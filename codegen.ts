@@ -3,13 +3,21 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 const config: CodegenConfig = {
   schema: 'pkg/graph/schema.graphql',
   documents: ['src/gql/apolloGQL/**/*.ts'],
+  overwrite: true,
   generates: {
     './src/gql/gen/graphql.ts': {
-      // preset: 'client',
       plugins: [
         'typescript',
         'typescript-operations',
-        'typescript-react-apollo'
+        'typescript-react-apollo',
+        {
+          // This plugin is used to generate type document query types.  Used when passing a mutation or query to a custom hook
+          'typed-document-node': {
+            transformUnderscore: false,
+            documentVariablePrefix: 'Typed',
+            fragmentVariablePrefix: 'Typed'
+          }
+        }
       ],
       config: {
         withHooks: true,
@@ -24,6 +32,10 @@ const config: CodegenConfig = {
           Upload: 'Upload',
           EmailAddress: 'EmailAddress',
           HTML: 'HTML'
+        },
+        nonOptionalTypename: true,
+        namingConvention: {
+          enumValues: 'change-case-all#upperCase#snakeCase'
         }
       }
     }

@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -32,7 +33,7 @@ export type Scalars = {
 
 /** Represents a contact associated with a system intake, including additional fields from CEDAR */
 export type AugmentedSystemIntakeContact = {
-  __typename?: 'AugmentedSystemIntakeContact';
+  __typename: 'AugmentedSystemIntakeContact';
   commonName?: Maybe<Scalars['String']['output']>;
   component: Scalars['String']['output'];
   email?: Maybe<Scalars['EmailAddress']['output']>;
@@ -47,7 +48,7 @@ export type AugmentedSystemIntakeContact = {
  * equester's justification for their system request
  */
 export type BusinessCase = {
-  __typename?: 'BusinessCase';
+  __typename: 'BusinessCase';
   alternativeASolution?: Maybe<BusinessCaseSolution>;
   alternativeBSolution?: Maybe<BusinessCaseSolution>;
   businessNeed?: Maybe<Scalars['String']['output']>;
@@ -71,7 +72,7 @@ export type BusinessCase = {
 
 /** A solution proposal within a business case */
 export type BusinessCaseSolution = {
-  __typename?: 'BusinessCaseSolution';
+  __typename: 'BusinessCaseSolution';
   acquisitionApproach?: Maybe<Scalars['String']['output']>;
   cons?: Maybe<Scalars['String']['output']>;
   costSavings?: Maybe<Scalars['String']['output']>;
@@ -88,19 +89,19 @@ export type BusinessCaseSolution = {
 
 /** The status of a business case associated with an system IT governence request */
 export enum BusinessCaseStatus {
-  Closed = 'CLOSED',
-  Open = 'OPEN'
+  CLOSED = 'CLOSED',
+  OPEN = 'OPEN'
 }
 
 /** The possible types of assignees for CedarRoles */
 export enum CedarAssigneeType {
-  Organization = 'ORGANIZATION',
-  Person = 'PERSON'
+  ORGANIZATION = 'ORGANIZATION',
+  PERSON = 'PERSON'
 }
 
 /** CedarAuthorityToOperate represents the response from the /authorityToOperate endpoint from the CEDAR Core API. */
 export type CedarAuthorityToOperate = {
-  __typename?: 'CedarAuthorityToOperate';
+  __typename: 'CedarAuthorityToOperate';
   actualDispositionDate?: Maybe<Scalars['Time']['output']>;
   cedarId: Scalars['String']['output'];
   containsPersonallyIdentifiableInformation?: Maybe<Scalars['Boolean']['output']>;
@@ -136,7 +137,7 @@ export type CedarAuthorityToOperate = {
  * Right now, this does not tie in with any other types defined here, and is a root node until that changes.
  */
 export type CedarBudget = {
-  __typename?: 'CedarBudget';
+  __typename: 'CedarBudget';
   fiscalYear?: Maybe<Scalars['String']['output']>;
   funding?: Maybe<Scalars['String']['output']>;
   fundingId?: Maybe<Scalars['String']['output']>;
@@ -153,7 +154,7 @@ export type CedarBudget = {
  * as a part of the CedarBudgetSystemCost object
  */
 export type CedarBudgetActualCost = {
-  __typename?: 'CedarBudgetActualCost';
+  __typename: 'CedarBudgetActualCost';
   actualSystemCost?: Maybe<Scalars['String']['output']>;
   fiscalYear?: Maybe<Scalars['String']['output']>;
   systemId?: Maybe<Scalars['String']['output']>;
@@ -164,13 +165,13 @@ export type CedarBudgetActualCost = {
  * Right now, this does not tie in with any other types defined here, and is a root node until that changes.
  */
 export type CedarBudgetSystemCost = {
-  __typename?: 'CedarBudgetSystemCost';
+  __typename: 'CedarBudgetSystemCost';
   budgetActualCost: Array<CedarBudgetActualCost>;
 };
 
 /** BusinessOwnerInformation contains information about the business owner for a CEDAR system */
 export type CedarBusinessOwnerInformation = {
-  __typename?: 'CedarBusinessOwnerInformation';
+  __typename: 'CedarBusinessOwnerInformation';
   beneficiaryAddressPurpose: Array<Scalars['String']['output']>;
   beneficiaryAddressPurposeOther?: Maybe<Scalars['String']['output']>;
   beneficiaryAddressSource: Array<Scalars['String']['output']>;
@@ -188,7 +189,7 @@ export type CedarBusinessOwnerInformation = {
 };
 
 export type CedarContract = {
-  __typename?: 'CedarContract';
+  __typename: 'CedarContract';
   contractName?: Maybe<Scalars['String']['output']>;
   contractNumber?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
@@ -202,7 +203,7 @@ export type CedarContract = {
 
 /** CedarDataCenter represents the data center used by a CedarDeployment */
 export type CedarDataCenter = {
-  __typename?: 'CedarDataCenter';
+  __typename: 'CedarDataCenter';
   address1?: Maybe<Scalars['String']['output']>;
   address2?: Maybe<Scalars['String']['output']>;
   addressState?: Maybe<Scalars['String']['output']>;
@@ -220,7 +221,7 @@ export type CedarDataCenter = {
 
 /** CedarDeployment represents a deployment of a system; this information is returned from the CEDAR Core API */
 export type CedarDeployment = {
-  __typename?: 'CedarDeployment';
+  __typename: 'CedarDeployment';
   contractorName?: Maybe<Scalars['String']['output']>;
   dataCenter?: Maybe<CedarDataCenter>;
   deploymentElementID?: Maybe<Scalars['String']['output']>;
@@ -243,7 +244,7 @@ export type CedarDeployment = {
 
 /** CedarExchange represents info about how data is exchanged between a CEDAR system and another system */
 export type CedarExchange = {
-  __typename?: 'CedarExchange';
+  __typename: 'CedarExchange';
   connectionFrequency: Array<Scalars['String']['output']>;
   containsBankingData?: Maybe<Scalars['Boolean']['output']>;
   containsBeneficiaryAddress?: Maybe<Scalars['Boolean']['output']>;
@@ -276,14 +277,14 @@ export type CedarExchange = {
 
 /** CedarExchangeTypeOfDataItem is one item of the TypeofData slice in a CedarExchange */
 export type CedarExchangeTypeOfDataItem = {
-  __typename?: 'CedarExchangeTypeOfDataItem';
+  __typename: 'CedarExchangeTypeOfDataItem';
   id?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
 
 /** CedarRole represents a role assigned to a person or organization for a system; this information is returned from the CEDAR Core API */
 export type CedarRole = {
-  __typename?: 'CedarRole';
+  __typename: 'CedarRole';
   application: Scalars['String']['output'];
   assigneeDesc?: Maybe<Scalars['String']['output']>;
   assigneeEmail?: Maybe<Scalars['String']['output']>;
@@ -304,7 +305,7 @@ export type CedarRole = {
 
 /** CedarRoleType represents a type of role that a user or organization can hold for some system, i.e. "Business Owner" or "Project Lead" */
 export type CedarRoleType = {
-  __typename?: 'CedarRoleType';
+  __typename: 'CedarRoleType';
   application: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
@@ -316,7 +317,7 @@ export type CedarRoleType = {
  * as a part of the CedarSoftwareProducts object
  */
 export type CedarSoftwareProductItem = {
-  __typename?: 'CedarSoftwareProductItem';
+  __typename: 'CedarSoftwareProductItem';
   apiGatewayUse?: Maybe<Scalars['Boolean']['output']>;
   elaPurchase?: Maybe<Scalars['String']['output']>;
   elaVendorId?: Maybe<Scalars['String']['output']>;
@@ -338,7 +339,7 @@ export type CedarSoftwareProductItem = {
  * Right now, this does not tie in with any other types defined here, and is a root node until that changes.
  */
 export type CedarSoftwareProducts = {
-  __typename?: 'CedarSoftwareProducts';
+  __typename: 'CedarSoftwareProducts';
   aiSolnCatg: Array<Maybe<Scalars['String']['output']>>;
   aiSolnCatgOther?: Maybe<Scalars['String']['output']>;
   apiDataArea: Array<Maybe<Scalars['String']['output']>>;
@@ -357,7 +358,7 @@ export type CedarSoftwareProducts = {
 
 /** CedarSubSystem represents the response from the /system/detail */
 export type CedarSubSystem = {
-  __typename?: 'CedarSubSystem';
+  __typename: 'CedarSubSystem';
   acronym?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
@@ -369,8 +370,10 @@ export type CedarSubSystem = {
  * Right now, this does not tie in with any other types defined here, and is a root node until that changes.
  */
 export type CedarSystem = {
-  __typename?: 'CedarSystem';
+  __typename: 'CedarSystem';
   acronym?: Maybe<Scalars['String']['output']>;
+  atoEffectiveDate?: Maybe<Scalars['Time']['output']>;
+  atoExpirationDate?: Maybe<Scalars['Time']['output']>;
   businessOwnerOrg?: Maybe<Scalars['String']['output']>;
   businessOwnerOrgComp?: Maybe<Scalars['String']['output']>;
   businessOwnerRoles: Array<CedarRole>;
@@ -407,14 +410,16 @@ export type CedarSystemLinkedTrbRequestsArgs = {
 
 /** Represents a user's bookmark of a cedar system */
 export type CedarSystemBookmark = {
-  __typename?: 'CedarSystemBookmark';
+  __typename: 'CedarSystemBookmark';
   cedarSystemId: Scalars['String']['output'];
   euaUserId: Scalars['String']['output'];
 };
 
 /** This is the Representation of Cedar system with additional related information */
 export type CedarSystemDetails = {
-  __typename?: 'CedarSystemDetails';
+  __typename: 'CedarSystemDetails';
+  atoEffectiveDate?: Maybe<Scalars['Time']['output']>;
+  atoExpirationDate?: Maybe<Scalars['Time']['output']>;
   businessOwnerInformation: CedarBusinessOwnerInformation;
   cedarSystem: CedarSystem;
   deployments: Array<CedarDeployment>;
@@ -427,7 +432,7 @@ export type CedarSystemDetails = {
 
 /** SystemMaintainerInformation contains information about the system maintainer of a CEDAR system */
 export type CedarSystemMaintainerInformation = {
-  __typename?: 'CedarSystemMaintainerInformation';
+  __typename: 'CedarSystemMaintainerInformation';
   adHocAgileDeploymentFrequency?: Maybe<Scalars['String']['output']>;
   agileUsed?: Maybe<Scalars['Boolean']['output']>;
   authoritativeDatasource?: Maybe<Scalars['String']['output']>;
@@ -474,7 +479,7 @@ export type CedarSystemMaintainerInformation = {
 
 /** CedarThreat represents the response from the /threat endpoint from the CEDAR Core API. */
 export type CedarThreat = {
-  __typename?: 'CedarThreat';
+  __typename: 'CedarThreat';
   alternativeId?: Maybe<Scalars['String']['output']>;
   controlFamily?: Maybe<Scalars['String']['output']>;
   daysOpen?: Maybe<Scalars['Int']['output']>;
@@ -486,7 +491,7 @@ export type CedarThreat = {
 
 /** CedarURL represents info about a URL associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API */
 export type CedarUrl = {
-  __typename?: 'CedarURL';
+  __typename: 'CedarURL';
   address?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   isAPIEndpoint?: Maybe<Scalars['Boolean']['output']>;
@@ -505,7 +510,7 @@ export type CloseTrbRequestInput = {
 
 /** Represents a date used for start and end dates on a contract */
 export type ContractDate = {
-  __typename?: 'ContractDate';
+  __typename: 'ContractDate';
   day?: Maybe<Scalars['String']['output']>;
   month?: Maybe<Scalars['String']['output']>;
   year?: Maybe<Scalars['String']['output']>;
@@ -518,7 +523,7 @@ export type CreateCedarSystemBookmarkInput = {
 
 /** The payload when bookmarking a cedar system */
 export type CreateCedarSystemBookmarkPayload = {
-  __typename?: 'CreateCedarSystemBookmarkPayload';
+  __typename: 'CreateCedarSystemBookmarkPayload';
   cedarSystemBookmark?: Maybe<CedarSystemBookmark>;
 };
 
@@ -532,7 +537,7 @@ export type CreateSystemIntakeContactInput = {
 
 /** The payload when creating a system intake contact */
 export type CreateSystemIntakeContactPayload = {
-  __typename?: 'CreateSystemIntakeContactPayload';
+  __typename: 'CreateSystemIntakeContactPayload';
   systemIntakeContact?: Maybe<SystemIntakeContact>;
 };
 
@@ -546,8 +551,15 @@ export type CreateSystemIntakeDocumentInput = {
 
 /** Data returned after uploading a document to a System Intake */
 export type CreateSystemIntakeDocumentPayload = {
-  __typename?: 'CreateSystemIntakeDocumentPayload';
+  __typename: 'CreateSystemIntakeDocumentPayload';
   document?: Maybe<SystemIntakeDocument>;
+};
+
+export type CreateSystemIntakeGrbReviewerInput = {
+  euaUserId: Scalars['String']['input'];
+  grbRole: SystemIntakeGrbReviewerRole;
+  systemIntakeID: Scalars['UUID']['input'];
+  votingRole: SystemIntakeGrbReviewerVotingRole;
 };
 
 /** The input data used to initialize an IT governance request for a system */
@@ -626,7 +638,7 @@ export type CreateTrbRequestDocumentInput = {
 
 /** Data returned after uploading a document to a TRB request */
 export type CreateTrbRequestDocumentPayload = {
-  __typename?: 'CreateTRBRequestDocumentPayload';
+  __typename: 'CreateTRBRequestDocumentPayload';
   document?: Maybe<TrbRequestDocument>;
 };
 
@@ -641,13 +653,13 @@ export type CreateTrbRequestFeedbackInput = {
 
 /** The current user of the application */
 export type CurrentUser = {
-  __typename?: 'CurrentUser';
+  __typename: 'CurrentUser';
   launchDarkly: LaunchDarklySettings;
 };
 
 /** The payload when deleting a bookmark for a cedar system */
 export type DeleteCedarSystemBookmarkPayload = {
-  __typename?: 'DeleteCedarSystemBookmarkPayload';
+  __typename: 'DeleteCedarSystemBookmarkPayload';
   cedarSystemId: Scalars['String']['output'];
 };
 
@@ -658,19 +670,23 @@ export type DeleteSystemIntakeContactInput = {
 
 /** The payload when deleting a system intake contact */
 export type DeleteSystemIntakeContactPayload = {
-  __typename?: 'DeleteSystemIntakeContactPayload';
+  __typename: 'DeleteSystemIntakeContactPayload';
   systemIntakeContact?: Maybe<SystemIntakeContact>;
 };
 
 /** Data returned after deleting a document attached to a System Intake */
 export type DeleteSystemIntakeDocumentPayload = {
-  __typename?: 'DeleteSystemIntakeDocumentPayload';
+  __typename: 'DeleteSystemIntakeDocumentPayload';
   document?: Maybe<SystemIntakeDocument>;
+};
+
+export type DeleteSystemIntakeGrbReviewerInput = {
+  reviewerID: Scalars['UUID']['input'];
 };
 
 /** Data returned after deleting a document attached to a TRB request */
 export type DeleteTrbRequestDocumentPayload = {
-  __typename?: 'DeleteTRBRequestDocumentPayload';
+  __typename: 'DeleteTRBRequestDocumentPayload';
   document?: Maybe<TrbRequestDocument>;
 };
 
@@ -690,7 +706,7 @@ export type EmailNotificationRecipients = {
  * system with a given solution
  */
 export type EstimatedLifecycleCost = {
-  __typename?: 'EstimatedLifecycleCost';
+  __typename: 'EstimatedLifecycleCost';
   businessCaseId: Scalars['UUID']['output'];
   cost?: Maybe<Scalars['Int']['output']>;
   id: Scalars['UUID']['output'];
@@ -700,13 +716,13 @@ export type EstimatedLifecycleCost = {
 };
 
 export enum ExchangeDirection {
-  Receiver = 'RECEIVER',
-  Sender = 'SENDER'
+  RECEIVER = 'RECEIVER',
+  SENDER = 'SENDER'
 }
 
 /** Feedback given to the requester on a governance request */
 export type GovernanceRequestFeedback = {
-  __typename?: 'GovernanceRequestFeedback';
+  __typename: 'GovernanceRequestFeedback';
   author?: Maybe<UserInfo>;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
@@ -722,127 +738,127 @@ export type GovernanceRequestFeedback = {
 
 /** Represents the possible actions that can provide feedback on a governance request */
 export enum GovernanceRequestFeedbackSourceAction {
-  ProgressToNewStep = 'PROGRESS_TO_NEW_STEP',
-  RequestEdits = 'REQUEST_EDITS'
+  PROGRESS_TO_NEW_STEP = 'PROGRESS_TO_NEW_STEP',
+  REQUEST_EDITS = 'REQUEST_EDITS'
 }
 
 /** Represents the possible forms on a governance request that can receive feedback */
 export enum GovernanceRequestFeedbackTargetForm {
-  DraftBusinessCase = 'DRAFT_BUSINESS_CASE',
-  FinalBusinessCase = 'FINAL_BUSINESS_CASE',
-  IntakeRequest = 'INTAKE_REQUEST',
-  NoTargetProvided = 'NO_TARGET_PROVIDED'
+  DRAFT_BUSINESS_CASE = 'DRAFT_BUSINESS_CASE',
+  FINAL_BUSINESS_CASE = 'FINAL_BUSINESS_CASE',
+  INTAKE_REQUEST = 'INTAKE_REQUEST',
+  NO_TARGET_PROVIDED = 'NO_TARGET_PROVIDED'
 }
 
 /** Represents the possible types of feedback on governance requests, based on who it's directed to */
 export enum GovernanceRequestFeedbackType {
-  Grb = 'GRB',
-  Requester = 'REQUESTER'
+  GRB = 'GRB',
+  REQUESTER = 'REQUESTER'
 }
 
 /** The requester view of the IT gov Decision step status */
 export enum ItGovDecisionStatus {
   /** This step can't be started yet */
-  CantStart = 'CANT_START',
+  CANT_START = 'CANT_START',
   /** The step is completed */
-  Completed = 'COMPLETED',
+  COMPLETED = 'COMPLETED',
   /** This step is in review */
-  InReview = 'IN_REVIEW'
+  IN_REVIEW = 'IN_REVIEW'
 }
 
 /** The requester view of the IT gov draft business case step status */
 export enum ItGovDraftBusinessCaseStatus {
   /** This step can't be started yet */
-  CantStart = 'CANT_START',
+  CANT_START = 'CANT_START',
   /** The draft business case has been completed and the intake is on a further step */
-  Done = 'DONE',
+  DONE = 'DONE',
   /** This draft business case has edits requested */
-  EditsRequested = 'EDITS_REQUESTED',
+  EDITS_REQUESTED = 'EDITS_REQUESTED',
   /** The form has started to be filled out */
-  InProgress = 'IN_PROGRESS',
+  IN_PROGRESS = 'IN_PROGRESS',
   /** This step is no longer needed */
-  NotNeeded = 'NOT_NEEDED',
+  NOT_NEEDED = 'NOT_NEEDED',
   /** Ready to begin filling out */
-  Ready = 'READY',
+  READY = 'READY',
   /** The draft business case has been submitted and it is waiting for feedback from the governance team */
-  Submitted = 'SUBMITTED'
+  SUBMITTED = 'SUBMITTED'
 }
 
 /** The requester view of the IT gov feedback step status */
 export enum ItGovFeedbackStatus {
   /** This step can't be started yet */
-  CantStart = 'CANT_START',
+  CANT_START = 'CANT_START',
   /** The step is completed */
-  Completed = 'COMPLETED',
+  COMPLETED = 'COMPLETED',
   /** This step is in review */
-  InReview = 'IN_REVIEW'
+  IN_REVIEW = 'IN_REVIEW'
 }
 
 /** The requester view of the IT Gov Final Business Case step status */
 export enum ItGovFinalBusinessCaseStatus {
   /** This step can't be started yet */
-  CantStart = 'CANT_START',
+  CANT_START = 'CANT_START',
   /** The business case has been completed and the intake is on a further step */
-  Done = 'DONE',
+  DONE = 'DONE',
   /** This business case has edits requested */
-  EditsRequested = 'EDITS_REQUESTED',
+  EDITS_REQUESTED = 'EDITS_REQUESTED',
   /** The form has started to be filled out */
-  InProgress = 'IN_PROGRESS',
+  IN_PROGRESS = 'IN_PROGRESS',
   /** This step is not needed and has been skipped */
-  NotNeeded = 'NOT_NEEDED',
+  NOT_NEEDED = 'NOT_NEEDED',
   /** Ready to begin filling out */
-  Ready = 'READY',
+  READY = 'READY',
   /** The business case has been submitted and it is waiting for feedback from the governance team */
-  Submitted = 'SUBMITTED'
+  SUBMITTED = 'SUBMITTED'
 }
 
 /** The requester view of the IT Gov GRB step status */
 export enum ItGovGrbStatus {
   /** The GRT meeting has already happened, and an outcome hasn't been noted yet */
-  AwaitingDecision = 'AWAITING_DECISION',
+  AWAITING_DECISION = 'AWAITING_DECISION',
   /** This step can't be started yet */
-  CantStart = 'CANT_START',
+  CANT_START = 'CANT_START',
   /** The step is completed */
-  Completed = 'COMPLETED',
+  COMPLETED = 'COMPLETED',
   /** This step is not needed and has been skipped */
-  NotNeeded = 'NOT_NEEDED',
+  NOT_NEEDED = 'NOT_NEEDED',
   /** The GRB meeting is waiting to be scheduled */
-  ReadyToSchedule = 'READY_TO_SCHEDULE',
+  READY_TO_SCHEDULE = 'READY_TO_SCHEDULE',
   /** The GRB meeting has been scheduled */
-  Scheduled = 'SCHEDULED'
+  SCHEDULED = 'SCHEDULED'
 }
 
 /** The requester view of the IT Gov GRT step status */
 export enum ItGovGrtStatus {
   /** The GRT meeting has already happened, and an outcome hasn't been noted yet */
-  AwaitingDecision = 'AWAITING_DECISION',
+  AWAITING_DECISION = 'AWAITING_DECISION',
   /** This step can't be started yet */
-  CantStart = 'CANT_START',
+  CANT_START = 'CANT_START',
   /** The step is completed */
-  Completed = 'COMPLETED',
+  COMPLETED = 'COMPLETED',
   /** This step is not needed and has been skipped */
-  NotNeeded = 'NOT_NEEDED',
+  NOT_NEEDED = 'NOT_NEEDED',
   /** The GRT meeting is waiting to be scheduled */
-  ReadyToSchedule = 'READY_TO_SCHEDULE',
+  READY_TO_SCHEDULE = 'READY_TO_SCHEDULE',
   /** The GRT meeting has been scheduled */
-  Scheduled = 'SCHEDULED'
+  SCHEDULED = 'SCHEDULED'
 }
 
 /** The requester view of the IT gov intake step status */
 export enum ItGovIntakeFormStatus {
   /** The Form is completed */
-  Completed = 'COMPLETED',
+  COMPLETED = 'COMPLETED',
   /** The form has edits requested */
-  EditsRequested = 'EDITS_REQUESTED',
+  EDITS_REQUESTED = 'EDITS_REQUESTED',
   /** The form has started to be filled out */
-  InProgress = 'IN_PROGRESS',
+  IN_PROGRESS = 'IN_PROGRESS',
   /** Ready to begin filling out */
-  Ready = 'READY'
+  READY = 'READY'
 }
 
 /** The statuses of the different steps in the IT Gov v2 workflow */
 export type ItGovTaskStatuses = {
-  __typename?: 'ITGovTaskStatuses';
+  __typename: 'ITGovTaskStatuses';
   bizCaseDraftStatus: ItGovDraftBusinessCaseStatus;
   bizCaseFinalStatus: ItGovFinalBusinessCaseStatus;
   decisionAndNextStepsStatus: ItGovDecisionStatus;
@@ -854,37 +870,37 @@ export type ItGovTaskStatuses = {
 
 /** The current user's Launch Darkly key */
 export type LaunchDarklySettings = {
-  __typename?: 'LaunchDarklySettings';
+  __typename: 'LaunchDarklySettings';
   signedHash: Scalars['String']['output'];
   userKey: Scalars['String']['output'];
 };
 
 /** The cost phase of a */
 export enum LifecycleCostPhase {
-  Development = 'DEVELOPMENT',
-  OperationsAndMaintenance = 'OPERATIONS_AND_MAINTENANCE',
-  Other = 'OTHER'
+  DEVELOPMENT = 'DEVELOPMENT',
+  OPERATIONS_AND_MAINTENANCE = 'OPERATIONS_AND_MAINTENANCE',
+  OTHER = 'OTHER'
 }
 
 /** The type of a lifecycle cost solution, part of a business case */
 export enum LifecycleCostSolution {
   A = 'A',
   B = 'B',
-  Preferred = 'PREFERRED'
+  PREFERRED = 'PREFERRED'
 }
 
 /** Represents a lifecycle cost phase */
 export enum LifecycleCostYear {
-  LifecycleCostYear_1 = 'LIFECYCLE_COST_YEAR_1',
-  LifecycleCostYear_2 = 'LIFECYCLE_COST_YEAR_2',
-  LifecycleCostYear_3 = 'LIFECYCLE_COST_YEAR_3',
-  LifecycleCostYear_4 = 'LIFECYCLE_COST_YEAR_4',
-  LifecycleCostYear_5 = 'LIFECYCLE_COST_YEAR_5'
+  LIFECYCLE_COST_YEAR_1 = 'LIFECYCLE_COST_YEAR_1',
+  LIFECYCLE_COST_YEAR_2 = 'LIFECYCLE_COST_YEAR_2',
+  LIFECYCLE_COST_YEAR_3 = 'LIFECYCLE_COST_YEAR_3',
+  LIFECYCLE_COST_YEAR_4 = 'LIFECYCLE_COST_YEAR_4',
+  LIFECYCLE_COST_YEAR_5 = 'LIFECYCLE_COST_YEAR_5'
 }
 
 /** Defines the mutations for the schema */
 export type Mutation = {
-  __typename?: 'Mutation';
+  __typename: 'Mutation';
   closeTRBRequest: TrbRequest;
   createCedarSystemBookmark?: Maybe<CreateCedarSystemBookmarkPayload>;
   createSystemIntake?: Maybe<SystemIntake>;
@@ -902,6 +918,7 @@ export type Mutation = {
   createSystemIntakeActionUpdateLCID?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   createSystemIntakeDocument?: Maybe<CreateSystemIntakeDocumentPayload>;
+  createSystemIntakeGRBReviewer: SystemIntakeGrbReviewer;
   createSystemIntakeNote?: Maybe<SystemIntakeNote>;
   createTRBAdminNoteAdviceLetter: TrbAdminNote;
   createTRBAdminNoteConsultSession: TrbAdminNote;
@@ -918,6 +935,7 @@ export type Mutation = {
   deleteCedarSystemBookmark?: Maybe<DeleteCedarSystemBookmarkPayload>;
   deleteSystemIntakeContact?: Maybe<DeleteSystemIntakeContactPayload>;
   deleteSystemIntakeDocument?: Maybe<DeleteSystemIntakeDocumentPayload>;
+  deleteSystemIntakeGRBReviewer: Scalars['UUID']['output'];
   deleteTRBAdviceLetterRecommendation: TrbAdviceLetterRecommendation;
   deleteTRBRequestAttendee: TrbRequestAttendee;
   deleteTRBRequestDocument?: Maybe<DeleteTrbRequestDocumentPayload>;
@@ -944,6 +962,7 @@ export type Mutation = {
   updateSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   updateSystemIntakeContactDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeContractDetails?: Maybe<UpdateSystemIntakePayload>;
+  updateSystemIntakeGRBReviewer: SystemIntakeGrbReviewer;
   updateSystemIntakeLinkedCedarSystem?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeNote: SystemIntakeNote;
   updateSystemIntakeRequestDetails?: Maybe<UpdateSystemIntakePayload>;
@@ -1064,6 +1083,12 @@ export type MutationCreateSystemIntakeDocumentArgs = {
 
 
 /** Defines the mutations for the schema */
+export type MutationCreateSystemIntakeGrbReviewerArgs = {
+  input: CreateSystemIntakeGrbReviewerInput;
+};
+
+
+/** Defines the mutations for the schema */
 export type MutationCreateSystemIntakeNoteArgs = {
   input: CreateSystemIntakeNoteInput;
 };
@@ -1156,6 +1181,12 @@ export type MutationDeleteSystemIntakeContactArgs = {
 /** Defines the mutations for the schema */
 export type MutationDeleteSystemIntakeDocumentArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationDeleteSystemIntakeGrbReviewerArgs = {
+  input: DeleteSystemIntakeGrbReviewerInput;
 };
 
 
@@ -1317,6 +1348,12 @@ export type MutationUpdateSystemIntakeContractDetailsArgs = {
 
 
 /** Defines the mutations for the schema */
+export type MutationUpdateSystemIntakeGrbReviewerArgs = {
+  input: UpdateSystemIntakeGrbReviewerInput;
+};
+
+
+/** Defines the mutations for the schema */
 export type MutationUpdateSystemIntakeLinkedCedarSystemArgs = {
   input: UpdateSystemIntakeLinkedCedarSystemInput;
 };
@@ -1403,21 +1440,21 @@ export type MutationUpdateTrbRequestTrbLeadArgs = {
 
 /** PersonRole is an enumeration of values for a person's role */
 export enum PersonRole {
-  BusinessOwner = 'BUSINESS_OWNER',
-  CloudNavigator = 'CLOUD_NAVIGATOR',
-  ContractOfficeRsrepresentative = 'CONTRACT_OFFICE_RSREPRESENTATIVE',
-  Cra = 'CRA',
-  InformationSystemSecurityAdvisor = 'INFORMATION_SYSTEM_SECURITY_ADVISOR',
-  Other = 'OTHER',
-  PrivacyAdvisor = 'PRIVACY_ADVISOR',
-  ProductOwner = 'PRODUCT_OWNER',
-  SystemMaintainer = 'SYSTEM_MAINTAINER',
-  SystemOwner = 'SYSTEM_OWNER'
+  BUSINESS_OWNER = 'BUSINESS_OWNER',
+  CLOUD_NAVIGATOR = 'CLOUD_NAVIGATOR',
+  CONTRACT_OFFICE_RSREPRESENTATIVE = 'CONTRACT_OFFICE_RSREPRESENTATIVE',
+  CRA = 'CRA',
+  INFORMATION_SYSTEM_SECURITY_ADVISOR = 'INFORMATION_SYSTEM_SECURITY_ADVISOR',
+  OTHER = 'OTHER',
+  PRIVACY_ADVISOR = 'PRIVACY_ADVISOR',
+  PRODUCT_OWNER = 'PRODUCT_OWNER',
+  SYSTEM_MAINTAINER = 'SYSTEM_MAINTAINER',
+  SYSTEM_OWNER = 'SYSTEM_OWNER'
 }
 
 /** Query definition for the schema */
 export type Query = {
-  __typename?: 'Query';
+  __typename: 'Query';
   cedarAuthorityToOperate: Array<CedarAuthorityToOperate>;
   cedarBudget?: Maybe<Array<CedarBudget>>;
   cedarBudgetSystemCost?: Maybe<CedarBudgetSystemCost>;
@@ -1446,6 +1483,7 @@ export type Query = {
   systemIntakeContacts: SystemIntakeContactsPayload;
   systemIntakes: Array<SystemIntake>;
   systemIntakesWithLcids: Array<SystemIntake>;
+  systemIntakesWithReviewRequested: Array<SystemIntake>;
   trbAdminNote: TrbAdminNote;
   trbLeadOptions: Array<UserInfo>;
   trbRequest: TrbRequest;
@@ -1606,7 +1644,7 @@ export type ReopenTrbRequestInput = {
 
 /** Represents a requester's system intake request */
 export type Request = {
-  __typename?: 'Request';
+  __typename: 'Request';
   id: Scalars['UUID']['output'];
   lcid?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
@@ -1619,34 +1657,34 @@ export type Request = {
 };
 
 export type RequestEdge = {
-  __typename?: 'RequestEdge';
+  __typename: 'RequestEdge';
   node: Request;
 };
 
 export enum RequestRelationType {
-  ExistingService = 'EXISTING_SERVICE',
-  ExistingSystem = 'EXISTING_SYSTEM',
-  NewSystem = 'NEW_SYSTEM'
+  EXISTING_SERVICE = 'EXISTING_SERVICE',
+  EXISTING_SYSTEM = 'EXISTING_SYSTEM',
+  NEW_SYSTEM = 'NEW_SYSTEM'
 }
 
 /** Indicates the type of a request being made with the EASi system */
 export enum RequestType {
-  GovernanceRequest = 'GOVERNANCE_REQUEST'
+  GOVERNANCE_REQUEST = 'GOVERNANCE_REQUEST'
 }
 
 export type RequestsConnection = {
-  __typename?: 'RequestsConnection';
+  __typename: 'RequestsConnection';
   edges: Array<RequestEdge>;
 };
 
 /** A user role associated with a job code */
 export enum Role {
-  /** A member of the GRT */
-  EasiGovteam = 'EASI_GOVTEAM',
+  /** An admin on the GRT */
+  EASI_GOVTEAM = 'EASI_GOVTEAM',
   /** An admin on the TRB */
-  EasiTrbAdmin = 'EASI_TRB_ADMIN',
+  EASI_TRB_ADMIN = 'EASI_TRB_ADMIN',
   /** A generic EASi user */
-  EasiUser = 'EASI_USER'
+  EASI_USER = 'EASI_USER'
 }
 
 export type SendCantFindSomethingEmailInput = {
@@ -1730,7 +1768,7 @@ export type SubmitIntakeInput = {
 
 /** Represents an IT governance request for a system */
 export type SystemIntake = {
-  __typename?: 'SystemIntake';
+  __typename: 'SystemIntake';
   actions: Array<SystemIntakeAction>;
   adminLead?: Maybe<Scalars['String']['output']>;
   annualSpending?: Maybe<SystemIntakeAnnualSpending>;
@@ -1788,6 +1826,10 @@ export type SystemIntake = {
   productManager: SystemIntakeProductManager;
   projectAcronym?: Maybe<Scalars['String']['output']>;
   rejectionReason?: Maybe<Scalars['HTML']['output']>;
+  /** Other System Intakes that share a CEDAR System or Contract Number */
+  relatedIntakes: Array<SystemIntake>;
+  /** TRB Requests that share a CEDAR System or Contract Number */
+  relatedTRBRequests: Array<TrbRequest>;
   relationType?: Maybe<RequestRelationType>;
   requestFormState: SystemIntakeFormState;
   requestName?: Maybe<Scalars['String']['output']>;
@@ -1810,7 +1852,7 @@ export type SystemIntake = {
 
 /** An action taken on a system intake, often resulting in a change in status. */
 export type SystemIntakeAction = {
-  __typename?: 'SystemIntakeAction';
+  __typename: 'SystemIntakeAction';
   actor: SystemIntakeActionActor;
   createdAt: Scalars['Time']['output'];
   feedback?: Maybe<Scalars['HTML']['output']>;
@@ -1825,47 +1867,47 @@ export type SystemIntakeAction = {
 
 /** The contact who is associated with an action being done to a system request */
 export type SystemIntakeActionActor = {
-  __typename?: 'SystemIntakeActionActor';
+  __typename: 'SystemIntakeActionActor';
   email: Scalars['String']['output'];
   name: Scalars['String']['output'];
 };
 
 /** Represents the type of an action that is being done to a system request */
 export enum SystemIntakeActionType {
-  BizCaseNeedsChanges = 'BIZ_CASE_NEEDS_CHANGES',
-  ChangeLcidRetirementDate = 'CHANGE_LCID_RETIREMENT_DATE',
-  CloseRequest = 'CLOSE_REQUEST',
-  ConfirmLcid = 'CONFIRM_LCID',
-  CreateBizCase = 'CREATE_BIZ_CASE',
-  ExpireLcid = 'EXPIRE_LCID',
-  ExtendLcid = 'EXTEND_LCID',
-  GuideReceivedClose = 'GUIDE_RECEIVED_CLOSE',
-  IssueLcid = 'ISSUE_LCID',
-  NeedBizCase = 'NEED_BIZ_CASE',
-  NotGovernance = 'NOT_GOVERNANCE',
-  NotItRequest = 'NOT_IT_REQUEST',
-  NotRespondingClose = 'NOT_RESPONDING_CLOSE',
-  NoGovernanceNeeded = 'NO_GOVERNANCE_NEEDED',
-  ProgressToNewStep = 'PROGRESS_TO_NEW_STEP',
-  ProvideFeedbackNeedBizCase = 'PROVIDE_FEEDBACK_NEED_BIZ_CASE',
-  ProvideGrtFeedbackBizCaseDraft = 'PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT',
-  ProvideGrtFeedbackBizCaseFinal = 'PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL',
-  ReadyForGrb = 'READY_FOR_GRB',
-  ReadyForGrt = 'READY_FOR_GRT',
-  Reject = 'REJECT',
-  ReopenRequest = 'REOPEN_REQUEST',
-  RequestEdits = 'REQUEST_EDITS',
-  RetireLcid = 'RETIRE_LCID',
-  SendEmail = 'SEND_EMAIL',
-  SubmitBizCase = 'SUBMIT_BIZ_CASE',
-  SubmitFinalBizCase = 'SUBMIT_FINAL_BIZ_CASE',
-  SubmitIntake = 'SUBMIT_INTAKE',
-  UpdateLcid = 'UPDATE_LCID'
+  BIZ_CASE_NEEDS_CHANGES = 'BIZ_CASE_NEEDS_CHANGES',
+  CHANGE_LCID_RETIREMENT_DATE = 'CHANGE_LCID_RETIREMENT_DATE',
+  CLOSE_REQUEST = 'CLOSE_REQUEST',
+  CONFIRM_LCID = 'CONFIRM_LCID',
+  CREATE_BIZ_CASE = 'CREATE_BIZ_CASE',
+  EXPIRE_LCID = 'EXPIRE_LCID',
+  EXTEND_LCID = 'EXTEND_LCID',
+  GUIDE_RECEIVED_CLOSE = 'GUIDE_RECEIVED_CLOSE',
+  ISSUE_LCID = 'ISSUE_LCID',
+  NEED_BIZ_CASE = 'NEED_BIZ_CASE',
+  NOT_GOVERNANCE = 'NOT_GOVERNANCE',
+  NOT_IT_REQUEST = 'NOT_IT_REQUEST',
+  NOT_RESPONDING_CLOSE = 'NOT_RESPONDING_CLOSE',
+  NO_GOVERNANCE_NEEDED = 'NO_GOVERNANCE_NEEDED',
+  PROGRESS_TO_NEW_STEP = 'PROGRESS_TO_NEW_STEP',
+  PROVIDE_FEEDBACK_NEED_BIZ_CASE = 'PROVIDE_FEEDBACK_NEED_BIZ_CASE',
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT = 'PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT',
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL = 'PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL',
+  READY_FOR_GRB = 'READY_FOR_GRB',
+  READY_FOR_GRT = 'READY_FOR_GRT',
+  REJECT = 'REJECT',
+  REOPEN_REQUEST = 'REOPEN_REQUEST',
+  REQUEST_EDITS = 'REQUEST_EDITS',
+  RETIRE_LCID = 'RETIRE_LCID',
+  SEND_EMAIL = 'SEND_EMAIL',
+  SUBMIT_BIZ_CASE = 'SUBMIT_BIZ_CASE',
+  SUBMIT_FINAL_BIZ_CASE = 'SUBMIT_FINAL_BIZ_CASE',
+  SUBMIT_INTAKE = 'SUBMIT_INTAKE',
+  UPDATE_LCID = 'UPDATE_LCID'
 }
 
 /** Represents current and planned annual costs for a system */
 export type SystemIntakeAnnualSpending = {
-  __typename?: 'SystemIntakeAnnualSpending';
+  __typename: 'SystemIntakeAnnualSpending';
   currentAnnualSpending?: Maybe<Scalars['String']['output']>;
   currentAnnualSpendingITPortion?: Maybe<Scalars['String']['output']>;
   plannedYearOneSpending?: Maybe<Scalars['String']['output']>;
@@ -1882,7 +1924,7 @@ export type SystemIntakeAnnualSpendingInput = {
 
 /** Represents the OIT business owner of a system */
 export type SystemIntakeBusinessOwner = {
-  __typename?: 'SystemIntakeBusinessOwner';
+  __typename: 'SystemIntakeBusinessOwner';
   component?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
@@ -1916,7 +1958,7 @@ export type SystemIntakeCloseRequestInput = {
  * creating a system IT governance request
  */
 export type SystemIntakeCollaborator = {
-  __typename?: 'SystemIntakeCollaborator';
+  __typename: 'SystemIntakeCollaborator';
   acronym: Scalars['String']['output'];
   collaborator: Scalars['String']['output'];
   key: Scalars['String']['output'];
@@ -1946,7 +1988,7 @@ export type SystemIntakeConfirmLcidInput = {
 
 /** Represents a contact associated with a system intake */
 export type SystemIntakeContact = {
-  __typename?: 'SystemIntakeContact';
+  __typename: 'SystemIntakeContact';
   component: Scalars['String']['output'];
   euaUserId: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
@@ -1956,14 +1998,14 @@ export type SystemIntakeContact = {
 
 /** The payload when retrieving system intake contacts */
 export type SystemIntakeContactsPayload = {
-  __typename?: 'SystemIntakeContactsPayload';
+  __typename: 'SystemIntakeContactsPayload';
   invalidEUAIDs: Array<Scalars['String']['output']>;
   systemIntakeContacts: Array<AugmentedSystemIntakeContact>;
 };
 
 /** Represents a contract for work on a system */
 export type SystemIntakeContract = {
-  __typename?: 'SystemIntakeContract';
+  __typename: 'SystemIntakeContract';
   contractor?: Maybe<Scalars['String']['output']>;
   endDate: ContractDate;
   hasContract?: Maybe<Scalars['String']['output']>;
@@ -1981,7 +2023,7 @@ export type SystemIntakeContractInput = {
 };
 
 export type SystemIntakeContractNumber = {
-  __typename?: 'SystemIntakeContractNumber';
+  __typename: 'SystemIntakeContractNumber';
   contractNumber: Scalars['String']['output'];
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['UUID']['output'];
@@ -1993,7 +2035,7 @@ export type SystemIntakeContractNumber = {
 
 /** Represents expectations about a system's additional costs */
 export type SystemIntakeCosts = {
-  __typename?: 'SystemIntakeCosts';
+  __typename: 'SystemIntakeCosts';
   expectedIncreaseAmount?: Maybe<Scalars['String']['output']>;
   isExpectingIncrease?: Maybe<Scalars['String']['output']>;
 };
@@ -2010,15 +2052,15 @@ export type SystemIntakeCostsInput = {
 
 /** This represents the possible System Intake Decision States */
 export enum SystemIntakeDecisionState {
-  LcidIssued = 'LCID_ISSUED',
-  NotApproved = 'NOT_APPROVED',
-  NotGovernance = 'NOT_GOVERNANCE',
-  NoDecision = 'NO_DECISION'
+  LCID_ISSUED = 'LCID_ISSUED',
+  NOT_APPROVED = 'NOT_APPROVED',
+  NOT_GOVERNANCE = 'NOT_GOVERNANCE',
+  NO_DECISION = 'NO_DECISION'
 }
 
 /** Represents a document attached to a System Intake */
 export type SystemIntakeDocument = {
-  __typename?: 'SystemIntakeDocument';
+  __typename: 'SystemIntakeDocument';
   documentType: SystemIntakeDocumentType;
   fileName: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
@@ -2032,16 +2074,16 @@ export type SystemIntakeDocument = {
  * System Intake document
  */
 export enum SystemIntakeDocumentCommonType {
-  DraftIcge = 'DRAFT_ICGE',
-  Other = 'OTHER',
-  SooSow = 'SOO_SOW'
+  DRAFT_ICGE = 'DRAFT_ICGE',
+  OTHER = 'OTHER',
+  SOO_SOW = 'SOO_SOW'
 }
 
 /** Enumeration of the possible statuses of documents uploaded in the System Intake */
 export enum SystemIntakeDocumentStatus {
-  Available = 'AVAILABLE',
-  Pending = 'PENDING',
-  Unavailable = 'UNAVAILABLE'
+  AVAILABLE = 'AVAILABLE',
+  PENDING = 'PENDING',
+  UNAVAILABLE = 'UNAVAILABLE'
 }
 
 /**
@@ -2049,7 +2091,7 @@ export enum SystemIntakeDocumentStatus {
  * which can be one of a number of common types, or a free-text user-specified type
  */
 export type SystemIntakeDocumentType = {
-  __typename?: 'SystemIntakeDocumentType';
+  __typename: 'SystemIntakeDocumentType';
   commonType: SystemIntakeDocumentCommonType;
   otherTypeDescription?: Maybe<Scalars['String']['output']>;
 };
@@ -2066,22 +2108,22 @@ export type SystemIntakeExpireLcidInput = {
 
 /** This represents the possible state any system intake form can take */
 export enum SystemIntakeFormState {
-  EditsRequested = 'EDITS_REQUESTED',
-  InProgress = 'IN_PROGRESS',
-  NotStarted = 'NOT_STARTED',
-  Submitted = 'SUBMITTED'
+  EDITS_REQUESTED = 'EDITS_REQUESTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  NOT_STARTED = 'NOT_STARTED',
+  SUBMITTED = 'SUBMITTED'
 }
 
 /** SystemIntakeRequestEditsOptions represents the current step in the intake process */
 export enum SystemIntakeFormStep {
-  DraftBusinessCase = 'DRAFT_BUSINESS_CASE',
-  FinalBusinessCase = 'FINAL_BUSINESS_CASE',
-  InitialRequestForm = 'INITIAL_REQUEST_FORM'
+  DRAFT_BUSINESS_CASE = 'DRAFT_BUSINESS_CASE',
+  FINAL_BUSINESS_CASE = 'FINAL_BUSINESS_CASE',
+  INITIAL_REQUEST_FORM = 'INITIAL_REQUEST_FORM'
 }
 
 /** Represents the source of funding for a system */
 export type SystemIntakeFundingSource = {
-  __typename?: 'SystemIntakeFundingSource';
+  __typename: 'SystemIntakeFundingSource';
   fundingNumber?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
   source?: Maybe<Scalars['String']['output']>;
@@ -2101,7 +2143,7 @@ export type SystemIntakeFundingSourcesInput = {
 
 /** GRB Reviewers for a system intake request */
 export type SystemIntakeGrbReviewer = {
-  __typename?: 'SystemIntakeGRBReviewer';
+  __typename: 'SystemIntakeGRBReviewer';
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['UUID']['output'];
   grbRole: SystemIntakeGrbReviewerRole;
@@ -2114,29 +2156,29 @@ export type SystemIntakeGrbReviewer = {
 };
 
 export enum SystemIntakeGrbReviewerRole {
-  Alternate = 'ALTERNATE',
-  NonVoting = 'NON_VOTING',
-  Voting = 'VOTING'
+  ACA_3021_REP = 'ACA_3021_REP',
+  CCIIO_REP = 'CCIIO_REP',
+  CMCS_REP = 'CMCS_REP',
+  CO_CHAIR_CFO = 'CO_CHAIR_CFO',
+  CO_CHAIR_CIO = 'CO_CHAIR_CIO',
+  CO_CHAIR_HCA = 'CO_CHAIR_HCA',
+  FED_ADMIN_BDG_CHAIR = 'FED_ADMIN_BDG_CHAIR',
+  OTHER = 'OTHER',
+  PROGRAM_INTEGRITY_BDG_CHAIR = 'PROGRAM_INTEGRITY_BDG_CHAIR',
+  PROGRAM_OPERATIONS_BDG_CHAIR = 'PROGRAM_OPERATIONS_BDG_CHAIR',
+  QIO_REP = 'QIO_REP',
+  SUBJECT_MATTER_EXPERT = 'SUBJECT_MATTER_EXPERT'
 }
 
 export enum SystemIntakeGrbReviewerVotingRole {
-  Aca_3021Rep = 'ACA_3021_REP',
-  CciioRep = 'CCIIO_REP',
-  CmcsRep = 'CMCS_REP',
-  CoChairCfo = 'CO_CHAIR_CFO',
-  CoChairCio = 'CO_CHAIR_CIO',
-  CoChairHca = 'CO_CHAIR_HCA',
-  FedAdminBdgChair = 'FED_ADMIN_BDG_CHAIR',
-  Other = 'OTHER',
-  ProgramIntegrityBdgChair = 'PROGRAM_INTEGRITY_BDG_CHAIR',
-  ProgramOperationsBdgChair = 'PROGRAM_OPERATIONS_BDG_CHAIR',
-  QioRep = 'QIO_REP',
-  SubjectMatterExpert = 'SUBJECT_MATTER_EXPERT'
+  ALTERNATE = 'ALTERNATE',
+  NON_VOTING = 'NON_VOTING',
+  VOTING = 'VOTING'
 }
 
 /** Contains multiple system request collaborators, if any */
 export type SystemIntakeGovernanceTeam = {
-  __typename?: 'SystemIntakeGovernanceTeam';
+  __typename: 'SystemIntakeGovernanceTeam';
   isPresent?: Maybe<Scalars['Boolean']['output']>;
   teams?: Maybe<Array<SystemIntakeCollaborator>>;
 };
@@ -2152,7 +2194,7 @@ export type SystemIntakeGovernanceTeamInput = {
  * assicuated with a system request, if any
  */
 export type SystemIntakeIsso = {
-  __typename?: 'SystemIntakeISSO';
+  __typename: 'SystemIntakeISSO';
   isPresent?: Maybe<Scalars['Boolean']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
@@ -2179,7 +2221,7 @@ export type SystemIntakeIssueLcidInput = {
 
 /** Contains the data about a change to the expiration date of a system request's lifecycle ID */
 export type SystemIntakeLcidExpirationChange = {
-  __typename?: 'SystemIntakeLCIDExpirationChange';
+  __typename: 'SystemIntakeLCIDExpirationChange';
   newCostBaseline?: Maybe<Scalars['String']['output']>;
   newDate: Scalars['Time']['output'];
   newNextSteps?: Maybe<Scalars['HTML']['output']>;
@@ -2192,15 +2234,15 @@ export type SystemIntakeLcidExpirationChange = {
 
 /** The possible statuses that an issued LCID can be in */
 export enum SystemIntakeLcidStatus {
-  Expired = 'EXPIRED',
-  Issued = 'ISSUED',
-  Retired = 'RETIRED'
+  EXPIRED = 'EXPIRED',
+  ISSUED = 'ISSUED',
+  RETIRED = 'RETIRED'
 }
 
 /** This represents the possible states any system intake meeting can take. */
 export enum SystemIntakeMeetingState {
-  NotScheduled = 'NOT_SCHEDULED',
-  Scheduled = 'SCHEDULED'
+  NOT_SCHEDULED = 'NOT_SCHEDULED',
+  SCHEDULED = 'SCHEDULED'
 }
 
 /** Input for creating a Not an IT Governance Request Action in Admin Actions v2 */
@@ -2214,7 +2256,7 @@ export type SystemIntakeNotItGovReqInput = {
 
 /** A note added to a system request */
 export type SystemIntakeNote = {
-  __typename?: 'SystemIntakeNote';
+  __typename: 'SystemIntakeNote';
   author: SystemIntakeNoteAuthor;
   content: Scalars['HTML']['output'];
   createdAt: Scalars['Time']['output'];
@@ -2227,14 +2269,14 @@ export type SystemIntakeNote = {
 
 /** The author of a note added to a system request */
 export type SystemIntakeNoteAuthor = {
-  __typename?: 'SystemIntakeNoteAuthor';
+  __typename: 'SystemIntakeNoteAuthor';
   eua: Scalars['String']['output'];
   name: Scalars['String']['output'];
 };
 
 /** The product manager associated with a system */
 export type SystemIntakeProductManager = {
-  __typename?: 'SystemIntakeProductManager';
+  __typename: 'SystemIntakeProductManager';
   component?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
@@ -2289,15 +2331,15 @@ export type SystemIntakeRequestEditsInput = {
 
 /** The type of an IT governance (system) request */
 export enum SystemIntakeRequestType {
-  MajorChanges = 'MAJOR_CHANGES',
-  New = 'NEW',
-  Recompete = 'RECOMPETE',
-  Shutdown = 'SHUTDOWN'
+  MAJOR_CHANGES = 'MAJOR_CHANGES',
+  NEW = 'NEW',
+  RECOMPETE = 'RECOMPETE',
+  SHUTDOWN = 'SHUTDOWN'
 }
 
 /** The contact who made an IT governance request for a system */
 export type SystemIntakeRequester = {
-  __typename?: 'SystemIntakeRequester';
+  __typename: 'SystemIntakeRequester';
   component?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -2329,77 +2371,77 @@ export type SystemIntakeRetireLcidInput = {
 
 /** SystemIntakeState represents whether the intake is open or closed */
 export enum SystemIntakeState {
-  Closed = 'CLOSED',
-  Open = 'OPEN'
+  CLOSED = 'CLOSED',
+  OPEN = 'OPEN'
 }
 
 /** This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress. */
 export enum SystemIntakeStatusAdmin {
-  Closed = 'CLOSED',
-  DraftBusinessCaseInProgress = 'DRAFT_BUSINESS_CASE_IN_PROGRESS',
-  DraftBusinessCaseSubmitted = 'DRAFT_BUSINESS_CASE_SUBMITTED',
-  FinalBusinessCaseInProgress = 'FINAL_BUSINESS_CASE_IN_PROGRESS',
-  FinalBusinessCaseSubmitted = 'FINAL_BUSINESS_CASE_SUBMITTED',
-  GrbMeetingComplete = 'GRB_MEETING_COMPLETE',
-  GrbMeetingReady = 'GRB_MEETING_READY',
-  GrtMeetingComplete = 'GRT_MEETING_COMPLETE',
-  GrtMeetingReady = 'GRT_MEETING_READY',
-  InitialRequestFormInProgress = 'INITIAL_REQUEST_FORM_IN_PROGRESS',
-  InitialRequestFormSubmitted = 'INITIAL_REQUEST_FORM_SUBMITTED',
-  LcidExpired = 'LCID_EXPIRED',
-  LcidIssued = 'LCID_ISSUED',
-  LcidRetired = 'LCID_RETIRED',
-  NotApproved = 'NOT_APPROVED',
-  NotGovernance = 'NOT_GOVERNANCE'
+  CLOSED = 'CLOSED',
+  DRAFT_BUSINESS_CASE_IN_PROGRESS = 'DRAFT_BUSINESS_CASE_IN_PROGRESS',
+  DRAFT_BUSINESS_CASE_SUBMITTED = 'DRAFT_BUSINESS_CASE_SUBMITTED',
+  FINAL_BUSINESS_CASE_IN_PROGRESS = 'FINAL_BUSINESS_CASE_IN_PROGRESS',
+  FINAL_BUSINESS_CASE_SUBMITTED = 'FINAL_BUSINESS_CASE_SUBMITTED',
+  GRB_MEETING_COMPLETE = 'GRB_MEETING_COMPLETE',
+  GRB_MEETING_READY = 'GRB_MEETING_READY',
+  GRT_MEETING_COMPLETE = 'GRT_MEETING_COMPLETE',
+  GRT_MEETING_READY = 'GRT_MEETING_READY',
+  INITIAL_REQUEST_FORM_IN_PROGRESS = 'INITIAL_REQUEST_FORM_IN_PROGRESS',
+  INITIAL_REQUEST_FORM_SUBMITTED = 'INITIAL_REQUEST_FORM_SUBMITTED',
+  LCID_EXPIRED = 'LCID_EXPIRED',
+  LCID_ISSUED = 'LCID_ISSUED',
+  LCID_RETIRED = 'LCID_RETIRED',
+  NOT_APPROVED = 'NOT_APPROVED',
+  NOT_GOVERNANCE = 'NOT_GOVERNANCE'
 }
 
 /** This represents the (calculated) statuses that a requester view of a system intake request can show as part of the IT Gov v2 workflow */
 export enum SystemIntakeStatusRequester {
-  Closed = 'CLOSED',
-  DraftBusinessCaseEditsRequested = 'DRAFT_BUSINESS_CASE_EDITS_REQUESTED',
-  DraftBusinessCaseInProgress = 'DRAFT_BUSINESS_CASE_IN_PROGRESS',
-  DraftBusinessCaseSubmitted = 'DRAFT_BUSINESS_CASE_SUBMITTED',
-  FinalBusinessCaseEditsRequested = 'FINAL_BUSINESS_CASE_EDITS_REQUESTED',
-  FinalBusinessCaseInProgress = 'FINAL_BUSINESS_CASE_IN_PROGRESS',
-  FinalBusinessCaseSubmitted = 'FINAL_BUSINESS_CASE_SUBMITTED',
-  GrbMeetingAwaitingDecision = 'GRB_MEETING_AWAITING_DECISION',
-  GrbMeetingReady = 'GRB_MEETING_READY',
-  GrtMeetingAwaitingDecision = 'GRT_MEETING_AWAITING_DECISION',
-  GrtMeetingReady = 'GRT_MEETING_READY',
-  InitialRequestFormEditsRequested = 'INITIAL_REQUEST_FORM_EDITS_REQUESTED',
-  InitialRequestFormInProgress = 'INITIAL_REQUEST_FORM_IN_PROGRESS',
-  InitialRequestFormNew = 'INITIAL_REQUEST_FORM_NEW',
-  InitialRequestFormSubmitted = 'INITIAL_REQUEST_FORM_SUBMITTED',
-  LcidExpired = 'LCID_EXPIRED',
-  LcidIssued = 'LCID_ISSUED',
-  LcidRetired = 'LCID_RETIRED',
-  NotApproved = 'NOT_APPROVED',
-  NotGovernance = 'NOT_GOVERNANCE'
+  CLOSED = 'CLOSED',
+  DRAFT_BUSINESS_CASE_EDITS_REQUESTED = 'DRAFT_BUSINESS_CASE_EDITS_REQUESTED',
+  DRAFT_BUSINESS_CASE_IN_PROGRESS = 'DRAFT_BUSINESS_CASE_IN_PROGRESS',
+  DRAFT_BUSINESS_CASE_SUBMITTED = 'DRAFT_BUSINESS_CASE_SUBMITTED',
+  FINAL_BUSINESS_CASE_EDITS_REQUESTED = 'FINAL_BUSINESS_CASE_EDITS_REQUESTED',
+  FINAL_BUSINESS_CASE_IN_PROGRESS = 'FINAL_BUSINESS_CASE_IN_PROGRESS',
+  FINAL_BUSINESS_CASE_SUBMITTED = 'FINAL_BUSINESS_CASE_SUBMITTED',
+  GRB_MEETING_AWAITING_DECISION = 'GRB_MEETING_AWAITING_DECISION',
+  GRB_MEETING_READY = 'GRB_MEETING_READY',
+  GRT_MEETING_AWAITING_DECISION = 'GRT_MEETING_AWAITING_DECISION',
+  GRT_MEETING_READY = 'GRT_MEETING_READY',
+  INITIAL_REQUEST_FORM_EDITS_REQUESTED = 'INITIAL_REQUEST_FORM_EDITS_REQUESTED',
+  INITIAL_REQUEST_FORM_IN_PROGRESS = 'INITIAL_REQUEST_FORM_IN_PROGRESS',
+  INITIAL_REQUEST_FORM_NEW = 'INITIAL_REQUEST_FORM_NEW',
+  INITIAL_REQUEST_FORM_SUBMITTED = 'INITIAL_REQUEST_FORM_SUBMITTED',
+  LCID_EXPIRED = 'LCID_EXPIRED',
+  LCID_ISSUED = 'LCID_ISSUED',
+  LCID_RETIRED = 'LCID_RETIRED',
+  NOT_APPROVED = 'NOT_APPROVED',
+  NOT_GOVERNANCE = 'NOT_GOVERNANCE'
 }
 
 /** SystemIntakeStep represents the current step in the intake process */
 export enum SystemIntakeStep {
-  DecisionAndNextSteps = 'DECISION_AND_NEXT_STEPS',
-  DraftBusinessCase = 'DRAFT_BUSINESS_CASE',
-  FinalBusinessCase = 'FINAL_BUSINESS_CASE',
-  GrbMeeting = 'GRB_MEETING',
-  GrtMeeting = 'GRT_MEETING',
-  InitialRequestForm = 'INITIAL_REQUEST_FORM'
+  DECISION_AND_NEXT_STEPS = 'DECISION_AND_NEXT_STEPS',
+  DRAFT_BUSINESS_CASE = 'DRAFT_BUSINESS_CASE',
+  FINAL_BUSINESS_CASE = 'FINAL_BUSINESS_CASE',
+  GRB_MEETING = 'GRB_MEETING',
+  GRT_MEETING = 'GRT_MEETING',
+  INITIAL_REQUEST_FORM = 'INITIAL_REQUEST_FORM'
 }
 
 /** Steps in the system intake process that a Progress to New Step action can progress to */
 export enum SystemIntakeStepToProgressTo {
-  DraftBusinessCase = 'DRAFT_BUSINESS_CASE',
-  FinalBusinessCase = 'FINAL_BUSINESS_CASE',
-  GrbMeeting = 'GRB_MEETING',
-  GrtMeeting = 'GRT_MEETING'
+  DRAFT_BUSINESS_CASE = 'DRAFT_BUSINESS_CASE',
+  FINAL_BUSINESS_CASE = 'FINAL_BUSINESS_CASE',
+  GRB_MEETING = 'GRB_MEETING',
+  GRT_MEETING = 'GRT_MEETING'
 }
 
 /** Different options for whether the Governance team believes a requester's team should consult with the TRB */
 export enum SystemIntakeTrbFollowUp {
-  NotRecommended = 'NOT_RECOMMENDED',
-  RecommendedButNotCritical = 'RECOMMENDED_BUT_NOT_CRITICAL',
-  StronglyRecommended = 'STRONGLY_RECOMMENDED'
+  NOT_RECOMMENDED = 'NOT_RECOMMENDED',
+  RECOMMENDED_BUT_NOT_CRITICAL = 'RECOMMENDED_BUT_NOT_CRITICAL',
+  STRONGLY_RECOMMENDED = 'STRONGLY_RECOMMENDED'
 }
 
 /** Input for updating an intake's LCID in IT Gov v2 */
@@ -2417,7 +2459,7 @@ export type SystemIntakeUpdateLcidInput = {
 
 /** Represents an admin note attached to a TRB request */
 export type TrbAdminNote = {
-  __typename?: 'TRBAdminNote';
+  __typename: 'TRBAdminNote';
   author: UserInfo;
   category: TrbAdminNoteCategory;
   categorySpecificData: TrbAdminNoteCategorySpecificData;
@@ -2436,7 +2478,7 @@ export type TrbAdminNote = {
  * The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
  */
 export type TrbAdminNoteAdviceLetterCategoryData = {
-  __typename?: 'TRBAdminNoteAdviceLetterCategoryData';
+  __typename: 'TRBAdminNoteAdviceLetterCategoryData';
   appliesToMeetingSummary: Scalars['Boolean']['output'];
   appliesToNextSteps: Scalars['Boolean']['output'];
   recommendations: Array<TrbAdviceLetterRecommendation>;
@@ -2444,11 +2486,11 @@ export type TrbAdminNoteAdviceLetterCategoryData = {
 
 /** Represents the category of a single TRB admin note */
 export enum TrbAdminNoteCategory {
-  AdviceLetter = 'ADVICE_LETTER',
-  ConsultSession = 'CONSULT_SESSION',
-  GeneralRequest = 'GENERAL_REQUEST',
-  InitialRequestForm = 'INITIAL_REQUEST_FORM',
-  SupportingDocuments = 'SUPPORTING_DOCUMENTS'
+  ADVICE_LETTER = 'ADVICE_LETTER',
+  CONSULT_SESSION = 'CONSULT_SESSION',
+  GENERAL_REQUEST = 'GENERAL_REQUEST',
+  INITIAL_REQUEST_FORM = 'INITIAL_REQUEST_FORM',
+  SUPPORTING_DOCUMENTS = 'SUPPORTING_DOCUMENTS'
 }
 
 export type TrbAdminNoteCategorySpecificData = TrbAdminNoteAdviceLetterCategoryData | TrbAdminNoteConsultSessionCategoryData | TrbAdminNoteGeneralRequestCategoryData | TrbAdminNoteInitialRequestFormCategoryData | TrbAdminNoteSupportingDocumentsCategoryData;
@@ -2458,7 +2500,7 @@ export type TrbAdminNoteCategorySpecificData = TrbAdminNoteAdviceLetterCategoryD
  * This type doesn't contain any actual data
  */
 export type TrbAdminNoteConsultSessionCategoryData = {
-  __typename?: 'TRBAdminNoteConsultSessionCategoryData';
+  __typename: 'TRBAdminNoteConsultSessionCategoryData';
   /** Placeholder field so this type is non-empty, always null */
   placeholderField?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -2468,14 +2510,14 @@ export type TrbAdminNoteConsultSessionCategoryData = {
  * This type doesn't contain any actual data
  */
 export type TrbAdminNoteGeneralRequestCategoryData = {
-  __typename?: 'TRBAdminNoteGeneralRequestCategoryData';
+  __typename: 'TRBAdminNoteGeneralRequestCategoryData';
   /** Placeholder field so this type is non-empty, always null */
   placeholderField?: Maybe<Scalars['Boolean']['output']>;
 };
 
 /** Data specific to admin notes in the Initial Request Form category */
 export type TrbAdminNoteInitialRequestFormCategoryData = {
-  __typename?: 'TRBAdminNoteInitialRequestFormCategoryData';
+  __typename: 'TRBAdminNoteInitialRequestFormCategoryData';
   appliesToAttendees: Scalars['Boolean']['output'];
   appliesToBasicRequestDetails: Scalars['Boolean']['output'];
   appliesToSubjectAreas: Scalars['Boolean']['output'];
@@ -2486,13 +2528,13 @@ export type TrbAdminNoteInitialRequestFormCategoryData = {
  * The "documents" property _will_ return deleted documents so that UI can reference the document name
  */
 export type TrbAdminNoteSupportingDocumentsCategoryData = {
-  __typename?: 'TRBAdminNoteSupportingDocumentsCategoryData';
+  __typename: 'TRBAdminNoteSupportingDocumentsCategoryData';
   documents: Array<TrbRequestDocument>;
 };
 
 /** Represents an advice letter for a TRB request */
 export type TrbAdviceLetter = {
-  __typename?: 'TRBAdviceLetter';
+  __typename: 'TRBAdviceLetter';
   author: UserInfo;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
@@ -2511,7 +2553,7 @@ export type TrbAdviceLetter = {
 
 /** Represents a recommendation and links that have been added to a TRB advice letter */
 export type TrbAdviceLetterRecommendation = {
-  __typename?: 'TRBAdviceLetterRecommendation';
+  __typename: 'TRBAdviceLetterRecommendation';
   author: UserInfo;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
@@ -2527,43 +2569,43 @@ export type TrbAdviceLetterRecommendation = {
 
 /** Represents the status of the TRB advice letter step */
 export enum TrbAdviceLetterStatus {
-  CannotStartYet = 'CANNOT_START_YET',
-  Completed = 'COMPLETED',
-  InProgress = 'IN_PROGRESS',
-  ReadyForReview = 'READY_FOR_REVIEW',
-  ReadyToStart = 'READY_TO_START'
+  CANNOT_START_YET = 'CANNOT_START_YET',
+  COMPLETED = 'COMPLETED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  READY_FOR_REVIEW = 'READY_FOR_REVIEW',
+  READY_TO_START = 'READY_TO_START'
 }
 
 /** Represents the status of the TRB advice letter step */
 export enum TrbAdviceLetterStatusTaskList {
-  CannotStartYet = 'CANNOT_START_YET',
-  Completed = 'COMPLETED',
-  InReview = 'IN_REVIEW'
+  CANNOT_START_YET = 'CANNOT_START_YET',
+  COMPLETED = 'COMPLETED',
+  IN_REVIEW = 'IN_REVIEW'
 }
 
 /** Represents the status of the TRB consult attendance step */
 export enum TrbAttendConsultStatus {
-  CannotStartYet = 'CANNOT_START_YET',
-  Completed = 'COMPLETED',
-  ReadyToSchedule = 'READY_TO_SCHEDULE',
-  Scheduled = 'SCHEDULED'
+  CANNOT_START_YET = 'CANNOT_START_YET',
+  COMPLETED = 'COMPLETED',
+  READY_TO_SCHEDULE = 'READY_TO_SCHEDULE',
+  SCHEDULED = 'SCHEDULED'
 }
 
 /** Represents an option selected for collaboration groups in the TRB request form */
 export enum TrbCollabGroupOption {
-  Cloud = 'CLOUD',
-  EnterpriseArchitecture = 'ENTERPRISE_ARCHITECTURE',
-  GovernanceReviewBoard = 'GOVERNANCE_REVIEW_BOARD',
-  Other = 'OTHER',
-  PrivacyAdvisor = 'PRIVACY_ADVISOR',
-  Security = 'SECURITY'
+  CLOUD = 'CLOUD',
+  ENTERPRISE_ARCHITECTURE = 'ENTERPRISE_ARCHITECTURE',
+  GOVERNANCE_REVIEW_BOARD = 'GOVERNANCE_REVIEW_BOARD',
+  OTHER = 'OTHER',
+  PRIVACY_ADVISOR = 'PRIVACY_ADVISOR',
+  SECURITY = 'SECURITY'
 }
 
 /** Represents the status of the TRB consult step */
 export enum TrbConsultPrepStatus {
-  CannotStartYet = 'CANNOT_START_YET',
-  Completed = 'COMPLETED',
-  ReadyToStart = 'READY_TO_START'
+  CANNOT_START_YET = 'CANNOT_START_YET',
+  COMPLETED = 'COMPLETED',
+  READY_TO_START = 'READY_TO_START'
 }
 
 /**
@@ -2571,37 +2613,37 @@ export enum TrbConsultPrepStatus {
  * TRB Request
  */
 export enum TrbDocumentCommonType {
-  ArchitectureDiagram = 'ARCHITECTURE_DIAGRAM',
-  BusinessCase = 'BUSINESS_CASE',
-  Other = 'OTHER',
-  PresentationSlideDeck = 'PRESENTATION_SLIDE_DECK'
+  ARCHITECTURE_DIAGRAM = 'ARCHITECTURE_DIAGRAM',
+  BUSINESS_CASE = 'BUSINESS_CASE',
+  OTHER = 'OTHER',
+  PRESENTATION_SLIDE_DECK = 'PRESENTATION_SLIDE_DECK'
 }
 
 /** Represents the action an admin is taking on a TRB request when leaving feedback */
 export enum TrbFeedbackAction {
-  ReadyForConsult = 'READY_FOR_CONSULT',
-  RequestEdits = 'REQUEST_EDITS'
+  READY_FOR_CONSULT = 'READY_FOR_CONSULT',
+  REQUEST_EDITS = 'REQUEST_EDITS'
 }
 
 /** Represents the status of the TRB feedback step */
 export enum TrbFeedbackStatus {
-  CannotStartYet = 'CANNOT_START_YET',
-  Completed = 'COMPLETED',
-  EditsRequested = 'EDITS_REQUESTED',
-  InReview = 'IN_REVIEW',
-  ReadyToStart = 'READY_TO_START'
+  CANNOT_START_YET = 'CANNOT_START_YET',
+  COMPLETED = 'COMPLETED',
+  EDITS_REQUESTED = 'EDITS_REQUESTED',
+  IN_REVIEW = 'IN_REVIEW',
+  READY_TO_START = 'READY_TO_START'
 }
 
 /** Represents the status of a TRB request form */
 export enum TrbFormStatus {
-  Completed = 'COMPLETED',
-  InProgress = 'IN_PROGRESS',
-  ReadyToStart = 'READY_TO_START'
+  COMPLETED = 'COMPLETED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  READY_TO_START = 'READY_TO_START'
 }
 
 /** Represents a TRB funding source */
 export type TrbFundingSource = {
-  __typename?: 'TRBFundingSource';
+  __typename: 'TRBFundingSource';
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
   fundingNumber: Scalars['String']['output'];
@@ -2614,7 +2656,7 @@ export type TrbFundingSource = {
 
 /** Represents a request for support from the Technical Review Board (TRB) */
 export type TrbRequest = {
-  __typename?: 'TRBRequest';
+  __typename: 'TRBRequest';
   adminNotes: Array<TrbAdminNote>;
   adviceLetter?: Maybe<TrbAdviceLetter>;
   archived: Scalars['Boolean']['output'];
@@ -2633,6 +2675,10 @@ export type TrbRequest = {
   modifiedAt?: Maybe<Scalars['Time']['output']>;
   modifiedBy?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  /** System Intakes that share a CEDAR System or Contract Number */
+  relatedIntakes: Array<SystemIntake>;
+  /** Other TRB Requests that share a CEDAR System or Contract Number */
+  relatedTRBRequests: Array<TrbRequest>;
   relationType?: Maybe<RequestRelationType>;
   requesterComponent?: Maybe<Scalars['String']['output']>;
   requesterInfo: UserInfo;
@@ -2648,7 +2694,7 @@ export type TrbRequest = {
 
 /** Represents an EUA user who is included as an attendee for a TRB request */
 export type TrbRequestAttendee = {
-  __typename?: 'TRBRequestAttendee';
+  __typename: 'TRBRequestAttendee';
   component?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
@@ -2673,7 +2719,7 @@ export type TrbRequestChanges = {
 };
 
 export type TrbRequestContractNumber = {
-  __typename?: 'TRBRequestContractNumber';
+  __typename: 'TRBRequestContractNumber';
   contractNumber: Scalars['String']['output'];
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['UUID']['output'];
@@ -2685,7 +2731,7 @@ export type TrbRequestContractNumber = {
 
 /** Represents a document attached to a TRB request */
 export type TrbRequestDocument = {
-  __typename?: 'TRBRequestDocument';
+  __typename: 'TRBRequestDocument';
   deletedAt?: Maybe<Scalars['Time']['output']>;
   documentType: TrbRequestDocumentType;
   fileName: Scalars['String']['output'];
@@ -2697,9 +2743,9 @@ export type TrbRequestDocument = {
 
 /** Enumeration of the possible statuses of documents uploaded in the TRB workflow */
 export enum TrbRequestDocumentStatus {
-  Available = 'AVAILABLE',
-  Pending = 'PENDING',
-  Unavailable = 'UNAVAILABLE'
+  AVAILABLE = 'AVAILABLE',
+  PENDING = 'PENDING',
+  UNAVAILABLE = 'UNAVAILABLE'
 }
 
 /**
@@ -2707,14 +2753,14 @@ export enum TrbRequestDocumentStatus {
  * which can be one of a number of common types, or a free-text user-specified type
  */
 export type TrbRequestDocumentType = {
-  __typename?: 'TRBRequestDocumentType';
+  __typename: 'TRBRequestDocumentType';
   commonType: TrbDocumentCommonType;
   otherTypeDescription?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents feedback added to a TRB request */
 export type TrbRequestFeedback = {
-  __typename?: 'TRBRequestFeedback';
+  __typename: 'TRBRequestFeedback';
   action: TrbFeedbackAction;
   author: UserInfo;
   copyTrbMailbox: Scalars['Boolean']['output'];
@@ -2730,7 +2776,7 @@ export type TrbRequestFeedback = {
 
 /** Represents an EUA user who is included as an form for a TRB request */
 export type TrbRequestForm = {
-  __typename?: 'TRBRequestForm';
+  __typename: 'TRBRequestForm';
   collabDateCloud?: Maybe<Scalars['String']['output']>;
   collabDateEnterpriseArchitecture?: Maybe<Scalars['String']['output']>;
   collabDateGovernanceReviewBoard?: Maybe<Scalars['String']['output']>;
@@ -2764,55 +2810,55 @@ export type TrbRequestForm = {
 };
 
 export enum TrbRequestState {
-  Closed = 'CLOSED',
-  Open = 'OPEN'
+  CLOSED = 'CLOSED',
+  OPEN = 'OPEN'
 }
 
 export enum TrbRequestStatus {
-  AdviceLetterInReview = 'ADVICE_LETTER_IN_REVIEW',
-  AdviceLetterSent = 'ADVICE_LETTER_SENT',
-  ConsultComplete = 'CONSULT_COMPLETE',
-  ConsultScheduled = 'CONSULT_SCHEDULED',
-  DraftAdviceLetter = 'DRAFT_ADVICE_LETTER',
-  DraftRequestForm = 'DRAFT_REQUEST_FORM',
-  FollowUpRequested = 'FOLLOW_UP_REQUESTED',
-  New = 'NEW',
-  ReadyForConsult = 'READY_FOR_CONSULT',
-  RequestFormComplete = 'REQUEST_FORM_COMPLETE'
+  ADVICE_LETTER_IN_REVIEW = 'ADVICE_LETTER_IN_REVIEW',
+  ADVICE_LETTER_SENT = 'ADVICE_LETTER_SENT',
+  CONSULT_COMPLETE = 'CONSULT_COMPLETE',
+  CONSULT_SCHEDULED = 'CONSULT_SCHEDULED',
+  DRAFT_ADVICE_LETTER = 'DRAFT_ADVICE_LETTER',
+  DRAFT_REQUEST_FORM = 'DRAFT_REQUEST_FORM',
+  FOLLOW_UP_REQUESTED = 'FOLLOW_UP_REQUESTED',
+  NEW = 'NEW',
+  READY_FOR_CONSULT = 'READY_FOR_CONSULT',
+  REQUEST_FORM_COMPLETE = 'REQUEST_FORM_COMPLETE'
 }
 
 export enum TrbRequestType {
-  Brainstorm = 'BRAINSTORM',
-  Followup = 'FOLLOWUP',
-  FormalReview = 'FORMAL_REVIEW',
-  NeedHelp = 'NEED_HELP',
-  Other = 'OTHER'
+  BRAINSTORM = 'BRAINSTORM',
+  FOLLOWUP = 'FOLLOWUP',
+  FORMAL_REVIEW = 'FORMAL_REVIEW',
+  NEED_HELP = 'NEED_HELP',
+  OTHER = 'OTHER'
 }
 
 /** The possible options on the TRB "Subject Areas" page */
 export enum TrbSubjectAreaOption {
-  AccessibilityCompliance = 'ACCESSIBILITY_COMPLIANCE',
-  AccessControlAndIdentityManagement = 'ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT',
-  AssistanceWithSystemConceptDevelopment = 'ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT',
-  BusinessIntelligence = 'BUSINESS_INTELLIGENCE',
-  CloudMigration = 'CLOUD_MIGRATION',
-  ContainersAndMicroservices = 'CONTAINERS_AND_MICROSERVICES',
-  DisasterRecovery = 'DISASTER_RECOVERY',
-  EmailIntegration = 'EMAIL_INTEGRATION',
-  EnterpriseDataLakeIntegration = 'ENTERPRISE_DATA_LAKE_INTEGRATION',
-  FrameworkOrToolAlternatives = 'FRAMEWORK_OR_TOOL_ALTERNATIVES',
-  OpenSourceSoftware = 'OPEN_SOURCE_SOFTWARE',
-  PortalIntegration = 'PORTAL_INTEGRATION',
-  SystemArchitectureReview = 'SYSTEM_ARCHITECTURE_REVIEW',
-  SystemDispositionPlanning = 'SYSTEM_DISPOSITION_PLANNING',
-  TechnicalReferenceArchitecture = 'TECHNICAL_REFERENCE_ARCHITECTURE',
-  WebBasedUiServices = 'WEB_BASED_UI_SERVICES',
-  WebServicesAndApis = 'WEB_SERVICES_AND_APIS'
+  ACCESSIBILITY_COMPLIANCE = 'ACCESSIBILITY_COMPLIANCE',
+  ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT = 'ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT',
+  ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT = 'ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT',
+  BUSINESS_INTELLIGENCE = 'BUSINESS_INTELLIGENCE',
+  CLOUD_MIGRATION = 'CLOUD_MIGRATION',
+  CONTAINERS_AND_MICROSERVICES = 'CONTAINERS_AND_MICROSERVICES',
+  DISASTER_RECOVERY = 'DISASTER_RECOVERY',
+  EMAIL_INTEGRATION = 'EMAIL_INTEGRATION',
+  ENTERPRISE_DATA_LAKE_INTEGRATION = 'ENTERPRISE_DATA_LAKE_INTEGRATION',
+  FRAMEWORK_OR_TOOL_ALTERNATIVES = 'FRAMEWORK_OR_TOOL_ALTERNATIVES',
+  OPEN_SOURCE_SOFTWARE = 'OPEN_SOURCE_SOFTWARE',
+  PORTAL_INTEGRATION = 'PORTAL_INTEGRATION',
+  SYSTEM_ARCHITECTURE_REVIEW = 'SYSTEM_ARCHITECTURE_REVIEW',
+  SYSTEM_DISPOSITION_PLANNING = 'SYSTEM_DISPOSITION_PLANNING',
+  TECHNICAL_REFERENCE_ARCHITECTURE = 'TECHNICAL_REFERENCE_ARCHITECTURE',
+  WEB_BASED_UI_SERVICES = 'WEB_BASED_UI_SERVICES',
+  WEB_SERVICES_AND_APIS = 'WEB_SERVICES_AND_APIS'
 }
 
 /** Wraps all of the various status on the TRB task list into one type */
 export type TrbTaskStatuses = {
-  __typename?: 'TRBTaskStatuses';
+  __typename: 'TRBTaskStatuses';
   adviceLetterStatus: TrbAdviceLetterStatus;
   adviceLetterStatusTaskList: TrbAdviceLetterStatusTaskList;
   attendConsultStatus: TrbAttendConsultStatus;
@@ -2823,12 +2869,12 @@ export type TrbTaskStatuses = {
 
 /** Represents an option selected to the "where are you in the process?" TRB request form */
 export enum TrbWhereInProcessOption {
-  ContractingWorkHasStarted = 'CONTRACTING_WORK_HAS_STARTED',
-  DevelopmentHasRecentlyStarted = 'DEVELOPMENT_HAS_RECENTLY_STARTED',
-  DevelopmentIsSignificantlyUnderway = 'DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY',
-  IHaveAnIdeaAndWantToBrainstorm = 'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM',
-  Other = 'OTHER',
-  TheSystemIsInOperationAndMaintenance = 'THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE'
+  CONTRACTING_WORK_HAS_STARTED = 'CONTRACTING_WORK_HAS_STARTED',
+  DEVELOPMENT_HAS_RECENTLY_STARTED = 'DEVELOPMENT_HAS_RECENTLY_STARTED',
+  DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY = 'DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY',
+  I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM = 'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM',
+  OTHER = 'OTHER',
+  THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE = 'THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE'
 }
 
 /**
@@ -2871,6 +2917,12 @@ export type UpdateSystemIntakeContractDetailsInput = {
   id: Scalars['UUID']['input'];
 };
 
+export type UpdateSystemIntakeGrbReviewerInput = {
+  grbRole: SystemIntakeGrbReviewerRole;
+  reviewerID: Scalars['UUID']['input'];
+  votingRole: SystemIntakeGrbReviewerVotingRole;
+};
+
 /** Input data for updating a system intake's relationship to a CEDAR system */
 export type UpdateSystemIntakeLinkedCedarSystemInput = {
   cedarSystemId?: InputMaybe<Scalars['String']['input']>;
@@ -2886,7 +2938,7 @@ export type UpdateSystemIntakeNoteInput = {
 
 /** The payload for updating a system's IT governance request */
 export type UpdateSystemIntakePayload = {
-  __typename?: 'UpdateSystemIntakePayload';
+  __typename: 'UpdateSystemIntakePayload';
   systemIntake?: Maybe<SystemIntake>;
   userErrors?: Maybe<Array<UserError>>;
 };
@@ -2990,7 +3042,7 @@ export type UpdateTrbRequestTrbLeadInput = {
 
 /** The representation of a User account in the EASI application */
 export type UserAccount = {
-  __typename?: 'UserAccount';
+  __typename: 'UserAccount';
   /** The Common Name of a user. Typically this is a combination of Given and Family name */
   commonName: Scalars['String']['output'];
   /** The email address associated to this user account */
@@ -3015,14 +3067,14 @@ export type UserAccount = {
  * either user or application developer error.
  */
 export type UserError = {
-  __typename?: 'UserError';
+  __typename: 'UserError';
   message: Scalars['String']['output'];
   path: Array<Scalars['String']['output']>;
 };
 
 /** Represents a person response from Okta */
 export type UserInfo = {
-  __typename?: 'UserInfo';
+  __typename: 'UserInfo';
   commonName: Scalars['String']['output'];
   email: Scalars['EmailAddress']['output'];
   euaUserId: Scalars['String']['output'];
@@ -3033,7 +3085,7 @@ export type UserInfo = {
 export type GetTrbLeadOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTrbLeadOptionsQuery = { __typename?: 'Query', trbLeadOptions: Array<{ __typename?: 'UserInfo', euaUserId: string, commonName: string }> };
+export type GetTrbLeadOptionsQuery = { __typename: 'Query', trbLeadOptions: Array<{ __typename: 'UserInfo', euaUserId: string, commonName: string }> };
 
 
 export const GetTrbLeadOptionsDocument = gql`
@@ -3076,3 +3128,5 @@ export type GetTrbLeadOptionsQueryHookResult = ReturnType<typeof useGetTrbLeadOp
 export type GetTrbLeadOptionsLazyQueryHookResult = ReturnType<typeof useGetTrbLeadOptionsLazyQuery>;
 export type GetTrbLeadOptionsSuspenseQueryHookResult = ReturnType<typeof useGetTrbLeadOptionsSuspenseQuery>;
 export type GetTrbLeadOptionsQueryResult = Apollo.QueryResult<GetTrbLeadOptionsQuery, GetTrbLeadOptionsQueryVariables>;
+
+export const TypedGetTrbLeadOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTrbLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}}]}}]} as unknown as DocumentNode<GetTrbLeadOptionsQuery, GetTrbLeadOptionsQueryVariables>;
