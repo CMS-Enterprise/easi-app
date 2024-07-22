@@ -9,11 +9,11 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // OktaAccountInfo represents the information you get if you query an account from Okta
@@ -220,20 +220,4 @@ func GetOktaAccountInfo(ctx context.Context, _ string) (*OktaAccountInfo, error)
 	ret := OktaAccountInfo{}
 	err = json.Unmarshal([]byte(jsonDataFromHTTP), &ret)
 	return &ret, err
-}
-
-// GetUserInfoFromOktaLocal is used to simulate okta user information when testing locally
-func GetUserInfoFromOktaLocal(ctx context.Context, username string) (*OktaAccountInfo, error) {
-	_ = ctx
-
-	accountInfo := &OktaAccountInfo{
-		Name:              username + " Doe",
-		Locale:            "en_US",
-		Email:             username + "@local.cms.gov",
-		PreferredUsername: username,
-		GivenName:         username,
-		FamilyName:        "Doe",
-		ZoneInfo:          "America/Los_Angeles",
-	}
-	return accountInfo, nil
 }

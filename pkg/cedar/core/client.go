@@ -11,8 +11,8 @@ import (
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	apiclient "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	apiclient "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client"
 )
 
 type loggingTransport struct {
@@ -20,9 +20,8 @@ type loggingTransport struct {
 }
 
 func (t *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
-	start := time.Now().UnixMilli()
+	start := time.Now()
 	resp, err := http.DefaultTransport.RoundTrip(r)
-	end := time.Now().UnixMilli()
 
 	// Start a status code of 0, in case the request fails (and we get a nil resp)
 	status := 0
@@ -33,12 +32,11 @@ func (t *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	t.logger.Info(
 		"Call to CEDAR core",
 		zap.String("service", "cedarcore"),
-		zap.Bool("cacheEnabled", false),
 		zap.String("method", r.Method),
 		zap.Int("status", status),
 		zap.String("path", r.URL.Path),
-		zap.String("queryParams", r.URL.RawQuery),
-		zap.Int64("timeMS", end-start),
+		zap.String("query-params", r.URL.RawQuery),
+		zap.Int64("cedar-response-time-ms", time.Since(start).Milliseconds()),
 	)
 
 	return resp, err

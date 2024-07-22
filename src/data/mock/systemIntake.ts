@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
+import GetSystemIntakeGrbReviewersQuery from 'queries/GetSystemIntakeGrbReviewersQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
@@ -18,6 +19,10 @@ import {
   GetSystemIntakeContactsQuery as GetSystemIntakeContactsType,
   GetSystemIntakeContactsQueryVariables
 } from 'queries/types/GetSystemIntakeContactsQuery';
+import {
+  GetSystemIntakeGrbReviewers,
+  GetSystemIntakeGrbReviewersVariables
+} from 'queries/types/GetSystemIntakeGrbReviewers';
 import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'queries/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
@@ -116,7 +121,7 @@ export const documents: SystemIntakeDocument[] = [
     status: SystemIntakeDocumentStatus.AVAILABLE,
     uploadedAt: '2023-06-14T18:24:46.310929Z',
     url:
-      'http://host.docker.internal:9000/easi-app-file-uploads/ead3f487-8aaa-47d2-aa26-335e9b560a92.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=f71d5d63d68958a2bd8526c2b2cdd5abe78b21eb69d10739fe8f8e6fd5d010ec',
+      'http://localhost:9004/easi-app-file-uploads/ead3f487-8aaa-47d2-aa26-335e9b560a92.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=f71d5d63d68958a2bd8526c2b2cdd5abe78b21eb69d10739fe8f8e6fd5d010ec',
     __typename: 'SystemIntakeDocument'
   },
   {
@@ -130,7 +135,7 @@ export const documents: SystemIntakeDocument[] = [
     status: SystemIntakeDocumentStatus.PENDING,
     uploadedAt: '2023-06-14T18:24:46.32661Z',
     url:
-      'http://host.docker.internal:9000/easi-app-file-uploads/7e047111-6228-4943-9c4b-0961f27858f4.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=0e3f337697c616b01533accd95a316cbeabeb6990961b9881911c757837cbf95',
+      'http://localhost:9004/easi-app-file-uploads/7e047111-6228-4943-9c4b-0961f27858f4.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=0e3f337697c616b01533accd95a316cbeabeb6990961b9881911c757837cbf95',
     __typename: 'SystemIntakeDocument'
   },
   {
@@ -144,7 +149,7 @@ export const documents: SystemIntakeDocument[] = [
     status: SystemIntakeDocumentStatus.UNAVAILABLE,
     uploadedAt: '2023-06-14T18:24:46.342866Z',
     url:
-      'http://host.docker.internal:9000/easi-app-file-uploads/f779e8e4-9c78-4b14-bbab-37618447f3f9.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=7e6755645a1f163d41d2fa7c19776d0ceb4cfd3ff8e1c2918c428a551fe44764',
+      'http://localhost:9004/easi-app-file-uploads/f779e8e4-9c78-4b14-bbab-37618447f3f9.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=7e6755645a1f163d41d2fa7c19776d0ceb4cfd3ff8e1c2918c428a551fe44764',
     __typename: 'SystemIntakeDocument'
   }
 ];
@@ -424,7 +429,7 @@ export const initialSystemIntakeForm: SystemIntake = {
   },
   contract: {
     __typename: 'SystemIntakeContract',
-    hasContract: '',
+    hasContract: null,
     contractor: '',
     vehicle: '',
     startDate: {
@@ -618,3 +623,42 @@ export const getGovernanceTaskListQuery = (
     }
   }
 });
+
+export const getSystemIntakeGrbReviewersQuery: MockedQuery<
+  GetSystemIntakeGrbReviewers,
+  GetSystemIntakeGrbReviewersVariables
+> = {
+  request: {
+    query: GetSystemIntakeGrbReviewersQuery,
+    variables: { id: systemIntakeId }
+  },
+  result: {
+    data: {
+      systemIntake: {
+        __typename: 'SystemIntake',
+        id: systemIntakeId,
+        grbReviewers: [
+          {
+            __typename: 'SystemIntakeGRBReviewer',
+            id: '0432800e-2393-4067-b954-0e3671042b6a',
+            userAccount: {
+              __typename: 'UserAccount',
+              id: '06296dc5-2e6f-44ad-93d6-971137762cda',
+              username: systemIntake.euaUserId!
+            }
+          },
+
+          {
+            __typename: 'SystemIntakeGRBReviewer',
+            id: 'bcf4bc5f-f305-4c23-9d1c-79bf9e9b181c',
+            userAccount: {
+              __typename: 'UserAccount',
+              id: '629e0090-20b2-431e-a3eb-dd9ce7ce7a45',
+              username: 'TXJK'
+            }
+          }
+        ]
+      }
+    }
+  }
+};

@@ -82,7 +82,7 @@ const AppRoutes = () => {
 
       {/* GRT/GRB Routes */}
       <SecureRoute
-        path="/governance-review-team"
+        path="/(governance-review-team|governance-review-board)/:id"
         component={GovernanceReviewTeam}
       />
 
@@ -143,10 +143,16 @@ const AppRoutes = () => {
 
       <SecureRoute exact path="/systems" component={SystemList} />
 
-      {flags.systemWorkspace && (
+      {flags.systemWorkspace ? (
         <SecureRoute
           path="/systems/:systemId/workspace"
           component={SystemWorkspace}
+        />
+      ) : (
+        <Redirect
+          exact
+          from="/systems/:systemId/workspace"
+          to="/systems/:systemId"
         />
       )}
 

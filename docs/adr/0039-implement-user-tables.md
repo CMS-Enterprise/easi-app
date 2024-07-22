@@ -89,13 +89,13 @@ As noted previously, we will handle the simpler cases of EUAIDs first, and later
 
 To validate these hypothesis, a few branches were created to test some of this initial implementation.
 
-### [Account Creator Test Branch `(EASI-3341/user_account_spike_poc_user_table_filler)`](https://github.com/CMSgov/easi-app/tree/EASI-3341/user_account_spike_poc_user_table_filler)
+### [Account Creator Test Branch `(EASI-3341/user_account_spike_poc_user_table_filler)`](https://github.com/cms-enterprise/easi-app/tree/EASI-3341/user_account_spike_poc_user_table_filler)
 
 This branch makes a small utility program. It queries the database for both usernames and user ids, and then it attempts to find information on that user in OKTA. If successful, it creates an account reference for the user in the database. The script can be invoked by running `go run ./cmd/populate_user_table/*.go` . Select the options you want to run by pressing space, and press enter to execute the commands.
 
 
 
-### [Account Table and TRB Migration `(EASI-3341/user_account_spike_poc)`](https://github.com/CMSgov/easi-app/tree/EASI-3341/user_account_spike_poc)
+### [Account Table and TRB Migration `(EASI-3341/user_account_spike_poc)`](https://github.com/cms-enterprise/easi-app/tree/EASI-3341/user_account_spike_poc)
 
 This branch ports the user table functionality from MINT. These features include
 1. New Data loaders

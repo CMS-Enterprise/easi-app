@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 )
 
 const traceHeader = "X-TRACE-ID"
@@ -16,8 +16,8 @@ func traceMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// NewTraceMiddleware returns a handler with a trace ID in context
-func NewTraceMiddleware() func(http.Handler) http.Handler {
+// newTraceMiddleware returns a handler with a trace ID in context
+func newTraceMiddleware() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return traceMiddleware(next)
 	}

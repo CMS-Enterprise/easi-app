@@ -4,8 +4,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
@@ -72,5 +73,108 @@ func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 		data, err = TRBRequestSystems(s.ctxWithNewDataloaders(), createdIDs[1])
 		s.NoError(err)
 		s.Empty(data)
+	})
+}
+
+func (s *ResolverSuite) TestTRBRequestsByCedarSystemID() {
+	ctx := s.testConfigs.Context
+
+	var (
+		open1 uuid.UUID
+		open2 uuid.UUID
+
+		closed uuid.UUID
+	)
+
+	const (
+		system1 = "1"
+		system2 = "2"
+		system3 = "3"
+		system4 = "4"
+	)
+
+	s.Run("test getting TRB requests by cedar system id", func() {
+		// create trb requests
+		trb1 := models.TRBRequest{
+			Type:  models.TRBTBrainstorm,
+			State: models.TRBRequestStateOpen,
+		}
+		trb1.CreatedBy = testhelpers.RandomEUAIDNull().String
+
+		create1, err := s.testConfigs.Store.CreateTRBRequest(ctx, s.testConfigs.Store, &trb1)
+		s.NoError(err)
+		s.NotNil(create1)
+
+		open1 = create1.ID
+
+		trb2 := models.TRBRequest{
+			Type:  models.TRBTBrainstorm,
+			State: models.TRBRequestStateOpen,
+		}
+
+		trb2.CreatedBy = testhelpers.RandomEUAIDNull().String
+
+		create2, err := s.testConfigs.Store.CreateTRBRequest(ctx, s.testConfigs.Store, &trb2)
+		s.NoError(err)
+		s.NotNil(create2)
+
+		open2 = create2.ID
+
+		trb3 := models.TRBRequest{
+			Type:  models.TRBTBrainstorm,
+			State: models.TRBRequestStateClosed,
+		}
+
+		trb3.CreatedBy = testhelpers.RandomEUAIDNull().String
+
+		create3, err := s.testConfigs.Store.CreateTRBRequest(ctx, s.testConfigs.Store, &trb3)
+		s.NoError(err)
+		s.NotNil(create3)
+
+		closed = create3.ID
+
+		// link all systems to all TRBs
+		systemNumbers := []string{
+			system1,
+			system2,
+			system3,
+			system4,
+		}
+
+		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return s.testConfigs.Store.SetTRBRequestSystems(ctx, tx, open1, systemNumbers)
+		})
+		s.NoError(err)
+
+		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return s.testConfigs.Store.SetTRBRequestSystems(ctx, tx, open2, systemNumbers)
+		})
+		s.NoError(err)
+
+		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return s.testConfigs.Store.SetTRBRequestSystems(ctx, tx, closed, systemNumbers)
+		})
+		s.NoError(err)
+
+		results, err := CedarSystemLinkedTRBRequests(s.ctxWithNewDataloaders(), system1, models.TRBRequestStateOpen)
+		s.NoError(err)
+		s.Len(results, 2)
+
+		foundClosed := false
+
+		for _, result := range results {
+			if result.ID == closed {
+				foundClosed = true
+				break
+			}
+		}
+
+		s.False(foundClosed)
+
+		// now find the closed one
+		results, err = CedarSystemLinkedTRBRequests(s.ctxWithNewDataloaders(), system1, models.TRBRequestStateClosed)
+		s.NoError(err)
+		s.Len(results, 1)
+		s.Equal(results[0].ID, closed)
 	})
 }

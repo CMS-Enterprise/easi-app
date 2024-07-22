@@ -8,8 +8,12 @@ Borrowed from - https://www.swarmia.com/blog/debugging-apollo-graphql-mockedprov
 import React from 'react';
 import { ApolloLink } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
-import { MockedProvider, MockedProviderProps } from '@apollo/client/testing';
-import { MockedResponse, MockLink } from '@apollo/react-testing';
+import {
+  MockedProvider,
+  MockedProviderProps,
+  MockedResponse,
+  MockLink
+} from '@apollo/client/testing';
 
 interface Props extends MockedProviderProps {
   mocks?: ReadonlyArray<MockedResponse>;

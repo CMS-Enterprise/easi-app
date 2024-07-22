@@ -1,9 +1,9 @@
 package resolvers
 
 import (
-	"github.com/cmsgov/easi-app/pkg/applychanges"
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/applychanges"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // ApplyChangesAndMetaData is a hook to call before updating a baseStruct object in the database it will

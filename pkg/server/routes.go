@@ -17,36 +17,39 @@ import (
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/alerts"
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/appses"
-	"github.com/cmsgov/easi-app/pkg/appvalidation"
-	"github.com/cmsgov/easi-app/pkg/authorization"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
-	"github.com/cmsgov/easi-app/pkg/oktaapi"
-	"github.com/cmsgov/easi-app/pkg/usersearch"
+	"github.com/cms-enterprise/easi-app/pkg/alerts"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/appses"
+	"github.com/cms-enterprise/easi-app/pkg/appvalidation"
+	"github.com/cms-enterprise/easi-app/pkg/authorization"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/oktaapi"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 
-	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
-	cedarintake "github.com/cmsgov/easi-app/pkg/cedar/intake"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/flags"
-	"github.com/cmsgov/easi-app/pkg/graph"
-	"github.com/cmsgov/easi-app/pkg/graph/generated"
-	"github.com/cmsgov/easi-app/pkg/handlers"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/okta"
-	"github.com/cmsgov/easi-app/pkg/services"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/upload"
+	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
+	cedarintake "github.com/cms-enterprise/easi-app/pkg/cedar/intake"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/flags"
+	"github.com/cms-enterprise/easi-app/pkg/graph"
+	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
+	"github.com/cms-enterprise/easi-app/pkg/handlers"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/okta"
+	"github.com/cms-enterprise/easi-app/pkg/services"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
 func (s *Server) routes(
+	contextMiddleware func(handler http.Handler) http.Handler,
 	corsMiddleware func(handler http.Handler) http.Handler,
 	traceMiddleware func(handler http.Handler) http.Handler,
-	loggerMiddleware func(handler http.Handler) http.Handler) {
+	loggerMiddleware func(handler http.Handler) http.Handler,
+) {
 
 	oktaConfig := s.NewOktaClientConfig()
 	jwtVerifier := okta.NewJwtVerifier(oktaConfig.OktaClientID, oktaConfig.OktaIssuer)
@@ -72,6 +75,7 @@ func (s *Server) routes(
 	)
 
 	s.router.Use(
+		contextMiddleware,
 		traceMiddleware, // trace all requests with an ID
 		loggerMiddleware,
 		corsMiddleware,
@@ -82,6 +86,9 @@ func (s *Server) routes(
 		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware(store)
 		s.router.Use(localAuthenticationMiddleware)
 	}
+
+	userAccountServiceMiddleware := userhelpers.NewUserAccountServiceMiddleware(dataloaders.GetUserAccountByID)
+	s.router.Use(userAccountServiceMiddleware)
 
 	requirePrincipalMiddleware := authorization.NewRequirePrincipalMiddleware()
 
@@ -148,7 +155,7 @@ func (s *Server) routes(
 
 	// override email client to use MailCatcher when running locally
 	if s.environment.Local() {
-		smtpSender := local.NewSMTPSender("host.docker.internal:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
+		smtpSender := local.NewSMTPSender("email:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
 		emailClient, err = email.NewClient(emailConfig, smtpSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
@@ -214,11 +221,7 @@ func (s *Server) routes(
 		coreClient,
 	)
 	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role models.Role) (res interface{}, err error) {
-		hasRole, err := services.HasRole(ctx, role)
-		if err != nil {
-			return nil, err
-		}
-		if !hasRole {
+		if !services.HasRole(ctx, role) {
 			// don't need to log here - services.HasRole() handles logging
 			return nil, &apperrors.UnauthorizedError{
 				Err: fmt.Errorf("not authorized: user does not have role %v", role),

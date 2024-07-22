@@ -6,8 +6,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type saver func(ctx context.Context, intake models.SystemIntake, notes []models.SystemIntakeNote) (bool, error)

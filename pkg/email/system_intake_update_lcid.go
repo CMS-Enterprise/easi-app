@@ -8,8 +8,8 @@ import (
 	"html/template"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type systemIntakeUpdateLCIDEmailParameters struct {

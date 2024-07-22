@@ -36,7 +36,7 @@ repos:
     hooks:
       - id: go-fmt-import
         name: Run "goimports" on go files
-        args: ['-local', 'github.com/cmsgov/easi-app']
+        args: ['-local', 'github.com/cms-enterprise/easi-app']
         files: .*\.go$
         exclude: >
           (?x)^(
@@ -48,9 +48,8 @@ repos:
   - repo: https://github.com/golangci/golangci-lint
     rev: v1.59.1
     hooks:
-      - id: golangci-lint
+      - id: golangci-lint-full
         name: Lint go files
-        entry: golangci-lint run --concurrency -1 -v --timeout=10m
 
   - repo: local
     hooks:
@@ -132,3 +131,12 @@ repos:
       - id: git-secrets
         name: Check for committed secrets
         entry: git-secrets --pre_commit_hook
+
+  - repo: local
+    hooks:
+      - id: remove-postman-ids
+        name: Remove Postman Collection IDs
+        language: script
+        entry: scripts/edit_postman_json.sh
+        always_run: true
+        pass_filenames: false

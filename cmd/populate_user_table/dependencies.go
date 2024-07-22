@@ -13,9 +13,9 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/oktaapi"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/oktaapi"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // getResolverDependencies takes a Viper config and returns a Store and Logger object to be used

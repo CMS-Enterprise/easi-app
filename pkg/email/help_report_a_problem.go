@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // SendReportAProblemEmailInput contains the data submitted by the user to the "report a problem" help form

@@ -9,10 +9,10 @@ import (
 
 	"github.com/go-openapi/swag"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/userhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 // DevUserConfig is the set of values that can be passed in a request header
@@ -78,7 +78,9 @@ func devUserContext(ctx context.Context, authHeader string, store *storage.Store
 		JobCodeGRT:      swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM"),
 		JobCodeTRBAdmin: swag.ContainsStrings(config.JobCodes, "EASI_TRB_ADMIN_D"),
 	}
-	userAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, princ.ID(), true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+	localOktaClient := NewOktaAPIClient()
+
+	userAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, princ.ID(), true, userhelpers.GetUserInfoAccountInfoWrapperFunc(localOktaClient.FetchUserInfo))
 	if err != nil {
 		return nil, err
 	}

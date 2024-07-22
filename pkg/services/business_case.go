@@ -7,18 +7,18 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/appvalidation"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/appvalidation"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // NewFetchBusinessCaseByID is a service to fetch the business case by id
 func NewFetchBusinessCaseByID(
 	config Config,
 	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
-	authorize func(context.Context) (bool, error),
+	authorized func(context.Context) bool,
 ) func(c context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 		logger := appcontext.ZLogger(ctx)
@@ -31,13 +31,8 @@ func NewFetchBusinessCaseByID(
 				Operation: apperrors.QueryFetch,
 			}
 		}
-		ok, err := authorize(ctx)
-		if err != nil {
-			logger.Error("failed to authorize fetch business case")
-			return &models.BusinessCase{}, err
-		}
-		if !ok {
-			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: err}
+		if !authorized(ctx) {
+			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to fetch business case")}
 		}
 		return businessCase, nil
 	}
@@ -47,7 +42,7 @@ func NewFetchBusinessCaseByID(
 func NewCreateBusinessCase(
 	config Config,
 	fetchIntake func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
-	authorize func(c context.Context, i *models.SystemIntake) (bool, error),
+	authorized func(c context.Context, i *models.SystemIntake) bool,
 	createAction func(context.Context, *models.Action) (*models.Action, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	createBizCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
@@ -63,12 +58,8 @@ func NewCreateBusinessCase(
 				ResourceID: "",
 			}
 		}
-		ok, err := authorize(ctx, intake)
-		if err != nil {
-			return &models.BusinessCase{}, err
-		}
-		if !ok {
-			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: err}
+		if !authorized(ctx, intake) {
+			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to create business case")}
 		}
 		err = appvalidation.BusinessCaseForCreation(businessCase, intake)
 		if err != nil {
@@ -131,7 +122,7 @@ func NewCreateBusinessCase(
 func NewUpdateBusinessCase(
 	config Config,
 	fetchBusinessCase func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
-	authorize func(c context.Context, b *models.BusinessCase) (bool, error),
+	authorized func(c context.Context, b *models.BusinessCase) bool,
 	update func(c context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error),
 	fetchIntake func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
@@ -146,12 +137,8 @@ func NewUpdateBusinessCase(
 				ResourceID: businessCase.ID.String(),
 			}
 		}
-		ok, err := authorize(ctx, existingBusinessCase)
-		if err != nil {
-			return &models.BusinessCase{}, err
-		}
-		if !ok {
-			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: err}
+		if !authorized(ctx, existingBusinessCase) {
+			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: errors.New("user unauthorized to update business case")}
 		}
 		// Uncomment below when UI has changed for unique lifecycle costs
 		//err = appvalidation.BusinessCaseForUpdate(businessCase)

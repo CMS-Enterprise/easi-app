@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, CardGroup, Grid } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import BookmarkButton from 'components/BookmarkButton';
 import MainContent from 'components/MainContent';
@@ -16,15 +17,18 @@ import {
   GetSystemWorkspaceVariables
 } from 'queries/types/GetSystemWorkspace';
 import { RoleTypeName } from 'types/systemProfile';
+import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 import NotFound from 'views/NotFound';
 import { getAtoStatus } from 'views/SystemProfile';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import AtoCard from './components/AtoCard';
 import HelpLinks from './components/HelpLinks';
+import RequestsCard from './components/RequestsCard';
 import SpacesCard from './components/SpacesCard';
 
 export const SystemWorkspace = () => {
+  const flags = useFlags();
   const { t } = useTranslation('systemWorkspace');
 
   const [isSystemProfileOpen, toggleSystemProfile] = useState<boolean>(false);
@@ -52,15 +56,23 @@ export const SystemWorkspace = () => {
       )
     : undefined;
 
+  /** The `linkSearchQuery` is used on starting new request links throughout workspace */
+  const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
+
   if (loading) {
     return <PageLoading />;
   }
 
-  if (error || !data || !data.cedarSystemDetails) {
+  if (error || !data || !data.cedarSystemDetails || !cedarSystem) {
     return <NotFound />;
   }
 
   const { isBookmarked } = data.cedarSystemDetails.cedarSystem;
+
+  // Redirect to system profile if not a team member for the system
+  if (flags.systemWorkspace && !data.cedarSystemDetails.isMySystem) {
+    return <Redirect to={`/systems/${systemId}`} />;
+  }
 
   return (
     <MainContent className="grid-container margin-bottom-8">
@@ -103,7 +115,10 @@ export const SystemWorkspace = () => {
         />
       </div>
 
-      <HelpLinks classname="margin-top-3 margin-bottom-5" />
+      <HelpLinks
+        classname="margin-top-3 margin-bottom-5"
+        linkSearchQuery={linkSearchQuery}
+      />
 
       <h2>{t('spaces.header')}</h2>
 
@@ -128,6 +143,15 @@ export const SystemWorkspace = () => {
             dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
             isso={isso}
           />
+
+          {flags.systemWorkspaceRequestsCard && (
+            <RequestsCard
+              systemId={systemId}
+              trbCount={cedarSystem.linkedTrbRequests.length}
+              itgovCount={cedarSystem.linkedSystemIntakes.length}
+              linkSearchQuery={linkSearchQuery}
+            />
+          )}
         </CardGroup>
       </Grid>
     </MainContent>

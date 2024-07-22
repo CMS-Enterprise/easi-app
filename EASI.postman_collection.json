@@ -1,9 +1,7 @@
 {
 	"info": {
-		"_postman_id": "a7ab52b4-b7f0-44d5-a9c9-f47a9b7c53ed",
 		"name": "EASI",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12341016"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -960,6 +958,143 @@
 					]
 				},
 				{
+					"name": "GRB Meeting (Async)",
+					"item": [
+						{
+							"name": "Get GRB Reviewers",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbReviewers {\n        id\n        systemIntakeID\n        grbRole\n        votingRole\n        userAccount {\n            username\n            id\n            givenName\n            commonName\n            email\n        }\n        createdAt\n        createdBy\n        modifiedAt\n        modifiedBy\n    }\n  }\n}",
+										"variables": "{\r\n    \"systemIntakeID\": \"5af245bc-fc54-4677-bab1-1b3e798bb43c\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add GRB Reviewer",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"SystemIntakeGRBReviewerID\", pm.response.json().data.createSystemIntakeGRBReviewer.id)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation createS($input: CreateSystemIntakeGRBReviewerInput!) {\n  createSystemIntakeGRBReviewer(input: $input) {\n    id\n    userAccount {\n      id\n    }\n    grbRole\n    votingRole\n    systemIntakeID\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n  }\n}",
+										"variables": "{\r\n  \"input\": {\r\n    \"euaUserId\": \"ABCD\",\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"votingRole\": \"NON_VOTING\",\r\n    \"grbRole\": \"CMCS_REP\"\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update GRB Reviewer",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation updateGRBReviewer($input: UpdateSystemIntakeGRBReviewerInput!) {\n  updateSystemIntakeGRBReviewer(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n        username\n        id\n        givenName\n        commonName\n        email\n    }\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"reviewerID\": \"{{SystemIntakeGRBReviewerID}}\",\r\n        \"votingRole\": \"VOTING\",\r\n        \"grbRole\": \"ACA_3021_REP\"\r\n    }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete GRB Reviewer",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation deleteGRBReviewer {\n  deleteSystemIntakeGRBReviewer(input: {reviewerID: \"{{SystemIntakeGRBReviewerID}}\"})\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Set Intake Relations",
 					"item": [
 						{
@@ -1081,6 +1216,39 @@
 					"response": []
 				},
 				{
+					"name": "SystemIntake Get (GRB Review Requested)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query systemIntakeGRBReviewRequested {\n  systemIntakesWithReviewRequested {\n    step\n    state\n    id\n    grbReviewers {\n        id\n        userAccount {\n            commonName\n        }\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "SystemIntake Get Homepage Admin Table",
 					"event": [
 						{
@@ -1132,6 +1300,72 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "query systemIntake {\n    # first does nothing and should be removed later\n  requests(first: -1) {\n      edges {\n        node {\n          id\n          name\n          submittedAt\n          type\n          status\n          statusRequester\n          statusCreatedAt\n          lcid\n          nextMeetingDate\n        }\n      }\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SystemIntake GetByID w/ Related Requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query systemIntake {\n    systemIntake(id: \"{{systemIntakeID}}\") {\n        id\n        requestName\n        relatedIntakes {\n            id\n            requestName\n        }\n        relatedTRBRequests {\n            id\n            name\n        }\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SystemIntake Get All w/ Related Requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query systemIntake {\n    systemIntakes(openRequests: true) {\n        id\n        requestName\n        relatedIntakes {\n            id\n            requestName\n        }\n        relatedTRBRequests {\n            id\n            name\n        }\n    }\n}",
 								"variables": ""
 							}
 						},
@@ -1444,6 +1678,55 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "query trbRequests{\n trbRequests(archived: false){\n id\n name\n archived\n type\n status\n relationType\n contractName\n contractNumbers {\n contractNumber\n }\n createdBy\n createdAt\n modifiedBy\n modifiedAt\n }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/graph/query",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"graph",
+										"query"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetByID w/ Related Requests",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query TRBRequestGetByID{\n  \n  trbRequest(id: \"{{trbRequestID}}\"){\n    id\n    name\n    archived\n    type\n    status\n    taskStatuses {\n        formStatus\n        feedbackStatus\n        consultPrepStatus\n    }\n    feedback {\n        id\n        trbRequestId\n        feedbackMessage\n        copyTrbMailbox\n        notifyEuaIds\n        action\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n    }\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n    # form {\n    #     status\n    #     id\n    #     trbRequestId\n    #     component\n    #     needsAssistanceWith\n    #     hasSolutionInMind\n    #     whereInProcess\n    #     hasExpectedStartEndDates\n    #     collabGroups\n\n    #     createdBy\n    #     createdAt\n    #     modifiedBy\n    #     modifiedAt\n    # }\n    attendees{\n        id\n        euaUserId\n        # userInfo {\n        #     euaUserId\n        #     commonName\n        #     email\n        # }\n        trbRequestId\n        component\n        role\n    }\n    \n    \n  }\n  \n  \n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All w/ Related Requests",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query trbRequests{\n    trbRequests {\n        id\n        name\n        relatedIntakes {\n            id\n            requestName\n        }\n        relatedTRBRequests {\n            id\n            name\n        }\n    }\n}",
 										"variables": ""
 									}
 								},
@@ -2599,7 +2882,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n  }\n}",
+												"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    atoEffectiveDate\n    atoExpirationDate\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n  }\n}",
 												"variables": ""
 											}
 										},

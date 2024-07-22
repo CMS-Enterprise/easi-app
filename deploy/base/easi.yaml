@@ -46,7 +46,7 @@ data:
   LD_ENV_USER: ''
   MINIO_ACCESS_KEY: minioadmin
   MINIO_SECRET_KEY: minioadmin
-  MINIO_ADDRESS: http://minio:9000
+  MINIO_ADDRESS: http://minio:9004
   SERVER_CERT: ''
   SERVER_KEY: ''
   USE_TLS: 'false'

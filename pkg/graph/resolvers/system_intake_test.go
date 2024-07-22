@@ -1,9 +1,11 @@
 package resolvers
 
 import (
+	"slices"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *ResolverSuite) TestSystemIntakesQuery() {
@@ -125,6 +127,72 @@ func (s *ResolverSuite) TestSystemIntakesQueryArchived() {
 	closedIntakes, err := SystemIntakes(ctx, store, false)
 	s.NoError(err)
 	s.Len(closedIntakes, 0)
+}
+
+func (s *ResolverSuite) TestSystemIntakeWithReviewRequested() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+
+	s.Run("fetch GRB reviewers", func() {
+		intake, reviewers := s.createIntakeAndAddReviewers(
+			reviewerToAdd{
+				// should be "TEST"
+				euaUserID:  appcontext.Principal(ctx).Account().Username,
+				votingRole: models.SIGRBRVRVoting,
+				grbRole:    models.SIGRBRRACA3021Rep,
+			},
+			reviewerToAdd{
+				euaUserID:  "ABCD",
+				votingRole: models.SIGRBRVRVoting,
+				grbRole:    models.SIGRBRRACA3021Rep,
+			},
+			reviewerToAdd{
+				euaUserID:  "A11Y",
+				votingRole: models.SIGRBRVRVoting,
+				grbRole:    models.SIGRBRRACA3021Rep,
+			},
+		)
+		s.Len(reviewers, 3)
+
+		closedIntake, reviewers := s.createIntakeAndAddReviewers(
+			reviewerToAdd{
+				// should be "TEST"
+				euaUserID:  appcontext.Principal(ctx).Account().Username,
+				votingRole: models.SIGRBRVRVoting,
+				grbRole:    models.SIGRBRRACA3021Rep,
+			},
+			reviewerToAdd{
+				euaUserID:  "ABCD",
+				votingRole: models.SIGRBRVRVoting,
+				grbRole:    models.SIGRBRRACA3021Rep,
+			},
+			reviewerToAdd{
+				euaUserID:  "A11Y",
+				votingRole: models.SIGRBRVRVoting,
+				grbRole:    models.SIGRBRRACA3021Rep,
+			},
+		)
+		s.Len(reviewers, 3)
+		closedIntake.State = models.SystemIntakeStateClosed
+
+		_, err := store.UpdateSystemIntake(ctx, closedIntake)
+		s.NoError(err)
+
+		noReviewersIntake := s.createNewIntake()
+
+		allIntakes, err := store.FetchSystemIntakes(s.ctxWithNewDataloaders())
+		s.NoError(err)
+		s.Len(allIntakes, 3)
+
+		intakesWhereReviewIsRequested, err := SystemIntakesWithReviewRequested(ctx, store)
+		s.NoError(err)
+		// should not return intakes that are closed or where user not requested
+		s.Len(intakesWhereReviewIsRequested, 1)
+		s.Equal(intake.ID, intakesWhereReviewIsRequested[0].ID)
+		s.False(slices.ContainsFunc(intakesWhereReviewIsRequested, func(i *models.SystemIntake) bool {
+			return i.ID == noReviewersIntake.ID || i.ID == closedIntake.ID
+		}))
+	})
 }
 
 func (s *ResolverSuite) TestUpdateSystemIntakeRequestType() {

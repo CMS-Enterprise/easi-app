@@ -4,11 +4,10 @@ import (
 	"context"
 	"errors"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (d *dataReader) getCedarSystemsByIDs(ctx context.Context, cedarSystemIDs []string) ([]*models.CedarSystem, []error) {
-	// will this have the same effect? TBD
 	data, err := d.getCedarSystems(ctx)
 	if err != nil {
 		return nil, []error{err}

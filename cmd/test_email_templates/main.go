@@ -11,10 +11,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -580,6 +580,14 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*nextSteps,
+	)
+	noErr(err)
+	err = client.SystemIntake.SendCreateGRBReviewerNotification(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Raisinets",
+		"Courage the Cowardly Dog",
 	)
 	noErr(err)
 }

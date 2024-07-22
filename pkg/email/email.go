@@ -9,7 +9,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // Config holds EASi application specific configs for SES
@@ -70,6 +70,7 @@ type templates struct {
 	systemIntakeExpireLCID                          templateCaller
 	systemIntakeUpdateLCID                          templateCaller
 	systemIntakeChangeLCIDRetirementDate            templateCaller
+	systemIntakeCreateGRBReviewer                   templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -363,6 +364,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(systemIntakeChangeLCIDRetirementDateTemplateName)
 	}
 	appTemplates.systemIntakeChangeLCIDRetirementDate = systemIntakeChangeLCIDRetirementDate
+
+	systemIntakeCreateGRBReviewerTemplateName := "system_intake_create_grb_reviewer.gohtml"
+	systemIntakeCreateGRBReviewer := rawTemplates.Lookup(systemIntakeCreateGRBReviewerTemplateName)
+	if systemIntakeCreateGRBReviewer == nil {
+		return Client{}, templateError(systemIntakeCreateGRBReviewerTemplateName)
+	}
+	appTemplates.systemIntakeCreateGRBReviewer = systemIntakeCreateGRBReviewer
 
 	client := Client{
 		config:    config,

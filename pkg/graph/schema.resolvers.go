@@ -17,16 +17,17 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/flags"
-	"github.com/cmsgov/easi-app/pkg/graph/generated"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/services"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/flags"
+	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/services"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
@@ -181,12 +182,12 @@ func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.Ceda
 
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
 func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
-	return r.store.TRBRequestsByCedarSystemID(ctx, obj.ID.String, state)
+	return resolvers.CedarSystemLinkedTRBRequests(ctx, obj.ID.String, state)
 }
 
 // LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
 func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
-	return r.store.SystemIntakesByCedarSystemID(ctx, obj.ID.String, state)
+	return resolvers.CedarSystemLinkedSystemIntakes(ctx, obj.ID.String, state)
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
@@ -649,6 +650,21 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	return &models.DeleteSystemIntakeContactPayload{
 		SystemIntakeContact: contact,
 	}, nil
+}
+
+// CreateSystemIntakeGRBReviewer is the resolver for the createSystemIntakeGRBReviewer field.
+func (r *mutationResolver) CreateSystemIntakeGRBReviewer(ctx context.Context, input models.CreateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
+	return resolvers.CreateSystemIntakeGRBReviewer(ctx, r.store, r.emailClient, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo), &input)
+}
+
+// UpdateSystemIntakeGRBReviewer is the resolver for the updateSystemIntakeGRBReviewer field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
+	return resolvers.UpdateSystemIntakeGRBReviewer(ctx, r.store, &input)
+}
+
+// DeleteSystemIntakeGRBReviewer is the resolver for the deleteSystemIntakeGRBReviewer field.
+func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error) {
+	return input.ReviewerID, resolvers.DeleteSystemIntakeGRBReviewer(ctx, r.store, input.ReviewerID)
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
@@ -1178,20 +1194,40 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 		return nil, err
 	}
 
-	ok, err := services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx, intake)
+	// if this user created the intake
+	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+		return intake, nil
+	}
+
+	// if this user is an admin
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+		return intake, nil
+	}
+
+	grbUsers, err := r.store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{id})
 	if err != nil {
 		return nil, err
 	}
-	if !ok {
-		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
+
+	principal := appcontext.Principal(ctx)
+
+	if isGRBViewer := slices.ContainsFunc(grbUsers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
+		return reviewer.UserID == principal.Account().ID
+	}); isGRBViewer {
+		return intake, nil
 	}
 
-	return intake, nil
+	return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
 }
 
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error) {
 	return resolvers.SystemIntakes(ctx, r.store, openRequests)
+}
+
+// SystemIntakesWithReviewRequested is the resolver for the systemIntakesWithReviewRequested field.
+func (r *queryResolver) SystemIntakesWithReviewRequested(ctx context.Context) ([]*models.SystemIntake, error) {
+	return resolvers.SystemIntakesWithReviewRequested(ctx, r.store)
 }
 
 // SystemIntakesWithLcids is the resolver for the systemIntakesWithLcids field.
@@ -1736,7 +1772,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 
 // GrbReviewers is the resolver for the grbReviewers field.
 func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error) {
-	return []*models.SystemIntakeGRBReviewer{}, nil
+	return resolvers.SystemIntakeGRBReviewers(ctx, obj.ID)
 }
 
 // Isso is the resolver for the isso field.
@@ -1831,7 +1867,7 @@ func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *mode
 
 // Documents is the resolver for the documents field.
 func (r *systemIntakeResolver) Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error) {
-	return resolvers.GetSystemIntakeDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
+	return resolvers.GetSystemIntakeDocumentsByRequestID(ctx, r.store, obj.ID)
 }
 
 // ItGovTaskStatuses is the resolver for the itGovTaskStatuses field.
@@ -1871,6 +1907,16 @@ func (r *systemIntakeResolver) ContractNumbers(ctx context.Context, obj *models.
 	return resolvers.SystemIntakeContractNumbers(ctx, obj.ID)
 }
 
+// RelatedIntakes is the resolver for the relatedIntakes field.
+func (r *systemIntakeResolver) RelatedIntakes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntake, error) {
+	return resolvers.SystemIntakeRelatedSystemIntakes(ctx, obj.ID)
+}
+
+// RelatedTRBRequests is the resolver for the relatedTRBRequests field.
+func (r *systemIntakeResolver) RelatedTRBRequests(ctx context.Context, obj *models.SystemIntake) ([]*models.TRBRequest, error) {
+	return resolvers.SystemIntakeRelatedTRBRequests(ctx, obj.ID)
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
@@ -1891,7 +1937,7 @@ func (r *systemIntakeDocumentResolver) UploadedAt(ctx context.Context, obj *mode
 
 // URL is the resolver for the url field.
 func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error) {
-	return resolvers.GetURLForSystemIntakeDocument(r.s3Client, obj.S3Key)
+	return resolvers.GetURLForSystemIntakeDocument(ctx, r.store, r.s3Client, obj.S3Key)
 }
 
 // VotingRole is the resolver for the votingRole field.
@@ -2034,6 +2080,16 @@ func (r *tRBRequestResolver) ContractNumbers(ctx context.Context, obj *models.TR
 // Systems is the resolver for the systems field.
 func (r *tRBRequestResolver) Systems(ctx context.Context, obj *models.TRBRequest) ([]*models.CedarSystem, error) {
 	return resolvers.TRBRequestSystems(ctx, obj.ID)
+}
+
+// RelatedIntakes is the resolver for the relatedIntakes field.
+func (r *tRBRequestResolver) RelatedIntakes(ctx context.Context, obj *models.TRBRequest) ([]*models.SystemIntake, error) {
+	return resolvers.TRBRequestRelatedSystemIntakes(ctx, obj.ID)
+}
+
+// RelatedTRBRequests is the resolver for the relatedTRBRequests field.
+func (r *tRBRequestResolver) RelatedTRBRequests(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequest, error) {
+	return resolvers.TRBRequestRelatedTRBRequests(ctx, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.

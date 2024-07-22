@@ -9,9 +9,9 @@ import (
 	"github.com/lib/pq"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
 
 // SetSystemIntakeContractNumbers links given Contract Numbers to given System Intake ID
@@ -58,7 +58,7 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 
 func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {
 	var systemIntakeContractNumbers []*models.SystemIntakeContractNumber
-	return systemIntakeContractNumbers, selectNamed(ctx, s, &systemIntakeContractNumbers, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDs, args{
+	return systemIntakeContractNumbers, namedSelect(ctx, s, &systemIntakeContractNumbers, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 }

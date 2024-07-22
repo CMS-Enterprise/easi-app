@@ -8,11 +8,11 @@ import (
 	"github.com/lib/pq"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
 
 // CreateCedarSystemBookmark creates a new cedar system bookmark object in the database
@@ -97,7 +97,7 @@ func (s *Store) FetchCedarSystemIsBookmarkedByCedarSystemIDs(ctx context.Context
 	}
 
 	var results []models.BookmarkRequest
-	if err := selectNamed(ctx, s, &results, sqlqueries.CedarBookmarkSystemsForm.SelectByCedarSystemIDs, args{
+	if err := namedSelect(ctx, s, &results, sqlqueries.CedarBookmarkSystemsForm.SelectByCedarSystemIDs, args{
 		"eua_user_ids":     pq.Array(euaUserIDs),
 		"cedar_system_ids": pq.Array(systemIDs),
 	}); err != nil {

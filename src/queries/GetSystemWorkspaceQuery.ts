@@ -13,10 +13,17 @@ export default gql`
       lastAssessmentDate
     }
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
+      isMySystem
       cedarSystem {
         id
         name
         isBookmarked
+        linkedTrbRequests(state: OPEN) {
+          id
+        }
+        linkedSystemIntakes(state: OPEN) {
+          id
+        }
       }
       roles {
         ...CedarRole

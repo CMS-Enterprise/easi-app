@@ -6,10 +6,10 @@ import (
 	"github.com/guregu/null"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 func makeDraftBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake) *models.SystemIntake {

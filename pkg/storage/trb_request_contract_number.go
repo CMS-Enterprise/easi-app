@@ -9,9 +9,9 @@ import (
 	"github.com/lib/pq"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
 
 // SetTRBRequestContractNumbers links given Contract Numbers to given TRB Request ID
@@ -58,7 +58,7 @@ func (s *Store) SetTRBRequestContractNumbers(ctx context.Context, tx *sqlx.Tx, t
 
 func (s *Store) TRBRequestContractNumbersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestContractNumber, error) {
 	var trbRequestContractNumbers []*models.TRBRequestContractNumber
-	return trbRequestContractNumbers, selectNamed(ctx, s, &trbRequestContractNumbers, sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDs, args{
+	return trbRequestContractNumbers, namedSelect(ctx, s, &trbRequestContractNumbers, sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 }

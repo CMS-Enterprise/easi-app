@@ -226,7 +226,7 @@ function SubjectAreas({
         <Controller
           name="subjectAreaOptionOther"
           control={control}
-          // eslint-disable-next-line no-shadow
+          // eslint-disable-next-line @typescript-eslint/no-shadow
           render={({ field, fieldState: { error } }) => (
             <FormGroup className="margin-top-1">
               <Label

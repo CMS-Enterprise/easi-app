@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 )
 
 // Server holds dependencies for running the EASi server
@@ -54,9 +54,11 @@ func NewServer(config *viper.Viper) *Server {
 
 	// set up routes
 	s.routes(
+		newContextMiddleware(),
 		newCORSMiddleware(clientAddress),
-		NewTraceMiddleware(),
-		NewLoggerMiddleware(s.logger, environment))
+		newTraceMiddleware(),
+		newLoggerMiddleware(s.logger, environment),
+	)
 
 	return s
 }

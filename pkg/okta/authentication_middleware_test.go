@@ -15,20 +15,23 @@ import (
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/handlers"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
-	"github.com/cmsgov/easi-app/pkg/userhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/handlers"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 )
 
 type AuthenticationMiddlewareTestSuite struct {
 	suite.Suite
-	logger *zap.Logger
-	config *viper.Viper
-	store  *storage.Store
+	logger           *zap.Logger
+	config           *viper.Viper
+	store            *storage.Store
+	userSearchClient usersearch.Client
 }
 
 func TestAuthenticationMiddlewareTestSuite(t *testing.T) {
@@ -38,12 +41,14 @@ func TestAuthenticationMiddlewareTestSuite(t *testing.T) {
 	ldClient, _ := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
 
 	store, _ := storage.NewStore(NewDBConfig(), ldClient)
+	localOktaClient := local.NewOktaAPIClient()
 
 	testSuite := &AuthenticationMiddlewareTestSuite{
-		Suite:  suite.Suite{},
-		store:  store,
-		logger: logger,
-		config: config,
+		Suite:            suite.Suite{},
+		store:            store,
+		logger:           logger,
+		config:           config,
+		userSearchClient: localOktaClient,
 	}
 
 	suite.Run(t, testSuite)
@@ -82,7 +87,7 @@ func (s *AuthenticationMiddlewareTestSuite) buildMiddleware(verify func(jwt stri
 
 func (s *AuthenticationMiddlewareTestSuite) TestAuthorizeMiddleware() {
 
-	_, err := userhelpers.GetOrCreateUserAccount(context.Background(), s.store, s.store, "EASI", true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+	_, err := userhelpers.GetOrCreateUserAccount(context.Background(), s.store, s.store, "EASI", true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.userSearchClient.FetchUserInfo))
 	s.NoError(err)
 
 	s.Run("a valid token sets the principal", func() {

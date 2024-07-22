@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
 )
 
 // IntakeStatusByClientIDReader is a Reader for the IntakeStatusByClientID structure.

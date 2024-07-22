@@ -174,6 +174,13 @@ type CreateSystemIntakeDocumentPayload struct {
 	Document *SystemIntakeDocument `json:"document,omitempty"`
 }
 
+type CreateSystemIntakeGRBReviewerInput struct {
+	SystemIntakeID uuid.UUID                         `json:"systemIntakeID"`
+	EuaUserID      string                            `json:"euaUserId"`
+	VotingRole     SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
+	GrbRole        SystemIntakeGRBReviewerRole       `json:"grbRole"`
+}
+
 // The input data used to initialize an IT governance request for a system
 type CreateSystemIntakeInput struct {
 	RequestType SystemIntakeRequestType     `json:"requestType"`
@@ -285,6 +292,10 @@ type DeleteSystemIntakeContactPayload struct {
 // Data returned after deleting a document attached to a System Intake
 type DeleteSystemIntakeDocumentPayload struct {
 	Document *SystemIntakeDocument `json:"document,omitempty"`
+}
+
+type DeleteSystemIntakeGRBReviewerInput struct {
+	ReviewerID uuid.UUID `json:"reviewerID"`
 }
 
 // Data returned after deleting a document attached to a TRB request
@@ -832,6 +843,12 @@ type UpdateSystemIntakeContractDetailsInput struct {
 	Contract       *SystemIntakeContractInput       `json:"contract,omitempty"`
 }
 
+type UpdateSystemIntakeGRBReviewerInput struct {
+	ReviewerID uuid.UUID                         `json:"reviewerID"`
+	VotingRole SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
+	GrbRole    SystemIntakeGRBReviewerRole       `json:"grbRole"`
+}
+
 // Input data for updating a system intake's relationship to a CEDAR system
 type UpdateSystemIntakeLinkedCedarSystemInput struct {
 	ID            uuid.UUID `json:"id"`
@@ -955,7 +972,7 @@ func (e RequestType) MarshalGQL(w io.Writer) {
 type Role string
 
 const (
-	// A member of the GRT
+	// An admin on the GRT
 	RoleEasiGovteam Role = "EASI_GOVTEAM"
 	// An admin on the TRB
 	RoleEasiTrbAdmin Role = "EASI_TRB_ADMIN"
@@ -1141,20 +1158,38 @@ func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 type SystemIntakeGRBReviewerRole string
 
 const (
-	SystemIntakeGRBReviewerRoleVoting    SystemIntakeGRBReviewerRole = "VOTING"
-	SystemIntakeGRBReviewerRoleAlternate SystemIntakeGRBReviewerRole = "ALTERNATE"
-	SystemIntakeGRBReviewerRoleNonVoting SystemIntakeGRBReviewerRole = "NON_VOTING"
+	SystemIntakeGRBReviewerRoleCoChairCio                SystemIntakeGRBReviewerRole = "CO_CHAIR_CIO"
+	SystemIntakeGRBReviewerRoleCoChairCfo                SystemIntakeGRBReviewerRole = "CO_CHAIR_CFO"
+	SystemIntakeGRBReviewerRoleCoChairHca                SystemIntakeGRBReviewerRole = "CO_CHAIR_HCA"
+	SystemIntakeGRBReviewerRoleAca3021Rep                SystemIntakeGRBReviewerRole = "ACA_3021_REP"
+	SystemIntakeGRBReviewerRoleCciioRep                  SystemIntakeGRBReviewerRole = "CCIIO_REP"
+	SystemIntakeGRBReviewerRoleProgramOperationsBdgChair SystemIntakeGRBReviewerRole = "PROGRAM_OPERATIONS_BDG_CHAIR"
+	SystemIntakeGRBReviewerRoleCmcsRep                   SystemIntakeGRBReviewerRole = "CMCS_REP"
+	SystemIntakeGRBReviewerRoleFedAdminBdgChair          SystemIntakeGRBReviewerRole = "FED_ADMIN_BDG_CHAIR"
+	SystemIntakeGRBReviewerRoleProgramIntegrityBdgChair  SystemIntakeGRBReviewerRole = "PROGRAM_INTEGRITY_BDG_CHAIR"
+	SystemIntakeGRBReviewerRoleQioRep                    SystemIntakeGRBReviewerRole = "QIO_REP"
+	SystemIntakeGRBReviewerRoleSubjectMatterExpert       SystemIntakeGRBReviewerRole = "SUBJECT_MATTER_EXPERT"
+	SystemIntakeGRBReviewerRoleOther                     SystemIntakeGRBReviewerRole = "OTHER"
 )
 
 var AllSystemIntakeGRBReviewerRole = []SystemIntakeGRBReviewerRole{
-	SystemIntakeGRBReviewerRoleVoting,
-	SystemIntakeGRBReviewerRoleAlternate,
-	SystemIntakeGRBReviewerRoleNonVoting,
+	SystemIntakeGRBReviewerRoleCoChairCio,
+	SystemIntakeGRBReviewerRoleCoChairCfo,
+	SystemIntakeGRBReviewerRoleCoChairHca,
+	SystemIntakeGRBReviewerRoleAca3021Rep,
+	SystemIntakeGRBReviewerRoleCciioRep,
+	SystemIntakeGRBReviewerRoleProgramOperationsBdgChair,
+	SystemIntakeGRBReviewerRoleCmcsRep,
+	SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+	SystemIntakeGRBReviewerRoleProgramIntegrityBdgChair,
+	SystemIntakeGRBReviewerRoleQioRep,
+	SystemIntakeGRBReviewerRoleSubjectMatterExpert,
+	SystemIntakeGRBReviewerRoleOther,
 }
 
 func (e SystemIntakeGRBReviewerRole) IsValid() bool {
 	switch e {
-	case SystemIntakeGRBReviewerRoleVoting, SystemIntakeGRBReviewerRoleAlternate, SystemIntakeGRBReviewerRoleNonVoting:
+	case SystemIntakeGRBReviewerRoleCoChairCio, SystemIntakeGRBReviewerRoleCoChairCfo, SystemIntakeGRBReviewerRoleCoChairHca, SystemIntakeGRBReviewerRoleAca3021Rep, SystemIntakeGRBReviewerRoleCciioRep, SystemIntakeGRBReviewerRoleProgramOperationsBdgChair, SystemIntakeGRBReviewerRoleCmcsRep, SystemIntakeGRBReviewerRoleFedAdminBdgChair, SystemIntakeGRBReviewerRoleProgramIntegrityBdgChair, SystemIntakeGRBReviewerRoleQioRep, SystemIntakeGRBReviewerRoleSubjectMatterExpert, SystemIntakeGRBReviewerRoleOther:
 		return true
 	}
 	return false
@@ -1184,38 +1219,20 @@ func (e SystemIntakeGRBReviewerRole) MarshalGQL(w io.Writer) {
 type SystemIntakeGRBReviewerVotingRole string
 
 const (
-	SystemIntakeGRBReviewerVotingRoleCoChairCio                SystemIntakeGRBReviewerVotingRole = "CO_CHAIR_CIO"
-	SystemIntakeGRBReviewerVotingRoleCoChairCfo                SystemIntakeGRBReviewerVotingRole = "CO_CHAIR_CFO"
-	SystemIntakeGRBReviewerVotingRoleCoChairHca                SystemIntakeGRBReviewerVotingRole = "CO_CHAIR_HCA"
-	SystemIntakeGRBReviewerVotingRoleAca3021Rep                SystemIntakeGRBReviewerVotingRole = "ACA_3021_REP"
-	SystemIntakeGRBReviewerVotingRoleCciioRep                  SystemIntakeGRBReviewerVotingRole = "CCIIO_REP"
-	SystemIntakeGRBReviewerVotingRoleProgramOperationsBdgChair SystemIntakeGRBReviewerVotingRole = "PROGRAM_OPERATIONS_BDG_CHAIR"
-	SystemIntakeGRBReviewerVotingRoleCmcsRep                   SystemIntakeGRBReviewerVotingRole = "CMCS_REP"
-	SystemIntakeGRBReviewerVotingRoleFedAdminBdgChair          SystemIntakeGRBReviewerVotingRole = "FED_ADMIN_BDG_CHAIR"
-	SystemIntakeGRBReviewerVotingRoleProgramIntegrityBdgChair  SystemIntakeGRBReviewerVotingRole = "PROGRAM_INTEGRITY_BDG_CHAIR"
-	SystemIntakeGRBReviewerVotingRoleQioRep                    SystemIntakeGRBReviewerVotingRole = "QIO_REP"
-	SystemIntakeGRBReviewerVotingRoleSubjectMatterExpert       SystemIntakeGRBReviewerVotingRole = "SUBJECT_MATTER_EXPERT"
-	SystemIntakeGRBReviewerVotingRoleOther                     SystemIntakeGRBReviewerVotingRole = "OTHER"
+	SystemIntakeGRBReviewerVotingRoleVoting    SystemIntakeGRBReviewerVotingRole = "VOTING"
+	SystemIntakeGRBReviewerVotingRoleAlternate SystemIntakeGRBReviewerVotingRole = "ALTERNATE"
+	SystemIntakeGRBReviewerVotingRoleNonVoting SystemIntakeGRBReviewerVotingRole = "NON_VOTING"
 )
 
 var AllSystemIntakeGRBReviewerVotingRole = []SystemIntakeGRBReviewerVotingRole{
-	SystemIntakeGRBReviewerVotingRoleCoChairCio,
-	SystemIntakeGRBReviewerVotingRoleCoChairCfo,
-	SystemIntakeGRBReviewerVotingRoleCoChairHca,
-	SystemIntakeGRBReviewerVotingRoleAca3021Rep,
-	SystemIntakeGRBReviewerVotingRoleCciioRep,
-	SystemIntakeGRBReviewerVotingRoleProgramOperationsBdgChair,
-	SystemIntakeGRBReviewerVotingRoleCmcsRep,
-	SystemIntakeGRBReviewerVotingRoleFedAdminBdgChair,
-	SystemIntakeGRBReviewerVotingRoleProgramIntegrityBdgChair,
-	SystemIntakeGRBReviewerVotingRoleQioRep,
-	SystemIntakeGRBReviewerVotingRoleSubjectMatterExpert,
-	SystemIntakeGRBReviewerVotingRoleOther,
+	SystemIntakeGRBReviewerVotingRoleVoting,
+	SystemIntakeGRBReviewerVotingRoleAlternate,
+	SystemIntakeGRBReviewerVotingRoleNonVoting,
 }
 
 func (e SystemIntakeGRBReviewerVotingRole) IsValid() bool {
 	switch e {
-	case SystemIntakeGRBReviewerVotingRoleCoChairCio, SystemIntakeGRBReviewerVotingRoleCoChairCfo, SystemIntakeGRBReviewerVotingRoleCoChairHca, SystemIntakeGRBReviewerVotingRoleAca3021Rep, SystemIntakeGRBReviewerVotingRoleCciioRep, SystemIntakeGRBReviewerVotingRoleProgramOperationsBdgChair, SystemIntakeGRBReviewerVotingRoleCmcsRep, SystemIntakeGRBReviewerVotingRoleFedAdminBdgChair, SystemIntakeGRBReviewerVotingRoleProgramIntegrityBdgChair, SystemIntakeGRBReviewerVotingRoleQioRep, SystemIntakeGRBReviewerVotingRoleSubjectMatterExpert, SystemIntakeGRBReviewerVotingRoleOther:
+	case SystemIntakeGRBReviewerVotingRoleVoting, SystemIntakeGRBReviewerVotingRoleAlternate, SystemIntakeGRBReviewerVotingRoleNonVoting:
 		return true
 	}
 	return false

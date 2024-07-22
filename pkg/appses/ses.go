@@ -8,8 +8,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/ses"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // Config is email configs used only for SES

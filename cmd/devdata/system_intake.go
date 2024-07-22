@@ -9,11 +9,12 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // creates, fills out the initial request form, and submits a system intake
@@ -259,9 +260,10 @@ func setSystemIntakeRelationNewSystem(
 	logger *zap.Logger,
 	store *storage.Store,
 	intakeID uuid.UUID,
+	username string,
 	contractNumbers []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
 	input := &models.SetSystemIntakeRelationNewSystemInput{
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
@@ -284,10 +286,11 @@ func setSystemIntakeRelationExistingSystem(
 	logger *zap.Logger,
 	store *storage.Store,
 	intakeID uuid.UUID,
+	username string,
 	contractNumbers []string,
 	cedarSystemIDs []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
 	input := &models.SetSystemIntakeRelationExistingSystemInput{
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
@@ -306,7 +309,7 @@ func setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
 		func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
-			return &models.CedarSystem{}, nil
+			return cedarcoremock.GetSystem(systemID), nil
 		},
 		input,
 	)
@@ -319,10 +322,11 @@ func setSystemIntakeRelationExistingService(
 	logger *zap.Logger,
 	store *storage.Store,
 	intakeID uuid.UUID,
+	username string,
 	contractName string,
 	contractNumbers []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
 	input := &models.SetSystemIntakeRelationExistingServiceInput{
 		SystemIntakeID:  intakeID,
 		ContractName:    contractName,
@@ -343,8 +347,8 @@ func setSystemIntakeRelationExistingService(
 	}
 }
 
-func unlinkSystemIntakeRelation(logger *zap.Logger, store *storage.Store, intakeID uuid.UUID) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+func unlinkSystemIntakeRelation(logger *zap.Logger, store *storage.Store, intakeID uuid.UUID, username string) {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
 
 	// temp, manually unlink contract numbers
 	// see Note [EASI-4160 Disable Contract Number Linking]
@@ -436,9 +440,9 @@ func updateSystemIntakeContractDetails(
 	plannedYearOneSpendingITPortion := "25%"
 	contractor := "Dr Doom"
 	startDate := time.Now().AddDate(-1, 0, 0)
-	hasContract := "HAVE_CONTRACT"
+	hasContract := "IN_PROGRESS"
 	endDate := time.Now().AddDate(3, 0, 0)
-	contractNumbers := []string{"123456789"}
+	contractNumbers := []string{}
 	input := models.UpdateSystemIntakeContractDetailsInput{
 		ID: intake.ID,
 		FundingSources: &models.SystemIntakeFundingSourcesInput{

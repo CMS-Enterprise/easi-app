@@ -3,7 +3,7 @@ package resolvers
 import (
 	"github.com/samber/lo"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TestCreateTRBRequestForm makes a new TRB request

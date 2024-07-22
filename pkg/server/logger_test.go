@@ -6,8 +6,8 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 )
 
 func (s *ServerTestSuite) TestLoggerMiddleware() {
@@ -15,12 +15,12 @@ func (s *ServerTestSuite) TestLoggerMiddleware() {
 
 		req := httptest.NewRequest("GET", "/systems/", nil)
 		rr := httptest.NewRecorder()
-		traceMiddleware := NewTraceMiddleware()
+		traceMiddleware := newTraceMiddleware()
 		prodLogger, err := zap.NewProduction()
 		s.NoError(err)
 		env, err := appconfig.NewEnvironment("test")
 		s.NoError(err)
-		loggerMiddleware := NewLoggerMiddleware(prodLogger, env)
+		loggerMiddleware := newLoggerMiddleware(prodLogger, env)
 
 		// this is the actual test, since the context is cancelled post request
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +42,7 @@ func (s *ServerTestSuite) TestLoggerMiddleware() {
 		s.NoError(err)
 		env, err := appconfig.NewEnvironment("test")
 		s.NoError(err)
-		loggerMiddleware := NewLoggerMiddleware(prodLogger, env)
+		loggerMiddleware := newLoggerMiddleware(prodLogger, env)
 
 		// this is the actual test, since the context is cancelled post request
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

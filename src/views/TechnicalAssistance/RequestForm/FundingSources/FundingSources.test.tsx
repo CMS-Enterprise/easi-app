@@ -26,6 +26,8 @@ describe('Funding sources', () => {
       <FundingSources
         initialValues={[
           {
+            __typename: 'TRBFundingSource',
+            id: '27849e78-e531-4778-9ead-e450eba50de0',
             fundingNumber: '123456',
             source: 'Research'
           }

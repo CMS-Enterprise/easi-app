@@ -7,9 +7,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/sqlqueries"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // UserAccountGetByCommonName gets a user account by a give username
@@ -87,7 +87,7 @@ func (s *Store) UserAccountGetByID(np sqlutils.NamedPreparer, id uuid.UUID) (*au
 // UserAccountsByIDs gets user accounts by user ID
 func (s *Store) UserAccountsByIDs(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, error) {
 	var accounts []*authentication.UserAccount
-	return accounts, selectNamed(ctx, s, &accounts, sqlqueries.UserAccount.GetByIDs, args{
+	return accounts, namedSelect(ctx, s, &accounts, sqlqueries.UserAccount.GetByIDs, args{
 		"user_ids": pq.Array(userIDs),
 	})
 }

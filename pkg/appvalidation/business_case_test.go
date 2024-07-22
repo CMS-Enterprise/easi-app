@@ -7,9 +7,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func (s *AppValidateTestSuite) TestCheckUniqLifecycleCosts() {

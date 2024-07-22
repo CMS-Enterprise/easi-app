@@ -6,9 +6,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/vikstrous/dataloadgen"
 
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 type (
@@ -64,14 +64,21 @@ type dataReader struct {
 */
 // you can then edit NewDataloaders below to include your new dataloader in the return
 type Dataloaders struct {
-	CedarSystemBookmark         *dataloadgen.Loader[models.BookmarkRequest, bool]
-	FetchUserInfo               *dataloadgen.Loader[string, *models.UserInfo]
-	GetUserAccount              *dataloadgen.Loader[uuid.UUID, *authentication.UserAccount]
-	GetCedarSystem              *dataloadgen.Loader[string, *models.CedarSystem]
-	SystemIntakeContractNumbers *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
-	SystemIntakeSystems         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
-	TRBRequestContractNumbers   *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestContractNumber]
-	TRBRequestSystems           *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestSystem]
+	CedarSystemBookmark              *dataloadgen.Loader[models.BookmarkRequest, bool]
+	CedarSystemLinkedSystemIntakes   *dataloadgen.Loader[models.SystemIntakesByCedarSystemIDsRequest, []*models.SystemIntake]
+	CedarSystemLinkedTRBRequests     *dataloadgen.Loader[models.TRBRequestsByCedarSystemIDsRequest, []*models.TRBRequest]
+	FetchUserInfo                    *dataloadgen.Loader[string, *models.UserInfo]
+	GetUserAccount                   *dataloadgen.Loader[uuid.UUID, *authentication.UserAccount]
+	GetCedarSystem                   *dataloadgen.Loader[string, *models.CedarSystem]
+	SystemIntakeContractNumbers      *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
+	SystemIntakeSystems              *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
+	SystemIntakeGRBReviewers         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewer]
+	SystemIntakeRelatedSystemIntakes *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
+	SystemIntakeRelatedTRBRequests   *dataloadgen.Loader[uuid.UUID, []*models.TRBRequest]
+	TRBRequestContractNumbers        *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestContractNumber]
+	TRBRequestSystems                *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestSystem]
+	TRBRequestRelatedSystemIntakes   *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
+	TRBRequestRelatedTRBRequests     *dataloadgen.Loader[uuid.UUID, []*models.TRBRequest]
 }
 
 // NewDataloaders returns a new set of dataloaders
@@ -82,13 +89,20 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		getCedarSystems: getCedarSystems,
 	}
 	return &Dataloaders{
-		CedarSystemBookmark:         dataloadgen.NewLoader(dr.batchCedarSystemIsBookmarked),
-		FetchUserInfo:               dataloadgen.NewLoader(dr.fetchUserInfosByEUAUserIDs),
-		GetUserAccount:              dataloadgen.NewLoader(dr.batchUserAccountsByIDs),
-		GetCedarSystem:              dataloadgen.NewLoader(dr.getCedarSystemsByIDs),
-		SystemIntakeContractNumbers: dataloadgen.NewLoader(dr.batchSystemIntakeContractNumbersBySystemIntakeIDs),
-		SystemIntakeSystems:         dataloadgen.NewLoader(dr.batchSystemIntakeSystemsBySystemIntakeIDs),
-		TRBRequestContractNumbers:   dataloadgen.NewLoader(dr.batchTRBRequestContractNumbersByTRBRequestIDs),
-		TRBRequestSystems:           dataloadgen.NewLoader(dr.batchTRBRequestSystemsByTRBRequestIDs),
+		CedarSystemBookmark:              dataloadgen.NewLoader(dr.batchCedarSystemIsBookmarked),
+		CedarSystemLinkedTRBRequests:     dataloadgen.NewLoader(dr.batchCedarSystemLinkedTRBRequests),
+		CedarSystemLinkedSystemIntakes:   dataloadgen.NewLoader(dr.batchCedarSystemLinkedSystemIntakes),
+		FetchUserInfo:                    dataloadgen.NewLoader(dr.fetchUserInfosByEUAUserIDs),
+		GetUserAccount:                   dataloadgen.NewLoader(dr.batchUserAccountsByIDs),
+		GetCedarSystem:                   dataloadgen.NewLoader(dr.getCedarSystemsByIDs),
+		SystemIntakeContractNumbers:      dataloadgen.NewLoader(dr.batchSystemIntakeContractNumbersBySystemIntakeIDs),
+		SystemIntakeSystems:              dataloadgen.NewLoader(dr.batchSystemIntakeSystemsBySystemIntakeIDs),
+		SystemIntakeGRBReviewers:         dataloadgen.NewLoader(dr.batchSystemIntakeGRBReviewersBySystemIntakeIDs),
+		SystemIntakeRelatedSystemIntakes: dataloadgen.NewLoader(dr.batchRelatedSystemIntakesBySystemIntakeIDs),
+		SystemIntakeRelatedTRBRequests:   dataloadgen.NewLoader(dr.batchRelatedTRBRequestsBySystemIntakeIDs),
+		TRBRequestContractNumbers:        dataloadgen.NewLoader(dr.batchTRBRequestContractNumbersByTRBRequestIDs),
+		TRBRequestSystems:                dataloadgen.NewLoader(dr.batchTRBRequestSystemsByTRBRequestIDs),
+		TRBRequestRelatedSystemIntakes:   dataloadgen.NewLoader(dr.batchRelatedSystemIntakesByTRBRequestIDs),
+		TRBRequestRelatedTRBRequests:     dataloadgen.NewLoader(dr.batchRelatedTRBRequestsByTRBRequestIDs),
 	}
 }

@@ -32,7 +32,7 @@ exports[`Help Links component > matches snapshot 1`] = `
             >
               <a
                 class="usa-link display-flex flex-align-center"
-                href="/system/request-type"
+                href="/system/request-type?linkCedarSystemId=1"
               >
                 Start an IT Governance request
                 <svg
@@ -80,7 +80,7 @@ exports[`Help Links component > matches snapshot 1`] = `
             >
               <a
                 class="usa-link display-flex flex-align-center"
-                href="/trb/start"
+                href="/trb/start?linkCedarSystemId=1"
               >
                 Start a technical assistance request
                 <svg
