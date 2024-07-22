@@ -176,7 +176,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	buildDataloaders := func() *dataloaders.Dataloaders {
 		return dataloaders.NewDataloaders(
 			store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
+			oktaAPIClient.FetchUserInfos,
 			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
 		)
 	}

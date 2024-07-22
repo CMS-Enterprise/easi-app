@@ -118,7 +118,7 @@ func GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, id uuid.UUID) ([]
 }
 
 // GetTRBAttendeeComponent retrieves the component of a TRB user from the TRB attendees table
-func GetTRBAttendeeComponent(ctx context.Context, store *storage.Store, euaID *string, trbRequestID uuid.UUID) (*string, error) {
+func GetTRBAttendeeComponent(ctx context.Context, euaID *string, trbRequestID uuid.UUID) (*string, error) {
 	if euaID == nil {
 		return nil, nil
 	}

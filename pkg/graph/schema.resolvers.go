@@ -261,7 +261,7 @@ func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Contex
 
 // Author is the resolver for the author field.
 func (r *governanceRequestFeedbackResolver) Author(ctx context.Context, obj *models.GovernanceRequestFeedback) (*models.UserInfo, error) {
-	return resolvers.GetGovernanceRequestFeedbackAuthor(ctx, r.service.FetchUserInfo, obj.CreatedBy)
+	return resolvers.GetGovernanceRequestFeedbackAuthor(ctx, obj.CreatedBy)
 }
 
 // IntakeFormStatus is the resolver for the intakeFormStatus field.
@@ -1809,7 +1809,7 @@ func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.S
 
 // Notes is the resolver for the notes field.
 func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error) {
-	return resolvers.SystemIntakeNotes(ctx, r.store, obj)
+	return resolvers.SystemIntakeNotes(ctx, obj)
 }
 
 // ProductManager is the resolver for the productManager field.
@@ -1838,7 +1838,7 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		return requesterWithoutEmail, nil
 	}
 
-	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID.ValueOrZero())
+	user, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.EUAUserID.ValueOrZero())
 	if err != nil {
 		// check if the EUA ID is just invalid in Okta (i.e. the requester no longer has an active EUA account)
 		if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
@@ -1849,7 +1849,14 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		return nil, err
 	}
 
+	// if we can't find the user and there was no error (shouldn't happen normally), omit the email
+	// user is a pointer, so we want to avoid a dereference below with this check
+	if user == nil {
+		return requesterWithoutEmail, nil
+	}
+
 	email := user.Email.String()
+
 	return &models.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
 		Email:     &email,
@@ -1964,7 +1971,7 @@ func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.Syste
 
 // Author is the resolver for the author field.
 func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error) {
-	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
 	if err != nil {
 		return nil, err
 	}
@@ -1979,7 +1986,7 @@ func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *mo
 
 // Author is the resolver for the author field.
 func (r *tRBAdviceLetterResolver) Author(ctx context.Context, obj *models.TRBAdviceLetter) (*models.UserInfo, error) {
-	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
 	if err != nil {
 		return nil, err
 	}
@@ -2000,7 +2007,7 @@ func (r *tRBAdviceLetterRecommendationResolver) Links(ctx context.Context, obj *
 
 // Author is the resolver for the author field.
 func (r *tRBAdviceLetterRecommendationResolver) Author(ctx context.Context, obj *models.TRBAdviceLetterRecommendation) (*models.UserInfo, error) {
-	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
 	if err != nil {
 		return nil, err
 	}
@@ -2025,7 +2032,7 @@ func (r *tRBRequestResolver) Feedback(ctx context.Context, obj *models.TRBReques
 
 // Documents is the resolver for the documents field.
 func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error) {
-	return resolvers.GetTRBRequestDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
+	return resolvers.GetTRBRequestDocumentsByRequestID(ctx, obj.ID)
 }
 
 // Form is the resolver for the form field.
@@ -2056,7 +2063,7 @@ func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBR
 // RequesterComponent is the resolver for the requesterComponent field.
 func (r *tRBRequestResolver) RequesterComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
 	requester := obj.CreatedBy
-	return resolvers.GetTRBAttendeeComponent(ctx, r.store, &requester, obj.ID)
+	return resolvers.GetTRBAttendeeComponent(ctx, &requester, obj.ID)
 }
 
 // AdminNotes is the resolver for the adminNotes field.
@@ -2096,7 +2103,7 @@ func (r *tRBRequestResolver) RelatedTRBRequests(ctx context.Context, obj *models
 
 // UserInfo is the resolver for the userInfo field.
 func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
-	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
+	userInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.EUAUserID)
 	if err != nil {
 		return nil, err
 	}
@@ -2134,7 +2141,7 @@ func (r *tRBRequestFeedbackResolver) NotifyEuaIds(ctx context.Context, obj *mode
 
 // Author is the resolver for the author field.
 func (r *tRBRequestFeedbackResolver) Author(ctx context.Context, obj *models.TRBRequestFeedback) (*models.UserInfo, error) {
-	user, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	user, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
 	if err != nil {
 		return &models.UserInfo{}, err
 	}

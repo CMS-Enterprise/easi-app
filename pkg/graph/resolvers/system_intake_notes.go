@@ -52,7 +52,6 @@ func UpdateSystemIntakeNote(
 // SystemIntakeNotes fetches notes by System Intake ID
 func SystemIntakeNotes(
 	ctx context.Context,
-	store *storage.Store,
 	obj *models.SystemIntake,
 ) ([]*models.SystemIntakeNote, error) {
 	return dataloaders.GetSystemIntakeNotesBySystemIntakeID(ctx, obj.ID)

@@ -41,3 +41,10 @@ type TRBRequestDocument struct {
 	S3Key              string                `json:"s3Key" db:"s3_key"` // The document's key inside an S3 bucket; does *not* include the bucket name.
 	DeletedAt          *time.Time            `json:"deletedAt" db:"deleted_at"`
 }
+
+func (d TRBRequestDocument) GetMappingKey() uuid.UUID {
+	return d.TRBRequestID
+}
+func (d TRBRequestDocument) GetMappingVal() *TRBRequestDocument {
+	return &d
+}
