@@ -2068,7 +2068,7 @@ func (r *tRBRequestResolver) RequesterComponent(ctx context.Context, obj *models
 
 // AdminNotes is the resolver for the adminNotes field.
 func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBAdminNote, error) {
-	return resolvers.GetTRBAdminNotesByTRBRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetTRBAdminNotesByTRBRequestID(ctx, obj.ID)
 }
 
 // IsRecent is the resolver for the isRecent field.
