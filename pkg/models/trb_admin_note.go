@@ -46,3 +46,10 @@ type TRBAdminNote struct {
 	AppliesToNextSteps      null.Bool `json:"appliesToNextSteps" db:"applies_to_next_steps"`
 	// the list of recommendations in the GQL schema is handled by a many-to-many link table with a separate model
 }
+
+func (n TRBAdminNote) GetMappingKey() uuid.UUID {
+	return n.TRBRequestID
+}
+func (n TRBAdminNote) GetMappingVal() *TRBAdminNote {
+	return &n
+}
