@@ -137,29 +137,41 @@ func (s *Store) GetTRBRequestFormsByTRBRequestIDs(ctx context.Context, trbReques
 	return forms, nil
 }
 
-// GetFundingSourcesByRequestID queries the DB for all the TRB request form funding sources
+// GetTRBFundingSourcesByRequestID queries the DB for all the TRB request form funding sources
 // matching the given TRB request ID
-func (s *Store) GetFundingSourcesByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBFundingSource, error) {
+func (s *Store) GetTRBFundingSourcesByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBFundingSource, error) {
 	fundingSources := []*models.TRBFundingSource{}
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_request_funding_sources WHERE trb_request_id=:trb_request_id`)
+	err := namedSelect(ctx, s, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqID, args{
+		"trb_request_id": trbRequestID,
+	})
+
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request funding sources",
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),
 		)
-		return nil, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     fundingSources,
+			Operation: apperrors.QueryFetch,
+		}
 	}
-	defer stmt.Close()
+	return fundingSources, err
+}
 
-	arg := map[string]interface{}{"trb_request_id": trbRequestID}
-	err = stmt.Select(&fundingSources, arg)
+// GetTRBFundingSourcesByRequestIDs queries the DB for all the TRB request form funding sources
+// matching the given TRB request IDs
+func (s *Store) GetTRBFundingSourcesByRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBFundingSource, error) {
+	fundingSources := []*models.TRBFundingSource{}
+	err := namedSelect(ctx, s, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request funding sources",
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
