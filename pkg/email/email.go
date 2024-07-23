@@ -54,6 +54,7 @@ type templates struct {
 	trbAdviceLetterSubmitted                        templateCaller
 	trbRequestClosed                                templateCaller
 	cedarRolesChanged                               templateCaller
+	systemIntakeAdminUploadDocTemplate              templateCaller
 	systemIntakeSubmitInitialFormRequesterTemplate  templateCaller
 	systemIntakeSubmitInitialFormReviewerTemplate   templateCaller
 	systemIntakeSubmitBusinessCaseRequesterTemplate templateCaller

@@ -13,6 +13,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -56,7 +57,12 @@ func GetStatusForSystemIntakeDocument(s3Client *upload.S3Client, s3Key string) (
 }
 
 // CreateSystemIntakeDocument uploads a document to S3, then saves its metadata to our database.
-func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.CreateSystemIntakeDocumentInput) (*models.SystemIntakeDocument, error) {
+func CreateSystemIntakeDocument(
+	ctx context.Context,
+	store *storage.Store,
+	s3Client *upload.S3Client,
+	emailClient *email.Client,
+	input models.CreateSystemIntakeDocumentInput) (*models.SystemIntakeDocument, error) {
 	intake, err := store.FetchSystemIntakeByID(ctx, input.RequestID)
 	if err != nil {
 		return nil, err
@@ -105,7 +111,8 @@ func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Cli
 		documentDatabaseRecord.OtherType = *input.OtherTypeDescription
 	}
 
-	if uploaderRole == models.AdminUploaderRole {
+	if uploaderRole == models.AdminUploaderRole && emailClient != nil {
+
 		// send notification
 		_ = 1
 	}
