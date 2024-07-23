@@ -24,7 +24,7 @@ type systemIntakeRetireLCIDEmailParameters struct {
 	AdditionalInfo           template.HTML
 }
 
-func (sie systemIntakeEmails) SystemIntakeRetireLCIDBody(
+func (sie systemIntakeEmails) systemIntakeRetireLCIDBody(
 	lifecycleID string,
 	lifecycleRetiresAt *time.Time,
 	lifecycleExpiresAt *time.Time,
@@ -87,7 +87,7 @@ func (sie systemIntakeEmails) SendRetireLCIDNotification(
 ) error {
 
 	subject := fmt.Sprintf("A Life Cycle ID (%s) has been retired", lifecycleID)
-	body, err := sie.SystemIntakeRetireLCIDBody(
+	body, err := sie.systemIntakeRetireLCIDBody(
 		lifecycleID,
 		lifecycleRetiresAt,
 		lifecycleExpiresAt,

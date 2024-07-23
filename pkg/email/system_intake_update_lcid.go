@@ -28,7 +28,7 @@ type systemIntakeUpdateLCIDEmailParameters struct {
 	AdditionalInfo            template.HTML
 }
 
-func (sie systemIntakeEmails) SystemIntakeUpdateLCIDBody(
+func (sie systemIntakeEmails) systemIntakeUpdateLCIDBody(
 	lifecycleID string,
 	lifecycleIssuedAt *time.Time,
 	lifecycleExpiresAtPrev *time.Time,
@@ -104,7 +104,7 @@ func (sie systemIntakeEmails) SendUpdateLCIDNotification(
 	additionalInfo *models.HTML,
 ) error {
 	subject := fmt.Sprintf("A Life Cycle ID (%s) has been updated", lifecycleID)
-	body, err := sie.SystemIntakeUpdateLCIDBody(
+	body, err := sie.systemIntakeUpdateLCIDBody(
 		lifecycleID,
 		lifecycleIssuedAt,
 		lifecycleExpiresAtPrev,

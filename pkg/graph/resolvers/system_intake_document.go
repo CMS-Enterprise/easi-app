@@ -105,6 +105,11 @@ func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Cli
 		documentDatabaseRecord.OtherType = *input.OtherTypeDescription
 	}
 
+	if uploaderRole == models.AdminUploaderRole {
+		// send notification
+		_ = 1
+	}
+
 	return store.CreateSystemIntakeDocument(ctx, &documentDatabaseRecord)
 }
 
