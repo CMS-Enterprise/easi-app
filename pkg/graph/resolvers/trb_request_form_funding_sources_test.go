@@ -15,8 +15,9 @@ func (s *ResolverSuite) TestModifyTRBFundingSources() {
 	s.Run("create/fetch/update/delete TRB request form funding sources", func() {
 		fetched, err := GetTRBFundingSourcesByRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
-		// current GQL schema returns null instead of an empty array for no funding sources
-		s.Nil(fetched)
+		s.Empty(fetched)
+		// should have no sources initially
+		s.Len(fetched, 0)
 		// add first funding sources
 		newFundingNumber1 := "12345"
 		newFundingSources1 := []string{"banana", "apple", "mango"}
