@@ -1,1 +1,23 @@
 {{template "easi_header.gohtml"}}
+
+<p>New documents have been added to GRB review for {{.RequestName}}. You can view the new documents using the link
+  below.</p>
+
+<br>
+<p><strong><a href="{{.SystemIntakeAdminLink}}">View this request in EASi</a></strong></p>
+
+<br>
+<div class="no-margin">
+  <p><u>Request Summary</u></p>
+  <p><strong>Project title:</strong> {{.RequestName}}</p>
+  <p><strong>Requester:</strong> {{.RequesterName}}, {{.RequesterComponent}}
+  </p>
+</div>
+
+
+<br>
+<p>If you have questions, please contact the Governance Team at <a
+    href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
+<br>
+<hr>
+<p>You will continue to receive email notifications about your request until it is closed.</p>
