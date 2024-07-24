@@ -4,18 +4,28 @@ export default gql`
   query GetLinkedRequests($cedarSystemId: String!) {
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
       cedarSystem {
+        linkedSystemIntakes: linkedSystemIntakes(state: OPEN) {
+          id
+          name: requestName
+          submittedAt
+          status: statusRequester
+          nextMeetingDate: grtDate # check
+          # requester
+          requesterName
+        }
         linkedTrbRequests(state: OPEN) {
           id
           name
-          createdAt
+          # submittedAt
+          form {
+            submittedAt
+          }
           status
           nextMeetingDate: consultMeetingTime
-        }
-        linkedSystemIntakes(state: OPEN) {
-          id
-          requestName
-          createdAt
-          status: statusRequester
+          # requester
+          requesterInfo {
+            commonName
+          }
         }
       }
     }
