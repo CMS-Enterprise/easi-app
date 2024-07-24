@@ -1,7 +1,11 @@
+import {
+  GetTrbLeadOptionsDocument,
+  GetTrbLeadOptionsQuery
+} from 'gql/gen/graphql';
+
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
-import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
@@ -21,7 +25,6 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
-import { GetTrbLeadOptions } from 'queries/types/GetTrbLeadOptions';
 import {
   GetTrbRequest,
   GetTrbRequestVariables
@@ -613,13 +616,14 @@ export const trbLeadOptions: MockUserInfo[] = [
   users.next()?.userInfo!
 ];
 
-export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptions> = {
+export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptionsQuery> = {
   request: {
-    query: GetTrbLeadOptionsQuery,
+    query: GetTrbLeadOptionsDocument,
     variables: {}
   },
   result: {
     data: {
+      __typename: 'Query',
       trbLeadOptions
     }
   }
