@@ -32,10 +32,10 @@ func (sie systemIntakeEmails) systemIntakeAdminUploadDocBody(input SendSystemInt
 
 	data := systemIntakeAdminUploadDocBody{
 		RequestName:              input.RequestName,
-		SystemIntakeAdminLink:    intakePath,
-		RequesterName:            "",
-		RequesterComponent:       "",
-		ITGovernanceInboxAddress: sie.client.urlFromPath(intakePath),
+		RequesterName:            input.RequesterName,
+		RequesterComponent:       input.RequesterComponent,
+		SystemIntakeAdminLink:    sie.client.urlFromPath(intakePath),
+		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
 	}
 
 	var b bytes.Buffer
@@ -60,7 +60,7 @@ func (sie systemIntakeEmails) SendSystemIntakeAdminUploadDocEmail(ctx context.Co
 
 	return sie.client.sender.Send(ctx,
 		NewEmail().
-			WithToAddresses(input.Recipients).
+			WithBccAddresses(input.Recipients).
 			WithSubject(subject).
 			WithBody(body),
 	)
