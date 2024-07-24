@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Make sure deadcode is installed at the latest version
+go install golang.org/x/tools/cmd/deadcode@latest > /dev/null 2>&1
+
 # Capture all arguments passed to the script
 # This is mainly useful for passing extra flags to deadcode (-test being a common one)
 args=("$@")
@@ -15,6 +18,7 @@ exclusions=(
 
 	# Other Exclusions
 	"pkg/models/gql_scalars.go" # GQL Scalars are called by reflection, and don't get detected properly
+	"pkg/testhelpers/" # Anything in the testhelpers directory is likely to only be used by tests, and can be ignored
 )
 
 # Function to build the grep pattern
