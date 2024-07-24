@@ -147,11 +147,13 @@ const AppRoutes = () => {
       {flags.systemWorkspace ? (
         [
           <SecureRoute
+            key="workspace"
             exact
             path="/systems/:systemId/workspace"
             component={SystemWorkspace}
           />,
           <SecureRoute
+            key="workspace-requests"
             exact
             path="/systems/:systemId/workspace/requests"
             component={SystemWorkspaceRequests}
