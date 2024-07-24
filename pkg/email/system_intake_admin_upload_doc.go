@@ -7,6 +7,8 @@ import (
 	"path"
 
 	"github.com/google/uuid"
+
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type SendSystemIntakeAdminUploadDocEmailInput struct {
@@ -14,6 +16,7 @@ type SendSystemIntakeAdminUploadDocEmailInput struct {
 	RequestName        string
 	RequesterName      string
 	RequesterComponent string
+	Recipients         []models.EmailAddress
 }
 
 type systemIntakeAdminUploadDocBody struct {
@@ -43,6 +46,22 @@ func (sie systemIntakeEmails) systemIntakeAdminUploadDocBody(input SendSystemInt
 	return b.String(), nil
 }
 
-func (sie systemIntakeEmails) SendSystemIntakeAdminUploadDocBody(ctx context.Context, requestName string) error {
-	subject := fmt.Sprintf("New documents have been added to the GRB review for %s", requestName)
+func (sie systemIntakeEmails) SendSystemIntakeAdminUploadDocEmail(ctx context.Context, input SendSystemIntakeAdminUploadDocEmailInput) error {
+	if len(input.RequestName) < 1 {
+		input.RequestName = "Draft System Intake"
+	}
+
+	subject := fmt.Sprintf("New documents have been added to the GRB review for %s", input.RequestName)
+
+	body, err := sie.systemIntakeAdminUploadDocBody(input)
+	if err != nil {
+		return err
+	}
+
+	return sie.client.sender.Send(ctx,
+		NewEmail().
+			WithToAddresses(input.Recipients).
+			WithSubject(subject).
+			WithBody(body),
+	)
 }

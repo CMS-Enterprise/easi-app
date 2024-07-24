@@ -112,9 +112,16 @@ func CreateSystemIntakeDocument(
 	}
 
 	if uploaderRole == models.AdminUploaderRole && emailClient != nil {
-		user := appcontext.Principal(ctx).Account()
 		// send notification
-		_ = 1
+		if err := emailClient.SystemIntake.SendSystemIntakeAdminUploadDocEmail(ctx, email.SendSystemIntakeAdminUploadDocEmailInput{
+			SystemIntakeID:     intake.ID,
+			RequestName:        intake.ProjectName.ValueOrZero(),
+			RequesterName:      intake.Requester,
+			RequesterComponent: intake.Component.ValueOrZero(),
+		}); err != nil {
+			// do not stop processing, just log
+			appcontext.ZLogger(ctx).Error("failed to send system intake admin upload document email", zap.Error(err))
+		}
 	}
 
 	return store.CreateSystemIntakeDocument(ctx, &documentDatabaseRecord)
