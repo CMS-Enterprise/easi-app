@@ -6,11 +6,11 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
+import { GetTrbLeadOptionsDocument } from 'gql/gen/graphql';
 import configureMockStore from 'redux-mock-store';
 
 import { attendees, requester, trbRequestSummary } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
 import GetTrbRequestHomeQuery from 'queries/GetTrbRequestHomeQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
@@ -73,7 +73,7 @@ const getTrbRequestHomeQuery = {
 
 const getTrbLeadOptionsQuery = {
   request: {
-    query: GetTrbLeadOptionsQuery
+    query: GetTrbLeadOptionsDocument
   },
   result: {
     data: {
