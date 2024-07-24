@@ -112,15 +112,9 @@ func CreateSystemIntakeDocument(
 	}
 
 	if uploaderRole == models.AdminUploaderRole && emailClient != nil {
-		// send notification
-		if err := emailClient.SystemIntake.SendSystemIntakeAdminUploadDocEmail(ctx, email.SendSystemIntakeAdminUploadDocEmailInput{
-			SystemIntakeID:     intake.ID,
-			RequestName:        intake.ProjectName.ValueOrZero(),
-			RequesterName:      intake.Requester,
-			RequesterComponent: intake.Component.ValueOrZero(),
-		}); err != nil {
+		if err := handleSendEmail(ctx, store, emailClient, intake); err != nil {
 			// do not stop processing, just log
-			appcontext.ZLogger(ctx).Error("failed to send system intake admin upload document email", zap.Error(err))
+			appcontext.ZLogger(ctx).Error("unable to send email for admin doc upload", zap.Error(err))
 		}
 	}
 
@@ -244,4 +238,34 @@ func canDelete(ctx context.Context, store *storage.Store, id uuid.UUID) error {
 		zap.String("document.id", document.ID.String()))
 
 	return errors.New("unauthorized attempt to delete system intake document")
+}
+
+func handleSendEmail(ctx context.Context, store *storage.Store, emailClient *email.Client, intake *models.SystemIntake) error {
+	grbUsers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+	if err != nil {
+		return err
+	}
+
+	ids := make([]uuid.UUID, len(grbUsers))
+	for i := range ids {
+		ids[i] = grbUsers[i].UserID
+	}
+
+	accounts, err := store.UserAccountsByIDs(ctx, ids)
+	if err != nil {
+		return err
+	}
+
+	emails := make([]models.EmailAddress, len(accounts))
+	for i := range emails {
+		emails[i] = models.EmailAddress(accounts[i].Email)
+	}
+
+	return emailClient.SystemIntake.SendSystemIntakeAdminUploadDocEmail(ctx, email.SendSystemIntakeAdminUploadDocEmailInput{
+		SystemIntakeID:     intake.ID,
+		RequestName:        intake.ProjectName.ValueOrZero(),
+		RequesterName:      intake.Requester,
+		RequesterComponent: intake.Component.ValueOrZero(),
+		Recipients:         emails,
+	})
 }
