@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeStatusRequester, TRBRequestStatus } from "./../../types/graphql-global-types";
+import { SystemIntakeState, TRBRequestState, SystemIntakeStatusRequester, TRBRequestStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetLinkedRequests
@@ -54,4 +54,6 @@ export interface GetLinkedRequests {
 
 export interface GetLinkedRequestsVariables {
   cedarSystemId: string;
+  systemIntakeState: SystemIntakeState;
+  trbRequestState: TRBRequestState;
 }

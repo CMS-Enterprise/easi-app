@@ -1,10 +1,14 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query GetLinkedRequests($cedarSystemId: String!) {
+  query GetLinkedRequests(
+    $cedarSystemId: String!
+    $systemIntakeState: SystemIntakeState!
+    $trbRequestState: TRBRequestState!
+  ) {
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
       cedarSystem {
-        linkedSystemIntakes: linkedSystemIntakes(state: OPEN) {
+        linkedSystemIntakes: linkedSystemIntakes(state: $systemIntakeState) {
           id
           name: requestName
           submittedAt
@@ -13,7 +17,7 @@ export default gql`
           # requester
           requesterName
         }
-        linkedTrbRequests(state: OPEN) {
+        linkedTrbRequests(state: $trbRequestState) {
           id
           name
           # submittedAt
