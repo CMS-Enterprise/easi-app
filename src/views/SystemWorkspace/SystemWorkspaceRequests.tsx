@@ -27,7 +27,7 @@ import {
   GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedTrbRequests as LinkedTrbRequest,
   GetLinkedRequestsVariables
 } from 'queries/types/GetLinkedRequests';
-import { formatDateLocal, formatDateUtc } from 'utils/date';
+import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -96,6 +96,8 @@ function LinkedRequestsTable({ data }: { data: LinkedRequest[] }) {
         //     ? t(`table.requestState.${state}`)
         //     : t(`table.requestStatus.${status}`)
       },
+      /*
+      tbd
       {
         Header: 'Upcoming meeting date',
         accessor: 'nextMeetingDate',
@@ -106,6 +108,7 @@ function LinkedRequestsTable({ data }: { data: LinkedRequest[] }) {
           return 'None';
         }
       },
+      */
       {
         Header: 'Requester',
         accessor: lr => {

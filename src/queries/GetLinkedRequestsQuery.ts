@@ -9,7 +9,7 @@ export default gql`
           name: requestName
           submittedAt
           status: statusRequester
-          nextMeetingDate: grtDate # check
+          # nextMeetingDate # tbd
           # requester
           requesterName
         }
@@ -21,7 +21,7 @@ export default gql`
             submittedAt
           }
           status
-          nextMeetingDate: consultMeetingTime
+          # nextMeetingDate: consultMeetingTime # tbd
           # requester
           requesterInfo {
             commonName
