@@ -112,7 +112,7 @@ func CreateSystemIntakeDocument(
 	}
 
 	if uploaderRole == models.AdminUploaderRole && emailClient != nil {
-
+		user := appcontext.Principal(ctx).Account()
 		// send notification
 		_ = 1
 	}
