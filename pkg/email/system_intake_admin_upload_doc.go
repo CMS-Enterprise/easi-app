@@ -3,6 +3,7 @@ package email
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"path"
 
@@ -22,20 +23,24 @@ type SendSystemIntakeAdminUploadDocEmailInput struct {
 type systemIntakeAdminUploadDocBody struct {
 	RequestName              string
 	RequesterName            string
-	RequesterComponent       string
+	RequestComponent         string
 	SystemIntakeAdminLink    string
 	ITGovernanceInboxAddress string
 }
 
 func (sie systemIntakeEmails) systemIntakeAdminUploadDocBody(input SendSystemIntakeAdminUploadDocEmailInput) (string, error) {
-	intakePath := path.Join("governance-task-list", input.SystemIntakeID.String())
+	adminLink := path.Join("governance-task-list", input.SystemIntakeID.String())
 
 	data := systemIntakeAdminUploadDocBody{
 		RequestName:              input.RequestName,
 		RequesterName:            input.RequesterName,
-		RequesterComponent:       input.RequesterComponent,
-		SystemIntakeAdminLink:    sie.client.urlFromPath(intakePath),
+		RequestComponent:         input.RequesterComponent,
+		SystemIntakeAdminLink:    sie.client.urlFromPath(adminLink),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
+	}
+
+	if sie.client.templates.systemIntakeAdminUploadDocTemplate == nil {
+		return "", errors.New("system intake admin upload doc template is nil")
 	}
 
 	var b bytes.Buffer
@@ -60,7 +65,7 @@ func (sie systemIntakeEmails) SendSystemIntakeAdminUploadDocEmail(ctx context.Co
 
 	return sie.client.sender.Send(ctx,
 		NewEmail().
-			WithBccAddresses(input.Recipients).
+			WithBccAddresses(append(input.Recipients, sie.client.config.GRTEmail)).
 			WithSubject(subject).
 			WithBody(body),
 	)

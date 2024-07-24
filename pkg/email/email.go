@@ -254,6 +254,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.cedarRolesChanged = cedarRolesChanged
 
+	sisAdminUploadDocTemplateName := "system_intake_admin_upload_doc.gohtml"
+	sisAdminUploadDocTemplate := rawTemplates.Lookup(sisAdminUploadDocTemplateName)
+	if sisAdminUploadDocTemplate == nil {
+		return Client{}, templateError(sisAdminUploadDocTemplateName)
+	}
+	appTemplates.systemIntakeAdminUploadDocTemplate = sisAdminUploadDocTemplate
+
 	sisInitialFormRequesterTemplateName := "system_intake_submit_initial_form_requester.gohtml"
 	sisInitialFormRequesterTemplate := rawTemplates.Lookup(sisInitialFormRequesterTemplateName)
 	if sisInitialFormRequesterTemplate == nil {
