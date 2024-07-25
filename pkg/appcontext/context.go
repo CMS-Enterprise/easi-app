@@ -26,13 +26,6 @@ func WithLogger(ctx context.Context, logger *zap.Logger) context.Context {
 	return context.WithValue(ctx, loggerKey, logger)
 }
 
-// Logger returns the context's logger
-// DEPRECATED - prefer ZLogger going forward
-func Logger(ctx context.Context) (*zap.Logger, bool) {
-	logger, ok := ctx.Value(loggerKey).(*zap.Logger)
-	return logger, ok
-}
-
 // ZLogger will always return something that functions
 // as a zap.Logger, even if it wasn't already placed
 // on the context
