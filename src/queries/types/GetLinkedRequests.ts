@@ -41,6 +41,7 @@ export interface GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedTrbReque
 
 export interface GetLinkedRequests_cedarSystemDetails_cedarSystem {
   __typename: "CedarSystem";
+  id: string;
   linkedSystemIntakes: GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedSystemIntakes[];
   linkedTrbRequests: GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedTrbRequests[];
 }

@@ -198,7 +198,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
   }
 
   return (
-    <div>
+    <div data-testid="system-linked-requests">
       {/* Open | Closed requests tabs */}
       <nav aria-label={t('adminTeamHome.existingRequests.tabs.label')}>
         <ul className="easi-request-repo__tab-list margin-bottom-4">

@@ -8,6 +8,7 @@ export default gql`
   ) {
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
       cedarSystem {
+        id
         linkedSystemIntakes: linkedSystemIntakes(state: $systemIntakeState) {
           id
           name: requestName
