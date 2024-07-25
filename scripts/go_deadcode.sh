@@ -18,6 +18,7 @@ exclusions=(
 
     # Anything in the ./cmd/ directory generally shouldn't be considered dead code, it's usually
     # just scripts or one-off commands
+    # NOTE: We need to keep the ./cmd/ directory in the deadcode check, as it's where the main entrypoint is for the rest of the code in ./pkg/
     "^cmd/.*"
 
 	# Other Exclusions
