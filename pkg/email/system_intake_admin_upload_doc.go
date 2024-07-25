@@ -24,7 +24,7 @@ type systemIntakeAdminUploadDocBody struct {
 	RequestName              string
 	RequesterName            string
 	RequestComponent         string
-	SystemIntakeAdminLink    string
+	Link                     string
 	ITGovernanceInboxAddress string
 }
 
@@ -35,7 +35,7 @@ func (sie systemIntakeEmails) systemIntakeAdminUploadDocBody(input SendSystemInt
 		RequestName:              input.RequestName,
 		RequesterName:            input.RequesterName,
 		RequestComponent:         input.RequesterComponent,
-		SystemIntakeAdminLink:    sie.client.urlFromPath(adminLink),
+		Link:                     sie.client.urlFromPath(adminLink),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
 	}
 

@@ -18,14 +18,8 @@ func (s *EmailTestSuite) TestSendSystemIntakeAdminUploadDocEmail() {
 	requester := "Dr Fishopolis"
 	requestComponent := "DOC"
 
-	//requestLink := fmt.Sprintf(
-	//	"%s://%s/governance-task-list/%s",
-	//	s.config.URLScheme,
-	//	s.config.URLHost,
-	//	intakeID.String(),
-	//)
-	adminLink := fmt.Sprintf(
-		"%s://%s/governance-review-team/%s/intake-request",
+	requestLink := fmt.Sprintf(
+		"%s://%s/governance-task-list/%s",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),
@@ -59,7 +53,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeAdminUploadDocEmail() {
 		<hr>
 		<p>You will continue to receive email notifications about your request until it is closed.</p>`,
 			requestName,
-			adminLink,
+			requestLink,
 			requester,
 			requestComponent,
 			s.config.GRTEmail.String(),
