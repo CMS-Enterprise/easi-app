@@ -31,6 +31,7 @@ import {
 import { SystemIntakeState, TRBRequestState } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
+import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -331,14 +332,15 @@ function SystemWorkspaceRequests() {
     systemId: string;
   }>();
 
-  // console.log(tableData);
+  const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
+  const workspacePath = `/systems/${systemId}/workspace`;
 
   return (
     <MainContent className="grid-container margin-bottom-5 desktop:margin-bottom-10">
       <Breadcrumbs
         items={[
           { text: t('breadcrumbs.home'), url: '/' },
-          { text: t('header'), url: 'todo' },
+          { text: t('header'), url: workspacePath },
           { text: t('requests.header') }
         ]}
       />
@@ -354,7 +356,7 @@ function SystemWorkspaceRequests() {
       </p>
 
       <UswdsReactLink
-        to="todo"
+        to={workspacePath}
         className="display-flex flex-align-center margin-top-2 text-primary"
       >
         <IconArrowBack className="margin-right-1" />
@@ -365,12 +367,28 @@ function SystemWorkspaceRequests() {
         <h4 className="margin-top-0 margin-bottom-1">
           {t('spaces.requests.start')}
         </h4>
-        <Button type="button" outline>
+
+        <UswdsReactLink
+          className="usa-button usa-button--outline text-primary"
+          to={{
+            search: linkSearchQuery,
+            pathname: '/system/request-type'
+          }}
+          data-testid="new-request-itgov"
+        >
           {t('helpLinks.links.0.linkText')}
-        </Button>
-        <Button type="button" outline>
+        </UswdsReactLink>
+
+        <UswdsReactLink
+          className="usa-button usa-button--outline text-primary"
+          to={{
+            search: linkSearchQuery,
+            pathname: '/trb/start'
+          }}
+          data-testid="new-request-itgov"
+        >
           {t('helpLinks.links.1.linkText')}
-        </Button>
+        </UswdsReactLink>
       </div>
 
       <LinkedRequestsTable systemId={systemId} />
