@@ -95,7 +95,7 @@ exports[`System Workspace Requests Table > renders open requests 1`] = `
       </a>
     </div>
     <div
-      class="bg-base-lightest padding-y-3 padding-x-2 margin-top-4 margin-bottom-6"
+      class="bg-base-lightest padding-top-3 padding-bottom-2 padding-x-2 margin-top-4 margin-bottom-6"
     >
       <h4
         class="margin-top-0 margin-bottom-1"
@@ -103,7 +103,7 @@ exports[`System Workspace Requests Table > renders open requests 1`] = `
         Start a new request
       </h4>
       <a
-        class="usa-link usa-button usa-button--outline text-primary"
+        class="usa-link usa-button usa-button--outline text-primary margin-bottom-1"
         data-testid="new-request-itgov"
         href="/system/request-type?linkCedarSystemId=%7B11AB1A00-1234-5678-ABC1-1A001B00CC1B%7D"
       >
@@ -269,7 +269,7 @@ exports[`System Workspace Requests Table > renders open requests 1`] = `
                   <div
                     class="flex-fill text-no-wrap"
                   >
-                    Project title
+                    Request name
                   </div>
                   <div
                     class="position-relative width-205 margin-left-05"

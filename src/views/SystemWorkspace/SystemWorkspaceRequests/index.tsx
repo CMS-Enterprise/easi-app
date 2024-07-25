@@ -45,7 +45,7 @@ const processName = {
 } as const;
 
 function LinkedRequestsTable({ systemId }: { systemId: string }) {
-  const { t } = useTranslation('technicalAssistance');
+  const { t } = useTranslation('tableAndPagination');
 
   const [activeTable, setActiveTable] = useState<'open' | 'closed'>('open');
 
@@ -78,7 +78,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
   const columns: Column<SystemLinkedRequest>[] = useMemo(() => {
     return [
       {
-        Header: t<string>('table.header.submissionDate'),
+        Header: t<string>('header.submissionDate'),
         id: 'submittedAt',
         accessor: lr => {
           // eslint-disable-next-line no-underscore-dangle
@@ -92,11 +92,11 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
         }
       },
       {
-        Header: t<string>('table.header.requestName'),
+        Header: t<string>('header.requestName'),
         accessor: 'name'
       },
       {
-        Header: 'Process',
+        Header: t<string>('header.process'),
         accessor: '__typename',
         Cell: ({
           value
@@ -108,15 +108,15 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
         }
       },
       {
-        Header: t<string>('adminHome.status'),
+        Header: t<string>('header.status'),
         accessor: 'status',
         Cell: ({ value, row }: CellProps<SystemLinkedRequest, string>) => {
           const lr = row.original;
           // eslint-disable-next-line no-underscore-dangle
           if (lr.__typename === 'TRBRequest') {
             return lr.state === TRBRequestState.CLOSED
-              ? t(`table.requestState.${lr.state}`)
-              : t(`table.requestStatus.${value}`);
+              ? t(`status.requestState.${lr.state}`)
+              : t(`status.requestStatus.${value}`);
           }
           return t(
             `governanceReviewTeam:systemIntakeStatusRequester.${value}`,
@@ -127,7 +127,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
       /*
       tbd
       {
-        Header: 'Upcoming meeting date',
+        Header: t<string>('header.upcomingMeetingDate'),
         accessor: 'nextMeetingDate',
         Cell: ({ value }: any) => {
           if (value) {
@@ -138,7 +138,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
       },
       */
       {
-        Header: 'Requester',
+        Header: t<string>('header.requester'),
         accessor: lr => {
           // eslint-disable-next-line no-underscore-dangle
           if (lr.__typename === 'TRBRequest') {
@@ -167,7 +167,6 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
     setGlobalFilter,
     setPageSize,
     state
-    // eslint-disable-next-line no-undef
   } = useTable(
     {
       columns,
@@ -200,7 +199,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
   return (
     <div data-testid="system-linked-requests">
       {/* Open | Closed requests tabs */}
-      <nav aria-label={t('adminTeamHome.existingRequests.tabs.label')}>
+      <nav aria-label={t('openClosedRequestsTabs.label')}>
         <ul className="easi-request-repo__tab-list margin-bottom-4">
           <li
             className={classnames('easi-request-repo__tab font-body-2xs', {
@@ -214,7 +213,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
               }`}
               onClick={() => setActiveTable('open')}
             >
-              {t('adminTeamHome.existingRequests.tabs.open.name')}
+              {t('openClosedRequestsTabs.open')}
             </button>
           </li>
           <li
@@ -229,7 +228,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
               }`}
               onClick={() => setActiveTable('closed')}
             >
-              {t('adminTeamHome.existingRequests.tabs.closed.name')}
+              {t('openClosedRequestsTabs.closed')}
             </button>
           </li>
         </ul>
@@ -288,7 +287,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
 
       {rows.length === 0 && (
         <div className="padding-x-2 padding-bottom-1 border-bottom-1px margin-top-neg-105 line-height-body-5">
-          {t(`adminTeamHome.existingRequests.noRequests.${activeTable}`)}
+          {t(`state.noRequests.${activeTable}`)}
         </div>
       )}
 
@@ -368,13 +367,13 @@ function SystemWorkspaceRequests() {
         </UswdsReactLink>
       </div>
 
-      <div className="bg-base-lightest padding-y-3 padding-x-2 margin-top-4 margin-bottom-6">
+      <div className="bg-base-lightest padding-top-3 padding-bottom-2 padding-x-2 margin-top-4 margin-bottom-6">
         <h4 className="margin-top-0 margin-bottom-1">
           {t('spaces.requests.start')}
         </h4>
 
         <UswdsReactLink
-          className="usa-button usa-button--outline text-primary"
+          className="usa-button usa-button--outline text-primary margin-bottom-1"
           to={{
             search: linkSearchQuery,
             pathname: '/system/request-type'
