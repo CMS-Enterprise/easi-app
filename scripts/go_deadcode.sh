@@ -16,6 +16,10 @@ exclusions=(
 	"pkg/graph/generated/generated.go" # gqlgen files
 	"/gen/" # Anything in a /gen/ directory (cedar core and cedar intake, namely)
 
+    # Anything in the ./cmd/ directory generally shouldn't be considered dead code, it's usually
+    # just scripts or one-off commands
+    "^cmd/.*"
+
 	# Other Exclusions
 	"pkg/models/gql_scalars.go" # GQL Scalars are called by reflection, and don't get detected properly
 	"pkg/testhelpers/" # Anything in the testhelpers directory is likely to only be used by tests, and can be ignored
