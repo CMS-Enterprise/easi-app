@@ -76,7 +76,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
     [linkedSystemIntakes, linkedTrbRequests]
   );
 
-  const columns = useMemo<Column<LinkedRequest>[]>(() => {
+  const columns: Column<LinkedRequest>[] = useMemo(() => {
     return [
       {
         Header: t<string>('table.header.submissionDate'),
@@ -108,21 +108,19 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
       {
         Header: t<string>('adminHome.status'),
         accessor: 'status',
-        Cell: ({ value }: CellProps<LinkedRequest, string>) => {
-          // system intake myrequest > table > status
-          // __typename: "SystemIntake";
-          // __typename: "TRBRequest";
-          // return t(
-          //   `governanceReviewTeam:systemIntakeStatusRequester.${row.original.statusRequester}`,
-          //   { lcid: row.original.lcid }
-          // );
-          // return t(`table.requestStatus.${value}`); // trb
-          return value;
+        Cell: ({ value, row }: CellProps<LinkedRequest, string>) => {
+          const lr = row.original;
+          // eslint-disable-next-line no-underscore-dangle
+          if (lr.__typename === 'TRBRequest') {
+            return lr.state === TRBRequestState.CLOSED
+              ? t(`table.requestState.${lr.state}`)
+              : t(`table.requestStatus.${value}`);
+          }
+          return t(
+            `governanceReviewTeam:systemIntakeStatusRequester.${value}`,
+            { lcid: lr.lcid }
+          );
         }
-        // accessor: ({ status, state }) =>
-        //   state === TRBRequestState.CLOSED
-        //     ? t(`table.requestState.${state}`)
-        //     : t(`table.requestStatus.${status}`)
       },
       /*
       tbd

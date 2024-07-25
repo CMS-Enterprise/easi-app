@@ -15,6 +15,7 @@ export interface GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedSystemIn
   name: string | null;
   submittedAt: Time | null;
   status: SystemIntakeStatusRequester;
+  lcid: string | null;
   requesterName: string | null;
 }
 
@@ -34,6 +35,7 @@ export interface GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedTrbReque
   name: string | null;
   form: GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedTrbRequests_form;
   status: TRBRequestStatus;
+  state: TRBRequestState;
   requesterInfo: GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedTrbRequests_requesterInfo;
 }
 
