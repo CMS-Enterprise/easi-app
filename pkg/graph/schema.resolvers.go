@@ -2161,7 +2161,7 @@ func (r *tRBRequestFormResolver) FundingSources(ctx context.Context, obj *models
 
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *tRBRequestFormResolver) SystemIntakes(ctx context.Context, obj *models.TRBRequestForm) ([]*models.SystemIntake, error) {
-	return resolvers.GetTRBRequestSystemIntakesByTRBRequestID(ctx, r.store, obj.TRBRequestID)
+	return resolvers.GetTRBRequestFormSystemIntakesByTRBRequestID(ctx, obj.TRBRequestID)
 }
 
 // SubjectAreaOptions is the resolver for the subjectAreaOptions field.
