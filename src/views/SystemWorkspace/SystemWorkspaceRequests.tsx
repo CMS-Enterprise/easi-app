@@ -24,11 +24,10 @@ import TablePagination from 'components/TablePagination';
 import GetLinkedRequestsQuery from 'queries/GetLinkedRequestsQuery';
 import {
   GetLinkedRequests,
-  GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedSystemIntakes as LinkedSystemIntake,
-  GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedTrbRequests as LinkedTrbRequest,
   GetLinkedRequestsVariables
 } from 'queries/types/GetLinkedRequests';
 import { SystemIntakeState, TRBRequestState } from 'types/graphql-global-types';
+import { SystemLinkedRequest } from 'types/systemLinkedRequest';
 import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
@@ -39,8 +38,6 @@ import {
 } from 'utils/tableSort';
 import { NotFoundPartial } from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
-
-type LinkedRequest = LinkedSystemIntake | LinkedTrbRequest;
 
 const processName = {
   SystemIntake: 'IT Governance',
@@ -70,7 +67,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
   const { linkedSystemIntakes, linkedTrbRequests } =
     data?.cedarSystemDetails?.cedarSystem || {};
 
-  const tableData: LinkedRequest[] = useMemo(
+  const tableData: SystemLinkedRequest[] = useMemo(
     () =>
       Array.isArray(linkedSystemIntakes) && Array.isArray(linkedTrbRequests)
         ? [...linkedSystemIntakes, ...linkedTrbRequests]
@@ -78,7 +75,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
     [linkedSystemIntakes, linkedTrbRequests]
   );
 
-  const columns: Column<LinkedRequest>[] = useMemo(() => {
+  const columns: Column<SystemLinkedRequest>[] = useMemo(() => {
     return [
       {
         Header: t<string>('table.header.submissionDate'),
@@ -90,7 +87,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
           }
           return lr.submittedAt;
         },
-        Cell: ({ value }: CellProps<LinkedRequest, string | null>) => {
+        Cell: ({ value }: CellProps<SystemLinkedRequest, string | null>) => {
           return value ? formatDateLocal(value, 'MM/dd/yyyy') : '';
         }
       },
@@ -103,14 +100,17 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
         accessor: '__typename',
         Cell: ({
           value
-        }: CellProps<LinkedRequest, LinkedRequest['__typename']>) => {
+        }: CellProps<
+          SystemLinkedRequest,
+          SystemLinkedRequest['__typename']
+        >) => {
           return processName[value];
         }
       },
       {
         Header: t<string>('adminHome.status'),
         accessor: 'status',
-        Cell: ({ value, row }: CellProps<LinkedRequest, string>) => {
+        Cell: ({ value, row }: CellProps<SystemLinkedRequest, string>) => {
           const lr = row.original;
           // eslint-disable-next-line no-underscore-dangle
           if (lr.__typename === 'TRBRequest') {
