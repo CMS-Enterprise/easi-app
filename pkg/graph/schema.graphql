@@ -738,8 +738,9 @@ type SystemIntake {
   governanceRequestFeedbacks: [GovernanceRequestFeedback!]!
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
-  grbReviewers: [SystemIntakeGRBReviewer!]!
   grtDate: Time
+  nextMeetingDate: Time
+  grbReviewers: [SystemIntakeGRBReviewer!]!
   id: UUID!
   isso: SystemIntakeISSO!
   lcid: String
@@ -1563,6 +1564,7 @@ type TRBRequest {
   adviceLetter: TRBAdviceLetter
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
+  nextMeetingDate: Time
   trbLead: String
   trbLeadInfo: UserInfo!
   requesterInfo: UserInfo!

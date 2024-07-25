@@ -704,6 +704,7 @@ type ComplexityRoot struct {
 		LifecycleIssuedAt           func(childComplexity int) int
 		LifecycleRetiresAt          func(childComplexity int) int
 		NeedsEaSupport              func(childComplexity int) int
+		NextMeetingDate             func(childComplexity int) int
 		Notes                       func(childComplexity int) int
 		OITSecurityCollaborator     func(childComplexity int) int
 		OITSecurityCollaboratorName func(childComplexity int) int
@@ -982,6 +983,7 @@ type ComplexityRoot struct {
 		ModifiedAt         func(childComplexity int) int
 		ModifiedBy         func(childComplexity int) int
 		Name               func(childComplexity int) int
+		NextMeetingDate    func(childComplexity int) int
 		RelatedIntakes     func(childComplexity int) int
 		RelatedTRBRequests func(childComplexity int) int
 		RelationType       func(childComplexity int) int
@@ -1287,6 +1289,7 @@ type SystemIntakeResolver interface {
 	GovernanceRequestFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GovernanceRequestFeedback, error)
 	GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGovernanceTeam, error)
 
+	NextMeetingDate(ctx context.Context, obj *models.SystemIntake) (*time.Time, error)
 	GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error)
 
 	Isso(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeIsso, error)
@@ -1358,6 +1361,8 @@ type TRBRequestResolver interface {
 	Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error)
 	AdviceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBAdviceLetter, error)
 	TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error)
+
+	NextMeetingDate(ctx context.Context, obj *models.TRBRequest) (*time.Time, error)
 
 	TrbLeadInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error)
 	RequesterInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error)
@@ -5437,6 +5442,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.NeedsEaSupport(childComplexity), true
 
+	case "SystemIntake.nextMeetingDate":
+		if e.complexity.SystemIntake.NextMeetingDate == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.NextMeetingDate(childComplexity), true
+
 	case "SystemIntake.notes":
 		if e.complexity.SystemIntake.Notes == nil {
 			break
@@ -6731,6 +6743,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBRequest.Name(childComplexity), true
+
+	case "TRBRequest.nextMeetingDate":
+		if e.complexity.TRBRequest.NextMeetingDate == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.NextMeetingDate(childComplexity), true
 
 	case "TRBRequest.relatedIntakes":
 		if e.complexity.TRBRequest.RelatedIntakes == nil {
@@ -8373,8 +8392,9 @@ type SystemIntake {
   governanceRequestFeedbacks: [GovernanceRequestFeedback!]!
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
-  grbReviewers: [SystemIntakeGRBReviewer!]!
   grtDate: Time
+  nextMeetingDate: Time
+  grbReviewers: [SystemIntakeGRBReviewer!]!
   id: UUID!
   isso: SystemIntakeISSO!
   lcid: String
@@ -9198,6 +9218,7 @@ type TRBRequest {
   adviceLetter: TRBAdviceLetter
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
+  nextMeetingDate: Time
   trbLead: String
   trbLeadInfo: UserInfo!
   requesterInfo: UserInfo!
@@ -13417,10 +13438,12 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -22160,6 +22183,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedTrbRequests(ctx conte
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -22291,10 +22316,12 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -28498,10 +28525,12 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -28723,10 +28752,12 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -30235,6 +30266,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -30350,6 +30383,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -31362,6 +31397,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestConsultMeeting
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -31501,6 +31538,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestTRBLead(ctx co
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -31613,6 +31652,8 @@ func (ec *executionContext) fieldContext_Mutation_setTRBRequestRelationNewSystem
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -31725,6 +31766,8 @@ func (ec *executionContext) fieldContext_Mutation_setTRBRequestRelationExistingS
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -31837,6 +31880,8 @@ func (ec *executionContext) fieldContext_Mutation_setTRBRequestRelationExistingS
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -31949,6 +31994,8 @@ func (ec *executionContext) fieldContext_Mutation_unlinkTRBRequestRelation(ctx c
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -33546,6 +33593,8 @@ func (ec *executionContext) fieldContext_Mutation_closeTRBRequest(ctx context.Co
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -33685,6 +33734,8 @@ func (ec *executionContext) fieldContext_Mutation_reopenTrbRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -34039,10 +34090,12 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -34240,10 +34293,12 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -34465,10 +34520,12 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -34655,10 +34712,12 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -36326,6 +36385,8 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -36465,6 +36526,8 @@ func (ec *executionContext) fieldContext_Query_trbRequests(ctx context.Context, 
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -36580,6 +36643,8 @@ func (ec *executionContext) fieldContext_Query_myTrbRequests(ctx context.Context
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -38493,6 +38558,88 @@ func (ec *executionContext) fieldContext_SystemIntake_grbDate(_ context.Context,
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_grtDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grtDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GRTDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grtDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_nextMeetingDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().NextMeetingDate(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_nextMeetingDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_grbReviewers(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 	if err != nil {
@@ -38552,47 +38699,6 @@ func (ec *executionContext) fieldContext_SystemIntake_grbReviewers(_ context.Con
 				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewer", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntake_grtDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_grtDate(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.GRTDate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntake_grtDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -40786,10 +40892,12 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -40960,6 +41068,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedTRBRequests(_ conte
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -41124,10 +41234,12 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -48210,6 +48322,47 @@ func (ec *executionContext) fieldContext_TRBRequest_consultMeetingTime(_ context
 	return fc, nil
 }
 
+func (ec *executionContext) _TRBRequest_nextMeetingDate(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBRequest().NextMeetingDate(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequest_nextMeetingDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequest",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _TRBRequest_trbLead(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBRequest_trbLead(ctx, field)
 	if err != nil {
@@ -49013,10 +49166,12 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -49187,6 +49342,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedTRBRequests(_ context
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_TRBRequest_nextMeetingDate(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
@@ -51864,10 +52021,12 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -52608,10 +52767,12 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
 				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
-			case "grbReviewers":
-				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "grtDate":
 				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "nextMeetingDate":
+				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -63476,6 +63637,41 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "grbDate":
 			out.Values[i] = ec._SystemIntake_grbDate(ctx, field, obj)
+		case "grtDate":
+			out.Values[i] = ec._SystemIntake_grtDate(ctx, field, obj)
+		case "nextMeetingDate":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_nextMeetingDate(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "grbReviewers":
 			field := field
 
@@ -63512,8 +63708,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "grtDate":
-			out.Values[i] = ec._SystemIntake_grtDate(ctx, field, obj)
 		case "id":
 			out.Values[i] = ec._SystemIntake_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -66668,6 +66862,39 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "consultMeetingTime":
 			out.Values[i] = ec._TRBRequest_consultMeetingTime(ctx, field, obj)
+		case "nextMeetingDate":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequest_nextMeetingDate(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "trbLead":
 			out.Values[i] = ec._TRBRequest_trbLead(ctx, field, obj)
 		case "trbLeadInfo":

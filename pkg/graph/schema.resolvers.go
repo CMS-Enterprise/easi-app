@@ -1155,20 +1155,7 @@ func (r *queryResolver) Requests(ctx context.Context, first int) (*models.Reques
 		if queryErr != nil {
 			return nil, gqlerror.Errorf("query error: %s", queryErr)
 		}
-		var nextMeetingDate *time.Time
-		grbDateIsSetAndNotInPast := intake.GRBDate != nil && time.Now().Before(*intake.GRBDate)
-		grtDateIsSetAndNotInPast := intake.GRTDate != nil && time.Now().Before(*intake.GRTDate)
-		if grbDateIsSetAndNotInPast && grtDateIsSetAndNotInPast {
-			if intake.GRBDate.Before(*intake.GRTDate) {
-				nextMeetingDate = intake.GRBDate
-			} else {
-				nextMeetingDate = intake.GRTDate
-			}
-		} else if grtDateIsSetAndNotInPast {
-			nextMeetingDate = intake.GRTDate
-		} else if grbDateIsSetAndNotInPast {
-			nextMeetingDate = intake.GRBDate
-		}
+		nextMeetingDate := resolvers.SystemIntakeNextMeetingDate(ctx, &intake, time.Now()) // TODO: Just use the resolver, but we should delete this request type eventually...
 		node := models.Request{
 			ID:              intake.ID,
 			SubmittedAt:     intake.SubmittedAt,
@@ -1770,6 +1757,11 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 	}, nil
 }
 
+// NextMeetingDate is the resolver for the nextMeetingDate field.
+func (r *systemIntakeResolver) NextMeetingDate(ctx context.Context, obj *models.SystemIntake) (*time.Time, error) {
+	return resolvers.SystemIntakeNextMeetingDate(ctx, obj, time.Now()), nil
+}
+
 // GrbReviewers is the resolver for the grbReviewers field.
 func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error) {
 	return resolvers.SystemIntakeGRBReviewers(ctx, obj.ID)
@@ -2039,6 +2031,11 @@ func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRe
 // TaskStatuses is the resolver for the taskStatuses field.
 func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error) {
 	return resolvers.GetTRBTaskStatuses(ctx, r.store, *obj)
+}
+
+// NextMeetingDate is the resolver for the nextMeetingDate field.
+func (r *tRBRequestResolver) NextMeetingDate(ctx context.Context, obj *models.TRBRequest) (*time.Time, error) {
+	return resolvers.TRBRequestNextMeetingDate(ctx, obj, time.Now()), nil
 }
 
 // TrbLeadInfo is the resolver for the trbLeadInfo field.
