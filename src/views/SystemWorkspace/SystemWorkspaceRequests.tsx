@@ -17,7 +17,7 @@ import classnames from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
-import Spinner from 'components/Spinner';
+import PageLoading from 'components/PageLoading';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
@@ -37,6 +37,7 @@ import {
   getColumnSortStatus,
   getHeaderSortIcon
 } from 'utils/tableSort';
+import { NotFoundPartial } from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 type LinkedRequest = LinkedSystemIntake | LinkedTrbRequest;
@@ -51,7 +52,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
 
   const [activeTable, setActiveTable] = useState<'open' | 'closed'>('open');
 
-  const { loading, data } = useQuery<
+  const { loading, error, data } = useQuery<
     GetLinkedRequests,
     GetLinkedRequestsVariables
   >(GetLinkedRequestsQuery, {
@@ -188,6 +189,14 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
 
   rows.map(row => prepareRow(row));
 
+  if (error) {
+    return <NotFoundPartial />;
+  }
+
+  if (loading) {
+    return <PageLoading />;
+  }
+
   return (
     <div>
       {/* Open | Closed requests tabs */}
@@ -226,99 +235,93 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
         </ul>
       </nav>
 
-      {loading ? (
-        <Spinner />
-      ) : (
-        <>
-          <GlobalClientFilter
-            setGlobalFilter={setGlobalFilter}
-            tableID={t('systemTable.id')}
-            tableName={t('systemTable.title')}
-            className="margin-bottom-5 maxw-mobile-lg"
-          />
+      <GlobalClientFilter
+        setGlobalFilter={setGlobalFilter}
+        tableID={t('systemTable.id')}
+        tableName={t('systemTable.title')}
+        className="margin-bottom-5 maxw-mobile-lg"
+      />
 
-          <Table bordered={false} fullWidth scrollable {...getTableProps()}>
-            <thead>
-              {headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column, index) => (
-                    <th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                      aria-sort={getColumnSortStatus(column)}
-                      scope="col"
-                      className="border-bottom-2px"
-                    >
-                      <Button
-                        type="button"
-                        unstyled
-                        className="width-full display-flex"
-                        {...column.getSortByToggleProps()}
-                      >
-                        <div className="flex-fill text-no-wrap">
-                          {column.render('Header')}
-                        </div>
-                        <div className="position-relative width-205 margin-left-05">
-                          {getHeaderSortIcon(column)}
-                        </div>
-                      </Button>
-                    </th>
-                  ))}
-                </tr>
+      <Table bordered={false} fullWidth scrollable {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column, index) => (
+                <th
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  aria-sort={getColumnSortStatus(column)}
+                  scope="col"
+                  className="border-bottom-2px"
+                >
+                  <Button
+                    type="button"
+                    unstyled
+                    className="width-full display-flex"
+                    {...column.getSortByToggleProps()}
+                  >
+                    <div className="flex-fill text-no-wrap">
+                      {column.render('Header')}
+                    </div>
+                    <div className="position-relative width-205 margin-left-05">
+                      {getHeaderSortIcon(column)}
+                    </div>
+                  </Button>
+                </th>
               ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {page.map((row, rowIdx) => {
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map((cell, index) => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {page.map((row, rowIdx) => {
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell, index) => {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
 
-          {rows.length === 0 && (
-            <div className="padding-x-2 padding-bottom-1 border-bottom-1px margin-top-neg-105 line-height-body-5">
-              {t(`adminTeamHome.existingRequests.noRequests.${activeTable}`)}
-            </div>
-          )}
+      {rows.length === 0 && (
+        <div className="padding-x-2 padding-bottom-1 border-bottom-1px margin-top-neg-105 line-height-body-5">
+          {t(`adminTeamHome.existingRequests.noRequests.${activeTable}`)}
+        </div>
+      )}
 
-          {rows.length > 0 && (
-            <>
-              <div className="grid-row grid-gap grid-gap-lg">
-                <TablePagination
-                  gotoPage={gotoPage}
-                  previousPage={previousPage}
-                  nextPage={nextPage}
-                  canNextPage={canNextPage}
-                  pageIndex={state.pageIndex}
-                  pageOptions={pageOptions}
-                  canPreviousPage={canPreviousPage}
-                  pageCount={pageCount}
-                  pageSize={state.pageSize}
-                  setPageSize={setPageSize}
-                  page={[]}
-                  className="desktop:grid-col-fill desktop:padding-bottom-0 desktop:margin-bottom-0"
-                />
-                <TablePageSize
-                  className="desktop:grid-col-auto"
-                  pageSize={state.pageSize}
-                  setPageSize={setPageSize}
-                />
-              </div>
+      {rows.length > 0 && (
+        <>
+          <div className="grid-row grid-gap grid-gap-lg">
+            <TablePagination
+              gotoPage={gotoPage}
+              previousPage={previousPage}
+              nextPage={nextPage}
+              canNextPage={canNextPage}
+              pageIndex={state.pageIndex}
+              pageOptions={pageOptions}
+              canPreviousPage={canPreviousPage}
+              pageCount={pageCount}
+              pageSize={state.pageSize}
+              setPageSize={setPageSize}
+              page={[]}
+              className="desktop:grid-col-fill desktop:padding-bottom-0 desktop:margin-bottom-0"
+            />
+            <TablePageSize
+              className="desktop:grid-col-auto"
+              pageSize={state.pageSize}
+              setPageSize={setPageSize}
+            />
+          </div>
 
-              <div
-                className="usa-sr-only usa-table__announcement-region"
-                aria-live="polite"
-              >
-                {currentTableSortDescription(headerGroups[0])}
-              </div>
-            </>
-          )}
+          <div
+            className="usa-sr-only usa-table__announcement-region"
+            aria-live="polite"
+          >
+            {currentTableSortDescription(headerGroups[0])}
+          </div>
         </>
       )}
     </div>
@@ -355,13 +358,15 @@ function SystemWorkspaceRequests() {
         {t('requests.description')}
       </p>
 
-      <UswdsReactLink
-        to={workspacePath}
-        className="display-flex flex-align-center margin-top-2 text-primary"
-      >
-        <IconArrowBack className="margin-right-1" />
-        {t('returnToWorkspace')}
-      </UswdsReactLink>
+      <div className="display-flex margin-top-2">
+        <UswdsReactLink
+          to={workspacePath}
+          className="display-flex flex-align-center text-primary"
+        >
+          <IconArrowBack className="margin-right-1" />
+          {t('returnToWorkspace')}
+        </UswdsReactLink>
+      </div>
 
       <div className="bg-base-lightest padding-y-3 padding-x-2 margin-top-4 margin-bottom-6">
         <h4 className="margin-top-0 margin-bottom-1">
