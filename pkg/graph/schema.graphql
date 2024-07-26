@@ -739,6 +739,7 @@ type SystemIntake {
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
   grtDate: Time
+  lastMeetingDate: Time
   nextMeetingDate: Time
   grbReviewers: [SystemIntakeGRBReviewer!]!
   id: UUID!
@@ -1564,6 +1565,7 @@ type TRBRequest {
   adviceLetter: TRBAdviceLetter
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
+  lastMeetingDate: Time
   nextMeetingDate: Time
   trbLead: String
   trbLeadInfo: UserInfo!

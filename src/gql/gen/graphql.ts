@@ -1811,6 +1811,7 @@ export type SystemIntake = {
   id: Scalars['UUID']['output'];
   isso: SystemIntakeIsso;
   itGovTaskStatuses: ItGovTaskStatuses;
+  lastMeetingDate?: Maybe<Scalars['Time']['output']>;
   lcid?: Maybe<Scalars['String']['output']>;
   lcidCostBaseline?: Maybe<Scalars['String']['output']>;
   lcidExpiresAt?: Maybe<Scalars['Time']['output']>;
@@ -2673,6 +2674,7 @@ export type TrbRequest = {
   form: TrbRequestForm;
   id: Scalars['UUID']['output'];
   isRecent: Scalars['Boolean']['output'];
+  lastMeetingDate?: Maybe<Scalars['Time']['output']>;
   modifiedAt?: Maybe<Scalars['Time']['output']>;
   modifiedBy?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
