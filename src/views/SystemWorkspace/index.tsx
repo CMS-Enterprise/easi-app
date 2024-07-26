@@ -48,7 +48,7 @@ export const SystemWorkspace = () => {
 
   const cedarSystem = data?.cedarSystemDetails?.cedarSystem;
   const ato = data?.cedarAuthorityToOperate[0];
-  const atoStatus = getAtoStatus(ato);
+  const atoStatus = getAtoStatus(ato?.dateAuthorizationMemoExpires);
 
   const isso = data?.cedarSystemDetails?.roles.length
     ? data.cedarSystemDetails.roles.find(

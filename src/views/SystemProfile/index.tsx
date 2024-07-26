@@ -238,7 +238,9 @@ export function getSystemProfileData(
     ...data,
     id: cedarSystem.id,
     ato: cedarAuthorityToOperate,
-    atoStatus: getAtoStatus(cedarAuthorityToOperate),
+    atoStatus: getAtoStatus(
+      cedarAuthorityToOperate.dateAuthorizationMemoExpires
+    ),
     budgetSystemCosts: cedarBudgetSystemCost,
     budgets: cedarBudget,
     businessOwners,

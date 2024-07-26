@@ -10,7 +10,6 @@ import { IconProps } from '@trussworks/react-uswds/lib/components/Icon/Icon';
 import classnames from 'classnames';
 
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
-import { GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate } from 'queries/types/GetSystemProfile';
 import { AtoStatus } from 'types/systemProfile';
 import { parseAsUTC } from 'utils/date';
 
@@ -31,24 +30,13 @@ const atoStatusIcon: Record<AtoStatus, React.ComponentType<IconProps>> = {
 };
 
 /**
- * Get the ATO Status from certain date properties and flags.
+ * Get the ATO Status from a date property
  */
-export function getAtoStatus(
-  // eslint-disable-next-line camelcase
-  data?: {
-    dateAuthorizationMemoExpires: CedarAuthorityToOperate['dateAuthorizationMemoExpires'];
-  }
-): AtoStatus {
-  // `ato.dateAuthorizationMemoExpires` will be null if tlcPhase is Initiate|Develop
+export function getAtoStatus(dt: string | null | undefined): AtoStatus {
+  // No ato if it doesn't exist or invalid empty string
+  if (typeof dt !== 'string' || dt === '') return 'No ATO';
 
-  // No ato if it doesn't exist
-  if (!data) return 'No ATO';
-
-  const { dateAuthorizationMemoExpires } = data;
-
-  if (!dateAuthorizationMemoExpires) return 'No ATO';
-
-  const expiry = parseAsUTC(dateAuthorizationMemoExpires).toString();
+  const expiry = parseAsUTC(dt).toString();
 
   const date = new Date().toISOString();
 
@@ -57,6 +45,7 @@ export function getAtoStatus(
   const soon = parseAsUTC(expiry)
     .minus({ days: ATO_STATUS_DUE_SOON_DAYS })
     .toString();
+
   if (date >= soon) return 'Due Soon';
 
   return 'Active';

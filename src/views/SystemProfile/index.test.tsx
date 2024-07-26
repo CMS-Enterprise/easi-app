@@ -7,7 +7,7 @@ import {
   waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import { clone, cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { DateTime } from 'luxon';
 
 import { getAtoStatus } from 'components/shared/AtoStatus';
@@ -91,18 +91,12 @@ describe('System profile description is expandable', () => {
 });
 
 describe('System Profile ATO Status', () => {
-  it('output "No ATO" on missing cedarAuthorityToOperate', () => {
+  it('output "No ATO" on missing invalid date property', () => {
+    expect(getAtoStatus('')).toBe('No ATO');
+
+    expect(getAtoStatus(null)).toBe('No ATO');
+
     expect(getAtoStatus(undefined)).toBe('No ATO');
-  });
-
-  it('output "No ATO" on missing cedarAuthorityToOperate.dateAuthorizationMemoExpires', () => {
-    const cedarAto = clone(result.data.cedarAuthorityToOperate[0]);
-
-    cedarAto.dateAuthorizationMemoExpires = '';
-    expect(getAtoStatus(cedarAto)).toBe('No ATO');
-
-    cedarAto.dateAuthorizationMemoExpires = null;
-    expect(getAtoStatus(cedarAto)).toBe('No ATO');
   });
 
   it.each([
@@ -116,9 +110,7 @@ describe('System Profile ATO Status', () => {
       dt: DateTime.utc().plus({ days: ATO_STATUS_DUE_SOON_DAYS + 1 })
     }
   ])('output based on current date %j', ({ status, dt }) => {
-    const cedarAto = clone(result.data.cedarAuthorityToOperate[0]);
-    cedarAto.dateAuthorizationMemoExpires = dt.toString();
-    expect(getAtoStatus(cedarAto)).toBe(status);
+    expect(getAtoStatus(dt.toString())).toBe(status);
   });
 });
 
