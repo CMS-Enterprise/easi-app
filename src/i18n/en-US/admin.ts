@@ -16,7 +16,14 @@ const admin = {
     'This request is for a completely new system, service, or contract and may not have other requests related to it. If this is an error, please use the button below to link the request to a system, service, or contract.',
   linkSystem: 'Link this request to a system, service, or contract',
   noContractNumber: 'No contract number listed',
-  relatedRequests: 'Related requests'
+  relatedRequests: 'Related requests',
+  tableColumns: {
+    projectTitle: 'Project title',
+    process: 'Process',
+    contractNumber: 'Contract number',
+    status: 'Status',
+    submissionDate: 'Submission date'
+  }
 };
 
 export default admin;
