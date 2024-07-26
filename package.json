@@ -6,6 +6,7 @@
     "@apollo/client": "^3.10.7",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
     "@cypress/code-coverage": "^3.12.39",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.0",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^2.9.8",
     "@okta/okta-auth-js": "^7.7.0",
@@ -92,7 +93,7 @@
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "generate": "rm -rf src/queries/types && apollo client:codegen --passthroughCustomScalars --localSchemaFile=pkg/graph/schema.graphql --target typescript  --tagName=gql --addTypename --globalTypesFile=src/types/graphql-global-types.ts types",
+    "generate": "graphql-codegen --config codegen.ts && rm -rf src/queries/types && apollo client:codegen --passthroughCustomScalars --localSchemaFile=pkg/graph/schema.graphql --target typescript  --tagName=gql --addTypename --globalTypesFile=src/types/graphql-global-types.ts types",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
@@ -103,7 +104,6 @@
     ]
   },
   "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -121,6 +121,9 @@
     "@babel/core": "^7.24.5",
     "@babel/preset-env": "^7.24.5",
     "@cypress/webpack-preprocessor": "^6.0.1",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/client-preset": "^4.3.0",
+    "@graphql-codegen/typed-document-node": "^5.0.9",
     "@storybook/addon-actions": "^7.0",
     "@storybook/addon-controls": "^7.0",
     "@storybook/addon-essentials": "^7.0",
@@ -181,7 +184,15 @@
     "node-fetch": "2.6.1",
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-jsx-a11y": "6.8.0",
-    "eslint-plugin-react": "7.34.1"
+    "eslint-plugin-react": "7.34.1",
+    "graphql": "15.8.0",
+    "@graphql-typed-document-node/core": "3.2.0"
+  },
+  "comments": {
+    "on_resolutions": {
+      "graphql": "Having graphql fixed at 15.8.0 allows apollo codegen and graphql-codegen to work together. Once the former is deprecated, you can remove this",
+      "typed_document_node": "https://github.com/dotansimha/graphql-code-generator/issues/9293"
+    }
   },
   "jest": {
     "collectCoverageFrom": [
