@@ -5,3 +5,5 @@ export interface LinkedRequestForTable {
   status: string;
   submissionDate: string;
 }
+
+const tableMap = (tableData: LinkedRequestForTable[]) => {};
