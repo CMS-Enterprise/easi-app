@@ -8,12 +8,15 @@ type ErrorAlertProps = {
   children: React.ReactNode | React.ReactNodeArray;
   classNames?: string;
   testId?: string;
+  /** Whether to autoFocus alert on error - defaults to true */
+  autoFocus?: boolean;
 };
 export const ErrorAlert = ({
   heading,
   children,
   classNames,
-  testId
+  testId,
+  autoFocus = true
 }: ErrorAlertProps) => {
   const errorAlertClasses = classnames(
     'usa-alert',
@@ -25,10 +28,10 @@ export const ErrorAlert = ({
 
   useEffect(() => {
     const { current } = headingEl;
-    if (current) {
+    if (current && autoFocus) {
       current.focus();
     }
-  }, []);
+  }, [autoFocus]);
 
   return (
     <div className={errorAlertClasses} role="alert" data-testid={testId}>

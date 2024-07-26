@@ -1,3 +1,17 @@
+import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
+
+const hasContractLabels: Record<
+  `hasContract_${SystemIntakeContractStatus}`,
+  string
+> = {
+  hasContract_HAVE_CONTRACT:
+    'I am planning project changes during my existing contract/InterAgency Agreement (IAA) period of performance',
+  hasContract_IN_PROGRESS:
+    'I am currently working on my OAGM Acquisition Plan/IAA documents',
+  hasContract_NOT_STARTED: "I haven't started acquisition planning yet",
+  hasContract_NOT_NEEDED: "I don't anticipate needing contractor support"
+};
+
 const intake = {
   navigation: {
     itGovernance: 'IT Governance',
@@ -271,6 +285,9 @@ const intake = {
         'You can find your funding number in the CMS Operating Plan page',
       fundingSource: 'Funding source',
       fundingSources: 'Funding sources',
+      fundingNumberLabel: 'Funding number: {{fundingNumber}}',
+      fundingSourcesLabel: 'Funding sources: {{sources}}',
+      formLegend: '{{action}} funding source',
       errors: {
         fundingNumberMinDigits: 'Funding number must be exactly 6 digits',
         fundingNumberDigits: 'Funding number can only contain digits',
@@ -289,21 +306,15 @@ const intake = {
       'Do you already have a contract in place to support this effort?',
     hasContractHelpText:
       'This information helps the Office of Acquisition and Grants Management (OAGM) track work',
-    hasContractRadio_HAVE_CONTRACT:
-      'I am planning project changes during my existing contract/InterAgency Agreement (IAA) period of performance',
     contractors: 'Contractor(s)',
     periodOfPerformance:
       'Period of Performance dates (include all option years)',
     newPeriodOfPerformance:
       'New Period of Performance dates (include all option years)',
     periodOfPerformanceHelpText: 'For example: 4/10/2020 - 4/9/2025',
-    hasContractRadio_IN_PROGRESS:
-      'I am currently working on my OAGM Acquisition Plan/IAA documents',
-    hasContractRadio_NOT_STARTED: "I haven't started acquisition planning yet",
-    hasContractRadio_NOT_NEEDED:
-      "I don't anticipate needing contractor support",
     hasContractRadioHint:
-      'Choosing this option will remove previously-entered contract number(s).'
+      'Choosing this option will remove previously-entered contract number(s).',
+    ...hasContractLabels
   },
   review: {
     heading: 'Check your answers before sending',

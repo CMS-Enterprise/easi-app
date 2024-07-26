@@ -1,3 +1,8 @@
+/**
+ * This component was previously used for both the system intake and TRB forms, and will be
+ * deprecated when `/components/FundingSources` is refactored to work with both forms.
+ */
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Fieldset, Label, Link } from '@trussworks/react-uswds';
@@ -7,15 +12,15 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import MultiSelect from 'components/shared/MultiSelect';
+import { GetTrbRequest_trbRequest_form_fundingSources as FundingSource } from 'queries/types/GetTrbRequest';
 import {
   FormattedFundingSourcesObject,
-  FundingSource,
   MultiFundingSource,
   UpdateActiveFundingSource,
   UpdateFundingSources
-} from 'types/systemIntake';
+} from 'types/technicalAssistance';
 
-import useIntakeFundingSources from './useIntakeFundingSources';
+import useIntakeFundingSources from './useTrbFundingSources';
 
 type FundingSourcesListItemProps = {
   fundingNumber: string;
@@ -25,7 +30,7 @@ type FundingSourcesListItemProps = {
   className?: string;
 };
 
-export const FundingSourcesListItem = ({
+const FundingSourcesListItem = ({
   fundingNumber,
   sources,
   handleDelete,
@@ -273,11 +278,12 @@ type FundingSourcesProps = {
   id?: string;
   initialValues: FundingSource[];
   fundingSourceOptions: string[];
-  setFieldValue: (field: string, value: any) => void;
+  setFieldValue: (value: any) => void;
   setFieldActive?: (active: boolean) => void;
   combinedFields?: boolean;
 };
 
+/** Funding sources component for use in TRB request form */
 const FundingSources = ({
   id,
   initialValues,

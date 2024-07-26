@@ -1,15 +1,31 @@
-/** Custom hook for system intake funding sources form */
+/**
+ * This hook was previously used for both the system intake and TRB forms, and will be
+ * deprecated when `/components/FundingSources` is refactored to work with both forms.
+ */
+
 import { useEffect, useMemo, useState } from 'react';
 
+import { GetTrbRequest_trbRequest_form_fundingSources as FundingSource } from 'queries/types/GetTrbRequest';
 import {
   ExistingFundingSource,
   FormattedFundingSourcesObject,
-  FundingSource,
   MultiFundingSource,
   UpdateActiveFundingSource,
-  UpdateFundingSources,
-  UseIntakeFundingSources
-} from 'types/systemIntake';
+  UpdateFundingSources
+} from 'types/technicalAssistance';
+
+/** useIntakeFundingSources hook return type */
+export type UseTrbFundingSources = {
+  fundingSources: [
+    fundingSources: FormattedFundingSourcesObject,
+    updateFundingSources: ({ action, data }: UpdateFundingSources) => void
+  ];
+  activeFundingSource: [
+    activeFundingSource: MultiFundingSource,
+    updateActiveFundingSource: (payload: UpdateActiveFundingSource) => void,
+    action: 'Add' | 'Edit' | null
+  ];
+};
 
 type GenericFundingSourceQueryType = {
   fundingNumber: string;
@@ -42,12 +58,12 @@ export const formatFundingSourcesForRender = (
   ) as MultiFundingSource[];
 };
 
-// Custom hook for system intake funding source actions
-export default function useIntakeFundingSources(
-  initialFundingSources: FundingSource[],
-  setFieldValue: (field: string, value: any) => void,
+/** Custom hook for funding sources functionality in TRB request form */
+export default function useTrbFundingSources(
+  initialFundingSources: Omit<FundingSource, 'id'>[],
+  setFieldValue: (value: any) => void,
   combinedFields?: boolean
-): UseIntakeFundingSources {
+): UseTrbFundingSources {
   // Format initial funding sources
   const fundingSources = useMemo(() => {
     // If no initial funding sources, return empty object
@@ -97,7 +113,7 @@ export default function useIntakeFundingSources(
   // Format funding sources for API
   const formatSourcesForApi = (
     sourcesObject: FormattedFundingSourcesObject
-  ): FundingSource[] => {
+  ): Omit<FundingSource, 'id' | '__typename'>[] => {
     return Object.values(sourcesObject)
       .map(sourceObj => {
         const { fundingNumber, sources } = sourceObj;
@@ -130,16 +146,13 @@ export default function useIntakeFundingSources(
       }
 
       // Set funding sources field value
-      setFieldValue(
-        'fundingSources',
-        formatSourcesForApi(updatedFundingSources)
-      );
+      setFieldValue(formatSourcesForApi(updatedFundingSources));
     } else if (action === 'Delete') {
       // Set funding number as value to delete
-      setFieldValue('fundingSources', { delete: fundingNumber });
+      setFieldValue({ delete: fundingNumber });
     } else {
       // Set funding sources field value for a single combined source
-      setFieldValue('fundingSources', data);
+      setFieldValue(data);
     }
   }
 
