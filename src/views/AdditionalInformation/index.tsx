@@ -112,6 +112,8 @@ const AdditionalInformation = ({
           )}
         </>
       )}
+
+      <h2 className="margin-bottom-0">{t('relatedRequests')}</h2>
     </div>
   );
 };
