@@ -4,7 +4,7 @@ import { Button, ButtonGroup, IconLaunch, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import Modal from 'components/Modal';
-import AtoStatusTag from 'components/shared/AtoStatusTag';
+import AtoStatusTag from 'components/shared/AtoStatus';
 import { ATO_LEARN_MORE, CFACTS } from 'constants/externalUrls';
 import { GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate } from 'queries/types/GetSystemProfile';
 import { GetSystemWorkspace_cedarSystemDetails_roles as CedarRole } from 'queries/types/GetSystemWorkspace';

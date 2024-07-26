@@ -9,6 +9,7 @@ import BookmarkButton from 'components/BookmarkButton';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import { getAtoStatus } from 'components/shared/AtoStatus';
 import SystemProfileModal from 'components/SystemProfileModal';
 import TLCTag from 'components/TLCTag';
 import GetSystemWorkspaceQuery from 'queries/GetSystemWorkspaceQuery';
@@ -19,7 +20,6 @@ import {
 import { RoleTypeName } from 'types/systemProfile';
 import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 import NotFound from 'views/NotFound';
-import { getAtoStatus } from 'views/SystemProfile';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import AtoCard from './components/AtoCard';

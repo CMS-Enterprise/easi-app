@@ -10,6 +10,7 @@ import {
 import { clone, cloneDeep } from 'lodash';
 import { DateTime } from 'luxon';
 
+import { getAtoStatus } from 'components/shared/AtoStatus';
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import {
   getMockPersonRole,
@@ -21,7 +22,7 @@ import {
 import { GetSystemProfile_cedarSystemDetails_roles } from 'queries/types/GetSystemProfile';
 import { RoleTypeName, SubpageKey } from 'types/systemProfile';
 
-import SystemProfile, { getAtoStatus } from './index';
+import SystemProfile from './index';
 import pointsOfContactIds from './pointsOfContactIds';
 import PointsOfContactSidebar, {
   getPointsOfContact
