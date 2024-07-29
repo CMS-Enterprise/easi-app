@@ -6,7 +6,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
-	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/email"
@@ -67,13 +66,5 @@ func (s Sender) Send(ctx context.Context, emailData email.Email) error {
 		SourceArn: aws.String(s.config.SourceARN),
 	}
 	_, err := s.client.SendEmail(input)
-	if err == nil {
-		appcontext.ZLogger(ctx).Info("Sending email with SES",
-			zap.Strings("To", models.EmailAddressesToStrings(emailData.ToAddresses)),
-			zap.Strings("CC", models.EmailAddressesToStrings(emailData.CcAddresses)),
-			zap.Strings("BCC", models.EmailAddressesToStrings(emailData.BccAddresses)),
-			zap.String("Subject", emailData.Subject),
-		)
-	}
 	return err
 }
