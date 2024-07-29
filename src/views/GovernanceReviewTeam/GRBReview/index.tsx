@@ -14,7 +14,10 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
-import { DeleteSystemIntakeGRBReviewerQuery } from 'queries/SystemIntakeGRBReviewerQueries';
+import {
+  DeleteSystemIntakeGRBReviewerQuery,
+  GetSystemIntakeGRBReviewersQuery
+} from 'queries/SystemIntakeGRBReviewerQueries';
 import {
   DeleteSystemIntakeGRBReviewer,
   DeleteSystemIntakeGRBReviewerVariables
@@ -58,7 +61,12 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
     DeleteSystemIntakeGRBReviewer,
     DeleteSystemIntakeGRBReviewerVariables
   >(DeleteSystemIntakeGRBReviewerQuery, {
-    refetchQueries: ['GetSystemIntakeGRBReviewers']
+    refetchQueries: [
+      {
+        query: GetSystemIntakeGRBReviewersQuery,
+        variables: { id }
+      }
+    ]
   });
 
   const removeGRBReviewer = (reviewer: SystemIntakeGRBReviewer) => {

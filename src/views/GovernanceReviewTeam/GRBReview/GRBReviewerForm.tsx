@@ -27,6 +27,7 @@ import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
 import {
   CreateSystemIntakeGRBReviewerQuery,
+  GetSystemIntakeGRBReviewersQuery,
   UpdateSystemIntakeGRBReviewerQuery
 } from 'queries/SystemIntakeGRBReviewerQueries';
 import {
@@ -82,14 +83,24 @@ const GRBReviewerForm = ({ setReviewerToRemove }: GRBReviewerFormProps) => {
     CreateSystemIntakeGRBReviewer,
     CreateSystemIntakeGRBReviewerVariables
   >(CreateSystemIntakeGRBReviewerQuery, {
-    refetchQueries: ['GetSystemIntakeGRBReviewers']
+    refetchQueries: [
+      {
+        query: GetSystemIntakeGRBReviewersQuery,
+        variables: { id: systemId }
+      }
+    ]
   });
 
   const [updateGRBReviewer] = useMutation<
     UpdateSystemIntakeGRBReviewer,
     UpdateSystemIntakeGRBReviewerVariables
   >(UpdateSystemIntakeGRBReviewerQuery, {
-    refetchQueries: ['GetSystemIntakeGRBReviewers']
+    refetchQueries: [
+      {
+        query: GetSystemIntakeGRBReviewersQuery,
+        variables: { id: systemId }
+      }
+    ]
   });
 
   const {
@@ -188,7 +199,7 @@ const GRBReviewerForm = ({ setReviewerToRemove }: GRBReviewerFormProps) => {
         className="maxw-none tablet:grid-col-9 margin-bottom-8"
       >
         <FormGroup>
-          <Label htmlFor="userAccount" required>
+          <Label htmlFor="react-select-userAccount-input" required>
             {t('form.grbMemberName')}
           </Label>
           <HelpText id="userAccountHelpText" className="margin-top-05">
@@ -276,7 +287,7 @@ const GRBReviewerForm = ({ setReviewerToRemove }: GRBReviewerFormProps) => {
           <Dropdown
             {...register('grbRole')}
             ref={null}
-            id="grbRoleRole"
+            id="grbRole"
             aria-describedby="grbRoleHelpText"
           >
             <option value="">{t('form:dropdownInitialSelect')}</option>

@@ -295,7 +295,6 @@ export default function CedarContactSelect({
       isDisabled={disabled}
       aria-describedby={ariaDescribedBy}
       aria-disabled={disabled}
-      aria-label="Cedar-Users"
       components={{ Input, IndicatorsContainer, ClearIndicator, Option, Menu }}
       options={contacts.map(contact => ({
         label: formatContactLabel(contact),
