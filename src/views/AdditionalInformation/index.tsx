@@ -13,6 +13,8 @@ import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
 import IsGrbViewContext from 'views/GovernanceReviewTeam/IsGrbViewContext';
 
+import RelatedRequestsTable from './RelatedRequestsTable';
+
 const AdditionalInformation = ({
   request,
   type
@@ -113,7 +115,12 @@ const AdditionalInformation = ({
         </>
       )}
 
-      <h2 className="margin-bottom-0">{t('relatedRequests')}</h2>
+      {type === 'itgov' && (
+        <>
+          <h2 className="margin-bottom-0">{t('relatedRequests')}</h2>
+          <RelatedRequestsTable requestID={request.id} />
+        </>
+      )}
     </div>
   );
 };
