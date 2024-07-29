@@ -2791,6 +2791,7 @@ export type TrbRequestForm = {
   createdBy: Scalars['String']['output'];
   expectedEndDate?: Maybe<Scalars['Time']['output']>;
   expectedStartDate?: Maybe<Scalars['Time']['output']>;
+  /** TODO: Make Funding sources non-nullable */
   fundingSources?: Maybe<Array<TrbFundingSource>>;
   hasExpectedStartEndDates?: Maybe<Scalars['Boolean']['output']>;
   hasSolutionInMind?: Maybe<Scalars['Boolean']['output']>;

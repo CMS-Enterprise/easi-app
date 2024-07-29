@@ -2156,7 +2156,7 @@ func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.T
 
 // FundingSources is the resolver for the fundingSources field.
 func (r *tRBRequestFormResolver) FundingSources(ctx context.Context, obj *models.TRBRequestForm) ([]*models.TRBFundingSource, error) {
-	return resolvers.GetFundingSourcesByRequestID(ctx, r.store, obj.TRBRequestID)
+	return resolvers.GetTRBFundingSourcesByRequestID(ctx, obj.TRBRequestID)
 }
 
 // SystemIntakes is the resolver for the systemIntakes field.
