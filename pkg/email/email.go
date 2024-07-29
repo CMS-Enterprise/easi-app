@@ -466,8 +466,8 @@ func (e Email) WithCCAddresses(ccAddresses []models.EmailAddress) Email {
 	return e
 }
 
-func (e Email) WithBccAddresses(BccAddresses []models.EmailAddress) Email {
-	e.BccAddresses = BccAddresses
+func (e Email) WithBccAddresses(bccAddresses []models.EmailAddress) Email {
+	e.BccAddresses = bccAddresses
 	return e
 }
 
