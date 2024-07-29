@@ -1,5 +1,3 @@
----
-version: '3.7'
 services:
   db_migrate:
     image: '${ECR_REGISTRY}/easi-db-migrate:${GIT_HASH}'
