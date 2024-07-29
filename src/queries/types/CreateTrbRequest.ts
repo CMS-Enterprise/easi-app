@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBSubjectAreaOption, TRBFeedbackAction } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBSubjectAreaOption, TRBFeedbackAction, TRBRequestStatus, SystemIntakeDecisionState } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: CreateTrbRequest
@@ -74,6 +74,40 @@ export interface CreateTrbRequest_createTRBRequest_feedback {
   createdAt: Time;
 }
 
+export interface CreateTrbRequest_createTRBRequest_relatedTRBRequests_contractNumbers {
+  __typename: "TRBRequestContractNumber";
+  contractNumber: string;
+}
+
+export interface CreateTrbRequest_createTRBRequest_relatedTRBRequests {
+  __typename: "TRBRequest";
+  id: UUID;
+  name: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: CreateTrbRequest_createTRBRequest_relatedTRBRequests_contractNumbers[];
+  status: TRBRequestStatus;
+  createdAt: Time;
+}
+
+export interface CreateTrbRequest_createTRBRequest_relatedIntakes_contractNumbers {
+  __typename: "SystemIntakeContractNumber";
+  contractNumber: string;
+}
+
+export interface CreateTrbRequest_createTRBRequest_relatedIntakes {
+  __typename: "SystemIntake";
+  id: UUID;
+  requestName: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: CreateTrbRequest_createTRBRequest_relatedIntakes_contractNumbers[];
+  decisionState: SystemIntakeDecisionState;
+  submittedAt: Time | null;
+}
+
 export interface CreateTrbRequest_createTRBRequest {
   __typename: "TRBRequest";
   id: UUID;
@@ -83,6 +117,14 @@ export interface CreateTrbRequest_createTRBRequest {
   taskStatuses: CreateTrbRequest_createTRBRequest_taskStatuses;
   form: CreateTrbRequest_createTRBRequest_form;
   feedback: CreateTrbRequest_createTRBRequest_feedback[];
+  /**
+   * Other TRB Requests that share a CEDAR System or Contract Number
+   */
+  relatedTRBRequests: CreateTrbRequest_createTRBRequest_relatedTRBRequests[];
+  /**
+   * System Intakes that share a CEDAR System or Contract Number
+   */
+  relatedIntakes: CreateTrbRequest_createTRBRequest_relatedIntakes[];
 }
 
 export interface CreateTrbRequest {

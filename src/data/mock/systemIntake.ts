@@ -276,7 +276,9 @@ export const emptySystemIntake: SystemIntake = {
         }
       ]
     }
-  ]
+  ],
+  relatedIntakes: [],
+  relatedTRBRequests: []
 };
 
 export const systemIntake: SystemIntake = {
@@ -401,7 +403,9 @@ export const systemIntake: SystemIntake = {
         }
       ]
     }
-  ]
+  ],
+  relatedIntakes: [],
+  relatedTRBRequests: []
 };
 
 /** System intake form that has NOT been started */
