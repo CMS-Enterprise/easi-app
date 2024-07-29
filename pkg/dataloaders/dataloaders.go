@@ -91,6 +91,7 @@ type Dataloaders struct {
 	TRBRequestRelatedSystemIntakes   *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
 	TRBRequestRelatedTRBRequests     *dataloadgen.Loader[uuid.UUID, []*models.TRBRequest]
 	TRBRequestSystems                *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestSystem]
+	TRBRequestFormSystemIntakes      *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
 }
 
 // NewDataloaders returns a new set of dataloaders
@@ -128,5 +129,6 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		TRBRequestRelatedSystemIntakes:   dataloadgen.NewLoader(dr.batchRelatedSystemIntakesByTRBRequestIDs),
 		TRBRequestRelatedTRBRequests:     dataloadgen.NewLoader(dr.batchRelatedTRBRequestsByTRBRequestIDs),
 		TRBRequestSystems:                dataloadgen.NewLoader(dr.batchTRBRequestSystemsByTRBRequestIDs),
+		TRBRequestFormSystemIntakes:      dataloadgen.NewLoader(dr.batchTRBRequestFormSystemIntakesByTRBRequestIDs),
 	}
 }
