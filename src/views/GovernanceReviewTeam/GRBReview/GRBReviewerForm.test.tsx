@@ -8,7 +8,8 @@ import { MessageProvider } from 'hooks/useMessage';
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import {
   CreateSystemIntakeGRBReviewerQuery,
-  GetSystemIntakeGRBReviewersQuery
+  GetSystemIntakeGRBReviewersQuery,
+  UpdateSystemIntakeGRBReviewerQuery
 } from 'queries/SystemIntakeGRBReviewerQueries';
 import {
   CreateSystemIntakeGRBReviewer,
@@ -23,6 +24,10 @@ import {
   GetSystemIntakeGRBReviewersVariables
 } from 'queries/types/GetSystemIntakeGRBReviewers';
 import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
+import {
+  UpdateSystemIntakeGRBReviewer,
+  UpdateSystemIntakeGRBReviewerVariables
+} from 'queries/types/UpdateSystemIntakeGRBReviewer';
 import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
@@ -48,11 +53,17 @@ const grbReviewer: SystemIntakeGRBReviewer = {
     __typename: 'UserAccount',
     id: '6867f3b6-283f-492b-a180-2066470e2a0a',
     commonName: contact.commonName,
-    email: contact.commonName,
+    email: contact.email,
     username: contact.euaUserId
   },
   votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
   grbRole: SystemIntakeGRBReviewerRole.CMCS_REP
+};
+
+const updatedGRBReviewer: SystemIntakeGRBReviewer = {
+  ...grbReviewer,
+  votingRole: SystemIntakeGRBReviewerVotingRole.NON_VOTING,
+  grbRole: SystemIntakeGRBReviewerRole.QIO_REP
 };
 
 // Cedar contacts query mock
@@ -89,17 +100,38 @@ const createSystemIntakeGRBReviewerQuery: MockedQuery<
   },
   result: {
     data: {
-      createSystemIntakeGRBReviewer: {
-        ...grbReviewer
-      }
+      createSystemIntakeGRBReviewer: grbReviewer
     }
   }
 };
 
-const getSystemIntakeGRBReviewersQuery: MockedQuery<
+const updateSystemIntakeGRBReviewerQuery: MockedQuery<
+  UpdateSystemIntakeGRBReviewer,
+  UpdateSystemIntakeGRBReviewerVariables
+> = {
+  request: {
+    query: UpdateSystemIntakeGRBReviewerQuery,
+    variables: {
+      input: {
+        reviewerID: grbReviewer.id,
+        votingRole: SystemIntakeGRBReviewerVotingRole.NON_VOTING,
+        grbRole: SystemIntakeGRBReviewerRole.QIO_REP
+      }
+    }
+  },
+  result: {
+    data: {
+      updateSystemIntakeGRBReviewer: updatedGRBReviewer
+    }
+  }
+};
+
+const getSystemIntakeGRBReviewersQuery = (
+  reviewer?: SystemIntakeGRBReviewer
+): MockedQuery<
   GetSystemIntakeGRBReviewers,
   GetSystemIntakeGRBReviewersVariables
-> = {
+> => ({
   request: {
     query: GetSystemIntakeGRBReviewersQuery,
     variables: {
@@ -111,11 +143,11 @@ const getSystemIntakeGRBReviewersQuery: MockedQuery<
       systemIntake: {
         __typename: 'SystemIntake',
         id: systemIntake.id,
-        grbReviewers: [grbReviewer]
+        grbReviewers: reviewer ? [reviewer] : []
       }
     }
   }
-};
+});
 
 describe('GRB reviewer form', () => {
   it('adds a GRB reviewer', async () => {
@@ -131,8 +163,8 @@ describe('GRB reviewer form', () => {
             cedarContactsQuery('Je'),
             cedarContactsQuery('Jerry Seinfeld'),
             createSystemIntakeGRBReviewerQuery,
-            getSystemIntakeGRBReviewersQuery,
-            getSystemIntakeGRBReviewersQuery
+            getSystemIntakeGRBReviewersQuery(),
+            getSystemIntakeGRBReviewersQuery(grbReviewer)
           ]}
         >
           <MessageProvider>
@@ -179,5 +211,72 @@ describe('GRB reviewer form', () => {
     userEvent.click(submitButton);
 
     expect(await screen.findByText('Jerry Seinfeld (Voting) - CMCS Rep'));
+  });
+
+  it('edits a GRB reviewer', async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: `/governance-review-team/${systemIntake.id}/grb-review/edit`,
+            state: grbReviewer
+          },
+          `/governance-review-team/${systemIntake.id}/grb-review`
+        ]}
+      >
+        <VerboseMockedProvider
+          mocks={[
+            cedarContactsQuery(contactLabel),
+            updateSystemIntakeGRBReviewerQuery,
+            getSystemIntakeGRBReviewersQuery(grbReviewer),
+            getSystemIntakeGRBReviewersQuery(updatedGRBReviewer)
+          ]}
+        >
+          <MessageProvider>
+            <Route path="/:reviewerType/:systemId/grb-review/:action">
+              <IsGrbViewContext.Provider value>
+                <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
+              </IsGrbViewContext.Provider>
+            </Route>
+            <Route path="/:reviewerType/:systemId/grb-review">
+              <IsGrbViewContext.Provider value>
+                <GRBReview
+                  {...systemIntake}
+                  grbReviewers={[updatedGRBReviewer]}
+                />
+              </IsGrbViewContext.Provider>
+            </Route>
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByRole('heading', { name: 'Add a GRB reviewer' }));
+
+    const contactInput = screen.getByRole('combobox', {
+      name: 'GRB member name *'
+    });
+
+    expect(contactInput).toBeDisabled();
+    expect(contactInput).toHaveValue(contactLabel);
+
+    const votingRoleField = screen.getByRole('combobox', {
+      name: 'Voting role *'
+    });
+    userEvent.selectOptions(votingRoleField, 'NON_VOTING');
+    expect(votingRoleField).toHaveValue('NON_VOTING');
+
+    const grbRoleField = screen.getByRole('combobox', { name: 'GRB role *' });
+    userEvent.selectOptions(grbRoleField, 'QIO_REP');
+    expect(grbRoleField).toHaveValue('QIO_REP');
+
+    const submitButton = screen.getByRole('button', { name: 'Save changes' });
+
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(submitButton).not.toBeDisabled();
+    userEvent.click(submitButton);
+
+    expect(await screen.findByText('Jerry Seinfeld (Non-voting) - QIO Rep'));
   });
 });
