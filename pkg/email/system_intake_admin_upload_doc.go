@@ -65,7 +65,7 @@ func (sie systemIntakeEmails) SendSystemIntakeAdminUploadDocEmail(ctx context.Co
 
 	return sie.client.sender.Send(ctx,
 		NewEmail().
-			WithBccAddresses(append(input.Recipients, sie.client.config.GRTEmail)).
+			WithBCCAddresses(append(input.Recipients, sie.client.config.GRTEmail)).
 			WithSubject(subject).
 			WithBody(body),
 	)

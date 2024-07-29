@@ -39,9 +39,9 @@ func NewSender(config Config) Sender {
 
 // Send sends an email. It will only return an error if there's an error connecting to SES; an invalid address/bounced email will *not* return an error.
 func (s Sender) Send(ctx context.Context, emailData email.Email) error {
-	// Don't send an email if there's no recipients (even if there are ccAddresses)
-	if len(emailData.ToAddresses) == 0 {
-		appcontext.ZLogger(ctx).Warn("attempted to send an email with empty toAddresses")
+	// Don't send an email if there are no recipients
+	if len(emailData.ToAddresses) == 0 && len(emailData.CcAddresses) == 0 && len(emailData.BccAddresses) == 0 {
+		appcontext.ZLogger(ctx).Warn("attempted to send an email with no recipients")
 		return nil
 	}
 
@@ -71,6 +71,7 @@ func (s Sender) Send(ctx context.Context, emailData email.Email) error {
 		appcontext.ZLogger(ctx).Info("Sending email with SES",
 			zap.Strings("To", models.EmailAddressesToStrings(emailData.ToAddresses)),
 			zap.Strings("CC", models.EmailAddressesToStrings(emailData.CcAddresses)),
+			zap.Strings("BCC", models.EmailAddressesToStrings(emailData.BccAddresses)),
 			zap.String("Subject", emailData.Subject),
 		)
 	}

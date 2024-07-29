@@ -85,4 +85,25 @@ func (s *SESTestSuite) TestSend() {
 
 		s.NoError(err)
 	})
+	s.Run("Sends email when only BCC or CC addresses are passed", func() {
+		err := s.sender.Send(
+			context.Background(),
+			email.NewEmail().
+				WithBCCAddresses([]models.EmailAddress{"success@simulator.amazonses.com"}).
+				WithSubject("Test Subject").
+				WithBody("Test Body"),
+		)
+
+		s.NoError(err)
+
+		err = s.sender.Send(
+			context.Background(),
+			email.NewEmail().
+				WithCCAddresses([]models.EmailAddress{"success@simulator.amazonses.com"}).
+				WithSubject("Test Subject").
+				WithBody("Test Body"),
+		)
+
+		s.NoError(err)
+	})
 }
