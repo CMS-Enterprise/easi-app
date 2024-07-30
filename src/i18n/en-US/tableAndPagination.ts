@@ -8,6 +8,10 @@ const tableAndPagination = {
     submissionDate: 'Submission date',
     upcomingMeetingDate: 'Upcoming meeting date'
   },
+  defaultVal: {
+    draft: 'Draft',
+    notSubmitted: 'Not submitted'
+  },
   openClosedRequestsTabs: {
     label: 'Request Repository Table Navigation',
     open: 'Open requests',

@@ -88,12 +88,19 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
           return lr.submittedAt;
         },
         Cell: ({ value }: CellProps<SystemLinkedRequest, string | null>) => {
-          return value ? formatDateLocal(value, 'MM/dd/yyyy') : '';
+          return value
+            ? formatDateLocal(value, 'MM/dd/yyyy')
+            : t<string>('defaultVal.notSubmitted');
         }
       },
       {
         Header: t<string>('header.requestName'),
-        accessor: 'name'
+        accessor: 'name',
+        Cell: ({
+          value
+        }: CellProps<SystemLinkedRequest, SystemLinkedRequest['name']>) => {
+          return value || t<string>('defaultVal.draft');
+        }
       },
       {
         Header: t<string>('header.process'),
