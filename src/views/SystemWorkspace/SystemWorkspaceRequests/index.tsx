@@ -361,7 +361,7 @@ function SystemWorkspaceRequests() {
       <p className="font-body-lg line-height-body-5 text-light margin-y-0">
         {t('requests.subhead')}
       </p>
-      <p className="line-height-body-5 margin-top-1">
+      <p className="font-body-md text-light line-height-body-4 margin-top-1">
         {t('requests.description')}
       </p>
 
