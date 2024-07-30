@@ -29,13 +29,13 @@ type systemIntakeAdminUploadDocBody struct {
 }
 
 func (sie systemIntakeEmails) systemIntakeAdminUploadDocBody(input SendSystemIntakeAdminUploadDocEmailInput) (string, error) {
-	adminLink := path.Join("governance-task-list", input.SystemIntakeID.String())
+	link := path.Join("governance-review-team", input.SystemIntakeID.String(), "grb-review")
 
 	data := systemIntakeAdminUploadDocBody{
 		RequestName:              input.RequestName,
 		RequesterName:            input.RequesterName,
 		RequestComponent:         input.RequesterComponent,
-		Link:                     sie.client.urlFromPath(adminLink),
+		Link:                     sie.client.urlFromPath(link),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
 	}
 
