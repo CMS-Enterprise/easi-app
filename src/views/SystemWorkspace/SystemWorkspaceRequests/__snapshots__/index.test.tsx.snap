@@ -68,7 +68,7 @@ exports[`System Workspace Requests Table > renders open requests 1`] = `
       EASi facilitates IT Governance requests and requests for technical assistance from the Technical Review Board (TRB). Use this page to view and manage open and closed requests for your system. You have access to edit and manage all of the requests below. You may have created them, or they may have been created by another team member
     </p>
     <div
-      class="display-flex margin-top-2"
+      class="display-flex"
     >
       <a
         class="usa-link display-flex flex-align-center text-primary"

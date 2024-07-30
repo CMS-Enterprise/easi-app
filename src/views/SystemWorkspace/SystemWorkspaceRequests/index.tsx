@@ -18,6 +18,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import IconLink from 'components/shared/IconLink';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
@@ -364,14 +365,14 @@ function SystemWorkspaceRequests() {
         {t('requests.description')}
       </p>
 
-      <div className="display-flex margin-top-2">
-        <UswdsReactLink
+      <div className="display-flex">
+        <IconLink
+          className="text-primary"
+          icon={<IconArrowBack />}
           to={workspacePath}
-          className="display-flex flex-align-center text-primary"
         >
-          <IconArrowBack className="margin-right-1" />
           {t('returnToWorkspace')}
-        </UswdsReactLink>
+        </IconLink>
       </div>
 
       <div className="bg-base-lightest padding-top-3 padding-bottom-2 padding-x-2 margin-top-4 margin-bottom-6">
