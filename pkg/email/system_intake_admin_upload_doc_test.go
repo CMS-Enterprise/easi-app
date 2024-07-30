@@ -19,7 +19,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeAdminUploadDocEmail() {
 	requestComponent := "DOC"
 
 	requestLink := fmt.Sprintf(
-		"%s://%s/governance-task-list/%s",
+		"%s://%s/governance-review-team/%s/grb-review",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),
