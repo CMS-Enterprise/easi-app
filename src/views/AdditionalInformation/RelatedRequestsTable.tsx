@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  CellProps,
   Column,
   Row,
   useFilters,
@@ -10,13 +11,24 @@ import {
   useTable
 } from 'react-table';
 import { useQuery } from '@apollo/client';
+import { Table as UswdsTable } from '@trussworks/react-uswds';
 
 import UswdsReactLink from '../../components/LinkWrapper';
+import Alert from '../../components/shared/Alert';
+import GlobalClientFilter from '../../components/TableFilter';
+import TablePageSize from '../../components/TablePageSize';
+import TablePagination from '../../components/TablePagination';
+import TableResults from '../../components/TableResults';
 import GetSystemIntakeRelatedRequests from '../../queries/GetSystemIntakeRelatedRequests';
 import { GetSystemIntake } from '../../queries/types/GetSystemIntake';
 import { GetSystemIntakeRelatedRequestsVariables } from '../../queries/types/GetSystemIntakeRelatedRequests';
 import globalFilterCellText from '../../utils/globalFilterCellText';
-import { sortColumnValues } from '../../utils/tableSort';
+import {
+  currentTableSortDescription,
+  getColumnSortStatus,
+  getHeaderSortIcon,
+  sortColumnValues
+} from '../../utils/tableSort';
 
 import { LinkedRequestForTable } from './tableMap';
 
@@ -89,15 +101,8 @@ const RelatedRequestsTable = ({
       {
         Header: t<string>('tableColumns.projectTitle'),
         accessor: 'projectTitle',
-        Cell: ({
-          row,
-          value
-        }: {
-          row: Row<LinkedRequestForTable>;
-          value: string;
-        }) => {
-          let link: string = '';
-
+        Cell: ({ value, row }: CellProps<LinkedRequestForTable, string>) => {
+          let link: string;
           if (row.original.process === 'TRB') {
             link = `/trb/task-list/${row.original.id}`;
           } else {
@@ -175,7 +180,120 @@ const RelatedRequestsTable = ({
   );
 
   rows.map(row => prepareRow(row));
-  return <div>table!</div>;
+  return (
+    <div>
+      {tableData.length > state.pageSize && (
+        <>
+          <GlobalClientFilter
+            setGlobalFilter={setGlobalFilter}
+            tableID={t('relatedRequestsTable.id')}
+            tableName={t('relatedRequestsTable.title')}
+            className="margin-bottom-4"
+          />
+
+          <TableResults
+            globalFilter={state.globalFilter}
+            pageIndex={state.pageIndex}
+            pageSize={state.pageSize}
+            filteredRowLength={rows.length}
+            rowLength={tableData.length}
+            className="margin-bottom-4"
+          />
+        </>
+      )}
+      <UswdsTable bordered={false} {...getTableProps()} fullWidth scrollable>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th
+                  {...column.getHeaderProps()}
+                  aria-sort={getColumnSortStatus(column)}
+                  className="table-header"
+                  scope="col"
+                >
+                  <button
+                    className="usa-button usa-button--unstyled"
+                    type="button"
+                    {...column.getSortByToggleProps()}
+                  >
+                    {column.render('Header')}
+                    {getHeaderSortIcon(column)}
+                  </button>
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {page.map(row => (
+            <tr {...row.getRowProps()}>
+              {row.cells.map((cell, index) => {
+                if (index === 0) {
+                  return (
+                    <th
+                      {...cell.getCellProps()}
+                      scope="row"
+                      style={{ paddingLeft: '0' }}
+                    >
+                      {cell.render('Cell')}
+                    </th>
+                  );
+                }
+
+                return (
+                  <td
+                    {...cell.getCellProps()}
+                    style={{ width: cell.column.width, paddingLeft: '0' }}
+                  >
+                    {cell.render('Cell')}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </UswdsTable>
+      <div className="grid-row grid-gap grid-gap-lg">
+        {tableData.length > state.pageSize && (
+          <TablePagination
+            gotoPage={gotoPage}
+            previousPage={previousPage}
+            nextPage={nextPage}
+            canNextPage={canNextPage}
+            pageIndex={state.pageIndex}
+            pageOptions={pageOptions}
+            canPreviousPage={canPreviousPage}
+            pageCount={pageCount}
+            pageSize={state.pageSize}
+            setPageSize={setPageSize}
+            page={[]}
+            className="desktop:grid-col-fill"
+          />
+        )}
+
+        {tableData.length > 10 && (
+          <TablePageSize
+            className="desktop:grid-col-auto"
+            pageSize={state.pageSize}
+            setPageSize={setPageSize}
+          />
+        )}
+      </div>
+      {tableData.length === 0 && (
+        <Alert type="info" slim>
+          {t('relatedRequestsTable.empty')}
+        </Alert>
+      )}
+
+      <div
+        className="usa-sr-only usa-table__announcement-region"
+        aria-live="polite"
+      >
+        {currentTableSortDescription(headerGroups[0])}
+      </div>
+    </div>
+  );
 };
 
 export default RelatedRequestsTable;

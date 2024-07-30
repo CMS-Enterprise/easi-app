@@ -23,6 +23,11 @@ const admin = {
     contractNumber: 'Contract number',
     status: 'Status',
     submissionDate: 'Submission date'
+  },
+  relatedRequestsTable: {
+    id: 'related-requests-table',
+    title: 'Related requests',
+    empty: 'There are no additional requests linked to this system'
   }
 };
 
