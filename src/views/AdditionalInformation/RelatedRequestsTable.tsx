@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  CellProps,
+  Cell,
   Column,
   Row,
   useFilters,
@@ -51,7 +51,7 @@ const RelatedRequestsTable = ({
     fetchPolicy: 'cache-and-network'
   });
 
-  const tableData = useMemo(() => {
+  const tableData: LinkedRequestForTable[] = useMemo(() => {
     if (error !== undefined) {
       return [];
     }
@@ -109,7 +109,7 @@ const RelatedRequestsTable = ({
         }: {
           row: Row<LinkedRequestForTable>;
           value: LinkedRequestForTable['projectTitle'];
-        }) => {
+        }): JSX.Element => {
           let link: string;
           if (row.original.process === 'TRB') {
             link = `/trb/task-list/${row.original.id}`;
@@ -217,7 +217,7 @@ const RelatedRequestsTable = ({
           />
         </>
       )}
-      <UswdsTable bordered={false} {...getTableProps()} fullWidth scrollable>
+      <UswdsTable bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -242,32 +242,27 @@ const RelatedRequestsTable = ({
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map((row: Row<LinkedRequestForTable>) => (
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                // if (index === 0) {
-                //   return (
-                //     <th
-                //       {...cell.getCellProps()}
-                //       scope="row"
-                //       style={{ paddingLeft: '0' }}
-                //     >
-                //       {cell.render('Cell')}
-                //     </th>
-                //   );
-                // }
-
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                    style={{ width: cell.column.width, paddingLeft: '0' }}
-                  >
-                    {cell.render('Cell')}
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
+          {page.map((row: Row<LinkedRequestForTable>) => {
+            // without this destructure (i.e., calling `{...row.getRowProps()}` down below
+            // or even using `= row;` instead of `= { ...row }; on the next line
+            // leads to a handful of `[field] is missing in props validation(react/prop-types)`
+            // TODO: why do other tables not trigger eslint issue but this one does?
+            const { getRowProps, cells } = { ...row };
+            return (
+              <tr {...getRowProps()}>
+                {cells.map((cell: Cell<LinkedRequestForTable, any>) => {
+                  return (
+                    <td
+                      {...cell.getCellProps()}
+                      style={{ width: cell.column.width, paddingLeft: '0' }}
+                    >
+                      {cell.render('Cell')}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
         </tbody>
       </UswdsTable>
       <div className="grid-row grid-gap grid-gap-lg">
