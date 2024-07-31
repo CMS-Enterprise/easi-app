@@ -89,17 +89,19 @@ type TestConfigs struct {
 }
 
 type mockSender struct {
-	toAddresses []models.EmailAddress
-	ccAddresses []models.EmailAddress
-	subject     string
-	body        string
+	toAddresses  []models.EmailAddress
+	ccAddresses  []models.EmailAddress
+	bccAddresses []models.EmailAddress
+	subject      string
+	body         string
 }
 
-func (s *mockSender) Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error {
-	s.toAddresses = toAddresses
-	s.ccAddresses = ccAddresses
-	s.subject = subject
-	s.body = body
+func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
+	s.toAddresses = emailData.ToAddresses
+	s.ccAddresses = emailData.CcAddresses
+	s.bccAddresses = emailData.BccAddresses
+	s.subject = emailData.Subject
+	s.body = emailData.Body
 	return nil
 }
 
