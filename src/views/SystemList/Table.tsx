@@ -197,8 +197,11 @@ export const Table = ({
       },
       {
         Header: 'ATO Status',
-        // id: 'atoExpirationDate'
-        accessor: 'atoExpirationDate'
+        id: 'atoStatus',
+        accessor: ({ atoExpirationDate, atoEffectiveDate }) => {
+          // todo systemTableType
+          return atoExpirationDate || atoEffectiveDate;
+        }
       }
       /*
       {
