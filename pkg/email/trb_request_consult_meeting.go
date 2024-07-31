@@ -8,7 +8,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -41,7 +40,7 @@ func (c Client) SendTRBRequestConsultMeetingEmail(ctx context.Context, input Sen
 	est, err := time.LoadLocation("America/New_York")
 
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
 	templateParams := trbConsultMeetingEmailTemplateParams{
@@ -58,7 +57,7 @@ func (c Client) SendTRBRequestConsultMeetingEmail(ctx context.Context, input Sen
 	err = c.templates.trbRequestConsultMeeting.Execute(&b, templateParams)
 
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
 	recipients := input.NotifyEmails
@@ -66,10 +65,11 @@ func (c Client) SendTRBRequestConsultMeetingEmail(ctx context.Context, input Sen
 		recipients = append(recipients, c.config.TRBEmail)
 	}
 
-	err = c.sender.Send(ctx, recipients, nil, subject, b.String())
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
+	return c.sender.Send(
+		ctx,
+		NewEmail().
+			WithToAddresses(recipients).
+			WithSubject(subject).
+			WithBody(b.String()),
+	)
 }
