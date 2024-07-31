@@ -63,7 +63,7 @@ func fillOutInitialIntake(
 		"the current stage",
 		true,
 	)
-	updateSystemIntakeContact(ctx, store, intake,
+	updateSystemIntakeContact(ctx, store,
 		"USR1",
 		"Center for Medicare",
 		"Requester",
@@ -229,7 +229,6 @@ func createSystemIntakeContact(
 func updateSystemIntakeContact(
 	ctx context.Context,
 	store *storage.Store,
-	intake *models.SystemIntake,
 	euaUserID string,
 	component string,
 	role string,
@@ -333,7 +332,7 @@ func setSystemIntakeRelationExistingService(
 	}
 }
 
-func unlinkSystemIntakeRelation(ctx context.Context, store *storage.Store, intakeID uuid.UUID, username string) {
+func unlinkSystemIntakeRelation(ctx context.Context, store *storage.Store, intakeID uuid.UUID) {
 	// temp, manually unlink contract numbers
 	// see Note [EASI-4160 Disable Contract Number Linking]
 	if err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {

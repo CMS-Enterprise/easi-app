@@ -707,7 +707,7 @@ func main() {
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
 		},
 	)
-	unlinkSystemIntakeRelation(ctx, store, intakeID, mock.PrincipalUser)
+	unlinkSystemIntakeRelation(ctx, store, intakeID)
 
 	// 5. Link deactivated Systems
 	intakeID = uuid.MustParse("04cb8a97-3515-4071-9b80-2710834cd94c")

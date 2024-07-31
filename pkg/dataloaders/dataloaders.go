@@ -64,6 +64,7 @@ type dataReader struct {
 */
 // you can then edit NewDataloaders below to include your new dataloader in the return
 type Dataloaders struct {
+	BusinessCaseLifecycleCosts       *dataloadgen.Loader[uuid.UUID, []*models.EstimatedLifecycleCost]
 	CedarSystemBookmark              *dataloadgen.Loader[models.BookmarkRequest, bool]
 	CedarSystemLinkedSystemIntakes   *dataloadgen.Loader[models.SystemIntakesByCedarSystemIDsRequest, []*models.SystemIntake]
 	CedarSystemLinkedTRBRequests     *dataloadgen.Loader[models.TRBRequestsByCedarSystemIDsRequest, []*models.TRBRequest]
@@ -71,6 +72,7 @@ type Dataloaders struct {
 	GetUserAccount                   *dataloadgen.Loader[uuid.UUID, *authentication.UserAccount]
 	GetCedarSystem                   *dataloadgen.Loader[string, *models.CedarSystem]
 	SystemIntakeActions              *dataloadgen.Loader[uuid.UUID, []*models.Action]
+	SystemIntakeBusinessCase         *dataloadgen.Loader[uuid.UUID, *models.BusinessCase]
 	SystemIntakeContractNumbers      *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
 	SystemIntakeFundingSources       *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeFundingSource]
 	SystemIntakeGRBReviewers         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewer]
@@ -102,6 +104,7 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		getCedarSystems: getCedarSystems,
 	}
 	return &Dataloaders{
+		BusinessCaseLifecycleCosts:       dataloadgen.NewLoader(dr.batchBusinessCaseLifecycleCostsByBizCaseIDs),
 		CedarSystemBookmark:              dataloadgen.NewLoader(dr.batchCedarSystemIsBookmarked),
 		CedarSystemLinkedTRBRequests:     dataloadgen.NewLoader(dr.batchCedarSystemLinkedTRBRequests),
 		CedarSystemLinkedSystemIntakes:   dataloadgen.NewLoader(dr.batchCedarSystemLinkedSystemIntakes),
@@ -109,6 +112,7 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		GetUserAccount:                   dataloadgen.NewLoader(dr.batchUserAccountsByIDs),
 		GetCedarSystem:                   dataloadgen.NewLoader(dr.getCedarSystemsByIDs),
 		SystemIntakeActions:              dataloadgen.NewLoader(dr.batchSystemIntakeActionsBySystemIntakeIDs),
+		SystemIntakeBusinessCase:         dataloadgen.NewLoader(dr.batchSystemIntakeBusinessCaseByIntakeIDs),
 		SystemIntakeContractNumbers:      dataloadgen.NewLoader(dr.batchSystemIntakeContractNumbersBySystemIntakeIDs),
 		SystemIntakeFundingSources:       dataloadgen.NewLoader(dr.batchSystemIntakeFundingSourcesBySystemIntakeIDs),
 		SystemIntakeGRBReviewers:         dataloadgen.NewLoader(dr.batchSystemIntakeGRBReviewersBySystemIntakeIDs),

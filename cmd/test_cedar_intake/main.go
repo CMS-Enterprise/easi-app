@@ -34,7 +34,7 @@ func noErr(err error) {
 
 type testData struct {
 	action       *models.Action
-	businessCase *models.BusinessCase
+	businessCase *models.BusinessCaseWithCosts
 	// feedback     *models.GRTFeedback
 	note         *models.SystemIntakeNote
 	systemIntake *models.SystemIntake
@@ -162,8 +162,8 @@ func makeTestNote(systemIntake models.SystemIntake) *models.SystemIntakeNote {
 	return note
 }
 
-func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *models.BusinessCase {
-	businessCase := &models.BusinessCase{
+func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *models.BusinessCaseWithCosts {
+	bc := models.BusinessCase{
 		ID:             uuid.New(),
 		SystemIntakeID: systemIntake.ID,
 
@@ -225,8 +225,10 @@ func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *
 		AlternativeBSecurityIsApproved:      null.BoolFromPtr(nil),
 		AlternativeBSecurityIsBeingReviewed: null.StringFromPtr(nil),
 		AlternativeBHostingCloudServiceType: null.StringFromPtr(nil),
-
-		LifecycleCostLines: models.EstimatedLifecycleCosts{},
+	}
+	businessCase := &models.BusinessCaseWithCosts{
+		BusinessCase:       bc,
+		LifecycleCostLines: []models.EstimatedLifecycleCost{},
 	}
 
 	// lifecycle cost items
