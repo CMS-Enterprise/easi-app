@@ -13,5 +13,12 @@ export default {
   viewBusinessCase: 'View Business Case',
   viewIntakeRequest: 'View Intake Request',
   viewOtherDocuments: 'View other supporting documents',
-  addGrbReviewer: 'Add a GRB reviewer'
+  addGrbReviewer: 'Add a GRB reviewer',
+  homepage: {
+    participationNeeded: 'GRB participation needed',
+    participationNeededText:
+      'The Governance Admin Team asks that the Governance Review Board (GRB) review and vote on the merits of IT projects. Depending on the project and timeframe, this may done asynchronously or during a regular GRB review meeting. Use the button below to access details for IT Governance requests that require a GRB review. ',
+    showGrbReviews: 'Show GRB reviews',
+    hideGrbReviews: 'Hide GRB reviews'
+  }
 };

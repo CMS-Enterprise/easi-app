@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { Grid } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import GrbParticipationNeeded from 'components/GrbParticipationNeeded';
 import LinkCard from 'components/LinkCard';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -60,6 +61,8 @@ const Home = () => {
               <p className="line-height-body-5 font-body-lg text-light margin-bottom-5 margin-top-1">
                 {t('home:subtitle')}
               </p>
+
+              <GrbParticipationNeeded />
 
               <Grid tablet={{ col: 12 }} className="margin-bottom-6">
                 <h2 className="margin-bottom-0 margin-top-4">
