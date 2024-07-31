@@ -63,6 +63,7 @@ func createSystemIntakeDocumentSubtest(s *ResolverSuite, systemIntakeID uuid.UUI
 		s.testConfigs.Context,
 		s.testConfigs.Store,
 		s.testConfigs.S3Client,
+		s.testConfigs.EmailClient,
 		gqlInput,
 	)
 	s.NoError(err)
