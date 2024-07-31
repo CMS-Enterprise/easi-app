@@ -2515,7 +2515,6 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
   systemIntakesWithReviewRequested: [SystemIntake!]!
-  @hasRole(role: EASI_GOVTEAM)
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
