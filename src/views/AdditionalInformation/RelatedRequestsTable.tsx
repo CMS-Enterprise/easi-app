@@ -13,22 +13,24 @@ import {
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
 
-import UswdsReactLink from '../../components/LinkWrapper';
-import Alert from '../../components/shared/Alert';
-import GlobalClientFilter from '../../components/TableFilter';
-import TablePageSize from '../../components/TablePageSize';
-import TablePagination from '../../components/TablePagination';
-import TableResults from '../../components/TableResults';
-import GetSystemIntakeRelatedRequests from '../../queries/GetSystemIntakeRelatedRequests';
-import { GetSystemIntake } from '../../queries/types/GetSystemIntake';
-import { GetSystemIntakeRelatedRequestsVariables } from '../../queries/types/GetSystemIntakeRelatedRequests';
-import globalFilterCellText from '../../utils/globalFilterCellText';
+import UswdsReactLink from 'components/LinkWrapper';
+import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
+import GlobalClientFilter from 'components/TableFilter';
+import TablePageSize from 'components/TablePageSize';
+import TablePagination from 'components/TablePagination';
+import TableResults from 'components/TableResults';
+import GetSystemIntakeRelatedRequests from 'queries/GetSystemIntakeRelatedRequests';
+import { GetSystemIntake } from 'queries/types/GetSystemIntake';
+import { GetSystemIntakeRelatedRequestsVariables } from 'queries/types/GetSystemIntakeRelatedRequests';
+import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
   getHeaderSortIcon,
   sortColumnValues
-} from '../../utils/tableSort';
+} from 'utils/tableSort';
+import { NotFoundPartial } from 'views/NotFound';
 
 import { LinkedRequestForTable } from './tableMap';
 
@@ -101,7 +103,13 @@ const RelatedRequestsTable = ({
       {
         Header: t<string>('tableColumns.projectTitle'),
         accessor: 'projectTitle',
-        Cell: ({ value, row }: CellProps<LinkedRequestForTable, string>) => {
+        Cell: ({
+          row,
+          value
+        }: {
+          row: Row<LinkedRequestForTable>;
+          value: LinkedRequestForTable['projectTitle'];
+        }) => {
           let link: string;
           if (row.original.process === 'TRB') {
             link = `/trb/task-list/${row.original.id}`;
@@ -151,7 +159,7 @@ const RelatedRequestsTable = ({
   } = useTable(
     {
       columns,
-      data: tableData,
+      data: tableData as LinkedRequestForTable[],
       sortTypes: {
         alphanumeric: (
           rowOne: Row<LinkedRequestForTable>,
@@ -179,7 +187,15 @@ const RelatedRequestsTable = ({
     usePagination
   );
 
-  rows.map(row => prepareRow(row));
+  if (error) {
+    return <NotFoundPartial />;
+  }
+
+  if (loading) {
+    return <PageLoading />;
+  }
+
+  rows.map((row: Row<LinkedRequestForTable>) => prepareRow(row));
   return (
     <div>
       {tableData.length > state.pageSize && (
@@ -226,20 +242,20 @@ const RelatedRequestsTable = ({
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map(row => (
+          {page.map((row: Row<LinkedRequestForTable>) => (
             <tr {...row.getRowProps()}>
-              {row.cells.map((cell, index) => {
-                if (index === 0) {
-                  return (
-                    <th
-                      {...cell.getCellProps()}
-                      scope="row"
-                      style={{ paddingLeft: '0' }}
-                    >
-                      {cell.render('Cell')}
-                    </th>
-                  );
-                }
+              {row.cells.map(cell => {
+                // if (index === 0) {
+                //   return (
+                //     <th
+                //       {...cell.getCellProps()}
+                //       scope="row"
+                //       style={{ paddingLeft: '0' }}
+                //     >
+                //       {cell.render('Cell')}
+                //     </th>
+                //   );
+                // }
 
                 return (
                   <td
