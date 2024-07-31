@@ -71,16 +71,6 @@ func (s *HandlerTestSuite) TestWriteErrorResponse() {
 			},
 		},
 		{
-			&apperrors.NotificationError{},
-			http.StatusInternalServerError,
-			errorResponse{
-				Errors:  []errorItem{},
-				Code:    http.StatusInternalServerError,
-				Message: "Failed to send notification",
-				TraceID: traceID,
-			},
-		},
-		{
 			&apperrors.ContextError{},
 			http.StatusInternalServerError,
 			errorResponse{

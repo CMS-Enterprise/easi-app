@@ -10,7 +10,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -77,18 +76,14 @@ func (sie systemIntakeEmails) SendProgressToNewStepNotification(
 	subject := fmt.Sprintf("%s is ready for a %s", requestName, HumanizeSnakeCase(string(step)))
 	body, err := sie.systemIntakeProgressToNewStepBody(systemIntakeID, requestName, step, requesterName, feedback, additionalInfo)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = sie.client.sender.Send(
+	return sie.client.sender.Send(
 		ctx,
-		sie.client.listAllRecipients(recipients),
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(sie.client.listAllRecipients(recipients)).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }

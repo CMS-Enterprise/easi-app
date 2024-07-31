@@ -35,17 +35,6 @@ func (s *ContextTestSuite) TestWithLogger() {
 	s.Equal(expectedLogger, logger)
 }
 
-func (s *ContextTestSuite) TestLogger() {
-	ctx := context.Background()
-	expectedLogger := zap.NewNop()
-	ctx = context.WithValue(ctx, loggerKey, expectedLogger)
-
-	logger, ok := Logger(ctx)
-
-	s.True(ok)
-	s.Equal(expectedLogger, logger)
-}
-
 func TestZLogger(t *testing.T) {
 	// functional logger returned even when not set
 	fallback := ZLogger(context.Background())

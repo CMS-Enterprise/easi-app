@@ -1,7 +1,6 @@
 import i18next, { TFunction } from 'i18next';
 import { sortBy } from 'lodash';
 
-import contractStatus from 'constants/enums/contractStatus';
 import {
   GetSystemIntakesTable_systemIntakes as SystemIntake,
   GetSystemIntakesTable_systemIntakes_notes as AdminNote
@@ -97,9 +96,9 @@ const tableMap = (
 
     // Translate `hasContract` value
     if (hasContract) {
-      hasContract = contractStatus[hasContract]
-        ? t(contractStatus[hasContract])
-        : hasContract;
+      hasContract = t('intake:contractDetails.hasContract', {
+        context: hasContract
+      });
     }
 
     const lastAdminNote = getLastAdminNote(intake.notes);

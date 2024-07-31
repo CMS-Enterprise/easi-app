@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Controller, useFieldArray } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
 import {
@@ -26,24 +26,23 @@ const GovernanceTeams = () => {
   const {
     control,
     watch,
-    trigger,
     register,
-    formState: { errors, isSubmitted }
+    clearErrors,
+    setValue,
+    formState: { errors }
   } = useEasiFormContext<ContactDetailsForm>();
-
-  const { fields: teams, remove, append } = useFieldArray<ContactDetailsForm>({
-    control,
-    name: 'governanceTeams.teams'
-  });
 
   const isPresent = watch('governanceTeams.isPresent');
 
-  // Revalidate teams fields after failed submission when updating values
+  // Reset team fields when `isPresent` is false
   useEffect(() => {
-    if (isSubmitted && teams.length > 0) {
-      trigger('governanceTeams.teams');
+    if (!isPresent) {
+      clearErrors('governanceTeams.teams');
+      setValue('governanceTeams.teams.enterpriseArchitecture.isPresent', false);
+      setValue('governanceTeams.teams.securityPrivacy.isPresent', false);
+      setValue('governanceTeams.teams.technicalReviewBoard.isPresent', false);
     }
-  }, [errors, trigger, isSubmitted, teams]);
+  }, [isPresent, setValue, clearErrors]);
 
   return (
     <>
@@ -85,21 +84,14 @@ const GovernanceTeams = () => {
             as={FieldErrorMsg}
           />
 
-          {cmsGovernanceTeams.map(({ key, value: name, label, acronym }) => {
-            const teamIndex = teams.findIndex(team => team.key === key);
-
-            const isChecked = teamIndex > -1;
-
-            const collaboratorField = `governanceTeams.teams.${teamIndex}.collaborator` as const;
-
-            const error =
-              errors?.governanceTeams?.teams?.[teamIndex]?.collaborator;
+          {cmsGovernanceTeams.map(({ key, label, acronym }) => {
+            const team = watch(`governanceTeams.teams.${key}`);
 
             return (
               <div key={key}>
                 <Controller
                   control={control}
-                  name="governanceTeams.teams"
+                  name={`governanceTeams.teams.${key}.isPresent`}
                   render={({ field: { ref, ...field } }) => {
                     return (
                       <Checkbox
@@ -107,38 +99,37 @@ const GovernanceTeams = () => {
                         inputRef={ref}
                         id={`governanceTeam-${key}`}
                         label={label}
-                        value={name}
-                        checked={isChecked}
                         disabled={!isPresent}
-                        onChange={e => {
-                          if (e.target.checked) {
-                            append({
-                              name,
-                              key,
-                              collaborator: ''
-                            });
-                          } else {
-                            remove(teamIndex);
-                          }
-                        }}
+                        value="true"
+                        checked={field.value}
+                        onChange={() => field.onChange(!field.value)}
                       />
                     );
                   }}
                 />
 
-                {isChecked && (
+                {team.isPresent && (
                   <FormGroup
-                    error={!!error}
+                    error={
+                      !!errors?.governanceTeams?.teams?.[key]?.collaborator
+                    }
                     className="margin-top-1 margin-bottom-2 margin-left-4"
                   >
                     <Label htmlFor={`governanceTeam-${key}-collaborator`}>
                       {t(`${acronym} Collaborator Name`)}
                     </Label>
 
-                    <ErrorMessage name={collaboratorField} as={FieldErrorMsg} />
+                    <ErrorMessage
+                      errors={errors}
+                      name={`governanceTeams.teams.${key}.collaborator`}
+                      as={FieldErrorMsg}
+                    />
 
                     <TextInput
-                      {...register(collaboratorField)}
+                      {...register(
+                        `governanceTeams.teams.${key}.collaborator`,
+                        { shouldUnregister: true }
+                      )}
                       ref={null}
                       id={`governanceTeam-${key}-collaborator`}
                       type="text"
@@ -161,12 +152,7 @@ const GovernanceTeams = () => {
               label={t('contactDetails.collaboration.none')}
               value="false"
               checked={!field.value}
-              onChange={() => {
-                // Set governanceTeams.isPresent to false
-                field.onChange(false);
-                // Reset governanceTeams.teams array
-                remove();
-              }}
+              onChange={() => field.onChange(false)}
             />
           )}
         />

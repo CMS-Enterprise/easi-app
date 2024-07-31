@@ -399,52 +399,6 @@ export const systemIntake: SystemIntake = {
   ]
 };
 
-/** System intake form that has NOT been started */
-export const initialSystemIntakeForm: SystemIntake = {
-  ...systemIntake,
-  requestName: '',
-  requester: {
-    ...systemIntake.requester,
-    component: ''
-  },
-  businessOwner: {
-    __typename: 'SystemIntakeBusinessOwner',
-    name: '',
-    component: ''
-  },
-  productManager: {
-    __typename: 'SystemIntakeProductManager',
-    name: '',
-    component: ''
-  },
-  isso: {
-    __typename: 'SystemIntakeISSO',
-    isPresent: null,
-    name: ''
-  },
-  contract: {
-    __typename: 'SystemIntakeContract',
-    hasContract: '',
-    contractor: '',
-    vehicle: '',
-    startDate: {
-      __typename: 'ContractDate',
-      month: '',
-      day: '',
-      year: ''
-    },
-    endDate: {
-      __typename: 'ContractDate',
-      month: '',
-      day: '',
-      year: ''
-    }
-  },
-  businessNeed: '',
-  businessSolution: '',
-  currentStage: ''
-};
-
 export const systemIntakeForTable: TableSystemIntake = {
   __typename: 'SystemIntake',
   id: '1',

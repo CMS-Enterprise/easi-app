@@ -7,14 +7,12 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
-import { FundingSourcesListItem } from 'views/SystemIntake/ContractDetails/FundingSources';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
 import './index.scss';
@@ -76,12 +74,25 @@ export const SystemIntakeReview = ({
         {Object.values(fundingSourcesObject).map(
           ({ fundingNumber, sources }) => {
             return (
-              <FundingSourcesListItem
-                className="margin-top-205"
+              <li
                 key={fundingNumber}
-                fundingNumber={fundingNumber!}
-                sources={sources}
-              />
+                className="margin-top-205"
+                id={`fundingSource${fundingNumber}`}
+              >
+                <p className="text-bold font-body-sm margin-bottom-0">
+                  {t('contractDetails.fundingSources.fundingSource')}
+                </p>
+                <p className="margin-y-05">
+                  {t('contractDetails.fundingSources.fundingNumberLabel', {
+                    fundingNumber
+                  })}
+                </p>
+                <p className="margin-y-05">
+                  {t('contractDetails.fundingSources.fundingSourcesLabel', {
+                    sources: sources.join(', ')
+                  })}
+                </p>
+              </li>
             );
           }
         )}
@@ -332,9 +343,9 @@ export const SystemIntakeReview = ({
           <div>
             <DescriptionTerm term={t('review.contract')} />
             <DescriptionDefinition
-              definition={
-                contractStatus[`${systemIntake.contract.hasContract}`]
-              }
+              definition={t('intake:contractDetails.hasContract', {
+                context: systemIntake.contract.hasContract
+              })}
             />
           </div>
         </ReviewRow>

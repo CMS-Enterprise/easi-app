@@ -71,7 +71,6 @@ export type SubpageKey =
  * So far it is certain team members and points of contact.
  * This is a borrowed set from `API/role/type/alfabet`.
  */
-// eslint-disable-next-line no-shadow
 export enum RoleTypeName {
   API_CONTACT = 'API Contact',
   BUSINESS_OWNER = 'Business Owner',
@@ -89,7 +88,6 @@ export enum RoleTypeName {
  * So far it is certain team members and points of contact.
  * This is a borrowed set from `API/role/type/alfabet`.
  */
-// eslint-disable-next-line no-shadow
 // export enum RoleTypeIdSparx {
 //   API_CONTACT = '{1FD4F238-56A1-46d2-8CB1-8A7C87F63A01}',
 //   BUSINESS_OWNER = '{C95EA2F9-1A08-4b1a-AEE7-A83011D06113}',

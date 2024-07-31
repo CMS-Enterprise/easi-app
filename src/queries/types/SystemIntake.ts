@@ -96,8 +96,9 @@ export interface SystemIntake_isso {
 
 export interface SystemIntake_fundingSources {
   __typename: "SystemIntakeFundingSource";
-  source: string | null;
+  id: UUID;
   fundingNumber: string | null;
+  source: string | null;
 }
 
 export interface SystemIntake_productManager {
