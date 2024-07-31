@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -56,18 +55,14 @@ func (c Client) SendWithdrawRequestEmail(ctx context.Context, requestName string
 		body, err = c.withdrawNamedRequestBody(requestName)
 	}
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = c.sender.Send(
+	return c.sender.Send(
 		ctx,
-		[]models.EmailAddress{c.config.GRTEmail},
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{c.config.GRTEmail}).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }

@@ -145,35 +145,26 @@ func (s *Server) routes(
 	)
 
 	// set up Email Client
-	sesConfig := s.NewSESConfig()
-	sesSender := appses.NewSender(sesConfig)
 	emailConfig := s.NewEmailConfig()
-	emailClient, err := email.NewClient(emailConfig, sesSender)
-	if err != nil {
-		s.logger.Fatal("Failed to create email client", zap.Error(err))
-	}
 
-	// override email client to use MailCatcher when running locally
-	if s.environment.Local() {
-		smtpSender := local.NewSMTPSender("email:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
-		emailClient, err = email.NewClient(emailConfig, smtpSender)
+	var emailClient email.Client
+	switch {
+	case s.environment.Deployed():
+		sesConfig := s.NewSESConfig()
+		sesSender := appses.NewSender(sesConfig)
+		emailClient, err = email.NewClient(emailConfig, sesSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
 		}
-	}
-
-	// override email client with dummy client that logs output when running tests
-	if s.environment.Test() {
-		smtpSender := local.NewSMTPSender("email:1025") // TODO - get from environment variable?
-		emailClient, err = email.NewClient(emailConfig, smtpSender)
-
-		if err != nil {
-			s.logger.Fatal("Failed to create email client", zap.Error(err))
-		}
-	}
-
-	if s.environment.Deployed() {
 		s.CheckEmailClient(emailClient)
+
+	default:
+		// default to test/local
+		smtpSender := local.NewSMTPSender("email:1025")
+		emailClient, err = email.NewClient(emailConfig, smtpSender)
+		if err != nil {
+			s.logger.Fatal("Failed to create email client", zap.Error(err))
+		}
 	}
 
 	// set up S3 client

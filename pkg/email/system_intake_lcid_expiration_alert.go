@@ -11,7 +11,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -107,21 +106,16 @@ func (c Client) SendLCIDExpirationAlertEmail(
 	)
 
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = c.sender.Send(
+	// TODO: No CC b/c we set the ShouldNotifyITGovernance bool as true in recipients.
+	//       This however doesn't cc the governance mailbox but sends directly to it, we should maybe allow for specification between cc'ing and sending directly?
+	return c.sender.Send(
 		ctx,
-		c.listAllRecipients(recipients),
-		nil, // TODO: This is nil b/c we set the ShouldNotifyITGovernance bool as true in recipients.
-		//       This however doesn't cc the governance mailbox but sends directly to it, we should maybe allow for specification between cc'ing and sending directly?
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(c.listAllRecipients(recipients)).
+			WithSubject(subject).
+			WithBody(body),
 	)
-
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
 }
