@@ -1713,7 +1713,7 @@ func (r *systemIntakeResolver) FundingSources(ctx context.Context, obj *models.S
 
 // GovernanceRequestFeedbacks is the resolver for the governanceRequestFeedbacks field.
 func (r *systemIntakeResolver) GovernanceRequestFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GovernanceRequestFeedback, error) {
-	return resolvers.GetGovernanceRequestFeedbacksByIntakeID(ctx, r.store, obj.ID)
+	return resolvers.GetGovernanceRequestFeedbacksByIntakeID(ctx, obj.ID)
 }
 
 // GovernanceTeams is the resolver for the governanceTeams field.

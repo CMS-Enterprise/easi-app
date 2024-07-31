@@ -7,12 +7,11 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
-	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // GetGovernanceRequestFeedbacksByIntakeID returns all governance request feedback items for a given system intake
-func GetGovernanceRequestFeedbacksByIntakeID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.GovernanceRequestFeedback, error) {
-	return store.GetGovernanceRequestFeedbacksByIntakeID(ctx, id)
+func GetGovernanceRequestFeedbacksByIntakeID(ctx context.Context, id uuid.UUID) ([]*models.GovernanceRequestFeedback, error) {
+	return dataloaders.GetSystemIntakeGovReqFeedbackByIntakeID(ctx, id)
 }
 
 // GetGovernanceRequestFeedbackAuthor returns the full user info for a feedback item's author
