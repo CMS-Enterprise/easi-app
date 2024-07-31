@@ -1,4 +1,5 @@
 import React from 'react';
+import { CellProps, Column } from 'react-table';
 import {
   IconCheck,
   IconError,
@@ -50,6 +51,42 @@ export function getAtoStatus(dt: string | null | undefined): AtoStatus {
 
   return 'Active';
 }
+
+// export function AtoStatusIconText({});
+
+export const atoStatusColumn: Column<any> = {
+  Header: 'ATO Status',
+  id: 'atoStatus',
+  accessor: ({ atoExpirationDate, atoEffectiveDate }) => {
+    // todo systemTableType
+    return atoExpirationDate || atoEffectiveDate;
+  },
+  Cell({
+    row
+  }: CellProps<
+    | {
+        atoExpirationDate?: string | null;
+      }
+    | {
+        atoEffectiveDate?: string | null;
+      }
+  >) {
+    let atodt = null;
+    if ('atoExpirationDate' in row.original) {
+      atodt = row.original.atoExpirationDate;
+    }
+    if ('atoEffectiveDate' in row.original) {
+      atodt = row.original.atoEffectiveDate;
+    }
+    const atostatus = getAtoStatus(atodt);
+    return (
+      <>
+        {atostatus}
+        {atodt}
+      </>
+    );
+  }
+};
 
 export default function AtoStatusTag({
   status,

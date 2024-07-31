@@ -30,6 +30,7 @@ import classNames from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
+import { atoStatusColumn } from 'components/shared/AtoStatus';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
@@ -195,14 +196,7 @@ export const Table = ({
           </p>
         )
       },
-      {
-        Header: 'ATO Status',
-        id: 'atoStatus',
-        accessor: ({ atoExpirationDate, atoEffectiveDate }) => {
-          // todo systemTableType
-          return atoExpirationDate || atoEffectiveDate;
-        }
-      }
+      atoStatusColumn
       /*
       {
         Header: t<string>('systemTable.header.systemStatus'),
