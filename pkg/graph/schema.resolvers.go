@@ -850,7 +850,7 @@ func (r *mutationResolver) DeleteTRBRequestDocument(ctx context.Context, id uuid
 
 // CreateSystemIntakeDocument is the resolver for the createSystemIntakeDocument field.
 func (r *mutationResolver) CreateSystemIntakeDocument(ctx context.Context, input models.CreateSystemIntakeDocumentInput) (*models.CreateSystemIntakeDocumentPayload, error) {
-	doc, err := resolvers.CreateSystemIntakeDocument(ctx, r.store, r.s3Client, input)
+	doc, err := resolvers.CreateSystemIntakeDocument(ctx, r.store, r.s3Client, r.emailClient, input)
 	if err != nil {
 		return nil, err
 	}

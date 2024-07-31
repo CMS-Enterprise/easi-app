@@ -8,7 +8,6 @@ import (
 	"html/template"
 	"time"
 
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -29,7 +28,7 @@ type systemIntakeUpdateLCIDEmailParameters struct {
 	AdditionalInfo            template.HTML
 }
 
-func (sie systemIntakeEmails) SystemIntakeUpdateLCIDBody(
+func (sie systemIntakeEmails) systemIntakeUpdateLCIDBody(
 	lifecycleID string,
 	lifecycleIssuedAt *time.Time,
 	lifecycleExpiresAtPrev *time.Time,
@@ -104,9 +103,8 @@ func (sie systemIntakeEmails) SendUpdateLCIDNotification(
 	reason *models.HTML,
 	additionalInfo *models.HTML,
 ) error {
-
 	subject := fmt.Sprintf("A Life Cycle ID (%s) has been updated", lifecycleID)
-	body, err := sie.SystemIntakeUpdateLCIDBody(
+	body, err := sie.systemIntakeUpdateLCIDBody(
 		lifecycleID,
 		lifecycleIssuedAt,
 		lifecycleExpiresAtPrev,
@@ -122,18 +120,14 @@ func (sie systemIntakeEmails) SendUpdateLCIDNotification(
 		additionalInfo,
 	)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = sie.client.sender.Send(
+	return sie.client.sender.Send(
 		ctx,
-		sie.client.listAllRecipients(recipients),
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(sie.client.listAllRecipients(recipients)).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }

@@ -2,7 +2,6 @@ import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
-import GetSystemIntakeGrbReviewersQuery from 'queries/GetSystemIntakeGrbReviewersQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
@@ -19,10 +18,6 @@ import {
   GetSystemIntakeContactsQuery as GetSystemIntakeContactsType,
   GetSystemIntakeContactsQueryVariables
 } from 'queries/types/GetSystemIntakeContactsQuery';
-import {
-  GetSystemIntakeGrbReviewers,
-  GetSystemIntakeGrbReviewersVariables
-} from 'queries/types/GetSystemIntakeGrbReviewers';
 import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'queries/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
@@ -408,52 +403,6 @@ export const systemIntake: SystemIntake = {
   relatedTRBRequests: []
 };
 
-/** System intake form that has NOT been started */
-export const initialSystemIntakeForm: SystemIntake = {
-  ...systemIntake,
-  requestName: '',
-  requester: {
-    ...systemIntake.requester,
-    component: ''
-  },
-  businessOwner: {
-    __typename: 'SystemIntakeBusinessOwner',
-    name: '',
-    component: ''
-  },
-  productManager: {
-    __typename: 'SystemIntakeProductManager',
-    name: '',
-    component: ''
-  },
-  isso: {
-    __typename: 'SystemIntakeISSO',
-    isPresent: null,
-    name: ''
-  },
-  contract: {
-    __typename: 'SystemIntakeContract',
-    hasContract: null,
-    contractor: '',
-    vehicle: '',
-    startDate: {
-      __typename: 'ContractDate',
-      month: '',
-      day: '',
-      year: ''
-    },
-    endDate: {
-      __typename: 'ContractDate',
-      month: '',
-      day: '',
-      year: ''
-    }
-  },
-  businessNeed: '',
-  businessSolution: '',
-  currentStage: ''
-};
-
 export const systemIntakeForTable: TableSystemIntake = {
   __typename: 'SystemIntake',
   id: '1',
@@ -627,42 +576,3 @@ export const getGovernanceTaskListQuery = (
     }
   }
 });
-
-export const getSystemIntakeGrbReviewersQuery: MockedQuery<
-  GetSystemIntakeGrbReviewers,
-  GetSystemIntakeGrbReviewersVariables
-> = {
-  request: {
-    query: GetSystemIntakeGrbReviewersQuery,
-    variables: { id: systemIntakeId }
-  },
-  result: {
-    data: {
-      systemIntake: {
-        __typename: 'SystemIntake',
-        id: systemIntakeId,
-        grbReviewers: [
-          {
-            __typename: 'SystemIntakeGRBReviewer',
-            id: '0432800e-2393-4067-b954-0e3671042b6a',
-            userAccount: {
-              __typename: 'UserAccount',
-              id: '06296dc5-2e6f-44ad-93d6-971137762cda',
-              username: systemIntake.euaUserId!
-            }
-          },
-
-          {
-            __typename: 'SystemIntakeGRBReviewer',
-            id: 'bcf4bc5f-f305-4c23-9d1c-79bf9e9b181c',
-            userAccount: {
-              __typename: 'UserAccount',
-              id: '629e0090-20b2-431e-a3eb-dd9ce7ce7a45',
-              username: 'TXJK'
-            }
-          }
-        ]
-      }
-    }
-  }
-};
