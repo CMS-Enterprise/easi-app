@@ -1,9 +1,14 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { CellProps, Column } from 'react-table';
 import {
   IconCheck,
+  IconCheckCircleOutline,
   IconError,
+  IconErrorOutline,
   IconHelp,
+  IconHelpOutline,
+  IconHighlightOff,
   IconWarning
 } from '@trussworks/react-uswds';
 // eslint-disable-next-line import/no-unresolved
@@ -12,22 +17,36 @@ import classnames from 'classnames';
 
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import { AtoStatus } from 'types/systemProfile';
-import { parseAsUTC } from 'utils/date';
+import { formatDateUtc, parseAsUTC } from 'utils/date';
 
 import Tag from '../Tag';
 
-const atoStatusClassNames: Record<AtoStatus, string> = {
+const atoStatusTagClassNames: Record<AtoStatus, string> = {
   Active: 'text-white bg-success-dark',
   'Due Soon': 'bg-warning',
   Expired: 'text-white bg-error-dark',
   'No ATO': 'bg-base-lighter'
 };
 
-const atoStatusIcon: Record<AtoStatus, React.ComponentType<IconProps>> = {
+const atoStatusTagIcon: Record<AtoStatus, React.ComponentType<IconProps>> = {
   Active: IconCheck,
   'Due Soon': IconWarning,
   Expired: IconError,
   'No ATO': IconHelp
+};
+
+const atoStatusIconClassNames: Record<AtoStatus, string> = {
+  Active: 'text-success',
+  'Due Soon': 'text-warning-dark',
+  Expired: 'text-error',
+  'No ATO': 'text-base-light'
+};
+
+const atoStatusIcon: Record<AtoStatus, React.ComponentType<IconProps>> = {
+  Active: IconCheckCircleOutline,
+  'Due Soon': IconErrorOutline,
+  Expired: IconHighlightOff,
+  'No ATO': IconHelpOutline
 };
 
 /**
@@ -52,7 +71,23 @@ export function getAtoStatus(dt: string | null | undefined): AtoStatus {
   return 'Active';
 }
 
-// export function AtoStatusIconText({});
+export function AtoStatusIconText({ dt }: { dt: string | null | undefined }) {
+  const status = getAtoStatus(dt);
+  const Icon = atoStatusIcon[status];
+  const { t } = useTranslation('systemProfile');
+  return (
+    <div className="display-flex flex-align-center">
+      <Icon
+        size={3}
+        className={`margin-right-1 ${atoStatusIconClassNames[status]}`}
+      />
+      <span>
+        {t(`systemTable.atoStatusColumn.${status}`)}{' '}
+        {formatDateUtc(dt || null, 'MM/yyyy')}
+      </span>
+    </div>
+  );
+}
 
 export const atoStatusColumn: Column<any> = {
   Header: 'ATO Status',
@@ -78,13 +113,7 @@ export const atoStatusColumn: Column<any> = {
     if ('atoEffectiveDate' in row.original) {
       atodt = row.original.atoEffectiveDate;
     }
-    const atostatus = getAtoStatus(atodt);
-    return (
-      <>
-        {atostatus}
-        {atodt}
-      </>
-    );
+    return <AtoStatusIconText dt={atodt} />;
   }
 };
 
@@ -95,9 +124,9 @@ export default function AtoStatusTag({
   status: AtoStatus;
   className?: string;
 }) {
-  const Icon = atoStatusIcon[status];
+  const Icon = atoStatusTagIcon[status];
   return (
-    <Tag className={classnames(`${atoStatusClassNames[status]}`, className)}>
+    <Tag className={classnames(`${atoStatusTagClassNames[status]}`, className)}>
       <Icon className="margin-right-1" />
       {status}
     </Tag>
