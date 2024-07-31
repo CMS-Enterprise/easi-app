@@ -73,6 +73,7 @@ type Dataloaders struct {
 	SystemIntakeActions              *dataloadgen.Loader[uuid.UUID, []*models.Action]
 	SystemIntakeContractNumbers      *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
 	SystemIntakeFundingSources       *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeFundingSource]
+	SystemIntakeGovReqFeedback       *dataloadgen.Loader[uuid.UUID, []*models.GovernanceRequestFeedback]
 	SystemIntakeGRBReviewers         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewer]
 	SystemIntakeNotes                *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeNote]
 	SystemIntakeRelatedSystemIntakes *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
@@ -111,6 +112,7 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		SystemIntakeActions:              dataloadgen.NewLoader(dr.batchSystemIntakeActionsBySystemIntakeIDs),
 		SystemIntakeContractNumbers:      dataloadgen.NewLoader(dr.batchSystemIntakeContractNumbersBySystemIntakeIDs),
 		SystemIntakeFundingSources:       dataloadgen.NewLoader(dr.batchSystemIntakeFundingSourcesBySystemIntakeIDs),
+		SystemIntakeGovReqFeedback:       dataloadgen.NewLoader(dr.batchSystemIntakeGovReqFeedbackByIntakeIDs),
 		SystemIntakeGRBReviewers:         dataloadgen.NewLoader(dr.batchSystemIntakeGRBReviewersBySystemIntakeIDs),
 		SystemIntakeNotes:                dataloadgen.NewLoader(dr.batchSystemIntakeNotesBySystemIntakeIDs),
 		SystemIntakeRelatedSystemIntakes: dataloadgen.NewLoader(dr.batchRelatedSystemIntakesBySystemIntakeIDs),

@@ -5,11 +5,12 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
 
 // CreateGovernanceRequestFeedback creates a governance request feedback record in the database
@@ -68,7 +69,9 @@ func (s *Store) CreateGovernanceRequestFeedback(ctx context.Context, requestFeed
 func (s *Store) GetGovernanceRequestFeedbacksByIntakeID(ctx context.Context, intakeID uuid.UUID) ([]*models.GovernanceRequestFeedback, error) {
 	feedbacks := []*models.GovernanceRequestFeedback{}
 
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM governance_request_feedback WHERE intake_id = :intake_id`)
+	err := namedSelect(ctx, s, &feedbacks, sqlqueries.SystemIntakeGovReqFeedback.GetBySystemIntakeID, args{
+		"system_intake_id": intakeID,
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch governance request feedbacks",
@@ -77,22 +80,23 @@ func (s *Store) GetGovernanceRequestFeedbacksByIntakeID(ctx context.Context, int
 		)
 		return nil, err
 	}
-	defer stmt.Close()
 
-	arg := map[string]interface{}{"intake_id": intakeID}
+	return feedbacks, nil
+}
 
-	err = stmt.Select(&feedbacks, arg)
+// GetGovernanceRequestFeedbacksByIntakeIDs returns all governance request feedback items for a list of intake IDs
+func (s *Store) GetGovernanceRequestFeedbacksByIntakeIDs(ctx context.Context, intakeIDs []uuid.UUID) ([]*models.GovernanceRequestFeedback, error) {
+	feedbacks := []*models.GovernanceRequestFeedback{}
+
+	err := namedSelect(ctx, s, &feedbacks, sqlqueries.SystemIntakeGovReqFeedback.GetBySystemIntakeIDs, args{
+		"system_intake_ids": pq.Array(intakeIDs),
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch governance request feedbacks",
 			zap.Error(err),
-			zap.String("intakeID", intakeID.String()),
 		)
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     []*models.GovernanceRequestFeedback{},
-			Operation: apperrors.QueryFetch,
-		}
+		return nil, err
 	}
 
 	return feedbacks, nil
