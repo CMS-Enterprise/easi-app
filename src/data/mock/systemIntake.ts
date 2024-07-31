@@ -5,7 +5,6 @@ import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
-import { GetSystemIntakeGRBReviewersQuery } from 'queries/SystemIntakeGRBReviewerQueries';
 import {
   GetGovernanceTaskList,
   GetGovernanceTaskList_systemIntake as TaskListSystemIntake,
@@ -19,10 +18,6 @@ import {
   GetSystemIntakeContactsQuery as GetSystemIntakeContactsType,
   GetSystemIntakeContactsQueryVariables
 } from 'queries/types/GetSystemIntakeContactsQuery';
-import {
-  GetSystemIntakeGRBReviewers,
-  GetSystemIntakeGRBReviewersVariables
-} from 'queries/types/GetSystemIntakeGRBReviewers';
 import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'queries/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
@@ -43,8 +38,6 @@ import {
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentStatus,
   SystemIntakeFormState,
-  SystemIntakeGRBReviewerRole,
-  SystemIntakeGRBReviewerVotingRole,
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatusAdmin,
@@ -625,49 +618,3 @@ export const getGovernanceTaskListQuery = (
     }
   }
 });
-
-export const getSystemIntakeGRBReviewersQuery: MockedQuery<
-  GetSystemIntakeGRBReviewers,
-  GetSystemIntakeGRBReviewersVariables
-> = {
-  request: {
-    query: GetSystemIntakeGRBReviewersQuery,
-    variables: { id: systemIntakeId }
-  },
-  result: {
-    data: {
-      systemIntake: {
-        __typename: 'SystemIntake',
-        id: systemIntakeId,
-        grbReviewers: [
-          {
-            __typename: 'SystemIntakeGRBReviewer',
-            id: '0432800e-2393-4067-b954-0e3671042b6a',
-            votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
-            grbRole: SystemIntakeGRBReviewerRole.ACA_3021_REP,
-            userAccount: {
-              __typename: 'UserAccount',
-              id: '06296dc5-2e6f-44ad-93d6-971137762cda',
-              username: businessOwner.euaUserId,
-              commonName: businessOwner.commonName!,
-              email: businessOwner.email!
-            }
-          },
-          {
-            __typename: 'SystemIntakeGRBReviewer',
-            id: 'bcf4bc5f-f305-4c23-9d1c-79bf9e9b181c',
-            votingRole: SystemIntakeGRBReviewerVotingRole.NON_VOTING,
-            grbRole: SystemIntakeGRBReviewerRole.SUBJECT_MATTER_EXPERT,
-            userAccount: {
-              __typename: 'UserAccount',
-              id: '629e0090-20b2-431e-a3eb-dd9ce7ce7a45',
-              username: productManager.euaUserId,
-              commonName: productManager.commonName!,
-              email: productManager.email!
-            }
-          }
-        ]
-      }
-    }
-  }
-};
