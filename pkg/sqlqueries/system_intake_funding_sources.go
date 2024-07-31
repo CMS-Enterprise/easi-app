@@ -12,7 +12,7 @@ var getSystemIntakeFundingSourcesBySystemIntakeIDs string
 //go:embed SQL/system_intake_funding_sources/get_all_by_ID.sql
 var getSystemIntakeFundingSourcesBySystemIntakeID string
 
-// SystemIntakeFundingSources holds all relevant SQL scripts for a System Intake Contract Number
+// SystemIntakeFundingSources holds all relevant SQL scripts for a System Intake's funding sources
 var SystemIntakeFundingSources = systemIntakeFundingSourcesScripts{
 	GetAllBySystemIntakeIDs: getSystemIntakeFundingSourcesBySystemIntakeIDs,
 	GetAllBySystemIntakeID:  getSystemIntakeFundingSourcesBySystemIntakeID,
