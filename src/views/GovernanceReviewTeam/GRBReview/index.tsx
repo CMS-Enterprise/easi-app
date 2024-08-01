@@ -26,6 +26,29 @@ const GRBReview = ({ id, grbReviewers }: GRBReviewProps) => {
   const isGrbView = useContext(IsGrbViewContext);
 
   const columns = useMemo<Column<SystemIntakeGrbReviewer>[]>(() => {
+    /** Column with action buttons to display for GRT admins */
+    const actionColumn: Column<SystemIntakeGrbReviewer> = {
+      Header: t<string>('participantsTable.actions'),
+      Cell: () => {
+        // TODO: Update edit and remove buttons with functionality from EASI-4332
+        return (
+          <ButtonGroup>
+            <Button type="button" onClick={() => null} unstyled>
+              {t('Edit')}
+            </Button>
+            <Button
+              type="button"
+              onClick={() => null}
+              className="text-error"
+              unstyled
+            >
+              {t('Remove')}
+            </Button>
+          </ButtonGroup>
+        );
+      }
+    };
+
     return [
       {
         Header: t<string>('participantsTable.name'),
@@ -41,9 +64,11 @@ const GRBReview = ({ id, grbReviewers }: GRBReviewProps) => {
         Header: t<string>('participantsTable.grbRole'),
         accessor: 'grbRole',
         Cell: ({ value }) => t<string>(`reviewerRoles.${value}`)
-      }
+      },
+      // Only display action column if user is GRT admin
+      ...(isGrbView ? [] : [actionColumn])
     ];
-  }, [t]);
+  }, [t, isGrbView]);
 
   const table = useTable(
     {
