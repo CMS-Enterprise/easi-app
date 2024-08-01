@@ -106,6 +106,14 @@ func main() {
 
 	// generate closed requests
 	g, gCtx := errgroup.WithContext(ctx)
+	reviewer1, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, "A11Y", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
+	if err != nil {
+		fmt.Println(err)
+	}
+	reviewer2, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, "BTMN", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
+	if err != nil {
+		fmt.Println(err)
+	}
 	for i := range closedRequestCount {
 		caseNum := i + 1
 		g.Go(func() error {
@@ -118,27 +126,21 @@ func main() {
 				store,
 				time.Now().AddDate(2, 0, 0),
 			)
-			acct, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, "A11Y", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
-			if err != nil {
-				return err
-			}
 			createdByID := appcontext.Principal(ctx).Account().ID
-			reviewer := models.NewSystemIntakeGRBReviewer(acct.ID, createdByID)
+			reviewer := models.NewSystemIntakeGRBReviewer(reviewer1.ID, createdByID)
 			reviewer.VotingRole = models.SIGRBRVRAlternate
 			reviewer.GRBRole = models.SIGRBRRACA3021Rep
 			reviewer.SystemIntakeID = sysIn.ID
 			err = store.CreateSystemIntakeGRBReviewer(ctx, store, reviewer)
 			if err != nil {
+				fmt.Println(err)
 				return err
 			}
-			acct, err = userhelpers.GetOrCreateUserAccount(ctx, store, store, "BTMN", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
-			if err != nil {
-				return err
-			}
-			reviewer.UserID = acct.ID
+			reviewer.UserID = reviewer2.ID
 			reviewer.ID = uuid.New()
 			err = store.CreateSystemIntakeGRBReviewer(ctx, store, reviewer)
 			if err != nil {
+				fmt.Println(err)
 				return err
 			}
 			setSystemIntakeRelationExistingSystem(
@@ -152,7 +154,6 @@ func main() {
 		})
 	}
 	if err := g.Wait(); err != nil {
-		fmt.Println(err)
 		panic(err)
 	}
 
