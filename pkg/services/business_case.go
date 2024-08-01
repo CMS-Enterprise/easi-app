@@ -17,22 +17,22 @@ import (
 // NewFetchBusinessCaseByID is a service to fetch the business case by id
 func NewFetchBusinessCaseByID(
 	config Config,
-	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error),
 	authorized func(context.Context) bool,
-) func(c context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
+) func(c context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
+	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
 		logger := appcontext.ZLogger(ctx)
 		businessCase, err := fetch(ctx, id)
 		if err != nil {
 			logger.Error("failed to fetch business case")
-			return &models.BusinessCase{}, &apperrors.QueryError{
+			return &models.BusinessCaseWithCosts{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
 				Operation: apperrors.QueryFetch,
 			}
 		}
 		if !authorized(ctx) {
-			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to fetch business case")}
+			return &models.BusinessCaseWithCosts{}, &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to fetch business case")}
 		}
 		return businessCase, nil
 	}
@@ -45,33 +45,33 @@ func NewCreateBusinessCase(
 	authorized func(c context.Context, i *models.SystemIntake) bool,
 	createAction func(context.Context, *models.Action) (*models.Action, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	createBizCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
+	createBizCase func(context.Context, *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error),
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-) func(c context.Context, b *models.BusinessCase) (*models.BusinessCase, error) {
-	return func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+) func(c context.Context, b *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+	return func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
 		intake, err := fetchIntake(ctx, businessCase.SystemIntakeID)
 		if err != nil {
 			// We return an empty id in this error because the business case hasn't been created
-			return &models.BusinessCase{}, &apperrors.ResourceConflictError{
+			return &models.BusinessCaseWithCosts{}, &apperrors.ResourceConflictError{
 				Err:        errors.New("system intake is required to create a business case"),
 				Resource:   models.BusinessCase{},
 				ResourceID: "",
 			}
 		}
 		if !authorized(ctx, intake) {
-			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to create business case")}
+			return &models.BusinessCaseWithCosts{}, &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to create business case")}
 		}
 		err = appvalidation.BusinessCaseForCreation(businessCase, intake)
 		if err != nil {
-			return &models.BusinessCase{}, err
+			return &models.BusinessCaseWithCosts{}, err
 		}
 
 		userInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 		if err != nil {
-			return &models.BusinessCase{}, err
+			return &models.BusinessCaseWithCosts{}, err
 		}
 		if userInfo == nil || userInfo.Email == "" || userInfo.DisplayName == "" || userInfo.Username == "" {
-			return &models.BusinessCase{}, &apperrors.ExternalAPIError{
+			return &models.BusinessCaseWithCosts{}, &apperrors.ExternalAPIError{
 				Err:       errors.New("user info fetch was not successful"),
 				Model:     intake,
 				ModelID:   intake.ID.String(),
@@ -89,7 +89,7 @@ func NewCreateBusinessCase(
 		}
 		_, err = createAction(ctx, &action)
 		if err != nil {
-			return &models.BusinessCase{}, &apperrors.QueryError{
+			return &models.BusinessCaseWithCosts{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     action,
 				Operation: apperrors.QueryPost,
@@ -106,12 +106,12 @@ func NewCreateBusinessCase(
 		businessCase.BusinessNeed = intake.BusinessNeed
 		businessCase.Status = models.BusinessCaseStatusOPEN
 		if businessCase, err = createBizCase(ctx, businessCase); err != nil {
-			return &models.BusinessCase{}, err
+			return &models.BusinessCaseWithCosts{}, err
 		}
 
 		intake.UpdatedAt = &now
 		if _, err = updateIntake(ctx, intake); err != nil {
-			return &models.BusinessCase{}, err
+			return &models.BusinessCaseWithCosts{}, err
 		}
 
 		return businessCase, nil
@@ -121,29 +121,29 @@ func NewCreateBusinessCase(
 // NewUpdateBusinessCase is a service to create a business case
 func NewUpdateBusinessCase(
 	config Config,
-	fetchBusinessCase func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
+	fetchBusinessCase func(c context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error),
 	authorized func(c context.Context, b *models.BusinessCase) bool,
-	update func(c context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error),
+	update func(c context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error),
 	fetchIntake func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-) func(c context.Context, b *models.BusinessCase) (*models.BusinessCase, error) {
-	return func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+) func(c context.Context, b *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+	return func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
 		logger := appcontext.ZLogger(ctx)
 		existingBusinessCase, err := fetchBusinessCase(ctx, businessCase.ID)
 		if err != nil {
-			return &models.BusinessCase{}, &apperrors.ResourceConflictError{
+			return &models.BusinessCaseWithCosts{}, &apperrors.ResourceConflictError{
 				Err:        errors.New("business case does not exist"),
 				Resource:   businessCase,
 				ResourceID: businessCase.ID.String(),
 			}
 		}
-		if !authorized(ctx, existingBusinessCase) {
-			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: errors.New("user unauthorized to update business case")}
+		if !authorized(ctx, &existingBusinessCase.BusinessCase) {
+			return &models.BusinessCaseWithCosts{}, &apperrors.UnauthorizedError{Err: errors.New("user unauthorized to update business case")}
 		}
 		// Uncomment below when UI has changed for unique lifecycle costs
 		//err = appvalidation.BusinessCaseForUpdate(businessCase)
 		//if err != nil {
-		//	return &models.BusinessCase{}, err
+		//	return &models.BusinessCaseWithCosts{}, err
 		//}
 		updatedAt := config.clock.Now()
 		businessCase.UpdatedAt = &updatedAt
@@ -151,7 +151,7 @@ func NewUpdateBusinessCase(
 		businessCase, err = update(ctx, businessCase)
 		if err != nil {
 			logger.Error("failed to update business case")
-			return &models.BusinessCase{}, &apperrors.QueryError{
+			return &models.BusinessCaseWithCosts{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
 				Operation: apperrors.QuerySave,
@@ -191,8 +191,8 @@ func NewUpdateBusinessCase(
 // NewCloseBusinessCase is a service to close a businessCase
 func NewCloseBusinessCase(
 	config Config,
-	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
-	update func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error),
+	update func(context.Context, *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error),
 ) func(context.Context, uuid.UUID) error {
 	return func(ctx context.Context, id uuid.UUID) error {
 		businessCase, fetchErr := fetch(ctx, id)

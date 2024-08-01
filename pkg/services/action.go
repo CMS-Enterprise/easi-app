@@ -187,11 +187,11 @@ func NewSubmitSystemIntake(
 func NewSubmitBusinessCase(
 	config Config,
 	authorized func(context.Context, *models.SystemIntake) bool,
-	fetchOpenBusinessCase func(context.Context, uuid.UUID) (*models.BusinessCase, error),
-	validateForSubmit func(businessCase *models.BusinessCase) error,
+	fetchOpenBusinessCase func(context.Context, uuid.UUID) (*models.BusinessCaseWithCosts, error),
+	validateForSubmit func(businessCase *models.BusinessCaseWithCosts) error,
 	saveAction func(context.Context, *models.Action) error,
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
+	updateBusinessCase func(context.Context, *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error),
 	emailRequester func(
 		ctx context.Context,
 		requesterEmail models.EmailAddress,
@@ -208,7 +208,7 @@ func NewSubmitBusinessCase(
 		isResubmitted bool,
 		isDraft bool,
 	) error,
-	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
+	submitToCEDAR func(ctx context.Context, bc models.BusinessCaseWithCosts) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		if !authorized(ctx, intake) {

@@ -69,26 +69,7 @@ func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *mo
 
 // LifecycleCostLines is the resolver for the lifecycleCostLines field.
 func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) ([]*models.EstimatedLifecycleCost, error) {
-	lifeCycleCostLines := obj.LifecycleCostLines
-
-	if len(lifeCycleCostLines) == 0 {
-		return nil, nil
-	}
-
-	var costLines []*models.EstimatedLifecycleCost
-	for _, cost := range lifeCycleCostLines {
-		costLine := &models.EstimatedLifecycleCost{
-			BusinessCaseID: cost.BusinessCaseID,
-			Cost:           cost.Cost,
-			ID:             cost.ID,
-			Phase:          cost.Phase,
-			Solution:       cost.Solution,
-			Year:           cost.Year,
-		}
-		costLines = append(costLines, costLine)
-	}
-
-	return costLines, nil
+	return resolvers.GetLifecycleCostLinesByBusinessCaseID(ctx, obj.ID)
 }
 
 // PreferredSolution is the resolver for the preferredSolution field.
@@ -1612,7 +1593,7 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 
 // BusinessCase is the resolver for the businessCase field.
 func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error) {
-	return r.store.FetchBusinessCaseBySystemIntakeID(ctx, obj.ID)
+	return dataloaders.GetSystemIntakeBusinessCaseBySystemIntakeID(ctx, obj.ID)
 }
 
 // BusinessOwner is the resolver for the businessOwner field.

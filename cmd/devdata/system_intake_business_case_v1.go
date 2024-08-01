@@ -14,7 +14,7 @@ func makeDraftBusinessCaseV1(ctx context.Context, name string, store *storage.St
 }
 
 func makeFinalBusinessCaseV1(ctx context.Context, name string, store *storage.Store, intake *models.SystemIntake) *models.SystemIntake {
-	return makeBusinessCaseV1(ctx, name, store, intake, func(b *models.BusinessCase) {
+	return makeBusinessCaseV1(ctx, name, store, intake, func(b *models.BusinessCaseWithCosts) {
 		b.CurrentSolutionSummary = null.StringFrom("It's gonna cost a lot")
 		b.CMSBenefit = null.StringFrom("Better Medicare")
 		b.PriorityAlignment = null.StringFrom("It's all gonna make sense later")
@@ -68,7 +68,7 @@ func submitBusinessCaseV1(
 	return intake
 }
 
-func makeBusinessCaseV1(ctx context.Context, name string, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) *models.SystemIntake {
+func makeBusinessCaseV1(ctx context.Context, name string, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCaseWithCosts)) *models.SystemIntake {
 	if intake == nil {
 		intake = makeSystemIntake(ctx, name, nil, "USR1", store)
 	}
@@ -87,31 +87,14 @@ func makeBusinessCaseV1(ctx context.Context, name string, store *storage.Store, 
 	cost := 123456
 	noCost := 0
 	businessCase := models.BusinessCase{
-		SystemIntakeID:       intake.ID,
-		EUAUserID:            intake.EUAUserID.ValueOrZero(),
-		Requester:            null.StringFrom("Shane Clark"),
-		RequesterPhoneNumber: null.StringFrom("3124567890"),
-		Status:               models.BusinessCaseStatusOPEN,
-		ProjectName:          null.StringFrom(name),
-		BusinessOwner:        null.StringFrom("Shane Clark"),
-		BusinessNeed:         null.StringFrom("business need"),
-		LifecycleCostLines: []models.EstimatedLifecycleCost{
-			{
-				Solution: models.LifecycleCostSolutionPREFERRED,
-				Year:     models.LifecycleCostYear1,
-				Phase:    &phase,
-				Cost:     &cost,
-			},
-			{
-				Solution: models.LifecycleCostSolutionA,
-				Year:     models.LifecycleCostYear2,
-			},
-			{
-				Solution: models.LifecycleCostSolutionA,
-				Year:     models.LifecycleCostYear3,
-				Cost:     &noCost,
-			},
-		},
+		SystemIntakeID:         intake.ID,
+		EUAUserID:              intake.EUAUserID.ValueOrZero(),
+		Requester:              null.StringFrom("Shane Clark"),
+		RequesterPhoneNumber:   null.StringFrom("3124567890"),
+		Status:                 models.BusinessCaseStatusOPEN,
+		ProjectName:            null.StringFrom(name),
+		BusinessOwner:          null.StringFrom("Shane Clark"),
+		BusinessNeed:           null.StringFrom("business need"),
 		CurrentSolutionSummary: null.StringFrom(""),
 		CMSBenefit:             null.StringFrom(""),
 		PriorityAlignment:      null.StringFrom(""),
@@ -129,11 +112,31 @@ func makeBusinessCaseV1(ctx context.Context, name string, store *storage.Store, 
 		AlternativeBCons:        null.StringFrom(""),
 		AlternativeBCostSavings: null.StringFrom(""),
 	}
+	bcWCosts := models.BusinessCaseWithCosts{
+		BusinessCase: businessCase,
+		LifecycleCostLines: []models.EstimatedLifecycleCost{
+			{
+				Solution: models.LifecycleCostSolutionPREFERRED,
+				Year:     models.LifecycleCostYear1,
+				Phase:    &phase,
+				Cost:     &cost,
+			},
+			{
+				Solution: models.LifecycleCostSolutionA,
+				Year:     models.LifecycleCostYear2,
+			},
+			{
+				Solution: models.LifecycleCostSolutionA,
+				Year:     models.LifecycleCostYear3,
+				Cost:     &noCost,
+			},
+		},
+	}
 	for _, cb := range callbacks {
-		cb(&businessCase)
+		cb(&bcWCosts)
 	}
 
-	_, err = store.CreateBusinessCase(ctx, &businessCase)
+	_, err = store.CreateBusinessCase(ctx, &bcWCosts)
 	if err != nil {
 		panic(err)
 	}
