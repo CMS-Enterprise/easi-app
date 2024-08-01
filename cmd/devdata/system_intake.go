@@ -1,19 +1,25 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
 // creates, fills out the initial request form, and submits a system intake
@@ -497,7 +503,34 @@ func createSystemIntakeDocument(
 	}
 	documentToCreate.CreatedBy = mock.PrincipalUser
 	documentToCreate.CreatedAt = time.Now()
-	createdDocument, err := store.CreateSystemIntakeDocument(ctx, documentToCreate)
+	testContents := "Test file content"
+	encodedFileContent := easiencoding.EncodeBase64String(testContents)
+	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
+	gqlInput := models.CreateSystemIntakeDocumentInput{
+		RequestID:            documentToCreate.SystemIntakeRequestID,
+		DocumentType:         documentToCreate.CommonDocumentType,
+		OtherTypeDescription: &documentToCreate.OtherType,
+		FileData: graphql.Upload{
+			File:        fileToUpload,
+			Filename:    documentToCreate.FileName,
+			Size:        fileToUpload.Size(),
+			ContentType: "application/pdf",
+		},
+	}
+
+	config := testhelpers.NewConfig()
+	s3Client := upload.NewS3Client(upload.Config{
+		IsLocal: true,
+		Bucket:  config.GetString(appconfig.AWSS3FileUploadBucket),
+		Region:  config.GetString(appconfig.AWSRegion),
+	})
+	createdDocument, err := resolvers.CreateSystemIntakeDocument(
+		ctx,
+		store,
+		&s3Client,
+		nil,
+		gqlInput,
+	)
 	if err != nil {
 		panic(err)
 	}

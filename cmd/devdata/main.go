@@ -3,12 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"golang.org/x/sync/errgroup"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
@@ -35,11 +37,23 @@ const closedRequestCount int = 10
 
 func main() {
 	config := testhelpers.NewConfig()
-	logger, loggerErr := zap.NewDevelopment()
 
-	if loggerErr != nil {
-		panic(loggerErr)
-	}
+	// https://pkg.go.dev/go.uber.org/zap#example-AtomicLevel
+	atom := zap.NewAtomicLevel()
+
+	// To keep the example deterministic, disable timestamps in the output.
+	encoderCfg := zap.NewProductionEncoderConfig()
+	encoderCfg.TimeKey = ""
+
+	logger := zap.New(zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoderCfg),
+		zapcore.Lock(os.Stdout),
+		atom,
+	))
+	defer logger.Sync()
+
+	// This prevents the seed script from dumping unnecessary logs
+	atom.SetLevel(zap.ErrorLevel)
 
 	dbConfig := storage.DBConfig{
 		Host:           config.GetString(appconfig.DBHostConfigKey),
