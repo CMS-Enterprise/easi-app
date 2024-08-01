@@ -1,19 +1,25 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
 // creates, fills out the initial request form, and submits a system intake
@@ -44,6 +50,7 @@ func makeSystemIntake(
 		"Requester Name",
 		models.SystemIntakeRequestTypeNEW,
 	)
+	createSystemIntakeDocument(ctx, store, intake)
 	return fillOutInitialIntake(ctx, requestName, store, intake)
 }
 
@@ -63,7 +70,7 @@ func fillOutInitialIntake(
 		"the current stage",
 		true,
 	)
-	updateSystemIntakeContact(ctx, store, intake,
+	updateSystemIntakeContact(ctx, store,
 		"USR1",
 		"Center for Medicare",
 		"Requester",
@@ -229,7 +236,6 @@ func createSystemIntakeContact(
 func updateSystemIntakeContact(
 	ctx context.Context,
 	store *storage.Store,
-	intake *models.SystemIntake,
 	euaUserID string,
 	component string,
 	role string,
@@ -249,7 +255,6 @@ func setSystemIntakeRelationNewSystem(
 	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
-	username string,
 	contractNumbers []string,
 ) {
 	input := &models.SetSystemIntakeRelationNewSystemInput{
@@ -274,7 +279,6 @@ func setSystemIntakeRelationExistingSystem(
 	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
-	username string,
 	contractNumbers []string,
 	cedarSystemIDs []string,
 ) {
@@ -309,7 +313,6 @@ func setSystemIntakeRelationExistingService(
 	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
-	username string,
 	contractName string,
 	contractNumbers []string,
 ) {
@@ -333,7 +336,7 @@ func setSystemIntakeRelationExistingService(
 	}
 }
 
-func unlinkSystemIntakeRelation(ctx context.Context, store *storage.Store, intakeID uuid.UUID, username string) {
+func unlinkSystemIntakeRelation(ctx context.Context, store *storage.Store, intakeID uuid.UUID) {
 	// temp, manually unlink contract numbers
 	// see Note [EASI-4160 Disable Contract Number Linking]
 	if err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
@@ -483,6 +486,56 @@ func createSystemIntakeNote(
 		panic(err)
 	}
 	return note
+}
+
+func createSystemIntakeDocument(
+	ctx context.Context,
+	store *storage.Store,
+	intake *models.SystemIntake,
+) *models.SystemIntakeDocument {
+	documentToCreate := &models.SystemIntakeDocument{
+		SystemIntakeRequestID: intake.ID,
+		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftICGE,
+		FileName:              "create_and_get.pdf",
+		Bucket:                "bukkit",
+		S3Key:                 uuid.NewString(),
+		UploaderRole:          models.RequesterUploaderRole,
+	}
+	documentToCreate.CreatedBy = mock.PrincipalUser
+	documentToCreate.CreatedAt = time.Now()
+	testContents := "Test file content"
+	encodedFileContent := easiencoding.EncodeBase64String(testContents)
+	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
+	gqlInput := models.CreateSystemIntakeDocumentInput{
+		RequestID:            documentToCreate.SystemIntakeRequestID,
+		DocumentType:         documentToCreate.CommonDocumentType,
+		OtherTypeDescription: &documentToCreate.OtherType,
+		FileData: graphql.Upload{
+			File:        fileToUpload,
+			Filename:    documentToCreate.FileName,
+			Size:        fileToUpload.Size(),
+			ContentType: "application/pdf",
+		},
+	}
+
+	config := testhelpers.NewConfig()
+	s3Client := upload.NewS3Client(upload.Config{
+		IsLocal: true,
+		Bucket:  config.GetString(appconfig.AWSS3FileUploadBucket),
+		Region:  config.GetString(appconfig.AWSRegion),
+	})
+	createdDocument, err := resolvers.CreateSystemIntakeDocument(
+		ctx,
+		store,
+		&s3Client,
+		nil,
+		gqlInput,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	return createdDocument
 }
 
 // Updates the System Intake through the store method directly instead of using the resolver

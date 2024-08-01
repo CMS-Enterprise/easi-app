@@ -3,12 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"golang.org/x/sync/errgroup"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
@@ -35,11 +37,23 @@ const closedRequestCount int = 10
 
 func main() {
 	config := testhelpers.NewConfig()
-	logger, loggerErr := zap.NewDevelopment()
 
-	if loggerErr != nil {
-		panic(loggerErr)
-	}
+	// https://pkg.go.dev/go.uber.org/zap#example-AtomicLevel
+	atom := zap.NewAtomicLevel()
+
+	// To keep the example deterministic, disable timestamps in the output.
+	encoderCfg := zap.NewProductionEncoderConfig()
+	encoderCfg.TimeKey = ""
+
+	logger := zap.New(zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoderCfg),
+		zapcore.Lock(os.Stdout),
+		atom,
+	))
+	defer logger.Sync()
+
+	// This prevents the seed script from dumping unnecessary logs
+	atom.SetLevel(zap.ErrorLevel)
 
 	dbConfig := storage.DBConfig{
 		Host:           config.GetString(appconfig.DBHostConfigKey),
@@ -92,6 +106,14 @@ func main() {
 
 	// generate closed requests
 	g, gCtx := errgroup.WithContext(ctx)
+	reviewer1, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, "A11Y", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
+	if err != nil {
+		fmt.Println(err)
+	}
+	reviewer2, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, "BTMN", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
+	if err != nil {
+		fmt.Println(err)
+	}
 	for i := range closedRequestCount {
 		caseNum := i + 1
 		g.Go(func() error {
@@ -100,38 +122,31 @@ func main() {
 				gCtx,
 				fmt.Sprintf("closed request #%d", caseNum),
 				&ID,
-				"ABCD",
+				mock.PrincipalUser,
 				store,
 				time.Now().AddDate(2, 0, 0),
 			)
-			acct, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, "A11Y", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
-			if err != nil {
-				return err
-			}
 			createdByID := appcontext.Principal(ctx).Account().ID
-			reviewer := models.NewSystemIntakeGRBReviewer(acct.ID, createdByID)
+			reviewer := models.NewSystemIntakeGRBReviewer(reviewer1.ID, createdByID)
 			reviewer.VotingRole = models.SIGRBRVRAlternate
 			reviewer.GRBRole = models.SIGRBRRACA3021Rep
 			reviewer.SystemIntakeID = sysIn.ID
 			err = store.CreateSystemIntakeGRBReviewer(ctx, store, reviewer)
 			if err != nil {
+				fmt.Println(err)
 				return err
 			}
-			acct, err = userhelpers.GetOrCreateUserAccount(ctx, store, store, "BTMN", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
-			if err != nil {
-				return err
-			}
-			reviewer.UserID = acct.ID
+			reviewer.UserID = reviewer2.ID
 			reviewer.ID = uuid.New()
 			err = store.CreateSystemIntakeGRBReviewer(ctx, store, reviewer)
 			if err != nil {
+				fmt.Println(err)
 				return err
 			}
 			setSystemIntakeRelationExistingSystem(
 				gCtx,
 				store,
 				ID,
-				"ABCD",
 				[]string{"111111", "111112"},
 				[]string{"1AB1A00-1234-5678-ABC1-1A001B00CC6G"},
 			)
@@ -139,7 +154,6 @@ func main() {
 		})
 	}
 	if err := g.Wait(); err != nil {
-		fmt.Println(err)
 		panic(err)
 	}
 
@@ -621,7 +635,6 @@ func main() {
 		ctx,
 		store,
 		intakeID,
-		mock.PrincipalUser,
 		[]string{"12345", "67890"},
 	)
 
@@ -632,7 +645,6 @@ func main() {
 		ctx,
 		store,
 		intakeID,
-		mock.PrincipalUser,
 		[]string{"00001", "00002"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
@@ -646,7 +658,6 @@ func main() {
 		ctx,
 		store,
 		intakeID,
-		mock.PrincipalUser,
 		[]string{"00003", "00004"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
@@ -660,7 +671,6 @@ func main() {
 		ctx,
 		store,
 		intakeID,
-		mock.PrincipalUser,
 		[]string{"00003", "00004"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
@@ -674,7 +684,6 @@ func main() {
 		ctx,
 		store,
 		intakeID,
-		mock.PrincipalUser,
 		[]string{"00005", "00001"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
@@ -688,7 +697,6 @@ func main() {
 		ctx,
 		store,
 		intakeID,
-		mock.PrincipalUser,
 		"My Cool Existing Contract/Service",
 		[]string{"00001"},
 	)
@@ -700,14 +708,13 @@ func main() {
 		ctx,
 		store,
 		intakeID,
-		mock.PrincipalUser,
 		[]string{"12345", "67890"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
 		},
 	)
-	unlinkSystemIntakeRelation(ctx, store, intakeID, mock.PrincipalUser)
+	unlinkSystemIntakeRelation(ctx, store, intakeID)
 
 	// 5. Link deactivated Systems
 	intakeID = uuid.MustParse("04cb8a97-3515-4071-9b80-2710834cd94c")
@@ -716,7 +723,6 @@ func main() {
 		ctx,
 		store,
 		intakeID,
-		mock.PrincipalUser,
 		[]string{"12345", "67890"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
