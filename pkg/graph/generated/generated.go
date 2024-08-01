@@ -9597,6 +9597,9 @@ type TRBRequestForm {
   collabDateOther: String
   collabGroupOther: String
   collabGRBConsultRequested: Boolean
+  """
+  TODO: Make Funding sources non-nullable
+  """
   fundingSources: [TRBFundingSource!]
   systemIntakes: [SystemIntake!]!
   subjectAreaOptions: [TRBSubjectAreaOption!]

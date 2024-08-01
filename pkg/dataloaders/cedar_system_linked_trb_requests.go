@@ -19,7 +19,7 @@ func (d *dataReader) batchCedarSystemLinkedTRBRequests(ctx context.Context, requ
 		ids[i] = requests[i].CedarSystemID
 	}
 
-	return helpers.OneToManyEmbedded(ids, data), nil
+	return helpers.OneToMany(ids, data), nil
 }
 
 func GetCedarSystemLinkedTRBRequests(ctx context.Context, cedarSystemID string, state models.TRBRequestState) ([]*models.TRBRequest, error) {

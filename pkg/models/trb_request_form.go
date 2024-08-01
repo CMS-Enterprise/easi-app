@@ -111,3 +111,10 @@ type TRBRequestForm struct {
 	SubjectAreaOptionOther           *string        `json:"subjectAreaOptionOther" db:"subject_area_option_other"`
 	SubmittedAt                      *time.Time     `json:"submittedAt" db:"submitted_at"`
 }
+
+func (f TRBRequestForm) GetMappingKey() uuid.UUID {
+	return f.TRBRequestID
+}
+func (f TRBRequestForm) GetMappingVal() *TRBRequestForm {
+	return &f
+}

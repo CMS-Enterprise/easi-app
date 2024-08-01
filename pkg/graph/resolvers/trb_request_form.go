@@ -10,6 +10,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -161,8 +162,8 @@ func UpdateTRBRequestForm(
 }
 
 // GetTRBRequestFormByTRBRequestID retrieves a TRB request form record for a given TRB request ID
-func GetTRBRequestFormByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestForm, error) {
-	form, err := store.GetTRBRequestFormByTRBRequestID(ctx, id)
+func GetTRBRequestFormByTRBRequestID(ctx context.Context, id uuid.UUID) (*models.TRBRequestForm, error) {
+	form, err := dataloaders.GetTRBRequestFormByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

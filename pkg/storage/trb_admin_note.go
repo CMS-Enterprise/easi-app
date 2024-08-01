@@ -7,11 +7,13 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
 
 // CreateTRBAdminNote creates a new TRB admin note record in the database
@@ -74,26 +76,35 @@ func (s *Store) CreateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 // GetTRBAdminNotesByTRBRequestID returns all notes for a given TRB request
 func (s *Store) GetTRBAdminNotesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBAdminNote, error) {
 	notes := []*models.TRBAdminNote{}
-
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_admin_notes WHERE trb_request_id = :trb_request_id`)
+	err := namedSelect(ctx, s, &notes, sqlqueries.TRBRequestAdminNotes.GetByTRBID, args{
+		"trb_request_id": trbRequestID,
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB admin notes",
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),
 		)
-		return nil, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     []*models.TRBAdminNote{},
+			Operation: apperrors.QueryFetch,
+		}
 	}
-	defer stmt.Close()
 
-	arg := map[string]interface{}{"trb_request_id": trbRequestID}
+	return notes, nil
+}
 
-	err = stmt.Select(&notes, arg)
+// GetTRBAdminNotesByTRBRequestIDs returns all notes for a given TRB request
+func (s *Store) GetTRBAdminNotesByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBAdminNote, error) {
+	notes := []*models.TRBAdminNote{}
+	err := namedSelect(ctx, s, &notes, sqlqueries.TRBRequestAdminNotes.GetByTRBIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB admin notes",
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
