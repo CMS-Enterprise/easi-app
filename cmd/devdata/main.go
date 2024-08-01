@@ -114,7 +114,7 @@ func main() {
 				gCtx,
 				fmt.Sprintf("closed request #%d", caseNum),
 				&ID,
-				"ABCD",
+				mock.PrincipalUser,
 				store,
 				time.Now().AddDate(2, 0, 0),
 			)
