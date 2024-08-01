@@ -162,9 +162,7 @@ const RelatedRequestsTable = ({
           value
         }: {
           value: LinkedRequestForTable['submissionDate'];
-        }): string => {
-          return formatDateLocal(value, 'MM/dd/yyyy');
-        }
+        }): string => formatDateLocal(value, 'MM/dd/yyyy')
       }
     ];
   }, [t]);
