@@ -234,6 +234,8 @@ func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatu
 	return &issuedStatus
 }
 
+// RelatedSystemIntake is used when intakes are selected from the DB using linking tables and the related request ID is added as an aliased column.
+// This struct with the added related request ID allows for using the mapping helpers in the dataloader package.
 type RelatedSystemIntake struct {
 	SystemIntake
 	RelatedRequestID uuid.UUID `db:"related_request_id"`

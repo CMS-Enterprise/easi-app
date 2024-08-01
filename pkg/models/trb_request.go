@@ -116,6 +116,8 @@ func (t *TRBRequest) GetName() string {
 	return "Draft"
 }
 
+// RelatedTRBRequest is used when TRB Reqs are selected from the DB using linking tables and the related request ID is added as an aliased column.
+// This struct with the added related request ID allows for using the mapping helpers in the dataloader package.
 type RelatedTRBRequest struct {
 	TRBRequest
 	RelatedRequestID uuid.UUID `db:"related_request_id"`
@@ -128,11 +130,13 @@ func (t RelatedTRBRequest) GetMappingVal() *TRBRequest {
 	return &t.TRBRequest
 }
 
+// TRBRequestsByCedarSystemIDsRequest is used as an input for dataloaders that can only receive a single argument
 type TRBRequestsByCedarSystemIDsRequest struct {
 	CedarSystemID string
 	State         TRBRequestState
 }
 
+// TRBRequestsByCedarSystemIDsResponse with the added related request ID allows for using the mapping helpers in the dataloader package.
 type TRBRequestsByCedarSystemIDsResponse struct {
 	CedarSystemID string `db:"system_id"`
 	TRBRequest
