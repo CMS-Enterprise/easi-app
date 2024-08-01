@@ -126,5 +126,8 @@ func GetTRBAttendeeComponent(ctx context.Context, euaID *string, trbRequestID uu
 	if err != nil {
 		return nil, err
 	}
+	if attendee == nil {
+		return nil, nil
+	}
 	return attendee.Component, nil
 }
