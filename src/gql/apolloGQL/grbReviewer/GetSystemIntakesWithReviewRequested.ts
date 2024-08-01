@@ -5,6 +5,7 @@ export const SystemIntakeWithReviewRequested = gql(/* GraphQL */ `
     id
     requestName
     requesterName
+    requesterComponent
     grbDate
   }
 `);

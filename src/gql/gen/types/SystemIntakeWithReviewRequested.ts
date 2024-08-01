@@ -12,5 +12,6 @@ export interface SystemIntakeWithReviewRequested {
   id: UUID;
   requestName: string | null;
   requesterName: string | null;
+  requesterComponent: string | null;
   grbDate: Time | null;
 }
