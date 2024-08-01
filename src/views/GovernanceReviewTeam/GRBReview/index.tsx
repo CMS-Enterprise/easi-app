@@ -1,24 +1,73 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { ButtonGroup } from '@trussworks/react-uswds';
+import { Column, useSortBy, useTable } from 'react-table';
+import { Button, ButtonGroup, Table } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import { SystemIntakeGrbReviewer } from 'queries/types/SystemIntakeGrbReviewer';
+import {
+  currentTableSortDescription,
+  getColumnSortStatus,
+  getHeaderSortIcon
+} from 'utils/tableSort';
 
 import IsGrbViewContext from '../IsGrbViewContext';
 
 type GRBReviewProps = {
   id: string;
+  grbReviewers: SystemIntakeGrbReviewer[];
 };
 
-const GRBReview = ({ id }: GRBReviewProps) => {
+const GRBReview = ({ id, grbReviewers }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
 
   const isGrbView = useContext(IsGrbViewContext);
 
+  const columns = useMemo<Column<SystemIntakeGrbReviewer>[]>(() => {
+    return [
+      {
+        Header: t<string>('participantsTable.name'),
+        id: 'commonName',
+        accessor: ({ userAccount }) => userAccount.commonName
+      },
+      {
+        Header: t<string>('participantsTable.votingRole'),
+        accessor: 'votingRole',
+        Cell: ({ value }) => t<string>(`votingRoles.${value}`)
+      },
+      {
+        Header: t<string>('participantsTable.grbRole'),
+        accessor: 'grbRole',
+        Cell: ({ value }) => t<string>(`reviewerRoles.${value}`)
+      }
+    ];
+  }, [t]);
+
+  const table = useTable(
+    {
+      columns,
+      data: grbReviewers,
+      autoResetSortBy: false,
+      autoResetPage: true,
+      initialState: {
+        sortBy: useMemo(() => [{ id: 'commonName', desc: false }], [])
+      }
+    },
+    useSortBy
+  );
+
+  const {
+    getTableBodyProps,
+    getTableProps,
+    headerGroups,
+    prepareRow,
+    rows
+  } = table;
+
   return (
-    <div>
+    <div className="padding-bottom-4">
       <PageHeading className="margin-y-0">{t('title')}</PageHeading>
       <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
         {t('description')}
@@ -83,7 +132,61 @@ const GRBReview = ({ id }: GRBReviewProps) => {
         </UswdsReactLink>
       )}
 
-      {/* TODO EASI-4350: add participants table */}
+      <div className="margin-top-3">
+        <Table bordered={false} fullWidth scrollable {...getTableProps()}>
+          <thead>
+            {headerGroups.map(headerGroup => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column, index) => (
+                  <th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    aria-sort={getColumnSortStatus(column)}
+                    scope="col"
+                    className="border-bottom-2px"
+                  >
+                    <Button
+                      type="button"
+                      unstyled
+                      className="width-full display-flex"
+                      {...column.getSortByToggleProps()}
+                    >
+                      <div className="flex-fill text-no-wrap">
+                        {column.render('Header')}
+                      </div>
+                      <div className="position-relative width-205 margin-left-05">
+                        {getHeaderSortIcon(column)}
+                      </div>
+                    </Button>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(row => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell, index) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </div>
+
+      {rows.length > 0 && (
+        <p
+          className="usa-sr-only usa-table__announcement-region"
+          aria-live="polite"
+        >
+          {currentTableSortDescription(headerGroups[0])}
+        </p>
+      )}
     </div>
   );
 };

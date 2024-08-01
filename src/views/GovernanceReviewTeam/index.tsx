@@ -39,14 +39,14 @@ const GovernanceReviewTeam = () => {
     }
   });
 
+  const grbReviewers = data?.systemIntake?.grbReviewers;
+
   /** Check if current user is set as GRB reviewer */
   const isGrbReviewer: boolean = useMemo(() => {
-    const grbReviewers = data?.systemIntake?.grbReviewers || [];
-
-    return grbReviewers.some(
+    return (grbReviewers || []).some(
       reviewer => reviewer.userAccount.username === euaId
     );
-  }, [data?.systemIntake?.grbReviewers, euaId]);
+  }, [grbReviewers, euaId]);
 
   const isGrtReviewer = !!user.isGrtReviewer(groups, flags);
 
@@ -73,8 +73,9 @@ const GovernanceReviewTeam = () => {
               // reviewerType differentiates between GRT and GRB views for admin pages
               path={`/:reviewerType(${reviewerType})/:systemId/:activePage/:subPage?`}
               exact
-              component={RequestOverview}
-            />
+            >
+              <RequestOverview grbReviewers={grbReviewers || []} />
+            </Route>
 
             <Route path="*" component={NotFound} />
           </Switch>

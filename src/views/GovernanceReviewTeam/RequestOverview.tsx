@@ -16,6 +16,7 @@ import {
   GetSystemIntake,
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
+import { SystemIntakeGrbReviewer } from 'queries/types/SystemIntakeGrbReviewer';
 import { AppState } from 'reducers/rootReducer';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 import AdditionalInformation from 'views/AdditionalInformation';
@@ -37,7 +38,11 @@ import Summary from './Summary';
 
 import './index.scss';
 
-const RequestOverview = () => {
+type RequestOverviewProps = {
+  grbReviewers: SystemIntakeGrbReviewer[];
+};
+
+const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const flags = useFlags();
 
@@ -224,7 +229,12 @@ const RequestOverview = () => {
                 {flags?.grbReviewTab && (
                   <Route
                     path={`/${reviewerType}/:systemId/grb-review`}
-                    render={() => <GRBReview {...systemIntake} />}
+                    render={() => (
+                      <GRBReview
+                        {...systemIntake}
+                        grbReviewers={grbReviewers}
+                      />
+                    )}
                   />
                 )}
 
