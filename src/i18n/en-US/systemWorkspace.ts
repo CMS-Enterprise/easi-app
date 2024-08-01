@@ -101,7 +101,7 @@ const systemWorkspace = {
     header: 'Requests',
     subhead: 'for Easy Access to System Information',
     description:
-      'EASi facilitates IT Governance requests and requests for technical assistance from the Technical Review Board (TRB). Use this page to view and manage open and closed requests for your system. You have access to edit and manage all of the requests below. You may have created them, or they may have been created by another team member'
+      'EASi facilitates IT Governance requests and requests for technical assistance from the Technical Review Board (TRB). Use this page to view and manage open and closed requests for your system. You may have created them, or they may have been created by another team member.'
   }
 };
 
