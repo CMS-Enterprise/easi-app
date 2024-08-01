@@ -19,6 +19,8 @@ export default {
     participationNeededText:
       'The Governance Admin Team asks that the Governance Review Board (GRB) review and vote on the merits of IT projects. Depending on the project and timeframe, this may done asynchronously or during a regular GRB review meeting. Use the button below to access details for IT Governance requests that require a GRB review. ',
     showGrbReviews: 'Show GRB reviews',
-    hideGrbReviews: 'Hide GRB reviews'
+    hideGrbReviews: 'Hide GRB reviews',
+    grbDate: 'GRB date',
+    noDateSet: 'No date set'
   }
 };
