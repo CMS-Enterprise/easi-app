@@ -1962,6 +1962,9 @@ type TRBRequestForm {
   collabDateOther: String
   collabGroupOther: String
   collabGRBConsultRequested: Boolean
+  """
+  TODO: Make Funding sources non-nullable
+  """
   fundingSources: [TRBFundingSource!]
   systemIntakes: [SystemIntake!]!
   subjectAreaOptions: [TRBSubjectAreaOption!]
@@ -2512,7 +2515,6 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
   systemIntakesWithReviewRequested: [SystemIntake!]!
-  @hasRole(role: EASI_GOVTEAM)
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!

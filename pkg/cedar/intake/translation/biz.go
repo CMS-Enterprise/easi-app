@@ -11,7 +11,7 @@ import (
 )
 
 // TranslatableBusinessCase is a wrapper around our BusinessCase model for translating into the CEDAR Intake API schema
-type TranslatableBusinessCase models.BusinessCase
+type TranslatableBusinessCase models.BusinessCaseWithCosts
 
 // ObjectID is a unique identifier for a TranslatableAction
 func (bc *TranslatableBusinessCase) ObjectID() string {

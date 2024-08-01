@@ -78,7 +78,7 @@ func migrateIntakes() {
 		intake := i // prevent gosec's G601 -- Implicit memory aliasing in for loop.
 		fmt.Println("Preparing to update system intake", intake.ID.String())
 
-		bizCase, err := store.FetchBusinessCaseBySystemIntakeID(ctx, intake.ID)
+		bizCase, err := store.GetBusinessCaseBySystemIntakeID(ctx, intake.ID)
 		noErr(err)
 		if bizCase != nil {
 			fmt.Println("Found biz case for intake", intake.ID.String())

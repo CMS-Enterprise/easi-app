@@ -438,18 +438,3 @@ func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.User
 
 	return requesterInfo, nil
 }
-
-// GetTRBUserComponent retrieves the component of a TRB user from the TRB attendees table
-func GetTRBUserComponent(ctx context.Context, store *storage.Store, euaID *string, trbRequestID uuid.UUID) (*string, error) {
-	// TODO/tech debt: This results in an N+1 problem and could be moved to a dataloader if
-	// performance ever becomes an issue
-	var component *string
-	if euaID != nil {
-		attendeeComponent, err := store.GetAttendeeComponentByEUA(ctx, *euaID, trbRequestID)
-		if err != nil {
-			return nil, err
-		}
-		component = attendeeComponent
-	}
-	return component, nil
-}

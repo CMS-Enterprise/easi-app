@@ -7,13 +7,14 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
-// GetFundingSourcesByRequestID retrieves funding sources for a TRB request form by TRB request ID
-func GetFundingSourcesByRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBFundingSource, error) {
-	return store.GetFundingSourcesByRequestID(ctx, id)
+// GetTRBFundingSourcesByRequestID retrieves funding sources for a TRB request form by TRB request ID
+func GetTRBFundingSourcesByRequestID(ctx context.Context, id uuid.UUID) ([]*models.TRBFundingSource, error) {
+	return dataloaders.GetTRBFundingSourcesByRequestID(ctx, id)
 }
 
 // UpdateTRBRequestFundingSources upserts funding sources for a TRB request form by TRB request ID and funding number
