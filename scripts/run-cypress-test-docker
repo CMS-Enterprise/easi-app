@@ -22,7 +22,7 @@ if [[ -n "${CI+x}" ]]; then
 
   docker compose cp cypress:/cypress/screenshots cypress/ || echo "No cypress screenshots copied"
   docker compose cp cypress:/cypress/videos cypress/ || echo "No cypress videos copied"
-  CYPRESS_EXIT_CODE=$(docker container inspect --format='{{.State.ExitCode}}' "${CYPRESS_CONTAINER}")
+  CYPRESS_EXIT_CODE=$(docker compose ps -q cypress | xargs docker inspect --format='{{.State.ExitCode}}')
   echo "done"
   exit "${CYPRESS_EXIT_CODE}"
 # Running locally
