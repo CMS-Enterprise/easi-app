@@ -24,3 +24,10 @@ type TRBRequestFeedback struct {
 	NotifyEUAIDs    pq.StringArray    `json:"notifyEuaIds" db:"notify_eua_ids"`
 	Action          TRBFeedbackAction `json:"action" db:"action"`
 }
+
+func (tf TRBRequestFeedback) GetMappingKey() uuid.UUID {
+	return tf.TRBRequestID
+}
+func (tf TRBRequestFeedback) GetMappingVal() *TRBRequestFeedback {
+	return &tf
+}

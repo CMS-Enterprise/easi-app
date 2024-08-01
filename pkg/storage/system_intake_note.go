@@ -7,11 +7,13 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
 
 // CreateSystemIntakeNote inserts a new note into the database
@@ -21,7 +23,7 @@ func (s *Store) CreateSystemIntakeNote(ctx context.Context, note *models.SystemI
 		ts := s.clock.Now()
 		note.CreatedAt = &ts
 	}
-	const createSystemIntakeNoteSQL = `	
+	const createSystemIntakeNoteSQL = `
 		INSERT INTO notes (
 			id,
 			system_intake,
@@ -29,13 +31,13 @@ func (s *Store) CreateSystemIntakeNote(ctx context.Context, note *models.SystemI
 		    eua_user_id,
 			author_name,
 			content
-		) 
+		)
 		VALUES (
 			:id,
 			:system_intake,
 		    :created_at,
 			:eua_user_id,
-		    :author_name,    
+		    :author_name,
 		    :content
 		)`
 	_, err := s.db.NamedExec(
@@ -117,13 +119,30 @@ func (s *Store) FetchSystemIntakeNoteByID(ctx context.Context, id uuid.UUID) (*m
 }
 
 // FetchNotesBySystemIntakeID retrieves all (non archived/deleted) Notes associated with a specific SystemIntake
-func (s *Store) FetchNotesBySystemIntakeID(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeNote, error) {
+func (s *Store) FetchNotesBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeNote, error) {
 	notes := []*models.SystemIntakeNote{}
-	err := s.db.Select(&notes, "SELECT * FROM notes WHERE system_intake=$1 AND is_archived=false ORDER BY created_at DESC", id)
+	err := namedSelect(ctx, s, &notes, sqlqueries.SystemIntakeNotes.SelectBySystemIntakeID, args{
+		"system_intake_id": systemIntakeID,
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch notes %s", err),
-			zap.String("systemIntakeID", id.String()),
+			zap.String("systemIntakeID", systemIntakeID.String()),
+		)
+		return nil, err
+	}
+	return notes, nil
+}
+
+// FetchNotesBySystemIntakeIDs retrieves all (non archived/deleted) Notes associated with a list of intake IDs
+func (s *Store) FetchNotesBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeNote, error) {
+	notes := []*models.SystemIntakeNote{}
+	err := namedSelect(ctx, s, &notes, sqlqueries.SystemIntakeNotes.SelectBySystemIntakeIDs, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to fetch notes by intake IDs %s", err),
 		)
 		return nil, err
 	}

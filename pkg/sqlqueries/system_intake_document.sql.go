@@ -17,6 +17,11 @@ var getSystemIntakeDocumentByS3Key string
 //go:embed SQL/system_intake_document/select_by_system_intake_id.sql
 var selectDocumentsBySystemIntakeID string
 
+// selectDocumentsBySystemIntakeIDs holds the SQL statement for getting all documents by system intake IDs
+//
+//go:embed SQL/system_intake_document/select_by_system_intake_ids.sql
+var selectDocumentsBySystemIntakeIDs string
+
 // createSystemIntakeDocument holds the SQL statement for creating a document on a system intake
 //
 //go:embed SQL/system_intake_document/create.sql
@@ -28,17 +33,19 @@ var createSystemIntakeDocument string
 var deleteSystemIntakeDocument string
 
 var SystemIntakeDocument = systemIntakeDocumentScripts{
-	Create:                          createSystemIntakeDocument,
-	Delete:                          deleteSystemIntakeDocument,
-	GetByDocumentID:                 getSystemIntakeDocumentByID,
-	GetByS3Key:                      getSystemIntakeDocumentByS3Key,
-	SelectDocumentsBySystemIntakeID: selectDocumentsBySystemIntakeID,
+	Create:                           createSystemIntakeDocument,
+	Delete:                           deleteSystemIntakeDocument,
+	GetByDocumentID:                  getSystemIntakeDocumentByID,
+	GetByS3Key:                       getSystemIntakeDocumentByS3Key,
+	SelectDocumentsBySystemIntakeID:  selectDocumentsBySystemIntakeID,
+	SelectDocumentsBySystemIntakeIDs: selectDocumentsBySystemIntakeIDs,
 }
 
 type systemIntakeDocumentScripts struct {
-	Create                          string
-	Delete                          string
-	GetByDocumentID                 string
-	GetByS3Key                      string
-	SelectDocumentsBySystemIntakeID string
+	Create                           string
+	Delete                           string
+	GetByDocumentID                  string
+	GetByS3Key                       string
+	SelectDocumentsBySystemIntakeID  string
+	SelectDocumentsBySystemIntakeIDs string
 }

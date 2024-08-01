@@ -11,3 +11,10 @@ type TRBFundingSource struct {
 	Source        string    `json:"source" db:"source"`
 	FundingNumber string    `json:"fundingNumber" db:"funding_number"`
 }
+
+func (f TRBFundingSource) GetMappingKey() uuid.UUID {
+	return f.TRBRequestID
+}
+func (f TRBFundingSource) GetMappingVal() *TRBFundingSource {
+	return &f
+}

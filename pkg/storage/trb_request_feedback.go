@@ -5,15 +5,18 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
@@ -22,6 +25,9 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 	return sqlutils.WithTransactionRet[*models.TRBRequestFeedback](ctx, s.db, func(tx *sqlx.Tx) (*models.TRBRequestFeedback, error) {
 		if feedback.ID == uuid.Nil {
 			feedback.ID = uuid.New()
+		}
+		if feedback.CreatedAt.IsZero() {
+			feedback.CreatedAt = time.Now()
 		}
 
 		stmt, err := tx.PrepareNamed(`
@@ -32,6 +38,7 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 			copy_trb_mailbox,
 			notify_eua_ids,
 			action,
+			created_at,
 			created_by,
 			modified_by
 		)
@@ -42,6 +49,7 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 			:copy_trb_mailbox,
 			:notify_eua_ids,
 			:action,
+			:created_at,
 			:created_by,
 			:modified_by
 		)
@@ -106,10 +114,32 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 func (s *Store) GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestFeedback, error) {
 	results := []*models.TRBRequestFeedback{}
 
-	err := s.db.Select(&results, `SELECT * FROM trb_request_feedback WHERE trb_request_id = $1`, trbRequestID)
+	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestFeedback.GetByID, args{
+		"trb_request_id": trbRequestID,
+	})
 
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request feedback", zap.Error(err), zap.String("id", trbRequestID.String()))
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request feedback by ID", zap.Error(err), zap.String("id", trbRequestID.String()))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBRequestFeedback{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return results, nil
+}
+
+// GetTRBRequestFeedbackByTRBRequestIDs queries the DB for all the TRB request feedback records
+// matching the given TRB request IDs
+func (s *Store) GetTRBRequestFeedbackByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestFeedback, error) {
+	results := []*models.TRBRequestFeedback{}
+
+	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestFeedback.GetByIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request feedback by IDs", zap.Error(err))
 		return nil, &apperrors.QueryError{
 			Err:       err,
 			Model:     models.TRBRequestFeedback{},
@@ -123,48 +153,46 @@ func (s *Store) GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequ
 // matching the given TRB request ID
 func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestFeedback, error) {
 	feedback := models.TRBRequestFeedback{}
-	stmt, err := s.db.PrepareNamed(`
-		SELECT *
-		FROM trb_request_feedback
-		WHERE trb_request_id = :trb_request_id
-		ORDER BY created_at DESC LIMIT 1`)
+	err := namedGet(ctx, s, &feedback, sqlqueries.TRBRequestFeedback.GetByNewestByID, args{
+		"trb_request_id": trbRequestID,
+	})
+
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch latest TRB request feedback",
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),
 		)
-		return nil, err
-	}
-	defer stmt.Close()
-
-	arg := map[string]interface{}{"trb_request_id": trbRequestID}
-	err = stmt.Get(&feedback, arg)
-
-	hasFeedback := true
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			hasFeedback = false
-		} else {
-			appcontext.ZLogger(ctx).Error(
-				"Failed to fetch latest TRB request feedback",
-				zap.Error(err),
-				zap.String("trbRequestID", trbRequestID.String()),
-			)
-			return nil, &apperrors.QueryError{
-				Err:       err,
-				Model:     feedback,
-				Operation: apperrors.QueryFetch,
-			}
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     feedback,
+			Operation: apperrors.QueryFetch,
 		}
 	}
+	return &feedback, nil
+}
 
-	// If no rows, return nil
-	var feedbackPtr *models.TRBRequestFeedback
-	if hasFeedback {
-		feedbackPtr = &feedback
-	} else {
-		feedbackPtr = nil
+// GetNewestTRBRequestFeedbackByTRBRequestIDs queries the DB the newest TRB request feedback records
+// matching the given TRB request IDs
+func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestFeedback, error) {
+	feedback := []*models.TRBRequestFeedback{}
+	err := namedSelect(ctx, s, &feedback, sqlqueries.TRBRequestFeedback.GetByNewestsByIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch latest TRB request feedback by IDs",
+			zap.Error(err),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     feedback,
+			Operation: apperrors.QueryFetch,
+		}
 	}
-	return feedbackPtr, nil
+	return feedback, nil
 }

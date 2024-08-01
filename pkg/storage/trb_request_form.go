@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 
 	"go.uber.org/zap"
 
@@ -103,11 +104,12 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 	return &updated, err
 }
 
-// GetTRBRequestFormByTRBRequestID queries the DB for all the TRB request form records
-// matching the given TRB request ID
+// GetTRBRequestFormByTRBRequestID queries the DB for the TRB request form record matching the given TRB request ID
 func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestForm, error) {
-	form := models.TRBRequestForm{}
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_request_forms WHERE trb_request_id=:trb_request_id`)
+	var form models.TRBRequestForm
+	err := namedGet(ctx, s, &form, sqlqueries.TRBRequestForm.GetByID, args{
+		"trb_request_id": trbRequestID,
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request form",
@@ -116,49 +118,60 @@ func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestI
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	return &form, nil
+}
 
-	arg := map[string]interface{}{"trb_request_id": trbRequestID}
-	err = stmt.Get(&form, arg)
-
+// GetTRBRequestFormsByTRBRequestIDs queries the DB for TRB request form records matching the given TRB request IDs
+func (s *Store) GetTRBRequestFormsByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestForm, error) {
+	var forms []*models.TRBRequestForm
+	err := namedSelect(ctx, s, &forms, sqlqueries.TRBRequestForm.GetByIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request form",
+			zap.Error(err),
+		)
+		return nil, err
+	}
+	return forms, nil
+}
+
+// GetTRBFundingSourcesByRequestID queries the DB for all the TRB request form funding sources
+// matching the given TRB request ID
+func (s *Store) GetTRBFundingSourcesByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBFundingSource, error) {
+	fundingSources := []*models.TRBFundingSource{}
+	err := namedSelect(ctx, s, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqID, args{
+		"trb_request_id": trbRequestID,
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB request funding sources",
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
-			Model:     form,
+			Model:     fundingSources,
 			Operation: apperrors.QueryFetch,
 		}
 	}
-	return &form, err
+	return fundingSources, err
 }
 
-// GetFundingSourcesByRequestID queries the DB for all the TRB request form funding sources
-// matching the given TRB request ID
-func (s *Store) GetFundingSourcesByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBFundingSource, error) {
+// GetTRBFundingSourcesByRequestIDs queries the DB for all the TRB request form funding sources
+// matching the given TRB request IDs
+func (s *Store) GetTRBFundingSourcesByRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBFundingSource, error) {
 	fundingSources := []*models.TRBFundingSource{}
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_request_funding_sources WHERE trb_request_id=:trb_request_id`)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			"Failed to fetch TRB request funding sources",
-			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
-		)
-		return nil, err
-	}
-	defer stmt.Close()
-
-	arg := map[string]interface{}{"trb_request_id": trbRequestID}
-	err = stmt.Select(&fundingSources, arg)
+	err := namedSelect(ctx, s, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request funding sources",
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,

@@ -5,11 +5,13 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
 
 // CreateAction creates an Action item in the database
@@ -77,22 +79,36 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 	return action, nil
 }
 
-// GetActionsByRequestID fetches actions for a particular request
-func (s *Store) GetActionsByRequestID(ctx context.Context, id uuid.UUID) ([]models.Action, error) {
+// GetActionsBySystemIntakeID fetches actions for a particular intake
+func (s *Store) GetActionsBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]models.Action, error) {
 	actions := []models.Action{}
-	const fetchActionsByRequestIDSQL = `
-		SELECT
-		       *
-		FROM
-		     actions
-		WHERE actions.intake_id=$1
-		ORDER BY created_at DESC
-	`
-	err := s.db.Select(&actions, fetchActionsByRequestIDSQL, id)
+	err := namedSelect(ctx, s, &actions, sqlqueries.SystemIntakeActions.SelectBySystemIntakeID, args{
+		"system_intake_id": systemIntakeID,
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch actions",
-			zap.String("intakeID", id.String()),
+			zap.String("intakeID", systemIntakeID.String()),
+			zap.String("error", err.Error()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     []models.Action{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return actions, nil
+}
+
+// GetActionsBySystemIntakeIDs fetches actions for a multiple intakes
+func (s *Store) GetActionsBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]models.Action, error) {
+	actions := []models.Action{}
+	err := namedSelect(ctx, s, &actions, sqlqueries.SystemIntakeActions.SelectBySystemIntakeIDs, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch actions",
 			zap.String("error", err.Error()),
 		)
 		return nil, &apperrors.QueryError{

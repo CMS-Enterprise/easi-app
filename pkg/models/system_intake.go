@@ -234,15 +234,17 @@ func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatu
 	return &issuedStatus
 }
 
+// RelatedSystemIntake is used when intakes are selected from the DB using linking tables and the related request ID is added as an aliased column.
+// This struct with the added related request ID allows for using the mapping helpers in the dataloader package.
 type RelatedSystemIntake struct {
 	SystemIntake
 	RelatedRequestID uuid.UUID `db:"related_request_id"`
 }
 
-func (s *RelatedSystemIntake) GetMappingID() uuid.UUID {
+func (s RelatedSystemIntake) GetMappingKey() uuid.UUID {
 	return s.RelatedRequestID
 }
-func (s *RelatedSystemIntake) GetEmbedPtr() *SystemIntake {
+func (s RelatedSystemIntake) GetMappingVal() *SystemIntake {
 	return &s.SystemIntake
 }
 
@@ -253,13 +255,13 @@ type SystemIntakesByCedarSystemIDsRequest struct {
 
 type SystemIntakesByCedarSystemIDsResponse struct {
 	CedarSystemID string `db:"system_id"`
-	*SystemIntake
+	SystemIntake
 }
 
-func (s *SystemIntakesByCedarSystemIDsResponse) GetMappingID() string {
+func (s SystemIntakesByCedarSystemIDsResponse) GetMappingKey() string {
 	return s.CedarSystemID
 }
 
-func (s *SystemIntakesByCedarSystemIDsResponse) GetEmbedPtr() *SystemIntake {
-	return s.SystemIntake
+func (s SystemIntakesByCedarSystemIDsResponse) GetMappingVal() *SystemIntake {
+	return &s.SystemIntake
 }

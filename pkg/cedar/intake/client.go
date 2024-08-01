@@ -83,7 +83,7 @@ func (c *Client) PublishSystemIntake(ctx context.Context, si models.SystemIntake
 }
 
 // PublishBusinessCase sends a business case to CEDAR through the Intake API for eventual storage in Alfabet
-func (c *Client) PublishBusinessCase(ctx context.Context, bc models.BusinessCase) error {
+func (c *Client) PublishBusinessCase(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 	intakeObject := translation.TranslatableBusinessCase(bc)
 	return c.publishIntakeObject(ctx, &intakeObject)
 }

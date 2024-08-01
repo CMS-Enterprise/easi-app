@@ -57,7 +57,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		results, err := s.store.SystemIntakeContractNumbersBySystemIntakeIDs(ctx, createdIDs)
 		s.NoError(err)
 
-		data := helpers.OneToMany[*models.SystemIntakeContractNumber](createdIDs, results)
+		data := helpers.OneToMany(createdIDs, results)
 		s.Equal(len(data), len(createdIDs))
 
 		for i, systemIntakeID := range createdIDs {
@@ -99,7 +99,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		results, err = s.store.SystemIntakeContractNumbersBySystemIntakeIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
 
-		data = helpers.OneToMany[*models.SystemIntakeContractNumber]([]uuid.UUID{createdIDs[0]}, results)
+		data = helpers.OneToMany([]uuid.UUID{createdIDs[0]}, results)
 		s.Len(data, 1)
 		contractsFound := data[0]
 		s.Len(contractsFound, 4)

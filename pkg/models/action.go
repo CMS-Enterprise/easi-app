@@ -90,3 +90,10 @@ type Action struct {
 	LCIDRetirementChangeNewDate              *time.Time        `json:"newRetirementDate" db:"lcid_retirement_change_new_date"`
 	LCIDRetirementChangePreviousDate         *time.Time        `json:"previousRetirementDate" db:"lcid_retirement_change_previous_date"`
 }
+
+func (a Action) GetMappingKey() uuid.UUID {
+	return *a.IntakeID
+}
+func (a Action) GetMappingVal() *Action {
+	return &a
+}
