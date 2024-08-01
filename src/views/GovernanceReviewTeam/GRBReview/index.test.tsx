@@ -1,14 +1,14 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
-import {
-  SystemIntakeGRBReviewerFragment,
-  SystemIntakeGRBReviewerRole,
-  SystemIntakeGRBReviewerVotingRole
-} from 'gql/gen/graphql';
 
 import { systemIntake } from 'data/mock/systemIntake';
 import users from 'data/mock/users';
+import { SystemIntakeGrbReviewer } from 'queries/types/SystemIntakeGrbReviewer';
+import {
+  SystemIntakeGRBReviewerRole,
+  SystemIntakeGRBReviewerVotingRole
+} from 'types/graphql-global-types';
 
 import IsGrbViewContext from '../IsGrbViewContext';
 
@@ -16,7 +16,7 @@ import GRBReview from '.';
 
 const user = users[0];
 
-const grbReviewer: SystemIntakeGRBReviewerFragment = {
+const grbReviewer: SystemIntakeGrbReviewer = {
   __typename: 'SystemIntakeGRBReviewer',
   id: 'b62addad-d490-42ab-a170-9b178a2f24eb',
   grbRole: SystemIntakeGRBReviewerRole.CMCS_REP,
