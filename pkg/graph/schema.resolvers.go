@@ -1876,7 +1876,7 @@ func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *mode
 
 // Documents is the resolver for the documents field.
 func (r *systemIntakeResolver) Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error) {
-	return resolvers.GetSystemIntakeDocumentsByRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetSystemIntakeDocumentsByRequestID(ctx, obj.ID)
 }
 
 // ItGovTaskStatuses is the resolver for the itGovTaskStatuses field.

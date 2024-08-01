@@ -22,7 +22,7 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	s.NotNil(intake)
 
 	// Check that there are no docs by default
-	docs, err := GetSystemIntakeDocumentsByRequestID(ctx, store, intake.ID)
+	docs, err := GetSystemIntakeDocumentsByRequestID(s.ctxWithNewDataloaders(), intake.ID)
 	s.NoError(err)
 	s.Len(docs, 0)
 
@@ -76,7 +76,7 @@ func createSystemIntakeDocumentSubtest(s *ResolverSuite, systemIntakeID uuid.UUI
 }
 
 func getSystemIntakeDocumentsByRequestIDSubtest(s *ResolverSuite, systemIntakeID uuid.UUID, createdDocument *models.SystemIntakeDocument) {
-	documents, err := GetSystemIntakeDocumentsByRequestID(s.testConfigs.Context, s.testConfigs.Store, systemIntakeID)
+	documents, err := GetSystemIntakeDocumentsByRequestID(s.ctxWithNewDataloaders(), systemIntakeID)
 	s.NoError(err)
 	s.Equal(1, len(documents))
 
@@ -92,7 +92,7 @@ func deleteSystemIntakeDocumentSubtest(s *ResolverSuite, createdDocument *models
 	s.NoError(err)
 	checkSystemIntakeDocumentEquality(s, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeRequestID, deletedDocument)
 
-	remainingDocuments, err := GetSystemIntakeDocumentsByRequestID(s.testConfigs.Context, s.testConfigs.Store, createdDocument.SystemIntakeRequestID)
+	remainingDocuments, err := GetSystemIntakeDocumentsByRequestID(s.ctxWithNewDataloaders(), createdDocument.SystemIntakeRequestID)
 	s.NoError(err)
 	s.Equal(0, len(remainingDocuments))
 }

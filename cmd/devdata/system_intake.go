@@ -44,6 +44,7 @@ func makeSystemIntake(
 		"Requester Name",
 		models.SystemIntakeRequestTypeNEW,
 	)
+	createSystemIntakeDocument(ctx, store, intake)
 	return fillOutInitialIntake(ctx, requestName, store, intake)
 }
 
@@ -63,7 +64,7 @@ func fillOutInitialIntake(
 		"the current stage",
 		true,
 	)
-	updateSystemIntakeContact(ctx, store, intake,
+	updateSystemIntakeContact(ctx, store,
 		"USR1",
 		"Center for Medicare",
 		"Requester",
@@ -229,7 +230,6 @@ func createSystemIntakeContact(
 func updateSystemIntakeContact(
 	ctx context.Context,
 	store *storage.Store,
-	intake *models.SystemIntake,
 	euaUserID string,
 	component string,
 	role string,
@@ -249,7 +249,6 @@ func setSystemIntakeRelationNewSystem(
 	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
-	username string,
 	contractNumbers []string,
 ) {
 	input := &models.SetSystemIntakeRelationNewSystemInput{
@@ -274,7 +273,6 @@ func setSystemIntakeRelationExistingSystem(
 	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
-	username string,
 	contractNumbers []string,
 	cedarSystemIDs []string,
 ) {
@@ -309,7 +307,6 @@ func setSystemIntakeRelationExistingService(
 	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
-	username string,
 	contractName string,
 	contractNumbers []string,
 ) {
@@ -333,7 +330,7 @@ func setSystemIntakeRelationExistingService(
 	}
 }
 
-func unlinkSystemIntakeRelation(ctx context.Context, store *storage.Store, intakeID uuid.UUID, username string) {
+func unlinkSystemIntakeRelation(ctx context.Context, store *storage.Store, intakeID uuid.UUID) {
 	// temp, manually unlink contract numbers
 	// see Note [EASI-4160 Disable Contract Number Linking]
 	if err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
@@ -483,6 +480,29 @@ func createSystemIntakeNote(
 		panic(err)
 	}
 	return note
+}
+
+func createSystemIntakeDocument(
+	ctx context.Context,
+	store *storage.Store,
+	intake *models.SystemIntake,
+) *models.SystemIntakeDocument {
+	documentToCreate := &models.SystemIntakeDocument{
+		SystemIntakeRequestID: intake.ID,
+		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftICGE,
+		FileName:              "create_and_get.pdf",
+		Bucket:                "bukkit",
+		S3Key:                 uuid.NewString(),
+		UploaderRole:          models.RequesterUploaderRole,
+	}
+	documentToCreate.CreatedBy = mock.PrincipalUser
+	documentToCreate.CreatedAt = time.Now()
+	createdDocument, err := store.CreateSystemIntakeDocument(ctx, documentToCreate)
+	if err != nil {
+		panic(err)
+	}
+
+	return createdDocument
 }
 
 // Updates the System Intake through the store method directly instead of using the resolver
