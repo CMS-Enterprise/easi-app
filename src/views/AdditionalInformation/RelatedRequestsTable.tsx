@@ -11,7 +11,7 @@ import {
   useTable
 } from 'react-table';
 import { useQuery } from '@apollo/client';
-import { Table as UswdsTable } from '@trussworks/react-uswds';
+import { Button, Table as UswdsTable } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
@@ -30,6 +30,8 @@ import {
   sortColumnValues
 } from 'utils/tableSort';
 import { NotFoundPartial } from 'views/NotFound';
+
+import { formatDateLocal } from '../../utils/date';
 
 import { LinkedRequestForTable } from './tableMap';
 
@@ -143,9 +145,11 @@ const RelatedRequestsTable = ({
         }): JSX.Element => {
           let ret: string;
           if (row.original.process === 'TRB') {
-            ret = t(`tableAndPagination:status.requestStatus.${value}`);
+            ret = t<string>(`tableAndPagination:status.requestStatus.${value}`);
           } else {
-            ret = t(`governanceReviewTeam:systemIntakeDecisionState.${value}`);
+            ret = t<string>(
+              `governanceReviewTeam:systemIntakeDecisionState.${value}`
+            );
           }
 
           return <>{ret}</>;
@@ -153,7 +157,14 @@ const RelatedRequestsTable = ({
       },
       {
         Header: t<string>('tableColumns.submissionDate'),
-        accessor: 'submissionDate'
+        accessor: 'submissionDate',
+        Cell: ({
+          value
+        }: {
+          value: LinkedRequestForTable['submissionDate'];
+        }): string => {
+          return formatDateLocal(value, 'MM/dd/yyyy');
+        }
       }
     ];
   }, [t]);
@@ -221,8 +232,8 @@ const RelatedRequestsTable = ({
         <>
           <GlobalClientFilter
             setGlobalFilter={setGlobalFilter}
-            tableID={t('relatedRequestsTable.id')}
-            tableName={t('relatedRequestsTable.title')}
+            tableID={t<string>('relatedRequestsTable.id')}
+            tableName={t<string>('relatedRequestsTable.title')}
             className="margin-bottom-4"
           />
 
@@ -240,21 +251,27 @@ const RelatedRequestsTable = ({
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column, index) => (
                 <th
-                  {...column.getHeaderProps()}
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
-                  className="table-header"
                   scope="col"
+                  className="border-bottom-2px"
+                  style={{ paddingLeft: '0', position: 'relative' }}
                 >
-                  <button
-                    className="usa-button usa-button--unstyled"
+                  <Button
                     type="button"
+                    unstyled
+                    className="width-full display-flex"
                     {...column.getSortByToggleProps()}
                   >
-                    {column.render('Header')}
-                    {getHeaderSortIcon(column)}
-                  </button>
+                    <div className="flex-fill text-no-wrap">
+                      {column.render('Header')}
+                    </div>
+                    <div className="position-relative width-205 margin-left-05">
+                      {getHeaderSortIcon(column)}
+                    </div>
+                  </Button>
                 </th>
               ))}
             </tr>
@@ -310,8 +327,9 @@ const RelatedRequestsTable = ({
           />
         )}
       </div>
+
       {tableData.length === 0 && (
-        <em className="text-bold">{t('relatedRequestsTable.empty')}</em>
+        <em className="text-bold">{t<string>('relatedRequestsTable.empty')}</em>
       )}
 
       <div
