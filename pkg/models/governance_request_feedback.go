@@ -69,3 +69,10 @@ type GovernanceRequestFeedback struct {
 	TargetForm   GovernanceRequestFeedbackTargetForm   `json:"targetForm" db:"target_form"`
 	Type         GovernanceRequestFeedbackType         `json:"type" db:"type"`
 }
+
+func (g GovernanceRequestFeedback) GetMappingKey() uuid.UUID {
+	return g.IntakeID
+}
+func (g GovernanceRequestFeedback) GetMappingVal() *GovernanceRequestFeedback {
+	return &g
+}

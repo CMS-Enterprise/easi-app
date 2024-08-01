@@ -7,6 +7,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -127,8 +128,8 @@ func CreateTRBRequestFeedback(
 }
 
 // GetTRBRequestFeedbackByTRBRequestID retrieves TRB request feedback records for a given TRB request ID
-func GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBRequestFeedback, error) {
-	results, err := store.GetTRBRequestFeedbackByTRBRequestID(ctx, id)
+func GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, id uuid.UUID) ([]*models.TRBRequestFeedback, error) {
+	results, err := dataloaders.GetTRBRequestFeedbackByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

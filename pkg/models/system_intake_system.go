@@ -17,6 +17,9 @@ func NewSystemIntakeSystem(createdBy uuid.UUID) SystemIntakeSystem {
 	}
 }
 
-func (s SystemIntakeSystem) GetMappingID() uuid.UUID {
+func (s SystemIntakeSystem) GetMappingKey() uuid.UUID {
 	return s.SystemIntakeID
+}
+func (s SystemIntakeSystem) GetMappingVal() *SystemIntakeSystem {
+	return &s
 }

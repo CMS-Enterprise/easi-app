@@ -57,7 +57,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 		results, err := s.store.TRBRequestSystemsByTRBRequestIDs(ctx, createdIDs)
 		s.NoError(err)
 		// map data
-		data := helpers.OneToMany[*models.TRBRequestSystem](createdIDs, results)
+		data := helpers.OneToMany(createdIDs, results)
 		s.Equal(len(data), len(createdIDs))
 
 		for i, trbRequestID := range createdIDs {
@@ -99,7 +99,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 		results, err = s.store.TRBRequestSystemsByTRBRequestIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
 
-		data = helpers.OneToMany[*models.TRBRequestSystem]([]uuid.UUID{createdIDs[0]}, results)
+		data = helpers.OneToMany([]uuid.UUID{createdIDs[0]}, results)
 		s.Len(data, 1)
 		systemsFound := data[0]
 		s.Len(systemsFound, 4)

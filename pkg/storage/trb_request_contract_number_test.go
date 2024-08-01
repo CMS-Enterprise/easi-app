@@ -9,7 +9,6 @@ import (
 	"github.com/lib/pq"
 
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
-	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
@@ -47,7 +46,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 		results, err := s.store.TRBRequestContractNumbersByTRBRequestIDs(ctx, createdIDs)
 		s.NoError(err)
 
-		data := helpers.OneToMany[*models.TRBRequestContractNumber](createdIDs, results)
+		data := helpers.OneToMany(createdIDs, results)
 		s.Equal(len(data), len(createdIDs))
 
 		for i, trbRequestID := range createdIDs {
@@ -89,7 +88,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 		results, err = s.store.TRBRequestContractNumbersByTRBRequestIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
 
-		data = helpers.OneToMany[*models.TRBRequestContractNumber]([]uuid.UUID{createdIDs[0]}, results)
+		data = helpers.OneToMany([]uuid.UUID{createdIDs[0]}, results)
 		s.Len(data, 1)
 
 		contractsFound := data[0]
