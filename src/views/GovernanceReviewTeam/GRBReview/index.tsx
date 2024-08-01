@@ -32,7 +32,7 @@ const GRBReview = ({ id, grbReviewers }: GRBReviewProps) => {
       Cell: () => {
         // TODO: Update edit and remove buttons with functionality from EASI-4332
         return (
-          <ButtonGroup>
+          <ButtonGroup data-testid="grbReviewerActions">
             <Button type="button" onClick={() => null} unstyled>
               {t('Edit')}
             </Button>
