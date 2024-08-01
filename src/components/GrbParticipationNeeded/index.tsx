@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Column, useSortBy, useTable } from 'react-table';
+import { Column, usePagination, useSortBy, useTable } from 'react-table';
 import {
   Button,
   IconGroups,
@@ -13,8 +13,10 @@ import {
   useGetSystemIntakesWithReviewRequestedQuery
 } from 'gql/gen/graphql';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import IconButton from 'components/shared/IconButton';
 import { formatDateLocal } from 'utils/date';
+import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 /**
@@ -39,11 +41,21 @@ const GrbParticipationNeeded = () => {
     return [
       {
         Header: t<string>('intake:fields.projectName'),
-        accessor: 'requestName'
+        accessor: ({ requestName, id }) => (
+          <UswdsReactLink to={`/governance-review-board/${id}/grb-review`}>
+            {requestName}
+          </UswdsReactLink>
+        )
       },
       {
         Header: t<string>('intake:fields.requester'),
-        accessor: 'requesterName'
+        accessor: ({ requesterName, requesterComponent }) =>
+          requesterName
+            ? getPersonNameAndComponentAcronym(
+                requesterName,
+                requesterComponent
+              )
+            : ''
       },
       {
         Header: t<string>('homepage.grbDate'),
@@ -68,11 +80,9 @@ const GrbParticipationNeeded = () => {
       data: systemIntakes,
       autoResetSortBy: false,
       autoResetPage: true
-      // initialState: {
-      //   sortBy: useMemo(() => [{ id: 'uploadedAt', desc: true }], [])
-      // }
     },
-    useSortBy
+    useSortBy,
+    usePagination
   );
 
   // Only show if user has been requested as reviewer
@@ -104,56 +114,57 @@ const GrbParticipationNeeded = () => {
       </IconButton>
 
       {showGrbReviews && (
-        <Table bordered={false} fullWidth {...getTableProps()}>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, index) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    aria-sort={getColumnSortStatus(column)}
-                    scope="col"
-                    className="border-bottom-2px bg-primary-lighter"
-                  >
-                    <Button
-                      type="button"
-                      unstyled
-                      className="width-full display-flex"
-                      {...column.getSortByToggleProps()}
+        <div className="margin-top-4 margin-bottom-neg-2">
+          <Table bordered={false} fullWidth {...getTableProps()}>
+            <thead>
+              {headerGroups.map(headerGroup => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column, index) => (
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                      aria-sort={getColumnSortStatus(column)}
+                      scope="col"
+                      className="border-bottom-2px bg-primary-lighter"
                     >
-                      <div className="flex-fill text-no-wrap">
-                        {column.render('Header')}
-                      </div>
-                      <div className="position-relative width-205 margin-left-05">
-                        {getHeaderSortIcon(column)}
-                      </div>
-                    </Button>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-
-          <tbody {...getTableBodyProps()}>
-            {rows.map(row => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell, index) => {
-                    return (
-                      <td
-                        {...cell.getCellProps()}
-                        className="bg-primary-lighter"
+                      <Button
+                        type="button"
+                        unstyled
+                        className="width-full display-flex"
+                        {...column.getSortByToggleProps()}
                       >
-                        {cell.render('Cell')}
-                      </td>
-                    );
-                  })}
+                        <div className="flex-fill text-no-wrap">
+                          {column.render('Header')}
+                        </div>
+                        <div className="position-relative width-205 margin-left-05">
+                          {getHeaderSortIcon(column)}
+                        </div>
+                      </Button>
+                    </th>
+                  ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </Table>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map(row => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell, index) => {
+                      return (
+                        <td
+                          {...cell.getCellProps()}
+                          className="bg-primary-lighter"
+                        >
+                          {cell.render('Cell')}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
       )}
     </div>
   );
