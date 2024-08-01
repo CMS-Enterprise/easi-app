@@ -15,7 +15,6 @@ import { Table as UswdsTable } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
-import Alert from 'components/shared/Alert';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
@@ -74,7 +73,9 @@ const RelatedRequestsTable = ({
     relatedIntakes.forEach(relatedIntake => {
       requests.push({
         id: relatedIntake.id,
-        contractNumber: relatedIntake.contractNumbers.join(', '),
+        contractNumber: relatedIntake.contractNumbers
+          .map(cn => cn.contractNumber)
+          .join(', '),
         process: 'IT Governance',
         projectTitle: relatedIntake.requestName || '',
         status: relatedIntake.decisionState,
@@ -86,7 +87,9 @@ const RelatedRequestsTable = ({
     relatedTRBRequests.forEach(relatedTRBRequest => {
       requests.push({
         id: relatedTRBRequest.id,
-        contractNumber: relatedTRBRequest.contractNumbers.join(', '),
+        contractNumber: relatedTRBRequest.contractNumbers
+          .map(cn => cn.contractNumber)
+          .join(', '),
         process: 'TRB',
         projectTitle: relatedTRBRequest.name || '',
         status: relatedTRBRequest.status,
@@ -292,9 +295,7 @@ const RelatedRequestsTable = ({
         )}
       </div>
       {tableData.length === 0 && (
-        <Alert type="info" slim>
-          {t('relatedRequestsTable.empty')}
-        </Alert>
+        <em className="text-bold">{t('relatedRequestsTable.empty')}</em>
       )}
 
       <div
