@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
@@ -14,6 +15,14 @@ func (s *Store) GetSystemIntakeDocumentsByRequestID(ctx context.Context, systemI
 	var documents []*models.SystemIntakeDocument
 	return documents, namedSelect(ctx, s, &documents, sqlqueries.SystemIntakeDocument.SelectDocumentsBySystemIntakeID, args{
 		"system_intake_id": systemIntakeID,
+	})
+}
+
+// GetSystemIntakeDocumentsByRequestIDs queries the DB for all documents attached to system intakes with the given IDs
+func (s *Store) GetSystemIntakeDocumentsByRequestIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeDocument, error) {
+	var documents []*models.SystemIntakeDocument
+	return documents, namedSelect(ctx, s, &documents, sqlqueries.SystemIntakeDocument.SelectDocumentsBySystemIntakeIDs, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 }
 
