@@ -15,9 +15,14 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 import IconButton from 'components/shared/IconButton';
+import TablePagination from 'components/TablePagination';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
-import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
+import {
+  currentTableSortDescription,
+  getColumnSortStatus,
+  getHeaderSortIcon
+} from 'utils/tableSort';
 
 /**
  * GRB Participation Needed alert box with table of system intakes
@@ -68,22 +73,30 @@ const GrbParticipationNeeded = () => {
     ];
   }, [t]);
 
+  const table = useTable(
+    {
+      columns,
+      data: systemIntakes,
+      autoResetSortBy: false,
+      autoResetPage: true,
+      initialState: {
+        sortBy: useMemo(() => [{ id: 'grbDate', desc: true }], []),
+        pageIndex: 0,
+        pageSize: 5
+      }
+    },
+    useSortBy,
+    usePagination
+  );
+
   const {
     getTableBodyProps,
     getTableProps,
     headerGroups,
     prepareRow,
+    page,
     rows
-  } = useTable(
-    {
-      columns,
-      data: systemIntakes,
-      autoResetSortBy: false,
-      autoResetPage: true
-    },
-    useSortBy,
-    usePagination
-  );
+  } = table;
 
   // Only show if user has been requested as reviewer
   if (loading || systemIntakes.length === 0) return null;
@@ -145,7 +158,7 @@ const GrbParticipationNeeded = () => {
               ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-              {rows.map(row => {
+              {page.map(row => {
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()}>
@@ -164,6 +177,25 @@ const GrbParticipationNeeded = () => {
               })}
             </tbody>
           </Table>
+
+          {rows.length > 0 && (
+            <>
+              <TablePagination
+                {...table}
+                pageIndex={table.state.pageIndex}
+                pageSize={table.state.pageSize}
+                page={[]}
+                className="desktop:grid-col-fill desktop:padding-bottom-0"
+              />
+
+              <div
+                className="usa-sr-only usa-table__announcement-region"
+                aria-live="polite"
+              >
+                {currentTableSortDescription(headerGroups[0])}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
