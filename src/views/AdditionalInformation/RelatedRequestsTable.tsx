@@ -112,7 +112,7 @@ const RelatedRequestsTable = ({
         }: {
           row: Row<LinkedRequestForTable>;
           value: LinkedRequestForTable['projectTitle'];
-        }): JSX.Element => {
+        }) => {
           let link: string;
           if (row.original.process === 'TRB') {
             link = `/trb/task-list/${row.original.id}`;
@@ -133,7 +133,23 @@ const RelatedRequestsTable = ({
       },
       {
         Header: t<string>('tableColumns.status'),
-        accessor: 'status'
+        accessor: 'status',
+        Cell: ({
+          row,
+          value
+        }: {
+          row: Row<LinkedRequestForTable>;
+          value: LinkedRequestForTable['status'];
+        }): JSX.Element => {
+          let ret: string;
+          if (row.original.process === 'TRB') {
+            ret = t(`tableAndPagination:status.requestStatus.${value}`);
+          } else {
+            ret = t(`governanceReviewTeam:systemIntakeDecisionState.${value}`);
+          }
+
+          return <>{ret}</>;
+        }
       },
       {
         Header: t<string>('tableColumns.submissionDate'),

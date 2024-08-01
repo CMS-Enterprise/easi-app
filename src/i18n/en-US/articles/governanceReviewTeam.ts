@@ -1,5 +1,6 @@
 import {
   SystemIntakeActionType,
+  SystemIntakeDecisionState,
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester
 } from 'types/graphql-global-types';
@@ -83,6 +84,13 @@ const systemIntakeStatusRequester: Record<
   LCID_RETIRED: 'Retired LCID: {{lcid}}',
   NOT_APPROVED: 'Project not approved by the GRB',
   NOT_GOVERNANCE: 'Not an IT Governance request'
+};
+
+const systemIntakeDecisionState: Record<SystemIntakeDecisionState, string> = {
+  LCID_ISSUED: 'LCID Issued',
+  NOT_APPROVED: 'Not Approved',
+  NOT_GOVERNANCE: 'Not Governance',
+  NO_DECISION: 'No Decision'
 };
 
 const governanceReviewTeam = {
@@ -306,6 +314,7 @@ const governanceReviewTeam = {
   },
   systemIntakeStatusAdmin,
   systemIntakeStatusRequester,
+  systemIntakeDecisionState,
   adminLeads: {
     assignModal: {
       header: 'Choose an Admin Lead for {{-requestName}}',
