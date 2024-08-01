@@ -57,7 +57,7 @@ describe('GRB participation needed', () => {
     );
   });
 
-  it('does not render component is user is not a GRB reviewer', () => {
+  it('does not render component if user is not a GRB reviewer', () => {
     render(
       <VerboseMockedProvider
         mocks={[getSystemIntakesWithReviewRequestedQuery([])]}
