@@ -18,7 +18,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import IconButton from 'components/shared/IconButton';
 import TablePagination from 'components/TablePagination';
 import users from 'data/mock/users';
-import { formatDateLocal } from 'utils/date';
+import { formatDateLocal, isDateInPast } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import {
   currentTableSortDescription,
@@ -26,6 +26,7 @@ import {
   getHeaderSortIcon
 } from 'utils/tableSort';
 
+// Mock system intake data - will remove once PR is approved
 const systemIntakes: SystemIntakeWithReviewRequestedFragment[] = [
   {
     id: '5af245bc-fc54-4677-bab1-1b3e798bb43c',
@@ -86,6 +87,28 @@ const systemIntakes: SystemIntakeWithReviewRequestedFragment[] = [
 ];
 
 /**
+ * Sort GRB dates
+ *
+ * No date set - order first,
+ * Future dates - closest dates first,
+ * Past dates - order last
+ */
+const sortByGrbDate = (grbDateA: string, grbDateB: string) => {
+  // Sort null dates first
+  if (grbDateA === null) return 1;
+  if (grbDateB === null) return -1;
+
+  // Sort past dates
+  if (isDateInPast(grbDateA) || isDateInPast(grbDateB)) {
+    return grbDateA < grbDateB ? -1 : 1;
+  }
+
+  // Sort future dates
+  if (grbDateA === grbDateB) return 0;
+  return grbDateA > grbDateB ? -1 : 1;
+};
+
+/**
  * GRB Participation Needed alert box with table of system intakes
  *
  * Only shows if GRB review has been requested from user on at least one intake
@@ -140,7 +163,9 @@ const GrbParticipationNeeded = () => {
         Cell: ({ value }) =>
           value
             ? formatDateLocal(value, 'MM/dd/yyyy')
-            : t<string>('homepage.noDateSet')
+            : t<string>('homepage.noDateSet'),
+        sortType: (rowA, rowB) =>
+          sortByGrbDate(rowA.values.grbDate, rowB.values.grbDate)
       }
     ];
   }, [t]);
