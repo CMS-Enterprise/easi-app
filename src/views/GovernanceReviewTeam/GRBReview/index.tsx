@@ -191,6 +191,7 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
                 type="button"
                 onClick={() => history.push(`${pathname}/add`)}
                 disabled={state === SystemIntakeState.CLOSED}
+                outline={grbReviewers.length > 0}
               >
                 {t(
                   grbReviewers.length > 0
