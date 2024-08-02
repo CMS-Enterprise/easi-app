@@ -110,7 +110,11 @@ func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string)
 	searchedUsers, _, err := cw.oktaClient.User.ListUsers(ctx, search)
 
 	// Log response time information
-	logger.Info("FetchUserInfos okta call", zap.Int64("response-time-ms", time.Since(start).Milliseconds()))
+	logger.Info("FetchUserInfos okta call",
+		zap.Int64("response-time-ms", time.Since(start).Milliseconds()),
+		zap.Int("username-count", len(usernames)),
+		zap.Int("user-count", len(searchedUsers)),
+	)
 	if err != nil {
 		// If it's also not a context cancellation, log and return the error
 		if !errors.Is(err, context.Canceled) {
