@@ -59,19 +59,27 @@ type GRBReviewerFormFields = {
 };
 
 type GRBReviewerFormProps = {
+  grbReviewers: SystemIntakeGRBReviewer[];
   setReviewerToRemove: (reviewer: SystemIntakeGRBReviewer) => void;
 };
 
-const GRBReviewerForm = ({ setReviewerToRemove }: GRBReviewerFormProps) => {
+/**
+ * Form to add or edit a GRB reviewer
+ */
+const GRBReviewerForm = ({
+  grbReviewers,
+  setReviewerToRemove
+}: GRBReviewerFormProps) => {
   const { t } = useTranslation('grbReview');
 
   const { showMessageOnNextPage } = useMessage();
 
   const history = useHistory();
 
-  const { state: activeReviewer } = useLocation<
-    SystemIntakeGRBReviewer | undefined
-  >();
+  const {
+    /** Active reviewer when editing */
+    state: activeReviewer
+  } = useLocation<SystemIntakeGRBReviewer | undefined>();
 
   const { reviewerType, systemId, action } = useParams<{
     reviewerType: ReviewerKey;
@@ -109,9 +117,9 @@ const GRBReviewerForm = ({ setReviewerToRemove }: GRBReviewerFormProps) => {
     watch,
     setValue,
     setError,
-    formState: { errors, isValid, isDirty }
+    formState: { errors, isDirty, isSubmitted }
   } = useEasiForm<GRBReviewerFormFields>({
-    resolver: yupResolver(CreateGRBReviewerSchema),
+    resolver: yupResolver(CreateGRBReviewerSchema(grbReviewers)),
     defaultValues: {
       votingRole: activeReviewer?.votingRole,
       grbRole: activeReviewer?.grbRole,
@@ -225,7 +233,7 @@ const GRBReviewerForm = ({ setReviewerToRemove }: GRBReviewerFormProps) => {
                     commonName: contact.commonName,
                     email: contact.email || ''
                   },
-                  { shouldValidate: true }
+                  { shouldValidate: isSubmitted }
                 )
               }
               value={{
@@ -327,7 +335,10 @@ const GRBReviewerForm = ({ setReviewerToRemove }: GRBReviewerFormProps) => {
           <Pager
             next={{
               text: t('form.submit', { context: action }),
-              disabled: !isValid && !errors?.root
+              disabled:
+                !watch('userAccount') ||
+                !watch('votingRole') ||
+                !watch('grbRole')
             }}
             taskListUrl={grbReviewPath}
             saveExitText={t('form.returnToRequest', { context: action })}

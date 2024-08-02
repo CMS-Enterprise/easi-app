@@ -128,7 +128,10 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
       )}
 
       {isForm ? (
-        <GRBReviewerForm setReviewerToRemove={setReviewerToRemove} />
+        <GRBReviewerForm
+          setReviewerToRemove={setReviewerToRemove}
+          grbReviewers={grbReviewers}
+        />
       ) : (
         <>
           <PageHeading className="margin-y-0">{t('title')}</PageHeading>
