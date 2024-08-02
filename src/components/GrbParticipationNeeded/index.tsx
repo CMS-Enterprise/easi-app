@@ -111,11 +111,18 @@ const GrbParticipationNeeded = () => {
     return [
       {
         Header: t<string>('intake:fields.projectName'),
-        accessor: ({ requestName, id }) => (
-          <UswdsReactLink to={`/governance-review-board/${id}/grb-review`}>
-            {requestName}
-          </UswdsReactLink>
-        )
+        accessor: 'requestName',
+        Cell: cell => {
+          const { row, value } = cell;
+
+          return (
+            <UswdsReactLink
+              to={`/governance-review-board/${row.original.id}/grb-review`}
+            >
+              {value}
+            </UswdsReactLink>
+          );
+        }
       },
       {
         Header: t<string>('intake:fields.requester'),
