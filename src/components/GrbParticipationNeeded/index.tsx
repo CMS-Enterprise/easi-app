@@ -17,6 +17,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import UswdsReactLink from 'components/LinkWrapper';
 import IconButton from 'components/shared/IconButton';
 import TablePagination from 'components/TablePagination';
+import users from 'data/mock/users';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import {
@@ -24,6 +25,65 @@ import {
   getColumnSortStatus,
   getHeaderSortIcon
 } from 'utils/tableSort';
+
+const systemIntakes: SystemIntakeWithReviewRequestedFragment[] = [
+  {
+    id: '5af245bc-fc54-4677-bab1-1b3e798bb43c',
+    requestName: 'System Intake with GRB Reviewers',
+    requesterName: 'User One',
+    requesterComponent: 'Office of the Actuary',
+    grbDate: '2020-10-08T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Edits requested on initial request form',
+    requesterName: users[0].commonName,
+    requesterComponent: 'Federal Coordinated Health Care Office',
+    grbDate: null,
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Edits requested on initial request form',
+    requesterName: users[1].commonName,
+    requesterComponent: 'Office of Communications',
+    grbDate: '2024-03-29T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Edits requested on initial request form',
+    requesterName: users[2].commonName,
+    requesterComponent: 'Office of the Actuary',
+    grbDate: '2025-06-09T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: 'a5689bec-e4cf-4f2b-a7de-72020e8d65be',
+    requestName: 'With GRB scheduled',
+    requesterName: users[3].commonName,
+    requesterComponent: 'Office of Enterprise Data and Analytics',
+    grbDate: '2024-10-02T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '20cbcfbf-6459-4c96-943b-e76b83122dbf',
+    requestName: 'Closable Request',
+    requesterName: users[3].commonName,
+    requesterComponent: 'Office of Information Technology',
+    grbDate: '2023-01-18T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Edits requested on initial request form',
+    requesterName: users[2].commonName,
+    requesterComponent: 'Office of Information Technology',
+    grbDate: null,
+    __typename: 'SystemIntake'
+  }
+];
 
 /**
  * GRB Participation Needed alert box with table of system intakes
@@ -37,10 +97,13 @@ const GrbParticipationNeeded = () => {
   // Toggles GRB reviews table
   const [showGrbReviews, setShowGrbReviews] = useState<boolean>(false);
 
-  const { data, loading } = useGetSystemIntakesWithReviewRequestedQuery();
+  const {
+    // data,
+    loading
+  } = useGetSystemIntakesWithReviewRequestedQuery();
 
-  const systemIntakes: SystemIntakeWithReviewRequestedFragment[] =
-    data?.systemIntakesWithReviewRequested || [];
+  // const systemIntakes: SystemIntakeWithReviewRequestedFragment[] =
+  //   data?.systemIntakesWithReviewRequested || [];
 
   const columns = useMemo<
     Column<SystemIntakeWithReviewRequestedFragment>[]
