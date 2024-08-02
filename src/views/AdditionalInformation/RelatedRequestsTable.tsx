@@ -22,6 +22,8 @@ import TableResults from 'components/TableResults';
 import GetSystemIntakeRelatedRequests from 'queries/GetSystemIntakeRelatedRequests';
 import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 import { GetSystemIntakeRelatedRequestsVariables } from 'queries/types/GetSystemIntakeRelatedRequests';
+import { formatDateLocal } from 'utils/date';
+import formatContractNumbers from 'utils/formatContractNumbers';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -31,9 +33,7 @@ import {
 } from 'utils/tableSort';
 import { NotFoundPartial } from 'views/NotFound';
 
-import { formatDateLocal } from '../../utils/date';
-
-import { LinkedRequestForTable } from './tableMap';
+import { LinkedRequestForTable } from './linkedRequestForTable';
 
 const RelatedRequestsTable = ({
   requestID,
@@ -75,9 +75,7 @@ const RelatedRequestsTable = ({
     relatedIntakes.forEach(relatedIntake => {
       requests.push({
         id: relatedIntake.id,
-        contractNumber: relatedIntake.contractNumbers
-          .map(cn => cn.contractNumber)
-          .join(', '),
+        contractNumber: formatContractNumbers(relatedIntake.contractNumbers),
         process: 'IT Governance',
         projectTitle: relatedIntake.requestName || '',
         status: relatedIntake.decisionState,
@@ -89,9 +87,9 @@ const RelatedRequestsTable = ({
     relatedTRBRequests.forEach(relatedTRBRequest => {
       requests.push({
         id: relatedTRBRequest.id,
-        contractNumber: relatedTRBRequest.contractNumbers
-          .map(cn => cn.contractNumber)
-          .join(', '),
+        contractNumber: formatContractNumbers(
+          relatedTRBRequest.contractNumbers
+        ),
         process: 'TRB',
         projectTitle: relatedTRBRequest.name || '',
         status: relatedTRBRequest.status,
@@ -249,7 +247,7 @@ const RelatedRequestsTable = ({
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) => (
+              {headerGroup.headers.map(column => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
