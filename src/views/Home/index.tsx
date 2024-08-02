@@ -62,7 +62,7 @@ const Home = () => {
                 {t('home:subtitle')}
               </p>
 
-              <GrbParticipationNeeded />
+              {flags.grbReviewTab && <GrbParticipationNeeded />}
 
               <Grid tablet={{ col: 12 }} className="margin-bottom-6">
                 <h2 className="margin-bottom-0 margin-top-4">
