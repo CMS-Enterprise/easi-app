@@ -8,8 +8,8 @@ export const grbReviewerVotingRolesTranslation: Record<
   string
 > = {
   VOTING: 'Voting',
-  NON_VOTING: 'Non-voting',
-  ALTERNATE: 'Alternate'
+  ALTERNATE: 'Alternate',
+  NON_VOTING: 'Non-voting'
 };
 
 export const grbReviewerRolesTranslation: Record<

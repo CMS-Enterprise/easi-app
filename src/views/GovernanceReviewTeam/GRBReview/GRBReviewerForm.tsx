@@ -171,164 +171,173 @@ const GRBReviewerForm = ({ setReviewerToRemove }: GRBReviewerFormProps) => {
   });
 
   return (
-    <Grid className="tablet:grid-col-8 padding-y-4">
-      <ErrorMessage errors={errors} name="root" as={<Alert type="error" />} />
+    <>
+      <ErrorMessage
+        errors={errors}
+        name="root"
+        as={<Alert type="error" className="margin-top-2" />}
+      />
+      <Grid className="tablet:grid-col-8 padding-y-4">
+        <h1 className="margin-bottom-1">{t('form.title')}</h1>
+        <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-105">
+          {t('form.description')}
+        </p>
 
-      <h1 className="margin-bottom-1">{t('form.title')}</h1>
-      <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-105">
-        {t('form.description')}
-      </p>
-
-      <p className="margin-top-1 text-base">
-        <Trans
-          i18nKey="action:fieldsMarkedRequired"
-          components={{ asterisk: <RequiredAsterisk /> }}
-        />
-      </p>
-
-      <IconLink
-        icon={<IconArrowBack />}
-        to={grbReviewPath}
-        className="margin-top-3 margin-bottom-5"
-      >
-        {t('form.returnToRequest', { context: action })}
-      </IconLink>
-
-      <Form
-        onSubmit={submit}
-        className="maxw-none tablet:grid-col-9 margin-bottom-8"
-      >
-        <FormGroup>
-          <Label htmlFor="react-select-userAccount-input" required>
-            {t('form.grbMemberName')}
-          </Label>
-          <HelpText id="userAccountHelpText" className="margin-top-05">
-            {t('form.grbMemberNameHelpText')}
-          </HelpText>
-          <ErrorMessage
-            errors={errors}
-            name="userAccount"
-            as={<FieldErrorMsg />}
+        <p className="margin-top-1 text-base">
+          <Trans
+            i18nKey="action:fieldsMarkedRequired"
+            components={{ asterisk: <RequiredAsterisk /> }}
           />
-          <CedarContactSelect
-            {...{ ...register('userAccount'), ref: null }}
-            onChange={contact =>
-              contact?.euaUserId &&
-              setValue(
-                'userAccount',
-                {
-                  username: contact.euaUserId,
-                  commonName: contact.commonName,
-                  email: contact.email || ''
-                },
-                { shouldValidate: true }
-              )
-            }
-            value={{
-              euaUserId: watch('userAccount.username'),
-              commonName: watch('userAccount.commonName'),
-              email: watch('userAccount.email')
-            }}
-            id="userAccount"
-            ariaDescribedBy="userAccountHelpText"
-            disabled={!!activeReviewer}
-          />
-        </FormGroup>
+        </p>
 
-        <FormGroup>
-          <Label htmlFor="votingRole" required>
-            {t('form.votingRole')}
-          </Label>
-          <ErrorMessage
-            errors={errors}
-            name="votingRole"
-            as={<FieldErrorMsg />}
-          />
-          <Dropdown {...register('votingRole')} ref={null} id="votingRole">
-            <option value="">{t('form:dropdownInitialSelect')}</option>
-            {grbReviewerVotingRoles.map(key => (
-              <option value={key} key={key}>
-                {t(`votingRoles.${key}`)}
-              </option>
-            ))}
-          </Dropdown>
-        </FormGroup>
-
-        <CollapsableLink
-          id="votingRolesInfoList"
-          label={t('form.votingRolesInfo.label')}
-          className="margin-top-2"
+        <IconLink
+          icon={<IconArrowBack />}
+          to={grbReviewPath}
+          className="margin-top-3 margin-bottom-5"
         >
-          <dl className="margin-y-neg-1 padding-left-2">
-            {t<string[]>('form.votingRolesInfo.items', {
-              returnObjects: true
-            }).map(item => (
-              <div key={item} className="display-list-item margin-y-1">
-                <Trans
-                  defaults={item}
-                  components={{
-                    dt: <dt className="text-bold display-inline" />,
-                    dd: <dd className="margin-0 display-inline" />
-                  }}
-                />
-              </div>
-            ))}
-          </dl>
-        </CollapsableLink>
+          {t('form.returnToRequest', { context: action })}
+        </IconLink>
 
-        <FormGroup>
-          <Label htmlFor="grbRole" required>
-            {t('form.grbRole')}
-          </Label>
-          <HelpText id="grbRoleHelpText" className="margin-top-05">
-            {t('form.grbRoleHelpText')}
-          </HelpText>
-          <ErrorMessage errors={errors} name="grbRole" as={<FieldErrorMsg />} />
-          <Dropdown
-            {...register('grbRole')}
-            ref={null}
-            id="grbRole"
-            aria-describedby="grbRoleHelpText"
+        <Form
+          onSubmit={submit}
+          className="maxw-none tablet:grid-col-9 margin-bottom-8"
+        >
+          <FormGroup>
+            <Label htmlFor="react-select-userAccount-input" required>
+              {t('form.grbMemberName')}
+            </Label>
+            <HelpText id="userAccountHelpText" className="margin-top-05">
+              {t('form.grbMemberNameHelpText')}
+            </HelpText>
+            <ErrorMessage
+              errors={errors}
+              name="userAccount"
+              as={<FieldErrorMsg />}
+            />
+            <CedarContactSelect
+              {...{ ...register('userAccount'), ref: null }}
+              onChange={contact =>
+                contact?.euaUserId &&
+                setValue(
+                  'userAccount',
+                  {
+                    username: contact.euaUserId,
+                    commonName: contact.commonName,
+                    email: contact.email || ''
+                  },
+                  { shouldValidate: true }
+                )
+              }
+              value={{
+                euaUserId: watch('userAccount.username'),
+                commonName: watch('userAccount.commonName'),
+                email: watch('userAccount.email')
+              }}
+              id="userAccount"
+              ariaDescribedBy="userAccountHelpText"
+              disabled={!!activeReviewer}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label htmlFor="votingRole" required>
+              {t('form.votingRole')}
+            </Label>
+            <ErrorMessage
+              errors={errors}
+              name="votingRole"
+              as={<FieldErrorMsg />}
+            />
+            <Dropdown {...register('votingRole')} ref={null} id="votingRole">
+              <option value="">{t('form:dropdownInitialSelect')}</option>
+              {grbReviewerVotingRoles.map(key => (
+                <option value={key} key={key}>
+                  {t(`votingRoles.${key}`)}
+                </option>
+              ))}
+            </Dropdown>
+          </FormGroup>
+
+          <CollapsableLink
+            id="votingRolesInfoList"
+            label={t('form.votingRolesInfo.label')}
+            className="margin-top-2"
           >
-            <option value="">{t('form:dropdownInitialSelect')}</option>
-            {grbReviewerRoles.map(key => (
-              <option value={key} key={key}>
-                {t(`reviewerRoles.${key}`)}
-              </option>
-            ))}
-          </Dropdown>
-        </FormGroup>
+            <dl className="margin-y-neg-1 padding-left-2">
+              {t<string[]>('form.votingRolesInfo.items', {
+                returnObjects: true
+              }).map(item => (
+                <div key={item} className="display-list-item margin-y-1">
+                  <Trans
+                    defaults={item}
+                    components={{
+                      dt: <dt className="text-bold display-inline" />,
+                      dd: <dd className="margin-0 display-inline" />
+                    }}
+                  />
+                </div>
+              ))}
+            </dl>
+          </CollapsableLink>
 
-        {activeReviewer && (
-          <Button
-            type="button"
-            onClick={() => setReviewerToRemove(activeReviewer)}
-            className="text-error margin-bottom-4"
-            unstyled
-          >
-            {t('form.removeGrbReviewer')}
-          </Button>
-        )}
+          <FormGroup>
+            <Label htmlFor="grbRole" required>
+              {t('form.grbRole')}
+            </Label>
+            <HelpText id="grbRoleHelpText" className="margin-top-05">
+              {t('form.grbRoleHelpText')}
+            </HelpText>
+            <ErrorMessage
+              errors={errors}
+              name="grbRole"
+              as={<FieldErrorMsg />}
+            />
+            <Dropdown
+              {...register('grbRole')}
+              ref={null}
+              id="grbRole"
+              aria-describedby="grbRoleHelpText"
+            >
+              <option value="">{t('form:dropdownInitialSelect')}</option>
+              {grbReviewerRoles.map(key => (
+                <option value={key} key={key}>
+                  {t(`reviewerRoles.${key}`)}
+                </option>
+              ))}
+            </Dropdown>
+          </FormGroup>
 
-        {action === 'add' && (
-          <Alert type="info" slim className="margin-top-8">
-            {t('form.infoAlert')}
-          </Alert>
-        )}
+          {activeReviewer && (
+            <Button
+              type="button"
+              onClick={() => setReviewerToRemove(activeReviewer)}
+              className="text-error margin-bottom-4"
+              unstyled
+            >
+              {t('form.removeGrbReviewer')}
+            </Button>
+          )}
 
-        <Pager
-          next={{
-            text: t('form.submit', { context: action }),
-            disabled: !isValid && !errors?.root
-          }}
-          taskListUrl={grbReviewPath}
-          saveExitText={t('form.returnToRequest', { context: action })}
-          border={false}
-          className="margin-top-4"
-          submitDisabled
-        />
-      </Form>
-    </Grid>
+          {action === 'add' && (
+            <Alert type="info" slim className="margin-top-8">
+              {t('form.infoAlert')}
+            </Alert>
+          )}
+
+          <Pager
+            next={{
+              text: t('form.submit', { context: action }),
+              disabled: !isValid && !errors?.root
+            }}
+            taskListUrl={grbReviewPath}
+            saveExitText={t('form.returnToRequest', { context: action })}
+            border={false}
+            className="margin-top-4"
+            submitDisabled
+          />
+        </Form>
+      </Grid>
+    </>
   );
 };
 
