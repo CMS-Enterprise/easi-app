@@ -217,12 +217,14 @@ function Homepage() {
 
         <div className="trb-requests-table">
           <h2>{t('table.heading')}</h2>
+
           <GlobalClientFilter
             setGlobalFilter={setGlobalFilter}
             tableID={t('systemTable.id')}
             tableName={t('systemTable.title')}
             className="margin-bottom-4 maxw-mobile-lg"
           />
+
           <Table bordered={false} fullWidth scrollable {...getTableProps()}>
             <thead>
               {headerGroups.map(headerGroup => (
@@ -269,11 +271,13 @@ function Homepage() {
               })}
             </tbody>
           </Table>
+
           {rows.length === 0 && (
             <div className="padding-bottom-2 border-bottom-1px margin-top-neg-05">
               {t('table.noRequests')}
             </div>
           )}
+
           <div className="grid-row grid-gap grid-gap-lg">
             <TablePagination
               gotoPage={gotoPage}
@@ -295,6 +299,7 @@ function Homepage() {
               setPageSize={setPageSize}
             />
           </div>
+
           <div
             className="usa-sr-only usa-table__announcement-region"
             aria-live="polite"
