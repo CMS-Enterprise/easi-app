@@ -1,34 +1,37 @@
 package helpers
 
-// GetMappingID can be implemented so that it can use OneToMany below to map a flat list of values
+// Mapper can be implemented so that it can use OneToMany below to map a flat list of values
 // to a flat list of their relative keys
-type GetMappingID[keyT comparable] interface {
-	GetMappingID() keyT
+type Mapper[keyT comparable, valT any] interface {
+	GetMappingKey() keyT
+	GetMappingVal() valT // in cases where the return value is not embedded, this should simply be a pointer to the original struct
 }
 
 // OneToMany takes a list of keys and a list of values which map one-to-many (key-to-value)
 // ex: vals could be a list of contract numbers where more than one value has the same mapped ID
-func OneToMany[valT GetMappingID[keyT], keyT comparable](keys []keyT, vals []valT) [][]valT {
+func OneToMany[valT Mapper[keyT, retT], keyT comparable, retT any](keys []keyT, vals []valT) [][]retT {
 	// create a map to store values grouped by key (of type keyT)
 	// each key will map to a slice of values (of type valT)
-	store := map[keyT][]valT{}
+	store := map[keyT][]retT{}
 
 	// iterate over each value in the flat slice and append it to the correct key in the map,
-	// based on the value's GetMappingID() method
+	// based on the value's GetMappingKey() method
 	for _, val := range vals {
-		id := val.GetMappingID()
-		// populate map with empty slice if not present yet
+		id := val.GetMappingKey()
+		// populate with empty slice if not present
 		if _, ok := store[id]; !ok {
-			store[id] = []valT{}
+			store[id] = []retT{}
 		}
-		store[id] = append(store[id], val)
+		// call return value in case it is an embedded struct or something different than the starting value
+		returnValue := val.GetMappingVal()
+		store[id] = append(store[id], returnValue)
 	}
 
 	// now we have a map of keys to slices of values, but we want to convert that to
 	// a 2D slice of values, where each slice is a list of values that share the same key
 	//
 	// to do this, we iterate over the keys slice and append the corresponding value slice from the map
-	var out [][]valT
+	var out [][]retT
 	for _, key := range keys {
 		out = append(out, store[key])
 	}
@@ -36,24 +39,16 @@ func OneToMany[valT GetMappingID[keyT], keyT comparable](keys []keyT, vals []val
 	return out
 }
 
-type GetMappingIDAndEmbedPtr[keyT comparable, embedPtr any] interface {
-	GetMappingID() keyT
-	GetEmbedPtr() embedPtr
-}
-
-func OneToManyEmbedded[valT GetMappingIDAndEmbedPtr[keyT, embedPtr], keyT comparable, embedPtr any](keys []keyT, vals []valT) [][]embedPtr {
-	store := map[keyT][]embedPtr{}
+// OneToOne takes a list of keys and a list of values which map one-to-one (key-to-value)
+func OneToOne[valT Mapper[keyT, retT], keyT comparable, retT any](keys []keyT, vals []valT) []retT {
+	store := map[keyT]retT{}
 
 	for _, val := range vals {
-		id := val.GetMappingID()
-		if _, ok := store[id]; !ok {
-			store[id] = []embedPtr{}
-		}
-		embeddedVal := val.GetEmbedPtr()
-		store[id] = append(store[id], embeddedVal)
+		id := val.GetMappingKey()
+		store[id] = val.GetMappingVal()
 	}
 
-	var out [][]embedPtr
+	var out []retT
 	for _, key := range keys {
 		out = append(out, store[key])
 	}

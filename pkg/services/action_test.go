@@ -228,15 +228,15 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		return intake, nil
 	}
 
-	updateBusinessCase := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+	updateBusinessCase := func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
 		return businessCase, nil
 	}
 
-	fetchOpenBusinessCase := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-		return &models.BusinessCase{}, nil
+	fetchOpenBusinessCase := func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
+		return &models.BusinessCaseWithCosts{}, nil
 	}
 
-	validateForSubmit := func(businessCase *models.BusinessCase) error {
+	validateForSubmit := func(businessCase *models.BusinessCaseWithCosts) error {
 		return nil
 	}
 
@@ -270,7 +270,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
@@ -320,7 +320,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
@@ -368,7 +368,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
@@ -416,7 +416,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
@@ -468,13 +468,13 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
 		intake := models.SystemIntake{Step: models.SystemIntakeStepDRAFTBIZCASE}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		failValidation := func(businessCase *models.BusinessCase) error {
+		failValidation := func(businessCase *models.BusinessCaseWithCosts) error {
 			return &apperrors.ValidationError{
 				Err:     errors.New("validation failed on these fields: ID"),
 				ModelID: businessCase.ID.String(),
@@ -526,21 +526,21 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
 		intake := models.SystemIntake{Step: models.SystemIntakeStepFINALBIZCASE}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		failValidation := func(businessCase *models.BusinessCase) error {
+		failValidation := func(businessCase *models.BusinessCaseWithCosts) error {
 			return &apperrors.ValidationError{
 				Err:     errors.New("validation failed on these fields: ID"),
 				ModelID: businessCase.ID.String(),
 				Model:   businessCase,
 			}
 		}
-		fetchOpenBusinessCase = func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-			return &models.BusinessCase{}, nil
+		fetchOpenBusinessCase = func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
+			return &models.BusinessCaseWithCosts{}, nil
 		}
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
@@ -583,7 +583,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
@@ -631,14 +631,14 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
 		intake := models.SystemIntake{}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		failUpdateBizCase := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-			return &models.BusinessCase{}, errors.New("update error")
+		failUpdateBizCase := func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+			return &models.BusinessCaseWithCosts{}, errors.New("update error")
 		}
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
@@ -680,7 +680,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		}
 
 		submitToCEDARCount := 0
-		submitToCEDARMock := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARMock := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			submitToCEDARCount++
 			return nil
 		}
@@ -732,7 +732,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		failSubmitToCEDAR := func(ctx context.Context, bc models.BusinessCase) error {
+		failSubmitToCEDAR := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return errors.New("Could not submit business case to CEDAR")
 		}
 

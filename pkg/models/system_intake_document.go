@@ -42,3 +42,10 @@ type SystemIntakeDocument struct {
 	S3Key                 string                         `json:"s3Key" db:"s3_key"` // The document's key inside an S3 bucket; does *not* include the bucket name.
 	UploaderRole          DocumentUploaderRole           `json:"uploaderRole" db:"uploader_role"`
 }
+
+func (d SystemIntakeDocument) GetMappingKey() uuid.UUID {
+	return d.SystemIntakeRequestID
+}
+func (d SystemIntakeDocument) GetMappingVal() *SystemIntakeDocument {
+	return &d
+}

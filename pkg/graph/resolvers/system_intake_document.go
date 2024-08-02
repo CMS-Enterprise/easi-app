@@ -12,6 +12,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -21,8 +22,8 @@ import (
 )
 
 // GetSystemIntakeDocumentsByRequestID fetches all documents attached to the system intake with the given ID.
-func GetSystemIntakeDocumentsByRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.SystemIntakeDocument, error) {
-	return store.GetSystemIntakeDocumentsByRequestID(ctx, id)
+func GetSystemIntakeDocumentsByRequestID(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeDocument, error) {
+	return dataloaders.GetSystemIntakeDocumentsBySystemIntakeID(ctx, id)
 }
 
 // GetURLForSystemIntakeDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key

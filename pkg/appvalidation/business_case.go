@@ -34,7 +34,7 @@ func checkSystemIntakeSubmitted(intake *models.SystemIntake) (string, string) {
 }
 
 // BusinessCaseForCreation checks if it's a valid business case to create
-func BusinessCaseForCreation(businessCase *models.BusinessCase, intake *models.SystemIntake) error {
+func BusinessCaseForCreation(businessCase *models.BusinessCaseWithCosts, intake *models.SystemIntake) error {
 	// We return an empty id in this error because the business case hasn't been created
 	expectedErr := apperrors.ValidationError{
 		Err:         errors.New("business case failed validations"),
@@ -61,7 +61,7 @@ func BusinessCaseForCreation(businessCase *models.BusinessCase, intake *models.S
 }
 
 // BusinessCaseForUpdate checks if it's a valid business case to update
-func BusinessCaseForUpdate(businessCase *models.BusinessCase) error {
+func BusinessCaseForUpdate(businessCase *models.BusinessCaseWithCosts) error {
 	// We return an empty id in this error because the business case hasn't been created
 	expectedErr := apperrors.NewValidationError(
 		errors.New("business case failed validations"),
@@ -80,7 +80,7 @@ func BusinessCaseForUpdate(businessCase *models.BusinessCase) error {
 	return nil
 }
 
-func alternativeARequired(businessCase *models.BusinessCase) bool {
+func alternativeARequired(businessCase *models.BusinessCaseWithCosts) bool {
 	return businessCase.AlternativeATitle.Valid ||
 		businessCase.AlternativeASummary.Valid ||
 		businessCase.AlternativeAAcquisitionApproach.Valid ||
@@ -88,7 +88,7 @@ func alternativeARequired(businessCase *models.BusinessCase) bool {
 		businessCase.AlternativeACons.Valid ||
 		businessCase.AlternativeACostSavings.Valid
 }
-func alternativeBRequired(businessCase *models.BusinessCase) bool {
+func alternativeBRequired(businessCase *models.BusinessCaseWithCosts) bool {
 	return businessCase.AlternativeBTitle.Valid ||
 		businessCase.AlternativeBSummary.Valid ||
 		businessCase.AlternativeBAcquisitionApproach.Valid ||
@@ -128,7 +128,7 @@ func validateRequiredCost(lines solutionCostLines) string {
 	return ""
 }
 
-func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCase) map[string]string {
+func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCaseWithCosts) map[string]string {
 	validations := map[string]string{}
 	preferredCosts := solutionCostLines{}
 	aCosts := solutionCostLines{}
@@ -187,7 +187,7 @@ func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCase) map[st
 }
 
 // BusinessCaseForSubmit checks if it's a valid business case to update
-func BusinessCaseForSubmit(businessCase *models.BusinessCase) error {
+func BusinessCaseForSubmit(businessCase *models.BusinessCaseWithCosts) error {
 	// We return an empty id in this error because the business case hasn't been created
 	expectedErr := apperrors.NewValidationError(
 		errors.New("business case failed validations"),

@@ -10,6 +10,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -177,8 +178,8 @@ func GetTRBAdminNoteByID(ctx context.Context, store *storage.Store, id uuid.UUID
 }
 
 // GetTRBAdminNotesByTRBRequestID retrieves a list of admin notes associated with a TRB request
-func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) ([]*models.TRBAdminNote, error) {
-	notes, err := store.GetTRBAdminNotesByTRBRequestID(ctx, trbRequestID)
+func GetTRBAdminNotesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBAdminNote, error) {
+	notes, err := dataloaders.GetTRBAdminNotesByTRBRequestID(ctx, trbRequestID)
 	if err != nil {
 		return nil, err
 	}
