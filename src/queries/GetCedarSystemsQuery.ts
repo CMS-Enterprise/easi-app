@@ -15,11 +15,9 @@ export default gql`
       isBookmarked
       linkedTrbRequests(state: OPEN) {
         id
-        __typename
       }
       linkedSystemIntakes(state: OPEN) {
         id
-        __typename
       }
     }
   }

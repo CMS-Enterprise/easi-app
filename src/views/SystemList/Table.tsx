@@ -144,8 +144,8 @@ export const Table = ({
       });
     };
 
-    // eslint-disable-next-line camelcase
     let cols: Column<CedarSystem>[] = [
+      // we do not show this column in the My Systems view
       {
         Header: <IconBookmark />,
         accessor: 'id',
