@@ -12,6 +12,7 @@ import {
   SystemIntakeWithReviewRequestedFragment,
   useGetSystemIntakesWithReviewRequestedQuery
 } from 'gql/gen/graphql';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import IconButton from 'components/shared/IconButton';
@@ -31,6 +32,7 @@ import {
  */
 const GrbParticipationNeeded = () => {
   const { t } = useTranslation('grbReview');
+  const flags = useFlags();
 
   // Toggles GRB reviews table
   const [showGrbReviews, setShowGrbReviews] = useState<boolean>(false);
@@ -97,6 +99,9 @@ const GrbParticipationNeeded = () => {
     page,
     rows
   } = table;
+
+  // Hide behind grbReviewTab flag
+  if (!flags.grbReviewTab) return null;
 
   // Only show if user has been requested as reviewer
   if (loading || systemIntakes.length === 0) return null;
