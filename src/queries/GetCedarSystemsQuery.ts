@@ -13,6 +13,14 @@ export default gql`
       systemMaintainerOrg
       systemMaintainerOrgComp
       isBookmarked
+      linkedTrbRequests(state: OPEN) {
+        id
+        __typename
+      }
+      linkedSystemIntakes(state: OPEN) {
+        id
+        __typename
+      }
     }
   }
 `;

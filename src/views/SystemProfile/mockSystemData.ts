@@ -132,7 +132,9 @@ export const mockSystemInfo: CedarSystemProps[] = [
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
-    isBookmarked: false
+    isBookmarked: false,
+    linkedTrbRequests: [],
+    linkedSystemIntakes: []
   },
   {
     __typename: 'CedarSystem',
@@ -151,7 +153,9 @@ export const mockSystemInfo: CedarSystemProps[] = [
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
-    isBookmarked: false
+    isBookmarked: false,
+    linkedTrbRequests: [],
+    linkedSystemIntakes: []
   },
   {
     __typename: 'CedarSystem',
@@ -170,7 +174,9 @@ export const mockSystemInfo: CedarSystemProps[] = [
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
-    isBookmarked: false
+    isBookmarked: false,
+    linkedTrbRequests: [],
+    linkedSystemIntakes: []
   },
   {
     __typename: 'CedarSystem',
@@ -190,7 +196,9 @@ export const mockSystemInfo: CedarSystemProps[] = [
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
-    isBookmarked: false
+    isBookmarked: false,
+    linkedTrbRequests: [],
+    linkedSystemIntakes: []
   }
 ];
 

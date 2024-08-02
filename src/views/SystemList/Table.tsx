@@ -56,6 +56,7 @@ export type SystemTableType =
   | 'bookmarked-systems';
 
 type TableProps = {
+  // eslint-disable-next-line camelcase
   systems?: CedarSystem[];
   defaultPageSize?: number;
   isMySystems?: boolean;
@@ -143,7 +144,8 @@ export const Table = ({
       });
     };
 
-    return [
+    // eslint-disable-next-line camelcase
+    let cols: Column<CedarSystem>[] = [
       {
         Header: <IconBookmark />,
         accessor: 'id',
@@ -182,6 +184,7 @@ export const Table = ({
           return <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>;
         }
       },
+      // we do not show this column in the My Systems view
       {
         Header: t<string>('systemTable.header.systemOwner'),
         accessor: 'businessOwnerOrg',
@@ -192,6 +195,17 @@ export const Table = ({
               item => item.name === row.original.businessOwnerOrg
             )?.acronym || row.original.businessOwnerOrg}
           </p>
+        )
+      },
+      // we do not show this column in the My Systems view
+      {
+        Header: t<string>('systemTable.header.openRequests'),
+        id: 'openRequests',
+        Cell: ({ row }: { row: Row<CedarSystem> }) => (
+          <>
+            {row.original.linkedSystemIntakes.length +
+              row.original.linkedTrbRequests.length}
+          </>
         )
       }
       /*
@@ -213,13 +227,20 @@ export const Table = ({
       }
       */
     ];
-  }, [t, systems, systemTableType, createMutate, deleteMutate]);
 
-  // Remove bookmark column if showing My systems table
-  if (isMySystems) {
-    columns.splice(0, 1);
-    columns.pop(); // remove component if isMySystems
-  }
+    // my-systems table doesn't have all the columns
+    if (isMySystems) {
+      // drop component column, bookmarks column, and open requests column
+      cols = cols.filter(
+        col =>
+          col.id !== 'systemId' &&
+          col.id !== 'openRequests' &&
+          col.id !== 'systemOwner'
+      );
+    }
+
+    return cols;
+  }, [createMutate, deleteMutate, isMySystems, systemTableType, systems, t]);
 
   const {
     getTableProps,
