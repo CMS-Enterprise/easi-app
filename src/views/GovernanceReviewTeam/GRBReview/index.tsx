@@ -339,7 +339,10 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
                 {rows.map(row => {
                   prepareRow(row);
                   return (
-                    <tr {...row.getRowProps()}>
+                    <tr
+                      {...row.getRowProps()}
+                      data-testid={`grbReviewer-${row.original.userAccount.username}`}
+                    >
                       {row.cells.map((cell, index) => {
                         return (
                           <td {...cell.getCellProps()}>

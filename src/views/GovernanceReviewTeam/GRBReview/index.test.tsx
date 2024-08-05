@@ -73,9 +73,13 @@ describe('GRB review tab', () => {
     it('renders table for GRT admins', () => {
       render(
         <MemoryRouter>
-          <IsGrbViewContext.Provider value={false}>
-            <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
-          </IsGrbViewContext.Provider>
+          <VerboseMockedProvider>
+            <MessageProvider>
+              <IsGrbViewContext.Provider value={false}>
+                <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
+              </IsGrbViewContext.Provider>
+            </MessageProvider>
+          </VerboseMockedProvider>
         </MemoryRouter>
       );
 
@@ -89,9 +93,13 @@ describe('GRB review tab', () => {
     it('hides action buttons for GRB reviewers', () => {
       render(
         <MemoryRouter>
-          <IsGrbViewContext.Provider value>
-            <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
-          </IsGrbViewContext.Provider>
+          <VerboseMockedProvider>
+            <MessageProvider>
+              <IsGrbViewContext.Provider value>
+                <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
+              </IsGrbViewContext.Provider>
+            </MessageProvider>
+          </VerboseMockedProvider>
         </MemoryRouter>
       );
 
