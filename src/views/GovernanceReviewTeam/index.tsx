@@ -5,11 +5,11 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
 import useCacheQuery from 'hooks/useCacheQuery';
-import GetSystemIntakeGrbReviewersQuery from 'queries/GetSystemIntakeGrbReviewersQuery';
+import { GetSystemIntakeGRBReviewersQuery } from 'queries/SystemIntakeGRBReviewerQueries';
 import {
-  GetSystemIntakeGrbReviewers,
-  GetSystemIntakeGrbReviewersVariables
-} from 'queries/types/GetSystemIntakeGrbReviewers';
+  GetSystemIntakeGRBReviewers,
+  GetSystemIntakeGRBReviewersVariables
+} from 'queries/types/GetSystemIntakeGRBReviewers';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
@@ -31,22 +31,22 @@ const GovernanceReviewTeam = () => {
   }>();
 
   const { data, loading } = useCacheQuery<
-    GetSystemIntakeGrbReviewers,
-    GetSystemIntakeGrbReviewersVariables
-  >(GetSystemIntakeGrbReviewersQuery, {
+    GetSystemIntakeGRBReviewers,
+    GetSystemIntakeGRBReviewersVariables
+  >(GetSystemIntakeGRBReviewersQuery, {
     variables: {
       id
     }
   });
 
+  const grbReviewers = data?.systemIntake?.grbReviewers;
+
   /** Check if current user is set as GRB reviewer */
   const isGrbReviewer: boolean = useMemo(() => {
-    const grbReviewers = data?.systemIntake?.grbReviewers || [];
-
-    return grbReviewers.some(
+    return (grbReviewers || []).some(
       reviewer => reviewer.userAccount.username === euaId
     );
-  }, [data?.systemIntake?.grbReviewers, euaId]);
+  }, [grbReviewers, euaId]);
 
   const isGrtReviewer = !!user.isGrtReviewer(groups, flags);
 
@@ -73,8 +73,9 @@ const GovernanceReviewTeam = () => {
               // reviewerType differentiates between GRT and GRB views for admin pages
               path={`/:reviewerType(${reviewerType})/:systemId/:activePage/:subPage?`}
               exact
-              component={RequestOverview}
-            />
+            >
+              <RequestOverview grbReviewers={grbReviewers || []} />
+            </Route>
 
             <Route path="*" component={NotFound} />
           </Switch>
