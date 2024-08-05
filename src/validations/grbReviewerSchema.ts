@@ -16,14 +16,20 @@ const CreateGRBReviewerSchema = (grbReviewers: SystemIntakeGRBReviewer[]) =>
         i18next.t('Select a GRB member'),
         value => !!value.commonName && !!value.username
       )
-      .test(
-        'duplicate',
-        i18next.t('User has already been added as a GRB reviewer'),
-        value =>
-          !grbReviewers.find(
-            reviewer => reviewer.userAccount.username === value.username
+      // Only check for duplicate reviewers when adding new reviewer
+      .when('$action', {
+        is: 'add',
+        then: schema =>
+          schema.test(
+            'duplicate',
+            i18next.t('User has already been added as a GRB reviewer'),
+            value => {
+              return !grbReviewers.find(
+                reviewer => reviewer.userAccount.username === value.username
+              );
+            }
           )
-      ),
+      }),
     votingRole: Yup.string()
       .oneOf(grbReviewerVotingRoles)
       .required(i18next.t('Select a voting role')),
