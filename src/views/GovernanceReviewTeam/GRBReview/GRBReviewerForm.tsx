@@ -120,6 +120,7 @@ const GRBReviewerForm = ({
     formState: { errors, isDirty, isSubmitted }
   } = useEasiForm<GRBReviewerFormFields>({
     resolver: yupResolver(CreateGRBReviewerSchema(grbReviewers)),
+    context: { action },
     defaultValues: {
       votingRole: activeReviewer?.votingRole,
       grbRole: activeReviewer?.grbRole,
