@@ -70,7 +70,6 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                       aria-autocomplete="list"
                       aria-expanded="false"
                       aria-haspopup="true"
-                      aria-label="Cedar-Users"
                       autocapitalize="none"
                       autocomplete="off"
                       autocorrect="off"

@@ -55,6 +55,9 @@ export interface CreateTrbRequest_createTRBRequest_form {
   collabGRBConsultRequested: boolean | null;
   subjectAreaOptions: TRBSubjectAreaOption[] | null;
   subjectAreaOptionOther: string | null;
+  /**
+   * TODO: Make Funding sources non-nullable
+   */
   fundingSources: CreateTrbRequest_createTRBRequest_form_fundingSources[] | null;
   systemIntakes: CreateTrbRequest_createTRBRequest_form_systemIntakes[];
   submittedAt: Time | null;

@@ -18,25 +18,27 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func newMockFetchBusinessCaseByID(err error) func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-		businessCase := models.BusinessCase{
-			ID:        id,
-			EUAUserID: "FAKE",
+func newMockFetchBusinessCaseByID(err error) func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
+	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
+		businessCase := models.BusinessCaseWithCosts{
+			BusinessCase: models.BusinessCase{
+				ID:        id,
+				EUAUserID: "FAKE",
+			},
 		}
 		return &businessCase, err
 	}
 }
 
-func newMockCreateBusinessCase(err error) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+func newMockCreateBusinessCase(err error) func(context context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+	return func(context context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
 		businessCase.ID = uuid.New()
 		return businessCase, err
 	}
 }
 
-func newMockUpdateBusinessCase(err error) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+func newMockUpdateBusinessCase(err error) func(context context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+	return func(context context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
 		businessCase.RequesterPhoneNumber = null.StringFrom("1234567890")
 		return businessCase, err
 	}

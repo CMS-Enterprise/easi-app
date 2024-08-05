@@ -20,3 +20,10 @@ type SystemIntakeNote struct {
 	ModifiedBy     *string     `json:"modifiedBy" db:"modified_by"`
 	IsArchived     bool        `json:"isArchived" db:"is_archived"`
 }
+
+func (n SystemIntakeNote) GetMappingKey() uuid.UUID {
+	return n.SystemIntakeID
+}
+func (n SystemIntakeNote) GetMappingVal() *SystemIntakeNote {
+	return &n
+}

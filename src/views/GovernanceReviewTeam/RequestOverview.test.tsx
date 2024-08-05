@@ -139,7 +139,7 @@ describe('Governance Review Team', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/:reviewerType(governance-review-team)/:systemId/intake-request">
-                <RequestOverview />
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -163,7 +163,7 @@ describe('Governance Review Team', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/:reviewerType(governance-review-team)/:systemId/business-case">
-                <RequestOverview />
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -190,7 +190,7 @@ describe('Governance Review Team', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/:reviewerType(governance-review-team)/:systemId/notes">
-                <RequestOverview />
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -209,7 +209,7 @@ describe('Governance Review Team', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/:reviewerType(governance-review-team)/:systemId/dates">
-                <RequestOverview />
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -229,7 +229,7 @@ describe('Governance Review Team', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/:reviewerType(governance-review-team)/:systemId/decision">
-                <RequestOverview />
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -251,7 +251,7 @@ describe('Governance Review Team', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/:reviewerType(governance-review-team)/:systemId/actions">
-                <RequestOverview />
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -277,7 +277,7 @@ describe('Governance Review Board', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/:reviewerType(governance-review-board)/:systemId/intake-request">
-                <RequestOverview />
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
