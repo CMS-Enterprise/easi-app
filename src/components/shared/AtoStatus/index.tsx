@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { CellProps, Column } from 'react-table';
 import {
   IconCheck,
   IconCheckCircleOutline,
@@ -88,34 +87,6 @@ export function AtoStatusIconText({ dt }: { dt: string | null | undefined }) {
     </div>
   );
 }
-
-export const atoStatusColumn: Column<any> = {
-  Header: 'ATO Status',
-  id: 'atoStatus',
-  accessor: ({ atoExpirationDate, atoEffectiveDate }) => {
-    // todo systemTableType
-    return atoExpirationDate || atoEffectiveDate;
-  },
-  Cell({
-    row
-  }: CellProps<
-    | {
-        atoExpirationDate?: string | null;
-      }
-    | {
-        atoEffectiveDate?: string | null;
-      }
-  >) {
-    let atodt = null;
-    if ('atoExpirationDate' in row.original) {
-      atodt = row.original.atoExpirationDate;
-    }
-    if ('atoEffectiveDate' in row.original) {
-      atodt = row.original.atoEffectiveDate;
-    }
-    return <AtoStatusIconText dt={atodt} />;
-  }
-};
 
 export default function AtoStatusTag({
   status,

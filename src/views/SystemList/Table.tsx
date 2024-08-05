@@ -8,6 +8,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
+  CellProps,
   Column,
   Row,
   useFilters,
@@ -30,7 +31,7 @@ import classNames from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
-import { atoStatusColumn } from 'components/shared/AtoStatus';
+import { AtoStatusIconText } from 'components/shared/AtoStatus';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
@@ -121,8 +122,7 @@ export const Table = ({
     }
   }, [systemTableType, systems, mySystems]);
 
-  // const columns = useMemo<Column<CedarSystem>[]>(() => {
-  const columns = useMemo<Column<any>[]>(() => {
+  const columns = useMemo<Column<CedarSystem>[]>(() => {
     const isBookmarked = (cedarSystemId: string): boolean =>
       !!systems.find(system => system.id === cedarSystemId)?.isBookmarked;
 
@@ -196,7 +196,21 @@ export const Table = ({
           </p>
         )
       },
-      atoStatusColumn
+      {
+        Header: 'ATO Status',
+        accessor: 'atoExpirationDate',
+        Cell({
+          value
+        }: CellProps<CedarSystem, CedarSystem['atoExpirationDate']>) {
+          return <AtoStatusIconText dt={value} />;
+        },
+        sortType: (a, b) => {
+          return (a.values.atoExpirationDate ?? '') >
+            (b.values.atoExpirationDate ?? '')
+            ? 1
+            : -1;
+        }
+      }
       /*
       {
         Header: t<string>('systemTable.header.systemStatus'),
@@ -219,10 +233,10 @@ export const Table = ({
   }, [t, systems, systemTableType, createMutate, deleteMutate]);
 
   // Remove bookmark column if showing My systems table
-  // if (isMySystems) {
-  //   columns.splice(0, 1);
-  //   columns.pop(); // remove component if isMySystems
-  // }
+  if (isMySystems) {
+    columns.splice(0, 1);
+    columns.pop(); // remove component if isMySystems
+  }
 
   const {
     getTableProps,
