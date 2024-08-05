@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Column, useSortBy, useTable } from 'react-table';
@@ -76,44 +76,54 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
     ]
   });
 
-  const removeGRBReviewer = (reviewer: SystemIntakeGRBReviewer) => {
-    mutate({ variables: { input: { reviewerID: reviewer.id } } })
-      .then(() =>
-        showMessage(
-          <Trans
-            i18nKey="grbReview:removeSuccess"
-            values={{ commonName: reviewer.userAccount.commonName }}
-          >
-            success
-          </Trans>,
-          { type: 'success' }
+  const removeGRBReviewer = useCallback(
+    (reviewer: SystemIntakeGRBReviewer) => {
+      mutate({ variables: { input: { reviewerID: reviewer.id } } })
+        .then(() =>
+          showMessage(
+            <Trans
+              i18nKey="grbReview:removeSuccess"
+              values={{ commonName: reviewer.userAccount.commonName }}
+            >
+              success
+            </Trans>,
+            { type: 'success' }
+          )
         )
-      )
-      .catch(() => showMessage(t('removeError'), { type: 'error' }));
+        .catch(() => showMessage(t('removeError'), { type: 'error' }));
 
-    // Reset `reviewerToRemove` to close modal
-    setReviewerToRemove(null);
+      // Reset `reviewerToRemove` to close modal
+      setReviewerToRemove(null);
 
-    // If removing reviewer from form, go to GRB Review page
-    if (isForm) {
-      history.push(`/${reviewerType}/${id}/grb-review`);
-    }
-  };
+      // If removing reviewer from form, go to GRB Review page
+      if (isForm) {
+        history.push(`/${reviewerType}/${id}/grb-review`);
+      }
+    },
+    [history, isForm, id, mutate, reviewerType, showMessage, t]
+  );
 
   const columns = useMemo<Column<SystemIntakeGRBReviewer>[]>(() => {
     /** Column with action buttons to display for GRT admins */
     const actionColumn: Column<SystemIntakeGRBReviewer> = {
       Header: t<string>('participantsTable.actions'),
-      Cell: () => {
-        // TODO: Update edit and remove buttons with functionality from EASI-4332
+      Cell: ({
+        row: { original: reviewer }
+      }: {
+        row: { original: SystemIntakeGRBReviewer };
+      }) => {
         return (
           <ButtonGroup data-testid="grbReviewerActions">
-            <Button type="button" onClick={() => null} unstyled>
+            <Button
+              type="button"
+              onClick={() => history.push(`${pathname}/edit`, reviewer)}
+              unstyled
+            >
               {t('Edit')}
             </Button>
             <Button
               type="button"
-              onClick={() => null}
+              onClick={() => setReviewerToRemove(reviewer)}
               className="text-error"
               unstyled
             >
@@ -143,7 +153,7 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
       // Only display action column if user is GRT admin
       ...(isGrbView ? [] : [actionColumn])
     ];
-  }, [t, isGrbView]);
+  }, [t, isGrbView, setReviewerToRemove, history, pathname]);
 
   const table = useTable(
     {
