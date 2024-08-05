@@ -1,9 +1,10 @@
 .easi-modal__content {
-  max-width: 480px;
+  width: 480px;
+  max-width: 90%;
   font-size: 1.06rem;
   line-height: 1.6;
 
   @media screen and (min-width: 640px) {
-    max-width: 668px;
+    width: 668px;
   }
 }

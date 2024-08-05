@@ -2,8 +2,15 @@ import React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 
+import { getSystemIntakeQuery, systemIntake } from 'data/mock/systemIntake';
+import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
+import {
+  GetCedarContacts,
+  GetCedarContactsVariables
+} from 'queries/types/GetCedarContacts';
 import { SystemIntakeContactProps } from 'types/systemIntake';
+import { MockedQuery } from 'types/util';
 
 import AdditionalContacts from './index';
 
@@ -26,54 +33,79 @@ vi.mock('@okta/okta-react', () => ({
   }
 }));
 
-describe('Additional contacts component', () => {
-  /** System intake ID */
-  const intakeId = '1d9a5930-276c-4bd1-9eeb-d23e42fe35e8';
+/** Additional Contacts */
+const additionalContacts: SystemIntakeContactProps[] = [
+  {
+    systemIntakeId: systemIntake.id,
+    id: '4828a0b0-9474-4ddc-8fc2-662323ef0087',
+    commonName: 'Jerry Seinfeld',
+    email: 'jerry.seinfeld@local.fake',
+    euaUserId: 'SF13',
+    component: 'Office of Information Technology',
+    role: 'Cloud Navigator'
+  },
+  {
+    systemIntakeId: systemIntake.id,
+    id: 'fa706702-45ab-43fe-ad90-68ff681313af',
+    commonName: 'Cosmo Kramer',
+    email: 'cosmo.kramer@local.fake',
+    euaUserId: 'KR14',
+    component: 'Other',
+    role: 'System Maintainer'
+  }
+];
 
-  /** Additional Contacts */
-  const additionalContacts: SystemIntakeContactProps[] = [
-    {
-      systemIntakeId: intakeId,
-      id: '4828a0b0-9474-4ddc-8fc2-662323ef0087',
-      commonName: 'Jerry Seinfeld',
-      email: 'jerry.seinfeld@local.fake',
-      euaUserId: 'SF13',
-      component: 'Office of Information Technology',
-      role: 'Cloud Navigator'
-    },
-    {
-      systemIntakeId: intakeId,
-      id: 'fa706702-45ab-43fe-ad90-68ff681313af',
-      commonName: 'Cosmo Kramer',
-      email: 'cosmo.kramer@local.fake',
-      euaUserId: 'KR14',
-      component: 'Other',
-      role: 'System Maintainer'
+/** System intake contacts query mock */
+const systemIntakeContactsQuery = {
+  request: {
+    query: GetSystemIntakeContactsQuery,
+    variables: {
+      id: systemIntake.id
     }
-  ];
-
-  /** System intake contacts query mock */
-  const systemIntakeContactsQuery = {
-    request: {
-      query: GetSystemIntakeContactsQuery,
-      variables: {
-        id: intakeId
+  },
+  result: {
+    data: {
+      systemIntakeContacts: {
+        systemIntakeContacts: additionalContacts
       }
-    },
-    result: {
-      data: {
-        systemIntakeContacts: {
-          systemIntakeContacts: additionalContacts
+    }
+  }
+};
+
+// Cedar contacts query mock
+const cedarContactsQuery: MockedQuery<
+  GetCedarContacts,
+  GetCedarContactsVariables
+> = {
+  request: {
+    query: GetCedarContactsQuery,
+    variables: {
+      commonName: 'Jerry Seinfeld, SF13 (jerry.seinfeld@local.fake)'
+    }
+  },
+  result: {
+    data: {
+      cedarPersonsByCommonName: [
+        {
+          __typename: 'UserInfo',
+          commonName: additionalContacts[0].commonName,
+          email: additionalContacts[0].email,
+          euaUserId: additionalContacts[0].euaUserId!
         }
-      }
+      ]
     }
-  };
+  }
+};
 
+describe('Additional contacts component', () => {
   it('renders without crashing', async () => {
     const { asFragment, getByTestId, getByRole } = render(
-      <MockedProvider mocks={[systemIntakeContactsQuery]} addTypename={false}>
+      <MockedProvider
+        mocks={[getSystemIntakeQuery(), systemIntakeContactsQuery]}
+        addTypename={false}
+      >
         <AdditionalContacts
-          systemIntakeId={intakeId}
+          systemIntakeId={systemIntake.id}
           activeContact={null}
           setActiveContact={() => null}
           contacts={additionalContacts}
@@ -111,12 +143,19 @@ describe('Additional contacts component', () => {
 
     // Render component with edit form
     const { asFragment, getByTestId, findByTestId } = render(
-      <MockedProvider mocks={[systemIntakeContactsQuery]} addTypename={false}>
+      <MockedProvider
+        mocks={[
+          getSystemIntakeQuery(),
+          systemIntakeContactsQuery,
+          cedarContactsQuery
+        ]}
+        addTypename={false}
+      >
         <AdditionalContacts
-          systemIntakeId={intakeId}
+          systemIntakeId={systemIntake.id}
           // Set active contact values to display edit form
           activeContact={{
-            systemIntakeId: intakeId,
+            systemIntakeId: systemIntake.id,
             id: activeContact.id,
             commonName: activeContact.commonName,
             email: activeContact.email,

@@ -3,6 +3,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 
 import { systemIntake } from 'data/mock/systemIntake';
+import { MessageProvider } from 'hooks/useMessage';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import IsGrbViewContext from '../IsGrbViewContext';
 
@@ -12,9 +14,13 @@ describe('GRB review tab', () => {
   it('renders GRB reviewer view', async () => {
     render(
       <MemoryRouter>
-        <IsGrbViewContext.Provider value>
-          <GRBReview id={systemIntake.id} />
-        </IsGrbViewContext.Provider>
+        <VerboseMockedProvider>
+          <MessageProvider>
+            <IsGrbViewContext.Provider value>
+              <GRBReview {...systemIntake} grbReviewers={[]} />
+            </IsGrbViewContext.Provider>
+          </MessageProvider>
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
 
@@ -26,14 +32,18 @@ describe('GRB review tab', () => {
   it('renders GRT admin view', async () => {
     render(
       <MemoryRouter>
-        <IsGrbViewContext.Provider value={false}>
-          <GRBReview id={systemIntake.id} />
-        </IsGrbViewContext.Provider>
+        <VerboseMockedProvider>
+          <MessageProvider>
+            <IsGrbViewContext.Provider value={false}>
+              <GRBReview {...systemIntake} grbReviewers={[]} />
+            </IsGrbViewContext.Provider>
+          </MessageProvider>
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
 
     expect(await screen.findByRole('heading', { name: 'GRB review' }));
 
-    expect(screen.getByRole('link', { name: 'Add a GRB reviewer' }));
+    expect(screen.getByRole('button', { name: 'Add a GRB reviewer' }));
   });
 });
