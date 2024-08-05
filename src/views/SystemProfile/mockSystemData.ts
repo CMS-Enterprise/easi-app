@@ -133,7 +133,7 @@ export const mockSystemInfo: CedarSystemProps[] = [
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
     isBookmarked: false,
-    atoEffectiveDate: null
+    atoExpirationDate: null
   },
   {
     __typename: 'CedarSystem',
@@ -153,7 +153,7 @@ export const mockSystemInfo: CedarSystemProps[] = [
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
     isBookmarked: false,
-    atoEffectiveDate: null
+    atoExpirationDate: null
   },
   {
     __typename: 'CedarSystem',
@@ -173,7 +173,7 @@ export const mockSystemInfo: CedarSystemProps[] = [
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
     isBookmarked: false,
-    atoEffectiveDate: null
+    atoExpirationDate: null
   },
   {
     __typename: 'CedarSystem',
@@ -194,7 +194,7 @@ export const mockSystemInfo: CedarSystemProps[] = [
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
     isBookmarked: false,
-    atoEffectiveDate: null
+    atoExpirationDate: null
   }
 ];
 
