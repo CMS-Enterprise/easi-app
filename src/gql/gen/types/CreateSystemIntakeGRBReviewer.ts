@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CreateSystemIntakeGRBReviewerInput, SystemIntakeGRBReviewerVotingRole, SystemIntakeGRBReviewerRole } from "./../../types/graphql-global-types";
+import { CreateSystemIntakeGRBReviewerInput, SystemIntakeGRBReviewerRole, SystemIntakeGRBReviewerVotingRole } from "./../../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: CreateSystemIntakeGRBReviewer
@@ -29,8 +29,8 @@ export interface CreateSystemIntakeGRBReviewer_createSystemIntakeGRBReviewer_use
 export interface CreateSystemIntakeGRBReviewer_createSystemIntakeGRBReviewer {
   __typename: "SystemIntakeGRBReviewer";
   id: UUID;
-  votingRole: SystemIntakeGRBReviewerVotingRole;
   grbRole: SystemIntakeGRBReviewerRole;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
   userAccount: CreateSystemIntakeGRBReviewer_createSystemIntakeGRBReviewer_userAccount;
 }
 

@@ -2,36 +2,34 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {
+  CreateSystemIntakeGRBReviewerDocument,
+  GetSystemIntakeGRBReviewersDocument,
+  SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewerRole,
+  SystemIntakeGRBReviewerVotingRole,
+  UpdateSystemIntakeGRBReviewerDocument
+} from 'gql/gen/graphql';
+import {
+  CreateSystemIntakeGRBReviewer,
+  CreateSystemIntakeGRBReviewerVariables
+} from 'gql/gen/types/CreateSystemIntakeGRBReviewer';
+import {
+  GetSystemIntakeGRBReviewers,
+  GetSystemIntakeGRBReviewersVariables
+} from 'gql/gen/types/GetSystemIntakeGRBReviewers';
+import {
+  UpdateSystemIntakeGRBReviewer,
+  UpdateSystemIntakeGRBReviewerVariables
+} from 'gql/gen/types/UpdateSystemIntakeGRBReviewer';
 
 import { systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import {
-  CreateSystemIntakeGRBReviewerQuery,
-  GetSystemIntakeGRBReviewersQuery,
-  UpdateSystemIntakeGRBReviewerQuery
-} from 'queries/SystemIntakeGRBReviewerQueries';
-import {
-  CreateSystemIntakeGRBReviewer,
-  CreateSystemIntakeGRBReviewerVariables
-} from 'queries/types/CreateSystemIntakeGRBReviewer';
-import {
   GetCedarContacts,
   GetCedarContactsVariables
 } from 'queries/types/GetCedarContacts';
-import {
-  GetSystemIntakeGRBReviewers,
-  GetSystemIntakeGRBReviewersVariables
-} from 'queries/types/GetSystemIntakeGRBReviewers';
-import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
-import {
-  UpdateSystemIntakeGRBReviewer,
-  UpdateSystemIntakeGRBReviewerVariables
-} from 'queries/types/UpdateSystemIntakeGRBReviewer';
-import {
-  SystemIntakeGRBReviewerRole,
-  SystemIntakeGRBReviewerVotingRole
-} from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import MockUsers from 'utils/testing/MockUsers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -46,7 +44,7 @@ const contact = user.userInfo;
 
 const contactLabel = `${contact.commonName}, ${contact.euaUserId} (${contact.email})`;
 
-const grbReviewer: SystemIntakeGRBReviewer = {
+const grbReviewer: SystemIntakeGRBReviewerFragment = {
   __typename: 'SystemIntakeGRBReviewer',
   id: '5b78f877-2848-40b2-a123-96872c40f744',
   userAccount: {
@@ -60,7 +58,7 @@ const grbReviewer: SystemIntakeGRBReviewer = {
   grbRole: SystemIntakeGRBReviewerRole.CMCS_REP
 };
 
-const updatedGRBReviewer: SystemIntakeGRBReviewer = {
+const updatedGRBReviewer: SystemIntakeGRBReviewerFragment = {
   ...grbReviewer,
   votingRole: SystemIntakeGRBReviewerVotingRole.NON_VOTING,
   grbRole: SystemIntakeGRBReviewerRole.QIO_REP
@@ -88,7 +86,7 @@ const createSystemIntakeGRBReviewerQuery: MockedQuery<
   CreateSystemIntakeGRBReviewerVariables
 > = {
   request: {
-    query: CreateSystemIntakeGRBReviewerQuery,
+    query: CreateSystemIntakeGRBReviewerDocument,
     variables: {
       input: {
         systemIntakeID: systemIntake.id,
@@ -110,7 +108,7 @@ const updateSystemIntakeGRBReviewerQuery: MockedQuery<
   UpdateSystemIntakeGRBReviewerVariables
 > = {
   request: {
-    query: UpdateSystemIntakeGRBReviewerQuery,
+    query: UpdateSystemIntakeGRBReviewerDocument,
     variables: {
       input: {
         reviewerID: grbReviewer.id,
@@ -127,13 +125,13 @@ const updateSystemIntakeGRBReviewerQuery: MockedQuery<
 };
 
 const getSystemIntakeGRBReviewersQuery = (
-  reviewer?: SystemIntakeGRBReviewer
+  reviewer?: SystemIntakeGRBReviewerFragment
 ): MockedQuery<
   GetSystemIntakeGRBReviewers,
   GetSystemIntakeGRBReviewersVariables
 > => ({
   request: {
-    query: GetSystemIntakeGRBReviewersQuery,
+    query: GetSystemIntakeGRBReviewersDocument,
     variables: {
       id: systemIntake.id
     }

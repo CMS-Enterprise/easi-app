@@ -381,7 +381,7 @@ export type CedarSystem = {
   id: Scalars['String']['output'];
   isBookmarked: Scalars['Boolean']['output'];
   linkedSystemIntakes: Array<SystemIntake>;
-  linkedTrbRequests: Array<TrbRequest>;
+  linkedTrbRequests: Array<TRBRequest>;
   name: Scalars['String']['output'];
   status?: Maybe<Scalars['String']['output']>;
   systemMaintainerOrg?: Maybe<Scalars['String']['output']>;
@@ -405,7 +405,7 @@ export type CedarSystemLinkedSystemIntakesArgs = {
  * Right now, this does not tie in with any other types defined here, and is a root node until that changes.
  */
 export type CedarSystemLinkedTrbRequestsArgs = {
-  state?: TrbRequestState;
+  state?: TRBRequestState;
 };
 
 /** Represents a user's bookmark of a cedar system */
@@ -427,7 +427,7 @@ export type CedarSystemDetails = {
   roles: Array<CedarRole>;
   systemMaintainerInformation: CedarSystemMaintainerInformation;
   threats: Array<CedarThreat>;
-  urls: Array<CedarUrl>;
+  urls: Array<CedarURL>;
 };
 
 /** SystemMaintainerInformation contains information about the system maintainer of a CEDAR system */
@@ -490,7 +490,7 @@ export type CedarThreat = {
 };
 
 /** CedarURL represents info about a URL associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API */
-export type CedarUrl = {
+export type CedarURL = {
   __typename: 'CedarURL';
   address?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
@@ -501,7 +501,7 @@ export type CedarUrl = {
 };
 
 /** The input needed to close a TRB request */
-export type CloseTrbRequestInput = {
+export type CloseTRBRequestInput = {
   copyTrbMailbox: Scalars['Boolean']['input'];
   id: Scalars['UUID']['input'];
   notifyEuaIds: Array<Scalars['String']['input']>;
@@ -555,11 +555,11 @@ export type CreateSystemIntakeDocumentPayload = {
   document?: Maybe<SystemIntakeDocument>;
 };
 
-export type CreateSystemIntakeGrbReviewerInput = {
+export type CreateSystemIntakeGRBReviewerInput = {
   euaUserId: Scalars['String']['input'];
-  grbRole: SystemIntakeGrbReviewerRole;
+  grbRole: SystemIntakeGRBReviewerRole;
   systemIntakeID: Scalars['UUID']['input'];
-  votingRole: SystemIntakeGrbReviewerVotingRole;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
 };
 
 /** The input data used to initialize an IT governance request for a system */
@@ -576,7 +576,7 @@ export type CreateSystemIntakeNoteInput = {
 };
 
 /** The data needed to create a TRB admin note with the Advice Letter category */
-export type CreateTrbAdminNoteAdviceLetterInput = {
+export type CreateTRBAdminNoteAdviceLetterInput = {
   appliesToMeetingSummary: Scalars['Boolean']['input'];
   appliesToNextSteps: Scalars['Boolean']['input'];
   noteText: Scalars['HTML']['input'];
@@ -585,19 +585,19 @@ export type CreateTrbAdminNoteAdviceLetterInput = {
 };
 
 /** The data needed to create a TRB admin note with the Consult Session category */
-export type CreateTrbAdminNoteConsultSessionInput = {
+export type CreateTRBAdminNoteConsultSessionInput = {
   noteText: Scalars['HTML']['input'];
   trbRequestId: Scalars['UUID']['input'];
 };
 
 /** The data needed to create a TRB admin note with the General Request category */
-export type CreateTrbAdminNoteGeneralRequestInput = {
+export type CreateTRBAdminNoteGeneralRequestInput = {
   noteText: Scalars['HTML']['input'];
   trbRequestId: Scalars['UUID']['input'];
 };
 
 /** The data needed to create a TRB admin note with the Initial Request Form category */
-export type CreateTrbAdminNoteInitialRequestFormInput = {
+export type CreateTRBAdminNoteInitialRequestFormInput = {
   appliesToAttendees: Scalars['Boolean']['input'];
   appliesToBasicRequestDetails: Scalars['Boolean']['input'];
   appliesToSubjectAreas: Scalars['Boolean']['input'];
@@ -606,14 +606,14 @@ export type CreateTrbAdminNoteInitialRequestFormInput = {
 };
 
 /** The data needed to create a TRB admin note with the Supporting Documents category */
-export type CreateTrbAdminNoteSupportingDocumentsInput = {
+export type CreateTRBAdminNoteSupportingDocumentsInput = {
   documentIDs: Array<Scalars['UUID']['input']>;
   noteText: Scalars['HTML']['input'];
   trbRequestId: Scalars['UUID']['input'];
 };
 
 /** The input required to add a recommendation & links to a TRB advice letter */
-export type CreateTrbAdviceLetterRecommendationInput = {
+export type CreateTRBAdviceLetterRecommendationInput = {
   links: Array<Scalars['String']['input']>;
   recommendation: Scalars['HTML']['input'];
   title: Scalars['String']['input'];
@@ -621,7 +621,7 @@ export type CreateTrbAdviceLetterRecommendationInput = {
 };
 
 /** The data needed add a TRB request attendee to a TRB request */
-export type CreateTrbRequestAttendeeInput = {
+export type CreateTRBRequestAttendeeInput = {
   component: Scalars['String']['input'];
   euaUserId: Scalars['String']['input'];
   role: PersonRole;
@@ -629,22 +629,22 @@ export type CreateTrbRequestAttendeeInput = {
 };
 
 /** The data needed to upload a TRB document and attach it to a request with metadata */
-export type CreateTrbRequestDocumentInput = {
-  documentType: TrbDocumentCommonType;
+export type CreateTRBRequestDocumentInput = {
+  documentType: TRBDocumentCommonType;
   fileData: Scalars['Upload']['input'];
   otherTypeDescription?: InputMaybe<Scalars['String']['input']>;
   requestID: Scalars['UUID']['input'];
 };
 
 /** Data returned after uploading a document to a TRB request */
-export type CreateTrbRequestDocumentPayload = {
+export type CreateTRBRequestDocumentPayload = {
   __typename: 'CreateTRBRequestDocumentPayload';
-  document?: Maybe<TrbRequestDocument>;
+  document?: Maybe<TRBRequestDocument>;
 };
 
 /** The data needed to add feedback to a TRB request */
-export type CreateTrbRequestFeedbackInput = {
-  action: TrbFeedbackAction;
+export type CreateTRBRequestFeedbackInput = {
+  action: TRBFeedbackAction;
   copyTrbMailbox: Scalars['Boolean']['input'];
   feedbackMessage: Scalars['HTML']['input'];
   notifyEuaIds: Array<Scalars['String']['input']>;
@@ -680,17 +680,17 @@ export type DeleteSystemIntakeDocumentPayload = {
   document?: Maybe<SystemIntakeDocument>;
 };
 
-export type DeleteSystemIntakeGrbReviewerInput = {
+export type DeleteSystemIntakeGRBReviewerInput = {
   reviewerID: Scalars['UUID']['input'];
 };
 
 /** Data returned after deleting a document attached to a TRB request */
-export type DeleteTrbRequestDocumentPayload = {
+export type DeleteTRBRequestDocumentPayload = {
   __typename: 'DeleteTRBRequestDocumentPayload';
-  document?: Maybe<TrbRequestDocument>;
+  document?: Maybe<TRBRequestDocument>;
 };
 
-export type DeleteTrbRequestFundingSourcesInput = {
+export type DeleteTRBRequestFundingSourcesInput = {
   fundingNumber: Scalars['String']['input'];
   trbRequestId: Scalars['UUID']['input'];
 };
@@ -757,7 +757,7 @@ export enum GovernanceRequestFeedbackType {
 }
 
 /** The requester view of the IT gov Decision step status */
-export enum ItGovDecisionStatus {
+export enum ITGovDecisionStatus {
   /** This step can't be started yet */
   CANT_START = 'CANT_START',
   /** The step is completed */
@@ -767,7 +767,7 @@ export enum ItGovDecisionStatus {
 }
 
 /** The requester view of the IT gov draft business case step status */
-export enum ItGovDraftBusinessCaseStatus {
+export enum ITGovDraftBusinessCaseStatus {
   /** This step can't be started yet */
   CANT_START = 'CANT_START',
   /** The draft business case has been completed and the intake is on a further step */
@@ -785,7 +785,7 @@ export enum ItGovDraftBusinessCaseStatus {
 }
 
 /** The requester view of the IT gov feedback step status */
-export enum ItGovFeedbackStatus {
+export enum ITGovFeedbackStatus {
   /** This step can't be started yet */
   CANT_START = 'CANT_START',
   /** The step is completed */
@@ -795,7 +795,7 @@ export enum ItGovFeedbackStatus {
 }
 
 /** The requester view of the IT Gov Final Business Case step status */
-export enum ItGovFinalBusinessCaseStatus {
+export enum ITGovFinalBusinessCaseStatus {
   /** This step can't be started yet */
   CANT_START = 'CANT_START',
   /** The business case has been completed and the intake is on a further step */
@@ -813,7 +813,7 @@ export enum ItGovFinalBusinessCaseStatus {
 }
 
 /** The requester view of the IT Gov GRB step status */
-export enum ItGovGrbStatus {
+export enum ITGovGRBStatus {
   /** The GRT meeting has already happened, and an outcome hasn't been noted yet */
   AWAITING_DECISION = 'AWAITING_DECISION',
   /** This step can't be started yet */
@@ -829,7 +829,7 @@ export enum ItGovGrbStatus {
 }
 
 /** The requester view of the IT Gov GRT step status */
-export enum ItGovGrtStatus {
+export enum ITGovGRTStatus {
   /** The GRT meeting has already happened, and an outcome hasn't been noted yet */
   AWAITING_DECISION = 'AWAITING_DECISION',
   /** This step can't be started yet */
@@ -845,7 +845,7 @@ export enum ItGovGrtStatus {
 }
 
 /** The requester view of the IT gov intake step status */
-export enum ItGovIntakeFormStatus {
+export enum ITGovIntakeFormStatus {
   /** The Form is completed */
   COMPLETED = 'COMPLETED',
   /** The form has edits requested */
@@ -857,15 +857,15 @@ export enum ItGovIntakeFormStatus {
 }
 
 /** The statuses of the different steps in the IT Gov v2 workflow */
-export type ItGovTaskStatuses = {
+export type ITGovTaskStatuses = {
   __typename: 'ITGovTaskStatuses';
-  bizCaseDraftStatus: ItGovDraftBusinessCaseStatus;
-  bizCaseFinalStatus: ItGovFinalBusinessCaseStatus;
-  decisionAndNextStepsStatus: ItGovDecisionStatus;
-  feedbackFromInitialReviewStatus: ItGovFeedbackStatus;
-  grbMeetingStatus: ItGovGrbStatus;
-  grtMeetingStatus: ItGovGrtStatus;
-  intakeFormStatus: ItGovIntakeFormStatus;
+  bizCaseDraftStatus: ITGovDraftBusinessCaseStatus;
+  bizCaseFinalStatus: ITGovFinalBusinessCaseStatus;
+  decisionAndNextStepsStatus: ITGovDecisionStatus;
+  feedbackFromInitialReviewStatus: ITGovFeedbackStatus;
+  grbMeetingStatus: ITGovGRBStatus;
+  grtMeetingStatus: ITGovGRTStatus;
+  intakeFormStatus: ITGovIntakeFormStatus;
 };
 
 /** The current user's Launch Darkly key */
@@ -901,7 +901,7 @@ export enum LifecycleCostYear {
 /** Defines the mutations for the schema */
 export type Mutation = {
   __typename: 'Mutation';
-  closeTRBRequest: TrbRequest;
+  closeTRBRequest: TRBRequest;
   createCedarSystemBookmark?: Maybe<CreateCedarSystemBookmarkPayload>;
   createSystemIntake?: Maybe<SystemIntake>;
   createSystemIntakeActionChangeLCIDRetirementDate?: Maybe<UpdateSystemIntakePayload>;
@@ -918,71 +918,71 @@ export type Mutation = {
   createSystemIntakeActionUpdateLCID?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   createSystemIntakeDocument?: Maybe<CreateSystemIntakeDocumentPayload>;
-  createSystemIntakeGRBReviewer: SystemIntakeGrbReviewer;
+  createSystemIntakeGRBReviewer: SystemIntakeGRBReviewer;
   createSystemIntakeNote?: Maybe<SystemIntakeNote>;
-  createTRBAdminNoteAdviceLetter: TrbAdminNote;
-  createTRBAdminNoteConsultSession: TrbAdminNote;
-  createTRBAdminNoteGeneralRequest: TrbAdminNote;
-  createTRBAdminNoteInitialRequestForm: TrbAdminNote;
-  createTRBAdminNoteSupportingDocuments: TrbAdminNote;
-  createTRBAdviceLetter: TrbAdviceLetter;
-  createTRBAdviceLetterRecommendation: TrbAdviceLetterRecommendation;
-  createTRBRequest: TrbRequest;
-  createTRBRequestAttendee: TrbRequestAttendee;
-  createTRBRequestDocument?: Maybe<CreateTrbRequestDocumentPayload>;
-  createTRBRequestFeedback: TrbRequestFeedback;
+  createTRBAdminNoteAdviceLetter: TRBAdminNote;
+  createTRBAdminNoteConsultSession: TRBAdminNote;
+  createTRBAdminNoteGeneralRequest: TRBAdminNote;
+  createTRBAdminNoteInitialRequestForm: TRBAdminNote;
+  createTRBAdminNoteSupportingDocuments: TRBAdminNote;
+  createTRBAdviceLetter: TRBAdviceLetter;
+  createTRBAdviceLetterRecommendation: TRBAdviceLetterRecommendation;
+  createTRBRequest: TRBRequest;
+  createTRBRequestAttendee: TRBRequestAttendee;
+  createTRBRequestDocument?: Maybe<CreateTRBRequestDocumentPayload>;
+  createTRBRequestFeedback: TRBRequestFeedback;
   createTrbLeadOption: UserInfo;
   deleteCedarSystemBookmark?: Maybe<DeleteCedarSystemBookmarkPayload>;
   deleteSystemIntakeContact?: Maybe<DeleteSystemIntakeContactPayload>;
   deleteSystemIntakeDocument?: Maybe<DeleteSystemIntakeDocumentPayload>;
   deleteSystemIntakeGRBReviewer: Scalars['UUID']['output'];
-  deleteTRBAdviceLetterRecommendation: TrbAdviceLetterRecommendation;
-  deleteTRBRequestAttendee: TrbRequestAttendee;
-  deleteTRBRequestDocument?: Maybe<DeleteTrbRequestDocumentPayload>;
-  deleteTRBRequestFundingSources: Array<TrbFundingSource>;
+  deleteTRBAdviceLetterRecommendation: TRBAdviceLetterRecommendation;
+  deleteTRBRequestAttendee: TRBRequestAttendee;
+  deleteTRBRequestDocument?: Maybe<DeleteTRBRequestDocumentPayload>;
+  deleteTRBRequestFundingSources: Array<TRBFundingSource>;
   deleteTrbLeadOption: Scalars['Boolean']['output'];
-  reopenTrbRequest: TrbRequest;
-  requestReviewForTRBAdviceLetter: TrbAdviceLetter;
+  reopenTrbRequest: TRBRequest;
+  requestReviewForTRBAdviceLetter: TRBAdviceLetter;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
-  sendTRBAdviceLetter: TrbAdviceLetter;
+  sendTRBAdviceLetter: TRBAdviceLetter;
   setRolesForUserOnSystem?: Maybe<Scalars['String']['output']>;
   setSystemIntakeRelationExistingService?: Maybe<UpdateSystemIntakePayload>;
   setSystemIntakeRelationExistingSystem?: Maybe<UpdateSystemIntakePayload>;
   setSystemIntakeRelationNewSystem?: Maybe<UpdateSystemIntakePayload>;
-  setTRBAdminNoteArchived: TrbAdminNote;
-  setTRBRequestRelationExistingService?: Maybe<TrbRequest>;
-  setTRBRequestRelationExistingSystem?: Maybe<TrbRequest>;
-  setTRBRequestRelationNewSystem?: Maybe<TrbRequest>;
+  setTRBAdminNoteArchived: TRBAdminNote;
+  setTRBRequestRelationExistingService?: Maybe<TRBRequest>;
+  setTRBRequestRelationExistingSystem?: Maybe<TRBRequest>;
+  setTRBRequestRelationNewSystem?: Maybe<TRBRequest>;
   submitIntake?: Maybe<UpdateSystemIntakePayload>;
   unlinkSystemIntakeRelation?: Maybe<UpdateSystemIntakePayload>;
-  unlinkTRBRequestRelation?: Maybe<TrbRequest>;
+  unlinkTRBRequestRelation?: Maybe<TRBRequest>;
   updateSystemIntakeAdminLead?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   updateSystemIntakeContactDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeContractDetails?: Maybe<UpdateSystemIntakePayload>;
-  updateSystemIntakeGRBReviewer: SystemIntakeGrbReviewer;
+  updateSystemIntakeGRBReviewer: SystemIntakeGRBReviewer;
   updateSystemIntakeLinkedCedarSystem?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeNote: SystemIntakeNote;
   updateSystemIntakeRequestDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeRequestType: SystemIntake;
   updateSystemIntakeReviewDates?: Maybe<UpdateSystemIntakePayload>;
-  updateTRBAdviceLetter: TrbAdviceLetter;
-  updateTRBAdviceLetterRecommendation: TrbAdviceLetterRecommendation;
-  updateTRBAdviceLetterRecommendationOrder: Array<TrbAdviceLetterRecommendation>;
-  updateTRBRequest: TrbRequest;
-  updateTRBRequestAttendee: TrbRequestAttendee;
-  updateTRBRequestConsultMeetingTime: TrbRequest;
-  updateTRBRequestForm: TrbRequestForm;
-  updateTRBRequestFundingSources: Array<TrbFundingSource>;
-  updateTRBRequestTRBLead: TrbRequest;
+  updateTRBAdviceLetter: TRBAdviceLetter;
+  updateTRBAdviceLetterRecommendation: TRBAdviceLetterRecommendation;
+  updateTRBAdviceLetterRecommendationOrder: Array<TRBAdviceLetterRecommendation>;
+  updateTRBRequest: TRBRequest;
+  updateTRBRequestAttendee: TRBRequestAttendee;
+  updateTRBRequestConsultMeetingTime: TRBRequest;
+  updateTRBRequestForm: TRBRequestForm;
+  updateTRBRequestFundingSources: Array<TRBFundingSource>;
+  updateTRBRequestTRBLead: TRBRequest;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCloseTrbRequestArgs = {
-  input: CloseTrbRequestInput;
+export type MutationCloseTRBRequestArgs = {
+  input: CloseTRBRequestInput;
 };
 
 
@@ -999,8 +999,8 @@ export type MutationCreateSystemIntakeArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateSystemIntakeActionChangeLcidRetirementDateArgs = {
-  input: SystemIntakeChangeLcidRetirementDateInput;
+export type MutationCreateSystemIntakeActionChangeLCIDRetirementDateArgs = {
+  input: SystemIntakeChangeLCIDRetirementDateInput;
 };
 
 
@@ -1011,26 +1011,26 @@ export type MutationCreateSystemIntakeActionCloseRequestArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateSystemIntakeActionConfirmLcidArgs = {
-  input: SystemIntakeConfirmLcidInput;
+export type MutationCreateSystemIntakeActionConfirmLCIDArgs = {
+  input: SystemIntakeConfirmLCIDInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateSystemIntakeActionExpireLcidArgs = {
-  input: SystemIntakeExpireLcidInput;
+export type MutationCreateSystemIntakeActionExpireLCIDArgs = {
+  input: SystemIntakeExpireLCIDInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateSystemIntakeActionIssueLcidArgs = {
-  input: SystemIntakeIssueLcidInput;
+export type MutationCreateSystemIntakeActionIssueLCIDArgs = {
+  input: SystemIntakeIssueLCIDInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateSystemIntakeActionNotItGovRequestArgs = {
-  input: SystemIntakeNotItGovReqInput;
+export type MutationCreateSystemIntakeActionNotITGovRequestArgs = {
+  input: SystemIntakeNotITGovReqInput;
 };
 
 
@@ -1059,14 +1059,14 @@ export type MutationCreateSystemIntakeActionRequestEditsArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateSystemIntakeActionRetireLcidArgs = {
-  input: SystemIntakeRetireLcidInput;
+export type MutationCreateSystemIntakeActionRetireLCIDArgs = {
+  input: SystemIntakeRetireLCIDInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateSystemIntakeActionUpdateLcidArgs = {
-  input: SystemIntakeUpdateLcidInput;
+export type MutationCreateSystemIntakeActionUpdateLCIDArgs = {
+  input: SystemIntakeUpdateLCIDInput;
 };
 
 
@@ -1083,8 +1083,8 @@ export type MutationCreateSystemIntakeDocumentArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateSystemIntakeGrbReviewerArgs = {
-  input: CreateSystemIntakeGrbReviewerInput;
+export type MutationCreateSystemIntakeGRBReviewerArgs = {
+  input: CreateSystemIntakeGRBReviewerInput;
 };
 
 
@@ -1095,68 +1095,68 @@ export type MutationCreateSystemIntakeNoteArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTrbAdminNoteAdviceLetterArgs = {
-  input: CreateTrbAdminNoteAdviceLetterInput;
+export type MutationCreateTRBAdminNoteAdviceLetterArgs = {
+  input: CreateTRBAdminNoteAdviceLetterInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTrbAdminNoteConsultSessionArgs = {
-  input: CreateTrbAdminNoteConsultSessionInput;
+export type MutationCreateTRBAdminNoteConsultSessionArgs = {
+  input: CreateTRBAdminNoteConsultSessionInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTrbAdminNoteGeneralRequestArgs = {
-  input: CreateTrbAdminNoteGeneralRequestInput;
+export type MutationCreateTRBAdminNoteGeneralRequestArgs = {
+  input: CreateTRBAdminNoteGeneralRequestInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTrbAdminNoteInitialRequestFormArgs = {
-  input: CreateTrbAdminNoteInitialRequestFormInput;
+export type MutationCreateTRBAdminNoteInitialRequestFormArgs = {
+  input: CreateTRBAdminNoteInitialRequestFormInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTrbAdminNoteSupportingDocumentsArgs = {
-  input: CreateTrbAdminNoteSupportingDocumentsInput;
+export type MutationCreateTRBAdminNoteSupportingDocumentsArgs = {
+  input: CreateTRBAdminNoteSupportingDocumentsInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTrbAdviceLetterArgs = {
+export type MutationCreateTRBAdviceLetterArgs = {
   trbRequestId: Scalars['UUID']['input'];
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTrbAdviceLetterRecommendationArgs = {
-  input: CreateTrbAdviceLetterRecommendationInput;
+export type MutationCreateTRBAdviceLetterRecommendationArgs = {
+  input: CreateTRBAdviceLetterRecommendationInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTrbRequestArgs = {
-  requestType: TrbRequestType;
+export type MutationCreateTRBRequestArgs = {
+  requestType: TRBRequestType;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTrbRequestAttendeeArgs = {
-  input: CreateTrbRequestAttendeeInput;
+export type MutationCreateTRBRequestAttendeeArgs = {
+  input: CreateTRBRequestAttendeeInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTrbRequestDocumentArgs = {
-  input: CreateTrbRequestDocumentInput;
+export type MutationCreateTRBRequestDocumentArgs = {
+  input: CreateTRBRequestDocumentInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTrbRequestFeedbackArgs = {
-  input: CreateTrbRequestFeedbackInput;
+export type MutationCreateTRBRequestFeedbackArgs = {
+  input: CreateTRBRequestFeedbackInput;
 };
 
 
@@ -1185,32 +1185,32 @@ export type MutationDeleteSystemIntakeDocumentArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationDeleteSystemIntakeGrbReviewerArgs = {
-  input: DeleteSystemIntakeGrbReviewerInput;
+export type MutationDeleteSystemIntakeGRBReviewerArgs = {
+  input: DeleteSystemIntakeGRBReviewerInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationDeleteTrbAdviceLetterRecommendationArgs = {
+export type MutationDeleteTRBAdviceLetterRecommendationArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationDeleteTrbRequestAttendeeArgs = {
+export type MutationDeleteTRBRequestAttendeeArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationDeleteTrbRequestDocumentArgs = {
+export type MutationDeleteTRBRequestDocumentArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationDeleteTrbRequestFundingSourcesArgs = {
-  input: DeleteTrbRequestFundingSourcesInput;
+export type MutationDeleteTRBRequestFundingSourcesArgs = {
+  input: DeleteTRBRequestFundingSourcesInput;
 };
 
 
@@ -1222,12 +1222,12 @@ export type MutationDeleteTrbLeadOptionArgs = {
 
 /** Defines the mutations for the schema */
 export type MutationReopenTrbRequestArgs = {
-  input: ReopenTrbRequestInput;
+  input: ReopenTRBRequestInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationRequestReviewForTrbAdviceLetterArgs = {
+export type MutationRequestReviewForTRBAdviceLetterArgs = {
   id: Scalars['UUID']['input'];
 };
 
@@ -1251,8 +1251,8 @@ export type MutationSendReportAProblemEmailArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationSendTrbAdviceLetterArgs = {
-  input: SendTrbAdviceLetterInput;
+export type MutationSendTRBAdviceLetterArgs = {
+  input: SendTRBAdviceLetterInput;
 };
 
 
@@ -1281,27 +1281,27 @@ export type MutationSetSystemIntakeRelationNewSystemArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationSetTrbAdminNoteArchivedArgs = {
+export type MutationSetTRBAdminNoteArchivedArgs = {
   id: Scalars['UUID']['input'];
   isArchived: Scalars['Boolean']['input'];
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationSetTrbRequestRelationExistingServiceArgs = {
-  input: SetTrbRequestRelationExistingServiceInput;
+export type MutationSetTRBRequestRelationExistingServiceArgs = {
+  input: SetTRBRequestRelationExistingServiceInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationSetTrbRequestRelationExistingSystemArgs = {
-  input: SetTrbRequestRelationExistingSystemInput;
+export type MutationSetTRBRequestRelationExistingSystemArgs = {
+  input: SetTRBRequestRelationExistingSystemInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationSetTrbRequestRelationNewSystemArgs = {
-  input: SetTrbRequestRelationNewSystemInput;
+export type MutationSetTRBRequestRelationNewSystemArgs = {
+  input: SetTRBRequestRelationNewSystemInput;
 };
 
 
@@ -1318,7 +1318,7 @@ export type MutationUnlinkSystemIntakeRelationArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationUnlinkTrbRequestRelationArgs = {
+export type MutationUnlinkTRBRequestRelationArgs = {
   trbRequestID: Scalars['UUID']['input'];
 };
 
@@ -1348,8 +1348,8 @@ export type MutationUpdateSystemIntakeContractDetailsArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateSystemIntakeGrbReviewerArgs = {
-  input: UpdateSystemIntakeGrbReviewerInput;
+export type MutationUpdateSystemIntakeGRBReviewerArgs = {
+  input: UpdateSystemIntakeGRBReviewerInput;
 };
 
 
@@ -1385,57 +1385,57 @@ export type MutationUpdateSystemIntakeReviewDatesArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTrbAdviceLetterArgs = {
-  input: UpdateTrbAdviceLetterInput;
+export type MutationUpdateTRBAdviceLetterArgs = {
+  input: UpdateTRBAdviceLetterInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTrbAdviceLetterRecommendationArgs = {
-  input: UpdateTrbAdviceLetterRecommendationInput;
+export type MutationUpdateTRBAdviceLetterRecommendationArgs = {
+  input: UpdateTRBAdviceLetterRecommendationInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTrbAdviceLetterRecommendationOrderArgs = {
-  input: UpdateTrbAdviceLetterRecommendationOrderInput;
+export type MutationUpdateTRBAdviceLetterRecommendationOrderArgs = {
+  input: UpdateTRBAdviceLetterRecommendationOrderInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTrbRequestArgs = {
-  changes?: InputMaybe<TrbRequestChanges>;
+export type MutationUpdateTRBRequestArgs = {
+  changes?: InputMaybe<TRBRequestChanges>;
   id: Scalars['UUID']['input'];
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTrbRequestAttendeeArgs = {
-  input: UpdateTrbRequestAttendeeInput;
+export type MutationUpdateTRBRequestAttendeeArgs = {
+  input: UpdateTRBRequestAttendeeInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTrbRequestConsultMeetingTimeArgs = {
-  input: UpdateTrbRequestConsultMeetingTimeInput;
+export type MutationUpdateTRBRequestConsultMeetingTimeArgs = {
+  input: UpdateTRBRequestConsultMeetingTimeInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTrbRequestFormArgs = {
-  input: UpdateTrbRequestFormInput;
+export type MutationUpdateTRBRequestFormArgs = {
+  input: UpdateTRBRequestFormInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTrbRequestFundingSourcesArgs = {
-  input: UpdateTrbRequestFundingSourcesInput;
+export type MutationUpdateTRBRequestFundingSourcesArgs = {
+  input: UpdateTRBRequestFundingSourcesInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTrbRequestTrbLeadArgs = {
-  input: UpdateTrbRequestTrbLeadInput;
+export type MutationUpdateTRBRequestTRBLeadArgs = {
+  input: UpdateTRBRequestTRBLeadInput;
 };
 
 /** PersonRole is an enumeration of values for a person's role */
@@ -1471,7 +1471,7 @@ export type Query = {
   deployments: Array<CedarDeployment>;
   exchanges: Array<CedarExchange>;
   myCedarSystems: Array<CedarSystem>;
-  myTrbRequests: Array<TrbRequest>;
+  myTrbRequests: Array<TRBRequest>;
   /**
    * Requests fetches a requester's own intake requests
    * first is currently non-functional and can be removed later
@@ -1484,11 +1484,11 @@ export type Query = {
   systemIntakes: Array<SystemIntake>;
   systemIntakesWithLcids: Array<SystemIntake>;
   systemIntakesWithReviewRequested: Array<SystemIntake>;
-  trbAdminNote: TrbAdminNote;
+  trbAdminNote: TRBAdminNote;
   trbLeadOptions: Array<UserInfo>;
-  trbRequest: TrbRequest;
-  trbRequests: Array<TrbRequest>;
-  urls: Array<CedarUrl>;
+  trbRequest: TRBRequest;
+  trbRequests: Array<TRBRequest>;
+  urls: Array<CedarURL>;
   userAccount?: Maybe<UserAccount>;
 };
 
@@ -1635,7 +1635,7 @@ export type QueryUserAccountArgs = {
 };
 
 /** The data needed to reopen a TRB request */
-export type ReopenTrbRequestInput = {
+export type ReopenTRBRequestInput = {
   copyTrbMailbox: Scalars['Boolean']['input'];
   notifyEuaIds: Array<Scalars['String']['input']>;
   reasonReopened: Scalars['HTML']['input'];
@@ -1715,7 +1715,7 @@ export type SendReportAProblemEmailInput = {
 };
 
 /** The data needed to send a TRB advice letter, including who to notify */
-export type SendTrbAdviceLetterInput = {
+export type SendTRBAdviceLetterInput = {
   copyTrbMailbox: Scalars['Boolean']['input'];
   id: Scalars['UUID']['input'];
   notifyEuaIds: Array<Scalars['String']['input']>;
@@ -1744,19 +1744,19 @@ export type SetSystemIntakeRelationNewSystemInput = {
   systemIntakeID: Scalars['UUID']['input'];
 };
 
-export type SetTrbRequestRelationExistingServiceInput = {
+export type SetTRBRequestRelationExistingServiceInput = {
   contractName: Scalars['String']['input'];
   contractNumbers: Array<Scalars['String']['input']>;
   trbRequestID: Scalars['UUID']['input'];
 };
 
-export type SetTrbRequestRelationExistingSystemInput = {
+export type SetTRBRequestRelationExistingSystemInput = {
   cedarSystemIDs: Array<Scalars['String']['input']>;
   contractNumbers: Array<Scalars['String']['input']>;
   trbRequestID: Scalars['UUID']['input'];
 };
 
-export type SetTrbRequestRelationNewSystemInput = {
+export type SetTRBRequestRelationNewSystemInput = {
   contractNumbers: Array<Scalars['String']['input']>;
   trbRequestID: Scalars['UUID']['input'];
 };
@@ -1802,15 +1802,15 @@ export type SystemIntake = {
   grbDate?: Maybe<Scalars['Time']['output']>;
   /** This is a calculated state based on if a date exists for the GRB Meeting date */
   grbMeetingState: SystemIntakeMeetingState;
-  grbReviewers: Array<SystemIntakeGrbReviewer>;
+  grbReviewers: Array<SystemIntakeGRBReviewer>;
   grtDate?: Maybe<Scalars['Time']['output']>;
   /** This is a calculated state based on if a date exists for the GRT Meeting date */
   grtMeetingState: SystemIntakeMeetingState;
   grtReviewEmailBody?: Maybe<Scalars['String']['output']>;
   hasUiChanges?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['UUID']['output'];
-  isso: SystemIntakeIsso;
-  itGovTaskStatuses: ItGovTaskStatuses;
+  isso: SystemIntakeISSO;
+  itGovTaskStatuses: ITGovTaskStatuses;
   lcid?: Maybe<Scalars['String']['output']>;
   lcidCostBaseline?: Maybe<Scalars['String']['output']>;
   lcidExpiresAt?: Maybe<Scalars['Time']['output']>;
@@ -1818,7 +1818,7 @@ export type SystemIntake = {
   lcidRetiresAt?: Maybe<Scalars['Time']['output']>;
   lcidScope?: Maybe<Scalars['HTML']['output']>;
   /** Intentionally nullable - lcidStatus is null if (and only if) the intake doesn't have an LCID issued */
-  lcidStatus?: Maybe<SystemIntakeLcidStatus>;
+  lcidStatus?: Maybe<SystemIntakeLCIDStatus>;
   needsEaSupport?: Maybe<Scalars['Boolean']['output']>;
   notes: Array<SystemIntakeNote>;
   oitSecurityCollaborator?: Maybe<Scalars['String']['output']>;
@@ -1829,7 +1829,7 @@ export type SystemIntake = {
   /** Other System Intakes that share a CEDAR System or Contract Number */
   relatedIntakes: Array<SystemIntake>;
   /** TRB Requests that share a CEDAR System or Contract Number */
-  relatedTRBRequests: Array<TrbRequest>;
+  relatedTRBRequests: Array<TRBRequest>;
   relationType?: Maybe<RequestRelationType>;
   requestFormState: SystemIntakeFormState;
   requestName?: Maybe<Scalars['String']['output']>;
@@ -1846,7 +1846,7 @@ export type SystemIntake = {
   systems: Array<CedarSystem>;
   trbCollaborator?: Maybe<Scalars['String']['output']>;
   trbCollaboratorName?: Maybe<Scalars['String']['output']>;
-  trbFollowUpRecommendation?: Maybe<SystemIntakeTrbFollowUp>;
+  trbFollowUpRecommendation?: Maybe<SystemIntakeTRBFollowUp>;
   updatedAt?: Maybe<Scalars['Time']['output']>;
 };
 
@@ -1857,7 +1857,7 @@ export type SystemIntakeAction = {
   createdAt: Scalars['Time']['output'];
   feedback?: Maybe<Scalars['HTML']['output']>;
   id: Scalars['UUID']['output'];
-  lcidExpirationChange?: Maybe<SystemIntakeLcidExpirationChange>;
+  lcidExpirationChange?: Maybe<SystemIntakeLCIDExpirationChange>;
   newRetirementDate?: Maybe<Scalars['Time']['output']>;
   previousRetirementDate?: Maybe<Scalars['Time']['output']>;
   step?: Maybe<SystemIntakeStep>;
@@ -1936,7 +1936,7 @@ export type SystemIntakeBusinessOwnerInput = {
 };
 
 /** Input for changing an intake's LCID retirement date in IT Gov v2 */
-export type SystemIntakeChangeLcidRetirementDateInput = {
+export type SystemIntakeChangeLCIDRetirementDateInput = {
   additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
   adminNote?: InputMaybe<Scalars['HTML']['input']>;
   notificationRecipients?: InputMaybe<EmailNotificationRecipients>;
@@ -1974,7 +1974,7 @@ export type SystemIntakeCollaboratorInput = {
 };
 
 /** Input for confirming an intake's decision to issue an LCID in IT Gov v2 */
-export type SystemIntakeConfirmLcidInput = {
+export type SystemIntakeConfirmLCIDInput = {
   additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
   adminNote?: InputMaybe<Scalars['HTML']['input']>;
   costBaseline?: InputMaybe<Scalars['String']['input']>;
@@ -1983,7 +1983,7 @@ export type SystemIntakeConfirmLcidInput = {
   notificationRecipients?: InputMaybe<EmailNotificationRecipients>;
   scope: Scalars['HTML']['input'];
   systemIntakeID: Scalars['UUID']['input'];
-  trbFollowUp: SystemIntakeTrbFollowUp;
+  trbFollowUp: SystemIntakeTRBFollowUp;
 };
 
 /** Represents a contact associated with a system intake */
@@ -2097,7 +2097,7 @@ export type SystemIntakeDocumentType = {
 };
 
 /** Input for expiring an intake's LCID in IT Gov v2 */
-export type SystemIntakeExpireLcidInput = {
+export type SystemIntakeExpireLCIDInput = {
   additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
   adminNote?: InputMaybe<Scalars['HTML']['input']>;
   nextSteps?: InputMaybe<Scalars['HTML']['input']>;
@@ -2142,20 +2142,20 @@ export type SystemIntakeFundingSourcesInput = {
 };
 
 /** GRB Reviewers for a system intake request */
-export type SystemIntakeGrbReviewer = {
+export type SystemIntakeGRBReviewer = {
   __typename: 'SystemIntakeGRBReviewer';
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['UUID']['output'];
-  grbRole: SystemIntakeGrbReviewerRole;
+  grbRole: SystemIntakeGRBReviewerRole;
   id: Scalars['UUID']['output'];
   modifiedAt?: Maybe<Scalars['Time']['output']>;
   modifiedBy?: Maybe<Scalars['UUID']['output']>;
   systemIntakeID: Scalars['UUID']['output'];
   userAccount: UserAccount;
-  votingRole: SystemIntakeGrbReviewerVotingRole;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
 };
 
-export enum SystemIntakeGrbReviewerRole {
+export enum SystemIntakeGRBReviewerRole {
   ACA_3021_REP = 'ACA_3021_REP',
   CCIIO_REP = 'CCIIO_REP',
   CMCS_REP = 'CMCS_REP',
@@ -2170,7 +2170,7 @@ export enum SystemIntakeGrbReviewerRole {
   SUBJECT_MATTER_EXPERT = 'SUBJECT_MATTER_EXPERT'
 }
 
-export enum SystemIntakeGrbReviewerVotingRole {
+export enum SystemIntakeGRBReviewerVotingRole {
   ALTERNATE = 'ALTERNATE',
   NON_VOTING = 'NON_VOTING',
   VOTING = 'VOTING'
@@ -2193,20 +2193,20 @@ export type SystemIntakeGovernanceTeamInput = {
  * The Information System Security Officer (ISSO) that is
  * assicuated with a system request, if any
  */
-export type SystemIntakeIsso = {
+export type SystemIntakeISSO = {
   __typename: 'SystemIntakeISSO';
   isPresent?: Maybe<Scalars['Boolean']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
 
 /** The input data used to set the ISSO associated with a system request, if any */
-export type SystemIntakeIssoInput = {
+export type SystemIntakeISSOInput = {
   isPresent?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Input for setting an intake's decision to issuing an LCID in IT Gov v2 */
-export type SystemIntakeIssueLcidInput = {
+export type SystemIntakeIssueLCIDInput = {
   additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
   adminNote?: InputMaybe<Scalars['HTML']['input']>;
   costBaseline?: InputMaybe<Scalars['String']['input']>;
@@ -2216,11 +2216,11 @@ export type SystemIntakeIssueLcidInput = {
   notificationRecipients?: InputMaybe<EmailNotificationRecipients>;
   scope: Scalars['HTML']['input'];
   systemIntakeID: Scalars['UUID']['input'];
-  trbFollowUp: SystemIntakeTrbFollowUp;
+  trbFollowUp: SystemIntakeTRBFollowUp;
 };
 
 /** Contains the data about a change to the expiration date of a system request's lifecycle ID */
-export type SystemIntakeLcidExpirationChange = {
+export type SystemIntakeLCIDExpirationChange = {
   __typename: 'SystemIntakeLCIDExpirationChange';
   newCostBaseline?: Maybe<Scalars['String']['output']>;
   newDate: Scalars['Time']['output'];
@@ -2233,7 +2233,7 @@ export type SystemIntakeLcidExpirationChange = {
 };
 
 /** The possible statuses that an issued LCID can be in */
-export enum SystemIntakeLcidStatus {
+export enum SystemIntakeLCIDStatus {
   EXPIRED = 'EXPIRED',
   ISSUED = 'ISSUED',
   RETIRED = 'RETIRED'
@@ -2246,7 +2246,7 @@ export enum SystemIntakeMeetingState {
 }
 
 /** Input for creating a Not an IT Governance Request Action in Admin Actions v2 */
-export type SystemIntakeNotItGovReqInput = {
+export type SystemIntakeNotITGovReqInput = {
   additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
   adminNote?: InputMaybe<Scalars['HTML']['input']>;
   notificationRecipients?: InputMaybe<EmailNotificationRecipients>;
@@ -2307,7 +2307,7 @@ export type SystemIntakeRejectIntakeInput = {
   notificationRecipients?: InputMaybe<EmailNotificationRecipients>;
   reason: Scalars['HTML']['input'];
   systemIntakeID: Scalars['UUID']['input'];
-  trbFollowUp: SystemIntakeTrbFollowUp;
+  trbFollowUp: SystemIntakeTRBFollowUp;
 };
 
 /** Input for creating a Reopen Request Action in Admin Actions v2 */
@@ -2360,7 +2360,7 @@ export type SystemIntakeRequesterWithComponentInput = {
 };
 
 /** Input for retiring an intake's LCID in IT Gov v2 */
-export type SystemIntakeRetireLcidInput = {
+export type SystemIntakeRetireLCIDInput = {
   additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
   adminNote?: InputMaybe<Scalars['HTML']['input']>;
   notificationRecipients?: InputMaybe<EmailNotificationRecipients>;
@@ -2438,14 +2438,14 @@ export enum SystemIntakeStepToProgressTo {
 }
 
 /** Different options for whether the Governance team believes a requester's team should consult with the TRB */
-export enum SystemIntakeTrbFollowUp {
+export enum SystemIntakeTRBFollowUp {
   NOT_RECOMMENDED = 'NOT_RECOMMENDED',
   RECOMMENDED_BUT_NOT_CRITICAL = 'RECOMMENDED_BUT_NOT_CRITICAL',
   STRONGLY_RECOMMENDED = 'STRONGLY_RECOMMENDED'
 }
 
 /** Input for updating an intake's LCID in IT Gov v2 */
-export type SystemIntakeUpdateLcidInput = {
+export type SystemIntakeUpdateLCIDInput = {
   additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
   adminNote?: InputMaybe<Scalars['HTML']['input']>;
   costBaseline?: InputMaybe<Scalars['String']['input']>;
@@ -2458,11 +2458,11 @@ export type SystemIntakeUpdateLcidInput = {
 };
 
 /** Represents an admin note attached to a TRB request */
-export type TrbAdminNote = {
+export type TRBAdminNote = {
   __typename: 'TRBAdminNote';
   author: UserInfo;
-  category: TrbAdminNoteCategory;
-  categorySpecificData: TrbAdminNoteCategorySpecificData;
+  category: TRBAdminNoteCategory;
+  categorySpecificData: TRBAdminNoteCategorySpecificData;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
@@ -2477,15 +2477,15 @@ export type TrbAdminNote = {
  * Data specific to admin notes in the Advice Letter category
  * The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
  */
-export type TrbAdminNoteAdviceLetterCategoryData = {
+export type TRBAdminNoteAdviceLetterCategoryData = {
   __typename: 'TRBAdminNoteAdviceLetterCategoryData';
   appliesToMeetingSummary: Scalars['Boolean']['output'];
   appliesToNextSteps: Scalars['Boolean']['output'];
-  recommendations: Array<TrbAdviceLetterRecommendation>;
+  recommendations: Array<TRBAdviceLetterRecommendation>;
 };
 
 /** Represents the category of a single TRB admin note */
-export enum TrbAdminNoteCategory {
+export enum TRBAdminNoteCategory {
   ADVICE_LETTER = 'ADVICE_LETTER',
   CONSULT_SESSION = 'CONSULT_SESSION',
   GENERAL_REQUEST = 'GENERAL_REQUEST',
@@ -2493,13 +2493,13 @@ export enum TrbAdminNoteCategory {
   SUPPORTING_DOCUMENTS = 'SUPPORTING_DOCUMENTS'
 }
 
-export type TrbAdminNoteCategorySpecificData = TrbAdminNoteAdviceLetterCategoryData | TrbAdminNoteConsultSessionCategoryData | TrbAdminNoteGeneralRequestCategoryData | TrbAdminNoteInitialRequestFormCategoryData | TrbAdminNoteSupportingDocumentsCategoryData;
+export type TRBAdminNoteCategorySpecificData = TRBAdminNoteAdviceLetterCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData;
 
 /**
  * Data specific to admin notes in the Consult Session category
  * This type doesn't contain any actual data
  */
-export type TrbAdminNoteConsultSessionCategoryData = {
+export type TRBAdminNoteConsultSessionCategoryData = {
   __typename: 'TRBAdminNoteConsultSessionCategoryData';
   /** Placeholder field so this type is non-empty, always null */
   placeholderField?: Maybe<Scalars['Boolean']['output']>;
@@ -2509,14 +2509,14 @@ export type TrbAdminNoteConsultSessionCategoryData = {
  * Data specific to admin notes in the General Request category
  * This type doesn't contain any actual data
  */
-export type TrbAdminNoteGeneralRequestCategoryData = {
+export type TRBAdminNoteGeneralRequestCategoryData = {
   __typename: 'TRBAdminNoteGeneralRequestCategoryData';
   /** Placeholder field so this type is non-empty, always null */
   placeholderField?: Maybe<Scalars['Boolean']['output']>;
 };
 
 /** Data specific to admin notes in the Initial Request Form category */
-export type TrbAdminNoteInitialRequestFormCategoryData = {
+export type TRBAdminNoteInitialRequestFormCategoryData = {
   __typename: 'TRBAdminNoteInitialRequestFormCategoryData';
   appliesToAttendees: Scalars['Boolean']['output'];
   appliesToBasicRequestDetails: Scalars['Boolean']['output'];
@@ -2527,13 +2527,13 @@ export type TrbAdminNoteInitialRequestFormCategoryData = {
  * Data specific to admin notes in the Supporting Documents category
  * The "documents" property _will_ return deleted documents so that UI can reference the document name
  */
-export type TrbAdminNoteSupportingDocumentsCategoryData = {
+export type TRBAdminNoteSupportingDocumentsCategoryData = {
   __typename: 'TRBAdminNoteSupportingDocumentsCategoryData';
-  documents: Array<TrbRequestDocument>;
+  documents: Array<TRBRequestDocument>;
 };
 
 /** Represents an advice letter for a TRB request */
-export type TrbAdviceLetter = {
+export type TRBAdviceLetter = {
   __typename: 'TRBAdviceLetter';
   author: UserInfo;
   createdAt: Scalars['Time']['output'];
@@ -2547,12 +2547,12 @@ export type TrbAdviceLetter = {
   modifiedBy?: Maybe<Scalars['String']['output']>;
   nextSteps?: Maybe<Scalars['HTML']['output']>;
   /** List of recommendations in the order specified by users */
-  recommendations: Array<TrbAdviceLetterRecommendation>;
+  recommendations: Array<TRBAdviceLetterRecommendation>;
   trbRequestId: Scalars['UUID']['output'];
 };
 
 /** Represents a recommendation and links that have been added to a TRB advice letter */
-export type TrbAdviceLetterRecommendation = {
+export type TRBAdviceLetterRecommendation = {
   __typename: 'TRBAdviceLetterRecommendation';
   author: UserInfo;
   createdAt: Scalars['Time']['output'];
@@ -2568,7 +2568,7 @@ export type TrbAdviceLetterRecommendation = {
 };
 
 /** Represents the status of the TRB advice letter step */
-export enum TrbAdviceLetterStatus {
+export enum TRBAdviceLetterStatus {
   CANNOT_START_YET = 'CANNOT_START_YET',
   COMPLETED = 'COMPLETED',
   IN_PROGRESS = 'IN_PROGRESS',
@@ -2577,14 +2577,14 @@ export enum TrbAdviceLetterStatus {
 }
 
 /** Represents the status of the TRB advice letter step */
-export enum TrbAdviceLetterStatusTaskList {
+export enum TRBAdviceLetterStatusTaskList {
   CANNOT_START_YET = 'CANNOT_START_YET',
   COMPLETED = 'COMPLETED',
   IN_REVIEW = 'IN_REVIEW'
 }
 
 /** Represents the status of the TRB consult attendance step */
-export enum TrbAttendConsultStatus {
+export enum TRBAttendConsultStatus {
   CANNOT_START_YET = 'CANNOT_START_YET',
   COMPLETED = 'COMPLETED',
   READY_TO_SCHEDULE = 'READY_TO_SCHEDULE',
@@ -2592,7 +2592,7 @@ export enum TrbAttendConsultStatus {
 }
 
 /** Represents an option selected for collaboration groups in the TRB request form */
-export enum TrbCollabGroupOption {
+export enum TRBCollabGroupOption {
   CLOUD = 'CLOUD',
   ENTERPRISE_ARCHITECTURE = 'ENTERPRISE_ARCHITECTURE',
   GOVERNANCE_REVIEW_BOARD = 'GOVERNANCE_REVIEW_BOARD',
@@ -2602,7 +2602,7 @@ export enum TrbCollabGroupOption {
 }
 
 /** Represents the status of the TRB consult step */
-export enum TrbConsultPrepStatus {
+export enum TRBConsultPrepStatus {
   CANNOT_START_YET = 'CANNOT_START_YET',
   COMPLETED = 'COMPLETED',
   READY_TO_START = 'READY_TO_START'
@@ -2612,7 +2612,7 @@ export enum TrbConsultPrepStatus {
  * Represents the common options for document type that is attached to a
  * TRB Request
  */
-export enum TrbDocumentCommonType {
+export enum TRBDocumentCommonType {
   ARCHITECTURE_DIAGRAM = 'ARCHITECTURE_DIAGRAM',
   BUSINESS_CASE = 'BUSINESS_CASE',
   OTHER = 'OTHER',
@@ -2620,13 +2620,13 @@ export enum TrbDocumentCommonType {
 }
 
 /** Represents the action an admin is taking on a TRB request when leaving feedback */
-export enum TrbFeedbackAction {
+export enum TRBFeedbackAction {
   READY_FOR_CONSULT = 'READY_FOR_CONSULT',
   REQUEST_EDITS = 'REQUEST_EDITS'
 }
 
 /** Represents the status of the TRB feedback step */
-export enum TrbFeedbackStatus {
+export enum TRBFeedbackStatus {
   CANNOT_START_YET = 'CANNOT_START_YET',
   COMPLETED = 'COMPLETED',
   EDITS_REQUESTED = 'EDITS_REQUESTED',
@@ -2635,14 +2635,14 @@ export enum TrbFeedbackStatus {
 }
 
 /** Represents the status of a TRB request form */
-export enum TrbFormStatus {
+export enum TRBFormStatus {
   COMPLETED = 'COMPLETED',
   IN_PROGRESS = 'IN_PROGRESS',
   READY_TO_START = 'READY_TO_START'
 }
 
 /** Represents a TRB funding source */
-export type TrbFundingSource = {
+export type TRBFundingSource = {
   __typename: 'TRBFundingSource';
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
@@ -2655,21 +2655,21 @@ export type TrbFundingSource = {
 };
 
 /** Represents a request for support from the Technical Review Board (TRB) */
-export type TrbRequest = {
+export type TRBRequest = {
   __typename: 'TRBRequest';
-  adminNotes: Array<TrbAdminNote>;
-  adviceLetter?: Maybe<TrbAdviceLetter>;
+  adminNotes: Array<TRBAdminNote>;
+  adviceLetter?: Maybe<TRBAdviceLetter>;
   archived: Scalars['Boolean']['output'];
-  attendees: Array<TrbRequestAttendee>;
+  attendees: Array<TRBRequestAttendee>;
   consultMeetingTime?: Maybe<Scalars['Time']['output']>;
   contractName?: Maybe<Scalars['String']['output']>;
   /** Linked contract numbers */
-  contractNumbers: Array<TrbRequestContractNumber>;
+  contractNumbers: Array<TRBRequestContractNumber>;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
-  documents: Array<TrbRequestDocument>;
-  feedback: Array<TrbRequestFeedback>;
-  form: TrbRequestForm;
+  documents: Array<TRBRequestDocument>;
+  feedback: Array<TRBRequestFeedback>;
+  form: TRBRequestForm;
   id: Scalars['UUID']['output'];
   isRecent: Scalars['Boolean']['output'];
   modifiedAt?: Maybe<Scalars['Time']['output']>;
@@ -2678,22 +2678,22 @@ export type TrbRequest = {
   /** System Intakes that share a CEDAR System or Contract Number */
   relatedIntakes: Array<SystemIntake>;
   /** Other TRB Requests that share a CEDAR System or Contract Number */
-  relatedTRBRequests: Array<TrbRequest>;
+  relatedTRBRequests: Array<TRBRequest>;
   relationType?: Maybe<RequestRelationType>;
   requesterComponent?: Maybe<Scalars['String']['output']>;
   requesterInfo: UserInfo;
-  state: TrbRequestState;
-  status: TrbRequestStatus;
+  state: TRBRequestState;
+  status: TRBRequestStatus;
   /** Linked systems */
   systems: Array<CedarSystem>;
-  taskStatuses: TrbTaskStatuses;
+  taskStatuses: TRBTaskStatuses;
   trbLead?: Maybe<Scalars['String']['output']>;
   trbLeadInfo: UserInfo;
-  type: TrbRequestType;
+  type: TRBRequestType;
 };
 
 /** Represents an EUA user who is included as an attendee for a TRB request */
-export type TrbRequestAttendee = {
+export type TRBRequestAttendee = {
   __typename: 'TRBRequestAttendee';
   component?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Time']['output'];
@@ -2712,13 +2712,13 @@ export type TrbRequestAttendee = {
  * Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
  * https://gqlgen.com/reference/changesets/
  */
-export type TrbRequestChanges = {
+export type TRBRequestChanges = {
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  type?: InputMaybe<TrbRequestType>;
+  type?: InputMaybe<TRBRequestType>;
 };
 
-export type TrbRequestContractNumber = {
+export type TRBRequestContractNumber = {
   __typename: 'TRBRequestContractNumber';
   contractNumber: Scalars['String']['output'];
   createdAt: Scalars['Time']['output'];
@@ -2730,19 +2730,19 @@ export type TrbRequestContractNumber = {
 };
 
 /** Represents a document attached to a TRB request */
-export type TrbRequestDocument = {
+export type TRBRequestDocument = {
   __typename: 'TRBRequestDocument';
   deletedAt?: Maybe<Scalars['Time']['output']>;
-  documentType: TrbRequestDocumentType;
+  documentType: TRBRequestDocumentType;
   fileName: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
-  status: TrbRequestDocumentStatus;
+  status: TRBRequestDocumentStatus;
   uploadedAt: Scalars['Time']['output'];
   url: Scalars['String']['output'];
 };
 
 /** Enumeration of the possible statuses of documents uploaded in the TRB workflow */
-export enum TrbRequestDocumentStatus {
+export enum TRBRequestDocumentStatus {
   AVAILABLE = 'AVAILABLE',
   PENDING = 'PENDING',
   UNAVAILABLE = 'UNAVAILABLE'
@@ -2752,16 +2752,16 @@ export enum TrbRequestDocumentStatus {
  * Denotes the type of a document attached to a TRB request,
  * which can be one of a number of common types, or a free-text user-specified type
  */
-export type TrbRequestDocumentType = {
+export type TRBRequestDocumentType = {
   __typename: 'TRBRequestDocumentType';
-  commonType: TrbDocumentCommonType;
+  commonType: TRBDocumentCommonType;
   otherTypeDescription?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents feedback added to a TRB request */
-export type TrbRequestFeedback = {
+export type TRBRequestFeedback = {
   __typename: 'TRBRequestFeedback';
-  action: TrbFeedbackAction;
+  action: TRBFeedbackAction;
   author: UserInfo;
   copyTrbMailbox: Scalars['Boolean']['output'];
   createdAt: Scalars['Time']['output'];
@@ -2775,7 +2775,7 @@ export type TrbRequestFeedback = {
 };
 
 /** Represents an EUA user who is included as an form for a TRB request */
-export type TrbRequestForm = {
+export type TRBRequestForm = {
   __typename: 'TRBRequestForm';
   collabDateCloud?: Maybe<Scalars['String']['output']>;
   collabDateEnterpriseArchitecture?: Maybe<Scalars['String']['output']>;
@@ -2785,14 +2785,14 @@ export type TrbRequestForm = {
   collabDateSecurity?: Maybe<Scalars['String']['output']>;
   collabGRBConsultRequested?: Maybe<Scalars['Boolean']['output']>;
   collabGroupOther?: Maybe<Scalars['String']['output']>;
-  collabGroups: Array<TrbCollabGroupOption>;
+  collabGroups: Array<TRBCollabGroupOption>;
   component?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
   expectedEndDate?: Maybe<Scalars['Time']['output']>;
   expectedStartDate?: Maybe<Scalars['Time']['output']>;
   /** TODO: Make Funding sources non-nullable */
-  fundingSources?: Maybe<Array<TrbFundingSource>>;
+  fundingSources?: Maybe<Array<TRBFundingSource>>;
   hasExpectedStartEndDates?: Maybe<Scalars['Boolean']['output']>;
   hasSolutionInMind?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['UUID']['output'];
@@ -2800,22 +2800,22 @@ export type TrbRequestForm = {
   modifiedBy?: Maybe<Scalars['String']['output']>;
   needsAssistanceWith?: Maybe<Scalars['String']['output']>;
   proposedSolution?: Maybe<Scalars['String']['output']>;
-  status: TrbFormStatus;
+  status: TRBFormStatus;
   subjectAreaOptionOther?: Maybe<Scalars['String']['output']>;
-  subjectAreaOptions?: Maybe<Array<TrbSubjectAreaOption>>;
+  subjectAreaOptions?: Maybe<Array<TRBSubjectAreaOption>>;
   submittedAt?: Maybe<Scalars['Time']['output']>;
   systemIntakes: Array<SystemIntake>;
   trbRequestId: Scalars['UUID']['output'];
-  whereInProcess?: Maybe<TrbWhereInProcessOption>;
+  whereInProcess?: Maybe<TRBWhereInProcessOption>;
   whereInProcessOther?: Maybe<Scalars['String']['output']>;
 };
 
-export enum TrbRequestState {
+export enum TRBRequestState {
   CLOSED = 'CLOSED',
   OPEN = 'OPEN'
 }
 
-export enum TrbRequestStatus {
+export enum TRBRequestStatus {
   ADVICE_LETTER_IN_REVIEW = 'ADVICE_LETTER_IN_REVIEW',
   ADVICE_LETTER_SENT = 'ADVICE_LETTER_SENT',
   CONSULT_COMPLETE = 'CONSULT_COMPLETE',
@@ -2828,7 +2828,7 @@ export enum TrbRequestStatus {
   REQUEST_FORM_COMPLETE = 'REQUEST_FORM_COMPLETE'
 }
 
-export enum TrbRequestType {
+export enum TRBRequestType {
   BRAINSTORM = 'BRAINSTORM',
   FOLLOWUP = 'FOLLOWUP',
   FORMAL_REVIEW = 'FORMAL_REVIEW',
@@ -2837,7 +2837,7 @@ export enum TrbRequestType {
 }
 
 /** The possible options on the TRB "Subject Areas" page */
-export enum TrbSubjectAreaOption {
+export enum TRBSubjectAreaOption {
   ACCESSIBILITY_COMPLIANCE = 'ACCESSIBILITY_COMPLIANCE',
   ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT = 'ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT',
   ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT = 'ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT',
@@ -2858,18 +2858,18 @@ export enum TrbSubjectAreaOption {
 }
 
 /** Wraps all of the various status on the TRB task list into one type */
-export type TrbTaskStatuses = {
+export type TRBTaskStatuses = {
   __typename: 'TRBTaskStatuses';
-  adviceLetterStatus: TrbAdviceLetterStatus;
-  adviceLetterStatusTaskList: TrbAdviceLetterStatusTaskList;
-  attendConsultStatus: TrbAttendConsultStatus;
-  consultPrepStatus: TrbConsultPrepStatus;
-  feedbackStatus: TrbFeedbackStatus;
-  formStatus: TrbFormStatus;
+  adviceLetterStatus: TRBAdviceLetterStatus;
+  adviceLetterStatusTaskList: TRBAdviceLetterStatusTaskList;
+  attendConsultStatus: TRBAttendConsultStatus;
+  consultPrepStatus: TRBConsultPrepStatus;
+  feedbackStatus: TRBFeedbackStatus;
+  formStatus: TRBFormStatus;
 };
 
 /** Represents an option selected to the "where are you in the process?" TRB request form */
-export enum TrbWhereInProcessOption {
+export enum TRBWhereInProcessOption {
   CONTRACTING_WORK_HAS_STARTED = 'CONTRACTING_WORK_HAS_STARTED',
   DEVELOPMENT_HAS_RECENTLY_STARTED = 'DEVELOPMENT_HAS_RECENTLY_STARTED',
   DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY = 'DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY',
@@ -2895,7 +2895,7 @@ export type UpdateSystemIntakeContactDetailsInput = {
   businessOwner: SystemIntakeBusinessOwnerInput;
   governanceTeams: SystemIntakeGovernanceTeamInput;
   id: Scalars['UUID']['input'];
-  isso: SystemIntakeIssoInput;
+  isso: SystemIntakeISSOInput;
   productManager: SystemIntakeProductManagerInput;
   requester: SystemIntakeRequesterWithComponentInput;
 };
@@ -2918,10 +2918,10 @@ export type UpdateSystemIntakeContractDetailsInput = {
   id: Scalars['UUID']['input'];
 };
 
-export type UpdateSystemIntakeGrbReviewerInput = {
-  grbRole: SystemIntakeGrbReviewerRole;
+export type UpdateSystemIntakeGRBReviewerInput = {
+  grbRole: SystemIntakeGRBReviewerRole;
   reviewerID: Scalars['UUID']['input'];
-  votingRole: SystemIntakeGrbReviewerVotingRole;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
 };
 
 /** Input data for updating a system intake's relationship to a CEDAR system */
@@ -2964,7 +2964,7 @@ export type UpdateSystemIntakeReviewDatesInput = {
 };
 
 /** The data needed to update a TRB advice letter */
-export type UpdateTrbAdviceLetterInput = {
+export type UpdateTRBAdviceLetterInput = {
   followupPoint?: InputMaybe<Scalars['String']['input']>;
   isFollowupRecommended?: InputMaybe<Scalars['Boolean']['input']>;
   meetingSummary?: InputMaybe<Scalars['HTML']['input']>;
@@ -2973,28 +2973,28 @@ export type UpdateTrbAdviceLetterInput = {
 };
 
 /** The input required to update a recommendation to a TRB advice letter */
-export type UpdateTrbAdviceLetterRecommendationInput = {
+export type UpdateTRBAdviceLetterRecommendationInput = {
   id: Scalars['UUID']['input'];
   links?: InputMaybe<Array<Scalars['String']['input']>>;
   recommendation?: InputMaybe<Scalars['HTML']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateTrbAdviceLetterRecommendationOrderInput = {
+export type UpdateTRBAdviceLetterRecommendationOrderInput = {
   /** List of the recommendation IDs in the new order they should be displayed */
   newOrder: Array<Scalars['UUID']['input']>;
   trbRequestId: Scalars['UUID']['input'];
 };
 
 /** Represents an EUA user who is included as an attendee for a TRB request */
-export type UpdateTrbRequestAttendeeInput = {
+export type UpdateTRBRequestAttendeeInput = {
   component: Scalars['String']['input'];
   id: Scalars['UUID']['input'];
   role: PersonRole;
 };
 
 /** The data needed schedule a TRB consult meeting time */
-export type UpdateTrbRequestConsultMeetingTimeInput = {
+export type UpdateTRBRequestConsultMeetingTimeInput = {
   consultMeetingTime: Scalars['Time']['input'];
   copyTrbMailbox: Scalars['Boolean']['input'];
   notes: Scalars['String']['input'];
@@ -3003,7 +3003,7 @@ export type UpdateTrbRequestConsultMeetingTimeInput = {
 };
 
 /** Represents an EUA user who is included as an form for a TRB request */
-export type UpdateTrbRequestFormInput = {
+export type UpdateTRBRequestFormInput = {
   collabDateCloud?: InputMaybe<Scalars['String']['input']>;
   collabDateEnterpriseArchitecture?: InputMaybe<Scalars['String']['input']>;
   collabDateGovernanceReviewBoard?: InputMaybe<Scalars['String']['input']>;
@@ -3012,7 +3012,7 @@ export type UpdateTrbRequestFormInput = {
   collabDateSecurity?: InputMaybe<Scalars['String']['input']>;
   collabGRBConsultRequested?: InputMaybe<Scalars['Boolean']['input']>;
   collabGroupOther?: InputMaybe<Scalars['String']['input']>;
-  collabGroups?: InputMaybe<Array<TrbCollabGroupOption>>;
+  collabGroups?: InputMaybe<Array<TRBCollabGroupOption>>;
   component?: InputMaybe<Scalars['String']['input']>;
   expectedEndDate?: InputMaybe<Scalars['Time']['input']>;
   expectedStartDate?: InputMaybe<Scalars['Time']['input']>;
@@ -3022,21 +3022,21 @@ export type UpdateTrbRequestFormInput = {
   needsAssistanceWith?: InputMaybe<Scalars['String']['input']>;
   proposedSolution?: InputMaybe<Scalars['String']['input']>;
   subjectAreaOptionOther?: InputMaybe<Scalars['String']['input']>;
-  subjectAreaOptions?: InputMaybe<Array<TrbSubjectAreaOption>>;
+  subjectAreaOptions?: InputMaybe<Array<TRBSubjectAreaOption>>;
   systemIntakes?: InputMaybe<Array<Scalars['UUID']['input']>>;
   trbRequestId: Scalars['UUID']['input'];
-  whereInProcess?: InputMaybe<TrbWhereInProcessOption>;
+  whereInProcess?: InputMaybe<TRBWhereInProcessOption>;
   whereInProcessOther?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateTrbRequestFundingSourcesInput = {
+export type UpdateTRBRequestFundingSourcesInput = {
   fundingNumber: Scalars['String']['input'];
   sources: Array<Scalars['String']['input']>;
   trbRequestId: Scalars['UUID']['input'];
 };
 
 /** The data needed assign a TRB lead to a TRB request */
-export type UpdateTrbRequestTrbLeadInput = {
+export type UpdateTRBRequestTRBLeadInput = {
   trbLead: Scalars['String']['input'];
   trbRequestId: Scalars['UUID']['input'];
 };
@@ -3083,12 +3083,194 @@ export type UserInfo = {
   lastName: Scalars['String']['output'];
 };
 
+export type CreateSystemIntakeGRBReviewerMutationVariables = Exact<{
+  input: CreateSystemIntakeGRBReviewerInput;
+}>;
+
+
+export type CreateSystemIntakeGRBReviewerMutation = { __typename: 'Mutation', createSystemIntakeGRBReviewer: { __typename: 'SystemIntakeGRBReviewer', id: UUID, grbRole: SystemIntakeGRBReviewerRole, votingRole: SystemIntakeGRBReviewerVotingRole, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } };
+
+export type DeleteSystemIntakeGRBReviewerMutationVariables = Exact<{
+  input: DeleteSystemIntakeGRBReviewerInput;
+}>;
+
+
+export type DeleteSystemIntakeGRBReviewerMutation = { __typename: 'Mutation', deleteSystemIntakeGRBReviewer: UUID };
+
+export type GetSystemIntakeGRBReviewersQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type GetSystemIntakeGRBReviewersQuery = { __typename: 'Query', systemIntake?: { __typename: 'SystemIntake', id: UUID, grbReviewers: Array<{ __typename: 'SystemIntakeGRBReviewer', id: UUID, grbRole: SystemIntakeGRBReviewerRole, votingRole: SystemIntakeGRBReviewerVotingRole, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }> } | null };
+
+export type SystemIntakeGRBReviewerFragment = { __typename: 'SystemIntakeGRBReviewer', id: UUID, grbRole: SystemIntakeGRBReviewerRole, votingRole: SystemIntakeGRBReviewerVotingRole, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } };
+
+export type UpdateSystemIntakeGRBReviewerMutationVariables = Exact<{
+  input: UpdateSystemIntakeGRBReviewerInput;
+}>;
+
+
+export type UpdateSystemIntakeGRBReviewerMutation = { __typename: 'Mutation', updateSystemIntakeGRBReviewer: { __typename: 'SystemIntakeGRBReviewer', id: UUID, grbRole: SystemIntakeGRBReviewerRole, votingRole: SystemIntakeGRBReviewerVotingRole, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } };
+
 export type GetTrbLeadOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetTrbLeadOptionsQuery = { __typename: 'Query', trbLeadOptions: Array<{ __typename: 'UserInfo', euaUserId: string, commonName: string }> };
 
+export const SystemIntakeGRBReviewerFragmentDoc = gql`
+    fragment SystemIntakeGRBReviewer on SystemIntakeGRBReviewer {
+  id
+  grbRole
+  votingRole
+  userAccount {
+    id
+    username
+    commonName
+    email
+  }
+}
+    `;
+export const CreateSystemIntakeGRBReviewerDocument = gql`
+    mutation CreateSystemIntakeGRBReviewer($input: CreateSystemIntakeGRBReviewerInput!) {
+  createSystemIntakeGRBReviewer(input: $input) {
+    ...SystemIntakeGRBReviewer
+  }
+}
+    ${SystemIntakeGRBReviewerFragmentDoc}`;
+export type CreateSystemIntakeGRBReviewerMutationFn = Apollo.MutationFunction<CreateSystemIntakeGRBReviewerMutation, CreateSystemIntakeGRBReviewerMutationVariables>;
 
+/**
+ * __useCreateSystemIntakeGRBReviewerMutation__
+ *
+ * To run a mutation, you first call `useCreateSystemIntakeGRBReviewerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSystemIntakeGRBReviewerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSystemIntakeGrbReviewerMutation, { data, loading, error }] = useCreateSystemIntakeGRBReviewerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateSystemIntakeGRBReviewerMutation(baseOptions?: Apollo.MutationHookOptions<CreateSystemIntakeGRBReviewerMutation, CreateSystemIntakeGRBReviewerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSystemIntakeGRBReviewerMutation, CreateSystemIntakeGRBReviewerMutationVariables>(CreateSystemIntakeGRBReviewerDocument, options);
+      }
+export type CreateSystemIntakeGRBReviewerMutationHookResult = ReturnType<typeof useCreateSystemIntakeGRBReviewerMutation>;
+export type CreateSystemIntakeGRBReviewerMutationResult = Apollo.MutationResult<CreateSystemIntakeGRBReviewerMutation>;
+export type CreateSystemIntakeGRBReviewerMutationOptions = Apollo.BaseMutationOptions<CreateSystemIntakeGRBReviewerMutation, CreateSystemIntakeGRBReviewerMutationVariables>;
+export const DeleteSystemIntakeGRBReviewerDocument = gql`
+    mutation DeleteSystemIntakeGRBReviewer($input: DeleteSystemIntakeGRBReviewerInput!) {
+  deleteSystemIntakeGRBReviewer(input: $input)
+}
+    `;
+export type DeleteSystemIntakeGRBReviewerMutationFn = Apollo.MutationFunction<DeleteSystemIntakeGRBReviewerMutation, DeleteSystemIntakeGRBReviewerMutationVariables>;
+
+/**
+ * __useDeleteSystemIntakeGRBReviewerMutation__
+ *
+ * To run a mutation, you first call `useDeleteSystemIntakeGRBReviewerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSystemIntakeGRBReviewerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSystemIntakeGrbReviewerMutation, { data, loading, error }] = useDeleteSystemIntakeGRBReviewerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteSystemIntakeGRBReviewerMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSystemIntakeGRBReviewerMutation, DeleteSystemIntakeGRBReviewerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteSystemIntakeGRBReviewerMutation, DeleteSystemIntakeGRBReviewerMutationVariables>(DeleteSystemIntakeGRBReviewerDocument, options);
+      }
+export type DeleteSystemIntakeGRBReviewerMutationHookResult = ReturnType<typeof useDeleteSystemIntakeGRBReviewerMutation>;
+export type DeleteSystemIntakeGRBReviewerMutationResult = Apollo.MutationResult<DeleteSystemIntakeGRBReviewerMutation>;
+export type DeleteSystemIntakeGRBReviewerMutationOptions = Apollo.BaseMutationOptions<DeleteSystemIntakeGRBReviewerMutation, DeleteSystemIntakeGRBReviewerMutationVariables>;
+export const GetSystemIntakeGRBReviewersDocument = gql`
+    query GetSystemIntakeGRBReviewers($id: UUID!) {
+  systemIntake(id: $id) {
+    id
+    grbReviewers {
+      ...SystemIntakeGRBReviewer
+    }
+  }
+}
+    ${SystemIntakeGRBReviewerFragmentDoc}`;
+
+/**
+ * __useGetSystemIntakeGRBReviewersQuery__
+ *
+ * To run a query within a React component, call `useGetSystemIntakeGRBReviewersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSystemIntakeGRBReviewersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSystemIntakeGRBReviewersQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetSystemIntakeGRBReviewersQuery(baseOptions: Apollo.QueryHookOptions<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables> & ({ variables: GetSystemIntakeGRBReviewersQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>(GetSystemIntakeGRBReviewersDocument, options);
+      }
+export function useGetSystemIntakeGRBReviewersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>(GetSystemIntakeGRBReviewersDocument, options);
+        }
+export function useGetSystemIntakeGRBReviewersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>(GetSystemIntakeGRBReviewersDocument, options);
+        }
+export type GetSystemIntakeGRBReviewersQueryHookResult = ReturnType<typeof useGetSystemIntakeGRBReviewersQuery>;
+export type GetSystemIntakeGRBReviewersLazyQueryHookResult = ReturnType<typeof useGetSystemIntakeGRBReviewersLazyQuery>;
+export type GetSystemIntakeGRBReviewersSuspenseQueryHookResult = ReturnType<typeof useGetSystemIntakeGRBReviewersSuspenseQuery>;
+export type GetSystemIntakeGRBReviewersQueryResult = Apollo.QueryResult<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>;
+export const UpdateSystemIntakeGRBReviewerDocument = gql`
+    mutation UpdateSystemIntakeGRBReviewer($input: UpdateSystemIntakeGRBReviewerInput!) {
+  updateSystemIntakeGRBReviewer(input: $input) {
+    ...SystemIntakeGRBReviewer
+  }
+}
+    ${SystemIntakeGRBReviewerFragmentDoc}`;
+export type UpdateSystemIntakeGRBReviewerMutationFn = Apollo.MutationFunction<UpdateSystemIntakeGRBReviewerMutation, UpdateSystemIntakeGRBReviewerMutationVariables>;
+
+/**
+ * __useUpdateSystemIntakeGRBReviewerMutation__
+ *
+ * To run a mutation, you first call `useUpdateSystemIntakeGRBReviewerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSystemIntakeGRBReviewerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSystemIntakeGrbReviewerMutation, { data, loading, error }] = useUpdateSystemIntakeGRBReviewerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSystemIntakeGRBReviewerMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSystemIntakeGRBReviewerMutation, UpdateSystemIntakeGRBReviewerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSystemIntakeGRBReviewerMutation, UpdateSystemIntakeGRBReviewerMutationVariables>(UpdateSystemIntakeGRBReviewerDocument, options);
+      }
+export type UpdateSystemIntakeGRBReviewerMutationHookResult = ReturnType<typeof useUpdateSystemIntakeGRBReviewerMutation>;
+export type UpdateSystemIntakeGRBReviewerMutationResult = Apollo.MutationResult<UpdateSystemIntakeGRBReviewerMutation>;
+export type UpdateSystemIntakeGRBReviewerMutationOptions = Apollo.BaseMutationOptions<UpdateSystemIntakeGRBReviewerMutation, UpdateSystemIntakeGRBReviewerMutationVariables>;
 export const GetTrbLeadOptionsDocument = gql`
     query GetTrbLeadOptions {
   trbLeadOptions {
@@ -3129,5 +3311,9 @@ export type GetTrbLeadOptionsQueryHookResult = ReturnType<typeof useGetTrbLeadOp
 export type GetTrbLeadOptionsLazyQueryHookResult = ReturnType<typeof useGetTrbLeadOptionsLazyQuery>;
 export type GetTrbLeadOptionsSuspenseQueryHookResult = ReturnType<typeof useGetTrbLeadOptionsSuspenseQuery>;
 export type GetTrbLeadOptionsQueryResult = Apollo.QueryResult<GetTrbLeadOptionsQuery, GetTrbLeadOptionsQueryVariables>;
-
+export const TypedSystemIntakeGRBReviewerFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<SystemIntakeGRBReviewerFragment, unknown>;
+export const TypedCreateSystemIntakeGRBReviewerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeGRBReviewer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeGRBReviewerMutation, CreateSystemIntakeGRBReviewerMutationVariables>;
+export const TypedDeleteSystemIntakeGRBReviewerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteSystemIntakeGRBReviewer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteSystemIntakeGRBReviewerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteSystemIntakeGRBReviewer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<DeleteSystemIntakeGRBReviewerMutation, DeleteSystemIntakeGRBReviewerMutationVariables>;
+export const TypedGetSystemIntakeGRBReviewersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeGRBReviewers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbReviewers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>;
+export const TypedUpdateSystemIntakeGRBReviewerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeGRBReviewer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeGRBReviewerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeGRBReviewer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeGRBReviewerMutation, UpdateSystemIntakeGRBReviewerMutationVariables>;
 export const TypedGetTrbLeadOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTrbLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}}]}}]} as unknown as DocumentNode<GetTrbLeadOptionsQuery, GetTrbLeadOptionsQueryVariables>;

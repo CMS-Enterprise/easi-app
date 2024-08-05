@@ -1,28 +1,23 @@
 import React, { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
+import {
+  GetSystemIntakeGRBReviewersDocument,
+  SystemIntakeGRBReviewerFragment,
+  useDeleteSystemIntakeGRBReviewerMutation
+} from 'gql/gen/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
-import {
-  DeleteSystemIntakeGRBReviewerQuery,
-  GetSystemIntakeGRBReviewersQuery
-} from 'queries/SystemIntakeGRBReviewerQueries';
-import {
-  DeleteSystemIntakeGRBReviewer,
-  DeleteSystemIntakeGRBReviewerVariables
-} from 'queries/types/DeleteSystemIntakeGRBReviewer';
-import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
 import { SystemIntakeState } from 'types/graphql-global-types';
 
 import IsGrbViewContext from '../IsGrbViewContext';
@@ -33,7 +28,7 @@ import GRBReviewerForm from './GRBReviewerForm';
 type GRBReviewProps = {
   id: string;
   state: SystemIntakeState;
-  grbReviewers: SystemIntakeGRBReviewer[];
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
 };
 
 const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
@@ -51,25 +46,22 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
   const [
     reviewerToRemove,
     setReviewerToRemove
-  ] = useState<SystemIntakeGRBReviewer | null>(null);
+  ] = useState<SystemIntakeGRBReviewerFragment | null>(null);
 
   const { showMessage } = useMessage();
 
   const isGrbView = useContext(IsGrbViewContext);
 
-  const [mutate] = useMutation<
-    DeleteSystemIntakeGRBReviewer,
-    DeleteSystemIntakeGRBReviewerVariables
-  >(DeleteSystemIntakeGRBReviewerQuery, {
+  const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewersQuery,
+        query: GetSystemIntakeGRBReviewersDocument,
         variables: { id }
       }
     ]
   });
 
-  const removeGRBReviewer = (reviewer: SystemIntakeGRBReviewer) => {
+  const removeGRBReviewer = (reviewer: SystemIntakeGRBReviewerFragment) => {
     mutate({ variables: { input: { reviewerID: reviewer.id } } })
       .then(() =>
         showMessage(

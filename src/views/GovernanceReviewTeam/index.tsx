@@ -1,15 +1,10 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
+import { useGetSystemIntakeGRBReviewersQuery } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
-import useCacheQuery from 'hooks/useCacheQuery';
-import { GetSystemIntakeGRBReviewersQuery } from 'queries/SystemIntakeGRBReviewerQueries';
-import {
-  GetSystemIntakeGRBReviewers,
-  GetSystemIntakeGRBReviewersVariables
-} from 'queries/types/GetSystemIntakeGRBReviewers';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
@@ -30,10 +25,7 @@ const GovernanceReviewTeam = () => {
     id: string;
   }>();
 
-  const { data, loading } = useCacheQuery<
-    GetSystemIntakeGRBReviewers,
-    GetSystemIntakeGRBReviewersVariables
-  >(GetSystemIntakeGRBReviewersQuery, {
+  const { data, loading } = useGetSystemIntakeGRBReviewersQuery({
     variables: {
       id
     }

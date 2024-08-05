@@ -1,10 +1,12 @@
+import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
 import i18next from 'i18next';
 import * as Yup from 'yup';
 
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
-import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
 
-const CreateGRBReviewerSchema = (grbReviewers: SystemIntakeGRBReviewer[]) =>
+const CreateGRBReviewerSchema = (
+  grbReviewers: SystemIntakeGRBReviewerFragment[]
+) =>
   Yup.object().shape({
     userAccount: Yup.object()
       .shape({

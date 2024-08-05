@@ -1,7 +1,7 @@
 import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
-} from 'types/graphql-global-types';
+} from 'gql/gen/graphql';
 
 export const grbReviewerVotingRolesTranslation: Record<
   SystemIntakeGRBReviewerVotingRole,

@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeGRBReviewerVotingRole, SystemIntakeGRBReviewerRole } from "./../../types/graphql-global-types";
+import { SystemIntakeGRBReviewerRole, SystemIntakeGRBReviewerVotingRole } from "./../../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL fragment: SystemIntakeGRBReviewer
@@ -29,7 +29,7 @@ export interface SystemIntakeGRBReviewer_userAccount {
 export interface SystemIntakeGRBReviewer {
   __typename: "SystemIntakeGRBReviewer";
   id: UUID;
-  votingRole: SystemIntakeGRBReviewerVotingRole;
   grbRole: SystemIntakeGRBReviewerRole;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
   userAccount: SystemIntakeGRBReviewer_userAccount;
 }
