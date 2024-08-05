@@ -122,7 +122,7 @@ export const Table = ({
     }
   }, [systemTableType, systems, mySystems]);
 
-  const columns = useMemo<Column<CedarSystem>[]>(() => {
+  const columns: Column<CedarSystem>[] = useMemo(() => {
     const isBookmarked = (cedarSystemId: string): boolean =>
       !!systems.find(system => system.id === cedarSystemId)?.isBookmarked;
 
@@ -145,8 +145,10 @@ export const Table = ({
       });
     };
 
-    return [
-      {
+    const cols: Column<CedarSystem>[] = [];
+
+    if (!isMySystems) {
+      cols.push({
         Header: <IconBookmark />,
         accessor: 'id',
         id: 'systemId',
@@ -168,23 +170,28 @@ export const Table = ({
             />
           </Button>
         )
-      },
-      {
-        Header: t<string>('systemTable.header.systemAcronym'),
-        accessor: 'acronym'
-      },
-      {
-        Header: t<string>('systemTable.header.systemName'),
-        accessor: 'name',
-        id: 'systemName',
-        Cell: ({ row }: { row: Row<CedarSystem> }) => {
-          const url = `/systems/${row.original.id}/${
-            systemTableType === 'my-systems' ? 'workspace' : 'home/top'
-          }`;
-          return <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>;
-        }
-      },
-      {
+      });
+    }
+
+    cols.push({
+      Header: t<string>('systemTable.header.systemAcronym'),
+      accessor: 'acronym'
+    });
+
+    cols.push({
+      Header: t<string>('systemTable.header.systemName'),
+      accessor: 'name',
+      id: 'systemName',
+      Cell: ({ row }: { row: Row<CedarSystem> }) => {
+        const url = `/systems/${row.original.id}/${
+          systemTableType === 'my-systems' ? 'workspace' : 'home/top'
+        }`;
+        return <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>;
+      }
+    });
+
+    if (!isMySystems) {
+      cols.push({
         Header: t<string>('systemTable.header.systemOwner'),
         accessor: 'businessOwnerOrg',
         id: 'systemOwner',
@@ -195,48 +202,44 @@ export const Table = ({
             )?.acronym || row.original.businessOwnerOrg}
           </p>
         )
-      },
-      {
-        Header: 'ATO Status',
-        accessor: 'atoExpirationDate',
-        Cell({
-          value
-        }: CellProps<CedarSystem, CedarSystem['atoExpirationDate']>) {
-          return <AtoStatusIconText dt={value} />;
-        },
-        sortType: (a, b) => {
-          return (a.values.atoExpirationDate ?? '') >
-            (b.values.atoExpirationDate ?? '')
-            ? 1
-            : -1;
-        }
-      }
-      /*
-      {
-        Header: t<string>('systemTable.header.systemStatus'),
-        accessor: 'status',
-        id: 'systemStatus',
-        disableGlobalFilter: true,
-        Cell: ({ row }: { row: Row<CedarSystem> }) => (
-          <div>
-            <SystemHealthIcon
-              status={mapCedarStatusToIcon(row.original.status)}
-              size="medium"
-              className="margin-right-1"
-            />
-            <span>{row.original.status}</span>
-          </div>
-        )
-      }
-      */
-    ];
-  }, [t, systems, systemTableType, createMutate, deleteMutate]);
+      });
+    }
 
-  // Remove bookmark column if showing My systems table
-  if (isMySystems) {
-    columns.splice(0, 1);
-    columns.pop(); // remove component if isMySystems
-  }
+    cols.push({
+      Header: t<string>('systemTable.header.systemStatus'),
+      accessor: 'atoExpirationDate',
+      Cell: ({
+        value
+      }: CellProps<CedarSystem, CedarSystem['atoExpirationDate']>) => (
+        <AtoStatusIconText dt={value} />
+      ),
+      sortType: (a, b) =>
+        (a.values.atoExpirationDate ?? '') > (b.values.atoExpirationDate ?? '')
+          ? 1
+          : -1
+    });
+
+    /*
+    {
+      Header: t<string>('systemTable.header.systemStatus'),
+      accessor: 'status',
+      id: 'systemStatus',
+      disableGlobalFilter: true,
+      Cell: ({ row }: { row: Row<CedarSystem> }) => (
+        <div>
+          <SystemHealthIcon
+            status={mapCedarStatusToIcon(row.original.status)}
+            size="medium"
+            className="margin-right-1"
+          />
+          <span>{row.original.status}</span>
+        </div>
+      )
+    }
+    */
+
+    return cols;
+  }, [t, systems, systemTableType, createMutate, deleteMutate, isMySystems]);
 
   const {
     getTableProps,

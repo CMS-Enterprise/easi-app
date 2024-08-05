@@ -387,7 +387,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                       title="Toggle SortBy"
                       type="button"
                     >
-                      ATO Status
+                      ATO status
                       <svg
                         class="usa-icon margin-left-05 position-absolute"
                         data-testid="caret--sort"
