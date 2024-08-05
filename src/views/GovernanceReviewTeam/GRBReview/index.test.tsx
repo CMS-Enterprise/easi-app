@@ -4,11 +4,13 @@ import { render, screen } from '@testing-library/react';
 
 import { systemIntake } from 'data/mock/systemIntake';
 import users from 'data/mock/users';
-import { SystemIntakeGrbReviewer } from 'queries/types/SystemIntakeGrbReviewer';
+import { MessageProvider } from 'hooks/useMessage';
+import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
 import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'types/graphql-global-types';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import IsGrbViewContext from '../IsGrbViewContext';
 
@@ -16,7 +18,7 @@ import GRBReview from '.';
 
 const user = users[0];
 
-const grbReviewer: SystemIntakeGrbReviewer = {
+const grbReviewer: SystemIntakeGRBReviewer = {
   __typename: 'SystemIntakeGRBReviewer',
   id: 'b62addad-d490-42ab-a170-9b178a2f24eb',
   grbRole: SystemIntakeGRBReviewerRole.CMCS_REP,
@@ -34,9 +36,13 @@ describe('GRB review tab', () => {
   it('renders GRB reviewer view', async () => {
     render(
       <MemoryRouter>
-        <IsGrbViewContext.Provider value>
-          <GRBReview id={systemIntake.id} grbReviewers={[]} />
-        </IsGrbViewContext.Provider>
+        <VerboseMockedProvider>
+          <MessageProvider>
+            <IsGrbViewContext.Provider value>
+              <GRBReview {...systemIntake} grbReviewers={[]} />
+            </IsGrbViewContext.Provider>
+          </MessageProvider>
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
 
@@ -48,15 +54,19 @@ describe('GRB review tab', () => {
   it('renders GRT admin view', async () => {
     render(
       <MemoryRouter>
-        <IsGrbViewContext.Provider value={false}>
-          <GRBReview id={systemIntake.id} grbReviewers={[]} />
-        </IsGrbViewContext.Provider>
+        <VerboseMockedProvider>
+          <MessageProvider>
+            <IsGrbViewContext.Provider value={false}>
+              <GRBReview {...systemIntake} grbReviewers={[]} />
+            </IsGrbViewContext.Provider>
+          </MessageProvider>
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
 
     expect(await screen.findByRole('heading', { name: 'GRB review' }));
 
-    expect(screen.getByRole('link', { name: 'Add a GRB reviewer' }));
+    expect(screen.getByRole('button', { name: 'Add a GRB reviewer' }));
   });
 
   describe('Participants table', () => {
@@ -64,7 +74,7 @@ describe('GRB review tab', () => {
       render(
         <MemoryRouter>
           <IsGrbViewContext.Provider value={false}>
-            <GRBReview id={systemIntake.id} grbReviewers={[grbReviewer]} />
+            <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
           </IsGrbViewContext.Provider>
         </MemoryRouter>
       );
@@ -80,7 +90,7 @@ describe('GRB review tab', () => {
       render(
         <MemoryRouter>
           <IsGrbViewContext.Provider value>
-            <GRBReview id={systemIntake.id} grbReviewers={[grbReviewer]} />
+            <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
           </IsGrbViewContext.Provider>
         </MemoryRouter>
       );

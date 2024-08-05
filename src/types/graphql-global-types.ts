@@ -563,6 +563,13 @@ export interface CreateSystemIntakeDocumentInput {
   otherTypeDescription?: string | null;
 }
 
+export interface CreateSystemIntakeGRBReviewerInput {
+  systemIntakeID: UUID;
+  euaUserId: string;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
+  grbRole: SystemIntakeGRBReviewerRole;
+}
+
 /**
  * The input data used to initialize an IT governance request for a system
  */
@@ -673,6 +680,10 @@ export interface CreateTRBRequestFeedbackInput {
  */
 export interface DeleteSystemIntakeContactInput {
   id: UUID;
+}
+
+export interface DeleteSystemIntakeGRBReviewerInput {
+  reviewerID: UUID;
 }
 
 export interface DeleteTRBRequestFundingSourcesInput {
@@ -1087,6 +1098,12 @@ export interface UpdateSystemIntakeContractDetailsInput {
   costs?: SystemIntakeCostsInput | null;
   annualSpending?: SystemIntakeAnnualSpendingInput | null;
   contract?: SystemIntakeContractInput | null;
+}
+
+export interface UpdateSystemIntakeGRBReviewerInput {
+  reviewerID: UUID;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
+  grbRole: SystemIntakeGRBReviewerRole;
 }
 
 /**

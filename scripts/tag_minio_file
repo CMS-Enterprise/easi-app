@@ -15,14 +15,14 @@ if [[ "$tag" != "CLEAN" ]] && [[ "$tag" != "INFECTED" ]] && [[ -n "$tag" ]]; the
     exit 1
 fi
 
-# Check if docker-compose is installed
-if command -v docker-compose &> /dev/null
+# Check if docker compose is installed
+if command -v docker compose &> /dev/null
 then
-  # docker-compose exists, so we're running on the host machine instead of in a container (presumably on a local machine, not CI),
+  # docker compose exists, so we're running on the host machine instead of in a container (presumably on a local machine, not CI),
   # so use the existing minio_mc service
-  docker-compose run --entrypoint="mc tag set local$bucket_and_file av-status=$tag" minio_mc
+  docker compose run --entrypoint="mc tag set local$bucket_and_file av-status=$tag" minio_mc
 else
-  # docker-compose isn't installed, so we're running inside the Cypress container,
+  # docker compose isn't installed, so we're running inside the Cypress container,
   # so use the mc binary (installed in Dockerfile.cypress)
   /mc tag set "local$bucket_and_file" "av-status=$tag"
 fi

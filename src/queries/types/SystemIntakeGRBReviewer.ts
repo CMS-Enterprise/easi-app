@@ -3,13 +3,13 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeGRBReviewerRole, SystemIntakeGRBReviewerVotingRole } from "./../../types/graphql-global-types";
+import { SystemIntakeGRBReviewerVotingRole, SystemIntakeGRBReviewerRole } from "./../../types/graphql-global-types";
 
 // ====================================================
-// GraphQL fragment: SystemIntakeGrbReviewer
+// GraphQL fragment: SystemIntakeGRBReviewer
 // ====================================================
 
-export interface SystemIntakeGrbReviewer_userAccount {
+export interface SystemIntakeGRBReviewer_userAccount {
   __typename: "UserAccount";
   id: UUID;
   /**
@@ -26,10 +26,10 @@ export interface SystemIntakeGrbReviewer_userAccount {
   email: string;
 }
 
-export interface SystemIntakeGrbReviewer {
+export interface SystemIntakeGRBReviewer {
   __typename: "SystemIntakeGRBReviewer";
   id: UUID;
-  grbRole: SystemIntakeGRBReviewerRole;
   votingRole: SystemIntakeGRBReviewerVotingRole;
-  userAccount: SystemIntakeGrbReviewer_userAccount;
+  grbRole: SystemIntakeGRBReviewerRole;
+  userAccount: SystemIntakeGRBReviewer_userAccount;
 }
