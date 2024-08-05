@@ -14,6 +14,7 @@ import {
 } from 'gql/gen/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import Divider from 'components/shared/Divider';
 import IconButton from 'components/shared/IconButton';
 import TablePagination from 'components/TablePagination';
 import { formatDateLocal, isDateInPast } from 'utils/date';
@@ -135,103 +136,109 @@ const GrbParticipationNeeded = () => {
   if (loading || systemIntakes.length === 0) return null;
 
   return (
-    <div className="bg-primary-lighter padding-4">
-      <div className="display-flex flex-align-start flex-justify">
-        <h2 className="margin-y-0 margin-right-2">
-          {t('homepage.participationNeeded')}
-        </h2>
-        <IconGroups size={4} className="text-primary" />
+    <>
+      <div className="bg-primary-lighter padding-4">
+        <div className="display-flex flex-align-start flex-justify">
+          <h2 className="margin-y-0 margin-right-2">
+            {t('homepage.participationNeeded')}
+          </h2>
+          <IconGroups size={4} className="text-primary" />
+        </div>
+
+        <p className="line-height-body-5 margin-top-1 margin-bottom-3">
+          {t('homepage.participationNeededText')}
+        </p>
+
+        {/* Toggle GRB reviews button */}
+        <IconButton
+          onClick={() => setShowGrbReviews(!showGrbReviews)}
+          icon={showGrbReviews ? <IconVisibilityOff /> : <IconVisiblity />}
+          type="button"
+          unstyled
+        >
+          {showGrbReviews
+            ? t('homepage.hideGrbReviews')
+            : t('homepage.showGrbReviews')}
+        </IconButton>
+
+        {showGrbReviews && (
+          <div className="margin-top-4 margin-bottom-neg-2">
+            <Table bordered={false} fullWidth {...getTableProps()}>
+              <thead>
+                {headerGroups.map(headerGroup => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column, index) => (
+                      <th
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps()
+                        )}
+                        aria-sort={getColumnSortStatus(column)}
+                        scope="col"
+                        className="border-bottom-2px bg-primary-lighter"
+                      >
+                        <Button
+                          type="button"
+                          unstyled
+                          className="width-full display-flex"
+                          {...column.getSortByToggleProps()}
+                        >
+                          <div className="flex-fill text-no-wrap">
+                            {column.render('Header')}
+                          </div>
+                          <div className="position-relative width-205 margin-left-05">
+                            {getHeaderSortIcon(column)}
+                          </div>
+                        </Button>
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody {...getTableBodyProps()}>
+                {page.map(row => {
+                  prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map((cell, index) => {
+                        return (
+                          <td
+                            {...cell.getCellProps()}
+                            className="bg-primary-lighter"
+                          >
+                            {cell.render('Cell')}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+
+            {rows.length > 0 && (
+              <>
+                <TablePagination
+                  {...table}
+                  pageIndex={table.state.pageIndex}
+                  pageSize={table.state.pageSize}
+                  page={[]}
+                  className="desktop:grid-col-fill desktop:padding-bottom-0"
+                />
+
+                <div
+                  className="usa-sr-only usa-table__announcement-region"
+                  aria-live="polite"
+                >
+                  {currentTableSortDescription(headerGroups[0])}
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
 
-      <p className="line-height-body-5 margin-top-1 margin-bottom-3">
-        {t('homepage.participationNeededText')}
-      </p>
-
-      {/* Toggle GRB reviews button */}
-      <IconButton
-        onClick={() => setShowGrbReviews(!showGrbReviews)}
-        icon={showGrbReviews ? <IconVisibilityOff /> : <IconVisiblity />}
-        type="button"
-        unstyled
-      >
-        {showGrbReviews
-          ? t('homepage.hideGrbReviews')
-          : t('homepage.showGrbReviews')}
-      </IconButton>
-
-      {showGrbReviews && (
-        <div className="margin-top-4 margin-bottom-neg-2">
-          <Table bordered={false} fullWidth {...getTableProps()}>
-            <thead>
-              {headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column, index) => (
-                    <th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                      aria-sort={getColumnSortStatus(column)}
-                      scope="col"
-                      className="border-bottom-2px bg-primary-lighter"
-                    >
-                      <Button
-                        type="button"
-                        unstyled
-                        className="width-full display-flex"
-                        {...column.getSortByToggleProps()}
-                      >
-                        <div className="flex-fill text-no-wrap">
-                          {column.render('Header')}
-                        </div>
-                        <div className="position-relative width-205 margin-left-05">
-                          {getHeaderSortIcon(column)}
-                        </div>
-                      </Button>
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {page.map(row => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map((cell, index) => {
-                      return (
-                        <td
-                          {...cell.getCellProps()}
-                          className="bg-primary-lighter"
-                        >
-                          {cell.render('Cell')}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-
-          {rows.length > 0 && (
-            <>
-              <TablePagination
-                {...table}
-                pageIndex={table.state.pageIndex}
-                pageSize={table.state.pageSize}
-                page={[]}
-                className="desktop:grid-col-fill desktop:padding-bottom-0"
-              />
-
-              <div
-                className="usa-sr-only usa-table__announcement-region"
-                aria-live="polite"
-              >
-                {currentTableSortDescription(headerGroups[0])}
-              </div>
-            </>
-          )}
-        </div>
-      )}
-    </div>
+      <Divider className="margin-top-6" />
+    </>
   );
 };
 
