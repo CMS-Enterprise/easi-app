@@ -224,6 +224,8 @@ const RelatedRequestsTable = ({
   rows.map((row: Row<LinkedRequestForTable>) => prepareRow(row));
   return (
     <div>
+      <h2 className="margin-bottom-0">{t('relatedRequests')}</h2>
+
       {tableData.length > state.pageSize && (
         <>
           <GlobalClientFilter
@@ -232,7 +234,6 @@ const RelatedRequestsTable = ({
             tableName={t<string>('relatedRequestsTable.title')}
             className="margin-bottom-4"
           />
-
           <TableResults
             globalFilter={state.globalFilter}
             pageIndex={state.pageIndex}
@@ -323,11 +324,9 @@ const RelatedRequestsTable = ({
           />
         )}
       </div>
-
       {tableData.length === 0 && (
         <em className="text-bold">{t<string>('relatedRequestsTable.empty')}</em>
       )}
-
       <div
         className="usa-sr-only usa-table__announcement-region"
         aria-live="polite"

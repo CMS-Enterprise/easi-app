@@ -115,12 +115,7 @@ const AdditionalInformation = ({
         </>
       )}
 
-      {type === 'itgov' && (
-        <>
-          <h2 className="margin-bottom-0">{t('relatedRequests')}</h2>
-          <RelatedRequestsTable requestID={request.id} />
-        </>
-      )}
+      {type === 'itgov' && <RelatedRequestsTable requestID={request.id} />}
     </div>
   );
 };
