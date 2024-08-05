@@ -373,7 +373,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                                   className="margin-top-2"
                                 >
                                   <Label
-                                    htmlFor={field.name}
+                                    htmlFor={`react-select-${field.name}-input`}
                                     className="text-normal"
                                     required
                                   >
