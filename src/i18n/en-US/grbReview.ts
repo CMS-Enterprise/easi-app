@@ -50,7 +50,9 @@ export default {
     name: 'Name',
     votingRole: 'Voting role',
     grbRole: 'GRB role',
-    actions: 'Actions'
+    actions: 'Actions',
+    noReviewers:
+      'You have not yet added GRB reviewers. Add reviewers using the button above.'
   },
   addAnotherGrbReviewer: 'Add another GRB reviewer',
   closedRequest:

@@ -342,6 +342,12 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
                 })}
               </tbody>
             </Table>
+
+            {rows.length === 0 && (
+              <p className="text-italic margin-top-neg-1">
+                {t('participantsTable.noReviewers')}
+              </p>
+            )}
           </div>
 
           {rows.length > 0 && (
