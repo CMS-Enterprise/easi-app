@@ -115,9 +115,9 @@ const RelatedRequestsTable = ({
         }) => {
           let link: string;
           if (row.original.process === 'TRB') {
-            link = `/trb/task-list/${row.original.id}`;
+            link = `/trb/${row.original.id}/request`;
           } else {
-            link = `/governance-task-list/${row.original.id}`;
+            link = `/governance-review-team/${row.original.id}/intake-request`;
           }
 
           return <UswdsReactLink to={link}>{value}</UswdsReactLink>;
