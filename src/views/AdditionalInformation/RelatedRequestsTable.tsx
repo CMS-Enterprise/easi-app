@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import {
   Cell,
   Column,
@@ -12,6 +13,7 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Button, Table as UswdsTable } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
@@ -24,6 +26,7 @@ import {
   GetSystemIntakeRelatedRequests,
   GetSystemIntakeRelatedRequestsVariables
 } from 'queries/types/GetSystemIntakeRelatedRequests';
+import { AppState } from 'reducers/rootReducer';
 import { formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
 import globalFilterCellText from 'utils/globalFilterCellText';
@@ -33,6 +36,7 @@ import {
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
+import user from 'utils/user';
 import { NotFoundPartial } from 'views/NotFound';
 
 import { LinkedRequestForTable } from './linkedRequestForTable';
@@ -45,7 +49,7 @@ const RelatedRequestsTable = ({
   pageSize?: number;
 }) => {
   const { t } = useTranslation('admin');
-  // make api call
+
   const { loading, error, data } = useQuery<
     GetSystemIntakeRelatedRequests,
     GetSystemIntakeRelatedRequestsVariables
@@ -53,6 +57,15 @@ const RelatedRequestsTable = ({
     variables: { systemIntakeID },
     fetchPolicy: 'cache-and-network'
   });
+
+  const { groups } = useSelector((state: AppState) => state.auth);
+
+  const flags = useFlags();
+
+  const isAdmin = useMemo(() => user.isTrbAdmin(groups, flags), [
+    flags,
+    groups
+  ]);
 
   const tableData: LinkedRequestForTable[] = useMemo(() => {
     if (error !== undefined) {
@@ -114,7 +127,12 @@ const RelatedRequestsTable = ({
         }: {
           row: Row<LinkedRequestForTable>;
           value: LinkedRequestForTable['projectTitle'];
-        }) => {
+        }): string | JSX.Element => {
+          // non-admins cannot click through the request titles
+          if (!isAdmin) {
+            return value;
+          }
+
           let link: string;
           if (row.original.process === 'TRB') {
             link = `/trb/${row.original.id}/request`;
@@ -165,7 +183,7 @@ const RelatedRequestsTable = ({
         }): string => formatDateLocal(value, 'MM/dd/yyyy')
       }
     ];
-  }, [t]);
+  }, [isAdmin, t]);
 
   const {
     getTableProps,

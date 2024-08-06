@@ -1,19 +1,22 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 
 import { systemIntake } from 'data/mock/systemIntake';
 import GetSystemIntakeRelatedRequestsQuery from 'queries/GetSystemIntakeRelatedRequestsQuery';
-
 import {
   SystemIntakeDecisionState,
   TRBRequestStatus
-} from '../../types/graphql-global-types';
+} from 'types/graphql-global-types';
+import easiMockStore from 'utils/testing/easiMockStore';
 
 import RelatedRequestsTable from './RelatedRequestsTable';
 
 describe('Related Requests table', () => {
+  const mockStore = easiMockStore();
+
   it('renders empty Related Requests table', async () => {
     const mocks = [
       {
@@ -37,9 +40,11 @@ describe('Related Requests table', () => {
     ];
     render(
       <MemoryRouter>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <RelatedRequestsTable systemIntakeID={systemIntake.id} />
-        </MockedProvider>
+        <Provider store={mockStore}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+          </MockedProvider>
+        </Provider>
       </MemoryRouter>
     );
 
