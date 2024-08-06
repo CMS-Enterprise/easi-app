@@ -166,6 +166,7 @@ type CreateSystemIntakeDocumentInput struct {
 	RequestID            uuid.UUID                      `json:"requestID"`
 	FileData             graphql.Upload                 `json:"fileData"`
 	DocumentType         SystemIntakeDocumentCommonType `json:"documentType"`
+	Version              SystemIntakeDocumentVersion    `json:"version"`
 	OtherTypeDescription *string                        `json:"otherTypeDescription,omitempty"`
 }
 

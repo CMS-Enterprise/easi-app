@@ -738,7 +738,7 @@ func main() {
 	createSystemIntake(ctx, &intakeID, store, "USR1", "User One", models.SystemIntakeRequestTypeNEW)
 
 	intakeID = uuid.MustParse("d2b96357-3a76-42e3-82ab-978a20f5acad")
-	makeSystemIntake(ctx, "initial form filled but not yet submitted", nil, mock.PrincipalUser, store)
+	makeSystemIntake(ctx, "initial form filled but not yet submitted", &intakeID, mock.PrincipalUser, store)
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
 

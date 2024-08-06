@@ -55,9 +55,27 @@ const intake = {
     noDocumentsAlert:
       'The original requester did not upload any additional documentation to this request. If the Governance Team needs any supporting documentation in order to fully process this request, contact the requester.',
     type: {
-      SOO_SOW: 'SOO or SOW',
-      DRAFT_ICGE: 'Draft ICGE',
+      SOO_SOW:
+        'Statement of Objectives (SOO), Statement of Work (SOW), Performance Work Statement (PWS), or other contracting document',
+      DRAFT_IGCE: 'Draft Independent Government Cost Estimate (IGCE)',
+      ACQUISITION_PLAN_OR_STRATEGY:
+        'Acquisition Plan (AP) or Acquisition Strategy (AS)',
+      REQUEST_FOR_ADDITIONAL_FUNDING: 'Request for Additional Funding (RAF)',
+      MEETING_MINUTES: 'Meeting Minutes',
       OTHER: 'Other'
+    },
+    abbreviatedType: {
+      SOO_SOW: 'SOO, SOW, PWS, or other contracting document',
+      DRAFT_IGCE: 'Draft IGCE',
+      ACQUISITION_PLAN_OR_STRATEGY: 'AP or AS',
+      REQUEST_FOR_ADDITIONAL_FUNDING: 'RAF',
+      MEETING_MINUTES: 'Meeting Minutes',
+      OTHER: 'Other'
+    },
+    versionLabel: 'What is the version of this document?',
+    version: {
+      CURRENT: 'Current',
+      HISTORICAL: 'Historical'
     }
   },
   submission: {

@@ -495,11 +495,12 @@ func createSystemIntakeDocument(
 ) *models.SystemIntakeDocument {
 	documentToCreate := &models.SystemIntakeDocument{
 		SystemIntakeRequestID: intake.ID,
-		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftICGE,
+		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftIGCE,
+		Version:               models.SystemIntakeDocumentVersionCURRENT,
 		FileName:              "create_and_get.pdf",
-		Bucket:                "bukkit",
-		S3Key:                 uuid.NewString(),
-		UploaderRole:          models.RequesterUploaderRole,
+		// Bucket:                "bukkit",
+		// S3Key:                 uuid.NewString(),
+		// UploaderRole:          models.RequesterUploaderRole,
 	}
 	documentToCreate.CreatedBy = mock.PrincipalUser
 	documentToCreate.CreatedAt = time.Now()
@@ -509,6 +510,7 @@ func createSystemIntakeDocument(
 	gqlInput := models.CreateSystemIntakeDocumentInput{
 		RequestID:            documentToCreate.SystemIntakeRequestID,
 		DocumentType:         documentToCreate.CommonDocumentType,
+		Version:              documentToCreate.Version,
 		OtherTypeDescription: &documentToCreate.OtherType,
 		FileData: graphql.Upload{
 			File:        fileToUpload,

@@ -99,6 +99,7 @@ func CreateSystemIntakeDocument(
 
 	documentDatabaseRecord := models.SystemIntakeDocument{
 		SystemIntakeRequestID: input.RequestID,
+		Version:               input.Version,
 		CommonDocumentType:    input.DocumentType,
 		FileName:              input.FileData.Filename,
 		S3Key:                 s3Key,
