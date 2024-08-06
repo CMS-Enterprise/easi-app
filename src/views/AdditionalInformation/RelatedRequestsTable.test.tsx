@@ -101,7 +101,7 @@ describe('Related Requests table', () => {
       }
     ];
 
-    render(
+    const { queryByText } = render(
       <MemoryRouter>
         <MockedProvider mocks={mocks}>
           <Provider store={mockStore}>
@@ -116,9 +116,9 @@ describe('Related Requests table', () => {
     expect(await screen.findByRole('heading', { name: 'Related requests' }));
 
     // this should NOT be in rendered if there is incoming table data
-    expect(() =>
-      screen.getByText('There are no additional requests linked to this system')
-    ).toThrow();
+    expect(
+      queryByText('There are no additional requests linked to this system')
+    ).not.toBeInTheDocument();
   });
 
   it('should provide clickable admin link if user is admin', async () => {
@@ -221,7 +221,7 @@ describe('Related Requests table', () => {
       }
     ];
 
-    render(
+    const { queryByRole } = render(
       <MemoryRouter>
         <MockedProvider mocks={mocks}>
           <Provider store={mockStore}>
@@ -233,9 +233,11 @@ describe('Related Requests table', () => {
       </MemoryRouter>
     );
 
-    expect(() =>
-      screen.getByRole('link', { name: 'related intake 1' })
-    ).toThrow();
-    expect(() => screen.getByRole('link', { name: 'related trb 1' })).toThrow();
+    expect(
+      queryByRole('link', { name: 'related intake 1' })
+    ).not.toBeInTheDocument();
+    expect(
+      queryByRole('link', { name: 'related trb 1' })
+    ).not.toBeInTheDocument();
   });
 });
