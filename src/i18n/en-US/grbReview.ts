@@ -8,8 +8,8 @@ export const grbReviewerVotingRolesTranslation: Record<
   string
 > = {
   VOTING: 'Voting',
-  ALTERNATE: 'Alternate',
-  NON_VOTING: 'Non-voting'
+  NON_VOTING: 'Non-voting',
+  ALTERNATE: 'Alternate'
 };
 
 export const grbReviewerRolesTranslation: Record<
@@ -46,6 +46,14 @@ export default {
   viewIntakeRequest: 'View Intake Request',
   viewOtherDocuments: 'View other supporting documents',
   addGrbReviewer: 'Add a GRB reviewer',
+  participantsTable: {
+    name: 'Name',
+    votingRole: 'Voting role',
+    grbRole: 'GRB role',
+    actions: 'Actions',
+    noReviewers:
+      'You have not yet added GRB reviewers. Add reviewers using the button above.'
+  },
   addAnotherGrbReviewer: 'Add another GRB reviewer',
   closedRequest:
     'This request is closed. Please <a>re-open</a> it before adding additional reviewers',

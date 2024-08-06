@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { systemIntake } from 'data/mock/systemIntake';
@@ -210,7 +210,13 @@ describe('GRB reviewer form', () => {
     expect(submitButton).not.toBeDisabled();
     userEvent.click(submitButton);
 
-    expect(await screen.findByText('Jerry Seinfeld (Voting) - CMCS Rep'));
+    const reviewerRow = await screen.findByTestId(
+      `grbReviewer-${contact.euaUserId}`
+    );
+
+    expect(within(reviewerRow).getByRole('cell', { name: contact.commonName }));
+    expect(within(reviewerRow).getByRole('cell', { name: 'Voting' }));
+    expect(within(reviewerRow).getByRole('cell', { name: 'CMCS Rep' }));
   });
 
   it('edits a GRB reviewer', async () => {
@@ -277,6 +283,12 @@ describe('GRB reviewer form', () => {
     expect(submitButton).not.toBeDisabled();
     userEvent.click(submitButton);
 
-    expect(await screen.findByText('Jerry Seinfeld (Non-voting) - QIO Rep'));
+    const reviewerRow = await screen.findByTestId(
+      `grbReviewer-${contact.euaUserId}`
+    );
+
+    expect(within(reviewerRow).getByRole('cell', { name: contact.commonName }));
+    expect(within(reviewerRow).getByRole('cell', { name: 'Non-voting' }));
+    expect(within(reviewerRow).getByRole('cell', { name: 'QIO Rep' }));
   });
 });
