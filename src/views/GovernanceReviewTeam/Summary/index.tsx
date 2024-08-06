@@ -186,7 +186,7 @@ const RequestSummary = ({
           </BreadcrumbBar>
 
           {/* Request summary */}
-          <div className="display-flex flex-align-end margin-bottom-2">
+          <div className="display-flex flex-align-end flex-wrap margin-bottom-2">
             <h2 className="margin-top-05 margin-bottom-0 margin-right-2">
               {requestName}
             </h2>
