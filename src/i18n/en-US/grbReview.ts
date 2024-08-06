@@ -100,5 +100,14 @@ export default {
     text:
       'Removing this reviewer will remove their access to documentation about this request. You may add them again at a later date if necessary.',
     remove: 'Remove reviewer'
+  },
+  homepage: {
+    participationNeeded: 'GRB participation needed',
+    participationNeededText:
+      'The Governance Admin Team asks that the Governance Review Board (GRB) review and vote on the merits of IT projects. Depending on the project and timeframe, this may done asynchronously or during a regular GRB review meeting. Use the button below to access details for IT Governance requests that require a GRB review. ',
+    showGrbReviews: 'Show GRB reviews',
+    hideGrbReviews: 'Hide GRB reviews',
+    grbDate: 'GRB date',
+    noDateSet: 'No date set'
   }
 };
