@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -30,6 +30,7 @@ import {
 } from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
+import getSystemOrContractName from 'utils/getContractOrSystemName';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { translateRequestType } from 'utils/systemIntake';
 
@@ -138,25 +139,6 @@ const RequestSummary = ({
     returnObjects: true
   });
 
-  /** Return linked system, service, or contract name */
-  const systemOrContractName = useMemo(() => {
-    if (relationType === RequestRelationType.EXISTING_SERVICE && contractName) {
-      return contractName;
-    }
-
-    if (relationType === RequestRelationType.EXISTING_SYSTEM) {
-      if (systems.length === 1) {
-        return systems[0].name;
-      }
-      return t('systemNamePlural', {
-        name: systems[0].name,
-        count: systems.length - 1
-      });
-    }
-
-    return t('noneSpecified');
-  }, [contractName, systems, relationType, t]);
-
   return (
     <div className="easi-admin-summary">
       <section className="easi-admin-summary__request-details bg-primary-darker">
@@ -208,7 +190,7 @@ const RequestSummary = ({
                 {t('systemServiceContractName')}
               </h5>
               <h4 className="margin-top-05 margin-bottom-2">
-                {systemOrContractName}
+                {getSystemOrContractName(relationType, contractName, systems)}
               </h4>
             </Grid>
 
