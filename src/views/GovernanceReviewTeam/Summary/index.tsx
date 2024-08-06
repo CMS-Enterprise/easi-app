@@ -155,7 +155,7 @@ const RequestSummary = ({
                 {t('header:home')}
               </BreadcrumbLink>
             </Breadcrumb>
-            <Breadcrumb current>{t('governanceRequestDetails')}</Breadcrumb>
+            <Breadcrumb current>{t('itGovernanceRequestDetails')}</Breadcrumb>
           </BreadcrumbBar>
 
           {/* Request summary */}
