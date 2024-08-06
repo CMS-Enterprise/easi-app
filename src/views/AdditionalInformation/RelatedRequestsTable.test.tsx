@@ -12,6 +12,8 @@ import {
 } from 'types/graphql-global-types';
 import easiMockStore from 'utils/testing/easiMockStore';
 
+import { MessageProvider } from '../../hooks/useMessage';
+
 import RelatedRequestsTable from './RelatedRequestsTable';
 
 describe('Related Requests table', () => {
@@ -40,11 +42,13 @@ describe('Related Requests table', () => {
     ];
     render(
       <MemoryRouter>
-        <Provider store={mockStore}>
-          <MockedProvider mocks={mocks} addTypename={false}>
-            <RelatedRequestsTable systemIntakeID={systemIntake.id} />
-          </MockedProvider>
-        </Provider>
+        <MockedProvider mocks={mocks}>
+          <Provider store={mockStore}>
+            <MessageProvider>
+              <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+            </MessageProvider>
+          </Provider>
+        </MockedProvider>
       </MemoryRouter>
     );
 
@@ -95,8 +99,12 @@ describe('Related Requests table', () => {
     ];
     render(
       <MemoryRouter>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+        <MockedProvider mocks={mocks}>
+          <Provider store={mockStore}>
+            <MessageProvider>
+              <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+            </MessageProvider>
+          </Provider>
         </MockedProvider>
       </MemoryRouter>
     );
