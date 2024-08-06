@@ -101,7 +101,7 @@ describe('Related Requests table', () => {
       }
     ];
 
-    const { queryByText } = render(
+    render(
       <MemoryRouter>
         <MockedProvider mocks={mocks}>
           <Provider store={mockStore}>
@@ -117,7 +117,9 @@ describe('Related Requests table', () => {
 
     // this should NOT be in rendered if there is incoming table data
     expect(
-      queryByText('There are no additional requests linked to this system')
+      screen.queryByText(
+        'There are no additional requests linked to this system'
+      )
     ).not.toBeInTheDocument();
   });
 
@@ -221,7 +223,7 @@ describe('Related Requests table', () => {
       }
     ];
 
-    const { queryByRole } = render(
+    render(
       <MemoryRouter>
         <MockedProvider mocks={mocks}>
           <Provider store={mockStore}>
@@ -234,10 +236,10 @@ describe('Related Requests table', () => {
     );
 
     expect(
-      queryByRole('link', { name: 'related intake 1' })
+      screen.queryByRole('link', { name: 'related intake 1' })
     ).not.toBeInTheDocument();
     expect(
-      queryByRole('link', { name: 'related trb 1' })
+      screen.queryByRole('link', { name: 'related trb 1' })
     ).not.toBeInTheDocument();
   });
 });
