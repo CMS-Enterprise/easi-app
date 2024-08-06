@@ -1,3 +1,4 @@
+import { SystemIntakeWithReviewRequested } from 'gql/gen/types/SystemIntakeWithReviewRequested';
 import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
@@ -572,3 +573,64 @@ export const getGovernanceTaskListQuery = (
     }
   }
 });
+
+const currentYear = DateTime.local().year;
+export const systemIntakesWithReviewRequested: SystemIntakeWithReviewRequested[] = [
+  {
+    id: 'a5689bec-e4cf-4f2b-a7de-72020e8d65be',
+    requestName: 'With GRB scheduled',
+    requesterName: users[3].commonName,
+    requesterComponent: 'Office of Enterprise Data and Analytics',
+    grbDate: `${currentYear + 2}-10-02T03:11:24.478056Z`,
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '5af245bc-fc54-4677-bab1-1b3e798bb43c',
+    requestName: 'System Intake with GRB Reviewers',
+    requesterName: 'User One',
+    requesterComponent: 'Office of the Actuary',
+    grbDate: '2020-10-08T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Edits requested on initial request form',
+    requesterName: users[0].commonName,
+    requesterComponent: 'Federal Coordinated Health Care Office',
+    grbDate: null,
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Mock System Intake 1',
+    requesterName: users[1].commonName,
+    requesterComponent: 'Office of Communications',
+    grbDate: '2024-03-29T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Mock System Intake 2',
+    requesterName: users[2].commonName,
+    requesterComponent: 'Office of the Actuary',
+    grbDate: `${currentYear + 1}-06-09T03:11:24.478056Z`,
+    __typename: 'SystemIntake'
+  },
+
+  {
+    id: '20cbcfbf-6459-4c96-943b-e76b83122dbf',
+    requestName: 'Closable Request',
+    requesterName: users[3].commonName,
+    requesterComponent: 'Office of Information Technology',
+    grbDate: '2023-01-18T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Mock System Intake 3',
+    requesterName: users[2].commonName,
+    requesterComponent: 'Office of Information Technology',
+    grbDate: null,
+    __typename: 'SystemIntake'
+  }
+];
