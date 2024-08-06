@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 const GetSystemIntakeRelatedRequestsQuery = gql`
-  query GetSystemIntakeRelatedRequestsQuery($systemIntakeID: UUID!) {
+  query GetSystemIntakeRelatedRequests($systemIntakeID: UUID!) {
     systemIntake(id: $systemIntakeID) {
       id
       relatedIntakes {

@@ -33,7 +33,7 @@ describe('Related Requests table', () => {
     render(
       <MemoryRouter>
         <MockedProvider mocks={mocks} addTypename={false}>
-          <RelatedRequestsTable requestID={systemIntake.id} />
+          <RelatedRequestsTable systemIntakeID={systemIntake.id} />
         </MockedProvider>
       </MemoryRouter>
     );

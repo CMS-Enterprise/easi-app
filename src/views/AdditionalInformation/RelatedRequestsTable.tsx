@@ -20,8 +20,10 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import GetSystemIntakeRelatedRequestsQuery from 'queries/GetSystemIntakeRelatedRequestsQuery';
-import { GetSystemIntake } from 'queries/types/GetSystemIntake';
-import { GetSystemIntakeRelatedRequestsVariables } from 'queries/types/GetSystemIntakeRelatedRequests';
+import {
+  GetSystemIntakeRelatedRequests,
+  GetSystemIntakeRelatedRequestsVariables
+} from 'queries/types/GetSystemIntakeRelatedRequests';
 import { formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
 import globalFilterCellText from 'utils/globalFilterCellText';
@@ -36,19 +38,19 @@ import { NotFoundPartial } from 'views/NotFound';
 import { LinkedRequestForTable } from './linkedRequestForTable';
 
 const RelatedRequestsTable = ({
-  requestID,
+  systemIntakeID,
   pageSize = 10
 }: {
-  requestID: string;
+  systemIntakeID: string;
   pageSize?: number;
 }) => {
   const { t } = useTranslation('admin');
   // make api call
   const { loading, error, data } = useQuery<
-    GetSystemIntake,
+    GetSystemIntakeRelatedRequests,
     GetSystemIntakeRelatedRequestsVariables
   >(GetSystemIntakeRelatedRequestsQuery, {
-    variables: { systemIntakeID: requestID },
+    variables: { systemIntakeID },
     fetchPolicy: 'cache-and-network'
   });
 

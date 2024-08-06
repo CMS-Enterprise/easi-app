@@ -115,7 +115,7 @@ const AdditionalInformation = ({
         </>
       )}
 
-      {type === 'itgov' && <RelatedRequestsTable requestID={request.id} />}
+      {type === 'itgov' && <RelatedRequestsTable systemIntakeID={request.id} />}
     </div>
   );
 };
