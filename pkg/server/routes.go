@@ -291,15 +291,6 @@ func (s *Server) routes(
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
 	api.Handle("/business_case", businessCaseHandler.Handle())
 
-	metricsHandler := handlers.NewSystemIntakeMetricsHandler(
-		base,
-		services.NewFetchMetrics(
-			serviceConfig,
-			store.FetchSystemIntakeMetrics,
-		),
-	)
-	api.Handle("/metrics", metricsHandler.Handle())
-
 	actionHandler := handlers.NewActionHandler(
 		base,
 		services.NewTakeAction(
@@ -328,7 +319,8 @@ func (s *Server) routes(
 					emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
 					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
 					publisher.PublishBusinessCase,
-				), models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
+				),
+				models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
 					serviceConfig,
 					services.AuthorizeUserIsIntakeRequester,
 					store.UpdateSystemIntake,
