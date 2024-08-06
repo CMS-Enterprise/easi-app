@@ -18,6 +18,10 @@ import {
   GetSystemIntakeContactsQuery as GetSystemIntakeContactsType,
   GetSystemIntakeContactsQueryVariables
 } from 'queries/types/GetSystemIntakeContactsQuery';
+import {
+  GetSystemIntakeRelatedRequests,
+  GetSystemIntakeRelatedRequestsVariables
+} from 'queries/types/GetSystemIntakeRelatedRequests';
 import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'queries/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
@@ -46,6 +50,8 @@ import {
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
+
+import GetSystemIntakeRelatedRequestsQuery from '../../queries/GetSystemIntakeRelatedRequestsQuery';
 
 import users from './users';
 
@@ -524,6 +530,28 @@ export const getSystemIntakeContactsQuery: MockedQuery<
       systemIntakeContacts: {
         __typename: 'SystemIntakeContactsPayload',
         systemIntakeContacts: [requester, businessOwner, isso]
+      }
+    }
+  }
+};
+
+export const getSystemIntakeRelatedRequests: MockedQuery<
+  GetSystemIntakeRelatedRequests,
+  GetSystemIntakeRelatedRequestsVariables
+> = {
+  request: {
+    query: GetSystemIntakeRelatedRequestsQuery,
+    variables: {
+      systemIntakeID: systemIntakeId
+    }
+  },
+  result: {
+    data: {
+      systemIntake: {
+        __typename: 'SystemIntake',
+        id: systemIntakeId,
+        relatedIntakes: [],
+        relatedTRBRequests: []
       }
     }
   }

@@ -19,7 +19,7 @@ import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
-import GetSystemIntakeRelatedRequests from 'queries/GetSystemIntakeRelatedRequests';
+import GetSystemIntakeRelatedRequestsQuery from 'queries/GetSystemIntakeRelatedRequestsQuery';
 import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 import { GetSystemIntakeRelatedRequestsVariables } from 'queries/types/GetSystemIntakeRelatedRequests';
 import { formatDateLocal } from 'utils/date';
@@ -47,7 +47,7 @@ const RelatedRequestsTable = ({
   const { loading, error, data } = useQuery<
     GetSystemIntake,
     GetSystemIntakeRelatedRequestsVariables
-  >(GetSystemIntakeRelatedRequests, {
+  >(GetSystemIntakeRelatedRequestsQuery, {
     variables: { systemIntakeID: requestID },
     fetchPolicy: 'cache-and-network'
   });
