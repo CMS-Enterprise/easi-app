@@ -6,10 +6,15 @@ import { render, screen } from '@testing-library/react';
 import { systemIntake } from 'data/mock/systemIntake';
 import GetSystemIntakeRelatedRequestsQuery from 'queries/GetSystemIntakeRelatedRequestsQuery';
 
+import {
+  SystemIntakeDecisionState,
+  TRBRequestStatus
+} from '../../types/graphql-global-types';
+
 import RelatedRequestsTable from './RelatedRequestsTable';
 
 describe('Related Requests table', () => {
-  it('renders Related Requests table', async () => {
+  it('renders empty Related Requests table', async () => {
     const mocks = [
       {
         request: {
@@ -39,5 +44,63 @@ describe('Related Requests table', () => {
     );
 
     expect(await screen.findByRole('heading', { name: 'Related requests' }));
+    expect(
+      await screen.findByText(
+        'There are no additional requests linked to this system'
+      )
+    );
+  });
+
+  it('renders Related Requests table with data', async () => {
+    const mocks = [
+      {
+        request: {
+          query: GetSystemIntakeRelatedRequestsQuery,
+          variables: {
+            systemIntakeID: systemIntake.id
+          }
+        },
+        result: {
+          data: {
+            systemIntake: {
+              __typename: 'SystemIntake',
+              id: systemIntake.id,
+              relatedIntakes: [
+                {
+                  id: '1',
+                  requestName: 'related intake 1',
+                  contractNumbers: ['1', '2'],
+                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  submittedAt: new Date()
+                }
+              ],
+              relatedTRBRequests: [
+                {
+                  id: '2',
+                  name: 'related trb 1',
+                  contractNumbers: ['3', '4'],
+                  status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
+                  createdAt: new Date()
+                }
+              ]
+            }
+          }
+        }
+      }
+    ];
+    render(
+      <MemoryRouter>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByRole('heading', { name: 'Related requests' }));
+
+    // this should NOT be in rendered if there is incoming table data
+    expect(() =>
+      screen.getByText('There are no additional requests linked to this system')
+    ).toThrow();
   });
 });
