@@ -99,18 +99,11 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
     <MainContent className="easi-grt" data-testid="grt-request-overview">
       {systemIntake && !fullPageLayout && (
         <Summary
-          id={systemIntake.id}
-          requester={systemIntake.requester}
+          {...systemIntake}
           requestName={systemIntake.requestName || ''}
-          requestType={systemIntake.requestType}
-          statusAdmin={systemIntake.statusAdmin}
-          adminLead={systemIntake.adminLead}
-          submittedAt={systemIntake.submittedAt}
-          lcid={systemIntake.lcid}
           contractNumbers={
             systemIntake?.contractNumbers?.map(c => c.contractNumber) || []
           }
-          state={systemIntake?.state}
         />
       )}
       {!fullPageLayout && (

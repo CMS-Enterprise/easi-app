@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import users from 'data/mock/users';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import {
+  RequestRelationType,
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatusAdmin
@@ -14,7 +15,7 @@ import {
 
 import IsGrbViewContext from '../IsGrbViewContext';
 
-import Summary from '.';
+import Summary, { RequestSummaryProps } from '.';
 
 vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
@@ -40,7 +41,7 @@ const requester: Requester = {
   component: 'Office of Information Technology'
 };
 
-const summaryProps = {
+const summaryProps: RequestSummaryProps = {
   id: 'ccdfdcf5-5085-4521-9f77-fa1ea324502b',
   requestName: 'Request Name',
   requestType: SystemIntakeRequestType.NEW,
@@ -50,7 +51,10 @@ const summaryProps = {
   lcid: null,
   requester,
   contractNumbers: ['123456'],
-  state: SystemIntakeState.OPEN
+  state: SystemIntakeState.OPEN,
+  relationType: RequestRelationType.NEW_SYSTEM,
+  contractName: null,
+  systems: []
 };
 
 describe('The GRT Review page', () => {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -20,9 +20,11 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import StateTag from 'components/StateTag';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
+import { SystemIntake_systems as System } from 'queries/types/SystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
 import {
+  RequestRelationType,
   SystemIntakeState,
   SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
@@ -35,7 +37,7 @@ import IsGrbViewContext from '../IsGrbViewContext';
 
 import './index.scss';
 
-type RequestSummaryProps = {
+export type RequestSummaryProps = {
   id: string;
   requester: Requester;
   requestName: string;
@@ -46,6 +48,9 @@ type RequestSummaryProps = {
   lcid: string | null;
   contractNumbers: string[];
   state: SystemIntakeState;
+  contractName: string | null;
+  relationType: RequestRelationType | null;
+  systems: System[];
 };
 
 const RequestSummary = ({
@@ -58,7 +63,10 @@ const RequestSummary = ({
   submittedAt,
   lcid,
   contractNumbers = [],
-  state
+  state,
+  contractName,
+  relationType,
+  systems
 }: RequestSummaryProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const [isModalOpen, setModalOpen] = useState(false);
@@ -130,6 +138,25 @@ const RequestSummary = ({
     returnObjects: true
   });
 
+  /** Return linked system, service, or contract name */
+  const systemOrContractName = useMemo(() => {
+    if (relationType === RequestRelationType.EXISTING_SERVICE && contractName) {
+      return contractName;
+    }
+
+    if (relationType === RequestRelationType.EXISTING_SYSTEM) {
+      if (systems.length === 1) {
+        return systems[0].name;
+      }
+      return t('systemNamePlural', {
+        name: systems[0].name,
+        count: systems.length - 1
+      });
+    }
+
+    return t('noneSpecified');
+  }, [contractName, systems, relationType, t]);
+
   return (
     <div className="easi-admin-summary">
       <section className="easi-admin-summary__request-details bg-primary-darker">
@@ -159,7 +186,16 @@ const RequestSummary = ({
           </BreadcrumbBar>
 
           {/* Request summary */}
-          <h2 className="margin-top-05 margin-bottom-2">{requestName}</h2>
+          <div className="display-flex flex-align-end margin-bottom-2">
+            <h2 className="margin-top-05 margin-bottom-0 margin-right-2">
+              {requestName}
+            </h2>
+            <p className="margin-y-05 text-primary-light">
+              {t('submittedOn', {
+                date: formatDateLocal(submittedAt, 'MM/dd/yyyy')
+              })}
+            </p>
+          </div>
 
           <Grid row gap>
             <Grid tablet={{ col: 8 }}>
@@ -169,12 +205,10 @@ const RequestSummary = ({
               </h4>
 
               <h5 className="text-normal margin-y-0">
-                {t('intake:review.contractNumber')}
+                {t('systemServiceContractName')}
               </h5>
               <h4 className="margin-top-05 margin-bottom-2">
-                {/* TODO: (Sam) review */}
-                {contractNumbers.join(', ') ||
-                  t('intake:review.noContractNumber')}
+                {systemOrContractName}
               </h4>
             </Grid>
 
@@ -190,12 +224,11 @@ const RequestSummary = ({
               </h4>
 
               <h5 className="text-normal margin-y-0">
-                {t('intake:fields.submissionDate')}
+                {t('intake:review.contractNumber')}
               </h5>
               <h4 className="margin-top-05 margin-bottom-2">
-                {submittedAt
-                  ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
-                  : 'N/A'}
+                {/* TODO: (Sam) review */}
+                {contractNumbers.join(', ') || t('noneSpecified')}
               </h4>
             </Grid>
           </Grid>

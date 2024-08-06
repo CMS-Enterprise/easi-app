@@ -298,8 +298,12 @@ const governanceReviewTeam = {
   },
   governanceRequestDetails: 'Governance request details',
   itGovernanceRequestDetails: 'IT Governance request details',
+  systemServiceContractName: 'System, service, or contract name',
+  noneSpecified: 'None specified',
   actions: 'Actions',
+  submittedOn: 'Submitted on {{date}}',
   requestType: 'Request type',
+  systemNamePlural: '{{name}}, +{{count}} more',
   status: {
     label: 'Status',
     open: 'Open',
