@@ -498,9 +498,6 @@ func createSystemIntakeDocument(
 		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftIGCE,
 		Version:               models.SystemIntakeDocumentVersionCURRENT,
 		FileName:              "create_and_get.pdf",
-		// Bucket:                "bukkit",
-		// S3Key:                 uuid.NewString(),
-		// UploaderRole:          models.RequesterUploaderRole,
 	}
 	documentToCreate.CreatedBy = mock.PrincipalUser
 	documentToCreate.CreatedAt = time.Now()
