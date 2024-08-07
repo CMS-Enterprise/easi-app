@@ -1,15 +1,15 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
-import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
+import {
+  SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewerRole,
+  SystemIntakeGRBReviewerVotingRole
+} from 'gql/gen/graphql';
 
 import { systemIntake } from 'data/mock/systemIntake';
 import users from 'data/mock/users';
 import { MessageProvider } from 'hooks/useMessage';
-import {
-  SystemIntakeGRBReviewerRole,
-  SystemIntakeGRBReviewerVotingRole
-} from 'types/graphql-global-types';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import IsGrbViewContext from '../IsGrbViewContext';
