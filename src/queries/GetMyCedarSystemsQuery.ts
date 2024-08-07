@@ -13,6 +13,7 @@ export default gql`
       systemMaintainerOrg
       systemMaintainerOrgComp
       isBookmarked
+      atoExpirationDate
     }
   }
 `;
