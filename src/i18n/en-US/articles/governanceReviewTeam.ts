@@ -297,8 +297,13 @@ const governanceReviewTeam = {
       'Feedback and recommendations have moved! Use the Feedback tab in the navigation to the left to view feedback and recommendations that have been sent to the requester and project team.'
   },
   governanceRequestDetails: 'Governance request details',
+  itGovernanceRequestDetails: 'IT Governance request details',
+  systemServiceContractName: 'System, service, or contract name',
+  noneSpecified: 'None specified',
   actions: 'Actions',
+  submittedOn: 'Submitted on {{date}}',
   requestType: 'Request type',
+  systemNamePlural: '{{name}}, +{{count}} more',
   status: {
     label: 'Status',
     open: 'Open',
