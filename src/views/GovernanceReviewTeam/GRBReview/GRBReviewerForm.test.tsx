@@ -1,27 +1,21 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   CreateSystemIntakeGRBReviewerDocument,
+  CreateSystemIntakeGRBReviewerMutation,
+  CreateSystemIntakeGRBReviewerMutationVariables,
   GetSystemIntakeGRBReviewersDocument,
+  GetSystemIntakeGRBReviewersQuery,
+  GetSystemIntakeGRBReviewersQueryVariables,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
-  UpdateSystemIntakeGRBReviewerDocument
+  UpdateSystemIntakeGRBReviewerDocument,
+  UpdateSystemIntakeGRBReviewerMutation,
+  UpdateSystemIntakeGRBReviewerMutationVariables
 } from 'gql/gen/graphql';
-import {
-  CreateSystemIntakeGRBReviewer,
-  CreateSystemIntakeGRBReviewerVariables
-} from 'gql/gen/types/CreateSystemIntakeGRBReviewer';
-import {
-  GetSystemIntakeGRBReviewers,
-  GetSystemIntakeGRBReviewersVariables
-} from 'gql/gen/types/GetSystemIntakeGRBReviewers';
-import {
-  UpdateSystemIntakeGRBReviewer,
-  UpdateSystemIntakeGRBReviewerVariables
-} from 'gql/gen/types/UpdateSystemIntakeGRBReviewer';
 
 import { systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
@@ -82,8 +76,8 @@ const cedarContactsQuery = (
 });
 
 const createSystemIntakeGRBReviewerQuery: MockedQuery<
-  CreateSystemIntakeGRBReviewer,
-  CreateSystemIntakeGRBReviewerVariables
+  CreateSystemIntakeGRBReviewerMutation,
+  CreateSystemIntakeGRBReviewerMutationVariables
 > = {
   request: {
     query: CreateSystemIntakeGRBReviewerDocument,
@@ -98,14 +92,15 @@ const createSystemIntakeGRBReviewerQuery: MockedQuery<
   },
   result: {
     data: {
+      __typename: 'Mutation',
       createSystemIntakeGRBReviewer: grbReviewer
     }
   }
 };
 
 const updateSystemIntakeGRBReviewerQuery: MockedQuery<
-  UpdateSystemIntakeGRBReviewer,
-  UpdateSystemIntakeGRBReviewerVariables
+  UpdateSystemIntakeGRBReviewerMutation,
+  UpdateSystemIntakeGRBReviewerMutationVariables
 > = {
   request: {
     query: UpdateSystemIntakeGRBReviewerDocument,
@@ -119,6 +114,7 @@ const updateSystemIntakeGRBReviewerQuery: MockedQuery<
   },
   result: {
     data: {
+      __typename: 'Mutation',
       updateSystemIntakeGRBReviewer: updatedGRBReviewer
     }
   }
@@ -127,8 +123,8 @@ const updateSystemIntakeGRBReviewerQuery: MockedQuery<
 const getSystemIntakeGRBReviewersQuery = (
   reviewer?: SystemIntakeGRBReviewerFragment
 ): MockedQuery<
-  GetSystemIntakeGRBReviewers,
-  GetSystemIntakeGRBReviewersVariables
+  GetSystemIntakeGRBReviewersQuery,
+  GetSystemIntakeGRBReviewersQueryVariables
 > => ({
   request: {
     query: GetSystemIntakeGRBReviewersDocument,
@@ -138,6 +134,7 @@ const getSystemIntakeGRBReviewersQuery = (
   },
   result: {
     data: {
+      __typename: 'Query',
       systemIntake: {
         __typename: 'SystemIntake',
         id: systemIntake.id,
@@ -208,7 +205,13 @@ describe('GRB reviewer form', () => {
     expect(submitButton).not.toBeDisabled();
     userEvent.click(submitButton);
 
-    expect(await screen.findByText('Jerry Seinfeld (Voting) - CMCS Rep'));
+    const reviewerRow = await screen.findByTestId(
+      `grbReviewer-${contact.euaUserId}`
+    );
+
+    expect(within(reviewerRow).getByRole('cell', { name: contact.commonName }));
+    expect(within(reviewerRow).getByRole('cell', { name: 'Voting' }));
+    expect(within(reviewerRow).getByRole('cell', { name: 'CMCS Rep' }));
   });
 
   it('edits a GRB reviewer', async () => {
@@ -275,6 +278,12 @@ describe('GRB reviewer form', () => {
     expect(submitButton).not.toBeDisabled();
     userEvent.click(submitButton);
 
-    expect(await screen.findByText('Jerry Seinfeld (Non-voting) - QIO Rep'));
+    const reviewerRow = await screen.findByTestId(
+      `grbReviewer-${contact.euaUserId}`
+    );
+
+    expect(within(reviewerRow).getByRole('cell', { name: contact.commonName }));
+    expect(within(reviewerRow).getByRole('cell', { name: 'Non-voting' }));
+    expect(within(reviewerRow).getByRole('cell', { name: 'QIO Rep' }));
   });
 });
