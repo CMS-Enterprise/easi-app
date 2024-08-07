@@ -5,15 +5,15 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ModalRef } from '@trussworks/react-uswds';
+import {
+  UpdateTrbRequestLeadDocument,
+  UpdateTrbRequestLeadMutation,
+  UpdateTrbRequestLeadMutationVariables
+} from 'gql/gen/graphql';
 import i18next from 'i18next';
 
 import { getTrbLeadOptionsQuery, trbLeadOptions } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import {
-  UpdateTrbRequestLead,
-  UpdateTrbRequestLeadVariables
-} from 'queries/types/UpdateTrbRequestLead';
-import UpdateTrbRequestLeadQuery from 'queries/UpdateTrbRequestLeadQuery';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
@@ -26,12 +26,12 @@ import TrbAssignLeadModal, {
 
 const trbLeadInfo = trbLeadOptions[0];
 
-const updateTrbRequestLeadQuery: MockedQuery<
-  UpdateTrbRequestLead,
-  UpdateTrbRequestLeadVariables
+const updateTrbRequestLeadMutation: MockedQuery<
+  UpdateTrbRequestLeadMutation,
+  UpdateTrbRequestLeadMutationVariables
 > = {
   request: {
-    query: UpdateTrbRequestLeadQuery,
+    query: UpdateTrbRequestLeadDocument,
     variables: {
       input: {
         trbRequestId: mockTrbRequestId,
@@ -41,6 +41,7 @@ const updateTrbRequestLeadQuery: MockedQuery<
   },
   result: {
     data: {
+      __typename: 'Mutation',
       updateTRBRequestTRBLead: {
         id: mockTrbRequestId,
         trbLead: trbLeadInfo.euaUserId,
@@ -105,7 +106,7 @@ describe('TrbAssignLeadModal', () => {
     const { findByText, getByRole, getByTestId } = render(
       <Provider store={store}>
         <MockedProvider
-          mocks={[getTrbLeadOptionsQuery, updateTrbRequestLeadQuery]}
+          mocks={[getTrbLeadOptionsQuery, updateTrbRequestLeadMutation]}
         >
           <MemoryRouter>
             <MessageProvider>
@@ -163,7 +164,7 @@ describe('TrbAssignLeadModal', () => {
           mocks={[
             getTrbLeadOptionsQuery,
             {
-              request: updateTrbRequestLeadQuery.request,
+              request: updateTrbRequestLeadMutation.request,
               error: new Error()
             }
           ]}
