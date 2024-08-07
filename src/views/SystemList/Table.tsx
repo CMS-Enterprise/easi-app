@@ -60,13 +60,13 @@ export type SystemTableType =
 type TableProps = {
   systems?: CedarSystem[];
   defaultPageSize?: number;
-  isMySystems?: boolean;
+  isHomePage?: boolean;
 };
 
 export const Table = ({
   systems = [],
   defaultPageSize = 10,
-  isMySystems
+  isHomePage
 }: TableProps) => {
   const { t } = useTranslation('systemProfile');
 
@@ -92,14 +92,14 @@ export const Table = ({
   // Sets the systemTableType state to the query param, defaults to all-systems if no param present
   // If the query param changes, update the component state
   useEffect(() => {
-    if (!tableType && !isMySystems) {
+    if (!tableType && !isHomePage) {
       history.replace({
         search: 'table-type=all-systems'
       });
     }
 
-    setSystemTableType(isMySystems ? 'my-systems' : tableType);
-  }, [tableType, isMySystems, history]);
+    setSystemTableType(isHomePage ? 'my-systems' : tableType);
+  }, [tableType, isHomePage, history]);
 
   // On button group toggle, change query param
   const switchTableType = (type: SystemTableType) => {
@@ -147,7 +147,7 @@ export const Table = ({
 
     const cols: Column<CedarSystem>[] = [];
 
-    if (!isMySystems) {
+    if (!isHomePage) {
       cols.push({
         Header: <IconBookmark />,
         accessor: 'id',
@@ -190,7 +190,7 @@ export const Table = ({
       }
     });
 
-    if (!isMySystems) {
+    if (!isHomePage) {
       cols.push({
         Header: t<string>('systemTable.header.systemOwner'),
         accessor: 'businessOwnerOrg',
@@ -219,21 +219,18 @@ export const Table = ({
           : -1
     });
 
-    if (isMySystems) {
+    if (isHomePage) {
       cols.push({
         Header: t<string>('systemTable.header.openRequests'),
         id: 'openRequests',
-        Cell: ({ row }: { row: Row<CedarSystem> }) => (
-          <>
-            {row.original.linkedSystemIntakes.length +
-              row.original.linkedTrbRequests.length}
-          </>
-        )
+        Cell: ({ row }: { row: Row<CedarSystem> }) =>
+          row.original.linkedSystemIntakes.length +
+          row.original.linkedTrbRequests.length
       });
     }
 
     return cols;
-  }, [t, systems, systemTableType, createMutate, deleteMutate, isMySystems]);
+  }, [t, systems, systemTableType, createMutate, deleteMutate, isHomePage]);
 
   const {
     getTableProps,
@@ -285,7 +282,7 @@ export const Table = ({
   rows.map(row => prepareRow(row));
 
   if (
-    (isMySystems || tableType === 'my-systems') &&
+    (isHomePage || tableType === 'my-systems') &&
     loading &&
     !mySystems?.myCedarSystems
   ) {
@@ -294,7 +291,7 @@ export const Table = ({
 
   return (
     <div className="margin-bottom-6">
-      {!isMySystems && (
+      {!isHomePage && (
         <>
           <p className="text-bold margin-0 margin-top-3">
             {t('systemTable.view')}
@@ -431,13 +428,13 @@ export const Table = ({
 
       {/* Alerts to show if there is no system/data */}
       {filteredSystems.length === 0 &&
-        (tableType === 'my-systems' || isMySystems) && (
+        (tableType === 'my-systems' || isHomePage) && (
           <Alert
             type="info"
             heading={t('systemTable.noMySystem.header')}
             className="margin-top-5"
           >
-            {isMySystems ? (
+            {isHomePage ? (
               <Trans
                 i18nKey="systemProfile:systemTable.noMySystem.description"
                 components={{
@@ -463,8 +460,8 @@ export const Table = ({
           </Alert>
         )}
 
-      {/* Alery to show to direct to Systems tab when viewing My sytems */}
-      {filteredSystems.length > 0 && isMySystems && (
+      {/* Alert to show to direct to Systems tab when viewing My sytems */}
+      {filteredSystems.length > 0 && isHomePage && (
         <Alert
           type="info"
           heading={t('systemProfile:systemTable:dontSeeSystem.header')}
