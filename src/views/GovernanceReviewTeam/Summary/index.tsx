@@ -30,8 +30,8 @@ import {
 } from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
-import getSystemOrContractName from 'utils/getContractOrSystemName';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
+import getSystemOrContractName from 'utils/getSystemOrContractName';
 import { translateRequestType } from 'utils/systemIntake';
 
 import IsGrbViewContext from '../IsGrbViewContext';
