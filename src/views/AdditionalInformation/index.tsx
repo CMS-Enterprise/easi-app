@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -22,6 +23,7 @@ const AdditionalInformation = ({
   request: TrbRequest | SystemIntake;
   type: RequestType;
 }) => {
+  const flags = useFlags();
   const { t } = useTranslation('admin');
 
   const parentRoute = type === 'itgov' ? 'governance-review-team' : 'trb';
@@ -116,7 +118,7 @@ const AdditionalInformation = ({
       )}
 
       {/* table only shows on itgov requests until EASI-4467 (https://jiraent.cms.gov/browse/EASI-4467) */}
-      {type === 'itgov' && (
+      {flags.systemIntakeRelatedRequests && type === 'itgov' && (
         <div className="margin-top-8">
           <RelatedRequestsTable systemIntakeID={request.id} />
         </div>
