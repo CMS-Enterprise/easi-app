@@ -220,8 +220,15 @@ export const Table = ({
     });
 
     if (isHomePage) {
+      // eslint-disable-next-line no-bitwise
+
       cols.push({
         Header: t<string>('systemTable.header.openRequests'),
+        accessor: (system: CedarSystem) => {
+          return (
+            system.linkedTrbRequests.length + system.linkedSystemIntakes.length
+          );
+        },
         id: 'openRequests',
         Cell: ({ row }: { row: Row<CedarSystem> }) =>
           row.original.linkedSystemIntakes.length +
