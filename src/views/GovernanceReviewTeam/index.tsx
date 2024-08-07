@@ -48,21 +48,21 @@ const GovernanceReviewTeam = () => {
     );
   }, [grbReviewers, euaId]);
 
-  const isGrtReviewer = !!user.isGrtReviewer(groups, flags);
+  const isITGovAdmin = user.isITGovAdmin(groups, flags);
 
-  const reviewerType: ReviewerKey = isGrtReviewer
+  const reviewerType: ReviewerKey = isITGovAdmin
     ? 'governance-review-team'
     : 'governance-review-board';
 
   if (isUserSet && !loading) {
-    if (isGrtReviewer || isGrbReviewer) {
+    if (isITGovAdmin || isGrbReviewer) {
       return (
         <IsGrbViewContext.Provider
           // Only show GRB view if user is GRB reviewer without GOVTEAM job code
-          value={!isGrtReviewer}
+          value={!isITGovAdmin}
         >
           <Switch>
-            {isGrtReviewer && (
+            {isITGovAdmin && (
               /* Defining outside parent route to trigger parent rerender/refetch after mutation */
               <Route path="/governance-review-team/:id/additional-information/link">
                 <RequestLinkForm requestType="itgov" fromAdmin />

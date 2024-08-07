@@ -62,7 +62,12 @@ const RelatedRequestsTable = ({
 
   const flags = useFlags();
 
-  const isAdmin = useMemo(() => user.isTrbAdmin(groups, flags), [
+  const isTRBAdmin = useMemo(() => user.isTrbAdmin(groups, flags), [
+    flags,
+    groups
+  ]);
+
+  const isITGovAdmin = useMemo(() => user.isITGovAdmin(groups, flags), [
     flags,
     groups
   ]);
@@ -129,7 +134,17 @@ const RelatedRequestsTable = ({
           value: LinkedRequestForTable['projectTitle'];
         }): string | JSX.Element => {
           // non-admins cannot click through the request titles
-          if (!isAdmin) {
+          if (!isTRBAdmin && !isITGovAdmin) {
+            return value;
+          }
+
+          // a non-TRB-admin cannot click through a TRB
+          if (row.original.process === 'TRB' && !isTRBAdmin) {
+            return value;
+          }
+
+          // a non-ITGov-admin cannot click through an ITGov
+          if (row.original.process === 'IT Governance' && !isITGovAdmin) {
             return value;
           }
 
@@ -183,7 +198,7 @@ const RelatedRequestsTable = ({
         }): string => formatDateLocal(value, 'MM/dd/yyyy')
       }
     ];
-  }, [isAdmin, t]);
+  }, [isTRBAdmin, t]);
 
   const {
     getTableProps,
