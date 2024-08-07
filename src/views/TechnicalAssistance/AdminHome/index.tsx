@@ -155,6 +155,9 @@ export default function AdminHome() {
         submissionDate={submissionDate}
         assignLeadModalRef={assignLeadModalRef}
         assignLeadModalTrbRequestIdRef={assignLeadModalTrbRequestIdRef}
+        contractName={trbRequest.contractName}
+        relationType={trbRequest.relationType}
+        systems={trbRequest.systems}
       />
 
       {/* Accordion navigation for tablet and mobile */}

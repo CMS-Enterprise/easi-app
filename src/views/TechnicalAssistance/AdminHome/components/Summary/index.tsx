@@ -12,8 +12,10 @@ import {
 } from '@trussworks/react-uswds';
 
 import StateTag from 'components/StateTag';
+import { SystemIntake_systems as System } from 'queries/types/SystemIntake';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import {
+  RequestRelationType,
   TRBRequestState,
   TRBRequestStatus,
   TRBRequestType
@@ -34,6 +36,9 @@ type SummaryProps = {
   submissionDate: string;
   assignLeadModalRef: React.RefObject<ModalRef>;
   assignLeadModalTrbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
+  contractName: string | null;
+  relationType: RequestRelationType | null;
+  systems: System[];
 };
 
 export default function Summary({
@@ -47,7 +52,10 @@ export default function Summary({
   requesterString,
   submissionDate,
   assignLeadModalRef,
-  assignLeadModalTrbRequestIdRef
+  assignLeadModalTrbRequestIdRef,
+  contractName,
+  relationType,
+  systems
 }: SummaryProps) {
   const { t } = useTranslation('technicalAssistance');
 

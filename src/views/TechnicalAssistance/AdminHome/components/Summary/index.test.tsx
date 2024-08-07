@@ -45,6 +45,9 @@ describe('TRB Admin Home summary', () => {
               submissionDate="January 5, 2023"
               assignLeadModalRef={modalRef}
               assignLeadModalTrbRequestIdRef={trbRequestIdRef}
+              contractName={trbRequestSummary.contractName}
+              relationType={trbRequestSummary.relationType}
+              systems={trbRequestSummary.systems}
             />
           </Provider>
         </MockedProvider>
