@@ -20,34 +20,6 @@ import { formatDateUtc, parseAsUTC } from 'utils/date';
 
 import Tag from '../Tag';
 
-const atoStatusTagClassNames: Record<AtoStatus, string> = {
-  Active: 'text-white bg-success-dark',
-  'Due Soon': 'bg-warning',
-  Expired: 'text-white bg-error-dark',
-  'No ATO': 'bg-base-lighter'
-};
-
-const atoStatusTagIcon: Record<AtoStatus, React.ComponentType<IconProps>> = {
-  Active: IconCheck,
-  'Due Soon': IconWarning,
-  Expired: IconError,
-  'No ATO': IconHelp
-};
-
-const atoStatusIconClassNames: Record<AtoStatus, string> = {
-  Active: 'text-success',
-  'Due Soon': 'text-warning-dark',
-  Expired: 'text-error',
-  'No ATO': 'text-base-light'
-};
-
-const atoStatusIcon: Record<AtoStatus, React.ComponentType<IconProps>> = {
-  Active: IconCheckCircleOutline,
-  'Due Soon': IconErrorOutline,
-  Expired: IconHighlightOff,
-  'No ATO': IconHelpOutline
-};
-
 /**
  * Get the ATO Status from a date property
  */
@@ -70,6 +42,50 @@ export function getAtoStatus(dt: string | null | undefined): AtoStatus {
   return 'Active';
 }
 
+const atoStatusTagClassNames: Record<AtoStatus, string> = {
+  Active: 'text-white bg-success-dark',
+  'Due Soon': 'bg-warning',
+  Expired: 'text-white bg-error-dark',
+  'No ATO': 'bg-base-lighter'
+};
+
+const atoStatusTagIcon: Record<AtoStatus, React.ComponentType<IconProps>> = {
+  Active: IconCheck,
+  'Due Soon': IconWarning,
+  Expired: IconError,
+  'No ATO': IconHelp
+};
+
+export function AtoStatusTag({
+  status,
+  className
+}: {
+  status: AtoStatus;
+  className?: string;
+}) {
+  const Icon = atoStatusTagIcon[status];
+  return (
+    <Tag className={classnames(`${atoStatusTagClassNames[status]}`, className)}>
+      <Icon className="margin-right-1" />
+      {status}
+    </Tag>
+  );
+}
+
+const atoStatusIconClassNames: Record<AtoStatus, string> = {
+  Active: 'text-success',
+  'Due Soon': 'text-warning-dark',
+  Expired: 'text-error',
+  'No ATO': 'text-base-light'
+};
+
+const atoStatusIcon: Record<AtoStatus, React.ComponentType<IconProps>> = {
+  Active: IconCheckCircleOutline,
+  'Due Soon': IconErrorOutline,
+  Expired: IconHighlightOff,
+  'No ATO': IconHelpOutline
+};
+
 export function AtoStatusIconText({ dt }: { dt: string | null | undefined }) {
   const status = getAtoStatus(dt);
   const Icon = atoStatusIcon[status];
@@ -85,21 +101,5 @@ export function AtoStatusIconText({ dt }: { dt: string | null | undefined }) {
         {formatDateUtc(dt || null, 'MM/yyyy')}
       </span>
     </div>
-  );
-}
-
-export default function AtoStatusTag({
-  status,
-  className
-}: {
-  status: AtoStatus;
-  className?: string;
-}) {
-  const Icon = atoStatusTagIcon[status];
-  return (
-    <Tag className={classnames(`${atoStatusTagClassNames[status]}`, className)}>
-      <Icon className="margin-right-1" />
-      {status}
-    </Tag>
   );
 }
