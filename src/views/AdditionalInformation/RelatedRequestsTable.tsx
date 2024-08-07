@@ -198,7 +198,7 @@ const RelatedRequestsTable = ({
         }): string => formatDateLocal(value, 'MM/dd/yyyy')
       }
     ];
-  }, [isTRBAdmin, t]);
+  }, [isITGovAdmin, isTRBAdmin, t]);
 
   const {
     getTableProps,
