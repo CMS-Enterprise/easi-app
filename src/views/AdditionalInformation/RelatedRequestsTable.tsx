@@ -259,7 +259,7 @@ const RelatedRequestsTable = ({
   rows.map((row: Row<LinkedRequestForTable>) => prepareRow(row));
   return (
     <div>
-      <h2 className="margin-bottom-0">{t('relatedRequests')}</h2>
+      <h2 className="margin-bottom-3">{t('relatedRequests')}</h2>
 
       {tableData.length > state.pageSize && (
         <>

@@ -115,6 +115,7 @@ const AdditionalInformation = ({
         </>
       )}
 
+      {/* table only shows on itgov requests until EASI-4467 (https://jiraent.cms.gov/browse/EASI-4467) */}
       {type === 'itgov' && <RelatedRequestsTable systemIntakeID={request.id} />}
     </div>
   );

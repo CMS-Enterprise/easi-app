@@ -124,8 +124,14 @@ describe('Related Requests table', () => {
   });
 
   it('should provide clickable admin link if user is admin', async () => {
+    // mock with both admin types
     const mockStore = easiMockStore({
-      groups: ['EASI_TRB_ADMIN_D', 'EASI_TRB_ADMIN_P']
+      groups: [
+        'EASI_TRB_ADMIN_D',
+        'EASI_TRB_ADMIN_P',
+        'EASI_D_GOVTEAM',
+        'EASI_P_GOVTEAM'
+      ]
     });
 
     const mocks = [
@@ -179,6 +185,132 @@ describe('Related Requests table', () => {
 
     expect(await screen.findByRole('link', { name: 'related intake 1' }));
     expect(await screen.findByRole('link', { name: 'related trb 1' }));
+  });
+
+  it('should provide clickable TRB admin link if user is TRB admin', async () => {
+    // mock with TRB admin only
+    const mockStore = easiMockStore({
+      groups: ['EASI_TRB_ADMIN_D', 'EASI_TRB_ADMIN_P']
+    });
+
+    const mocks = [
+      {
+        request: {
+          query: GetSystemIntakeRelatedRequestsQuery,
+          variables: {
+            systemIntakeID: systemIntake.id
+          }
+        },
+        result: {
+          data: {
+            systemIntake: {
+              __typename: 'SystemIntake',
+              id: systemIntake.id,
+              relatedIntakes: [
+                {
+                  id: '1',
+                  requestName: 'related intake 1',
+                  contractNumbers: ['1', '2'],
+                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  submittedAt: new Date()
+                }
+              ],
+              relatedTRBRequests: [
+                {
+                  id: '2',
+                  name: 'related trb 1',
+                  contractNumbers: ['3', '4'],
+                  status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
+                  createdAt: new Date()
+                }
+              ]
+            }
+          }
+        }
+      }
+    ];
+
+    render(
+      <MemoryRouter>
+        <MockedProvider mocks={mocks}>
+          <Provider store={mockStore}>
+            <MessageProvider>
+              <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+            </MessageProvider>
+          </Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    // expect only TRB to be clickable
+    expect(await screen.findByRole('link', { name: 'related trb 1' }));
+
+    expect(
+      screen.queryByRole('link', { name: 'related intake 1' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('should provide clickable ITGov admin link if user is ITGov admin', async () => {
+    // mock with ITGov admin only
+    const mockStore = easiMockStore({
+      groups: ['EASI_D_GOVTEAM', 'EASI_P_GOVTEAM']
+    });
+
+    const mocks = [
+      {
+        request: {
+          query: GetSystemIntakeRelatedRequestsQuery,
+          variables: {
+            systemIntakeID: systemIntake.id
+          }
+        },
+        result: {
+          data: {
+            systemIntake: {
+              __typename: 'SystemIntake',
+              id: systemIntake.id,
+              relatedIntakes: [
+                {
+                  id: '1',
+                  requestName: 'related intake 1',
+                  contractNumbers: ['1', '2'],
+                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  submittedAt: new Date()
+                }
+              ],
+              relatedTRBRequests: [
+                {
+                  id: '2',
+                  name: 'related trb 1',
+                  contractNumbers: ['3', '4'],
+                  status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
+                  createdAt: new Date()
+                }
+              ]
+            }
+          }
+        }
+      }
+    ];
+
+    render(
+      <MemoryRouter>
+        <MockedProvider mocks={mocks}>
+          <Provider store={mockStore}>
+            <MessageProvider>
+              <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+            </MessageProvider>
+          </Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    // expect only ITGov to be clickable
+    expect(await screen.findByRole('link', { name: 'related intake 1' }));
+
+    expect(
+      screen.queryByRole('link', { name: 'related trb 1' })
+    ).not.toBeInTheDocument();
   });
 
   it('should provide non-clickable text if user is not an admin', () => {
