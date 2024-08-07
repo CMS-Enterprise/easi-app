@@ -402,6 +402,7 @@ const systemProfile = {
     id: 'system-list',
     search: 'Search table',
     header: {
+      openRequests: 'Open EASi requests',
       systemName: 'System name',
       systemOwner: 'CMS component',
       systemAcronym: 'Acronym',

@@ -219,24 +219,18 @@ export const Table = ({
           : -1
     });
 
-    /*
-    {
-      Header: t<string>('systemTable.header.systemStatus'),
-      accessor: 'status',
-      id: 'systemStatus',
-      disableGlobalFilter: true,
-      Cell: ({ row }: { row: Row<CedarSystem> }) => (
-        <div>
-          <SystemHealthIcon
-            status={mapCedarStatusToIcon(row.original.status)}
-            size="medium"
-            className="margin-right-1"
-          />
-          <span>{row.original.status}</span>
-        </div>
-      )
+    if (isMySystems) {
+      cols.push({
+        Header: t<string>('systemTable.header.openRequests'),
+        id: 'openRequests',
+        Cell: ({ row }: { row: Row<CedarSystem> }) => (
+          <>
+            {row.original.linkedSystemIntakes.length +
+              row.original.linkedTrbRequests.length}
+          </>
+        )
+      });
     }
-    */
 
     return cols;
   }, [t, systems, systemTableType, createMutate, deleteMutate, isMySystems]);
