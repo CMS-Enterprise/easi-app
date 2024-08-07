@@ -75,6 +75,7 @@ const UploadForm = () => {
       variables: {
         input: {
           fileData: newFile,
+          version: formData.version,
           documentType: formData.documentType,
           // If type is set to 'Other', include description field
           ...(formData.documentType === 'OTHER'
@@ -121,7 +122,6 @@ const UploadForm = () => {
           <Controller
             name="fileData"
             control={control}
-            // eslint-disable-next-line @typescript-eslint/no-shadow
             render={({ field, fieldState: { error } }) => {
               return (
                 <FormGroup error={!!error} className="margin-top-5">
@@ -154,7 +154,6 @@ const UploadForm = () => {
           <Controller
             name="documentType"
             control={control}
-            // eslint-disable-next-line @typescript-eslint/no-shadow
             render={({ field, fieldState: { error } }) => (
               <FormGroup error={!!error}>
                 <Fieldset
@@ -169,7 +168,9 @@ const UploadForm = () => {
                       {t('technicalAssistance:errors.makeSelection')}
                     </ErrorMessage>
                   )}
-                  {['SOO_SOW', 'DRAFT_ICGE', 'OTHER'].map(val => (
+                  {Object.keys(
+                    t('intake:documents.type', { returnObjects: true })
+                  ).map(val => (
                     <Radio
                       key={val}
                       id={`${field.name}-${val}`}
@@ -192,7 +193,6 @@ const UploadForm = () => {
               <Controller
                 name="otherTypeDescription"
                 control={control}
-                // eslint-disable-next-line @typescript-eslint/no-shadow
                 render={({ field, fieldState: { error } }) => (
                   <FormGroup
                     className="margin-top-1 margin-left-4"
@@ -220,6 +220,43 @@ const UploadForm = () => {
               />
             )
           }
+
+          {/* Document type */}
+          <Controller
+            name="version"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <FormGroup error={!!error}>
+                <Fieldset
+                  legend={
+                    <span className="text-bold">
+                      {t('intake:documents.versionLabel')}
+                    </span>
+                  }
+                >
+                  {error && (
+                    <ErrorMessage>
+                      {t('technicalAssistance:errors.makeSelection')}
+                    </ErrorMessage>
+                  )}
+                  {Object.keys(
+                    t('intake:documents.version', { returnObjects: true })
+                  ).map(val => (
+                    <Radio
+                      key={val}
+                      id={`${field.name}-${val}`}
+                      data-testid={`${field.name}-${val}`}
+                      name={field.name}
+                      onBlur={field.onBlur}
+                      onChange={field.onChange}
+                      label={t(`intake:documents.version.${val}`)}
+                      value={val}
+                    />
+                  ))}
+                </Fieldset>
+              </FormGroup>
+            )}
+          />
 
           <Alert type="info" slim className="margin-top-5">
             {t('technicalAssistance:documents.upload.toKeepCmsSafe')}

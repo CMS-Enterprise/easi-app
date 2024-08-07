@@ -29,7 +29,8 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	// Create a document
 	documentToCreate := &models.SystemIntakeDocument{
 		SystemIntakeRequestID: intake.ID,
-		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftICGE,
+		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftIGCE,
+		Version:               models.SystemIntakeDocumentVersionHISTORICAL,
 		FileName:              "create_and_get.pdf",
 		Bucket:                "bukkit",
 		S3Key:                 uuid.NewString(),
@@ -50,6 +51,7 @@ func createSystemIntakeDocumentSubtest(s *ResolverSuite, systemIntakeID uuid.UUI
 	gqlInput := models.CreateSystemIntakeDocumentInput{
 		RequestID:            documentToCreate.SystemIntakeRequestID,
 		DocumentType:         documentToCreate.CommonDocumentType,
+		Version:              documentToCreate.Version,
 		OtherTypeDescription: &documentToCreate.OtherType,
 		FileData: graphql.Upload{
 			File:        fileToUpload,

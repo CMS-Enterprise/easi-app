@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus } from "./../../types/graphql-global-types";
+import { SystemIntakeDocumentCommonType, SystemIntakeDocumentVersion, SystemIntakeDocumentStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL fragment: SystemIntakeDocument
@@ -20,6 +20,7 @@ export interface SystemIntakeDocument {
   documentType: SystemIntakeDocument_documentType;
   id: UUID;
   fileName: string;
+  version: SystemIntakeDocumentVersion;
   status: SystemIntakeDocumentStatus;
   uploadedAt: Time;
   url: string;

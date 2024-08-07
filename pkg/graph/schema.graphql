@@ -1699,8 +1699,20 @@ System Intake document
 """
 enum SystemIntakeDocumentCommonType {
   SOO_SOW
-  DRAFT_ICGE
+  DRAFT_IGCE
+  ACQUISITION_PLAN_OR_STRATEGY
+  REQUEST_FOR_ADDITIONAL_FUNDING
+  MEETING_MINUTES
   OTHER
+}
+
+"""
+Represents the version options for a document that is attached to a
+System Intake document
+"""
+enum SystemIntakeDocumentVersion {
+  CURRENT
+  HISTORICAL
 }
 
 """
@@ -1742,6 +1754,7 @@ input CreateSystemIntakeDocumentInput {
   requestID: UUID!
   fileData: Upload!
   documentType: SystemIntakeDocumentCommonType!
+  version: SystemIntakeDocumentVersion!
   otherTypeDescription: String
 }
 
@@ -1765,6 +1778,7 @@ type SystemIntakeDocument {
   id: UUID!
   fileName: String!
   status: SystemIntakeDocumentStatus!
+  version: SystemIntakeDocumentVersion!
   uploadedAt: Time!
   url: String!
 }

@@ -240,9 +240,15 @@ def each_minio_file(&block)
   end
 end
 
-def set_file_tag(key, status)
-  command = %Q{mc tag set 'local/easi-app-file-uploads/#{key}' 'av-status=#{status}'}
-  sh %Q{docker compose run --entrypoint="#{command}" minio_mc}
+def set_file_tags(status)
+  output = `docker compose run --entrypoint="mc --no-color --json ls -r local/easi-app-file-uploads" minio_mc`
+  json = "[#{output.gsub(/\}\s*\{/, "},{")}]" # convert sort-of-jsonl into conventional json
+  files = JSON.parse(json)
+  command = ""
+  files.each do |file|
+    command = command + %Q{mc tag set 'local/easi-app-file-uploads/#{file["key"]}' 'av-status=#{status}'; }
+  end
+  `docker compose run --entrypoint="/bin/sh -c" minio_mc "#{command}" > /dev/null 2>&1`
 end
 
 namespace :minio do
@@ -254,23 +260,20 @@ namespace :minio do
 
   desc "Mark all files in minio as clean (no viruses found)"
   task :clean do
-    each_minio_file do |file|
-      set_file_tag(file["key"], "CLEAN")
-    end
+    puts "Marking all minio files as clean"
+    set_file_tags("CLEAN")
   end
 
   desc "Mark all files in minio as infected (virus found)"
   task :infected do
-    each_minio_file do |file|
-      set_file_tag(file["key"], "INFECTED")
-    end
+    puts "Marking all minio files as infected"
+    set_file_tags("INFECTED")
   end
 
   desc "Mark all files in minio as pending (waiting for scan)"
   task :pending do
-    each_minio_file do |file|
-      set_file_tag(file["key"], "")
-    end
+    puts "Marking all minio files as pending"
+    set_file_tags("")
   end
 end
 
@@ -391,7 +394,7 @@ namespace :db do
     sql = tables.map { |table| "DELETE FROM #{table};" }.join
     puts "Cleaning database..."
     `echo "#{sql}" | psql`
-    
+
     # Delete all files from Minio
     puts "Cleaning Minio file storage..."
     `docker compose run --entrypoint='mc --quiet rm -r --force local/easi-app-file-uploads/' minio_mc > /dev/null 2>&1`
