@@ -51,7 +51,6 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
             aria-describedby="react-select-cedarContactSelect-placeholder"
             aria-expanded="true"
             aria-haspopup="true"
-            aria-label="Cedar-Users"
             autocapitalize="none"
             autocomplete="off"
             autocorrect="off"
