@@ -168,14 +168,9 @@ const UploadForm = () => {
                       {t('technicalAssistance:errors.makeSelection')}
                     </ErrorMessage>
                   )}
-                  {[
-                    'SOO_SOW',
-                    'ACQUISITION_PLAN_OR_STRATEGY',
-                    'DRAFT_IGCE',
-                    'REQUEST_FOR_ADDITIONAL_FUNDING',
-                    'MEETING_MINUTES',
-                    'OTHER'
-                  ].map(val => (
+                  {Object.keys(
+                    t('intake:documents.type', { returnObjects: true })
+                  ).map(val => (
                     <Radio
                       key={val}
                       id={`${field.name}-${val}`}
@@ -244,7 +239,9 @@ const UploadForm = () => {
                       {t('technicalAssistance:errors.makeSelection')}
                     </ErrorMessage>
                   )}
-                  {['CURRENT', 'HISTORICAL'].map(val => (
+                  {Object.keys(
+                    t('intake:documents.version', { returnObjects: true })
+                  ).map(val => (
                     <Radio
                       key={val}
                       id={`${field.name}-${val}`}
