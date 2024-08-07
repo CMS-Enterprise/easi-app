@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 // Used to parse out mintute, day, ,month, and years from ISOString
 export const parseAsUTC = (date: string) => DateTime.fromISO(date).toUTC();
 
-type DateFormat = 'MM/dd/yyyy' | 'MMMM d, yyyy';
+type DateFormat = 'MM/dd/yyyy' | 'MMMM d, yyyy' | 'MM/yyyy';
 
 /**
  * Output local timezoned dates from iso string.
