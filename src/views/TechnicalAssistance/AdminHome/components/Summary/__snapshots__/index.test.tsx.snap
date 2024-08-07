@@ -33,7 +33,7 @@ exports[`TRB Admin Home summary > renders TRB request details 1`] = `
               aria-current="page"
               class="usa-breadcrumb__list-item usa-current"
             >
-              Request details
+              TRB request details
             </li>
           </ol>
         </nav>

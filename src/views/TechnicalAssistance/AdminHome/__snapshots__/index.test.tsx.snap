@@ -36,7 +36,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                 aria-current="page"
                 class="usa-breadcrumb__list-item usa-current"
               >
-                Request details
+                TRB request details
               </li>
             </ol>
           </nav>
