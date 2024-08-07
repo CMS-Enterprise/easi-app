@@ -1,14 +1,8 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { Grid } from '@trussworks/react-uswds';
-
-import {
-  UpdateTrbRequestFormStatus,
-  UpdateTrbRequestFormStatusVariables
-} from 'queries/types/UpdateTrbRequestFormStatus';
-import UpdateTrbRequestFormStatusQuery from 'queries/UpdateTrbRequestFormStatusQuery';
+import { useUpdateTrbRequestFormStatusMutation } from 'gql/gen/graphql';
 
 import Pager from './Pager';
 import SubmittedRequest from './SubmittedRequest';
@@ -25,10 +19,7 @@ function Check({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const [update, { loading }] = useMutation<
-    UpdateTrbRequestFormStatus,
-    UpdateTrbRequestFormStatusVariables
-  >(UpdateTrbRequestFormStatusQuery);
+  const [update, { loading }] = useUpdateTrbRequestFormStatusMutation();
 
   const submitNoop: StepSubmit = async callback => {
     callback?.();

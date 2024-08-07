@@ -1,4 +1,4 @@
-import { SystemIntakeWithReviewRequested } from 'gql/gen/types/SystemIntakeWithReviewRequested';
+import { SystemIntakeWithReviewRequestedFragment } from 'gql/gen/graphql';
 import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
@@ -610,7 +610,7 @@ export const getGovernanceTaskListQuery = (
 });
 
 const currentYear = DateTime.local().year;
-export const systemIntakesWithReviewRequested: SystemIntakeWithReviewRequested[] = [
+export const systemIntakesWithReviewRequested: SystemIntakeWithReviewRequestedFragment[] = [
   {
     id: 'a5689bec-e4cf-4f2b-a7de-72020e8d65be',
     requestName: 'With GRB scheduled',
