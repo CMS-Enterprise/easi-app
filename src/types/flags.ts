@@ -8,6 +8,7 @@ export type Flags = {
   systemWorkspaceRequestsCard: boolean;
   trbRelatedRequests: boolean;
   grbReviewTab: boolean;
+  showAtoColumn: boolean;
 };
 
 export type FlagsState = {
