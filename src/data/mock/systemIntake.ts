@@ -45,7 +45,8 @@ import {
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester,
   SystemIntakeStep,
-  SystemIntakeTRBFollowUp
+  SystemIntakeTRBFollowUp,
+  TRBRequestStatus
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 
@@ -276,7 +277,9 @@ export const emptySystemIntake: SystemIntake = {
         }
       ]
     }
-  ]
+  ],
+  relatedIntakes: [],
+  relatedTRBRequests: []
 };
 
 export const systemIntake: SystemIntake = {
@@ -400,6 +403,38 @@ export const systemIntake: SystemIntake = {
           assigneeLastName: 'Doe'
         }
       ]
+    }
+  ],
+  relatedIntakes: [
+    {
+      __typename: 'SystemIntake',
+      id: '1',
+      requestName: 'related intake 1',
+      contractNumbers: [
+        { __typename: 'SystemIntakeContractNumber', contractNumber: '1' },
+        { __typename: 'SystemIntakeContractNumber', contractNumber: '2' }
+      ],
+      decisionState: SystemIntakeDecisionState.NO_DECISION,
+      submittedAt: new Date().toString()
+    }
+  ],
+  relatedTRBRequests: [
+    {
+      __typename: 'TRBRequest',
+      id: '2',
+      name: 'related trb 1',
+      contractNumbers: [
+        {
+          __typename: 'TRBRequestContractNumber',
+          contractNumber: '1'
+        },
+        {
+          __typename: 'TRBRequestContractNumber',
+          contractNumber: '2'
+        }
+      ],
+      status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
+      createdAt: new Date().toString()
     }
   ]
 };

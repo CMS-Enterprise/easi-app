@@ -35,10 +35,10 @@ const Home = () => {
 
   const renderView = () => {
     if (isUserSet) {
-      if (user.isGrtReviewer(groups, flags) || user.isTrbAdmin(groups, flags)) {
+      if (user.isITGovAdmin(groups, flags) || user.isTrbAdmin(groups, flags)) {
         return (
           <AdminHome
-            isGrtReviewer={user.isGrtReviewer(groups, flags)}
+            isITGovAdmin={user.isITGovAdmin(groups, flags)}
             isTrbAdmin={user.isTrbAdmin(groups, flags)}
           />
         );
@@ -74,11 +74,7 @@ const Home = () => {
                 </p>
 
                 {/* TODO: figure out why need to pass empty params here when they are optional with defaults */}
-                <SystemsListTable
-                  systems={[]}
-                  isMySystems
-                  defaultPageSize={5}
-                />
+                <SystemsListTable systems={[]} isHomePage defaultPageSize={5} />
               </Grid>
 
               <hr className="margin-bottom-3 margin-top-4" aria-hidden />
