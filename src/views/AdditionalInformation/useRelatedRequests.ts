@@ -1,15 +1,15 @@
 import { useQuery } from '@apollo/client';
 
-import GetSystemIntakeRelatedRequestsQuery from '../../queries/GetSystemIntakeRelatedRequestsQuery';
-import GetTRBRequestRelatedRequestsQuery from '../../queries/GetTRBRequestRelatedRequestsQuery';
+import GetSystemIntakeRelatedRequestsQuery from 'queries/GetSystemIntakeRelatedRequestsQuery';
+import GetTRBRequestRelatedRequestsQuery from 'queries/GetTRBRequestRelatedRequestsQuery';
 import {
   GetSystemIntakeRelatedRequests,
   GetSystemIntakeRelatedRequestsVariables
-} from '../../queries/types/GetSystemIntakeRelatedRequests';
+} from 'queries/types/GetSystemIntakeRelatedRequests';
 import {
   GetTRBRequestRelatedRequests,
   GetTRBRequestRelatedRequestsVariables
-} from '../../queries/types/GetTRBRequestRelatedRequests';
+} from 'queries/types/GetTRBRequestRelatedRequests';
 
 const useRelatedRequests = (requestID: string, type: 'trb' | 'itgov') => {
   const {
