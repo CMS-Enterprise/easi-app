@@ -74,11 +74,7 @@ const Home = () => {
                 </p>
 
                 {/* TODO: figure out why need to pass empty params here when they are optional with defaults */}
-                <SystemsListTable
-                  systems={[]}
-                  isMySystems
-                  defaultPageSize={5}
-                />
+                <SystemsListTable systems={[]} isHomePage defaultPageSize={5} />
               </Grid>
 
               <hr className="margin-bottom-3 margin-top-4" aria-hidden />
