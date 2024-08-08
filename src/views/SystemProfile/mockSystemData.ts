@@ -132,7 +132,10 @@ export const mockSystemInfo: CedarSystemProps[] = [
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
-    isBookmarked: false
+    isBookmarked: false,
+    atoExpirationDate: null,
+    linkedTrbRequests: [],
+    linkedSystemIntakes: []
   },
   {
     __typename: 'CedarSystem',
@@ -151,7 +154,10 @@ export const mockSystemInfo: CedarSystemProps[] = [
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
-    isBookmarked: false
+    isBookmarked: false,
+    atoExpirationDate: null,
+    linkedTrbRequests: [],
+    linkedSystemIntakes: []
   },
   {
     __typename: 'CedarSystem',
@@ -170,7 +176,10 @@ export const mockSystemInfo: CedarSystemProps[] = [
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
-    isBookmarked: false
+    isBookmarked: false,
+    atoExpirationDate: null,
+    linkedTrbRequests: [],
+    linkedSystemIntakes: []
   },
   {
     __typename: 'CedarSystem',
@@ -190,26 +199,10 @@ export const mockSystemInfo: CedarSystemProps[] = [
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
-    isBookmarked: false
-  }
-];
-
-export const products: tempProductsProp[] = [
-  {
-    id: '1',
-    name: 'Drupal',
-    manufacturer: 'Drupal Association',
-    type: 'Enterprise Content Management (ECM)',
-    version: '9.3',
-    edition: 'Enterprise'
-  },
-  {
-    id: '2',
-    name: 'Kong',
-    manufacturer: 'Kong Enterprise',
-    type: 'Software Development',
-    tags: ['API Gateway'],
-    version: '2.1'
+    isBookmarked: false,
+    atoExpirationDate: null,
+    linkedTrbRequests: [],
+    linkedSystemIntakes: []
   }
 ];
 
