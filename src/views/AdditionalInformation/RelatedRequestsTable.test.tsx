@@ -46,7 +46,7 @@ describe('Related Requests table', () => {
         <MockedProvider mocks={mocks}>
           <Provider store={mockStore}>
             <MessageProvider>
-              <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+              <RelatedRequestsTable requestID={systemIntake.id} type="itgov" />
             </MessageProvider>
           </Provider>
         </MockedProvider>
@@ -106,7 +106,7 @@ describe('Related Requests table', () => {
         <MockedProvider mocks={mocks}>
           <Provider store={mockStore}>
             <MessageProvider>
-              <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+              <RelatedRequestsTable requestID={systemIntake.id} type="itgov" />
             </MessageProvider>
           </Provider>
         </MockedProvider>
@@ -176,7 +176,7 @@ describe('Related Requests table', () => {
         <MockedProvider mocks={mocks}>
           <Provider store={mockStore}>
             <MessageProvider>
-              <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+              <RelatedRequestsTable requestID={systemIntake.id} type="itgov" />
             </MessageProvider>
           </Provider>
         </MockedProvider>
@@ -235,7 +235,7 @@ describe('Related Requests table', () => {
         <MockedProvider mocks={mocks}>
           <Provider store={mockStore}>
             <MessageProvider>
-              <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+              <RelatedRequestsTable requestID={systemIntake.id} type="itgov" />
             </MessageProvider>
           </Provider>
         </MockedProvider>
@@ -298,7 +298,7 @@ describe('Related Requests table', () => {
         <MockedProvider mocks={mocks}>
           <Provider store={mockStore}>
             <MessageProvider>
-              <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+              <RelatedRequestsTable requestID={systemIntake.id} type="itgov" />
             </MessageProvider>
           </Provider>
         </MockedProvider>
@@ -360,7 +360,7 @@ describe('Related Requests table', () => {
         <MockedProvider mocks={mocks}>
           <Provider store={mockStore}>
             <MessageProvider>
-              <RelatedRequestsTable systemIntakeID={systemIntake.id} />
+              <RelatedRequestsTable requestID={systemIntake.id} type="itgov" />
             </MessageProvider>
           </Provider>
         </MockedProvider>

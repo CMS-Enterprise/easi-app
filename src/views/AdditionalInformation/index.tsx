@@ -120,8 +120,12 @@ const AdditionalInformation = ({
       {/* table only shows on itgov requests until EASI-4467 (https://jiraent.cms.gov/browse/EASI-4467) */}
       {flags.systemIntakeRelatedRequests && type === 'itgov' && (
         <div className="margin-top-8">
-          <RelatedRequestsTable systemIntakeID={request.id} />
+          <RelatedRequestsTable requestID={request.id} type={type} />
         </div>
+      )}
+
+      {flags.trbRelatedRequests && type === 'trb' && (
+        <RelatedRequestsTable requestID={request.id} type={type} />
       )}
     </div>
   );

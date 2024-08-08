@@ -42,10 +42,12 @@ import { NotFoundPartial } from 'views/NotFound';
 import { LinkedRequestForTable } from './linkedRequestForTable';
 
 const RelatedRequestsTable = ({
-  systemIntakeID,
+  requestID,
+  type,
   pageSize = 10
 }: {
-  systemIntakeID: string;
+  requestID: string;
+  type: 'trb' | 'itgov';
   pageSize?: number;
 }) => {
   const { t } = useTranslation('admin');
@@ -54,7 +56,7 @@ const RelatedRequestsTable = ({
     GetSystemIntakeRelatedRequests,
     GetSystemIntakeRelatedRequestsVariables
   >(GetSystemIntakeRelatedRequestsQuery, {
-    variables: { systemIntakeID },
+    variables: { systemIntakeID: requestID },
     fetchPolicy: 'cache-and-network'
   });
 

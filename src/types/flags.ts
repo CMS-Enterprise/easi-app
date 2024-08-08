@@ -6,6 +6,7 @@ export type Flags = {
   systemProfileHiddenFields: boolean;
   systemWorkspace: boolean;
   systemWorkspaceRequestsCard: boolean;
+  trbRelatedRequests: boolean;
   grbReviewTab: boolean;
 };
 
