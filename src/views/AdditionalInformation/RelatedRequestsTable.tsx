@@ -11,7 +11,6 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useQuery } from '@apollo/client';
 import { Button, Table as UswdsTable } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -21,11 +20,6 @@ import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
-import GetSystemIntakeRelatedRequestsQuery from 'queries/GetSystemIntakeRelatedRequestsQuery';
-import {
-  GetSystemIntakeRelatedRequests,
-  GetSystemIntakeRelatedRequestsVariables
-} from 'queries/types/GetSystemIntakeRelatedRequests';
 import { AppState } from 'reducers/rootReducer';
 import { formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
@@ -40,6 +34,7 @@ import user from 'utils/user';
 import { NotFoundPartial } from 'views/NotFound';
 
 import { LinkedRequestForTable } from './linkedRequestForTable';
+import useRelatedRequests from './useRelatedRequests';
 
 const RelatedRequestsTable = ({
   requestID,
@@ -52,13 +47,25 @@ const RelatedRequestsTable = ({
 }) => {
   const { t } = useTranslation('admin');
 
-  const { loading, error, data } = useQuery<
-    GetSystemIntakeRelatedRequests,
-    GetSystemIntakeRelatedRequestsVariables
-  >(GetSystemIntakeRelatedRequestsQuery, {
-    variables: { systemIntakeID: requestID },
-    fetchPolicy: 'cache-and-network'
-  });
+  const { loading, error, data } = useRelatedRequests(requestID, type);
+
+  // const { loading, error, data } = useQuery<
+  //   GetSystemIntakeRelatedRequests,
+  //   GetSystemIntakeRelatedRequestsVariables
+  // >(GetSystemIntakeRelatedRequestsQuery, {
+  //   variables: { systemIntakeID: requestID },
+  //   fetchPolicy: 'cache-and-network',
+  //   skip: type !== 'itgov'
+  // });
+  //
+  // const { loading, error, data } = useQuery<
+  //   GetTRBRequestRelatedRequests,
+  //   GetTRBRequestRelatedRequestsVariables
+  // >(GetSystemIntakeRelatedRequestsQuery, {
+  //   variables: { trbRequestID: requestID },
+  //   fetchPolicy: 'cache-and-network',
+  //   skip: type !== 'trb'
+  // });
 
   const { groups } = useSelector((state: AppState) => state.auth);
 
@@ -83,13 +90,11 @@ const RelatedRequestsTable = ({
       return [];
     }
 
-    if (data === undefined || data.systemIntake === null) {
+    if (data === undefined || data === null) {
       return [];
     }
 
-    const {
-      systemIntake: { relatedIntakes, relatedTRBRequests }
-    } = data;
+    const { relatedIntakes, relatedTRBRequests } = data;
 
     const requests: LinkedRequestForTable[] = [];
 
