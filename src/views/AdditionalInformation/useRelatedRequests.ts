@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 
 import GetSystemIntakeRelatedRequestsQuery from '../../queries/GetSystemIntakeRelatedRequestsQuery';
+import GetTRBRequestRelatedRequestsQuery from '../../queries/GetTRBRequestRelatedRequestsQuery';
 import {
   GetSystemIntakeRelatedRequests,
   GetSystemIntakeRelatedRequestsVariables
@@ -11,35 +12,45 @@ import {
 } from '../../queries/types/GetTRBRequestRelatedRequests';
 
 const useRelatedRequests = (requestID: string, type: 'trb' | 'itgov') => {
-  const sysIntakeRes = useQuery<
+  const {
+    error: systemIntakeError,
+    loading: systemIntakeLoading,
+    data: systemIntakeData
+  } = useQuery<
     GetSystemIntakeRelatedRequests,
     GetSystemIntakeRelatedRequestsVariables
   >(GetSystemIntakeRelatedRequestsQuery, {
     variables: { systemIntakeID: requestID },
     fetchPolicy: 'cache-and-network',
+    // avoid making API call if not needed
     skip: type !== 'itgov'
   });
 
-  const trbRequestRes = useQuery<
+  const {
+    error: trbRequestError,
+    loading: trbRequestLoading,
+    data: trbRequestData
+  } = useQuery<
     GetTRBRequestRelatedRequests,
     GetTRBRequestRelatedRequestsVariables
-  >(GetSystemIntakeRelatedRequestsQuery, {
+  >(GetTRBRequestRelatedRequestsQuery, {
     variables: { trbRequestID: requestID },
     fetchPolicy: 'cache-and-network',
+    // avoid making API call if not needed
     skip: type !== 'trb'
   });
 
-  return {
-    data:
-      type === 'trb'
-        ? trbRequestRes.data?.trbRequest
-        : sysIntakeRes.data?.systemIntake,
-
-    loading: type === 'trb' ? trbRequestRes.loading : sysIntakeRes.loading,
-    error: type === 'trb' ? trbRequestRes.error : sysIntakeRes.error
-  };
-
-  // return type === 'trb' ? trbRequestRes.data?.trbRequest : sysIntakeRes;
+  return type === 'trb'
+    ? {
+        error: trbRequestError,
+        loading: trbRequestLoading,
+        data: trbRequestData?.trbRequest
+      }
+    : {
+        error: systemIntakeError,
+        loading: systemIntakeLoading,
+        data: systemIntakeData?.systemIntake
+      };
 };
 
 export default useRelatedRequests;

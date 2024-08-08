@@ -49,24 +49,6 @@ const RelatedRequestsTable = ({
 
   const { loading, error, data } = useRelatedRequests(requestID, type);
 
-  // const { loading, error, data } = useQuery<
-  //   GetSystemIntakeRelatedRequests,
-  //   GetSystemIntakeRelatedRequestsVariables
-  // >(GetSystemIntakeRelatedRequestsQuery, {
-  //   variables: { systemIntakeID: requestID },
-  //   fetchPolicy: 'cache-and-network',
-  //   skip: type !== 'itgov'
-  // });
-  //
-  // const { loading, error, data } = useQuery<
-  //   GetTRBRequestRelatedRequests,
-  //   GetTRBRequestRelatedRequestsVariables
-  // >(GetSystemIntakeRelatedRequestsQuery, {
-  //   variables: { trbRequestID: requestID },
-  //   fetchPolicy: 'cache-and-network',
-  //   skip: type !== 'trb'
-  // });
-
   const { groups } = useSelector((state: AppState) => state.auth);
 
   const flags = useFlags();
