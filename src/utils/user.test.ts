@@ -7,17 +7,17 @@ import {
 } from 'constants/jobCodes';
 import { Flags } from 'types/flags';
 
-import { isBasicUser, isGrtReviewer, isTrbAdmin } from './user';
+import { isBasicUser, isITGovAdmin, isTrbAdmin } from './user';
 
 describe('user', () => {
-  describe('isGrtReviewer', () => {
+  describe('isITGovAdmin', () => {
     describe('groups', () => {
       const flags = {} as Flags;
       describe('dev job code exists in groups', () => {
         const groups = [GOVTEAM_DEV];
 
         it('returns true', () => {
-          expect(isGrtReviewer(groups, flags)).toBe(true);
+          expect(isITGovAdmin(groups, flags)).toBe(true);
         });
       });
 
@@ -25,7 +25,7 @@ describe('user', () => {
         const groups = [GOVTEAM_PROD];
 
         it('returns true', () => {
-          expect(isGrtReviewer(groups, flags)).toBe(true);
+          expect(isITGovAdmin(groups, flags)).toBe(true);
         });
       });
 
@@ -33,7 +33,7 @@ describe('user', () => {
         const groups = [BASIC_USER_PROD];
 
         it('returns false', () => {
-          expect(isGrtReviewer(groups, flags)).toBe(false);
+          expect(isITGovAdmin(groups, flags)).toBe(false);
         });
       });
     });
@@ -44,14 +44,14 @@ describe('user', () => {
       describe('the downgrade flag is false', () => {
         const flags = { downgradeGovTeam: false } as Flags;
         it('returns true', () => {
-          expect(isGrtReviewer(groups, flags)).toBe(true);
+          expect(isITGovAdmin(groups, flags)).toBe(true);
         });
       });
 
       describe('the downgrade flag is true', () => {
         const flags = { downgradeGovTeam: true } as Flags;
         it('returns false', () => {
-          expect(isGrtReviewer(groups, flags)).toBe(false);
+          expect(isITGovAdmin(groups, flags)).toBe(false);
         });
       });
     });

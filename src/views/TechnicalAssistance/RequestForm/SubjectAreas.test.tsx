@@ -56,6 +56,8 @@ const mockTrbRequestData: TrbRequest = {
   type: TRBRequestType.NEED_HELP,
   state: TRBRequestState.OPEN,
   taskStatuses: {} as any,
+  relatedTRBRequests: [],
+  relatedIntakes: [],
   __typename: 'TRBRequest'
 };
 
@@ -88,6 +90,8 @@ function renderSubjectAreas() {
             type: TRBRequestType.NEED_HELP,
             state: TRBRequestState.OPEN,
             taskStatuses: {} as any,
+            relatedTRBRequests: [],
+            relatedIntakes: [],
             __typename: 'TRBRequest'
           }}
           stepUrl={{

@@ -150,7 +150,7 @@ describe('The home page', () => {
           <Provider store={adminStore}>
             <VerboseMockedProvider mocks={[...mocks, getTrbAdminTeamHomeQuery]}>
               <MessageProvider>
-                <AdminHome isGrtReviewer isTrbAdmin />
+                <AdminHome isITGovAdmin isTrbAdmin />
               </MessageProvider>
             </VerboseMockedProvider>
           </Provider>

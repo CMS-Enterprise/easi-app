@@ -134,6 +134,24 @@ export const SystemIntake = gql`
         assigneeLastName
       }
     }
+    relatedTRBRequests {
+      id
+      name
+      contractNumbers {
+        contractNumber
+      }
+      status
+      createdAt
+    }
+    relatedIntakes {
+      id
+      requestName
+      contractNumbers {
+        contractNumber
+      }
+      decisionState
+      submittedAt
+    }
   }
 `;
 

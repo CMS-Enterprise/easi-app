@@ -35,10 +35,10 @@ const Home = () => {
 
   const renderView = () => {
     if (isUserSet) {
-      if (user.isGrtReviewer(groups, flags) || user.isTrbAdmin(groups, flags)) {
+      if (user.isITGovAdmin(groups, flags) || user.isTrbAdmin(groups, flags)) {
         return (
           <AdminHome
-            isGrtReviewer={user.isGrtReviewer(groups, flags)}
+            isITGovAdmin={user.isITGovAdmin(groups, flags)}
             isTrbAdmin={user.isTrbAdmin(groups, flags)}
           />
         );

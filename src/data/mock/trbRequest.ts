@@ -156,7 +156,9 @@ export const trbRequest: GetTrbRequest['trbRequest'] = {
     fundingSources: null,
     submittedAt: null,
     __typename: 'TRBRequestForm'
-  }
+  },
+  relatedTRBRequests: [],
+  relatedIntakes: []
 };
 
 export const getTrbRequestQuery: MockedQuery<

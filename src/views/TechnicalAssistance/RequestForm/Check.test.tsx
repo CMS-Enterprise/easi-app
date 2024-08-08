@@ -74,6 +74,8 @@ const mockTrbRequestData: TrbRequest = {
     submittedAt: '2023-01-23T20:06:52.123703Z',
     __typename: 'TRBRequestForm'
   },
+  relatedTRBRequests: [],
+  relatedIntakes: [],
   __typename: 'TRBRequest'
 };
 
