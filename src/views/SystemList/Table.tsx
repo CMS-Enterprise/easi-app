@@ -27,6 +27,7 @@ import {
   Table as UswdsTable
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
@@ -68,6 +69,7 @@ export const Table = ({
   defaultPageSize = 10,
   isHomePage
 }: TableProps) => {
+  const flags = useFlags();
   const { t } = useTranslation('systemProfile');
 
   const location = useLocation();
@@ -205,19 +207,22 @@ export const Table = ({
       });
     }
 
-    cols.push({
-      Header: t<string>('systemTable.header.systemStatus'),
-      accessor: 'atoExpirationDate',
-      Cell: ({
-        value
-      }: CellProps<CedarSystem, CedarSystem['atoExpirationDate']>) => (
-        <AtoStatusIconText dt={value} />
-      ),
-      sortType: (a, b) =>
-        (a.values.atoExpirationDate ?? '') > (b.values.atoExpirationDate ?? '')
-          ? 1
-          : -1
-    });
+    if (flags.showAtoColumn) {
+      cols.push({
+        Header: t<string>('systemTable.header.systemStatus'),
+        accessor: 'atoExpirationDate',
+        Cell: ({
+          value
+        }: CellProps<CedarSystem, CedarSystem['atoExpirationDate']>) => (
+          <AtoStatusIconText dt={value} />
+        ),
+        sortType: (a, b) =>
+          (a.values.atoExpirationDate ?? '') >
+          (b.values.atoExpirationDate ?? '')
+            ? 1
+            : -1
+      });
+    }
 
     if (isHomePage) {
       cols.push({
@@ -232,7 +237,15 @@ export const Table = ({
     }
 
     return cols;
-  }, [t, systems, systemTableType, createMutate, deleteMutate, isHomePage]);
+  }, [
+    t,
+    systems,
+    systemTableType,
+    createMutate,
+    deleteMutate,
+    isHomePage,
+    flags.showAtoColumn
+  ]);
 
   const {
     getTableProps,

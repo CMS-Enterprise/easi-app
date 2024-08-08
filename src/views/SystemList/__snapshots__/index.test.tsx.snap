@@ -373,41 +373,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                       </svg>
                     </button>
                   </th>
-                  <th
-                    aria-sort="none"
-                    colspan="1"
-                    role="columnheader"
-                    scope="col"
-                    style="min-width: 150px; position: relative;"
-                    title="Toggle SortBy"
-                  >
-                    <button
-                      class="usa-button usa-button--unstyled"
-                      style="cursor: pointer;"
-                      title="Toggle SortBy"
-                      type="button"
-                    >
-                      ATO status
-                      <svg
-                        class="usa-icon margin-left-05 position-absolute"
-                        data-testid="caret--sort"
-                        focusable="false"
-                        height="1em"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
-                        />
-                      </svg>
-                    </button>
-                  </th>
                 </tr>
               </thead>
               <tbody
@@ -466,34 +431,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                       CMMI
                     </p>
                   </th>
-                  <th
-                    role="cell"
-                  >
-                    <div
-                      class="display-flex flex-align-center"
-                    >
-                      <svg
-                        class="usa-icon usa-icon--size-3 margin-right-1 text-base-light"
-                        focusable="false"
-                        height="1em"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"
-                        />
-                      </svg>
-                      <span>
-                        No ATO on file 
-                      </span>
-                    </div>
-                  </th>
                 </tr>
                 <tr
                   role="row"
@@ -547,34 +484,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     <p>
                       CMMI
                     </p>
-                  </th>
-                  <th
-                    role="cell"
-                  >
-                    <div
-                      class="display-flex flex-align-center"
-                    >
-                      <svg
-                        class="usa-icon usa-icon--size-3 margin-right-1 text-base-light"
-                        focusable="false"
-                        height="1em"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"
-                        />
-                      </svg>
-                      <span>
-                        No ATO on file 
-                      </span>
-                    </div>
                   </th>
                 </tr>
                 <tr
@@ -630,34 +539,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                       Division of Call Center Systems
                     </p>
                   </th>
-                  <th
-                    role="cell"
-                  >
-                    <div
-                      class="display-flex flex-align-center"
-                    >
-                      <svg
-                        class="usa-icon usa-icon--size-3 margin-right-1 text-base-light"
-                        focusable="false"
-                        height="1em"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"
-                        />
-                      </svg>
-                      <span>
-                        No ATO on file 
-                      </span>
-                    </div>
-                  </th>
                 </tr>
                 <tr
                   role="row"
@@ -711,34 +592,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     <p>
                       CMMI
                     </p>
-                  </th>
-                  <th
-                    role="cell"
-                  >
-                    <div
-                      class="display-flex flex-align-center"
-                    >
-                      <svg
-                        class="usa-icon usa-icon--size-3 margin-right-1 text-base-light"
-                        focusable="false"
-                        height="1em"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"
-                        />
-                      </svg>
-                      <span>
-                        No ATO on file 
-                      </span>
-                    </div>
                   </th>
                 </tr>
               </tbody>
