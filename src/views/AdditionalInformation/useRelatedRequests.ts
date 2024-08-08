@@ -1,17 +1,30 @@
-import { useQuery } from '@apollo/client';
+import { ApolloError, useQuery } from '@apollo/client';
 
 import GetSystemIntakeRelatedRequestsQuery from 'queries/GetSystemIntakeRelatedRequestsQuery';
 import GetTRBRequestRelatedRequestsQuery from 'queries/GetTRBRequestRelatedRequestsQuery';
 import {
   GetSystemIntakeRelatedRequests,
+  GetSystemIntakeRelatedRequests_systemIntake as SystemIntakeRelatedRequests,
   GetSystemIntakeRelatedRequestsVariables
 } from 'queries/types/GetSystemIntakeRelatedRequests';
 import {
   GetTRBRequestRelatedRequests,
+  GetTRBRequestRelatedRequests_trbRequest as TRBRequestRelatedRequests,
   GetTRBRequestRelatedRequestsVariables
 } from 'queries/types/GetTRBRequestRelatedRequests';
 
-const useRelatedRequests = (requestID: string, type: 'trb' | 'itgov') => {
+const useRelatedRequests = (
+  requestID: string,
+  type: 'trb' | 'itgov'
+): {
+  error: ApolloError | undefined;
+  loading: boolean;
+  data:
+    | SystemIntakeRelatedRequests
+    | TRBRequestRelatedRequests
+    | null
+    | undefined;
+} => {
   const {
     error: systemIntakeError,
     loading: systemIntakeLoading,
