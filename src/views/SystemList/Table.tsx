@@ -227,10 +227,7 @@ export const Table = ({
             system.linkedTrbRequests.length + system.linkedSystemIntakes.length
           );
         },
-        id: 'openRequests',
-        Cell: ({ row }: { row: Row<CedarSystem> }) =>
-          row.original.linkedSystemIntakes.length +
-          row.original.linkedTrbRequests.length
+        id: 'openRequests'
       });
     }
 
