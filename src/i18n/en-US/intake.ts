@@ -15,10 +15,12 @@ const hasContractLabels: Record<
   hasContract_NOT_STARTED: "I haven't started acquisition planning yet",
   hasContract_NOT_NEEDED: "I don't anticipate needing contractor support"
 };
+
 const version: Record<SystemIntakeDocumentVersion, string> = {
   CURRENT: 'Current',
   HISTORICAL: 'Historical'
 };
+
 const type: Record<SystemIntakeDocumentCommonType, string> = {
   SOO_SOW:
     'Statement of Objectives (SOO), Statement of Work (SOW), Performance Work Statement (PWS), or other contracting document',
@@ -29,6 +31,7 @@ const type: Record<SystemIntakeDocumentCommonType, string> = {
   MEETING_MINUTES: 'Meeting Minutes',
   OTHER: 'Other'
 };
+
 export const abbreviatedType: Record<SystemIntakeDocumentCommonType, string> = {
   SOO_SOW: 'SOO, SOW, PWS, or other contracting document',
   DRAFT_IGCE: 'Draft IGCE',
@@ -81,6 +84,10 @@ const intake = {
     noDocumentsAlert:
       'The original requester did not upload any additional documentation to this request. If the Governance Team needs any supporting documentation in order to fully process this request, contact the requester.',
     versionLabel: 'What is the version of this document?',
+    versionHelpText_CURRENT:
+      'Choose this option if you are uploading a document from the past that should be used for reference purposes only.',
+    versionHelpText_HISTORICAL:
+      'Choose this option if this is the most recent document version that the Governance Team should reference.',
     type,
     abbreviatedType,
     version

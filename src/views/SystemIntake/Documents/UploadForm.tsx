@@ -242,16 +242,26 @@ const UploadForm = () => {
                   {Object.keys(
                     t('intake:documents.version', { returnObjects: true })
                   ).map(val => (
-                    <Radio
-                      key={val}
-                      id={`${field.name}-${val}`}
-                      data-testid={`${field.name}-${val}`}
-                      name={field.name}
-                      onBlur={field.onBlur}
-                      onChange={field.onChange}
-                      label={t(`intake:documents.version.${val}`)}
-                      value={val}
-                    />
+                    <React.Fragment key={val}>
+                      <Radio
+                        id={`${field.name}-${val}`}
+                        data-testid={`${field.name}-${val}`}
+                        name={field.name}
+                        onBlur={field.onBlur}
+                        onChange={field.onChange}
+                        label={t(`intake:documents.version.${val}`)}
+                        aria-describedby={`versionHelpText${val}`}
+                        value={val}
+                      />
+                      <p
+                        id={`versionHelpText${val}`}
+                        className="margin-left-4 margin-top-05 margin-bottom-0 font-body-2xs line-height-body-3"
+                      >
+                        {t('intake:documents.versionHelpText', {
+                          context: val
+                        })}
+                      </p>
+                    </React.Fragment>
                   ))}
                 </Fieldset>
               </FormGroup>
