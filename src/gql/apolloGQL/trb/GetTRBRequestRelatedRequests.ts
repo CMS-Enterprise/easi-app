@@ -10,7 +10,8 @@ export default gql(/* GraphQL */ `
         contractNumbers {
           contractNumber
         }
-        decisionState
+        statusAdmin
+        statusRequester
         submittedAt
       }
       relatedTRBRequests {

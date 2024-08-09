@@ -88,7 +88,10 @@ const RelatedRequestsTable = ({
         contractNumber: formatContractNumbers(relatedIntake.contractNumbers),
         process: 'IT Governance',
         projectTitle: relatedIntake.requestName || '',
-        status: relatedIntake.decisionState,
+        status:
+          isTRBAdmin || isITGovAdmin
+            ? relatedIntake.statusAdmin
+            : relatedIntake.statusRequester,
         submissionDate: relatedIntake.submittedAt || ''
       });
     });
@@ -107,7 +110,7 @@ const RelatedRequestsTable = ({
       });
     });
     return requests;
-  }, [data, error, loading]);
+  }, [data, error, isITGovAdmin, isTRBAdmin, loading]);
 
   const columns: Column<LinkedRequestForTable>[] = useMemo<
     Column<LinkedRequestForTable>[]
@@ -171,7 +174,11 @@ const RelatedRequestsTable = ({
             ret = t<string>(`tableAndPagination:status.requestStatus.${value}`);
           } else {
             ret = t<string>(
-              `governanceReviewTeam:systemIntakeDecisionState.${value}`
+              `governanceReviewTeam:${
+                isTRBAdmin || isITGovAdmin
+                  ? 'systemIntakeStatusAdmin'
+                  : 'systemIntakeStatusRequester'
+              }.${value}`
             );
           }
 

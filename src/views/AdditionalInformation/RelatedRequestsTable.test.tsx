@@ -5,14 +5,15 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import GetSystemIntakeRelatedRequests from 'gql/apolloGQL/systemIntake/GetSystemIntakeRelatedRequests';
 import GetTRBRequestRelatedRequests from 'gql/apolloGQL/trb/GetTRBRequestRelatedRequests';
+import {
+  SystemIntakeStatusAdmin,
+  SystemIntakeStatusRequester
+} from 'gql/gen/graphql';
 
 import { systemIntake } from 'data/mock/systemIntake';
 import { trbRequest } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import {
-  SystemIntakeDecisionState,
-  TRBRequestStatus
-} from 'types/graphql-global-types';
+import { TRBRequestStatus } from 'types/graphql-global-types';
 import easiMockStore from 'utils/testing/easiMockStore';
 
 import RelatedRequestsTable from './RelatedRequestsTable';
@@ -127,7 +128,10 @@ describe('Related Requests table', () => {
                   id: '1',
                   requestName: 'related intake 1',
                   contractNumbers: ['1', '2'],
-                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  statusAdmin:
+                    SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+                  statusRequester:
+                    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date()
                 }
               ],
@@ -189,7 +193,10 @@ describe('Related Requests table', () => {
                   id: '1',
                   requestName: 'related intake 1',
                   contractNumbers: ['1', '2'],
-                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  statusAdmin:
+                    SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+                  statusRequester:
+                    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date()
                 }
               ],
@@ -259,7 +266,10 @@ describe('Related Requests table', () => {
                   id: '1',
                   requestName: 'related intake 1',
                   contractNumbers: ['1', '2'],
-                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  statusAdmin:
+                    SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+                  statusRequester:
+                    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date()
                 }
               ],
@@ -323,7 +333,10 @@ describe('Related Requests table', () => {
                   id: '1',
                   requestName: 'related intake 1',
                   contractNumbers: ['1', '2'],
-                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  statusAdmin:
+                    SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+                  statusRequester:
+                    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date()
                 }
               ],
@@ -382,7 +395,10 @@ describe('Related Requests table', () => {
                   id: '1',
                   requestName: 'related intake 1',
                   contractNumbers: ['1', '2'],
-                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  statusAdmin:
+                    SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+                  statusRequester:
+                    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date()
                 }
               ],
@@ -445,7 +461,10 @@ describe('Related Requests table', () => {
                   id: '1',
                   requestName: 'related intake 1',
                   contractNumbers: ['1', '2'],
-                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  statusAdmin:
+                    SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+                  statusRequester:
+                    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date()
                 }
               ],
@@ -508,7 +527,10 @@ describe('Related Requests table', () => {
                   id: '1',
                   requestName: 'related intake 1',
                   contractNumbers: ['1', '2'],
-                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  statusAdmin:
+                    SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+                  statusRequester:
+                    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date()
                 }
               ],
@@ -571,7 +593,10 @@ describe('Related Requests table', () => {
                   id: '1',
                   requestName: 'related intake 1',
                   contractNumbers: ['1', '2'],
-                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  statusAdmin:
+                    SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+                  statusRequester:
+                    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date()
                 }
               ],
@@ -633,7 +658,10 @@ describe('Related Requests table', () => {
                   id: '1',
                   requestName: 'related intake 1',
                   contractNumbers: ['1', '2'],
-                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  statusAdmin:
+                    SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+                  statusRequester:
+                    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date()
                 }
               ],
@@ -695,7 +723,10 @@ describe('Related Requests table', () => {
                   id: '1',
                   requestName: 'related intake 1',
                   contractNumbers: ['1', '2'],
-                  decisionState: SystemIntakeDecisionState.NO_DECISION,
+                  statusAdmin:
+                    SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+                  statusRequester:
+                    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date()
                 }
               ],

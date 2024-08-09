@@ -277,7 +277,7 @@ export enum SystemIntakeState {
 }
 
 /**
- * This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
+ * This represents the statuses that an admin would see as a representation of a system intake. Note, there is no status for a brand new request, because an Admin doesn't see the request until it is in progress.
  */
 export enum SystemIntakeStatusAdmin {
   CLOSED = "CLOSED",
