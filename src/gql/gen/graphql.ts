@@ -2062,6 +2062,8 @@ export enum SystemIntakeDecisionState {
 /** Represents a document attached to a System Intake */
 export type SystemIntakeDocument = {
   __typename: 'SystemIntakeDocument';
+  canDelete: Scalars['Boolean']['output'];
+  canView: Scalars['Boolean']['output'];
   documentType: SystemIntakeDocumentType;
   fileName: Scalars['String']['output'];
   id: Scalars['UUID']['output'];

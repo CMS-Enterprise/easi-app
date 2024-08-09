@@ -1781,6 +1781,8 @@ type SystemIntakeDocument {
   version: SystemIntakeDocumentVersion!
   uploadedAt: Time!
   url: String!
+  canDelete: Boolean!
+  canView: Boolean!
 }
 
 """
