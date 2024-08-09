@@ -35,7 +35,8 @@ const config: CodegenConfig = {
         },
         nonOptionalTypename: true,
         namingConvention: {
-          enumValues: 'change-case-all#upperCase#snakeCase'
+          enumValues: 'change-case-all#upperCase#snakeCase',
+          typeNames: 'lodash#upperFirst'
         }
       }
     }

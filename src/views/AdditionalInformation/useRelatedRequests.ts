@@ -1,9 +1,9 @@
 import { ApolloError } from '@apollo/client';
 import {
   GetSystemIntakeRelatedRequestsQuery,
-  GetTrbRequestRelatedRequestsQuery,
+  GetTRBRequestRelatedRequestsQuery,
   useGetSystemIntakeRelatedRequestsQuery,
-  useGetTrbRequestRelatedRequestsQuery
+  useGetTRBRequestRelatedRequestsQuery
 } from 'gql/gen/graphql';
 
 import { RequestType } from 'types/requestType';
@@ -16,7 +16,7 @@ const useRelatedRequests = (
   loading: boolean;
   data:
     | GetSystemIntakeRelatedRequestsQuery['systemIntake']
-    | GetTrbRequestRelatedRequestsQuery['trbRequest']
+    | GetTRBRequestRelatedRequestsQuery['trbRequest']
     | null
     | undefined;
 } => {
@@ -35,7 +35,7 @@ const useRelatedRequests = (
     error: trbRequestError,
     loading: trbRequestLoading,
     data: trbRequestData
-  } = useGetTrbRequestRelatedRequestsQuery({
+  } = useGetTRBRequestRelatedRequestsQuery({
     variables: { trbRequestID: requestID },
     fetchPolicy: 'cache-and-network',
     skip: type !== 'trb'

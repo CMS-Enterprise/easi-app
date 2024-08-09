@@ -1,7 +1,6 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -12,6 +11,14 @@ import {
   Grid,
   IconArrowBack
 } from '@trussworks/react-uswds';
+import {
+  GetSystemIntakeGRBReviewersDocument,
+  SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewerRole,
+  SystemIntakeGRBReviewerVotingRole,
+  useCreateSystemIntakeGRBReviewerMutation,
+  useUpdateSystemIntakeGRBReviewerMutation
+} from 'gql/gen/graphql';
 import { toLower } from 'lodash';
 
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -25,24 +32,6 @@ import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
-import {
-  CreateSystemIntakeGRBReviewerQuery,
-  GetSystemIntakeGRBReviewersQuery,
-  UpdateSystemIntakeGRBReviewerQuery
-} from 'queries/SystemIntakeGRBReviewerQueries';
-import {
-  CreateSystemIntakeGRBReviewer,
-  CreateSystemIntakeGRBReviewerVariables
-} from 'queries/types/CreateSystemIntakeGRBReviewer';
-import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
-import {
-  UpdateSystemIntakeGRBReviewer,
-  UpdateSystemIntakeGRBReviewerVariables
-} from 'queries/types/UpdateSystemIntakeGRBReviewer';
-import {
-  SystemIntakeGRBReviewerRole,
-  SystemIntakeGRBReviewerVotingRole
-} from 'types/graphql-global-types';
 import CreateGRBReviewerSchema from 'validations/grbReviewerSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
@@ -59,8 +48,8 @@ type GRBReviewerFormFields = {
 };
 
 type GRBReviewerFormProps = {
-  grbReviewers: SystemIntakeGRBReviewer[];
-  setReviewerToRemove: (reviewer: SystemIntakeGRBReviewer) => void;
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
+  setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
 };
 
 /**
@@ -79,7 +68,7 @@ const GRBReviewerForm = ({
   const {
     /** Active reviewer when editing */
     state: activeReviewer
-  } = useLocation<SystemIntakeGRBReviewer | undefined>();
+  } = useLocation<SystemIntakeGRBReviewerFragment | undefined>();
 
   const { reviewerType, systemId, action } = useParams<{
     reviewerType: ReviewerKey;
@@ -87,25 +76,19 @@ const GRBReviewerForm = ({
     action: 'add' | 'edit';
   }>();
 
-  const [createGRBReviewer] = useMutation<
-    CreateSystemIntakeGRBReviewer,
-    CreateSystemIntakeGRBReviewerVariables
-  >(CreateSystemIntakeGRBReviewerQuery, {
+  const [createGRBReviewer] = useCreateSystemIntakeGRBReviewerMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewersQuery,
+        query: GetSystemIntakeGRBReviewersDocument,
         variables: { id: systemId }
       }
     ]
   });
 
-  const [updateGRBReviewer] = useMutation<
-    UpdateSystemIntakeGRBReviewer,
-    UpdateSystemIntakeGRBReviewerVariables
-  >(UpdateSystemIntakeGRBReviewerQuery, {
+  const [updateGRBReviewer] = useUpdateSystemIntakeGRBReviewerMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewersQuery,
+        query: GetSystemIntakeGRBReviewersDocument,
         variables: { id: systemId }
       }
     ]

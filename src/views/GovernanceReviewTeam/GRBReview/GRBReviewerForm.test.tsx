@@ -2,36 +2,28 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {
+  CreateSystemIntakeGRBReviewerDocument,
+  CreateSystemIntakeGRBReviewerMutation,
+  CreateSystemIntakeGRBReviewerMutationVariables,
+  GetSystemIntakeGRBReviewersDocument,
+  GetSystemIntakeGRBReviewersQuery,
+  GetSystemIntakeGRBReviewersQueryVariables,
+  SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewerRole,
+  SystemIntakeGRBReviewerVotingRole,
+  UpdateSystemIntakeGRBReviewerDocument,
+  UpdateSystemIntakeGRBReviewerMutation,
+  UpdateSystemIntakeGRBReviewerMutationVariables
+} from 'gql/gen/graphql';
 
 import { systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import {
-  CreateSystemIntakeGRBReviewerQuery,
-  GetSystemIntakeGRBReviewersQuery,
-  UpdateSystemIntakeGRBReviewerQuery
-} from 'queries/SystemIntakeGRBReviewerQueries';
-import {
-  CreateSystemIntakeGRBReviewer,
-  CreateSystemIntakeGRBReviewerVariables
-} from 'queries/types/CreateSystemIntakeGRBReviewer';
-import {
   GetCedarContacts,
   GetCedarContactsVariables
 } from 'queries/types/GetCedarContacts';
-import {
-  GetSystemIntakeGRBReviewers,
-  GetSystemIntakeGRBReviewersVariables
-} from 'queries/types/GetSystemIntakeGRBReviewers';
-import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
-import {
-  UpdateSystemIntakeGRBReviewer,
-  UpdateSystemIntakeGRBReviewerVariables
-} from 'queries/types/UpdateSystemIntakeGRBReviewer';
-import {
-  SystemIntakeGRBReviewerRole,
-  SystemIntakeGRBReviewerVotingRole
-} from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import MockUsers from 'utils/testing/MockUsers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -46,7 +38,7 @@ const contact = user.userInfo;
 
 const contactLabel = `${contact.commonName}, ${contact.euaUserId} (${contact.email})`;
 
-const grbReviewer: SystemIntakeGRBReviewer = {
+const grbReviewer: SystemIntakeGRBReviewerFragment = {
   __typename: 'SystemIntakeGRBReviewer',
   id: '5b78f877-2848-40b2-a123-96872c40f744',
   userAccount: {
@@ -60,7 +52,7 @@ const grbReviewer: SystemIntakeGRBReviewer = {
   grbRole: SystemIntakeGRBReviewerRole.CMCS_REP
 };
 
-const updatedGRBReviewer: SystemIntakeGRBReviewer = {
+const updatedGRBReviewer: SystemIntakeGRBReviewerFragment = {
   ...grbReviewer,
   votingRole: SystemIntakeGRBReviewerVotingRole.NON_VOTING,
   grbRole: SystemIntakeGRBReviewerRole.QIO_REP
@@ -84,11 +76,11 @@ const cedarContactsQuery = (
 });
 
 const createSystemIntakeGRBReviewerQuery: MockedQuery<
-  CreateSystemIntakeGRBReviewer,
-  CreateSystemIntakeGRBReviewerVariables
+  CreateSystemIntakeGRBReviewerMutation,
+  CreateSystemIntakeGRBReviewerMutationVariables
 > = {
   request: {
-    query: CreateSystemIntakeGRBReviewerQuery,
+    query: CreateSystemIntakeGRBReviewerDocument,
     variables: {
       input: {
         systemIntakeID: systemIntake.id,
@@ -100,17 +92,18 @@ const createSystemIntakeGRBReviewerQuery: MockedQuery<
   },
   result: {
     data: {
+      __typename: 'Mutation',
       createSystemIntakeGRBReviewer: grbReviewer
     }
   }
 };
 
 const updateSystemIntakeGRBReviewerQuery: MockedQuery<
-  UpdateSystemIntakeGRBReviewer,
-  UpdateSystemIntakeGRBReviewerVariables
+  UpdateSystemIntakeGRBReviewerMutation,
+  UpdateSystemIntakeGRBReviewerMutationVariables
 > = {
   request: {
-    query: UpdateSystemIntakeGRBReviewerQuery,
+    query: UpdateSystemIntakeGRBReviewerDocument,
     variables: {
       input: {
         reviewerID: grbReviewer.id,
@@ -121,25 +114,27 @@ const updateSystemIntakeGRBReviewerQuery: MockedQuery<
   },
   result: {
     data: {
+      __typename: 'Mutation',
       updateSystemIntakeGRBReviewer: updatedGRBReviewer
     }
   }
 };
 
 const getSystemIntakeGRBReviewersQuery = (
-  reviewer?: SystemIntakeGRBReviewer
+  reviewer?: SystemIntakeGRBReviewerFragment
 ): MockedQuery<
-  GetSystemIntakeGRBReviewers,
-  GetSystemIntakeGRBReviewersVariables
+  GetSystemIntakeGRBReviewersQuery,
+  GetSystemIntakeGRBReviewersQueryVariables
 > => ({
   request: {
-    query: GetSystemIntakeGRBReviewersQuery,
+    query: GetSystemIntakeGRBReviewersDocument,
     variables: {
       id: systemIntake.id
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       systemIntake: {
         __typename: 'SystemIntake',
         id: systemIntake.id,
