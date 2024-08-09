@@ -1,17 +1,11 @@
-import { ApolloError, useQuery } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
+import {
+  GetSystemIntakeRelatedRequestsQuery,
+  GetTrbRequestRelatedRequestsQuery,
+  useGetSystemIntakeRelatedRequestsQuery,
+  useGetTrbRequestRelatedRequestsQuery
+} from 'gql/gen/graphql';
 
-import GetSystemIntakeRelatedRequestsQuery from 'queries/GetSystemIntakeRelatedRequestsQuery';
-import GetTRBRequestRelatedRequestsQuery from 'queries/GetTRBRequestRelatedRequestsQuery';
-import {
-  GetSystemIntakeRelatedRequests,
-  GetSystemIntakeRelatedRequests_systemIntake as SystemIntakeRelatedRequests,
-  GetSystemIntakeRelatedRequestsVariables
-} from 'queries/types/GetSystemIntakeRelatedRequests';
-import {
-  GetTRBRequestRelatedRequests,
-  GetTRBRequestRelatedRequests_trbRequest as TRBRequestRelatedRequests,
-  GetTRBRequestRelatedRequestsVariables
-} from 'queries/types/GetTRBRequestRelatedRequests';
 import { RequestType } from 'types/requestType';
 
 const useRelatedRequests = (
@@ -21,8 +15,8 @@ const useRelatedRequests = (
   error: ApolloError | undefined;
   loading: boolean;
   data:
-    | SystemIntakeRelatedRequests
-    | TRBRequestRelatedRequests
+    | GetSystemIntakeRelatedRequestsQuery['systemIntake']
+    | GetTrbRequestRelatedRequestsQuery['trbRequest']
     | null
     | undefined;
 } => {
@@ -30,10 +24,7 @@ const useRelatedRequests = (
     error: systemIntakeError,
     loading: systemIntakeLoading,
     data: systemIntakeData
-  } = useQuery<
-    GetSystemIntakeRelatedRequests,
-    GetSystemIntakeRelatedRequestsVariables
-  >(GetSystemIntakeRelatedRequestsQuery, {
+  } = useGetSystemIntakeRelatedRequestsQuery({
     variables: { systemIntakeID: requestID },
     fetchPolicy: 'cache-and-network',
     // avoid making API call if not needed
@@ -44,13 +35,9 @@ const useRelatedRequests = (
     error: trbRequestError,
     loading: trbRequestLoading,
     data: trbRequestData
-  } = useQuery<
-    GetTRBRequestRelatedRequests,
-    GetTRBRequestRelatedRequestsVariables
-  >(GetTRBRequestRelatedRequestsQuery, {
+  } = useGetTrbRequestRelatedRequestsQuery({
     variables: { trbRequestID: requestID },
     fetchPolicy: 'cache-and-network',
-    // avoid making API call if not needed
     skip: type !== 'trb'
   });
 

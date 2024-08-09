@@ -3090,10 +3090,24 @@ export type GetSystemIntakesWithReviewRequestedQueryVariables = Exact<{ [key: st
 
 export type GetSystemIntakesWithReviewRequestedQuery = { __typename: 'Query', systemIntakesWithReviewRequested: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, requesterName?: string | null, requesterComponent?: string | null, grbDate?: Time | null }> };
 
+export type GetSystemIntakeRelatedRequestsQueryVariables = Exact<{
+  systemIntakeID: Scalars['UUID']['input'];
+}>;
+
+
+export type GetSystemIntakeRelatedRequestsQuery = { __typename: 'Query', systemIntake?: { __typename: 'SystemIntake', id: UUID, relatedIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, decisionState: SystemIntakeDecisionState, submittedAt?: Time | null, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', contractNumber: string }> }>, relatedTRBRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TrbRequestStatus, createdAt: Time, contractNumbers: Array<{ __typename: 'TRBRequestContractNumber', contractNumber: string }> }> } | null };
+
 export type GetTrbLeadOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetTrbLeadOptionsQuery = { __typename: 'Query', trbLeadOptions: Array<{ __typename: 'UserInfo', euaUserId: string, commonName: string }> };
+
+export type GetTrbRequestRelatedRequestsQueryVariables = Exact<{
+  trbRequestID: Scalars['UUID']['input'];
+}>;
+
+
+export type GetTrbRequestRelatedRequestsQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', id: UUID, relatedIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, decisionState: SystemIntakeDecisionState, submittedAt?: Time | null, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', contractNumber: string }> }>, relatedTRBRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TrbRequestStatus, createdAt: Time, contractNumbers: Array<{ __typename: 'TRBRequestContractNumber', contractNumber: string }> }> } };
 
 export type UpdateTrbRequestFormStatusMutationVariables = Exact<{
   isSubmitted: Scalars['Boolean']['input'];
@@ -3158,6 +3172,64 @@ export type GetSystemIntakesWithReviewRequestedQueryHookResult = ReturnType<type
 export type GetSystemIntakesWithReviewRequestedLazyQueryHookResult = ReturnType<typeof useGetSystemIntakesWithReviewRequestedLazyQuery>;
 export type GetSystemIntakesWithReviewRequestedSuspenseQueryHookResult = ReturnType<typeof useGetSystemIntakesWithReviewRequestedSuspenseQuery>;
 export type GetSystemIntakesWithReviewRequestedQueryResult = Apollo.QueryResult<GetSystemIntakesWithReviewRequestedQuery, GetSystemIntakesWithReviewRequestedQueryVariables>;
+export const GetSystemIntakeRelatedRequestsDocument = gql`
+    query GetSystemIntakeRelatedRequests($systemIntakeID: UUID!) {
+  systemIntake(id: $systemIntakeID) {
+    id
+    relatedIntakes {
+      id
+      requestName
+      contractNumbers {
+        contractNumber
+      }
+      decisionState
+      submittedAt
+    }
+    relatedTRBRequests {
+      id
+      name
+      contractNumbers {
+        contractNumber
+      }
+      status
+      createdAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSystemIntakeRelatedRequestsQuery__
+ *
+ * To run a query within a React component, call `useGetSystemIntakeRelatedRequestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSystemIntakeRelatedRequestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSystemIntakeRelatedRequestsQuery({
+ *   variables: {
+ *      systemIntakeID: // value for 'systemIntakeID'
+ *   },
+ * });
+ */
+export function useGetSystemIntakeRelatedRequestsQuery(baseOptions: Apollo.QueryHookOptions<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables> & ({ variables: GetSystemIntakeRelatedRequestsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>(GetSystemIntakeRelatedRequestsDocument, options);
+      }
+export function useGetSystemIntakeRelatedRequestsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>(GetSystemIntakeRelatedRequestsDocument, options);
+        }
+export function useGetSystemIntakeRelatedRequestsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>(GetSystemIntakeRelatedRequestsDocument, options);
+        }
+export type GetSystemIntakeRelatedRequestsQueryHookResult = ReturnType<typeof useGetSystemIntakeRelatedRequestsQuery>;
+export type GetSystemIntakeRelatedRequestsLazyQueryHookResult = ReturnType<typeof useGetSystemIntakeRelatedRequestsLazyQuery>;
+export type GetSystemIntakeRelatedRequestsSuspenseQueryHookResult = ReturnType<typeof useGetSystemIntakeRelatedRequestsSuspenseQuery>;
+export type GetSystemIntakeRelatedRequestsQueryResult = Apollo.QueryResult<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>;
 export const GetTrbLeadOptionsDocument = gql`
     query GetTrbLeadOptions {
   trbLeadOptions {
@@ -3198,6 +3270,64 @@ export type GetTrbLeadOptionsQueryHookResult = ReturnType<typeof useGetTrbLeadOp
 export type GetTrbLeadOptionsLazyQueryHookResult = ReturnType<typeof useGetTrbLeadOptionsLazyQuery>;
 export type GetTrbLeadOptionsSuspenseQueryHookResult = ReturnType<typeof useGetTrbLeadOptionsSuspenseQuery>;
 export type GetTrbLeadOptionsQueryResult = Apollo.QueryResult<GetTrbLeadOptionsQuery, GetTrbLeadOptionsQueryVariables>;
+export const GetTrbRequestRelatedRequestsDocument = gql`
+    query GetTRBRequestRelatedRequests($trbRequestID: UUID!) {
+  trbRequest(id: $trbRequestID) {
+    id
+    relatedIntakes {
+      id
+      requestName
+      contractNumbers {
+        contractNumber
+      }
+      decisionState
+      submittedAt
+    }
+    relatedTRBRequests {
+      id
+      name
+      contractNumbers {
+        contractNumber
+      }
+      status
+      createdAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTrbRequestRelatedRequestsQuery__
+ *
+ * To run a query within a React component, call `useGetTrbRequestRelatedRequestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTrbRequestRelatedRequestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTrbRequestRelatedRequestsQuery({
+ *   variables: {
+ *      trbRequestID: // value for 'trbRequestID'
+ *   },
+ * });
+ */
+export function useGetTrbRequestRelatedRequestsQuery(baseOptions: Apollo.QueryHookOptions<GetTrbRequestRelatedRequestsQuery, GetTrbRequestRelatedRequestsQueryVariables> & ({ variables: GetTrbRequestRelatedRequestsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTrbRequestRelatedRequestsQuery, GetTrbRequestRelatedRequestsQueryVariables>(GetTrbRequestRelatedRequestsDocument, options);
+      }
+export function useGetTrbRequestRelatedRequestsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTrbRequestRelatedRequestsQuery, GetTrbRequestRelatedRequestsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTrbRequestRelatedRequestsQuery, GetTrbRequestRelatedRequestsQueryVariables>(GetTrbRequestRelatedRequestsDocument, options);
+        }
+export function useGetTrbRequestRelatedRequestsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetTrbRequestRelatedRequestsQuery, GetTrbRequestRelatedRequestsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTrbRequestRelatedRequestsQuery, GetTrbRequestRelatedRequestsQueryVariables>(GetTrbRequestRelatedRequestsDocument, options);
+        }
+export type GetTrbRequestRelatedRequestsQueryHookResult = ReturnType<typeof useGetTrbRequestRelatedRequestsQuery>;
+export type GetTrbRequestRelatedRequestsLazyQueryHookResult = ReturnType<typeof useGetTrbRequestRelatedRequestsLazyQuery>;
+export type GetTrbRequestRelatedRequestsSuspenseQueryHookResult = ReturnType<typeof useGetTrbRequestRelatedRequestsSuspenseQuery>;
+export type GetTrbRequestRelatedRequestsQueryResult = Apollo.QueryResult<GetTrbRequestRelatedRequestsQuery, GetTrbRequestRelatedRequestsQueryVariables>;
 export const UpdateTrbRequestFormStatusDocument = gql`
     mutation UpdateTrbRequestFormStatus($isSubmitted: Boolean!, $trbRequestId: UUID!) {
   updateTRBRequestForm(
@@ -3275,6 +3405,8 @@ export type UpdateTrbRequestLeadMutationResult = Apollo.MutationResult<UpdateTrb
 export type UpdateTrbRequestLeadMutationOptions = Apollo.BaseMutationOptions<UpdateTrbRequestLeadMutation, UpdateTrbRequestLeadMutationVariables>;
 export const TypedSystemIntakeWithReviewRequestedFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeWithReviewRequested"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntake"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}}]}}]} as unknown as DocumentNode<SystemIntakeWithReviewRequestedFragment, unknown>;
 export const TypedGetSystemIntakesWithReviewRequestedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakesWithReviewRequested"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakesWithReviewRequested"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeWithReviewRequested"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeWithReviewRequested"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntake"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}}]}}]} as unknown as DocumentNode<GetSystemIntakesWithReviewRequestedQuery, GetSystemIntakesWithReviewRequestedQueryVariables>;
+export const TypedGetSystemIntakeRelatedRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeRelatedRequests"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"systemIntakeID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"systemIntakeID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>;
 export const TypedGetTrbLeadOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTrbLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}}]}}]} as unknown as DocumentNode<GetTrbLeadOptionsQuery, GetTrbLeadOptionsQueryVariables>;
+export const TypedGetTrbRequestRelatedRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBRequestRelatedRequests"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<GetTrbRequestRelatedRequestsQuery, GetTrbRequestRelatedRequestsQueryVariables>;
 export const TypedUpdateTrbRequestFormStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTrbRequestFormStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"isSubmitted"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBRequestForm"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"isSubmitted"},"value":{"kind":"Variable","name":{"kind":"Name","value":"isSubmitted"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"trbRequestId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<UpdateTrbRequestFormStatusMutation, UpdateTrbRequestFormStatusMutationVariables>;
 export const TypedUpdateTrbRequestLeadDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTrbRequestLead"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBRequestTRBLeadInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBRequestTRBLead"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"trbLead"}},{"kind":"Field","name":{"kind":"Name","value":"trbLeadInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateTrbRequestLeadMutation, UpdateTrbRequestLeadMutationVariables>;

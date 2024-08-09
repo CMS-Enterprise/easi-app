@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const GetTRBRequestRelatedRequestsQuery = gql`
+export default gql(/* GraphQL */ `
   query GetTRBRequestRelatedRequests($trbRequestID: UUID!) {
     trbRequest(id: $trbRequestID) {
       id
@@ -24,6 +24,4 @@ const GetTRBRequestRelatedRequestsQuery = gql`
       }
     }
   }
-`;
-
-export default GetTRBRequestRelatedRequestsQuery;
+`);

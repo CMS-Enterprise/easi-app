@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const GetSystemIntakeRelatedRequestsQuery = gql`
+export default gql(/* GraphQL */ `
   query GetSystemIntakeRelatedRequests($systemIntakeID: UUID!) {
     systemIntake(id: $systemIntakeID) {
       id
@@ -24,6 +24,4 @@ const GetSystemIntakeRelatedRequestsQuery = gql`
       }
     }
   }
-`;
-
-export default GetSystemIntakeRelatedRequestsQuery;
+`);

@@ -3,12 +3,12 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
+import GetSystemIntakeRelatedRequests from 'gql/apolloGQL/systemIntake/GetSystemIntakeRelatedRequests';
+import GetTRBRequestRelatedRequests from 'gql/apolloGQL/trb/GetTRBRequestRelatedRequests';
 
 import { systemIntake } from 'data/mock/systemIntake';
 import { trbRequest } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import GetSystemIntakeRelatedRequestsQuery from 'queries/GetSystemIntakeRelatedRequestsQuery';
-import GetTRBRequestRelatedRequestsQuery from 'queries/GetTRBRequestRelatedRequestsQuery';
 import {
   SystemIntakeDecisionState,
   TRBRequestStatus
@@ -24,7 +24,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetSystemIntakeRelatedRequestsQuery,
+          query: GetSystemIntakeRelatedRequests,
           variables: {
             systemIntakeID: systemIntake.id
           }
@@ -68,7 +68,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetTRBRequestRelatedRequestsQuery,
+          query: GetTRBRequestRelatedRequests,
           variables: {
             trbRequestID: trbRequest.id
           }
@@ -112,7 +112,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetSystemIntakeRelatedRequestsQuery,
+          query: GetSystemIntakeRelatedRequests,
           variables: {
             systemIntakeID: systemIntake.id
           }
@@ -174,7 +174,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetTRBRequestRelatedRequestsQuery,
+          query: GetTRBRequestRelatedRequests,
           variables: {
             trbRequestID: trbRequest.id
           }
@@ -244,7 +244,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetSystemIntakeRelatedRequestsQuery,
+          query: GetSystemIntakeRelatedRequests,
           variables: {
             systemIntakeID: systemIntake.id
           }
@@ -308,7 +308,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetTRBRequestRelatedRequestsQuery,
+          query: GetTRBRequestRelatedRequests,
           variables: {
             trbRequestID: trbRequest.id
           }
@@ -367,7 +367,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetSystemIntakeRelatedRequestsQuery,
+          query: GetSystemIntakeRelatedRequests,
           variables: {
             systemIntakeID: systemIntake.id
           }
@@ -430,7 +430,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetTRBRequestRelatedRequestsQuery,
+          query: GetTRBRequestRelatedRequests,
           variables: {
             trbRequestID: trbRequest.id
           }
@@ -493,7 +493,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetSystemIntakeRelatedRequestsQuery,
+          query: GetSystemIntakeRelatedRequests,
           variables: {
             systemIntakeID: systemIntake.id
           }
@@ -556,7 +556,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetTRBRequestRelatedRequestsQuery,
+          query: GetTRBRequestRelatedRequests,
           variables: {
             trbRequestID: trbRequest.id
           }
@@ -618,7 +618,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetSystemIntakeRelatedRequestsQuery,
+          query: GetSystemIntakeRelatedRequests,
           variables: {
             systemIntakeID: systemIntake.id
           }
@@ -680,7 +680,7 @@ describe('Related Requests table', () => {
     const mocks = [
       {
         request: {
-          query: GetTRBRequestRelatedRequestsQuery,
+          query: GetTRBRequestRelatedRequests,
           variables: {
             systemIntakeID: trbRequest.id
           }
