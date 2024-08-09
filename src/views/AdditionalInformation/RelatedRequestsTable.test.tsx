@@ -5,16 +5,15 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 
 import { systemIntake } from 'data/mock/systemIntake';
+import { trbRequest } from 'data/mock/trbRequest';
+import { MessageProvider } from 'hooks/useMessage';
 import GetSystemIntakeRelatedRequestsQuery from 'queries/GetSystemIntakeRelatedRequestsQuery';
+import GetTRBRequestRelatedRequestsQuery from 'queries/GetTRBRequestRelatedRequestsQuery';
 import {
   SystemIntakeDecisionState,
   TRBRequestStatus
 } from 'types/graphql-global-types';
 import easiMockStore from 'utils/testing/easiMockStore';
-
-import { trbRequest } from '../../data/mock/trbRequest';
-import { MessageProvider } from '../../hooks/useMessage';
-import GetTRBRequestRelatedRequestsQuery from '../../queries/GetTRBRequestRelatedRequestsQuery';
 
 import RelatedRequestsTable from './RelatedRequestsTable';
 

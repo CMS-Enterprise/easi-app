@@ -12,10 +12,11 @@ import {
   GetTRBRequestRelatedRequests_trbRequest as TRBRequestRelatedRequests,
   GetTRBRequestRelatedRequestsVariables
 } from 'queries/types/GetTRBRequestRelatedRequests';
+import { RequestType } from 'types/requestType';
 
 const useRelatedRequests = (
   requestID: string,
-  type: 'trb' | 'itgov'
+  type: RequestType
 ): {
   error: ApolloError | undefined;
   loading: boolean;

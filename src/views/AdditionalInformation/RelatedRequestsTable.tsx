@@ -21,6 +21,7 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { AppState } from 'reducers/rootReducer';
+import { RequestType } from 'types/requestType';
 import { formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
 import globalFilterCellText from 'utils/globalFilterCellText';
@@ -42,7 +43,7 @@ const RelatedRequestsTable = ({
   pageSize = 10
 }: {
   requestID: string;
-  type: 'trb' | 'itgov';
+  type: RequestType;
   pageSize?: number;
 }) => {
   const { t } = useTranslation('admin');
