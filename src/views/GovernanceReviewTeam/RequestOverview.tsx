@@ -6,6 +6,7 @@ import { Link, Route, Switch, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid, IconArrowBack } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
@@ -16,7 +17,6 @@ import {
   GetSystemIntake,
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
-import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
 import { AppState } from 'reducers/rootReducer';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 import AdditionalInformation from 'views/AdditionalInformation';
@@ -39,7 +39,7 @@ import Summary from './Summary';
 import './index.scss';
 
 type RequestOverviewProps = {
-  grbReviewers: SystemIntakeGRBReviewer[];
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
 };
 
 const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
