@@ -806,6 +806,8 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeDocument struct {
+		CanDelete    func(childComplexity int) int
+		CanView      func(childComplexity int) int
 		DocumentType func(childComplexity int) int
 		FileName     func(childComplexity int) int
 		ID           func(childComplexity int) int
@@ -1328,6 +1330,8 @@ type SystemIntakeDocumentResolver interface {
 
 	UploadedAt(ctx context.Context, obj *models.SystemIntakeDocument) (*time.Time, error)
 	URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error)
+	CanDelete(ctx context.Context, obj *models.SystemIntakeDocument) (bool, error)
+	CanView(ctx context.Context, obj *models.SystemIntakeDocument) (bool, error)
 }
 type SystemIntakeGRBReviewerResolver interface {
 	VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error)
@@ -5922,6 +5926,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeCosts.IsExpectingIncrease(childComplexity), true
 
+	case "SystemIntakeDocument.canDelete":
+		if e.complexity.SystemIntakeDocument.CanDelete == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocument.CanDelete(childComplexity), true
+
+	case "SystemIntakeDocument.canView":
+		if e.complexity.SystemIntakeDocument.CanView == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocument.CanView(childComplexity), true
+
 	case "SystemIntakeDocument.documentType":
 		if e.complexity.SystemIntakeDocument.DocumentType == nil {
 			break
@@ -9425,6 +9443,8 @@ type SystemIntakeDocument {
   version: SystemIntakeDocumentVersion!
   uploadedAt: Time!
   url: String!
+  canDelete: Boolean!
+  canView: Boolean!
 }
 
 """
@@ -25790,6 +25810,10 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeDocumentPayload_docum
 				return ec.fieldContext_SystemIntakeDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_SystemIntakeDocument_url(ctx, field)
+			case "canDelete":
+				return ec.fieldContext_SystemIntakeDocument_canDelete(ctx, field)
+			case "canView":
+				return ec.fieldContext_SystemIntakeDocument_canView(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeDocument", field.Name)
 		},
@@ -26051,6 +26075,10 @@ func (ec *executionContext) fieldContext_DeleteSystemIntakeDocumentPayload_docum
 				return ec.fieldContext_SystemIntakeDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_SystemIntakeDocument_url(ctx, field)
+			case "canDelete":
+				return ec.fieldContext_SystemIntakeDocument_canDelete(ctx, field)
+			case "canView":
+				return ec.fieldContext_SystemIntakeDocument_canView(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeDocument", field.Name)
 		},
@@ -39948,6 +39976,10 @@ func (ec *executionContext) fieldContext_SystemIntake_documents(_ context.Contex
 				return ec.fieldContext_SystemIntakeDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_SystemIntakeDocument_url(ctx, field)
+			case "canDelete":
+				return ec.fieldContext_SystemIntakeDocument_canDelete(ctx, field)
+			case "canView":
+				return ec.fieldContext_SystemIntakeDocument_canView(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeDocument", field.Name)
 		},
@@ -43399,6 +43431,94 @@ func (ec *executionContext) fieldContext_SystemIntakeDocument_url(_ context.Cont
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocument_canDelete(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocument_canDelete(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeDocument().CanDelete(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocument_canDelete(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocument",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocument_canView(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocument_canView(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeDocument().CanView(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocument_canView(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocument",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -65060,6 +65180,78 @@ func (ec *executionContext) _SystemIntakeDocument(ctx context.Context, sel ast.S
 					}
 				}()
 				res = ec._SystemIntakeDocument_url(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "canDelete":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeDocument_canDelete(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "canView":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeDocument_canView(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
