@@ -161,28 +161,22 @@ const RelatedRequestsTable = ({
       },
       {
         Header: t<string>('tableColumns.status'),
-        accessor: 'status',
-        Cell: ({
-          row,
-          value
-        }: {
-          row: Row<LinkedRequestForTable>;
-          value: LinkedRequestForTable['status'];
-        }): JSX.Element => {
-          let ret: string;
-          if (row.original.process === 'TRB') {
-            ret = t<string>(`tableAndPagination:status.requestStatus.${value}`);
-          } else {
-            ret = t<string>(
-              `governanceReviewTeam:${
-                isTRBAdmin || isITGovAdmin
-                  ? 'systemIntakeStatusAdmin'
-                  : 'systemIntakeStatusRequester'
-              }.${value}`
+        accessor: (request: LinkedRequestForTable) => {
+          if (request.process === 'TRB') {
+            return t<string>(
+              `tableAndPagination:status.requestStatus.${request.status}`
             );
           }
 
-          return <>{ret}</>;
+          if (isTRBAdmin || isITGovAdmin) {
+            return t<string>(
+              `governanceReviewTeam:systemIntakeStatusAdmin.${request.status}`
+            );
+          }
+
+          return t<string>(
+            `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`
+          );
         }
       },
       {
