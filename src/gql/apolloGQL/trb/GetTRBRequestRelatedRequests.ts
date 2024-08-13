@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-const GetSystemIntakeRelatedRequestsQuery = gql`
-  query GetSystemIntakeRelatedRequests($systemIntakeID: UUID!) {
-    systemIntake(id: $systemIntakeID) {
+export default gql(/* GraphQL */ `
+  query GetTRBRequestRelatedRequests($trbRequestID: UUID!) {
+    trbRequest(id: $trbRequestID) {
       id
       relatedIntakes {
         id
@@ -10,7 +10,8 @@ const GetSystemIntakeRelatedRequestsQuery = gql`
         contractNumbers {
           contractNumber
         }
-        decisionState
+        statusAdmin
+        statusRequester
         submittedAt
       }
       relatedTRBRequests {
@@ -24,6 +25,4 @@ const GetSystemIntakeRelatedRequestsQuery = gql`
       }
     }
   }
-`;
-
-export default GetSystemIntakeRelatedRequestsQuery;
+`);

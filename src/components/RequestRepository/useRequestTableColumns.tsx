@@ -128,14 +128,15 @@ const useRequestTableColumns = (
 
   const statusColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.status'),
-    accessor: 'statusAdmin',
-    Cell: ({
-      row,
-      value
-    }: CellProps<SystemIntakeForTable, SystemIntakeForTable['statusAdmin']>) =>
-      t(`governanceReviewTeam:systemIntakeStatusAdmin.${value}`, {
-        lcid: row.original.lcid
-      })
+    id: 'statusAdmin',
+    accessor: obj => {
+      return t(
+        `governanceReviewTeam:systemIntakeStatusAdmin.${obj.statusAdmin}`,
+        {
+          lcid: obj.lcid
+        }
+      );
+    }
   };
 
   const lcidExpirationDateColumn: Column<SystemIntakeForTable> = {
