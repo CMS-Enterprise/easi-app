@@ -11,7 +11,16 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
+import { useQuery } from '@apollo/client';
 import { Button, Table as UswdsTable } from '@trussworks/react-uswds';
+import {
+  GetSystemIntakeRelatedRequestsDocument,
+  GetSystemIntakeRelatedRequestsQuery,
+  GetSystemIntakeRelatedRequestsQueryVariables,
+  GetTRBRequestRelatedRequestsDocument,
+  GetTRBRequestRelatedRequestsQuery,
+  GetTRBRequestRelatedRequestsQueryVariables
+} from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -35,7 +44,6 @@ import user from 'utils/user';
 import { NotFoundPartial } from 'views/NotFound';
 
 import { LinkedRequestForTable } from './linkedRequestForTable';
-import useRelatedRequests from './useRelatedRequests';
 
 const RelatedRequestsTable = ({
   requestID,
@@ -48,7 +56,22 @@ const RelatedRequestsTable = ({
 }) => {
   const { t } = useTranslation('admin');
 
-  const { loading, error, data } = useRelatedRequests(requestID, type);
+  const { loading, error, data } = useQuery<
+    GetSystemIntakeRelatedRequestsQuery | GetTRBRequestRelatedRequestsQuery,
+    | GetSystemIntakeRelatedRequestsQueryVariables
+    | GetTRBRequestRelatedRequestsQueryVariables
+  >(
+    type === 'trb'
+      ? GetTRBRequestRelatedRequestsDocument
+      : GetSystemIntakeRelatedRequestsDocument,
+    {
+      fetchPolicy: 'cache-and-network',
+      variables:
+        type === 'trb'
+          ? { trbRequestID: requestID }
+          : { systemIntakeID: requestID }
+    }
+  );
 
   const { groups } = useSelector((state: AppState) => state.auth);
 
@@ -77,12 +100,15 @@ const RelatedRequestsTable = ({
       return [];
     }
 
-    const { relatedIntakes, relatedTRBRequests } = data;
+    const { relatedIntakes, relatedTRBRequests } =
+      type === 'trb'
+        ? (data && 'trbRequest' in data && data.trbRequest) || {}
+        : (data && 'systemIntake' in data && data.systemIntake) || {};
 
     const requests: LinkedRequestForTable[] = [];
 
     // handle related intakes
-    relatedIntakes.forEach(relatedIntake => {
+    (relatedIntakes || []).forEach(relatedIntake => {
       requests.push({
         id: relatedIntake.id,
         contractNumber: formatContractNumbers(relatedIntake.contractNumbers),
@@ -97,7 +123,7 @@ const RelatedRequestsTable = ({
     });
 
     // handle trb requests
-    relatedTRBRequests.forEach(relatedTRBRequest => {
+    (relatedTRBRequests || []).forEach(relatedTRBRequest => {
       requests.push({
         id: relatedTRBRequest.id,
         contractNumber: formatContractNumbers(
@@ -110,7 +136,7 @@ const RelatedRequestsTable = ({
       });
     });
     return requests;
-  }, [data, error, isITGovAdmin, isTRBAdmin, loading]);
+  }, [data, error, isITGovAdmin, isTRBAdmin, loading, type]);
 
   const columns: Column<LinkedRequestForTable>[] = useMemo<
     Column<LinkedRequestForTable>[]
