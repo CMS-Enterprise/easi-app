@@ -75,7 +75,7 @@ const intake = {
     continueWithoutDocuments: 'Continue without documents',
     noDocuments: 'No documents uploaded',
     formDescription:
-      'Choose a document to upload, such as a draft IGCE, contracting document, or another document related to your Intake Request.',
+      'Choose a document to upload such as a draft IGCE, contracting document, RAF or other document related to this project and Intake Request.',
     returnToIntake: "Don't upload and return to Intake Request",
     selectDocument: 'Select your document',
     supportingDocuments: 'Supporting documents',
@@ -84,10 +84,11 @@ const intake = {
     noDocumentsAlert:
       'The original requester did not upload any additional documentation to this request. If the Governance Team needs any supporting documentation in order to fully process this request, contact the requester.',
     versionLabel: 'What is the version of this document?',
-    versionHelpText_CURRENT:
-      'Choose this option if you are uploading a document from the past that should be used for reference purposes only.',
     versionHelpText_HISTORICAL:
+      'Choose this option if you are uploading a document from the past that should be used for reference purposes only.',
+    versionHelpText_CURRENT:
       'Choose this option if this is the most recent document version that the Governance Team should reference.',
+    supportedFileTypes: 'Select a PDF, DOC, DOCX, XLS, or XLSX',
     type,
     abbreviatedType,
     version
