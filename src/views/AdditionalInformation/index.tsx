@@ -117,7 +117,8 @@ const AdditionalInformation = ({
         </>
       )}
 
-      {type === 'itgov' && (
+      {/* flagged for testing - will condense this + the below into one line */}
+      {flags.systemIntakeRelatedRequests && type === 'itgov' && (
         <div className="margin-top-8">
           <RelatedRequestsTable requestID={request.id} type={type} />
         </div>
