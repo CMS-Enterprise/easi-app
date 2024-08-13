@@ -76,7 +76,8 @@ const intake = {
     noDocuments: 'No documents uploaded',
     formDescription:
       'Choose a document to upload such as a draft IGCE, contracting document, RAF or other document related to this project and Intake Request.',
-    returnToIntake: "Don't upload and return to Intake Request",
+    dontUpload_requester: "Don't upload and return to Intake Request",
+    dontUpload_admin: "Don't upload and return to request details",
     selectDocument: 'Select your document',
     supportingDocuments: 'Supporting documents',
     adminDescription:

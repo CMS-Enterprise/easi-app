@@ -33,10 +33,14 @@ import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
 
+type UploadFormProps = {
+  type: 'admin' | 'requester';
+};
+
 /**
  * System intake document upload form
  */
-const UploadForm = () => {
+const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
   const { t } = useTranslation();
 
   const history = useHistory();
@@ -125,7 +129,7 @@ const UploadForm = () => {
         </p>
 
         <IconLink to={`/system/${systemId}/documents`} icon={<IconArrowBack />}>
-          {t('intake:documents.returnToIntake')}
+          {t('intake:documents.dontUpload', { context: type })}
         </IconLink>
 
         <Form className="maxw-full" onSubmit={submit}>
@@ -270,7 +274,7 @@ const UploadForm = () => {
                 !watch('fileData') || !watch('documentType') || isSubmitting
             }}
             taskListUrl={`/system/${systemId}/documents`}
-            saveExitText={t('intake:documents.returnToIntake')}
+            saveExitText={t('intake:documents.dontUpload', { context: type })}
             border={false}
             className="margin-top-4"
           />
