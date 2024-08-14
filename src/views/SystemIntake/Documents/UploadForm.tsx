@@ -70,7 +70,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
     register,
     watch,
     handleSubmit,
-    formState: { isSubmitting, errors }
+    formState: { isSubmitting, errors, isValid }
   } = useEasiForm<DocumentUploadFields>({
     resolver: yupResolver(documentSchema)
   });
@@ -275,8 +275,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
           <Pager
             next={{
               text: t('technicalAssistance:documents.upload.uploadDocument'),
-              disabled:
-                !watch('fileData') || !watch('documentType') || isSubmitting
+              disabled: !isValid || isSubmitting
             }}
             taskListUrl={requestDetailsLink}
             saveExitText={t('intake:documents.dontUpload', { context: type })}
