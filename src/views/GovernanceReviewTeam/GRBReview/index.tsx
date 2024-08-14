@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Column, useSortBy, useTable } from 'react-table';
-import { useMutation } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -10,21 +9,17 @@ import {
   ModalHeading,
   Table
 } from '@trussworks/react-uswds';
+import {
+  GetSystemIntakeGRBReviewersDocument,
+  SystemIntakeGRBReviewerFragment,
+  useDeleteSystemIntakeGRBReviewerMutation
+} from 'gql/gen/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
-import {
-  DeleteSystemIntakeGRBReviewerQuery,
-  GetSystemIntakeGRBReviewersQuery
-} from 'queries/SystemIntakeGRBReviewerQueries';
-import {
-  DeleteSystemIntakeGRBReviewer,
-  DeleteSystemIntakeGRBReviewerVariables
-} from 'queries/types/DeleteSystemIntakeGRBReviewer';
-import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
 import { SystemIntakeState } from 'types/graphql-global-types';
 import {
   currentTableSortDescription,
@@ -40,7 +35,7 @@ import GRBReviewerForm from './GRBReviewerForm';
 type GRBReviewProps = {
   id: string;
   state: SystemIntakeState;
-  grbReviewers: SystemIntakeGRBReviewer[];
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
 };
 
 const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
@@ -58,26 +53,23 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
   const [
     reviewerToRemove,
     setReviewerToRemove
-  ] = useState<SystemIntakeGRBReviewer | null>(null);
+  ] = useState<SystemIntakeGRBReviewerFragment | null>(null);
 
   const { showMessage } = useMessage();
 
   const isGrbView = useContext(IsGrbViewContext);
 
-  const [mutate] = useMutation<
-    DeleteSystemIntakeGRBReviewer,
-    DeleteSystemIntakeGRBReviewerVariables
-  >(DeleteSystemIntakeGRBReviewerQuery, {
+  const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewersQuery,
+        query: GetSystemIntakeGRBReviewersDocument,
         variables: { id }
       }
     ]
   });
 
   const removeGRBReviewer = useCallback(
-    (reviewer: SystemIntakeGRBReviewer) => {
+    (reviewer: SystemIntakeGRBReviewerFragment) => {
       mutate({ variables: { input: { reviewerID: reviewer.id } } })
         .then(() =>
           showMessage(
@@ -103,14 +95,14 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
     [history, isForm, id, mutate, reviewerType, showMessage, t]
   );
 
-  const columns = useMemo<Column<SystemIntakeGRBReviewer>[]>(() => {
+  const columns = useMemo<Column<SystemIntakeGRBReviewerFragment>[]>(() => {
     /** Column with action buttons to display for GRT admins */
-    const actionColumn: Column<SystemIntakeGRBReviewer> = {
+    const actionColumn: Column<SystemIntakeGRBReviewerFragment> = {
       Header: t<string>('participantsTable.actions'),
       Cell: ({
         row: { original: reviewer }
       }: {
-        row: { original: SystemIntakeGRBReviewer };
+        row: { original: SystemIntakeGRBReviewerFragment };
       }) => {
         return (
           <ButtonGroup data-testid="grbReviewerActions">

@@ -102,16 +102,16 @@ const Table = ({
         Header: t('requestsTable.headers.status'),
         // The status property is just a generic property available on all request types
         // See cases below for details on how statuses are determined by type
-        accessor: 'status',
-        Cell: ({ row, value }: any) => {
-          switch (row.original.type) {
+        id: 'status',
+        accessor: (obj: any) => {
+          switch (obj.type) {
             case t(`requestsTable.types.GOVERNANCE_REQUEST`):
               return t(
-                `governanceReviewTeam:systemIntakeStatusRequester.${row.original.statusRequester}`,
-                { lcid: row.original.lcid }
+                `governanceReviewTeam:systemIntakeStatusRequester.${obj.statusRequester}`,
+                { lcid: obj.lcid }
               );
             case t(`requestsTable.types.TRB`):
-              return value;
+              return obj.status;
             default:
               return '';
           }

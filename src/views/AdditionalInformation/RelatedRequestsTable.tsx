@@ -13,6 +13,14 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Button, Table as UswdsTable } from '@trussworks/react-uswds';
+import {
+  GetSystemIntakeRelatedRequestsDocument,
+  GetSystemIntakeRelatedRequestsQuery,
+  GetSystemIntakeRelatedRequestsQueryVariables,
+  GetTRBRequestRelatedRequestsDocument,
+  GetTRBRequestRelatedRequestsQuery,
+  GetTRBRequestRelatedRequestsQueryVariables
+} from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -21,12 +29,8 @@ import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
-import GetSystemIntakeRelatedRequestsQuery from 'queries/GetSystemIntakeRelatedRequestsQuery';
-import {
-  GetSystemIntakeRelatedRequests,
-  GetSystemIntakeRelatedRequestsVariables
-} from 'queries/types/GetSystemIntakeRelatedRequests';
 import { AppState } from 'reducers/rootReducer';
+import { RequestType } from 'types/requestType';
 import { formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
 import globalFilterCellText from 'utils/globalFilterCellText';
@@ -42,21 +46,32 @@ import { NotFoundPartial } from 'views/NotFound';
 import { LinkedRequestForTable } from './linkedRequestForTable';
 
 const RelatedRequestsTable = ({
-  systemIntakeID,
+  requestID,
+  type,
   pageSize = 10
 }: {
-  systemIntakeID: string;
+  requestID: string;
+  type: RequestType;
   pageSize?: number;
 }) => {
   const { t } = useTranslation('admin');
 
   const { loading, error, data } = useQuery<
-    GetSystemIntakeRelatedRequests,
-    GetSystemIntakeRelatedRequestsVariables
-  >(GetSystemIntakeRelatedRequestsQuery, {
-    variables: { systemIntakeID },
-    fetchPolicy: 'cache-and-network'
-  });
+    GetSystemIntakeRelatedRequestsQuery | GetTRBRequestRelatedRequestsQuery,
+    | GetSystemIntakeRelatedRequestsQueryVariables
+    | GetTRBRequestRelatedRequestsQueryVariables
+  >(
+    type === 'trb'
+      ? GetTRBRequestRelatedRequestsDocument
+      : GetSystemIntakeRelatedRequestsDocument,
+    {
+      fetchPolicy: 'cache-and-network',
+      variables:
+        type === 'trb'
+          ? { trbRequestID: requestID }
+          : { systemIntakeID: requestID }
+    }
+  );
 
   const { groups } = useSelector((state: AppState) => state.auth);
 
@@ -81,30 +96,35 @@ const RelatedRequestsTable = ({
       return [];
     }
 
-    if (data === undefined || data.systemIntake === null) {
+    if (data === undefined || data === null) {
       return [];
     }
 
-    const {
-      systemIntake: { relatedIntakes, relatedTRBRequests }
-    } = data;
+    const { relatedIntakes, relatedTRBRequests } =
+      type === 'trb'
+        ? (data && 'trbRequest' in data && data.trbRequest) || {}
+        : (data && 'systemIntake' in data && data.systemIntake) || {};
 
     const requests: LinkedRequestForTable[] = [];
 
     // handle related intakes
-    relatedIntakes.forEach(relatedIntake => {
+    (relatedIntakes || []).forEach(relatedIntake => {
       requests.push({
         id: relatedIntake.id,
         contractNumber: formatContractNumbers(relatedIntake.contractNumbers),
         process: 'IT Governance',
         projectTitle: relatedIntake.requestName || '',
-        status: relatedIntake.decisionState,
-        submissionDate: relatedIntake.submittedAt || ''
+        status:
+          isTRBAdmin || isITGovAdmin
+            ? relatedIntake.statusAdmin
+            : relatedIntake.statusRequester,
+        submissionDate: relatedIntake.submittedAt || '',
+        lcid: relatedIntake.lcid || null
       });
     });
 
     // handle trb requests
-    relatedTRBRequests.forEach(relatedTRBRequest => {
+    (relatedTRBRequests || []).forEach(relatedTRBRequest => {
       requests.push({
         id: relatedTRBRequest.id,
         contractNumber: formatContractNumbers(
@@ -113,11 +133,12 @@ const RelatedRequestsTable = ({
         process: 'TRB',
         projectTitle: relatedTRBRequest.name || '',
         status: relatedTRBRequest.status,
-        submissionDate: relatedTRBRequest.createdAt
+        submissionDate: relatedTRBRequest.createdAt,
+        lcid: null
       });
     });
     return requests;
-  }, [data, error, loading]);
+  }, [data, error, isITGovAdmin, isTRBAdmin, loading, type]);
 
   const columns: Column<LinkedRequestForTable>[] = useMemo<
     Column<LinkedRequestForTable>[]
@@ -168,24 +189,24 @@ const RelatedRequestsTable = ({
       },
       {
         Header: t<string>('tableColumns.status'),
-        accessor: 'status',
-        Cell: ({
-          row,
-          value
-        }: {
-          row: Row<LinkedRequestForTable>;
-          value: LinkedRequestForTable['status'];
-        }): JSX.Element => {
-          let ret: string;
-          if (row.original.process === 'TRB') {
-            ret = t<string>(`tableAndPagination:status.requestStatus.${value}`);
-          } else {
-            ret = t<string>(
-              `governanceReviewTeam:systemIntakeDecisionState.${value}`
+        accessor: (request: LinkedRequestForTable) => {
+          if (request.process === 'TRB') {
+            return t<string>(
+              `tableAndPagination:status.requestStatus.${request.status}`
             );
           }
 
-          return <>{ret}</>;
+          if (isTRBAdmin || isITGovAdmin) {
+            return t<string>(
+              `governanceReviewTeam:systemIntakeStatusAdmin.${request.status}`,
+              { lcid: request.lcid }
+            );
+          }
+
+          return t<string>(
+            `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`,
+            { lcid: request.lcid }
+          );
         }
       },
       {
