@@ -21,6 +21,7 @@ import { AppState } from 'reducers/rootReducer';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 import AdditionalInformation from 'views/AdditionalInformation';
 import NotFound from 'views/NotFound';
+import UploadForm from 'views/SystemIntake/Documents/UploadForm';
 
 import AccordionNavigation from './AccordionNavigation';
 import Actions from './Actions';
@@ -179,6 +180,13 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
                   path={`/${reviewerType}/:systemId/intake-request`}
                   render={() => <IntakeReview systemIntake={systemIntake} />}
                 />
+
+                {flags?.grbReviewTab && (
+                  <Route
+                    path="/governance-review-team/:systemId/documents/upload"
+                    render={() => <UploadForm type="admin" />}
+                  />
+                )}
 
                 <Route
                   path={`/${reviewerType}/:systemId/documents`}
