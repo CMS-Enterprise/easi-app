@@ -75,6 +75,11 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
     resolver: yupResolver(documentSchema)
   });
 
+  const requestDetailsLink =
+    type === 'requester'
+      ? `/system/${systemId}/documents`
+      : `/governance-review-team/${systemId}/grb-review`;
+
   const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
     const newFile = await fileToBase64File(formData.fileData);
     createDocument({
@@ -98,7 +103,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
             type: 'success'
           }
         );
-        history.push(`/system/${systemId}/documents`);
+        history.push(requestDetailsLink);
       })
       .catch(() => {
         showMessage(t('technicalAssistance:documents.upload.error'), {
@@ -128,7 +133,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
           />
         </p>
 
-        <IconLink to={`/system/${systemId}/documents`} icon={<IconArrowBack />}>
+        <IconLink to={requestDetailsLink} icon={<IconArrowBack />}>
           {t('intake:documents.dontUpload', { context: type })}
         </IconLink>
 
@@ -273,7 +278,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
               disabled:
                 !watch('fileData') || !watch('documentType') || isSubmitting
             }}
-            taskListUrl={`/system/${systemId}/documents`}
+            taskListUrl={requestDetailsLink}
             saveExitText={t('intake:documents.dontUpload', { context: type })}
             border={false}
             className="margin-top-4"
