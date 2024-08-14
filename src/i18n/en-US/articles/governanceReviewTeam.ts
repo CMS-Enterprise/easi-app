@@ -1,5 +1,6 @@
 import {
   SystemIntakeActionType,
+  SystemIntakeDecisionState,
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester
 } from 'types/graphql-global-types';
@@ -83,6 +84,13 @@ const systemIntakeStatusRequester: Record<
   LCID_RETIRED: 'Retired LCID: {{lcid}}',
   NOT_APPROVED: 'Project not approved by the GRB',
   NOT_GOVERNANCE: 'Not an IT Governance request'
+};
+
+const systemIntakeDecisionState: Record<SystemIntakeDecisionState, string> = {
+  LCID_ISSUED: 'LCID Issued',
+  NOT_APPROVED: 'Not Approved',
+  NOT_GOVERNANCE: 'Not Governance',
+  NO_DECISION: 'No Decision'
 };
 
 const governanceReviewTeam = {
@@ -297,8 +305,13 @@ const governanceReviewTeam = {
       'Feedback and recommendations have moved! Use the Feedback tab in the navigation to the left to view feedback and recommendations that have been sent to the requester and project team.'
   },
   governanceRequestDetails: 'Governance request details',
+  itGovernanceRequestDetails: 'IT Governance request details',
+  systemServiceContractName: 'System, service, or contract name',
+  noneSpecified: 'None specified',
   actions: 'Actions',
+  submittedOn: 'Submitted on {{date}}',
   requestType: 'Request type',
+  systemNamePlural: '{{name}}, +{{count}} more',
   status: {
     label: 'Status',
     open: 'Open',
@@ -306,6 +319,7 @@ const governanceReviewTeam = {
   },
   systemIntakeStatusAdmin,
   systemIntakeStatusRequester,
+  systemIntakeDecisionState,
   adminLeads: {
     assignModal: {
       header: 'Choose an Admin Lead for {{-requestName}}',

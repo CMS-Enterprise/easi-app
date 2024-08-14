@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBSubjectAreaOption, TRBFeedbackAction } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBSubjectAreaOption, TRBFeedbackAction, TRBRequestStatus, SystemIntakeDecisionState } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL fragment: TrbRequestFormFields
@@ -77,6 +77,40 @@ export interface TrbRequestFormFields_feedback {
   createdAt: Time;
 }
 
+export interface TrbRequestFormFields_relatedTRBRequests_contractNumbers {
+  __typename: "TRBRequestContractNumber";
+  contractNumber: string;
+}
+
+export interface TrbRequestFormFields_relatedTRBRequests {
+  __typename: "TRBRequest";
+  id: UUID;
+  name: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: TrbRequestFormFields_relatedTRBRequests_contractNumbers[];
+  status: TRBRequestStatus;
+  createdAt: Time;
+}
+
+export interface TrbRequestFormFields_relatedIntakes_contractNumbers {
+  __typename: "SystemIntakeContractNumber";
+  contractNumber: string;
+}
+
+export interface TrbRequestFormFields_relatedIntakes {
+  __typename: "SystemIntake";
+  id: UUID;
+  requestName: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: TrbRequestFormFields_relatedIntakes_contractNumbers[];
+  decisionState: SystemIntakeDecisionState;
+  submittedAt: Time | null;
+}
+
 export interface TrbRequestFormFields {
   __typename: "TRBRequest";
   id: UUID;
@@ -86,4 +120,12 @@ export interface TrbRequestFormFields {
   taskStatuses: TrbRequestFormFields_taskStatuses;
   form: TrbRequestFormFields_form;
   feedback: TrbRequestFormFields_feedback[];
+  /**
+   * Other TRB Requests that share a CEDAR System or Contract Number
+   */
+  relatedTRBRequests: TrbRequestFormFields_relatedTRBRequests[];
+  /**
+   * System Intakes that share a CEDAR System or Contract Number
+   */
+  relatedIntakes: TrbRequestFormFields_relatedIntakes[];
 }

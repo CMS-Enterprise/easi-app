@@ -28,7 +28,7 @@ func GetSystemIntakeDocumentsByRequestID(ctx context.Context, id uuid.UUID) ([]*
 
 // GetURLForSystemIntakeDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key
 func GetURLForSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, s3Key string) (string, error) {
-	if err := canView(ctx, store, s3Key); err != nil {
+	if err := allowView(ctx, store, s3Key); err != nil {
 		return "", err
 	}
 
@@ -74,7 +74,7 @@ func CreateSystemIntakeDocument(
 		return nil, err
 	}
 
-	if err := canCreate(ctx, uploaderRole, intake); err != nil {
+	if err := allowCreate(ctx, uploaderRole, intake); err != nil {
 		return nil, err
 	}
 
@@ -127,54 +127,59 @@ func CreateSystemIntakeDocument(
 //
 // Does *not* delete the uploaded file from S3, following the example of TRB request documents.
 func DeleteSystemIntakeDocument(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.SystemIntakeDocument, error) {
-	if err := canDelete(ctx, store, id); err != nil {
+	if err := allowDelete(ctx, store, id); err != nil {
 		return nil, err
 	}
 
 	return store.DeleteSystemIntakeDocument(ctx, id)
 }
 
-// canView guards unauthorized views (downloads) of system intake documents
-// admins can view any document
-// requesters can view any document
-// GRB reviewers can view any document
-func canView(ctx context.Context, store *storage.Store, s3Key string) error {
+// CanViewDocument determines if a user can view a document
+func CanViewDocument(ctx context.Context, grbUsers []*models.SystemIntakeGRBReviewer, document *models.SystemIntakeDocument) bool {
 	// admins can view
 	if services.HasRole(ctx, models.RoleEasiGovteam) {
-		return nil
-	}
-
-	document, err := store.GetSystemIntakeDocumentByS3Key(ctx, s3Key)
-	if err != nil {
-
-		if errors.Is(err, sql.ErrNoRows) {
-			// if the document was deleted, don't error and break
-			return nil
-		}
-
-		return err
+		return true
 	}
 
 	// requester can view
 	user := appcontext.Principal(ctx).Account()
 	if document.GetCreatedBy() == user.Username {
-		return nil
-	}
-
-	// if needed, get GRB members for this intake
-	grbUsers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{document.SystemIntakeRequestID})
-	if err != nil {
-		return err
+		return true
 	}
 
 	if isGRBViewer := slices.ContainsFunc(grbUsers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
 		return reviewer.UserID == user.ID
 	}); isGRBViewer {
+		return true
+	}
+	return false
+}
+
+// canView guards unauthorized views (downloads) of system intake documents
+// admins can view any document
+// requesters can view any document
+// GRB reviewers can view any document
+func allowView(ctx context.Context, store *storage.Store, s3Key string) error {
+	document, err := store.GetSystemIntakeDocumentByS3Key(ctx, s3Key)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			// if the document was deleted, don't error and break
+			return nil
+		}
+		return err
+	}
+
+	grbUsers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{document.SystemIntakeRequestID})
+	if err != nil {
+		return err
+	}
+
+	if CanViewDocument(ctx, grbUsers, document) {
 		return nil
 	}
 
 	appcontext.ZLogger(ctx).Warn("unauthorized user attempted to view system intake document",
-		zap.String("username", user.Username),
+		zap.String("username", appcontext.Principal(ctx).Account().Username),
 		zap.String("system_intake.id", document.SystemIntakeRequestID.String()),
 		zap.String("document.id", document.ID.String()))
 
@@ -202,7 +207,7 @@ func getUploaderRole(ctx context.Context, intake *models.SystemIntake) (models.D
 	return "", errors.New("unauthorized attempt to create system intake document")
 }
 
-func canCreate(ctx context.Context, role models.DocumentUploaderRole, intake *models.SystemIntake) error {
+func allowCreate(ctx context.Context, role models.DocumentUploaderRole, intake *models.SystemIntake) error {
 	if role == models.RequesterUploaderRole || role == models.AdminUploaderRole {
 		return nil
 	}
@@ -214,28 +219,32 @@ func canCreate(ctx context.Context, role models.DocumentUploaderRole, intake *mo
 	return errors.New("unauthorized attempt to create system intake document")
 }
 
-// canDelete guards unauthorized deletions of system intake documents
+// CanDeleteDocument determines if a user can delete a document
+func CanDeleteDocument(ctx context.Context, document *models.SystemIntakeDocument) bool {
+	// admins can only delete admin-uploaded docs
+	if services.HasRole(ctx, models.RoleEasiGovteam) && document.UploaderRole == models.AdminUploaderRole {
+		return true
+	}
+
+	// if the acting user is the requester, they can delete the doc
+	return document.GetCreatedBy() == appcontext.Principal(ctx).Account().Username
+}
+
+// allowDelete guards unauthorized deletions of system intake documents
 // an admin is allowed to delete admin-uploaded docs
 // the intake requester is allowed to delete requester-uploaded docs
-func canDelete(ctx context.Context, store *storage.Store, id uuid.UUID) error {
+func allowDelete(ctx context.Context, store *storage.Store, id uuid.UUID) error {
 	document, err := store.GetSystemIntakeDocumentByID(ctx, id)
 	if err != nil {
 		return err
 	}
 
-	// admins can only delete admin-uploaded docs
-	if services.HasRole(ctx, models.RoleEasiGovteam) && document.UploaderRole == models.AdminUploaderRole {
-		return nil
-	}
-
-	// if the acting user is the requester, they can delete the doc
-	user := appcontext.Principal(ctx).Account()
-	if document.GetCreatedBy() == user.Username {
+	if CanDeleteDocument(ctx, document) {
 		return nil
 	}
 
 	appcontext.ZLogger(ctx).Warn("unauthorized user attempted to delete system intake document",
-		zap.String("username", user.Username),
+		zap.String("username", appcontext.Principal(ctx).Account().Username),
 		zap.String("system_intake.id", document.SystemIntakeRequestID.String()),
 		zap.String("document.id", document.ID.String()))
 

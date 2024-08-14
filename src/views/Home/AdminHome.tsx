@@ -10,12 +10,12 @@ import TrbAdminTeamHome from 'views/TechnicalAssistance/TrbAdminTeamHome';
 
 type AdminView = 'TRB' | 'GRT';
 
-type AdminHomeProps = { isTrbAdmin: boolean; isGrtReviewer: boolean };
+type AdminHomeProps = { isTrbAdmin: boolean; isITGovAdmin: boolean };
 
 /**
  * Admin homepage view
  */
-const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
+const AdminHome = ({ isTrbAdmin, isITGovAdmin }: AdminHomeProps) => {
   const { t } = useTranslation('home');
   const { Message } = useMessage();
 
@@ -26,16 +26,16 @@ const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
    */
   const [adminView, setAdminView] = useState<AdminView | null | undefined>(
     () => {
-      if (isTrbAdmin && isGrtReviewer && localStorage.getItem('admin-view'))
+      if (isTrbAdmin && isITGovAdmin && localStorage.getItem('admin-view'))
         return localStorage.getItem('admin-view') as AdminView;
 
       if (isTrbAdmin) return 'TRB';
-      if (isGrtReviewer) return 'GRT';
+      if (isITGovAdmin) return 'GRT';
       return undefined;
     }
   );
 
-  const showViewSelect: boolean = isTrbAdmin && isGrtReviewer;
+  const showViewSelect: boolean = isTrbAdmin && isITGovAdmin;
 
   // Update local storage with admin view selection
   useEffect(() => {

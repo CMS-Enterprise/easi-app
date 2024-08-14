@@ -20,22 +20,25 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import StateTag from 'components/StateTag';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
+import { SystemIntake_systems as System } from 'queries/types/SystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
 import {
+  RequestRelationType,
   SystemIntakeState,
   SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
+import getSystemOrContractName from 'utils/getSystemOrContractName';
 import { translateRequestType } from 'utils/systemIntake';
 
 import IsGrbViewContext from '../IsGrbViewContext';
 
 import './index.scss';
 
-type RequestSummaryProps = {
+export type RequestSummaryProps = {
   id: string;
   requester: Requester;
   requestName: string;
@@ -46,6 +49,9 @@ type RequestSummaryProps = {
   lcid: string | null;
   contractNumbers: string[];
   state: SystemIntakeState;
+  contractName: string | null;
+  relationType: RequestRelationType | null;
+  systems: System[];
 };
 
 const RequestSummary = ({
@@ -58,7 +64,10 @@ const RequestSummary = ({
   submittedAt,
   lcid,
   contractNumbers = [],
-  state
+  state,
+  contractName,
+  relationType,
+  systems
 }: RequestSummaryProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const [isModalOpen, setModalOpen] = useState(false);
@@ -155,11 +164,20 @@ const RequestSummary = ({
                 {t('header:home')}
               </BreadcrumbLink>
             </Breadcrumb>
-            <Breadcrumb current>{t('governanceRequestDetails')}</Breadcrumb>
+            <Breadcrumb current>{t('itGovernanceRequestDetails')}</Breadcrumb>
           </BreadcrumbBar>
 
           {/* Request summary */}
-          <h2 className="margin-top-05 margin-bottom-2">{requestName}</h2>
+          <div className="display-flex flex-align-end flex-wrap margin-bottom-2">
+            <h2 className="margin-top-05 margin-bottom-0 margin-right-2">
+              {requestName}
+            </h2>
+            <p className="margin-y-05 text-primary-light">
+              {t('submittedOn', {
+                date: formatDateLocal(submittedAt, 'MM/dd/yyyy')
+              })}
+            </p>
+          </div>
 
           <Grid row gap>
             <Grid tablet={{ col: 8 }}>
@@ -169,12 +187,10 @@ const RequestSummary = ({
               </h4>
 
               <h5 className="text-normal margin-y-0">
-                {t('intake:review.contractNumber')}
+                {t('systemServiceContractName')}
               </h5>
               <h4 className="margin-top-05 margin-bottom-2">
-                {/* TODO: (Sam) review */}
-                {contractNumbers.join(', ') ||
-                  t('intake:review.noContractNumber')}
+                {getSystemOrContractName(relationType, contractName, systems)}
               </h4>
             </Grid>
 
@@ -190,12 +206,11 @@ const RequestSummary = ({
               </h4>
 
               <h5 className="text-normal margin-y-0">
-                {t('intake:fields.submissionDate')}
+                {t('intake:review.contractNumber')}
               </h5>
               <h4 className="margin-top-05 margin-bottom-2">
-                {submittedAt
-                  ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
-                  : 'N/A'}
+                {/* TODO: (Sam) review */}
+                {contractNumbers.join(', ') || t('noneSpecified')}
               </h4>
             </Grid>
           </Grid>
