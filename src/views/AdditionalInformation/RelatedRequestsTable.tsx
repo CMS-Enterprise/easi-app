@@ -118,7 +118,8 @@ const RelatedRequestsTable = ({
           isTRBAdmin || isITGovAdmin
             ? relatedIntake.statusAdmin
             : relatedIntake.statusRequester,
-        submissionDate: relatedIntake.submittedAt || ''
+        submissionDate: relatedIntake.submittedAt || '',
+        lcid: relatedIntake.lcid || null
       });
     });
 
@@ -132,7 +133,8 @@ const RelatedRequestsTable = ({
         process: 'TRB',
         projectTitle: relatedTRBRequest.name || '',
         status: relatedTRBRequest.status,
-        submissionDate: relatedTRBRequest.createdAt
+        submissionDate: relatedTRBRequest.createdAt,
+        lcid: null
       });
     });
     return requests;
@@ -196,12 +198,14 @@ const RelatedRequestsTable = ({
 
           if (isTRBAdmin || isITGovAdmin) {
             return t<string>(
-              `governanceReviewTeam:systemIntakeStatusAdmin.${request.status}`
+              `governanceReviewTeam:systemIntakeStatusAdmin.${request.status}`,
+              { lcid: request.lcid }
             );
           }
 
           return t<string>(
-            `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`
+            `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`,
+            { lcid: request.lcid }
           );
         }
       },
