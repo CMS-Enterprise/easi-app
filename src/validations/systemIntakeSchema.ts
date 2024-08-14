@@ -2,7 +2,10 @@ import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 import { FormattedFundingSource } from 'components/FundingSources';
-import { SystemIntakeDocumentCommonType } from 'types/graphql-global-types';
+import {
+  SystemIntakeDocumentCommonType,
+  SystemIntakeDocumentVersion
+} from 'types/graphql-global-types';
 
 const govTeam = (name: string) =>
   Yup.object().shape({
@@ -343,5 +346,6 @@ export const documentSchema = Yup.object({
   otherTypeDescription: Yup.string().when('documentType', {
     is: 'OTHER',
     then: schema => schema.required()
-  })
+  }),
+  version: Yup.mixed<SystemIntakeDocumentVersion>().required()
 });
