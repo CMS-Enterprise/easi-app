@@ -33,9 +33,8 @@ import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
 import CreateGRBReviewerSchema from 'validations/grbReviewerSchema';
+import { ReviewerKey } from 'views/GovernanceReviewTeam/subNavItems';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
-
-import { ReviewerKey } from '../subNavItems';
 
 type GRBReviewerFormFields = {
   userAccount: {
