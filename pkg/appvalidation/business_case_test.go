@@ -1,6 +1,7 @@
 package appvalidation
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -149,7 +150,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForUpdate() {
 		err := BusinessCaseForUpdate(&businessCase)
 		s.Error(err)
 		s.IsType(&apperrors.ValidationError{}, err)
-		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCaseWithCosts " + id.String() +
+		expectedErrMessage := errors.New("Could not validate *models.BusinessCaseWithCosts " + id.String() +
 			": {\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"}",
 		)
 		s.Equal(expectedErrMessage, err.Error())
