@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -23,7 +22,6 @@ const AdditionalInformation = ({
   request: TrbRequest | SystemIntake;
   type: RequestType;
 }) => {
-  const flags = useFlags();
   const { t } = useTranslation('admin');
 
   const parentRoute = type === 'itgov' ? 'governance-review-team' : 'trb';
@@ -117,17 +115,7 @@ const AdditionalInformation = ({
         </>
       )}
 
-      {/* flagged for testing - will condense this + the below into one line */}
-      {flags.systemIntakeRelatedRequests && type === 'itgov' && (
-        <div className="margin-top-8">
-          <RelatedRequestsTable requestID={request.id} type={type} />
-        </div>
-      )}
-
-      {/* flagged for testing - will condense this + the above into one line */}
-      {flags.trbRelatedRequests && type === 'trb' && (
-        <RelatedRequestsTable requestID={request.id} type={type} />
-      )}
+      <RelatedRequestsTable requestID={request.id} type={type} />
     </div>
   );
 };

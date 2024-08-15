@@ -13,6 +13,7 @@ export default gql(/* GraphQL */ `
         statusAdmin
         statusRequester
         submittedAt
+        lcid
       }
       relatedTRBRequests {
         id
