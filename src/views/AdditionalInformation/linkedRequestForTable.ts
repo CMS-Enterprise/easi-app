@@ -5,4 +5,5 @@ export interface LinkedRequestForTable {
   contractNumber: string;
   status: string;
   submissionDate: string;
+  lcid: string | null;
 }
