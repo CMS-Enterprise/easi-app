@@ -320,20 +320,6 @@ func (s *Server) routes(
 					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
 					publisher.PublishBusinessCase,
 				),
-				models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
-					serviceConfig,
-					services.AuthorizeUserIsIntakeRequester,
-					store.UpdateSystemIntake,
-					// quick adapter to retrofit the new interface to take the place
-					// of the old interface
-					func(ctx context.Context, si *models.SystemIntake) (string, error) {
-						err := publisher.PublishSystemIntake(ctx, *si)
-						return "", err
-					},
-					saveAction,
-					emailClient.SystemIntake.SendSubmitInitialFormRequesterNotification,
-					emailClient.SystemIntake.SendSubmitInitialFormReviewerNotification,
-				),
 			},
 		),
 	)
