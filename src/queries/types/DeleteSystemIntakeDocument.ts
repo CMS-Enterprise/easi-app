@@ -24,6 +24,8 @@ export interface DeleteSystemIntakeDocument_deleteSystemIntakeDocument_document 
   status: SystemIntakeDocumentStatus;
   uploadedAt: Time;
   url: string;
+  canView: boolean;
+  canDelete: boolean;
 }
 
 export interface DeleteSystemIntakeDocument_deleteSystemIntakeDocument {

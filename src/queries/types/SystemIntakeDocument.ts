@@ -24,4 +24,6 @@ export interface SystemIntakeDocument {
   status: SystemIntakeDocumentStatus;
   uploadedAt: Time;
   url: string;
+  canView: boolean;
+  canDelete: boolean;
 }

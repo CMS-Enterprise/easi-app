@@ -20,6 +20,7 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
+import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { SystemIntakeState } from 'types/graphql-global-types';
 import {
   currentTableSortDescription,
@@ -36,9 +37,10 @@ type GRBReviewProps = {
   id: string;
   state: SystemIntakeState;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
+  documents: SystemIntakeDocument[];
 };
 
-const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
+const GRBReview = ({ id, state, grbReviewers, documents }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const { pathname } = useLocation();
   const history = useHistory();

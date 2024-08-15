@@ -129,6 +129,8 @@ export interface GetSystemIntake_systemIntake_documents {
   status: SystemIntakeDocumentStatus;
   uploadedAt: Time;
   url: string;
+  canView: boolean;
+  canDelete: boolean;
 }
 
 export interface GetSystemIntake_systemIntake_systems_businessOwnerRoles {

@@ -24,6 +24,8 @@ export interface CreateSystemIntakeDocument_createSystemIntakeDocument_document 
   status: SystemIntakeDocumentStatus;
   uploadedAt: Time;
   url: string;
+  canView: boolean;
+  canDelete: boolean;
 }
 
 export interface CreateSystemIntakeDocument_createSystemIntakeDocument {
