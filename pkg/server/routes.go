@@ -266,7 +266,6 @@ func (s *Server) routes(
 	businessCaseHandler := handlers.NewBusinessCaseHandler(
 		base,
 		services.NewFetchBusinessCaseByID(
-			serviceConfig,
 			store.FetchBusinessCaseByID,
 			services.AuthorizeHasEASiRole,
 		),
