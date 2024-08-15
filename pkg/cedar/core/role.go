@@ -432,7 +432,7 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 
 	if resp.Payload.Result == "error" {
 		if len(resp.Payload.Message) > 0 {
-			return fmt.Errorf(resp.Payload.Message[0]) // message from CEDAR should be "Role assignment(s) could not be found"
+			return errors.New(resp.Payload.Message[0]) // message from CEDAR should be "Role assignment(s) could not be found"
 		}
 		return fmt.Errorf("unknown error")
 	}
@@ -469,7 +469,7 @@ func (c *Client) deleteRoles(ctx context.Context, roleIDsToDelete []string) erro
 
 	if resp.Payload.Result == "error" {
 		if len(resp.Payload.Message) > 0 {
-			return fmt.Errorf(resp.Payload.Message[0]) // should be "Role assignment(s) could not be found"
+			return errors.New(resp.Payload.Message[0]) // should be "Role assignment(s) could not be found"
 		}
 		return fmt.Errorf("unknown error")
 	}

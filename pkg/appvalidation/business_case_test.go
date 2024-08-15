@@ -149,9 +149,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForUpdate() {
 		err := BusinessCaseForUpdate(&businessCase)
 		s.Error(err)
 		s.IsType(&apperrors.ValidationError{}, err)
-		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCaseWithCosts " + id.String() +
-			": {\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"}",
-		)
+		expectedErrMessage := fmt.Sprintf(`Could not validate *models.BusinessCaseWithCosts %s: {"LifecycleCostPhase":"cannot have multiple costs for the same phase, solution, and year"}`, id.String())
 		s.Equal(expectedErrMessage, err.Error())
 	})
 }
