@@ -153,7 +153,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForUpdate() {
 		expectedErrMessage := errors.New("Could not validate *models.BusinessCaseWithCosts " + id.String() +
 			": {\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"}",
 		)
-		s.Equal(expectedErrMessage, err.Error())
+		s.ErrorContains(expectedErrMessage, err.Error())
 	})
 }
 
