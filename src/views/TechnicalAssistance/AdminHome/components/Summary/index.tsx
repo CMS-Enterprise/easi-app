@@ -84,7 +84,6 @@ export default function Summary({
             <Breadcrumb current>{t('adminHome.breadcrumb')}</Breadcrumb>
           </BreadcrumbBar>
 
-          {/* Request summary */}
           <AdminRequestHeaderSummary
             requestName={name}
             submittedAt={submittedAt}

@@ -7,7 +7,7 @@ import { RequestRelationType } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import getSystemOrContractName from 'utils/getSystemOrContractName';
 
-// Most properties are just display strings passed in after any parsing,
+// Some properties are just display strings passed in after any parsing,
 // because original ITG & TRB objects are different.
 type AdminRequestHeaderSummaryProps = {
   requestName: string;
