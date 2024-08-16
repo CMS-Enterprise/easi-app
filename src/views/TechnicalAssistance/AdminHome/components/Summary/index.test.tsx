@@ -42,13 +42,15 @@ describe('TRB Admin Home summary', () => {
               trbLead={trbRequestSummary.trbLeadInfo.commonName}
               requester={requester}
               requesterString="Adeline Aarons, CMS"
-              submittedAt="2023-01-05T00:01:21.315Z"
+              submittedAt={trbRequestSummary.createdAt}
               assignLeadModalRef={modalRef}
               assignLeadModalTrbRequestIdRef={trbRequestIdRef}
               contractName={trbRequestSummary.contractName}
               relationType={trbRequestSummary.relationType}
               systems={trbRequestSummary.systems}
-              contractNumbers={['00004', '00004']}
+              contractNumbers={trbRequestSummary.contractNumbers.map(
+                c => c.contractNumber
+              )}
             />
           </Provider>
         </MockedProvider>
