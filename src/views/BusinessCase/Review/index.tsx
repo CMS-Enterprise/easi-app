@@ -16,10 +16,9 @@ import './index.scss';
 
 type ReviewProps = {
   businessCase: BusinessCaseModel;
-  isFinal: boolean;
 };
 
-const Review = ({ businessCase, isFinal }: ReviewProps) => {
+const Review = ({ businessCase }: ReviewProps) => {
   const { t } = useTranslation('businessCase');
 
   const history = useHistory();
