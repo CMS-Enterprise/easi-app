@@ -11,6 +11,7 @@ import {
   ModalRef
 } from '@trussworks/react-uswds';
 
+import AdminRequestHeaderSummary from 'components/shared/AdminRequestHeaderSummary';
 import StateTag from 'components/StateTag';
 import { SystemIntake_systems as System } from 'queries/types/SystemIntake';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
@@ -26,16 +27,17 @@ import { TrbAssignLeadModalOpener } from '../../TrbAssignLeadModal';
 
 type SummaryProps = {
   trbRequestId: string;
-  name: string | null;
+  name: string;
   requestType: TRBRequestType;
   state: TRBRequestState;
   taskStatus?: TRBRequestStatus;
   trbLead: string | null;
   requester: TRBAttendee;
   requesterString?: string | null;
-  submissionDate: string;
+  submittedAt: string;
   assignLeadModalRef: React.RefObject<ModalRef>;
   assignLeadModalTrbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
+  contractNumbers: string[];
   contractName: string | null;
   relationType: RequestRelationType | null;
   systems: System[];
@@ -50,9 +52,10 @@ export default function Summary({
   trbLead,
   requester,
   requesterString,
-  submissionDate,
+  submittedAt,
   assignLeadModalRef,
   assignLeadModalTrbRequestIdRef,
+  contractNumbers,
   contractName,
   relationType,
   systems
@@ -82,42 +85,17 @@ export default function Summary({
           </BreadcrumbBar>
 
           {/* Request summary */}
-          <h2 className="margin-top-05 margin-bottom-2">{name}</h2>
-
-          <Grid row gap>
-            <Grid tablet={{ col: 8 }}>
-              <h5 className="text-normal margin-y-0">
-                {t('adminHome.requestType')}
-              </h5>
-              <h4 className="margin-top-05 margin-bottom-2">
-                {t(`requestType.type.${requestType}.heading`)}
-              </h4>
-            </Grid>
-
-            <Grid tablet={{ col: 4 }}>
-              <h5 className="text-normal margin-y-0">
-                {t('adminHome.requester')}
-              </h5>
-              {requesterString && (
-                <h4
-                  className="margin-top-05 margin-bottom-2"
-                  data-testid={`trbSummary-requester_${requester.userInfo?.euaUserId}`}
-                >
-                  {requesterString}
-                </h4>
-              )}
-
-              <h5 className="text-normal margin-y-0">
-                {t('adminHome.submissionDate')}
-              </h5>
-              <h4
-                className="margin-top-05 margin-bottom-2"
-                data-testid="trbSummary-submissionDate"
-              >
-                {t(submissionDate)}
-              </h4>
-            </Grid>
-          </Grid>
+          <AdminRequestHeaderSummary
+            requestName={name}
+            submittedAt={submittedAt}
+            requestType={t(`requestType.type.${requestType}.heading`)}
+            relationType={relationType}
+            contractName={contractName}
+            systems={systems}
+            requester={requesterString || ''}
+            trbRequesterTestId={`trbSummary-requester_${requester.userInfo?.euaUserId}`}
+            contractNumbers={contractNumbers}
+          />
         </GridContainer>
       </section>
 
