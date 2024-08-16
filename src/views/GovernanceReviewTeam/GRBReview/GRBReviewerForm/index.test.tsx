@@ -27,10 +27,9 @@ import {
 import { MockedQuery } from 'types/util';
 import MockUsers from 'utils/testing/MockUsers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
+import IsGrbViewContext from 'views/GovernanceReviewTeam/IsGrbViewContext';
 
-import IsGrbViewContext from '../IsGrbViewContext';
-
-import GRBReview from '.';
+import GRBReview from '..';
 
 const mockUsers = new MockUsers();
 const user = mockUsers.findByCommonName('Jerry Seinfeld')!;
