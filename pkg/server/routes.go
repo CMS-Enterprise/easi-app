@@ -292,34 +292,20 @@ func (s *Server) routes(
 
 	actionHandler := handlers.NewActionHandler(
 		base,
-		services.NewTakeAction(
+		services.NewBusinessCaseTakeAction(
 			store.FetchSystemIntakeByID,
-			map[models.ActionType]services.ActionExecuter{
-				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
-					serviceConfig,
-					services.AuthorizeUserIsIntakeRequester,
-					store.FetchOpenBusinessCaseByIntakeID,
-					appvalidation.BusinessCaseForSubmit,
-					saveAction,
-					store.UpdateSystemIntake,
-					store.UpdateBusinessCase,
-					emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
-					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
-					publisher.PublishBusinessCase,
-				),
-				models.ActionTypeSUBMITFINALBIZCASE: services.NewSubmitBusinessCase(
-					serviceConfig,
-					services.AuthorizeUserIsIntakeRequester,
-					store.FetchOpenBusinessCaseByIntakeID,
-					appvalidation.BusinessCaseForSubmit,
-					saveAction,
-					store.UpdateSystemIntake,
-					store.UpdateBusinessCase,
-					emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
-					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
-					publisher.PublishBusinessCase,
-				),
-			},
+			services.NewSubmitBusinessCase(
+				serviceConfig,
+				services.AuthorizeUserIsIntakeRequester,
+				store.FetchOpenBusinessCaseByIntakeID,
+				appvalidation.BusinessCaseForSubmit,
+				saveAction,
+				store.UpdateSystemIntake,
+				store.UpdateBusinessCase,
+				emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
+				emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
+				publisher.PublishBusinessCase,
+			),
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/actions", actionHandler.Handle())
