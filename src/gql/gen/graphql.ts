@@ -547,6 +547,7 @@ export type CreateSystemIntakeDocumentInput = {
   fileData: Scalars['Upload']['input'];
   otherTypeDescription?: InputMaybe<Scalars['String']['input']>;
   requestID: Scalars['UUID']['input'];
+  sendNotification?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Data returned after uploading a document to a System Intake */

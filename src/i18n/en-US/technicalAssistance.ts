@@ -737,7 +737,12 @@ const technicalAssistance = {
       dontUploadAndReturn: 'Don’t upload and return to previous page',
       error:
         'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
-      success: 'Your document has been uploaded and is being scanned.'
+      success: 'Your document has been uploaded and is being scanned.',
+      sendNotificationToGRBReviewers: {
+        header: 'Would you like to send a notification email to GRB reviewers?',
+        info:
+          'If you choose “Yes”, EASi will automatically send a notification email to all GRB reviewers added to this request. Sending a notification while a GRB review is still in progress will help GRB reviewers stay up to date with all relevant project materials.'
+      }
     },
     continueWithoutAdding: 'Continue without adding documents',
     supportingDocuments: {

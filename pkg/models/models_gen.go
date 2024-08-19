@@ -167,6 +167,7 @@ type CreateSystemIntakeDocumentInput struct {
 	FileData             graphql.Upload                 `json:"fileData"`
 	DocumentType         SystemIntakeDocumentCommonType `json:"documentType"`
 	OtherTypeDescription *string                        `json:"otherTypeDescription,omitempty"`
+	SendNotification     *bool                          `json:"sendNotification,omitempty"`
 }
 
 // Data returned after uploading a document to a System Intake

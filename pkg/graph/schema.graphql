@@ -1743,6 +1743,7 @@ input CreateSystemIntakeDocumentInput {
   fileData: Upload!
   documentType: SystemIntakeDocumentCommonType!
   otherTypeDescription: String
+  sendNotification: Boolean
 }
 
 """

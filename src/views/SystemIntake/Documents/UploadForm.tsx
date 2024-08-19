@@ -1,6 +1,7 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,6 +16,7 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { Alert } from 'components/shared/Alert';
 import IconLink from 'components/shared/IconLink';
@@ -30,6 +32,10 @@ import { CreateSystemIntakeDocumentInput } from 'types/graphql-global-types';
 import { fileToBase64File } from 'utils/downloadFile';
 import { documentSchema } from 'validations/systemIntakeSchema';
 
+import HelpText from '../../../components/shared/HelpText';
+import { AppState } from '../../../reducers/rootReducer';
+import user from '../../../utils/user';
+
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
 
 /**
@@ -37,6 +43,10 @@ type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
  */
 const UploadForm = () => {
   const { t } = useTranslation();
+
+  const { groups } = useSelector((state: AppState) => state.auth);
+
+  const flags = useFlags();
 
   const history = useHistory();
 
@@ -149,7 +159,6 @@ const UploadForm = () => {
               );
             }}
           />
-
           {/* Document type */}
           <Controller
             name="documentType"
@@ -185,7 +194,6 @@ const UploadForm = () => {
               </FormGroup>
             )}
           />
-
           {
             // Text field for 'Other' type
             watch('documentType') === 'OTHER' && (
@@ -221,10 +229,57 @@ const UploadForm = () => {
             )
           }
 
+          {/* display for admins only */}
+          {user.isITGovAdmin(groups, flags) && (
+            <Controller
+              name="sendNotification"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup className="margin-top-3" error={!!error}>
+                  <Label htmlFor={field.name}>
+                    {t(
+                      'technicalAssistance:documents.upload.sendNotificationToGRBReviewers.header'
+                    )}
+                  </Label>
+                  <HelpText className="margin-top-05">
+                    {t(
+                      'technicalAssistance:documents.upload.sendNotificationToGRBReviewers.info'
+                    )}
+                  </HelpText>
+
+                  {error && (
+                    <ErrorMessage>
+                      {t('technicalAssistance:errors.fillBlank')}
+                    </ErrorMessage>
+                  )}
+
+                  <Radio
+                    key="yes"
+                    id={`${field.name}-yes`}
+                    name={field.name}
+                    label={t('technicalAssistance:basic.options.yes')}
+                    onBlur={field.onBlur}
+                    onChange={field.onChange}
+                    value={field.value ? 'Yes' : 'No'}
+                  />
+
+                  <Radio
+                    key="no"
+                    id={`${field.name}-no`}
+                    name={field.name}
+                    label={t('technicalAssistance:basic.options.no')}
+                    onBlur={field.onBlur}
+                    onChange={field.onChange}
+                    value={field.value ? 'Yes' : 'No'}
+                  />
+                </FormGroup>
+              )}
+            />
+          )}
+
           <Alert type="info" slim className="margin-top-5">
             {t('technicalAssistance:documents.upload.toKeepCmsSafe')}
           </Alert>
-
           <Button
             type="submit"
             disabled={

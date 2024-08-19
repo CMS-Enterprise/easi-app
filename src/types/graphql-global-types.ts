@@ -561,6 +561,7 @@ export interface CreateSystemIntakeDocumentInput {
   fileData: Upload;
   documentType: SystemIntakeDocumentCommonType;
   otherTypeDescription?: string | null;
+  sendNotification?: boolean | null;
 }
 
 export interface CreateSystemIntakeGRBReviewerInput {
