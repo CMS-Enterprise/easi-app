@@ -19,7 +19,10 @@ import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
-import { RequestType } from 'types/graphql-global-types';
+import {
+  RequestType,
+  SystemIntakeStatusRequester
+} from 'types/graphql-global-types';
 import { formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -38,6 +41,29 @@ type myRequestsTableProps = {
   hiddenColumns?: string[];
   defaultPageSize?: number;
 };
+
+const SystemIntakeStatusRequesterIndex = [
+  SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
+  SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
+  SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_SUBMITTED,
+  SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_EDITS_REQUESTED,
+  SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+  SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_SUBMITTED,
+  SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
+  SystemIntakeStatusRequester.GRT_MEETING_READY,
+  SystemIntakeStatusRequester.GRT_MEETING_AWAITING_DECISION,
+  SystemIntakeStatusRequester.FINAL_BUSINESS_CASE_IN_PROGRESS,
+  SystemIntakeStatusRequester.FINAL_BUSINESS_CASE_SUBMITTED,
+  SystemIntakeStatusRequester.FINAL_BUSINESS_CASE_EDITS_REQUESTED,
+  SystemIntakeStatusRequester.GRB_MEETING_READY,
+  SystemIntakeStatusRequester.GRB_MEETING_AWAITING_DECISION,
+  SystemIntakeStatusRequester.LCID_ISSUED,
+  SystemIntakeStatusRequester.LCID_EXPIRED,
+  SystemIntakeStatusRequester.LCID_RETIRED,
+  SystemIntakeStatusRequester.NOT_GOVERNANCE,
+  SystemIntakeStatusRequester.NOT_APPROVED,
+  SystemIntakeStatusRequester.CLOSED
+] as const;
 
 const Table = ({
   type,
@@ -115,6 +141,13 @@ const Table = ({
             default:
               return '';
           }
+        },
+        sortType: (a: any, b: any) => {
+          const ax = a.original.statusRequester;
+          const bx = b.original.statusRequester;
+          const ai = SystemIntakeStatusRequesterIndex.indexOf(ax);
+          const bi = SystemIntakeStatusRequesterIndex.indexOf(bx);
+          return ai > bi ? 1 : -1;
         },
         width: '200px'
       },
