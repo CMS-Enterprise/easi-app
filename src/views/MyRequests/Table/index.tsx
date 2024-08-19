@@ -143,10 +143,25 @@ const Table = ({
           }
         },
         sortType: (a: any, b: any) => {
-          const ax = a.original.statusRequester;
-          const bx = b.original.statusRequester;
-          const ai = SystemIntakeStatusRequesterIndex.indexOf(ax);
-          const bi = SystemIntakeStatusRequesterIndex.indexOf(bx);
+          const astatus = a.original.statusRequester;
+          const bstatus = b.original.statusRequester;
+
+          if (
+            astatus === SystemIntakeStatusRequester.LCID_ISSUED &&
+            bstatus === SystemIntakeStatusRequester.LCID_ISSUED
+          ) {
+            return a.original.lcid > b.original.lcid ? 1 : -1;
+          }
+
+          if (
+            astatus === SystemIntakeStatusRequester.LCID_EXPIRED &&
+            bstatus === SystemIntakeStatusRequester.LCID_EXPIRED
+          ) {
+            return a.original.lcid > b.original.lcid ? 1 : -1;
+          }
+
+          const ai = SystemIntakeStatusRequesterIndex.indexOf(astatus);
+          const bi = SystemIntakeStatusRequesterIndex.indexOf(bstatus);
           return ai > bi ? 1 : -1;
         },
         width: '200px'
