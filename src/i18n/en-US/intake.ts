@@ -311,6 +311,13 @@ const intake = {
     usesAiTech: 'Does your request involve AI technologies?',
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
+    elas: {
+      label:
+        'Are you planning on using any software through an Enterprise License',
+      selectedLabel: 'Selected software',
+      help:
+        'Please select any of the software listed that apply to this request and/or system'
+    },
     needsEaSupport: 'Does your request need Enterprise Architecture support?',
     needsEaSupportHelpText:
       'If you are unsure, mark "Yes" and someone from the EA team will assess your needs.',

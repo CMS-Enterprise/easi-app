@@ -721,6 +721,7 @@ type SystemIntake {
   lcidCostBaseline: String
   lcidRetiresAt: Time
   needsEaSupport: Boolean
+  elaInfo: [SystemIntakeELAInfo!]!
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
@@ -927,6 +928,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   requestName: String
   businessNeed: String
   businessSolution: String
+  elaInfo: SystemIntakeELAInfoInput
   needsEaSupport: Boolean
   currentStage: String
   cedarSystemId: String
@@ -957,6 +959,22 @@ The input required to specify the funding source(s) for a system intake
 input SystemIntakeFundingSourcesInput {
   existingFunding: Boolean
   fundingSources: [SystemIntakeFundingSourceInput!]!
+}
+
+"""
+Represents information on an individual ELA assocatied with a system intake
+"""
+type SystemIntakeELAInfo {
+  id: UUID!
+  elaName: String
+  createdAt: Time 
+}
+
+"""
+The input required to specify the ELA(s) associated with a system intake
+"""
+input SystemIntakeELAInfoInput {
+  elaName: Boolean
 }
 
 """

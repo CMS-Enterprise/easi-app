@@ -28,6 +28,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import MultiSelect from 'components/shared/MultiSelect';
 import processStages from 'constants/enums/processStages';
 import { CMS_AI_EMAIL, CMS_TRB_EMAIL } from 'constants/externalUrls';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
@@ -92,6 +93,13 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       usesAiTech
     }
   });
+
+  // TODO: NJD - get ELA list?
+  const NJDOptions = [
+    { label: 'Software 1', value: 'software-1' },
+    { label: 'Software 2', value: 'software-2' },
+    { label: 'Software 3', value: 'software-3' }
+  ];
 
   const [mutate] = useMutation<
     UpdateSystemIntakeRequestDetails,
@@ -364,6 +372,29 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           </Fieldset>
         </FieldGroup>
 
+        {/* NJD add SWAM question(s) here */}
+        <FieldGroup scrollElement="NJD-anyELAs" error={!!errors.needsEaSupport}>
+          {/* NJD fix error */}
+          {/* NJD fix controller name */}
+          <Label htmlFor="elasNJD">{t('requestDetails.elas.label')}</Label>
+          <HelpText id="elasHelpText" className="margin-top-1">
+            {t('requestDetails.elas.help')}
+          </HelpText>
+          <Controller
+            control={control}
+            name="needsEaSupport"
+            render={({ field }) => (
+              <MultiSelect
+                name={field.name}
+                selectedLabel={t('requestDetails.elas.selectedLabel')}
+                // initialValues={field.value}
+                initialValues={['']}
+                options={NJDOptions}
+                onChange={values => field.onChange(values)}
+              />
+            )}
+          />
+        </FieldGroup>
         <FieldGroup
           scrollElement="needsEaSupport"
           error={!!errors.needsEaSupport}
