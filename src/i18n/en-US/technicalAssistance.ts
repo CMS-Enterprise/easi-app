@@ -185,7 +185,7 @@ const technicalAssistance = {
     description:
       'Document any outcomes, advice, findings, recommendations, or next steps that the TRB has for this request.',
     text:
-      'After submitting this form, the requester will recieve an automatic notification letting them know their advice letter is available.',
+      'After submitting this form, the requester will receive an automatic notification letting them know their advice letter is available.',
     returnToRequest: 'Save and return to request',
     steps: [
       {
