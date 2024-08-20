@@ -25,6 +25,7 @@ import {
 } from 'types/graphql-global-types';
 import { formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
+import { SystemIntakeStatusRequesterIndex } from 'utils/tableRequestStatusIndex';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -41,31 +42,6 @@ type myRequestsTableProps = {
   hiddenColumns?: string[];
   defaultPageSize?: number;
 };
-
-const SystemIntakeStatusRequesterIndex = Object.fromEntries(
-  [
-    SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
-    SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
-    SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_SUBMITTED,
-    SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_EDITS_REQUESTED,
-    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_IN_PROGRESS,
-    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_SUBMITTED,
-    SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
-    SystemIntakeStatusRequester.GRT_MEETING_READY,
-    SystemIntakeStatusRequester.GRT_MEETING_AWAITING_DECISION,
-    SystemIntakeStatusRequester.FINAL_BUSINESS_CASE_IN_PROGRESS,
-    SystemIntakeStatusRequester.FINAL_BUSINESS_CASE_SUBMITTED,
-    SystemIntakeStatusRequester.FINAL_BUSINESS_CASE_EDITS_REQUESTED,
-    SystemIntakeStatusRequester.GRB_MEETING_READY,
-    SystemIntakeStatusRequester.GRB_MEETING_AWAITING_DECISION,
-    SystemIntakeStatusRequester.LCID_ISSUED,
-    SystemIntakeStatusRequester.LCID_EXPIRED,
-    SystemIntakeStatusRequester.LCID_RETIRED,
-    SystemIntakeStatusRequester.NOT_GOVERNANCE,
-    SystemIntakeStatusRequester.NOT_APPROVED,
-    SystemIntakeStatusRequester.CLOSED
-  ].map((v, i) => [v, i])
-);
 
 const Table = ({
   type,
@@ -144,14 +120,17 @@ const Table = ({
               return '';
           }
         },
+        // Check for the 3 status keys: trb requester, itgov requester & admin
+        // For each key check some matching statuses to further sort by lcid value
         sortType: (a: any, b: any) => {
-          const astatus = a.original.statusRequester;
-          const bstatus = b.original.statusRequester;
-
           // console.log(a.original);
           // console.log(b.original);
 
-          // Check some matching statuses to further sort by lcid value
+          // Only IT Gov requests are handled at this time
+
+          const astatus = a.original.statusRequester;
+          const bstatus = b.original.statusRequester;
+
           if (
             (astatus === SystemIntakeStatusRequester.LCID_ISSUED &&
               bstatus === SystemIntakeStatusRequester.LCID_ISSUED) ||
