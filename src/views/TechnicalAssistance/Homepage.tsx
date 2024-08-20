@@ -99,8 +99,7 @@ function Homepage() {
           state === TRBRequestState.CLOSED
             ? t(`table.requestState.${state}`)
             : t(`table.requestStatus.${status}`),
-        sortType: trbRequestStatusSortType,
-        width: '200px'
+        sortType: trbRequestStatusSortType
       },
       {
         Header: t<string>('table.header.submissionDate'),
