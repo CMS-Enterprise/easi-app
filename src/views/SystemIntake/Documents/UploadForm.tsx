@@ -74,6 +74,7 @@ const UploadForm = () => {
     control,
     watch,
     handleSubmit,
+    setValue,
     formState: { isSubmitting }
   } = useForm<DocumentUploadFields>({
     resolver: yupResolver(documentSchema)
@@ -90,7 +91,8 @@ const UploadForm = () => {
           ...(formData.documentType === 'OTHER'
             ? { otherTypeDescription }
             : {}),
-          requestID: systemId
+          requestID: systemId,
+          sendNotification: formData.sendNotification
         }
       }
     })
@@ -259,8 +261,9 @@ const UploadForm = () => {
                     name={field.name}
                     label={t('technicalAssistance:basic.options.yes')}
                     onBlur={field.onBlur}
-                    onChange={field.onChange}
-                    value={field.value ? 'Yes' : 'No'}
+                    onChange={() => {
+                      setValue('sendNotification', true);
+                    }}
                   />
 
                   <Radio
@@ -269,8 +272,9 @@ const UploadForm = () => {
                     name={field.name}
                     label={t('technicalAssistance:basic.options.no')}
                     onBlur={field.onBlur}
-                    onChange={field.onChange}
-                    value={field.value ? 'Yes' : 'No'}
+                    onChange={() => {
+                      setValue('sendNotification', false);
+                    }}
                   />
                 </FormGroup>
               )}
