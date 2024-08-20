@@ -775,6 +775,7 @@ type SystemIntake {
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
+  usesAiTech: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
   requestFormState: SystemIntakeFormState!
   draftBusinessCaseState: SystemIntakeFormState!
@@ -958,6 +959,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   currentStage: String
   cedarSystemId: String
   hasUiChanges: Boolean
+  usesAiTech: Boolean
 }
 
 """

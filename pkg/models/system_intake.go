@@ -129,6 +129,7 @@ type SystemIntake struct {
 	FundingNumber                   null.String                  `json:"fundingNumber" db:"funding_number"`
 	FundingSources                  []*SystemIntakeFundingSource `json:"fundingSources"`
 	HasUIChanges                    null.Bool                    `json:"hasUiChanges" db:"has_ui_changes"`
+	UsesAITech                      null.Bool                    `json:"usesAiTech" db:"uses_ai_tech"`
 	RequestFormState                SystemIntakeFormState        `json:"requestFormState" db:"request_form_state"`
 	DraftBusinessCaseState          SystemIntakeFormState        `json:"draftBusinessCaseState" db:"draft_business_case_state"`
 	FinalBusinessCaseState          SystemIntakeFormState        `json:"finalBusinessCaseState" db:"final_business_case_state"`

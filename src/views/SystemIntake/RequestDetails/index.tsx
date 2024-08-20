@@ -47,6 +47,7 @@ type RequestDetailsForm = {
   currentStage: string;
   needsEaSupport: boolean | null;
   hasUiChanges: boolean | null;
+  usesAiTech: boolean | null;
 };
 
 type RequestDetailsProps = {
@@ -63,7 +64,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     businessSolution,
     currentStage,
     needsEaSupport,
-    hasUiChanges
+    hasUiChanges,
+    usesAiTech
   } = systemIntake;
 
   const history = useHistory();
@@ -84,7 +86,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       businessSolution: businessSolution || '',
       currentStage: currentStage || '',
       needsEaSupport,
-      hasUiChanges
+      hasUiChanges,
+      usesAiTech
     }
   });
 
@@ -297,6 +300,56 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               </option>
             ))}
           </Dropdown>
+        </FieldGroup>
+
+        <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>
+          <Fieldset>
+            <legend className="text-bold">
+              {t('requestDetails.usesAiTech')}
+            </legend>
+            <HelpText id="usesAiTechHelpText" className="margin-top-1">
+              {t('requestDetails.usesAiTechHelpText')}
+            </HelpText>
+            <ErrorMessage
+              errors={errors}
+              name="usesAiTech"
+              as={FieldErrorMsg}
+            />
+
+            <Controller
+              control={control}
+              name="usesAiTech"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  checked={field.value === true}
+                  id="usesAiTechTrue"
+                  label={t('Yes')}
+                  onChange={() => field.onChange(true)}
+                  value="true"
+                  aria-describedby="usesAiTechHelpText"
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="usesAiTech"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  checked={field.value === false}
+                  id="usesAiTechFalse"
+                  label={t('No')}
+                  onChange={() => field.onChange(false)}
+                  value="true"
+                  aria-describedby="usesAiTechHelpText"
+                />
+              )}
+            />
+          </Fieldset>
         </FieldGroup>
 
         <FieldGroup

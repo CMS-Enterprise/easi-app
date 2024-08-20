@@ -1848,6 +1848,7 @@ export type SystemIntake = {
   trbCollaboratorName?: Maybe<Scalars['String']['output']>;
   trbFollowUpRecommendation?: Maybe<SystemIntakeTRBFollowUp>;
   updatedAt?: Maybe<Scalars['Time']['output']>;
+  usesAiTech?: Maybe<Scalars['Boolean']['output']>;
 };
 
 /** An action taken on a system intake, often resulting in a change in status. */
@@ -2954,6 +2955,7 @@ export type UpdateSystemIntakeRequestDetailsInput = {
   id: Scalars['UUID']['input'];
   needsEaSupport?: InputMaybe<Scalars['Boolean']['input']>;
   requestName?: InputMaybe<Scalars['String']['input']>;
+  usesAiTech?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Input data used to update GRT and GRB dates for a system request */

@@ -122,6 +122,7 @@ const intake = {
     businessNeed: 'Business Need',
     businessSolution: 'Business Solution',
     currentStage: 'Process Status',
+    usesAiTech: 'AI Tech Involved',
     eaSupport: 'EA Support Requested',
     hasUiChanges: 'Interface Component/Changes',
     isExpectingCostIncrease: 'Expecting Cost Increase',
@@ -253,6 +254,8 @@ const intake = {
     currentStage: 'Where are you in the process?',
     currentStageHelpText:
       'This helps the governance team provide the right type of guidance for your request',
+    usesAiTech: 'Does your request involve AI technologies?',
+    usesAiTechHelpText: 'AI Language here, come to OIT for all your AI needs!',
     needsEaSupport: 'Does your request need Enterprise Architecture support?',
     needsEaSupportHelpText:
       'If you are unsure, mark "Yes" and someone from the EA team will assess your needs.',
@@ -335,6 +338,7 @@ const intake = {
     businessNeed: 'What is your business need?',
     solving: 'How are you thinking of solving it?',
     process: 'Where are you in the process?',
+    usesAiTech: 'Does your request involve AI technologies?',
     eaSupport: 'Do you need Enterprise Architecture (EA) support?',
     hasUiChanges:
       'Does your project involve any user interface component, or changes to an interface component?',

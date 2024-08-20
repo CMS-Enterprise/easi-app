@@ -1146,6 +1146,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 				currentStage:  "Just an idea",
 				needsEaSupport: false,
 				hasUiChanges: false,
+				usesAiTech: true,
 			}) {
 				systemIntake {
 					id
@@ -1155,6 +1156,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 					currentStage
 					needsEaSupport
 					hasUiChanges
+					usesAiTech
 				}
 			}
 		}`, intake.ID), &resp)

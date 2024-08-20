@@ -1127,6 +1127,7 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   currentStage?: string | null;
   cedarSystemId?: string | null;
   hasUiChanges?: boolean | null;
+  usesAiTech?: boolean | null;
 }
 
 /**
