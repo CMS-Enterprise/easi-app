@@ -42,9 +42,15 @@ describe('TRB Admin Home summary', () => {
               trbLead={trbRequestSummary.trbLeadInfo.commonName}
               requester={requester}
               requesterString="Adeline Aarons, CMS"
-              submissionDate="January 5, 2023"
+              submittedAt={trbRequestSummary.createdAt}
               assignLeadModalRef={modalRef}
               assignLeadModalTrbRequestIdRef={trbRequestIdRef}
+              contractName={trbRequestSummary.contractName}
+              relationType={trbRequestSummary.relationType}
+              systems={trbRequestSummary.systems}
+              contractNumbers={trbRequestSummary.contractNumbers.map(
+                c => c.contractNumber
+              )}
             />
           </Provider>
         </MockedProvider>
@@ -60,8 +66,8 @@ describe('TRB Admin Home summary', () => {
     expect(requesterString).toHaveTextContent('Adeline Aarons, CMS');
 
     // Check that submission date is formatted correctly
-    expect(getByTestId('trbSummary-submissionDate')).toHaveTextContent(
-      'January 5, 2023'
+    expect(getByTestId('summary-submissionDate')).toHaveTextContent(
+      'Submitted on 01/05/2023'
     );
 
     // Check that correct task status is rendered
