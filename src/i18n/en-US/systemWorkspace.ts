@@ -95,6 +95,17 @@ const systemWorkspace = {
       trbCount: '{{count}} open technical assistance request',
       trbCount_plural: '{{count}} open technical assistance requests',
       viewAll: 'View all requests'
+    },
+    team: {
+      header: 'Team',
+      description:
+        'Team members can edit all sections of a system workspace, including collaborating on IT Governance requests and adding more team members.',
+      view: {
+        more: 'View {{count}} more team members',
+        less: 'View fewer team members'
+      },
+      add: 'Add a team member ',
+      manage: 'Manage system team'
     }
   },
   requests: {
