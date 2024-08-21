@@ -19,9 +19,16 @@ import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
-import { RequestType } from 'types/graphql-global-types';
+import {
+  RequestType,
+  SystemIntakeStatusRequester
+} from 'types/graphql-global-types';
 import { formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
+import {
+  SystemIntakeStatusRequesterIndex,
+  trbRequestStatusSortType
+} from 'utils/tableRequestStatusIndex';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -81,7 +88,7 @@ const Table = ({
             link = `/trb/task-list/${row.original.id}`;
           } else {
             switch (row.original.type) {
-              case t('requestsTable.types.GOVERNANCE_REQUEST'):
+              case 'IT Governance':
                 link = `/governance-task-list/${row.original.id}`;
                 break;
               default:
@@ -105,16 +112,66 @@ const Table = ({
         id: 'status',
         accessor: (obj: any) => {
           switch (obj.type) {
-            case t(`requestsTable.types.GOVERNANCE_REQUEST`):
+            case 'IT Governance':
               return t(
                 `governanceReviewTeam:systemIntakeStatusRequester.${obj.statusRequester}`,
                 { lcid: obj.lcid }
               );
-            case t(`requestsTable.types.TRB`):
-              return obj.status;
+            case 'TRB':
+              return t(`table.requestStatus.${obj.status}`, {
+                ns: 'technicalAssistance'
+              });
             default:
               return '';
           }
+        },
+        sortType: (a: any, b: any) => {
+          // Check for the 2 status types: trb requester and itgov requester
+          // Put IT Gov requests before TRB
+          if (
+            a.original.type === 'IT Governance' &&
+            b.original.type === 'TRB'
+          ) {
+            return -1;
+          }
+          if (
+            a.original.type === 'TRB' &&
+            b.original.type === 'IT Governance'
+          ) {
+            return 1;
+          }
+
+          // Compare IT Gov Requests
+          if (
+            a.original.type === 'IT Governance' &&
+            b.original.type === 'IT Governance'
+          ) {
+            const astatus = a.original.statusRequester;
+            const bstatus = b.original.statusRequester;
+
+            // Check some matching statuses to further sort by lcid value
+            if (
+              (astatus === SystemIntakeStatusRequester.LCID_ISSUED &&
+                bstatus === SystemIntakeStatusRequester.LCID_ISSUED) ||
+              (astatus === SystemIntakeStatusRequester.LCID_EXPIRED &&
+                bstatus === SystemIntakeStatusRequester.LCID_EXPIRED) ||
+              (astatus === SystemIntakeStatusRequester.LCID_RETIRED &&
+                bstatus === SystemIntakeStatusRequester.LCID_RETIRED)
+            ) {
+              return a.original.lcid > b.original.lcid ? 1 : -1;
+            }
+
+            const ai = SystemIntakeStatusRequesterIndex()[astatus];
+            const bi = SystemIntakeStatusRequesterIndex()[bstatus];
+            return ai > bi ? 1 : -1;
+          }
+
+          // Compare TRB Requests
+          if (a.original.type === 'TRB' && b.original.type === 'TRB') {
+            return trbRequestStatusSortType(a, b);
+          }
+
+          return 0;
         },
         width: '200px'
       },

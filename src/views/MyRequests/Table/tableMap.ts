@@ -53,19 +53,10 @@ const tableMap = (
           ? t(`requestsTable.types.${request.type}`)
           : t(`requestsTable.types.TRB`);
 
-      let status = '';
-      if (isTRBRequestType(request)) {
-        // TRB status
-        status = t(`table.requestStatus.${request.status}`, {
-          ns: 'technicalAssistance'
-        });
-      }
-
       return {
         ...request,
         name,
-        type,
-        status
+        type
       };
     });
 
