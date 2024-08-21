@@ -79,7 +79,6 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
     register,
     watch,
     handleSubmit,
-    setValue,
     formState: { isSubmitting, errors, isValid }
   } = useEasiForm<DocumentUploadFields>({
     resolver: yupResolver(documentSchema)
@@ -279,7 +278,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
             </Fieldset>
           </FormGroup>
 
-          {/* display for admins only */}
+          {/* display for admins only when accessed from admin view */}
           {type === 'admin' && user.isITGovAdmin(groups, flags) && (
             <Controller
               name="sendNotification"
@@ -313,7 +312,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
                     label={t('technicalAssistance:basic.options.yes')}
                     onBlur={field.onBlur}
                     onChange={() => {
-                      setValue('sendNotification', true);
+                      field.onChange(true);
                     }}
                   />
 
@@ -325,7 +324,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
                     label={t('technicalAssistance:basic.options.no')}
                     onBlur={field.onBlur}
                     onChange={() => {
-                      setValue('sendNotification', false);
+                      field.onChange(false);
                     }}
                   />
                 </FormGroup>
