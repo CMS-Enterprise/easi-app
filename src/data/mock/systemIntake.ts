@@ -38,6 +38,7 @@ import {
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentStatus,
+  SystemIntakeDocumentVersion,
   SystemIntakeFormState,
   SystemIntakeRequestType,
   SystemIntakeState,
@@ -111,10 +112,11 @@ export const documents: SystemIntakeDocument[] = [
     id: '3b23fcf9-85d3-4211-a7d8-d2d08148f196',
     fileName: 'sample1.pdf',
     documentType: {
-      commonType: SystemIntakeDocumentCommonType.DRAFT_ICGE,
+      commonType: SystemIntakeDocumentCommonType.DRAFT_IGCE,
       otherTypeDescription: null,
       __typename: 'SystemIntakeDocumentType'
     },
+    version: SystemIntakeDocumentVersion.CURRENT,
     status: SystemIntakeDocumentStatus.AVAILABLE,
     uploadedAt: '2023-06-14T18:24:46.310929Z',
     url:
@@ -129,6 +131,7 @@ export const documents: SystemIntakeDocument[] = [
       otherTypeDescription: null,
       __typename: 'SystemIntakeDocumentType'
     },
+    version: SystemIntakeDocumentVersion.CURRENT,
     status: SystemIntakeDocumentStatus.PENDING,
     uploadedAt: '2023-06-14T18:24:46.32661Z',
     url:
@@ -143,6 +146,7 @@ export const documents: SystemIntakeDocument[] = [
       otherTypeDescription: 'Some other type of doc',
       __typename: 'SystemIntakeDocumentType'
     },
+    version: SystemIntakeDocumentVersion.HISTORICAL,
     status: SystemIntakeDocumentStatus.UNAVAILABLE,
     uploadedAt: '2023-06-14T18:24:46.342866Z',
     url:

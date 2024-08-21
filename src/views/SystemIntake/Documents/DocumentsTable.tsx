@@ -124,7 +124,24 @@ const DocumentsTable = ({
           if (commonType === SystemIntakeDocumentCommonType.OTHER) {
             return otherTypeDescription || '';
           }
-          return t(`intake:documents.type.${commonType}`);
+          return t(`intake:documents.abbreviatedType.${commonType}`);
+        },
+        Cell: ({ row }: CellProps<SystemIntakeDocument, string>) => {
+          const { version } = row.original;
+          return (
+            <>
+              <p>
+                {
+                  row.values[
+                    t('technicalAssistance:documents.table.header.documentType')
+                  ]
+                }
+              </p>
+              <p className="text-base font-sans-2xs">
+                {t(`intake:documents.version.${version}`)}
+              </p>
+            </>
+          );
         }
       },
       {
@@ -146,12 +163,13 @@ const DocumentsTable = ({
         Cell: ({ row }: CellProps<SystemIntakeDocument, string>) => {
           // Show the upload status
           // Virus scanning
-          if (row.original.status === SystemIntakeDocumentStatus.PENDING)
+          if (row.original.status === SystemIntakeDocumentStatus.PENDING) {
             return (
               <em data-testurl={row.original.url}>
                 {t('technicalAssistance:documents.table.virusScan')}
               </em>
             );
+          }
           // View or Remove
           if (row.original.status === SystemIntakeDocumentStatus.AVAILABLE) {
             // Show some file actions once it's available
@@ -186,8 +204,9 @@ const DocumentsTable = ({
             );
           }
           // Infected unavailable
-          if (row.original.status === SystemIntakeDocumentStatus.UNAVAILABLE)
+          if (row.original.status === SystemIntakeDocumentStatus.UNAVAILABLE) {
             return t('technicalAssistance:documents.table.unavailable');
+          }
           return '';
         }
       }
