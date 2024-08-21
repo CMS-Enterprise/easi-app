@@ -25,7 +25,10 @@ import {
 } from 'types/graphql-global-types';
 import { formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
-import { SystemIntakeStatusRequesterIndex } from 'utils/tableRequestStatusIndex';
+import {
+  SystemIntakeStatusRequesterIndex,
+  trbRequestStatusSortType
+} from 'utils/tableRequestStatusIndex';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -85,7 +88,7 @@ const Table = ({
             link = `/trb/task-list/${row.original.id}`;
           } else {
             switch (row.original.type) {
-              case t('requestsTable.types.GOVERNANCE_REQUEST'):
+              case 'IT Governance':
                 link = `/governance-task-list/${row.original.id}`;
                 break;
               default:
@@ -109,40 +112,64 @@ const Table = ({
         id: 'status',
         accessor: (obj: any) => {
           switch (obj.type) {
-            case t(`requestsTable.types.GOVERNANCE_REQUEST`):
+            case 'IT Governance':
               return t(
                 `governanceReviewTeam:systemIntakeStatusRequester.${obj.statusRequester}`,
                 { lcid: obj.lcid }
               );
-            case t(`requestsTable.types.TRB`):
-              return obj.status;
+            case 'TRB':
+              return t(`table.requestStatus.${obj.status}`, {
+                ns: 'technicalAssistance'
+              });
             default:
               return '';
           }
         },
-        // Check for the 3 status keys: trb requester, itgov requester & admin
-        // For each key check some matching statuses to further sort by lcid value
         sortType: (a: any, b: any) => {
-          // console.log(a.original);
-          // console.log(b.original);
-
-          // Only IT Gov requests are handled at this time
-
-          const astatus = a.original.statusRequester;
-          const bstatus = b.original.statusRequester;
-
+          // Check for the 2 status types: trb requester and itgov requester
+          // Put IT Gov requests before TRB
           if (
-            (astatus === SystemIntakeStatusRequester.LCID_ISSUED &&
-              bstatus === SystemIntakeStatusRequester.LCID_ISSUED) ||
-            (astatus === SystemIntakeStatusRequester.LCID_EXPIRED &&
-              bstatus === SystemIntakeStatusRequester.LCID_EXPIRED)
+            a.original.type === 'IT Governance' &&
+            b.original.type === 'TRB'
           ) {
-            return a.original.lcid > b.original.lcid ? 1 : -1;
+            return -1;
+          }
+          if (
+            a.original.type === 'TRB' &&
+            b.original.type === 'IT Governance'
+          ) {
+            return 1;
           }
 
-          const ai = SystemIntakeStatusRequesterIndex()[astatus];
-          const bi = SystemIntakeStatusRequesterIndex()[bstatus];
-          return ai > bi ? 1 : -1;
+          // Compare IT Gov Requests
+          if (
+            a.original.type === 'IT Governance' &&
+            b.original.type === 'IT Governance'
+          ) {
+            const astatus = a.original.statusRequester;
+            const bstatus = b.original.statusRequester;
+
+            // Check some matching statuses to further sort by lcid value
+            if (
+              (astatus === SystemIntakeStatusRequester.LCID_ISSUED &&
+                bstatus === SystemIntakeStatusRequester.LCID_ISSUED) ||
+              (astatus === SystemIntakeStatusRequester.LCID_EXPIRED &&
+                bstatus === SystemIntakeStatusRequester.LCID_EXPIRED)
+            ) {
+              return a.original.lcid > b.original.lcid ? 1 : -1;
+            }
+
+            const ai = SystemIntakeStatusRequesterIndex()[astatus];
+            const bi = SystemIntakeStatusRequesterIndex()[bstatus];
+            return ai > bi ? 1 : -1;
+          }
+
+          // Compare TRB Requests
+          if (a.original.type === 'TRB' && b.original.type === 'TRB') {
+            return trbRequestStatusSortType(a, b);
+          }
+
+          return 0;
         },
         width: '200px'
       },

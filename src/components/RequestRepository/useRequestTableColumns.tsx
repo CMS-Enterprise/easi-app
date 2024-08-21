@@ -140,9 +140,6 @@ const useRequestTableColumns = (
       );
     },
     sortType: (a: Row<SystemIntakeForTable>, b: Row<SystemIntakeForTable>) => {
-      // console.log(a.original);
-      // console.log(b.original);
-
       const astatus = a.original.statusAdmin;
       const bstatus = b.original.statusAdmin;
 
