@@ -249,6 +249,20 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
+                Does your request involve AI technologies?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              />
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
                 Do you need Enterprise Architecture (EA) support?
               </dt>
               <dd
