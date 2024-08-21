@@ -154,7 +154,9 @@ const Table = ({
               (astatus === SystemIntakeStatusRequester.LCID_ISSUED &&
                 bstatus === SystemIntakeStatusRequester.LCID_ISSUED) ||
               (astatus === SystemIntakeStatusRequester.LCID_EXPIRED &&
-                bstatus === SystemIntakeStatusRequester.LCID_EXPIRED)
+                bstatus === SystemIntakeStatusRequester.LCID_EXPIRED) ||
+              (astatus === SystemIntakeStatusRequester.LCID_RETIRED &&
+                bstatus === SystemIntakeStatusRequester.LCID_RETIRED)
             ) {
               return a.original.lcid > b.original.lcid ? 1 : -1;
             }

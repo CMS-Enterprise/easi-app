@@ -147,7 +147,9 @@ const useRequestTableColumns = (
         (astatus === SystemIntakeStatusAdmin.LCID_ISSUED &&
           bstatus === SystemIntakeStatusAdmin.LCID_ISSUED) ||
         (astatus === SystemIntakeStatusAdmin.LCID_EXPIRED &&
-          bstatus === SystemIntakeStatusAdmin.LCID_EXPIRED)
+          bstatus === SystemIntakeStatusAdmin.LCID_EXPIRED) ||
+        (astatus === SystemIntakeStatusAdmin.LCID_RETIRED &&
+          bstatus === SystemIntakeStatusAdmin.LCID_RETIRED)
       ) {
         return (a.original.lcid || '') > (b.original.lcid || '') ? 1 : -1;
       }
