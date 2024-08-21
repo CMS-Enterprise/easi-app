@@ -281,7 +281,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
           </FormGroup>
 
           {/* display for admins only */}
-          {user.isITGovAdmin(groups, flags) && (
+          {type === 'admin' && user.isITGovAdmin(groups, flags) && (
             <Controller
               name="sendNotification"
               control={control}
