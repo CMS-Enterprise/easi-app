@@ -19,6 +19,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { useEasiForm } from 'components/EasiForm';
 import { Alert } from 'components/shared/Alert';
+import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import useMessage from 'hooks/useMessage';
@@ -28,14 +29,12 @@ import {
   CreateSystemIntakeDocument,
   CreateSystemIntakeDocumentVariables
 } from 'queries/types/CreateSystemIntakeDocument';
+import { AppState } from 'reducers/rootReducer';
 import { CreateSystemIntakeDocumentInput } from 'types/graphql-global-types';
 import { fileToBase64File } from 'utils/downloadFile';
+import user from 'utils/user';
 import { documentSchema } from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
-
-import HelpText from '../../../components/shared/HelpText';
-import { AppState } from '../../../reducers/rootReducer';
-import user from '../../../utils/user';
 
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
 
