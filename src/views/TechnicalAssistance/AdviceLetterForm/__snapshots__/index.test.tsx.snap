@@ -307,7 +307,7 @@ exports[`TRB Advice Letter Form > matches the snapshot 1`] = `
         <div
           class="easi-help-text margin-top-1 margin-bottom-1 text-base"
         >
-          Fields marked with an asterisk (
+          Fields marked with an asterisk ( 
           <span
             class="text-red"
           >
@@ -324,7 +324,7 @@ exports[`TRB Advice Letter Form > matches the snapshot 1`] = `
             for="meetingSummary"
             id="meetingSummary-label"
           >
-            Meeting summary
+            Meeting summary 
             <span
               class="text-red"
             >
@@ -439,18 +439,18 @@ exports[`TRB Advice Letter Form > matches the snapshot 1`] = `
                       class="toastui-editor-tooltip"
                       style="display:none"
                     >
-
-
+                      
+        
                       <div
                         class="arrow"
                       />
-
-
+                      
+        
                       <span
                         class="text"
                       />
-
-
+                      
+      
                     </div>
                   </div>
                   <div
@@ -505,7 +505,7 @@ exports[`TRB Advice Letter Form > matches the snapshot 1`] = `
                           >
                             Meeting summary text
                           </p>
-
+                          
 
                         </div>
                       </div>
