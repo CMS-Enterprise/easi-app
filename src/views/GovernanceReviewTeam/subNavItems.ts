@@ -1,7 +1,7 @@
 import { Flags } from 'types/flags';
 
 /** IT Gov reviewer types - used for GRT and GRB view routing */
-export type ReviewerKey = 'governance-review-team' | 'governance-review-board';
+export type ReviewerKey = 'it-governance' | 'governance-review-board';
 
 type SubNavItems = {
   route: `/${ReviewerKey}/${string}/${string}`;
@@ -68,18 +68,18 @@ const subNavItems = (
       route: `/${reviewerRoute}/${systemId}/additional-information`,
       text: 'additionalInformation.title',
       aria: 'aria.openAdditionalInformation',
-      groupEnd: reviewerRoute === 'governance-review-team'
+      groupEnd: reviewerRoute === 'it-governance'
     },
     {
-      route: `/governance-review-team/${systemId}/actions`,
+      route: `/it-governance/${systemId}/actions`,
       text: 'actions'
     },
     {
-      route: `/governance-review-team/${systemId}/notes`,
+      route: `/it-governance/${systemId}/notes`,
       text: 'notes.heading'
     },
     {
-      route: `/governance-review-team/${systemId}/dates`,
+      route: `/it-governance/${systemId}/dates`,
       text: 'dates.heading'
     }
   ];

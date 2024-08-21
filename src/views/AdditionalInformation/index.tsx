@@ -24,7 +24,7 @@ const AdditionalInformation = ({
 }) => {
   const { t } = useTranslation('admin');
 
-  const parentRoute = type === 'itgov' ? 'governance-review-team' : 'trb';
+  const parentRoute = type === 'itgov' ? 'it-governance' : 'trb';
 
   const isGrbView = useContext(IsGrbViewContext);
 

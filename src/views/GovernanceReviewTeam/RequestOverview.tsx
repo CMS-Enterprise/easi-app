@@ -234,12 +234,12 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
                 {/* GRT only routes */}
 
                 <Route
-                  path="/governance-review-team/:systemId/dates"
+                  path="/it-governance/:systemId/dates"
                   render={() => <Dates systemIntake={systemIntake} />}
                 />
 
                 <Route
-                  path="/governance-review-team/:systemId/(actions|resolutions|manage-lcid)/:subPage?"
+                  path="/it-governance/:systemId/(actions|resolutions|manage-lcid)/:subPage?"
                   render={() => <Actions systemIntake={systemIntake} />}
                 />
 

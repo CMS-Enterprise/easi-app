@@ -42,14 +42,12 @@ describe('The GRT intake review view', () => {
   it('matches the snapshot', async () => {
     const { asFragment } = render(
       <MemoryRouter
-        initialEntries={[
-          `/governance-review-team/${systemIntake.id}/intake-request`
-        ]}
+        initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
       >
         <MockedProvider
           mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
         >
-          <Route path={['/governance-review-team/:systemId/intake-request']}>
+          <Route path={['/it-governance/:systemId/intake-request']}>
             <MessageProvider>
               <IntakeReview systemIntake={systemIntake} />
             </MessageProvider>

@@ -148,8 +148,8 @@ describe('GRB reviewer form', () => {
     render(
       <MemoryRouter
         initialEntries={[
-          `/governance-review-team/${systemIntake.id}/grb-review/add`,
-          `/governance-review-team/${systemIntake.id}/grb-review`
+          `/it-governance/${systemIntake.id}/grb-review/add`,
+          `/it-governance/${systemIntake.id}/grb-review`
         ]}
       >
         <VerboseMockedProvider
@@ -218,10 +218,10 @@ describe('GRB reviewer form', () => {
       <MemoryRouter
         initialEntries={[
           {
-            pathname: `/governance-review-team/${systemIntake.id}/grb-review/edit`,
+            pathname: `/it-governance/${systemIntake.id}/grb-review/edit`,
             state: grbReviewer
           },
-          `/governance-review-team/${systemIntake.id}/grb-review`
+          `/it-governance/${systemIntake.id}/grb-review`
         ]}
       >
         <VerboseMockedProvider

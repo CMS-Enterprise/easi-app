@@ -625,7 +625,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
     </div>
     <a
       class="usa-button margin-top-5"
-      href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
+      href="/it-governance/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
     >
       Take an action
     </a>

@@ -43,7 +43,7 @@ const GovernanceReviewTeam = () => {
   const isITGovAdmin = user.isITGovAdmin(groups, flags);
 
   const reviewerType: ReviewerKey = isITGovAdmin
-    ? 'governance-review-team'
+    ? 'it-governance'
     : 'governance-review-board';
 
   if (isUserSet && !loading) {
@@ -56,7 +56,7 @@ const GovernanceReviewTeam = () => {
           <Switch>
             {isITGovAdmin && (
               /* Defining outside parent route to trigger parent rerender/refetch after mutation */
-              <Route path="/governance-review-team/:id/additional-information/link">
+              <Route path="/it-governance/:id/additional-information/link">
                 <RequestLinkForm requestType="itgov" fromAdmin />
               </Route>
             )}

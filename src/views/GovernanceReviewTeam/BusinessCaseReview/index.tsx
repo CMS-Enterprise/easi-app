@@ -102,7 +102,7 @@ const BusinessCaseReview = ({
         <UswdsReactLink
           className="usa-button margin-top-5"
           variant="unstyled"
-          to={`/governance-review-team/${businessCase.systemIntakeId}/actions`}
+          to={`/it-governance/${businessCase.systemIntakeId}/actions`}
         >
           {t('action:takeAnAction')}
         </UswdsReactLink>

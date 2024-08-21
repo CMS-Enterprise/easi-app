@@ -204,10 +204,7 @@ const RequestSummary = ({
                 )
               }
               {!isGrbView && (
-                <Link
-                  to={`/governance-review-team/${id}/actions`}
-                  className="usa-link"
-                >
+                <Link to={`/it-governance/${id}/actions`} className="usa-link">
                   {t('action:takeAnAction')}
                 </Link>
               )}

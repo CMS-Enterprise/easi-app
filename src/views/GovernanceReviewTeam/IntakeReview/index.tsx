@@ -34,7 +34,7 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
         <UswdsReactLink
           className="usa-button margin-top-5"
           variant="unstyled"
-          to={`/governance-review-team/${systemIntake.id}/actions`}
+          to={`/it-governance/${systemIntake.id}/actions`}
         >
           {t('action:takeAnAction')}
         </UswdsReactLink>

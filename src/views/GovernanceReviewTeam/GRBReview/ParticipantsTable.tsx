@@ -165,7 +165,7 @@ const ParticipantsTable = ({
                 components={{
                   a: (
                     <UswdsReactLink
-                      to={`/governance-review-team/${id}/resolutions/re-open-request`}
+                      to={`/it-governance/${id}/resolutions/re-open-request`}
                     >
                       re-open
                     </UswdsReactLink>
