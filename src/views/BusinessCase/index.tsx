@@ -213,9 +213,7 @@ export const BusinessCase = () => {
           />
           <Route
             path="/business/:businessCaseId/review"
-            render={() => (
-              <Review businessCase={businessCase} isFinal={isFinal} />
-            )}
+            render={() => <Review businessCase={businessCase} />}
           />
           <Route
             path="/business/:businessCaseId/view"
