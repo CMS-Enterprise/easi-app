@@ -140,8 +140,8 @@ const Table = ({
             return a.original.lcid > b.original.lcid ? 1 : -1;
           }
 
-          const ai = SystemIntakeStatusRequesterIndex[astatus];
-          const bi = SystemIntakeStatusRequesterIndex[bstatus];
+          const ai = SystemIntakeStatusRequesterIndex()[astatus];
+          const bi = SystemIntakeStatusRequesterIndex()[bstatus];
           return ai > bi ? 1 : -1;
         },
         width: '200px'

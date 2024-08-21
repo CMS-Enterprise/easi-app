@@ -1,3 +1,5 @@
+import { once } from 'lodash';
+
 import {
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester,
@@ -12,8 +14,8 @@ import {
 // Unfortunately the order of original enums from `schema.graphql` are lost
 // when types are generated for the frontend in `global-types`.
 // Generated enum strings are maintained in such a way here for react table column sorting.
-function parseSortIndex(arr: string[]): { [v: string]: number } {
-  return Object.fromEntries(arr.map((v, i) => [v, i]));
+function parseSortIndex(arr: string[]): () => { [v: string]: number } {
+  return once(() => Object.fromEntries(arr.map((v, i) => [v, i])));
 }
 
 export const SystemIntakeStatusRequesterIndex = parseSortIndex([
@@ -83,7 +85,7 @@ export function trbRequestStatusSortType(a: any, b: any) {
       ? b.original.state
       : b.original.status;
 
-  return TRBRequestStatusIndex[astatus] > TRBRequestStatusIndex[bstatus]
+  return TRBRequestStatusIndex()[astatus] > TRBRequestStatusIndex()[bstatus]
     ? 1
     : -1;
 }
