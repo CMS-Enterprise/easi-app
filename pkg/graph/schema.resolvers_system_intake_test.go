@@ -1130,6 +1130,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 				CurrentStage     string
 				NeedsEaSupport   bool
 				HasUIChanges     bool
+				UsesAiTech       bool
 			}
 		}
 	}
@@ -1170,6 +1171,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 	s.Equal(respIntake.CurrentStage, "Just an idea")
 	s.False(respIntake.NeedsEaSupport)
 	s.False(respIntake.HasUIChanges)
+	s.True(respIntake.UsesAiTech)
 }
 
 func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesNull() {
@@ -1194,10 +1196,12 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesNull() {
 		`mutation {
 			updateSystemIntakeRequestDetails(input: {
 				id: "%s",
+				usesAiTech: null,
 				hasUiChanges: null,
 			}) {
 				systemIntake {
 					id
+					usesAiTech
 					hasUiChanges
 				}
 			}
