@@ -307,6 +307,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
 
                   <Radio
                     key="yes"
+                    ref={null}
                     id={`${field.name}-yes`}
                     name={field.name}
                     label={t('technicalAssistance:basic.options.yes')}
@@ -318,6 +319,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
 
                   <Radio
                     key="no"
+                    ref={null}
                     id={`${field.name}-no`}
                     name={field.name}
                     label={t('technicalAssistance:basic.options.no')}
