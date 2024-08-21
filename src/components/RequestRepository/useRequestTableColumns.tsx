@@ -6,7 +6,9 @@ import { IconError } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import TruncatedText from 'components/shared/TruncatedText';
+import { SystemIntakeStatusAdmin } from 'types/graphql-global-types';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
+import { SystemIntakeStatusAdminIndex } from 'utils/tableRequestStatusIndex';
 
 import { SystemIntakeForTable } from './tableMap';
 
@@ -136,6 +138,26 @@ const useRequestTableColumns = (
           lcid: obj.lcid
         }
       );
+    },
+    sortType: (a: Row<SystemIntakeForTable>, b: Row<SystemIntakeForTable>) => {
+      // console.log(a.original);
+      // console.log(b.original);
+
+      const astatus = a.original.statusAdmin;
+      const bstatus = b.original.statusAdmin;
+
+      if (
+        (astatus === SystemIntakeStatusAdmin.LCID_ISSUED &&
+          bstatus === SystemIntakeStatusAdmin.LCID_ISSUED) ||
+        (astatus === SystemIntakeStatusAdmin.LCID_EXPIRED &&
+          bstatus === SystemIntakeStatusAdmin.LCID_EXPIRED)
+      ) {
+        return (a.original.lcid || '') > (b.original.lcid || '') ? 1 : -1;
+      }
+
+      const ai = SystemIntakeStatusAdminIndex[astatus];
+      const bi = SystemIntakeStatusAdminIndex[bstatus];
+      return ai > bi ? 1 : -1;
     }
   };
 
