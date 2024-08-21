@@ -125,6 +125,18 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                         id: '123'
                       }
                     ],
+                    contractNumbers: [
+                      {
+                        id: 'd547c413-00d7-4bd4-a43e-5a2c45fbb98d',
+                        contractNumber: '00004',
+                        __typename: 'TRBRequestContractNumber'
+                      },
+                      {
+                        id: '74c53a09-506d-4be4-a781-c999c1a52c5c',
+                        contractNumber: '00005',
+                        __typename: 'TRBRequestContractNumber'
+                      }
+                    ],
                     __typename: 'TRBRequest'
                   }
                 }
@@ -314,6 +326,18 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                     adminNotes: [
                       {
                         id: '123'
+                      }
+                    ],
+                    contractNumbers: [
+                      {
+                        id: 'd547c413-00d7-4bd4-a43e-5a2c45fbb98d',
+                        contractNumber: '00004',
+                        __typename: 'TRBRequestContractNumber'
+                      },
+                      {
+                        id: '74c53a09-506d-4be4-a781-c999c1a52c5c',
+                        contractNumber: '00005',
+                        __typename: 'TRBRequestContractNumber'
                       }
                     ],
                     __typename: 'TRBRequest'
