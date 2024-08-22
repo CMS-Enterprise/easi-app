@@ -391,25 +391,6 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	return &intake, nil
 }
 
-// FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
-func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
-	intakes := []models.SystemIntake{}
-	const whereClause = `
-		WHERE system_intakes.eua_user_id=$1
-			AND system_intakes.archived_at IS NULL
-		ORDER BY created_at DESC
-	`
-	err := s.db.Select(&intakes, fetchSystemIntakeSQL+whereClause, euaID)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch system intakes %s", err),
-			zap.String("euaID", euaID),
-		)
-		return models.SystemIntakes{}, err
-	}
-	return intakes, nil
-}
-
 // FetchSystemIntakes queries the DB for all system intakes
 func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}

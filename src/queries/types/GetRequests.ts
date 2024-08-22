@@ -3,33 +3,21 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { RequestType, SystemIntakeStatusRequester, TRBRequestStatus } from "./../../types/graphql-global-types";
+import { SystemIntakeStatusRequester, SystemIntakeStatusAdmin, TRBRequestStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetRequests
 // ====================================================
 
-export interface GetRequests_requests_edges_node {
-  __typename: "Request";
+export interface GetRequests_mySystemIntakes {
+  __typename: "SystemIntake";
   id: UUID;
-  name: string | null;
+  requestName: string | null;
   submittedAt: Time | null;
-  type: RequestType;
-  status: string;
-  statusCreatedAt: Time | null;
-  statusRequester: SystemIntakeStatusRequester | null;
-  lcid: string | null;
-  nextMeetingDate: Time | null;
-}
-
-export interface GetRequests_requests_edges {
-  __typename: "RequestEdge";
-  node: GetRequests_requests_edges_node;
-}
-
-export interface GetRequests_requests {
-  __typename: "RequestsConnection";
-  edges: GetRequests_requests_edges[];
+  statusRequester: SystemIntakeStatusRequester;
+  statusAdmin: SystemIntakeStatusAdmin;
+  grbDate: Time | null;
+  grtDate: Time | null;
 }
 
 export interface GetRequests_myTrbRequests {
@@ -42,14 +30,6 @@ export interface GetRequests_myTrbRequests {
 }
 
 export interface GetRequests {
-  /**
-   * Requests fetches a requester's own intake requests
-   * first is currently non-functional and can be removed later
-   */
-  requests: GetRequests_requests | null;
+  mySystemIntakes: GetRequests_mySystemIntakes[];
   myTrbRequests: GetRequests_myTrbRequests[];
-}
-
-export interface GetRequestsVariables {
-  first: number;
 }

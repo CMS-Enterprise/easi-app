@@ -11,7 +11,6 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
@@ -433,109 +432,6 @@ func (s *StoreTestSuite) TestFetchSystemIntakeByID() {
 		s.NoError(err, "failed to fetch system intake")
 		s.Equal(intake.ID, fetched.ID)
 		s.Equal(&bizCase.ID, fetched.BusinessCaseID)
-	})
-}
-
-func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
-	ctx := context.Background()
-
-	s.Run("golden path to fetch system intakes", func() {
-		intake := testhelpers.NewSystemIntake()
-		intake2 := testhelpers.NewSystemIntake()
-		intake2.EUAUserID = intake.EUAUserID
-
-		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-			s.NoError(err)
-			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
-			s.NoError(err)
-
-			return nil
-		})
-		s.NoError(err)
-
-		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
-
-		s.NoError(err, "failed to fetch system intakes")
-		s.Len(fetched, 2)
-		s.Equal(intake.EUAUserID, fetched[0].EUAUserID)
-	})
-
-	s.Run("does not fetch archived intake", func() {
-		intake := testhelpers.NewSystemIntake()
-		intake2 := testhelpers.NewSystemIntake()
-		intake2.EUAUserID = intake.EUAUserID
-
-		// set archived at for intake2
-		intake2.ArchivedAt = helpers.PointerTo(time.Now())
-
-		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-			s.NoError(err)
-			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
-			s.NoError(err)
-
-			return nil
-		})
-		s.NoError(err)
-
-		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
-
-		s.NoError(err, "failed to fetch system intakes")
-		s.Len(fetched, 1)
-		s.Equal(intake.EUAUserID, fetched[0].EUAUserID)
-	})
-
-	s.Run("fetches no results with other EUA ID", func() {
-		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, testhelpers.RandomEUAID())
-
-		s.NoError(err)
-		s.Len(fetched, 0)
-		s.Equal(models.SystemIntakes{}, fetched)
-	})
-
-	s.Run("fetches biz case ID if it exists", func() {
-		intake := testhelpers.NewSystemIntake()
-		intake2 := testhelpers.NewSystemIntake()
-		id := intake.ID
-		intake2.EUAUserID = intake.EUAUserID
-
-		bizCase := testhelpers.NewBusinessCase(id)
-
-		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-			s.NoError(err)
-			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
-			s.NoError(err)
-			_, err = tx.NamedExec(insertRelatedBizCaseSQL, &bizCase)
-			s.NoError(err)
-
-			return nil
-		})
-		s.NoError(err)
-
-		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
-
-		s.NoError(err, "failed to fetch system intakes")
-		s.Len(fetched, 2)
-		fetchedIntakeWithBizCase := func(fetched models.SystemIntakes) models.SystemIntake {
-			for _, intake := range fetched {
-				if intake.ID == id {
-					return intake
-				}
-			}
-			return models.SystemIntake{}
-		}
-		fetchedIntakeWithoutBizCase := func(fetched models.SystemIntakes) models.SystemIntake {
-			for _, intake := range fetched {
-				if intake.ID != id {
-					return intake
-				}
-			}
-			return models.SystemIntake{}
-		}
-		s.Equal(&bizCase.ID, fetchedIntakeWithBizCase(fetched).BusinessCaseID)
-		s.Equal((*uuid.UUID)(nil), fetchedIntakeWithoutBizCase(fetched).BusinessCaseID)
 	})
 }
 

@@ -43,6 +43,10 @@ export interface GetSystemIntakeRelation_cedarSystems {
 }
 
 export interface GetSystemIntakeRelation {
+  /**
+   * Requests fetches a requester's own intake requests
+   * first is currently non-functional and can be removed later
+   */
   systemIntake: GetSystemIntakeRelation_systemIntake | null;
   cedarSystems: GetSystemIntakeRelation_cedarSystems[];
 }

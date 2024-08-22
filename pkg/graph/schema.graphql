@@ -8,13 +8,6 @@ type UserError {
 }
 
 """
-Indicates the type of a request being made with the EASi system
-"""
-enum RequestType {
-  GOVERNANCE_REQUEST
-}
-
-"""
 PersonRole is an enumeration of values for a person's role
 """
 enum PersonRole {
@@ -28,29 +21,6 @@ enum PersonRole {
   PRIVACY_ADVISOR
   CRA
   OTHER
-}
-
-"""
-Represents a requester's system intake request
-"""
-type Request {
-  id: UUID!
-  name: String
-  submittedAt: Time
-  type: RequestType!
-  status: String!
-  statusRequester: SystemIntakeStatusRequester
-  statusCreatedAt: Time
-  lcid: String
-  nextMeetingDate: Time
-}
-
-type RequestsConnection {
-  edges: [RequestEdge!]!
-}
-
-type RequestEdge {
-  node: Request!
 }
 
 """
@@ -2511,9 +2481,9 @@ type Query {
   Requests fetches a requester's own intake requests
   first is currently non-functional and can be removed later
   """
-  requests(first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
+  mySystemIntakes:[SystemIntake!]!
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
