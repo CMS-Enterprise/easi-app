@@ -85,30 +85,17 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 
 // GetTRBRequestByID returns a TRB request by it's ID
 func GetTRBRequestByID(ctx context.Context, id uuid.UUID, store *storage.Store) (*models.TRBRequest, error) {
-	trb, err := store.GetTRBRequestByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	return trb, err
+	return store.GetTRBRequestByID(ctx, id)
 }
 
 // GetTRBRequests returns all TRB Requests
 func GetTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
-	TRBRequests, err := store.GetTRBRequests(ctx, archived)
-	if err != nil {
-		return nil, err
-	}
-	return TRBRequests, err
+	return store.GetTRBRequests(ctx, archived)
 }
 
 // GetMyTRBRequests returns all TRB Requests that belong to the principal in the context
 func GetMyTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
-	TRBRequests, err := store.GetMyTRBRequests(ctx, archived)
-	if err != nil {
-		return nil, err
-	}
-	return TRBRequests, err
+	return store.GetMyTRBRequests(ctx, archived)
 }
 
 // UpdateTRBRequestConsultMeetingTime sets the TRB consult meeting time and sends the related emails
