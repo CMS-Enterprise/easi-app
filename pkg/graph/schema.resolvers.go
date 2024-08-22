@@ -1522,17 +1522,17 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 
 // TrbRequest is the resolver for the trbRequest field.
 func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
-	return resolvers.GetTRBRequestByID(ctx, id, r.store)
+	return resolvers.GetTRBRequestByID(ctx, r.store, id)
 }
 
 // TrbRequests is the resolver for the trbRequests field.
 func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
-	return resolvers.GetTRBRequests(ctx, archived, r.store)
+	return resolvers.GetTRBRequests(ctx, r.store, archived)
 }
 
 // MyTrbRequests is the resolver for the myTrbRequests field.
 func (r *queryResolver) MyTrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
-	return resolvers.GetMyTRBRequests(ctx, archived, r.store)
+	return resolvers.GetMyTRBRequests(ctx, r.store, archived)
 }
 
 // TrbLeadOptions is the resolver for the trbLeadOptions field.

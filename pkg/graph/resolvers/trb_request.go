@@ -84,17 +84,17 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 }
 
 // GetTRBRequestByID returns a TRB request by it's ID
-func GetTRBRequestByID(ctx context.Context, id uuid.UUID, store *storage.Store) (*models.TRBRequest, error) {
+func GetTRBRequestByID(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequest, error) {
 	return store.GetTRBRequestByID(ctx, id)
 }
 
 // GetTRBRequests returns all TRB Requests
-func GetTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
+func GetTRBRequests(ctx context.Context, store *storage.Store, archived bool) ([]*models.TRBRequest, error) {
 	return store.GetTRBRequests(ctx, archived)
 }
 
 // GetMyTRBRequests returns all TRB Requests that belong to the principal in the context
-func GetMyTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
+func GetMyTRBRequests(ctx context.Context, store *storage.Store, archived bool) ([]*models.TRBRequest, error) {
 	return store.GetMyTRBRequests(ctx, archived)
 }
 
