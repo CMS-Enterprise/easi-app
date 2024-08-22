@@ -14,6 +14,7 @@ export const SystemIntakeDocument = gql`
     url
     canView
     canDelete
+    systemIntakeId
   }
 `;
 

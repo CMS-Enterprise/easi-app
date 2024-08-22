@@ -23,9 +23,10 @@ export interface DeleteSystemIntakeDocument_deleteSystemIntakeDocument_document 
   version: SystemIntakeDocumentVersion;
   status: SystemIntakeDocumentStatus;
   uploadedAt: Time;
-  url: string;
+  url: string | null;
   canView: boolean;
   canDelete: boolean;
+  systemIntakeId: UUID;
 }
 
 export interface DeleteSystemIntakeDocument_deleteSystemIntakeDocument {

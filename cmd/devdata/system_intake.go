@@ -50,7 +50,19 @@ func makeSystemIntake(
 		"Requester Name",
 		models.SystemIntakeRequestTypeNEW,
 	)
-	createSystemIntakeDocument(ctx, store, intake)
+	createSystemIntakeDocument(ctx, store, intake, "first_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftIGCE)
+	createSystemIntakeDocument(ctx, store, intake, "second_doc.pdf", models.SystemIntakeDocumentVersionHISTORICAL, models.SystemIntakeDocumentCommonTypeMEETINGMINS)
+	createSystemIntakeDocument(ctx, store, intake, "third_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)
+	createSystemIntakeDocument(ctx, store, intake, "fourth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeRAF)
+	createSystemIntakeDocument(ctx, store, intake, "fifth_doc.pdf", models.SystemIntakeDocumentVersionHISTORICAL, models.SystemIntakeDocumentCommonTypeSOOSOW)
+	createSystemIntakeDocument(ctx, store, intake, "sixth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftIGCE)
+	createSystemIntakeDocument(ctx, store, intake, "seventh_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftOther)
+	createSystemIntakeDocument(ctx, store, intake, "eighth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeSOOSOW)
+	createSystemIntakeDocument(ctx, store, intake, "nineth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)
+	createSystemIntakeDocument(ctx, store, intake, "tenth_doc.pdf", models.SystemIntakeDocumentVersionHISTORICAL, models.SystemIntakeDocumentCommonTypeMEETINGMINS)
+	createSystemIntakeDocument(ctx, store, intake, "eleventh_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftIGCE)
+	createSystemIntakeDocument(ctx, store, intake, "twelth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)
+	createSystemIntakeDocument(ctx, store, intake, "thirteenth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftOther)
 	return fillOutInitialIntake(ctx, requestName, store, intake)
 }
 
@@ -492,12 +504,18 @@ func createSystemIntakeDocument(
 	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
+	fileName string,
+	version models.SystemIntakeDocumentVersion,
+	docType models.SystemIntakeDocumentCommonType,
 ) *models.SystemIntakeDocument {
 	documentToCreate := &models.SystemIntakeDocument{
-		SystemIntakeRequestID: intake.ID,
-		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftIGCE,
-		Version:               models.SystemIntakeDocumentVersionCURRENT,
-		FileName:              "create_and_get.pdf",
+		SystemIntakeID:     intake.ID,
+		CommonDocumentType: docType,
+		Version:            version,
+		FileName:           fileName,
+	}
+	if docType == models.SystemIntakeDocumentCommonTypeDraftOther {
+		documentToCreate.OtherType = "banana"
 	}
 	documentToCreate.CreatedBy = mock.PrincipalUser
 	documentToCreate.CreatedAt = time.Now()
@@ -505,7 +523,7 @@ func createSystemIntakeDocument(
 	encodedFileContent := easiencoding.EncodeBase64String(testContents)
 	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
 	gqlInput := models.CreateSystemIntakeDocumentInput{
-		RequestID:            documentToCreate.SystemIntakeRequestID,
+		RequestID:            documentToCreate.SystemIntakeID,
 		DocumentType:         documentToCreate.CommonDocumentType,
 		Version:              documentToCreate.Version,
 		OtherTypeDescription: &documentToCreate.OtherType,

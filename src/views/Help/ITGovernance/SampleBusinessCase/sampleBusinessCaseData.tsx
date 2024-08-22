@@ -386,7 +386,8 @@ const sampleBusinessCaseData: BusinessCaseModel = {
     },
     hasUserInterface: 'YES'
   },
-  createdAt: '2021-03-16T20:05:10.95265Z'
+  createdAt: '2021-03-16T20:05:10.95265Z',
+  updatedAt: '2021-03-17T20:05:10.95265Z'
 };
 
 export default sampleBusinessCaseData;

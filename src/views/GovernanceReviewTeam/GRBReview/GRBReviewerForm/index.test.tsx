@@ -17,6 +17,7 @@ import {
   UpdateSystemIntakeGRBReviewerMutationVariables
 } from 'gql/gen/graphql';
 
+import { businessCase } from 'data/mock/businessCase';
 import { systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
@@ -164,12 +165,20 @@ describe('GRB reviewer form', () => {
           <MessageProvider>
             <Route path="/:reviewerType/:systemId/grb-review/:action">
               <IsGrbViewContext.Provider value>
-                <GRBReview {...systemIntake} grbReviewers={[]} />
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewers={[]}
+                />
               </IsGrbViewContext.Provider>
             </Route>
             <Route path="/:reviewerType/:systemId/grb-review">
               <IsGrbViewContext.Provider value>
-                <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewers={[grbReviewer]}
+                />
               </IsGrbViewContext.Provider>
             </Route>
           </MessageProvider>
@@ -235,13 +244,18 @@ describe('GRB reviewer form', () => {
           <MessageProvider>
             <Route path="/:reviewerType/:systemId/grb-review/:action">
               <IsGrbViewContext.Provider value>
-                <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewers={[grbReviewer]}
+                />
               </IsGrbViewContext.Provider>
             </Route>
             <Route path="/:reviewerType/:systemId/grb-review">
               <IsGrbViewContext.Provider value>
                 <GRBReview
                   {...systemIntake}
+                  businessCase={businessCase}
                   grbReviewers={[updatedGRBReviewer]}
                 />
               </IsGrbViewContext.Provider>

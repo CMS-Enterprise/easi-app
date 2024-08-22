@@ -23,7 +23,8 @@ export interface SystemIntakeDocument {
   version: SystemIntakeDocumentVersion;
   status: SystemIntakeDocumentStatus;
   uploadedAt: Time;
-  url: string;
+  url: string | null;
   canView: boolean;
   canDelete: boolean;
+  systemIntakeId: UUID;
 }

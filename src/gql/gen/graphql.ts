@@ -2068,8 +2068,9 @@ export type SystemIntakeDocument = {
   fileName: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
   status: SystemIntakeDocumentStatus;
+  systemIntakeId: Scalars['UUID']['output'];
   uploadedAt: Scalars['Time']['output'];
-  url: Scalars['String']['output'];
+  url?: Maybe<Scalars['String']['output']>;
   version: SystemIntakeDocumentVersion;
 };
 
