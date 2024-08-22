@@ -18,11 +18,9 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
-import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
-import {
-  RequestType,
-  SystemIntakeStatusRequester
-} from 'types/graphql-global-types';
+import { GetRequests } from 'queries/types/GetRequests';
+import { SystemIntakeStatusRequester } from 'types/graphql-global-types';
+import { RequestType } from 'types/requestType';
 import { formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -58,13 +56,12 @@ const Table = ({
     'governanceReviewTeam'
   ]);
 
-  const { loading, error, data: tableData } = useQuery<
-    GetRequests,
-    GetRequestsVariables
-  >(GetRequestsQuery, {
-    variables: { first: 20 },
-    fetchPolicy: 'cache-and-network'
-  });
+  const { loading, error, data: tableData } = useQuery<GetRequests>(
+    GetRequestsQuery,
+    {
+      fetchPolicy: 'cache-and-network'
+    }
+  );
 
   const columns: any = useMemo(() => {
     return [
@@ -192,10 +189,10 @@ const Table = ({
   // Modifying data for table sorting and prepping for Cell configuration
   const data = useMemo(() => {
     if (tableData) {
-      return tableMap(tableData, t, type);
+      return tableMap(tableData);
     }
     return [];
-  }, [tableData, t, type]);
+  }, [tableData]);
 
   const {
     getTableProps,

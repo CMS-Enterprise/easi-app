@@ -9,6 +9,12 @@ import { SystemIntakeStatusRequester, SystemIntakeStatusAdmin, TRBRequestStatus 
 // GraphQL query operation: GetRequests
 // ====================================================
 
+export interface GetRequests_mySystemIntakes_systems {
+  __typename: "CedarSystem";
+  id: string;
+  name: string;
+}
+
 export interface GetRequests_mySystemIntakes {
   __typename: "SystemIntake";
   id: UUID;
@@ -18,6 +24,16 @@ export interface GetRequests_mySystemIntakes {
   statusAdmin: SystemIntakeStatusAdmin;
   grbDate: Time | null;
   grtDate: Time | null;
+  /**
+   * Linked systems
+   */
+  systems: GetRequests_mySystemIntakes_systems[];
+}
+
+export interface GetRequests_myTrbRequests_systems {
+  __typename: "CedarSystem";
+  id: string;
+  name: string;
 }
 
 export interface GetRequests_myTrbRequests {
@@ -27,6 +43,10 @@ export interface GetRequests_myTrbRequests {
   submittedAt: Time;
   status: TRBRequestStatus;
   nextMeetingDate: Time | null;
+  /**
+   * Linked systems
+   */
+  systems: GetRequests_myTrbRequests_systems[];
 }
 
 export interface GetRequests {

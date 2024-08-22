@@ -1,18 +1,25 @@
-import { TFunction } from 'i18next';
-
 import {
   GetRequests,
-  GetRequests_myTrbRequests as GetTRBRequestsType,
-  GetRequests_requests_edges_node as GetRequestsType
+  GetRequests_mySystemIntakes as GetSystemIntakesType,
+  GetRequests_myTrbRequests as GetTRBRequestsType
 } from 'queries/types/GetRequests';
-import { RequestType } from 'types/graphql-global-types';
+
+interface MergedRequestsForTable {
+  id: string;
+  name: string;
+  process: 'TRB' | 'IT Governance';
+  status: string;
+  submissionDate: string;
+  systems: string[];
+  nextMeetingDate: string;
+}
 
 // React table sorts on the data passed table.  The column configuration uses the accessor to access the field of the original dataset.
 // Column cell configuration is meant to wrap data in JSX components, not modify data for sorting
 // Here is where the data can be modified and used appropriately for sorting.
 // Modifed data can then be configured with JSX components in column cell configuration
 
-type MergedRequests = GetRequestsType | GetTRBRequestsType;
+type MergedRequests = GetSystemIntakesType | GetTRBRequestsType;
 
 // Type guard for checking request is of type GetTRBRequestsType/TRB
 // https://www.typescriptlang.org/docs/handbook/advanced-types.html#type-guards-and-differentiating-types
@@ -23,44 +30,66 @@ export const isTRBRequestType = (
   return request.__typename === 'TRBRequest';
 };
 
-const tableMap = (
-  tableData: GetRequests,
-  t: TFunction,
-  requestType?: RequestType
-) => {
-  const requests: GetRequestsType[] =
-    tableData?.requests?.edges
-      .filter(data => data.node.statusRequester !== 'CLOSED')
-      .map(edge => {
-        return edge.node;
-      }) || ([] as GetRequestsType[]);
+const calcSystemIntakeNextMeetingDate = (
+  grb: string | null,
+  grt: string | null
+): string | null => {
+  if (grb === null && grt === null) {
+    return null;
+  }
 
-  const myTrbRequests: GetTRBRequestsType[] = tableData?.myTrbRequests || [];
+  if (grb === null) {
+    return grt;
+  }
 
-  const mergedRequests: MergedRequests[] = [...requests, ...myTrbRequests];
+  if (grt === null) {
+    return grb;
+  }
 
-  const mappedData = mergedRequests
-    ?.filter(request =>
-      !requestType
-        ? true
-        : !isTRBRequestType(request) && request.type === requestType
-    ) // if filter prop exists, filter by the request type
-    .map(request => {
-      const name = request.name ? request.name : 'Draft';
+  // attempt to parse
+  const grbDate = Date.parse(grb);
+  const grtDate = Date.parse(grt);
 
-      const type: string =
-        !isTRBRequestType(request) && request.type
-          ? t(`requestsTable.types.${request.type}`)
-          : t(`requestsTable.types.TRB`);
+  // return latest of the two
+  if (grbDate > grtDate) {
+    return grb;
+  }
 
-      return {
-        ...request,
-        name,
-        type
-      };
+  return grt;
+};
+
+const tableMap = (tableData: GetRequests) => {
+  const merged: MergedRequestsForTable[] = [];
+
+  tableData.mySystemIntakes.forEach((systemIntake: GetSystemIntakesType) => {
+    const nextDate = calcSystemIntakeNextMeetingDate(
+      systemIntake.grbDate,
+      systemIntake.grtDate
+    );
+    merged.push({
+      id: systemIntake.id,
+      name: systemIntake.requestName || 'Draft',
+      nextMeetingDate: nextDate !== null ? nextDate : 'None',
+      process: 'IT Governance',
+      status: '',
+      submissionDate: systemIntake.submittedAt || 'Not submitted',
+      systems: systemIntake.systems.map(system => system.name)
     });
+  });
 
-  return mappedData || [];
+  tableData.myTrbRequests.forEach((trbRequest: GetTRBRequestsType) => {
+    merged.push({
+      id: trbRequest.id,
+      name: trbRequest.name || 'Draft',
+      nextMeetingDate: trbRequest.nextMeetingDate || 'None',
+      process: 'TRB',
+      status: '',
+      submissionDate: trbRequest.submittedAt || 'Not yet submitted',
+      systems: trbRequest.systems.map(system => system.name)
+    });
+  });
+
+  return merged;
 };
 
 export default tableMap;

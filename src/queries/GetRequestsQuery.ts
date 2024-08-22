@@ -10,6 +10,10 @@ export default gql`
       statusAdmin
       grbDate
       grtDate
+      systems {
+        id
+        name
+      }
     }
     myTrbRequests(archived: false) {
       id
@@ -17,6 +21,10 @@ export default gql`
       submittedAt: createdAt
       status
       nextMeetingDate: consultMeetingTime
+      systems {
+        id
+        name
+      }
     }
   }
 `;

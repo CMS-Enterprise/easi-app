@@ -4,7 +4,6 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 
 import { getRequestsQuery } from 'data/mock/trbRequest';
-import { RequestType } from 'types/graphql-global-types';
 
 import Table from '.';
 
@@ -48,7 +47,7 @@ describe('My Requests Table', () => {
         <MemoryRouter>
           <MockedProvider mocks={[getRequestsQuery()]}>
             <Table
-              type={RequestType.GOVERNANCE_REQUEST}
+              type="itgov"
               hiddenColumns={['Governance', 'Upcoming meeting date']}
             />
           </MockedProvider>

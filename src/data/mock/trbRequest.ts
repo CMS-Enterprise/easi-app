@@ -13,8 +13,7 @@ import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import {
   GetRequests,
-  GetRequests_myTrbRequests as MyTrbRequests,
-  GetRequestsVariables
+  GetRequests_myTrbRequests as MyTrbRequests
 } from 'queries/types/GetRequests';
 import {
   GetTrbAdminNotes,
@@ -264,25 +263,23 @@ const getRequestsData: {
       nextMeetingDate: null,
       status: TRBRequestStatus.CONSULT_COMPLETE,
       submittedAt: '2023-03-07T15:09:17.694681Z',
-      __typename: 'TRBRequest'
+      __typename: 'TRBRequest',
+      systems: []
     }
   ]
 };
 
 export const getRequestsQuery = (
   myTrbRequests: MyTrbRequests[] = getRequestsData.myTrbRequests
-): MockedQuery<GetRequests, GetRequestsVariables> => ({
+): MockedQuery<GetRequests> => ({
   request: {
     query: GetRequestsQuery,
-    variables: { first: 20 }
+    variables: {}
   },
   result: {
     data: {
-      requests: {
-        __typename: 'RequestsConnection',
-        edges: []
-      },
-      myTrbRequests
+      myTrbRequests,
+      mySystemIntakes: []
     }
   }
 });
