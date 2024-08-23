@@ -36,6 +36,9 @@ import user from 'utils/user';
 import { documentSchema } from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
+import FieldErrorMsg from '../../../components/shared/FieldErrorMsg';
+import RequiredAsterisk from '../../../components/shared/RequiredAsterisk';
+
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
 
 type UploadFormProps = {
@@ -81,7 +84,8 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
     handleSubmit,
     formState: { isSubmitting, errors, isValid }
   } = useEasiForm<DocumentUploadFields>({
-    resolver: yupResolver(documentSchema)
+    resolver: yupResolver(documentSchema),
+    context: { type }
   });
 
   const requestDetailsLink =
@@ -242,7 +246,6 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
               legend={
                 <span className="text-bold">
                   {t('intake:documents.versionLabel')}{' '}
-                  <span className="text-red">*</span>
                 </span>
               }
             >
@@ -285,48 +288,54 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <FormGroup className="margin-top-3" error={!!error}>
-                  <Label htmlFor={field.name}>
-                    {t(
-                      'technicalAssistance:documents.upload.sendNotificationToGRBReviewers.header'
-                    )}
-                  </Label>
-                  <HelpText className="margin-top-05">
-                    {t(
-                      'technicalAssistance:documents.upload.sendNotificationToGRBReviewers.info'
-                    )}
-                  </HelpText>
+                  <Fieldset
+                    legend={
+                      <span className="text-bold">
+                        {t(
+                          'technicalAssistance:documents.upload.sendNotificationToGRBReviewers.header'
+                        )}
+                        <RequiredAsterisk />
+                      </span>
+                    }
+                  >
+                    <HelpText className="margin-top-05">
+                      {t(
+                        'technicalAssistance:documents.upload.sendNotificationToGRBReviewers.info'
+                      )}
+                    </HelpText>
 
-                  <ErrorMessage
-                    name="sendNotification"
-                    errors={errors}
-                    message={t('technicalAssistance:errors.makeSelection')}
-                  />
+                    <ErrorMessage
+                      as={FieldErrorMsg}
+                      name="sendNotification"
+                      errors={errors}
+                    />
 
-                  <Radio
-                    key="yes"
-                    ref={null}
-                    inputRef={field.ref}
-                    id={`${field.name}-yes`}
-                    name={field.name}
-                    label={t('technicalAssistance:basic.options.yes')}
-                    onBlur={field.onBlur}
-                    onChange={() => {
-                      field.onChange(true);
-                    }}
-                  />
+                    <Radio
+                      key="yes"
+                      ref={null}
+                      inputRef={field.ref}
+                      id={`${field.name}-yes`}
+                      name={field.name}
+                      label={t('technicalAssistance:basic.options.yes')}
+                      onBlur={field.onBlur}
+                      onChange={() => {
+                        field.onChange(true);
+                      }}
+                    />
 
-                  <Radio
-                    key="no"
-                    ref={null}
-                    inputRef={field.ref}
-                    id={`${field.name}-no`}
-                    name={field.name}
-                    label={t('technicalAssistance:basic.options.no')}
-                    onBlur={field.onBlur}
-                    onChange={() => {
-                      field.onChange(false);
-                    }}
-                  />
+                    <Radio
+                      key="no"
+                      ref={null}
+                      inputRef={field.ref}
+                      id={`${field.name}-no`}
+                      name={field.name}
+                      label={t('technicalAssistance:basic.options.no')}
+                      onBlur={field.onBlur}
+                      onChange={() => {
+                        field.onChange(false);
+                      }}
+                    />
+                  </Fieldset>
                 </FormGroup>
               )}
             />
