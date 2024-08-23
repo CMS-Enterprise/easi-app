@@ -28,6 +28,7 @@ export interface GetRequests_mySystemIntakes {
    * Linked systems
    */
   systems: GetRequests_mySystemIntakes_systems[];
+  lcid: string | null;
 }
 
 export interface GetRequests_myTrbRequests_systems {

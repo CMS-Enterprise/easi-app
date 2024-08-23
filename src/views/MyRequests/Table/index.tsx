@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import {
   Column,
   useFilters,
@@ -10,6 +11,7 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
@@ -38,8 +40,9 @@ import {
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
+import user from 'utils/user';
 
-import { isTRBRequestType } from './tableMap';
+import { AppState } from '../../../reducers/rootReducer';
 
 import '../index.scss';
 
@@ -48,9 +51,10 @@ interface MergedRequestsForTable {
   name: string;
   process: 'TRB' | 'IT Governance';
   status: string;
-  submissionDate: string;
+  submissionDate: string | null;
   systems: string[];
   nextMeetingDate: string;
+  lcid: string | null;
 }
 
 const calcSystemIntakeNextMeetingDate = (
@@ -99,11 +103,20 @@ const Table = ({
     'governanceReviewTeam'
   ]);
 
+  const { groups } = useSelector((state: AppState) => state.auth);
+
+  const flags = useFlags();
+
   const { loading, error, data: tableData } = useQuery<GetRequests>(
     GetRequestsQuery,
     {
       fetchPolicy: 'cache-and-network'
     }
+  );
+
+  const isITGovAdmin: boolean = useMemo(
+    () => user.isITGovAdmin(groups, flags),
+    [flags, groups]
   );
 
   const columns: Column<MergedRequestsForTable>[] = useMemo<
@@ -123,19 +136,24 @@ const Table = ({
       {
         Header: t<string>('requestsTable.headers.name'),
         accessor: 'name',
-        Cell: ({ row, value }: any) => {
+        Cell: ({
+          row,
+          value
+        }: {
+          row: MergedRequestsForTable;
+          value: MergedRequestsForTable['name'];
+        }) => {
           let link: string;
 
-          if (isTRBRequestType(row.original)) {
-            link = `/trb/task-list/${row.original.id}`;
-          } else {
-            switch (row.original.type) {
-              case 'IT Governance':
-                link = `/governance-task-list/${row.original.id}`;
-                break;
-              default:
-                link = '/';
-            }
+          switch (row.process) {
+            case 'TRB':
+              link = `/trb/task-list/${row.id}`;
+              break;
+            case 'IT Governance':
+              link = `/governance-task-list/${row.id}`;
+              break;
+            default:
+              link = '/';
           }
 
           return <UswdsReactLink to={link}>{value}</UswdsReactLink>;
@@ -252,9 +270,12 @@ const Table = ({
             name: systemIntake.requestName || 'Draft',
             nextMeetingDate: nextDate !== null ? nextDate : 'None',
             process: 'IT Governance',
-            status: '',
-            submissionDate: systemIntake.submittedAt || 'Not submitted',
-            systems: systemIntake.systems.map(system => system.name)
+            status: isITGovAdmin
+              ? systemIntake.statusAdmin
+              : systemIntake.statusRequester,
+            submissionDate: systemIntake.submittedAt,
+            systems: systemIntake.systems.map(system => system.name),
+            lcid: systemIntake.lcid
           });
         }
       );
@@ -268,14 +289,15 @@ const Table = ({
           nextMeetingDate: trbRequest.nextMeetingDate || 'None',
           process: 'TRB',
           status: trbRequest.status,
-          submissionDate: trbRequest.submittedAt || 'Not yet submitted',
-          systems: trbRequest.systems.map(system => system.name)
+          submissionDate: trbRequest.submittedAt,
+          systems: trbRequest.systems.map(system => system.name),
+          lcid: null
         });
       });
     }
 
     return merged;
-  }, [tableData, type]);
+  }, [isITGovAdmin, tableData, type]);
 
   const {
     getTableProps,

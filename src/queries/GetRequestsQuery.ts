@@ -14,6 +14,7 @@ export default gql`
         id
         name
       }
+      lcid
     }
     myTrbRequests(archived: false) {
       id
