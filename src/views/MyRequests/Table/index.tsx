@@ -231,43 +231,51 @@ const Table = ({
   }, [t]);
 
   // Modifying data for table sorting and prepping for Cell configuration
-  const data = useMemo(() => {
+  const data: MergedRequestsForTable[] = useMemo<
+    MergedRequestsForTable[]
+  >(() => {
     if (!tableData) {
       return [];
     }
 
     const merged: MergedRequestsForTable[] = [];
 
-    tableData.mySystemIntakes.forEach((systemIntake: GetSystemIntakesType) => {
-      const nextDate = calcSystemIntakeNextMeetingDate(
-        systemIntake.grbDate,
-        systemIntake.grtDate
+    if (!type || type === 'itgov') {
+      tableData.mySystemIntakes.forEach(
+        (systemIntake: GetSystemIntakesType) => {
+          const nextDate = calcSystemIntakeNextMeetingDate(
+            systemIntake.grbDate,
+            systemIntake.grtDate
+          );
+          merged.push({
+            id: systemIntake.id,
+            name: systemIntake.requestName || 'Draft',
+            nextMeetingDate: nextDate !== null ? nextDate : 'None',
+            process: 'IT Governance',
+            status: '',
+            submissionDate: systemIntake.submittedAt || 'Not submitted',
+            systems: systemIntake.systems.map(system => system.name)
+          });
+        }
       );
-      merged.push({
-        id: systemIntake.id,
-        name: systemIntake.requestName || 'Draft',
-        nextMeetingDate: nextDate !== null ? nextDate : 'None',
-        process: 'IT Governance',
-        status: '',
-        submissionDate: systemIntake.submittedAt || 'Not submitted',
-        systems: systemIntake.systems.map(system => system.name)
-      });
-    });
+    }
 
-    tableData.myTrbRequests.forEach((trbRequest: GetTRBRequestsType) => {
-      merged.push({
-        id: trbRequest.id,
-        name: trbRequest.name || 'Draft',
-        nextMeetingDate: trbRequest.nextMeetingDate || 'None',
-        process: 'TRB',
-        status: trbRequest.status,
-        submissionDate: trbRequest.submittedAt || 'Not yet submitted',
-        systems: trbRequest.systems.map(system => system.name)
+    if (!type || type === 'trb') {
+      tableData.myTrbRequests.forEach((trbRequest: GetTRBRequestsType) => {
+        merged.push({
+          id: trbRequest.id,
+          name: trbRequest.name || 'Draft',
+          nextMeetingDate: trbRequest.nextMeetingDate || 'None',
+          process: 'TRB',
+          status: trbRequest.status,
+          submissionDate: trbRequest.submittedAt || 'Not yet submitted',
+          systems: trbRequest.systems.map(system => system.name)
+        });
       });
-    });
+    }
 
     return merged;
-  }, [tableData]);
+  }, [tableData, type]);
 
   const {
     getTableProps,
