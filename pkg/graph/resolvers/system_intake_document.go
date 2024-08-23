@@ -63,7 +63,9 @@ func CreateSystemIntakeDocument(
 	store *storage.Store,
 	s3Client *upload.S3Client,
 	emailClient *email.Client,
-	input models.CreateSystemIntakeDocumentInput) (*models.SystemIntakeDocument, error) {
+	input models.CreateSystemIntakeDocumentInput,
+) (*models.SystemIntakeDocument, error) {
+
 	intake, err := store.FetchSystemIntakeByID(ctx, input.RequestID)
 	if err != nil {
 		return nil, err
@@ -92,8 +94,7 @@ func CreateSystemIntakeDocument(
 		return nil, fmt.Errorf("...%w...FileName: %s", err, input.FileData.Filename) //Wrap error and provide filename
 	}
 
-	err = s3Client.UploadFile(s3Key, decodedReadSeeker)
-	if err != nil {
+	if err := s3Client.UploadFile(s3Key, decodedReadSeeker); err != nil {
 		return nil, err
 	}
 
@@ -113,7 +114,7 @@ func CreateSystemIntakeDocument(
 		documentDatabaseRecord.OtherType = *input.OtherTypeDescription
 	}
 
-	if uploaderRole == models.AdminUploaderRole && emailClient != nil {
+	if emailClient != nil && shouldSend(uploaderRole, input.SendNotification) {
 		if err := handleSendEmail(ctx, store, emailClient, intake); err != nil {
 			// do not stop processing, just log
 			appcontext.ZLogger(ctx).Error("unable to send email for admin doc upload", zap.Error(err))
@@ -249,6 +250,18 @@ func allowDelete(ctx context.Context, store *storage.Store, id uuid.UUID) error 
 		zap.String("document.id", document.ID.String()))
 
 	return errors.New("unauthorized attempt to delete system intake document")
+}
+
+func shouldSend(uploaderRole models.DocumentUploaderRole, send *bool) bool {
+	if uploaderRole != models.AdminUploaderRole {
+		return false
+	}
+
+	if send == nil {
+		return false
+	}
+
+	return *send
 }
 
 func handleSendEmail(ctx context.Context, store *storage.Store, emailClient *email.Client, intake *models.SystemIntake) error {
