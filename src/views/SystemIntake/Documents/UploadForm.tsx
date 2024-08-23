@@ -296,17 +296,16 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
                     )}
                   </HelpText>
 
-                  {error && (
-                    <ErrorMessage
-                      name="sendNotification"
-                      errors={errors}
-                      message={t('technicalAssistance:errors.fillBlank')}
-                    />
-                  )}
+                  <ErrorMessage
+                    name="sendNotification"
+                    errors={errors}
+                    message={t('technicalAssistance:errors.makeSelection')}
+                  />
 
                   <Radio
                     key="yes"
                     ref={null}
+                    inputRef={field.ref}
                     id={`${field.name}-yes`}
                     name={field.name}
                     label={t('technicalAssistance:basic.options.yes')}
@@ -319,6 +318,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
                   <Radio
                     key="no"
                     ref={null}
+                    inputRef={field.ref}
                     id={`${field.name}-no`}
                     name={field.name}
                     label={t('technicalAssistance:basic.options.no')}
