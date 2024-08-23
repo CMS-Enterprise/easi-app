@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Column,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -18,7 +19,11 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
-import { GetRequests } from 'queries/types/GetRequests';
+import {
+  GetRequests,
+  GetRequests_mySystemIntakes as GetSystemIntakesType,
+  GetRequests_myTrbRequests as GetTRBRequestsType
+} from 'queries/types/GetRequests';
 import { SystemIntakeStatusRequester } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import { formatDateUtc } from 'utils/date';
@@ -34,9 +39,47 @@ import {
   sortColumnValues
 } from 'utils/tableSort';
 
-import tableMap, { isTRBRequestType } from './tableMap';
+import { isTRBRequestType } from './tableMap';
 
 import '../index.scss';
+
+interface MergedRequestsForTable {
+  id: string;
+  name: string;
+  process: 'TRB' | 'IT Governance';
+  status: string;
+  submissionDate: string;
+  systems: string[];
+  nextMeetingDate: string;
+}
+
+const calcSystemIntakeNextMeetingDate = (
+  grb: string | null,
+  grt: string | null
+): string | null => {
+  if (grb === null && grt === null) {
+    return null;
+  }
+
+  if (grb === null) {
+    return grt;
+  }
+
+  if (grt === null) {
+    return grb;
+  }
+
+  // attempt to parse
+  const grbDate = Date.parse(grb);
+  const grtDate = Date.parse(grt);
+
+  // return latest of the two
+  if (grbDate > grtDate) {
+    return grb;
+  }
+
+  return grt;
+};
 
 type myRequestsTableProps = {
   type?: RequestType;
@@ -63,11 +106,13 @@ const Table = ({
     }
   );
 
-  const columns: any = useMemo(() => {
+  const columns: Column<MergedRequestsForTable>[] = useMemo<
+    Column<MergedRequestsForTable>[]
+  >(() => {
     return [
       {
-        Header: t('requestsTable.headers.submittedAt'),
-        accessor: 'submittedAt',
+        Header: t<string>('requestsTable.headers.submittedAt'),
+        accessor: 'submissionDate',
         Cell: ({ value }: any) => {
           if (value) {
             return formatDateUtc(value, 'MM/dd/yyyy');
@@ -76,7 +121,7 @@ const Table = ({
         }
       },
       {
-        Header: t('requestsTable.headers.name'),
+        Header: t<string>('requestsTable.headers.name'),
         accessor: 'name',
         Cell: ({ row, value }: any) => {
           let link: string;
@@ -99,23 +144,23 @@ const Table = ({
         maxWidth: 350
       },
       {
-        Header: t('requestsTable.headers.type'),
-        accessor: 'type'
+        Header: t<string>('requestsTable.headers.type'),
+        accessor: 'process'
       },
       {
-        Header: t('requestsTable.headers.status'),
+        Header: t<string>('requestsTable.headers.status'),
         // The status property is just a generic property available on all request types
         // See cases below for details on how statuses are determined by type
         id: 'status',
         accessor: (obj: any) => {
           switch (obj.type) {
             case 'IT Governance':
-              return t(
+              return t<string>(
                 `governanceReviewTeam:systemIntakeStatusRequester.${obj.statusRequester}`,
                 { lcid: obj.lcid }
               );
             case 'TRB':
-              return t(`table.requestStatus.${obj.status}`, {
+              return t<string>(`table.requestStatus.${obj.status}`, {
                 ns: 'technicalAssistance'
               });
             default:
@@ -173,7 +218,7 @@ const Table = ({
         width: '200px'
       },
       {
-        Header: t('requestsTable.headers.nextMeetingDate'),
+        Header: t<string>('requestsTable.headers.nextMeetingDate'),
         accessor: 'nextMeetingDate',
         Cell: ({ value }: any) => {
           if (value) {
@@ -183,15 +228,45 @@ const Table = ({
         }
       }
     ];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [t]);
 
   // Modifying data for table sorting and prepping for Cell configuration
   const data = useMemo(() => {
-    if (tableData) {
-      return tableMap(tableData);
+    if (!tableData) {
+      return [];
     }
-    return [];
+
+    const merged: MergedRequestsForTable[] = [];
+
+    tableData.mySystemIntakes.forEach((systemIntake: GetSystemIntakesType) => {
+      const nextDate = calcSystemIntakeNextMeetingDate(
+        systemIntake.grbDate,
+        systemIntake.grtDate
+      );
+      merged.push({
+        id: systemIntake.id,
+        name: systemIntake.requestName || 'Draft',
+        nextMeetingDate: nextDate !== null ? nextDate : 'None',
+        process: 'IT Governance',
+        status: '',
+        submissionDate: systemIntake.submittedAt || 'Not submitted',
+        systems: systemIntake.systems.map(system => system.name)
+      });
+    });
+
+    tableData.myTrbRequests.forEach((trbRequest: GetTRBRequestsType) => {
+      merged.push({
+        id: trbRequest.id,
+        name: trbRequest.name || 'Draft',
+        nextMeetingDate: trbRequest.nextMeetingDate || 'None',
+        process: 'TRB',
+        status: trbRequest.status,
+        submissionDate: trbRequest.submittedAt || 'Not yet submitted',
+        systems: trbRequest.systems.map(system => system.name)
+      });
+    });
+
+    return merged;
   }, [tableData]);
 
   const {
@@ -258,8 +333,8 @@ const Table = ({
         <>
           <GlobalClientFilter
             setGlobalFilter={setGlobalFilter}
-            tableID={t('requestsTable.id')}
-            tableName={t('requestsTable.title')}
+            tableID={t<string>('requestsTable.id')}
+            tableName={t<string>('requestsTable.title')}
             className="margin-bottom-4"
           />
 
@@ -274,7 +349,9 @@ const Table = ({
         </>
       )}
       <UswdsTable bordered={false} {...getTableProps()} fullWidth scrollable>
-        <caption className="usa-sr-only">{t('requestsTable.caption')}</caption>
+        <caption className="usa-sr-only">
+          {t<string>('requestsTable.caption')}
+        </caption>
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -372,7 +449,7 @@ const Table = ({
 
       {data.length === 0 && (
         <Alert type="info" slim>
-          {t('requestsTable.empty')}
+          {t<string>('requestsTable.empty')}
         </Alert>
       )}
 
