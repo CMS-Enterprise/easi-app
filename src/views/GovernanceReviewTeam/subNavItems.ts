@@ -4,11 +4,13 @@ import { Flags } from 'types/flags';
 export type ReviewerKey = 'it-governance' | 'governance-review-board';
 
 type SubNavItems = {
-  route: `/${ReviewerKey}/${string}/${string}`;
+  route: `/it-governance/${string}/${string}`;
   text: string;
   aria?: string;
   /** Value used to designate end of sidenav subgrouping / border-bottom */
   groupEnd?: boolean;
+  /** Hide link from navigation */
+  hidden?: boolean;
 }[];
 
 /**
@@ -18,75 +20,74 @@ type SubNavItems = {
  * */
 const subNavItems = (
   systemId: string,
-  /** Base reviewer route for nav item links */
-  reviewerRoute: ReviewerKey,
+  /** Whether current user is IT Gov admin */
+  itGovAdmin: boolean,
   flags?: Flags
-): SubNavItems => {
-  const grbReview: SubNavItems[number] = {
-    route: `/${reviewerRoute}/${systemId}/grb-review`,
+): SubNavItems => [
+  {
+    route: `/it-governance/${systemId}/intake-request`,
+    text: 'general:intake',
+    aria: 'aria.openIntake'
+  },
+  {
+    route: `/it-governance/${systemId}/documents`,
+    text: 'intake:documents.supportingDocuments',
+    aria: 'aria.openDocuments'
+  },
+  {
+    route: `/it-governance/${systemId}/business-case`,
+    text: 'general:businessCase',
+    aria: 'aria.openBusiness',
+    groupEnd: flags && !flags.grbReviewTab
+  },
+  {
+    route: `/it-governance/${systemId}/grb-review`,
     text: 'grbReview:title',
     aria: 'grbReview:aria',
+    groupEnd: true,
+    // Only show GRB Review tab when flag is turned on
+    hidden: !flags?.grbReviewTab
+  },
+  {
+    route: `/it-governance/${systemId}/feedback`,
+    text: 'feedback.title',
+    aria: 'aria.openFeedback'
+  },
+  {
+    route: `/it-governance/${systemId}/decision`,
+    text: 'decision.title',
+    aria: 'aria.openDecision'
+  },
+  {
+    route: `/it-governance/${systemId}/lcid`,
+    text: 'lifecycleID.title',
+    aria: 'aria.openLcid',
     groupEnd: true
-  };
-
-  const items: SubNavItems = [
-    {
-      route: `/${reviewerRoute}/${systemId}/intake-request`,
-      text: 'general:intake',
-      aria: 'aria.openIntake'
-    },
-    {
-      route: `/${reviewerRoute}/${systemId}/documents`,
-      text: 'intake:documents.supportingDocuments',
-      aria: 'aria.openDocuments'
-    },
-    {
-      route: `/${reviewerRoute}/${systemId}/business-case`,
-      text: 'general:businessCase',
-      aria: 'aria.openBusiness',
-      groupEnd: flags && !flags.grbReviewTab
-    },
-    // Add GRB review tab to nav items if flag is on
-    ...(flags?.grbReviewTab ? [grbReview] : []),
-    {
-      route: `/${reviewerRoute}/${systemId}/feedback`,
-      text: 'feedback.title',
-      aria: 'aria.openFeedback'
-    },
-    {
-      route: `/${reviewerRoute}/${systemId}/decision`,
-      text: 'decision.title',
-      aria: 'aria.openDecision'
-    },
-    {
-      route: `/${reviewerRoute}/${systemId}/lcid`,
-      text: 'lifecycleID.title',
-      aria: 'aria.openLcid',
-      groupEnd: true
-    },
-    {
-      route: `/${reviewerRoute}/${systemId}/additional-information`,
-      text: 'additionalInformation.title',
-      aria: 'aria.openAdditionalInformation',
-      groupEnd: reviewerRoute === 'it-governance'
-    },
-    {
-      route: `/it-governance/${systemId}/actions`,
-      text: 'actions'
-    },
-    {
-      route: `/it-governance/${systemId}/notes`,
-      text: 'notes.heading'
-    },
-    {
-      route: `/it-governance/${systemId}/dates`,
-      text: 'dates.heading'
-    }
-  ];
-
-  // Filter so array only includes nav items with correct routes
-  // Excludes GRT links from GRB view navigation
-  return items.filter(item => item.route.includes(reviewerRoute));
-};
+  },
+  {
+    route: `/it-governance/${systemId}/additional-information`,
+    text: 'additionalInformation.title',
+    aria: 'aria.openAdditionalInformation',
+    groupEnd: itGovAdmin
+  },
+  {
+    route: `/it-governance/${systemId}/actions`,
+    text: 'actions',
+    // GRT only link
+    hidden: !itGovAdmin
+  },
+  {
+    route: `/it-governance/${systemId}/notes`,
+    text: 'notes.heading',
+    // GRT only link
+    hidden: !itGovAdmin
+  },
+  {
+    route: `/it-governance/${systemId}/dates`,
+    text: 'dates.heading',
+    // GRT only link
+    hidden: !itGovAdmin
+  }
+];
 
 export default subNavItems;

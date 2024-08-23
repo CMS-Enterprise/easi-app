@@ -27,7 +27,7 @@ import {
 import { MockedQuery } from 'types/util';
 import MockUsers from 'utils/testing/MockUsers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
-import IsGrbViewContext from 'views/GovernanceReviewTeam/IsGrbViewContext';
+import ITGovAdminContext from 'views/GovernanceReviewTeam/ITGovAdminContext';
 
 import GRBReview from '..';
 
@@ -163,14 +163,14 @@ describe('GRB reviewer form', () => {
         >
           <MessageProvider>
             <Route path="/:reviewerType/:systemId/grb-review/:action">
-              <IsGrbViewContext.Provider value>
+              <ITGovAdminContext.Provider value>
                 <GRBReview {...systemIntake} grbReviewers={[]} />
-              </IsGrbViewContext.Provider>
+              </ITGovAdminContext.Provider>
             </Route>
             <Route path="/:reviewerType/:systemId/grb-review">
-              <IsGrbViewContext.Provider value>
+              <ITGovAdminContext.Provider value>
                 <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
-              </IsGrbViewContext.Provider>
+              </ITGovAdminContext.Provider>
             </Route>
           </MessageProvider>
         </VerboseMockedProvider>
@@ -234,17 +234,17 @@ describe('GRB reviewer form', () => {
         >
           <MessageProvider>
             <Route path="/:reviewerType/:systemId/grb-review/:action">
-              <IsGrbViewContext.Provider value>
+              <ITGovAdminContext.Provider value>
                 <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
-              </IsGrbViewContext.Provider>
+              </ITGovAdminContext.Provider>
             </Route>
             <Route path="/:reviewerType/:systemId/grb-review">
-              <IsGrbViewContext.Provider value>
+              <ITGovAdminContext.Provider value>
                 <GRBReview
                   {...systemIntake}
                   grbReviewers={[updatedGRBReviewer]}
                 />
-              </IsGrbViewContext.Provider>
+              </ITGovAdminContext.Provider>
             </Route>
           </MessageProvider>
         </VerboseMockedProvider>

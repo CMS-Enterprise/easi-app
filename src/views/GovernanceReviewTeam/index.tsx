@@ -11,8 +11,7 @@ import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
 import NotFound from 'views/NotFound';
 import RequestLinkForm from 'views/RequestLinkForm';
 
-import IsGrbViewContext from './IsGrbViewContext';
-import { ReviewerKey } from './subNavItems';
+import ITGovAdminContext from './ITGovAdminContext';
 
 const GovernanceReviewTeam = () => {
   const { groups, euaId, isUserSet } = useSelector(
@@ -42,17 +41,11 @@ const GovernanceReviewTeam = () => {
 
   const isITGovAdmin = user.isITGovAdmin(groups, flags);
 
-  const reviewerType: ReviewerKey = isITGovAdmin
-    ? 'it-governance'
-    : 'governance-review-board';
-
   if (isUserSet && !loading) {
+    // Only show admin section if user is either IT Gov admin or GRB reviewer
     if (isITGovAdmin || isGrbReviewer) {
       return (
-        <IsGrbViewContext.Provider
-          // Only show GRB view if user is GRB reviewer without GOVTEAM job code
-          value={!isITGovAdmin}
-        >
+        <ITGovAdminContext.Provider value={isITGovAdmin}>
           <Switch>
             {isITGovAdmin && (
               /* Defining outside parent route to trigger parent rerender/refetch after mutation */
@@ -63,7 +56,7 @@ const GovernanceReviewTeam = () => {
 
             <Route
               // reviewerType differentiates between GRT and GRB views for admin pages
-              path={`/:reviewerType(${reviewerType})/:systemId/:activePage/:subPage?`}
+              path="/it-governance/:systemId/:activePage/:subPage?"
               exact
             >
               <RequestOverview grbReviewers={grbReviewers || []} />
@@ -71,7 +64,7 @@ const GovernanceReviewTeam = () => {
 
             <Route path="*" component={NotFound} />
           </Switch>
-        </IsGrbViewContext.Provider>
+        </ITGovAdminContext.Provider>
       );
     }
 

@@ -12,7 +12,7 @@ import users from 'data/mock/users';
 import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
-import IsGrbViewContext from '../IsGrbViewContext';
+import ITGovAdminContext from '../ITGovAdminContext';
 
 import GRBReview from '.';
 
@@ -38,9 +38,9 @@ describe('GRB review tab', () => {
       <MemoryRouter>
         <VerboseMockedProvider>
           <MessageProvider>
-            <IsGrbViewContext.Provider value>
+            <ITGovAdminContext.Provider value={false}>
               <GRBReview {...systemIntake} grbReviewers={[]} />
-            </IsGrbViewContext.Provider>
+            </ITGovAdminContext.Provider>
           </MessageProvider>
         </VerboseMockedProvider>
       </MemoryRouter>
@@ -56,9 +56,9 @@ describe('GRB review tab', () => {
       <MemoryRouter>
         <VerboseMockedProvider>
           <MessageProvider>
-            <IsGrbViewContext.Provider value={false}>
+            <ITGovAdminContext.Provider value>
               <GRBReview {...systemIntake} grbReviewers={[]} />
-            </IsGrbViewContext.Provider>
+            </ITGovAdminContext.Provider>
           </MessageProvider>
         </VerboseMockedProvider>
       </MemoryRouter>
@@ -75,9 +75,9 @@ describe('GRB review tab', () => {
         <MemoryRouter>
           <VerboseMockedProvider>
             <MessageProvider>
-              <IsGrbViewContext.Provider value={false}>
+              <ITGovAdminContext.Provider value>
                 <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
-              </IsGrbViewContext.Provider>
+              </ITGovAdminContext.Provider>
             </MessageProvider>
           </VerboseMockedProvider>
         </MemoryRouter>
@@ -95,9 +95,9 @@ describe('GRB review tab', () => {
         <MemoryRouter>
           <VerboseMockedProvider>
             <MessageProvider>
-              <IsGrbViewContext.Provider value>
+              <ITGovAdminContext.Provider value>
                 <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
-              </IsGrbViewContext.Provider>
+              </ITGovAdminContext.Provider>
             </MessageProvider>
           </VerboseMockedProvider>
         </MemoryRouter>

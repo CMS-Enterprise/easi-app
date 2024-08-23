@@ -12,7 +12,8 @@ import {
   getColumnSortStatus,
   getHeaderSortIcon
 } from 'utils/tableSort';
-import IsGrbViewContext from 'views/GovernanceReviewTeam/IsGrbViewContext';
+
+import ITGovAdminContext from '../ITGovAdminContext';
 
 type ParticipantsTableProps = {
   id: string;
@@ -34,7 +35,7 @@ const ParticipantsTable = ({
   const history = useHistory();
   const { pathname } = useLocation();
 
-  const isGrbView = useContext(IsGrbViewContext);
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   /** Columns for table */
   const columns = useMemo<Column<SystemIntakeGRBReviewerFragment>[]>(() => {
@@ -85,9 +86,9 @@ const ParticipantsTable = ({
         Cell: ({ value }) => t<string>(`reviewerRoles.${value}`)
       },
       // Only display action column if user is GRT admin
-      ...(isGrbView ? [] : [actionColumn])
+      ...(isITGovAdmin ? [actionColumn] : [])
     ];
-  }, [t, isGrbView, setReviewerToRemove, history, pathname]);
+  }, [t, isITGovAdmin, setReviewerToRemove, history, pathname]);
 
   const table = useTable(
     {
@@ -118,7 +119,7 @@ const ParticipantsTable = ({
         {t('participantsText')}
       </p>
 
-      {isGrbView ? (
+      {isITGovAdmin ? (
         // GRB Reviewer documentation links
         <div className="bg-base-lightest padding-2">
           <h4 className="margin-top-0 margin-bottom-1">

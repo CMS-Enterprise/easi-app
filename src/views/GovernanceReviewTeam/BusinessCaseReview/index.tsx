@@ -13,7 +13,7 @@ import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedba
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
 
-import IsGrbViewContext from '../IsGrbViewContext';
+import ITGovAdminContext from '../ITGovAdminContext';
 
 type BusinessCaseReviewProps = {
   businessCase: BusinessCaseModel;
@@ -27,7 +27,7 @@ const BusinessCaseReview = ({
   const { t } = useTranslation('governanceReviewTeam');
   const filename = `Business case for ${businessCase.requestName}.pdf`;
 
-  const isGrbView = useContext(IsGrbViewContext);
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   if (!businessCase.id) {
     return (
@@ -98,7 +98,7 @@ const BusinessCaseReview = ({
         }
       </PDFExport>
 
-      {!isGrbView && (
+      {isITGovAdmin && (
         <UswdsReactLink
           className="usa-button margin-top-5"
           variant="unstyled"

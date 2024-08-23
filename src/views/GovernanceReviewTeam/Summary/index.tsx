@@ -33,7 +33,7 @@ import { RequestType } from 'types/systemIntake';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { translateRequestType } from 'utils/systemIntake';
 
-import IsGrbViewContext from '../IsGrbViewContext';
+import ITGovAdminContext from '../ITGovAdminContext';
 
 import './index.scss';
 
@@ -78,7 +78,7 @@ const RequestSummary = ({
     }
   );
 
-  const isGrbView = useContext(IsGrbViewContext);
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   /** Admin lead text and modal trigger button */
   const AdminLead = () => {
@@ -97,7 +97,7 @@ const RequestSummary = ({
           {!adminLead && <IconError className="text-error margin-right-05" />}
           {adminLead || t('governanceReviewTeam:adminLeads.notAssigned')}
         </span>
-        {!isGrbView && (
+        {isITGovAdmin && (
           <Button
             type="button"
             className="width-auto"
@@ -203,7 +203,7 @@ const RequestSummary = ({
                   </p>
                 )
               }
-              {!isGrbView && (
+              {isITGovAdmin && (
                 <Link to={`/it-governance/${id}/actions`} className="usa-link">
                   {t('action:takeAnAction')}
                 </Link>
