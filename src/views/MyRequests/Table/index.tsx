@@ -44,18 +44,9 @@ import user from 'utils/user';
 
 import { AppState } from '../../../reducers/rootReducer';
 
-import '../index.scss';
+import { MergedRequestsForTable } from './mergedRequestForTable';
 
-interface MergedRequestsForTable {
-  id: string;
-  name: string;
-  process: 'TRB' | 'IT Governance';
-  status: string;
-  submissionDate: string | null;
-  systems: string[];
-  nextMeetingDate: string;
-  lcid: string | null;
-}
+import '../index.scss';
 
 const calcSystemIntakeNextMeetingDate = (
   grb: string | null,
@@ -119,6 +110,11 @@ const Table = ({
     [flags, groups]
   );
 
+  const isTRBAdmin: boolean = useMemo(() => user.isTrbAdmin(groups, flags), [
+    flags,
+    groups
+  ]);
+
   const columns: Column<MergedRequestsForTable>[] = useMemo<
     Column<MergedRequestsForTable>[]
   >(() => {
@@ -170,15 +166,25 @@ const Table = ({
         // The status property is just a generic property available on all request types
         // See cases below for details on how statuses are determined by type
         id: 'status',
-        accessor: (obj: any) => {
-          switch (obj.type) {
+        accessor: (request: MergedRequestsForTable) => {
+          switch (request.process) {
             case 'IT Governance':
+              // return admin status for admins
+              if (isITGovAdmin || isTRBAdmin) {
+                return t<string>(
+                  `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`,
+                  { lcid: request.lcid }
+                );
+              }
+
+              // return requester status for non-admins
               return t<string>(
-                `governanceReviewTeam:systemIntakeStatusRequester.${obj.statusRequester}`,
-                { lcid: obj.lcid }
+                `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`,
+                { lcid: request.lcid }
               );
+
             case 'TRB':
-              return t<string>(`table.requestStatus.${obj.status}`, {
+              return t<string>(`table.requestStatus.${request.status}`, {
                 ns: 'technicalAssistance'
               });
             default:
@@ -246,7 +252,7 @@ const Table = ({
         }
       }
     ];
-  }, [t]);
+  }, [isITGovAdmin, isTRBAdmin, t]);
 
   // Modifying data for table sorting and prepping for Cell configuration
   const data: MergedRequestsForTable[] = useMemo<
@@ -270,9 +276,10 @@ const Table = ({
             name: systemIntake.requestName || 'Draft',
             nextMeetingDate: nextDate !== null ? nextDate : 'None',
             process: 'IT Governance',
-            status: isITGovAdmin
-              ? systemIntake.statusAdmin
-              : systemIntake.statusRequester,
+            status:
+              isITGovAdmin || isTRBAdmin
+                ? systemIntake.statusAdmin
+                : systemIntake.statusRequester,
             submissionDate: systemIntake.submittedAt,
             systems: systemIntake.systems.map(system => system.name),
             lcid: systemIntake.lcid
@@ -297,7 +304,7 @@ const Table = ({
     }
 
     return merged;
-  }, [isITGovAdmin, tableData, type]);
+  }, [isITGovAdmin, isTRBAdmin, tableData, type]);
 
   const {
     getTableProps,
