@@ -100,6 +100,9 @@ const systemWorkspace = {
       header: 'Team',
       description:
         'Team members can edit all sections of a system workspace, including collaborating on IT Governance requests and adding more team members.',
+
+      moreRolesCount: '+{{count}} more role',
+      moreRolesCount_plural: '+{{count}} more roles',
       view: {
         more: 'View {{count}} more team members',
         less: 'View fewer team members'

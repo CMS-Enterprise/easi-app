@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Redirect, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, CardGroup, Grid } from '@trussworks/react-uswds';
+import { CedarAssigneeType } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import BookmarkButton from 'components/BookmarkButton';
@@ -17,7 +18,8 @@ import {
   GetSystemWorkspace,
   GetSystemWorkspaceVariables
 } from 'queries/types/GetSystemWorkspace';
-import { RoleTypeName } from 'types/systemProfile';
+import { CedarRoleAssigneePerson, RoleTypeName } from 'types/systemProfile';
+import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
@@ -56,6 +58,15 @@ export const SystemWorkspace = () => {
         role => role.roleTypeName === RoleTypeName.ISSO
       )
     : undefined;
+
+  const personRoles =
+    data?.cedarSystemDetails?.roles.filter(
+      role => role.assigneeType === CedarAssigneeType.PERSON
+    ) || [];
+
+  const usernamesWithRoles = getUsernamesWithRoles(
+    personRoles as CedarRoleAssigneePerson[]
+  );
 
   /** The `linkSearchQuery` is used on starting new request links throughout workspace */
   const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
@@ -150,9 +161,7 @@ export const SystemWorkspace = () => {
           )}
         </CardGroup>
       </Grid>
-      {flags.systemWorkspaceTeam && (
-        <TeamCard roles={data.cedarSystemDetails.roles} />
-      )}
+      {flags.systemWorkspaceTeam && <TeamCard roles={usernamesWithRoles} />}
     </MainContent>
   );
 };

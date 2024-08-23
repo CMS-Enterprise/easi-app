@@ -1,4 +1,4 @@
-import { rolesIndex } from 'constants/sortIndexes';
+import { teamRolesIndex } from 'constants/sortIndexes';
 import {
   CedarRoleAssigneePerson,
   UsernameWithRoles
@@ -29,14 +29,14 @@ export default function getUsernamesWithRoles(
     }
   }
 
-  const rolesIndexEnd = Object.keys(rolesIndex()).length;
+  const rolesIndexEnd = Object.keys(teamRolesIndex()).length;
 
   // eslint-disable-next-line no-restricted-syntax
   for (const p of people) {
     p.roles.sort((a, b) => {
       return (
-        (rolesIndex()[a.roleTypeName || ''] ?? rolesIndexEnd) -
-        (rolesIndex()[b.roleTypeName || ''] ?? rolesIndexEnd)
+        (teamRolesIndex()[a.roleTypeName || ''] ?? rolesIndexEnd) -
+        (teamRolesIndex()[b.roleTypeName || ''] ?? rolesIndexEnd)
       );
     });
   }
