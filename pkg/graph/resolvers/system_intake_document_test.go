@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -41,6 +42,26 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	createdDocument := createSystemIntakeDocumentSubtest(s, intake.ID, documentToCreate)
 	getSystemIntakeDocumentsByRequestIDSubtest(s, intake.ID, createdDocument)
 	deleteSystemIntakeDocumentSubtest(s, createdDocument)
+}
+
+func (s *ResolverSuite) TestShouldSend() {
+	// only admins can send, and only if admin selected "Yes" for sending notification
+	s.True(shouldSend(models.AdminUploaderRole, helpers.PointerTo(true)))
+
+	// admin has selected "No"
+	s.False(shouldSend(models.AdminUploaderRole, helpers.PointerTo(false)))
+
+	// admin did not make a selection (currently not a possible path via UI, but just in case that changes)
+	s.False(shouldSend(models.AdminUploaderRole, nil))
+
+	// a requester has selected to send (currently not a possible path via UI - only admins can make this choice)
+	s.False(shouldSend(models.RequesterUploaderRole, helpers.PointerTo(true)))
+
+	// a requester has selected not to send (currently not a possible path via UI, but will still result in no-send)
+	s.False(shouldSend(models.RequesterUploaderRole, helpers.PointerTo(false)))
+
+	// normal path for a requester, no selection would be made (only allowed path via UI)
+	s.False(shouldSend(models.RequesterUploaderRole, nil))
 }
 
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially
