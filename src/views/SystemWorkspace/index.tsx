@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Button, CardGroup, Grid } from '@trussworks/react-uswds';
+import {
+  Button,
+  CardGroup,
+  Grid,
+  GridContainer
+} from '@trussworks/react-uswds';
 import { CedarAssigneeType } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -59,13 +64,11 @@ export const SystemWorkspace = () => {
       )
     : undefined;
 
-  const personRoles =
+  const team = getUsernamesWithRoles(
     data?.cedarSystemDetails?.roles.filter(
-      role => role.assigneeType === CedarAssigneeType.PERSON
-    ) || [];
-
-  const usernamesWithRoles = getUsernamesWithRoles(
-    personRoles as CedarRoleAssigneePerson[]
+      (role): role is CedarRoleAssigneePerson =>
+        role.assigneeType === CedarAssigneeType.PERSON
+    ) || []
   );
 
   /** The `linkSearchQuery` is used on starting new request links throughout workspace */
@@ -87,81 +90,92 @@ export const SystemWorkspace = () => {
   }
 
   return (
-    <MainContent className="grid-container margin-bottom-8">
-      <Breadcrumbs
-        items={[
-          { text: t('breadcrumbs.home'), url: '/' },
-          { text: t('header') }
-        ]}
-      />
-      <SystemProfileModal
-        id={systemId}
-        isOpen={isSystemProfileOpen}
-        closeModal={() => toggleSystemProfile(false)}
-      />
-      <div className="display-flex flex-align-start flex-justify margin-top-5">
-        <div>
-          <PageHeading className="margin-bottom-1 margin-top-0">
-            {t('header')}
-          </PageHeading>
-
-          <p className="margin-y-1 text-body-lg">
-            {t('subheader', {
-              systemName: cedarSystem?.name
-            })}
-          </p>
-
-          <div className="display-flex margin-top-neg-1">
-            <p className="text-bold margin-right-2">{t('tlcPhase')}</p>
-
-            <TLCTag tlcPhase={ato?.tlcPhase} />
-          </div>
-        </div>
-
-        <BookmarkButton
-          id={systemId}
-          isBookmarked={isBookmarked}
-          className="bg-primary-lighter"
+    <MainContent>
+      <GridContainer>
+        <Breadcrumbs
+          items={[
+            { text: t('breadcrumbs.home'), url: '/' },
+            { text: t('header') }
+          ]}
         />
-      </div>
-      <HelpLinks
-        classname="margin-top-3 margin-bottom-5"
-        linkSearchQuery={linkSearchQuery}
-      />
-      <h2>{t('spaces.header')}</h2>
-      <Grid className="display-flex flex-align-stretch">
-        <CardGroup>
-          <SpacesCard
-            header={t('spaces.systemProfile.header')}
-            description={t('spaces.systemProfile.description')}
-            footer={
-              <Button
-                type="button"
-                outline
-                onClick={() => toggleSystemProfile(true)}
-              >
-                {t('spaces.systemProfile.linktext')}
-              </Button>
-            }
-          />
+        <SystemProfileModal
+          id={systemId}
+          isOpen={isSystemProfileOpen}
+          closeModal={() => toggleSystemProfile(false)}
+        />
+        <div className="display-flex flex-align-start flex-justify margin-top-5">
+          <div>
+            <PageHeading className="margin-bottom-1 margin-top-0">
+              {t('header')}
+            </PageHeading>
 
-          <AtoCard
-            status={atoStatus}
-            dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
-            isso={isso}
-          />
+            <p className="margin-y-1 text-body-lg">
+              {t('subheader', {
+                systemName: cedarSystem?.name
+              })}
+            </p>
 
-          {flags.systemWorkspaceRequestsCard && (
-            <RequestsCard
-              systemId={systemId}
-              trbCount={cedarSystem.linkedTrbRequests.length}
-              itgovCount={cedarSystem.linkedSystemIntakes.length}
-              linkSearchQuery={linkSearchQuery}
+            <div className="display-flex margin-top-neg-1">
+              <p className="text-bold margin-right-2">{t('tlcPhase')}</p>
+
+              <TLCTag tlcPhase={ato?.tlcPhase} />
+            </div>
+          </div>
+
+          <BookmarkButton
+            id={systemId}
+            isBookmarked={isBookmarked}
+            className="bg-primary-lighter"
+          />
+        </div>
+        <HelpLinks
+          classname="margin-top-3 margin-bottom-5"
+          linkSearchQuery={linkSearchQuery}
+        />
+        <h2>{t('spaces.header')}</h2>
+        <Grid className="display-flex flex-align-stretch margin-bottom-4">
+          <CardGroup>
+            <SpacesCard
+              header={t('spaces.systemProfile.header')}
+              description={t('spaces.systemProfile.description')}
+              footer={
+                <Button
+                  type="button"
+                  outline
+                  onClick={() => toggleSystemProfile(true)}
+                >
+                  {t('spaces.systemProfile.linktext')}
+                </Button>
+              }
             />
-          )}
-        </CardGroup>
-      </Grid>
-      {flags.systemWorkspaceTeam && <TeamCard roles={usernamesWithRoles} />}
+
+            <AtoCard
+              status={atoStatus}
+              dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
+              isso={isso}
+            />
+
+            {flags.systemWorkspaceRequestsCard && (
+              <RequestsCard
+                systemId={systemId}
+                trbCount={cedarSystem.linkedTrbRequests.length}
+                itgovCount={cedarSystem.linkedSystemIntakes.length}
+                linkSearchQuery={linkSearchQuery}
+              />
+            )}
+          </CardGroup>
+        </Grid>
+      </GridContainer>
+
+      {flags.systemWorkspaceTeam && (
+        <div className="bg-base-lightest padding-top-6 padding-bottom-10">
+          <GridContainer>
+            <CardGroup>
+              <TeamCard team={team} />
+            </CardGroup>
+          </GridContainer>
+        </div>
+      )}
     </MainContent>
   );
 };

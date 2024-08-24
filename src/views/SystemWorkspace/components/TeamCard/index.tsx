@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button, IconExpandMore } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
@@ -8,18 +9,47 @@ import { UsernameWithRoles } from 'types/systemProfile';
 
 import SpacesCard from '../SpacesCard';
 
-type Props = {
-  roles: UsernameWithRoles[];
-};
+function MemberRole({ person }: { person: UsernameWithRoles }) {
+  const { t } = useTranslation('systemWorkspace');
+  const p = person.roles[0];
+  const moreRolesCount = person.roles.length - 1;
 
-function TeamCard({ roles }: Props) {
+  return (
+    <div className="grid-col-6 desktop:grid-col-3 margin-bottom-1 display-flex">
+      <AvatarCircle
+        user={`${p.assigneeFirstName || ''} ${p.assigneeLastName || ''}`}
+      />
+      <div className="margin-x-05">
+        <div className="margin-y-05 line-height-body-5">
+          {p.assigneeFirstName} {p.assigneeLastName}
+        </div>
+        <div className="font-body-2xs line-height-body-2">
+          {p.roleTypeName}
+          {moreRolesCount > 0 && (
+            <>
+              <br />
+              {t('spaces.team.moreRolesCount', {
+                count: moreRolesCount
+              })}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TeamCard({ team }: { team: UsernameWithRoles[] }) {
   const { t } = useTranslation('systemWorkspace');
 
   const teamCountCap = 8;
+  const [isExpanded, setExpanded] = useState<boolean>(false);
+  const moreCount = team.length - teamCountCap;
 
-  const rolesSorted = useMemo(() => {
+  const teamSorted: UsernameWithRoles[] = useMemo(() => {
+    // Sort by roles with any unlisted moved to the end
     const roleEndIdx = Object.keys(teamRolesIndex()).length;
-    return roles.sort((a: UsernameWithRoles, b: UsernameWithRoles) => {
+    return team.sort((a, b) => {
       const ar = a.roles[0];
       const br = b.roles[0];
       const ari = teamRolesIndex()[ar.roleTypeName || ''] ?? roleEndIdx;
@@ -39,7 +69,7 @@ function TeamCard({ roles }: Props) {
       if (afirst > bfirst) return 1;
       return 0;
     });
-  }, [roles]);
+  }, [team]);
 
   return (
     <SpacesCard
@@ -48,43 +78,33 @@ function TeamCard({ roles }: Props) {
       description={t('spaces.team.description')}
       body={
         <div className="grid-row flex-wrap margin-bottom-neg-1">
-          {rolesSorted.slice(0, teamCountCap).map((role, idx) => {
-            const p = role.roles[0];
-            const moreRolesCount = role.roles.length - 1;
-
-            return (
-              <div
-                key={p.roleID}
-                className="grid-col-3 margin-bottom-1 display-flex"
+          {teamSorted
+            .slice(0, isExpanded ? undefined : teamCountCap)
+            .map(role => (
+              <MemberRole key={role.assigneeUsername} person={role} />
+            ))}
+          {moreCount > 0 && (
+            <div className="margin-top-1 width-full">
+              <Button
+                unstyled
+                type="button"
+                className="line-height-body-5"
+                onClick={() => {
+                  setExpanded(!isExpanded);
+                }}
               >
-                <AvatarCircle
-                  user={`${p.assigneeFirstName || ''} ${
-                    p.assigneeLastName || ''
-                  }`}
+                <IconExpandMore
+                  className="margin-right-05 margin-bottom-2px text-tbottom"
+                  style={{
+                    transform: isExpanded ? 'rotate(180deg)' : ''
+                  }}
                 />
-                <div className="margin-x-05">
-                  <div className="margin-y-05 line-height-body-5">
-                    {p.assigneeFirstName} {p.assigneeLastName}
-                  </div>
-                  <div className="font-body-2xs">
-                    <div className="line-height-body-2">
-                      {/* {role.roles.map(r => {
-                      return <div key={r.roleTypeID}>{r.roleTypeName}</div>;
-                    })} */}
-                      <div>{p.roleTypeName}</div>
-                      {moreRolesCount > 0 && (
-                        <div>
-                          {t('spaces.team.moreRolesCount', {
-                            count: moreRolesCount
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+                {t(`spaces.team.view.${isExpanded ? 'less' : 'more'}`, {
+                  count: moreCount
+                })}
+              </Button>
+            </div>
+          )}
         </div>
       }
       footer={
