@@ -127,18 +127,18 @@ const ParticipantsTable = ({
           </h4>
           <ButtonGroup>
             <UswdsReactLink
-              to={`/governance-review-board/${id}/business-case`}
+              to={`/it-governance/${id}/business-case`}
               className="margin-right-3"
             >
               {t('viewBusinessCase')}
             </UswdsReactLink>
             <UswdsReactLink
-              to={`/governance-review-board/${id}/intake-request`}
+              to={`/it-governance/${id}/intake-request`}
               className="margin-right-3"
             >
               {t('viewIntakeRequest')}
             </UswdsReactLink>
-            <UswdsReactLink to={`/governance-review-board/${id}/documents`}>
+            <UswdsReactLink to={`/it-governance/${id}/documents`}>
               {t('viewOtherDocuments')}
             </UswdsReactLink>
           </ButtonGroup>

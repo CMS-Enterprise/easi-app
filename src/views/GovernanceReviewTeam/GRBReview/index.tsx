@@ -20,8 +20,6 @@ import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 import { SystemIntakeState } from 'types/graphql-global-types';
 
-import { ReviewerKey } from '../subNavItems';
-
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
 
@@ -35,8 +33,7 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
 
-  const { reviewerType, action } = useParams<{
-    reviewerType: ReviewerKey;
+  const { action } = useParams<{
     action?: 'add' | 'edit';
   }>();
 
@@ -79,10 +76,10 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
 
       // If removing reviewer from form, go to GRB Review page
       if (isForm) {
-        history.push(`/${reviewerType}/${id}/grb-review`);
+        history.push(`/it-governance/${id}/grb-review`);
       }
     },
-    [history, isForm, id, mutate, reviewerType, showMessage, t]
+    [history, isForm, id, mutate, showMessage, t]
   );
 
   return (

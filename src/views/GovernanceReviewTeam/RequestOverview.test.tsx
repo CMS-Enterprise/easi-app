@@ -262,9 +262,7 @@ describe('Governance Review Board', () => {
   it('hides GRT navigation items', async () => {
     render(
       <MemoryRouter
-        initialEntries={[
-          `/governance-review-board/${systemIntake.id}/intake-request`
-        ]}
+        initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
       >
         <MockedProvider
           mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
@@ -272,7 +270,7 @@ describe('Governance Review Board', () => {
         >
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/:reviewerType(governance-review-board)/:systemId/intake-request">
+              <Route path="/:reviewerType(it-governance)/:systemId/intake-request">
                 <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>

@@ -33,7 +33,6 @@ import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
 import CreateGRBReviewerSchema from 'validations/grbReviewerSchema';
-import { ReviewerKey } from 'views/GovernanceReviewTeam/subNavItems';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 type GRBReviewerFormFields = {
@@ -69,8 +68,7 @@ const GRBReviewerForm = ({
     state: activeReviewer
   } = useLocation<SystemIntakeGRBReviewerFragment | undefined>();
 
-  const { reviewerType, systemId, action } = useParams<{
-    reviewerType: ReviewerKey;
+  const { systemId, action } = useParams<{
     systemId: string;
     action: 'add' | 'edit';
   }>();
@@ -114,7 +112,7 @@ const GRBReviewerForm = ({
     }
   });
 
-  const grbReviewPath = `/${reviewerType}/${systemId}/grb-review`;
+  const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
   const submit = handleSubmit(({ userAccount, ...values }) => {
     if (!isDirty) return history.push(grbReviewPath);
