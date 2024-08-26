@@ -95,7 +95,7 @@ describe('GRB review tab', () => {
         <MemoryRouter>
           <VerboseMockedProvider>
             <MessageProvider>
-              <ITGovAdminContext.Provider value>
+              <ITGovAdminContext.Provider value={false}>
                 <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
               </ITGovAdminContext.Provider>
             </MessageProvider>
