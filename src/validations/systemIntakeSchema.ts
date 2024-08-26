@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
@@ -347,5 +348,17 @@ export const documentSchema = Yup.object({
     is: 'OTHER',
     then: schema => schema.required()
   }),
-  version: Yup.mixed<SystemIntakeDocumentVersion>().required()
+  version: Yup.mixed<SystemIntakeDocumentVersion>().required(),
+  sendNotification: Yup.boolean().when(
+    '$type',
+    (type: 'admin' | 'requester', schema: Yup.BooleanSchema) => {
+      if (type === 'admin') {
+        return schema.required(
+          i18next.t('technicalAssistance:errors.makeSelection')
+        );
+      }
+
+      return schema;
+    }
+  )
 });

@@ -1756,6 +1756,7 @@ input CreateSystemIntakeDocumentInput {
   documentType: SystemIntakeDocumentCommonType!
   version: SystemIntakeDocumentVersion!
   otherTypeDescription: String
+  sendNotification: Boolean
 }
 
 """

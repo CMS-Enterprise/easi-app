@@ -1,6 +1,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
@@ -14,9 +15,11 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { useEasiForm } from 'components/EasiForm';
 import { Alert } from 'components/shared/Alert';
+import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import useMessage from 'hooks/useMessage';
@@ -26,10 +29,15 @@ import {
   CreateSystemIntakeDocument,
   CreateSystemIntakeDocumentVariables
 } from 'queries/types/CreateSystemIntakeDocument';
+import { AppState } from 'reducers/rootReducer';
 import { CreateSystemIntakeDocumentInput } from 'types/graphql-global-types';
 import { fileToBase64File } from 'utils/downloadFile';
+import user from 'utils/user';
 import { documentSchema } from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
+
+import FieldErrorMsg from '../../../components/shared/FieldErrorMsg';
+import RequiredAsterisk from '../../../components/shared/RequiredAsterisk';
 
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
 
@@ -42,6 +50,10 @@ type UploadFormProps = {
  */
 const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
   const { t } = useTranslation();
+
+  const { groups } = useSelector((state: AppState) => state.auth);
+
+  const flags = useFlags();
 
   const history = useHistory();
 
@@ -72,7 +84,8 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
     handleSubmit,
     formState: { isSubmitting, errors, isValid }
   } = useEasiForm<DocumentUploadFields>({
-    resolver: yupResolver(documentSchema)
+    resolver: yupResolver(documentSchema),
+    context: { type }
   });
 
   const requestDetailsLink =
@@ -92,7 +105,8 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
           ...(formData.documentType === 'OTHER'
             ? { otherTypeDescription }
             : {}),
-          requestID: systemId
+          requestID: systemId,
+          sendNotification: formData.sendNotification
         }
       }
     })
@@ -232,7 +246,6 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
               legend={
                 <span className="text-bold">
                   {t('intake:documents.versionLabel')}{' '}
-                  <span className="text-red">*</span>
                 </span>
               }
             >
@@ -267,6 +280,66 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
               ))}
             </Fieldset>
           </FormGroup>
+
+          {/* display for admins only when accessed from admin view */}
+          {type === 'admin' && user.isITGovAdmin(groups, flags) && (
+            <Controller
+              name="sendNotification"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup className="margin-top-3" error={!!error}>
+                  <Fieldset
+                    legend={
+                      <span className="text-bold">
+                        {t(
+                          'technicalAssistance:documents.upload.sendNotificationToGRBReviewers.header'
+                        )}
+                        <RequiredAsterisk />
+                      </span>
+                    }
+                  >
+                    <HelpText className="margin-top-05">
+                      {t(
+                        'technicalAssistance:documents.upload.sendNotificationToGRBReviewers.info'
+                      )}
+                    </HelpText>
+
+                    <ErrorMessage
+                      as={FieldErrorMsg}
+                      name="sendNotification"
+                      errors={errors}
+                    />
+
+                    <Radio
+                      key="yes"
+                      ref={null}
+                      inputRef={field.ref}
+                      id={`${field.name}-yes`}
+                      name={field.name}
+                      label={t('technicalAssistance:basic.options.yes')}
+                      onBlur={field.onBlur}
+                      onChange={() => {
+                        field.onChange(true);
+                      }}
+                    />
+
+                    <Radio
+                      key="no"
+                      ref={null}
+                      inputRef={field.ref}
+                      id={`${field.name}-no`}
+                      name={field.name}
+                      label={t('technicalAssistance:basic.options.no')}
+                      onBlur={field.onBlur}
+                      onChange={() => {
+                        field.onChange(false);
+                      }}
+                    />
+                  </Fieldset>
+                </FormGroup>
+              )}
+            />
+          )}
 
           <Alert type="info" slim className="margin-top-5">
             {t('technicalAssistance:documents.upload.toKeepCmsSafe')}

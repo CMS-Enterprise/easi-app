@@ -574,6 +574,7 @@ export interface CreateSystemIntakeDocumentInput {
   documentType: SystemIntakeDocumentCommonType;
   version: SystemIntakeDocumentVersion;
   otherTypeDescription?: string | null;
+  sendNotification?: boolean | null;
 }
 
 export interface CreateSystemIntakeGRBReviewerInput {

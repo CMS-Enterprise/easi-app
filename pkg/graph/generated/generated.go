@@ -9426,6 +9426,7 @@ input CreateSystemIntakeDocumentInput {
   documentType: SystemIntakeDocumentCommonType!
   version: SystemIntakeDocumentVersion!
   otherTypeDescription: String
+  sendNotification: Boolean
 }
 
 """
@@ -55595,7 +55596,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeDocumentInput(ctx co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"requestID", "fileData", "documentType", "version", "otherTypeDescription"}
+	fieldsInOrder := [...]string{"requestID", "fileData", "documentType", "version", "otherTypeDescription", "sendNotification"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -55637,6 +55638,13 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeDocumentInput(ctx co
 				return it, err
 			}
 			it.OtherTypeDescription = data
+		case "sendNotification":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sendNotification"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SendNotification = data
 		}
 	}
 
