@@ -55,7 +55,11 @@ const MakingARequest = () => {
       </h2>
       <Table
         type="itgov"
-        hiddenColumns={['Governance', 'Upcoming meeting date']}
+        hiddenColumns={[
+          'Governance',
+          'Upcoming meeting date',
+          'Related systems'
+        ]}
       />
     </MainContent>
   );
