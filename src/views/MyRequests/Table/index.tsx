@@ -245,6 +245,7 @@ const Table = ({
         Header: t<string>('requestsTable.headers.nextMeetingDate'),
         accessor: 'nextMeetingDate',
         Cell: ({ value }: any) => {
+          console.info(value);
           if (value) {
             return formatDateUtc(value, 'MM/dd/yyyy');
           }
@@ -267,14 +268,13 @@ const Table = ({
     if (!type || type === 'itgov') {
       tableData.mySystemIntakes.forEach(
         (systemIntake: GetSystemIntakesType) => {
-          const nextDate = calcSystemIntakeNextMeetingDate(
-            systemIntake.grbDate,
-            systemIntake.grtDate
-          );
           merged.push({
             id: systemIntake.id,
             name: systemIntake.requestName || 'Draft',
-            nextMeetingDate: nextDate !== null ? nextDate : 'None',
+            nextMeetingDate: calcSystemIntakeNextMeetingDate(
+              systemIntake.grbDate,
+              systemIntake.grtDate
+            ),
             process: 'IT Governance',
             status:
               isITGovAdmin || isTRBAdmin
@@ -293,7 +293,7 @@ const Table = ({
         merged.push({
           id: trbRequest.id,
           name: trbRequest.name || 'Draft',
-          nextMeetingDate: trbRequest.nextMeetingDate || 'None',
+          nextMeetingDate: trbRequest.nextMeetingDate,
           process: 'TRB',
           status: trbRequest.status,
           submissionDate: trbRequest.submittedAt,

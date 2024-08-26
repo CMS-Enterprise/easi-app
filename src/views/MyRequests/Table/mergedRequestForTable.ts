@@ -5,6 +5,6 @@ export interface MergedRequestsForTable {
   status: string;
   submissionDate: string | null;
   systems: string[];
-  nextMeetingDate: string;
+  nextMeetingDate: string | null;
   lcid: string | null;
 }
