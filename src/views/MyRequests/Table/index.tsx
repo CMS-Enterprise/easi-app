@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
   Column,
+  Row,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -136,17 +137,17 @@ const Table = ({
           row,
           value
         }: {
-          row: MergedRequestsForTable;
+          row: Row<MergedRequestsForTable>;
           value: MergedRequestsForTable['name'];
         }) => {
           let link: string;
 
-          switch (row.process) {
+          switch (row.original.process) {
             case 'TRB':
-              link = `/trb/task-list/${row.id}`;
+              link = `/trb/task-list/${row.original.id}`;
               break;
             case 'IT Governance':
-              link = `/governance-task-list/${row.id}`;
+              link = `/governance-task-list/${row.original.id}`;
               break;
             default:
               link = '/';
@@ -244,12 +245,18 @@ const Table = ({
       {
         Header: t<string>('requestsTable.headers.nextMeetingDate'),
         accessor: 'nextMeetingDate',
-        Cell: ({ value }: any) => {
-          console.info(value);
+        Cell: ({ value }: { value: string | null }) => {
           if (value) {
             return formatDateUtc(value, 'MM/dd/yyyy');
           }
           return 'None';
+        }
+      },
+      {
+        Header: t<string>('requestsTable.headers.relatedSystems'),
+        accessor: 'systems',
+        Cell: ({ value }: { value: string[] }) => {
+          return value.join(', ');
         }
       }
     ];
