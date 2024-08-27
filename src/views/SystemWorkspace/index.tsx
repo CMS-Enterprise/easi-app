@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
@@ -8,7 +8,6 @@ import {
   Grid,
   GridContainer
 } from '@trussworks/react-uswds';
-import { CedarAssigneeType } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import BookmarkButton from 'components/BookmarkButton';
@@ -23,8 +22,7 @@ import {
   GetSystemWorkspace,
   GetSystemWorkspaceVariables
 } from 'queries/types/GetSystemWorkspace';
-import { CedarRoleAssigneePerson, RoleTypeName } from 'types/systemProfile';
-import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
+import { RoleTypeName } from 'types/systemProfile';
 import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
@@ -58,17 +56,15 @@ export const SystemWorkspace = () => {
   const ato = data?.cedarAuthorityToOperate[0];
   const atoStatus = getAtoStatus(ato?.dateAuthorizationMemoExpires);
 
-  const isso = data?.cedarSystemDetails?.roles.length
-    ? data.cedarSystemDetails.roles.find(
-        role => role.roleTypeName === RoleTypeName.ISSO
-      )
-    : undefined;
-
-  const team = getUsernamesWithRoles(
-    data?.cedarSystemDetails?.roles.filter(
-      (role): role is CedarRoleAssigneePerson =>
-        role.assigneeType === CedarAssigneeType.PERSON
-    ) || []
+  const { isso } = useMemo(
+    () => ({
+      isso: data?.cedarSystemDetails?.roles.length
+        ? data.cedarSystemDetails.roles.find(
+            role => role.roleTypeName === RoleTypeName.ISSO
+          )
+        : undefined
+    }),
+    [data]
   );
 
   /** The `linkSearchQuery` is used on starting new request links throughout workspace */
@@ -171,7 +167,7 @@ export const SystemWorkspace = () => {
         <div className="bg-base-lightest padding-top-6 padding-bottom-10">
           <GridContainer>
             <CardGroup>
-              <TeamCard team={team} />
+              <TeamCard roles={data.cedarSystemDetails.roles} />
             </CardGroup>
           </GridContainer>
         </div>

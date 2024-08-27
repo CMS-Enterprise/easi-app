@@ -5,7 +5,13 @@ import { Button, IconExpandMore } from '@trussworks/react-uswds';
 import UswdsReactLink from 'components/LinkWrapper';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
 import { teamRolesIndex } from 'constants/sortIndexes';
-import { UsernameWithRoles } from 'types/systemProfile';
+import { CedarRole } from 'queries/types/CedarRole';
+import { CedarAssigneeType } from 'types/graphql-global-types';
+import {
+  CedarRoleAssigneePerson,
+  UsernameWithRoles
+} from 'types/systemProfile';
+import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 
 import SpacesCard from '../SpacesCard';
 
@@ -39,14 +45,20 @@ function MemberRole({ person }: { person: UsernameWithRoles }) {
   );
 }
 
-function TeamCard({ team }: { team: UsernameWithRoles[] }) {
+function TeamCard({ roles }: { roles: CedarRole[] }) {
   const { t } = useTranslation('systemWorkspace');
 
   const teamCountCap = 8;
   const [isExpanded, setExpanded] = useState<boolean>(false);
-  const moreCount = team.length - teamCountCap;
 
   const teamSorted: UsernameWithRoles[] = useMemo(() => {
+    const team: UsernameWithRoles[] = getUsernamesWithRoles(
+      roles.filter(
+        (role): role is CedarRoleAssigneePerson =>
+          role.assigneeType === CedarAssigneeType.PERSON
+      )
+    );
+
     // Sort by roles with any unlisted moved to the end
     const roleEndIdx = Object.keys(teamRolesIndex()).length;
     return team.sort((a, b) => {
@@ -69,7 +81,9 @@ function TeamCard({ team }: { team: UsernameWithRoles[] }) {
       if (afirst > bfirst) return 1;
       return 0;
     });
-  }, [team]);
+  }, [roles]);
+
+  const moreCount = teamSorted.length - teamCountCap;
 
   return (
     <SpacesCard
