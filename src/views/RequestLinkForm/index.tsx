@@ -167,7 +167,7 @@ const RequestLinkForm = ({
     return !cedarSystemsData
       ? []
       : cedarSystemsData.map(system => ({
-          label: system.name,
+          label: `${system.name} (${system.acronym})`,
           value: system.id
         }));
   }, [data?.cedarSystems]);
