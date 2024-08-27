@@ -41,20 +41,20 @@ exports[`TeamCard > renders 1`] = `
                 SJ
               </div>
               <div
-                class="margin-x-05"
+                class="margin-left-1 margin-right-05"
               >
-                <div
+                <p
                   class="margin-y-05 line-height-body-5"
                 >
                   Sabina Jakubowski
-                </div>
-                <div
-                  class="font-body-2xs line-height-body-2"
+                </p>
+                <p
+                  class="font-body-2xs line-height-body-2 margin-y-0"
                 >
                   Business Owner
                   <br />
                   +3 more roles
-                </div>
+                </p>
               </div>
             </div>
             <div
@@ -67,18 +67,18 @@ exports[`TeamCard > renders 1`] = `
                 DL
               </div>
               <div
-                class="margin-x-05"
+                class="margin-left-1 margin-right-05"
               >
-                <div
+                <p
                   class="margin-y-05 line-height-body-5"
                 >
                   Davion Lubowitz
-                </div>
-                <div
-                  class="font-body-2xs line-height-body-2"
+                </p>
+                <p
+                  class="font-body-2xs line-height-body-2 margin-y-0"
                 >
                   Business Owner
-                </div>
+                </p>
               </div>
             </div>
             <div
@@ -91,20 +91,20 @@ exports[`TeamCard > renders 1`] = `
                 ZS
               </div>
               <div
-                class="margin-x-05"
+                class="margin-left-1 margin-right-05"
               >
-                <div
+                <p
                   class="margin-y-05 line-height-body-5"
                 >
                   Zechariah Shields
-                </div>
-                <div
-                  class="font-body-2xs line-height-body-2"
+                </p>
+                <p
+                  class="font-body-2xs line-height-body-2 margin-y-0"
                 >
                   System Maintainer
                   <br />
                   +4 more roles
-                </div>
+                </p>
               </div>
             </div>
             <div
@@ -117,20 +117,20 @@ exports[`TeamCard > renders 1`] = `
                 MB
               </div>
               <div
-                class="margin-x-05"
+                class="margin-left-1 margin-right-05"
               >
-                <div
+                <p
                   class="margin-y-05 line-height-body-5"
                 >
                   Matt Bogisich
-                </div>
-                <div
-                  class="font-body-2xs line-height-body-2"
+                </p>
+                <p
+                  class="font-body-2xs line-height-body-2 margin-y-0"
                 >
                   Contracting Officer's Representative (COR)
                   <br />
                   +4 more roles
-                </div>
+                </p>
               </div>
             </div>
             <div
@@ -143,20 +143,20 @@ exports[`TeamCard > renders 1`] = `
                 DT
               </div>
               <div
-                class="margin-x-05"
+                class="margin-left-1 margin-right-05"
               >
-                <div
+                <p
                   class="margin-y-05 line-height-body-5"
                 >
                   David Tillman
-                </div>
-                <div
-                  class="font-body-2xs line-height-body-2"
+                </p>
+                <p
+                  class="font-body-2xs line-height-body-2 margin-y-0"
                 >
                   Government Task Lead (GTL)
                   <br />
                   +3 more roles
-                </div>
+                </p>
               </div>
             </div>
             <div
@@ -169,20 +169,20 @@ exports[`TeamCard > renders 1`] = `
                 AG
               </div>
               <div
-                class="margin-x-05"
+                class="margin-left-1 margin-right-05"
               >
-                <div
+                <p
                   class="margin-y-05 line-height-body-5"
                 >
                   Ariane Grant
-                </div>
-                <div
-                  class="font-body-2xs line-height-body-2"
+                </p>
+                <p
+                  class="font-body-2xs line-height-body-2 margin-y-0"
                 >
                   Project Lead
                   <br />
                   +1 more role
-                </div>
+                </p>
               </div>
             </div>
             <div
@@ -195,20 +195,20 @@ exports[`TeamCard > renders 1`] = `
                 VS
               </div>
               <div
-                class="margin-x-05"
+                class="margin-left-1 margin-right-05"
               >
-                <div
+                <p
                   class="margin-y-05 line-height-body-5"
                 >
                   Vinnie Schuster
-                </div>
-                <div
-                  class="font-body-2xs line-height-body-2"
+                </p>
+                <p
+                  class="font-body-2xs line-height-body-2 margin-y-0"
                 >
                   ISSO
                   <br />
                   +1 more role
-                </div>
+                </p>
               </div>
             </div>
             <div
@@ -221,20 +221,20 @@ exports[`TeamCard > renders 1`] = `
                 RC
               </div>
               <div
-                class="margin-x-05"
+                class="margin-left-1 margin-right-05"
               >
-                <div
+                <p
                   class="margin-y-05 line-height-body-5"
                 >
                   Roselyn Cremin
-                </div>
-                <div
-                  class="font-body-2xs line-height-body-2"
+                </p>
+                <p
+                  class="font-body-2xs line-height-body-2 margin-y-0"
                 >
                   Subject Matter Expert (SME)
                   <br />
                   +3 more roles
-                </div>
+                </p>
               </div>
             </div>
             <div

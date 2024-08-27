@@ -25,11 +25,11 @@ function MemberRole({ person }: { person: UsernameWithRoles }) {
       <AvatarCircle
         user={`${p.assigneeFirstName || ''} ${p.assigneeLastName || ''}`}
       />
-      <div className="margin-x-05">
-        <div className="margin-y-05 line-height-body-5">
+      <div className="margin-left-1 margin-right-05">
+        <p className="margin-y-05 line-height-body-5">
           {p.assigneeFirstName} {p.assigneeLastName}
-        </div>
-        <div className="font-body-2xs line-height-body-2">
+        </p>
+        <p className="font-body-2xs line-height-body-2 margin-y-0">
           {p.roleTypeName}
           {moreRolesCount > 0 && (
             <>
@@ -39,7 +39,7 @@ function MemberRole({ person }: { person: UsernameWithRoles }) {
               })}
             </>
           )}
-        </div>
+        </p>
       </div>
     </div>
   );
