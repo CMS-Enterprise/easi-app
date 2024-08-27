@@ -4,7 +4,7 @@ import { Button, IconExpandMore } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
-import { teamRolesIndex } from 'constants/sortIndexes';
+import teamRolesIndex from 'constants/teamRolesIndex';
 import { CedarRole } from 'queries/types/CedarRole';
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import {

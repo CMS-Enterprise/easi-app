@@ -1,4 +1,4 @@
-import { teamRolesIndex } from 'constants/sortIndexes';
+import teamRolesIndex from 'constants/teamRolesIndex';
 import {
   CedarRoleAssigneePerson,
   UsernameWithRoles

@@ -2,8 +2,7 @@ import { parseSortIndex } from 'utils/tableRequestStatusIndex';
 
 // This role list is slightly different from types/systemProfile.ts#RoleTypeName
 // RoleTypeName also wasn't initially intended to be an ordered list
-// eslint-disable-next-line import/prefer-default-export
-export const teamRolesIndex = parseSortIndex([
+const teamRolesIndex = parseSortIndex([
   'Business Owner',
   'System Maintainer',
   "Contracting Officer's Representative (COR)",
@@ -22,3 +21,5 @@ export const teamRolesIndex = parseSortIndex([
   'API Contact',
   'AI Contact'
 ]);
+
+export default teamRolesIndex;
