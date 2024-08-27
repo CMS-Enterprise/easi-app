@@ -23,7 +23,7 @@ describe('Governance Review Team', () => {
 
   it('can assign Admin Lead', () => {
     cy.visit(
-      '/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
+      '/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
     );
     cy.get('[data-testid="admin-lead"]').contains('Not Assigned');
     cy.contains('button', 'Assign').click();
@@ -47,7 +47,7 @@ describe('Governance Review Team', () => {
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
     cy.get(
-      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/dates"]'
+      'a[href="/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/dates"]'
     ).click();
 
     cy.get('#Dates-GrtDateMonth').clear().type('11').should('have.value', '11');
@@ -69,14 +69,14 @@ describe('Governance Review Team', () => {
 
     cy.location().should(loc => {
       expect(loc.pathname).to.eq(
-        '/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
+        '/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
       );
     });
 
     cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
 
     cy.get(
-      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/dates"]'
+      'a[href="/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/dates"]'
     ).click();
 
     cy.get('#Dates-GrtDateMonth').should('have.value', '11');
@@ -104,7 +104,7 @@ describe('Governance Review Team', () => {
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
     cy.get(
-      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/notes"]'
+      'a[href="/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/notes"]'
     ).click();
 
     cy.get('[data-testid="user-note"]').then(notes => {
@@ -131,7 +131,7 @@ describe('Governance Review Team', () => {
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
     cy.get(
-      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/notes"]'
+      'a[href="/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/notes"]'
     ).click();
 
     cy.get('[data-testid="user-note"]').then(() => {
@@ -158,7 +158,7 @@ describe('Governance Review Team', () => {
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
     cy.get(
-      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/notes"]'
+      'a[href="/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/notes"]'
     ).click();
 
     cy.get('[data-testid="user-note"]').then(notes => {
