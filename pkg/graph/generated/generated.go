@@ -524,6 +524,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		ArchiveSystemIntake                              func(childComplexity int, id uuid.UUID) int
 		CloseTRBRequest                                  func(childComplexity int, input models.CloseTRBRequestInput) int
 		CreateCedarSystemBookmark                        func(childComplexity int, input models.CreateCedarSystemBookmarkInput) int
 		CreateSystemIntake                               func(childComplexity int, input models.CreateSystemIntakeInput) int
@@ -1195,6 +1196,7 @@ type MutationResolver interface {
 	UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error)
 	DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error)
 	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
+	ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.UpdateSystemIntakePayload, error)
 	SendFeedbackEmail(ctx context.Context, input models.SendFeedbackEmailInput) (*string, error)
 	SendCantFindSomethingEmail(ctx context.Context, input models.SendCantFindSomethingEmailInput) (*string, error)
 	SendReportAProblemEmail(ctx context.Context, input models.SendReportAProblemEmailInput) (*string, error)
@@ -3786,6 +3788,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.LaunchDarklySettings.UserKey(childComplexity), true
+
+	case "Mutation.archiveSystemIntake":
+		if e.complexity.Mutation.ArchiveSystemIntake == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_archiveSystemIntake_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ArchiveSystemIntake(childComplexity, args["id"].(uuid.UUID)), true
 
 	case "Mutation.closeTRBRequest":
 		if e.complexity.Mutation.CloseTRBRequest == nil {
@@ -10071,6 +10085,8 @@ type Mutation {
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
+  archiveSystemIntake(id: UUID!): UpdateSystemIntakePayload
+
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
@@ -10631,6 +10647,21 @@ func (ec *executionContext) field_CedarSystem_linkedTrbRequests_args(ctx context
 		}
 	}
 	args["state"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_archiveSystemIntake_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uuid.UUID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -30010,6 +30041,64 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeLinkedCedarS
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateSystemIntakeLinkedCedarSystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_archiveSystemIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_archiveSystemIntake(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ArchiveSystemIntake(rctx, fc.Args["id"].(uuid.UUID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_archiveSystemIntake_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -61923,6 +62012,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "updateSystemIntakeLinkedCedarSystem":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateSystemIntakeLinkedCedarSystem(ctx, field)
+			})
+		case "archiveSystemIntake":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_archiveSystemIntake(ctx, field)
 			})
 		case "sendFeedbackEmail":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {

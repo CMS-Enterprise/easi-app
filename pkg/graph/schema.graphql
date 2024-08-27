@@ -2436,6 +2436,8 @@ type Mutation {
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
+  archiveSystemIntake(id: UUID!): UpdateSystemIntakePayload
+
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String

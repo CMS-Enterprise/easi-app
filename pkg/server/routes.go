@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -44,12 +43,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
-func (s *Server) routes(
-	contextMiddleware func(handler http.Handler) http.Handler,
-	corsMiddleware func(handler http.Handler) http.Handler,
-	traceMiddleware func(handler http.Handler) http.Handler,
-	loggerMiddleware func(handler http.Handler) http.Handler,
-) {
+func (s *Server) routes() {
 
 	oktaConfig := s.NewOktaClientConfig()
 	jwtVerifier := okta.NewJwtVerifier(oktaConfig.OktaClientID, oktaConfig.OktaIssuer)
@@ -74,13 +68,7 @@ func (s *Server) routes(
 		oktaConfig.AltJobCodes,
 	)
 
-	s.router.Use(
-		contextMiddleware,
-		traceMiddleware, // trace all requests with an ID
-		loggerMiddleware,
-		corsMiddleware,
-		oktaAuthenticationMiddleware,
-	)
+	s.router.Use(oktaAuthenticationMiddleware)
 
 	if s.NewLocalAuthIsEnabled() {
 		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware(store)

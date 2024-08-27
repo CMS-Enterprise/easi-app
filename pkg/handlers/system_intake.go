@@ -49,7 +49,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
-			uuid, err := uuid.Parse(id)
+			parsedUUID, err := uuid.Parse(id)
 			if err != nil {
 				valErr.WithValidation("path.intakeID", "must be UUID")
 				h.WriteErrorResponse(r.Context(), w, &valErr)
@@ -63,7 +63,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				fn = h.RemoveSystemIntake
 			}
 
-			err = fn(r.Context(), uuid)
+			err = fn(r.Context(), parsedUUID)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return

@@ -52,13 +52,16 @@ func NewServer(config *viper.Viper) *Server {
 		environment: environment,
 	}
 
-	// set up routes
-	s.routes(
+	// set up middleware
+	s.router.Use(
 		newContextMiddleware(),
 		newCORSMiddleware(clientAddress),
 		newTraceMiddleware(),
 		newLoggerMiddleware(s.logger, environment),
 	)
+
+	// set up routes
+	s.routes()
 
 	return s
 }

@@ -901,6 +901,7 @@ export enum LifecycleCostYear {
 /** Defines the mutations for the schema */
 export type Mutation = {
   __typename: 'Mutation';
+  archiveSystemIntake?: Maybe<UpdateSystemIntakePayload>;
   closeTRBRequest: TRBRequest;
   createCedarSystemBookmark?: Maybe<CreateCedarSystemBookmarkPayload>;
   createSystemIntake?: Maybe<SystemIntake>;
@@ -977,6 +978,12 @@ export type Mutation = {
   updateTRBRequestForm: TRBRequestForm;
   updateTRBRequestFundingSources: Array<TRBFundingSource>;
   updateTRBRequestTRBLead: TRBRequest;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationArchiveSystemIntakeArgs = {
+  id: Scalars['UUID']['input'];
 };
 
 
