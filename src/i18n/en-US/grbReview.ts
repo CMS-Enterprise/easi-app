@@ -54,19 +54,14 @@ export default {
     submitted: 'Last Updated',
     need: 'Business or user need',
     preferredSolution: 'Preferred solution: Summary',
-    linkToBusinessCase: 'View full Business Case'
+    linkToBusinessCase: 'View full Business Case',
+    unsubmittedAlertText: 'There is not yet a Business Case for this request.'
   },
   additionalDocuments: 'Additional documents',
   additionalDocsLink: 'Add another supporting document',
   documentsIntakeLinkTitle: 'EASi Intake Request form',
   documentsIntakeLinkText: 'View in EASi',
   documentsIntakeSubmitted: 'submitted',
-  documentsTable: {
-    fileName: 'File name',
-    docType: 'Document type',
-    dateAdded: 'Date added',
-    actions: 'Actions'
-  },
   participantsTable: {
     name: 'Name',
     votingRole: 'Voting role',

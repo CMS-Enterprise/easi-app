@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import {
@@ -22,15 +22,21 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import {
+  DescriptionDefinition,
+  DescriptionList,
+  DescriptionTerm
+} from 'components/shared/DescriptionGroup';
 import useMessage from 'hooks/useMessage';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeState } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
+import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
+import IsGrbViewContext from '../IsGrbViewContext';
 import { ReviewerKey } from '../subNavItems';
 
-import DocumentsTable from './DocumentsTable';
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
 
@@ -76,6 +82,8 @@ const GRBReview = ({
       }
     ]
   });
+
+  const isGRBView = useContext(IsGrbViewContext);
 
   const removeGRBReviewer = useCallback(
     (reviewer: SystemIntakeGRBReviewerFragment) => {
@@ -179,47 +187,78 @@ const GRBReview = ({
           </p>
 
           {/* Business Case Card */}
-          <div className="usa-card__container margin-left-0">
+          <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
             <CardHeader>
-              <h3 className="display-inline-block margin-right-2">
+              <h3 className="display-inline-block margin-right-2 margin-bottom-0">
                 {t('businessCaseOverview.title')}
               </h3>
-              <span className="text-base">
-                {t('businessCaseOverview.submitted')}{' '}
-                {formatDateLocal(businessCase.updatedAt, 'MM/dd/yyyy')}
-              </span>
-            </CardHeader>
-            <CardBody>
-              <h4>{t('businessCaseOverview.need')}</h4>
-              <p>{businessCase.businessNeed}</p>
-              <h4>{t('businessCaseOverview.preferredSolution')}</h4>
-              <p>{businessCase.preferredSolution.summary}</p>
-            </CardBody>
-            <CardFooter>
-              <UswdsReactLink
-                to="./business-case"
-                className="display-flex flex-row flex-align-center"
-              >
-                <span className="margin-right-1">
-                  {t('businessCaseOverview.linkToBusinessCase')}
+              {/* TODO: update these checks to use submittedAt when implemented */}
+              {businessCase.id && businessCase.updatedAt && (
+                <span className="text-base tablet:display-inline-block">
+                  {t('businessCaseOverview.submitted')}{' '}
+                  {formatDateLocal(businessCase.updatedAt, 'MM/dd/yyyy')}
                 </span>
-                <IconArrowForward />
-              </UswdsReactLink>
-            </CardFooter>
+              )}
+            </CardHeader>
+            {businessCase.id &&
+            businessCase.businessNeed &&
+            businessCase?.preferredSolution?.summary ? (
+              <>
+                <CardBody>
+                  <DescriptionList>
+                    <DescriptionTerm
+                      term={t('businessCaseOverview.need')}
+                      className="margin-bottom-0"
+                    />
+                    <DescriptionDefinition
+                      definition={businessCase.businessNeed}
+                      className="text-light font-body-md line-height-body-4"
+                    />
+
+                    <DescriptionTerm
+                      term={t('businessCaseOverview.preferredSolution')}
+                      className="margin-bottom-0 margin-top-2"
+                    />
+                    <DescriptionDefinition
+                      definition={businessCase.preferredSolution.summary}
+                      className="text-light font-body-md line-height-body-4"
+                    />
+                  </DescriptionList>
+                </CardBody>
+                <CardFooter>
+                  <UswdsReactLink
+                    to="./business-case"
+                    className="display-flex flex-row flex-align-center"
+                  >
+                    <span className="margin-right-1">
+                      {t('businessCaseOverview.linkToBusinessCase')}
+                    </span>
+                    <IconArrowForward />
+                  </UswdsReactLink>
+                </CardFooter>
+              </>
+            ) : (
+              <Alert type="info" className="margin-left-5 margin-bottom-5">
+                {t('businessCaseOverview.unsubmittedAlertText')}
+              </Alert>
+            )}
           </div>
 
           {/* Additional Documents Title and Link */}
           <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
-          <UswdsReactLink
-            to="./documents/upload"
-            className="display-flex flex-align-center"
-          >
-            <IconAdd className="margin-right-1" />
-            <span>{t('additionalDocsLink')}</span>
-          </UswdsReactLink>
+
+          {!isGRBView && (
+            <UswdsReactLink
+              to="./documents/upload"
+              className="display-flex flex-align-center"
+            >
+              <IconAdd className="margin-right-1" />
+              <span>{t('additionalDocsLink')}</span>
+            </UswdsReactLink>
+          )}
 
           {/* Intake Request Link */}
-          <p className="usa-card__container margin-x-0 padding-x-2 padding-y-1 display-inline-flex flex-row flex-wrap">
+          <p className="usa-card__container margin-x-0 padding-x-2 padding-y-1 display-inline-flex flex-row flex-wrap border-width-1px">
             <span className="margin-right-1">
               {t('documentsIntakeLinkTitle')}
             </span>
