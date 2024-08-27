@@ -1,12 +1,12 @@
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Controller } from 'react-hook-form';
+import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Button,
-  ErrorMessage,
   Fieldset,
   FileInput,
   Form,
@@ -15,8 +15,11 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import { useEasiForm } from 'components/EasiForm';
 import { Alert } from 'components/shared/Alert';
+import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import useMessage from 'hooks/useMessage';
@@ -26,17 +29,31 @@ import {
   CreateSystemIntakeDocument,
   CreateSystemIntakeDocumentVariables
 } from 'queries/types/CreateSystemIntakeDocument';
+import { AppState } from 'reducers/rootReducer';
 import { CreateSystemIntakeDocumentInput } from 'types/graphql-global-types';
 import { fileToBase64File } from 'utils/downloadFile';
+import user from 'utils/user';
 import { documentSchema } from 'validations/systemIntakeSchema';
+import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
+
+import FieldErrorMsg from '../../../components/shared/FieldErrorMsg';
+import RequiredAsterisk from '../../../components/shared/RequiredAsterisk';
 
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
+
+type UploadFormProps = {
+  type: 'admin' | 'requester';
+};
 
 /**
  * System intake document upload form
  */
-const UploadForm = () => {
+const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
   const { t } = useTranslation();
+
+  const { groups } = useSelector((state: AppState) => state.auth);
+
+  const flags = useFlags();
 
   const history = useHistory();
 
@@ -62,12 +79,19 @@ const UploadForm = () => {
 
   const {
     control,
+    register,
     watch,
     handleSubmit,
-    formState: { isSubmitting }
-  } = useForm<DocumentUploadFields>({
-    resolver: yupResolver(documentSchema)
+    formState: { isSubmitting, errors, isValid }
+  } = useEasiForm<DocumentUploadFields>({
+    resolver: yupResolver(documentSchema),
+    context: { type }
   });
+
+  const requestDetailsLink =
+    type === 'requester'
+      ? `/system/${systemId}/documents`
+      : `/governance-review-team/${systemId}/grb-review`;
 
   const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
     const newFile = await fileToBase64File(formData.fileData);
@@ -75,12 +99,14 @@ const UploadForm = () => {
       variables: {
         input: {
           fileData: newFile,
+          version: formData.version,
           documentType: formData.documentType,
           // If type is set to 'Other', include description field
           ...(formData.documentType === 'OTHER'
             ? { otherTypeDescription }
             : {}),
-          requestID: systemId
+          requestID: systemId,
+          sendNotification: formData.sendNotification
         }
       }
     })
@@ -91,7 +117,7 @@ const UploadForm = () => {
             type: 'success'
           }
         );
-        history.push(`/system/${systemId}/documents`);
+        history.push(requestDetailsLink);
       })
       .catch(() => {
         showMessage(t('technicalAssistance:documents.upload.error'), {
@@ -109,136 +135,227 @@ const UploadForm = () => {
         <h1 className="margin-bottom-1">
           {t('technicalAssistance:documents.upload.title')}
         </h1>
-        <p className="margin-top-1 font-body-md line-height-body-5">
+
+        <p className="margin-top-1 margin-bottom-1 font-body-md line-height-body-5 text-light">
           {t('intake:documents.formDescription')}
         </p>
-        <IconLink to={`/system/${systemId}/documents`} icon={<IconArrowBack />}>
-          {t('intake:documents.returnToIntake')}
+
+        <p className="margin-bottom-3 margin-top-105 text-base">
+          <Trans
+            i18nKey="technicalAssistance:requiredFields"
+            components={{ red: <span className="text-red" /> }}
+          />
+        </p>
+
+        <IconLink to={requestDetailsLink} icon={<IconArrowBack />}>
+          {t('intake:documents.dontUpload', { context: type })}
         </IconLink>
 
         <Form className="maxw-full" onSubmit={submit}>
           {/* Upload field */}
-          <Controller
-            name="fileData"
-            control={control}
-            // eslint-disable-next-line @typescript-eslint/no-shadow
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <FormGroup error={!!error} className="margin-top-5">
-                  <Label htmlFor={field.name}>
-                    {t('intake:documents.selectDocument')}
-                  </Label>
-                  <span className="usa-hint">
-                    {t('technicalAssistance:documents.upload.docType')}
-                  </span>
-                  {error && (
-                    <ErrorMessage>
-                      {t('technicalAssistance:errors.selectFile')}
-                    </ErrorMessage>
-                  )}
-                  <FileInput
-                    id={field.name}
-                    name={field.name}
-                    onBlur={field.onBlur}
-                    onChange={e => {
-                      field.onChange(e.currentTarget?.files?.[0]);
-                    }}
-                    accept=".pdf,.doc,.docx,.xls,.xlsx"
-                  />
-                </FormGroup>
-              );
-            }}
-          />
+          <FormGroup error={!!errors.fileData} className="margin-top-5">
+            <Label htmlFor="fileData" required>
+              {t('intake:documents.selectDocument')}
+            </Label>
+            <p className="usa-hint margin-bottom-0 margin-top-05">
+              {t('intake:documents.supportedFileTypes')}
+            </p>
+            <ErrorMessage
+              errors={errors}
+              name="fileData"
+              message={t('technicalAssistance:errors.selectFile')}
+            />
+            <Controller
+              control={control}
+              name="fileData"
+              render={({ field: { value, ...field } }) => (
+                <FileInput
+                  {...field}
+                  id={field.name}
+                  name={field.name}
+                  onChange={e => {
+                    field.onChange(e.currentTarget?.files?.[0]);
+                  }}
+                  accept=".pdf,.doc,.docx,.xls,.xlsx"
+                />
+              )}
+            />
+          </FormGroup>
 
           {/* Document type */}
-          <Controller
-            name="documentType"
-            control={control}
-            // eslint-disable-next-line @typescript-eslint/no-shadow
-            render={({ field, fieldState: { error } }) => (
-              <FormGroup error={!!error}>
-                <Fieldset
-                  legend={
-                    <span className="text-bold">
-                      {t('technicalAssistance:documents.upload.whatType')}
-                    </span>
-                  }
-                >
-                  {error && (
-                    <ErrorMessage>
-                      {t('technicalAssistance:errors.makeSelection')}
-                    </ErrorMessage>
-                  )}
-                  {['SOO_SOW', 'DRAFT_ICGE', 'OTHER'].map(val => (
-                    <Radio
-                      key={val}
-                      id={`${field.name}-${val}`}
-                      data-testid={`${field.name}-${val}`}
-                      name={field.name}
-                      onBlur={field.onBlur}
-                      onChange={field.onChange}
-                      label={t(`intake:documents.type.${val}`)}
-                      value={val}
-                    />
-                  ))}
-                </Fieldset>
-              </FormGroup>
-            )}
-          />
+          <FormGroup error={!!errors.documentType}>
+            <Fieldset
+              legend={
+                <span className="text-bold">
+                  {t('technicalAssistance:documents.upload.whatType')}{' '}
+                  <span className="text-red">*</span>
+                </span>
+              }
+            >
+              <ErrorMessage
+                name="documentType"
+                errors={errors}
+                message={t('technicalAssistance:errors.makeSelection')}
+              />
+              {Object.keys(
+                t('intake:documents.type', { returnObjects: true })
+              ).map(val => (
+                <Radio
+                  {...register('documentType')}
+                  ref={null}
+                  value={val}
+                  key={val}
+                  id={`documentType-${val}`}
+                  data-testid={`documentType-${val}`}
+                  label={t(`intake:documents.type.${val}`)}
+                />
+              ))}
+            </Fieldset>
+          </FormGroup>
 
           {
             // Text field for 'Other' type
             watch('documentType') === 'OTHER' && (
-              <Controller
-                name="otherTypeDescription"
-                control={control}
-                // eslint-disable-next-line @typescript-eslint/no-shadow
-                render={({ field, fieldState: { error } }) => (
-                  <FormGroup
-                    className="margin-top-1 margin-left-4"
-                    error={!!error}
-                  >
-                    <Label htmlFor={field.name}>
-                      {t('technicalAssistance:documents.upload.whatKind')}
-                    </Label>
-                    {error && (
-                      <ErrorMessage>
-                        {t('technicalAssistance:errors.fillBlank')}
-                      </ErrorMessage>
-                    )}
-                    <TextInput
-                      id={field.name}
-                      name={field.name}
-                      type="text"
-                      onBlur={field.onBlur}
-                      onChange={field.onChange}
-                      value={field.value || ''}
-                      validationStatus={error && 'error'}
-                    />
-                  </FormGroup>
-                )}
-              />
+              <FormGroup
+                className="margin-top-1 margin-left-4"
+                error={!!errors.otherTypeDescription}
+              >
+                <Label htmlFor="otherTypeDescription">
+                  {t('technicalAssistance:documents.upload.whatKind')}
+                </Label>
+                <ErrorMessage
+                  errors={errors}
+                  name="otherTypeDescription"
+                  message={t('technicalAssistance:errors.fillBlank')}
+                />
+                <TextInput
+                  {...register('otherTypeDescription', {
+                    shouldUnregister: true
+                  })}
+                  ref={null}
+                  id="otherTypeDescription"
+                  type="text"
+                />
+              </FormGroup>
             )
           }
+
+          {/* Version */}
+          <FormGroup error={!!errors.version}>
+            <Fieldset
+              legend={
+                <span className="text-bold">
+                  {t('intake:documents.versionLabel')}{' '}
+                </span>
+              }
+            >
+              <ErrorMessage
+                name="version"
+                errors={errors}
+                message={t('technicalAssistance:errors.makeSelection')}
+              />
+              {Object.keys(
+                t('intake:documents.version', { returnObjects: true })
+              ).map(val => (
+                <React.Fragment key={val}>
+                  <Radio
+                    {...register('version')}
+                    ref={null}
+                    value={val}
+                    key={val}
+                    id={`version-${val}`}
+                    data-testid={`version-${val}`}
+                    label={t(`intake:documents.version.${val}`)}
+                    aria-describedby={`versionHelpText${val}`}
+                  />
+                  <p
+                    id={`versionHelpText${val}`}
+                    className="margin-left-4 margin-top-05 margin-bottom-0 font-body-2xs line-height-body-3"
+                  >
+                    {t('intake:documents.versionHelpText', {
+                      context: val
+                    })}
+                  </p>
+                </React.Fragment>
+              ))}
+            </Fieldset>
+          </FormGroup>
+
+          {/* display for admins only when accessed from admin view */}
+          {type === 'admin' && user.isITGovAdmin(groups, flags) && (
+            <Controller
+              name="sendNotification"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup className="margin-top-3" error={!!error}>
+                  <Fieldset
+                    legend={
+                      <span className="text-bold">
+                        {t(
+                          'technicalAssistance:documents.upload.sendNotificationToGRBReviewers.header'
+                        )}
+                        <RequiredAsterisk />
+                      </span>
+                    }
+                  >
+                    <HelpText className="margin-top-05">
+                      {t(
+                        'technicalAssistance:documents.upload.sendNotificationToGRBReviewers.info'
+                      )}
+                    </HelpText>
+
+                    <ErrorMessage
+                      as={FieldErrorMsg}
+                      name="sendNotification"
+                      errors={errors}
+                    />
+
+                    <Radio
+                      key="yes"
+                      ref={null}
+                      inputRef={field.ref}
+                      id={`${field.name}-yes`}
+                      name={field.name}
+                      label={t('technicalAssistance:basic.options.yes')}
+                      onBlur={field.onBlur}
+                      onChange={() => {
+                        field.onChange(true);
+                      }}
+                    />
+
+                    <Radio
+                      key="no"
+                      ref={null}
+                      inputRef={field.ref}
+                      id={`${field.name}-no`}
+                      name={field.name}
+                      label={t('technicalAssistance:basic.options.no')}
+                      onBlur={field.onBlur}
+                      onChange={() => {
+                        field.onChange(false);
+                      }}
+                    />
+                  </Fieldset>
+                </FormGroup>
+              )}
+            />
+          )}
 
           <Alert type="info" slim className="margin-top-5">
             {t('technicalAssistance:documents.upload.toKeepCmsSafe')}
           </Alert>
 
-          <Button
-            type="submit"
-            disabled={
-              !watch('fileData') || !watch('documentType') || isSubmitting
-            }
-            className="margin-y-4"
-          >
-            {t('technicalAssistance:documents.upload.uploadDocument')}
-          </Button>
+          <Pager
+            next={{
+              text: t('technicalAssistance:documents.upload.uploadDocument'),
+              disabled: !isValid || isSubmitting
+            }}
+            taskListUrl={requestDetailsLink}
+            saveExitText={t('intake:documents.dontUpload', { context: type })}
+            border={false}
+            className="margin-top-4"
+          />
         </Form>
-
-        <IconLink to={`/system/${systemId}/documents`} icon={<IconArrowBack />}>
-          {t('intake:documents.returnToIntake')}
-        </IconLink>
       </div>
     </>
   );

@@ -166,7 +166,9 @@ type CreateSystemIntakeDocumentInput struct {
 	RequestID            uuid.UUID                      `json:"requestID"`
 	FileData             graphql.Upload                 `json:"fileData"`
 	DocumentType         SystemIntakeDocumentCommonType `json:"documentType"`
+	Version              SystemIntakeDocumentVersion    `json:"version"`
 	OtherTypeDescription *string                        `json:"otherTypeDescription,omitempty"`
+	SendNotification     *bool                          `json:"sendNotification,omitempty"`
 }
 
 // Data returned after uploading a document to a System Intake

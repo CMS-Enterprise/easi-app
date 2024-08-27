@@ -806,12 +806,15 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeDocument struct {
+		CanDelete    func(childComplexity int) int
+		CanView      func(childComplexity int) int
 		DocumentType func(childComplexity int) int
 		FileName     func(childComplexity int) int
 		ID           func(childComplexity int) int
 		Status       func(childComplexity int) int
 		URL          func(childComplexity int) int
 		UploadedAt   func(childComplexity int) int
+		Version      func(childComplexity int) int
 	}
 
 	SystemIntakeDocumentType struct {
@@ -1324,8 +1327,11 @@ type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
 
 	Status(ctx context.Context, obj *models.SystemIntakeDocument) (models.SystemIntakeDocumentStatus, error)
+
 	UploadedAt(ctx context.Context, obj *models.SystemIntakeDocument) (*time.Time, error)
 	URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error)
+	CanDelete(ctx context.Context, obj *models.SystemIntakeDocument) (bool, error)
+	CanView(ctx context.Context, obj *models.SystemIntakeDocument) (bool, error)
 }
 type SystemIntakeGRBReviewerResolver interface {
 	VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error)
@@ -5920,6 +5926,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeCosts.IsExpectingIncrease(childComplexity), true
 
+	case "SystemIntakeDocument.canDelete":
+		if e.complexity.SystemIntakeDocument.CanDelete == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocument.CanDelete(childComplexity), true
+
+	case "SystemIntakeDocument.canView":
+		if e.complexity.SystemIntakeDocument.CanView == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocument.CanView(childComplexity), true
+
 	case "SystemIntakeDocument.documentType":
 		if e.complexity.SystemIntakeDocument.DocumentType == nil {
 			break
@@ -5961,6 +5981,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeDocument.UploadedAt(childComplexity), true
+
+	case "SystemIntakeDocument.version":
+		if e.complexity.SystemIntakeDocument.Version == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocument.Version(childComplexity), true
 
 	case "SystemIntakeDocumentType.commonType":
 		if e.complexity.SystemIntakeDocumentType.CommonType == nil {
@@ -9334,8 +9361,20 @@ System Intake document
 """
 enum SystemIntakeDocumentCommonType {
   SOO_SOW
-  DRAFT_ICGE
+  DRAFT_IGCE
+  ACQUISITION_PLAN_OR_STRATEGY
+  REQUEST_FOR_ADDITIONAL_FUNDING
+  MEETING_MINUTES
   OTHER
+}
+
+"""
+Represents the version options for a document that is attached to a
+System Intake document
+"""
+enum SystemIntakeDocumentVersion {
+  CURRENT
+  HISTORICAL
 }
 
 """
@@ -9377,7 +9416,9 @@ input CreateSystemIntakeDocumentInput {
   requestID: UUID!
   fileData: Upload!
   documentType: SystemIntakeDocumentCommonType!
+  version: SystemIntakeDocumentVersion!
   otherTypeDescription: String
+  sendNotification: Boolean
 }
 
 """
@@ -9400,8 +9441,11 @@ type SystemIntakeDocument {
   id: UUID!
   fileName: String!
   status: SystemIntakeDocumentStatus!
+  version: SystemIntakeDocumentVersion!
   uploadedAt: Time!
   url: String!
+  canDelete: Boolean!
+  canView: Boolean!
 }
 
 """
@@ -25761,10 +25805,16 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeDocumentPayload_docum
 				return ec.fieldContext_SystemIntakeDocument_fileName(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntakeDocument_status(ctx, field)
+			case "version":
+				return ec.fieldContext_SystemIntakeDocument_version(ctx, field)
 			case "uploadedAt":
 				return ec.fieldContext_SystemIntakeDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_SystemIntakeDocument_url(ctx, field)
+			case "canDelete":
+				return ec.fieldContext_SystemIntakeDocument_canDelete(ctx, field)
+			case "canView":
+				return ec.fieldContext_SystemIntakeDocument_canView(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeDocument", field.Name)
 		},
@@ -26020,10 +26070,16 @@ func (ec *executionContext) fieldContext_DeleteSystemIntakeDocumentPayload_docum
 				return ec.fieldContext_SystemIntakeDocument_fileName(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntakeDocument_status(ctx, field)
+			case "version":
+				return ec.fieldContext_SystemIntakeDocument_version(ctx, field)
 			case "uploadedAt":
 				return ec.fieldContext_SystemIntakeDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_SystemIntakeDocument_url(ctx, field)
+			case "canDelete":
+				return ec.fieldContext_SystemIntakeDocument_canDelete(ctx, field)
+			case "canView":
+				return ec.fieldContext_SystemIntakeDocument_canView(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeDocument", field.Name)
 		},
@@ -39915,10 +39971,16 @@ func (ec *executionContext) fieldContext_SystemIntake_documents(_ context.Contex
 				return ec.fieldContext_SystemIntakeDocument_fileName(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntakeDocument_status(ctx, field)
+			case "version":
+				return ec.fieldContext_SystemIntakeDocument_version(ctx, field)
 			case "uploadedAt":
 				return ec.fieldContext_SystemIntakeDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_SystemIntakeDocument_url(ctx, field)
+			case "canDelete":
+				return ec.fieldContext_SystemIntakeDocument_canDelete(ctx, field)
+			case "canView":
+				return ec.fieldContext_SystemIntakeDocument_canView(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeDocument", field.Name)
 		},
@@ -43243,6 +43305,50 @@ func (ec *executionContext) fieldContext_SystemIntakeDocument_status(_ context.C
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntakeDocument_version(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocument_version(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Version, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeDocumentVersion)
+	fc.Result = res
+	return ec.marshalNSystemIntakeDocumentVersion2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentVersion(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocument_version(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocument",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeDocumentVersion does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeDocument_uploadedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeDocument_uploadedAt(ctx, field)
 	if err != nil {
@@ -43326,6 +43432,94 @@ func (ec *executionContext) fieldContext_SystemIntakeDocument_url(_ context.Cont
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocument_canDelete(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocument_canDelete(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeDocument().CanDelete(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocument_canDelete(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocument",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocument_canView(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocument_canView(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeDocument().CanView(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocument_canView(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocument",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -55346,7 +55540,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeDocumentInput(ctx co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"requestID", "fileData", "documentType", "otherTypeDescription"}
+	fieldsInOrder := [...]string{"requestID", "fileData", "documentType", "version", "otherTypeDescription", "sendNotification"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -55374,6 +55568,13 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeDocumentInput(ctx co
 				return it, err
 			}
 			it.DocumentType = data
+		case "version":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("version"))
+			data, err := ec.unmarshalNSystemIntakeDocumentVersion2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentVersion(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Version = data
 		case "otherTypeDescription":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("otherTypeDescription"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
@@ -55381,6 +55582,13 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeDocumentInput(ctx co
 				return it, err
 			}
 			it.OtherTypeDescription = data
+		case "sendNotification":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sendNotification"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SendNotification = data
 		}
 	}
 
@@ -64929,6 +65137,11 @@ func (ec *executionContext) _SystemIntakeDocument(ctx context.Context, sel ast.S
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "version":
+			out.Values[i] = ec._SystemIntakeDocument_version(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
 		case "uploadedAt":
 			field := field
 
@@ -64975,6 +65188,78 @@ func (ec *executionContext) _SystemIntakeDocument(ctx context.Context, sel ast.S
 					}
 				}()
 				res = ec._SystemIntakeDocument_url(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "canDelete":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeDocument_canDelete(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "canView":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeDocument_canView(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -70472,6 +70757,22 @@ func (ec *executionContext) marshalNSystemIntakeDocumentType2ᚖgithubᚗcomᚋc
 		return graphql.Null
 	}
 	return ec._SystemIntakeDocumentType(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeDocumentVersion2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentVersion(ctx context.Context, v interface{}) (models.SystemIntakeDocumentVersion, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeDocumentVersion(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeDocumentVersion2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentVersion(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeDocumentVersion) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeExpireLCIDInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeExpireLCIDInput(ctx context.Context, v interface{}) (models.SystemIntakeExpireLCIDInput, error) {

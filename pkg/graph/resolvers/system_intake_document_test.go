@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -29,7 +30,8 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	// Create a document
 	documentToCreate := &models.SystemIntakeDocument{
 		SystemIntakeRequestID: intake.ID,
-		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftICGE,
+		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftIGCE,
+		Version:               models.SystemIntakeDocumentVersionHISTORICAL,
 		FileName:              "create_and_get.pdf",
 		Bucket:                "bukkit",
 		S3Key:                 uuid.NewString(),
@@ -42,6 +44,26 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	deleteSystemIntakeDocumentSubtest(s, createdDocument)
 }
 
+func (s *ResolverSuite) TestShouldSend() {
+	// only admins can send, and only if admin selected "Yes" for sending notification
+	s.True(shouldSend(models.AdminUploaderRole, helpers.PointerTo(true)))
+
+	// admin has selected "No"
+	s.False(shouldSend(models.AdminUploaderRole, helpers.PointerTo(false)))
+
+	// admin did not make a selection (currently not a possible path via UI, but just in case that changes)
+	s.False(shouldSend(models.AdminUploaderRole, nil))
+
+	// a requester has selected to send (currently not a possible path via UI - only admins can make this choice)
+	s.False(shouldSend(models.RequesterUploaderRole, helpers.PointerTo(true)))
+
+	// a requester has selected not to send (currently not a possible path via UI, but will still result in no-send)
+	s.False(shouldSend(models.RequesterUploaderRole, helpers.PointerTo(false)))
+
+	// normal path for a requester, no selection would be made (only allowed path via UI)
+	s.False(shouldSend(models.RequesterUploaderRole, nil))
+}
+
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially
 func createSystemIntakeDocumentSubtest(s *ResolverSuite, systemIntakeID uuid.UUID, documentToCreate *models.SystemIntakeDocument) *models.SystemIntakeDocument {
 	testContents := "Test file content"
@@ -50,6 +72,7 @@ func createSystemIntakeDocumentSubtest(s *ResolverSuite, systemIntakeID uuid.UUI
 	gqlInput := models.CreateSystemIntakeDocumentInput{
 		RequestID:            documentToCreate.SystemIntakeRequestID,
 		DocumentType:         documentToCreate.CommonDocumentType,
+		Version:              documentToCreate.Version,
 		OtherTypeDescription: &documentToCreate.OtherType,
 		FileData: graphql.Upload{
 			File:        fileToUpload,
