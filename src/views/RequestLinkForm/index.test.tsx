@@ -6,9 +6,9 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
+import { GetSystemIntakeRelationDocument } from 'gql/gen/graphql';
 import configureMockStore from 'redux-mock-store';
 
-import { GetSystemIntakeRelationQuery } from 'queries/SystemIntakeRelationQueries';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import RequestLinkForm from '.';
@@ -30,7 +30,7 @@ describe('IT Gov Request relation link form', () => {
             mocks={[
               {
                 request: {
-                  query: GetSystemIntakeRelationQuery,
+                  query: GetSystemIntakeRelationDocument,
                   variables: {
                     id
                   }
