@@ -34,7 +34,7 @@ exports[`Trb Admin: Action: Request Edits > submits a feedback message 1`] = `
             href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/initial-request-form"
           >
             <span>
-              Request details
+              TRB request details
             </span>
           </a>
         </li>
