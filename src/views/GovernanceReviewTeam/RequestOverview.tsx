@@ -178,7 +178,7 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
 
                 {flags?.grbReviewTab && (
                   <Route
-                    path="/governance-review-team/:systemId/documents/upload"
+                    path="/it-governance/:systemId/documents/upload"
                     render={() => <UploadForm type="admin" />}
                   />
                 )}
