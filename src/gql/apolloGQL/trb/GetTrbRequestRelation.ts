@@ -18,6 +18,7 @@ const GetTrbRequestRelationQuery = gql(/* GraphQL */ `
     cedarSystems {
       id
       name
+      acronym
     }
   }
 `);

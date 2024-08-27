@@ -18,6 +18,7 @@ const GetSystemIntakeRelationQuery = gql(/* GraphQL */ `
     cedarSystems {
       id
       name
+      acronym
     }
   }
 `);
