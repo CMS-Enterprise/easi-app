@@ -9,7 +9,11 @@ import {
   Dropdown,
   Fieldset,
   Form,
+<<<<<<< HEAD
   Link as UswdsLink,
+=======
+  FormGroup,
+>>>>>>> d87886cec (More system intake ELA work)
   Radio,
   Textarea,
   TextInput
@@ -512,6 +516,88 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               )}
             />
           </Fieldset>
+        </FieldGroup>
+
+        {/* NJD add SWAM question(s) here */}
+        <FieldGroup scrollElement="NJD-anyELAs" error={!!errors.needsEaSupport}>
+          {/* NJD fix error */}
+          {/* NJD fix controller name */}
+          <Label htmlFor="elasNJD">
+            {t('requestDetails.elas.usingSoftwareLabel')}
+          </Label>
+          <HelpText id="elasHelpText" className="margin-top-1">
+            {t('requestDetails.elas.usingSoftwareHelp')}
+          </HelpText>
+          <Controller
+            control={control}
+            name="NJDusingSoftware"
+            render={({ field: { ref, value, ...field } }) => (
+              <Radio
+                {...field}
+                inputRef={ref}
+                id="usingSoftwareTrue"
+                label={t('Yes')}
+                checked={value}
+                onChange={() => field.onChange(true)}
+              />
+            )}
+          />
+          {watch('NJDusingSoftware') && (
+            <div className="margin-left-4 margin-bottom-3">
+              {/* TODO: NJD fix error */}
+              <FormGroup error={!!errors?.isso?.commonName}>
+                <Label htmlFor="elaNJD">
+                  {t('requestDetails.elas.whichSoftwareLabel')}
+                </Label>
+                <HelpText id="whichSoftwareHelpText" className="margin-top-1">
+                  {t('requestDetails.elas.whichSoftwareHelp')}
+                </HelpText>
+                <TextInput
+                  {...register('requestDetails.elas.whichSoftwareLabel')}
+                  ref={null}
+                  id="currentAnnualSpendingITPortion"
+                  type="text"
+                  maxLength={200}
+                />
+              </FormGroup>
+            </div>
+          )}
+          <Controller
+            control={control}
+            name="NJDusingSoftware"
+            render={({ field: { ref, value, ...field } }) => (
+              <Radio
+                {...field}
+                inputRef={ref}
+                id="usingSoftwareFalse"
+                label={t('No')}
+                checked={!value}
+                onChange={() => {
+                  field.onChange(false);
+
+                  // Reset ELA fields - TODO: NJD
+                  // setValue('isso.commonName', '');
+                  // setValue('isso.euaUserId', '');
+                  // setValue('isso.email', '');
+                  // setValue('isso.component', '');
+                }}
+              />
+            )}
+          />
+          {/* <Controller
+            control={control}
+            name="needsEaSupport"
+            render={({ field }) => (
+              <MultiSelect
+                name={field.name}
+                selectedLabel={t('requestDetails.elas.selectedLabel')}
+                // initialValues={field.value}
+                initialValues={['']}
+                options={NJDOptions}
+                onChange={values => field.onChange(values)}
+              />
+            )}
+          /> */}
         </FieldGroup>
 
         <Pager

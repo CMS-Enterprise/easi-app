@@ -312,11 +312,15 @@ const intake = {
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
     elas: {
-      label:
-        'Are you planning on using any software through an Enterprise License',
+      usingSoftwareLabel:
+        'Do you plan to use any software products to fulfill your business needs?',
+      usingSoftwareHelp:
+        'This could include COTS products, infrastructure products, or other engineering and development tools.',
       selectedLabel: 'Selected software',
-      help:
-        'Please select any of the software listed that apply to this request and/or system'
+      whichSoftwareLabel: 'Which software?',
+      whichSoftwareHelp:
+        'If known, please upload a bill of materials (BOM) on the document upload section of this form.',
+      acquisitionStrategyLabel: 'How will the software be acquired?'
     },
     needsEaSupport: 'Does your request need Enterprise Architecture support?',
     needsEaSupportHelpText:
