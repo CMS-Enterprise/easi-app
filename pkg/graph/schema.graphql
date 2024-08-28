@@ -2439,7 +2439,7 @@ type Mutation {
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
-  archiveSystemIntake(id: UUID!): UpdateSystemIntakePayload
+  archiveSystemIntake(id: UUID!): SystemIntake!
 
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String

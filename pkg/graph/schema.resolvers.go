@@ -673,7 +673,7 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 }
 
 // ArchiveSystemIntake is the resolver for the archiveSystemIntake field.
-func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -719,9 +719,7 @@ func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID
 		}
 	}
 
-	return &models.UpdateSystemIntakePayload{
-		SystemIntake: updatedIntake,
-	}, nil
+	return updatedIntake, nil
 }
 
 // SendFeedbackEmail is the resolver for the sendFeedbackEmail field.
