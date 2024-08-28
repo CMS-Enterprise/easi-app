@@ -54,6 +54,7 @@ export default {
     submitted: 'Last Updated',
     need: 'Business or user need',
     preferredSolution: 'Preferred solution: Summary',
+    noSolution: 'No answer added.',
     linkToBusinessCase: 'View full Business Case',
     unsubmittedAlertText: 'There is not yet a Business Case for this request.'
   },

@@ -194,15 +194,13 @@ const GRBReview = ({
               </h3>
               {/* TODO: update these checks to use submittedAt when implemented */}
               {businessCase.id && businessCase.updatedAt && (
-                <span className="text-base tablet:display-inline-block">
+                <span className="text-base display-inline-block">
                   {t('businessCaseOverview.submitted')}{' '}
                   {formatDateLocal(businessCase.updatedAt, 'MM/dd/yyyy')}
                 </span>
               )}
             </CardHeader>
-            {businessCase.id &&
-            businessCase.businessNeed &&
-            businessCase?.preferredSolution?.summary ? (
+            {businessCase.id && businessCase.businessNeed ? (
               <>
                 <CardBody>
                   <DescriptionList>
@@ -220,7 +218,10 @@ const GRBReview = ({
                       className="margin-bottom-0 margin-top-2"
                     />
                     <DescriptionDefinition
-                      definition={businessCase.preferredSolution.summary}
+                      definition={
+                        businessCase?.preferredSolution?.summary ||
+                        t('businessCaseOverview.noSolution')
+                      }
                       className="text-light font-body-md line-height-body-4"
                     />
                   </DescriptionList>
@@ -238,9 +239,11 @@ const GRBReview = ({
                 </CardFooter>
               </>
             ) : (
-              <Alert type="info" className="margin-left-5 margin-bottom-5">
-                {t('businessCaseOverview.unsubmittedAlertText')}
-              </Alert>
+              <CardBody>
+                <Alert type="info" slim>
+                  {t('businessCaseOverview.unsubmittedAlertText')}
+                </Alert>
+              </CardBody>
             )}
           </div>
 
