@@ -34331,6 +34331,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
