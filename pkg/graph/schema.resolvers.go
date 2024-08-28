@@ -1926,7 +1926,7 @@ func (r *systemIntakeDocumentResolver) UploadedAt(ctx context.Context, obj *mode
 }
 
 // URL is the resolver for the url field.
-func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error) {
+func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.SystemIntakeDocument) (*string, error) {
 	return resolvers.GetURLForSystemIntakeDocument(ctx, r.store, r.s3Client, obj.S3Key)
 }
 
@@ -1937,7 +1937,7 @@ func (r *systemIntakeDocumentResolver) CanDelete(ctx context.Context, obj *model
 
 // CanView is the resolver for the canView field.
 func (r *systemIntakeDocumentResolver) CanView(ctx context.Context, obj *models.SystemIntakeDocument) (bool, error) {
-	grbUsers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, obj.SystemIntakeRequestID)
+	grbUsers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, obj.SystemIntakeID)
 	if err != nil {
 		return false, err
 	}

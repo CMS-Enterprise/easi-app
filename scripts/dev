@@ -231,7 +231,7 @@ namespace :docker do
 end
 
 def each_minio_file(&block)
-  output = `docker compose run --entrypoint="mc --no-color --json ls -r local/easi-app-file-uploads" minio_mc`
+  output = `docker compose run --rm --entrypoint="mc --no-color --json ls -r local/easi-app-file-uploads" minio_mc`
   json = "[#{output.gsub(/\}\s*\{/, "},{")}]" # convert sort-of-jsonl into conventional json
   files = JSON.parse(json)
 
@@ -241,14 +241,14 @@ def each_minio_file(&block)
 end
 
 def set_file_tags(status)
-  output = `docker compose run --entrypoint="mc --no-color --json ls -r local/easi-app-file-uploads" minio_mc`
+  output = `docker compose run --rm --entrypoint="mc --no-color --json ls -r local/easi-app-file-uploads" minio_mc`
   json = "[#{output.gsub(/\}\s*\{/, "},{")}]" # convert sort-of-jsonl into conventional json
   files = JSON.parse(json)
   command = ""
   files.each do |file|
     command = command + %Q{mc tag set 'local/easi-app-file-uploads/#{file["key"]}' 'av-status=#{status}'; }
   end
-  `docker compose run --entrypoint="/bin/sh -c" minio_mc "#{command}" > /dev/null 2>&1`
+  `docker compose run --rm --entrypoint="/bin/sh -c" minio_mc "#{command}" > /dev/null 2>&1`
 end
 
 namespace :minio do

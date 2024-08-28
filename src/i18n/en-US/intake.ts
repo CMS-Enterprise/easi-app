@@ -94,7 +94,25 @@ const intake = {
     supportedFileTypes: 'Select a PDF, DOC, DOCX, XLS, or XLSX',
     type,
     abbreviatedType,
-    version
+    version,
+    table: {
+      fileName: 'File name',
+      docType: 'Document type',
+      dateAdded: 'Date added',
+      actions: 'Actions',
+      downloadBtn: 'Download',
+      removeBtn: 'Remove',
+      removeModal: {
+        heading: 'Remove {{documentName}}?',
+        explanation:
+          'You will not be able to access this document after it is removed, and GRB reviewers will not be able to view it.',
+        confirm: 'Remove document',
+        cancel: 'Cancel',
+        success: 'You have successfully removed {{documentName}}.',
+        error:
+          'There was an issue removing your document. Please try again, and if the problem persists, try again later.'
+      }
+    }
   },
   submission: {
     confirmation: {

@@ -128,7 +128,10 @@ export interface SystemIntake_documents {
   version: SystemIntakeDocumentVersion;
   status: SystemIntakeDocumentStatus;
   uploadedAt: Time;
-  url: string;
+  url: string | null;
+  canView: boolean;
+  canDelete: boolean;
+  systemIntakeId: UUID;
 }
 
 export interface SystemIntake_systems_businessOwnerRoles {
