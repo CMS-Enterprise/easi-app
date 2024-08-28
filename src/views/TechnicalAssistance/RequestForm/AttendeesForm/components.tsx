@@ -28,9 +28,9 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import { AvatarCircle } from 'components/shared/Avatar/Avatar';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import HelpText from 'components/shared/HelpText';
-import InitialsIcon from 'components/shared/InitialsIcon';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TablePagination from 'components/TablePagination';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
@@ -476,9 +476,8 @@ const AttendeesTable = ({
                       className="trbAttendee display-flex"
                     >
                       {/* Attendee icon with initials */}
-                      <InitialsIcon
-                        name={attendee?.userInfo?.commonName || ''}
-                        index={index}
+                      <AvatarCircle
+                        user={attendee?.userInfo?.commonName || ''}
                         className="margin-right-1"
                       />
                       <Attendee

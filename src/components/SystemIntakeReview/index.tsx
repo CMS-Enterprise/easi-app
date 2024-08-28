@@ -311,6 +311,14 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
+            <DescriptionTerm term={t('review.usesAiTech')} />
+            <DescriptionDefinition
+              definition={convertBoolToYesNo(systemIntake.usesAiTech)}
+            />
+          </div>
+        </ReviewRow>
+        <ReviewRow>
+          <div>
             <DescriptionTerm term={t('review.eaSupport')} />
             <DescriptionDefinition
               definition={convertBoolToYesNo(systemIntake.needsEaSupport)}

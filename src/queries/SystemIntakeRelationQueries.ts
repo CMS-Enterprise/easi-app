@@ -1,27 +1,5 @@
 import { gql } from '@apollo/client';
 
-export const GetSystemIntakeRelationQuery = gql`
-  query GetSystemIntakeRelation($id: UUID!) {
-    systemIntake(id: $id) {
-      id
-      relationType
-      contractName
-      contractNumbers {
-        contractNumber
-      }
-      systems {
-        id
-        name
-        acronym
-      }
-    }
-    cedarSystems {
-      id
-      name
-    }
-  }
-`;
-
 export const SetSystemIntakeRelationNewSystemQuery = gql`
   mutation SetSystemIntakeRelationNewSystem(
     $input: SetSystemIntakeRelationNewSystemInput!
@@ -68,27 +46,6 @@ export const UnlinkSystemIntakeRelationQuery = gql`
   }
 `;
 
-export const GetTrbRequestRelationQuery = gql`
-  query GetTrbRequestRelation($id: UUID!) {
-    trbRequest(id: $id) {
-      id
-      relationType
-      contractName
-      contractNumbers {
-        contractNumber
-      }
-      systems {
-        id
-        name
-        acronym
-      }
-    }
-    cedarSystems {
-      id
-      name
-    }
-  }
-`;
 export const SetTrbRequestRelationNewSystemQuery = gql`
   mutation SetTrbRequestRelationNewSystem(
     $input: SetTRBRequestRelationNewSystemInput!

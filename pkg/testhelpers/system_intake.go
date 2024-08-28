@@ -52,5 +52,6 @@ func NewSystemIntake() models.SystemIntake {
 		ContractStartDate:  &now,
 		ContractEndDate:    &now,
 		HasUIChanges:       null.BoolFrom(false),
+		UsesAITech:         null.BoolFrom(true),
 	}
 }

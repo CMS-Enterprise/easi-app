@@ -198,6 +198,12 @@ exports[`Trb Request form: Check and submit > renders request form field values 
         class="easi-tag text-base-darker bg-base-lighter margin-bottom-1"
         data-testid="tag"
       >
+        Artificial Intelligence
+      </span>
+      <span
+        class="easi-tag text-base-darker bg-base-lighter margin-bottom-1"
+        data-testid="tag"
+      >
         Access Control and Identity Management
       </span>
       <span
