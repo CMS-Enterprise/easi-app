@@ -18,11 +18,9 @@ import {
   UsernameWithRoles
 } from 'types/systemProfile';
 import { MockedQuery } from 'types/util';
+import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 import MockUsers from 'utils/testing/MockUsers';
-import {
-  getSystemProfileData,
-  getUsernamesWithRoles
-} from 'views/SystemProfile';
+import { getSystemProfileData } from 'views/SystemProfile';
 
 const emptyRoles: CedarRole[] = [
   {
