@@ -490,6 +490,7 @@ export enum TRBRequestType {
 export enum TRBSubjectAreaOption {
   ACCESSIBILITY_COMPLIANCE = "ACCESSIBILITY_COMPLIANCE",
   ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT = "ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT",
+  ARTIFICIAL_INTELLIGENCE = "ARTIFICIAL_INTELLIGENCE",
   ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT",
   BUSINESS_INTELLIGENCE = "BUSINESS_INTELLIGENCE",
   CLOUD_MIGRATION = "CLOUD_MIGRATION",
@@ -1120,6 +1121,7 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   currentStage?: string | null;
   cedarSystemId?: string | null;
   hasUiChanges?: boolean | null;
+  usesAiTech?: boolean | null;
 }
 
 /**

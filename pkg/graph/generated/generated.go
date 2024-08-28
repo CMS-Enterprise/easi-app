@@ -709,6 +709,7 @@ type ComplexityRoot struct {
 		TRBCollaboratorName         func(childComplexity int) int
 		TRBFollowUpRecommendation   func(childComplexity int) int
 		UpdatedAt                   func(childComplexity int) int
+		UsesAITech                  func(childComplexity int) int
 	}
 
 	SystemIntakeAction struct {
@@ -5510,6 +5511,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.UpdatedAt(childComplexity), true
 
+	case "SystemIntake.usesAiTech":
+		if e.complexity.SystemIntake.UsesAITech == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.UsesAITech(childComplexity), true
+
 	case "SystemIntakeAction.actor":
 		if e.complexity.SystemIntakeAction.Actor == nil {
 			break
@@ -8278,6 +8286,7 @@ type SystemIntake {
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
+  usesAiTech: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
   requestFormState: SystemIntakeFormState!
   draftBusinessCaseState: SystemIntakeFormState!
@@ -8461,6 +8470,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   currentStage: String
   cedarSystemId: String
   hasUiChanges: Boolean
+  usesAiTech: Boolean
 }
 
 """
@@ -9423,6 +9433,7 @@ The possible options on the TRB "Subject Areas" page
 enum TRBSubjectAreaOption {
   ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT
   ACCESSIBILITY_COMPLIANCE
+  ARTIFICIAL_INTELLIGENCE
   ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT
   BUSINESS_INTELLIGENCE
   CLOUD_MIGRATION
@@ -13340,6 +13351,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -22214,6 +22227,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -28421,6 +28436,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -28646,6 +28663,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -33906,6 +33925,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -34107,6 +34128,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -34498,6 +34521,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -34688,6 +34713,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -39464,6 +39491,47 @@ func (ec *executionContext) fieldContext_SystemIntake_hasUiChanges(_ context.Con
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_usesAiTech(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UsesAITech, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.Bool)
+	fc.Result = res
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_usesAiTech(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_itGovTaskStatuses(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 	if err != nil {
@@ -40329,6 +40397,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -40667,6 +40737,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -48556,6 +48628,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -51407,6 +51481,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -52151,6 +52227,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
 			case "itGovTaskStatuses":
 				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
 			case "requestFormState":
@@ -57742,7 +57820,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "requestName", "businessNeed", "businessSolution", "needsEaSupport", "currentStage", "cedarSystemId", "hasUiChanges"}
+	fieldsInOrder := [...]string{"id", "requestName", "businessNeed", "businessSolution", "needsEaSupport", "currentStage", "cedarSystemId", "hasUiChanges", "usesAiTech"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -57805,6 +57883,13 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 				return it, err
 			}
 			it.HasUIChanges = data
+		case "usesAiTech":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("usesAiTech"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UsesAiTech = data
 		}
 	}
 
@@ -63316,6 +63401,8 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "hasUiChanges":
 			out.Values[i] = ec._SystemIntake_hasUiChanges(ctx, field, obj)
+		case "usesAiTech":
+			out.Values[i] = ec._SystemIntake_usesAiTech(ctx, field, obj)
 		case "itGovTaskStatuses":
 			field := field
 
