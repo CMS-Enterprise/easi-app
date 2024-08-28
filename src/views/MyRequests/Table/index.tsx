@@ -257,7 +257,8 @@ const Table = ({
         accessor: 'systems',
         Cell: ({ value }: { value: string[] }) => {
           return value.join(', ');
-        }
+        },
+        width: '250px'
       }
     ];
   }, [isITGovAdmin, isTRBAdmin, t]);
