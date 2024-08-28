@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Controller, FieldPath } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
@@ -9,6 +9,7 @@ import {
   Dropdown,
   Fieldset,
   Form,
+  Link as UswdsLink,
   Radio,
   Textarea,
   TextInput
@@ -28,6 +29,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import processStages from 'constants/enums/processStages';
+import { CMS_AI_EMAIL, CMS_TRB_EMAIL } from 'constants/externalUrls';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
 import { SystemIntake } from 'queries/types/SystemIntake';
@@ -308,7 +310,17 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               {t('requestDetails.usesAiTech')}
             </legend>
             <HelpText id="usesAiTechHelpText" className="margin-top-1">
-              {t('requestDetails.usesAiTechHelpText')}
+              <Trans
+                i18nKey="intake:requestDetails.usesAiTechHelpText"
+                components={{
+                  aiEmail: (
+                    <UswdsLink href={`mailto:${CMS_AI_EMAIL}`}> </UswdsLink>
+                  ),
+                  trbEmail: (
+                    <UswdsLink href={`mailto:${CMS_TRB_EMAIL}`}> </UswdsLink>
+                  )
+                }}
+              />
             </HelpText>
             <ErrorMessage
               errors={errors}

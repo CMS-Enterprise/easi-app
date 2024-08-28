@@ -81,6 +81,9 @@ const SystemIntakeValidationSchema = {
       .trim()
       .required('Tell us how you think of solving your business need'),
     currentStage: Yup.string().required('Tell us where you are in the process'),
+    usesAiTech: Yup.boolean()
+      .nullable()
+      .required('Tell us if your request involves AI technologies'),
     needsEaSupport: Yup.boolean()
       .nullable()
       .required('Tell us if you need Enterprise Architecture (EA) support'),

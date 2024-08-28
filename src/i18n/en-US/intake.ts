@@ -255,7 +255,8 @@ const intake = {
     currentStageHelpText:
       'This helps the governance team provide the right type of guidance for your request',
     usesAiTech: 'Does your request involve AI technologies?',
-    usesAiTechHelpText: 'AI Language here, come to OIT for all your AI needs!',
+    usesAiTechHelpText:
+      'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
     needsEaSupport: 'Does your request need Enterprise Architecture support?',
     needsEaSupportHelpText:
       'If you are unsure, mark "Yes" and someone from the EA team will assess your needs.',
