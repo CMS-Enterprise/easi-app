@@ -18,6 +18,7 @@ type SystemHelpCardProps = {
   description: string;
   body?: React.ReactNode;
   footer: React.ReactNode;
+  fullWidth?: boolean;
 };
 
 const SpacesCard = ({
@@ -25,12 +26,13 @@ const SpacesCard = ({
   header,
   description,
   body,
-  footer
+  footer,
+  fullWidth = false
 }: SystemHelpCardProps) => {
   return (
     <Grid
       tablet={{ col: 12 }}
-      desktop={{ col: 6 }}
+      desktop={{ col: fullWidth ? 12 : 6 }}
       className="display-flex flex-align-stretch"
     >
       <Card
