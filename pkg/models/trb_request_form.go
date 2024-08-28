@@ -55,6 +55,7 @@ type TRBSubjectAreaOption string
 const (
 	TRBSubjectAreaOptionAccessControlAndIdentityMgmt   TRBSubjectAreaOption = "ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT"
 	TRBSubjectAreaOptionAccessibilityCompliance        TRBSubjectAreaOption = "ACCESSIBILITY_COMPLIANCE"
+	TRBSubjectAreaOptionArtificialIntelligence         TRBSubjectAreaOption = "ARTIFICIAL_INTELLIGENCE"
 	TRBSubjectAreaOptionAssistanceWithSystemConceptDev TRBSubjectAreaOption = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
 	TRBSubjectAreaOptionBusinessIntelligence           TRBSubjectAreaOption = "BUSINESS_INTELLIGENCE"
 	TRBSubjectAreaOptionCloudMigration                 TRBSubjectAreaOption = "CLOUD_MIGRATION"

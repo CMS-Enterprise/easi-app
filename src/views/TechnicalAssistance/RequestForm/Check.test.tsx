@@ -66,6 +66,7 @@ const mockTrbRequestData: TrbRequest = {
     collabGroupOther: 'Consectetur',
     collabGRBConsultRequested: null,
     subjectAreaOptions: [
+      TRBSubjectAreaOption.ARTIFICIAL_INTELLIGENCE,
       TRBSubjectAreaOption.ACCESSIBILITY_COMPLIANCE,
       TRBSubjectAreaOption.CLOUD_MIGRATION
     ],

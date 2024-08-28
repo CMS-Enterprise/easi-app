@@ -55,6 +55,8 @@ cy.systemIntake = {
         .type('This is my business solution.')
         .should('have.value', 'This is my business solution.');
 
+      cy.get('#usesAiTechTrue').check({ force: true }).should('be.checked');
+
       cy.get('#needsEaSupportFalse')
         .check({ force: true })
         .should('be.checked');

@@ -766,6 +766,7 @@ func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName *string, isS
 		"collabDateOther":                  "Last week",
 		"collabGRBConsultRequested":        true,
 		"subjectAreaOptions": []models.TRBSubjectAreaOption{
+			models.TRBSubjectAreaOptionArtificialIntelligence,
 			models.TRBSubjectAreaOptionAssistanceWithSystemConceptDev,
 			models.TRBSubjectAreaOptionCloudMigration,
 		},
