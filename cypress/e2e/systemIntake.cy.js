@@ -427,4 +427,26 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Back').click();
     cy.wait('@updateRequestDetails');
   });
+
+  it('archives a system intake', () => {
+    cy.visit('/system/making-a-request');
+
+    cy.contains('a', 'Start a new request').click();
+
+    cy.contains('label', 'Add a new system or service').click();
+
+    cy.contains('button', 'Continue').click();
+
+    cy.contains('a', 'Get started').click();
+
+    cy.visit('/');
+
+    cy.contains('a', 'Draft').click();
+
+    cy.contains('button', 'Remove your request').click();
+
+    cy.contains('button', 'Remove request').click();
+
+    cy.url().should('eq', 'http://localhost:3000/');
+  });
 });
