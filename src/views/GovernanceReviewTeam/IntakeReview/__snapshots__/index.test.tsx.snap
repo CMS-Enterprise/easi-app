@@ -511,7 +511,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                       <div
                         class="flex-fill text-no-wrap"
                       >
-                        Upload date
+                        Date added
                       </div>
                       <div
                         class="position-relative width-205 margin-left-05"
