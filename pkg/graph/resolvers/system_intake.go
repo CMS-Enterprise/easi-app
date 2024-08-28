@@ -112,6 +112,7 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.Solution = null.StringFromPtr(input.BusinessSolution)
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
 	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
+	intake.UsesAITech = null.BoolFromPtr(input.UsesAiTech)
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()
