@@ -31,6 +31,8 @@ const (
 	SystemIntakeDocumentCommonTypeMEETINGMINS SystemIntakeDocumentCommonType = "MEETING_MINUTES"
 	// SystemIntakeDocumentCommonTypeRAF means the document is a Request for Add'l Funding
 	SystemIntakeDocumentCommonTypeRAF SystemIntakeDocumentCommonType = "REQUEST_FOR_ADDITIONAL_FUNDING"
+	// SystemIntakeDocumentCommonTypeSoftwareBOM means the document is a Software Bill of Materials
+	SystemIntakeDocumentCommonTypeSoftwareBOM SystemIntakeDocumentCommonType = "SOFTWARE_BILL_OF_MATERIALS"
 	// SystemIntakeDocumentCommonTypeDraftOther means the document is some type other than the common document types
 	SystemIntakeDocumentCommonTypeDraftOther SystemIntakeDocumentCommonType = "OTHER"
 
