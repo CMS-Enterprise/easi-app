@@ -14,7 +14,7 @@ describe('Creating requests from the workspace that are linked to cedar systems'
     cy.get('[data-testid="new-request-trb"]a').click();
     cy.contains('a', 'Start').click();
     cy.contains('button', 'Continue').click();
-    cy.get(`[data-testid="multiselect-tag--${systemName}"]`).should(
+    cy.get(`[data-testid="multiselect-tag--${systemName} (OFW)"]`).should(
       'be.visible'
     );
 
@@ -24,7 +24,7 @@ describe('Creating requests from the workspace that are linked to cedar systems'
     cy.get('#RequestType-NewSystem').check({ force: true });
     cy.contains('button', 'Continue').click();
     cy.contains('a', 'Get started').click();
-    cy.get(`[data-testid="multiselect-tag--${systemName}"]`).should(
+    cy.get(`[data-testid="multiselect-tag--${systemName} (OFW)"]`).should(
       'be.visible'
     );
   });
