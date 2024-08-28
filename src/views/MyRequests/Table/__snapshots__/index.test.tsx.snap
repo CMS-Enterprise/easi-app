@@ -278,7 +278,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
             </td>
             <td
               role="cell"
-              style="width: 150px; padding-left: 0px;"
+              style="width: 250px; padding-left: 0px;"
             />
           </tr>
         </tbody>
