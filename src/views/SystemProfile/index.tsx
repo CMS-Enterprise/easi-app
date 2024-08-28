@@ -47,10 +47,10 @@ import {
   SubpageKey,
   SystemProfileData,
   UrlLocation,
-  UrlLocationTag,
-  UsernameWithRoles
+  UrlLocationTag
 } from 'types/systemProfile';
 import { formatHttpsUrl } from 'utils/formatUrl';
+import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 import { showSystemVal } from 'utils/showVal';
 import NotFound, { NotFoundPartial } from 'views/NotFound';
 import {
@@ -118,34 +118,6 @@ function getLocations(
       tags
     };
   });
-}
-
-/**
- * Get a list of people by their usernames with of a nested list of their Cedar Roles.
- * Assignees appear to be listed in order. The returned list keeps that order.
- */
-export function getUsernamesWithRoles(
-  personRoles: CedarRoleAssigneePerson[]
-): UsernameWithRoles[] {
-  const people: UsernameWithRoles[] = [];
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const role of personRoles) {
-    const { assigneeUsername } = role;
-    if (assigneeUsername) {
-      let person = people.find(
-        p => p.assigneeUsername === role.assigneeUsername
-      );
-      if (!person) {
-        person = { assigneeUsername, roles: [] };
-        people.push(person);
-      }
-
-      person.roles.push(role);
-    }
-  }
-
-  return people;
 }
 
 function getPlannedRetirement(

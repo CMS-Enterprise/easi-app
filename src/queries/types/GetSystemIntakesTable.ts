@@ -129,6 +129,7 @@ export interface GetSystemIntakesTable_systemIntakes {
   notes: GetSystemIntakesTable_systemIntakes_notes[];
   actions: GetSystemIntakesTable_systemIntakes_actions[];
   hasUiChanges: boolean | null;
+  usesAiTech: boolean | null;
   decidedAt: Time | null;
   submittedAt: Time | null;
   updatedAt: Time | null;

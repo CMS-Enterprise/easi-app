@@ -101,6 +101,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			grt_date,
 			grb_date,
 			has_ui_changes,
+			uses_ai_tech,
 			trb_follow_up_recommendation,
 			contract_name,
 			created_at,
@@ -157,6 +158,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:grt_date,
 			:grb_date,
 			:has_ui_changes,
+			:uses_ai_tech,
 			:trb_follow_up_recommendation,
 			:contract_name,
 			:created_at,
@@ -260,6 +262,7 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			admin_lead = :admin_lead,
 			cedar_system_id = :cedar_system_id,
 			has_ui_changes = :has_ui_changes,
+			uses_ai_tech = :uses_ai_tech,
 			trb_follow_up_recommendation = :trb_follow_up_recommendation,
 			contract_name = :contract_name,
 			system_relation_type = :system_relation_type

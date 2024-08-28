@@ -775,6 +775,7 @@ type SystemIntake {
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
+  usesAiTech: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
   requestFormState: SystemIntakeFormState!
   draftBusinessCaseState: SystemIntakeFormState!
@@ -958,6 +959,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   currentStage: String
   cedarSystemId: String
   hasUiChanges: Boolean
+  usesAiTech: Boolean
 }
 
 """
@@ -1937,6 +1939,7 @@ The possible options on the TRB "Subject Areas" page
 enum TRBSubjectAreaOption {
   ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT
   ACCESSIBILITY_COMPLIANCE
+  ARTIFICIAL_INTELLIGENCE
   ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT
   BUSINESS_INTELLIGENCE
   CLOUD_MIGRATION

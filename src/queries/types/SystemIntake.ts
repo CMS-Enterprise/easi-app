@@ -232,6 +232,7 @@ export interface SystemIntake {
   archivedAt: Time | null;
   euaUserId: string | null;
   hasUiChanges: boolean | null;
+  usesAiTech: boolean | null;
   documents: SystemIntake_documents[];
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;
