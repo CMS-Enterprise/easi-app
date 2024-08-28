@@ -1187,6 +1187,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesNull() {
 		UpdateSystemIntakeRequestDetails struct {
 			SystemIntake struct {
 				ID           string
+				UsesAiTech   *bool
 				HasUIChanges *bool
 			}
 		}
@@ -1226,6 +1227,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
 		UpdateSystemIntakeRequestDetails struct {
 			SystemIntake struct {
 				ID           string
+				UsesAiTech   *bool
 				HasUIChanges *bool
 			}
 		}
@@ -1235,10 +1237,12 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
 		`mutation {
 			updateSystemIntakeRequestDetails(input: {
 				id: "%s",
+				usesAiTech: true,
 				hasUiChanges: true,
 			}) {
 				systemIntake {
 					id
+					usesAiTech
 					hasUiChanges
 				}
 			}
