@@ -149,18 +149,14 @@ const RequestLinkForm = ({
   const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
   const [isUnlinkModalOpen, setUnlinkModalOpen] = useState<boolean>(false);
 
-  const getSystemIntakeRelationQuery = useGetSystemIntakeRelationQuery({
-    variables: { id }
-  });
-
-  const getTrbRequestRelationQuery = useGetTrbRequestRelationQuery({
-    variables: { id }
-  });
-
-  const { data, error: relationError, loading: relationLoading } =
+  const query =
     requestType === 'trb'
-      ? getTrbRequestRelationQuery
-      : getSystemIntakeRelationQuery;
+      ? useGetTrbRequestRelationQuery
+      : useGetSystemIntakeRelationQuery;
+
+  const { data, error: relationError, loading: relationLoading } = query({
+    variables: { id }
+  });
 
   const cedarSystemIdOptions = useMemo(() => {
     const cedarSystemsData = data?.cedarSystems;
