@@ -234,23 +234,6 @@ func (s *Server) routes() {
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 	api.Use(requirePrincipalMiddleware)
 
-	systemIntakeHandler := handlers.NewSystemIntakeHandler(
-		base,
-		services.NewArchiveSystemIntake(
-			serviceConfig,
-			store.FetchSystemIntakeByID,
-			store.UpdateSystemIntake,
-			services.NewCloseBusinessCase(
-				serviceConfig,
-				store.FetchBusinessCaseByID,
-				store.UpdateBusinessCase,
-			),
-			services.AuthorizeUserIsIntakeRequester,
-			emailClient.SendWithdrawRequestEmail,
-		),
-	)
-	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
-
 	businessCaseHandler := handlers.NewBusinessCaseHandler(
 		base,
 		services.NewFetchBusinessCaseByID(

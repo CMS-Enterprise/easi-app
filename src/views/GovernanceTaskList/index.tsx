@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
@@ -32,9 +31,10 @@ import {
   SystemIntakeState,
   SystemIntakeStep
 } from 'types/graphql-global-types';
-import { archiveSystemIntake } from 'types/routines';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
+
+import { useArchiveSystemIntakeMutation } from '../../gql/gen/graphql';
 
 import AdditionalRequestInfo from './AdditionalRequestInfo';
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
@@ -49,7 +49,6 @@ function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('itGov');
   const history = useHistory();
-  const dispatch = useDispatch();
 
   const { showMessageOnNextPage } = useMessage();
 
@@ -64,10 +63,16 @@ function GovernanceTaskList() {
     }
   });
 
+  const [archive] = useArchiveSystemIntakeMutation({
+    variables: {
+      id: systemId
+    }
+  });
+
   const systemIntake = data?.systemIntake;
   const requestName = systemIntake?.requestName;
 
-  const archiveIntake = () => {
+  const archiveIntake = async () => {
     const redirect = () => {
       const message = t('taskList:withdraw_modal.confirmationText', {
         context: requestName ? 'name' : 'noName',
@@ -76,7 +81,9 @@ function GovernanceTaskList() {
       showMessageOnNextPage(message, { type: 'success' });
       history.push('/');
     };
-    dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
+
+    await archive();
+    redirect();
   };
 
   const isClosed = systemIntake?.state === SystemIntakeState.CLOSED;
