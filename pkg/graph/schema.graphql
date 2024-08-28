@@ -1783,9 +1783,10 @@ type SystemIntakeDocument {
   status: SystemIntakeDocumentStatus!
   version: SystemIntakeDocumentVersion!
   uploadedAt: Time!
-  url: String!
+  url: String
   canDelete: Boolean!
   canView: Boolean!
+  systemIntakeId: UUID!
 }
 
 """

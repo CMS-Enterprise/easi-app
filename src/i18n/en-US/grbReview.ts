@@ -46,6 +46,23 @@ export default {
   viewIntakeRequest: 'View Intake Request',
   viewOtherDocuments: 'View other supporting documents',
   addGrbReviewer: 'Add a GRB reviewer',
+  supportingDocuments: 'Supporting Documents',
+  supportingDocumentsText:
+    'The documents below will help the GRB review this IT Governance request, and were completed during the course of this IT Governance request or were added by the requester and/or the Governance Admin Team. You may add additional documents and may remove any that have been added by Governance Admin Team members.',
+  businessCaseOverview: {
+    title: 'Business Case Overview',
+    submitted: 'Last Updated',
+    need: 'Business or user need',
+    preferredSolution: 'Preferred solution: Summary',
+    noSolution: 'No answer added.',
+    linkToBusinessCase: 'View full Business Case',
+    unsubmittedAlertText: 'There is not yet a Business Case for this request.'
+  },
+  additionalDocuments: 'Additional documents',
+  additionalDocsLink: 'Add another supporting document',
+  documentsIntakeLinkTitle: 'EASi Intake Request form',
+  documentsIntakeLinkText: 'View in EASi',
+  documentsIntakeSubmitted: 'submitted',
   participantsTable: {
     name: 'Name',
     votingRole: 'Voting role',

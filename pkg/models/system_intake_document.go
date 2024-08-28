@@ -48,18 +48,18 @@ const (
 // SystemIntakeDocument represents a document attached to a system intake that has been uploaded to S3
 type SystemIntakeDocument struct {
 	BaseStruct
-	SystemIntakeRequestID uuid.UUID                      `json:"systemIntakeId" db:"system_intake_id"`
-	CommonDocumentType    SystemIntakeDocumentCommonType `db:"document_type"`
-	Version               SystemIntakeDocumentVersion    `db:"document_version" json:"version"`
-	OtherType             string                         `db:"other_type"`
-	FileName              string                         `json:"fileName" db:"file_name"`
-	Bucket                string                         `json:"bucket" db:"bucket"`
-	S3Key                 string                         `json:"s3Key" db:"s3_key"` // The document's key inside an S3 bucket; does *not* include the bucket name.
-	UploaderRole          DocumentUploaderRole           `json:"uploaderRole" db:"uploader_role"`
+	SystemIntakeID     uuid.UUID                      `json:"systemIntakeId" db:"system_intake_id"`
+	CommonDocumentType SystemIntakeDocumentCommonType `db:"document_type"`
+	Version            SystemIntakeDocumentVersion    `db:"document_version" json:"version"`
+	OtherType          string                         `db:"other_type"`
+	FileName           string                         `json:"fileName" db:"file_name"`
+	Bucket             string                         `json:"bucket" db:"bucket"`
+	S3Key              string                         `json:"s3Key" db:"s3_key"` // The document's key inside an S3 bucket; does *not* include the bucket name.
+	UploaderRole       DocumentUploaderRole           `json:"uploaderRole" db:"uploader_role"`
 }
 
 func (d SystemIntakeDocument) GetMappingKey() uuid.UUID {
-	return d.SystemIntakeRequestID
+	return d.SystemIntakeID
 }
 func (d SystemIntakeDocument) GetMappingVal() *SystemIntakeDocument {
 	return &d

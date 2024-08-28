@@ -10,7 +10,7 @@
 export interface GetSystemIntakeDocumentUrls_systemIntake_documents {
   __typename: "SystemIntakeDocument";
   id: UUID;
-  url: string;
+  url: string | null;
   fileName: string;
 }
 

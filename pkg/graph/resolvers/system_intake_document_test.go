@@ -29,13 +29,13 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 
 	// Create a document
 	documentToCreate := &models.SystemIntakeDocument{
-		SystemIntakeRequestID: intake.ID,
-		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftIGCE,
-		Version:               models.SystemIntakeDocumentVersionHISTORICAL,
-		FileName:              "create_and_get.pdf",
-		Bucket:                "bukkit",
-		S3Key:                 uuid.NewString(),
-		UploaderRole:          models.RequesterUploaderRole,
+		SystemIntakeID:     intake.ID,
+		CommonDocumentType: models.SystemIntakeDocumentCommonTypeDraftIGCE,
+		Version:            models.SystemIntakeDocumentVersionHISTORICAL,
+		FileName:           "create_and_get.pdf",
+		Bucket:             "bukkit",
+		S3Key:              uuid.NewString(),
+		UploaderRole:       models.RequesterUploaderRole,
 	}
 	// documentToCreate.CreatedBy will be set based on principal in test config
 
@@ -70,7 +70,7 @@ func createSystemIntakeDocumentSubtest(s *ResolverSuite, systemIntakeID uuid.UUI
 	encodedFileContent := easiencoding.EncodeBase64String(testContents)
 	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
 	gqlInput := models.CreateSystemIntakeDocumentInput{
-		RequestID:            documentToCreate.SystemIntakeRequestID,
+		RequestID:            documentToCreate.SystemIntakeID,
 		DocumentType:         documentToCreate.CommonDocumentType,
 		Version:              documentToCreate.Version,
 		OtherTypeDescription: &documentToCreate.OtherType,
@@ -106,16 +106,16 @@ func getSystemIntakeDocumentsByRequestIDSubtest(s *ResolverSuite, systemIntakeID
 	fetchedDocument := documents[0]
 	s.NotNil(fetchedDocument)
 
-	checkSystemIntakeDocumentEquality(s, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeRequestID, fetchedDocument)
+	checkSystemIntakeDocumentEquality(s, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeID, fetchedDocument)
 	// TODO - try downloading fetchedDocument.URL? compare content to fileToUpload from create subtest?
 }
 
 func deleteSystemIntakeDocumentSubtest(s *ResolverSuite, createdDocument *models.SystemIntakeDocument) {
 	deletedDocument, err := DeleteSystemIntakeDocument(s.testConfigs.Context, s.testConfigs.Store, createdDocument.ID)
 	s.NoError(err)
-	checkSystemIntakeDocumentEquality(s, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeRequestID, deletedDocument)
+	checkSystemIntakeDocumentEquality(s, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeID, deletedDocument)
 
-	remainingDocuments, err := GetSystemIntakeDocumentsByRequestID(s.ctxWithNewDataloaders(), createdDocument.SystemIntakeRequestID)
+	remainingDocuments, err := GetSystemIntakeDocumentsByRequestID(s.ctxWithNewDataloaders(), createdDocument.SystemIntakeID)
 	s.NoError(err)
 	s.Equal(0, len(remainingDocuments))
 }
@@ -135,7 +135,7 @@ func checkSystemIntakeDocumentEquality(
 	suite.Nil(actualDocument.ModifiedAt)
 
 	// SystemIntakeDocument-specific fields
-	suite.EqualValues(expectedSystemIntakeID, actualDocument.SystemIntakeRequestID)
+	suite.EqualValues(expectedSystemIntakeID, actualDocument.SystemIntakeID)
 	suite.EqualValues(expectedDocument.CommonDocumentType, actualDocument.CommonDocumentType)
 	suite.EqualValues(expectedDocument.OtherType, actualDocument.OtherType)
 	suite.EqualValues(expectedDocument.FileName, actualDocument.FileName)

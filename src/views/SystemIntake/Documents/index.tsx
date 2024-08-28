@@ -70,7 +70,10 @@ const Documents = ({ systemIntake }: DocumentsProps) => {
         )}
       </Button>
 
-      <DocumentsTable systemIntake={systemIntake} />
+      <DocumentsTable
+        systemIntakeId={systemIntake.id}
+        documents={systemIntake.documents}
+      />
 
       <Pager
         className="margin-top-6 margin-bottom-8"

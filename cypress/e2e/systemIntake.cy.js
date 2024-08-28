@@ -298,7 +298,7 @@ describe('The System Intake Form', () => {
 
     // Delete first document
     cy.contains('button', 'Remove').click();
-    cy.contains('h3', 'Confirm you want to remove test.pdf.');
+    cy.contains('h3', 'Remove test.pdf?');
     cy.contains('button', 'Remove document').click();
 
     cy.contains(
