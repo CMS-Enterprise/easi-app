@@ -136,7 +136,7 @@ describe('Governance Review Team', () => {
         >
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/:reviewerType(it-governance)/:systemId/intake-request">
+              <Route path="/it-governance/:systemId/intake-request">
                 <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
@@ -158,7 +158,7 @@ describe('Governance Review Team', () => {
         <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/:reviewerType(it-governance)/:systemId/business-case">
+              <Route path="/it-governance/:systemId/business-case">
                 <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
@@ -185,7 +185,7 @@ describe('Governance Review Team', () => {
         >
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/:reviewerType(it-governance)/:systemId/notes">
+              <Route path="/it-governance/:systemId/notes">
                 <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
@@ -204,7 +204,7 @@ describe('Governance Review Team', () => {
         <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/:reviewerType(it-governance)/:systemId/dates">
+              <Route path="/it-governance/:systemId/dates">
                 <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
@@ -224,7 +224,7 @@ describe('Governance Review Team', () => {
         <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/:reviewerType(it-governance)/:systemId/decision">
+              <Route path="/it-governance/:systemId/decision">
                 <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
@@ -246,7 +246,7 @@ describe('Governance Review Team', () => {
         >
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/:reviewerType(it-governance)/:systemId/actions">
+              <Route path="/it-governance/:systemId/actions">
                 <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
@@ -270,7 +270,7 @@ describe('Governance Review Board', () => {
         >
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/:reviewerType(it-governance)/:systemId/intake-request">
+              <Route path="/it-governance/:systemId/intake-request">
                 <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
