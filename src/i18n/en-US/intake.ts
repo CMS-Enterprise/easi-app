@@ -28,6 +28,7 @@ const type: Record<SystemIntakeDocumentCommonType, string> = {
   ACQUISITION_PLAN_OR_STRATEGY:
     'Acquisition Plan (AP) or Acquisition Strategy (AS)',
   REQUEST_FOR_ADDITIONAL_FUNDING: 'Request for Additional Funding (RAF)',
+  SOFTWARE_BILL_OF_MATERIALS: 'Software Bill of Materials (BOM)',
   MEETING_MINUTES: 'Meeting Minutes',
   OTHER: 'Other'
 };
@@ -37,6 +38,7 @@ export const abbreviatedType: Record<SystemIntakeDocumentCommonType, string> = {
   DRAFT_IGCE: 'Draft IGCE',
   ACQUISITION_PLAN_OR_STRATEGY: 'AP or AS',
   REQUEST_FOR_ADDITIONAL_FUNDING: 'RAF',
+  SOFTWARE_BILL_OF_MATERIALS: 'Software BOM',
   MEETING_MINUTES: 'Meeting Minutes',
   OTHER: 'Other'
 };
