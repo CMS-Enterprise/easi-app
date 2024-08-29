@@ -62,6 +62,10 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.currentStage')
   },
   {
+    key: 'usesAiTech',
+    label: t('intake:csvHeadings.usesAiTech')
+  },
+  {
     key: 'needsEaSupport',
     label: t('intake:csvHeadings.eaSupport')
   },

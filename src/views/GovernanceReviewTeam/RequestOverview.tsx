@@ -235,6 +235,7 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
                     render={() => (
                       <GRBReview
                         {...systemIntake}
+                        businessCase={businessCase}
                         grbReviewers={grbReviewers}
                       />
                     )}

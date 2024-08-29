@@ -1,25 +1,25 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CellProps, Column, useSortBy, useTable } from 'react-table';
-import { useLazyQuery, useMutation } from '@apollo/client';
-import { Alert, Button, Table } from '@trussworks/react-uswds';
+import {
+  CellProps,
+  Column,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
+import { useMutation } from '@apollo/client';
+import { Button, Table } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
+import TablePageSize from 'components/TablePageSize';
+import TablePagination from 'components/TablePagination';
 import useMessage from 'hooks/useMessage';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
-import {
-  DeleteSystemIntakeDocumentQuery,
-  GetSystemIntakeDocumentUrlsQuery
-} from 'queries/SystemIntakeDocumentQueries';
+import { DeleteSystemIntakeDocumentQuery } from 'queries/SystemIntakeDocumentQueries';
 import {
   DeleteSystemIntakeDocument,
   DeleteSystemIntakeDocumentVariables
 } from 'queries/types/DeleteSystemIntakeDocument';
-import {
-  GetSystemIntakeDocumentUrls,
-  GetSystemIntakeDocumentUrlsVariables
-} from 'queries/types/GetSystemIntakeDocumentUrls';
-import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import {
   SystemIntakeDocumentCommonType,
@@ -29,25 +29,15 @@ import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
-import './index.scss';
-
 type DocumentsTableProps = {
-  systemIntake: SystemIntake;
-  /**
-   * Whether to show remove document button in table
-   *
-   * Defaults to true
-   */
-  canEdit?: boolean;
+  systemIntakeId: string;
+  documents: SystemIntakeDocument[];
 };
 
 /**
  * System intake document upload form step
  */
-const DocumentsTable = ({
-  systemIntake,
-  canEdit = true
-}: DocumentsTableProps) => {
+const DocumentsTable = ({ systemIntakeId, documents }: DocumentsTableProps) => {
   const { t } = useTranslation();
 
   const { showMessage } = useMessage();
@@ -55,17 +45,6 @@ const DocumentsTable = ({
   const [fileToDelete, setFileToDelete] = useState<SystemIntakeDocument | null>(
     null
   );
-
-  const { id: systemIntakeID, documents } = systemIntake;
-
-  const [getDocumentUrls, { loading: documentUrlsLoading }] = useLazyQuery<
-    GetSystemIntakeDocumentUrls,
-    GetSystemIntakeDocumentUrlsVariables
-  >(GetSystemIntakeDocumentUrlsQuery, {
-    variables: {
-      id: systemIntakeID
-    }
-  });
 
   const [deleteDocument] = useMutation<
     DeleteSystemIntakeDocument,
@@ -75,51 +54,20 @@ const DocumentsTable = ({
       {
         query: GetSystemIntakeQuery,
         variables: {
-          id: systemIntake.id
+          id: systemIntakeId
         }
       }
     ]
   });
 
   const columns = useMemo<Column<SystemIntakeDocument>[]>(() => {
-    const getUrlForDocument = (documentId: string, documentName: string) => {
-      getDocumentUrls().then(response => {
-        if (response.error || !response.data || !response.data.systemIntake) {
-          // if response.data is falsy, that's effectively an error; there's no URL to use to download the file
-          // similarly, if no systemIntake is returned, there's no URL info to use
-          showMessage(
-            <Alert type="error" className="margin-top-3">
-              {t('technicalAssistance:documents.viewFail', {
-                documentName
-              })}
-            </Alert>
-          );
-        } else {
-          // Download document
-          const requestedDocument = response.data.systemIntake.documents.find(
-            doc => doc.id === documentId
-          )!; // non-null assertion should be safe, this function should only be called with a documentId of a valid document
-          downloadFileFromURL(
-            requestedDocument.url,
-            requestedDocument.fileName
-          );
-        }
-      });
-      // don't need to call .catch(); apollo-client will always fulfill the promise, even if there's a network error
-      // both network errors and GraphQL errors will set response.error - see https://www.apollographql.com/docs/react/data/error-handling/
-    };
-
     return [
       {
-        Header: t<string>(
-          'technicalAssistance:documents.table.header.fileName'
-        ),
+        Header: t<string>('intake:documents.table.fileName'),
         accessor: 'fileName'
       },
       {
-        Header: t<string>(
-          'technicalAssistance:documents.table.header.documentType'
-        ),
+        Header: t<string>('intake:documents.table.docType'),
         accessor: ({ documentType: { commonType, otherTypeDescription } }) => {
           if (commonType === SystemIntakeDocumentCommonType.OTHER) {
             return otherTypeDescription || '';
@@ -130,13 +78,7 @@ const DocumentsTable = ({
           const { version } = row.original;
           return (
             <>
-              <p>
-                {
-                  row.values[
-                    t('technicalAssistance:documents.table.header.documentType')
-                  ]
-                }
-              </p>
+              <p>{row.values[t('intake:documents.table.docType')]}</p>
               <p className="text-base font-sans-2xs">
                 {t(`intake:documents.version.${version}`)}
               </p>
@@ -145,14 +87,12 @@ const DocumentsTable = ({
         }
       },
       {
-        Header: t<string>(
-          'technicalAssistance:documents.table.header.uploadDate'
-        ),
+        Header: t<string>('intake:documents.table.dateAdded'),
         accessor: 'uploadedAt',
         Cell: ({ value }) => formatDateLocal(value, 'MM/dd/yyyy')
       },
       {
-        Header: t<string>('technicalAssistance:documents.table.header.actions'),
+        Header: t<string>('intake:documents.table.actions'),
         accessor: ({ status }) => {
           // Repurpose the accessor to use `status` for sorting order
           if (status === SystemIntakeDocumentStatus.PENDING) return 1;
@@ -173,34 +113,44 @@ const DocumentsTable = ({
           // View or Remove
           if (row.original.status === SystemIntakeDocumentStatus.AVAILABLE) {
             // Show some file actions once it's available
-            const documentId = row.original.id;
-            const documentName = row.original.fileName;
+            const {
+              fileName: documentName,
+              canView,
+              canDelete,
+              url: documentUrl
+            } = row.original;
+
             return (
-              <>
-                {/* View document */}
-                <Button
-                  type="button"
-                  unstyled
-                  onClick={() => getUrlForDocument(documentId, documentName)}
-                  disabled={documentUrlsLoading}
-                >
-                  {t('technicalAssistance:documents.table.view')}
-                </Button>
+              <div className="display-flex flex-row">
+                {
+                  /* View document */
+                  canView && (
+                    <Button
+                      type="button"
+                      unstyled
+                      onClick={() =>
+                        downloadFileFromURL(documentUrl, documentName)
+                      }
+                    >
+                      {t('intake:documents.table.downloadBtn')}
+                    </Button>
+                  )
+                }
 
                 {
                   /* Delete document */
-                  canEdit && (
+                  canDelete && (
                     <Button
                       unstyled
                       type="button"
                       className="margin-left-2 text-error"
                       onClick={() => setFileToDelete(row.original)}
                     >
-                      {t('technicalAssistance:documents.table.remove')}
+                      {t('intake:documents.table.removeBtn')}
                     </Button>
                   )
                 }
-              </>
+              </div>
             );
           }
           // Infected unavailable
@@ -211,78 +161,71 @@ const DocumentsTable = ({
         }
       }
     ];
-  }, [t, getDocumentUrls, showMessage, documentUrlsLoading, canEdit]);
+  }, [t]);
 
-  const {
-    getTableBodyProps,
-    getTableProps,
-    headerGroups,
-    prepareRow,
-    rows
-  } = useTable(
+  const table = useTable(
     {
       columns,
       data: documents,
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'uploadedAt', desc: true }], [])
+        sortBy: useMemo(() => [{ id: 'uploadedAt', desc: true }], []),
+        pageIndex: 0,
+        pageSize: 5
       }
     },
-    useSortBy
+    useSortBy,
+    usePagination
   );
+
+  const {
+    getTableBodyProps,
+    getTableProps,
+    headerGroups,
+    prepareRow,
+    page,
+    rows,
+    setPageSize
+  } = table;
 
   const ConfirmDeleteModal = () => {
     if (!fileToDelete) return null;
     return (
       <Modal isOpen={!!fileToDelete} closeModal={() => setFileToDelete(null)}>
         <h3 className="margin-top-0 margin-bottom-0">
-          {t(
-            'technicalAssistance:documents.supportingDocuments.removeHeading',
-            {
-              documentName: fileToDelete.fileName
-            }
-          )}
+          {t('intake:documents.table.removeModal.heading', {
+            documentName: fileToDelete.fileName
+          })}
         </h3>
 
-        <p>
-          {t('technicalAssistance:documents.supportingDocuments.removeInfo')}
-        </p>
+        <p>{t('intake:documents.table.removeModal.explanation')}</p>
 
         <Button
           type="button"
+          secondary
           onClick={() => {
             deleteDocument({ variables: { id: fileToDelete.id } })
               .then(() => {
                 showMessage(
-                  t(
-                    'technicalAssistance:documents.supportingDocuments.removeSuccess',
-                    {
-                      documentName: fileToDelete.fileName
-                    }
-                  ),
+                  t('intake:documents.table.removeModal.success', {
+                    documentName: fileToDelete.fileName
+                  }),
                   {
                     type: 'success'
                   }
                 );
               })
               .catch(() => {
-                showMessage(
-                  t(
-                    'technicalAssistance:documents.supportingDocuments.removeFail'
-                  ),
-                  {
-                    type: 'error'
-                  }
-                );
+                showMessage(t('intake:documents.table.removeModal.error'), {
+                  type: 'error'
+                });
               });
 
             setFileToDelete(null);
           }}
         >
-          {t(
-            'technicalAssistance:documents.supportingDocuments.removeDocument'
-          )}
+          {t('intake:documents.table.removeModal.confirm')}
         </Button>
 
         <Button
@@ -291,7 +234,7 @@ const DocumentsTable = ({
           unstyled
           onClick={() => setFileToDelete(null)}
         >
-          {t('technicalAssistance:documents.supportingDocuments.cancel')}
+          {t('intake:documents.table.removeModal.cancel')}
         </Button>
       </Modal>
     );
@@ -305,7 +248,7 @@ const DocumentsTable = ({
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) => (
+              {headerGroup.headers.map(column => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
@@ -331,13 +274,15 @@ const DocumentsTable = ({
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {page.map(row => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
-                {row.cells.map((cell, index) => {
+                {row.cells.map(cell => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td className="text-ttop" {...cell.getCellProps()}>
+                      {cell.render('Cell')}
+                    </td>
                   );
                 })}
               </tr>
@@ -345,7 +290,22 @@ const DocumentsTable = ({
           })}
         </tbody>
       </Table>
-
+      {rows.length > 5 && (
+        <div className="display-flex flex-row flex-justify-between">
+          <TablePagination
+            {...table}
+            pageIndex={table.state.pageIndex}
+            pageSize={table.state.pageSize}
+            page={[]}
+            className="desktop:grid-col-fill desktop:padding-bottom-0"
+          />
+          <TablePageSize
+            className="desktop:grid-col-auto"
+            pageSize={table.state.pageSize}
+            setPageSize={setPageSize}
+          />
+        </div>
+      )}
       {!documents.length && <p>{t('intake:documents.noDocuments')}</p>}
     </div>
   );

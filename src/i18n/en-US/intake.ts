@@ -92,7 +92,25 @@ const intake = {
     supportedFileTypes: 'Select a PDF, DOC, DOCX, XLS, or XLSX',
     type,
     abbreviatedType,
-    version
+    version,
+    table: {
+      fileName: 'File name',
+      docType: 'Document type',
+      dateAdded: 'Date added',
+      actions: 'Actions',
+      downloadBtn: 'Download',
+      removeBtn: 'Remove',
+      removeModal: {
+        heading: 'Remove {{documentName}}?',
+        explanation:
+          'You will not be able to access this document after it is removed, and GRB reviewers will not be able to view it.',
+        confirm: 'Remove document',
+        cancel: 'Cancel',
+        success: 'You have successfully removed {{documentName}}.',
+        error:
+          'There was an issue removing your document. Please try again, and if the problem persists, try again later.'
+      }
+    }
   },
   submission: {
     confirmation: {
@@ -156,6 +174,7 @@ const intake = {
     businessNeed: 'Business Need',
     businessSolution: 'Business Solution',
     currentStage: 'Process Status',
+    usesAiTech: 'AI Tech Involved',
     eaSupport: 'EA Support Requested',
     hasUiChanges: 'Interface Component/Changes',
     isExpectingCostIncrease: 'Expecting Cost Increase',
@@ -287,6 +306,9 @@ const intake = {
     currentStage: 'Where are you in the process?',
     currentStageHelpText:
       'This helps the governance team provide the right type of guidance for your request',
+    usesAiTech: 'Does your request involve AI technologies?',
+    usesAiTechHelpText:
+      'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
     needsEaSupport: 'Does your request need Enterprise Architecture support?',
     needsEaSupportHelpText:
       'If you are unsure, mark "Yes" and someone from the EA team will assess your needs.',
@@ -369,6 +391,7 @@ const intake = {
     businessNeed: 'What is your business need?',
     solving: 'How are you thinking of solving it?',
     process: 'Where are you in the process?',
+    usesAiTech: 'Does your request involve AI technologies?',
     eaSupport: 'Do you need Enterprise Architecture (EA) support?',
     hasUiChanges:
       'Does your project involve any user interface component, or changes to an interface component?',

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Controller, FieldPath } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
@@ -9,6 +9,7 @@ import {
   Dropdown,
   Fieldset,
   Form,
+  Link as UswdsLink,
   Radio,
   Textarea,
   TextInput
@@ -28,6 +29,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import processStages from 'constants/enums/processStages';
+import { CMS_AI_EMAIL, CMS_TRB_EMAIL } from 'constants/externalUrls';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
 import { SystemIntake } from 'queries/types/SystemIntake';
@@ -47,6 +49,7 @@ type RequestDetailsForm = {
   currentStage: string;
   needsEaSupport: boolean | null;
   hasUiChanges: boolean | null;
+  usesAiTech: boolean | null;
 };
 
 type RequestDetailsProps = {
@@ -63,7 +66,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     businessSolution,
     currentStage,
     needsEaSupport,
-    hasUiChanges
+    hasUiChanges,
+    usesAiTech
   } = systemIntake;
 
   const history = useHistory();
@@ -84,7 +88,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       businessSolution: businessSolution || '',
       currentStage: currentStage || '',
       needsEaSupport,
-      hasUiChanges
+      hasUiChanges,
+      usesAiTech
     }
   });
 
@@ -297,6 +302,66 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               </option>
             ))}
           </Dropdown>
+        </FieldGroup>
+
+        <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>
+          <Fieldset>
+            <legend className="text-bold">
+              {t('requestDetails.usesAiTech')}
+            </legend>
+            <HelpText id="usesAiTechHelpText" className="margin-top-1">
+              <Trans
+                i18nKey="intake:requestDetails.usesAiTechHelpText"
+                components={{
+                  aiEmail: (
+                    <UswdsLink href={`mailto:${CMS_AI_EMAIL}`}> </UswdsLink>
+                  ),
+                  trbEmail: (
+                    <UswdsLink href={`mailto:${CMS_TRB_EMAIL}`}> </UswdsLink>
+                  )
+                }}
+              />
+            </HelpText>
+            <ErrorMessage
+              errors={errors}
+              name="usesAiTech"
+              as={FieldErrorMsg}
+            />
+
+            <Controller
+              control={control}
+              name="usesAiTech"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  checked={field.value === true}
+                  id="usesAiTechTrue"
+                  label={t('Yes')}
+                  onChange={() => field.onChange(true)}
+                  value="true"
+                  aria-describedby="usesAiTechHelpText"
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="usesAiTech"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  checked={field.value === false}
+                  id="usesAiTechFalse"
+                  label={t('No')}
+                  onChange={() => field.onChange(false)}
+                  value="true"
+                  aria-describedby="usesAiTechHelpText"
+                />
+              )}
+            />
+          </Fieldset>
         </FieldGroup>
 
         <FieldGroup

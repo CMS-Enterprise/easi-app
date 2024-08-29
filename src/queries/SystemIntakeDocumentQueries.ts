@@ -12,6 +12,9 @@ export const SystemIntakeDocument = gql`
     status
     uploadedAt
     url
+    canView
+    canDelete
+    systemIntakeId
   }
 `;
 

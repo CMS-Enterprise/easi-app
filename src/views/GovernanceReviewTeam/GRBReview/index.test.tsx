@@ -7,6 +7,7 @@ import {
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/gen/graphql';
 
+import { businessCase } from 'data/mock/businessCase';
 import { systemIntake } from 'data/mock/systemIntake';
 import users from 'data/mock/users';
 import { MessageProvider } from 'hooks/useMessage';
@@ -39,7 +40,11 @@ describe('GRB review tab', () => {
         <VerboseMockedProvider>
           <MessageProvider>
             <ITGovAdminContext.Provider value={false}>
-              <GRBReview {...systemIntake} grbReviewers={[]} />
+              <GRBReview
+                {...systemIntake}
+                businessCase={businessCase}
+                grbReviewers={[]}
+              />
             </ITGovAdminContext.Provider>
           </MessageProvider>
         </VerboseMockedProvider>
@@ -57,7 +62,11 @@ describe('GRB review tab', () => {
         <VerboseMockedProvider>
           <MessageProvider>
             <ITGovAdminContext.Provider value>
-              <GRBReview {...systemIntake} grbReviewers={[]} />
+              <GRBReview
+                {...systemIntake}
+                businessCase={businessCase}
+                grbReviewers={[]}
+              />
             </ITGovAdminContext.Provider>
           </MessageProvider>
         </VerboseMockedProvider>
@@ -76,7 +85,11 @@ describe('GRB review tab', () => {
           <VerboseMockedProvider>
             <MessageProvider>
               <ITGovAdminContext.Provider value>
-                <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewers={[grbReviewer]}
+                />
               </ITGovAdminContext.Provider>
             </MessageProvider>
           </VerboseMockedProvider>
@@ -96,7 +109,11 @@ describe('GRB review tab', () => {
           <VerboseMockedProvider>
             <MessageProvider>
               <ITGovAdminContext.Provider value={false}>
-                <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewers={[grbReviewer]}
+                />
               </ITGovAdminContext.Provider>
             </MessageProvider>
           </VerboseMockedProvider>

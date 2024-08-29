@@ -311,6 +311,14 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
+            <DescriptionTerm term={t('review.usesAiTech')} />
+            <DescriptionDefinition
+              definition={convertBoolToYesNo(systemIntake.usesAiTech)}
+            />
+          </div>
+        </ReviewRow>
+        <ReviewRow>
+          <div>
             <DescriptionTerm term={t('review.eaSupport')} />
             <DescriptionDefinition
               definition={convertBoolToYesNo(systemIntake.needsEaSupport)}
@@ -403,7 +411,10 @@ export const SystemIntakeReview = ({
 
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">{t('review.documents')}</h2>
-      <DocumentsTable systemIntake={systemIntake} />
+      <DocumentsTable
+        systemIntakeId={systemIntake.id}
+        documents={systemIntake.documents}
+      />
     </div>
   );
 };

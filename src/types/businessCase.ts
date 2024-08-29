@@ -69,6 +69,7 @@ export type BusinessCaseModel = GeneralRequestInfoForm &
     status: BusinessCaseStatus;
     systemIntakeId: string;
     createdAt: string;
+    updatedAt: string;
   };
 
 export type BusinessCasesState = {

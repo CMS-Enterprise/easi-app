@@ -128,7 +128,10 @@ export interface GetSystemIntake_systemIntake_documents {
   version: SystemIntakeDocumentVersion;
   status: SystemIntakeDocumentStatus;
   uploadedAt: Time;
-  url: string;
+  url: string | null;
+  canView: boolean;
+  canDelete: boolean;
+  systemIntakeId: UUID;
 }
 
 export interface GetSystemIntake_systemIntake_systems_businessOwnerRoles {
@@ -232,6 +235,7 @@ export interface GetSystemIntake_systemIntake {
   archivedAt: Time | null;
   euaUserId: string | null;
   hasUiChanges: boolean | null;
+  usesAiTech: boolean | null;
   documents: GetSystemIntake_systemIntake_documents[];
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;

@@ -100,6 +100,7 @@ export default gql`
       }
 
       hasUiChanges
+      usesAiTech
 
       decidedAt
       submittedAt

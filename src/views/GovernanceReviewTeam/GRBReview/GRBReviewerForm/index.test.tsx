@@ -17,6 +17,7 @@ import {
   UpdateSystemIntakeGRBReviewerMutationVariables
 } from 'gql/gen/graphql';
 
+import { businessCase } from 'data/mock/businessCase';
 import { systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
@@ -162,14 +163,22 @@ describe('GRB reviewer form', () => {
           ]}
         >
           <MessageProvider>
-            <Route path="/:reviewerType/:systemId/grb-review/:action">
+            <Route path="/it-governance/:systemId/grb-review/:action">
               <ITGovAdminContext.Provider value>
-                <GRBReview {...systemIntake} grbReviewers={[]} />
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewers={[]}
+                />
               </ITGovAdminContext.Provider>
             </Route>
-            <Route path="/:reviewerType/:systemId/grb-review">
+            <Route path="/it-governance/:systemId/grb-review">
               <ITGovAdminContext.Provider value>
-                <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewers={[grbReviewer]}
+                />
               </ITGovAdminContext.Provider>
             </Route>
           </MessageProvider>
@@ -233,15 +242,20 @@ describe('GRB reviewer form', () => {
           ]}
         >
           <MessageProvider>
-            <Route path="/:reviewerType/:systemId/grb-review/:action">
-              <ITGovAdminContext.Provider value>
-                <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
-              </ITGovAdminContext.Provider>
-            </Route>
-            <Route path="/:reviewerType/:systemId/grb-review">
+            <Route path="/it-governance/:systemId/grb-review/:action">
               <ITGovAdminContext.Provider value>
                 <GRBReview
                   {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewers={[grbReviewer]}
+                />
+              </ITGovAdminContext.Provider>
+            </Route>
+            <Route path="/it-governance/:systemId/grb-review">
+              <ITGovAdminContext.Provider value>
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
                   grbReviewers={[updatedGRBReviewer]}
                 />
               </ITGovAdminContext.Provider>
