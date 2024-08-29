@@ -56,7 +56,7 @@ describe('System Card Componenet', () => {
     const { getByText } = render(
       <MemoryRouter
         initialEntries={[
-          '/governance-review-team/a5689bec-e4cf-4f2b-a7de-72020e8d65be/additional-information'
+          '/it-governance/a5689bec-e4cf-4f2b-a7de-72020e8d65be/additional-information'
         ]}
       >
         <SystemCard
@@ -81,7 +81,7 @@ describe('System Card Componenet', () => {
     const { getByText, getByTestId } = render(
       <MemoryRouter
         initialEntries={[
-          '/governance-review-team/a5689bec-e4cf-4f2b-a7de-72020e8d65be/additional-information'
+          '/it-governance/a5689bec-e4cf-4f2b-a7de-72020e8d65be/additional-information'
         ]}
       >
         <SystemCardTable systems={systems} />
@@ -98,7 +98,7 @@ describe('System Card Componenet', () => {
     const { getByText, queryAllByTestId } = render(
       <MemoryRouter
         initialEntries={[
-          '/governance-review-team/a5689bec-e4cf-4f2b-a7de-72020e8d65be/additional-information'
+          '/it-governance/a5689bec-e4cf-4f2b-a7de-72020e8d65be/additional-information'
         ]}
       >
         {' '}
@@ -116,7 +116,7 @@ describe('System Card Componenet', () => {
     const { asFragment } = render(
       <MemoryRouter
         initialEntries={[
-          '/governance-review-team/a5689bec-e4cf-4f2b-a7de-72020e8d65be/additional-information'
+          '/it-governance/a5689bec-e4cf-4f2b-a7de-72020e8d65be/additional-information'
         ]}
       >
         {' '}

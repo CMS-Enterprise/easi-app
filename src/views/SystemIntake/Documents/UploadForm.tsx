@@ -91,7 +91,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
   const requestDetailsLink =
     type === 'requester'
       ? `/system/${systemId}/documents`
-      : `/governance-review-team/${systemId}/grb-review`;
+      : `/it-governance/${systemId}/grb-review`;
 
   const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
     const newFile = await fileToBase64File(formData.fileData);

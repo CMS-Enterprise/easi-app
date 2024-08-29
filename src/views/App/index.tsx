@@ -82,10 +82,8 @@ const AppRoutes = () => {
       <SecureRoute path="/my-requests" component={MyRequests} />
 
       {/* GRT/GRB Routes */}
-      <SecureRoute
-        path="/(governance-review-team|governance-review-board)/:id"
-        component={GovernanceReviewTeam}
-      />
+      <Redirect from="/governance-review-team/*" to="/it-governance/*" />
+      <SecureRoute path="/it-governance/:id" component={GovernanceReviewTeam} />
 
       {/* Requester / Business Owner Routes */}
       <SecureRoute path="/system/making-a-request" component={MakingARequest} />

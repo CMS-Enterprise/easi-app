@@ -1,5 +1,5 @@
 /* eslint-disable import/no-named-default */
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, Switch, useParams } from 'react-router-dom';
@@ -32,9 +32,10 @@ import Documents from './Documents';
 import Feedback from './Feedback';
 import GRBReview from './GRBReview';
 import IntakeReview from './IntakeReview';
+import ITGovAdminContext from './ITGovAdminContext';
 import LifecycleID from './LifecycleID';
 import Notes from './Notes';
-import subNavItems, { ReviewerKey } from './subNavItems';
+import subNavItems from './subNavItems';
 import Summary from './Summary';
 
 import './index.scss';
@@ -51,8 +52,9 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
 
   const dispatch = useDispatch();
 
-  const { reviewerType, systemId, activePage, subPage } = useParams<{
-    reviewerType: ReviewerKey;
+  const isITGovAdmin = useContext(ITGovAdminContext);
+
+  const { systemId, activePage, subPage } = useParams<{
     systemId: string;
     activePage: string;
     subPage?: string;
@@ -82,7 +84,7 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
       'easi-grt__nav-link--active': route.split('/')[3] === activePage
     });
 
-  const navItems = subNavItems(systemId, reviewerType, flags);
+  const navItems = subNavItems(systemId, isITGovAdmin, flags);
 
   useEffect(() => {
     if (systemIntake?.businessCaseId) {
@@ -170,24 +172,24 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
             >
               <Switch>
                 <Route
-                  path={`/${reviewerType}/:systemId/intake-request`}
+                  path="/it-governance/:systemId/intake-request"
                   render={() => <IntakeReview systemIntake={systemIntake} />}
                 />
 
                 {flags?.grbReviewTab && (
                   <Route
-                    path="/governance-review-team/:systemId/documents/upload"
+                    path="/it-governance/:systemId/documents/upload"
                     render={() => <UploadForm type="admin" />}
                   />
                 )}
 
                 <Route
-                  path={`/${reviewerType}/:systemId/documents`}
+                  path="/it-governance/:systemId/documents"
                   render={() => <Documents systemIntake={systemIntake} />}
                 />
 
                 <Route
-                  path={`/${reviewerType}/:systemId/business-case`}
+                  path="/it-governance/:systemId/business-case"
                   render={() => (
                     <BusinessCaseReview
                       businessCase={businessCase}
@@ -197,23 +199,23 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
                 />
 
                 <Route
-                  path={`/${reviewerType}/:systemId/notes`}
+                  path="/it-governance/:systemId/notes"
                   render={() => <Notes />}
                 />
 
                 <Route
-                  path={`/${reviewerType}/:systemId/feedback`}
+                  path="/it-governance/:systemId/feedback"
                   render={() => <Feedback systemIntakeId={systemId} />}
                 />
 
                 <Route
-                  path={`/${reviewerType}/:systemId/decision`}
+                  path="/it-governance/:systemId/decision"
                   render={() => <Decision {...systemIntake} />}
                 />
 
                 <Route
                   exact
-                  path={`/${reviewerType}/:systemId/additional-information`}
+                  path="/it-governance/:systemId/additional-information"
                   render={() => (
                     <AdditionalInformation
                       request={systemIntake}
@@ -223,13 +225,13 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
                 />
 
                 <Route
-                  path={`/${reviewerType}/:systemId/lcid`}
+                  path="/it-governance/:systemId/lcid"
                   render={() => <LifecycleID systemIntake={systemIntake} />}
                 />
 
                 {flags?.grbReviewTab && (
                   <Route
-                    path={`/:reviewerType(${reviewerType})/:systemId/grb-review/:action(add|edit)?`}
+                    path="/it-governance/:systemId/grb-review/:action(add|edit)?"
                     render={() => (
                       <GRBReview
                         {...systemIntake}
@@ -243,12 +245,12 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
                 {/* GRT only routes */}
 
                 <Route
-                  path="/governance-review-team/:systemId/dates"
+                  path="/it-governance/:systemId/dates"
                   render={() => <Dates systemIntake={systemIntake} />}
                 />
 
                 <Route
-                  path="/governance-review-team/:systemId/(actions|resolutions|manage-lcid)/:subPage?"
+                  path="/it-governance/:systemId/(actions|resolutions|manage-lcid)/:subPage?"
                   render={() => <Actions systemIntake={systemIntake} />}
                 />
 

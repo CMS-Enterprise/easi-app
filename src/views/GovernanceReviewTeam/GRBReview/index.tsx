@@ -34,8 +34,7 @@ import { SystemIntakeState } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
-import IsGrbViewContext from '../IsGrbViewContext';
-import { ReviewerKey } from '../subNavItems';
+import ITGovAdminContext from '../ITGovAdminContext';
 
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
@@ -60,8 +59,7 @@ const GRBReview = ({
   const { t } = useTranslation('grbReview');
   const history = useHistory();
 
-  const { reviewerType, action } = useParams<{
-    reviewerType: ReviewerKey;
+  const { action } = useParams<{
     action?: 'add' | 'edit';
   }>();
 
@@ -83,7 +81,7 @@ const GRBReview = ({
     ]
   });
 
-  const isGRBView = useContext(IsGrbViewContext);
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   const removeGRBReviewer = useCallback(
     (reviewer: SystemIntakeGRBReviewerFragment) => {
@@ -106,10 +104,10 @@ const GRBReview = ({
 
       // If removing reviewer from form, go to GRB Review page
       if (isForm) {
-        history.push(`/${reviewerType}/${id}/grb-review`);
+        history.push(`/it-governance/${id}/grb-review`);
       }
     },
-    [history, isForm, id, mutate, reviewerType, showMessage, t]
+    [history, isForm, id, mutate, showMessage, t]
   );
 
   return (
@@ -250,7 +248,7 @@ const GRBReview = ({
           {/* Additional Documents Title and Link */}
           <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
 
-          {!isGRBView && (
+          {isITGovAdmin && (
             <UswdsReactLink
               to="./documents/upload"
               className="display-flex flex-align-center"
