@@ -21,6 +21,10 @@ export interface GetSystemIntakeDocumentUrls_systemIntake {
 }
 
 export interface GetSystemIntakeDocumentUrls {
+  /**
+   * Requests fetches a requester's own intake requests
+   * first is currently non-functional and can be removed later
+   */
   systemIntake: GetSystemIntakeDocumentUrls_systemIntake | null;
 }
 

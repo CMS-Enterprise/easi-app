@@ -797,7 +797,7 @@ func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName *string, isS
 	if err != nil {
 		return nil, err
 	}
-	return resolvers.GetTRBRequestByID(ctx, trb.ID, s.store)
+	return resolvers.GetTRBRequestByID(ctx, s.store, trb.ID)
 }
 
 func (s *seederConfig) seedTRBWithAttendees(ctx context.Context, trbRequestID uuid.UUID) error {
