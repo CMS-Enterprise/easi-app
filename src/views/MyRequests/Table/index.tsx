@@ -1,6 +1,9 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import {
+  Column,
+  Row,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -9,6 +12,7 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
@@ -18,11 +22,13 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
-import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 import {
-  RequestType,
-  SystemIntakeStatusRequester
-} from 'types/graphql-global-types';
+  GetRequests,
+  GetRequests_mySystemIntakes as GetSystemIntakesType,
+  GetRequests_myTrbRequests as GetTRBRequestsType
+} from 'queries/types/GetRequests';
+import { SystemIntakeStatusRequester } from 'types/graphql-global-types';
+import { RequestType } from 'types/requestType';
 import { formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -35,10 +41,41 @@ import {
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
+import user from 'utils/user';
 
-import tableMap, { isTRBRequestType } from './tableMap';
+import { AppState } from '../../../reducers/rootReducer';
+
+import { MergedRequestsForTable } from './mergedRequestForTable';
 
 import '../index.scss';
+
+const calcSystemIntakeNextMeetingDate = (
+  grb: string | null,
+  grt: string | null
+): string | null => {
+  if (grb === null && grt === null) {
+    return null;
+  }
+
+  if (grb === null) {
+    return grt;
+  }
+
+  if (grt === null) {
+    return grb;
+  }
+
+  // attempt to parse
+  const grbDate = Date.parse(grb);
+  const grtDate = Date.parse(grt);
+
+  // return latest of the two
+  if (grbDate > grtDate) {
+    return grb;
+  }
+
+  return grt;
+};
 
 type myRequestsTableProps = {
   type?: RequestType;
@@ -58,19 +95,34 @@ const Table = ({
     'governanceReviewTeam'
   ]);
 
-  const { loading, error, data: tableData } = useQuery<
-    GetRequests,
-    GetRequestsVariables
-  >(GetRequestsQuery, {
-    variables: { first: 20 },
-    fetchPolicy: 'cache-and-network'
-  });
+  const { groups } = useSelector((state: AppState) => state.auth);
 
-  const columns: any = useMemo(() => {
+  const flags = useFlags();
+
+  const { loading, error, data: tableData } = useQuery<GetRequests>(
+    GetRequestsQuery,
+    {
+      fetchPolicy: 'cache-and-network'
+    }
+  );
+
+  const isITGovAdmin: boolean = useMemo(
+    () => user.isITGovAdmin(groups, flags),
+    [flags, groups]
+  );
+
+  const isTRBAdmin: boolean = useMemo(() => user.isTrbAdmin(groups, flags), [
+    flags,
+    groups
+  ]);
+
+  const columns: Column<MergedRequestsForTable>[] = useMemo<
+    Column<MergedRequestsForTable>[]
+  >(() => {
     return [
       {
-        Header: t('requestsTable.headers.submittedAt'),
-        accessor: 'submittedAt',
+        Header: t<string>('requestsTable.headers.submittedAt'),
+        accessor: 'submissionDate',
         Cell: ({ value }: any) => {
           if (value) {
             return formatDateUtc(value, 'MM/dd/yyyy');
@@ -79,21 +131,26 @@ const Table = ({
         }
       },
       {
-        Header: t('requestsTable.headers.name'),
+        Header: t<string>('requestsTable.headers.name'),
         accessor: 'name',
-        Cell: ({ row, value }: any) => {
+        Cell: ({
+          row,
+          value
+        }: {
+          row: Row<MergedRequestsForTable>;
+          value: MergedRequestsForTable['name'];
+        }) => {
           let link: string;
 
-          if (isTRBRequestType(row.original)) {
-            link = `/trb/task-list/${row.original.id}`;
-          } else {
-            switch (row.original.type) {
-              case 'IT Governance':
-                link = `/governance-task-list/${row.original.id}`;
-                break;
-              default:
-                link = '/';
-            }
+          switch (row.original.process) {
+            case 'TRB':
+              link = `/trb/task-list/${row.original.id}`;
+              break;
+            case 'IT Governance':
+              link = `/governance-task-list/${row.original.id}`;
+              break;
+            default:
+              link = '/';
           }
 
           return <UswdsReactLink to={link}>{value}</UswdsReactLink>;
@@ -102,23 +159,33 @@ const Table = ({
         maxWidth: 350
       },
       {
-        Header: t('requestsTable.headers.type'),
-        accessor: 'type'
+        Header: t<string>('requestsTable.headers.type'),
+        accessor: 'process'
       },
       {
-        Header: t('requestsTable.headers.status'),
+        Header: t<string>('requestsTable.headers.status'),
         // The status property is just a generic property available on all request types
         // See cases below for details on how statuses are determined by type
         id: 'status',
-        accessor: (obj: any) => {
-          switch (obj.type) {
+        accessor: (request: MergedRequestsForTable) => {
+          switch (request.process) {
             case 'IT Governance':
-              return t(
-                `governanceReviewTeam:systemIntakeStatusRequester.${obj.statusRequester}`,
-                { lcid: obj.lcid }
+              // return admin status for admins
+              if (isITGovAdmin || isTRBAdmin) {
+                return t<string>(
+                  `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`,
+                  { lcid: request.lcid }
+                );
+              }
+
+              // return requester status for non-admins
+              return t<string>(
+                `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`,
+                { lcid: request.lcid }
               );
+
             case 'TRB':
-              return t(`table.requestStatus.${obj.status}`, {
+              return t<string>(`table.requestStatus.${request.status}`, {
                 ns: 'technicalAssistance'
               });
             default:
@@ -176,26 +243,76 @@ const Table = ({
         width: '200px'
       },
       {
-        Header: t('requestsTable.headers.nextMeetingDate'),
+        Header: t<string>('requestsTable.headers.nextMeetingDate'),
         accessor: 'nextMeetingDate',
-        Cell: ({ value }: any) => {
+        Cell: ({ value }: { value: string | null }) => {
           if (value) {
             return formatDateUtc(value, 'MM/dd/yyyy');
           }
           return 'None';
         }
+      },
+      {
+        Header: t<string>('requestsTable.headers.relatedSystems'),
+        accessor: 'systems',
+        Cell: ({ value }: { value: string[] }) => {
+          return value.join(', ');
+        },
+        width: '250px'
       }
     ];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isITGovAdmin, isTRBAdmin, t]);
 
   // Modifying data for table sorting and prepping for Cell configuration
-  const data = useMemo(() => {
-    if (tableData) {
-      return tableMap(tableData, t, type);
+  const data: MergedRequestsForTable[] = useMemo<
+    MergedRequestsForTable[]
+  >(() => {
+    if (!tableData) {
+      return [];
     }
-    return [];
-  }, [tableData, t, type]);
+
+    const merged: MergedRequestsForTable[] = [];
+
+    if (!type || type === 'itgov') {
+      tableData.mySystemIntakes.forEach(
+        (systemIntake: GetSystemIntakesType) => {
+          merged.push({
+            id: systemIntake.id,
+            name: systemIntake.requestName || 'Draft',
+            nextMeetingDate: calcSystemIntakeNextMeetingDate(
+              systemIntake.grbDate,
+              systemIntake.grtDate
+            ),
+            process: 'IT Governance',
+            status:
+              isITGovAdmin || isTRBAdmin
+                ? systemIntake.statusAdmin
+                : systemIntake.statusRequester,
+            submissionDate: systemIntake.submittedAt,
+            systems: systemIntake.systems.map(system => system.name),
+            lcid: systemIntake.lcid
+          });
+        }
+      );
+    }
+
+    if (!type || type === 'trb') {
+      tableData.myTrbRequests.forEach((trbRequest: GetTRBRequestsType) => {
+        merged.push({
+          id: trbRequest.id,
+          name: trbRequest.name || 'Draft',
+          nextMeetingDate: trbRequest.nextMeetingDate,
+          process: 'TRB',
+          status: trbRequest.status,
+          submissionDate: trbRequest.submittedAt,
+          systems: trbRequest.systems.map(system => system.name),
+          lcid: null
+        });
+      });
+    }
+
+    return merged;
+  }, [isITGovAdmin, isTRBAdmin, tableData, type]);
 
   const {
     getTableProps,
@@ -261,8 +378,8 @@ const Table = ({
         <>
           <GlobalClientFilter
             setGlobalFilter={setGlobalFilter}
-            tableID={t('requestsTable.id')}
-            tableName={t('requestsTable.title')}
+            tableID={t<string>('requestsTable.id')}
+            tableName={t<string>('requestsTable.title')}
             className="margin-bottom-4"
           />
 
@@ -277,7 +394,9 @@ const Table = ({
         </>
       )}
       <UswdsTable bordered={false} {...getTableProps()} fullWidth scrollable>
-        <caption className="usa-sr-only">{t('requestsTable.caption')}</caption>
+        <caption className="usa-sr-only">
+          {t<string>('requestsTable.caption')}
+        </caption>
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -375,7 +494,7 @@ const Table = ({
 
       {data.length === 0 && (
         <Alert type="info" slim>
-          {t('requestsTable.empty')}
+          {t<string>('requestsTable.empty')}
         </Alert>
       )}
 

@@ -29,14 +29,14 @@ vi.mock('@okta/okta-react', () => ({
 }));
 
 describe('The making a request page', () => {
-  it('renders without errors', async () => {
-    const mockStore = configureMockStore();
-    const defaultStore = mockStore({
-      auth: {
-        euaId: 'AAAA'
-      }
-    });
+  const mockStore = configureMockStore();
+  const defaultStore = mockStore({
+    auth: {
+      euaId: 'AAAA'
+    }
+  });
 
+  it('renders without errors', async () => {
     render(
       <MemoryRouter initialEntries={['/system/making-a-request']}>
         <MockedProvider>
@@ -61,7 +61,9 @@ describe('The making a request page', () => {
       .create(
         <MemoryRouter>
           <MockedProvider>
-            <MakingARequest />
+            <Provider store={defaultStore}>
+              <MakingARequest />
+            </Provider>
           </MockedProvider>
         </MemoryRouter>
       )
