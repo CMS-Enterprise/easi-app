@@ -1478,14 +1478,14 @@ export type Query = {
   deployments: Array<CedarDeployment>;
   exchanges: Array<CedarExchange>;
   myCedarSystems: Array<CedarSystem>;
+  mySystemIntakes: Array<SystemIntake>;
   myTrbRequests: Array<TRBRequest>;
+  roleTypes: Array<CedarRoleType>;
+  roles: Array<CedarRole>;
   /**
    * Requests fetches a requester's own intake requests
    * first is currently non-functional and can be removed later
    */
-  requests?: Maybe<RequestsConnection>;
-  roleTypes: Array<CedarRoleType>;
-  roles: Array<CedarRole>;
   systemIntake?: Maybe<SystemIntake>;
   systemIntakeContacts: SystemIntakeContactsPayload;
   systemIntakes: Array<SystemIntake>;
@@ -1582,12 +1582,6 @@ export type QueryMyTrbRequestsArgs = {
 
 
 /** Query definition for the schema */
-export type QueryRequestsArgs = {
-  first: Scalars['Int']['input'];
-};
-
-
-/** Query definition for the schema */
 export type QueryRolesArgs = {
   cedarSystemId: Scalars['String']['input'];
   roleTypeID?: InputMaybe<Scalars['String']['input']>;
@@ -1649,40 +1643,11 @@ export type ReopenTRBRequestInput = {
   trbRequestId: Scalars['UUID']['input'];
 };
 
-/** Represents a requester's system intake request */
-export type Request = {
-  __typename: 'Request';
-  id: Scalars['UUID']['output'];
-  lcid?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  nextMeetingDate?: Maybe<Scalars['Time']['output']>;
-  status: Scalars['String']['output'];
-  statusCreatedAt?: Maybe<Scalars['Time']['output']>;
-  statusRequester?: Maybe<SystemIntakeStatusRequester>;
-  submittedAt?: Maybe<Scalars['Time']['output']>;
-  type: RequestType;
-};
-
-export type RequestEdge = {
-  __typename: 'RequestEdge';
-  node: Request;
-};
-
 export enum RequestRelationType {
   EXISTING_SERVICE = 'EXISTING_SERVICE',
   EXISTING_SYSTEM = 'EXISTING_SYSTEM',
   NEW_SYSTEM = 'NEW_SYSTEM'
 }
-
-/** Indicates the type of a request being made with the EASi system */
-export enum RequestType {
-  GOVERNANCE_REQUEST = 'GOVERNANCE_REQUEST'
-}
-
-export type RequestsConnection = {
-  __typename: 'RequestsConnection';
-  edges: Array<RequestEdge>;
-};
 
 /** A user role associated with a job code */
 export enum Role {

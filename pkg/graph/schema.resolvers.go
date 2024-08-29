@@ -13,7 +13,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
-	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
@@ -1173,53 +1172,6 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 	return resolvers.DeleteTRBLeadOption(ctx, r.store, eua)
 }
 
-// Requests is the resolver for the requests field. (First is not in use)
-func (r *queryResolver) Requests(ctx context.Context, first int) (*models.RequestsConnection, error) {
-	intakes, queryErr := r.store.FetchSystemIntakesByEuaID(ctx, appcontext.Principal(ctx).ID())
-	if queryErr != nil {
-		return nil, gqlerror.Errorf("query error: %s", queryErr)
-	}
-
-	edges := []*models.RequestEdge{}
-
-	for _, intake := range intakes {
-		var requesterStatus models.SystemIntakeStatusRequester
-		requesterStatus, queryErr = resolvers.CalculateSystemIntakeRequesterStatus(&intake, time.Now())
-		if queryErr != nil {
-			return nil, gqlerror.Errorf("query error: %s", queryErr)
-		}
-		var nextMeetingDate *time.Time
-		grbDateIsSetAndNotInPast := intake.GRBDate != nil && time.Now().Before(*intake.GRBDate)
-		grtDateIsSetAndNotInPast := intake.GRTDate != nil && time.Now().Before(*intake.GRTDate)
-		if grbDateIsSetAndNotInPast && grtDateIsSetAndNotInPast {
-			if intake.GRBDate.Before(*intake.GRTDate) {
-				nextMeetingDate = intake.GRBDate
-			} else {
-				nextMeetingDate = intake.GRTDate
-			}
-		} else if grtDateIsSetAndNotInPast {
-			nextMeetingDate = intake.GRTDate
-		} else if grbDateIsSetAndNotInPast {
-			nextMeetingDate = intake.GRBDate
-		}
-		node := models.Request{
-			ID:              intake.ID,
-			SubmittedAt:     intake.SubmittedAt,
-			Name:            intake.ProjectName.Ptr(),
-			Type:            models.RequestTypeGovernanceRequest,
-			StatusRequester: &requesterStatus,
-			StatusCreatedAt: intake.CreatedAt,
-			Lcid:            intake.LifecycleID.Ptr(),
-			NextMeetingDate: nextMeetingDate,
-		}
-		edges = append(edges, &models.RequestEdge{
-			Node: &node,
-		})
-	}
-
-	return &models.RequestsConnection{Edges: edges}, nil
-}
-
 // SystemIntake is the resolver for the systemIntake field.
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
@@ -1256,6 +1208,11 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error) {
 	return resolvers.SystemIntakes(ctx, r.store, openRequests)
+}
+
+// MySystemIntakes is the resolver for the mySystemIntakes field.
+func (r *queryResolver) MySystemIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
+	return resolvers.GetMySystemIntakes(ctx, r.store)
 }
 
 // SystemIntakesWithReviewRequested is the resolver for the systemIntakesWithReviewRequested field.
@@ -1573,17 +1530,17 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 
 // TrbRequest is the resolver for the trbRequest field.
 func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
-	return resolvers.GetTRBRequestByID(ctx, id, r.store)
+	return resolvers.GetTRBRequestByID(ctx, r.store, id)
 }
 
 // TrbRequests is the resolver for the trbRequests field.
 func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
-	return resolvers.GetTRBRequests(ctx, archived, r.store)
+	return resolvers.GetTRBRequests(ctx, r.store, archived)
 }
 
 // MyTrbRequests is the resolver for the myTrbRequests field.
 func (r *queryResolver) MyTrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
-	return resolvers.GetMyTRBRequests(ctx, archived, r.store)
+	return resolvers.GetMyTRBRequests(ctx, r.store, archived)
 }
 
 // TrbLeadOptions is the resolver for the trbLeadOptions field.

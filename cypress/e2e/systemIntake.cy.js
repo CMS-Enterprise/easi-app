@@ -1,5 +1,6 @@
 import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
 import { BASIC_USER_PROD } from '../../src/constants/jobCodes';
+import testSystemIntakeName from '../support/systemIntake';
 
 describe('The System Intake Form', () => {
   beforeEach(() => {
@@ -53,7 +54,8 @@ describe('The System Intake Form', () => {
   });
 
   it('fills out minimum required fields (smoke test)', () => {
-    // Contact Details
+    // Cont
+    // act Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
     // Test "Business owner same as requester" checkbox
@@ -369,7 +371,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', 'Project Name')
       .siblings('dd')
-      .contains('Test Request Name');
+      .contains(testSystemIntakeName);
 
     cy.contains('dt', 'What is your business need?')
       .siblings('dd')
@@ -421,8 +423,8 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Request details');
 
     cy.get('#requestName')
-      .type('Test Request Name')
-      .should('have.value', 'Test Request Name');
+      .type(testSystemIntakeName)
+      .should('have.value', testSystemIntakeName);
 
     cy.contains('button', 'Back').click();
     cy.wait('@updateRequestDetails');

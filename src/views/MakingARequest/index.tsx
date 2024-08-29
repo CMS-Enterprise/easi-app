@@ -5,7 +5,6 @@ import { Link as UswdsLink, SummaryBox } from '@trussworks/react-uswds';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
-import { RequestType } from 'types/graphql-global-types';
 import Table from 'views/MyRequests/Table';
 
 const MakingARequest = () => {
@@ -55,8 +54,12 @@ const MakingARequest = () => {
         {t('myRequests')}
       </h2>
       <Table
-        type={RequestType.GOVERNANCE_REQUEST}
-        hiddenColumns={['Governance', 'Upcoming meeting date']}
+        type="itgov"
+        hiddenColumns={[
+          'Governance',
+          'Upcoming meeting date',
+          'Related systems'
+        ]}
       />
     </MainContent>
   );

@@ -71,7 +71,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 	s.Run("status is correctly calculated as TRB tasks are performed", func() {
 		// Test the "NEW" TRB status
-		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err := GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
@@ -100,7 +100,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
@@ -128,7 +128,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
@@ -163,7 +163,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
@@ -196,7 +196,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
@@ -229,7 +229,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
@@ -256,7 +256,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
@@ -276,7 +276,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = RequestReviewForTRBAdviceLetter(ctx, store, &emailClient, stubFetchUserInfo, adviceLetter.ID)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
@@ -296,7 +296,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = SendTRBAdviceLetter(ctx, store, adviceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos, false, nil)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
@@ -320,7 +320,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)

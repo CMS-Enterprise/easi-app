@@ -139,13 +139,6 @@ export enum RequestRelationType {
 }
 
 /**
- * Indicates the type of a request being made with the EASi system
- */
-export enum RequestType {
-  GOVERNANCE_REQUEST = "GOVERNANCE_REQUEST",
-}
-
-/**
  * Represents the type of an action that is being done to a system request
  */
 export enum SystemIntakeActionType {
