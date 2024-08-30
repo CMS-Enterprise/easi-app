@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { type } from '@testing-library/user-event/dist/type';
 import {
   Button,
   ButtonGroup,
@@ -51,7 +50,7 @@ function GovernanceTaskList() {
   const { t } = useTranslation('itGov');
   const history = useHistory();
 
-  const { showMessageOnNextPage, showMessage } = useMessage();
+  const { showMessageOnNextPage } = useMessage();
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -73,24 +72,31 @@ function GovernanceTaskList() {
   const systemIntake = data?.systemIntake;
   const requestName = systemIntake?.requestName;
 
-  const archiveIntake = async () => {
+  const archiveIntake = useCallback(async () => {
     const redirect = () => {
       history.push('/');
     };
 
+    let message: string;
+    let type: 'error' | 'success' | 'warning' | 'info';
     try {
       await archive();
-      const message = t('taskList:withdraw_modal.confirmationText', {
+      message = t<string>('taskList:withdraw_modal.confirmationText', {
         context: requestName ? 'name' : 'noName',
         requestName
       });
-      showMessageOnNextPage(message, { type: 'success' });
+      type = 'success';
     } catch {
-      showMessageOnNextPage('test', { type: 'error' });
+      message = t<string>('taskList:withdraw_modal.error', {
+        context: requestName ? 'name' : 'noName',
+        requestName
+      });
+      type = 'error';
     }
 
+    showMessageOnNextPage(message, { type });
     redirect();
-  };
+  }, [archive, history, requestName, showMessageOnNextPage, t]);
 
   const isClosed = systemIntake?.state === SystemIntakeState.CLOSED;
 

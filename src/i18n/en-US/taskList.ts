@@ -5,7 +5,10 @@ const taskList = {
     confirm: 'Remove request',
     cancel: 'Cancel',
     confirmationText_name: 'The request for {{-requestName}} has been removed',
-    confirmationText_noName: 'The request has been removed'
+    confirmationText_noName: 'The request has been removed',
+    error_name:
+      'The request for {{-requestName}} could not be removed. Please try again later.',
+    error_noName: 'The request could not be removed. Please try again later.'
   },
   trbWithdrawModal: {
     header: 'Are you sure you want to remove this request?',

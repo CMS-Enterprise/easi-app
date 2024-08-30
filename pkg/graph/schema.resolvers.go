@@ -673,7 +673,6 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 
 // ArchiveSystemIntake is the resolver for the archiveSystemIntake field.
 func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	return nil, errors.New("whoops")
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
 	if err != nil {
 		return nil, err
