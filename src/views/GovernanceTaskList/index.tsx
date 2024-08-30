@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
@@ -32,9 +31,10 @@ import {
   SystemIntakeState,
   SystemIntakeStep
 } from 'types/graphql-global-types';
-import { archiveSystemIntake } from 'types/routines';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
+
+import { useArchiveSystemIntakeMutation } from '../../gql/gen/graphql';
 
 import AdditionalRequestInfo from './AdditionalRequestInfo';
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
@@ -49,9 +49,8 @@ function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('itGov');
   const history = useHistory();
-  const dispatch = useDispatch();
 
-  const { showMessageOnNextPage } = useMessage();
+  const { showMessageOnNextPage, showMessage, Message } = useMessage();
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -64,19 +63,35 @@ function GovernanceTaskList() {
     }
   });
 
+  const [archive] = useArchiveSystemIntakeMutation({
+    variables: {
+      id: systemId
+    }
+  });
+
   const systemIntake = data?.systemIntake;
   const requestName = systemIntake?.requestName;
 
-  const archiveIntake = () => {
-    const redirect = () => {
-      const message = t('taskList:withdraw_modal.confirmationText', {
-        context: requestName ? 'name' : 'noName',
-        requestName
+  const archiveIntake = async () => {
+    archive()
+      .then(() => {
+        const message = t<string>('taskList:withdraw_modal.confirmationText', {
+          context: requestName ? 'name' : 'noName',
+          requestName
+        });
+
+        showMessageOnNextPage(message, { type: 'success' });
+        history.push('/');
+      })
+      .catch(() => {
+        const message = t<string>('taskList:withdraw_modal.error', {
+          context: requestName ? 'name' : 'noName',
+          requestName
+        });
+
+        showMessage(message, { type: 'error' });
+        setModalOpen(false);
       });
-      showMessageOnNextPage(message, { type: 'success' });
-      history.push('/');
-    };
-    dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
   };
 
   const isClosed = systemIntake?.state === SystemIntakeState.CLOSED;
@@ -100,6 +115,8 @@ function GovernanceTaskList() {
       data-testid="governance-task-list"
     >
       <GridContainer className="width-full">
+        <Message className="margin-top-5 margin-bottom-3" />
+
         <Breadcrumbs
           items={[
             { text: t('itGovernance'), url: '/system/making-a-request' },

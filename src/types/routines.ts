@@ -2,9 +2,6 @@ import { createRoutine } from 'redux-saga-routines';
 
 import { CreateActionPayload } from 'types/action';
 
-// SystemIntake routines
-export const archiveSystemIntake = createRoutine('ARCHIVE_SYSTEM_INTAKE');
-
 // BusinessCase routines
 export const fetchBusinessCase = createRoutine('FETCH_BUSINESS_CASE');
 export const postBusinessCase = createRoutine('POST_BUSINESS_CASE');

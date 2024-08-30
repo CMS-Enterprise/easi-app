@@ -524,6 +524,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		ArchiveSystemIntake                              func(childComplexity int, id uuid.UUID) int
 		CloseTRBRequest                                  func(childComplexity int, input models.CloseTRBRequestInput) int
 		CreateCedarSystemBookmark                        func(childComplexity int, input models.CreateCedarSystemBookmarkInput) int
 		CreateSystemIntake                               func(childComplexity int, input models.CreateSystemIntakeInput) int
@@ -1176,6 +1177,7 @@ type MutationResolver interface {
 	UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error)
 	DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error)
 	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
+	ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	SendFeedbackEmail(ctx context.Context, input models.SendFeedbackEmailInput) (*string, error)
 	SendCantFindSomethingEmail(ctx context.Context, input models.SendCantFindSomethingEmailInput) (*string, error)
 	SendReportAProblemEmail(ctx context.Context, input models.SendReportAProblemEmailInput) (*string, error)
@@ -3767,6 +3769,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.LaunchDarklySettings.UserKey(childComplexity), true
+
+	case "Mutation.archiveSystemIntake":
+		if e.complexity.Mutation.ArchiveSystemIntake == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_archiveSystemIntake_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ArchiveSystemIntake(childComplexity, args["id"].(uuid.UUID)), true
 
 	case "Mutation.closeTRBRequest":
 		if e.complexity.Mutation.CloseTRBRequest == nil {
@@ -9950,6 +9964,8 @@ type Mutation {
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
+  archiveSystemIntake(id: UUID!): SystemIntake!
+
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
@@ -10510,6 +10526,21 @@ func (ec *executionContext) field_CedarSystem_linkedTrbRequests_args(ctx context
 		}
 	}
 	args["state"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_archiveSystemIntake_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uuid.UUID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -29882,6 +29913,209 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeLinkedCedarS
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateSystemIntakeLinkedCedarSystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_archiveSystemIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_archiveSystemIntake(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ArchiveSystemIntake(rctx, fc.Args["id"].(uuid.UUID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntake)
+	fc.Result = res
+	return ec.marshalNSystemIntake2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "actions":
+				return ec.fieldContext_SystemIntake_actions(ctx, field)
+			case "adminLead":
+				return ec.fieldContext_SystemIntake_adminLead(ctx, field)
+			case "archivedAt":
+				return ec.fieldContext_SystemIntake_archivedAt(ctx, field)
+			case "businessCase":
+				return ec.fieldContext_SystemIntake_businessCase(ctx, field)
+			case "businessNeed":
+				return ec.fieldContext_SystemIntake_businessNeed(ctx, field)
+			case "businessOwner":
+				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
+			case "businessSolution":
+				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "contract":
+				return ec.fieldContext_SystemIntake_contract(ctx, field)
+			case "costs":
+				return ec.fieldContext_SystemIntake_costs(ctx, field)
+			case "annualSpending":
+				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
+			case "currentStage":
+				return ec.fieldContext_SystemIntake_currentStage(ctx, field)
+			case "decisionNextSteps":
+				return ec.fieldContext_SystemIntake_decisionNextSteps(ctx, field)
+			case "eaCollaborator":
+				return ec.fieldContext_SystemIntake_eaCollaborator(ctx, field)
+			case "eaCollaboratorName":
+				return ec.fieldContext_SystemIntake_eaCollaboratorName(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_SystemIntake_euaUserId(ctx, field)
+			case "existingFunding":
+				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
+			case "fundingSources":
+				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
+			case "governanceTeams":
+				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
+			case "grbDate":
+				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grtDate":
+				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "id":
+				return ec.fieldContext_SystemIntake_id(ctx, field)
+			case "isso":
+				return ec.fieldContext_SystemIntake_isso(ctx, field)
+			case "lcid":
+				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidIssuedAt":
+				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
+			case "lcidExpiresAt":
+				return ec.fieldContext_SystemIntake_lcidExpiresAt(ctx, field)
+			case "lcidScope":
+				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
+			case "lcidCostBaseline":
+				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
+			case "needsEaSupport":
+				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
+			case "notes":
+				return ec.fieldContext_SystemIntake_notes(ctx, field)
+			case "oitSecurityCollaborator":
+				return ec.fieldContext_SystemIntake_oitSecurityCollaborator(ctx, field)
+			case "oitSecurityCollaboratorName":
+				return ec.fieldContext_SystemIntake_oitSecurityCollaboratorName(ctx, field)
+			case "productManager":
+				return ec.fieldContext_SystemIntake_productManager(ctx, field)
+			case "projectAcronym":
+				return ec.fieldContext_SystemIntake_projectAcronym(ctx, field)
+			case "rejectionReason":
+				return ec.fieldContext_SystemIntake_rejectionReason(ctx, field)
+			case "requestName":
+				return ec.fieldContext_SystemIntake_requestName(ctx, field)
+			case "requestType":
+				return ec.fieldContext_SystemIntake_requestType(ctx, field)
+			case "requester":
+				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "requesterName":
+				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
+			case "requesterComponent":
+				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
+			case "submittedAt":
+				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
+			case "trbCollaborator":
+				return ec.fieldContext_SystemIntake_trbCollaborator(ctx, field)
+			case "trbCollaboratorName":
+				return ec.fieldContext_SystemIntake_trbCollaboratorName(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_SystemIntake_updatedAt(ctx, field)
+			case "grtReviewEmailBody":
+				return ec.fieldContext_SystemIntake_grtReviewEmailBody(ctx, field)
+			case "decidedAt":
+				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
+			case "businessCaseId":
+				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
+			case "cedarSystemId":
+				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "hasUiChanges":
+				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_SystemIntake_usesAiTech(ctx, field)
+			case "itGovTaskStatuses":
+				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
+			case "requestFormState":
+				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
+			case "draftBusinessCaseState":
+				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
+			case "finalBusinessCaseState":
+				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
+			case "decisionState":
+				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusRequester":
+				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "lcidStatus":
+				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "systems":
+				return ec.fieldContext_SystemIntake_systems(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
+			case "relatedIntakes":
+				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
+			case "relatedTRBRequests":
+				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_archiveSystemIntake_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -61508,6 +61742,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateSystemIntakeLinkedCedarSystem(ctx, field)
 			})
+		case "archiveSystemIntake":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_archiveSystemIntake(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "sendFeedbackEmail":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_sendFeedbackEmail(ctx, field)

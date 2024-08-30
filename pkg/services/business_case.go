@@ -186,38 +186,3 @@ func NewUpdateBusinessCase(
 		return businessCase, nil
 	}
 }
-
-// NewCloseBusinessCase is a service to close a businessCase
-func NewCloseBusinessCase(
-	config Config,
-	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error),
-	update func(context.Context, *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error),
-) func(context.Context, uuid.UUID) error {
-	return func(ctx context.Context, id uuid.UUID) error {
-		businessCase, fetchErr := fetch(ctx, id)
-		if fetchErr != nil {
-			return &apperrors.QueryError{
-				Err:       fetchErr,
-				Operation: apperrors.QueryFetch,
-				Model:     businessCase,
-			}
-		}
-
-		if businessCase.Status != models.BusinessCaseStatusCLOSED {
-			updatedTime := config.clock.Now()
-			businessCase.UpdatedAt = &updatedTime
-			businessCase.Status = models.BusinessCaseStatusCLOSED
-
-			_, err := update(ctx, businessCase)
-			if err != nil {
-				return &apperrors.QueryError{
-					Err:       err,
-					Model:     businessCase,
-					Operation: apperrors.QuerySave,
-				}
-			}
-		}
-
-		return nil
-	}
-}

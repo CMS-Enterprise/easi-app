@@ -25,6 +25,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/flags"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -668,6 +669,56 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, nil
+}
+
+// ArchiveSystemIntake is the resolver for the archiveSystemIntake field.
+func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if !services.AuthorizeUserIsIntakeRequester(ctx, intake) {
+		return nil, errors.New("user is unauthorized to archive system intake")
+	}
+
+	now := helpers.PointerTo(time.Now())
+
+	// close out any associated business case
+	if intake.BusinessCaseID != nil {
+		// get business case
+		businessCase, err := r.store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
+		if err != nil {
+			return nil, err
+		}
+
+		// only attempt to close if business case is not yet closed
+		if businessCase.Status != models.BusinessCaseStatusCLOSED {
+			businessCase.UpdatedAt = now
+			businessCase.Status = models.BusinessCaseStatusCLOSED
+
+			if _, err := r.store.UpdateBusinessCase(ctx, businessCase); err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	intake.UpdatedAt = now
+	intake.ArchivedAt = now
+
+	updatedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	// do not send email if intake was in draft state (not submitted)
+	if intake.SubmittedAt != nil {
+		if err := r.emailClient.SendWithdrawRequestEmail(ctx, intake.ProjectName.String); err != nil {
+			return nil, err
+		}
+	}
+
+	return updatedIntake, nil
 }
 
 // SendFeedbackEmail is the resolver for the sendFeedbackEmail field.
