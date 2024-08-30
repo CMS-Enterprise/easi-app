@@ -54,8 +54,7 @@ describe('The System Intake Form', () => {
   });
 
   it('fills out minimum required fields (smoke test)', () => {
-    // Cont
-    // act Details
+    // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
     // Test "Business owner same as requester" checkbox
