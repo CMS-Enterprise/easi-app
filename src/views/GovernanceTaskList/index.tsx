@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import { type } from '@testing-library/user-event/dist/type';
 import {
   Button,
   ButtonGroup,
@@ -50,7 +51,7 @@ function GovernanceTaskList() {
   const { t } = useTranslation('itGov');
   const history = useHistory();
 
-  const { showMessageOnNextPage } = useMessage();
+  const { showMessageOnNextPage, showMessage } = useMessage();
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -74,15 +75,20 @@ function GovernanceTaskList() {
 
   const archiveIntake = async () => {
     const redirect = () => {
+      history.push('/');
+    };
+
+    try {
+      await archive();
       const message = t('taskList:withdraw_modal.confirmationText', {
         context: requestName ? 'name' : 'noName',
         requestName
       });
       showMessageOnNextPage(message, { type: 'success' });
-      history.push('/');
-    };
+    } catch {
+      showMessageOnNextPage('test', { type: 'error' });
+    }
 
-    await archive();
     redirect();
   };
 
