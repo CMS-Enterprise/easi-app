@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
@@ -50,7 +50,7 @@ function GovernanceTaskList() {
   const { t } = useTranslation('itGov');
   const history = useHistory();
 
-  const { showMessageOnNextPage } = useMessage();
+  const { showMessageOnNextPage, showMessage, Message } = useMessage();
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -72,31 +72,27 @@ function GovernanceTaskList() {
   const systemIntake = data?.systemIntake;
   const requestName = systemIntake?.requestName;
 
-  const archiveIntake = useCallback(async () => {
-    const redirect = () => {
-      history.push('/');
-    };
+  const archiveIntake = async () => {
+    archive()
+      .then(() => {
+        const message = t<string>('taskList:withdraw_modal.confirmationText', {
+          context: requestName ? 'name' : 'noName',
+          requestName
+        });
 
-    let message: string;
-    let type: 'error' | 'success' | 'warning' | 'info';
-    try {
-      await archive();
-      message = t<string>('taskList:withdraw_modal.confirmationText', {
-        context: requestName ? 'name' : 'noName',
-        requestName
-      });
-      type = 'success';
-    } catch {
-      message = t<string>('taskList:withdraw_modal.error', {
-        context: requestName ? 'name' : 'noName',
-        requestName
-      });
-      type = 'error';
-    }
+        showMessageOnNextPage(message, { type: 'success' });
+        history.push('/');
+      })
+      .catch(() => {
+        const message = t<string>('taskList:withdraw_modal.error', {
+          context: requestName ? 'name' : 'noName',
+          requestName
+        });
 
-    showMessageOnNextPage(message, { type });
-    redirect();
-  }, [archive, history, requestName, showMessageOnNextPage, t]);
+        showMessage(message, { type: 'error' });
+        setModalOpen(false);
+      });
+  };
 
   const isClosed = systemIntake?.state === SystemIntakeState.CLOSED;
 
@@ -119,6 +115,8 @@ function GovernanceTaskList() {
       data-testid="governance-task-list"
     >
       <GridContainer className="width-full">
+        <Message className="margin-top-5 margin-bottom-3" />
+
         <Breadcrumbs
           items={[
             { text: t('itGovernance'), url: '/system/making-a-request' },
