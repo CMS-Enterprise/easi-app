@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -719,6 +720,11 @@ func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID
 	}
 
 	return updatedIntake, nil
+}
+
+// CreateBusinessCase is the resolver for the createBusinessCase field.
+func (r *mutationResolver) CreateBusinessCase(ctx context.Context, systemIntakeID uuid.UUID) (*models.BusinessCase, error) {
+	panic(fmt.Errorf("not implemented: CreateBusinessCase - createBusinessCase"))
 }
 
 // SendFeedbackEmail is the resolver for the sendFeedbackEmail field.

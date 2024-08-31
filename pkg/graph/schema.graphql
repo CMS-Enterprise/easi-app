@@ -2411,6 +2411,8 @@ type Mutation {
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 
+  createBusinessCase(systemIntakeID: UUID!): BusinessCase!
+
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String

@@ -526,6 +526,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		ArchiveSystemIntake                              func(childComplexity int, id uuid.UUID) int
 		CloseTRBRequest                                  func(childComplexity int, input models.CloseTRBRequestInput) int
+		CreateBusinessCase                               func(childComplexity int, systemIntakeID uuid.UUID) int
 		CreateCedarSystemBookmark                        func(childComplexity int, input models.CreateCedarSystemBookmarkInput) int
 		CreateSystemIntake                               func(childComplexity int, input models.CreateSystemIntakeInput) int
 		CreateSystemIntakeActionChangeLCIDRetirementDate func(childComplexity int, input models.SystemIntakeChangeLCIDRetirementDateInput) int
@@ -1178,6 +1179,7 @@ type MutationResolver interface {
 	DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error)
 	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
 	ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
+	CreateBusinessCase(ctx context.Context, systemIntakeID uuid.UUID) (*models.BusinessCase, error)
 	SendFeedbackEmail(ctx context.Context, input models.SendFeedbackEmailInput) (*string, error)
 	SendCantFindSomethingEmail(ctx context.Context, input models.SendCantFindSomethingEmailInput) (*string, error)
 	SendReportAProblemEmail(ctx context.Context, input models.SendReportAProblemEmailInput) (*string, error)
@@ -3793,6 +3795,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CloseTRBRequest(childComplexity, args["input"].(models.CloseTRBRequestInput)), true
+
+	case "Mutation.createBusinessCase":
+		if e.complexity.Mutation.CreateBusinessCase == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createBusinessCase_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateBusinessCase(childComplexity, args["systemIntakeID"].(uuid.UUID)), true
 
 	case "Mutation.createCedarSystemBookmark":
 		if e.complexity.Mutation.CreateCedarSystemBookmark == nil {
@@ -9966,6 +9980,8 @@ type Mutation {
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 
+  createBusinessCase(systemIntakeID: UUID!): BusinessCase!
+
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
@@ -10556,6 +10572,21 @@ func (ec *executionContext) field_Mutation_closeTRBRequest_args(ctx context.Cont
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createBusinessCase_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uuid.UUID
+	if tmp, ok := rawArgs["systemIntakeID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["systemIntakeID"] = arg0
 	return args, nil
 }
 
@@ -30116,6 +30147,101 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_archiveSystemIntake_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createBusinessCase(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createBusinessCase(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateBusinessCase(rctx, fc.Args["systemIntakeID"].(uuid.UUID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.BusinessCase)
+	fc.Result = res
+	return ec.marshalNBusinessCase2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCase(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createBusinessCase(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "alternativeASolution":
+				return ec.fieldContext_BusinessCase_alternativeASolution(ctx, field)
+			case "alternativeBSolution":
+				return ec.fieldContext_BusinessCase_alternativeBSolution(ctx, field)
+			case "businessNeed":
+				return ec.fieldContext_BusinessCase_businessNeed(ctx, field)
+			case "businessOwner":
+				return ec.fieldContext_BusinessCase_businessOwner(ctx, field)
+			case "cmsBenefit":
+				return ec.fieldContext_BusinessCase_cmsBenefit(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_BusinessCase_createdAt(ctx, field)
+			case "currentSolutionSummary":
+				return ec.fieldContext_BusinessCase_currentSolutionSummary(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_BusinessCase_euaUserId(ctx, field)
+			case "id":
+				return ec.fieldContext_BusinessCase_id(ctx, field)
+			case "lifecycleCostLines":
+				return ec.fieldContext_BusinessCase_lifecycleCostLines(ctx, field)
+			case "preferredSolution":
+				return ec.fieldContext_BusinessCase_preferredSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_BusinessCase_priorityAlignment(ctx, field)
+			case "projectName":
+				return ec.fieldContext_BusinessCase_projectName(ctx, field)
+			case "requester":
+				return ec.fieldContext_BusinessCase_requester(ctx, field)
+			case "requesterPhoneNumber":
+				return ec.fieldContext_BusinessCase_requesterPhoneNumber(ctx, field)
+			case "status":
+				return ec.fieldContext_BusinessCase_status(ctx, field)
+			case "successIndicators":
+				return ec.fieldContext_BusinessCase_successIndicators(ctx, field)
+			case "systemIntake":
+				return ec.fieldContext_BusinessCase_systemIntake(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_BusinessCase_updatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type BusinessCase", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createBusinessCase_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -61749,6 +61875,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "createBusinessCase":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createBusinessCase(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "sendFeedbackEmail":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_sendFeedbackEmail(ctx, field)
@@ -68246,6 +68379,20 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNBusinessCase2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCase(ctx context.Context, sel ast.SelectionSet, v models.BusinessCase) graphql.Marshaler {
+	return ec._BusinessCase(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNBusinessCase2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCase(ctx context.Context, sel ast.SelectionSet, v *models.BusinessCase) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._BusinessCase(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNBusinessCaseStatus2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCaseStatus(ctx context.Context, v interface{}) (models.BusinessCaseStatus, error) {

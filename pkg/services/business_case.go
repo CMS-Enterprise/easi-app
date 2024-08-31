@@ -97,6 +97,7 @@ func NewCreateBusinessCase(
 
 		// Autofill time and intake data
 		now := config.clock.Now()
+		//var businessCase models.BusinessCaseWithCosts
 		businessCase.CreatedAt = &now
 		businessCase.UpdatedAt = &now
 		businessCase.Requester = null.StringFrom(intake.Requester)

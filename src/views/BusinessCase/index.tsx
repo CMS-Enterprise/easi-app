@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -36,6 +36,9 @@ import {
 } from 'types/routines';
 import { NotFoundPartial } from 'views/NotFound';
 
+import { prepareBusinessCaseForApp } from '../../data/businessCase';
+import { useCreateBusinessCaseMutation } from '../../gql/gen/graphql';
+
 import {
   AlternativeSolutionA,
   AlternativeSolutionB
@@ -59,10 +62,11 @@ export const BusinessCase = () => {
   const dispatch = useDispatch();
   const location = useLocation<any>();
   const { t } = useTranslation('taskList');
-
-  const businessCase = useSelector(
-    (state: AppState) => state.businessCase.form
+  const [businessCase, setBusinessCase] = useState<BusinessCaseModel | null>(
+    null
   );
+
+  const [createBusinessCase] = useCreateBusinessCaseMutation();
 
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
 
@@ -85,7 +89,7 @@ export const BusinessCase = () => {
     GetGovernanceTaskListVariables
   >(GetGovernanceTaskListQuery, {
     variables: {
-      id: businessCase.systemIntakeId
+      id: businessCase?.systemIntakeId || ''
     },
     skip: !businessCase?.systemIntakeId
   });
@@ -95,18 +99,32 @@ export const BusinessCase = () => {
 
   // Start new business case or resume existing business case
   useEffect(() => {
-    if (businessCaseId === 'new') {
-      const systemIntakeId =
-        (location.state && location.state.systemIntakeId) || '';
-      dispatch(
-        postBusinessCase({
-          ...businessCase,
-          systemIntakeId
-        })
-      );
-    } else {
-      dispatch(fetchBusinessCase(businessCaseId));
+    async function run(): Promise<void> {
+      if (businessCaseId === 'new') {
+        const systemIntakeId =
+          (location.state && location.state.systemIntakeId) || '';
+
+        try {
+          const createdBusinessCase = await createBusinessCase({
+            variables: { systemIntakeID: systemIntakeId }
+          });
+
+          setBusinessCase(prepareBusinessCaseForApp(createdBusinessCase));
+        } catch {
+          // show alert
+        }
+        dispatch(
+          postBusinessCase({
+            ...businessCase,
+            systemIntakeId
+          })
+        );
+      } else {
+        dispatch(fetchBusinessCase(businessCaseId));
+      }
     }
+
+    run().then(r => {});
 
     return () => {
       // clear business case when unmounting
@@ -117,10 +135,10 @@ export const BusinessCase = () => {
   }, []);
 
   useEffect(() => {
-    if (businessCase.id) {
+    if (businessCase?.id) {
       history.replace(`/business/${businessCase.id}/${formPage}`);
     }
-  }, [history, businessCase.id, formPage]);
+  }, [history, businessCase?.id, formPage]);
 
   // Handle submit
   useEffect(() => {
@@ -143,7 +161,7 @@ export const BusinessCase = () => {
           <Breadcrumb>
             <BreadcrumbLink
               asCustom={Link}
-              to={`/governance-task-list/${businessCase.systemIntakeId}`}
+              to={`/governance-task-list/${businessCase?.systemIntakeId || ''}`}
             >
               <span>{t('navigation.governanceTaskList')}</span>
             </BreadcrumbLink>
@@ -154,7 +172,7 @@ export const BusinessCase = () => {
 
       {loading && <PageLoading />}
 
-      {businessCase.id && !loading && (
+      {businessCase?.id && !loading && (
         <Switch>
           <Route
             path="/business/:businessCaseId/general-request-info"
