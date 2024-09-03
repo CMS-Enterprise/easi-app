@@ -1,90 +1,83 @@
+import { NavLinkProps } from 'components/shared/SideNavigation';
 import { Flags } from 'types/flags';
-
-type SubNavItems = {
-  route: `/it-governance/${string}/${string}`;
-  text: string;
-  aria?: string;
-  /** Value used to designate end of sidenav subgrouping / border-bottom */
-  groupEnd?: boolean;
-  /** Hide link from navigation */
-  hidden?: boolean;
-}[];
 
 /**
  * Sub navigation links for IT Gov admin pages
  *
- * Returns correct nav links based on `reviewerRoute` prop (ex: excludes GRT-specific links from GRB view)
- * */
+ * Hides GRT admin links when user does not have admin job code
+ */
 const subNavItems = (
   systemId: string,
   /** Whether current user is IT Gov admin */
-  itGovAdmin: boolean,
+  isITGovAdmin: boolean,
   flags?: Flags
-): SubNavItems => {
-  const links: SubNavItems = [
+): NavLinkProps[] => {
+  const links: Array<NavLinkProps & { hidden?: boolean }> = [
     {
       route: `/it-governance/${systemId}/intake-request`,
-      text: 'general:intake',
-      aria: 'aria.openIntake'
+      text: 'general:intake'
     },
     {
       route: `/it-governance/${systemId}/documents`,
-      text: 'intake:documents.supportingDocuments',
-      aria: 'aria.openDocuments'
+      text: 'intake:documents.supportingDocuments'
     },
     {
       route: `/it-governance/${systemId}/business-case`,
       text: 'general:businessCase',
-      aria: 'aria.openBusiness',
       groupEnd: flags && !flags.grbReviewTab
     },
     {
       route: `/it-governance/${systemId}/grb-review`,
       text: 'grbReview:title',
-      aria: 'grbReview:aria',
       groupEnd: true,
       // Only show GRB Review tab when flag is turned on
-      hidden: !flags?.grbReviewTab
+      hidden: !flags?.grbReviewTab,
+      children: [
+        {
+          route: `/it-governance/${systemId}/grb-review#documents`,
+          text: 'grbReview:supportingDocuments'
+        },
+        {
+          route: `/it-governance/${systemId}/grb-review#participants`,
+          text: 'grbReview:participants'
+        }
+      ]
     },
     {
       route: `/it-governance/${systemId}/feedback`,
-      text: 'feedback.title',
-      aria: 'aria.openFeedback'
+      text: 'governanceReviewTeam:feedback.title'
     },
     {
       route: `/it-governance/${systemId}/decision`,
-      text: 'decision.title',
-      aria: 'aria.openDecision'
+      text: 'governanceReviewTeam:decision.title'
     },
     {
       route: `/it-governance/${systemId}/lcid`,
-      text: 'lifecycleID.title',
-      aria: 'aria.openLcid',
+      text: 'governanceReviewTeam:lifecycleID.title',
       groupEnd: true
     },
     {
       route: `/it-governance/${systemId}/additional-information`,
-      text: 'additionalInformation.title',
-      aria: 'aria.openAdditionalInformation',
-      groupEnd: itGovAdmin
+      text: 'governanceReviewTeam:additionalInformation.title',
+      groupEnd: isITGovAdmin
     },
     {
       route: `/it-governance/${systemId}/actions`,
-      text: 'actions',
+      text: 'governanceReviewTeam:actions',
       // GRT only link
-      hidden: !itGovAdmin
+      hidden: !isITGovAdmin
     },
     {
       route: `/it-governance/${systemId}/notes`,
-      text: 'notes.heading',
+      text: 'governanceReviewTeam:notes.heading',
       // GRT only link
-      hidden: !itGovAdmin
+      hidden: !isITGovAdmin
     },
     {
       route: `/it-governance/${systemId}/dates`,
-      text: 'dates.heading',
+      text: 'governanceReviewTeam:dates.heading',
       // GRT only link
-      hidden: !itGovAdmin
+      hidden: !isITGovAdmin
     }
   ];
 
