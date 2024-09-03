@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import { NavHashLink } from 'react-router-hash-link';
 import { IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
@@ -84,14 +85,14 @@ const SideNavigation = ({
                   <ul className="usa-sidenav__sublist">
                     {item.children.map(child => (
                       <li className="usa-sidenav__item border-top-0">
-                        <UswdsReactLink
+                        <NavHashLink
                           to={child.route}
-                          className={classNames({
+                          className={classNames('usa-link', {
                             'usa-current': pathnameWithHash === child.route
                           })}
                         >
                           {t(child.text)}
-                        </UswdsReactLink>
+                        </NavHashLink>
                       </li>
                     ))}
                   </ul>

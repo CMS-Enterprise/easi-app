@@ -246,7 +246,9 @@ const GRBReview = ({
           </div>
 
           {/* Additional Documents Title and Link */}
-          <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
+          <h3 className="margin-bottom-1" id="documents">
+            {t('additionalDocuments')}
+          </h3>
 
           {isITGovAdmin && (
             <UswdsReactLink
