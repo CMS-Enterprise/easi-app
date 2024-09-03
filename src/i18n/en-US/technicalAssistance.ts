@@ -598,6 +598,7 @@ const technicalAssistance = {
     labels: {
       ACCESSIBILITY_COMPLIANCE: 'Access Control and Identity Management',
       ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT: 'Accessibility Compliance',
+      ARTIFICIAL_INTELLIGENCE: 'Artificial Intelligence',
       ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT:
         'Assistance with System Concept Development',
       BUSINESS_INTELLIGENCE: 'Business Intelligence',
@@ -816,7 +817,7 @@ const technicalAssistance = {
   },
   adminHome: {
     home: 'Home',
-    breadcrumb: 'Request details',
+    breadcrumb: 'TRB request details',
     requestType: 'Request type',
     requester: 'Requester',
     submissionDate: 'Submission Date',

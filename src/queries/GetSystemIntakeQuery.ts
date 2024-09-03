@@ -109,6 +109,7 @@ export const SystemIntake = gql`
     archivedAt
     euaUserId
     hasUiChanges
+    usesAiTech
     documents {
       ...SystemIntakeDocument
     }
@@ -133,6 +134,24 @@ export const SystemIntake = gql`
         assigneeFirstName
         assigneeLastName
       }
+    }
+    relatedTRBRequests {
+      id
+      name
+      contractNumbers {
+        contractNumber
+      }
+      status
+      createdAt
+    }
+    relatedIntakes {
+      id
+      requestName
+      contractNumbers {
+        contractNumber
+      }
+      decisionState
+      submittedAt
     }
   }
 `;

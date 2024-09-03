@@ -8,13 +8,6 @@ type UserError {
 }
 
 """
-Indicates the type of a request being made with the EASi system
-"""
-enum RequestType {
-  GOVERNANCE_REQUEST
-}
-
-"""
 PersonRole is an enumeration of values for a person's role
 """
 enum PersonRole {
@@ -28,29 +21,6 @@ enum PersonRole {
   PRIVACY_ADVISOR
   CRA
   OTHER
-}
-
-"""
-Represents a requester's system intake request
-"""
-type Request {
-  id: UUID!
-  name: String
-  submittedAt: Time
-  type: RequestType!
-  status: String!
-  statusRequester: SystemIntakeStatusRequester
-  statusCreatedAt: Time
-  lcid: String
-  nextMeetingDate: Time
-}
-
-type RequestsConnection {
-  edges: [RequestEdge!]!
-}
-
-type RequestEdge {
-  node: Request!
 }
 
 """
@@ -777,6 +747,7 @@ type SystemIntake {
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
+  usesAiTech: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
   requestFormState: SystemIntakeFormState!
   draftBusinessCaseState: SystemIntakeFormState!
@@ -960,6 +931,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   currentStage: String
   cedarSystemId: String
   hasUiChanges: Boolean
+  usesAiTech: Boolean
 }
 
 """
@@ -1924,6 +1896,7 @@ The possible options on the TRB "Subject Areas" page
 enum TRBSubjectAreaOption {
   ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT
   ACCESSIBILITY_COMPLIANCE
+  ARTIFICIAL_INTELLIGENCE
   ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT
   BUSINESS_INTELLIGENCE
   CLOUD_MIGRATION
@@ -1966,6 +1939,9 @@ type TRBRequestForm {
   collabDateOther: String
   collabGroupOther: String
   collabGRBConsultRequested: Boolean
+  """
+  TODO: Make Funding sources non-nullable
+  """
   fundingSources: [TRBFundingSource!]
   systemIntakes: [SystemIntake!]!
   subjectAreaOptions: [TRBSubjectAreaOption!]
@@ -2437,6 +2413,8 @@ type Mutation {
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
+  archiveSystemIntake(id: UUID!): SystemIntake!
+
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
@@ -2512,11 +2490,10 @@ type Query {
   Requests fetches a requester's own intake requests
   first is currently non-functional and can be removed later
   """
-  requests(first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
+  mySystemIntakes:[SystemIntake!]!
   systemIntakesWithReviewRequested: [SystemIntake!]!
-  @hasRole(role: EASI_GOVTEAM)
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
@@ -2854,7 +2831,7 @@ enum SystemIntakeMeetingState {
 }
 
 """
-This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
+This represents the statuses that an admin would see as a representation of a system intake. Note, there is no status for a brand new request, because an Admin doesn't see the request until it is in progress.
 """
 enum SystemIntakeStatusAdmin {
   INITIAL_REQUEST_FORM_IN_PROGRESS

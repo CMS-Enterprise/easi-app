@@ -3,6 +3,8 @@
 // and 3000 causes issue with autosave. This is definitely a bit hacky...
 // TODO: fix this in the future if it causes more headache
 
+const testSystemIntakeName = 'Test Request Name';
+
 cy.systemIntake = {
   contactDetails: {
     fillNonBranchingFields: () => {
@@ -44,8 +46,8 @@ cy.systemIntake = {
   requestDetails: {
     fillNonBranchingFields: () => {
       cy.get('#requestName')
-        .type('Test Request Name')
-        .should('have.value', 'Test Request Name');
+        .type(testSystemIntakeName)
+        .should('have.value', testSystemIntakeName);
 
       cy.get('#businessNeed')
         .type('This is my business need.')
@@ -54,6 +56,8 @@ cy.systemIntake = {
       cy.get('#businessSolution')
         .type('This is my business solution.')
         .should('have.value', 'This is my business solution.');
+
+      cy.get('#usesAiTechTrue').check({ force: true }).should('be.checked');
 
       cy.get('#needsEaSupportFalse')
         .check({ force: true })
@@ -84,3 +88,5 @@ cy.systemIntake = {
     }
   }
 };
+
+export default testSystemIntakeName;

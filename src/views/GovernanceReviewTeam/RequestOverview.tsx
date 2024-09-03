@@ -6,6 +6,7 @@ import { Link, Route, Switch, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid, IconArrowBack } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
@@ -37,7 +38,11 @@ import Summary from './Summary';
 
 import './index.scss';
 
-const RequestOverview = () => {
+type RequestOverviewProps = {
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
+};
+
+const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const flags = useFlags();
 
@@ -94,18 +99,11 @@ const RequestOverview = () => {
     <MainContent className="easi-grt" data-testid="grt-request-overview">
       {systemIntake && !fullPageLayout && (
         <Summary
-          id={systemIntake.id}
-          requester={systemIntake.requester}
+          {...systemIntake}
           requestName={systemIntake.requestName || ''}
-          requestType={systemIntake.requestType}
-          statusAdmin={systemIntake.statusAdmin}
-          adminLead={systemIntake.adminLead}
-          submittedAt={systemIntake.submittedAt}
-          lcid={systemIntake.lcid}
           contractNumbers={
             systemIntake?.contractNumbers?.map(c => c.contractNumber) || []
           }
-          state={systemIntake?.state}
         />
       )}
       {!fullPageLayout && (
@@ -223,8 +221,13 @@ const RequestOverview = () => {
 
                 {flags?.grbReviewTab && (
                   <Route
-                    path={`/${reviewerType}/:systemId/grb-review`}
-                    render={() => <GRBReview {...systemIntake} />}
+                    path={`/:reviewerType(${reviewerType})/:systemId/grb-review/:action(add|edit)?`}
+                    render={() => (
+                      <GRBReview
+                        {...systemIntake}
+                        grbReviewers={grbReviewers}
+                      />
+                    )}
                   />
                 )}
 

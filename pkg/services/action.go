@@ -16,10 +16,10 @@ import (
 // ActionExecuter is a function that can execute an action
 type ActionExecuter func(context.Context, *models.SystemIntake, *models.Action) error
 
-// NewTakeAction is a service to create and execute an action
-func NewTakeAction(
+// NewBusinessCaseTakeAction is a service to create and execute an action
+func NewBusinessCaseTakeAction(
 	fetch func(context.Context, uuid.UUID) (*models.SystemIntake, error),
-	actionTypeMap map[models.ActionType]ActionExecuter,
+	submitBusinessCase ActionExecuter,
 ) func(context.Context, *models.Action) error {
 	return func(ctx context.Context, action *models.Action) error {
 		intake, fetchErr := fetch(ctx, *action.IntakeID)
@@ -31,14 +31,7 @@ func NewTakeAction(
 			}
 		}
 
-		if executeAction, ok := actionTypeMap[action.ActionType]; ok {
-			return executeAction(ctx, intake, action)
-		}
-		return &apperrors.ResourceConflictError{
-			Err:        errors.New("invalid action type"),
-			Resource:   intake,
-			ResourceID: intake.ID.String(),
-		}
+		return submitBusinessCase(ctx, intake, action)
 	}
 }
 
@@ -187,11 +180,11 @@ func NewSubmitSystemIntake(
 func NewSubmitBusinessCase(
 	config Config,
 	authorized func(context.Context, *models.SystemIntake) bool,
-	fetchOpenBusinessCase func(context.Context, uuid.UUID) (*models.BusinessCase, error),
-	validateForSubmit func(businessCase *models.BusinessCase) error,
+	fetchOpenBusinessCase func(context.Context, uuid.UUID) (*models.BusinessCaseWithCosts, error),
+	validateForSubmit func(businessCase *models.BusinessCaseWithCosts) error,
 	saveAction func(context.Context, *models.Action) error,
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
+	updateBusinessCase func(context.Context, *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error),
 	emailRequester func(
 		ctx context.Context,
 		requesterEmail models.EmailAddress,
@@ -208,7 +201,7 @@ func NewSubmitBusinessCase(
 		isResubmitted bool,
 		isDraft bool,
 	) error,
-	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
+	submitToCEDAR func(ctx context.Context, bc models.BusinessCaseWithCosts) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		if !authorized(ctx, intake) {

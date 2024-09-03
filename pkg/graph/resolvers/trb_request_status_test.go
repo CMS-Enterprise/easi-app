@@ -71,12 +71,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 	s.Run("status is correctly calculated as TRB tasks are performed", func() {
 		// Test the "NEW" TRB status
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err := GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err := GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusNew, trbStatus)
-		taskStatuses, err := GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err := GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusReadyToStart,
@@ -89,7 +89,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 		// Test the "DRAFT_REQUEST_FORM" status by making a random update to the form but not
 		// submitting it
-		form, err := GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trb.ID)
+		form, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trb.ID)
 		s.NoError(err)
 		s.NotNil(form)
 		formChanges := map[string]interface{}{
@@ -100,12 +100,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusDraftRequestForm, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusInProgress,
@@ -117,7 +117,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		}, *taskStatuses)
 
 		// Test the "REQUEST_FORM_COMPLETE" status by submitting it
-		form, err = GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trb.ID)
+		form, err = GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trb.ID)
 		s.NoError(err)
 		s.NotNil(form)
 		formChanges = map[string]interface{}{
@@ -128,12 +128,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusRequestFormComplete, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -163,12 +163,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusReadyForConsult, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -196,12 +196,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusConsultScheduled, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -229,12 +229,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusConsultComplete, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -256,12 +256,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusDraftAdviceLetter, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -276,12 +276,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = RequestReviewForTRBAdviceLetter(ctx, store, &emailClient, stubFetchUserInfo, adviceLetter.ID)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusAdviceLetterInReview, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -296,12 +296,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = SendTRBAdviceLetter(ctx, store, adviceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos, false, nil)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusAdviceLetterSent, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -320,12 +320,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusFollowUpRequested, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,

@@ -5,11 +5,7 @@ export type Flags = {
   systemProfileHiddenFields: boolean;
   systemWorkspace: boolean;
   systemWorkspaceRequestsCard: boolean;
+  systemWorkspaceTeam: boolean;
   grbReviewTab: boolean;
-};
-
-export type FlagsState = {
-  flags: Flags;
-  isLoaded: boolean;
-  error?: string;
+  showAtoColumn: boolean;
 };

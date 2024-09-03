@@ -42,6 +42,7 @@ import SystemIntake from 'views/SystemIntake';
 import SystemList from 'views/SystemList';
 import SystemProfile from 'views/SystemProfile';
 import SystemWorkspace from 'views/SystemWorkspace';
+import SystemWorkspaceRequests from 'views/SystemWorkspace/SystemWorkspaceRequests';
 import TableStateWrapper from 'views/TableStateWrapper';
 import TechnicalAssistance from 'views/TechnicalAssistance';
 import TermsAndConditions from 'views/TermsAndConditions';
@@ -144,10 +145,20 @@ const AppRoutes = () => {
       <SecureRoute exact path="/systems" component={SystemList} />
 
       {flags.systemWorkspace ? (
-        <SecureRoute
-          path="/systems/:systemId/workspace"
-          component={SystemWorkspace}
-        />
+        [
+          <SecureRoute
+            key="workspace"
+            exact
+            path="/systems/:systemId/workspace"
+            component={SystemWorkspace}
+          />,
+          <SecureRoute
+            key="workspace-requests"
+            exact
+            path="/systems/:systemId/workspace/requests"
+            component={SystemWorkspaceRequests}
+          />
+        ]
       ) : (
         <Redirect
           exact

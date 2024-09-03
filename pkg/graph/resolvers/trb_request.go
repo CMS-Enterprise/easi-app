@@ -84,31 +84,18 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 }
 
 // GetTRBRequestByID returns a TRB request by it's ID
-func GetTRBRequestByID(ctx context.Context, id uuid.UUID, store *storage.Store) (*models.TRBRequest, error) {
-	trb, err := store.GetTRBRequestByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	return trb, err
+func GetTRBRequestByID(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequest, error) {
+	return store.GetTRBRequestByID(ctx, id)
 }
 
 // GetTRBRequests returns all TRB Requests
-func GetTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
-	TRBRequests, err := store.GetTRBRequests(ctx, archived)
-	if err != nil {
-		return nil, err
-	}
-	return TRBRequests, err
+func GetTRBRequests(ctx context.Context, store *storage.Store, archived bool) ([]*models.TRBRequest, error) {
+	return store.GetTRBRequests(ctx, archived)
 }
 
 // GetMyTRBRequests returns all TRB Requests that belong to the principal in the context
-func GetMyTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
-	TRBRequests, err := store.GetMyTRBRequests(ctx, archived)
-	if err != nil {
-		return nil, err
-	}
-	return TRBRequests, err
+func GetMyTRBRequests(ctx context.Context, store *storage.Store, archived bool) ([]*models.TRBRequest, error) {
+	return store.GetMyTRBRequests(ctx, archived)
 }
 
 // UpdateTRBRequestConsultMeetingTime sets the TRB consult meeting time and sends the related emails
@@ -437,19 +424,4 @@ func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.User
 	}
 
 	return requesterInfo, nil
-}
-
-// GetTRBUserComponent retrieves the component of a TRB user from the TRB attendees table
-func GetTRBUserComponent(ctx context.Context, store *storage.Store, euaID *string, trbRequestID uuid.UUID) (*string, error) {
-	// TODO/tech debt: This results in an N+1 problem and could be moved to a dataloader if
-	// performance ever becomes an issue
-	var component *string
-	if euaID != nil {
-		attendeeComponent, err := store.GetAttendeeComponentByEUA(ctx, *euaID, trbRequestID)
-		if err != nil {
-			return nil, err
-		}
-		component = attendeeComponent
-	}
-	return component, nil
 }

@@ -1,15 +1,10 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
+import { useGetSystemIntakeGRBReviewersQuery } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
-import useCacheQuery from 'hooks/useCacheQuery';
-import GetSystemIntakeGrbReviewersQuery from 'queries/GetSystemIntakeGrbReviewersQuery';
-import {
-  GetSystemIntakeGrbReviewers,
-  GetSystemIntakeGrbReviewersVariables
-} from 'queries/types/GetSystemIntakeGrbReviewers';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
@@ -30,39 +25,36 @@ const GovernanceReviewTeam = () => {
     id: string;
   }>();
 
-  const { data, loading } = useCacheQuery<
-    GetSystemIntakeGrbReviewers,
-    GetSystemIntakeGrbReviewersVariables
-  >(GetSystemIntakeGrbReviewersQuery, {
+  const { data, loading } = useGetSystemIntakeGRBReviewersQuery({
     variables: {
       id
     }
   });
 
+  const grbReviewers = data?.systemIntake?.grbReviewers;
+
   /** Check if current user is set as GRB reviewer */
   const isGrbReviewer: boolean = useMemo(() => {
-    const grbReviewers = data?.systemIntake?.grbReviewers || [];
-
-    return grbReviewers.some(
+    return (grbReviewers || []).some(
       reviewer => reviewer.userAccount.username === euaId
     );
-  }, [data?.systemIntake?.grbReviewers, euaId]);
+  }, [grbReviewers, euaId]);
 
-  const isGrtReviewer = !!user.isGrtReviewer(groups, flags);
+  const isITGovAdmin = user.isITGovAdmin(groups, flags);
 
-  const reviewerType: ReviewerKey = isGrtReviewer
+  const reviewerType: ReviewerKey = isITGovAdmin
     ? 'governance-review-team'
     : 'governance-review-board';
 
   if (isUserSet && !loading) {
-    if (isGrtReviewer || isGrbReviewer) {
+    if (isITGovAdmin || isGrbReviewer) {
       return (
         <IsGrbViewContext.Provider
           // Only show GRB view if user is GRB reviewer without GOVTEAM job code
-          value={!isGrtReviewer}
+          value={!isITGovAdmin}
         >
           <Switch>
-            {isGrtReviewer && (
+            {isITGovAdmin && (
               /* Defining outside parent route to trigger parent rerender/refetch after mutation */
               <Route path="/governance-review-team/:id/additional-information/link">
                 <RequestLinkForm requestType="itgov" fromAdmin />
@@ -73,8 +65,9 @@ const GovernanceReviewTeam = () => {
               // reviewerType differentiates between GRT and GRB views for admin pages
               path={`/:reviewerType(${reviewerType})/:systemId/:activePage/:subPage?`}
               exact
-              component={RequestOverview}
-            />
+            >
+              <RequestOverview grbReviewers={grbReviewers || []} />
+            </Route>
 
             <Route path="*" component={NotFound} />
           </Switch>

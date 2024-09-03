@@ -15,3 +15,10 @@ type SystemIntakeFundingSource struct {
 	FundingNumber  null.String `json:"fundingNumber" db:"funding_number"`
 	CreatedAt      *time.Time  `db:"created_at"`
 }
+
+func (s SystemIntakeFundingSource) GetMappingKey() uuid.UUID {
+	return s.SystemIntakeID
+}
+func (s SystemIntakeFundingSource) GetMappingVal() *SystemIntakeFundingSource {
+	return &s
+}

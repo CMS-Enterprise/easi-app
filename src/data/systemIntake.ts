@@ -107,6 +107,7 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
 
   // Translate booleans to yes/no
   const existingFunding = convertBoolToYesNo(intake?.existingFunding);
+  const usesAiTech = convertBoolToYesNo(intake?.usesAiTech);
   const needsEaSupport = convertBoolToYesNo(intake?.needsEaSupport);
   const hasUiChanges = convertBoolToYesNo(intake?.hasUiChanges);
 
@@ -122,6 +123,7 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     lastAdminNote,
     // Formatted booleans
     existingFunding,
+    usesAiTech,
     needsEaSupport,
     hasUiChanges,
     // Formatted dates

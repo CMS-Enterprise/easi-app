@@ -1,0 +1,690 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`System Workspace Requests Table > renders open requests 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container margin-bottom-5 desktop:margin-bottom-10"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <nav
+      aria-label="Breadcrumbs"
+      class="usa-breadcrumb usa-breadcrumb--wrap padding-bottom-0"
+      style="background-color: transparent;"
+    >
+      <ol
+        class="usa-breadcrumb__list"
+      >
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="usa-breadcrumb__link"
+            href="/"
+          >
+            <span>
+              Home
+            </span>
+          </a>
+        </li>
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="usa-breadcrumb__link"
+            href="/systems/{11AB1A00-1234-5678-ABC1-1A001B00CC1B}/workspace"
+          >
+            <span>
+              System workspace
+            </span>
+          </a>
+        </li>
+        <li
+          aria-current="page"
+          class="usa-breadcrumb__list-item usa-current"
+        >
+          <span>
+            Requests
+          </span>
+        </li>
+      </ol>
+    </nav>
+    <h1
+      aria-live="polite"
+      class="easi-h1 margin-top-6 margin-bottom-05"
+      tabindex="-1"
+    >
+      Requests
+    </h1>
+    <p
+      class="font-body-lg line-height-body-5 text-light margin-y-0"
+    >
+      for Easy Access to System Information
+    </p>
+    <p
+      class="font-body-md text-light line-height-body-4 margin-top-1"
+    >
+      EASi facilitates IT Governance requests and requests for technical assistance from the Technical Review Board (TRB). Use this page to view and manage open and closed requests for your system. You may have created them, or they may have been created by another team member.
+    </p>
+    <div
+      class="display-flex"
+    >
+      <a
+        class="usa-link display-flex flex-align-center text-primary"
+        href="/systems/{11AB1A00-1234-5678-ABC1-1A001B00CC1B}/workspace"
+      >
+        <svg
+          class="usa-icon margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Return to system workspace
+      </a>
+    </div>
+    <div
+      class="bg-base-lightest padding-top-3 padding-bottom-2 padding-x-2 margin-top-4 margin-bottom-6"
+    >
+      <h4
+        class="margin-top-0 margin-bottom-1"
+      >
+        Start a new request
+      </h4>
+      <a
+        class="usa-link usa-button usa-button--outline text-primary margin-bottom-1"
+        data-testid="new-request-itgov"
+        href="/system/request-type?linkCedarSystemId=%7B11AB1A00-1234-5678-ABC1-1A001B00CC1B%7D"
+      >
+        Start an IT Governance request
+      </a>
+      <a
+        class="usa-link usa-button usa-button--outline text-primary"
+        data-testid="new-request-itgov"
+        href="/trb/start?linkCedarSystemId=%7B11AB1A00-1234-5678-ABC1-1A001B00CC1B%7D"
+      >
+        Start a technical assistance request
+      </a>
+    </div>
+    <div
+      data-testid="system-linked-requests"
+    >
+      <nav
+        aria-label="Request Repository Table Navigation"
+      >
+        <ul
+          class="easi-request-repo__tab-list margin-bottom-4"
+        >
+          <li
+            class="easi-request-repo__tab font-body-2xs easi-request-repo__tab--active"
+          >
+            <button
+              class="easi-request-repo__tab-btn line-height-body-3 text-primary"
+              type="button"
+            >
+              Open requests
+            </button>
+          </li>
+          <li
+            class="easi-request-repo__tab font-body-2xs"
+          >
+            <button
+              class="easi-request-repo__tab-btn line-height-body-3 text-base-dark"
+              type="button"
+            >
+              Closed requests
+            </button>
+          </li>
+        </ul>
+      </nav>
+      <form
+        class="usa-form usa-search margin-bottom-5 maxw-mobile-lg"
+        data-testid="table-client-filter"
+        role="search"
+      >
+        <label
+          class="usa-sr-only"
+          data-testid="label"
+          for="systemTable.id-search"
+        >
+          Search table
+        </label>
+        <input
+          class="usa-input"
+          data-testid="textInput"
+          id="systemTable.id-search"
+          name="systemTable.title Search"
+          role="searchbox"
+          type="search"
+          value=""
+        />
+        <button
+          class="usa-button grid-row flex-justify-center flex-align-center no-pointer"
+          data-testid="button"
+          type="submit"
+        >
+          <svg
+            class="usa-icon usa-icon--size-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+            />
+          </svg>
+        </button>
+      </form>
+      <div
+        class="usa-table-container--scrollable"
+        data-testid="scrollable-table-container"
+      >
+        <table
+          class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
+          data-testid="table"
+        >
+          <thead>
+            <tr
+              role="row"
+            >
+              <th
+                aria-sort="descending"
+                class="border-bottom-2px"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled width-full display-flex"
+                  data-testid="button"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  <div
+                    class="flex-fill text-no-wrap"
+                  >
+                    Submission date
+                  </div>
+                  <div
+                    class="position-relative width-205 margin-left-05"
+                  >
+                    <svg
+                      class="usa-icon margin-left-05 position-absolute"
+                      data-testid="caret--down"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path
+                        d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="border-bottom-2px"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled width-full display-flex"
+                  data-testid="button"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  <div
+                    class="flex-fill text-no-wrap"
+                  >
+                    Request name
+                  </div>
+                  <div
+                    class="position-relative width-205 margin-left-05"
+                  >
+                    <svg
+                      class="usa-icon margin-left-05 position-absolute"
+                      data-testid="caret--sort"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path
+                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="border-bottom-2px"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled width-full display-flex"
+                  data-testid="button"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  <div
+                    class="flex-fill text-no-wrap"
+                  >
+                    Process
+                  </div>
+                  <div
+                    class="position-relative width-205 margin-left-05"
+                  >
+                    <svg
+                      class="usa-icon margin-left-05 position-absolute"
+                      data-testid="caret--sort"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path
+                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="border-bottom-2px"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled width-full display-flex"
+                  data-testid="button"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  <div
+                    class="flex-fill text-no-wrap"
+                  >
+                    Status
+                  </div>
+                  <div
+                    class="position-relative width-205 margin-left-05"
+                  >
+                    <svg
+                      class="usa-icon margin-left-05 position-absolute"
+                      data-testid="caret--sort"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path
+                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="border-bottom-2px"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled width-full display-flex"
+                  data-testid="button"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  <div
+                    class="flex-fill text-no-wrap"
+                  >
+                    Requester
+                  </div>
+                  <div
+                    class="position-relative width-205 margin-left-05"
+                  >
+                    <svg
+                      class="usa-icon margin-left-05 position-absolute"
+                      data-testid="caret--sort"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path
+                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            role="rowgroup"
+          >
+            <tr
+              role="row"
+            >
+              <td
+                role="cell"
+              >
+                07/25/2024
+              </td>
+              <td
+                role="cell"
+              >
+                Related Intake 2 (system 1B)
+              </td>
+              <td
+                role="cell"
+              >
+                IT Governance
+              </td>
+              <td
+                role="cell"
+              >
+                New
+              </td>
+              <td
+                role="cell"
+              >
+                User One
+              </td>
+            </tr>
+            <tr
+              role="row"
+            >
+              <td
+                role="cell"
+              >
+                07/24/2024
+              </td>
+              <td
+                role="cell"
+              >
+                System Intake Relation (Existing System 0A)
+              </td>
+              <td
+                role="cell"
+              >
+                IT Governance
+              </td>
+              <td
+                role="cell"
+              >
+                New
+              </td>
+              <td
+                role="cell"
+              >
+                User One
+              </td>
+            </tr>
+            <tr
+              role="row"
+            >
+              <td
+                role="cell"
+              >
+                07/03/2024
+              </td>
+              <td
+                role="cell"
+              >
+                Case 18 - Completed request with related system (1B)
+              </td>
+              <td
+                role="cell"
+              >
+                TRB
+              </td>
+              <td
+                role="cell"
+              >
+                Request form complete
+              </td>
+              <td
+                role="cell"
+              >
+                Adeline Aarons
+              </td>
+            </tr>
+            <tr
+              role="row"
+            >
+              <td
+                role="cell"
+              >
+                07/03/2024
+              </td>
+              <td
+                role="cell"
+              >
+                Case 18 - Completed request with related system (1B)
+              </td>
+              <td
+                role="cell"
+              >
+                TRB
+              </td>
+              <td
+                role="cell"
+              >
+                Request form complete
+              </td>
+              <td
+                role="cell"
+              >
+                Adeline Aarons
+              </td>
+            </tr>
+            <tr
+              role="row"
+            >
+              <td
+                role="cell"
+              >
+                07/02/2024
+              </td>
+              <td
+                role="cell"
+              >
+                Case 14 - Completed request form with Existing System Relation
+              </td>
+              <td
+                role="cell"
+              >
+                TRB
+              </td>
+              <td
+                role="cell"
+              >
+                Request form complete
+              </td>
+              <td
+                role="cell"
+              >
+                Adeline Aarons
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        class="grid-row grid-gap grid-gap-lg"
+      >
+        <nav
+          aria-label="Pagination"
+          class="usa-pagination padding-bottom-1 desktop:grid-col-fill desktop:padding-bottom-0 desktop:margin-bottom-0"
+          data-testid="table-pagination"
+        >
+          <ul
+            class="usa-pagination__list"
+          >
+            <li
+              class="usa-pagination__item usa-pagination__page-no"
+            >
+              <div>
+                <div
+                  class="usa-pagination__item"
+                >
+                  <button
+                    aria-label="Page 1"
+                    class="usa-pagination__button usa-current"
+                    type="button"
+                  >
+                    1
+                  </button>
+                </div>
+              </div>
+              <div>
+                <div
+                  class="usa-pagination__item"
+                >
+                  <button
+                    aria-label="Page 2"
+                    class="usa-pagination__button"
+                    type="button"
+                  >
+                    2
+                  </button>
+                </div>
+              </div>
+            </li>
+            <li
+              class="usa-pagination__item usa-pagination__arrow"
+            >
+              <button
+                aria-label="Next page"
+                class="usa-pagination__link usa-pagination__previous-page"
+                type="button"
+              >
+                <span
+                  class="usa-pagination__link-text"
+                >
+                  Next &gt;
+                </span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+        <div
+          class="desktop:margin-top-2 desktop:grid-col-auto"
+        >
+          <select
+            class="usa-select margin-top-0 width-auto"
+            data-testid="table-page-size"
+            id="table-page-size"
+            name="tablePageSize"
+          >
+            <option
+              value="5"
+            >
+              Show 5
+            </option>
+            <option
+              value="10"
+            >
+              Show 10
+            </option>
+            <option
+              value="25"
+            >
+              Show 25
+            </option>
+            <option
+              value="50"
+            >
+              Show 50
+            </option>
+            <option
+              value="100"
+            >
+              Show 100
+            </option>
+          </select>
+        </div>
+      </div>
+      <div
+        aria-live="polite"
+        class="usa-sr-only usa-table__announcement-region"
+      >
+        Requests table sorted by Submission date descending
+      </div>
+    </div>
+  </main>
+</DocumentFragment>
+`;

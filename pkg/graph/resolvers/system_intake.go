@@ -112,6 +112,7 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.Solution = null.StringFromPtr(input.BusinessSolution)
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
 	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
+	intake.UsesAITech = null.BoolFromPtr(input.UsesAiTech)
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()
@@ -354,4 +355,8 @@ func SystemIntakes(ctx context.Context, store *storage.Store, openRequests bool)
 func SystemIntakesWithReviewRequested(ctx context.Context, store *storage.Store) ([]*models.SystemIntake, error) {
 	userID := appcontext.Principal(ctx).Account().ID
 	return store.FetchSystemIntakesWithReviewRequested(ctx, userID)
+}
+
+func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.SystemIntake, error) {
+	return store.GetMySystemIntakes(ctx)
 }

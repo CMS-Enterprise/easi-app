@@ -38,7 +38,7 @@
     "@uswds/uswds": "^3.3.0",
     "apollo": "^2.34",
     "apollo-upload-client": "^17.0.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "classnames": "^2.5.1",
     "cross-fetch": "^3.1.5",
     "cypress-file-upload": "^5.0.8",
@@ -93,7 +93,7 @@
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "generate": "graphql-codegen --config codegen.ts && rm -rf src/queries/types && apollo client:codegen --passthroughCustomScalars --localSchemaFile=pkg/graph/schema.graphql --target typescript  --tagName=gql --addTypename --globalTypesFile=src/types/graphql-global-types.ts types",
+    "generate": "graphql-codegen --config codegen.ts && rm -rf src/queries/types && apollo client:codegen --passthroughCustomScalars --localSchemaFile=pkg/graph/schema.graphql --target typescript  --tagName=gql --addTypename --globalTypesFile=src/types/graphql-global-types.ts types && rm -rf src/gql/gen/types",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
@@ -171,7 +171,7 @@
     "vite-plugin-svgr": "^3.2.0",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.34.1",
-    "webpack": "^5.91.0"
+    "webpack": "^5.94.0"
   },
   "resolutions": {
     "prismjs": "1.24.0",

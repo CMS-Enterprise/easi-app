@@ -13,6 +13,8 @@ import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
 import IsGrbViewContext from 'views/GovernanceReviewTeam/IsGrbViewContext';
 
+import RelatedRequestsTable from './RelatedRequestsTable';
+
 const AdditionalInformation = ({
   request,
   type
@@ -87,20 +89,33 @@ const AdditionalInformation = ({
           </UswdsReactLink>
         )}
 
-      {type !== 'itgov' && // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
-        request.relationType !== null &&
-        request.contractNumbers?.length > 0 && (
-          <div className="margin-top-3">
-            <strong>
-              {t('contractNumber', {
-                count: request.contractNumbers.length
-              })}
-            </strong>
-            <p className="margin-top-1">
-              {formatContractNumbers(request.contractNumbers)}
-            </p>
-          </div>
-        )}
+      {request.relationType !== null && (
+        <>
+          {request.contractNumbers?.length > 0 && (
+            <div className="margin-top-3">
+              <strong>
+                {t('contractNumber', {
+                  count: request.contractNumbers.length
+                })}
+              </strong>
+              <p className="margin-top-1">
+                {formatContractNumbers(request.contractNumbers)}
+              </p>
+            </div>
+          )}
+
+          {(!request.contractNumbers || request.contractNumbers.length < 1) && (
+            <div className="margin-top-3">
+              <strong>{t('contractNumber')}</strong>
+              <p className="margin-top-1 text-base text-italic">
+                {t('noContractNumber')}
+              </p>
+            </div>
+          )}
+        </>
+      )}
+
+      <RelatedRequestsTable requestID={request.id} type={type} />
     </div>
   );
 };

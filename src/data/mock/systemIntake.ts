@@ -1,8 +1,8 @@
+import { SystemIntakeWithReviewRequestedFragment } from 'gql/gen/graphql';
 import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
-import GetSystemIntakeGrbReviewersQuery from 'queries/GetSystemIntakeGrbReviewersQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
@@ -19,10 +19,6 @@ import {
   GetSystemIntakeContactsQuery as GetSystemIntakeContactsType,
   GetSystemIntakeContactsQueryVariables
 } from 'queries/types/GetSystemIntakeContactsQuery';
-import {
-  GetSystemIntakeGrbReviewers,
-  GetSystemIntakeGrbReviewersVariables
-} from 'queries/types/GetSystemIntakeGrbReviewers';
 import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'queries/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
@@ -48,7 +44,8 @@ import {
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester,
   SystemIntakeStep,
-  SystemIntakeTRBFollowUp
+  SystemIntakeTRBFollowUp,
+  TRBRequestStatus
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 
@@ -226,6 +223,7 @@ export const emptySystemIntake: SystemIntake = {
   businessSolution: null,
   currentStage: null,
   needsEaSupport: null,
+  usesAiTech: null,
   grtReviewEmailBody: null,
   decidedAt: null,
   submittedAt: null,
@@ -276,7 +274,9 @@ export const emptySystemIntake: SystemIntake = {
         }
       ]
     }
-  ]
+  ],
+  relatedIntakes: [],
+  relatedTRBRequests: []
 };
 
 export const systemIntake: SystemIntake = {
@@ -351,6 +351,7 @@ export const systemIntake: SystemIntake = {
   businessSolution: 'The quick brown fox jumps over the lazy dog.',
   currentStage: 'The quick brown fox jumps over the lazy dog.',
   needsEaSupport: false,
+  usesAiTech: true,
   grtReviewEmailBody: 'The quick brown fox jumps over the lazy dog.',
   decidedAt: null,
   submittedAt: '2022-10-20T14:55:47.88283Z',
@@ -401,53 +402,39 @@ export const systemIntake: SystemIntake = {
         }
       ]
     }
-  ]
-};
-
-/** System intake form that has NOT been started */
-export const initialSystemIntakeForm: SystemIntake = {
-  ...systemIntake,
-  requestName: '',
-  requester: {
-    ...systemIntake.requester,
-    component: ''
-  },
-  businessOwner: {
-    __typename: 'SystemIntakeBusinessOwner',
-    name: '',
-    component: ''
-  },
-  productManager: {
-    __typename: 'SystemIntakeProductManager',
-    name: '',
-    component: ''
-  },
-  isso: {
-    __typename: 'SystemIntakeISSO',
-    isPresent: null,
-    name: ''
-  },
-  contract: {
-    __typename: 'SystemIntakeContract',
-    hasContract: null,
-    contractor: '',
-    vehicle: '',
-    startDate: {
-      __typename: 'ContractDate',
-      month: '',
-      day: '',
-      year: ''
-    },
-    endDate: {
-      __typename: 'ContractDate',
-      month: '',
-      day: '',
-      year: ''
+  ],
+  relatedIntakes: [
+    {
+      __typename: 'SystemIntake',
+      id: '1',
+      requestName: 'related intake 1',
+      contractNumbers: [
+        { __typename: 'SystemIntakeContractNumber', contractNumber: '1' },
+        { __typename: 'SystemIntakeContractNumber', contractNumber: '2' }
+      ],
+      decisionState: SystemIntakeDecisionState.NO_DECISION,
+      submittedAt: new Date().toString()
     }
-  },
-  businessNeed: '',
-  businessSolution: '',
-  currentStage: ''
+  ],
+  relatedTRBRequests: [
+    {
+      __typename: 'TRBRequest',
+      id: '2',
+      name: 'related trb 1',
+      contractNumbers: [
+        {
+          __typename: 'TRBRequestContractNumber',
+          contractNumber: '1'
+        },
+        {
+          __typename: 'TRBRequestContractNumber',
+          contractNumber: '2'
+        }
+      ],
+      status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
+      createdAt: new Date().toString()
+    }
+  ]
 };
 
 export const systemIntakeForTable: TableSystemIntake = {
@@ -482,6 +469,7 @@ export const systemIntakeForTable: TableSystemIntake = {
   businessSolution: systemIntake.businessSolution,
   currentStage: systemIntake.currentStage,
   needsEaSupport: systemIntake.needsEaSupport,
+  usesAiTech: systemIntake.usesAiTech,
   grtDate: systemIntake.grtDate,
   grbDate: systemIntake.grbDate,
   lcid: null,
@@ -624,41 +612,63 @@ export const getGovernanceTaskListQuery = (
   }
 });
 
-export const getSystemIntakeGrbReviewersQuery: MockedQuery<
-  GetSystemIntakeGrbReviewers,
-  GetSystemIntakeGrbReviewersVariables
-> = {
-  request: {
-    query: GetSystemIntakeGrbReviewersQuery,
-    variables: { id: systemIntakeId }
+const currentYear = DateTime.local().year;
+export const systemIntakesWithReviewRequested: SystemIntakeWithReviewRequestedFragment[] = [
+  {
+    id: 'a5689bec-e4cf-4f2b-a7de-72020e8d65be',
+    requestName: 'With GRB scheduled',
+    requesterName: users[3].commonName,
+    requesterComponent: 'Office of Enterprise Data and Analytics',
+    grbDate: `${currentYear + 2}-10-02T03:11:24.478056Z`,
+    __typename: 'SystemIntake'
   },
-  result: {
-    data: {
-      systemIntake: {
-        __typename: 'SystemIntake',
-        id: systemIntakeId,
-        grbReviewers: [
-          {
-            __typename: 'SystemIntakeGRBReviewer',
-            id: '0432800e-2393-4067-b954-0e3671042b6a',
-            userAccount: {
-              __typename: 'UserAccount',
-              id: '06296dc5-2e6f-44ad-93d6-971137762cda',
-              username: systemIntake.euaUserId!
-            }
-          },
+  {
+    id: '5af245bc-fc54-4677-bab1-1b3e798bb43c',
+    requestName: 'System Intake with GRB Reviewers',
+    requesterName: 'User One',
+    requesterComponent: 'Office of the Actuary',
+    grbDate: '2020-10-08T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Edits requested on initial request form',
+    requesterName: users[0].commonName,
+    requesterComponent: 'Federal Coordinated Health Care Office',
+    grbDate: null,
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Mock System Intake 1',
+    requesterName: users[1].commonName,
+    requesterComponent: 'Office of Communications',
+    grbDate: '2024-03-29T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Mock System Intake 2',
+    requesterName: users[2].commonName,
+    requesterComponent: 'Office of the Actuary',
+    grbDate: `${currentYear + 1}-06-09T03:11:24.478056Z`,
+    __typename: 'SystemIntake'
+  },
 
-          {
-            __typename: 'SystemIntakeGRBReviewer',
-            id: 'bcf4bc5f-f305-4c23-9d1c-79bf9e9b181c',
-            userAccount: {
-              __typename: 'UserAccount',
-              id: '629e0090-20b2-431e-a3eb-dd9ce7ce7a45',
-              username: 'TXJK'
-            }
-          }
-        ]
-      }
-    }
+  {
+    id: '20cbcfbf-6459-4c96-943b-e76b83122dbf',
+    requestName: 'Closable Request',
+    requesterName: users[3].commonName,
+    requesterComponent: 'Office of Information Technology',
+    grbDate: '2023-01-18T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Mock System Intake 3',
+    requesterName: users[2].commonName,
+    requesterComponent: 'Office of Information Technology',
+    grbDate: null,
+    __typename: 'SystemIntake'
   }
-};
+];

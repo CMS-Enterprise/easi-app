@@ -1,5 +1,6 @@
 import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
 import { BASIC_USER_PROD } from '../../src/constants/jobCodes';
+import testSystemIntakeName from '../support/systemIntake';
 
 describe('The System Intake Form', () => {
   beforeEach(() => {
@@ -369,7 +370,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', 'Project Name')
       .siblings('dd')
-      .contains('Test Request Name');
+      .contains(testSystemIntakeName);
 
     cy.contains('dt', 'What is your business need?')
       .siblings('dd')
@@ -421,10 +422,32 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Request details');
 
     cy.get('#requestName')
-      .type('Test Request Name')
-      .should('have.value', 'Test Request Name');
+      .type(testSystemIntakeName)
+      .should('have.value', testSystemIntakeName);
 
     cy.contains('button', 'Back').click();
     cy.wait('@updateRequestDetails');
+  });
+
+  it('archives a system intake', () => {
+    cy.visit('/system/making-a-request');
+
+    cy.contains('a', 'Start a new request').click();
+
+    cy.contains('label', 'Add a new system or service').click();
+
+    cy.contains('button', 'Continue').click();
+
+    cy.contains('a', 'Get started').click();
+
+    cy.visit('/');
+
+    cy.contains('a', 'Draft').click();
+
+    cy.contains('button', 'Remove your request').click();
+
+    cy.contains('button', 'Remove request').click();
+
+    cy.url().should('eq', 'http://localhost:3000/');
   });
 });

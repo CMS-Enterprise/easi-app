@@ -16,6 +16,9 @@ func NewTRBRequestContractNumber(createdBy uuid.UUID) TRBRequestContractNumber {
 	}
 }
 
-func (t *TRBRequestContractNumber) GetMappingID() uuid.UUID {
+func (t TRBRequestContractNumber) GetMappingKey() uuid.UUID {
 	return t.TRBRequestID
+}
+func (t TRBRequestContractNumber) GetMappingVal() *TRBRequestContractNumber {
+	return &t
 }

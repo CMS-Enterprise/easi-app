@@ -12,7 +12,9 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -20,8 +22,8 @@ import (
 )
 
 // GetSystemIntakeDocumentsByRequestID fetches all documents attached to the system intake with the given ID.
-func GetSystemIntakeDocumentsByRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.SystemIntakeDocument, error) {
-	return store.GetSystemIntakeDocumentsByRequestID(ctx, id)
+func GetSystemIntakeDocumentsByRequestID(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeDocument, error) {
+	return dataloaders.GetSystemIntakeDocumentsBySystemIntakeID(ctx, id)
 }
 
 // GetURLForSystemIntakeDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key
@@ -56,7 +58,12 @@ func GetStatusForSystemIntakeDocument(s3Client *upload.S3Client, s3Key string) (
 }
 
 // CreateSystemIntakeDocument uploads a document to S3, then saves its metadata to our database.
-func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.CreateSystemIntakeDocumentInput) (*models.SystemIntakeDocument, error) {
+func CreateSystemIntakeDocument(
+	ctx context.Context,
+	store *storage.Store,
+	s3Client *upload.S3Client,
+	emailClient *email.Client,
+	input models.CreateSystemIntakeDocumentInput) (*models.SystemIntakeDocument, error) {
 	intake, err := store.FetchSystemIntakeByID(ctx, input.RequestID)
 	if err != nil {
 		return nil, err
@@ -103,6 +110,13 @@ func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Cli
 	documentDatabaseRecord.CreatedBy = appcontext.Principal(ctx).ID()
 	if input.OtherTypeDescription != nil {
 		documentDatabaseRecord.OtherType = *input.OtherTypeDescription
+	}
+
+	if uploaderRole == models.AdminUploaderRole && emailClient != nil {
+		if err := handleSendEmail(ctx, store, emailClient, intake); err != nil {
+			// do not stop processing, just log
+			appcontext.ZLogger(ctx).Error("unable to send email for admin doc upload", zap.Error(err))
+		}
 	}
 
 	return store.CreateSystemIntakeDocument(ctx, &documentDatabaseRecord)
@@ -225,4 +239,34 @@ func canDelete(ctx context.Context, store *storage.Store, id uuid.UUID) error {
 		zap.String("document.id", document.ID.String()))
 
 	return errors.New("unauthorized attempt to delete system intake document")
+}
+
+func handleSendEmail(ctx context.Context, store *storage.Store, emailClient *email.Client, intake *models.SystemIntake) error {
+	grbUsers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+	if err != nil {
+		return err
+	}
+
+	ids := make([]uuid.UUID, len(grbUsers))
+	for i := range ids {
+		ids[i] = grbUsers[i].UserID
+	}
+
+	accounts, err := store.UserAccountsByIDs(ctx, ids)
+	if err != nil {
+		return err
+	}
+
+	emails := make([]models.EmailAddress, len(accounts))
+	for i := range emails {
+		emails[i] = models.EmailAddress(accounts[i].Email)
+	}
+
+	return emailClient.SystemIntake.SendSystemIntakeAdminUploadDocEmail(ctx, email.SendSystemIntakeAdminUploadDocEmailInput{
+		SystemIntakeID:     intake.ID,
+		RequestName:        intake.ProjectName.ValueOrZero(),
+		RequesterName:      intake.Requester,
+		RequesterComponent: intake.Component.ValueOrZero(),
+		Recipients:         emails,
+	})
 }

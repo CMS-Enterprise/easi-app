@@ -13,7 +13,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
-	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
@@ -21,10 +20,12 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/flags"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -68,26 +69,7 @@ func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *mo
 
 // LifecycleCostLines is the resolver for the lifecycleCostLines field.
 func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) ([]*models.EstimatedLifecycleCost, error) {
-	lifeCycleCostLines := obj.LifecycleCostLines
-
-	if len(lifeCycleCostLines) == 0 {
-		return nil, nil
-	}
-
-	var costLines []*models.EstimatedLifecycleCost
-	for _, cost := range lifeCycleCostLines {
-		costLine := &models.EstimatedLifecycleCost{
-			BusinessCaseID: cost.BusinessCaseID,
-			Cost:           cost.Cost,
-			ID:             cost.ID,
-			Phase:          cost.Phase,
-			Solution:       cost.Solution,
-			Year:           cost.Year,
-		}
-		costLines = append(costLines, costLine)
-	}
-
-	return costLines, nil
+	return resolvers.GetLifecycleCostLinesByBusinessCaseID(ctx, obj.ID)
 }
 
 // PreferredSolution is the resolver for the preferredSolution field.
@@ -260,7 +242,7 @@ func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Contex
 
 // Author is the resolver for the author field.
 func (r *governanceRequestFeedbackResolver) Author(ctx context.Context, obj *models.GovernanceRequestFeedback) (*models.UserInfo, error) {
-	return resolvers.GetGovernanceRequestFeedbackAuthor(ctx, r.service.FetchUserInfo, obj.CreatedBy)
+	return resolvers.GetGovernanceRequestFeedbackAuthor(ctx, obj.CreatedBy)
 }
 
 // IntakeFormStatus is the resolver for the intakeFormStatus field.
@@ -689,6 +671,56 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 	}, nil
 }
 
+// ArchiveSystemIntake is the resolver for the archiveSystemIntake field.
+func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if !services.AuthorizeUserIsIntakeRequester(ctx, intake) {
+		return nil, errors.New("user is unauthorized to archive system intake")
+	}
+
+	now := helpers.PointerTo(time.Now())
+
+	// close out any associated business case
+	if intake.BusinessCaseID != nil {
+		// get business case
+		businessCase, err := r.store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
+		if err != nil {
+			return nil, err
+		}
+
+		// only attempt to close if business case is not yet closed
+		if businessCase.Status != models.BusinessCaseStatusCLOSED {
+			businessCase.UpdatedAt = now
+			businessCase.Status = models.BusinessCaseStatusCLOSED
+
+			if _, err := r.store.UpdateBusinessCase(ctx, businessCase); err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	intake.UpdatedAt = now
+	intake.ArchivedAt = now
+
+	updatedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	// do not send email if intake was in draft state (not submitted)
+	if intake.SubmittedAt != nil {
+		if err := r.emailClient.SendWithdrawRequestEmail(ctx, intake.ProjectName.String); err != nil {
+			return nil, err
+		}
+	}
+
+	return updatedIntake, nil
+}
+
 // SendFeedbackEmail is the resolver for the sendFeedbackEmail field.
 func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input models.SendFeedbackEmailInput) (*string, error) {
 	var reporterName, reporterEmail string
@@ -850,7 +882,7 @@ func (r *mutationResolver) DeleteTRBRequestDocument(ctx context.Context, id uuid
 
 // CreateSystemIntakeDocument is the resolver for the createSystemIntakeDocument field.
 func (r *mutationResolver) CreateSystemIntakeDocument(ctx context.Context, input models.CreateSystemIntakeDocumentInput) (*models.CreateSystemIntakeDocumentPayload, error) {
-	doc, err := resolvers.CreateSystemIntakeDocument(ctx, r.store, r.s3Client, input)
+	doc, err := resolvers.CreateSystemIntakeDocument(ctx, r.store, r.s3Client, r.emailClient, input)
 	if err != nil {
 		return nil, err
 	}
@@ -1140,40 +1172,6 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 	return resolvers.DeleteTRBLeadOption(ctx, r.store, eua)
 }
 
-// Requests is the resolver for the requests field. (First is not in use)
-func (r *queryResolver) Requests(ctx context.Context, first int) (*models.RequestsConnection, error) {
-	intakes, queryErr := r.store.FetchSystemIntakesByEuaID(ctx, appcontext.Principal(ctx).ID())
-	if queryErr != nil {
-		return nil, gqlerror.Errorf("query error: %s", queryErr)
-	}
-
-	edges := []*models.RequestEdge{}
-
-	for _, intake := range intakes {
-		var requesterStatus models.SystemIntakeStatusRequester
-		requesterStatus, queryErr = resolvers.CalculateSystemIntakeRequesterStatus(&intake, time.Now())
-		if queryErr != nil {
-			return nil, gqlerror.Errorf("query error: %s", queryErr)
-		}
-		nextMeetingDate := resolvers.SystemIntakeNextMeetingDate(ctx, &intake, time.Now()) // TODO: Just use the resolver, but we should delete this request type eventually...
-		node := models.Request{
-			ID:              intake.ID,
-			SubmittedAt:     intake.SubmittedAt,
-			Name:            intake.ProjectName.Ptr(),
-			Type:            models.RequestTypeGovernanceRequest,
-			StatusRequester: &requesterStatus,
-			StatusCreatedAt: intake.CreatedAt,
-			Lcid:            intake.LifecycleID.Ptr(),
-			NextMeetingDate: nextMeetingDate,
-		}
-		edges = append(edges, &models.RequestEdge{
-			Node: &node,
-		})
-	}
-
-	return &models.RequestsConnection{Edges: edges}, nil
-}
-
 // SystemIntake is the resolver for the systemIntake field.
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
@@ -1210,6 +1208,11 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error) {
 	return resolvers.SystemIntakes(ctx, r.store, openRequests)
+}
+
+// MySystemIntakes is the resolver for the mySystemIntakes field.
+func (r *queryResolver) MySystemIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
+	return resolvers.GetMySystemIntakes(ctx, r.store)
 }
 
 // SystemIntakesWithReviewRequested is the resolver for the systemIntakesWithReviewRequested field.
@@ -1527,17 +1530,17 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 
 // TrbRequest is the resolver for the trbRequest field.
 func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
-	return resolvers.GetTRBRequestByID(ctx, id, r.store)
+	return resolvers.GetTRBRequestByID(ctx, r.store, id)
 }
 
 // TrbRequests is the resolver for the trbRequests field.
 func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
-	return resolvers.GetTRBRequests(ctx, archived, r.store)
+	return resolvers.GetTRBRequests(ctx, r.store, archived)
 }
 
 // MyTrbRequests is the resolver for the myTrbRequests field.
 func (r *queryResolver) MyTrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
-	return resolvers.GetMyTRBRequests(ctx, archived, r.store)
+	return resolvers.GetMyTRBRequests(ctx, r.store, archived)
 }
 
 // TrbLeadOptions is the resolver for the trbLeadOptions field.
@@ -1557,7 +1560,7 @@ func (r *queryResolver) UserAccount(ctx context.Context, username string) (*auth
 
 // Actions is the resolver for the actions field.
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error) {
-	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
+	actions, actionsErr := dataloaders.GetSystemIntakeActionsBySystemIntakeID(ctx, obj.ID)
 	if actionsErr != nil {
 		return nil, actionsErr
 	}
@@ -1572,6 +1575,7 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 				Name:  action.ActorName,
 				Email: action.ActorEmail.String(),
 			},
+			SystemIntake:           obj,
 			Feedback:               action.Feedback,
 			CreatedAt:              *action.CreatedAt,
 			NewRetirementDate:      action.LCIDRetirementChangeNewDate,
@@ -1597,7 +1601,7 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 
 // BusinessCase is the resolver for the businessCase field.
 func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error) {
-	return r.store.FetchBusinessCaseBySystemIntakeID(ctx, obj.ID)
+	return dataloaders.GetSystemIntakeBusinessCaseBySystemIntakeID(ctx, obj.ID)
 }
 
 // BusinessOwner is the resolver for the businessOwner field.
@@ -1693,12 +1697,12 @@ func (r *systemIntakeResolver) CurrentStage(ctx context.Context, obj *models.Sys
 
 // FundingSources is the resolver for the fundingSources field.
 func (r *systemIntakeResolver) FundingSources(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeFundingSource, error) {
-	return r.store.FetchSystemIntakeFundingSourcesByIntakeID(ctx, obj.ID)
+	return dataloaders.GetSystemIntakeFundingSourceBySystemIntakeID(ctx, obj.ID)
 }
 
 // GovernanceRequestFeedbacks is the resolver for the governanceRequestFeedbacks field.
 func (r *systemIntakeResolver) GovernanceRequestFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GovernanceRequestFeedback, error) {
-	return resolvers.GetGovernanceRequestFeedbacksByIntakeID(ctx, r.store, obj.ID)
+	return resolvers.GetGovernanceRequestFeedbacksByIntakeID(ctx, obj.ID)
 }
 
 // GovernanceTeams is the resolver for the governanceTeams field.
@@ -1804,7 +1808,7 @@ func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.S
 
 // Notes is the resolver for the notes field.
 func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error) {
-	return resolvers.SystemIntakeNotes(ctx, r.store, obj)
+	return resolvers.SystemIntakeNotes(ctx, obj)
 }
 
 // ProductManager is the resolver for the productManager field.
@@ -1833,7 +1837,7 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		return requesterWithoutEmail, nil
 	}
 
-	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID.ValueOrZero())
+	user, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.EUAUserID.ValueOrZero())
 	if err != nil {
 		// check if the EUA ID is just invalid in Okta (i.e. the requester no longer has an active EUA account)
 		if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
@@ -1844,7 +1848,14 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		return nil, err
 	}
 
+	// if we can't find the user and there was no error (shouldn't happen normally), omit the email
+	// user is a pointer, so we want to avoid a dereference below with this check
+	if user == nil {
+		return requesterWithoutEmail, nil
+	}
+
 	email := user.Email.String()
+
 	return &models.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
 		Email:     &email,
@@ -1864,7 +1875,7 @@ func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *mode
 
 // Documents is the resolver for the documents field.
 func (r *systemIntakeResolver) Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error) {
-	return resolvers.GetSystemIntakeDocumentsByRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetSystemIntakeDocumentsByRequestID(ctx, obj.ID)
 }
 
 // ItGovTaskStatuses is the resolver for the itGovTaskStatuses field.
@@ -1959,7 +1970,7 @@ func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.Syste
 
 // Author is the resolver for the author field.
 func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error) {
-	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
 	if err != nil {
 		return nil, err
 	}
@@ -1974,7 +1985,7 @@ func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *mo
 
 // Author is the resolver for the author field.
 func (r *tRBAdviceLetterResolver) Author(ctx context.Context, obj *models.TRBAdviceLetter) (*models.UserInfo, error) {
-	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
 	if err != nil {
 		return nil, err
 	}
@@ -1995,7 +2006,7 @@ func (r *tRBAdviceLetterRecommendationResolver) Links(ctx context.Context, obj *
 
 // Author is the resolver for the author field.
 func (r *tRBAdviceLetterRecommendationResolver) Author(ctx context.Context, obj *models.TRBAdviceLetterRecommendation) (*models.UserInfo, error) {
-	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
 	if err != nil {
 		return nil, err
 	}
@@ -2005,37 +2016,37 @@ func (r *tRBAdviceLetterRecommendationResolver) Author(ctx context.Context, obj 
 
 // Status is the resolver for the status field.
 func (r *tRBRequestResolver) Status(ctx context.Context, obj *models.TRBRequest) (models.TRBRequestStatus, error) {
-	return resolvers.GetTRBRequestStatus(ctx, r.store, *obj)
+	return resolvers.GetTRBRequestStatus(ctx, *obj)
 }
 
 // Attendees is the resolver for the attendees field.
 func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error) {
-	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, obj.ID)
 }
 
 // Feedback is the resolver for the feedback field.
 func (r *tRBRequestResolver) Feedback(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestFeedback, error) {
-	return resolvers.GetTRBRequestFeedbackByTRBRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetTRBRequestFeedbackByTRBRequestID(ctx, obj.ID)
 }
 
 // Documents is the resolver for the documents field.
 func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error) {
-	return resolvers.GetTRBRequestDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
+	return resolvers.GetTRBRequestDocumentsByRequestID(ctx, obj.ID)
 }
 
 // Form is the resolver for the form field.
 func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
-	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, obj.ID)
 }
 
 // AdviceLetter is the resolver for the adviceLetter field.
 func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBAdviceLetter, error) {
-	return resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, obj.ID)
 }
 
 // TaskStatuses is the resolver for the taskStatuses field.
 func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error) {
-	return resolvers.GetTRBTaskStatuses(ctx, r.store, *obj)
+	return resolvers.GetTRBTaskStatuses(ctx, *obj)
 }
 
 // LastMeetingDate is the resolver for the lastMeetingDate field.
@@ -2061,12 +2072,12 @@ func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBR
 // RequesterComponent is the resolver for the requesterComponent field.
 func (r *tRBRequestResolver) RequesterComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
 	requester := obj.CreatedBy
-	return resolvers.GetTRBUserComponent(ctx, r.store, &requester, obj.ID)
+	return resolvers.GetTRBAttendeeComponent(ctx, &requester, obj.ID)
 }
 
 // AdminNotes is the resolver for the adminNotes field.
 func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBAdminNote, error) {
-	return resolvers.GetTRBAdminNotesByTRBRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetTRBAdminNotesByTRBRequestID(ctx, obj.ID)
 }
 
 // IsRecent is the resolver for the isRecent field.
@@ -2101,7 +2112,7 @@ func (r *tRBRequestResolver) RelatedTRBRequests(ctx context.Context, obj *models
 
 // UserInfo is the resolver for the userInfo field.
 func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
-	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
+	userInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.EUAUserID)
 	if err != nil {
 		return nil, err
 	}
@@ -2139,7 +2150,7 @@ func (r *tRBRequestFeedbackResolver) NotifyEuaIds(ctx context.Context, obj *mode
 
 // Author is the resolver for the author field.
 func (r *tRBRequestFeedbackResolver) Author(ctx context.Context, obj *models.TRBRequestFeedback) (*models.UserInfo, error) {
-	user, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	user, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
 	if err != nil {
 		return &models.UserInfo{}, err
 	}
@@ -2154,12 +2165,12 @@ func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.T
 
 // FundingSources is the resolver for the fundingSources field.
 func (r *tRBRequestFormResolver) FundingSources(ctx context.Context, obj *models.TRBRequestForm) ([]*models.TRBFundingSource, error) {
-	return resolvers.GetFundingSourcesByRequestID(ctx, r.store, obj.TRBRequestID)
+	return resolvers.GetTRBFundingSourcesByRequestID(ctx, obj.TRBRequestID)
 }
 
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *tRBRequestFormResolver) SystemIntakes(ctx context.Context, obj *models.TRBRequestForm) ([]*models.SystemIntake, error) {
-	return resolvers.GetTRBRequestSystemIntakesByTRBRequestID(ctx, r.store, obj.TRBRequestID)
+	return resolvers.GetTRBRequestFormSystemIntakesByTRBRequestID(ctx, obj.TRBRequestID)
 }
 
 // SubjectAreaOptions is the resolver for the subjectAreaOptions field.

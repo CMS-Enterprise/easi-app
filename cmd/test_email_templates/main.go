@@ -590,4 +590,16 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		"Courage the Cowardly Dog",
 	)
 	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeAdminUploadDocEmail(
+		ctx,
+		email.SendSystemIntakeAdminUploadDocEmailInput{
+			SystemIntakeID:     intakeID,
+			RequestName:        "Doc Upload",
+			RequesterName:      "Wouldn't you like to know",
+			RequesterComponent: "OFW",
+			Recipients:         emailNotificationRecipients.RegularRecipientEmails,
+		},
+	)
+	noErr(err)
 }

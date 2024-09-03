@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 
@@ -60,9 +59,12 @@ function RequestsCard({
         </div>
       }
       footer={
-        <Button disabled type="button">
+        <UswdsReactLink
+          className="usa-button"
+          to={`/systems/${systemId}/workspace/requests`}
+        >
           {t('spaces.requests.viewAll')}
-        </Button>
+        </UswdsReactLink>
       }
     />
   );

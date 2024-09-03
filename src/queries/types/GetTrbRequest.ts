@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBSubjectAreaOption, TRBFeedbackAction } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBSubjectAreaOption, TRBFeedbackAction, TRBRequestStatus, SystemIntakeDecisionState } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetTrbRequest
@@ -55,6 +55,9 @@ export interface GetTrbRequest_trbRequest_form {
   collabGRBConsultRequested: boolean | null;
   subjectAreaOptions: TRBSubjectAreaOption[] | null;
   subjectAreaOptionOther: string | null;
+  /**
+   * TODO: Make Funding sources non-nullable
+   */
   fundingSources: GetTrbRequest_trbRequest_form_fundingSources[] | null;
   systemIntakes: GetTrbRequest_trbRequest_form_systemIntakes[];
   submittedAt: Time | null;
@@ -74,6 +77,40 @@ export interface GetTrbRequest_trbRequest_feedback {
   createdAt: Time;
 }
 
+export interface GetTrbRequest_trbRequest_relatedTRBRequests_contractNumbers {
+  __typename: "TRBRequestContractNumber";
+  contractNumber: string;
+}
+
+export interface GetTrbRequest_trbRequest_relatedTRBRequests {
+  __typename: "TRBRequest";
+  id: UUID;
+  name: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: GetTrbRequest_trbRequest_relatedTRBRequests_contractNumbers[];
+  status: TRBRequestStatus;
+  createdAt: Time;
+}
+
+export interface GetTrbRequest_trbRequest_relatedIntakes_contractNumbers {
+  __typename: "SystemIntakeContractNumber";
+  contractNumber: string;
+}
+
+export interface GetTrbRequest_trbRequest_relatedIntakes {
+  __typename: "SystemIntake";
+  id: UUID;
+  requestName: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: GetTrbRequest_trbRequest_relatedIntakes_contractNumbers[];
+  decisionState: SystemIntakeDecisionState;
+  submittedAt: Time | null;
+}
+
 export interface GetTrbRequest_trbRequest {
   __typename: "TRBRequest";
   id: UUID;
@@ -83,6 +120,14 @@ export interface GetTrbRequest_trbRequest {
   taskStatuses: GetTrbRequest_trbRequest_taskStatuses;
   form: GetTrbRequest_trbRequest_form;
   feedback: GetTrbRequest_trbRequest_feedback[];
+  /**
+   * Other TRB Requests that share a CEDAR System or Contract Number
+   */
+  relatedTRBRequests: GetTrbRequest_trbRequest_relatedTRBRequests[];
+  /**
+   * System Intakes that share a CEDAR System or Contract Number
+   */
+  relatedIntakes: GetTrbRequest_trbRequest_relatedIntakes[];
 }
 
 export interface GetTrbRequest {

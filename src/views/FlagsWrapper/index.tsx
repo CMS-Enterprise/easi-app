@@ -38,7 +38,9 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             systemProfileHiddenFields: false,
             systemWorkspace: false,
             systemWorkspaceRequestsCard: false,
-            grbReviewTab: false
+            systemWorkspaceTeam: false,
+            grbReviewTab: false,
+            showAtoColumn: false
           }
         });
 

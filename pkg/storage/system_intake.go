@@ -101,6 +101,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			grt_date,
 			grb_date,
 			has_ui_changes,
+			uses_ai_tech,
 			trb_follow_up_recommendation,
 			contract_name,
 			created_at,
@@ -157,6 +158,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:grt_date,
 			:grb_date,
 			:has_ui_changes,
+			:uses_ai_tech,
 			:trb_follow_up_recommendation,
 			:contract_name,
 			:created_at,
@@ -260,6 +262,7 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			admin_lead = :admin_lead,
 			cedar_system_id = :cedar_system_id,
 			has_ui_changes = :has_ui_changes,
+			uses_ai_tech = :uses_ai_tech,
 			trb_follow_up_recommendation = :trb_follow_up_recommendation,
 			contract_name = :contract_name,
 			system_relation_type = :system_relation_type
@@ -391,25 +394,6 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	return &intake, nil
 }
 
-// FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
-func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
-	intakes := []models.SystemIntake{}
-	const whereClause = `
-		WHERE system_intakes.eua_user_id=$1
-			AND system_intakes.archived_at IS NULL
-		ORDER BY created_at DESC
-	`
-	err := s.db.Select(&intakes, fetchSystemIntakeSQL+whereClause, euaID)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch system intakes %s", err),
-			zap.String("euaID", euaID),
-		)
-		return models.SystemIntakes{}, err
-	}
-	return intakes, nil
-}
-
 // FetchSystemIntakes queries the DB for all system intakes
 func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
@@ -481,76 +465,6 @@ func (s *Store) GenerateLifecycleID(ctx context.Context) (string, error) {
 		return "", err
 	}
 	return fmt.Sprintf("%s%d", prefix, count), nil
-}
-
-// FetchSystemIntakeMetrics gets a metrics digest for system intake
-func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
-	type startedQueryResponse struct {
-		StartedCount   int `db:"started_count"`
-		CompletedCount int `db:"completed_count"`
-	}
-	const startedCountSQL = `
-		WITH "started" AS (
-		    SELECT *
-		    FROM system_intakes
-		    WHERE created_at >=  $1
-		      AND created_at < $2
-		)
-		SELECT count(*) AS started_count,
-		       coalesce(
-		           sum(
-		               CASE WHEN submitted_at >=  $1
-		                             AND submitted_at < $2
-		                   THEN 1 ELSE 0 END
-		               ),
-		           0) AS completed_count
-		FROM started;
-	`
-	type fundedQueryResponse struct {
-		CompletedCount int `db:"completed_count"`
-		FundedCount    int `db:"funded_count"`
-	}
-	const fundedCountSQL = `
-		WITH "completed" AS (
-		    SELECT existing_funding
-		    FROM system_intakes
-		    WHERE submitted_at >=  $1
-		      AND submitted_at < $2
-		)
-		SELECT count(*) AS completed_count,
-		       coalesce(sum(CASE WHEN existing_funding IS true THEN 1 ELSE 0 END),0) AS funded_count
-		FROM completed
-	`
-
-	metrics := models.SystemIntakeMetrics{}
-
-	var startedResponse startedQueryResponse
-	err := s.db.Get(
-		&startedResponse,
-		startedCountSQL,
-		&startTime,
-		&endTime,
-	)
-	if err != nil {
-		return metrics, err
-	}
-	metrics.Started = startedResponse.StartedCount
-	metrics.CompletedOfStarted = startedResponse.CompletedCount
-
-	var fundedResponse fundedQueryResponse
-	err = s.db.Get(
-		&fundedResponse,
-		fundedCountSQL,
-		&startTime,
-		&endTime,
-	)
-	if err != nil {
-		return metrics, err
-	}
-	metrics.Completed = fundedResponse.CompletedCount
-	metrics.Funded = fundedResponse.FundedCount
-
-	return metrics, nil
 }
 
 // UpdateAdminLead updates the admin lead for an intake
@@ -661,4 +575,14 @@ func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.System
 		return nil, err
 	}
 	return intakes, nil
+}
+
+func (s *Store) GetMySystemIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
+	var intakes []*models.SystemIntake
+
+	err := namedSelect(ctx, s, &intakes, sqlqueries.SystemIntake.GetByUser, args{
+		"eua_user_id": appcontext.Principal(ctx).Account().Username,
+	})
+
+	return intakes, err
 }

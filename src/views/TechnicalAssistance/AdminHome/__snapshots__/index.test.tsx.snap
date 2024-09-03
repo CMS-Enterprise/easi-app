@@ -36,15 +36,25 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                 aria-current="page"
                 class="usa-breadcrumb__list-item usa-current"
               >
-                Request details
+                TRB request details
               </li>
             </ol>
           </nav>
-          <h2
-            class="margin-top-05 margin-bottom-2"
+          <div
+            class="display-flex flex-align-end flex-wrap margin-bottom-2"
           >
-            Mock TRB Request
-          </h2>
+            <h2
+              class="margin-top-05 margin-bottom-0 margin-right-2"
+            >
+              Mock TRB Request
+            </h2>
+            <p
+              class="margin-y-05 text-primary-light"
+              data-testid="summary-submissionDate"
+            >
+              Submitted on 01/05/2023
+            </p>
+          </div>
           <div
             class="grid-row grid-gap"
             data-testid="grid"
@@ -62,6 +72,16 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                 class="margin-top-05 margin-bottom-2"
               >
                 I’m having a problem with my system
+              </h4>
+              <h5
+                class="text-normal margin-y-0"
+              >
+                System, service, or contract name
+              </h5>
+              <h4
+                class="margin-top-05 margin-bottom-2"
+              >
+                None specified
               </h4>
             </div>
             <div
@@ -82,13 +102,12 @@ exports[`TRB admin home > matches the snapshot 1`] = `
               <h5
                 class="text-normal margin-y-0"
               >
-                Submission Date
+                Contract number
               </h5>
               <h4
                 class="margin-top-05 margin-bottom-2"
-                data-testid="trbSummary-submissionDate"
               >
-                January 5, 2023
+                123124455432
               </h4>
             </div>
           </div>

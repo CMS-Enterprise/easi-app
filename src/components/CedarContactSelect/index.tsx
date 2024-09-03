@@ -121,7 +121,7 @@ const IndicatorsContainer = (
 const formatContactLabel = (contact: CedarContactProps) => {
   const { commonName, euaUserId, email } = contact;
   return `${commonName}${euaUserId && `, ${euaUserId}`}${
-    email && ` (${email})`
+    email ? ` (${email})` : ''
   }`;
 };
 
@@ -295,7 +295,6 @@ export default function CedarContactSelect({
       isDisabled={disabled}
       aria-describedby={ariaDescribedBy}
       aria-disabled={disabled}
-      aria-label="Cedar-Users"
       components={{ Input, IndicatorsContainer, ClearIndicator, Option, Menu }}
       options={contacts.map(contact => ({
         label: formatContactLabel(contact),

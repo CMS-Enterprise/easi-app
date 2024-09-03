@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Button, CardGroup, Grid } from '@trussworks/react-uswds';
+import {
+  Button,
+  CardGroup,
+  Grid,
+  GridContainer
+} from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import BookmarkButton from 'components/BookmarkButton';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import { getAtoStatus } from 'components/shared/AtoStatus';
 import SystemProfileModal from 'components/SystemProfileModal';
 import TLCTag from 'components/TLCTag';
 import GetSystemWorkspaceQuery from 'queries/GetSystemWorkspaceQuery';
@@ -19,13 +25,13 @@ import {
 import { RoleTypeName } from 'types/systemProfile';
 import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 import NotFound from 'views/NotFound';
-import { getAtoStatus } from 'views/SystemProfile';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import AtoCard from './components/AtoCard';
 import HelpLinks from './components/HelpLinks';
 import RequestsCard from './components/RequestsCard';
 import SpacesCard from './components/SpacesCard';
+import TeamCard from './components/TeamCard';
 
 export const SystemWorkspace = () => {
   const flags = useFlags();
@@ -48,13 +54,18 @@ export const SystemWorkspace = () => {
 
   const cedarSystem = data?.cedarSystemDetails?.cedarSystem;
   const ato = data?.cedarAuthorityToOperate[0];
-  const atoStatus = getAtoStatus(ato);
+  const atoStatus = getAtoStatus(ato?.dateAuthorizationMemoExpires);
 
-  const isso = data?.cedarSystemDetails?.roles.length
-    ? data.cedarSystemDetails.roles.find(
-        role => role.roleTypeName === RoleTypeName.ISSO
-      )
-    : undefined;
+  const { isso } = useMemo(
+    () => ({
+      isso: data?.cedarSystemDetails?.roles.length
+        ? data.cedarSystemDetails.roles.find(
+            role => role.roleTypeName === RoleTypeName.ISSO
+          )
+        : undefined
+    }),
+    [data]
+  );
 
   /** The `linkSearchQuery` is used on starting new request links throughout workspace */
   const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
@@ -75,85 +86,92 @@ export const SystemWorkspace = () => {
   }
 
   return (
-    <MainContent className="grid-container margin-bottom-8">
-      <Breadcrumbs
-        items={[
-          { text: t('breadcrumbs.home'), url: '/' },
-          { text: t('header') }
-        ]}
-      />
-
-      <SystemProfileModal
-        id={systemId}
-        isOpen={isSystemProfileOpen}
-        closeModal={() => toggleSystemProfile(false)}
-      />
-
-      <div className="display-flex flex-align-start flex-justify margin-top-5">
-        <div>
-          <PageHeading className="margin-bottom-1 margin-top-0">
-            {t('header')}
-          </PageHeading>
-
-          <p className="margin-y-1 text-body-lg">
-            {t('subheader', {
-              systemName: cedarSystem?.name
-            })}
-          </p>
-
-          <div className="display-flex margin-top-neg-1">
-            <p className="text-bold margin-right-2">{t('tlcPhase')}</p>
-
-            <TLCTag tlcPhase={ato?.tlcPhase} />
-          </div>
-        </div>
-
-        <BookmarkButton
-          id={systemId}
-          isBookmarked={isBookmarked}
-          className="bg-primary-lighter"
+    <MainContent>
+      <GridContainer>
+        <Breadcrumbs
+          items={[
+            { text: t('breadcrumbs.home'), url: '/' },
+            { text: t('header') }
+          ]}
         />
-      </div>
+        <SystemProfileModal
+          id={systemId}
+          isOpen={isSystemProfileOpen}
+          closeModal={() => toggleSystemProfile(false)}
+        />
+        <div className="display-flex flex-align-start flex-justify margin-top-5">
+          <div>
+            <PageHeading className="margin-bottom-1 margin-top-0">
+              {t('header')}
+            </PageHeading>
 
-      <HelpLinks
-        classname="margin-top-3 margin-bottom-5"
-        linkSearchQuery={linkSearchQuery}
-      />
+            <p className="margin-y-1 text-body-lg">
+              {t('subheader', {
+                systemName: cedarSystem?.name
+              })}
+            </p>
 
-      <h2>{t('spaces.header')}</h2>
+            <div className="display-flex margin-top-neg-1">
+              <p className="text-bold margin-right-2">{t('tlcPhase')}</p>
 
-      <Grid className="display-flex flex-align-stretch">
-        <CardGroup>
-          <SpacesCard
-            header={t('spaces.systemProfile.header')}
-            description={t('spaces.systemProfile.description')}
-            footer={
-              <Button
-                type="button"
-                outline
-                onClick={() => toggleSystemProfile(true)}
-              >
-                {t('spaces.systemProfile.linktext')}
-              </Button>
-            }
+              <TLCTag tlcPhase={ato?.tlcPhase} />
+            </div>
+          </div>
+
+          <BookmarkButton
+            id={systemId}
+            isBookmarked={isBookmarked}
+            className="bg-primary-lighter"
           />
-
-          <AtoCard
-            status={atoStatus}
-            dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
-            isso={isso}
-          />
-
-          {flags.systemWorkspaceRequestsCard && (
-            <RequestsCard
-              systemId={systemId}
-              trbCount={cedarSystem.linkedTrbRequests.length}
-              itgovCount={cedarSystem.linkedSystemIntakes.length}
-              linkSearchQuery={linkSearchQuery}
+        </div>
+        <HelpLinks
+          classname="margin-top-3 margin-bottom-5"
+          linkSearchQuery={linkSearchQuery}
+        />
+        <h2>{t('spaces.header')}</h2>
+        <Grid className="display-flex flex-align-stretch margin-bottom-4">
+          <CardGroup>
+            <SpacesCard
+              header={t('spaces.systemProfile.header')}
+              description={t('spaces.systemProfile.description')}
+              footer={
+                <Button
+                  type="button"
+                  outline
+                  onClick={() => toggleSystemProfile(true)}
+                >
+                  {t('spaces.systemProfile.linktext')}
+                </Button>
+              }
             />
-          )}
-        </CardGroup>
-      </Grid>
+
+            <AtoCard
+              status={atoStatus}
+              dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
+              isso={isso}
+            />
+
+            {flags.systemWorkspaceRequestsCard && (
+              <RequestsCard
+                systemId={systemId}
+                trbCount={cedarSystem.linkedTrbRequests.length}
+                itgovCount={cedarSystem.linkedSystemIntakes.length}
+                linkSearchQuery={linkSearchQuery}
+              />
+            )}
+          </CardGroup>
+        </Grid>
+      </GridContainer>
+
+      {flags.systemWorkspaceTeam && (
+        <div className="bg-base-lightest padding-top-6 padding-bottom-10">
+          <GridContainer>
+            <CardGroup>
+              <TeamCard roles={data.cedarSystemDetails.roles} />
+            </CardGroup>
+          </GridContainer>
+        </div>
+      )}
     </MainContent>
   );
 };

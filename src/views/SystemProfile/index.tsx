@@ -23,18 +23,17 @@ import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import { getAtoStatus } from 'components/shared/AtoStatus';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import {
   DescriptionDefinition,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
 import {
   GetSystemProfile,
-  GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate,
   /* eslint-disable camelcase */
   GetSystemProfile_cedarSystemDetails,
   /* eslint-enable camelcase */
@@ -42,18 +41,16 @@ import {
 } from 'queries/types/GetSystemProfile';
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import {
-  AtoStatus,
   CedarRoleAssigneePerson,
   DevelopmentTag,
   RoleTypeName,
   SubpageKey,
   SystemProfileData,
   UrlLocation,
-  UrlLocationTag,
-  UsernameWithRoles
+  UrlLocationTag
 } from 'types/systemProfile';
-import { parseAsUTC } from 'utils/date';
 import { formatHttpsUrl } from 'utils/formatUrl';
+import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 import { showSystemVal } from 'utils/showVal';
 import NotFound, { NotFoundPartial } from 'views/NotFound';
 import {
@@ -74,38 +71,6 @@ import { getPersonFullName } from './helpers';
 import PointsOfContactSidebar from './PointsOfContactSidebar';
 
 import './index.scss';
-
-/**
- * Get the ATO Status from certain date properties and flags.
- */
-export function getAtoStatus(
-  // eslint-disable-next-line camelcase
-  data?: {
-    dateAuthorizationMemoExpires: CedarAuthorityToOperate['dateAuthorizationMemoExpires'];
-  }
-): AtoStatus {
-  // `ato.dateAuthorizationMemoExpires` will be null if tlcPhase is Initiate|Develop
-
-  // No ato if it doesn't exist
-  if (!data) return 'No ATO';
-
-  const { dateAuthorizationMemoExpires } = data;
-
-  if (!dateAuthorizationMemoExpires) return 'No ATO';
-
-  const expiry = parseAsUTC(dateAuthorizationMemoExpires).toString();
-
-  const date = new Date().toISOString();
-
-  if (date >= expiry) return 'Expired';
-
-  const soon = parseAsUTC(expiry)
-    .minus({ days: ATO_STATUS_DUE_SOON_DAYS })
-    .toString();
-  if (date >= soon) return 'Due Soon';
-
-  return 'Active';
-}
 
 /**
  * Get Development Tags which are derived from various other properties.
@@ -153,34 +118,6 @@ function getLocations(
       tags
     };
   });
-}
-
-/**
- * Get a list of people by their usernames with of a nested list of their Cedar Roles.
- * Assignees appear to be listed in order. The returned list keeps that order.
- */
-export function getUsernamesWithRoles(
-  personRoles: CedarRoleAssigneePerson[]
-): UsernameWithRoles[] {
-  const people: UsernameWithRoles[] = [];
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const role of personRoles) {
-    const { assigneeUsername } = role;
-    if (assigneeUsername) {
-      let person = people.find(
-        p => p.assigneeUsername === role.assigneeUsername
-      );
-      if (!person) {
-        person = { assigneeUsername, roles: [] };
-        people.push(person);
-      }
-
-      person.roles.push(role);
-    }
-  }
-
-  return people;
 }
 
 function getPlannedRetirement(
@@ -273,7 +210,9 @@ export function getSystemProfileData(
     ...data,
     id: cedarSystem.id,
     ato: cedarAuthorityToOperate,
-    atoStatus: getAtoStatus(cedarAuthorityToOperate),
+    atoStatus: getAtoStatus(
+      cedarAuthorityToOperate.dateAuthorizationMemoExpires
+    ),
     budgetSystemCosts: cedarBudgetSystemCost,
     budgets: cedarBudget,
     businessOwners,

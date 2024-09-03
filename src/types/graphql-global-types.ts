@@ -139,13 +139,6 @@ export enum RequestRelationType {
 }
 
 /**
- * Indicates the type of a request being made with the EASi system
- */
-export enum RequestType {
-  GOVERNANCE_REQUEST = "GOVERNANCE_REQUEST",
-}
-
-/**
  * Represents the type of an action that is being done to a system request
  */
 export enum SystemIntakeActionType {
@@ -228,6 +221,27 @@ export enum SystemIntakeFormStep {
   INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
 }
 
+export enum SystemIntakeGRBReviewerRole {
+  ACA_3021_REP = "ACA_3021_REP",
+  CCIIO_REP = "CCIIO_REP",
+  CMCS_REP = "CMCS_REP",
+  CO_CHAIR_CFO = "CO_CHAIR_CFO",
+  CO_CHAIR_CIO = "CO_CHAIR_CIO",
+  CO_CHAIR_HCA = "CO_CHAIR_HCA",
+  FED_ADMIN_BDG_CHAIR = "FED_ADMIN_BDG_CHAIR",
+  OTHER = "OTHER",
+  PROGRAM_INTEGRITY_BDG_CHAIR = "PROGRAM_INTEGRITY_BDG_CHAIR",
+  PROGRAM_OPERATIONS_BDG_CHAIR = "PROGRAM_OPERATIONS_BDG_CHAIR",
+  QIO_REP = "QIO_REP",
+  SUBJECT_MATTER_EXPERT = "SUBJECT_MATTER_EXPERT",
+}
+
+export enum SystemIntakeGRBReviewerVotingRole {
+  ALTERNATE = "ALTERNATE",
+  NON_VOTING = "NON_VOTING",
+  VOTING = "VOTING",
+}
+
 /**
  * The possible statuses that an issued LCID can be in
  */
@@ -256,7 +270,7 @@ export enum SystemIntakeState {
 }
 
 /**
- * This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
+ * This represents the statuses that an admin would see as a representation of a system intake. Note, there is no status for a brand new request, because an Admin doesn't see the request until it is in progress.
  */
 export enum SystemIntakeStatusAdmin {
   CLOSED = "CLOSED",
@@ -476,6 +490,7 @@ export enum TRBRequestType {
 export enum TRBSubjectAreaOption {
   ACCESSIBILITY_COMPLIANCE = "ACCESSIBILITY_COMPLIANCE",
   ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT = "ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT",
+  ARTIFICIAL_INTELLIGENCE = "ARTIFICIAL_INTELLIGENCE",
   ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT",
   BUSINESS_INTELLIGENCE = "BUSINESS_INTELLIGENCE",
   CLOUD_MIGRATION = "CLOUD_MIGRATION",
@@ -540,6 +555,13 @@ export interface CreateSystemIntakeDocumentInput {
   fileData: Upload;
   documentType: SystemIntakeDocumentCommonType;
   otherTypeDescription?: string | null;
+}
+
+export interface CreateSystemIntakeGRBReviewerInput {
+  systemIntakeID: UUID;
+  euaUserId: string;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
+  grbRole: SystemIntakeGRBReviewerRole;
 }
 
 /**
@@ -652,6 +674,10 @@ export interface CreateTRBRequestFeedbackInput {
  */
 export interface DeleteSystemIntakeContactInput {
   id: UUID;
+}
+
+export interface DeleteSystemIntakeGRBReviewerInput {
+  reviewerID: UUID;
 }
 
 export interface DeleteTRBRequestFundingSourcesInput {
@@ -1068,6 +1094,12 @@ export interface UpdateSystemIntakeContractDetailsInput {
   contract?: SystemIntakeContractInput | null;
 }
 
+export interface UpdateSystemIntakeGRBReviewerInput {
+  reviewerID: UUID;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
+  grbRole: SystemIntakeGRBReviewerRole;
+}
+
 /**
  * Input data for updating an IT governance admin note
  */
@@ -1089,6 +1121,7 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   currentStage?: string | null;
   cedarSystemId?: string | null;
   hasUiChanges?: boolean | null;
+  usesAiTech?: boolean | null;
 }
 
 /**

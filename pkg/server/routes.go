@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -44,12 +43,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
-func (s *Server) routes(
-	contextMiddleware func(handler http.Handler) http.Handler,
-	corsMiddleware func(handler http.Handler) http.Handler,
-	traceMiddleware func(handler http.Handler) http.Handler,
-	loggerMiddleware func(handler http.Handler) http.Handler,
-) {
+func (s *Server) routes() {
 
 	oktaConfig := s.NewOktaClientConfig()
 	jwtVerifier := okta.NewJwtVerifier(oktaConfig.OktaClientID, oktaConfig.OktaIssuer)
@@ -74,13 +68,7 @@ func (s *Server) routes(
 		oktaConfig.AltJobCodes,
 	)
 
-	s.router.Use(
-		contextMiddleware,
-		traceMiddleware, // trace all requests with an ID
-		loggerMiddleware,
-		corsMiddleware,
-		oktaAuthenticationMiddleware,
-	)
+	s.router.Use(oktaAuthenticationMiddleware)
 
 	if s.NewLocalAuthIsEnabled() {
 		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware(store)
@@ -145,35 +133,26 @@ func (s *Server) routes(
 	)
 
 	// set up Email Client
-	sesConfig := s.NewSESConfig()
-	sesSender := appses.NewSender(sesConfig)
 	emailConfig := s.NewEmailConfig()
-	emailClient, err := email.NewClient(emailConfig, sesSender)
-	if err != nil {
-		s.logger.Fatal("Failed to create email client", zap.Error(err))
-	}
 
-	// override email client to use MailCatcher when running locally
-	if s.environment.Local() {
-		smtpSender := local.NewSMTPSender("email:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
-		emailClient, err = email.NewClient(emailConfig, smtpSender)
+	var emailClient email.Client
+	switch {
+	case s.environment.Deployed():
+		sesConfig := s.NewSESConfig()
+		sesSender := appses.NewSender(sesConfig)
+		emailClient, err = email.NewClient(emailConfig, sesSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
 		}
-	}
-
-	// override email client with dummy client that logs output when running tests
-	if s.environment.Test() {
-		smtpSender := local.NewSMTPSender("email:1025") // TODO - get from environment variable?
-		emailClient, err = email.NewClient(emailConfig, smtpSender)
-
-		if err != nil {
-			s.logger.Fatal("Failed to create email client", zap.Error(err))
-		}
-	}
-
-	if s.environment.Deployed() {
 		s.CheckEmailClient(emailClient)
+
+	default:
+		// default to test/local
+		smtpSender := local.NewSMTPSender("email:1025")
+		emailClient, err = email.NewClient(emailConfig, smtpSender)
+		if err != nil {
+			s.logger.Fatal("Failed to create email client", zap.Error(err))
+		}
 	}
 
 	// set up S3 client
@@ -255,27 +234,9 @@ func (s *Server) routes(
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 	api.Use(requirePrincipalMiddleware)
 
-	systemIntakeHandler := handlers.NewSystemIntakeHandler(
-		base,
-		services.NewArchiveSystemIntake(
-			serviceConfig,
-			store.FetchSystemIntakeByID,
-			store.UpdateSystemIntake,
-			services.NewCloseBusinessCase(
-				serviceConfig,
-				store.FetchBusinessCaseByID,
-				store.UpdateBusinessCase,
-			),
-			services.AuthorizeUserIsIntakeRequester,
-			emailClient.SendWithdrawRequestEmail,
-		),
-	)
-	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
-
 	businessCaseHandler := handlers.NewBusinessCaseHandler(
 		base,
 		services.NewFetchBusinessCaseByID(
-			serviceConfig,
 			store.FetchBusinessCaseByID,
 			services.AuthorizeHasEASiRole,
 		),
@@ -300,58 +261,22 @@ func (s *Server) routes(
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
 	api.Handle("/business_case", businessCaseHandler.Handle())
 
-	metricsHandler := handlers.NewSystemIntakeMetricsHandler(
-		base,
-		services.NewFetchMetrics(
-			serviceConfig,
-			store.FetchSystemIntakeMetrics,
-		),
-	)
-	api.Handle("/metrics", metricsHandler.Handle())
-
 	actionHandler := handlers.NewActionHandler(
 		base,
-		services.NewTakeAction(
+		services.NewBusinessCaseTakeAction(
 			store.FetchSystemIntakeByID,
-			map[models.ActionType]services.ActionExecuter{
-				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
-					serviceConfig,
-					services.AuthorizeUserIsIntakeRequester,
-					store.FetchOpenBusinessCaseByIntakeID,
-					appvalidation.BusinessCaseForSubmit,
-					saveAction,
-					store.UpdateSystemIntake,
-					store.UpdateBusinessCase,
-					emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
-					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
-					publisher.PublishBusinessCase,
-				),
-				models.ActionTypeSUBMITFINALBIZCASE: services.NewSubmitBusinessCase(
-					serviceConfig,
-					services.AuthorizeUserIsIntakeRequester,
-					store.FetchOpenBusinessCaseByIntakeID,
-					appvalidation.BusinessCaseForSubmit,
-					saveAction,
-					store.UpdateSystemIntake,
-					store.UpdateBusinessCase,
-					emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
-					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
-					publisher.PublishBusinessCase,
-				), models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
-					serviceConfig,
-					services.AuthorizeUserIsIntakeRequester,
-					store.UpdateSystemIntake,
-					// quick adapter to retrofit the new interface to take the place
-					// of the old interface
-					func(ctx context.Context, si *models.SystemIntake) (string, error) {
-						err := publisher.PublishSystemIntake(ctx, *si)
-						return "", err
-					},
-					saveAction,
-					emailClient.SystemIntake.SendSubmitInitialFormRequesterNotification,
-					emailClient.SystemIntake.SendSubmitInitialFormReviewerNotification,
-				),
-			},
+			services.NewSubmitBusinessCase(
+				serviceConfig,
+				services.AuthorizeUserIsIntakeRequester,
+				store.FetchOpenBusinessCaseByIntakeID,
+				appvalidation.BusinessCaseForSubmit,
+				saveAction,
+				store.UpdateSystemIntake,
+				store.UpdateBusinessCase,
+				emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
+				emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
+				publisher.PublishBusinessCase,
+			),
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/actions", actionHandler.Handle())
