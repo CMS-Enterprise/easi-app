@@ -77,6 +77,7 @@ const AccordionNavigation = ({
             {items.map(item => {
               return (
                 <li
+                  key={item.text}
                   className={classNames('usa-sidenav__item border-top-0', {
                     'border-bottom-1px border-primary': item?.groupEnd
                   })}
@@ -96,7 +97,10 @@ const AccordionNavigation = ({
                     item?.children && (
                       <ul className="usa-sidenav__sublist">
                         {item.children.map(child => (
-                          <li className="usa-sidenav__item border-top-0">
+                          <li
+                            key={child.text}
+                            className="usa-sidenav__item border-top-0"
+                          >
                             <NavHashLink
                               to={child.route}
                               onClick={() => setIsAccordionOpen(false)}
