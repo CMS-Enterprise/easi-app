@@ -29,7 +29,7 @@ import {
 } from 'queries/types/GetLinkedRequests';
 import { SystemIntakeState, TRBRequestState } from 'types/graphql-global-types';
 import { SystemLinkedRequest } from 'types/systemLinkedRequest';
-import { formatDateLocal } from 'utils/date';
+import { formatDateLocal, formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 import {
@@ -132,19 +132,28 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
           );
         }
       },
-      /*
-      tbd
-      {
-        Header: t<string>('header.upcomingMeetingDate'),
-        accessor: 'nextMeetingDate',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDateUtc(value, 'MM/dd/yyyy');
+      activeTable === 'open'
+        ? {
+            Header: t<string>('header.upcomingMeetingDate'),
+            accessor: 'nextMeetingDate',
+            Cell: ({ value }: any) => {
+              if (value) {
+                return formatDateUtc(value, 'MM/dd/yyyy');
+              }
+              return 'None';
+            }
           }
-          return 'None';
-        }
-      },
-      */
+        : {
+            Header: t<string>('header.lastMeetingDate'),
+            accessor: 'lastMeetingDate',
+            Cell: ({ value }: any) => {
+              if (value) {
+                return formatDateUtc(value, 'MM/dd/yyyy');
+              }
+              return 'None';
+            }
+          },
+
       {
         Header: t<string>('header.requester'),
         accessor: lr => {

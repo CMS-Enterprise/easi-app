@@ -6,7 +6,8 @@ const tableAndPagination = {
     requester: 'Requester',
     status: 'Status',
     submissionDate: 'Submission date',
-    upcomingMeetingDate: 'Upcoming meeting date'
+    upcomingMeetingDate: 'Upcoming meeting date',
+    lastMeetingDate: 'Most recent meeting date'
   },
   defaultVal: {
     draft: 'Draft',
