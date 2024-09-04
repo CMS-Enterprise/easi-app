@@ -62,4 +62,49 @@ describe('System Workspace Requests Table', () => {
     await screen.findByTestId('system-linked-requests');
     expect(asFragment()).toMatchSnapshot();
   });
+
+  it('renders closed requests', async () => {
+    const cedarSystemId = '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}';
+
+    const getLinkedRequestsMockedQuery: MockedQuery<
+      GetLinkedRequests,
+      GetLinkedRequestsVariables
+    > = {
+      request: {
+        query: GetLinkedRequestsQuery,
+        variables: {
+          cedarSystemId,
+          systemIntakeState: SystemIntakeState.OPEN,
+          trbRequestState: TRBRequestState.OPEN
+        }
+      },
+      result: {
+        data: {
+          cedarSystemDetails: {
+            __typename: 'CedarSystemDetails',
+            cedarSystem: {
+              __typename: 'CedarSystem',
+              id: cedarSystemId,
+              linkedSystemIntakes,
+              linkedTrbRequests
+            }
+          }
+        }
+      }
+    };
+
+    const { asFragment } = render(
+      <MockedProvider mocks={[getLinkedRequestsMockedQuery]}>
+        <MemoryRouter
+          initialEntries={[`/systems/${cedarSystemId}/workspace/requests`]}
+        >
+          <Route exact path="/systems/:systemId/workspace/requests">
+            <SystemWorkspaceRequests />
+          </Route>
+        </MemoryRouter>
+      </MockedProvider>
+    );
+    await screen.findByTestId('system-linked-requests');
+    expect(asFragment()).toMatchSnapshot();
+  });
 });

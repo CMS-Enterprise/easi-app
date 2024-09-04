@@ -9,6 +9,9 @@ import {
   SystemLinkedRequest
 } from 'types/systemLinkedRequest';
 
+const today = new Date();
+const tomorrow = today.setDate(today.getDate() + 1);
+
 const linkedSystemIntakes: LinkedSystemIntake[] = [
   {
     id: '29d73aa0-3a29-478e-afb4-374a7594be47',
@@ -17,8 +20,8 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
     requesterName: 'User One',
-    lastMeetingDate: null,
-    nextMeetingDate: null,
+    lastMeetingDate: new Date('2024-09-04').toString(),
+    nextMeetingDate: tomorrow.toString(),
     __typename: 'SystemIntake'
   },
   {
@@ -28,8 +31,8 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
     requesterName: 'User One',
-    lastMeetingDate: null,
-    nextMeetingDate: null,
+    lastMeetingDate: new Date('2024-09-04').toString(),
+    nextMeetingDate: tomorrow.toString(),
     __typename: 'SystemIntake'
   },
   {
@@ -39,8 +42,8 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
     requesterName: 'User USR1',
-    lastMeetingDate: null,
-    nextMeetingDate: null,
+    lastMeetingDate: new Date('2024-09-04').toString(),
+    nextMeetingDate: tomorrow.toString(),
     __typename: 'SystemIntake'
   }
 ];
@@ -59,8 +62,8 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
-    lastMeetingDate: null,
-    nextMeetingDate: null,
+    lastMeetingDate: new Date('2024-09-04').toString(),
+    nextMeetingDate: tomorrow.toString(),
     __typename: 'TRBRequest'
   },
   {
@@ -76,8 +79,8 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
-    lastMeetingDate: null,
-    nextMeetingDate: null,
+    lastMeetingDate: new Date('2024-09-04').toString(),
+    nextMeetingDate: tomorrow.toString(),
     __typename: 'TRBRequest'
   },
   {
@@ -93,8 +96,8 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
-    lastMeetingDate: null,
-    nextMeetingDate: null,
+    lastMeetingDate: new Date('2024-09-04').toString(),
+    nextMeetingDate: tomorrow.toString(),
     __typename: 'TRBRequest'
   }
 ];
