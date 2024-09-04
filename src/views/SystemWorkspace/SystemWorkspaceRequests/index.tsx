@@ -153,7 +153,6 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
               return 'None';
             }
           },
-
       {
         Header: t<string>('header.requester'),
         accessor: lr => {
@@ -165,7 +164,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
         }
       }
     ];
-  }, [t]);
+  }, [activeTable, t]);
 
   const {
     canNextPage,
