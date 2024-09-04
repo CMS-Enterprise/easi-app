@@ -404,6 +404,51 @@ exports[`System Workspace Requests Table > renders open requests 1`] = `
                   <div
                     class="flex-fill text-no-wrap"
                   >
+                    Upcoming meeting date
+                  </div>
+                  <div
+                    class="position-relative width-205 margin-left-05"
+                  >
+                    <svg
+                      class="usa-icon margin-left-05 position-absolute"
+                      data-testid="caret--sort"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path
+                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="border-bottom-2px"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled width-full display-flex"
+                  data-testid="button"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  <div
+                    class="flex-fill text-no-wrap"
+                  >
                     Requester
                   </div>
                   <div
@@ -461,6 +506,11 @@ exports[`System Workspace Requests Table > renders open requests 1`] = `
               <td
                 role="cell"
               >
+                None
+              </td>
+              <td
+                role="cell"
+              >
                 User One
               </td>
             </tr>
@@ -490,6 +540,11 @@ exports[`System Workspace Requests Table > renders open requests 1`] = `
               <td
                 role="cell"
               >
+                None
+              </td>
+              <td
+                role="cell"
+              >
                 User One
               </td>
             </tr>
@@ -519,6 +574,11 @@ exports[`System Workspace Requests Table > renders open requests 1`] = `
               <td
                 role="cell"
               >
+                None
+              </td>
+              <td
+                role="cell"
+              >
                 Adeline Aarons
               </td>
             </tr>
@@ -548,6 +608,11 @@ exports[`System Workspace Requests Table > renders open requests 1`] = `
               <td
                 role="cell"
               >
+                None
+              </td>
+              <td
+                role="cell"
+              >
                 Adeline Aarons
               </td>
             </tr>
@@ -573,6 +638,11 @@ exports[`System Workspace Requests Table > renders open requests 1`] = `
                 role="cell"
               >
                 Request form complete
+              </td>
+              <td
+                role="cell"
+              >
+                None
               </td>
               <td
                 role="cell"
