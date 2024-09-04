@@ -1761,6 +1761,16 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 	}, nil
 }
 
+// LastMeetingDate is the resolver for the lastMeetingDate field.
+func (r *systemIntakeResolver) LastMeetingDate(ctx context.Context, obj *models.SystemIntake) (*time.Time, error) {
+	return resolvers.SystemIntakeLastMeetingDate(ctx, obj, time.Now()), nil
+}
+
+// NextMeetingDate is the resolver for the nextMeetingDate field.
+func (r *systemIntakeResolver) NextMeetingDate(ctx context.Context, obj *models.SystemIntake) (*time.Time, error) {
+	return resolvers.SystemIntakeNextMeetingDate(ctx, obj, time.Now()), nil
+}
+
 // GrbReviewers is the resolver for the grbReviewers field.
 func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error) {
 	return resolvers.SystemIntakeGRBReviewers(ctx, obj.ID)
@@ -2037,6 +2047,16 @@ func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRe
 // TaskStatuses is the resolver for the taskStatuses field.
 func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error) {
 	return resolvers.GetTRBTaskStatuses(ctx, *obj)
+}
+
+// LastMeetingDate is the resolver for the lastMeetingDate field.
+func (r *tRBRequestResolver) LastMeetingDate(ctx context.Context, obj *models.TRBRequest) (*time.Time, error) {
+	return resolvers.TRBRequestLastMeetingDate(ctx, obj, time.Now()), nil
+}
+
+// NextMeetingDate is the resolver for the nextMeetingDate field.
+func (r *tRBRequestResolver) NextMeetingDate(ctx context.Context, obj *models.TRBRequest) (*time.Time, error) {
+	return resolvers.TRBRequestNextMeetingDate(ctx, obj, time.Now()), nil
 }
 
 // TrbLeadInfo is the resolver for the trbLeadInfo field.
