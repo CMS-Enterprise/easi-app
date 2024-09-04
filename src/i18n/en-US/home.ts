@@ -88,7 +88,8 @@ const home = {
       type: 'Governance',
       submittedAt: 'Submission date',
       status: 'Status',
-      nextMeetingDate: 'Upcoming meeting date'
+      nextMeetingDate: 'Upcoming meeting date',
+      relatedSystems: 'Related systems'
     },
     types: { GOVERNANCE_REQUEST: 'IT Governance', TRB: 'TRB' },
     defaultName: 'Draft',

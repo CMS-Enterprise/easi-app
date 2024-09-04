@@ -1,7 +1,9 @@
+import testSystemIntakeName from './systemIntake';
+
 cy.trbRequest = {
   basicDetails: {
     fillRequiredFields: () => {
-      cy.get('[name=name]').clear().type('Test Request Name');
+      cy.get('[name=name]').clear().type(testSystemIntakeName);
       cy.get('[name=component]').select(
         'Center for Medicaid and CHIP Services'
       );

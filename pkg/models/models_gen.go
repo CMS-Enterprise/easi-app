@@ -332,27 +332,6 @@ type ReopenTRBRequestInput struct {
 	NotifyEuaIds   []string  `json:"notifyEuaIds"`
 }
 
-// Represents a requester's system intake request
-type Request struct {
-	ID              uuid.UUID                    `json:"id"`
-	Name            *string                      `json:"name,omitempty"`
-	SubmittedAt     *time.Time                   `json:"submittedAt,omitempty"`
-	Type            RequestType                  `json:"type"`
-	Status          string                       `json:"status"`
-	StatusRequester *SystemIntakeStatusRequester `json:"statusRequester,omitempty"`
-	StatusCreatedAt *time.Time                   `json:"statusCreatedAt,omitempty"`
-	Lcid            *string                      `json:"lcid,omitempty"`
-	NextMeetingDate *time.Time                   `json:"nextMeetingDate,omitempty"`
-}
-
-type RequestEdge struct {
-	Node *Request `json:"node"`
-}
-
-type RequestsConnection struct {
-	Edges []*RequestEdge `json:"edges"`
-}
-
 type SendCantFindSomethingEmailInput struct {
 	Body string `json:"body"`
 }
@@ -929,46 +908,6 @@ type UpdateTRBRequestTRBLeadInput struct {
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
-}
-
-// Indicates the type of a request being made with the EASi system
-type RequestType string
-
-const (
-	RequestTypeGovernanceRequest RequestType = "GOVERNANCE_REQUEST"
-)
-
-var AllRequestType = []RequestType{
-	RequestTypeGovernanceRequest,
-}
-
-func (e RequestType) IsValid() bool {
-	switch e {
-	case RequestTypeGovernanceRequest:
-		return true
-	}
-	return false
-}
-
-func (e RequestType) String() string {
-	return string(e)
-}
-
-func (e *RequestType) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = RequestType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid RequestType", str)
-	}
-	return nil
-}
-
-func (e RequestType) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 // A user role associated with a job code
