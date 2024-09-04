@@ -20,6 +20,9 @@ export default gql`
 
           # requester
           requesterName
+
+          nextMeetingDate
+          lastMeetingDate
         }
         linkedTrbRequests(state: $trbRequestState) {
           id
@@ -38,6 +41,9 @@ export default gql`
           requesterInfo {
             commonName
           }
+
+          nextMeetingDate
+          lastMeetingDate
         }
       }
     }

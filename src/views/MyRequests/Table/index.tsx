@@ -27,6 +27,7 @@ import {
   GetRequests_mySystemIntakes as GetSystemIntakesType,
   GetRequests_myTrbRequests as GetTRBRequestsType
 } from 'queries/types/GetRequests';
+import { AppState } from 'reducers/rootReducer';
 import { SystemIntakeStatusRequester } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import { formatDateUtc } from 'utils/date';
@@ -43,39 +44,9 @@ import {
 } from 'utils/tableSort';
 import user from 'utils/user';
 
-import { AppState } from '../../../reducers/rootReducer';
-
 import { MergedRequestsForTable } from './mergedRequestForTable';
 
 import '../index.scss';
-
-const calcSystemIntakeNextMeetingDate = (
-  grb: string | null,
-  grt: string | null
-): string | null => {
-  if (grb === null && grt === null) {
-    return null;
-  }
-
-  if (grb === null) {
-    return grt;
-  }
-
-  if (grt === null) {
-    return grb;
-  }
-
-  // attempt to parse
-  const grbDate = Date.parse(grb);
-  const grtDate = Date.parse(grt);
-
-  // return latest of the two
-  if (grbDate > grtDate) {
-    return grb;
-  }
-
-  return grt;
-};
 
 type myRequestsTableProps = {
   type?: RequestType;
@@ -279,10 +250,7 @@ const Table = ({
           merged.push({
             id: systemIntake.id,
             name: systemIntake.requestName || 'Draft',
-            nextMeetingDate: calcSystemIntakeNextMeetingDate(
-              systemIntake.grbDate,
-              systemIntake.grtDate
-            ),
+            nextMeetingDate: systemIntake.nextMeetingDate,
             process: 'IT Governance',
             status:
               isITGovAdmin || isTRBAdmin
