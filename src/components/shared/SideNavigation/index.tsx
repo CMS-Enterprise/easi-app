@@ -9,22 +9,13 @@ import UswdsReactLink from 'components/LinkWrapper';
 
 import IconLink from '../IconLink';
 
+import { NavLinkProps } from './types';
+
 import './index.scss';
-
-export type SubNavLinkProps = {
-  route: string;
-  text: string;
-};
-
-export type NavLinkProps = SubNavLinkProps & {
-  children?: SubNavLinkProps[];
-  /** Designates end of navigation group with bottom border */
-  groupEnd?: boolean;
-};
 
 type SideNavigationProps = {
   items: Array<NavLinkProps>;
-  /** Link with back arrow displayed at top of navigation */
+  /** Link with back arrow */
   returnLink?: {
     to: string;
     text: string;
@@ -46,16 +37,16 @@ const SideNavigation = ({
   const pathnameWithHash = `${pathname}${hash}`;
 
   return (
-    <nav className={className}>
+    <nav className={classNames('easi-sidenav', className)}>
       <ul className="usa-sidenav border-bottom-0">
         {
-          // Return arrow link at top of navigation list
+          // Return arrow link
           returnLink && (
-            <li>
+            <li className="margin-bottom-4">
               <IconLink
                 to={returnLink.to}
                 icon={<IconArrowBack />}
-                className="text-primary hover:text-primary-dark text-underline margin-bottom-4"
+                className="text-primary hover:text-primary-dark text-underline"
               >
                 {t(returnLink.text)}
               </IconLink>

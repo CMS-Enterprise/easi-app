@@ -24,7 +24,8 @@ import AdditionalInformation from 'views/AdditionalInformation';
 import NotFound from 'views/NotFound';
 import UploadForm from 'views/SystemIntake/Documents/UploadForm';
 
-import AccordionNavigation from './AccordionNavigation';
+import AccordionNavigation from '../../components/shared/AccordionNavigation';
+
 import Actions from './Actions';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
@@ -105,9 +106,9 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
           }
         />
       )}
-      {!fullPageLayout && (
-        <AccordionNavigation activePage={activePage} subNavItems={navItems} />
-      )}
+
+      {!fullPageLayout && <AccordionNavigation items={navItems} />}
+
       <section
         className={classnames('grid-container', {
           'margin-bottom-5 margin-top-7': !fullPageLayout

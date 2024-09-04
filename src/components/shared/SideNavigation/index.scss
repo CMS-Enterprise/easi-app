@@ -1,15 +1,17 @@
 @use 'uswds-core' as *;
 
-ul.usa-sidenav a:not(.usa-button) {
-  &:not(.usa-current) {
-    color: color('base-darkest');
-  }
+.easi-sidenav {
+  ul.usa-sidenav a:not(.usa-button) {
+    &:not(.usa-current):not(:hover) {
+      color: color('base-darkest');
+    }
 
-  &:hover {
-    background-color: transparent;
-  }
+    &:hover {
+      background-color: transparent;
+    }
 
-  &.usa-current:hover {
-    color: color('primary-dark')
+    &.usa-current:hover {
+      color: color('primary-dark')
+    }
   }
 } 

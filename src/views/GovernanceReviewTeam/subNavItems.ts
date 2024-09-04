@@ -1,4 +1,4 @@
-import { NavLinkProps } from 'components/shared/SideNavigation';
+import { NavLinkProps } from 'components/shared/SideNavigation/types';
 import { Flags } from 'types/flags';
 
 /**
