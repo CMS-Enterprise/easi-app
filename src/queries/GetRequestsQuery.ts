@@ -15,6 +15,8 @@ export default gql`
         name
       }
       lcid
+      nextMeetingDate
+      lastMeetingDate
     }
     myTrbRequests(archived: false) {
       id
@@ -22,6 +24,7 @@ export default gql`
       submittedAt: createdAt
       status
       nextMeetingDate: consultMeetingTime
+      lastMeetingDate
       systems {
         id
         name
