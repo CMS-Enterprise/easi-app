@@ -175,7 +175,7 @@ describe('Governance Review Team', () => {
   it('can issue a new Life Cycle ID', () => {
     cy.contains('a', 'Closable Request').should('be.visible').click();
 
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
+    cy.get('[data-testid="side-nav-actions-link"]').click();
 
     cy.get('#grt-action__resolutions').check({ force: true });
 
@@ -222,7 +222,7 @@ describe('Governance Review Team', () => {
   it('can issue an existing Life Cycle ID', () => {
     cy.contains('a', 'final biz case submitted').should('be.visible').click();
 
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
+    cy.get('[data-testid="side-nav-actions-link"]').click();
 
     cy.get('#grt-action__resolutions').check({ force: true });
 
@@ -282,7 +282,7 @@ describe('Governance Review Team', () => {
 
     cy.contains('a', 'Closable Request').should('be.visible').click();
 
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
+    cy.get('[data-testid="side-nav-actions-link"]').click();
 
     cy.get('#grt-action__manage-lcid').check({ force: true });
 
@@ -330,7 +330,7 @@ describe('Governance Review Team', () => {
 
     cy.contains('a', 'Updated LCID').should('be.visible').click();
 
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
+    cy.get('[data-testid="side-nav-actions-link"]').click();
 
     cy.get('#grt-action__manage-lcid').check({ force: true });
 
@@ -357,7 +357,7 @@ describe('Governance Review Team', () => {
 
     cy.contains('a', 'LCID issued').should('be.visible').click();
 
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
+    cy.get('[data-testid="side-nav-actions-link"]').click();
 
     cy.get('#grt-action__manage-lcid').check({ force: true });
 
@@ -386,7 +386,7 @@ describe('Governance Review Team', () => {
 
     cy.contains('a', 'Retired LCID').should('be.visible').click();
 
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
+    cy.get('[data-testid="side-nav-actions-link"]').click();
 
     cy.get('#grt-action__manage-lcid').check({ force: true });
 
@@ -424,7 +424,7 @@ describe('Governance Review Team', () => {
 
     // Check retirement date updated
 
-    // cy.get('[data-testid="grt-nav-actions-link"]').click();
+    // cy.get('[data-testid="side-nav-actions-link"]').click();
 
     // // Wait for task list query to complete
     // cy.wait('@getGovernanceTaskList')
@@ -447,7 +447,7 @@ describe('Governance Review Team', () => {
   it('can progress to the GRT meeting step', () => {
     cy.contains('a', 'Draft Business Case').should('be.visible').click();
 
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
+    cy.get('[data-testid="side-nav-actions-link"]').click();
 
     cy.get('#grt-action__new-step').check({ force: true });
 
@@ -485,7 +485,7 @@ describe('Governance Review Team', () => {
       .should('be.visible')
       .click();
 
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
+    cy.get('[data-testid="side-nav-actions-link"]').click();
 
     cy.get('#grt-action__resolutions').check({ force: true });
 
@@ -518,7 +518,7 @@ describe('Governance Review Team', () => {
 
     cy.contains('a', 'Closed Request').should('be.visible').click();
 
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
+    cy.get('[data-testid="side-nav-actions-link"]').click();
 
     cy.get('#grt-action__resolutions').check({ force: true });
 
@@ -547,7 +547,7 @@ describe('Governance Review Team', () => {
       .should('be.visible')
       .click();
 
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
+    cy.get('[data-testid="side-nav-actions-link"]').click();
 
     cy.get('#grt-action__new-step').check({ force: true });
 

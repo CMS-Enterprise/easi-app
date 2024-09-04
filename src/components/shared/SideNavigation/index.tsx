@@ -64,6 +64,7 @@ const SideNavigation = ({
             >
               <UswdsReactLink
                 to={item.route}
+                data-testid={`side-nav-${item.text}-link`}
                 className={classNames({
                   'usa-current': item.route === pathname
                 })}
@@ -82,6 +83,7 @@ const SideNavigation = ({
                       >
                         <NavHashLink
                           to={child.route}
+                          data-testid={`side-nav-${item.text}-link`}
                           className={classNames('usa-link', {
                             'usa-current': pathnameWithHash === child.route
                           })}
