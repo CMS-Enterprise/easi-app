@@ -2,15 +2,16 @@
 import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Route, Switch, useParams } from 'react-router-dom';
+import { Route, Switch, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Grid, IconArrowBack } from '@trussworks/react-uswds';
+import { Grid } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
+import SideNavigation from 'components/shared/SideNavigation';
 import useMessage from 'hooks/useMessage';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
@@ -23,7 +24,8 @@ import AdditionalInformation from 'views/AdditionalInformation';
 import NotFound from 'views/NotFound';
 import UploadForm from 'views/SystemIntake/Documents/UploadForm';
 
-import AccordionNavigation from './AccordionNavigation';
+import AccordionNavigation from '../../components/shared/AccordionNavigation';
+
 import Actions from './Actions';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
@@ -79,11 +81,6 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
   const fullPageLayout: boolean =
     activePage === 'resolutions' || activePage === 'manage-lcid' || !!subPage;
 
-  const getNavLinkClasses = (route: string) =>
-    classnames('easi-grt__nav-link', {
-      'easi-grt__nav-link--active': route.split('/')[3] === activePage
-    });
-
   const navItems = subNavItems(systemId, isITGovAdmin, flags);
 
   useEffect(() => {
@@ -109,9 +106,9 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
           }
         />
       )}
-      {!fullPageLayout && (
-        <AccordionNavigation activePage={activePage} subNavItems={navItems} />
-      )}
+
+      {!fullPageLayout && <AccordionNavigation items={navItems} />}
+
       <section
         className={classnames('grid-container', {
           'margin-bottom-5 margin-top-7': !fullPageLayout
@@ -120,47 +117,16 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
         <Message className="margin-bottom-6 margin-top-neg-4" />
         <Grid row gap>
           {!fullPageLayout && (
-            <nav className="desktop:grid-col-3 desktop:display-block display-none">
-              <ul className="easi-grt__nav-list margin-top-0">
-                <li className="margin-bottom-6 margin-top-0">
-                  <Link
-                    to="/"
-                    className="display-flex flex-align-center hover:text-primary-dark"
-                  >
-                    <IconArrowBack className="margin-right-1" aria-hidden />
-                    {t('back.allRequests')}
-                  </Link>
-                </li>
-                {navItems.map(({ aria, groupEnd, route, text }) => (
-                  <li
-                    key={`desktop-sidenav-${text}`}
-                    className={classnames({
-                      'easi-grt__nav-link--border': groupEnd
-                    })}
-                  >
-                    {aria ? (
-                      <Link
-                        to={route}
-                        aria-label={t(aria)}
-                        className={getNavLinkClasses(route)}
-                        data-testid={`grt-nav-${text}-link`}
-                      >
-                        {t(text)}
-                      </Link>
-                    ) : (
-                      <Link
-                        to={route}
-                        className={getNavLinkClasses(route)}
-                        data-testid={`grt-nav-${text}-link`}
-                      >
-                        {t(text)}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            <SideNavigation
+              items={navItems}
+              returnLink={{
+                to: '/',
+                text: t('back.allRequests')
+              }}
+              className="desktop:grid-col-3 desktop:display-block display-none"
+            />
           )}
+
           {loading && (
             <div className="margin-x-auto">
               <PageLoading />
