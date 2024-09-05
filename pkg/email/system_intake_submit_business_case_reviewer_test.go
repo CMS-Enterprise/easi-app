@@ -21,7 +21,7 @@ func (s *EmailTestSuite) TestSubmitBizCaseReviewer() {
 	requestName := "Test Request"
 	requesterName := "John Adams"
 	adminLink := fmt.Sprintf(
-		"%s://%s/governance-review-team/%s/business-case",
+		"%s://%s/it-governance/%s/business-case",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),

@@ -51,7 +51,7 @@ func (s *EmailTestSuite) TestSendRequestEditsNotification() {
 			)
 		}
 		adminLink := fmt.Sprintf(
-			"%s://%s/governance-review-team/%s/",
+			"%s://%s/it-governance/%s/",
 			s.config.URLScheme,
 			s.config.URLHost,
 			intakeID.String(),
