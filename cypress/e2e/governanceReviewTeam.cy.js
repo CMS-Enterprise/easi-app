@@ -473,7 +473,7 @@ describe('Governance Review Team', () => {
 
     // Check GRT meeting date was set
 
-    cy.get('[data-testid="grt-nav-dates.heading-link"]').click();
+    cy.get('li.usa-sidenav__item a[href*="dates"]').click();
 
     cy.get('#Dates-GrtDateMonth').should('have.value', '1');
     cy.get('#Dates-GrtDateDay').should('have.value', '1');
