@@ -41,7 +41,7 @@ func (c Client) lcidExpirationBody(
 	nextSteps models.HTML,
 ) (string, error) {
 	requesterPath := path.Join("governance-task-list", systemIntakeID.String())
-	grtPath := path.Join("governance-review-team", systemIntakeID.String(), "lcid")
+	grtPath := path.Join("it-governance", systemIntakeID.String(), "lcid")
 	var issuedAt string
 	if lcidIssuedAt != nil {
 		issuedAt = lcidIssuedAt.Format("01/02/2006")
