@@ -136,21 +136,21 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
         ? {
             Header: t<string>('header.upcomingMeetingDate'),
             accessor: 'nextMeetingDate',
-            Cell: ({ value }: any) => {
+            Cell: ({ value }: CellProps<SystemLinkedRequest, string>) => {
               if (value) {
                 return formatDateUtc(value, 'MM/dd/yyyy');
               }
-              return 'None';
+              return t('defaultVal.none');
             }
           }
         : {
             Header: t<string>('header.lastMeetingDate'),
             accessor: 'lastMeetingDate',
-            Cell: ({ value }: any) => {
+            Cell: ({ value }: CellProps<SystemLinkedRequest, string>) => {
               if (value) {
                 return formatDateUtc(value, 'MM/dd/yyyy');
               }
-              return 'None';
+              return t('defaultVal.none');
             }
           },
       {

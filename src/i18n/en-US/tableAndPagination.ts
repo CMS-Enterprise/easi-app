@@ -11,7 +11,8 @@ const tableAndPagination = {
   },
   defaultVal: {
     draft: 'Draft',
-    notSubmitted: 'Not submitted'
+    notSubmitted: 'Not submitted',
+    none: 'None'
   },
   openClosedRequestsTabs: {
     label: 'Request Repository Table Navigation',
