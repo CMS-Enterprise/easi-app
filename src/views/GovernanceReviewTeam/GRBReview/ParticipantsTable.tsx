@@ -113,7 +113,9 @@ const ParticipantsTable = ({
 
   return (
     <>
-      <h2 className="margin-bottom-0">{t('participants')}</h2>
+      <h2 className="margin-bottom-0" id="participants">
+        {t('participants')}
+      </h2>
 
       <p className="margin-top-05 line-height-body-5">
         {t('participantsText')}

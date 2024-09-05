@@ -12,13 +12,13 @@ import classNames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
+import AccordionNavigation from 'components/shared/AccordionNavigation';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { AppState } from 'reducers/rootReducer';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import user from 'utils/user';
-import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation';
 import NotFound from 'views/NotFound';
 
 import Summary from './components/Summary';
@@ -160,8 +160,7 @@ export default function AdminHome() {
 
       {/* Accordion navigation for tablet and mobile */}
       <AccordionNavigation
-        activePage={activePage}
-        subNavItems={trbAdminPages.map(({ path, text, groupEnd }) => ({
+        items={trbAdminPages.map(({ path, text, groupEnd }) => ({
           text,
           route: `/trb/${id}/${path}`,
           groupEnd
