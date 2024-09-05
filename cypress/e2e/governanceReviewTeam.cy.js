@@ -210,7 +210,7 @@ describe('Governance Review Team', () => {
 
     // Check correct values are displayed on Life Cycle ID page
 
-    cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
+    cy.get('li.usa-sidenav__item a[href*="lcid"]').click();
 
     cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
     cy.get('dd').contains(scope);
@@ -267,7 +267,7 @@ describe('Governance Review Team', () => {
 
     // Check correct values are displayed on Life Cycle ID page
 
-    cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
+    cy.get('li.usa-sidenav__item a[href*="lcid"]').click();
 
     cy.get('dd').contains(lcid);
     cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
@@ -312,7 +312,7 @@ describe('Governance Review Team', () => {
 
     // Check updated values are displayed on Life Cycle ID page
 
-    cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
+    cy.get('li.usa-sidenav__item a[href*="lcid"]').click();
 
     // Wait for task list query to complete
     cy.wait('@getGovernanceTaskList')
