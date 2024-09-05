@@ -2,15 +2,16 @@ CREATE TYPE software_acquisition_method AS ENUM ('CONTRACTOR_FURNISHED', 'FED_FU
 
 -- TODO: NJD - should we rename this to software_to_system_intake?
 -- TODO: NJD - can we make software_name an ENUM based on external (CEDAR) software list?
-CREATE TABLE system_intake_to_software (
+CREATE TABLE system_intake_software_acquisition (
     id uuid PRIMARY KEY NOT NULL,
     system_intake_id uuid NOT NULL REFERENCES system_intakes(id),
-    software_name TEXT NOT NULL
+    using_software TEXT NOT NULL, 
+    acquisition_methods software_acquisition_method ARRAY NOT NULL
 );
 
-ALTER TABLE system_intakes ADD using_software_products BOOLEAN NOT NULL;
-ALTER TABLE system_intakes ADD acquisition_approaches software_acquisition_method;
+-- ALTER TABLE system_intakes ADD using_software_products TEXT NOT NULL;
+-- ALTER TABLE system_intakes ADD acquisition_approaches software_acquisition_method;
 
 --     estimated_num_instances INTEGER
 --     vendor/manufacture_name?
--- TODO: NJD - rename this migration V187__Add_Software_Info_To_System_Intake
+--     software_name TEXT NOT NULL

@@ -1982,6 +1982,13 @@ func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.Syste
 	return resolvers.SystemIntakeNoteEditor(ctx, obj)
 }
 
+// AcuqisitionMethods is the resolver for the acuqisitionMethods field.
+func (r *systemIntakeSoftwareAcquisitionResolver) AcuqisitionMethods(ctx context.Context, obj *models.SystemIntakeSoftwareAcquisition) ([]string, error) {
+	// panic(fmt.Errorf("not implemented: AcuqisitionMethods - acuqisitionMethods")) NJD
+	acqMethods := models.ConvertEnums[string](obj.AcuqisitionMethods)
+	return acqMethods, nil
+}
+
 // Author is the resolver for the author field.
 func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error) {
 	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
@@ -2260,6 +2267,11 @@ func (r *Resolver) SystemIntakeNote() generated.SystemIntakeNoteResolver {
 	return &systemIntakeNoteResolver{r}
 }
 
+// SystemIntakeSoftwareAcquisition returns generated.SystemIntakeSoftwareAcquisitionResolver implementation.
+func (r *Resolver) SystemIntakeSoftwareAcquisition() generated.SystemIntakeSoftwareAcquisitionResolver {
+	return &systemIntakeSoftwareAcquisitionResolver{r}
+}
+
 // TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
 func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
 
@@ -2312,6 +2324,7 @@ type systemIntakeResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
+type systemIntakeSoftwareAcquisitionResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
 type tRBAdviceLetterResolver struct{ *Resolver }
 type tRBAdviceLetterRecommendationResolver struct{ *Resolver }
