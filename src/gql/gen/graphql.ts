@@ -1785,6 +1785,7 @@ export type SystemIntake = {
   id: Scalars['UUID']['output'];
   isso: SystemIntakeISSO;
   itGovTaskStatuses: ITGovTaskStatuses;
+  lastMeetingDate?: Maybe<Scalars['Time']['output']>;
   lcid?: Maybe<Scalars['String']['output']>;
   lcidCostBaseline?: Maybe<Scalars['String']['output']>;
   lcidExpiresAt?: Maybe<Scalars['Time']['output']>;
@@ -1794,6 +1795,7 @@ export type SystemIntake = {
   /** Intentionally nullable - lcidStatus is null if (and only if) the intake doesn't have an LCID issued */
   lcidStatus?: Maybe<SystemIntakeLCIDStatus>;
   needsEaSupport?: Maybe<Scalars['Boolean']['output']>;
+  nextMeetingDate?: Maybe<Scalars['Time']['output']>;
   notes: Array<SystemIntakeNote>;
   oitSecurityCollaborator?: Maybe<Scalars['String']['output']>;
   oitSecurityCollaboratorName?: Maybe<Scalars['String']['output']>;
@@ -2664,9 +2666,11 @@ export type TRBRequest = {
   form: TRBRequestForm;
   id: Scalars['UUID']['output'];
   isRecent: Scalars['Boolean']['output'];
+  lastMeetingDate?: Maybe<Scalars['Time']['output']>;
   modifiedAt?: Maybe<Scalars['Time']['output']>;
   modifiedBy?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  nextMeetingDate?: Maybe<Scalars['Time']['output']>;
   /** System Intakes that share a CEDAR System or Contract Number */
   relatedIntakes: Array<SystemIntake>;
   /** Other TRB Requests that share a CEDAR System or Contract Number */
