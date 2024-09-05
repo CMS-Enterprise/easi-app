@@ -2,6 +2,7 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import {
   linkedSystemIntakes,
@@ -60,6 +61,7 @@ describe('System Workspace Requests Table', () => {
       </MockedProvider>
     );
     await screen.findByTestId('system-linked-requests');
+    expect(screen.getByText('Upcoming meeting date')).toBeInTheDocument();
     expect(asFragment()).toMatchSnapshot();
   });
 
@@ -93,7 +95,7 @@ describe('System Workspace Requests Table', () => {
       }
     };
 
-    const { asFragment } = render(
+    render(
       <MockedProvider mocks={[getLinkedRequestsMockedQuery]}>
         <MemoryRouter
           initialEntries={[`/systems/${cedarSystemId}/workspace/requests`]}
@@ -105,6 +107,15 @@ describe('System Workspace Requests Table', () => {
       </MockedProvider>
     );
     await screen.findByTestId('system-linked-requests');
-    expect(asFragment()).toMatchSnapshot();
+
+    const closed = await screen.findByRole('button', {
+      name: 'Closed requests'
+    });
+
+    userEvent.click(closed);
+
+    expect(
+      await screen.findByText('Most recent meeting date')
+    ).toBeInTheDocument();
   });
 });

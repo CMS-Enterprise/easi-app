@@ -10,7 +10,7 @@ import {
 } from 'types/systemLinkedRequest';
 
 const today = new Date();
-const tomorrow = today.setDate(today.getDate() + 1);
+const tomorrow = new Date(today.setDate(today.getDate() + 1)).toISOString();
 
 const linkedSystemIntakes: LinkedSystemIntake[] = [
   {
@@ -31,8 +31,8 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
     requesterName: 'User One',
-    lastMeetingDate: new Date('2024-09-04').toString(),
-    nextMeetingDate: tomorrow.toString(),
+    lastMeetingDate: new Date('2024-09-04').toISOString(),
+    nextMeetingDate: tomorrow,
     __typename: 'SystemIntake'
   },
   {
@@ -42,8 +42,8 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
     requesterName: 'User USR1',
-    lastMeetingDate: new Date('2024-09-04').toString(),
-    nextMeetingDate: tomorrow.toString(),
+    lastMeetingDate: new Date('2024-09-04').toISOString(),
+    nextMeetingDate: tomorrow,
     __typename: 'SystemIntake'
   }
 ];
@@ -62,8 +62,8 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
-    lastMeetingDate: new Date('2024-09-04').toString(),
-    nextMeetingDate: tomorrow.toString(),
+    lastMeetingDate: new Date('2024-09-04').toISOString(),
+    nextMeetingDate: tomorrow,
     __typename: 'TRBRequest'
   },
   {
@@ -79,8 +79,8 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
-    lastMeetingDate: new Date('2024-09-04').toString(),
-    nextMeetingDate: tomorrow.toString(),
+    lastMeetingDate: new Date('2024-09-04').toISOString(),
+    nextMeetingDate: tomorrow,
     __typename: 'TRBRequest'
   },
   {
@@ -96,8 +96,8 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
-    lastMeetingDate: new Date('2024-09-04').toString(),
-    nextMeetingDate: tomorrow.toString(),
+    lastMeetingDate: new Date('2024-09-04').toISOString(),
+    nextMeetingDate: tomorrow,
     __typename: 'TRBRequest'
   }
 ];
