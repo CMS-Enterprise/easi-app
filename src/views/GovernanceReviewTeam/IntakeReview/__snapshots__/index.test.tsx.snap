@@ -527,7 +527,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                       <div
                         class="flex-fill text-no-wrap"
                       >
-                        Upload date
+                        Date added
                       </div>
                       <div
                         class="position-relative width-205 margin-left-05"
@@ -639,12 +639,6 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
         Download System Intake as PDF
       </button>
     </div>
-    <a
-      class="usa-button margin-top-5"
-      href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
-    >
-      Take an action
-    </a>
   </div>
 </DocumentFragment>
 `;

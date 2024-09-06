@@ -112,7 +112,8 @@ export const businessCaseInitialData: BusinessCaseModel = {
   preferredSolution: cloneDeep(defaultProposedSolution),
   alternativeA: cloneDeep(defaultProposedSolution),
   alternativeB: cloneDeep(defaultProposedSolution),
-  createdAt: ''
+  createdAt: '',
+  updatedAt: ''
 };
 
 type lifecycleCostLinesType = Record<LifecycleSolution, LifecycleCosts>;
@@ -288,7 +289,8 @@ export const prepareBusinessCaseForApp = (
       },
       hasUserInterface: businessCase.alternativeBHasUI || ''
     },
-    createdAt: businessCase.createdAt
+    createdAt: businessCase.createdAt,
+    updatedAt: businessCase.updatedAt
   };
 };
 

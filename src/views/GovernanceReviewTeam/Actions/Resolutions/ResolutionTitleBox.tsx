@@ -44,7 +44,7 @@ const ResolutionTitleBox = ({
           {t('titleBox.selected', { type: 'resolution' })}
         </p>
         <h3 className="margin-top-05 margin-bottom-105">{t(title)}</h3>
-        <Link to={`/governance-review-team/${systemIntakeId}/resolutions`}>
+        <Link to={`/it-governance/${systemIntakeId}/resolutions`}>
           {t('titleBox.change', { type: 'resolution' })}
         </Link>
       </div>

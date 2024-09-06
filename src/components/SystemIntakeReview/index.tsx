@@ -411,7 +411,10 @@ export const SystemIntakeReview = ({
 
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">{t('review.documents')}</h2>
-      <DocumentsTable systemIntake={systemIntake} />
+      <DocumentsTable
+        systemIntakeId={systemIntake.id}
+        documents={systemIntake.documents}
+      />
     </div>
   );
 };

@@ -1,9 +1,14 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  IconAdd,
+  IconArrowForward,
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
@@ -17,26 +22,44 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import {
+  DescriptionDefinition,
+  DescriptionList,
+  DescriptionTerm
+} from 'components/shared/DescriptionGroup';
 import useMessage from 'hooks/useMessage';
+import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
+import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeState } from 'types/graphql-global-types';
+import { formatDateLocal } from 'utils/date';
+import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
-import { ReviewerKey } from '../subNavItems';
+import ITGovAdminContext from '../ITGovAdminContext';
 
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
 
 type GRBReviewProps = {
   id: string;
+  submittedAt: string | null;
   state: SystemIntakeState;
+  businessCase: BusinessCaseModel;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
+  documents: SystemIntakeDocument[];
 };
 
-const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
+const GRBReview = ({
+  id,
+  businessCase,
+  submittedAt,
+  state,
+  grbReviewers,
+  documents
+}: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
 
-  const { reviewerType, action } = useParams<{
-    reviewerType: ReviewerKey;
+  const { action } = useParams<{
     action?: 'add' | 'edit';
   }>();
 
@@ -57,6 +80,8 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
       }
     ]
   });
+
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   const removeGRBReviewer = useCallback(
     (reviewer: SystemIntakeGRBReviewerFragment) => {
@@ -79,10 +104,10 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
 
       // If removing reviewer from form, go to GRB Review page
       if (isForm) {
-        history.push(`/${reviewerType}/${id}/grb-review`);
+        history.push(`/it-governance/${id}/grb-review`);
       }
     },
-    [history, isForm, id, mutate, reviewerType, showMessage, t]
+    [history, isForm, id, mutate, showMessage, t]
   );
 
   return (
@@ -152,6 +177,104 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
               }}
             />
           </Alert>
+
+          {/* Supporting Docs text */}
+          <h2 className="margin-bottom-0">{t('supportingDocuments')}</h2>
+          <p className="margin-top-05 line-height-body-5">
+            {t('supportingDocumentsText')}
+          </p>
+
+          {/* Business Case Card */}
+          <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
+            <CardHeader>
+              <h3 className="display-inline-block margin-right-2 margin-bottom-0">
+                {t('businessCaseOverview.title')}
+              </h3>
+              {/* TODO: update these checks to use submittedAt when implemented */}
+              {businessCase.id && businessCase.updatedAt && (
+                <span className="text-base display-inline-block">
+                  {t('businessCaseOverview.submitted')}{' '}
+                  {formatDateLocal(businessCase.updatedAt, 'MM/dd/yyyy')}
+                </span>
+              )}
+            </CardHeader>
+            {businessCase.id && businessCase.businessNeed ? (
+              <>
+                <CardBody>
+                  <DescriptionList>
+                    <DescriptionTerm
+                      term={t('businessCaseOverview.need')}
+                      className="margin-bottom-0"
+                    />
+                    <DescriptionDefinition
+                      definition={businessCase.businessNeed}
+                      className="text-light font-body-md line-height-body-4"
+                    />
+
+                    <DescriptionTerm
+                      term={t('businessCaseOverview.preferredSolution')}
+                      className="margin-bottom-0 margin-top-2"
+                    />
+                    <DescriptionDefinition
+                      definition={
+                        businessCase?.preferredSolution?.summary ||
+                        t('businessCaseOverview.noSolution')
+                      }
+                      className="text-light font-body-md line-height-body-4"
+                    />
+                  </DescriptionList>
+                </CardBody>
+                <CardFooter>
+                  <UswdsReactLink
+                    to="./business-case"
+                    className="display-flex flex-row flex-align-center"
+                  >
+                    <span className="margin-right-1">
+                      {t('businessCaseOverview.linkToBusinessCase')}
+                    </span>
+                    <IconArrowForward />
+                  </UswdsReactLink>
+                </CardFooter>
+              </>
+            ) : (
+              <CardBody>
+                <Alert type="info" slim>
+                  {t('businessCaseOverview.unsubmittedAlertText')}
+                </Alert>
+              </CardBody>
+            )}
+          </div>
+
+          {/* Additional Documents Title and Link */}
+          <h3 className="margin-bottom-1" id="documents">
+            {t('additionalDocuments')}
+          </h3>
+
+          {isITGovAdmin && (
+            <UswdsReactLink
+              to="./documents/upload"
+              className="display-flex flex-align-center"
+            >
+              <IconAdd className="margin-right-1" />
+              <span>{t('additionalDocsLink')}</span>
+            </UswdsReactLink>
+          )}
+
+          {/* Intake Request Link */}
+          <p className="usa-card__container margin-x-0 padding-x-2 padding-y-1 display-inline-flex flex-row flex-wrap border-width-1px">
+            <span className="margin-right-1">
+              {t('documentsIntakeLinkTitle')}
+            </span>
+            <span className="margin-right-1 text-base">
+              ({t('documentsIntakeSubmitted')}{' '}
+              {formatDateLocal(submittedAt, 'MM/dd/yyyy')})
+            </span>
+            <UswdsReactLink to="./intake-request">
+              {t('documentsIntakeLinkText')}
+            </UswdsReactLink>
+          </p>
+
+          <DocumentsTable systemIntakeId={id} documents={documents} />
 
           <ParticipantsTable
             id={id}
