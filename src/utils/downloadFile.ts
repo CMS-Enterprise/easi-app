@@ -20,8 +20,12 @@ export function downloadBlob(filename: string, blob: Blob) {
   document.body.removeChild(link);
 }
 
-export function downloadFileFromURL(downloadURL: string, fileName: string) {
-  return axios
+export function downloadFileFromURL(
+  downloadURL: string | null,
+  fileName: string
+) {
+  if (!downloadURL) return;
+  axios
     .request({
       url: downloadURL,
       responseType: 'blob',

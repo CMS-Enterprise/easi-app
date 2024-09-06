@@ -44,7 +44,7 @@ func (sie systemIntakeEmails) requestEditsBody(
 	case models.GRFTFNoTargetProvided:
 		return "", errors.New("no target form provided")
 	}
-	adminPath := path.Join("governance-review-team", systemIntakeID.String(), adminFormPath)
+	adminPath := path.Join("it-governance", systemIntakeID.String(), adminFormPath)
 
 	data := systemIntakeRequestEditsEmailParameters{
 		RequestName:              requestName,

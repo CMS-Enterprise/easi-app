@@ -1,92 +1,87 @@
+import { NavLinkProps } from 'components/shared/SideNavigation/types';
 import { Flags } from 'types/flags';
-
-/** IT Gov reviewer types - used for GRT and GRB view routing */
-export type ReviewerKey = 'governance-review-team' | 'governance-review-board';
-
-type SubNavItems = {
-  route: `/${ReviewerKey}/${string}/${string}`;
-  text: string;
-  aria?: string;
-  /** Value used to designate end of sidenav subgrouping / border-bottom */
-  groupEnd?: boolean;
-}[];
 
 /**
  * Sub navigation links for IT Gov admin pages
  *
- * Returns correct nav links based on `reviewerRoute` prop (ex: excludes GRT-specific links from GRB view)
- * */
+ * Hides GRT admin links when user does not have admin job code
+ */
 const subNavItems = (
   systemId: string,
-  /** Base reviewer route for nav item links */
-  reviewerRoute: ReviewerKey,
+  /** Whether current user is IT Gov admin */
+  isITGovAdmin: boolean,
   flags?: Flags
-): SubNavItems => {
-  const grbReview: SubNavItems[number] = {
-    route: `/${reviewerRoute}/${systemId}/grb-review`,
-    text: 'grbReview:title',
-    aria: 'grbReview:aria',
-    groupEnd: true
-  };
-
-  const items: SubNavItems = [
+): NavLinkProps[] => {
+  const links: Array<NavLinkProps & { hidden?: boolean }> = [
     {
-      route: `/${reviewerRoute}/${systemId}/intake-request`,
-      text: 'general:intake',
-      aria: 'aria.openIntake'
+      route: `/it-governance/${systemId}/intake-request`,
+      text: 'general:intake'
     },
     {
-      route: `/${reviewerRoute}/${systemId}/documents`,
-      text: 'intake:documents.supportingDocuments',
-      aria: 'aria.openDocuments'
+      route: `/it-governance/${systemId}/documents`,
+      text: 'intake:documents.supportingDocuments'
     },
     {
-      route: `/${reviewerRoute}/${systemId}/business-case`,
+      route: `/it-governance/${systemId}/business-case`,
       text: 'general:businessCase',
-      aria: 'aria.openBusiness',
       groupEnd: flags && !flags.grbReviewTab
     },
-    // Add GRB review tab to nav items if flag is on
-    ...(flags?.grbReviewTab ? [grbReview] : []),
     {
-      route: `/${reviewerRoute}/${systemId}/feedback`,
-      text: 'feedback.title',
-      aria: 'aria.openFeedback'
+      route: `/it-governance/${systemId}/grb-review`,
+      text: 'grbReview:title',
+      groupEnd: true,
+      // Only show GRB Review tab when flag is turned on
+      hidden: !flags?.grbReviewTab,
+      children: [
+        {
+          route: `/it-governance/${systemId}/grb-review#documents`,
+          text: 'grbReview:supportingDocuments'
+        },
+        {
+          route: `/it-governance/${systemId}/grb-review#participants`,
+          text: 'grbReview:participants'
+        }
+      ]
     },
     {
-      route: `/${reviewerRoute}/${systemId}/decision`,
-      text: 'decision.title',
-      aria: 'aria.openDecision'
+      route: `/it-governance/${systemId}/feedback`,
+      text: 'governanceReviewTeam:feedback.title'
     },
     {
-      route: `/${reviewerRoute}/${systemId}/lcid`,
-      text: 'lifecycleID.title',
-      aria: 'aria.openLcid',
+      route: `/it-governance/${systemId}/decision`,
+      text: 'governanceReviewTeam:decision.title'
+    },
+    {
+      route: `/it-governance/${systemId}/lcid`,
+      text: 'governanceReviewTeam:lifecycleID.title',
       groupEnd: true
     },
     {
-      route: `/${reviewerRoute}/${systemId}/additional-information`,
-      text: 'additionalInformation.title',
-      aria: 'aria.openAdditionalInformation',
-      groupEnd: reviewerRoute === 'governance-review-team'
+      route: `/it-governance/${systemId}/additional-information`,
+      text: 'governanceReviewTeam:additionalInformation.title',
+      groupEnd: isITGovAdmin
     },
     {
-      route: `/governance-review-team/${systemId}/actions`,
-      text: 'actions'
+      route: `/it-governance/${systemId}/actions`,
+      text: 'governanceReviewTeam:actions',
+      // GRT only link
+      hidden: !isITGovAdmin
     },
     {
-      route: `/governance-review-team/${systemId}/notes`,
-      text: 'notes.heading'
+      route: `/it-governance/${systemId}/notes`,
+      text: 'governanceReviewTeam:notes.heading',
+      // GRT only link
+      hidden: !isITGovAdmin
     },
     {
-      route: `/governance-review-team/${systemId}/dates`,
-      text: 'dates.heading'
+      route: `/it-governance/${systemId}/dates`,
+      text: 'governanceReviewTeam:dates.heading',
+      // GRT only link
+      hidden: !isITGovAdmin
     }
   ];
 
-  // Filter so array only includes nav items with correct routes
-  // Excludes GRT links from GRB view navigation
-  return items.filter(item => item.route.includes(reviewerRoute));
+  return links.filter(({ hidden }) => !hidden);
 };
 
 export default subNavItems;

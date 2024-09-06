@@ -10,6 +10,10 @@ import {
   systemIntake
 } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import { SystemIntake } from 'queries/types/SystemIntake';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
+
+import ITGovAdminContext from '../ITGovAdminContext';
 
 import IntakeReview from './index';
 
@@ -42,14 +46,12 @@ describe('The GRT intake review view', () => {
   it('matches the snapshot', async () => {
     const { asFragment } = render(
       <MemoryRouter
-        initialEntries={[
-          `/governance-review-team/${systemIntake.id}/intake-request`
-        ]}
+        initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
       >
         <MockedProvider
           mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
         >
-          <Route path={['/governance-review-team/:systemId/intake-request']}>
+          <Route path={['/it-governance/:systemId/intake-request']}>
             <MessageProvider>
               <IntakeReview systemIntake={systemIntake} />
             </MessageProvider>
@@ -66,22 +68,29 @@ describe('The GRT intake review view', () => {
   });
 
   it('renders increased costs data', () => {
+    const costs: SystemIntake['costs'] = {
+      __typename: 'SystemIntakeCosts',
+      isExpectingIncrease: 'YES',
+      expectedIncreaseAmount: 'less than $1 million'
+    };
+
     render(
       <MemoryRouter>
-        <MockedProvider mocks={[getSystemIntakeContactsQuery]}>
+        <VerboseMockedProvider
+          mocks={[
+            getSystemIntakeQuery({ costs }),
+            getSystemIntakeContactsQuery
+          ]}
+        >
           <MessageProvider>
             <IntakeReview
               systemIntake={{
                 ...systemIntake,
-                costs: {
-                  __typename: 'SystemIntakeCosts',
-                  isExpectingIncrease: 'YES',
-                  expectedIncreaseAmount: 'less than $1 million'
-                }
+                costs
               }}
             />
           </MessageProvider>
-        </MockedProvider>
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
 
@@ -89,20 +98,27 @@ describe('The GRT intake review view', () => {
   });
 
   it('renders annual spending data', () => {
+    const annualSpending: SystemIntake['annualSpending'] = {
+      __typename: 'SystemIntakeAnnualSpending',
+      currentAnnualSpending: 'about $3.50',
+      currentAnnualSpendingITPortion: '35%',
+      plannedYearOneSpending: 'more than $1 million',
+      plannedYearOneSpendingITPortion: '50%'
+    };
+
     render(
       <MemoryRouter>
-        <MockedProvider mocks={[getSystemIntakeContactsQuery]}>
+        <MockedProvider
+          mocks={[
+            getSystemIntakeQuery({ annualSpending }),
+            getSystemIntakeContactsQuery
+          ]}
+        >
           <MessageProvider>
             <IntakeReview
               systemIntake={{
                 ...systemIntake,
-                annualSpending: {
-                  __typename: 'SystemIntakeAnnualSpending',
-                  currentAnnualSpending: 'about $3.50',
-                  currentAnnualSpendingITPortion: '35%',
-                  plannedYearOneSpending: 'more than $1 million',
-                  plannedYearOneSpendingITPortion: '50%'
-                }
+                annualSpending
               }}
             />
           </MessageProvider>
@@ -112,5 +128,33 @@ describe('The GRT intake review view', () => {
 
     expect(screen.getByText(/about \$3.50/i)).toBeInTheDocument();
     expect(screen.getByText(/more than \$1 million/i)).toBeInTheDocument();
+  });
+
+  it('Renders action button for GRT admins', async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
+      >
+        <MockedProvider
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+        >
+          <Route path={['/it-governance/:systemId/intake-request']}>
+            <MessageProvider>
+              <ITGovAdminContext.Provider value>
+                <IntakeReview systemIntake={systemIntake} />
+              </ITGovAdminContext.Provider>
+            </MessageProvider>
+          </Route>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      await screen.findByTestId(`contact-requester-${requester.id}`)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('link', { name: 'Take an action' })
+    ).toBeInTheDocument();
   });
 });

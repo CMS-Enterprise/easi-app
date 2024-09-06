@@ -86,7 +86,7 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
           { text: t('Home'), url: '/' },
           {
             text: t('governanceReviewTeam:governanceRequestDetails'),
-            url: `/governance-review-team/${systemIntakeId}/intake-request`
+            url: `/it-governance/${systemIntakeId}/intake-request`
           },
           {
             text: t('manageLcid.breadcrumb')
@@ -95,21 +95,21 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
       />
 
       <Switch>
-        <Route path="/governance-review-team/:sytemId/manage-lcid/retire">
+        <Route path="/it-governance/:sytemId/manage-lcid/retire">
           <RetireLcid {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
-        <Route path="/governance-review-team/:sytemId/manage-lcid/update">
+        <Route path="/it-governance/:sytemId/manage-lcid/update">
           <UpdateLcid
             {...systemIntake}
             lcid={lcid}
             systemIntakeId={systemIntakeId}
           />
         </Route>
-        <Route path="/governance-review-team/:sytemId/manage-lcid/expire">
+        <Route path="/it-governance/:sytemId/manage-lcid/expire">
           <ExpireLcid {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
 
-        <Route path="/governance-review-team/:sytemId/manage-lcid">
+        <Route path="/it-governance/:sytemId/manage-lcid">
           <div className="desktop:display-flex desktop:flex-align-end">
             <PageHeading className="margin-bottom-0">
               {t('manageLcid.title')}
@@ -187,7 +187,7 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
                   disabled: !isDirty
                 }}
                 saveExitText={t('cancelAction')}
-                taskListUrl={`/governance-review-team/${systemIntakeId}/actions`}
+                taskListUrl={`/it-governance/${systemIntakeId}/actions`}
                 className="margin-top-6"
                 border={false}
                 submitDisabled

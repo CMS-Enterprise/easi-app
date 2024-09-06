@@ -16,11 +16,9 @@ describe('Resolutions page', () => {
   it('Renders for open request with no decision', () => {
     render(
       <MemoryRouter
-        initialEntries={[
-          `/governance-review-team/${systemIntake.id}/resolutions`
-        ]}
+        initialEntries={[`/it-governance/${systemIntake.id}/resolutions`]}
       >
-        <Route path={[`/governance-review-team/:systemId/resolutions`]}>
+        <Route path={[`/it-governance/:systemId/resolutions`]}>
           <Resolutions systemIntake={systemIntake} />
         </Route>
       </MemoryRouter>
@@ -40,11 +38,9 @@ describe('Resolutions page', () => {
   it('Renders for closed request with decision issued', () => {
     render(
       <MemoryRouter
-        initialEntries={[
-          `/governance-review-team/${systemIntake.id}/resolutions`
-        ]}
+        initialEntries={[`/it-governance/${systemIntake.id}/resolutions`]}
       >
-        <Route path={[`/governance-review-team/:systemId/resolutions`]}>
+        <Route path={[`/it-governance/:systemId/resolutions`]}>
           <Resolutions
             systemIntake={{
               ...systemIntake,

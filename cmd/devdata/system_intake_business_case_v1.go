@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"time"
 
 	"github.com/guregu/null"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -87,6 +89,8 @@ func makeBusinessCaseV1(ctx context.Context, name string, store *storage.Store, 
 	cost := 123456
 	noCost := 0
 	businessCase := models.BusinessCase{
+		CreatedAt:              helpers.PointerTo(time.Now().AddDate(0, 0, -2)),
+		UpdatedAt:              helpers.PointerTo(time.Now()),
 		SystemIntakeID:         intake.ID,
 		EUAUserID:              intake.EUAUserID.ValueOrZero(),
 		Requester:              null.StringFrom("Shane Clark"),

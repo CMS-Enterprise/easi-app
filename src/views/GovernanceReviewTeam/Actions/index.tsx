@@ -146,19 +146,19 @@ const Actions = ({ systemIntake }: ActionsProps) => {
         <Switch>
           {/* Select resolution page */}
           <Route
-            path="/governance-review-team/:systemId/resolutions/:subPage?"
+            path="/it-governance/:systemId/resolutions/:subPage?"
             render={() => <Resolutions systemIntake={systemIntake} />}
           />
 
           {/* Manage LCID page */}
           <Route
-            path="/governance-review-team/:systemId/manage-lcid/:subPage?"
+            path="/it-governance/:systemId/manage-lcid/:subPage?"
             render={() => <ManageLcid systemIntake={systemIntake} />}
           />
 
           {/* Request edits */}
           <Route
-            path="/governance-review-team/:systemId/actions/request-edits"
+            path="/it-governance/:systemId/actions/request-edits"
             render={() => (
               <RequestEdits
                 currentStep={step}
@@ -169,14 +169,14 @@ const Actions = ({ systemIntake }: ActionsProps) => {
 
           {/* Progress to a new step */}
           <Route
-            path="/governance-review-team/:systemId/actions/new-step"
+            path="/it-governance/:systemId/actions/new-step"
             render={() => (
               <ProgressToNewStep systemIntakeId={systemIntake.id} step={step} />
             )}
           />
 
           {/* Select action main page */}
-          <Route path="/governance-review-team/:systemId/actions" exact>
+          <Route path="/it-governance/:systemId/actions" exact>
             <PageHeading
               data-testid="grt-actions-view"
               className="margin-top-0 margin-bottom-5"

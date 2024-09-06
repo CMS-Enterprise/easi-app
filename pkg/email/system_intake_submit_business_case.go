@@ -107,7 +107,7 @@ func (sie systemIntakeEmails) businessCaseSubmissionReviewerBody(
 	isResubmitted bool,
 	isDraft bool,
 ) (string, error) {
-	businessCasePath := path.Join("governance-review-team", systemIntakeID.String(), "business-case")
+	businessCasePath := path.Join("it-governance", systemIntakeID.String(), "business-case")
 	data := businessCaseSubmissionReviewer{
 		RequesterName:         requesterName,
 		RequestName:           requestName,

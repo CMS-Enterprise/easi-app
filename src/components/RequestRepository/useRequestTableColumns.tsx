@@ -52,7 +52,7 @@ const useRequestTableColumns = (
       return (
         <Link
           className="usa-link"
-          to={`/governance-review-team/${row.original.id}/intake-request`}
+          to={`/it-governance/${row.original.id}/intake-request`}
         >
           {value}
         </Link>
@@ -97,7 +97,7 @@ const useRequestTableColumns = (
         return (
           <UswdsReactLink
             data-testid="add-grt-date-cta"
-            to={`/governance-review-team/${row.original.id}/dates`}
+            to={`/it-governance/${row.original.id}/dates`}
           >
             {t('requestRepository.table.addDate')}
           </UswdsReactLink>
@@ -118,7 +118,7 @@ const useRequestTableColumns = (
         return (
           <UswdsReactLink
             data-testid="add-grb-date-cta"
-            to={`/governance-review-team/${row.original.id}/dates`}
+            to={`/it-governance/${row.original.id}/dates`}
           >
             {t('requestRepository.table.addDate')}
           </UswdsReactLink>

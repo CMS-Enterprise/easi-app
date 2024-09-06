@@ -1,8 +1,12 @@
+import i18next from 'i18next';
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 import { FormattedFundingSource } from 'components/FundingSources';
-import { SystemIntakeDocumentCommonType } from 'types/graphql-global-types';
+import {
+  SystemIntakeDocumentCommonType,
+  SystemIntakeDocumentVersion
+} from 'types/graphql-global-types';
 
 const govTeam = (name: string) =>
   Yup.object().shape({
@@ -346,5 +350,18 @@ export const documentSchema = Yup.object({
   otherTypeDescription: Yup.string().when('documentType', {
     is: 'OTHER',
     then: schema => schema.required()
-  })
+  }),
+  version: Yup.mixed<SystemIntakeDocumentVersion>().required(),
+  sendNotification: Yup.boolean().when(
+    '$type',
+    (type: 'admin' | 'requester', schema: Yup.BooleanSchema) => {
+      if (type === 'admin') {
+        return schema.required(
+          i18next.t('technicalAssistance:errors.makeSelection')
+        );
+      }
+
+      return schema;
+    }
+  )
 });

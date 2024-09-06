@@ -22,11 +22,9 @@ describe('Manage LCID selection page', () => {
   it('Renders options for issued LCID', () => {
     render(
       <MemoryRouter
-        initialEntries={[
-          `/governance-review-team/${systemIntake.id}/manage-lcid`
-        ]}
+        initialEntries={[`/it-governance/${systemIntake.id}/manage-lcid`]}
       >
-        <Route path={[`/governance-review-team/:systemId/manage-lcid`]}>
+        <Route path={[`/it-governance/:systemId/manage-lcid`]}>
           <ManageLcid systemIntake={systemIntake} />
         </Route>
       </MemoryRouter>
@@ -54,11 +52,9 @@ describe('Manage LCID selection page', () => {
   it('Renders options for retired LCID', () => {
     render(
       <MemoryRouter
-        initialEntries={[
-          `/governance-review-team/${systemIntake.id}/manage-lcid`
-        ]}
+        initialEntries={[`/it-governance/${systemIntake.id}/manage-lcid`]}
       >
-        <Route path={[`/governance-review-team/:systemId/manage-lcid`]}>
+        <Route path={[`/it-governance/:systemId/manage-lcid`]}>
           <ManageLcid
             systemIntake={{
               ...systemIntake,

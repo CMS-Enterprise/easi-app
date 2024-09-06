@@ -1,9 +1,11 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { businessCaseInitialData } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
+
+import ITGovAdminContext from '../ITGovAdminContext';
 
 import BusinessCaseReview from './index';
 
@@ -156,5 +158,19 @@ describe('The GRT business case review', () => {
     );
 
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('Renders action button for GRT admins', () => {
+    render(
+      <MemoryRouter>
+        <ITGovAdminContext.Provider value>
+          <BusinessCaseReview businessCase={mockBusinessCase} />
+        </ITGovAdminContext.Provider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByRole('link', { name: 'Take an action' })
+    ).toBeInTheDocument();
   });
 });

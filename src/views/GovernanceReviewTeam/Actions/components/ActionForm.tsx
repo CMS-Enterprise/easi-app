@@ -143,7 +143,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           showMessageOnNextPage(t(successMessage), { type: 'success' });
         }
 
-        history.push(`/governance-review-team/${systemIntakeId}/actions`);
+        history.push(`/it-governance/${systemIntakeId}/actions`);
       })
       .catch(e => {
         setModalIsOpen(false);
@@ -231,7 +231,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
             { text: t('Home'), url: '/' },
             {
               text: t('governanceReviewTeam:governanceRequestDetails'),
-              url: `/governance-review-team/${systemIntakeId}/intake-request`
+              url: `/it-governance/${systemIntakeId}/intake-request`
             },
             { text: breadcrumb }
           ]}
@@ -441,7 +441,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
               disabled: disableSubmit || isSubmitting || modalIsOpen,
               onClick: () => setSendEmail(false)
             }}
-            taskListUrl={`/governance-review-team/${systemIntakeId}/actions`}
+            taskListUrl={`/it-governance/${systemIntakeId}/actions`}
             saveExitText={t('cancelAction')}
             border={false}
             className="margin-top-6"

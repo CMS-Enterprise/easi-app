@@ -77,7 +77,7 @@ exports[`TRB Advice Letter Form > matches the snapshot 1`] = `
             <div
               class="margin-top-2 line-height-body-5"
             >
-              After submitting this form, the requester will recieve an automatic notification letting them know their advice letter is available.
+              After submitting this form, the requester will receive an automatic notification letting them know their advice letter is available.
             </div>
             <div
               class="margin-top-3"

@@ -2,35 +2,6 @@
 @use 'colors' as *;
 
 .easi-grt {
-
-  &__nav-list {
-    padding: 0;
-    list-style-type: none;
-
-    li {
-      margin: 1em 0;
-    }
-  }
-
-  &__nav-link {
-    color: color('black');
-    text-decoration: none;
-
-    &:hover {
-      color: color('primary');
-    }
-
-    &--active {
-      font-weight: bold;
-      color: $easi-bright-blue;
-    }
-
-    &--border {
-      border-bottom: 1px solid color('disabled-light');
-      padding-bottom: 0.75rem;
-    }
-  }
-
   &__note-field {
     &.usa-textarea {
       height: 5rem;

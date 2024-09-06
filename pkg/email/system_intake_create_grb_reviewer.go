@@ -23,7 +23,7 @@ func (sie systemIntakeEmails) createGRBReviewerBody(
 	projectTitle string,
 	requesterName string,
 ) (string, error) {
-	adminPath := path.Join("governance-review-team", systemIntakeID.String(), "grb-review")
+	adminPath := path.Join("it-governance", systemIntakeID.String(), "grb-review")
 
 	data := systemIntakeCreateGRBReviewerParameters{
 		ProjectTitle:             projectTitle,

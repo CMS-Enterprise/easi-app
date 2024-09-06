@@ -92,7 +92,7 @@ export const SystemIntake = () => {
           />
           <Route
             path="/system/:systemId/documents/upload"
-            render={() => <UploadForm />}
+            render={() => <UploadForm type="requester" />}
           />
           <Route
             path="/system/:systemId/documents"

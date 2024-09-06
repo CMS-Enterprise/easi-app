@@ -173,7 +173,7 @@ const RelatedRequestsTable = ({
           if (row.original.process === 'TRB') {
             link = `/trb/${row.original.id}/request`;
           } else {
-            link = `/governance-review-team/${row.original.id}/intake-request`;
+            link = `/it-governance/${row.original.id}/intake-request`;
           }
 
           return <UswdsReactLink to={link}>{value}</UswdsReactLink>;

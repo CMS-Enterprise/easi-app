@@ -184,7 +184,7 @@ exports[`Governance Overview Content > renders default version without crashing 
           <p
             class="margin-bottom-1"
           >
-            If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will recieve documented next steps or concerns to address in order to proceed.
+            If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.
           </p>
         </li>
       </ol>
@@ -441,7 +441,7 @@ exports[`Governance Overview Content > renders help section version without cras
           <p
             class="margin-bottom-1"
           >
-            If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will recieve documented next steps or concerns to address in order to proceed.
+            If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.
           </p>
         </li>
       </ol>

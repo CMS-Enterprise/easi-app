@@ -36,7 +36,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		intakeID.String(),
 	)
 	adminLink := fmt.Sprintf(
-		"%s://%s/governance-review-team/%s/lcid",
+		"%s://%s/it-governance/%s/lcid",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),

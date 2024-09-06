@@ -76,9 +76,7 @@ const GrbParticipationNeeded = () => {
           const { row, value } = cell;
 
           return (
-            <UswdsReactLink
-              to={`/governance-review-board/${row.original.id}/grb-review`}
-            >
+            <UswdsReactLink to={`/it-governance/${row.original.id}/grb-review`}>
               {value}
             </UswdsReactLink>
           );

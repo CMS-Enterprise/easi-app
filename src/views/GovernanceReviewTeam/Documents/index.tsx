@@ -26,7 +26,10 @@ const Documents = ({ systemIntake }: DocumentsProps) => {
       </p>
 
       {systemIntake.documents.length > 0 ? (
-        <DocumentsTable systemIntake={systemIntake} canEdit={false} />
+        <DocumentsTable
+          systemIntakeId={systemIntake.id}
+          documents={systemIntake.documents}
+        />
       ) : (
         <Alert type="info" slim>
           {t('documents.noDocumentsAlert')}
