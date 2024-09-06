@@ -966,6 +966,14 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 			appcontext.ZLogger(emailCtx).Error("failed to send CEDAR notification email", zap.Error(err))
 			return
 		}
+
+		if rs.DidAdd {
+			if err := r.emailClient.SendCedarYouHaveBeenAddedEmail(emailCtx, rs.SystemName, input.CedarSystemID, rs.RoleTypeNamesAfter, targetUserInfo.Email); err != nil {
+				// don't fail the request if the email fails, just log and return from the go func
+				appcontext.ZLogger(emailCtx).Error("failed to send CEDAR email to user who was added to team", zap.Error(err))
+				return
+			}
+		}
 	}()
 
 	resp := "Roles changed successfully"

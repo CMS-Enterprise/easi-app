@@ -8,20 +8,18 @@ import (
 	"path"
 	"strings"
 
-	"github.com/google/uuid"
-
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type cedarYouHaveBeenAddedEmailParameters struct {
 	SystemName          string
-	SystemID            uuid.UUID
+	SystemID            string
 	Roles               string
 	SystemWorkspaceLink string
 	TeamLink            string
 }
 
-func (c Client) cedarYouHaveBeenAddedEmailBody(systemName string, systemID uuid.UUID, roles []string) (string, error) {
+func (c Client) cedarYouHaveBeenAddedEmailBody(systemName string, systemID string, roles []string) (string, error) {
 
 	var roleString string
 
@@ -43,8 +41,8 @@ func (c Client) cedarYouHaveBeenAddedEmailBody(systemName string, systemID uuid.
 	data := cedarYouHaveBeenAddedEmailParameters{
 		SystemName:          systemName,
 		Roles:               roleString,
-		SystemWorkspaceLink: c.urlFromPath(path.Join("systems", systemID.String(), "workspace")),
-		TeamLink:            c.urlFromPath(path.Join("systems", systemID.String(), "team", "edit", "team-member")),
+		SystemWorkspaceLink: c.urlFromPath(path.Join("systems", systemID, "workspace")),
+		TeamLink:            c.urlFromPath(path.Join("systems", systemID, "team", "edit", "team-member")),
 	}
 
 	if c.templates.cedarYouHaveBeenAdded == nil {
@@ -62,7 +60,7 @@ func (c Client) cedarYouHaveBeenAddedEmailBody(systemName string, systemID uuid.
 func (c Client) SendCedarYouHaveBeenAddedEmail(
 	ctx context.Context,
 	systemName string,
-	systemID uuid.UUID,
+	systemID string,
 	roles []string,
 	teamMemberEmail models.EmailAddress,
 ) error {
