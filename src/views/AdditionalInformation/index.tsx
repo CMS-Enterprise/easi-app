@@ -11,7 +11,7 @@ import { SystemIntake } from 'queries/types/SystemIntake';
 import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
-import IsGrbViewContext from 'views/GovernanceReviewTeam/IsGrbViewContext';
+import ITGovAdminContext from 'views/GovernanceReviewTeam/ITGovAdminContext';
 
 import RelatedRequestsTable from './RelatedRequestsTable';
 
@@ -24,9 +24,9 @@ const AdditionalInformation = ({
 }) => {
   const { t } = useTranslation('admin');
 
-  const parentRoute = type === 'itgov' ? 'governance-review-team' : 'trb';
+  const parentRoute = type === 'itgov' ? 'it-governance' : 'trb';
 
-  const isGrbView = useContext(IsGrbViewContext);
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   return (
     <div>
@@ -76,7 +76,7 @@ const AdditionalInformation = ({
         </Alert>
       )}
 
-      {!isGrbView &&
+      {isITGovAdmin &&
         (request.relationType === null ||
           request.relationType === RequestRelationType.NEW_SYSTEM) && (
           <UswdsReactLink

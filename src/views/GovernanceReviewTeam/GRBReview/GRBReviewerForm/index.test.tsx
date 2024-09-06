@@ -17,6 +17,7 @@ import {
   UpdateSystemIntakeGRBReviewerMutationVariables
 } from 'gql/gen/graphql';
 
+import { businessCase } from 'data/mock/businessCase';
 import { systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
@@ -27,7 +28,7 @@ import {
 import { MockedQuery } from 'types/util';
 import MockUsers from 'utils/testing/MockUsers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
-import IsGrbViewContext from 'views/GovernanceReviewTeam/IsGrbViewContext';
+import ITGovAdminContext from 'views/GovernanceReviewTeam/ITGovAdminContext';
 
 import GRBReview from '..';
 
@@ -148,8 +149,8 @@ describe('GRB reviewer form', () => {
     render(
       <MemoryRouter
         initialEntries={[
-          `/governance-review-team/${systemIntake.id}/grb-review/add`,
-          `/governance-review-team/${systemIntake.id}/grb-review`
+          `/it-governance/${systemIntake.id}/grb-review/add`,
+          `/it-governance/${systemIntake.id}/grb-review`
         ]}
       >
         <VerboseMockedProvider
@@ -162,15 +163,23 @@ describe('GRB reviewer form', () => {
           ]}
         >
           <MessageProvider>
-            <Route path="/:reviewerType/:systemId/grb-review/:action">
-              <IsGrbViewContext.Provider value>
-                <GRBReview {...systemIntake} grbReviewers={[]} />
-              </IsGrbViewContext.Provider>
+            <Route path="/it-governance/:systemId/grb-review/:action">
+              <ITGovAdminContext.Provider value>
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewers={[]}
+                />
+              </ITGovAdminContext.Provider>
             </Route>
-            <Route path="/:reviewerType/:systemId/grb-review">
-              <IsGrbViewContext.Provider value>
-                <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
-              </IsGrbViewContext.Provider>
+            <Route path="/it-governance/:systemId/grb-review">
+              <ITGovAdminContext.Provider value>
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewers={[grbReviewer]}
+                />
+              </ITGovAdminContext.Provider>
             </Route>
           </MessageProvider>
         </VerboseMockedProvider>
@@ -218,10 +227,10 @@ describe('GRB reviewer form', () => {
       <MemoryRouter
         initialEntries={[
           {
-            pathname: `/governance-review-team/${systemIntake.id}/grb-review/edit`,
+            pathname: `/it-governance/${systemIntake.id}/grb-review/edit`,
             state: grbReviewer
           },
-          `/governance-review-team/${systemIntake.id}/grb-review`
+          `/it-governance/${systemIntake.id}/grb-review`
         ]}
       >
         <VerboseMockedProvider
@@ -233,18 +242,23 @@ describe('GRB reviewer form', () => {
           ]}
         >
           <MessageProvider>
-            <Route path="/:reviewerType/:systemId/grb-review/:action">
-              <IsGrbViewContext.Provider value>
-                <GRBReview {...systemIntake} grbReviewers={[grbReviewer]} />
-              </IsGrbViewContext.Provider>
-            </Route>
-            <Route path="/:reviewerType/:systemId/grb-review">
-              <IsGrbViewContext.Provider value>
+            <Route path="/it-governance/:systemId/grb-review/:action">
+              <ITGovAdminContext.Provider value>
                 <GRBReview
                   {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewers={[grbReviewer]}
+                />
+              </ITGovAdminContext.Provider>
+            </Route>
+            <Route path="/it-governance/:systemId/grb-review">
+              <ITGovAdminContext.Provider value>
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
                   grbReviewers={[updatedGRBReviewer]}
                 />
-              </IsGrbViewContext.Provider>
+              </ITGovAdminContext.Provider>
             </Route>
           </MessageProvider>
         </VerboseMockedProvider>

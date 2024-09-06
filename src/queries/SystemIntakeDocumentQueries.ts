@@ -8,9 +8,13 @@ export const SystemIntakeDocument = gql`
     }
     id
     fileName
+    version
     status
     uploadedAt
     url
+    canView
+    canDelete
+    systemIntakeId
   }
 `;
 

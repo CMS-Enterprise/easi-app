@@ -34,7 +34,7 @@ func (sie systemIntakeEmails) reopenRequestBody(
 	additionalInfo *models.HTML,
 ) (string, error) {
 	requesterPath := path.Join("governance-task-list", systemIntakeID.String())
-	adminPath := path.Join("governance-review-team", systemIntakeID.String(), "intake-request")
+	adminPath := path.Join("it-governance", systemIntakeID.String(), "intake-request")
 
 	var submissionDate string
 	if submittedAt != nil {
