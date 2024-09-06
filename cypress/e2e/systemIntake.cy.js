@@ -262,6 +262,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Upload a document');
     cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
     cy.get('#documentType-SOO_SOW').check({ force: true });
+    cy.get('#version-HISTORICAL').check({ force: true });
     cy.contains('button', 'Upload document').click();
 
     cy.contains(
@@ -277,6 +278,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Upload a document');
     cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
     cy.get('#documentType-OTHER').check({ force: true });
+    cy.get('#version-CURRENT').check({ force: true });
     cy.get('#otherTypeDescription')
       .type('Test document')
       .should('have.value', 'Test document');
@@ -297,7 +299,7 @@ describe('The System Intake Form', () => {
 
     // Delete first document
     cy.contains('button', 'Remove').click();
-    cy.contains('h3', 'Confirm you want to remove test.pdf.');
+    cy.contains('h3', 'Remove test.pdf?');
     cy.contains('button', 'Remove document').click();
 
     cy.contains(

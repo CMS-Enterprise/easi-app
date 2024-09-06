@@ -1,4 +1,8 @@
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
+import {
+  SystemIntakeDocumentCommonType,
+  SystemIntakeDocumentVersion
+} from 'types/graphql-global-types';
 
 const hasContractLabels: Record<
   `hasContract_${SystemIntakeContractStatus}`,
@@ -10,6 +14,33 @@ const hasContractLabels: Record<
     'I am currently working on my OAGM Acquisition Plan/IAA documents',
   hasContract_NOT_STARTED: "I haven't started acquisition planning yet",
   hasContract_NOT_NEEDED: "I don't anticipate needing contractor support"
+};
+
+const version: Record<SystemIntakeDocumentVersion, string> = {
+  CURRENT: 'Current',
+  HISTORICAL: 'Historical'
+};
+
+const type: Record<SystemIntakeDocumentCommonType, string> = {
+  SOO_SOW:
+    'Statement of Objectives (SOO), Statement of Work (SOW), Performance Work Statement (PWS), or other contracting document',
+  DRAFT_IGCE: 'Draft Independent Government Cost Estimate (IGCE)',
+  ACQUISITION_PLAN_OR_STRATEGY:
+    'Acquisition Plan (AP) or Acquisition Strategy (AS)',
+  REQUEST_FOR_ADDITIONAL_FUNDING: 'Request for Additional Funding (RAF)',
+  SOFTWARE_BILL_OF_MATERIALS: 'Software Bill of Materials (BOM)',
+  MEETING_MINUTES: 'Meeting Minutes',
+  OTHER: 'Other'
+};
+
+export const abbreviatedType: Record<SystemIntakeDocumentCommonType, string> = {
+  SOO_SOW: 'SOO, SOW, PWS, or other contracting document',
+  DRAFT_IGCE: 'Draft IGCE',
+  ACQUISITION_PLAN_OR_STRATEGY: 'AP or AS',
+  REQUEST_FOR_ADDITIONAL_FUNDING: 'RAF',
+  SOFTWARE_BILL_OF_MATERIALS: 'Software BOM',
+  MEETING_MINUTES: 'Meeting Minutes',
+  OTHER: 'Other'
 };
 
 const intake = {
@@ -46,18 +77,41 @@ const intake = {
     continueWithoutDocuments: 'Continue without documents',
     noDocuments: 'No documents uploaded',
     formDescription:
-      'Choose a document to upload, such as a draft IGCE, contracting document, or another document related to your Intake Request.',
-    returnToIntake: "Don't upload and return to Intake Request",
+      'Choose a document to upload such as a draft IGCE, contracting document, RAF or other document related to this project and Intake Request.',
+    dontUpload_requester: "Don't upload and return to Intake Request",
+    dontUpload_admin: "Don't upload and return to request details",
     selectDocument: 'Select your document',
     supportingDocuments: 'Supporting documents',
     adminDescription:
       'The requester has uploaded these documents as a part of this request. If the Governance Team needs additional documentation to process this request, contact the requester.',
     noDocumentsAlert:
       'The original requester did not upload any additional documentation to this request. If the Governance Team needs any supporting documentation in order to fully process this request, contact the requester.',
-    type: {
-      SOO_SOW: 'SOO or SOW',
-      DRAFT_ICGE: 'Draft ICGE',
-      OTHER: 'Other'
+    versionLabel: 'What is the version of this document?',
+    versionHelpText_HISTORICAL:
+      'Choose this option if you are uploading a document from the past that should be used for reference purposes only.',
+    versionHelpText_CURRENT:
+      'Choose this option if this is the most recent document version that the Governance Team should reference.',
+    supportedFileTypes: 'Select a PDF, DOC, DOCX, XLS, or XLSX',
+    type,
+    abbreviatedType,
+    version,
+    table: {
+      fileName: 'File name',
+      docType: 'Document type',
+      dateAdded: 'Date added',
+      actions: 'Actions',
+      downloadBtn: 'Download',
+      removeBtn: 'Remove',
+      removeModal: {
+        heading: 'Remove {{documentName}}?',
+        explanation:
+          'You will not be able to access this document after it is removed, and GRB reviewers will not be able to view it.',
+        confirm: 'Remove document',
+        cancel: 'Cancel',
+        success: 'You have successfully removed {{documentName}}.',
+        error:
+          'There was an issue removing your document. Please try again, and if the problem persists, try again later.'
+      }
     }
   },
   submission: {

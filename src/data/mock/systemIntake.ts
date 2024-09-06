@@ -38,6 +38,7 @@ import {
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentStatus,
+  SystemIntakeDocumentVersion,
   SystemIntakeFormState,
   SystemIntakeRequestType,
   SystemIntakeState,
@@ -111,14 +112,18 @@ export const documents: SystemIntakeDocument[] = [
     id: '3b23fcf9-85d3-4211-a7d8-d2d08148f196',
     fileName: 'sample1.pdf',
     documentType: {
-      commonType: SystemIntakeDocumentCommonType.DRAFT_ICGE,
+      commonType: SystemIntakeDocumentCommonType.DRAFT_IGCE,
       otherTypeDescription: null,
       __typename: 'SystemIntakeDocumentType'
     },
+    version: SystemIntakeDocumentVersion.CURRENT,
     status: SystemIntakeDocumentStatus.AVAILABLE,
     uploadedAt: '2023-06-14T18:24:46.310929Z',
     url:
       'http://localhost:9004/easi-app-file-uploads/ead3f487-8aaa-47d2-aa26-335e9b560a92.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=f71d5d63d68958a2bd8526c2b2cdd5abe78b21eb69d10739fe8f8e6fd5d010ec',
+    canView: true,
+    canDelete: true,
+    systemIntakeId,
     __typename: 'SystemIntakeDocument'
   },
   {
@@ -129,10 +134,14 @@ export const documents: SystemIntakeDocument[] = [
       otherTypeDescription: null,
       __typename: 'SystemIntakeDocumentType'
     },
+    version: SystemIntakeDocumentVersion.CURRENT,
     status: SystemIntakeDocumentStatus.PENDING,
     uploadedAt: '2023-06-14T18:24:46.32661Z',
     url:
       'http://localhost:9004/easi-app-file-uploads/7e047111-6228-4943-9c4b-0961f27858f4.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=0e3f337697c616b01533accd95a316cbeabeb6990961b9881911c757837cbf95',
+    canView: true,
+    canDelete: true,
+    systemIntakeId,
     __typename: 'SystemIntakeDocument'
   },
   {
@@ -143,10 +152,14 @@ export const documents: SystemIntakeDocument[] = [
       otherTypeDescription: 'Some other type of doc',
       __typename: 'SystemIntakeDocumentType'
     },
+    version: SystemIntakeDocumentVersion.HISTORICAL,
     status: SystemIntakeDocumentStatus.UNAVAILABLE,
     uploadedAt: '2023-06-14T18:24:46.342866Z',
     url:
       'http://localhost:9004/easi-app-file-uploads/f779e8e4-9c78-4b14-bbab-37618447f3f9.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=7e6755645a1f163d41d2fa7c19776d0ceb4cfd3ff8e1c2918c428a551fe44764',
+    canView: true,
+    canDelete: true,
+    systemIntakeId,
     __typename: 'SystemIntakeDocument'
   }
 ];

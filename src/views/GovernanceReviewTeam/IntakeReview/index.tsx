@@ -7,7 +7,7 @@ import PDFExport from 'components/PDFExport';
 import SystemIntakeReview from 'components/SystemIntakeReview';
 import { SystemIntake } from 'queries/types/SystemIntake';
 
-import IsGrbViewContext from '../IsGrbViewContext';
+import ITGovAdminContext from '../ITGovAdminContext';
 
 type IntakeReviewProps = {
   systemIntake: SystemIntake;
@@ -17,7 +17,7 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const filename = `System intake for ${systemIntake.requestName}.pdf`;
 
-  const isGrbView = useContext(IsGrbViewContext);
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   return (
     <div data-testid="intake-review">
@@ -30,11 +30,11 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
         <SystemIntakeReview systemIntake={systemIntake} />
       </PDFExport>
 
-      {!isGrbView && (
+      {isITGovAdmin && (
         <UswdsReactLink
           className="usa-button margin-top-5"
           variant="unstyled"
-          to={`/governance-review-team/${systemIntake.id}/actions`}
+          to={`/it-governance/${systemIntake.id}/actions`}
         >
           {t('action:takeAnAction')}
         </UswdsReactLink>

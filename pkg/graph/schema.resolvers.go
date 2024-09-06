@@ -1944,8 +1944,22 @@ func (r *systemIntakeDocumentResolver) UploadedAt(ctx context.Context, obj *mode
 }
 
 // URL is the resolver for the url field.
-func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error) {
+func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.SystemIntakeDocument) (*string, error) {
 	return resolvers.GetURLForSystemIntakeDocument(ctx, r.store, r.s3Client, obj.S3Key)
+}
+
+// CanDelete is the resolver for the canDelete field.
+func (r *systemIntakeDocumentResolver) CanDelete(ctx context.Context, obj *models.SystemIntakeDocument) (bool, error) {
+	return resolvers.CanDeleteDocument(ctx, obj), nil
+}
+
+// CanView is the resolver for the canView field.
+func (r *systemIntakeDocumentResolver) CanView(ctx context.Context, obj *models.SystemIntakeDocument) (bool, error) {
+	grbUsers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, obj.SystemIntakeID)
+	if err != nil {
+		return false, err
+	}
+	return resolvers.CanViewDocument(ctx, grbUsers, obj), nil
 }
 
 // VotingRole is the resolver for the votingRole field.

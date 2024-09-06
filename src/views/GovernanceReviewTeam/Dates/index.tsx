@@ -92,7 +92,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
         }
       }
     }).then(() => {
-      history.push(`/governance-review-team/${systemId}/intake-request`);
+      history.push(`/it-governance/${systemId}/intake-request`);
     });
   };
 

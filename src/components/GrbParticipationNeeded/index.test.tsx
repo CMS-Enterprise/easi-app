@@ -82,10 +82,7 @@ describe('GRB participation needed', () => {
 
     expect(
       screen.getByRole('link', { name: testIntake.requestName! })
-    ).toHaveAttribute(
-      'href',
-      `/governance-review-board/${testIntake.id}/grb-review`
-    );
+    ).toHaveAttribute('href', `/it-governance/${testIntake.id}/grb-review`);
 
     expect(
       screen.getByText(

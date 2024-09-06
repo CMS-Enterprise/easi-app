@@ -57,7 +57,7 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   const routeParams: string[] = pathname.split('/');
 
   const isGovTeamRoute: boolean =
-    routeParams[1] === 'governance-review-team' || pathname === '/';
+    routeParams[1] === 'it-governance' || pathname === '/';
 
   const itGovAdmin = useRef<ITGovTableState>({
     ...initialTableStates.itGovAdmin.current

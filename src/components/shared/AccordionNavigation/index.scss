@@ -1,0 +1,51 @@
+@use 'uswds-core' as *;
+@use 'colors' as *;
+
+.easi-accordion-nav {
+  button.usa-menu-btn {
+    text-transform: capitalize;
+  }
+
+  ul.usa-sidenav {
+    padding: .75rem 1rem;
+    
+    li {
+      a:not(.usa-button) {
+        color: white !important;
+        
+        &:hover {
+          background-color: transparent;
+        }
+      }
+    }
+    
+    > li {
+      > a {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      > .usa-current {
+        padding-left: 1rem;
+
+        &::after {
+          background-color: white;
+          left: 0;
+        }
+      }
+
+      &.border-bottom-1px {
+        border-color: color('primary') !important;
+      }
+
+      &:has(.usa-current) {
+        ul.usa-sidenav__sublist a:not(.usa-button) {
+          padding-left: 2rem;
+        }
+      }
+    }
+
+    &__sublist a:not(.usa-button) {
+      padding-left: 1rem;
+    }
+  }
+}

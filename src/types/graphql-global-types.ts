@@ -188,8 +188,12 @@ export enum SystemIntakeDecisionState {
  * System Intake document
  */
 export enum SystemIntakeDocumentCommonType {
-  DRAFT_ICGE = "DRAFT_ICGE",
+  ACQUISITION_PLAN_OR_STRATEGY = "ACQUISITION_PLAN_OR_STRATEGY",
+  DRAFT_IGCE = "DRAFT_IGCE",
+  MEETING_MINUTES = "MEETING_MINUTES",
   OTHER = "OTHER",
+  REQUEST_FOR_ADDITIONAL_FUNDING = "REQUEST_FOR_ADDITIONAL_FUNDING",
+  SOFTWARE_BILL_OF_MATERIALS = "SOFTWARE_BILL_OF_MATERIALS",
   SOO_SOW = "SOO_SOW",
 }
 
@@ -200,6 +204,15 @@ export enum SystemIntakeDocumentStatus {
   AVAILABLE = "AVAILABLE",
   PENDING = "PENDING",
   UNAVAILABLE = "UNAVAILABLE",
+}
+
+/**
+ * Represents the version options for a document that is attached to a
+ * System Intake document
+ */
+export enum SystemIntakeDocumentVersion {
+  CURRENT = "CURRENT",
+  HISTORICAL = "HISTORICAL",
 }
 
 /**
@@ -554,7 +567,9 @@ export interface CreateSystemIntakeDocumentInput {
   requestID: UUID;
   fileData: Upload;
   documentType: SystemIntakeDocumentCommonType;
+  version: SystemIntakeDocumentVersion;
   otherTypeDescription?: string | null;
+  sendNotification?: boolean | null;
 }
 
 export interface CreateSystemIntakeGRBReviewerInput {

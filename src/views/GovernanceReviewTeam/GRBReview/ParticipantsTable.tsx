@@ -12,7 +12,8 @@ import {
   getColumnSortStatus,
   getHeaderSortIcon
 } from 'utils/tableSort';
-import IsGrbViewContext from 'views/GovernanceReviewTeam/IsGrbViewContext';
+
+import ITGovAdminContext from '../ITGovAdminContext';
 
 type ParticipantsTableProps = {
   id: string;
@@ -34,7 +35,7 @@ const ParticipantsTable = ({
   const history = useHistory();
   const { pathname } = useLocation();
 
-  const isGrbView = useContext(IsGrbViewContext);
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   /** Columns for table */
   const columns = useMemo<Column<SystemIntakeGRBReviewerFragment>[]>(() => {
@@ -85,9 +86,9 @@ const ParticipantsTable = ({
         Cell: ({ value }) => t<string>(`reviewerRoles.${value}`)
       },
       // Only display action column if user is GRT admin
-      ...(isGrbView ? [] : [actionColumn])
+      ...(isITGovAdmin ? [actionColumn] : [])
     ];
-  }, [t, isGrbView, setReviewerToRemove, history, pathname]);
+  }, [t, isITGovAdmin, setReviewerToRemove, history, pathname]);
 
   const table = useTable(
     {
@@ -112,13 +113,15 @@ const ParticipantsTable = ({
 
   return (
     <>
-      <h2 className="margin-bottom-0">{t('participants')}</h2>
+      <h2 className="margin-bottom-0" id="participants">
+        {t('participants')}
+      </h2>
 
       <p className="margin-top-05 line-height-body-5">
         {t('participantsText')}
       </p>
 
-      {isGrbView ? (
+      {!isITGovAdmin ? (
         // GRB Reviewer documentation links
         <div className="bg-base-lightest padding-2">
           <h4 className="margin-top-0 margin-bottom-1">
@@ -126,18 +129,18 @@ const ParticipantsTable = ({
           </h4>
           <ButtonGroup>
             <UswdsReactLink
-              to={`/governance-review-board/${id}/business-case`}
+              to={`/it-governance/${id}/business-case`}
               className="margin-right-3"
             >
               {t('viewBusinessCase')}
             </UswdsReactLink>
             <UswdsReactLink
-              to={`/governance-review-board/${id}/intake-request`}
+              to={`/it-governance/${id}/intake-request`}
               className="margin-right-3"
             >
               {t('viewIntakeRequest')}
             </UswdsReactLink>
-            <UswdsReactLink to={`/governance-review-board/${id}/documents`}>
+            <UswdsReactLink to={`/it-governance/${id}/documents`}>
               {t('viewOtherDocuments')}
             </UswdsReactLink>
           </ButtonGroup>
@@ -165,7 +168,7 @@ const ParticipantsTable = ({
                 components={{
                   a: (
                     <UswdsReactLink
-                      to={`/governance-review-team/${id}/resolutions/re-open-request`}
+                      to={`/it-governance/${id}/resolutions/re-open-request`}
                     >
                       re-open
                     </UswdsReactLink>
