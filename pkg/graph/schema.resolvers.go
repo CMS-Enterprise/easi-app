@@ -973,6 +973,19 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 				appcontext.ZLogger(emailCtx).Error("failed to send CEDAR email to user who was added to team", zap.Error(err))
 				return
 			}
+
+			// send to all except the new team member to avoid duplicate emails
+			// get cedar system info
+			systemDetails, err := r.cedarCoreClient.GetSystemDetail(ctx, input.CedarSystemID)
+			if err != nil {
+				appcontext.ZLogger(emailCtx).Error("failed to get CEDAR system details when new team member added", zap.Error(err))
+				return
+			}
+
+			if err := r.emailClient.SendCedarNewTeamMemberEmail(ctx, targetUserInfo.DisplayName, targetUserInfo.Email.String(), rs.SystemName, input.CedarSystemID, rs.RoleTypeNamesAfter, systemDetails); err != nil {
+				appcontext.ZLogger(emailCtx).Error("failed to send CEDAR email for new team member added", zap.Error(err))
+				return
+			}
 		}
 	}()
 
