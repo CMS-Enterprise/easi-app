@@ -85,7 +85,7 @@ func (c S3Client) NewGetPresignedURL(key string) (*PreSignedURL, error) {
 	}
 	req, _ := c.client.GetObjectRequest(objectInput)
 
-	url, err := req.Presign(15 * time.Minute)
+	url, err := req.Presign(90 * time.Minute) // to match FE timeout in src/views/TimeOutWrapper/index.tsx
 	if err != nil {
 		return &PreSignedURL{}, err
 	}
