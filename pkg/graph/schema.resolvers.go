@@ -955,15 +955,13 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 		})
 
 		// wait for both calls to complete
-		err := g.Wait()
-		if err != nil {
+		if err := g.Wait(); err != nil {
 			// don't fail the request if the lookup fails, just log and return from the go func
 			appcontext.ZLogger(emailCtx).Error("failed to lookup user infos for CEDAR notification email", zap.Error(err))
 			return
 		}
 
-		err = r.emailClient.SendCedarRolesChangedEmail(emailCtx, requesterUserInfo.DisplayName, targetUserInfo.DisplayName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now())
-		if err != nil {
+		if err := r.emailClient.SendCedarRolesChangedEmail(emailCtx, requesterUserInfo.DisplayName, targetUserInfo.DisplayName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now()); err != nil {
 			// don't fail the request if the email fails, just log and return from the go func
 			appcontext.ZLogger(emailCtx).Error("failed to send CEDAR notification email", zap.Error(err))
 			return
