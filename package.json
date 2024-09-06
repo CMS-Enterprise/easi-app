@@ -38,7 +38,7 @@
     "@uswds/uswds": "^3.3.0",
     "apollo": "^2.34",
     "apollo-upload-client": "^17.0.0",
-    "axios": "^1.7.4",
+    "axios": "^1.7.7",
     "classnames": "^2.5.1",
     "cross-fetch": "^3.1.5",
     "cypress-file-upload": "^5.0.8",
