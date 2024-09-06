@@ -29,7 +29,7 @@ type systemIntakeAdminUploadDocBody struct {
 }
 
 func (sie systemIntakeEmails) systemIntakeAdminUploadDocBody(input SendSystemIntakeAdminUploadDocEmailInput) (string, error) {
-	link := path.Join("governance-review-team", input.SystemIntakeID.String(), "grb-review")
+	link := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 
 	data := systemIntakeAdminUploadDocBody{
 		RequestName:              input.RequestName,

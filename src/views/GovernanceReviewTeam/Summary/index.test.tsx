@@ -13,7 +13,7 @@ import {
   SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
 
-import IsGrbViewContext from '../IsGrbViewContext';
+import ITGovAdminContext from '../ITGovAdminContext';
 
 import Summary, { RequestSummaryProps } from '.';
 
@@ -117,9 +117,9 @@ describe('The GRT Review page', () => {
     render(
       <MemoryRouter>
         <MockedProvider>
-          <IsGrbViewContext.Provider value>
+          <ITGovAdminContext.Provider value={false}>
             <Summary {...summaryProps} />
-          </IsGrbViewContext.Provider>
+          </ITGovAdminContext.Provider>
         </MockedProvider>
       </MemoryRouter>
     );

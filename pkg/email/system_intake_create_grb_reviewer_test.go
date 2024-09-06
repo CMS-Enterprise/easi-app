@@ -15,7 +15,7 @@ func (s *EmailTestSuite) TestCreateSystemIntakeGRBReviewerNotification() {
 	requestName := "Hotdog/Not Hotdog Program"
 	requester := "Dr Fishopolis"
 	adminLink := fmt.Sprintf(
-		"%s://%s/governance-review-team/%s/grb-review",
+		"%s://%s/it-governance/%s/grb-review",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),

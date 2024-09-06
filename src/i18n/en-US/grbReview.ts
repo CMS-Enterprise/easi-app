@@ -32,7 +32,6 @@ export const grbReviewerRolesTranslation: Record<
 
 export default {
   title: 'GRB review',
-  aria: 'Open GRB review',
   description:
     'Many projects coming through the IT Governance process require review by the Governance Review Board (GRB). These reviews may happen at regularly scheduled GRB meetings or during an alternate asynchronous review process. GRB members will review project details, discuss any concerns, and vote on the merits of the project under consideration. ',
   featureInProgress: 'Feature in progress',
@@ -46,6 +45,23 @@ export default {
   viewIntakeRequest: 'View Intake Request',
   viewOtherDocuments: 'View other supporting documents',
   addGrbReviewer: 'Add a GRB reviewer',
+  supportingDocuments: 'Supporting Documents',
+  supportingDocumentsText:
+    'The documents below will help the GRB review this IT Governance request, and were completed during the course of this IT Governance request or were added by the requester and/or the Governance Admin Team. You may add additional documents and may remove any that have been added by Governance Admin Team members.',
+  businessCaseOverview: {
+    title: 'Business Case Overview',
+    submitted: 'Last Updated',
+    need: 'Business or user need',
+    preferredSolution: 'Preferred solution: Summary',
+    noSolution: 'No answer added.',
+    linkToBusinessCase: 'View full Business Case',
+    unsubmittedAlertText: 'There is not yet a Business Case for this request.'
+  },
+  additionalDocuments: 'Additional documents',
+  additionalDocsLink: 'Add another supporting document',
+  documentsIntakeLinkTitle: 'EASi Intake Request form',
+  documentsIntakeLinkText: 'View in EASi',
+  documentsIntakeSubmitted: 'submitted',
   participantsTable: {
     name: 'Name',
     votingRole: 'Voting role',

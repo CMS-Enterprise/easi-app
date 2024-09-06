@@ -59,14 +59,24 @@ describe('The System Intake page', () => {
   });
 
   it('renders document upload', async () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({
+      auth: {
+        euaId: 'ABCD'
+      },
+      systemIntake: { systemIntake: {} },
+      action: {}
+    });
     render(
       <MemoryRouter initialEntries={[`/system/${systemIntake.id}/documents`]}>
         <MockedProvider mocks={[getSystemIntakeQuery({ documents })]}>
-          <MessageProvider>
-            <Route path="/system/:systemId/:formPage">
-              <SystemIntake />
-            </Route>
-          </MessageProvider>
+          <Provider store={store}>
+            <MessageProvider>
+              <Route path="/system/:systemId/:formPage">
+                <SystemIntake />
+              </Route>
+            </MessageProvider>
+          </Provider>
         </MockedProvider>
       </MemoryRouter>
     );

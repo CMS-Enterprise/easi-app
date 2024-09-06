@@ -547,6 +547,8 @@ export type CreateSystemIntakeDocumentInput = {
   fileData: Scalars['Upload']['input'];
   otherTypeDescription?: InputMaybe<Scalars['String']['input']>;
   requestID: Scalars['UUID']['input'];
+  sendNotification?: InputMaybe<Scalars['Boolean']['input']>;
+  version: SystemIntakeDocumentVersion;
 };
 
 /** Data returned after uploading a document to a System Intake */
@@ -2036,12 +2038,16 @@ export enum SystemIntakeDecisionState {
 /** Represents a document attached to a System Intake */
 export type SystemIntakeDocument = {
   __typename: 'SystemIntakeDocument';
+  canDelete: Scalars['Boolean']['output'];
+  canView: Scalars['Boolean']['output'];
   documentType: SystemIntakeDocumentType;
   fileName: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
   status: SystemIntakeDocumentStatus;
+  systemIntakeId: Scalars['UUID']['output'];
   uploadedAt: Scalars['Time']['output'];
-  url: Scalars['String']['output'];
+  url?: Maybe<Scalars['String']['output']>;
+  version: SystemIntakeDocumentVersion;
 };
 
 /**
@@ -2049,8 +2055,12 @@ export type SystemIntakeDocument = {
  * System Intake document
  */
 export enum SystemIntakeDocumentCommonType {
-  DRAFT_ICGE = 'DRAFT_ICGE',
+  ACQUISITION_PLAN_OR_STRATEGY = 'ACQUISITION_PLAN_OR_STRATEGY',
+  DRAFT_IGCE = 'DRAFT_IGCE',
+  MEETING_MINUTES = 'MEETING_MINUTES',
   OTHER = 'OTHER',
+  REQUEST_FOR_ADDITIONAL_FUNDING = 'REQUEST_FOR_ADDITIONAL_FUNDING',
+  SOFTWARE_BILL_OF_MATERIALS = 'SOFTWARE_BILL_OF_MATERIALS',
   SOO_SOW = 'SOO_SOW'
 }
 
@@ -2070,6 +2080,15 @@ export type SystemIntakeDocumentType = {
   commonType: SystemIntakeDocumentCommonType;
   otherTypeDescription?: Maybe<Scalars['String']['output']>;
 };
+
+/**
+ * Represents the version options for a document that is attached to a
+ * System Intake document
+ */
+export enum SystemIntakeDocumentVersion {
+  CURRENT = 'CURRENT',
+  HISTORICAL = 'HISTORICAL'
+}
 
 /** Input for expiring an intake's LCID in IT Gov v2 */
 export type SystemIntakeExpireLCIDInput = {

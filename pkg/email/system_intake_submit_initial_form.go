@@ -96,7 +96,7 @@ func (sie systemIntakeEmails) submitInitialFormReviewerBody(
 	processStage string,
 	isResubmitted bool,
 ) (string, error) {
-	adminPath := path.Join("governance-review-team", systemIntakeID.String(), "intake-request")
+	adminPath := path.Join("it-governance", systemIntakeID.String(), "intake-request")
 	data := submitInitialFormReviewerBody{
 		RequesterName:         requesterName,
 		IsResubmitted:         isResubmitted,

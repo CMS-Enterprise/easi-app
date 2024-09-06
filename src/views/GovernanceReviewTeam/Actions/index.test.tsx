@@ -38,11 +38,9 @@ const renderActionPage = ({
   return render(
     <VerboseMockedProvider mocks={mocks} addTypename>
       <MemoryRouter
-        initialEntries={[
-          `/governance-review-team/${systemIntake.id}/actions/${action}`
-        ]}
+        initialEntries={[`/it-governance/${systemIntake.id}/actions/${action}`]}
       >
-        <Route path={[`/governance-review-team/:systemId/actions/:subPage?`]}>
+        <Route path={[`/it-governance/:systemId/actions/:subPage?`]}>
           <MessageProvider>
             <MockMessage />
             <Actions systemIntake={systemIntake} />
@@ -58,11 +56,9 @@ describe('IT Gov Actions', () => {
     render(
       <VerboseMockedProvider mocks={[getGovernanceTaskListQuery()]}>
         <MemoryRouter
-          initialEntries={[
-            `/governance-review-team/${systemIntake.id}/actions`
-          ]}
+          initialEntries={[`/it-governance/${systemIntake.id}/actions`]}
         >
-          <Route path={[`/governance-review-team/:systemId/actions/:action?`]}>
+          <Route path={[`/it-governance/:systemId/actions/:action?`]}>
             <MessageProvider>
               <Actions systemIntake={systemIntake} />
             </MessageProvider>

@@ -18,10 +18,10 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@apollo/client@^3.10.7":
-  version "3.10.8"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.10.8.tgz#96b1548818e45fac752ec2bd318e5466d9ca26b5"
-  integrity sha512-UaaFEitRrPRWV836wY2L7bd3HRCfbMie1jlYMcmazFAK23MVhz/Uq7VG1nwbotPb5xzFsw5RF4Wnp2G3dWPM3g==
+"@apollo/client@^3.11.8":
+  version "3.11.8"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.11.8.tgz#f6bacdc7e1b243807c1387113e1d445a53471a9c"
+  integrity sha512-CgG1wbtMjsV2pRGe/eYITmV5B8lXUCYljB2gB/6jWTFQcrvirUVvKg7qtFdjYkQSFbIffU1IDyxgeaN81eTjbA==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
     "@wry/caches" "^1.0.0"
@@ -4278,10 +4278,10 @@
   resolved "https://registry.yarnpkg.com/@oclif/screen/-/screen-3.0.6.tgz#35539ba5d78a5743e5ac0c5dd707965019df9ee3"
   integrity sha512-nEv7dFPxCrWrvK6dQ8zya0/Kb54EXVcwIKV9capjSa89ZDoOo+qH0YSo4/eQVECXgW3eUvgKLDIcIt62YBk0HA==
 
-"@okta/okta-auth-js@^7.7.0":
-  version "7.7.0"
-  resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-7.7.0.tgz#daac09294316a69d996a33232eb25032d1b85d70"
-  integrity sha512-m+WlI9TJ3J2uHI+W9Uc7zinE4CQLS2JC6AQYPJ0KHxaVE5lwPDLFleapPNfNWzYGr/30GV7oBzJMU+8+UQEsPA==
+"@okta/okta-auth-js@^7.8.0":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-7.8.0.tgz#1ab69c47cbf6fd7f3ce9f6caed2e05685f5bb22d"
+  integrity sha512-yFjv0wD9T5GYcFg6zzQ0M/WGdq2IMoaI/SK/0s9AqazZ6ILv6eyZq47L2nJJ7xld5DBFUhVewnD6BS3Ee7Im1A==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@peculiar/webcrypto" "^1.4.0"
@@ -4308,12 +4308,12 @@
     "@babel/runtime" "^7.11.2"
     compare-versions "^4.1.2"
 
-"@okta/okta-signin-widget@^7.19.6":
-  version "7.19.6"
-  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-7.19.6.tgz#670c73bbc296083597b335f33f9f94e1ccc2726d"
-  integrity sha512-L+IFaSick5wEChz9KoP4Pb2frck9Qfn9q4m3eK0D1eS/sMaFTbexIHqcpFZhb91Er3BbXl2K83UYswgkplCkXg==
+"@okta/okta-signin-widget@^7.23.0":
+  version "7.23.0"
+  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-7.23.0.tgz#1e440d5a753a637e542cf259f804a1065da8403c"
+  integrity sha512-0Dw7TscGKGWuv3pJ/U6cu2yiCT/eLCWoQ9i2RVvdNYpPqxb0pf4YPgwq3hmUL0MlbwoTfXKte+UjmCh5D/E5Qw==
   dependencies:
-    "@okta/okta-auth-js" "^7.7.0"
+    "@okta/okta-auth-js" "^7.8.0"
     "@sindresorhus/to-milliseconds" "^1.0.0"
     "@types/backbone" "^1.4.15"
     "@types/eslint-scope" "^3.7.3"
