@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@apollo/client": "^3.10.7",
+    "@apollo/client": "^3.11.8",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
     "@cypress/code-coverage": "^3.12.39",
     "@graphql-codegen/typescript-react-apollo": "^4.3.0",
