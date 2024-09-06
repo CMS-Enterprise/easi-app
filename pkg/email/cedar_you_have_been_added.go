@@ -13,40 +13,21 @@ import (
 
 type cedarYouHaveBeenAddedEmailParameters struct {
 	SystemName          string
-	SystemID            string
 	Roles               string
 	SystemWorkspaceLink string
 	TeamLink            string
 }
 
 func (c Client) cedarYouHaveBeenAddedEmailBody(systemName string, systemID string, roles []string) (string, error) {
-
-	var roleString string
-
-	switch len(roles) {
-	case 0:
-		roleString = "Team Member"
-	case 1:
-		roleString = roles[0]
-	case 2:
-		// first and second
-		roleString = strings.Join(roles, " and ")
-	default:
-		// first, second, third, and fourth
-		roleString = fmt.Sprintf("%[1]s, and %[2]s",
-			strings.Join(roles[:len(roles)-1], ", "),
-			roles[len(roles)-1])
+	if c.templates.cedarYouHaveBeenAdded == nil {
+		return "", errors.New("CEDAR You Have Been Added template is nil")
 	}
 
 	data := cedarYouHaveBeenAddedEmailParameters{
 		SystemName:          systemName,
-		Roles:               roleString,
+		Roles:               buildRoleString(roles),
 		SystemWorkspaceLink: c.urlFromPath(path.Join("systems", systemID, "workspace")),
 		TeamLink:            c.urlFromPath(path.Join("systems", systemID, "team", "edit", "team-member")),
-	}
-
-	if c.templates.cedarYouHaveBeenAdded == nil {
-		return "", errors.New("CEDAR You Have Been Added template is nil")
 	}
 
 	var b bytes.Buffer
@@ -77,4 +58,21 @@ func (c Client) SendCedarYouHaveBeenAddedEmail(
 			WithSubject(subject).
 			WithBody(body),
 	)
+}
+
+func buildRoleString(roles []string) string {
+	switch len(roles) {
+	case 0:
+		return "Team Member"
+	case 1:
+		return roles[0]
+	case 2:
+		// first and second
+		return strings.Join(roles, " and ")
+	default:
+		// first, second, third, and fourth
+		return fmt.Sprintf("%[1]s, and %[2]s",
+			strings.Join(roles[:len(roles)-1], ", "),
+			roles[len(roles)-1])
+	}
 }

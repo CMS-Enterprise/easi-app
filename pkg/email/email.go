@@ -55,6 +55,7 @@ type templates struct {
 	trbRequestClosed                                templateCaller
 	cedarRolesChanged                               templateCaller
 	cedarYouHaveBeenAdded                           templateCaller
+	cedarNewTeamMember                              templateCaller
 	systemIntakeAdminUploadDocTemplate              templateCaller
 	systemIntakeSubmitInitialFormRequesterTemplate  templateCaller
 	systemIntakeSubmitInitialFormReviewerTemplate   templateCaller
@@ -261,6 +262,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(cedarYouHaveBeenAddedTemplateName)
 	}
 	appTemplates.cedarYouHaveBeenAdded = cedarYouHaveBeenAdded
+
+	cedarNewTeamMemberTemplateName := "cedar_new_team_member.gohtml"
+	cedarNewTeamMember := rawTemplates.Lookup(cedarNewTeamMemberTemplateName)
+	if cedarNewTeamMember == nil {
+		return Client{}, templateError(cedarNewTeamMemberTemplateName)
+	}
+	appTemplates.cedarNewTeamMember = cedarNewTeamMember
 
 	sisAdminUploadDocTemplateName := "system_intake_admin_upload_doc.gohtml"
 	sisAdminUploadDocTemplate := rawTemplates.Lookup(sisAdminUploadDocTemplateName)
