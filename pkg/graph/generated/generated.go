@@ -877,7 +877,6 @@ type ComplexityRoot struct {
 
 	SystemIntakeSoftwareAcquisition struct {
 		AcuqisitionMethods func(childComplexity int) int
-		CreatedAt          func(childComplexity int) int
 		ID                 func(childComplexity int) int
 		UsingSoftware      func(childComplexity int) int
 	}
@@ -1298,7 +1297,7 @@ type SystemIntakeResolver interface {
 	LcidCostBaseline(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	NeedsEaSupport(ctx context.Context, obj *models.SystemIntake) (*bool, error)
-
+	SoftwareAcquisition(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeSoftwareAcquisition, error)
 	Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error)
 
 	ProductManager(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeProductManager, error)
@@ -6254,13 +6253,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeSoftwareAcquisition.AcuqisitionMethods(childComplexity), true
 
-	case "SystemIntakeSoftwareAcquisition.createdAt":
-		if e.complexity.SystemIntakeSoftwareAcquisition.CreatedAt == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeSoftwareAcquisition.CreatedAt(childComplexity), true
-
 	case "SystemIntakeSoftwareAcquisition.id":
 		if e.complexity.SystemIntakeSoftwareAcquisition.ID == nil {
 			break
@@ -8397,7 +8389,7 @@ type SystemIntake {
   lcidCostBaseline: String
   lcidRetiresAt: Time
   needsEaSupport: Boolean
-  softwareAcquisition: [SystemIntakeSoftwareAcquisition!]!
+  softwareAcquisition: SystemIntakeSoftwareAcquisition
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
@@ -8644,14 +8636,14 @@ type SystemIntakeSoftwareAcquisition {
   id: UUID!
   usingSoftware: String
   acuqisitionMethods: [String!]! 
-  createdAt: Time 
 }
 
 """
 The input required to specify the software acquisition information associated with a system intake
 """
 input SystemIntakeSoftwareAcquisitionInput {
-  elaName: Boolean
+  usingSoftware: String
+  acuqisitionMethods: [String!]!
 }
 
 """
@@ -39104,29 +39096,26 @@ func (ec *executionContext) _SystemIntake_softwareAcquisition(ctx context.Contex
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.SoftwareAcquisition, nil
+		return ec.resolvers.SystemIntake().SoftwareAcquisition(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.SystemIntakeSoftwareAcquisition)
+	res := resTmp.(*models.SystemIntakeSoftwareAcquisition)
 	fc.Result = res
-	return ec.marshalNSystemIntakeSoftwareAcquisition2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionᚄ(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeSoftwareAcquisition2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisition(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_softwareAcquisition(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntake",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -39135,8 +39124,6 @@ func (ec *executionContext) fieldContext_SystemIntake_softwareAcquisition(_ cont
 				return ec.fieldContext_SystemIntakeSoftwareAcquisition_usingSoftware(ctx, field)
 			case "acuqisitionMethods":
 				return ec.fieldContext_SystemIntakeSoftwareAcquisition_acuqisitionMethods(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_SystemIntakeSoftwareAcquisition_createdAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeSoftwareAcquisition", field.Name)
 		},
@@ -45672,47 +45659,6 @@ func (ec *executionContext) fieldContext_SystemIntakeSoftwareAcquisition_acuqisi
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeSoftwareAcquisition_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSoftwareAcquisition) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeSoftwareAcquisition_createdAt(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeSoftwareAcquisition_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeSoftwareAcquisition",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -58522,20 +58468,27 @@ func (ec *executionContext) unmarshalInputSystemIntakeSoftwareAcquisitionInput(c
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"elaName"}
+	fieldsInOrder := [...]string{"usingSoftware", "acuqisitionMethods"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "elaName":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("elaName"))
-			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+		case "usingSoftware":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("usingSoftware"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.ElaName = data
+			it.UsingSoftware = data
+		case "acuqisitionMethods":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("acuqisitionMethods"))
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AcuqisitionMethods = data
 		}
 	}
 
@@ -64373,10 +64326,38 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "softwareAcquisition":
-			out.Values[i] = ec._SystemIntake_softwareAcquisition(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_softwareAcquisition(ctx, field, obj)
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "notes":
 			field := field
 
@@ -66499,8 +66480,6 @@ func (ec *executionContext) _SystemIntakeSoftwareAcquisition(ctx context.Context
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "createdAt":
-			out.Values[i] = ec._SystemIntakeSoftwareAcquisition_createdAt(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -71753,60 +71732,6 @@ func (ec *executionContext) unmarshalNSystemIntakeRetireLCIDInput2githubᚗcom�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNSystemIntakeSoftwareAcquisition2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeSoftwareAcquisition) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNSystemIntakeSoftwareAcquisition2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisition(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNSystemIntakeSoftwareAcquisition2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisition(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeSoftwareAcquisition) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._SystemIntakeSoftwareAcquisition(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNSystemIntakeState2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeState(ctx context.Context, v interface{}) (models.SystemIntakeState, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.SystemIntakeState(tmp)
@@ -73935,6 +73860,13 @@ func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsᚑent
 		return graphql.Null
 	}
 	return ec._SystemIntakeNote(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeSoftwareAcquisition2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisition(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeSoftwareAcquisition) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeSoftwareAcquisition(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeSoftwareAcquisitionInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionInput(ctx context.Context, v interface{}) (*models.SystemIntakeSoftwareAcquisitionInput, error) {

@@ -1806,6 +1806,11 @@ func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.S
 	return obj.EASupportRequest.Ptr(), nil
 }
 
+// SoftwareAcquisition is the resolver for the softwareAcquisition field.
+func (r *systemIntakeResolver) SoftwareAcquisition(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeSoftwareAcquisition, error) {
+	return dataloaders.GetSystemIntakeSoftwareAcquisitionBySystemIntakeID(ctx, obj.ID)
+}
+
 // Notes is the resolver for the notes field.
 func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error) {
 	return resolvers.SystemIntakeNotes(ctx, obj)
@@ -1984,7 +1989,6 @@ func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.Syste
 
 // AcuqisitionMethods is the resolver for the acuqisitionMethods field.
 func (r *systemIntakeSoftwareAcquisitionResolver) AcuqisitionMethods(ctx context.Context, obj *models.SystemIntakeSoftwareAcquisition) ([]string, error) {
-	// panic(fmt.Errorf("not implemented: AcuqisitionMethods - acuqisitionMethods")) NJD
 	acqMethods := models.ConvertEnums[string](obj.AcuqisitionMethods)
 	return acqMethods, nil
 }

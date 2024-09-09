@@ -6,14 +6,12 @@ import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  Checkbox,
   Dropdown,
   Fieldset,
   Form,
-<<<<<<< HEAD
-  Link as UswdsLink,
-=======
   FormGroup,
->>>>>>> d87886cec (More system intake ELA work)
+  Link as UswdsLink,
   Radio,
   Textarea,
   TextInput
@@ -34,7 +32,12 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import MultiSelect from 'components/shared/MultiSelect';
 import processStages from 'constants/enums/processStages';
-import { CMS_AI_EMAIL, CMS_TRB_EMAIL } from 'constants/externalUrls';
+import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
+import {
+  CMS_AI_EMAIL,
+  CMS_DVSM_EMAIL,
+  CMS_TRB_EMAIL
+} from 'constants/externalUrls';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
 import { SystemIntake } from 'queries/types/SystemIntake';
@@ -55,6 +58,7 @@ type RequestDetailsForm = {
   needsEaSupport: boolean | null;
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
+  usesSoftwareProducts: string | null;
 };
 
 type RequestDetailsProps = {
@@ -72,7 +76,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     currentStage,
     needsEaSupport,
     hasUiChanges,
-    usesAiTech
+    usesAiTech,
+    usesSoftwareProducts
   } = systemIntake;
 
   const history = useHistory();
@@ -376,29 +381,6 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           </Fieldset>
         </FieldGroup>
 
-        {/* NJD add SWAM question(s) here */}
-        <FieldGroup scrollElement="NJD-anyELAs" error={!!errors.needsEaSupport}>
-          {/* NJD fix error */}
-          {/* NJD fix controller name */}
-          <Label htmlFor="elasNJD">{t('requestDetails.elas.label')}</Label>
-          <HelpText id="elasHelpText" className="margin-top-1">
-            {t('requestDetails.elas.help')}
-          </HelpText>
-          <Controller
-            control={control}
-            name="needsEaSupport"
-            render={({ field }) => (
-              <MultiSelect
-                name={field.name}
-                selectedLabel={t('requestDetails.elas.selectedLabel')}
-                // initialValues={field.value}
-                initialValues={['']}
-                options={NJDOptions}
-                onChange={values => field.onChange(values)}
-              />
-            )}
-          />
-        </FieldGroup>
         <FieldGroup
           scrollElement="needsEaSupport"
           error={!!errors.needsEaSupport}
@@ -523,68 +505,107 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           {/* NJD fix error */}
           {/* NJD fix controller name */}
           <Label htmlFor="elasNJD">
-            {t('requestDetails.elas.usingSoftwareLabel')}
+            {t('requestDetails.elas.usesSoftwareLabel')}
           </Label>
           <HelpText id="elasHelpText" className="margin-top-1">
-            {t('requestDetails.elas.usingSoftwareHelp')}
+            <Trans
+              i18nKey="intake:requestDetails.elas.usesSoftwareHelp"
+              components={{
+                dvsmEmail: (
+                  <UswdsLink href={`mailto:${CMS_DVSM_EMAIL}`}> </UswdsLink>
+                )
+              }}
+            />
           </HelpText>
           <Controller
             control={control}
-            name="NJDusingSoftware"
+            name="usesSoftwareProducts"
             render={({ field: { ref, value, ...field } }) => (
               <Radio
                 {...field}
                 inputRef={ref}
-                id="usingSoftwareTrue"
+                id="usesSoftwareYes"
                 label={t('Yes')}
-                checked={value}
-                onChange={() => field.onChange(true)}
+                checked={value === 'YES'}
+                onChange={() => field.onChange('YES')}
               />
             )}
           />
-          {watch('NJDusingSoftware') && (
+          {/* If 'Yes' is selected, display additional software props (software MultiSelect and Acquisition Approach Checkboxes) */}
+          {watch('usesSoftwareProducts') === 'YES' && (
             <div className="margin-left-4 margin-bottom-3">
-              {/* TODO: NJD fix error */}
-              <FormGroup error={!!errors?.isso?.commonName}>
-                <Label htmlFor="elaNJD">
-                  {t('requestDetails.elas.whichSoftwareLabel')}
-                </Label>
-                <HelpText id="whichSoftwareHelpText" className="margin-top-1">
-                  {t('requestDetails.elas.whichSoftwareHelp')}
-                </HelpText>
-                <TextInput
-                  {...register('requestDetails.elas.whichSoftwareLabel')}
-                  ref={null}
-                  id="currentAnnualSpendingITPortion"
-                  type="text"
-                  maxLength={200}
-                />
-              </FormGroup>
+              {Object.values(SystemIntakeSoftwareAcquisitionMethods).map(
+                acqMethod => {
+                  // return acqMethod;
+                  return (
+                    <div key={acqMethod}>
+                      <Controller
+                        control={control}
+                        name="usesSoftwareProducts"
+                        render={({ field: { ref, ...field } }) => {
+                          return (
+                            <Checkbox
+                              {...field}
+                              inputRef={ref}
+                              id={`software-${acqMethod}`}
+                              label={acqMethod}
+                              // disabled={!isPresent}
+                              value="true"
+                              checked={field.value === acqMethod}
+                              onChange={() => field.onChange(!field.value)}
+                            />
+                          );
+                        }}
+                      />
+                    </div>
+                  );
+                }
+              )}
             </div>
           )}
           <Controller
             control={control}
-            name="NJDusingSoftware"
+            name="usesSoftwareProducts"
             render={({ field: { ref, value, ...field } }) => (
               <Radio
                 {...field}
                 inputRef={ref}
-                id="usingSoftwareFalse"
+                id="usesSoftwareNo"
                 label={t('No')}
-                checked={!value}
+                checked={value === 'NO'}
                 onChange={() => {
-                  field.onChange(false);
-
-                  // Reset ELA fields - TODO: NJD
-                  // setValue('isso.commonName', '');
-                  // setValue('isso.euaUserId', '');
-                  // setValue('isso.email', '');
-                  // setValue('isso.component', '');
+                  field.onChange('NO');
                 }}
               />
             )}
           />
-          {/* <Controller
+          <Controller
+            control={control}
+            name="usesSoftwareProducts"
+            render={({ field: { ref, value, ...field } }) => (
+              <Radio
+                {...field}
+                inputRef={ref}
+                id="usesSoftwareNotSure"
+                label={t('Not Sure')} // TODO: NJD - fix this translation?
+                checked={value === 'NOT_SURE'}
+                onChange={() => {
+                  field.onChange('NOT_SURE');
+                }}
+              />
+            )}
+          />
+        </FieldGroup>
+
+        {/* NJD add SWAM question(s) here */}
+        <FieldGroup scrollElement="NJD-anyELAs" error={!!errors.needsEaSupport}>
+          {/* NJD fix error */}
+          {/* NJD fix controller name */}
+          <Label htmlFor="elasNJD">{t('requestDetails.elas.label')}</Label>
+          <HelpText id="elasHelpText" className="margin-top-1">
+            {t('requestDetails.elas.help')}
+          </HelpText>
+          <Controller
             control={control}
             name="needsEaSupport"
             render={({ field }) => (
@@ -597,7 +618,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 onChange={values => field.onChange(values)}
               />
             )}
-          /> */}
+          />
         </FieldGroup>
 
         <Pager

@@ -1813,6 +1813,7 @@ export type SystemIntake = {
   requester: SystemIntakeRequester;
   requesterComponent?: Maybe<Scalars['String']['output']>;
   requesterName?: Maybe<Scalars['String']['output']>;
+  softwareAcquisition?: Maybe<SystemIntakeSoftwareAcquisition>;
   state: SystemIntakeState;
   statusAdmin: SystemIntakeStatusAdmin;
   statusRequester: SystemIntakeStatusRequester;
@@ -2361,6 +2362,20 @@ export type SystemIntakeRetireLCIDInput = {
   reason?: InputMaybe<Scalars['HTML']['input']>;
   retiresAt: Scalars['Time']['input'];
   systemIntakeID: Scalars['UUID']['input'];
+};
+
+/** Represents information on software acquisition information assocatied with a system intake */
+export type SystemIntakeSoftwareAcquisition = {
+  __typename: 'SystemIntakeSoftwareAcquisition';
+  acuqisitionMethods: Array<Scalars['String']['output']>;
+  id: Scalars['UUID']['output'];
+  usingSoftware?: Maybe<Scalars['String']['output']>;
+};
+
+/** The input required to specify the software acquisition information associated with a system intake */
+export type SystemIntakeSoftwareAcquisitionInput = {
+  acuqisitionMethods: Array<Scalars['String']['input']>;
+  usingSoftware?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** SystemIntakeState represents whether the intake is open or closed */
@@ -2951,6 +2966,7 @@ export type UpdateSystemIntakeRequestDetailsInput = {
   id: Scalars['UUID']['input'];
   needsEaSupport?: InputMaybe<Scalars['Boolean']['input']>;
   requestName?: InputMaybe<Scalars['String']['input']>;
+  softwareAcquisition?: InputMaybe<SystemIntakeSoftwareAcquisitionInput>;
   usesAiTech?: InputMaybe<Scalars['Boolean']['input']>;
 };
 

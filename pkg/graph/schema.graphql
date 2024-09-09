@@ -721,7 +721,7 @@ type SystemIntake {
   lcidCostBaseline: String
   lcidRetiresAt: Time
   needsEaSupport: Boolean
-  softwareAcquisition: [SystemIntakeSoftwareAcquisition!]!
+  softwareAcquisition: SystemIntakeSoftwareAcquisition
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
@@ -968,14 +968,14 @@ type SystemIntakeSoftwareAcquisition {
   id: UUID!
   usingSoftware: String
   acuqisitionMethods: [String!]! 
-  createdAt: Time 
 }
 
 """
 The input required to specify the software acquisition information associated with a system intake
 """
 input SystemIntakeSoftwareAcquisitionInput {
-  elaName: Boolean
+  usingSoftware: String
+  acuqisitionMethods: [String!]!
 }
 
 """

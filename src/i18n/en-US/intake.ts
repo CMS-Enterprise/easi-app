@@ -312,15 +312,18 @@ const intake = {
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
     elas: {
-      usingSoftwareLabel:
+      usesSoftwareLabel:
         'Do you plan to use any software products to fulfill your business needs?',
-      usingSoftwareHelp:
-        'This could include COTS products, infrastructure products, or other engineering and development tools.',
+      usesSoftwareHelp:
+        'This could include COTS products, infrastructure products, or other engineering and development tools. <dvsmEmail>Email the Division of Vendor and Software Management (DVSM)</dvsmEmail> to learn more about options at CMS related to software and Enterprise License Agreements (ELAs). If you mark "I\'m not sure", someone from DVSM may reach out to speak with you about available software and enterprise licenses.',
       selectedLabel: 'Selected software',
       whichSoftwareLabel: 'Which software?',
       whichSoftwareHelp:
         'If known, please upload a bill of materials (BOM) on the document upload section of this form.',
-      acquisitionStrategyLabel: 'How will the software be acquired?'
+      acquisitionStrategyLabel: 'How will the software be acquired?',
+      acquisitionStrategyHelp: 'Select all that apply.',
+      softwareRequirements:
+        'If sofware requirements are not yet determined or if the contractor(s) will be requested to provide as part of the requirement. CMS suggests that you include the need for a proposed software Bill of Materials (BOM) in the solicitation or contract.'
     },
     needsEaSupport: 'Does your request need Enterprise Architecture support?',
     needsEaSupportHelpText:

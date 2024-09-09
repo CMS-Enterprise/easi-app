@@ -19,6 +19,6 @@ var SystemIntakeSoftwareAcquisition = SystemIntakeSoftwareAcquisitionScripts{
 }
 
 type SystemIntakeSoftwareAcquisitionScripts struct {
-	GetBySystemIntakeIDs string
 	GetBySystemIntakeID  string
+	GetBySystemIntakeIDs string
 }

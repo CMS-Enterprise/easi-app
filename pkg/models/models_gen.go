@@ -725,7 +725,8 @@ type SystemIntakeRetireLCIDInput struct {
 
 // The input required to specify the software acquisition information associated with a system intake
 type SystemIntakeSoftwareAcquisitionInput struct {
-	ElaName *bool `json:"elaName,omitempty"`
+	UsingSoftware      *string  `json:"usingSoftware,omitempty"`
+	AcuqisitionMethods []string `json:"acuqisitionMethods"`
 }
 
 // Input for updating an intake's LCID in IT Gov v2
