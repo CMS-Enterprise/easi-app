@@ -1876,6 +1876,7 @@ export type SystemIntake = {
   requester: SystemIntakeRequester;
   requesterComponent?: Maybe<Scalars['String']['output']>;
   requesterName?: Maybe<Scalars['String']['output']>;
+  softwareAcquisition?: Maybe<SystemIntakeSoftwareAcquisition>;
   state: SystemIntakeState;
   statusAdmin: SystemIntakeStatusAdmin;
   statusRequester: SystemIntakeStatusRequester;
@@ -3025,6 +3026,7 @@ export type UpdateSystemIntakeRequestDetailsInput = {
   id: Scalars['UUID']['input'];
   needsEaSupport?: InputMaybe<Scalars['Boolean']['input']>;
   requestName?: InputMaybe<Scalars['String']['input']>;
+  softwareAcquisition?: InputMaybe<SystemIntakeSoftwareAcquisitionInput>;
   usesAiTech?: InputMaybe<Scalars['Boolean']['input']>;
   usingSoftware?: InputMaybe<Scalars['String']['input']>;
 };

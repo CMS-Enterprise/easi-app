@@ -764,6 +764,12 @@ type SystemIntakeRetireLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
+// The input required to specify the software acquisition information associated with a system intake
+type SystemIntakeSoftwareAcquisitionInput struct {
+	UsingSoftware      *string  `json:"usingSoftware,omitempty"`
+	AcuqisitionMethods []string `json:"acuqisitionMethods"`
+}
+
 // Input for updating an intake's LCID in IT Gov v2
 type SystemIntakeUpdateLCIDInput struct {
 	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`

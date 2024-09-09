@@ -73,31 +73,31 @@ func (s *Store) UpdateSystemIntakeSoftwareAcquisitionNP(ctx context.Context, tx 
 }
 
 // FetchSystemIntakeSoftwareAcquisitionByIntakeID fetches Software Acquisition information for a given system intake
-func (s *Store) FetchSystemIntakeSoftwareAcquisitionByIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSoftwareAcquisition, error) {
-	sources := []*models.SystemIntakeSoftwareAcquisition{}
-	err := namedSelect(ctx, s, &sources, sqlqueries.SystemIntakeSoftwareAcquisition.GetBySystemIntakeID, args{
+func (s *Store) FetchSystemIntakeSoftwareAcquisitionByIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeSoftwareAcquisition, error) {
+	softwareAcuisition := models.SystemIntakeSoftwareAcquisition{}
+	err := namedSelect(ctx, s, &softwareAcuisition, sqlqueries.SystemIntakeSoftwareAcquisition.GetBySystemIntakeID, args{
 		"system_intake_id": systemIntakeID,
 	})
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch Software Acquisition information, error %s", err))
-		return sources, err
+		return nil, err
 	}
 
-	return sources, nil
+	return &softwareAcuisition, nil
 }
 
 // FetchSystemIntakeSoftwareAcquisitionByIntakeIDs fetches Software Acquisition information for a slice of system intake IDs
 func (s *Store) FetchSystemIntakeSoftwareAcquisitionByIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeSoftwareAcquisition, error) {
-	sources := []*models.SystemIntakeSoftwareAcquisition{}
-	err := namedSelect(ctx, s, &sources, sqlqueries.SystemIntakeSoftwareAcquisition.GetBySystemIntakeIDs, args{
+	softwareAcuisitions := []*models.SystemIntakeSoftwareAcquisition{}
+	err := namedSelect(ctx, s, &softwareAcuisitions, sqlqueries.SystemIntakeSoftwareAcquisition.GetBySystemIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch Software Acquisition information from multiple intakes, error %s", err))
-		return sources, err
+		return softwareAcuisitions, err
 	}
 
-	return sources, nil
+	return softwareAcuisitions, nil
 }
