@@ -9,6 +9,11 @@ import {
   SystemLinkedRequest
 } from 'types/systemLinkedRequest';
 
+const today = new Date();
+const tomorrow = new Date(today.setDate(today.getDate() + 1)).toISOString();
+
+// For now this mock data is used for both OPEN and CLOSED intakes
+
 const linkedSystemIntakes: LinkedSystemIntake[] = [
   {
     id: '29d73aa0-3a29-478e-afb4-374a7594be47',
@@ -17,6 +22,8 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
     requesterName: 'User One',
+    lastMeetingDate: new Date('2024-09-04').toISOString(),
+    nextMeetingDate: tomorrow,
     __typename: 'SystemIntake'
   },
   {
@@ -26,6 +33,8 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
     requesterName: 'User One',
+    lastMeetingDate: null,
+    nextMeetingDate: null,
     __typename: 'SystemIntake'
   },
   {
@@ -35,6 +44,8 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
     requesterName: 'User USR1',
+    lastMeetingDate: new Date('2024-09-04').toISOString(),
+    nextMeetingDate: tomorrow,
     __typename: 'SystemIntake'
   }
 ];
@@ -53,6 +64,8 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
+    lastMeetingDate: new Date('2024-09-04').toISOString(),
+    nextMeetingDate: tomorrow,
     __typename: 'TRBRequest'
   },
   {
@@ -68,6 +81,8 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
+    lastMeetingDate: new Date('2024-09-04').toISOString(),
+    nextMeetingDate: tomorrow,
     __typename: 'TRBRequest'
   },
   {
@@ -83,6 +98,8 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
+    lastMeetingDate: new Date('2024-09-04').toISOString(),
+    nextMeetingDate: tomorrow,
     __typename: 'TRBRequest'
   }
 ];
