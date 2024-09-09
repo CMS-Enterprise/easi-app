@@ -550,6 +550,12 @@ export interface CreateCedarSystemBookmarkInput {
   cedarSystemId: string;
 }
 
+export interface CreateGRBReviewerInput {
+  euaUserId: string;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
+  grbRole: SystemIntakeGRBReviewerRole;
+}
+
 /**
  * The data needed to associate a contact with a system intake
  */
@@ -572,11 +578,9 @@ export interface CreateSystemIntakeDocumentInput {
   sendNotification?: boolean | null;
 }
 
-export interface CreateSystemIntakeGRBReviewerInput {
+export interface CreateSystemIntakeGRBReviewersInput {
   systemIntakeID: UUID;
-  euaUserId: string;
-  votingRole: SystemIntakeGRBReviewerVotingRole;
-  grbRole: SystemIntakeGRBReviewerRole;
+  reviewers: CreateGRBReviewerInput[];
 }
 
 /**

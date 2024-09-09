@@ -634,8 +634,13 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	}, nil
 }
 
-// CreateSystemIntakeGRBReviewer is the resolver for the createSystemIntakeGRBReviewer field.
-func (r *mutationResolver) CreateSystemIntakeGRBReviewer(ctx context.Context, input models.CreateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
+// StartGRBReview is the resolver for the startGRBReview field.
+func (r *mutationResolver) StartGRBReview(ctx context.Context, input models.StartGRBReviewInput) (*string, error) {
+	return helpers.PointerTo("started GRB review"), nil
+}
+
+// CreateSystemIntakeGRBReviewers is the resolver for the createSystemIntakeGRBReviewers field.
+func (r *mutationResolver) CreateSystemIntakeGRBReviewers(ctx context.Context, input models.CreateSystemIntakeGRBReviewersInput) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
 	return resolvers.CreateSystemIntakeGRBReviewer(ctx, r.store, r.emailClient, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo), &input)
 }
 

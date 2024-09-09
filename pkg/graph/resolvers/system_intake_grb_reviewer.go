@@ -23,8 +23,11 @@ func CreateSystemIntakeGRBReviewer(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUser userhelpers.GetAccountInfoFunc,
-	input *models.CreateSystemIntakeGRBReviewerInput,
-) (*models.SystemIntakeGRBReviewer, error) {
+	input *models.CreateSystemIntakeGRBReviewersInput,
+) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
+	return &models.CreateSystemIntakeGRBReviewersPayload{
+		Reviewers: []*models.SystemIntakeGRBReviewer{},
+	}, nil
 	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntakeGRBReviewer, error) {
 		// Fetch intake by ID
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)

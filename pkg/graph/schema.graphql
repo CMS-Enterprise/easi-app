@@ -1111,6 +1111,13 @@ type SystemIntakeActionActor {
 }
 
 """
+Input for starting a GRB Review, which notifies reviewers by email
+"""
+input StartGRBReviewInput {
+  systemIntakeID: UUID!
+}
+
+"""
 GRB Reviewers for a system intake request
 """
 type SystemIntakeGRBReviewer {
@@ -1125,11 +1132,19 @@ type SystemIntakeGRBReviewer {
   modifiedAt: Time
 }
 
-input CreateSystemIntakeGRBReviewerInput {
-  systemIntakeID: UUID!
+input CreateGRBReviewerInput {
   euaUserId: String!
   votingRole: SystemIntakeGRBReviewerVotingRole!
   grbRole: SystemIntakeGRBReviewerRole!
+}
+
+input CreateSystemIntakeGRBReviewersInput {
+  systemIntakeID: UUID!
+  reviewers: [CreateGRBReviewerInput!]!
+}
+
+type CreateSystemIntakeGRBReviewersPayload {
+  reviewers: [SystemIntakeGRBReviewer!]!
 }
 
 input UpdateSystemIntakeGRBReviewerInput {
@@ -2426,7 +2441,9 @@ type Mutation {
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
 
-  createSystemIntakeGRBReviewer(input: CreateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
+  startGRBReview(input: StartGRBReviewInput!): String
+
+  createSystemIntakeGRBReviewers(input: CreateSystemIntakeGRBReviewersInput!): CreateSystemIntakeGRBReviewersPayload
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
   deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
 
