@@ -17,6 +17,8 @@ export interface GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedSystemIn
   status: SystemIntakeStatusRequester;
   lcid: string | null;
   requesterName: string | null;
+  nextMeetingDate: Time | null;
+  lastMeetingDate: Time | null;
 }
 
 export interface GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedTrbRequests_form {
@@ -37,6 +39,8 @@ export interface GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedTrbReque
   status: TRBRequestStatus;
   state: TRBRequestState;
   requesterInfo: GetLinkedRequests_cedarSystemDetails_cedarSystem_linkedTrbRequests_requesterInfo;
+  nextMeetingDate: Time | null;
+  lastMeetingDate: Time | null;
 }
 
 export interface GetLinkedRequests_cedarSystemDetails_cedarSystem {
