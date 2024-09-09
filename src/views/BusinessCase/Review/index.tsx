@@ -16,9 +16,10 @@ import './index.scss';
 
 type ReviewProps = {
   businessCase: BusinessCaseModel;
+  isFinal: boolean;
 };
 
-const Review = ({ businessCase }: ReviewProps) => {
+const Review = ({ businessCase, isFinal }: ReviewProps) => {
   const { t } = useTranslation('businessCase');
 
   const history = useHistory();
@@ -55,7 +56,14 @@ const Review = ({ businessCase }: ReviewProps) => {
             type="submit"
             disabled={isSubmitting}
             onClick={() => {
-              dispatch(postAction({ intakeId: businessCase.systemIntakeId }));
+              dispatch(
+                postAction({
+                  intakeId: businessCase.systemIntakeId,
+                  actionType: isFinal
+                    ? 'SUBMIT_FINAL_BIZ_CASE'
+                    : 'SUBMIT_BIZ_CASE'
+                })
+              );
             }}
           >
             {t('sendBusinessCase')}
