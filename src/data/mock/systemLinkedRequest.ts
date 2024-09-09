@@ -5,12 +5,11 @@ import {
 } from 'types/graphql-global-types';
 import {
   LinkedSystemIntake,
-  LinkedTrbRequest,
-  SystemLinkedRequest
+  LinkedTrbRequest
 } from 'types/systemLinkedRequest';
 
-const today = new Date();
-const tomorrow = new Date(today.setDate(today.getDate() + 1)).toISOString();
+const timeInThePast = new Date('09/08/2024').toISOString();
+const aLongTimeFromNow = new Date('09/08/2124').toISOString();
 
 // For now this mock data is used for both OPEN and CLOSED intakes
 
@@ -22,8 +21,8 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
     requesterName: 'User One',
-    lastMeetingDate: new Date('2024-09-04').toISOString(),
-    nextMeetingDate: tomorrow,
+    lastMeetingDate: timeInThePast,
+    nextMeetingDate: aLongTimeFromNow,
     __typename: 'SystemIntake'
   },
   {
@@ -44,8 +43,8 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
     requesterName: 'User USR1',
-    lastMeetingDate: new Date('2024-09-04').toISOString(),
-    nextMeetingDate: tomorrow,
+    lastMeetingDate: timeInThePast,
+    nextMeetingDate: aLongTimeFromNow,
     __typename: 'SystemIntake'
   }
 ];
@@ -64,8 +63,8 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
-    lastMeetingDate: new Date('2024-09-04').toISOString(),
-    nextMeetingDate: tomorrow,
+    lastMeetingDate: timeInThePast,
+    nextMeetingDate: aLongTimeFromNow,
     __typename: 'TRBRequest'
   },
   {
@@ -81,8 +80,8 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
-    lastMeetingDate: new Date('2024-09-04').toISOString(),
-    nextMeetingDate: tomorrow,
+    lastMeetingDate: timeInThePast,
+    nextMeetingDate: aLongTimeFromNow,
     __typename: 'TRBRequest'
   },
   {
@@ -98,15 +97,10 @@ const linkedTrbRequests: LinkedTrbRequest[] = [
       commonName: 'Adeline Aarons',
       __typename: 'UserInfo'
     },
-    lastMeetingDate: new Date('2024-09-04').toISOString(),
-    nextMeetingDate: tomorrow,
+    lastMeetingDate: timeInThePast,
+    nextMeetingDate: aLongTimeFromNow,
     __typename: 'TRBRequest'
   }
 ];
 
-const systemLinkedRequests: SystemLinkedRequest[] = [
-  ...linkedSystemIntakes,
-  ...linkedTrbRequests
-];
-
-export { linkedSystemIntakes, linkedTrbRequests, systemLinkedRequests };
+export { linkedSystemIntakes, linkedTrbRequests };

@@ -18,19 +18,44 @@ func (s *ServicesTestSuite) TestNewTakeAction() {
 		return &models.SystemIntake{ID: id}, nil
 	}
 
+	s.Run("returns QueryError if fetch fails", func() {
+		failFetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+			return nil, errors.New("error")
+		}
+		createAction := NewTakeAction(failFetch, map[models.ActionType]ActionExecuter{})
+		id := uuid.New()
+		action := models.Action{
+			IntakeID:   &id,
+			ActionType: models.ActionTypeSUBMITINTAKE,
+		}
+		err := createAction(ctx, &action)
+		s.IsType(&apperrors.QueryError{}, err)
+	})
+
 	s.Run("returns error from an action service", func() {
 		submitError := errors.New("test")
 		failSubmit := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 			return submitError
 		}
-		createAction := NewBusinessCaseTakeAction(fetch, failSubmit)
+		createAction := NewTakeAction(fetch, map[models.ActionType]ActionExecuter{models.ActionTypeSUBMITINTAKE: failSubmit})
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
-			ActionType: models.ActionTypeSUBMITBIZCASE,
+			ActionType: models.ActionTypeSUBMITINTAKE,
 		}
 		err := createAction(ctx, &action)
 		s.Equal(submitError, err)
+	})
+
+	s.Run("returns ResourceConflictError if invalid action type", func() {
+		createAction := NewTakeAction(fetch, map[models.ActionType]ActionExecuter{})
+		id := uuid.New()
+		action := models.Action{
+			IntakeID:   &id,
+			ActionType: "INVALID",
+		}
+		err := createAction(ctx, &action)
+		s.IsType(&apperrors.ResourceConflictError{}, err)
 	})
 }
 
