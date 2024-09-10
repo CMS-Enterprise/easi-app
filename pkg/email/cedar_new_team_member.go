@@ -7,6 +7,9 @@ import (
 	"fmt"
 	"path"
 
+	"go.uber.org/zap"
+
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -82,6 +85,11 @@ func (c Client) SendCedarNewTeamMemberEmail(
 			recipients = append(recipients, models.NewEmailAddress(role.AssigneeEmail.String))
 			continue
 		}
+	}
+
+	if len(recipients) < 1 {
+		appcontext.ZLogger(ctx).Info("no recipients found for new team member email", zap.String("SystemName", systemName))
+		return nil
 	}
 
 	return c.sender.Send(
