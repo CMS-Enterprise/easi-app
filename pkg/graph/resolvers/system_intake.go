@@ -114,6 +114,10 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
 	intake.UsesAITech = null.BoolFromPtr(input.UsesAiTech)
 
+	// TODO: NJD - fix these hard codings
+	softwareAcq := models.SystemIntakeSoftwareAcquisition{SystemIntakeID: intake.ID, UsingSoftware: null.StringFrom("Yes"), AcuqisitionMethods: []string{}}
+	store.UpdateSystemIntakeSoftwareAcquisition(ctx, input.ID, &softwareAcq)
+
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()
 	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {

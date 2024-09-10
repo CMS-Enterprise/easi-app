@@ -14,15 +14,18 @@ import (
 )
 
 // UpdateSystemIntakeSoftwareAcquisition clears and updates the Software Acquisition information of a system intake using an automatically created transaction
-func (s *Store) UpdateSystemIntakeSoftwareAcquisition(ctx context.Context, systemIntakeID uuid.UUID, softwareAcquisitions []*models.SystemIntakeSoftwareAcquisition) ([]*models.SystemIntakeSoftwareAcquisition, error) {
-	return sqlutils.WithTransactionRet[[]*models.SystemIntakeSoftwareAcquisition](ctx, s, func(tx *sqlx.Tx) ([]*models.SystemIntakeSoftwareAcquisition, error) {
-		return s.UpdateSystemIntakeSoftwareAcquisitionNP(ctx, tx, systemIntakeID, softwareAcquisitions)
+func (s *Store) UpdateSystemIntakeSoftwareAcquisition(ctx context.Context, systemIntakeID uuid.UUID, softwareAcquisition *models.SystemIntakeSoftwareAcquisition) (*models.SystemIntakeSoftwareAcquisition, error) {
+	return sqlutils.WithTransactionRet[*models.SystemIntakeSoftwareAcquisition](ctx, s, func(tx *sqlx.Tx) (*models.SystemIntakeSoftwareAcquisition, error) {
+		return s.UpdateSystemIntakeSoftwareAcquisitionNP(ctx, tx, systemIntakeID, softwareAcquisition)
 	})
 }
 
 // UpdateSystemIntakeSoftwareAcquisitionNP clears and updates the Software Acquisition information of a system intake
-func (s *Store) UpdateSystemIntakeSoftwareAcquisitionNP(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, softwareAcquisitions []*models.SystemIntakeSoftwareAcquisition) ([]*models.SystemIntakeSoftwareAcquisition, error) {
-	now := s.clock.Now()
+func (s *Store) UpdateSystemIntakeSoftwareAcquisitionNP(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, softwareAcquisition *models.SystemIntakeSoftwareAcquisition) (*models.SystemIntakeSoftwareAcquisition, error) {
+	// TODO: NJD - do I need CreatedAt?
+	// now := s.clock.Now()
+
+	appcontext.ZLogger(ctx).Info("NJD HERE 1")
 
 	deleteSoftwareAcquisitionSQL := `
 		DELETE FROM system_intake_software_acquisition
@@ -34,42 +37,35 @@ func (s *Store) UpdateSystemIntakeSoftwareAcquisitionNP(ctx context.Context, tx 
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create Software Acquisition transaction, error %s", err))
 		return nil, err
 	}
+	appcontext.ZLogger(ctx).Info("NJD HERE 2")
 
-	for _, softwareAcquisition := range softwareAcquisitions {
-		if softwareAcquisition != nil {
-			if softwareAcquisition.ID == uuid.Nil {
-				softwareAcquisition.ID = uuid.New()
-			}
-			if softwareAcquisition.CreatedAt == nil {
-				softwareAcquisition.CreatedAt = &now
-			}
-			softwareAcquisition.SystemIntakeID = systemIntakeID
-
-			const createSoftwareAcquisitionSQL = `
+	const createSoftwareAcquisitionSQL = `
 				INSERT INTO system_intake_software_acquisition (
 					id,
 					system_intake_id,
+					using_software,
 					acquisition_methods
 				)
 				VALUES (
 					:id,
 					:system_intake_id,
+					:using_software,
 					:acquisition_methods
 				)`
 
-			_, err = tx.NamedExec(
-				createSoftwareAcquisitionSQL,
-				softwareAcquisition,
-			)
+	_, err = tx.NamedExec(
+		createSoftwareAcquisitionSQL,
+		softwareAcquisition,
+	)
 
-			if err != nil {
-				appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to insert Software Acquisition information, error %s", err))
-				return nil, err
-			}
-		}
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to insert Software Acquisition information, error %s", err))
+		return nil, err
 	}
 
-	return softwareAcquisitions, nil
+	appcontext.ZLogger(ctx).Info("NJD HERE 3")
+
+	return softwareAcquisition, nil
 }
 
 // FetchSystemIntakeSoftwareAcquisitionByIntakeID fetches Software Acquisition information for a given system intake
