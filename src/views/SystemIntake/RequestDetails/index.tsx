@@ -224,6 +224,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
       <MandatoryFieldsAlert className="tablet:grid-col-6" />
 
+      <hr className="margin-bottom-1 margin-top-3 opacity-30" aria-hidden />
+      <span className="font-body-sm text-bold">Project Concept NJD</span>
+
       <Form
         onSubmit={handleSubmit(() =>
           submit(() => history.push('contract-details'), true)
@@ -321,65 +324,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           </Dropdown>
         </FieldGroup>
 
-        <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>
-          <Fieldset>
-            <legend className="text-bold">
-              {t('requestDetails.usesAiTech')}
-            </legend>
-            <HelpText id="usesAiTechHelpText" className="margin-top-1">
-              <Trans
-                i18nKey="intake:requestDetails.usesAiTechHelpText"
-                components={{
-                  aiEmail: (
-                    <UswdsLink href={`mailto:${CMS_AI_EMAIL}`}> </UswdsLink>
-                  ),
-                  trbEmail: (
-                    <UswdsLink href={`mailto:${CMS_TRB_EMAIL}`}> </UswdsLink>
-                  )
-                }}
-              />
-            </HelpText>
-            <ErrorMessage
-              errors={errors}
-              name="usesAiTech"
-              as={FieldErrorMsg}
-            />
-
-            <Controller
-              control={control}
-              name="usesAiTech"
-              render={({ field: { ref, ...field } }) => (
-                <Radio
-                  {...field}
-                  inputRef={ref}
-                  checked={field.value === true}
-                  id="usesAiTechTrue"
-                  label={t('Yes')}
-                  onChange={() => field.onChange(true)}
-                  value="true"
-                  aria-describedby="usesAiTechHelpText"
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="usesAiTech"
-              render={({ field: { ref, ...field } }) => (
-                <Radio
-                  {...field}
-                  inputRef={ref}
-                  checked={field.value === false}
-                  id="usesAiTechFalse"
-                  label={t('No')}
-                  onChange={() => field.onChange(false)}
-                  value="true"
-                  aria-describedby="usesAiTechHelpText"
-                />
-              )}
-            />
-          </Fieldset>
-        </FieldGroup>
+        <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
+        <span className="font-body-sm text-bold">Collaboration NJD</span>
 
         <FieldGroup
           scrollElement="needsEaSupport"
@@ -452,6 +398,69 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             </ul>
           </>
         </CollapsableLink>
+
+        <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
+        <span className="font-body-sm text-bold">Project Details NJD</span>
+
+        <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>
+          <Fieldset>
+            <legend className="text-bold">
+              {t('requestDetails.usesAiTech')}
+            </legend>
+            <HelpText id="usesAiTechHelpText" className="margin-top-1">
+              <Trans
+                i18nKey="intake:requestDetails.usesAiTechHelpText"
+                components={{
+                  aiEmail: (
+                    <UswdsLink href={`mailto:${CMS_AI_EMAIL}`}> </UswdsLink>
+                  ),
+                  trbEmail: (
+                    <UswdsLink href={`mailto:${CMS_TRB_EMAIL}`}> </UswdsLink>
+                  )
+                }}
+              />
+            </HelpText>
+            <ErrorMessage
+              errors={errors}
+              name="usesAiTech"
+              as={FieldErrorMsg}
+            />
+
+            <Controller
+              control={control}
+              name="usesAiTech"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  checked={field.value === true}
+                  id="usesAiTechTrue"
+                  label={t('Yes')}
+                  onChange={() => field.onChange(true)}
+                  value="true"
+                  aria-describedby="usesAiTechHelpText"
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="usesAiTech"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  checked={field.value === false}
+                  id="usesAiTechFalse"
+                  label={t('No')}
+                  onChange={() => field.onChange(false)}
+                  value="true"
+                  aria-describedby="usesAiTechHelpText"
+                />
+              )}
+            />
+          </Fieldset>
+        </FieldGroup>
 
         <FieldGroup scrollElement="hasUiChanges" error={!!errors.hasUiChanges}>
           <Fieldset>
