@@ -76,12 +76,12 @@ func (c Client) SendCedarNewTeamMemberEmail(
 			continue
 		}
 
-		if role.RoleTypeName.String == "Survey Point of Contact" {
+		if role.RoleTypeName.String == models.SurveyPointOfContactRole.String() {
 			recipients = append(recipients, models.NewEmailAddress(role.AssigneeEmail.String))
 			continue
 		}
 
-		if role.RoleTypeName.String == "Business Owner" {
+		if role.RoleTypeName.String == models.BusinessOwnerRole.String() {
 			recipients = append(recipients, models.NewEmailAddress(role.AssigneeEmail.String))
 			continue
 		}
@@ -114,15 +114,15 @@ func determineProjectLeadEmail(roles []*models.CedarRole) models.EmailAddress {
 		}
 
 		switch role.RoleTypeName.String {
-		case "Project Lead":
+		case models.ProjectLeadRole.String():
 			// ideal situation
 			return models.NewEmailAddress(role.AssigneeEmail.String)
 
-		case "Government Task Lead (GTL)":
+		case models.GovernmentTaskLeadRole.String():
 			// second-best situation
 			currBest = models.NewEmailAddress(role.AssigneeEmail.String)
 
-		case "Contracting Officer's Representative (COR)":
+		case models.CORRole.String():
 			// third-best situation
 			// do not override if currBest is already filled in
 			if len(currBest) < 1 {
