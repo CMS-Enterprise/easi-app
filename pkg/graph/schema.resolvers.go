@@ -982,7 +982,7 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 				return
 			}
 
-			if err := r.emailClient.SendCedarNewTeamMemberEmail(ctx, targetUserInfo.DisplayName, targetUserInfo.Email.String(), rs.SystemName, input.CedarSystemID, rs.RoleTypeNamesAfter, systemDetails); err != nil {
+			if err := r.emailClient.SendCedarNewTeamMemberEmail(ctx, targetUserInfo.DisplayName, targetUserInfo.Email.String(), rs.SystemName, input.CedarSystemID, rs.RoleTypeNamesAfter, systemDetails.Roles); err != nil {
 				appcontext.ZLogger(emailCtx).Error("failed to send CEDAR email for new team member added", zap.Error(err))
 				return
 			}

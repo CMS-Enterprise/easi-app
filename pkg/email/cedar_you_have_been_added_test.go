@@ -26,13 +26,6 @@ func (s *EmailTestSuite) TestSendCedarYouHaveBeenAddedEmail() {
 		systemID.String(),
 	)
 
-	//input := cedarYouHaveBeenAddedEmailParameters{
-	//	SystemName:          systemName,
-	//	Roles:               roles,
-	//	SystemWorkspaceLink: workspaceLink,
-	//	TeamLink:            teamLink,
-	//}
-
 	expectedBody := fmt.Sprintf(`<h1 class="header-title">EASi</h1>
 <p class="header-subtitle">Easy Access to System Information</p>
 
@@ -54,7 +47,7 @@ func (s *EmailTestSuite) TestSendCedarYouHaveBeenAddedEmail() {
 		client, err := NewClient(s.config, &ms)
 		s.NoError(err)
 
-		err = client.SendCedarYouHaveBeenAddedEmail(ctx, systemName, systemID.String(), rolesList, "test@ok.com")
+		err = client.SendCedarYouHaveBeenAddedEmail(ctx, systemName, systemID.String(), rolesList, "test@fake.com")
 		s.NoError(err)
 
 		expectedSubject := fmt.Sprintf("You have been added as a team member for %s", systemName)

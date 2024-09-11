@@ -49,8 +49,9 @@ func (c Client) SendCedarNewTeamMemberEmail(
 	systemName string,
 	systemID string,
 	roles []string,
-	systemDetails *models.CedarSystemDetails,
+	existingTeamMembers []*models.CedarRole,
 ) error {
+
 	subject := fmt.Sprintf("%[1]s has been added as a team member for %[2]s", newTeamMemberName, systemName)
 	body, err := c.cedarNewTeamMemberEmailBody(newTeamMemberName, systemName, systemID, roles)
 	if err != nil {
@@ -60,13 +61,13 @@ func (c Client) SendCedarNewTeamMemberEmail(
 	var recipients []models.EmailAddress
 
 	// find our project lead first
-	projectLeadEmail := determineProjectLeadEmail(systemDetails.Roles)
+	projectLeadEmail := determineProjectLeadEmail(existingTeamMembers)
 	if len(projectLeadEmail) > 0 {
 		recipients = append(recipients, projectLeadEmail)
 	}
 
 	// look for the rest of the roles
-	for _, role := range systemDetails.Roles {
+	for _, role := range existingTeamMembers {
 		if role == nil {
 			continue
 		}
