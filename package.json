@@ -119,8 +119,8 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.24.5",
-    "@babel/preset-env": "^7.24.5",
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
     "@cypress/webpack-preprocessor": "^6.0.1",
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/client-preset": "^4.3.0",
