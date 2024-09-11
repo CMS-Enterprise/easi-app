@@ -237,6 +237,7 @@ func (s *Server) routes() {
 	businessCaseHandler := handlers.NewBusinessCaseHandler(
 		base,
 		services.NewFetchBusinessCaseByID(
+			serviceConfig,
 			store.FetchBusinessCaseByID,
 			services.AuthorizeHasEASiRole,
 		),
@@ -263,20 +264,48 @@ func (s *Server) routes() {
 
 	actionHandler := handlers.NewActionHandler(
 		base,
-		services.NewBusinessCaseTakeAction(
+		services.NewTakeAction(
 			store.FetchSystemIntakeByID,
-			services.NewSubmitBusinessCase(
-				serviceConfig,
-				services.AuthorizeUserIsIntakeRequester,
-				store.FetchOpenBusinessCaseByIntakeID,
-				appvalidation.BusinessCaseForSubmit,
-				saveAction,
-				store.UpdateSystemIntake,
-				store.UpdateBusinessCase,
-				emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
-				emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
-				publisher.PublishBusinessCase,
-			),
+			map[models.ActionType]services.ActionExecuter{
+				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
+					serviceConfig,
+					services.AuthorizeUserIsIntakeRequester,
+					store.FetchOpenBusinessCaseByIntakeID,
+					appvalidation.BusinessCaseForSubmit,
+					saveAction,
+					store.UpdateSystemIntake,
+					store.UpdateBusinessCase,
+					emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
+					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
+					publisher.PublishBusinessCase,
+				),
+				models.ActionTypeSUBMITFINALBIZCASE: services.NewSubmitBusinessCase(
+					serviceConfig,
+					services.AuthorizeUserIsIntakeRequester,
+					store.FetchOpenBusinessCaseByIntakeID,
+					appvalidation.BusinessCaseForSubmit,
+					saveAction,
+					store.UpdateSystemIntake,
+					store.UpdateBusinessCase,
+					emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
+					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
+					publisher.PublishBusinessCase,
+				),
+				models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
+					serviceConfig,
+					services.AuthorizeUserIsIntakeRequester,
+					store.UpdateSystemIntake,
+					// quick adapter to retrofit the new interface to take the place
+					// of the old interface
+					func(ctx context.Context, si *models.SystemIntake) (string, error) {
+						err := publisher.PublishSystemIntake(ctx, *si)
+						return "", err
+					},
+					saveAction,
+					emailClient.SystemIntake.SendSubmitInitialFormRequesterNotification,
+					emailClient.SystemIntake.SendSubmitInitialFormReviewerNotification,
+				),
+			},
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/actions", actionHandler.Handle())

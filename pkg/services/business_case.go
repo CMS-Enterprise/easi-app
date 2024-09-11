@@ -16,6 +16,7 @@ import (
 
 // NewFetchBusinessCaseByID is a service to fetch the business case by id
 func NewFetchBusinessCaseByID(
+	config Config,
 	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error),
 	authorized func(context.Context) bool,
 ) func(c context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {

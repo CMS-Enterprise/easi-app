@@ -23,6 +23,7 @@ export type ActionType =
  */
 export type CreateActionPayload = {
   intakeId: string;
+  actionType: ActionType;
   feedback?: string;
 };
 

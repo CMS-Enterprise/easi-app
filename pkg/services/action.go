@@ -16,10 +16,10 @@ import (
 // ActionExecuter is a function that can execute an action
 type ActionExecuter func(context.Context, *models.SystemIntake, *models.Action) error
 
-// NewBusinessCaseTakeAction is a service to create and execute an action
-func NewBusinessCaseTakeAction(
+// NewTakeAction is a service to create and execute an action
+func NewTakeAction(
 	fetch func(context.Context, uuid.UUID) (*models.SystemIntake, error),
-	submitBusinessCase ActionExecuter,
+	actionTypeMap map[models.ActionType]ActionExecuter,
 ) func(context.Context, *models.Action) error {
 	return func(ctx context.Context, action *models.Action) error {
 		intake, fetchErr := fetch(ctx, *action.IntakeID)
@@ -31,7 +31,14 @@ func NewBusinessCaseTakeAction(
 			}
 		}
 
-		return submitBusinessCase(ctx, intake, action)
+		if executeAction, ok := actionTypeMap[action.ActionType]; ok {
+			return executeAction(ctx, intake, action)
+		}
+		return &apperrors.ResourceConflictError{
+			Err:        errors.New("invalid action type"),
+			Resource:   intake,
+			ResourceID: intake.ID.String(),
+		}
 	}
 }
 

@@ -29,6 +29,8 @@ export interface GetRequests_mySystemIntakes {
    */
   systems: GetRequests_mySystemIntakes_systems[];
   lcid: string | null;
+  nextMeetingDate: Time | null;
+  lastMeetingDate: Time | null;
 }
 
 export interface GetRequests_myTrbRequests_systems {
@@ -44,6 +46,7 @@ export interface GetRequests_myTrbRequests {
   submittedAt: Time;
   status: TRBRequestStatus;
   nextMeetingDate: Time | null;
+  lastMeetingDate: Time | null;
   /**
    * Linked systems
    */

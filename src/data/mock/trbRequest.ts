@@ -264,7 +264,8 @@ const getRequestsData: {
       status: TRBRequestStatus.CONSULT_COMPLETE,
       submittedAt: '2023-03-07T15:09:17.694681Z',
       __typename: 'TRBRequest',
-      systems: []
+      systems: [],
+      lastMeetingDate: null
     }
   ]
 };

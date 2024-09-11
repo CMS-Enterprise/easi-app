@@ -15,7 +15,10 @@ import (
 )
 
 func (s *ServicesTestSuite) TestBusinessCaseByIDFetcher() {
+	logger := zap.NewNop()
 	fakeID := uuid.New()
+	serviceConfig := NewConfig(logger, nil)
+	serviceConfig.clock = clock.NewMock()
 	authorized := func(context context.Context) bool { return true }
 
 	s.Run("successfully fetches Business Case by ID without an error", func() {
@@ -26,7 +29,7 @@ func (s *ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 				},
 			}, nil
 		}
-		fetchBusinessCaseByID := NewFetchBusinessCaseByID(fetch, authorized)
+		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch, authorized)
 		businessCase, err := fetchBusinessCaseByID(context.Background(), fakeID)
 		s.NoError(err)
 
@@ -37,7 +40,7 @@ func (s *ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 		fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
 			return &models.BusinessCaseWithCosts{}, errors.New("fetch failed")
 		}
-		fetchBusinessCaseByID := NewFetchBusinessCaseByID(fetch, authorized)
+		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch, authorized)
 
 		businessCase, err := fetchBusinessCaseByID(context.Background(), uuid.New())
 
