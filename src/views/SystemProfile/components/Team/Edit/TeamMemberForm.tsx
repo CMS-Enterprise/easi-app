@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { FetchResult, MutationFunctionOptions, useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  Alert,
   Button,
   CardGroup,
   Form,
@@ -18,6 +19,7 @@ import * as yup from 'yup';
 
 import CedarContactSelect from 'components/CedarContactSelect';
 import PageLoading from 'components/PageLoading';
+import CollapsableLink from 'components/shared/CollapsableLink';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
@@ -67,6 +69,8 @@ const TeamMemberForm = ({
 }: TeamMemberFormProps) => {
   const { t } = useTranslation('systemProfile');
 
+  // const tmpflag = false;
+
   const { showMessageOnNextPage, showMessage } = useMessage();
   const history = useHistory();
   const { state } = useLocation<{ user?: UsernameWithRoles }>();
@@ -82,6 +86,15 @@ const TeamMemberForm = ({
   const { data, loading: roleTypesLoading } = useQuery<GetCedarRoleTypes>(
     GetCedarRoleTypesQuery
   );
+
+  const availableRolesText = t<Record<string, string[]>>(
+    'singleSystem.editTeam.form.availableRoles',
+    {
+      returnObjects: true
+    }
+  );
+
+  // console.log(data?.roleTypes);
 
   const {
     control,
@@ -222,6 +235,44 @@ const TeamMemberForm = ({
             </FormGroup>
           )}
         />
+
+        <CollapsableLink
+          id="availableRoles"
+          label={t('singleSystem.editTeam.form.availableRoles.link')}
+        >
+          <p>
+            <strong>
+              {t('singleSystem.editTeam.form.availableRoles.primaryLabel')}
+            </strong>
+          </p>
+          <ul>
+            {availableRolesText.primaryList.map(li => (
+              <li key={li}>
+                <Trans>{li}</Trans>
+              </li>
+            ))}
+          </ul>
+          <p>
+            <strong>
+              {t('singleSystem.editTeam.form.availableRoles.pocLabel')}
+            </strong>
+            <br />
+            <span className="text-base-dark">
+              {t('singleSystem.editTeam.form.availableRoles.pocText')}
+            </span>
+          </p>
+          <ul>
+            {availableRolesText.pocList.map(li => (
+              <li key={li}>
+                <Trans>{li}</Trans>
+              </li>
+            ))}
+          </ul>
+        </CollapsableLink>
+
+        <Alert slim type="info">
+          {t('singleSystem.editTeam.form.add.alertInfo')}
+        </Alert>
 
         <div className="display-flex flex-align-center margin-top-6">
           <Button
