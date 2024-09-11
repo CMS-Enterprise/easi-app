@@ -20,18 +20,18 @@ import (
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/graph/generated"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
-	"github.com/cmsgov/easi-app/pkg/upload"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
 type GraphQLTestSuite struct {
@@ -176,7 +176,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	buildDataloaders := func() *dataloaders.Dataloaders {
 		return dataloaders.NewDataloaders(
 			store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
+			oktaAPIClient.FetchUserInfos,
 			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
 		)
 	}

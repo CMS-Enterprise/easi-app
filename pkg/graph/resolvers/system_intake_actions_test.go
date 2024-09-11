@@ -6,8 +6,8 @@ import (
 
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
@@ -176,7 +176,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		)
 		s.NoError(err)
 		s.Equal(intake.ID, actionedIntake.ID)
-		allActions, err := s.testConfigs.Store.GetActionsByRequestID(ctx, actionedIntake.ID)
+		allActions, err := s.testConfigs.Store.GetActionsBySystemIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
@@ -316,7 +316,7 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 	s.EqualValues(input.TrbFollowUp, *updatedIntake.TRBFollowUpRecommendation)
 
 	// should create action
-	allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntake.ID)
+	allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
 	s.NoError(err)
 	s.NotEmpty(allActionsForIntake)
 	action := allActionsForIntake[0]
@@ -451,7 +451,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.EqualValues(time.Now().UTC().Day(), updatedIntake.LifecycleIssuedAt.Day())
 
 		// should create action
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntake.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0]
@@ -598,7 +598,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 		)
 		s.NoError(err)
 		s.Equal(intake.ID, actionedIntake.ID)
-		allActions, err := s.testConfigs.Store.GetActionsByRequestID(ctx, actionedIntake.ID)
+		allActions, err := s.testConfigs.Store.GetActionsBySystemIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
@@ -787,7 +787,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		)
 		s.NoError(err)
 		s.Equal(intake.ID, actionedIntake.ID)
-		allActions, err := s.testConfigs.Store.GetActionsByRequestID(ctx, actionedIntake.ID)
+		allActions, err := s.testConfigs.Store.GetActionsBySystemIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
@@ -949,7 +949,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		)
 		s.NoError(err)
 		s.Equal(intake.ID, actionedIntake.ID)
-		allActions, err := s.testConfigs.Store.GetActionsByRequestID(ctx, actionedIntake.ID)
+		allActions, err := s.testConfigs.Store.GetActionsBySystemIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
@@ -1070,7 +1070,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		s.EqualValues(null.StringFrom(costBaseline), updatedIntakeLCID.LifecycleCostBaseline)
 
 		// assert acion is created
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntakeLCID.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, updatedIntakeLCID.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0]
@@ -1103,7 +1103,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 			s.EqualValues(updatedScope, secondUpdateIntake.LifecycleScope)
 			s.EqualValues(null.StringFrom(costBaseline), secondUpdateIntake.LifecycleCostBaseline) // This should not be updated since it wasn't included
 
-			allActionsForIntake2, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, secondUpdateIntake.ID)
+			allActionsForIntake2, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, secondUpdateIntake.ID)
 			s.NoError(err)
 			s.NotEmpty(allActionsForIntake2)
 			action := allActionsForIntake2[0] //The first action is the most recent
@@ -1181,7 +1181,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		s.Nil(confirmedIntakeLCID.LifecycleExpirationAlertTS)
 
 		// assert action is created
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, confirmedIntakeLCID.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, confirmedIntakeLCID.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0]
@@ -1227,7 +1227,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			s.EqualValues(null.StringFrom(costBaseline), secondconfirmIntake.LifecycleCostBaseline) // This should not be confirmd since it wasn't included
 			s.NotNil(secondconfirmIntake)                                                           // Shouldn't be reset since we passed the same date as before
 
-			allActionsForIntake2, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, secondconfirmIntake.ID)
+			allActionsForIntake2, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, secondconfirmIntake.ID)
 			s.NoError(err)
 			s.NotEmpty(allActionsForIntake2)
 			action := allActionsForIntake2[0] //The first action is the most recent
@@ -1303,7 +1303,7 @@ func (s *ResolverSuite) TestExpireLCID() {
 		s.EqualValues(expectedExpirationDate, expiredIntake.LifecycleExpiresAt.UTC())
 
 		// should create action
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, expiredIntake.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, expiredIntake.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0] // GetActionsByRequestID() orders actions by .CreatedAt in descending order, so most recent action is first in the slice
@@ -1375,7 +1375,7 @@ func (s *ResolverSuite) TestRetireLCID() {
 		s.EqualValues(retirementDate.UTC(), retiredIntake.LifecycleRetiresAt.UTC())
 
 		// should create action
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, retiredIntake.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, retiredIntake.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0] // GetActionsByRequestID() orders actions by .CreatedAt in descending order, so most recent action is first in the slice
@@ -1461,7 +1461,7 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 		s.WithinDuration(newRetirementDate, *lcidWithUpdatedRetirementDate.LifecycleRetiresAt, 1*time.Microsecond)
 
 		// should create action
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, lcidWithUpdatedRetirementDate.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, lcidWithUpdatedRetirementDate.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0] // GetActionsByRequestID() orders actions by .CreatedAt in descending order, so most recent action is first in the slice

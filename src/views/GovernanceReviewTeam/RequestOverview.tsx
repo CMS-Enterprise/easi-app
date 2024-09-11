@@ -1,15 +1,17 @@
 /* eslint-disable import/no-named-default */
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Route, useParams } from 'react-router-dom';
+import { Route, Switch, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Grid, IconArrowBack } from '@trussworks/react-uswds';
+import { Grid } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
+import SideNavigation from 'components/shared/SideNavigation';
 import useMessage from 'hooks/useMessage';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
@@ -20,15 +22,19 @@ import { AppState } from 'reducers/rootReducer';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 import AdditionalInformation from 'views/AdditionalInformation';
 import NotFound from 'views/NotFound';
+import UploadForm from 'views/SystemIntake/Documents/UploadForm';
 
-import AccordionNavigation from './AccordionNavigation';
+import AccordionNavigation from '../../components/shared/AccordionNavigation';
+
 import Actions from './Actions';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
 import Documents from './Documents';
 import Feedback from './Feedback';
+import GRBReview from './GRBReview';
 import IntakeReview from './IntakeReview';
+import ITGovAdminContext from './ITGovAdminContext';
 import LifecycleID from './LifecycleID';
 import Notes from './Notes';
 import subNavItems from './subNavItems';
@@ -36,22 +42,25 @@ import Summary from './Summary';
 
 import './index.scss';
 
-const RequestOverview = () => {
+type RequestOverviewProps = {
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
+};
+
+const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const flags = useFlags();
 
   const { Message } = useMessage();
 
   const dispatch = useDispatch();
+
+  const isITGovAdmin = useContext(ITGovAdminContext);
+
   const { systemId, activePage, subPage } = useParams<{
     systemId: string;
     activePage: string;
     subPage?: string;
   }>();
-
-  /** Hides summary and side navigation for all action subpages */
-  const fullPageLayout: boolean =
-    activePage === 'resolutions' || activePage === 'manage-lcid' || !!subPage;
 
   const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
     GetSystemIntakeQuery,
@@ -68,6 +77,12 @@ const RequestOverview = () => {
     (state: AppState) => state.businessCase.form
   );
 
+  /** Hides summary and side navigation for all action subpages */
+  const fullPageLayout: boolean =
+    activePage === 'resolutions' || activePage === 'manage-lcid' || !!subPage;
+
+  const navItems = subNavItems(systemId, isITGovAdmin, flags);
+
   useEffect(() => {
     if (systemIntake?.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
@@ -75,11 +90,6 @@ const RequestOverview = () => {
       dispatch(clearBusinessCase());
     }
   }, [dispatch, systemIntake?.businessCaseId]);
-
-  const getNavLinkClasses = (route: string) =>
-    classnames('easi-grt__nav-link', {
-      'easi-grt__nav-link--active': route.split('/')[3] === activePage
-    });
 
   if (!loading && !systemIntake) {
     return <NotFound />;
@@ -89,26 +99,16 @@ const RequestOverview = () => {
     <MainContent className="easi-grt" data-testid="grt-request-overview">
       {systemIntake && !fullPageLayout && (
         <Summary
-          id={systemIntake.id}
-          requester={systemIntake.requester}
+          {...systemIntake}
           requestName={systemIntake.requestName || ''}
-          requestType={systemIntake.requestType}
-          statusAdmin={systemIntake.statusAdmin}
-          adminLead={systemIntake.adminLead}
-          submittedAt={systemIntake.submittedAt}
-          lcid={systemIntake.lcid}
           contractNumbers={
             systemIntake?.contractNumbers?.map(c => c.contractNumber) || []
           }
-          state={systemIntake?.state}
         />
       )}
-      {!fullPageLayout && (
-        <AccordionNavigation
-          activePage={activePage}
-          subNavItems={subNavItems(systemId, flags)}
-        />
-      )}
+
+      {!fullPageLayout && <AccordionNavigation items={navItems} />}
+
       <section
         className={classnames('grid-container', {
           'margin-bottom-5 margin-top-7': !fullPageLayout
@@ -117,49 +117,16 @@ const RequestOverview = () => {
         <Message className="margin-bottom-6 margin-top-neg-4" />
         <Grid row gap>
           {!fullPageLayout && (
-            <nav className="desktop:grid-col-3 desktop:display-block display-none">
-              <ul className="easi-grt__nav-list margin-top-0">
-                <li className="margin-bottom-6 margin-top-0">
-                  <Link
-                    to="/"
-                    className="display-flex flex-align-center hover:text-primary-dark"
-                  >
-                    <IconArrowBack className="margin-right-1" aria-hidden />
-                    {t('back.allRequests')}
-                  </Link>
-                </li>
-                {subNavItems(systemId, flags).map(
-                  ({ aria, groupEnd, route, text }) => (
-                    <li
-                      key={`desktop-sidenav-${text}`}
-                      className={classnames({
-                        'easi-grt__nav-link--border': groupEnd
-                      })}
-                    >
-                      {aria ? (
-                        <Link
-                          to={route}
-                          aria-label={t(aria)}
-                          className={getNavLinkClasses(route)}
-                          data-testid={`grt-nav-${text}-link`}
-                        >
-                          {t(text)}
-                        </Link>
-                      ) : (
-                        <Link
-                          to={route}
-                          className={getNavLinkClasses(route)}
-                          data-testid={`grt-nav-${text}-link`}
-                        >
-                          {t(text)}
-                        </Link>
-                      )}
-                    </li>
-                  )
-                )}
-              </ul>
-            </nav>
+            <SideNavigation
+              items={navItems}
+              returnLink={{
+                to: '/',
+                text: t('back.allRequests')
+              }}
+              className="desktop:grid-col-3 desktop:display-block display-none"
+            />
           )}
+
           {loading && (
             <div className="margin-x-auto">
               <PageLoading />
@@ -169,64 +136,92 @@ const RequestOverview = () => {
             <section
               className={classnames({ 'desktop:grid-col-9': !fullPageLayout })}
             >
-              <Route
-                path="/governance-review-team/:systemId/intake-request"
-                render={() => {
-                  return <IntakeReview systemIntake={systemIntake} />;
-                }}
-              />
-              <Route
-                path="/governance-review-team/:systemId/documents"
-                render={() => {
-                  return <Documents systemIntake={systemIntake} />;
-                }}
-              />
-              <Route
-                path="/governance-review-team/:systemId/business-case"
-                render={() => (
-                  <BusinessCaseReview
-                    businessCase={businessCase}
-                    grtFeedbacks={systemIntake.governanceRequestFeedbacks}
+              <Switch>
+                <Route
+                  path="/it-governance/:systemId/intake-request"
+                  render={() => <IntakeReview systemIntake={systemIntake} />}
+                />
+
+                {flags?.grbReviewTab && (
+                  <Route
+                    path="/it-governance/:systemId/documents/upload"
+                    render={() => <UploadForm type="admin" />}
                   />
                 )}
-              />
-              <Route
-                path="/governance-review-team/:systemId/notes"
-                render={() => <Notes />}
-              />
-              <Route
-                path="/governance-review-team/:systemId/dates"
-                render={() => {
-                  return <Dates systemIntake={systemIntake} />;
-                }}
-              />
 
-              <Route
-                path="/governance-review-team/:systemId/feedback"
-                render={() => <Feedback systemIntakeId={systemId} />}
-              />
+                <Route
+                  path="/it-governance/:systemId/documents"
+                  render={() => <Documents systemIntake={systemIntake} />}
+                />
 
-              <Route
-                path="/governance-review-team/:systemId/decision"
-                render={() => <Decision {...systemIntake} />}
-              />
+                <Route
+                  path="/it-governance/:systemId/business-case"
+                  render={() => (
+                    <BusinessCaseReview
+                      businessCase={businessCase}
+                      grtFeedbacks={systemIntake.governanceRequestFeedbacks}
+                    />
+                  )}
+                />
 
-              <Route
-                exact
-                path="/governance-review-team/:systemId/additional-information"
-              >
-                <AdditionalInformation request={systemIntake} type="itgov" />
-              </Route>
+                <Route
+                  path="/it-governance/:systemId/notes"
+                  render={() => <Notes />}
+                />
 
-              <Route
-                path="/governance-review-team/:systemId/lcid"
-                render={() => <LifecycleID systemIntake={systemIntake} />}
-              />
+                <Route
+                  path="/it-governance/:systemId/feedback"
+                  render={() => <Feedback systemIntakeId={systemId} />}
+                />
 
-              <Route
-                path="/governance-review-team/:systemId/(actions|resolutions|manage-lcid)/:subPage?"
-                render={() => <Actions systemIntake={systemIntake} />}
-              />
+                <Route
+                  path="/it-governance/:systemId/decision"
+                  render={() => <Decision {...systemIntake} />}
+                />
+
+                <Route
+                  exact
+                  path="/it-governance/:systemId/additional-information"
+                  render={() => (
+                    <AdditionalInformation
+                      request={systemIntake}
+                      type="itgov"
+                    />
+                  )}
+                />
+
+                <Route
+                  path="/it-governance/:systemId/lcid"
+                  render={() => <LifecycleID systemIntake={systemIntake} />}
+                />
+
+                {flags?.grbReviewTab && (
+                  <Route
+                    path="/it-governance/:systemId/grb-review/:action(add|edit)?"
+                    render={() => (
+                      <GRBReview
+                        {...systemIntake}
+                        businessCase={businessCase}
+                        grbReviewers={grbReviewers}
+                      />
+                    )}
+                  />
+                )}
+
+                {/* GRT only routes */}
+
+                <Route
+                  path="/it-governance/:systemId/dates"
+                  render={() => <Dates systemIntake={systemIntake} />}
+                />
+
+                <Route
+                  path="/it-governance/:systemId/(actions|resolutions|manage-lcid)/:subPage?"
+                  render={() => <Actions systemIntake={systemIntake} />}
+                />
+
+                <Route path="*" component={NotFound} />
+              </Switch>
             </section>
           )}
         </Grid>

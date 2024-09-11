@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // EstimatedLifecycleCostOptions allows cost options to be customized
@@ -185,10 +185,10 @@ func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
 }
 
 // NewBusinessCase allows us to generate a business case for tests
-func NewBusinessCase(systemIntakeID uuid.UUID) models.BusinessCase {
+func NewBusinessCase(systemIntakeID uuid.UUID) models.BusinessCaseWithCosts {
 	now := time.Now().UTC()
 	year2 := models.LifecycleCostYear2
-	return models.BusinessCase{
+	bc := models.BusinessCase{
 		ID:                              uuid.New(),
 		EUAUserID:                       RandomEUAID(),
 		SystemIntakeID:                  systemIntakeID,
@@ -226,13 +226,16 @@ func NewBusinessCase(systemIntakeID uuid.UUID) models.BusinessCase {
 		AlternativeBPros:                null.StringFrom("Test Alternative B Pros"),
 		AlternativeBCons:                null.StringFrom("Test Alternative B Cons"),
 		AlternativeBCostSavings:         null.StringFrom("Test Alternative B Cost Savings"),
+		CreatedAt:                       &now,
+		UpdatedAt:                       &now,
+	}
+	return models.BusinessCaseWithCosts{
+		BusinessCase: bc,
 		LifecycleCostLines: models.EstimatedLifecycleCosts{
 			NewEstimatedLifecycleCost(
 				EstimatedLifecycleCostOptions{Year: &year2},
 			),
 			NewEstimatedLifecycleCost(EstimatedLifecycleCostOptions{}),
 		},
-		CreatedAt: &now,
-		UpdatedAt: &now,
 	}
 }

@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // URLFindListReader is a Reader for the URLFindList structure.

@@ -7,9 +7,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func (s *AppValidateTestSuite) TestCheckUniqLifecycleCosts() {
@@ -72,8 +72,10 @@ func (s *AppValidateTestSuite) TestBusinessCaseForCreation() {
 		submittedIntake.RequestFormState = models.SIRFSSubmitted
 		submittedIntake.Step = models.SystemIntakeStepDRAFTBIZCASE
 
-		businessCase := models.BusinessCase{
-			SystemIntakeID:     submittedIntake.ID,
+		businessCase := models.BusinessCaseWithCosts{
+			BusinessCase: models.BusinessCase{
+				SystemIntakeID: submittedIntake.ID,
+			},
 			LifecycleCostLines: nil,
 		}
 		err := BusinessCaseForCreation(&businessCase, &submittedIntake)
@@ -82,13 +84,15 @@ func (s *AppValidateTestSuite) TestBusinessCaseForCreation() {
 
 	s.Run("returns validation error when business case fails validation", func() {
 		intake := testhelpers.NewSystemIntake()
-		businessCase := models.BusinessCase{
-			SystemIntakeID: intake.ID,
+		businessCase := models.BusinessCaseWithCosts{
+			BusinessCase: models.BusinessCase{
+				SystemIntakeID: intake.ID,
+			},
 		}
 		err := BusinessCaseForCreation(&businessCase, &intake)
 		s.Error(err)
 		s.IsType(&apperrors.ValidationError{}, err)
-		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCase : " +
+		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCaseWithCosts : " +
 			"{\"SystemIntake\":\"must have already been submitted\"}",
 		)
 		s.Equal(expectedErrMessage, err.Error())
@@ -122,7 +126,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForUpdate() {
 	elc1 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
 
 	s.Run("golden path", func() {
-		businessCase := models.BusinessCase{
+		businessCase := models.BusinessCaseWithCosts{
 			LifecycleCostLines: models.EstimatedLifecycleCosts{elc1},
 		}
 		err := BusinessCaseForUpdate(&businessCase)
@@ -133,8 +137,10 @@ func (s *AppValidateTestSuite) TestBusinessCaseForUpdate() {
 		elc2 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
 		id := uuid.New()
 
-		businessCase := models.BusinessCase{
-			ID: id,
+		businessCase := models.BusinessCaseWithCosts{
+			BusinessCase: models.BusinessCase{
+				ID: id,
+			},
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				elc1,
 				elc2,
@@ -143,9 +149,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForUpdate() {
 		err := BusinessCaseForUpdate(&businessCase)
 		s.Error(err)
 		s.IsType(&apperrors.ValidationError{}, err)
-		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCase " + id.String() +
-			": {\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"}",
-		)
+		expectedErrMessage := fmt.Sprintf(`Could not validate *models.BusinessCaseWithCosts %s: {"LifecycleCostPhase":"cannot have multiple costs for the same phase, solution, and year"}`, id.String())
 		s.Equal(expectedErrMessage, err.Error())
 	})
 }
@@ -238,7 +242,8 @@ func (s *AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 
 	s.Run("when alt b costs exist but alt b is not required", func() {
 		altB := models.LifecycleCostSolutionB
-		businessCase := models.BusinessCase{
+		businessCase := models.BusinessCaseWithCosts{
+			BusinessCase: models.BusinessCase{},
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{Solution: &altB}),
 			},
@@ -258,7 +263,9 @@ func (s *AppValidateTestSuite) TestBusinessCaseForSubmit() {
 	})
 
 	s.Run("returns validations when submitted", func() {
-		businessCase := models.BusinessCase{}
+		businessCase := models.BusinessCaseWithCosts{
+			BusinessCase: models.BusinessCase{},
+		}
 		cost := 300
 		businessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
 			models.EstimatedLifecycleCost{
@@ -268,7 +275,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForSubmit() {
 				Cost:     &cost,
 			},
 		}
-		expectedError := `Could not validate *models.BusinessCase ` +
+		expectedError := `Could not validate *models.BusinessCaseWithCosts ` +
 			`00000000-0000-0000-0000-000000000000: ` +
 			`{"BusinessNeed":"is required",` +
 			`"BusinessOwner":"is required",` +
@@ -311,7 +318,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForSubmit() {
 		businessCase.AlternativeBCons = null.NewString("", false)
 		businessCase.AlternativeBAcquisitionApproach = null.NewString("", false)
 		businessCase.AlternativeBCostSavings = null.NewString("", false)
-		expectedError := `Could not validate *models.BusinessCase ` +
+		expectedError := `Could not validate *models.BusinessCaseWithCosts ` +
 			fmt.Sprintf("%s: ", businessCase.ID) +
 			`{"AlternativeBAcquisitionApproach":"is required",` +
 			`"AlternativeBCons":"is required",` +

@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 )
 
 var rootCmd = &cobra.Command{

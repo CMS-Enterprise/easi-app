@@ -9,8 +9,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type businessCaseSubmissionRequester struct {
@@ -89,19 +88,16 @@ func (sie systemIntakeEmails) SendSubmitBizCaseRequesterNotification(
 		isDraft,
 	)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
-	err = sie.client.sender.Send(
+
+	return sie.client.sender.Send(
 		ctx,
-		[]models.EmailAddress{requesterEmailAddress},
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{requesterEmailAddress}).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }
 
 func (sie systemIntakeEmails) businessCaseSubmissionReviewerBody(
@@ -111,7 +107,7 @@ func (sie systemIntakeEmails) businessCaseSubmissionReviewerBody(
 	isResubmitted bool,
 	isDraft bool,
 ) (string, error) {
-	businessCasePath := path.Join("governance-review-team", systemIntakeID.String(), "business-case")
+	businessCasePath := path.Join("it-governance", systemIntakeID.String(), "business-case")
 	data := businessCaseSubmissionReviewer{
 		RequesterName:         requesterName,
 		RequestName:           requestName,
@@ -164,17 +160,14 @@ func (sie systemIntakeEmails) SendSubmitBizCaseReviewerNotification(
 		isDraft,
 	)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
-	err = sie.client.sender.Send(
+
+	return sie.client.sender.Send(
 		ctx,
-		[]models.EmailAddress{sie.client.config.GRTEmail},
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{sie.client.config.GRTEmail}).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }

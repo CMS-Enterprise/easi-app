@@ -8,8 +8,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type systemIntakeCreateGRBReviewerParameters struct {
@@ -24,7 +23,7 @@ func (sie systemIntakeEmails) createGRBReviewerBody(
 	projectTitle string,
 	requesterName string,
 ) (string, error) {
-	adminPath := path.Join("governance-review-team", systemIntakeID.String(), "grb-review")
+	adminPath := path.Join("it-governance", systemIntakeID.String(), "grb-review")
 
 	data := systemIntakeCreateGRBReviewerParameters{
 		ProjectTitle:             projectTitle,
@@ -44,7 +43,7 @@ func (sie systemIntakeEmails) createGRBReviewerBody(
 	return b.String(), nil
 }
 
-// SendCloseRequestNotification notifies user-selected recipients that a system intake form needs edits
+// SendCreateGRBReviewerNotification notifies user-selected recipients that a system intake form needs edits
 func (sie systemIntakeEmails) SendCreateGRBReviewerNotification(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
@@ -52,25 +51,20 @@ func (sie systemIntakeEmails) SendCreateGRBReviewerNotification(
 	projectTitle string,
 	requesterName string,
 ) error {
-
 	if projectTitle == "" {
 		projectTitle = "Draft System Intake"
 	}
 	subject := "GRB Review: You are invited to review documentation in EASi"
 	body, err := sie.createGRBReviewerBody(systemIntakeID, projectTitle, requesterName)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = sie.client.sender.Send(
+	return sie.client.sender.Send(
 		ctx,
-		sie.client.listAllRecipients(recipients),
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(sie.client.listAllRecipients(recipients)).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }

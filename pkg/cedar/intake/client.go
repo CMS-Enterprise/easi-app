@@ -16,12 +16,12 @@ import (
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	apiclient "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client"
-	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/health_check"
-	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/intake"
-	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	apiclient "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/client"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/client/health_check"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/client/intake"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/translation"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Intake API
@@ -83,7 +83,7 @@ func (c *Client) PublishSystemIntake(ctx context.Context, si models.SystemIntake
 }
 
 // PublishBusinessCase sends a business case to CEDAR through the Intake API for eventual storage in Alfabet
-func (c *Client) PublishBusinessCase(ctx context.Context, bc models.BusinessCase) error {
+func (c *Client) PublishBusinessCase(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 	intakeObject := translation.TranslatableBusinessCase(bc)
 	return c.publishIntakeObject(ctx, &intakeObject)
 }

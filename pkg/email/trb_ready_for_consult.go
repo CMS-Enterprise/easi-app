@@ -10,8 +10,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type readyForConsultEmailParameters struct {
@@ -65,7 +64,7 @@ func (c Client) SendTRBReadyForConsultNotification(
 	subject := fmt.Sprintf("%v is ready for a consult session", requestName)
 	body, err := c.trbReadyForConsultEmailBody(requestID, requestName, requesterName, feedback)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
 	allRecipients := recipients
@@ -73,16 +72,11 @@ func (c Client) SendTRBReadyForConsultNotification(
 		allRecipients = append(allRecipients, c.config.TRBEmail)
 	}
 
-	err = c.sender.Send(
+	return c.sender.Send(
 		ctx,
-		allRecipients,
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(allRecipients).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
 }

@@ -13,7 +13,7 @@ import (
 
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
@@ -118,6 +118,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		intakeToUpdate.ExistingContract = null.StringFrom("Test Requester")
 		*intakeToUpdate.UpdatedAt = time.Now().UTC()
 		intakeToUpdate.HasUIChanges = null.BoolFrom(false)
+		intakeToUpdate.UsesAITech = null.BoolFrom(true)
 		body, err := json.Marshal(intakeToUpdate)
 		s.NoError(err)
 		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))

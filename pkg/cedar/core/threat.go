@@ -6,10 +6,10 @@ import (
 
 	"github.com/guregu/null/zero"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	apithreat "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/threat"
-	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	apithreat "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/threat"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // GetThreat makes a GET call to the /threat endpoint

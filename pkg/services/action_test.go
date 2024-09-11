@@ -8,8 +8,8 @@ import (
 	"github.com/guregu/null"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *ServicesTestSuite) TestNewTakeAction() {
@@ -64,7 +64,7 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 	serviceConfig := NewConfig(logger, nil)
 	ctx := context.Background()
 
-	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) { return true, nil }
+	authorized := func(ctx context.Context, intake *models.SystemIntake) bool { return true }
 	update := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		return intake, nil
 	}
@@ -105,7 +105,7 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 	s.Run("golden path submit intake", func() {
 		intake := models.SystemIntake{}
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, saveAction, sendRequesterEmail, sendReviewerEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorized, update, submit, saveAction, sendRequesterEmail, sendReviewerEmail)
 		s.Equal(0, sendRequesterEmailCount)
 		s.Equal(0, sendReviewerEmailCount)
 
@@ -122,23 +122,22 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 	s.Run("returns error from authorization if authorization fails", func() {
 		intake := models.SystemIntake{}
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		authorizationError := errors.New("authorization failed")
-		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-			return false, authorizationError
+		unauthorized := func(ctx context.Context, intake *models.SystemIntake) bool {
+			return false
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, failAuthorize, update, submit, saveAction, sendRequesterEmail, sendReviewerEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, unauthorized, update, submit, saveAction, sendRequesterEmail, sendReviewerEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
-		s.Equal(authorizationError, err)
+		s.IsType(&apperrors.UnauthorizedError{}, err)
 	})
 
 	s.Run("returns unauthorized error if authorization denied", func() {
 		intake := models.SystemIntake{}
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		unauthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-			return false, nil
+		unauthorized := func(ctx context.Context, intake *models.SystemIntake) bool {
+			return false
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, unauthorize, update, submit, saveAction, sendRequesterEmail, sendReviewerEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, unauthorized, update, submit, saveAction, sendRequesterEmail, sendReviewerEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
@@ -150,7 +149,7 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 		failCreateAction := func(ctx context.Context, action *models.Action) error {
 			return errors.New("error")
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, failCreateAction, sendRequesterEmail, sendReviewerEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorized, update, submit, failCreateAction, sendRequesterEmail, sendReviewerEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -168,7 +167,7 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 				Source:    "CEDAR",
 			}
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failSubmitToCEDAR, saveAction, sendRequesterEmail, sendReviewerEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorized, update, failSubmitToCEDAR, saveAction, sendRequesterEmail, sendReviewerEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(nil, err)
@@ -184,7 +183,7 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
 		submitSystemIntake := NewSubmitSystemIntake(
 			serviceConfig,
-			authorize,
+			authorized,
 			update,
 			submit,
 			saveAction,
@@ -206,7 +205,7 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 		}
 		submitSystemIntake := NewSubmitSystemIntake(
 			serviceConfig,
-			authorize,
+			authorized,
 			failUpdate,
 			submit,
 			saveAction,
@@ -224,20 +223,20 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 	serviceConfig := NewConfig(logger, nil)
 	ctx := context.Background()
 
-	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) { return true, nil }
+	authorized := func(ctx context.Context, intake *models.SystemIntake) bool { return true }
 	updateIntake := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		return intake, nil
 	}
 
-	updateBusinessCase := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+	updateBusinessCase := func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
 		return businessCase, nil
 	}
 
-	fetchOpenBusinessCase := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-		return &models.BusinessCase{}, nil
+	fetchOpenBusinessCase := func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
+		return &models.BusinessCaseWithCosts{}, nil
 	}
 
-	validateForSubmit := func(businessCase *models.BusinessCase) error {
+	validateForSubmit := func(businessCase *models.BusinessCaseWithCosts) error {
 		return nil
 	}
 
@@ -271,7 +270,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
@@ -279,7 +278,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
-			authorize,
+			authorized,
 			fetchOpenBusinessCase,
 			validateForSubmit,
 			saveAction,
@@ -321,19 +320,18 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
 		intake := models.SystemIntake{}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		authorizationError := errors.New("authorization failed")
-		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-			return false, authorizationError
+		unauthorized := func(ctx context.Context, intake *models.SystemIntake) bool {
+			return false
 		}
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
-			failAuthorize,
+			unauthorized,
 			fetchOpenBusinessCase,
 			validateForSubmit,
 			saveAction,
@@ -345,7 +343,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		)
 		err := submitBusinessCase(ctx, &intake, &action)
 
-		s.Equal(authorizationError, err)
+		s.IsType(&apperrors.UnauthorizedError{}, err)
 	})
 
 	s.Run("returns unauthorized error if authorization denied", func() {
@@ -370,18 +368,18 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
 		intake := models.SystemIntake{}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		unauthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-			return false, nil
+		unauthorized := func(ctx context.Context, intake *models.SystemIntake) bool {
+			return false
 		}
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
-			unauthorize,
+			unauthorized,
 			fetchOpenBusinessCase,
 			validateForSubmit,
 			saveAction,
@@ -418,7 +416,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
@@ -429,7 +427,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		}
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
-			authorize,
+			authorized,
 			fetchOpenBusinessCase,
 			validateForSubmit,
 			failCreateAction,
@@ -470,13 +468,13 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
 		intake := models.SystemIntake{Step: models.SystemIntakeStepDRAFTBIZCASE}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		failValidation := func(businessCase *models.BusinessCase) error {
+		failValidation := func(businessCase *models.BusinessCaseWithCosts) error {
 			return &apperrors.ValidationError{
 				Err:     errors.New("validation failed on these fields: ID"),
 				ModelID: businessCase.ID.String(),
@@ -485,7 +483,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		}
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
-			authorize,
+			authorized,
 			fetchOpenBusinessCase,
 			failValidation,
 			saveAction,
@@ -528,25 +526,25 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
 		intake := models.SystemIntake{Step: models.SystemIntakeStepFINALBIZCASE}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		failValidation := func(businessCase *models.BusinessCase) error {
+		failValidation := func(businessCase *models.BusinessCaseWithCosts) error {
 			return &apperrors.ValidationError{
 				Err:     errors.New("validation failed on these fields: ID"),
 				ModelID: businessCase.ID.String(),
 				Model:   businessCase,
 			}
 		}
-		fetchOpenBusinessCase = func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-			return &models.BusinessCase{}, nil
+		fetchOpenBusinessCase = func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
+			return &models.BusinessCaseWithCosts{}, nil
 		}
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
-			authorize,
+			authorized,
 			fetchOpenBusinessCase,
 			failValidation,
 			saveAction,
@@ -585,7 +583,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
@@ -596,7 +594,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		}
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
-			authorize,
+			authorized,
 			fetchOpenBusinessCase,
 			validateForSubmit,
 			saveAction,
@@ -633,18 +631,18 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return nil
 		}
 
 		intake := models.SystemIntake{}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		failUpdateBizCase := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-			return &models.BusinessCase{}, errors.New("update error")
+		failUpdateBizCase := func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+			return &models.BusinessCaseWithCosts{}, errors.New("update error")
 		}
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
-			authorize,
+			authorized,
 			fetchOpenBusinessCase,
 			validateForSubmit,
 			saveAction,
@@ -682,7 +680,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		}
 
 		submitToCEDARCount := 0
-		submitToCEDARMock := func(ctx context.Context, bc models.BusinessCase) error {
+		submitToCEDARMock := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			submitToCEDARCount++
 			return nil
 		}
@@ -694,7 +692,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
-			authorize,
+			authorized,
 			fetchOpenBusinessCase,
 			validateForSubmit,
 			saveAction,
@@ -734,7 +732,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		failSubmitToCEDAR := func(ctx context.Context, bc models.BusinessCase) error {
+		failSubmitToCEDAR := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 			return errors.New("Could not submit business case to CEDAR")
 		}
 
@@ -743,7 +741,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 
 		submitBusinessCase := NewSubmitBusinessCase(
 			serviceConfig,
-			authorize,
+			authorized,
 			fetchOpenBusinessCase,
 			validateForSubmit,
 			saveAction,

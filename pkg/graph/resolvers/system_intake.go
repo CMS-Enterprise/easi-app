@@ -8,12 +8,12 @@ import (
 	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // CreateSystemIntake creates a system intake.
@@ -112,6 +112,7 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.Solution = null.StringFromPtr(input.BusinessSolution)
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
 	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
+	intake.UsesAITech = null.BoolFromPtr(input.UsesAiTech)
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()
@@ -349,4 +350,13 @@ func SystemIntakes(ctx context.Context, store *storage.Store, openRequests bool)
 	}
 
 	return intakes, nil
+}
+
+func SystemIntakesWithReviewRequested(ctx context.Context, store *storage.Store) ([]*models.SystemIntake, error) {
+	userID := appcontext.Principal(ctx).Account().ID
+	return store.FetchSystemIntakesWithReviewRequested(ctx, userID)
+}
+
+func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.SystemIntake, error) {
+	return store.GetMySystemIntakes(ctx)
 }

@@ -9,9 +9,9 @@ import (
 	"github.com/guregu/null"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func (s *ServicesTestSuite) TestBusinessCaseByIDFetcher() {
@@ -19,15 +19,17 @@ func (s *ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
-	authorize := func(context context.Context) (bool, error) { return true, nil }
+	authorized := func(context context.Context) bool { return true }
 
 	s.Run("successfully fetches Business Case by ID without an error", func() {
-		fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-			return &models.BusinessCase{
-				ID: fakeID,
+		fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
+			return &models.BusinessCaseWithCosts{
+				BusinessCase: models.BusinessCase{
+					ID: fakeID,
+				},
 			}, nil
 		}
-		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch, authorize)
+		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch, authorized)
 		businessCase, err := fetchBusinessCaseByID(context.Background(), fakeID)
 		s.NoError(err)
 
@@ -35,15 +37,15 @@ func (s *ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	})
 
 	s.Run("returns query error when fetch fails", func() {
-		fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-			return &models.BusinessCase{}, errors.New("fetch failed")
+		fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
+			return &models.BusinessCaseWithCosts{}, errors.New("fetch failed")
 		}
-		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch, authorize)
+		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch, authorized)
 
 		businessCase, err := fetchBusinessCaseByID(context.Background(), uuid.New())
 
 		s.IsType(&apperrors.QueryError{}, err)
-		s.Equal(&models.BusinessCase{}, businessCase)
+		s.Equal(&models.BusinessCaseWithCosts{}, businessCase)
 	})
 }
 
@@ -62,20 +64,24 @@ func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 	intake, err := s.store.CreateSystemIntake(ctx, intake)
 	s.NoError(err)
 
-	input := models.BusinessCase{
-		EUAUserID:      euaID.ValueOrZero(),
-		SystemIntakeID: intake.ID,
+	input := models.BusinessCaseWithCosts{
+		BusinessCase: models.BusinessCase{
+			EUAUserID:      euaID.ValueOrZero(),
+			SystemIntakeID: intake.ID,
+		},
 	}
 	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return intake, nil
 	}
-	create := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-		return &models.BusinessCase{
-			EUAUserID: euaID.ValueOrZero(),
+	create := func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+		return &models.BusinessCaseWithCosts{
+			BusinessCase: models.BusinessCase{
+				EUAUserID: euaID.ValueOrZero(),
+			},
 		}, nil
 	}
-	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-		return true, nil
+	authorized := func(ctx context.Context, intake *models.SystemIntake) bool {
+		return true
 	}
 	createAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
 		return action, nil
@@ -92,7 +98,7 @@ func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 	}
 
 	s.Run("successfully creates a Business Case without an error", func() {
-		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, createAction, fetchUserInfo, create, updateIntake)
+		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorized, createAction, fetchUserInfo, create, updateIntake)
 		businessCase, err := createBusinessCase(ctx, &input)
 		s.NoError(err)
 
@@ -100,23 +106,25 @@ func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 	})
 
 	s.Run("returns query error when create fails", func() {
-		failCreate := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-			return &models.BusinessCase{}, errors.New("creation failed")
+		failCreate := func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+			return &models.BusinessCaseWithCosts{}, errors.New("creation failed")
 		}
-		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, createAction, fetchUserInfo, failCreate, updateIntake)
+		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorized, createAction, fetchUserInfo, failCreate, updateIntake)
 		businessCase, err := createBusinessCase(ctx, &input)
 
 		s.Error(err)
-		s.Equal(&models.BusinessCase{}, businessCase)
+		s.Equal(&models.BusinessCaseWithCosts{}, businessCase)
 	})
 
 	s.Run("autofills information from the intake", func() {
-		create = func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-			return &models.BusinessCase{
-				Requester:     businessCase.Requester,
-				BusinessOwner: businessCase.BusinessOwner,
-				ProjectName:   businessCase.ProjectName,
-				BusinessNeed:  businessCase.BusinessNeed,
+		create = func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+			return &models.BusinessCaseWithCosts{
+				BusinessCase: models.BusinessCase{
+					Requester:     businessCase.Requester,
+					BusinessOwner: businessCase.BusinessOwner,
+					ProjectName:   businessCase.ProjectName,
+					BusinessNeed:  businessCase.BusinessNeed,
+				},
 			}, nil
 		}
 		intake.Requester = "Charlie Chaplin"
@@ -126,7 +134,7 @@ func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 		_, err := s.store.UpdateSystemIntake(ctx, intake)
 		s.NoError(err)
 
-		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, createAction, fetchUserInfo, create, updateIntake)
+		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorized, createAction, fetchUserInfo, create, updateIntake)
 
 		businessCase, err := createBusinessCase(ctx, &input)
 		s.NoError(err)
@@ -141,11 +149,11 @@ func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 			return nil, errors.New("error")
 		}
 
-		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, failCreateAction, fetchUserInfo, create, updateIntake)
+		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorized, failCreateAction, fetchUserInfo, create, updateIntake)
 		businessCase, err := createBusinessCase(ctx, &input)
 
 		s.IsType(&apperrors.QueryError{}, err)
-		s.Equal(&models.BusinessCase{}, businessCase)
+		s.Equal(&models.BusinessCaseWithCosts{}, businessCase)
 	})
 
 	s.Run("returns error if fails to fetch user info", func() {
@@ -153,21 +161,21 @@ func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 		failFetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
 			return nil, fetchUserInfoError
 		}
-		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, createAction, failFetchUserInfo, create, updateIntake)
+		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorized, createAction, failFetchUserInfo, create, updateIntake)
 		businessCase, err := createBusinessCase(ctx, &input)
 		s.Equal(fetchUserInfoError, err)
-		s.Equal(&models.BusinessCase{}, businessCase)
+		s.Equal(&models.BusinessCaseWithCosts{}, businessCase)
 	})
 
 	s.Run("returns error if fetches bad user info", func() {
 		failFetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
 			return &models.UserInfo{}, nil
 		}
-		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, createAction, failFetchUserInfo, create, updateIntake)
+		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorized, createAction, failFetchUserInfo, create, updateIntake)
 		businessCase, err := createBusinessCase(ctx, &input)
 
 		s.IsType(&apperrors.ExternalAPIError{}, err)
-		s.Equal(&models.BusinessCase{}, businessCase)
+		s.Equal(&models.BusinessCaseWithCosts{}, businessCase)
 	})
 
 	// Uncomment below when UI has changed for unique lifecycle costs
@@ -176,7 +184,7 @@ func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 	//	}
-	//	createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger, mockClock)
+	//	createBusinessCase := NewCreateBusinessCase(fetch, authorized, create, logger, mockClock)
 	//	businessCase, err := createBusinessCase(ctx, &input)
 	//
 	//	s.IsType(&apperrors.ValidationError{}, err)
@@ -200,19 +208,19 @@ func (s *ServicesTestSuite) TestBusinessCaseUpdater() {
 
 	existingBusinessCase := testhelpers.NewBusinessCase(retIntake.ID)
 
-	fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
+	fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error) {
 		return &existingBusinessCase, nil
 	}
-	update := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+	update := func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
 		return businessCase, nil
 	}
-	authorize := func(ctx context.Context, businessCase *models.BusinessCase) (bool, error) {
-		return true, nil
+	authorized := func(ctx context.Context, businessCase *models.BusinessCase) bool {
+		return true
 	}
 
 	s.Run("successfully updates a Business Case without an error", func() {
 
-		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, update, s.store.FetchSystemIntakeByID, s.store.UpdateSystemIntake)
+		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorized, update, s.store.FetchSystemIntakeByID, s.store.UpdateSystemIntake)
 
 		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 
@@ -221,14 +229,14 @@ func (s *ServicesTestSuite) TestBusinessCaseUpdater() {
 	})
 
 	s.Run("returns query error when update fails", func() {
-		failUpdate := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-			return &models.BusinessCase{}, errors.New("creation failed")
+		failUpdate := func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+			return &models.BusinessCaseWithCosts{}, errors.New("creation failed")
 		}
-		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, failUpdate, s.store.FetchSystemIntakeByID, s.store.UpdateSystemIntake)
+		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorized, failUpdate, s.store.FetchSystemIntakeByID, s.store.UpdateSystemIntake)
 		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 
 		s.IsType(&apperrors.QueryError{}, err)
-		s.Equal(&models.BusinessCase{}, businessCase)
+		s.Equal(&models.BusinessCaseWithCosts{}, businessCase)
 	})
 
 	// Uncomment below when UI has changed for unique lifecycle costs
@@ -237,52 +245,10 @@ func (s *ServicesTestSuite) TestBusinessCaseUpdater() {
 	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 	//	}
-	//	updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
+	//	updateBusinessCase := NewUpdateBusinessCase(fetch, authorized, update, logger, mockClock)
 	//	businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 	//
 	//	s.IsType(&apperrors.ValidationError{}, err)
 	//	s.Equal(&models.BusinessCase{}, businessCase)
 	//})
-}
-
-func (s *ServicesTestSuite) TestBusinessCaseCloser() {
-	logger := zap.NewNop()
-	fakeID := uuid.New()
-	serviceConfig := NewConfig(logger, nil)
-	serviceConfig.clock = clock.NewMock()
-	ctx := context.Background()
-
-	fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-		return &models.BusinessCase{
-			ID:     id,
-			Status: models.BusinessCaseStatusOPEN,
-		}, nil
-	}
-	update := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-		return businessCase, nil
-	}
-
-	s.Run("golden path archive business case", func() {
-		archiveBusinessCase := NewCloseBusinessCase(serviceConfig, fetch, update)
-		err := archiveBusinessCase(ctx, fakeID)
-		s.NoError(err)
-	})
-
-	s.Run("returns query error when fetch fails", func() {
-		failFetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-			return &models.BusinessCase{}, errors.New("fetch failed")
-		}
-		archiveBusinessCase := NewCloseBusinessCase(serviceConfig, failFetch, update)
-		err := archiveBusinessCase(ctx, fakeID)
-		s.IsType(&apperrors.QueryError{}, err)
-	})
-
-	s.Run("returns query error when update fails", func() {
-		failUpdate := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-			return &models.BusinessCase{}, errors.New("update failed")
-		}
-		archiveBusinessCase := NewCloseBusinessCase(serviceConfig, fetch, failUpdate)
-		err := archiveBusinessCase(ctx, fakeID)
-		s.IsType(&apperrors.QueryError{}, err)
-	})
 }

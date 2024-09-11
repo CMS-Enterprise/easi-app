@@ -6,9 +6,10 @@ import (
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // CreateTRBRequestAttendee creates a TRBRequestAttendee in the database
@@ -107,11 +108,26 @@ func DeleteTRBRequestAttendee(ctx context.Context, store *storage.Store, id uuid
 }
 
 // GetTRBRequestAttendeesByTRBRequestID retrieves a list of attendees associated with a TRB request
-func GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBRequestAttendee, error) {
-	attendees, err := store.GetTRBRequestAttendeesByTRBRequestID(ctx, id)
+func GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, id uuid.UUID) ([]*models.TRBRequestAttendee, error) {
+	attendees, err := dataloaders.GetTRBAttendeesByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
 	return attendees, err
+}
+
+// GetTRBAttendeeComponent retrieves the component of a TRB user from the TRB attendees table
+func GetTRBAttendeeComponent(ctx context.Context, euaID *string, trbRequestID uuid.UUID) (*string, error) {
+	if euaID == nil {
+		return nil, nil
+	}
+	attendee, err := dataloaders.GetTRBAttendeeByEUAIDAndTRBRequestID(ctx, *euaID, trbRequestID)
+	if err != nil {
+		return nil, err
+	}
+	if attendee == nil {
+		return nil, nil
+	}
+	return attendee.Component, nil
 }

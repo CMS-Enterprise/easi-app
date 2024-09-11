@@ -11,10 +11,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -588,6 +588,18 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		intakeID,
 		"Raisinets",
 		"Courage the Cowardly Dog",
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeAdminUploadDocEmail(
+		ctx,
+		email.SendSystemIntakeAdminUploadDocEmailInput{
+			SystemIntakeID:     intakeID,
+			RequestName:        "Doc Upload",
+			RequesterName:      "Wouldn't you like to know",
+			RequesterComponent: "OFW",
+			Recipients:         emailNotificationRecipients.RegularRecipientEmails,
+		},
 	)
 	noErr(err)
 }

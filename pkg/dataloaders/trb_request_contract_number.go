@@ -6,8 +6,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (d *dataReader) batchTRBRequestContractNumbersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestContractNumber, []error) {
@@ -16,7 +16,7 @@ func (d *dataReader) batchTRBRequestContractNumbersByTRBRequestIDs(ctx context.C
 		return nil, []error{err}
 	}
 
-	return helpers.OneToMany[*models.TRBRequestContractNumber](trbRequestIDs, data), nil
+	return helpers.OneToMany(trbRequestIDs, data), nil
 }
 
 func GetTRBRequestContractNumbersByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestContractNumber, error) {

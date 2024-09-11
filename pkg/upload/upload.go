@@ -13,7 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 )
 
 // AVStatusTagName is the name of the tag that stores virus scan results for uploaded files
@@ -85,7 +85,7 @@ func (c S3Client) NewGetPresignedURL(key string) (*PreSignedURL, error) {
 	}
 	req, _ := c.client.GetObjectRequest(objectInput)
 
-	url, err := req.Presign(15 * time.Minute)
+	url, err := req.Presign(90 * time.Minute) // to match FE timeout in src/views/TimeOutWrapper/index.tsx
 	if err != nil {
 		return &PreSignedURL{}, err
 	}

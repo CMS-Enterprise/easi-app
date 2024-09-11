@@ -4,7 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (d *dataReader) fetchUserInfosByEUAUserIDs(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, []error) {
@@ -12,19 +13,7 @@ func (d *dataReader) fetchUserInfosByEUAUserIDs(ctx context.Context, euaUserIDs 
 	if err != nil {
 		return nil, []error{err}
 	}
-
-	store := map[string]*models.UserInfo{}
-
-	for _, info := range data {
-		store[info.Username] = info
-	}
-
-	var out []*models.UserInfo
-	for _, id := range euaUserIDs {
-		out = append(out, store[id])
-	}
-
-	return out, nil
+	return helpers.OneToOne(euaUserIDs, data), nil
 }
 
 func FetchUserInfoByEUAUserID(ctx context.Context, euaUserID string) (*models.UserInfo, error) {

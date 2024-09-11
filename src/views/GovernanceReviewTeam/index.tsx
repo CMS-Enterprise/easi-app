@@ -1,52 +1,73 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useParams } from 'react-router-dom';
+import { useGetSystemIntakeGRBReviewersQuery } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
-import RequestRepository from 'components/RequestRepository';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
 import NotFound from 'views/NotFound';
 import RequestLinkForm from 'views/RequestLinkForm';
 
+import ITGovAdminContext from './ITGovAdminContext';
+
 const GovernanceReviewTeam = () => {
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  const { groups, euaId, isUserSet } = useSelector(
+    (state: AppState) => state.auth
+  );
+
   const flags = useFlags();
 
-  if (isUserSet) {
-    if (user.isGrtReviewer(userGroups, flags)) {
+  const { id } = useParams<{
+    id: string;
+  }>();
+
+  const { data, loading } = useGetSystemIntakeGRBReviewersQuery({
+    variables: {
+      id
+    }
+  });
+
+  const grbReviewers = data?.systemIntake?.grbReviewers;
+
+  /** Check if current user is set as GRB reviewer */
+  const isGrbReviewer: boolean = useMemo(() => {
+    return (grbReviewers || []).some(
+      reviewer => reviewer.userAccount.username === euaId
+    );
+  }, [grbReviewers, euaId]);
+
+  const isITGovAdmin = user.isITGovAdmin(groups, flags);
+
+  if (isUserSet && !loading) {
+    // Only show admin section if user is either IT Gov admin or GRB reviewer
+    if (isITGovAdmin || isGrbReviewer) {
       return (
-        <Switch>
-          <Route
-            path="/governance-review-team/all"
-            render={() => (
-              // Changed GRT table from grid-container to just slight margins. This is take up
-              // entire screen to better fit the more expansive data in the table.
-              // NOTE: not sure this is ever used (deprecated for Home/index.tsx ?)
-              <div className="padding-x-4">
-                <RequestRepository />
-              </div>
+        <ITGovAdminContext.Provider value={isITGovAdmin}>
+          <Switch>
+            {isITGovAdmin && (
+              /* Defining outside parent route to trigger parent rerender/refetch after mutation */
+              <Route path="/it-governance/:id/additional-information/link">
+                <RequestLinkForm requestType="itgov" fromAdmin />
+              </Route>
             )}
-          />
 
-          {/* Defining outside parent route to trigger parent rerender/refetch after mutation */}
-          <Route path="/governance-review-team/:id/additional-information/link">
-            <RequestLinkForm requestType="itgov" fromAdmin />
-          </Route>
+            <Route
+              // reviewerType differentiates between GRT and GRB views for admin pages
+              path="/it-governance/:systemId/:activePage/:subPage?"
+              exact
+            >
+              <RequestOverview grbReviewers={grbReviewers || []} />
+            </Route>
 
-          <Route
-            path="/governance-review-team/:systemId/:activePage/:subPage?"
-            exact
-            component={RequestOverview}
-          />
-
-          <Route path="*" component={NotFound} />
-        </Switch>
+            <Route path="*" component={NotFound} />
+          </Switch>
+        </ITGovAdminContext.Provider>
       );
     }
+
     return <NotFound />;
   }
 

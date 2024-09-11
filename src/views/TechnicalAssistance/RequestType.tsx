@@ -23,6 +23,9 @@ import {
 } from 'queries/types/UpdateTrbRequestType';
 import UpdateTrbRequestTypeQuery from 'queries/UpdateTrbRequestTypeQuery';
 import { TRBRequestType } from 'types/graphql-global-types';
+import linkCedarSystemIdQueryString, {
+  useLinkCedarSystemIdQueryParam
+} from 'utils/linkCedarSystemIdQueryString';
 
 import Breadcrumbs from './Breadcrumbs';
 
@@ -42,6 +45,9 @@ function RequestType() {
   const { id } = useParams<{
     id: string;
   }>();
+
+  const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+  const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
 
   const [mutate, { data, error, loading }] = useMutation<
     UpdateTrbRequestType,
@@ -78,6 +84,12 @@ function RequestType() {
 
       <UswdsReactLink
         to={isNew ? '/trb' : `/trb/task-list/${id}`}
+        onClick={e => {
+          // Hack to handle more contexts than determined by `to`
+          // This element may not need static hrefs soon
+          e.preventDefault();
+          history.goBack();
+        }}
         className="display-flex flex-align-center margin-top-2"
       >
         <IconArrowBack className="margin-right-1" />
@@ -126,7 +138,8 @@ function RequestType() {
                 <UswdsReactLink
                   to={{
                     pathname: '/trb/process',
-                    state: { requestType }
+                    state: { requestType },
+                    search: linkCedarSystemIdQs
                   }}
                   className="usa-button"
                   variant="unstyled"
@@ -160,7 +173,8 @@ function RequestType() {
               <UswdsReactLink
                 to={{
                   pathname: '/trb/process',
-                  state: { requestType: TRBRequestType.OTHER }
+                  state: { requestType: TRBRequestType.OTHER },
+                  search: linkCedarSystemIdQs
                 }}
               >
                 {t('requestType.services.other')}

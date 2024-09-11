@@ -1,22 +1,22 @@
 # Order matters in a CODEOWNERS file. The last matching pattern is what will be used for requests.
 # Anything that doesn't hit the below patterns should be sent to the entire team for review.
-* @CMSGov/easi
+* @CMS-Enterprise/easi
 
 # Frontend Changes
-/yarn.lock @CMSGov/easi-frontend
-/package.json @CMSGov/easi-frontend
-/src/ @CMSGov/easi-frontend
-/cypress/ @CMSGov/easi-frontend
-/public/ @CMSGov/easi-frontend
-/.storybook/ @CMSGov/easi-frontend
-*.js @CMSGov/easi-frontend
-*.ts @CMSGov/easi-frontend
-*.tsx @CMSGov/easi-frontend
+/yarn.lock @CMS-Enterprise/easi-frontend
+/package.json @CMS-Enterprise/easi-frontend
+/src/ @CMS-Enterprise/easi-frontend
+/cypress/ @CMS-Enterprise/easi-frontend
+/public/ @CMS-Enterprise/easi-frontend
+/.storybook/ @CMS-Enterprise/easi-frontend
+*.js @CMS-Enterprise/easi-frontend
+*.ts @CMS-Enterprise/easi-frontend
+*.tsx @CMS-Enterprise/easi-frontend
 
 # Backend Changes
-/go.mod @CMSGov/easi-backend
-/go.sum @CMSGov/easi-backend
-/pkg/ @CMSGov/easi-backend
-/cmd/ @CMSGov/easi-backend
-/migrations/ @CMSGov/easi-backend
-*.go @CMSGov/easi-backend
+/go.mod @CMS-Enterprise/easi-backend
+/go.sum @CMS-Enterprise/easi-backend
+/pkg/ @CMS-Enterprise/easi-backend
+/cmd/ @CMS-Enterprise/easi-backend
+/migrations/ @CMS-Enterprise/easi-backend
+*.go @CMS-Enterprise/easi-backend

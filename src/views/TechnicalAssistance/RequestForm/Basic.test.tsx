@@ -52,6 +52,8 @@ const mockTrbRequestData: TrbRequest = {
   state: TRBRequestState.OPEN,
   taskStatuses: {} as any,
   feedback: [],
+  relatedTRBRequests: [],
+  relatedIntakes: [],
   __typename: 'TRBRequest'
 };
 
@@ -91,6 +93,8 @@ describe('Trb Request form: Basic', () => {
               type: TRBRequestType.NEED_HELP,
               state: TRBRequestState.OPEN,
               taskStatuses: {} as any,
+              relatedTRBRequests: [],
+              relatedIntakes: [],
               __typename: 'TRBRequest'
             }}
             stepUrl={{

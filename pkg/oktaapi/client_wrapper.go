@@ -7,13 +7,14 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/okta/okta-sdk-golang/v2/okta"
 	"github.com/okta/okta-sdk-golang/v2/okta/query"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 const maxEUAIDLength = 4
@@ -87,7 +88,10 @@ func (o *oktaUserResponse) toUserInfo() *models.UserInfo {
 
 // FetchUserInfos fetches users from Okta by EUA ID
 func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string) ([]*models.UserInfo, error) {
-	logger := appcontext.ZLogger(ctx)
+	logger := appcontext.ZLogger(ctx).With(
+		zap.String("service", "okta"),
+		zap.String("method", "FetchUserInfos"),
+	)
 	users := []*models.UserInfo{}
 	if len(usernames) == 0 {
 		return users, nil
@@ -101,7 +105,16 @@ func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string)
 	searchString := fmt.Sprintf(`(%v)`, euaSearch)
 	search := query.NewQueryParams(query.WithSearch(searchString))
 
+	// Make the call to Okta, tracking how much time it took so we can log it
+	start := time.Now()
 	searchedUsers, _, err := cw.oktaClient.User.ListUsers(ctx, search)
+
+	// Log response time information
+	logger.Info("FetchUserInfos okta call",
+		zap.Int64("response-time-ms", time.Since(start).Milliseconds()),
+		zap.Int("username-count", len(usernames)),
+		zap.Int("user-count", len(searchedUsers)),
+	)
 	if err != nil {
 		// If it's also not a context cancellation, log and return the error
 		if !errors.Is(err, context.Canceled) {
@@ -133,9 +146,17 @@ func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string)
 
 // FetchUserInfo fetches a single user from Okta by EUA ID
 func (cw *ClientWrapper) FetchUserInfo(ctx context.Context, username string) (*models.UserInfo, error) {
-	logger := appcontext.ZLogger(ctx)
+	logger := appcontext.ZLogger(ctx).With(
+		zap.String("service", "okta"),
+		zap.String("method", "FetchUserInfos"),
+	)
 
+	// Make the call to Okta, tracking how much time it took so we can log it
+	start := time.Now()
 	user, _, err := cw.oktaClient.User.GetUser(ctx, username)
+
+	// Log response time information
+	logger.Info("FetchUserInfo okta call", zap.Int64("response-time-ms", time.Since(start).Milliseconds()))
 	if err != nil {
 		// Only log the error if it's not a context cancellation, we don't really care about these (but still pass it up the call stack)
 		if !errors.Is(err, context.Canceled) {

@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 )
 
 type contextKey int
@@ -24,13 +24,6 @@ const (
 // WithLogger returns a context with the given logger
 func WithLogger(ctx context.Context, logger *zap.Logger) context.Context {
 	return context.WithValue(ctx, loggerKey, logger)
-}
-
-// Logger returns the context's logger
-// DEPRECATED - prefer ZLogger going forward
-func Logger(ctx context.Context) (*zap.Logger, bool) {
-	logger, ok := ctx.Value(loggerKey).(*zap.Logger)
-	return logger, ok
 }
 
 // ZLogger will always return something that functions

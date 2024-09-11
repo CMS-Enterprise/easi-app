@@ -1,5 +1,7 @@
 import { gql } from '@apollo/client';
 
+import { FundingSource } from './GetSystemIntakeQuery';
+
 // eslint-disable-next-line import/prefer-default-export
 export const CreateSystemIntake = gql`
   mutation CreateSystemIntake($input: CreateSystemIntakeInput!) {
@@ -14,6 +16,7 @@ export const CreateSystemIntake = gql`
 `;
 
 export const UpdateSystemIntakeContractDetails = gql`
+  ${FundingSource}
   mutation UpdateSystemIntakeContractDetails(
     $input: UpdateSystemIntakeContractDetailsInput!
   ) {
@@ -22,8 +25,7 @@ export const UpdateSystemIntakeContractDetails = gql`
         id
         currentStage
         fundingSources {
-          source
-          fundingNumber
+          ...FundingSource
         }
         costs {
           expectedIncreaseAmount
@@ -69,6 +71,7 @@ export const UpdateSystemIntakeRequestDetails = gql`
         businessSolution
         needsEaSupport
         hasUiChanges
+        usesAiTech
       }
     }
   }

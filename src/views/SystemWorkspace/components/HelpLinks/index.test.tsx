@@ -18,7 +18,10 @@ describe('Help Links component', () => {
   it('matches snapshot', async () => {
     const { asFragment } = render(
       <MemoryRouter>
-        <HelpCardGroup cards={helpCards} />
+        <HelpCardGroup
+          cards={helpCards}
+          linkSearchQuery="linkCedarSystemId=1"
+        />
       </MemoryRouter>
     );
 

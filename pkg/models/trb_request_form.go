@@ -55,6 +55,7 @@ type TRBSubjectAreaOption string
 const (
 	TRBSubjectAreaOptionAccessControlAndIdentityMgmt   TRBSubjectAreaOption = "ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT"
 	TRBSubjectAreaOptionAccessibilityCompliance        TRBSubjectAreaOption = "ACCESSIBILITY_COMPLIANCE"
+	TRBSubjectAreaOptionArtificialIntelligence         TRBSubjectAreaOption = "ARTIFICIAL_INTELLIGENCE"
 	TRBSubjectAreaOptionAssistanceWithSystemConceptDev TRBSubjectAreaOption = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
 	TRBSubjectAreaOptionBusinessIntelligence           TRBSubjectAreaOption = "BUSINESS_INTELLIGENCE"
 	TRBSubjectAreaOptionCloudMigration                 TRBSubjectAreaOption = "CLOUD_MIGRATION"
@@ -110,4 +111,11 @@ type TRBRequestForm struct {
 	SubjectAreaOptions               pq.StringArray `json:"subjectAreaOptions" db:"subject_area_options"`
 	SubjectAreaOptionOther           *string        `json:"subjectAreaOptionOther" db:"subject_area_option_other"`
 	SubmittedAt                      *time.Time     `json:"submittedAt" db:"submitted_at"`
+}
+
+func (f TRBRequestForm) GetMappingKey() uuid.UUID {
+	return f.TRBRequestID
+}
+func (f TRBRequestForm) GetMappingVal() *TRBRequestForm {
+	return &f
 }

@@ -36,13 +36,13 @@ ends up making a SQL request for all accessibility requests, then it makes a *se
 2021-12-20 23:36:02.286 UTC [122] DETAIL:  parameters: $1 = 'bea5c7a4-cf84-4aea-9300-5c8828aa1866'
 ```
 
-This could cause some scalability issues as the number of records in our database goes up. It's also a potential issue when querying CEDAR; see [this PR comment](https://github.com/CMSgov/easi-app/pull/1406#discussion_r778218474) as an example where the n+1 problem prevents us from optimizing our GraphQL schema.
+This could cause some scalability issues as the number of records in our database goes up. It's also a potential issue when querying CEDAR; see [this PR comment](https://github.com/cms-enterprise/easi-app/pull/1406#discussion_r778218474) as an example where the n+1 problem prevents us from optimizing our GraphQL schema.
 
 ## Considered Alternatives
 
 * Do nothing.
 * Use a dataloader-based approach for batching multiple queries. See https://github.com/graphql/dataloader  and https://gqlgen.com/reference/dataloaders/ for information on this general approach.
-  * Implement this with the [`dataloaden`](https://github.com/vektah/dataloaden) library. The [`dataloaden-proof-of-concept` branch](https://github.com/CMSgov/easi-app/tree/dataloaden-proof-of-concept) has a proof of concept for using this, which batches the SQL queries.
+  * Implement this with the [`dataloaden`](https://github.com/vektah/dataloaden) library. The [`dataloaden-proof-of-concept` branch](https://github.com/cms-enterprise/easi-app/tree/dataloaden-proof-of-concept) has a proof of concept for using this, which batches the SQL queries.
   * Implement this with the [`graph-gophers/dataloader`](https://github.com/graph-gophers/dataloader) library.
 
 

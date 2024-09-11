@@ -6,8 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
@@ -73,10 +72,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestID, "testRequest", "testRequester", "testComponent")
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("TRB Form Submission Admin template is nil", e.Err.Error())
+		s.Equal("TRB Form Submission Admin template is nil", err.Error())
 	})
 
 	s.Run("if the template fails to execute, we get the error from it", func() {
@@ -87,10 +83,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestID, "testRequest", "testRequester", "testComponent")
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("template caller had an error", e.Err.Error())
+		s.Equal("template caller had an error", err.Error())
 	})
 
 	s.Run("if the sender fails, we get the error from it", func() {
@@ -102,10 +95,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestID, "testRequest", "testRequester", "testComponent")
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("sender had an error", e.Err.Error())
+		s.Equal("sender had an error", err.Error())
 	})
 }
 
@@ -180,10 +170,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 		)
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("TRB Form Submission Requester template is nil", e.Err.Error())
+		s.Equal("TRB Form Submission Requester template is nil", err.Error())
 	})
 
 	s.Run("if the template fails to execute, we get the error from it", func() {
@@ -200,10 +187,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 		)
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("template caller had an error", e.Err.Error())
+		s.Equal("template caller had an error", err.Error())
 	})
 
 	s.Run("if the sender fails, we get the error from it", func() {
@@ -221,9 +205,6 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 		)
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("sender had an error", e.Err.Error())
+		s.Equal("sender had an error", err.Error())
 	})
 }

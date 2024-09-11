@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 )
 
 type failWriter struct {
@@ -67,16 +67,6 @@ func (s *HandlerTestSuite) TestWriteErrorResponse() {
 				Errors:  []errorItem{},
 				Code:    http.StatusServiceUnavailable,
 				Message: "Service unavailable",
-				TraceID: traceID,
-			},
-		},
-		{
-			&apperrors.NotificationError{},
-			http.StatusInternalServerError,
-			errorResponse{
-				Errors:  []errorItem{},
-				Code:    http.StatusInternalServerError,
-				Message: "Failed to send notification",
 				TraceID: traceID,
 			},
 		},

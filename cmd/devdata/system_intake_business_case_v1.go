@@ -2,22 +2,21 @@ package main
 
 import (
 	"context"
+	"time"
 
 	"github.com/guregu/null"
-	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
-func makeDraftBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake) *models.SystemIntake {
-	return makeBusinessCaseV1(name, logger, store, intake)
+func makeDraftBusinessCaseV1(ctx context.Context, name string, store *storage.Store, intake *models.SystemIntake) *models.SystemIntake {
+	return makeBusinessCaseV1(ctx, name, store, intake)
 }
 
-func makeFinalBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake) *models.SystemIntake {
-	return makeBusinessCaseV1(name, logger, store, intake, func(b *models.BusinessCase) {
+func makeFinalBusinessCaseV1(ctx context.Context, name string, store *storage.Store, intake *models.SystemIntake) *models.SystemIntake {
+	return makeBusinessCaseV1(ctx, name, store, intake, func(b *models.BusinessCaseWithCosts) {
 		b.CurrentSolutionSummary = null.StringFrom("It's gonna cost a lot")
 		b.CMSBenefit = null.StringFrom("Better Medicare")
 		b.PriorityAlignment = null.StringFrom("It's all gonna make sense later")
@@ -54,11 +53,10 @@ func makeFinalBusinessCaseV1(name string, logger *zap.Logger, store *storage.Sto
 }
 
 func submitBusinessCaseV1(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 		intake.DraftBusinessCaseState = models.SIRFSSubmitted
 	}
@@ -72,10 +70,9 @@ func submitBusinessCaseV1(
 	return intake
 }
 
-func makeBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) *models.SystemIntake {
-	ctx := appcontext.WithLogger(context.Background(), logger)
+func makeBusinessCaseV1(ctx context.Context, name string, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCaseWithCosts)) *models.SystemIntake {
 	if intake == nil {
-		intake = makeSystemIntake(name, nil, "USR1", logger, store)
+		intake = makeSystemIntake(ctx, name, nil, "USR1", store)
 	}
 	if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 		intake.DraftBusinessCaseState = models.SIRFSInProgress
@@ -92,31 +89,16 @@ func makeBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, i
 	cost := 123456
 	noCost := 0
 	businessCase := models.BusinessCase{
-		SystemIntakeID:       intake.ID,
-		EUAUserID:            intake.EUAUserID.ValueOrZero(),
-		Requester:            null.StringFrom("Shane Clark"),
-		RequesterPhoneNumber: null.StringFrom("3124567890"),
-		Status:               models.BusinessCaseStatusOPEN,
-		ProjectName:          null.StringFrom(name),
-		BusinessOwner:        null.StringFrom("Shane Clark"),
-		BusinessNeed:         null.StringFrom("business need"),
-		LifecycleCostLines: []models.EstimatedLifecycleCost{
-			{
-				Solution: models.LifecycleCostSolutionPREFERRED,
-				Year:     models.LifecycleCostYear1,
-				Phase:    &phase,
-				Cost:     &cost,
-			},
-			{
-				Solution: models.LifecycleCostSolutionA,
-				Year:     models.LifecycleCostYear2,
-			},
-			{
-				Solution: models.LifecycleCostSolutionA,
-				Year:     models.LifecycleCostYear3,
-				Cost:     &noCost,
-			},
-		},
+		CreatedAt:              helpers.PointerTo(time.Now().AddDate(0, 0, -2)),
+		UpdatedAt:              helpers.PointerTo(time.Now()),
+		SystemIntakeID:         intake.ID,
+		EUAUserID:              intake.EUAUserID.ValueOrZero(),
+		Requester:              null.StringFrom("Shane Clark"),
+		RequesterPhoneNumber:   null.StringFrom("3124567890"),
+		Status:                 models.BusinessCaseStatusOPEN,
+		ProjectName:            null.StringFrom(name),
+		BusinessOwner:          null.StringFrom("Shane Clark"),
+		BusinessNeed:           null.StringFrom("business need"),
 		CurrentSolutionSummary: null.StringFrom(""),
 		CMSBenefit:             null.StringFrom(""),
 		PriorityAlignment:      null.StringFrom(""),
@@ -134,11 +116,31 @@ func makeBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, i
 		AlternativeBCons:        null.StringFrom(""),
 		AlternativeBCostSavings: null.StringFrom(""),
 	}
+	bcWCosts := models.BusinessCaseWithCosts{
+		BusinessCase: businessCase,
+		LifecycleCostLines: []models.EstimatedLifecycleCost{
+			{
+				Solution: models.LifecycleCostSolutionPREFERRED,
+				Year:     models.LifecycleCostYear1,
+				Phase:    &phase,
+				Cost:     &cost,
+			},
+			{
+				Solution: models.LifecycleCostSolutionA,
+				Year:     models.LifecycleCostYear2,
+			},
+			{
+				Solution: models.LifecycleCostSolutionA,
+				Year:     models.LifecycleCostYear3,
+				Cost:     &noCost,
+			},
+		},
+	}
 	for _, cb := range callbacks {
-		cb(&businessCase)
+		cb(&bcWCosts)
 	}
 
-	_, err = store.CreateBusinessCase(ctx, &businessCase)
+	_, err = store.CreateBusinessCase(ctx, &bcWCosts)
 	if err != nil {
 		panic(err)
 	}

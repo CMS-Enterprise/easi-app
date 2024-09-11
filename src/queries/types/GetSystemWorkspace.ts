@@ -18,11 +18,23 @@ export interface GetSystemWorkspace_cedarAuthorityToOperate {
   lastAssessmentDate: Time | null;
 }
 
+export interface GetSystemWorkspace_cedarSystemDetails_cedarSystem_linkedTrbRequests {
+  __typename: "TRBRequest";
+  id: UUID;
+}
+
+export interface GetSystemWorkspace_cedarSystemDetails_cedarSystem_linkedSystemIntakes {
+  __typename: "SystemIntake";
+  id: UUID;
+}
+
 export interface GetSystemWorkspace_cedarSystemDetails_cedarSystem {
   __typename: "CedarSystem";
   id: string;
   name: string;
   isBookmarked: boolean;
+  linkedTrbRequests: GetSystemWorkspace_cedarSystemDetails_cedarSystem_linkedTrbRequests[];
+  linkedSystemIntakes: GetSystemWorkspace_cedarSystemDetails_cedarSystem_linkedSystemIntakes[];
 }
 
 export interface GetSystemWorkspace_cedarSystemDetails_roles {

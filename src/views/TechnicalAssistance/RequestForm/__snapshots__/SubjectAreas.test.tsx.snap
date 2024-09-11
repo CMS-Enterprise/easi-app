@@ -67,6 +67,28 @@ exports[`Trb Request form: Subject areas > checks subject area form elements 1`]
           >
             <input
               class="usa-checkbox__input usa-checkbox__input--tile"
+              id="ARTIFICIAL_INTELLIGENCE"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="ARTIFICIAL_INTELLIGENCE"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="ARTIFICIAL_INTELLIGENCE"
+            >
+              Artificial Intelligence
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
               id="ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
               name="subjectAreaOptions"
               type="checkbox"

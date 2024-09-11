@@ -8,13 +8,6 @@ type UserError {
 }
 
 """
-Indicates the type of a request being made with the EASi system
-"""
-enum RequestType {
-  GOVERNANCE_REQUEST
-}
-
-"""
 PersonRole is an enumeration of values for a person's role
 """
 enum PersonRole {
@@ -28,29 +21,6 @@ enum PersonRole {
   PRIVACY_ADVISOR
   CRA
   OTHER
-}
-
-"""
-Represents a requester's system intake request
-"""
-type Request {
-  id: UUID!
-  name: String
-  submittedAt: Time
-  type: RequestType!
-  status: String!
-  statusRequester: SystemIntakeStatusRequester
-  statusCreatedAt: Time
-  lcid: String
-  nextMeetingDate: Time
-}
-
-type RequestsConnection {
-  edges: [RequestEdge!]!
-}
-
-type RequestEdge {
-  node: Request!
 }
 
 """
@@ -738,8 +708,10 @@ type SystemIntake {
   governanceRequestFeedbacks: [GovernanceRequestFeedback!]!
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
-  grbReviewers: [SystemIntakeGRBReviewer!]!
   grtDate: Time
+  lastMeetingDate: Time
+  nextMeetingDate: Time
+  grbReviewers: [SystemIntakeGRBReviewer!]!
   id: UUID!
   isso: SystemIntakeISSO!
   lcid: String
@@ -775,6 +747,7 @@ type SystemIntake {
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
+  usesAiTech: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
   requestFormState: SystemIntakeFormState!
   draftBusinessCaseState: SystemIntakeFormState!
@@ -807,6 +780,14 @@ type SystemIntake {
   Linked contract numbers
   """
   contractNumbers: [SystemIntakeContractNumber!]!
+  """
+  Other System Intakes that share a CEDAR System or Contract Number
+  """
+  relatedIntakes: [SystemIntake!]!
+  """
+  TRB Requests that share a CEDAR System or Contract Number
+  """
+  relatedTRBRequests: [TRBRequest!]!
 }
 
 type SystemIntakeContractNumber {
@@ -950,6 +931,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   currentStage: String
   cedarSystemId: String
   hasUiChanges: Boolean
+  usesAiTech: Boolean
 }
 
 """
@@ -1555,6 +1537,8 @@ type TRBRequest {
   adviceLetter: TRBAdviceLetter
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
+  lastMeetingDate: Time
+  nextMeetingDate: Time
   trbLead: String
   trbLeadInfo: UserInfo!
   requesterInfo: UserInfo!
@@ -1577,6 +1561,15 @@ type TRBRequest {
   Linked systems
   """
   systems: [CedarSystem!]!
+
+  """
+  System Intakes that share a CEDAR System or Contract Number
+  """
+  relatedIntakes: [SystemIntake!]!
+  """
+  Other TRB Requests that share a CEDAR System or Contract Number
+  """
+  relatedTRBRequests: [TRBRequest!]!
 }
 
 type TRBRequestContractNumber {
@@ -1682,8 +1675,21 @@ System Intake document
 """
 enum SystemIntakeDocumentCommonType {
   SOO_SOW
-  DRAFT_ICGE
+  DRAFT_IGCE
+  ACQUISITION_PLAN_OR_STRATEGY
+  REQUEST_FOR_ADDITIONAL_FUNDING
+  SOFTWARE_BILL_OF_MATERIALS
+  MEETING_MINUTES
   OTHER
+}
+
+"""
+Represents the version options for a document that is attached to a
+System Intake document
+"""
+enum SystemIntakeDocumentVersion {
+  CURRENT
+  HISTORICAL
 }
 
 """
@@ -1725,7 +1731,9 @@ input CreateSystemIntakeDocumentInput {
   requestID: UUID!
   fileData: Upload!
   documentType: SystemIntakeDocumentCommonType!
+  version: SystemIntakeDocumentVersion!
   otherTypeDescription: String
+  sendNotification: Boolean
 }
 
 """
@@ -1748,8 +1756,12 @@ type SystemIntakeDocument {
   id: UUID!
   fileName: String!
   status: SystemIntakeDocumentStatus!
+  version: SystemIntakeDocumentVersion!
   uploadedAt: Time!
-  url: String!
+  url: String
+  canDelete: Boolean!
+  canView: Boolean!
+  systemIntakeId: UUID!
 }
 
 """
@@ -1903,6 +1915,7 @@ The possible options on the TRB "Subject Areas" page
 enum TRBSubjectAreaOption {
   ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT
   ACCESSIBILITY_COMPLIANCE
+  ARTIFICIAL_INTELLIGENCE
   ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT
   BUSINESS_INTELLIGENCE
   CLOUD_MIGRATION
@@ -1945,6 +1958,9 @@ type TRBRequestForm {
   collabDateOther: String
   collabGroupOther: String
   collabGRBConsultRequested: Boolean
+  """
+  TODO: Make Funding sources non-nullable
+  """
   fundingSources: [TRBFundingSource!]
   systemIntakes: [SystemIntake!]!
   subjectAreaOptions: [TRBSubjectAreaOption!]
@@ -2416,6 +2432,8 @@ type Mutation {
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
+  archiveSystemIntake(id: UUID!): SystemIntake!
+
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
@@ -2491,10 +2509,10 @@ type Query {
   Requests fetches a requester's own intake requests
   first is currently non-functional and can be removed later
   """
-  requests(first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
-  @hasRole(role: EASI_GOVTEAM)
+  mySystemIntakes:[SystemIntake!]!
+  systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
@@ -2592,7 +2610,7 @@ A user role associated with a job code
 """
 enum Role {
   """
-  A member of the GRT
+  An admin on the GRT
   """
   EASI_GOVTEAM
 
@@ -2832,7 +2850,7 @@ enum SystemIntakeMeetingState {
 }
 
 """
-This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
+This represents the statuses that an admin would see as a representation of a system intake. Note, there is no status for a brand new request, because an Admin doesn't see the request until it is in progress.
 """
 enum SystemIntakeStatusAdmin {
   INITIAL_REQUEST_FORM_IN_PROGRESS

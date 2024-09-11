@@ -37,7 +37,7 @@ We decided to move forward with implementing an nginx proxy server between our a
 
 ### Use a proxy server to cache requests (nginx).
 
-POC can be found on the `EASI-4129/nginx-caching` branch ([link to PR](https://github.com/CMSgov/easi-app/pull/2545))
+POC can be found on the `EASI-4129/nginx-caching` branch ([link to PR](https://github.com/cms-enterprise/easi-app/pull/2545))
 
 * `+` Once the proxy is set up, GET requests are cached automatically.
 * `+` Nginx is very performant.
@@ -51,7 +51,7 @@ POC can be found on the `EASI-4129/nginx-caching` branch ([link to PR](https://g
 
 ### Use an optimized external key-value store to store data in lieu of making requests (Redis/Elasticache).
 
-POC can be found on the `EASI-4139/redis-caching` branch ([link to PR](https://github.com/CMSgov/easi-app/pull/2548))
+POC can be found on the `EASI-4139/redis-caching` branch ([link to PR](https://github.com/cms-enterprise/easi-app/pull/2548))
 
 * `+` Allows the most control over what to store and how to store it.
 * `+` Can be used to store other values (cache DB queries, etc.).

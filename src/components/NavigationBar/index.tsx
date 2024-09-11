@@ -37,7 +37,11 @@ export const navLinks = (
   {
     link: '/',
     label:
-      isUserSet && user.isTrbAdmin(userGroups, flags) ? 'adminHome' : 'home',
+      isUserSet &&
+      (user.isTrbAdmin(userGroups, flags) ||
+        user.isITGovAdmin(userGroups, flags))
+        ? 'adminHome'
+        : 'home',
     isEnabled: true
   },
   {

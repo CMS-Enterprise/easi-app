@@ -32,6 +32,9 @@ import {
 } from 'queries/types/UpdateSystemIntakeRequestType';
 import { SystemIntakeRequestType } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
+import linkCedarSystemIdQueryString, {
+  useLinkCedarSystemIdQueryParam
+} from 'utils/linkCedarSystemIdQueryString';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 const RequestTypeForm = () => {
@@ -54,6 +57,8 @@ const RequestTypeForm = () => {
     UpdateSystemIntakeRequestType,
     UpdateSystemIntakeRequestTypeVariables
   >(UpdateSystemIntakeRequestTypeQuery);
+
+  const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
 
   // Check for an existing intake to prefill the request type option
   const intakeQuery = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
@@ -85,11 +90,12 @@ const RequestTypeForm = () => {
       };
 
       const nextPage = (id: string) => {
-        const navigationLink = `/system/link/${id}`;
+        const linkqs = linkCedarSystemIdQueryString(linkCedarSystemId);
+        const navigationLink = `/system/link/${id}?${linkqs}`;
 
         switch (requestType) {
           case 'NEW':
-            history.push(`/governance-overview/${id}`, { isNew });
+            history.push(`/governance-overview/${id}?${linkqs}`, { isNew });
             break;
           case 'MAJOR_CHANGES':
             history.push(navigationLink, { isNew });

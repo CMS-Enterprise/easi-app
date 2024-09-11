@@ -85,13 +85,13 @@ jobs:
           MINIO_SECRET_KEY: minioadmin
           MINIO_ADDRESS: http://localhost:9004
         run: |
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d db
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from db_migrate db_migrate
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d minio
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from minio_mc minio_mc
+          docker compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d db
+          docker compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from db_migrate db_migrate
+          docker compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d minio
+          docker compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from minio_mc minio_mc
           ./scripts/build_app
           ./scripts/testsuite
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
+          docker compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
       - name: Upload backend test artifacts
         uses: actions/upload-artifact@v4
         with:

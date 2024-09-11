@@ -1,7 +1,11 @@
+import {
+  GetTrbLeadOptionsDocument,
+  GetTrbLeadOptionsQuery
+} from 'gql/gen/graphql';
+
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
-import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
@@ -9,8 +13,7 @@ import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import {
   GetRequests,
-  GetRequests_myTrbRequests as MyTrbRequests,
-  GetRequestsVariables
+  GetRequests_myTrbRequests as MyTrbRequests
 } from 'queries/types/GetRequests';
 import {
   GetTrbAdminNotes,
@@ -21,7 +24,6 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
-import { GetTrbLeadOptions } from 'queries/types/GetTrbLeadOptions';
 import {
   GetTrbRequest,
   GetTrbRequestVariables
@@ -153,7 +155,9 @@ export const trbRequest: GetTrbRequest['trbRequest'] = {
     fundingSources: null,
     submittedAt: null,
     __typename: 'TRBRequestForm'
-  }
+  },
+  relatedTRBRequests: [],
+  relatedIntakes: []
 };
 
 export const getTrbRequestQuery: MockedQuery<
@@ -259,25 +263,24 @@ const getRequestsData: {
       nextMeetingDate: null,
       status: TRBRequestStatus.CONSULT_COMPLETE,
       submittedAt: '2023-03-07T15:09:17.694681Z',
-      __typename: 'TRBRequest'
+      __typename: 'TRBRequest',
+      systems: [],
+      lastMeetingDate: null
     }
   ]
 };
 
 export const getRequestsQuery = (
   myTrbRequests: MyTrbRequests[] = getRequestsData.myTrbRequests
-): MockedQuery<GetRequests, GetRequestsVariables> => ({
+): MockedQuery<GetRequests> => ({
   request: {
     query: GetRequestsQuery,
-    variables: { first: 20 }
+    variables: {}
   },
   result: {
     data: {
-      requests: {
-        __typename: 'RequestsConnection',
-        edges: []
-      },
-      myTrbRequests
+      myTrbRequests,
+      mySystemIntakes: []
     }
   }
 });
@@ -613,13 +616,14 @@ export const trbLeadOptions: MockUserInfo[] = [
   users.next()?.userInfo!
 ];
 
-export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptions> = {
+export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptionsQuery> = {
   request: {
-    query: GetTrbLeadOptionsQuery,
+    query: GetTrbLeadOptionsDocument,
     variables: {}
   },
   result: {
     data: {
+      __typename: 'Query',
       trbLeadOptions
     }
   }

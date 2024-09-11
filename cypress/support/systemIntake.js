@@ -3,6 +3,8 @@
 // and 3000 causes issue with autosave. This is definitely a bit hacky...
 // TODO: fix this in the future if it causes more headache
 
+const testSystemIntakeName = 'Test Request Name';
+
 cy.systemIntake = {
   contactDetails: {
     fillNonBranchingFields: () => {
@@ -43,33 +45,33 @@ cy.systemIntake = {
   },
   requestDetails: {
     fillNonBranchingFields: () => {
-      cy.get('#IntakeForm-ContractName')
-        .type('Test Request Name')
-        .should('have.value', 'Test Request Name');
+      cy.get('#requestName')
+        .type(testSystemIntakeName)
+        .should('have.value', testSystemIntakeName);
 
-      cy.get('#IntakeForm-BusinessNeed')
+      cy.get('#businessNeed')
         .type('This is my business need.')
         .should('have.value', 'This is my business need.');
 
-      cy.get('#IntakeForm-BusinessSolution')
+      cy.get('#businessSolution')
         .type('This is my business solution.')
         .should('have.value', 'This is my business solution.');
 
-      cy.get('#IntakeForm-NeedsEaSupportNo')
+      cy.get('#usesAiTechTrue').check({ force: true }).should('be.checked');
+
+      cy.get('#needsEaSupportFalse')
         .check({ force: true })
         .should('be.checked');
 
-      cy.get('#IntakeForm-HasUiChangesNo')
-        .check({ force: true })
-        .should('be.checked');
+      cy.get('#hasUiChangesFalse').check({ force: true }).should('be.checked');
     }
   },
   contractDetails: {
     addFundingSource: ({ fundingNumber, sources, restart }) => {
-      if (restart) cy.get('[data-testid="fundingSourcesAction-add"').click();
+      if (restart) cy.get('[data-testid="fundingSourcesAction-add"]').click();
 
       if (fundingNumber) {
-        cy.get('#IntakeForm-FundingNumber')
+        cy.get('#fundingNumber')
           .clear()
           .type(fundingNumber)
           .should('have.value', fundingNumber);
@@ -77,7 +79,7 @@ cy.systemIntake = {
 
       if (sources) {
         sources.forEach(source => {
-          cy.get('#IntakeForm-FundingSources').type(`${source}{enter}{esc}`);
+          cy.get('#sources').type(`${source}{enter}{esc}`);
           cy.get(`[data-testid="multiselect-tag--${source}"]`);
         });
       }
@@ -86,3 +88,5 @@ cy.systemIntake = {
     }
   }
 };
+
+export default testSystemIntakeName;

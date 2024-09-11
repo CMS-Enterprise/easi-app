@@ -73,6 +73,6 @@ export CEDAR_CORE_API_VERSION=2.0.0
 Additionally, if you're using the `openconnect-tinyproxy` VPN container for selective proxying, add the following to your `.envrc.local` file to instruct Go to use the proxy:
 
 ```
-export HTTP_PROXY=http://host.docker.internal:8888
-export HTTPS_PROXY=http://host.docker.internal:8888
+export HTTP_PROXY=http://localhost:8888
+export HTTPS_PROXY=http://localhost:8888
 ```

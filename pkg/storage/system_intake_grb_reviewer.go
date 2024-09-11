@@ -8,17 +8,18 @@ import (
 	"github.com/lib/pq"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // CreateSystemIntakeGRBReviewer creates a GRB Reviewer
-func (s *Store) CreateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, reviewer *models.SystemIntakeGRBReviewer) error {
+func (s *Store) CreateSystemIntakeGRBReviewer(ctx context.Context, np sqlutils.NamedPreparer, reviewer *models.SystemIntakeGRBReviewer) error {
 	if reviewer.ID == uuid.Nil {
 		reviewer.ID = uuid.New()
 	}
-	if _, err := namedExec(ctx, tx, sqlqueries.SystemIntakeGRBReviewer.Create, reviewer); err != nil {
+	if _, err := namedExec(ctx, np, sqlqueries.SystemIntakeGRBReviewer.Create, reviewer); err != nil {
 		appcontext.ZLogger(ctx).Error("failed to create GRB reviewer", zap.Error(err))
 		return err
 	}

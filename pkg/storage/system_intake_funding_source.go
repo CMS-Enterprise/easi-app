@@ -6,10 +6,12 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // UpdateSystemIntakeFundingSources clears and updates the funding sources of a system intake using an automatically created transaction
@@ -79,11 +81,24 @@ func (s *Store) UpdateSystemIntakeFundingSourcesNP(ctx context.Context, tx *sqlx
 // FetchSystemIntakeFundingSourcesByIntakeID fetches all funding sources for a system intake
 func (s *Store) FetchSystemIntakeFundingSourcesByIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeFundingSource, error) {
 	sources := []*models.SystemIntakeFundingSource{}
-	err := s.db.Select(&sources, `
-		SELECT *
-		FROM system_intake_funding_sources
-		WHERE system_intake_id=$1
-	`, systemIntakeID)
+	err := namedSelect(ctx, s, &sources, sqlqueries.SystemIntakeFundingSources.GetAllBySystemIntakeID, args{
+		"system_intake_id": systemIntakeID,
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch funding sources, error %s", err))
+		return sources, err
+	}
+
+	return sources, nil
+}
+
+// FetchSystemIntakeFundingSourcesByIntakeIDs fetches all funding sources for a slice of system intake IDs
+func (s *Store) FetchSystemIntakeFundingSourcesByIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeFundingSource, error) {
+	sources := []*models.SystemIntakeFundingSource{}
+	err := namedSelect(ctx, s, &sources, sqlqueries.SystemIntakeFundingSources.GetAllBySystemIntakeIDs, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
+	})
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch funding sources, error %s", err))

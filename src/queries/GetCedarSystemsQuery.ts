@@ -13,6 +13,13 @@ export default gql`
       systemMaintainerOrg
       systemMaintainerOrgComp
       isBookmarked
+      atoExpirationDate
+      linkedTrbRequests(state: OPEN) {
+        id
+      }
+      linkedSystemIntakes(state: OPEN) {
+        id
+      }
     }
   }
 `;

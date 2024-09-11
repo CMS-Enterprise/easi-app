@@ -51,6 +51,7 @@ const systemWorkspace = {
   tlcPhase: 'Overall Target Life Cycle (TLC) phase: ',
   bookmark: 'Bookmark',
   bookmarked: 'Bookmarked',
+  returnToWorkspace: 'Return to system workspace',
   helpLinks: {
     header: 'How can EASi help you today?',
     description:
@@ -83,7 +84,38 @@ const systemWorkspace = {
         continue: 'Continue to CFACTS',
         cancel: 'Go back to EASi'
       }
+    },
+    requests: {
+      header: 'Requests in EASi',
+      description:
+        'EASi facilitates IT Governance requests and requests for technical assistance from the Technical Review Board (TRB).',
+      start: 'Start a new request',
+      itgCount: '{{count}} open IT Governance request',
+      itgCount_plural: '{{count}} open IT Governance requests',
+      trbCount: '{{count}} open technical assistance request',
+      trbCount_plural: '{{count}} open technical assistance requests',
+      viewAll: 'View all requests'
+    },
+    team: {
+      header: 'Team',
+      description:
+        'Team members can edit all sections of a system workspace, including collaborating on IT Governance requests and adding more team members.',
+
+      moreRolesCount: '+{{count}} more role',
+      moreRolesCount_plural: '+{{count}} more roles',
+      view: {
+        more: 'View {{count}} more team members',
+        less: 'View fewer team members'
+      },
+      add: 'Add a team member ',
+      manage: 'Manage system team'
     }
+  },
+  requests: {
+    header: 'Requests',
+    subhead: 'for Easy Access to System Information',
+    description:
+      'EASi facilitates IT Governance requests and requests for technical assistance from the Technical Review Board (TRB). Use this page to view and manage open and closed requests for your system. You may have created them, or they may have been created by another team member.'
   }
 };
 

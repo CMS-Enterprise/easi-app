@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestIntakeChangeLCIDRetirementDateNotification() {

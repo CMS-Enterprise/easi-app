@@ -18,6 +18,12 @@ export default gql`
         id
         name
         isBookmarked
+        linkedTrbRequests(state: OPEN) {
+          id
+        }
+        linkedSystemIntakes(state: OPEN) {
+          id
+        }
       }
       roles {
         ...CedarRole

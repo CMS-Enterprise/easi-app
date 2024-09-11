@@ -4,10 +4,8 @@ export type Flags = {
   downgradeTrbAdmin: boolean;
   systemProfileHiddenFields: boolean;
   systemWorkspace: boolean;
-};
-
-export type FlagsState = {
-  flags: Flags;
-  isLoaded: boolean;
-  error?: string;
+  systemWorkspaceRequestsCard: boolean;
+  systemWorkspaceTeam: boolean;
+  grbReviewTab: boolean;
+  showAtoColumn: boolean;
 };

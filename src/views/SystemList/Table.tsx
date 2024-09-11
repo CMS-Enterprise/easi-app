@@ -8,6 +8,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
+  CellProps,
   Column,
   Row,
   useFilters,
@@ -26,10 +27,12 @@ import {
   Table as UswdsTable
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
+import { AtoStatusIconText } from 'components/shared/AtoStatus';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
@@ -58,14 +61,15 @@ export type SystemTableType =
 type TableProps = {
   systems?: CedarSystem[];
   defaultPageSize?: number;
-  isMySystems?: boolean;
+  isHomePage?: boolean;
 };
 
 export const Table = ({
   systems = [],
   defaultPageSize = 10,
-  isMySystems
+  isHomePage
 }: TableProps) => {
+  const flags = useFlags();
   const { t } = useTranslation('systemProfile');
 
   const location = useLocation();
@@ -90,14 +94,14 @@ export const Table = ({
   // Sets the systemTableType state to the query param, defaults to all-systems if no param present
   // If the query param changes, update the component state
   useEffect(() => {
-    if (!tableType && !isMySystems) {
+    if (!tableType && !isHomePage) {
       history.replace({
         search: 'table-type=all-systems'
       });
     }
 
-    setSystemTableType(isMySystems ? 'my-systems' : tableType);
-  }, [tableType, isMySystems, history]);
+    setSystemTableType(isHomePage ? 'my-systems' : tableType);
+  }, [tableType, isHomePage, history]);
 
   // On button group toggle, change query param
   const switchTableType = (type: SystemTableType) => {
@@ -120,7 +124,7 @@ export const Table = ({
     }
   }, [systemTableType, systems, mySystems]);
 
-  const columns = useMemo<Column<CedarSystem>[]>(() => {
+  const columns: Column<CedarSystem>[] = useMemo(() => {
     const isBookmarked = (cedarSystemId: string): boolean =>
       !!systems.find(system => system.id === cedarSystemId)?.isBookmarked;
 
@@ -143,8 +147,10 @@ export const Table = ({
       });
     };
 
-    return [
-      {
+    const cols: Column<CedarSystem>[] = [];
+
+    if (!isHomePage) {
+      cols.push({
         Header: <IconBookmark />,
         accessor: 'id',
         id: 'systemId',
@@ -166,23 +172,28 @@ export const Table = ({
             />
           </Button>
         )
-      },
-      {
-        Header: t<string>('systemTable.header.systemAcronym'),
-        accessor: 'acronym'
-      },
-      {
-        Header: t<string>('systemTable.header.systemName'),
-        accessor: 'name',
-        id: 'systemName',
-        Cell: ({ row }: { row: Row<CedarSystem> }) => {
-          const url = `/systems/${row.original.id}/${
-            systemTableType === 'my-systems' ? 'workspace' : 'home/top'
-          }`;
-          return <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>;
-        }
-      },
-      {
+      });
+    }
+
+    cols.push({
+      Header: t<string>('systemTable.header.systemAcronym'),
+      accessor: 'acronym'
+    });
+
+    cols.push({
+      Header: t<string>('systemTable.header.systemName'),
+      accessor: 'name',
+      id: 'systemName',
+      Cell: ({ row }: { row: Row<CedarSystem> }) => {
+        const url = `/systems/${row.original.id}/${
+          systemTableType === 'my-systems' ? 'workspace' : 'home/top'
+        }`;
+        return <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>;
+      }
+    });
+
+    if (!isHomePage) {
+      cols.push({
         Header: t<string>('systemTable.header.systemOwner'),
         accessor: 'businessOwnerOrg',
         id: 'systemOwner',
@@ -193,33 +204,48 @@ export const Table = ({
             )?.acronym || row.original.businessOwnerOrg}
           </p>
         )
-      }
-      /*
-      {
-        Header: t<string>('systemTable.header.systemStatus'),
-        accessor: 'status',
-        id: 'systemStatus',
-        disableGlobalFilter: true,
-        Cell: ({ row }: { row: Row<CedarSystem> }) => (
-          <div>
-            <SystemHealthIcon
-              status={mapCedarStatusToIcon(row.original.status)}
-              size="medium"
-              className="margin-right-1"
-            />
-            <span>{row.original.status}</span>
-          </div>
-        )
-      }
-      */
-    ];
-  }, [t, systems, systemTableType, createMutate, deleteMutate]);
+      });
+    }
 
-  // Remove bookmark column if showing My systems table
-  if (isMySystems) {
-    columns.splice(0, 1);
-    columns.pop(); // remove component if isMySystems
-  }
+    if (flags.showAtoColumn) {
+      cols.push({
+        Header: t<string>('systemTable.header.systemStatus'),
+        accessor: 'atoExpirationDate',
+        Cell: ({
+          value
+        }: CellProps<CedarSystem, CedarSystem['atoExpirationDate']>) => (
+          <AtoStatusIconText dt={value} />
+        ),
+        sortType: (a, b) =>
+          (a.values.atoExpirationDate ?? '') >
+          (b.values.atoExpirationDate ?? '')
+            ? 1
+            : -1
+      });
+    }
+
+    if (isHomePage) {
+      cols.push({
+        Header: t<string>('systemTable.header.openRequests'),
+        accessor: (system: CedarSystem) => {
+          return (
+            system.linkedTrbRequests.length + system.linkedSystemIntakes.length
+          );
+        },
+        id: 'openRequests'
+      });
+    }
+
+    return cols;
+  }, [
+    t,
+    systems,
+    systemTableType,
+    createMutate,
+    deleteMutate,
+    isHomePage,
+    flags.showAtoColumn
+  ]);
 
   const {
     getTableProps,
@@ -271,7 +297,7 @@ export const Table = ({
   rows.map(row => prepareRow(row));
 
   if (
-    (isMySystems || tableType === 'my-systems') &&
+    (isHomePage || tableType === 'my-systems') &&
     loading &&
     !mySystems?.myCedarSystems
   ) {
@@ -280,7 +306,7 @@ export const Table = ({
 
   return (
     <div className="margin-bottom-6">
-      {!isMySystems && (
+      {!isHomePage && (
         <>
           <p className="text-bold margin-0 margin-top-3">
             {t('systemTable.view')}
@@ -417,13 +443,13 @@ export const Table = ({
 
       {/* Alerts to show if there is no system/data */}
       {filteredSystems.length === 0 &&
-        (tableType === 'my-systems' || isMySystems) && (
+        (tableType === 'my-systems' || isHomePage) && (
           <Alert
             type="info"
             heading={t('systemTable.noMySystem.header')}
             className="margin-top-5"
           >
-            {isMySystems ? (
+            {isHomePage ? (
               <Trans
                 i18nKey="systemProfile:systemTable.noMySystem.description"
                 components={{
@@ -449,8 +475,8 @@ export const Table = ({
           </Alert>
         )}
 
-      {/* Alery to show to direct to Systems tab when viewing My sytems */}
-      {filteredSystems.length > 0 && isMySystems && (
+      {/* Alert to show to direct to Systems tab when viewing My sytems */}
+      {filteredSystems.length > 0 && isHomePage && (
         <Alert
           type="info"
           heading={t('systemProfile:systemTable:dontSeeSystem.header')}

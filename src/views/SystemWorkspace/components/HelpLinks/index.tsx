@@ -8,7 +8,13 @@ import { HelpLinkType } from 'i18n/en-US/systemWorkspace';
 
 import HelpCardGroup from './SystemCardGroup';
 
-export const HelpLinks = ({ classname }: { classname?: string }) => {
+export const HelpLinks = ({
+  classname,
+  linkSearchQuery
+}: {
+  classname?: string;
+  linkSearchQuery: string | undefined;
+}) => {
   const { t } = useTranslation('systemWorkspace');
 
   const helpCards = t<HelpLinkType[]>('helpLinks.links', {
@@ -43,7 +49,7 @@ export const HelpLinks = ({ classname }: { classname?: string }) => {
         bold={false}
         className="text-normal margin-bottom-1"
       >
-        <HelpCardGroup cards={helpCards} />
+        <HelpCardGroup cards={helpCards} linkSearchQuery={linkSearchQuery} />
       </CollapsableLink>
     </SummaryBox>
   );

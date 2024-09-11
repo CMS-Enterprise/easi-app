@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
-	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 )
 
 // IBaseStruct is an interface that all models must implement

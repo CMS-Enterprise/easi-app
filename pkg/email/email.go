@@ -9,7 +9,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // Config holds EASi application specific configs for SES
@@ -54,6 +54,7 @@ type templates struct {
 	trbAdviceLetterSubmitted                        templateCaller
 	trbRequestClosed                                templateCaller
 	cedarRolesChanged                               templateCaller
+	systemIntakeAdminUploadDocTemplate              templateCaller
 	systemIntakeSubmitInitialFormRequesterTemplate  templateCaller
 	systemIntakeSubmitInitialFormReviewerTemplate   templateCaller
 	systemIntakeSubmitBusinessCaseRequesterTemplate templateCaller
@@ -75,7 +76,7 @@ type templates struct {
 
 // sender is an interface for swapping out email provider implementations
 type sender interface {
-	Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error
+	Send(ctx context.Context, email Email) error
 }
 
 // Client is an EASi SES client wrapper
@@ -253,6 +254,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.cedarRolesChanged = cedarRolesChanged
 
+	sisAdminUploadDocTemplateName := "system_intake_admin_upload_doc.gohtml"
+	sisAdminUploadDocTemplate := rawTemplates.Lookup(sisAdminUploadDocTemplateName)
+	if sisAdminUploadDocTemplate == nil {
+		return Client{}, templateError(sisAdminUploadDocTemplateName)
+	}
+	appTemplates.systemIntakeAdminUploadDocTemplate = sisAdminUploadDocTemplate
+
 	sisInitialFormRequesterTemplateName := "system_intake_submit_initial_form_requester.gohtml"
 	sisInitialFormRequesterTemplate := rawTemplates.Lookup(sisInitialFormRequesterTemplateName)
 	if sisInitialFormRequesterTemplate == nil {
@@ -397,7 +405,13 @@ func (c Client) urlFromPath(path string) string {
 // SendTestEmail sends an email to a no-reply address
 func (c Client) SendTestEmail(ctx context.Context) error {
 	testToAddress := models.NewEmailAddress("success@simulator.amazonses.com")
-	return c.sender.Send(ctx, []models.EmailAddress{testToAddress}, nil, "test", "test")
+	return c.sender.Send(
+		ctx,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{testToAddress}).
+			WithSubject("test").
+			WithBody("test"),
+	)
 }
 
 // helper method to get a list of all addresses from a models.EmailNotificationRecipients value
@@ -428,4 +442,41 @@ func HumanizeSnakeCase(s string) string {
 		wordSlice = append(wordSlice, capitalizedWord)
 	}
 	return strings.Join(wordSlice, " ")
+}
+
+type Email struct {
+	ToAddresses  []models.EmailAddress
+	CcAddresses  []models.EmailAddress
+	BccAddresses []models.EmailAddress
+	Subject      string
+	Body         string
+}
+
+func NewEmail() Email {
+	return Email{}
+}
+
+func (e Email) WithToAddresses(toAddresses []models.EmailAddress) Email {
+	e.ToAddresses = toAddresses
+	return e
+}
+
+func (e Email) WithCCAddresses(ccAddresses []models.EmailAddress) Email {
+	e.CcAddresses = ccAddresses
+	return e
+}
+
+func (e Email) WithBCCAddresses(bccAddresses []models.EmailAddress) Email {
+	e.BccAddresses = bccAddresses
+	return e
+}
+
+func (e Email) WithSubject(subject string) Email {
+	e.Subject = subject
+	return e
+}
+
+func (e Email) WithBody(body string) Email {
+	e.Body = body
+	return e
 }

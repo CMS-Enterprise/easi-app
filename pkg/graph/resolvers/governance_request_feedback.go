@@ -5,21 +5,19 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // GetGovernanceRequestFeedbacksByIntakeID returns all governance request feedback items for a given system intake
-func GetGovernanceRequestFeedbacksByIntakeID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.GovernanceRequestFeedback, error) {
-	return store.GetGovernanceRequestFeedbacksByIntakeID(ctx, id)
+func GetGovernanceRequestFeedbacksByIntakeID(ctx context.Context, id uuid.UUID) ([]*models.GovernanceRequestFeedback, error) {
+	return dataloaders.GetSystemIntakeGovReqFeedbackByIntakeID(ctx, id)
 }
 
 // GetGovernanceRequestFeedbackAuthor returns the full user info for a feedback item's author
 // nil values for feedbackAuthorEUAID are allowed and will return a nil *models.UserInfo
 func GetGovernanceRequestFeedbackAuthor(
 	ctx context.Context,
-	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	feedbackAuthorEUAID *string,
 ) (*models.UserInfo, error) {
 	// If there's no feedbackAuthorEUAID, don't try and query Okta, just return a nil userinfo

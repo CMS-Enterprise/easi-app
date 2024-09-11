@@ -166,7 +166,9 @@ type CreateSystemIntakeDocumentInput struct {
 	RequestID            uuid.UUID                      `json:"requestID"`
 	FileData             graphql.Upload                 `json:"fileData"`
 	DocumentType         SystemIntakeDocumentCommonType `json:"documentType"`
+	Version              SystemIntakeDocumentVersion    `json:"version"`
 	OtherTypeDescription *string                        `json:"otherTypeDescription,omitempty"`
+	SendNotification     *bool                          `json:"sendNotification,omitempty"`
 }
 
 // Data returned after uploading a document to a System Intake
@@ -328,27 +330,6 @@ type ReopenTRBRequestInput struct {
 	ReasonReopened HTML      `json:"reasonReopened"`
 	CopyTrbMailbox bool      `json:"copyTrbMailbox"`
 	NotifyEuaIds   []string  `json:"notifyEuaIds"`
-}
-
-// Represents a requester's system intake request
-type Request struct {
-	ID              uuid.UUID                    `json:"id"`
-	Name            *string                      `json:"name,omitempty"`
-	SubmittedAt     *time.Time                   `json:"submittedAt,omitempty"`
-	Type            RequestType                  `json:"type"`
-	Status          string                       `json:"status"`
-	StatusRequester *SystemIntakeStatusRequester `json:"statusRequester,omitempty"`
-	StatusCreatedAt *time.Time                   `json:"statusCreatedAt,omitempty"`
-	Lcid            *string                      `json:"lcid,omitempty"`
-	NextMeetingDate *time.Time                   `json:"nextMeetingDate,omitempty"`
-}
-
-type RequestEdge struct {
-	Node *Request `json:"node"`
-}
-
-type RequestsConnection struct {
-	Edges []*RequestEdge `json:"edges"`
 }
 
 type SendCantFindSomethingEmailInput struct {
@@ -878,6 +859,7 @@ type UpdateSystemIntakeRequestDetailsInput struct {
 	CurrentStage     *string   `json:"currentStage,omitempty"`
 	CedarSystemID    *string   `json:"cedarSystemId,omitempty"`
 	HasUIChanges     *bool     `json:"hasUiChanges,omitempty"`
+	UsesAiTech       *bool     `json:"usesAiTech,omitempty"`
 }
 
 // Input data used to update GRT and GRB dates for a system request
@@ -928,51 +910,11 @@ type UserError struct {
 	Path    []string `json:"path"`
 }
 
-// Indicates the type of a request being made with the EASi system
-type RequestType string
-
-const (
-	RequestTypeGovernanceRequest RequestType = "GOVERNANCE_REQUEST"
-)
-
-var AllRequestType = []RequestType{
-	RequestTypeGovernanceRequest,
-}
-
-func (e RequestType) IsValid() bool {
-	switch e {
-	case RequestTypeGovernanceRequest:
-		return true
-	}
-	return false
-}
-
-func (e RequestType) String() string {
-	return string(e)
-}
-
-func (e *RequestType) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = RequestType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid RequestType", str)
-	}
-	return nil
-}
-
-func (e RequestType) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
 // A user role associated with a job code
 type Role string
 
 const (
-	// A member of the GRT
+	// An admin on the GRT
 	RoleEasiGovteam Role = "EASI_GOVTEAM"
 	// An admin on the TRB
 	RoleEasiTrbAdmin Role = "EASI_TRB_ADMIN"

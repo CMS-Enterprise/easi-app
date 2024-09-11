@@ -1,8 +1,8 @@
 package resolvers
 
 import (
-	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *ResolverSuite) TestCedarSystemBookmarks() {

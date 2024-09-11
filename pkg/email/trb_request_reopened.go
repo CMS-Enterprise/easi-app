@@ -8,8 +8,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // SendTRBRequestReopenedEmailInput contains the data needed to to send the TRB advice
@@ -57,13 +56,14 @@ func (c Client) SendTRBRequestReopenedEmail(ctx context.Context, input SendTRBRe
 	err := c.templates.trbRequestReopened.Execute(&b, templateParams)
 
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = c.sender.Send(ctx, allRecipients, nil, subject, b.String())
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
+	return c.sender.Send(
+		ctx,
+		NewEmail().
+			WithToAddresses(allRecipients).
+			WithSubject(subject).
+			WithBody(b.String()),
+	)
 }

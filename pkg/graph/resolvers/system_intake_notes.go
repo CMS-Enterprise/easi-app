@@ -5,10 +5,10 @@ import (
 
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // CreateSystemIntakeNote creates a system intake note.
@@ -52,10 +52,9 @@ func UpdateSystemIntakeNote(
 // SystemIntakeNotes fetches notes by System Intake ID
 func SystemIntakeNotes(
 	ctx context.Context,
-	store *storage.Store,
 	obj *models.SystemIntake,
 ) ([]*models.SystemIntakeNote, error) {
-	return store.FetchNotesBySystemIntakeID(ctx, obj.ID)
+	return dataloaders.GetSystemIntakeNotesBySystemIntakeID(ctx, obj.ID)
 }
 
 // SystemIntakeNoteAuthor returns the system intake note author

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendCantFindSomethingEmail() {

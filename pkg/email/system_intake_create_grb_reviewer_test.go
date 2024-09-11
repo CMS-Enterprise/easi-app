@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestCreateSystemIntakeGRBReviewerNotification() {
@@ -15,7 +15,7 @@ func (s *EmailTestSuite) TestCreateSystemIntakeGRBReviewerNotification() {
 	requestName := "Hotdog/Not Hotdog Program"
 	requester := "Dr Fishopolis"
 	adminLink := fmt.Sprintf(
-		"%s://%s/governance-review-team/%s/grb-review",
+		"%s://%s/it-governance/%s/grb-review",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),

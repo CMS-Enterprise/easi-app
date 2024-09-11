@@ -28,7 +28,7 @@ const pointsOfContactIds: Record<SubpageKey, RoleTypeName[]> = {
     RoleTypeName.SYSTEM_ISSUES_CONTACT,
     RoleTypeName.PROJECT_LEAD
   ],
-  ato: [
+  'ato-and-security': [
     RoleTypeName.ISSO,
     RoleTypeName.SYSTEM_ISSUES_CONTACT,
     RoleTypeName.PROJECT_LEAD

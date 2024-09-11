@@ -1,89 +1,109 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
-	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
 // creates, fills out the initial request form, and submits a system intake
 func makeSystemIntakeAndSubmit(
+	ctx context.Context,
 	requestName string,
 	intakeID *uuid.UUID,
 	requesterEUAID string,
-	logger *zap.Logger,
 	store *storage.Store,
 ) *models.SystemIntake {
-	intake := makeSystemIntake(requestName, intakeID, requesterEUAID, logger, store)
-	return submitSystemIntake(logger, store, intake)
+	intake := makeSystemIntake(ctx, requestName, intakeID, requesterEUAID, store)
+	return submitSystemIntake(ctx, store, intake)
 }
 
 // creates an intake and fills out the initial request form
 func makeSystemIntake(
+	ctx context.Context,
 	requestName string,
 	intakeID *uuid.UUID,
 	requesterEUAID string,
-	logger *zap.Logger,
 	store *storage.Store,
 ) *models.SystemIntake {
 	intake := createSystemIntake(
+		ctx,
 		intakeID,
-		logger,
 		store,
 		requesterEUAID,
 		"Requester Name",
 		models.SystemIntakeRequestTypeNEW,
 	)
-	return fillOutInitialIntake(requestName, logger, store, intake)
+	createSystemIntakeDocument(ctx, store, intake, "first_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftIGCE)
+	createSystemIntakeDocument(ctx, store, intake, "second_doc.pdf", models.SystemIntakeDocumentVersionHISTORICAL, models.SystemIntakeDocumentCommonTypeMEETINGMINS)
+	createSystemIntakeDocument(ctx, store, intake, "third_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)
+	createSystemIntakeDocument(ctx, store, intake, "fourth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeRAF)
+	createSystemIntakeDocument(ctx, store, intake, "fifth_doc.pdf", models.SystemIntakeDocumentVersionHISTORICAL, models.SystemIntakeDocumentCommonTypeSOOSOW)
+	createSystemIntakeDocument(ctx, store, intake, "sixth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftIGCE)
+	createSystemIntakeDocument(ctx, store, intake, "seventh_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftOther)
+	createSystemIntakeDocument(ctx, store, intake, "eighth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeSOOSOW)
+	createSystemIntakeDocument(ctx, store, intake, "nineth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)
+	createSystemIntakeDocument(ctx, store, intake, "tenth_doc.pdf", models.SystemIntakeDocumentVersionHISTORICAL, models.SystemIntakeDocumentCommonTypeMEETINGMINS)
+	createSystemIntakeDocument(ctx, store, intake, "eleventh_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftIGCE)
+	createSystemIntakeDocument(ctx, store, intake, "twelth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)
+	createSystemIntakeDocument(ctx, store, intake, "thirteenth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftOther)
+	return fillOutInitialIntake(ctx, requestName, store, intake)
 }
 
 // updates an intake and fills out the initial request form
 func fillOutInitialIntake(
+	ctx context.Context,
 	requestName string,
-	logger *zap.Logger,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	intake = updateSystemIntakeRequestDetails(logger, store, intake,
+	intake = updateSystemIntakeRequestDetails(ctx, store, intake,
 		requestName,
 		"An intense business need",
 		"with a great business solution",
+		true,
 		true,
 		"Some CEDAR System ID",
 		"the current stage",
 		true,
 	)
-	updateSystemIntakeContact(logger, store, intake,
+	updateSystemIntakeContact(ctx, store,
 		"USR1",
 		"Center for Medicare",
 		"Requester",
 	)
-	createSystemIntakeContact(logger, store, intake,
+	createSystemIntakeContact(ctx, store, intake,
 		"A11Y",
 		"Center for Medicare",
 		"Business Owner",
 	)
-	createSystemIntakeContact(logger, store, intake,
+	createSystemIntakeContact(ctx, store, intake,
 		"OQYV",
 		"Center for Medicare",
 		"Product Manager",
 	)
-	createSystemIntakeContact(logger, store, intake,
+	createSystemIntakeContact(ctx, store, intake,
 		"GP87",
 		"Center for Medicare",
 		"ISSO",
 	)
-	intake = updateSystemIntakeContactDetails(logger, store, intake,
+	intake = updateSystemIntakeContactDetails(ctx, store, intake,
 		"User One",
 		"Office of the Actuary",
 		"Ally Anderson",
@@ -93,19 +113,14 @@ func fillOutInitialIntake(
 		true,
 		"Leatha Gorczany",
 	)
-	return updateSystemIntakeContractDetails(logger, store, intake)
+	return updateSystemIntakeContractDetails(ctx, store, intake)
 }
 
 func submitSystemIntake(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	userEUA := intake.EUAUserID.ValueOrZero()
-	if userEUA == "" {
-		userEUA = mock.PrincipalUser
-	}
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, userEUA)
 	// until the submit function is refactored out of services, manually submit
 	// NOTE: does not send emails
 	mockSubmitIntake := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -136,17 +151,15 @@ func submitSystemIntake(
 
 // This is a v2 function that uses the resolver to create the intake
 func createSystemIntake(
+	ctx context.Context,
 	intakeID *uuid.UUID,
-	logger *zap.Logger,
 	store *storage.Store,
 	requesterEUAID string,
 	requesterName string,
 	requestType models.SystemIntakeRequestType,
 ) *models.SystemIntake {
-	ctx := context.Background()
 	var requesterEUAIDPtr *string
 	if requesterEUAID != "" {
-		ctx = mock.CtxWithLoggerAndPrincipal(logger, store, requesterEUAID)
 		requesterEUAIDPtr = &requesterEUAID
 	}
 	// The resolver requires an EUA ID and creates a random intake ID.
@@ -182,24 +195,25 @@ func createSystemIntake(
 
 // This is a v2 function that uses the resolver to fill in an intake's request details
 func updateSystemIntakeRequestDetails(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	requestName string,
 	businessNeed string,
 	businessSolution string,
 	needsEaSupport bool,
+	usesAiTech bool,
 	currentStage string,
 	cedarSystemID string,
 	hasUIChanges bool,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	input := models.UpdateSystemIntakeRequestDetailsInput{
 		ID:               intake.ID,
 		RequestName:      &requestName,
 		BusinessNeed:     &businessNeed,
 		BusinessSolution: &businessSolution,
 		NeedsEaSupport:   &needsEaSupport,
+		UsesAiTech:       &usesAiTech,
 		CurrentStage:     &currentStage,
 		CedarSystemID:    &cedarSystemID,
 		HasUIChanges:     &hasUIChanges,
@@ -215,14 +229,13 @@ func updateSystemIntakeRequestDetails(
 }
 
 func createSystemIntakeContact(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	euaUserID string,
 	component string,
 	role string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	input := models.CreateSystemIntakeContactInput{
 		Component:      component,
 		Role:           role,
@@ -236,14 +249,12 @@ func createSystemIntakeContact(
 }
 
 func updateSystemIntakeContact(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
-	intake *models.SystemIntake,
 	euaUserID string,
 	component string,
 	role string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	input := models.UpdateSystemIntakeContactInput{
 		Component: component,
 		Role:      role,
@@ -256,12 +267,11 @@ func updateSystemIntakeContact(
 }
 
 func setSystemIntakeRelationNewSystem(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
 	contractNumbers []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
 	input := &models.SetSystemIntakeRelationNewSystemInput{
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
@@ -281,13 +291,12 @@ func setSystemIntakeRelationNewSystem(
 }
 
 func setSystemIntakeRelationExistingSystem(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
 	contractNumbers []string,
 	cedarSystemIDs []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
 	input := &models.SetSystemIntakeRelationExistingSystemInput{
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
@@ -306,7 +315,7 @@ func setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
 		func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
-			return &models.CedarSystem{}, nil
+			return cedarcoremock.GetSystem(systemID), nil
 		},
 		input,
 	)
@@ -316,13 +325,12 @@ func setSystemIntakeRelationExistingSystem(
 }
 
 func setSystemIntakeRelationExistingService(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
 	contractName string,
 	contractNumbers []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
 	input := &models.SetSystemIntakeRelationExistingServiceInput{
 		SystemIntakeID:  intakeID,
 		ContractName:    contractName,
@@ -343,9 +351,7 @@ func setSystemIntakeRelationExistingService(
 	}
 }
 
-func unlinkSystemIntakeRelation(logger *zap.Logger, store *storage.Store, intakeID uuid.UUID) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
-
+func unlinkSystemIntakeRelation(ctx context.Context, store *storage.Store, intakeID uuid.UUID) {
 	// temp, manually unlink contract numbers
 	// see Note [EASI-4160 Disable Contract Number Linking]
 	if err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
@@ -360,7 +366,7 @@ func unlinkSystemIntakeRelation(logger *zap.Logger, store *storage.Store, intake
 }
 
 func updateSystemIntakeContactDetails(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	requesterName string,
@@ -372,7 +378,6 @@ func updateSystemIntakeContactDetails(
 	issoIsPresent bool,
 	issoName string,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	govTeamsPresent := true
 
 	input := models.UpdateSystemIntakeContactDetailsInput{
@@ -419,11 +424,10 @@ func updateSystemIntakeContactDetails(
 }
 
 func updateSystemIntakeContractDetails(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	existingFunding := true
 	fundingNumber1 := "123456"
 	fundingNumber2 := "789012"
@@ -436,9 +440,9 @@ func updateSystemIntakeContractDetails(
 	plannedYearOneSpendingITPortion := "25%"
 	contractor := "Dr Doom"
 	startDate := time.Now().AddDate(-1, 0, 0)
-	hasContract := "HAVE_CONTRACT"
+	hasContract := "IN_PROGRESS"
 	endDate := time.Now().AddDate(3, 0, 0)
-	contractNumbers := []string{"123456789"}
+	contractNumbers := []string{}
 	input := models.UpdateSystemIntakeContractDetailsInput{
 		ID: intake.ID,
 		FundingSources: &models.SystemIntakeFundingSourcesInput{
@@ -481,12 +485,11 @@ func updateSystemIntakeContractDetails(
 }
 
 func createSystemIntakeNote(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	noteContent string,
 ) *models.SystemIntakeNote {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
 	content := models.HTML(noteContent)
 	input := models.CreateSystemIntakeNoteInput{
 		Content:    content,
@@ -500,9 +503,64 @@ func createSystemIntakeNote(
 	return note
 }
 
+func createSystemIntakeDocument(
+	ctx context.Context,
+	store *storage.Store,
+	intake *models.SystemIntake,
+	fileName string,
+	version models.SystemIntakeDocumentVersion,
+	docType models.SystemIntakeDocumentCommonType,
+) *models.SystemIntakeDocument {
+	documentToCreate := &models.SystemIntakeDocument{
+		SystemIntakeID:     intake.ID,
+		CommonDocumentType: docType,
+		Version:            version,
+		FileName:           fileName,
+	}
+	if docType == models.SystemIntakeDocumentCommonTypeDraftOther {
+		documentToCreate.OtherType = "banana"
+	}
+	documentToCreate.CreatedBy = mock.PrincipalUser
+	documentToCreate.CreatedAt = time.Now()
+	testContents := "Test file content"
+	encodedFileContent := easiencoding.EncodeBase64String(testContents)
+	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
+	gqlInput := models.CreateSystemIntakeDocumentInput{
+		RequestID:            documentToCreate.SystemIntakeID,
+		DocumentType:         documentToCreate.CommonDocumentType,
+		Version:              documentToCreate.Version,
+		OtherTypeDescription: &documentToCreate.OtherType,
+		FileData: graphql.Upload{
+			File:        fileToUpload,
+			Filename:    documentToCreate.FileName,
+			Size:        fileToUpload.Size(),
+			ContentType: "application/pdf",
+		},
+	}
+
+	config := testhelpers.NewConfig()
+	s3Client := upload.NewS3Client(upload.Config{
+		IsLocal: true,
+		Bucket:  config.GetString(appconfig.AWSS3FileUploadBucket),
+		Region:  config.GetString(appconfig.AWSRegion),
+	})
+	createdDocument, err := resolvers.CreateSystemIntakeDocument(
+		ctx,
+		store,
+		&s3Client,
+		nil,
+		gqlInput,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	return createdDocument
+}
+
 // Updates the System Intake through the store method directly instead of using the resolver
 func modifySystemIntake(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	cb func(*models.SystemIntake),
@@ -510,7 +568,6 @@ func modifySystemIntake(
 	if intake == nil {
 		panic("must provide intake to edit")
 	}
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	cb(intake)
 	intake, err := store.UpdateSystemIntake(ctx, intake)
 	if err != nil {

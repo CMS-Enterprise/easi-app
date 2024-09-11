@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -7,6 +7,8 @@ import PDFExport from 'components/PDFExport';
 import SystemIntakeReview from 'components/SystemIntakeReview';
 import { SystemIntake } from 'queries/types/SystemIntake';
 
+import ITGovAdminContext from '../ITGovAdminContext';
+
 type IntakeReviewProps = {
   systemIntake: SystemIntake;
 };
@@ -14,6 +16,8 @@ type IntakeReviewProps = {
 const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const filename = `System intake for ${systemIntake.requestName}.pdf`;
+
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   return (
     <div data-testid="intake-review">
@@ -25,13 +29,16 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
       >
         <SystemIntakeReview systemIntake={systemIntake} />
       </PDFExport>
-      <UswdsReactLink
-        className="usa-button margin-top-5"
-        variant="unstyled"
-        to={`/governance-review-team/${systemIntake.id}/actions`}
-      >
-        Take an action
-      </UswdsReactLink>
+
+      {isITGovAdmin && (
+        <UswdsReactLink
+          className="usa-button margin-top-5"
+          variant="unstyled"
+          to={`/it-governance/${systemIntake.id}/actions`}
+        >
+          {t('action:takeAnAction')}
+        </UswdsReactLink>
+      )}
     </div>
   );
 };

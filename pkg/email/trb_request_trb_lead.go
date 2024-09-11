@@ -8,8 +8,7 @@ import (
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // SendTRBRequestTRBLeadEmailInput contains the data needed to send an email to the TRB team
@@ -72,15 +71,15 @@ func (c Client) sendTRBRequestTRBLeadAdminEmail(ctx context.Context, input SendT
 	err := c.templates.trbRequestTRBLeadAdmin.Execute(&b, templateParams)
 
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = c.sender.Send(ctx, []models.EmailAddress{c.config.TRBEmail}, nil, subject, b.String())
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
+	return c.sender.Send(ctx,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{c.config.TRBEmail}).
+			WithSubject(subject).
+			WithBody(b.String()),
+	)
 }
 
 // sendTRBRequestTRBLeadAssigneeEmail sends an email to a user indicating that they have been assigned
@@ -100,13 +99,13 @@ func (c Client) sendTRBRequestTRBLeadAssigneeEmail(ctx context.Context, input Se
 	err := c.templates.trbRequestTRBLeadAssignee.Execute(&b, templateParams)
 
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = c.sender.Send(ctx, []models.EmailAddress{input.TRBLeadEmail}, nil, subject, b.String())
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
+	return c.sender.Send(ctx,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{input.TRBLeadEmail}).
+			WithSubject(subject).
+			WithBody(b.String()),
+	)
 }

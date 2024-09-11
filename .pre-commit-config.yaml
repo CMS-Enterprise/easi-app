@@ -11,6 +11,7 @@ repos:
       - id: end-of-file-fixer
         files: \.(sql|scss|md|js|ts|tsx|go|yml|yaml|graphql)$
         name: Add newlines to ends of files
+        exclude: src/gql/gen/.* # Ignore generated FE files
 
   - repo: https://github.com/detailyang/pre-commit-shell
     rev: v1.0.6
@@ -35,7 +36,7 @@ repos:
     hooks:
       - id: go-fmt-import
         name: Run "goimports" on go files
-        args: ['-local', 'github.com/cmsgov/easi-app']
+        args: ['-local', 'github.com/cms-enterprise/easi-app']
         files: .*\.go$
         exclude: >
           (?x)^(
@@ -45,11 +46,10 @@ repos:
           )$
 
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.59.1
+    rev: v1.60.1
     hooks:
-      - id: golangci-lint
+      - id: golangci-lint-full
         name: Lint go files
-        entry: golangci-lint run --concurrency -1 -v --timeout=10m
 
   - repo: local
     hooks:
@@ -68,7 +68,7 @@ repos:
         entry: scripts/pre-commit-eslint
         language: script
         files: \.(js|jsx|ts|tsx)$
-        exclude: (\.(d\.ts)$)|(\.storybook)|(serviceWorker\.ts) # This should match the .eslintrc "ignorePatterns". Change one, change the other!
+        exclude: (\.(d\.ts)$)|(\.storybook)|(serviceWorker\.ts)|(src/gql/gen/.*) # This should match the .eslintrc "ignorePatterns". Change one, change the other!
 
   - repo: local
     hooks:
@@ -101,7 +101,7 @@ repos:
         name: Run GraphQL code generation
         entry: "scripts/dev gql"
         language: script
-        files: "pkg/graph/schema\\.graphql|pkg/graph/schema\\.resolvers\\.go|src/queries/.*\\.ts"
+        files: "pkg/graph/schema\\.graphql|pkg/graph/schema\\.resolvers\\.go|src/queries/.*\\.ts|src/gql/apolloGQL/.*\\.ts"
         pass_filenames: false
 
   # for some reason, trying to call "go run cmd/intake_schema_gen/main.go" directly from this config doesn't work;

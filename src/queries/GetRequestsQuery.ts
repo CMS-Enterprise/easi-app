@@ -1,21 +1,22 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query GetRequests($first: Int!) {
-    requests(first: $first) {
-      edges {
-        node {
-          id
-          name
-          submittedAt
-          type
-          status
-          statusCreatedAt
-          statusRequester
-          lcid
-          nextMeetingDate
-        }
+  query GetRequests {
+    mySystemIntakes {
+      id
+      requestName
+      submittedAt
+      statusRequester
+      statusAdmin
+      grbDate
+      grtDate
+      systems {
+        id
+        name
       }
+      lcid
+      nextMeetingDate
+      lastMeetingDate
     }
     myTrbRequests(archived: false) {
       id
@@ -23,6 +24,11 @@ export default gql`
       submittedAt: createdAt
       status
       nextMeetingDate: consultMeetingTime
+      lastMeetingDate
+      systems {
+        id
+        name
+      }
     }
   }
 `;

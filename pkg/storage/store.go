@@ -11,8 +11,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // Store performs database operations for EASi

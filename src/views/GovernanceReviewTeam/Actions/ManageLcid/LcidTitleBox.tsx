@@ -37,7 +37,7 @@ const LcidTitleBox = ({
       <div className="margin-top-3 margin-bottom-105 bg-base-lightest tablet:grid-col-6 padding-3">
         <p className="margin-0">{t('titleBox.selected', { type: 'action' })}</p>
         <h3 className="margin-top-05 margin-bottom-105">{t(title)}</h3>
-        <Link to={`/governance-review-team/${systemIntakeId}/manage-lcid`}>
+        <Link to={`/it-governance/${systemIntakeId}/manage-lcid`}>
           {t('titleBox.change', { type: 'action' })}
         </Link>
       </div>

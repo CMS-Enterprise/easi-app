@@ -6,8 +6,8 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/easiencoding"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *ResolverSuite) TestTRBRequestDocumentResolvers() {
@@ -66,9 +66,7 @@ func createTRBRequestDocumentSubtest(suite *ResolverSuite, trbRequestID uuid.UUI
 
 func getTRBRequestDocumentsByRequestIDSubtest(suite *ResolverSuite, trbRequestID uuid.UUID, createdDocument *models.TRBRequestDocument) {
 	documents, err := GetTRBRequestDocumentsByRequestID(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
-		suite.testConfigs.S3Client,
+		suite.ctxWithNewDataloaders(),
 		trbRequestID,
 	)
 	suite.NoError(err)
@@ -87,9 +85,7 @@ func deleteTRBRequestDocumentSubtest(suite *ResolverSuite, createdDocument *mode
 	checkDocumentEquality(suite, createdDocument, createdDocument.CreatedBy, createdDocument.TRBRequestID, deletedDocument)
 
 	remainingDocuments, err := GetTRBRequestDocumentsByRequestID(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
-		suite.testConfigs.S3Client,
+		suite.ctxWithNewDataloaders(),
 		createdDocument.TRBRequestID,
 	)
 	suite.NoError(err)

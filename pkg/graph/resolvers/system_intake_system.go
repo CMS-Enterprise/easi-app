@@ -6,9 +6,9 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // SystemIntakeSystems utilizes dataloaders to retrieve systems linked to a given system intake ID
@@ -29,4 +29,8 @@ func SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*mode
 		systems = append(systems, cedarSystemSummary)
 	}
 	return systems, nil
+}
+
+func CedarSystemLinkedSystemIntakes(ctx context.Context, cedarSystemID string, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
+	return dataloaders.GetCedarSystemLinkedSystemIntakes(ctx, cedarSystemID, state)
 }

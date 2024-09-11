@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
 )
 
 // IntakeFindByCedarIDReader is a Reader for the IntakeFindByCedarID structure.

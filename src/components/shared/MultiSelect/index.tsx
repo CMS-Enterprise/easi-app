@@ -1,4 +1,5 @@
 import React, { CSSProperties, useEffect, useState } from 'react';
+import { RefCallBack } from 'react-hook-form';
 import Select, {
   ClearIndicatorProps,
   components,
@@ -132,7 +133,8 @@ const MultiSelect = ({
   onChange,
   initialValues,
   disabled,
-  className
+  className,
+  inputRef
 }: {
   id?: string;
   inputId?: string;
@@ -143,6 +145,7 @@ const MultiSelect = ({
   initialValues?: string[];
   disabled?: boolean;
   className?: string;
+  inputRef?: RefCallBack;
 }) => {
   const [
     selected,
@@ -244,6 +247,7 @@ const MultiSelect = ({
         placeholder={!disabled && `${selected?.length || 0} selected`}
         styles={customStyles}
         isDisabled={disabled}
+        ref={inputRef}
       />
       {selected && selected.length > 0 && (
         <div className="easi-multiselect--selected">

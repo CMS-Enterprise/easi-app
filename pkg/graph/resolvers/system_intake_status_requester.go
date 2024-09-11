@@ -1,10 +1,11 @@
 package resolvers
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 const noDecisionInvalidStateErrMsg = "issue calculating the requester intake status, intake is in an invalid state - step is DECISION, but decisionState is NO_DECISION"
@@ -13,7 +14,7 @@ const noDecisionInvalidStateErrMsg = "issue calculating the requester intake sta
 // based on the intake's current step, the state of that step, and the overall intake state (open/closed)
 func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTime time.Time) (models.SystemIntakeStatusRequester, error) {
 	if intake.Step == models.SystemIntakeStepDECISION && intake.DecisionState == models.SIDSNoDecision {
-		return "", fmt.Errorf(noDecisionInvalidStateErrMsg)
+		return "", errors.New(noDecisionInvalidStateErrMsg)
 	}
 
 	if intake.State == models.SystemIntakeStateClosed && intake.DecisionState == models.SIDSNoDecision {
@@ -115,7 +116,7 @@ func calcSystemIntakeDecisionStatusRequester(decisionState models.SystemIntakeDe
 	case models.SIDSNoDecision:
 		// we shouldn't hit this case, it should be caught by the check at the start of CalculateSystemIntakeRequesterStatus(),
 		// but it's repeated here for clarity and to make sure we handle all possible values of decisionState in this function
-		return "", fmt.Errorf(noDecisionInvalidStateErrMsg)
+		return "", errors.New(noDecisionInvalidStateErrMsg)
 	}
 
 	return "", fmt.Errorf("issue calculating the requester intake status, no valid decisionState")

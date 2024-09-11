@@ -13,7 +13,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // iamDB is a custom struct that satisfies the driver.Connector so that it can be used with sql.OpenDB.

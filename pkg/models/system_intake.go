@@ -129,6 +129,7 @@ type SystemIntake struct {
 	FundingNumber                   null.String                  `json:"fundingNumber" db:"funding_number"`
 	FundingSources                  []*SystemIntakeFundingSource `json:"fundingSources"`
 	HasUIChanges                    null.Bool                    `json:"hasUiChanges" db:"has_ui_changes"`
+	UsesAITech                      null.Bool                    `json:"usesAiTech" db:"uses_ai_tech"`
 	RequestFormState                SystemIntakeFormState        `json:"requestFormState" db:"request_form_state"`
 	DraftBusinessCaseState          SystemIntakeFormState        `json:"draftBusinessCaseState" db:"draft_business_case_state"`
 	FinalBusinessCaseState          SystemIntakeFormState        `json:"finalBusinessCaseState" db:"final_business_case_state"`
@@ -140,16 +141,6 @@ type SystemIntake struct {
 
 // SystemIntakes is a list of System Intakes
 type SystemIntakes []SystemIntake
-
-// SystemIntakeMetrics is a model for storing metrics related to system intake
-type SystemIntakeMetrics struct {
-	StartTime          time.Time `json:"startTime"`
-	EndTime            time.Time `json:"endTime"`
-	Started            int       `json:"started"`
-	CompletedOfStarted int       `json:"completedOfStarted"`
-	Completed          int       `json:"completed"`
-	Funded             int       `json:"funded"`
-}
 
 // SystemIntakeFormState represents the possible states of of any System Intake form types.
 type SystemIntakeFormState string
@@ -232,4 +223,36 @@ func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatu
 	}
 
 	return &issuedStatus
+}
+
+// RelatedSystemIntake is used when intakes are selected from the DB using linking tables and the related request ID is added as an aliased column.
+// This struct with the added related request ID allows for using the mapping helpers in the dataloader package.
+type RelatedSystemIntake struct {
+	SystemIntake
+	RelatedRequestID uuid.UUID `db:"related_request_id"`
+}
+
+func (s RelatedSystemIntake) GetMappingKey() uuid.UUID {
+	return s.RelatedRequestID
+}
+func (s RelatedSystemIntake) GetMappingVal() *SystemIntake {
+	return &s.SystemIntake
+}
+
+type SystemIntakesByCedarSystemIDsRequest struct {
+	CedarSystemID string
+	State         SystemIntakeState
+}
+
+type SystemIntakesByCedarSystemIDsResponse struct {
+	CedarSystemID string `db:"system_id"`
+	SystemIntake
+}
+
+func (s SystemIntakesByCedarSystemIDsResponse) GetMappingKey() string {
+	return s.CedarSystemID
+}
+
+func (s SystemIntakesByCedarSystemIDsResponse) GetMappingVal() *SystemIntake {
+	return &s.SystemIntake
 }

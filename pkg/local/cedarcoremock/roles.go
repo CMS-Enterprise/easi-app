@@ -1,13 +1,14 @@
 package cedarcoremock
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/guregu/null/zero"
 
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 var mockRoleTypes = []*models.CedarRoleType{
@@ -125,7 +126,11 @@ func GetSystemRoles(cedarSystemID string, roleTypeID *string) []*models.CedarRol
 		roleTypeIDStr = *roleTypeID
 	}
 	roleTypes := GetRoleTypes()
-	users := local.GetMockUserData()
+
+	oktaClient := local.NewOktaAPIClient()
+	//swallow error for mocking
+	users, _ := oktaClient.FetchUserInfos(context.Background(), local.GetMockUsernames())
+
 	mockSystemRoles := []*models.CedarRole{}
 
 	makeMockRoleFromUserAndRoleType := func(
@@ -138,7 +143,7 @@ func GetSystemRoles(cedarSystemID string, roleTypeID *string) []*models.CedarRol
 			ObjectID:          zero.StringFrom(cedarSystemID),
 			AssigneeType:      helpers.PointerTo(models.PersonAssignee),
 			AssigneeUsername:  zero.StringFrom(user.Username),
-			AssigneeEmail:     zero.StringFrom(fmt.Sprintf(`%s.%s@fake.local`, user.FirstName, user.LastName)),
+			AssigneeEmail:     zero.StringFrom(string(user.Email)),
 			AssigneeFirstName: zero.StringFrom(user.FirstName),
 			AssigneeLastName:  zero.StringFrom(user.LastName),
 			AssigneePhone:     zero.StringFrom("123-456-7890"),

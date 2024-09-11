@@ -4,7 +4,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TestTRBRequestLCIDCrud tests creation/deletion of TRB request LCIDs
@@ -33,7 +33,7 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 	}
 
 	s.Run("create/read/update TRB request system intakes", func() {
-		trbIntakes, err := GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		trbIntakes, err := GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(trbIntakes, 0)
 
@@ -45,7 +45,7 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 		})
 		s.NoError(err)
 
-		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		trbIntakes, err = GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(trbIntakes, 2)
 
@@ -65,7 +65,7 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 		})
 		s.NoError(err)
 
-		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		trbIntakes, err = GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(trbIntakes, 3)
 
@@ -86,7 +86,7 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 		})
 		s.NoError(err)
 
-		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		trbIntakes, err = GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(trbIntakes, 1)
 
@@ -105,7 +105,7 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 		})
 		s.NoError(err)
 
-		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		trbIntakes, err = GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(trbIntakes, 0)
 	})

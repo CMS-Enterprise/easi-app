@@ -9,10 +9,10 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
@@ -57,7 +57,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		results, err := s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, createdIDs)
 		s.NoError(err)
 
-		data := helpers.OneToMany[*models.SystemIntakeSystem](createdIDs, results)
+		data := helpers.OneToMany(createdIDs, results)
 		s.Equal(len(data), len(createdIDs))
 
 		for i, systemIntakeID := range createdIDs {
@@ -99,7 +99,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		results, err = s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
 
-		data = helpers.OneToMany[*models.SystemIntakeSystem]([]uuid.UUID{createdIDs[0]}, results)
+		data = helpers.OneToMany([]uuid.UUID{createdIDs[0]}, results)
 		s.Len(data, 1)
 		systemsFound := data[0]
 		s.Len(systemsFound, 4)
@@ -129,106 +129,5 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 
 		_, err = s.db.Exec("DELETE FROM system_intakes WHERE id = ANY($1)", pq.Array(createdIDs))
 		s.NoError(err)
-	})
-}
-
-func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
-	ctx := context.Background()
-
-	var (
-		open1 uuid.UUID
-		open2 uuid.UUID
-
-		closed uuid.UUID
-	)
-
-	const (
-		system1 = "1"
-		system2 = "2"
-		system3 = "3"
-		system4 = "4"
-	)
-
-	s.Run("test getting system intakes by cedar system id", func() {
-		// create some intakes
-		intake1 := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			RequestType: models.SystemIntakeRequestTypeNEW,
-			State:       models.SystemIntakeStateOpen,
-		}
-
-		create1, err := s.store.CreateSystemIntake(ctx, &intake1)
-		s.NoError(err)
-		s.NotNil(create1)
-
-		open1 = create1.ID
-
-		intake2 := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			RequestType: models.SystemIntakeRequestTypeNEW,
-			State:       models.SystemIntakeStateOpen,
-		}
-
-		create2, err := s.store.CreateSystemIntake(ctx, &intake2)
-		s.NoError(err)
-		s.NotNil(create2)
-
-		open2 = create2.ID
-
-		intake3 := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			RequestType: models.SystemIntakeRequestTypeNEW,
-			State:       models.SystemIntakeStateClosed,
-		}
-
-		create3, err := s.store.CreateSystemIntake(ctx, &intake3)
-		s.NoError(err)
-		s.NotNil(create3)
-
-		closed = create3.ID
-
-		// link all systems to all system intakes
-		systemNumbers := []string{
-			system1,
-			system2,
-			system3,
-			system4,
-		}
-
-		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			return s.store.SetSystemIntakeSystems(ctx, tx, open1, systemNumbers)
-		})
-		s.NoError(err)
-
-		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			return s.store.SetSystemIntakeSystems(ctx, tx, open2, systemNumbers)
-		})
-		s.NoError(err)
-
-		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			return s.store.SetSystemIntakeSystems(ctx, tx, closed, systemNumbers)
-		})
-		s.NoError(err)
-
-		results, err := s.store.SystemIntakesByCedarSystemID(ctx, system1, models.SystemIntakeStateOpen)
-		s.NoError(err)
-		s.Len(results, 2)
-
-		foundClosed := false
-
-		for _, result := range results {
-			if result.ID == closed {
-				foundClosed = true
-				break
-			}
-		}
-
-		s.False(foundClosed)
-
-		// now get the closed one
-		results, err = s.store.SystemIntakesByCedarSystemID(ctx, system1, models.SystemIntakeStateClosed)
-		s.NoError(err)
-		s.Len(results, 1)
-		s.Equal(results[0].ID, closed)
 	})
 }

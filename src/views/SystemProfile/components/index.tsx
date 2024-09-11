@@ -137,10 +137,10 @@ const sideNavItems = (
           componentId: 'funding-and-budget',
           groupEnd: true
         },
-        ato: {
+        'ato-and-security': {
           component: <ATO system={system} />,
-          route: `/systems/${system.id}/ato`,
-          componentId: 'ato',
+          route: `/systems/${system.id}/ato-and-security`,
+          componentId: 'ato-and-security',
           hashLinks: [
             {
               name: i18next.t<string>('systemProfile:navigation.ato'),
@@ -184,10 +184,10 @@ const sideNavItems = (
           route: `/systems/${system.id}/contracts`,
           componentId: 'contracts'
         },
-        ato: {
+        'ato-and-security': {
           component: <ATO system={system} />,
-          route: `/systems/${system.id}/ato`,
-          componentId: 'ato'
+          route: `/systems/${system.id}/ato-and-security`,
+          componentId: 'ato-and-security'
         },
         'lifecycle-id': {
           component: <SystemHome system={system} />,

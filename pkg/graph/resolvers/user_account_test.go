@@ -3,7 +3,7 @@ package resolvers
 import (
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 )
 
 func (s *ResolverSuite) TestGetUserAccountByID() {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -11,6 +11,9 @@ import { SystemIntake } from 'queries/types/SystemIntake';
 import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
+import ITGovAdminContext from 'views/GovernanceReviewTeam/ITGovAdminContext';
+
+import RelatedRequestsTable from './RelatedRequestsTable';
 
 const AdditionalInformation = ({
   request,
@@ -21,7 +24,9 @@ const AdditionalInformation = ({
 }) => {
   const { t } = useTranslation('admin');
 
-  const parentRoute = type === 'itgov' ? 'governance-review-team' : 'trb';
+  const parentRoute = type === 'itgov' ? 'it-governance' : 'trb';
+
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   return (
     <div>
@@ -71,32 +76,46 @@ const AdditionalInformation = ({
         </Alert>
       )}
 
-      {(request.relationType === null ||
-        request.relationType === RequestRelationType.NEW_SYSTEM) && (
-        <UswdsReactLink
-          to={`/${parentRoute}/${request.id}/additional-information/link`}
-          className={classNames('usa-button', {
-            'usa-button--outline': request.relationType !== null
-          })}
-        >
-          {t('linkSystem')}
-        </UswdsReactLink>
+      {isITGovAdmin &&
+        (request.relationType === null ||
+          request.relationType === RequestRelationType.NEW_SYSTEM) && (
+          <UswdsReactLink
+            to={`/${parentRoute}/${request.id}/additional-information/link`}
+            className={classNames('usa-button', {
+              'usa-button--outline': request.relationType !== null
+            })}
+          >
+            {t('linkSystem')}
+          </UswdsReactLink>
+        )}
+
+      {request.relationType !== null && (
+        <>
+          {request.contractNumbers?.length > 0 && (
+            <div className="margin-top-3">
+              <strong>
+                {t('contractNumber', {
+                  count: request.contractNumbers.length
+                })}
+              </strong>
+              <p className="margin-top-1">
+                {formatContractNumbers(request.contractNumbers)}
+              </p>
+            </div>
+          )}
+
+          {(!request.contractNumbers || request.contractNumbers.length < 1) && (
+            <div className="margin-top-3">
+              <strong>{t('contractNumber')}</strong>
+              <p className="margin-top-1 text-base text-italic">
+                {t('noContractNumber')}
+              </p>
+            </div>
+          )}
+        </>
       )}
 
-      {type !== 'itgov' && // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
-        request.relationType !== null &&
-        request.contractNumbers?.length > 0 && (
-          <div className="margin-top-3">
-            <strong>
-              {t('contractNumber', {
-                count: request.contractNumbers.length
-              })}
-            </strong>
-            <p className="margin-top-1">
-              {formatContractNumbers(request.contractNumbers)}
-            </p>
-          </div>
-        )}
+      <RelatedRequestsTable requestID={request.id} type={type} />
     </div>
   );
 };

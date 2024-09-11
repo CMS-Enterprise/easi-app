@@ -11,8 +11,8 @@ import (
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	apiclient "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	apiclient "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client"
 )
 
 type loggingTransport struct {

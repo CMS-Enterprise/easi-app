@@ -6,8 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSubmitInitialIntakeFormReviewer() {
@@ -25,7 +24,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormReviewer() {
 	requestType := models.SystemIntakeRequestTypeRECOMPETE
 	processStage := "some kind of stage"
 	adminLink := fmt.Sprintf(
-		"%s://%s/governance-review-team/%s/intake-request",
+		"%s://%s/it-governance/%s/intake-request",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),
@@ -147,10 +146,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormReviewer() {
 		)
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("system intake submission reviewer template is nil", e.Err.Error())
+		s.Equal("system intake submission reviewer template is nil", err.Error())
 	})
 
 	s.Run("if the template fails to execute, we get the error from it", func() {
@@ -170,10 +166,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormReviewer() {
 		)
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("template caller had an error", e.Err.Error())
+		s.Equal("template caller had an error", err.Error())
 	})
 
 	s.Run("if the sender fails, we get the error from it", func() {
@@ -194,9 +187,6 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormReviewer() {
 		)
 
 		s.Error(err)
-		s.IsType(&apperrors.NotificationError{}, err)
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("sender had an error", e.Err.Error())
+		s.Equal("sender had an error", err.Error())
 	})
 }

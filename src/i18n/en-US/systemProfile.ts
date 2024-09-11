@@ -20,6 +20,7 @@ const systemProfile = {
     teamAdditional: 'Additional team members',
     'funding-and-budget': 'Funding and Budget',
     'tools-and-software': 'Tools and Software',
+    'ato-and-security': 'ATO and Security',
     ato: 'ATO',
     atoPoamsAndFindings: 'POA&Ms and findings',
     atoDatesFormsAndTesting: 'Dates, forms, and testing',
@@ -401,6 +402,7 @@ const systemProfile = {
     id: 'system-list',
     search: 'Search table',
     header: {
+      openRequests: 'Open EASi requests',
       systemName: 'System name',
       systemOwner: 'CMS component',
       systemAcronym: 'Acronym',
@@ -423,6 +425,12 @@ const systemProfile = {
       header: 'Don’t see the system you’re looking for?',
       description:
         'If you believe there’s an error in the table above, please refresh the page. You may also use the Systems section of EASi to view information about all CMS systems.  <link1>Go to all CMS systems<iconForward /></link1>'
+    },
+    atoStatusColumn: {
+      Active: 'Expires',
+      'Due Soon': 'Expires',
+      Expired: 'Expired',
+      'No ATO': 'No ATO on file'
     }
   },
   bookmark: {

@@ -11,11 +11,11 @@ import (
 	"gopkg.in/launchdarkly/go-server-sdk.v5/ldcomponents"
 	"gopkg.in/launchdarkly/go-server-sdk.v5/testhelpers/ldtestdata"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func noErr(err error) {
@@ -78,7 +78,7 @@ func migrateIntakes() {
 		intake := i // prevent gosec's G601 -- Implicit memory aliasing in for loop.
 		fmt.Println("Preparing to update system intake", intake.ID.String())
 
-		bizCase, err := store.FetchBusinessCaseBySystemIntakeID(ctx, intake.ID)
+		bizCase, err := store.GetBusinessCaseBySystemIntakeID(ctx, intake.ID)
 		noErr(err)
 		if bizCase != nil {
 			fmt.Println("Found biz case for intake", intake.ID.String())

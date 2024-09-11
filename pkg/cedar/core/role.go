@@ -12,11 +12,11 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	apiroles "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
-	apimodels "github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
-	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	apiroles "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/role"
+	apimodels "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 const (
@@ -432,7 +432,7 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 
 	if resp.Payload.Result == "error" {
 		if len(resp.Payload.Message) > 0 {
-			return fmt.Errorf(resp.Payload.Message[0]) // message from CEDAR should be "Role assignment(s) could not be found"
+			return errors.New(resp.Payload.Message[0]) // message from CEDAR should be "Role assignment(s) could not be found"
 		}
 		return fmt.Errorf("unknown error")
 	}
@@ -469,7 +469,7 @@ func (c *Client) deleteRoles(ctx context.Context, roleIDsToDelete []string) erro
 
 	if resp.Payload.Result == "error" {
 		if len(resp.Payload.Message) > 0 {
-			return fmt.Errorf(resp.Payload.Message[0]) // should be "Role assignment(s) could not be found"
+			return errors.New(resp.Payload.Message[0]) // should be "Role assignment(s) could not be found"
 		}
 		return fmt.Errorf("unknown error")
 	}

@@ -58,6 +58,8 @@ const mockTrbRequestData: TrbRequest = {
   state: TRBRequestState.OPEN,
   taskStatuses: {} as any,
   feedback: [],
+  relatedTRBRequests: [],
+  relatedIntakes: [],
   __typename: 'TRBRequest'
 };
 
@@ -102,6 +104,8 @@ const documents = (
       state: TRBRequestState.OPEN,
       taskStatuses: {} as any,
       feedback: [],
+      relatedTRBRequests: [],
+      relatedIntakes: [],
       __typename: 'TRBRequest'
     }}
     stepUrl={{ current: '', next: '', back: '' }}

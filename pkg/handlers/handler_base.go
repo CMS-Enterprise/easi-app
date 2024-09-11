@@ -9,8 +9,8 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 )
 
 // NewHandlerBase is a constructor for HandlerBase
@@ -97,14 +97,6 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 				traceID,
 			)
 		}
-	case *apperrors.NotificationError:
-		logger.Error("Returning server error response from handler", zap.Error(appErr))
-		code = http.StatusInternalServerError
-		response = newErrorResponse(
-			code,
-			"Failed to send notification",
-			traceID,
-		)
 	case *apperrors.ExternalAPIError:
 		logger.Error("Returning service unavailable error response from handler", zap.Error(appErr))
 		code = http.StatusServiceUnavailable

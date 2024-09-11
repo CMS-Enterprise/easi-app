@@ -6,7 +6,12 @@ import { render, screen, waitFor } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
-import { getSystemIntakeQuery, systemIntake } from 'data/mock/systemIntake';
+import {
+  getGovernanceTaskListQuery,
+  getSystemIntakeContactsQuery,
+  getSystemIntakeQuery,
+  systemIntake
+} from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
 
@@ -39,6 +44,27 @@ const waitForPageLoad = async (testId: string = 'grt-submit-action-view') => {
     expect(screen.getByTestId(testId)).toBeInTheDocument();
   });
 };
+
+const mockStore = configureMockStore();
+const defaultStore = mockStore({
+  auth: {
+    euaId: 'AAAA',
+    isUserSet: true,
+    groups: ['EASI_D_GOVTEAM']
+  },
+  systemIntake: {
+    systemIntake: {
+      ...systemIntake,
+      businessCaseId: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
+    }
+  },
+  businessCase: {
+    form: {
+      ...businessCaseInitialData,
+      id: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
+    }
+  }
+});
 
 describe('Governance Review Team', () => {
   const adminNotesAndActionsQuery = {
@@ -99,39 +125,19 @@ describe('Governance Review Team', () => {
     }
   };
 
-  const mockStore = configureMockStore();
-  const defaultStore = mockStore({
-    auth: {
-      euaId: 'AAAA',
-      isUserSet: true,
-      groups: ['EASI_D_GOVTEAM']
-    },
-    systemIntake: {
-      systemIntake: {
-        ...systemIntake,
-        businessCaseId: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
-      }
-    },
-    businessCase: {
-      form: {
-        ...businessCaseInitialData,
-        id: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
-      }
-    }
-  });
-
   it('renders without errors (intake request)', async () => {
     render(
       <MemoryRouter
-        initialEntries={[
-          `/governance-review-team/${systemIntake.id}/intake-request`
-        ]}
+        initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
+        <MockedProvider
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+          addTypename={false}
+        >
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/intake-request">
-                <RequestOverview />
+              <Route path="/it-governance/:systemId/intake-request">
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -147,15 +153,13 @@ describe('Governance Review Team', () => {
   it('renders GRT business case view', async () => {
     render(
       <MemoryRouter
-        initialEntries={[
-          `/governance-review-team/${systemIntake.id}/business-case`
-        ]}
+        initialEntries={[`/it-governance/${systemIntake.id}/business-case`]}
       >
         <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/business-case">
-                <RequestOverview />
+              <Route path="/it-governance/:systemId/business-case">
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -168,7 +172,7 @@ describe('Governance Review Team', () => {
   it('renders GRT notes view', async () => {
     render(
       <MemoryRouter
-        initialEntries={[`/governance-review-team/${systemIntake.id}/notes`]}
+        initialEntries={[`/it-governance/${systemIntake.id}/notes`]}
       >
         {/* TODO: There shouldn't need to be three mocked queries; only 2 */}
         <MockedProvider
@@ -181,8 +185,8 @@ describe('Governance Review Team', () => {
         >
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/notes">
-                <RequestOverview />
+              <Route path="/it-governance/:systemId/notes">
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -195,13 +199,13 @@ describe('Governance Review Team', () => {
   it('renders GRT dates view', async () => {
     render(
       <MemoryRouter
-        initialEntries={[`/governance-review-team/${systemIntake.id}/dates`]}
+        initialEntries={[`/it-governance/${systemIntake.id}/dates`]}
       >
         <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/dates">
-                <RequestOverview />
+              <Route path="/it-governance/:systemId/dates">
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -215,13 +219,13 @@ describe('Governance Review Team', () => {
   it('renders GRT decision view', async () => {
     render(
       <MemoryRouter
-        initialEntries={[`/governance-review-team/${systemIntake.id}/decision`]}
+        initialEntries={[`/it-governance/${systemIntake.id}/decision`]}
       >
         <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/decision">
-                <RequestOverview />
+              <Route path="/it-governance/:systemId/decision">
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -234,13 +238,16 @@ describe('Governance Review Team', () => {
   it('renders GRT actions view', async () => {
     render(
       <MemoryRouter
-        initialEntries={[`/governance-review-team/${systemIntake.id}/actions`]}
+        initialEntries={[`/it-governance/${systemIntake.id}/actions`]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
+        <MockedProvider
+          mocks={[getSystemIntakeQuery(), getGovernanceTaskListQuery()]}
+          addTypename={false}
+        >
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/actions">
-                <RequestOverview />
+              <Route path="/it-governance/:systemId/actions">
+                <RequestOverview grbReviewers={[]} />
               </Route>
             </MessageProvider>
           </Provider>
@@ -248,5 +255,33 @@ describe('Governance Review Team', () => {
       </MemoryRouter>
     );
     await waitForPageLoad('grt-actions-view');
+  });
+});
+
+describe('Governance Review Board', () => {
+  it('hides GRT navigation items', async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
+      >
+        <MockedProvider
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+          addTypename={false}
+        >
+          <Provider store={defaultStore}>
+            <MessageProvider>
+              <Route path="/it-governance/:systemId/intake-request">
+                <RequestOverview grbReviewers={[]} />
+              </Route>
+            </MessageProvider>
+          </Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    await waitForPageLoad('intake-review');
+
+    expect(screen.queryByRole('link', { name: 'Dates' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Action' })).toBeNull();
   });
 });

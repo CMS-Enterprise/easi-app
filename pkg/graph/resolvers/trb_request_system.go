@@ -6,9 +6,9 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TRBRequestSystems utilizes dataloaders to retrieve systems linked to a given trb request ID
@@ -29,4 +29,8 @@ func TRBRequestSystems(ctx context.Context, trbRequestID uuid.UUID) ([]*models.C
 		systems = append(systems, cedarSystemSummary)
 	}
 	return systems, nil
+}
+
+func CedarSystemLinkedTRBRequests(ctx context.Context, cedarSystemID string, state models.TRBRequestState) ([]*models.TRBRequest, error) {
+	return dataloaders.GetCedarSystemLinkedTRBRequests(ctx, cedarSystemID, state)
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // NewSystemIntake generates a system intake to use in tests
@@ -52,5 +52,6 @@ func NewSystemIntake() models.SystemIntake {
 		ContractStartDate:  &now,
 		ContractEndDate:    &now,
 		HasUIChanges:       null.BoolFrom(false),
+		UsesAITech:         null.BoolFrom(true),
 	}
 }

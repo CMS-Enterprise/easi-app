@@ -3,7 +3,6 @@ package storage
 import (
 	"context"
 	"fmt"
-	"math/rand"
 	"time"
 
 	"github.com/facebookgo/clock"
@@ -11,11 +10,10 @@ import (
 	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, request_type, requester, archived_at) VALUES (:id, :eua_user_id, :request_type, :requester, :archived_at)"
@@ -437,109 +435,6 @@ func (s *StoreTestSuite) TestFetchSystemIntakeByID() {
 	})
 }
 
-func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
-	ctx := context.Background()
-
-	s.Run("golden path to fetch system intakes", func() {
-		intake := testhelpers.NewSystemIntake()
-		intake2 := testhelpers.NewSystemIntake()
-		intake2.EUAUserID = intake.EUAUserID
-
-		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-			s.NoError(err)
-			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
-			s.NoError(err)
-
-			return nil
-		})
-		s.NoError(err)
-
-		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
-
-		s.NoError(err, "failed to fetch system intakes")
-		s.Len(fetched, 2)
-		s.Equal(intake.EUAUserID, fetched[0].EUAUserID)
-	})
-
-	s.Run("does not fetch archived intake", func() {
-		intake := testhelpers.NewSystemIntake()
-		intake2 := testhelpers.NewSystemIntake()
-		intake2.EUAUserID = intake.EUAUserID
-
-		// set archived at for intake2
-		intake2.ArchivedAt = helpers.PointerTo(time.Now())
-
-		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-			s.NoError(err)
-			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
-			s.NoError(err)
-
-			return nil
-		})
-		s.NoError(err)
-
-		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
-
-		s.NoError(err, "failed to fetch system intakes")
-		s.Len(fetched, 1)
-		s.Equal(intake.EUAUserID, fetched[0].EUAUserID)
-	})
-
-	s.Run("fetches no results with other EUA ID", func() {
-		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, testhelpers.RandomEUAID())
-
-		s.NoError(err)
-		s.Len(fetched, 0)
-		s.Equal(models.SystemIntakes{}, fetched)
-	})
-
-	s.Run("fetches biz case ID if it exists", func() {
-		intake := testhelpers.NewSystemIntake()
-		intake2 := testhelpers.NewSystemIntake()
-		id := intake.ID
-		intake2.EUAUserID = intake.EUAUserID
-
-		bizCase := testhelpers.NewBusinessCase(id)
-
-		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-			s.NoError(err)
-			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
-			s.NoError(err)
-			_, err = tx.NamedExec(insertRelatedBizCaseSQL, &bizCase)
-			s.NoError(err)
-
-			return nil
-		})
-		s.NoError(err)
-
-		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
-
-		s.NoError(err, "failed to fetch system intakes")
-		s.Len(fetched, 2)
-		fetchedIntakeWithBizCase := func(fetched models.SystemIntakes) models.SystemIntake {
-			for _, intake := range fetched {
-				if intake.ID == id {
-					return intake
-				}
-			}
-			return models.SystemIntake{}
-		}
-		fetchedIntakeWithoutBizCase := func(fetched models.SystemIntakes) models.SystemIntake {
-			for _, intake := range fetched {
-				if intake.ID != id {
-					return intake
-				}
-			}
-			return models.SystemIntake{}
-		}
-		s.Equal(&bizCase.ID, fetchedIntakeWithBizCase(fetched).BusinessCaseID)
-		s.Equal((*uuid.UUID)(nil), fetchedIntakeWithoutBizCase(fetched).BusinessCaseID)
-	})
-}
-
 func (s *StoreTestSuite) TestFetchSystemIntakes() {
 	s.Run("fetches all intakes", func() {
 		ctx := context.Background()
@@ -566,147 +461,6 @@ func (s *StoreTestSuite) TestFetchSystemIntakes() {
 			s.True(found, "did not receive expected intake", id)
 		}
 	})
-}
-
-func (s *StoreTestSuite) TestFetchSystemIntakeMetrics() {
-	ctx := context.Background()
-
-	mockClock := clock.NewMock()
-	settableClock := testhelpers.SettableClock{Mock: mockClock}
-	s.store.clock = &settableClock
-
-	// create a random year to avoid test collisions
-	// uses postgres max year minus 1000000
-	//nolint
-	rand.Seed(time.Now().UnixNano())
-	// #nosec G404
-	endYear := rand.Intn(294276)
-	endDate := time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
-	startDate := endDate.AddDate(0, -1, 0)
-	var startedTests = []struct {
-		name          string
-		createdAt     time.Time
-		expectedCount int
-	}{
-		{"start time is included", startDate, 1},
-		{"end time is not included", endDate, 1},
-		{"mid time is included", startDate.AddDate(0, 0, 1), 2},
-		{"before time is not included", startDate.AddDate(0, 0, -1), 2},
-		{"after time is not included", endDate.AddDate(0, 0, 1), 2},
-	}
-	for _, tt := range startedTests {
-		s.Run(fmt.Sprintf("%s for started count", tt.name), func() {
-			settableClock.Set(tt.createdAt)
-			intake := testhelpers.NewSystemIntake()
-			_, err := s.store.CreateSystemIntake(ctx, &intake)
-			s.NoError(err)
-
-			metrics, err := s.store.FetchSystemIntakeMetrics(ctx, startDate, endDate)
-
-			s.NoError(err)
-			s.Equal(tt.expectedCount, metrics.Started)
-		})
-	}
-
-	// #nosec G404
-	endYear = rand.Intn(294276)
-	endDate = time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
-	startDate = endDate.AddDate(0, -1, 0)
-	var completedTests = []struct {
-		name          string
-		createdAt     time.Time
-		submittedAt   time.Time
-		expectedCount int
-	}{
-		{
-			"started but not finished is not included",
-			startDate,
-			endDate.AddDate(0, 0, 1),
-			0,
-		},
-		{
-			"started and finished is included",
-			startDate,
-			startDate.AddDate(0, 0, 1),
-			1,
-		},
-		{
-			"started before is not included",
-			startDate.AddDate(0, 0, -1),
-			startDate.AddDate(0, 0, 1),
-			1,
-		},
-	}
-	for i := range completedTests {
-		tt := completedTests[i]
-		s.Run(fmt.Sprintf("%s for completed count", tt.name), func() {
-			intake := testhelpers.NewSystemIntake()
-			settableClock.Set(tt.createdAt)
-			_, err := s.store.CreateSystemIntake(ctx, &intake)
-			s.NoError(err)
-			intake.SubmittedAt = &tt.submittedAt
-			_, err = s.store.UpdateSystemIntake(ctx, &intake)
-			s.NoError(err)
-
-			metrics, err := s.store.FetchSystemIntakeMetrics(ctx, startDate, endDate)
-
-			s.NoError(err)
-			s.Equal(tt.expectedCount, metrics.CompletedOfStarted)
-		})
-	}
-
-	// #nosec G404
-	endYear = rand.Intn(294276)
-	endDate = time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
-	startDate = endDate.AddDate(0, -1, 0)
-	var fundedTests = []struct {
-		name           string
-		submittedAt    time.Time
-		funded         bool
-		completedCount int
-		fundedCount    int
-	}{
-		{
-			"completed out of range and funded",
-			endDate.AddDate(0, 0, 1),
-			true,
-			0,
-			0,
-		},
-		{
-			"completed in range and funded",
-			startDate,
-			true,
-			1,
-			1,
-		},
-		{
-			"completed in range and not funded",
-			startDate,
-			false,
-			2,
-			1,
-		},
-	}
-	for i := range fundedTests {
-		tt := fundedTests[i]
-		s.Run(tt.name, func() {
-			intake := testhelpers.NewSystemIntake()
-			settableClock.Set(tt.submittedAt)
-			intake.ExistingFunding = null.BoolFrom(tt.funded)
-			_, err := s.store.CreateSystemIntake(ctx, &intake)
-			s.NoError(err)
-			intake.SubmittedAt = &tt.submittedAt
-			_, err = s.store.UpdateSystemIntake(ctx, &intake)
-			s.NoError(err)
-
-			metrics, err := s.store.FetchSystemIntakeMetrics(ctx, startDate, endDate)
-
-			s.NoError(err)
-			s.Equal(tt.completedCount, metrics.Completed)
-			s.Equal(tt.fundedCount, metrics.Funded)
-		})
-	}
 }
 
 func (s *StoreTestSuite) TestUpdateAdminLead() {

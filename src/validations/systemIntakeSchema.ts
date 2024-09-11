@@ -1,31 +1,44 @@
+import i18next from 'i18next';
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
-import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-import { SystemIntakeDocumentCommonType } from 'types/graphql-global-types';
+import { FormattedFundingSource } from 'components/FundingSources';
+import {
+  SystemIntakeDocumentCommonType,
+  SystemIntakeDocumentVersion
+} from 'types/graphql-global-types';
 
-const governanceTeamNames = cmsGovernanceTeams.map(team => team.value);
-
-const govTeam = Yup.object().shape({
-  name: Yup.string().oneOf(governanceTeamNames),
-  collaborator: Yup.string().when('name', (name: string, schema) =>
-    schema.required(
-      `Tell us the name of the person you've been working with from the ${name}`
-    )
-  )
-});
+const govTeam = (name: string) =>
+  Yup.object().shape({
+    isPresent: Yup.boolean(),
+    collaborator: Yup.string().when('isPresent', {
+      is: true,
+      then: Yup.string().required(
+        `Tell us the name of the person you've been working with from the ${name}`
+      )
+    })
+  });
 
 const governanceTeams = Yup.object().shape({
   isPresent: Yup.boolean()
     .nullable()
     .required('Select if you are working with any teams'),
-  teams: Yup.array().when('isPresent', {
-    is: true,
-    then: schema =>
-      schema
-        .min(1, 'Mark all teams you are currently collaborating with')
-        .of(govTeam)
-  })
+  teams: Yup.object()
+    .shape({
+      technicalReviewBoard: govTeam('Technical Review Board'),
+      securityPrivacy: govTeam("OIT's Security and Privacy Group"),
+      enterpriseArchitecture: govTeam('Enterprise Architecture')
+    })
+    .test(
+      'min',
+      'Mark all teams you are currently collaborating with',
+      (teams, context) => {
+        const { isPresent } = context.parent;
+        return isPresent
+          ? Object.values(teams).some(team => team.isPresent)
+          : true;
+      }
+    )
 });
 
 const SystemIntakeValidationSchema = {
@@ -72,6 +85,9 @@ const SystemIntakeValidationSchema = {
       .trim()
       .required('Tell us how you think of solving your business need'),
     currentStage: Yup.string().required('Tell us where you are in the process'),
+    usesAiTech: Yup.boolean()
+      .nullable()
+      .required('Tell us if your request involves AI technologies'),
     needsEaSupport: Yup.boolean()
       .nullable()
       .required('Tell us if you need Enterprise Architecture (EA) support'),
@@ -97,9 +113,9 @@ const SystemIntakeValidationSchema = {
       )
     }),
     contract: Yup.object().shape({
-      hasContract: Yup.string().required(
-        'Tell us whether you have a contract to support this effort'
-      ),
+      hasContract: Yup.string()
+        .nullable()
+        .required('Tell us whether you have a contract to support this effort'),
       contractor: Yup.string().when('hasContract', {
         is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.string()
@@ -192,6 +208,34 @@ const SystemIntakeValidationSchema = {
 };
 
 export default SystemIntakeValidationSchema;
+
+export const FundingSourcesValidationSchema = Yup.object().shape({
+  fundingSources: Yup.array().of(
+    Yup.object({
+      id: Yup.string(),
+      fundingNumber: Yup.string()
+        .trim()
+        .required('Funding number must be exactly 6 digits')
+        .length(6, 'Funding number must be exactly 6 digits')
+        .matches(/^\d+$/, 'Funding number can only contain digits'),
+      sources: Yup.array().of(Yup.string()).min(1, 'Select a funding source')
+    }).test('is-unique', 'Must be unique', (value, context) => {
+      const fundingNumbers: string[] = context.parent
+        .filter((source: FormattedFundingSource) => source.id !== value.id)
+        .map((source: FormattedFundingSource) => source.fundingNumber);
+
+      const isUnique = !fundingNumbers.includes(value?.fundingNumber!);
+
+      return (
+        isUnique ||
+        context.createError({
+          path: `${context.path}.fundingNumber`,
+          message: 'Funding number must be unique'
+        })
+      );
+    })
+  )
+});
 
 export const DateValidationSchema: any = Yup.object().shape(
   {
@@ -306,5 +350,18 @@ export const documentSchema = Yup.object({
   otherTypeDescription: Yup.string().when('documentType', {
     is: 'OTHER',
     then: schema => schema.required()
-  })
+  }),
+  version: Yup.mixed<SystemIntakeDocumentVersion>().required(),
+  sendNotification: Yup.boolean().when(
+    '$type',
+    (type: 'admin' | 'requester', schema: Yup.BooleanSchema) => {
+      if (type === 'admin') {
+        return schema.required(
+          i18next.t('technicalAssistance:errors.makeSelection')
+        );
+      }
+
+      return schema;
+    }
+  )
 });

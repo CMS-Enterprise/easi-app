@@ -11,8 +11,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type systemIntakeReopenRequestEmailParameters struct {
@@ -35,7 +34,7 @@ func (sie systemIntakeEmails) reopenRequestBody(
 	additionalInfo *models.HTML,
 ) (string, error) {
 	requesterPath := path.Join("governance-task-list", systemIntakeID.String())
-	adminPath := path.Join("governance-review-team", systemIntakeID.String(), "intake-request")
+	adminPath := path.Join("it-governance", systemIntakeID.String(), "intake-request")
 
 	var submissionDate string
 	if submittedAt != nil {
@@ -82,18 +81,14 @@ func (sie systemIntakeEmails) SendReopenRequestNotification(
 	subject := fmt.Sprintf("The Governance Team has re-opened %s in EASi", requestName)
 	body, err := sie.reopenRequestBody(systemIntakeID, requestName, requesterName, reason, submittedAt, additionalInfo)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = sie.client.sender.Send(
+	return sie.client.sender.Send(
 		ctx,
-		sie.client.listAllRecipients(recipients),
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(sie.client.listAllRecipients(recipients)).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }

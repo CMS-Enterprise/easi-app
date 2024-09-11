@@ -12,6 +12,9 @@ import GovernanceOverviewContent from 'components/GovernanceOverview';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import linkCedarSystemIdQueryString, {
+  useLinkCedarSystemIdQueryParam
+} from 'utils/linkCedarSystemIdQueryString';
 
 import './index.scss';
 
@@ -23,6 +26,9 @@ const GovernanceOverview = () => {
 
   const { state } = useLocation<{ isNew?: boolean }>();
   const isNew = !!state?.isNew;
+
+  const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+  const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
 
   return (
     <MainContent
@@ -41,6 +47,7 @@ const GovernanceOverview = () => {
       <Link
         to={{
           pathname: `/system/request-type/${systemId || ''}`,
+          search: linkCedarSystemIdQs,
           state: { isNew }
         }}
         className="display-flex flex-align-center text-primary"
@@ -63,6 +70,7 @@ const GovernanceOverview = () => {
           variant="unstyled"
           to={{
             pathname: `/system/link/${systemId}`,
+            search: linkCedarSystemIdQs,
             state: { isNew }
           }}
         >

@@ -8,9 +8,9 @@ import (
 	"github.com/guregu/null"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // ActionExecuter is a function that can execute an action
@@ -80,7 +80,7 @@ func NewSaveAction(
 // executes submit of a system intake
 func NewSubmitSystemIntake(
 	config Config,
-	authorize func(context.Context, *models.SystemIntake) (bool, error),
+	authorized func(context.Context, *models.SystemIntake) bool,
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	submitToCEDAR func(context.Context, *models.SystemIntake) (string, error),
 	saveAction func(context.Context, *models.Action) error,
@@ -103,12 +103,8 @@ func NewSubmitSystemIntake(
 	) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
-		ok, err := authorize(ctx, intake)
-		if err != nil {
-			return err
-		}
-		if !ok {
-			return &apperrors.UnauthorizedError{Err: err}
+		if !authorized(ctx, intake) {
+			return &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to submit system intake")}
 		}
 
 		isResubmitted := false
@@ -139,8 +135,7 @@ func NewSubmitSystemIntake(
 		}
 
 		// Store in the `actions` table
-		err = saveAction(ctx, action)
-		if err != nil {
+		if err := saveAction(ctx, action); err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
 				Model:     action,
@@ -149,7 +144,7 @@ func NewSubmitSystemIntake(
 		}
 
 		// Update the SystemIntake in the DB
-		intake, err = update(ctx, intake)
+		intake, err := update(ctx, intake)
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
@@ -191,12 +186,12 @@ func NewSubmitSystemIntake(
 // executes submit of a business case
 func NewSubmitBusinessCase(
 	config Config,
-	authorize func(context.Context, *models.SystemIntake) (bool, error),
-	fetchOpenBusinessCase func(context.Context, uuid.UUID) (*models.BusinessCase, error),
-	validateForSubmit func(businessCase *models.BusinessCase) error,
+	authorized func(context.Context, *models.SystemIntake) bool,
+	fetchOpenBusinessCase func(context.Context, uuid.UUID) (*models.BusinessCaseWithCosts, error),
+	validateForSubmit func(businessCase *models.BusinessCaseWithCosts) error,
 	saveAction func(context.Context, *models.Action) error,
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
+	updateBusinessCase func(context.Context, *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error),
 	emailRequester func(
 		ctx context.Context,
 		requesterEmail models.EmailAddress,
@@ -213,15 +208,11 @@ func NewSubmitBusinessCase(
 		isResubmitted bool,
 		isDraft bool,
 	) error,
-	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
+	submitToCEDAR func(ctx context.Context, bc models.BusinessCaseWithCosts) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
-		ok, err := authorize(ctx, intake)
-		if err != nil {
-			return err
-		}
-		if !ok {
-			return &apperrors.UnauthorizedError{Err: err}
+		if !authorized(ctx, intake) {
+			return &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to submit business case")}
 		}
 
 		businessCase, err := fetchOpenBusinessCase(ctx, intake.ID)

@@ -1,16 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 type progressOptions struct {
@@ -23,17 +23,17 @@ type progressOptions struct {
 
 // always fills out and submits the initial request form
 func makeSystemIntakeAndProgressToStep(
+	ctx context.Context,
 	name string,
 	intakeID *uuid.UUID,
 	requesterEUA string,
-	logger *zap.Logger,
 	store *storage.Store,
 	newStep models.SystemIntakeStepToProgressTo,
 	options *progressOptions,
 ) *models.SystemIntake {
-	intake := makeSystemIntakeAndSubmit(name, intakeID, requesterEUA, logger, store)
+	intake := makeSystemIntakeAndSubmit(ctx, name, intakeID, requesterEUA, store)
 	if options == nil {
-		return progressIntake(logger, store, intake, newStep, nil)
+		return progressIntake(ctx, store, intake, newStep, nil)
 	}
 	if options.meetingDate != nil &&
 		(newStep == models.SystemIntakeStepToProgressToDraftBusinessCase ||
@@ -47,37 +47,37 @@ func makeSystemIntakeAndProgressToStep(
 			panic("no prior steps to fill!")
 		case models.SystemIntakeStepToProgressToGrtMeeting:
 			// completed draft biz case step
-			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToDraftBusinessCase, nil)
-			intake = makeDraftBusinessCaseV1("draft biz case", logger, store, intake) // partially fills biz case form
-			intake = submitBusinessCaseV1(logger, store, intake)
+			intake = progressIntake(ctx, store, intake, models.SystemIntakeStepToProgressToDraftBusinessCase, nil)
+			intake = makeDraftBusinessCaseV1(ctx, "draft biz case", store, intake) // partially fills biz case form
+			intake = submitBusinessCaseV1(ctx, store, intake)
 		case models.SystemIntakeStepToProgressToFinalBusinessCase:
 			// complete draft biz case step
-			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToDraftBusinessCase, nil)
-			intake = makeFinalBusinessCaseV1("final biz case", logger, store, intake) // fully fills biz case form
-			intake = submitBusinessCaseV1(logger, store, intake)
+			intake = progressIntake(ctx, store, intake, models.SystemIntakeStepToProgressToDraftBusinessCase, nil)
+			intake = makeFinalBusinessCaseV1(ctx, "final biz case", store, intake) // fully fills biz case form
+			intake = submitBusinessCaseV1(ctx, store, intake)
 			// complete GRT meeting step
-			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToGrtMeeting, &pastMeetingDate)
+			intake = progressIntake(ctx, store, intake, models.SystemIntakeStepToProgressToGrtMeeting, &pastMeetingDate)
 		case models.SystemIntakeStepToProgressToGrbMeeting:
 			// complete draft biz case step
-			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToDraftBusinessCase, nil)
-			intake = makeFinalBusinessCaseV1("final biz case", logger, store, intake) // fully fills biz case form
-			intake = submitBusinessCaseV1(logger, store, intake)
+			intake = progressIntake(ctx, store, intake, models.SystemIntakeStepToProgressToDraftBusinessCase, nil)
+			intake = makeFinalBusinessCaseV1(ctx, "final biz case", store, intake) // fully fills biz case form
+			intake = submitBusinessCaseV1(ctx, store, intake)
 			// complete GRT meeting step
-			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToGrtMeeting, &pastMeetingDate)
+			intake = progressIntake(ctx, store, intake, models.SystemIntakeStepToProgressToGrtMeeting, &pastMeetingDate)
 			// complete final biz case step
-			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToFinalBusinessCase, nil)
+			intake = progressIntake(ctx, store, intake, models.SystemIntakeStepToProgressToFinalBusinessCase, nil)
 			// no need to fill biz case form again, draft/final are the same form
-			intake = submitBusinessCaseV1(logger, store, intake)
+			intake = submitBusinessCaseV1(ctx, store, intake)
 		}
 	}
-	intake = progressIntake(logger, store, intake, newStep, options.meetingDate)
+	intake = progressIntake(ctx, store, intake, newStep, options.meetingDate)
 	// skip if previous steps already filled out the business case
 	if options.fillForm && !options.completeOtherSteps {
 		switch newStep {
 		case models.SystemIntakeStepToProgressToDraftBusinessCase:
-			intake = makeDraftBusinessCaseV1("draft biz case", logger, store, intake)
+			intake = makeDraftBusinessCaseV1(ctx, "draft biz case", store, intake)
 		case models.SystemIntakeStepToProgressToFinalBusinessCase:
-			intake = makeFinalBusinessCaseV1("final biz case", logger, store, intake)
+			intake = makeFinalBusinessCaseV1(ctx, "final biz case", store, intake)
 		case models.SystemIntakeStepToProgressToGrbMeeting:
 			fallthrough
 		case models.SystemIntakeStepToProgressToGrtMeeting:
@@ -90,9 +90,9 @@ func makeSystemIntakeAndProgressToStep(
 		}
 		switch newStep {
 		case models.SystemIntakeStepToProgressToDraftBusinessCase:
-			intake = submitBusinessCaseV1(logger, store, intake)
+			intake = submitBusinessCaseV1(ctx, store, intake)
 		case models.SystemIntakeStepToProgressToFinalBusinessCase:
-			intake = submitBusinessCaseV1(logger, store, intake)
+			intake = submitBusinessCaseV1(ctx, store, intake)
 		case models.SystemIntakeStepToProgressToGrbMeeting:
 			fallthrough
 		case models.SystemIntakeStepToProgressToGrtMeeting:
@@ -114,21 +114,19 @@ func makeSystemIntakeAndProgressToStep(
 		case models.SystemIntakeStepToProgressToGrtMeeting:
 			panic("cannot request edits to non-form step")
 		}
-		requestEditsToIntakeForm(logger, store, intake, targetedForm)
+		requestEditsToIntakeForm(ctx, store, intake, targetedForm)
 	}
 	return intake
 }
 
 // Progresses an intake to a new step
 func progressIntake(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	newStep models.SystemIntakeStepToProgressTo,
 	meetingDate *time.Time,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
-
 	feedbackText := models.HTML(fmt.Sprintf("feedback for %s progressing to %s", string(intake.Step), string(newStep)))
 	grbRecommendations := models.HTML(fmt.Sprintf("grb recommendations for %s progressing to %s", string(intake.Step), string(newStep)))
 	additionalInfo := models.HTML(fmt.Sprintf("additional info for %s progressing to %s", string(intake.Step), string(newStep)))
@@ -155,12 +153,11 @@ func progressIntake(
 }
 
 func requestEditsToIntakeForm(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	targetedForm models.SystemIntakeFormStep,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
 	adminNote := models.HTML(fmt.Sprintf("admin note that edits were requested to %s form", string(targetedForm)))
 	additionalInfo := models.HTML(fmt.Sprintf("add'l info about edits requested on %s form", string(targetedForm)))
 

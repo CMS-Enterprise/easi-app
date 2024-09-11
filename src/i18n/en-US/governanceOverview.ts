@@ -61,7 +61,7 @@ const governanceOverview = {
     {
       heading: 'Decision and next steps',
       content:
-        'If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will recieve documented next steps or concerns to address in order to proceed.'
+        'If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.'
     }
   ],
   processExists: {

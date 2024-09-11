@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *ResolverSuite) TestCreateTRBAdminNoteGeneralRequest() {
@@ -203,7 +203,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		s.Error(err)
 
 		// check that admin note didn't get created at all
-		createdNotes, err := GetTRBAdminNotesByTRBRequestID(ctx, store, trbRequestForNote.ID)
+		createdNotes, err := GetTRBAdminNotesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequestForNote.ID)
 		s.NoError(err)
 		s.Len(createdNotes, 0)
 	})
@@ -372,7 +372,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 		s.Error(err)
 
 		// check that admin note didn't get created at all
-		createdNotes, err := GetTRBAdminNotesByTRBRequestID(ctx, store, trbRequestForNote.ID)
+		createdNotes, err := GetTRBAdminNotesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequestForNote.ID)
 		s.NoError(err)
 		s.Len(createdNotes, 0)
 	})

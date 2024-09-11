@@ -18,7 +18,7 @@ linters-settings:
   goimports:
     # put imports beginning with prefix after 3rd-party packages;
     # it's a comma-separated list of prefixes
-    local-prefixes: github.com/cmsgov/easi-app
+    local-prefixes: github.com/cms-enterprise/easi-app
   revive:
     confidence: 0.1 # Default is 0.8. We want to ignore things that have an extremely low confidence level
   exhaustive:
@@ -49,11 +49,15 @@ issues:
   exclude-use-default: false
   exclude:
     - "ST1000" # Exclude package comments from `stylecheck`
+  exclude-files:
+    - "pkg/graph/generated/generated.go" # Since we don't ignore _all_ generated files, we have to ignore this one specifically
+    - "pkg/models/models_gen.go" # Since we don't ignore _all_ generated files, we have to ignore this one specifically
   exclude-rules:
     - text: 'shadow: declaration of "err" shadows declaration at'
       linters: [ govet ]
+  exclude-generated: disable
 
 run:
   # timeout for analysis, e.g. 30s, 5m, default is 1m
-  deadline: 8m
+  timeout: 8m
   concurrency: 1

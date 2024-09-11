@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendRequestEditsNotification() {
@@ -51,7 +51,7 @@ func (s *EmailTestSuite) TestSendRequestEditsNotification() {
 			)
 		}
 		adminLink := fmt.Sprintf(
-			"%s://%s/governance-review-team/%s/",
+			"%s://%s/it-governance/%s/",
 			s.config.URLScheme,
 			s.config.URLHost,
 			intakeID.String(),

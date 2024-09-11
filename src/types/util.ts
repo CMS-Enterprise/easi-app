@@ -1,5 +1,5 @@
 import { DocumentNode, FetchResult, GraphQLRequest } from '@apollo/client';
-import { MockedResponse } from '@apollo/react-testing';
+import { MockedResponse } from '@apollo/client/testing';
 
 export type NonNullableProps<T> = {
   [P in keyof T]: NonNullable<T[P]>;

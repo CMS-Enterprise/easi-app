@@ -3,7 +3,7 @@ package models
 import "github.com/google/uuid"
 
 // TRBRequestSystem is the insertion type for linking a trb request to
-// system(s)
+// CEDAR system(s)
 type TRBRequestSystem struct {
 	BaseStructUser
 	TRBRequestID uuid.UUID `db:"trb_request_id"`
@@ -17,6 +17,9 @@ func NewTRBRequestSystem(createdBy uuid.UUID) TRBRequestSystem {
 	}
 }
 
-func (t TRBRequestSystem) GetMappingID() uuid.UUID {
+func (t TRBRequestSystem) GetMappingKey() uuid.UUID {
 	return t.TRBRequestID
+}
+func (t TRBRequestSystem) GetMappingVal() *TRBRequestSystem {
+	return &t
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';

@@ -3,8 +3,8 @@ package lcidactions
 import (
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // GetConfirmLCIDAction is a method to set all the relevant data fields for that are a result of an Update LCID action.

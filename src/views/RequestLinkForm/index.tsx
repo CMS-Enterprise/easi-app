@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -19,6 +19,10 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import {
+  useGetSystemIntakeRelationQuery,
+  useGetTrbRequestRelationQuery
+} from 'gql/gen/graphql';
 
 import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
@@ -29,8 +33,6 @@ import IconButton from 'components/shared/IconButton';
 import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import {
-  GetSystemIntakeRelationQuery,
-  GetTrbRequestRelationQuery,
   SetSystemIntakeRelationExistingServiceQuery,
   SetSystemIntakeRelationExistingSystemQuery,
   SetSystemIntakeRelationNewSystemQuery,
@@ -40,14 +42,6 @@ import {
   UnlinkSystemIntakeRelationQuery,
   UnlinkTrbRequestRelationQuery
 } from 'queries/SystemIntakeRelationQueries';
-import {
-  GetSystemIntakeRelation,
-  GetSystemIntakeRelationVariables
-} from 'queries/types/GetSystemIntakeRelation';
-import {
-  GetTrbRequestRelation,
-  GetTrbRequestRelationVariables
-} from 'queries/types/GetTrbRequestRelation';
 import {
   SetSystemIntakeRelationExistingService,
   SetSystemIntakeRelationExistingServiceVariables
@@ -83,12 +77,22 @@ import {
 import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
+import { useLinkCedarSystemIdQueryParam } from 'utils/linkCedarSystemIdQueryString';
+
+type RequestLinkFormFields = {
+  relationType: RequestRelationType | null;
+  cedarSystemIDs: string[];
+  contractNumbers: string;
+  contractName: string;
+};
+
 /**
  * This request link relation form is used in the contexts of TRB Requests and System Intakes.
  * There are 3 variables used to configure modes for this component:
  * - `requestType`
  * - `fromAdmin`
  * - `isNew`
+ * The query string var `linkCedarSystemId` is used to prefill the Existing Systems dropdown.
  */
 const RequestLinkForm = ({
   requestType,
@@ -113,6 +117,8 @@ const RequestLinkForm = ({
 
   const { state } = useLocation<{ isNew?: boolean }>();
 
+  const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+
   // Form edit mode is either new or edit
   const isNew = !!state?.isNew;
 
@@ -122,7 +128,7 @@ const RequestLinkForm = ({
     if (fromAdmin) {
       return requestType === 'trb'
         ? `/trb/${id}/additional-information`
-        : `/governance-review-team/${id}/additional-information`;
+        : `/it-governance/${id}/additional-information`;
     }
     return requestType === 'trb'
       ? `/trb/task-list/${id}`
@@ -143,24 +149,21 @@ const RequestLinkForm = ({
   const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
   const [isUnlinkModalOpen, setUnlinkModalOpen] = useState<boolean>(false);
 
-  const { data, error: relationError, loading: relationLoading } = useQuery<
-    GetSystemIntakeRelation | GetTrbRequestRelation,
-    GetSystemIntakeRelationVariables | GetTrbRequestRelationVariables
-  >(
+  const query =
     requestType === 'trb'
-      ? GetTrbRequestRelationQuery
-      : GetSystemIntakeRelationQuery,
-    {
-      variables: { id }
-    }
-  );
+      ? useGetTrbRequestRelationQuery
+      : useGetSystemIntakeRelationQuery;
+
+  const { data, error: relationError, loading: relationLoading } = query({
+    variables: { id }
+  });
 
   const cedarSystemIdOptions = useMemo(() => {
     const cedarSystemsData = data?.cedarSystems;
     return !cedarSystemsData
       ? []
       : cedarSystemsData.map(system => ({
-          label: system.name,
+          label: `${system.name} (${system.acronym})`,
           value: system.id
         }));
   }, [data?.cedarSystems]);
@@ -205,12 +208,12 @@ const RequestLinkForm = ({
       : UnlinkSystemIntakeRelationQuery
   );
 
-  const { control, watch, setValue, handleSubmit } = useForm<{
-    relationType: RequestRelationType | null;
-    cedarSystemIDs: string[];
-    contractNumbers: string;
-    contractName: string;
-  }>({
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit
+  } = useForm<RequestLinkFormFields>({
     defaultValues: {
       relationType: null,
       cedarSystemIDs: [],
@@ -219,8 +222,19 @@ const RequestLinkForm = ({
     },
     values: (values => {
       if (!values) return undefined;
+
+      // Condition for prefilling existing systems on new requests
+      if (values.relationType === null && linkCedarSystemId) {
+        return {
+          relationType: RequestRelationType.EXISTING_SYSTEM,
+          cedarSystemIDs: [linkCedarSystemId],
+          contractNumbers: '',
+          contractName: ''
+        };
+      }
+
       return {
-        relationType: values.relationType,
+        relationType: values.relationType || null,
         cedarSystemIDs: values.systems.map(v => v.id),
         contractNumbers: formatContractNumbers(values.contractNumbers),
         contractName: values.contractName || ''

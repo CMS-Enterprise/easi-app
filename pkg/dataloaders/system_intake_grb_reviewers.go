@@ -6,8 +6,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (d *dataReader) batchSystemIntakeGRBReviewersBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeGRBReviewer, []error) {
@@ -16,7 +16,7 @@ func (d *dataReader) batchSystemIntakeGRBReviewersBySystemIntakeIDs(ctx context.
 		return nil, []error{err}
 	}
 
-	return helpers.OneToMany[*models.SystemIntakeGRBReviewer](systemIntakeIDs, data), nil
+	return helpers.OneToMany(systemIntakeIDs, data), nil
 }
 
 func GetSystemIntakeGRBReviewersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeGRBReviewer, error) {

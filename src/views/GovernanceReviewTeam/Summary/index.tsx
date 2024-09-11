@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -16,24 +16,28 @@ import {
 } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
+import AdminRequestHeaderSummary from 'components/shared/AdminRequestHeaderSummary';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import StateTag from 'components/StateTag';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
+import { SystemIntake_systems as System } from 'queries/types/SystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
 import {
+  RequestRelationType,
   SystemIntakeState,
   SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
-import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { translateRequestType } from 'utils/systemIntake';
 
+import ITGovAdminContext from '../ITGovAdminContext';
+
 import './index.scss';
 
-type RequestSummaryProps = {
+export type RequestSummaryProps = {
   id: string;
   requester: Requester;
   requestName: string;
@@ -44,6 +48,9 @@ type RequestSummaryProps = {
   lcid: string | null;
   contractNumbers: string[];
   state: SystemIntakeState;
+  contractName: string | null;
+  relationType: RequestRelationType | null;
+  systems: System[];
 };
 
 const RequestSummary = ({
@@ -56,7 +63,10 @@ const RequestSummary = ({
   submittedAt,
   lcid,
   contractNumbers = [],
-  state
+  state,
+  contractName,
+  relationType,
+  systems
 }: RequestSummaryProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const [isModalOpen, setModalOpen] = useState(false);
@@ -67,6 +77,8 @@ const RequestSummary = ({
       errorPolicy: 'all'
     }
   );
+
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   /** Admin lead text and modal trigger button */
   const AdminLead = () => {
@@ -85,18 +97,20 @@ const RequestSummary = ({
           {!adminLead && <IconError className="text-error margin-right-05" />}
           {adminLead || t('governanceReviewTeam:adminLeads.notAssigned')}
         </span>
-        <Button
-          type="button"
-          className="width-auto"
-          unstyled
-          onClick={() => {
-            // Reset newAdminLead to value in intake
-            resetNewAdminLead();
-            setModalOpen(true);
-          }}
-        >
-          {buttonText}
-        </Button>
+        {isITGovAdmin && (
+          <Button
+            type="button"
+            className="width-auto"
+            unstyled
+            onClick={() => {
+              // Reset newAdminLead to value in intake
+              resetNewAdminLead();
+              setModalOpen(true);
+            }}
+          >
+            {buttonText}
+          </Button>
+        )}
       </>
     );
   };
@@ -149,50 +163,22 @@ const RequestSummary = ({
                 {t('header:home')}
               </BreadcrumbLink>
             </Breadcrumb>
-            <Breadcrumb current>{t('governanceRequestDetails')}</Breadcrumb>
+            <Breadcrumb current>{t('itGovernanceRequestDetails')}</Breadcrumb>
           </BreadcrumbBar>
 
-          {/* Request summary */}
-          <h2 className="margin-top-05 margin-bottom-2">{requestName}</h2>
-
-          <Grid row gap>
-            <Grid tablet={{ col: 8 }}>
-              <h5 className="text-normal margin-y-0">{t('requestType')}</h5>
-              <h4 className="margin-top-05 margin-bottom-2">
-                {translateRequestType(requestType)}
-              </h4>
-
-              <h5 className="text-normal margin-y-0">
-                {t('intake:review.contractNumber')}
-              </h5>
-              <h4 className="margin-top-05 margin-bottom-2">
-                {/* TODO: (Sam) review */}
-                {contractNumbers.join(', ') ||
-                  t('intake:review.noContractNumber')}
-              </h4>
-            </Grid>
-
-            <Grid tablet={{ col: 4 }}>
-              <h5 className="text-normal margin-y-0">
-                {t('intake:contactDetails.requester')}
-              </h5>
-              <h4 className="margin-top-05 margin-bottom-2">
-                {getPersonNameAndComponentAcronym(
-                  requester?.name || '',
-                  requester?.component
-                )}
-              </h4>
-
-              <h5 className="text-normal margin-y-0">
-                {t('intake:fields.submissionDate')}
-              </h5>
-              <h4 className="margin-top-05 margin-bottom-2">
-                {submittedAt
-                  ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
-                  : 'N/A'}
-              </h4>
-            </Grid>
-          </Grid>
+          <AdminRequestHeaderSummary
+            requestName={requestName}
+            submittedAt={submittedAt || ''}
+            requestType={translateRequestType(requestType)}
+            relationType={relationType}
+            contractName={contractName}
+            systems={systems}
+            requester={getPersonNameAndComponentAcronym(
+              requester?.name || '',
+              requester?.component
+            )}
+            contractNumbers={contractNumbers}
+          />
         </GridContainer>
       </section>
 
@@ -217,12 +203,11 @@ const RequestSummary = ({
                   </p>
                 )
               }
-              <Link
-                to={`/governance-review-team/${id}/actions`}
-                className="usa-link"
-              >
-                {t('action:takeAnAction')}
-              </Link>
+              {isITGovAdmin && (
+                <Link to={`/it-governance/${id}/actions`} className="usa-link">
+                  {t('action:takeAnAction')}
+                </Link>
+              )}
             </Grid>
 
             {/* Admin lead */}

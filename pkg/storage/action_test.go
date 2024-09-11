@@ -6,8 +6,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func (s *StoreTestSuite) TestCreateAction() {
@@ -90,7 +90,7 @@ func (s *StoreTestSuite) TestFetchActionsByRequestID() {
 		s.NoError(err)
 		_, err = s.store.CreateAction(ctx, &action2)
 		s.NoError(err)
-		fetched, err := s.store.GetActionsByRequestID(ctx, intake.ID)
+		fetched, err := s.store.GetActionsBySystemIntakeID(ctx, intake.ID)
 
 		s.NoError(err, "failed to fetch actions")
 		s.Len(fetched, 2)
@@ -107,7 +107,7 @@ func (s *StoreTestSuite) TestFetchActionsByRequestID() {
 		_, err = s.store.CreateAction(ctx, &action)
 		s.NoError(err)
 
-		fetched, err := s.store.GetActionsByRequestID(ctx, intake.ID)
+		fetched, err := s.store.GetActionsBySystemIntakeID(ctx, intake.ID)
 
 		s.NoError(err, "failed to fetch actions")
 		s.Len(fetched, 2)

@@ -7,9 +7,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/sqlqueries"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // UserAccountGetByCommonName gets a user account by a give username

@@ -7,16 +7,17 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/easiencoding"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/upload"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
 // GetTRBRequestDocumentsByRequestID fetches all documents attached to the TRB request with the given ID.
-func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, id uuid.UUID) ([]*models.TRBRequestDocument, error) {
-	return store.GetTRBRequestDocumentsByRequestID(ctx, id)
+func GetTRBRequestDocumentsByRequestID(ctx context.Context, id uuid.UUID) ([]*models.TRBRequestDocument, error) {
+	return dataloaders.GetTRBRequestDocumentsByRequestID(ctx, id)
 }
 
 // GetURLForTRBRequestDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key

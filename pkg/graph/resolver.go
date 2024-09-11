@@ -5,11 +5,11 @@ import (
 
 	ldclient "gopkg.in/launchdarkly/go-server-sdk.v5"
 
-	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/upload"
+	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
 //go:generate go run github.com/99designs/gqlgen

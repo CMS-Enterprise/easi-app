@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatusAdmin, SystemIntakeStatusRequester, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState, RequestRelationType } from "./../../types/graphql-global-types";
+import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatusAdmin, SystemIntakeStatusRequester, SystemIntakeDocumentCommonType, SystemIntakeDocumentVersion, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState, RequestRelationType, TRBRequestStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntake
@@ -96,8 +96,9 @@ export interface GetSystemIntake_systemIntake_isso {
 
 export interface GetSystemIntake_systemIntake_fundingSources {
   __typename: "SystemIntakeFundingSource";
-  source: string | null;
+  id: UUID;
   fundingNumber: string | null;
+  source: string | null;
 }
 
 export interface GetSystemIntake_systemIntake_productManager {
@@ -124,9 +125,13 @@ export interface GetSystemIntake_systemIntake_documents {
   documentType: GetSystemIntake_systemIntake_documents_documentType;
   id: UUID;
   fileName: string;
+  version: SystemIntakeDocumentVersion;
   status: SystemIntakeDocumentStatus;
   uploadedAt: Time;
-  url: string;
+  url: string | null;
+  canView: boolean;
+  canDelete: boolean;
+  systemIntakeId: UUID;
 }
 
 export interface GetSystemIntake_systemIntake_systems_businessOwnerRoles {
@@ -144,6 +149,40 @@ export interface GetSystemIntake_systemIntake_systems {
   acronym: string | null;
   businessOwnerOrg: string | null;
   businessOwnerRoles: GetSystemIntake_systemIntake_systems_businessOwnerRoles[];
+}
+
+export interface GetSystemIntake_systemIntake_relatedTRBRequests_contractNumbers {
+  __typename: "TRBRequestContractNumber";
+  contractNumber: string;
+}
+
+export interface GetSystemIntake_systemIntake_relatedTRBRequests {
+  __typename: "TRBRequest";
+  id: UUID;
+  name: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: GetSystemIntake_systemIntake_relatedTRBRequests_contractNumbers[];
+  status: TRBRequestStatus;
+  createdAt: Time;
+}
+
+export interface GetSystemIntake_systemIntake_relatedIntakes_contractNumbers {
+  __typename: "SystemIntakeContractNumber";
+  contractNumber: string;
+}
+
+export interface GetSystemIntake_systemIntake_relatedIntakes {
+  __typename: "SystemIntake";
+  id: UUID;
+  requestName: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: GetSystemIntake_systemIntake_relatedIntakes_contractNumbers[];
+  decisionState: SystemIntakeDecisionState;
+  submittedAt: Time | null;
 }
 
 export interface GetSystemIntake_systemIntake {
@@ -196,6 +235,7 @@ export interface GetSystemIntake_systemIntake {
   archivedAt: Time | null;
   euaUserId: string | null;
   hasUiChanges: boolean | null;
+  usesAiTech: boolean | null;
   documents: GetSystemIntake_systemIntake_documents[];
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;
@@ -207,9 +247,21 @@ export interface GetSystemIntake_systemIntake {
    * Linked systems
    */
   systems: GetSystemIntake_systemIntake_systems[];
+  /**
+   * TRB Requests that share a CEDAR System or Contract Number
+   */
+  relatedTRBRequests: GetSystemIntake_systemIntake_relatedTRBRequests[];
+  /**
+   * Other System Intakes that share a CEDAR System or Contract Number
+   */
+  relatedIntakes: GetSystemIntake_systemIntake_relatedIntakes[];
 }
 
 export interface GetSystemIntake {
+  /**
+   * Requests fetches a requester's own intake requests
+   * first is currently non-functional and can be removed later
+   */
   systemIntake: GetSystemIntake_systemIntake | null;
 }
 
