@@ -84,10 +84,8 @@ function TaskList() {
     UpdateTrbRequestArchivedVariables
   >(UpdateTrbRequestArchivedQuery);
 
-  const [
-    isRemoveRequestModalOpen,
-    setRemoveRequestModalOpen
-  ] = useState<boolean>(false);
+  const [isRemoveRequestModalOpen, setRemoveRequestModalOpen] =
+    useState<boolean>(false);
 
   const removeRequest = () => {
     archive({ variables: { id, archived: true } }).then(result => {
@@ -185,11 +183,16 @@ function TaskList() {
                   <TaskListDescription>
                     <p>{taskListText[0].text}</p>
 
-                    {editsRequested && formStatus !== TRBFormStatus.COMPLETED && (
-                      <Alert type="warning" slim className="margin-bottom-205">
-                        {t('taskList.editsRequestedWarning')}
-                      </Alert>
-                    )}
+                    {editsRequested &&
+                      formStatus !== TRBFormStatus.COMPLETED && (
+                        <Alert
+                          type="warning"
+                          slim
+                          className="margin-bottom-205"
+                        >
+                          {t('taskList.editsRequestedWarning')}
+                        </Alert>
+                      )}
                   </TaskListDescription>
                   {/* Continue to fill out the request form or view the submitted request if it's completed */}
                   {formStatus === TRBFormStatus.COMPLETED ? (

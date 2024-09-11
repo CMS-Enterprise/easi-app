@@ -712,9 +712,8 @@ describe('The business case data', () => {
 
   describe('prepareBusinessCaseForApi', () => {
     it('Formats lifecycle costs for API', () => {
-      const formattedLifecycleCosts: ApiLifecycleCostLine[] = prepareBusinessCaseForApi(
-        mockBusinessCase
-      ).lifecycleCostLines;
+      const formattedLifecycleCosts: ApiLifecycleCostLine[] =
+        prepareBusinessCaseForApi(mockBusinessCase).lifecycleCostLines;
 
       expect(formattedLifecycleCosts).toEqual(lifecycleCostLines);
     });

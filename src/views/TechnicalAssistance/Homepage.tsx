@@ -61,9 +61,8 @@ function Homepage() {
   // Current user info from redux
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
-  const { loading, error, data } = useQuery<GetTrbRequests>(
-    GetTrbRequestsQuery
-  );
+  const { loading, error, data } =
+    useQuery<GetTrbRequests>(GetTrbRequestsQuery);
 
   const infoBoxText = t<Record<string, string[]>>('infoBox', {
     returnObjects: true

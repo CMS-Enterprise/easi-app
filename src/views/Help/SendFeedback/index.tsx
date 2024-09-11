@@ -288,7 +288,8 @@ export async function parseFeedbackForm(
 
     // Parse fields of option groups with optional additional text
     else if (field in sendFeedbackOptionFieldsForTextInput) {
-      const additional = `${field}${ADDITIONAL_TEXT_INPUT_SUFFIX}` as keyof SendFeedbackEmailForm;
+      const additional =
+        `${field}${ADDITIONAL_TEXT_INPUT_SUFFIX}` as keyof SendFeedbackEmailForm;
 
       const optionForTextInput =
         sendFeedbackOptionFieldsForTextInput[
@@ -461,7 +462,7 @@ const SendFeedback = () => {
       />
       <Formik
         initialValues={
-          (sendFeedbackEmailFormSchema.getDefaultFromShape() as unknown) as SendFeedbackEmailForm
+          sendFeedbackEmailFormSchema.getDefaultFromShape() as unknown as SendFeedbackEmailForm
         }
         validationSchema={sendFeedbackEmailFormSchema}
         validateOnBlur={false}
