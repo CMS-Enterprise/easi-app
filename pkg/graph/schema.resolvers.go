@@ -969,6 +969,8 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 			return
 		}
 
+		// _Always_ send an email to CEDAR with role change information
+		// This is used as an audit trail by the CEDAR team to help keep an eye on changes
 		if err := r.emailClient.SendCedarRolesChangedEmail(emailCtx, requesterUserInfo.DisplayName, targetUserInfo.DisplayName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now()); err != nil {
 			// don't fail the request if the email fails, just log and return from the go func
 			appcontext.ZLogger(emailCtx).Error("failed to send CEDAR notification email", zap.Error(err))
