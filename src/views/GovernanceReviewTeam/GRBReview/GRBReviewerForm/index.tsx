@@ -168,9 +168,10 @@ const GRBReviewerForm = ({
         name="root"
         as={<Alert type="error" className="margin-top-2" />}
       />
-      <Grid className="tablet:grid-col-8 padding-y-4">
+
+      <Grid className="padding-y-4">
         <h1 className="margin-bottom-1">{t('form.title')}</h1>
-        <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-105">
+        <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-105 tablet:grid-col-8">
           {t('form.description')}
         </p>
 
@@ -189,12 +190,12 @@ const GRBReviewerForm = ({
           {t('form.returnToRequest', { context: action })}
         </IconLink>
 
-        <Tabs defaultActiveTab={t('form.addViaEUA')}>
+        <Tabs
+          defaultActiveTab={t('form.addViaEUA')}
+          className="margin-bottom-8"
+        >
           <TabPanel id="addReviewerFromEua" tabName={t('form.addViaEUA')}>
-            <Form
-              onSubmit={submit}
-              className="maxw-none tablet:grid-col-9 margin-bottom-8"
-            >
+            <Form onSubmit={submit} className="maxw-none tablet:grid-col-6">
               <FormGroup>
                 <Label htmlFor="react-select-userAccount-input" required>
                   {t('form.grbMemberName')}
@@ -341,29 +342,37 @@ const GRBReviewerForm = ({
             id="addReviewersFromRequest"
             tabName={t('form.addFromRequest')}
           >
-            <p>{t('form.addFromRequestDescription')}</p>
+            <div className="tablet:grid-col-6">
+              <p className="line-height-body-5 margin-top-3">
+                {t('form.addFromRequestDescription')}
+              </p>
 
-            <FormGroup>
-              <Label htmlFor="itGovernanceRequests">
-                {t('form.itGovernanceRequests')}
-              </Label>
-              <HelpText id="itGovernanceRequestsHelpText">
-                {t('form.itGovernanceRequestsHelpText')}
-              </HelpText>
+              <FormGroup>
+                <Label
+                  htmlFor="itGovernanceRequests"
+                  className="text-normal margin-bottom-05"
+                >
+                  {t('form.itGovernanceRequests')}
+                </Label>
+                <HelpText id="itGovernanceRequestsHelpText">
+                  {t('form.itGovernanceRequestsHelpText')}
+                </HelpText>
 
-              <ComboBox
-                id="itGovernanceRequests"
-                name="itGovernanceRequests"
-                // TODO: onChange
-                onChange={val => null}
-                // TODO: Set requests as options
-                options={[
-                  { value: 'One', label: 'One' },
-                  { value: 'Two', label: 'Two' },
-                  { value: 'Three', label: 'Three' }
-                ]}
-              />
-            </FormGroup>
+                <ComboBox
+                  id="itGovernanceRequests"
+                  name="itGovernanceRequests"
+                  className="maxw-none"
+                  // TODO: onChange
+                  onChange={val => null}
+                  // TODO: Set requests as options
+                  options={[
+                    { value: 'One', label: 'One' },
+                    { value: 'Two', label: 'Two' },
+                    { value: 'Three', label: 'Three' }
+                  ]}
+                />
+              </FormGroup>
+            </div>
           </TabPanel>
         </Tabs>
       </Grid>
