@@ -227,7 +227,9 @@ const systemProfile = {
           returnButtonLabel:
             'Don’t add a team member and return to previous page',
           alertInfo:
-            'This new team member will be able to edit information about your system within EASi. Please make sure this individual should be able to do this before you proceed.'
+            'This new team member will be able to edit information about your system within EASi. Please make sure this individual should be able to do this before you proceed.',
+          memberAlreadySelectedInfo:
+            'This individual has already been added as a team member. Their existing roles are populated below. Adding or removing roles will change the roles assigned to this individual for this system.'
         },
         edit: {
           title: 'Edit team member roles',

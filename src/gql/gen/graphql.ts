@@ -3081,6 +3081,13 @@ export type UserInfo = {
   lastName: Scalars['String']['output'];
 };
 
+export type GetSystemTeamMembersQueryVariables = Exact<{
+  cedarSystemId: Scalars['String']['input'];
+}>;
+
+
+export type GetSystemTeamMembersQuery = { __typename: 'Query', cedarSystemDetails?: { __typename: 'CedarSystemDetails', roles: Array<{ __typename: 'CedarRole', assigneeUsername?: string | null }> } | null };
+
 export type CreateSystemIntakeGRBReviewerMutationVariables = Exact<{
   input: CreateSystemIntakeGRBReviewerInput;
 }>;
@@ -3195,6 +3202,48 @@ export const SystemIntakeGRBReviewerFragmentDoc = gql`
   }
 }
     `;
+export const GetSystemTeamMembersDocument = gql`
+    query GetSystemTeamMembers($cedarSystemId: String!) {
+  cedarSystemDetails(cedarSystemId: $cedarSystemId) {
+    roles {
+      assigneeUsername
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSystemTeamMembersQuery__
+ *
+ * To run a query within a React component, call `useGetSystemTeamMembersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSystemTeamMembersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSystemTeamMembersQuery({
+ *   variables: {
+ *      cedarSystemId: // value for 'cedarSystemId'
+ *   },
+ * });
+ */
+export function useGetSystemTeamMembersQuery(baseOptions: Apollo.QueryHookOptions<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables> & ({ variables: GetSystemTeamMembersQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables>(GetSystemTeamMembersDocument, options);
+      }
+export function useGetSystemTeamMembersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables>(GetSystemTeamMembersDocument, options);
+        }
+export function useGetSystemTeamMembersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables>(GetSystemTeamMembersDocument, options);
+        }
+export type GetSystemTeamMembersQueryHookResult = ReturnType<typeof useGetSystemTeamMembersQuery>;
+export type GetSystemTeamMembersLazyQueryHookResult = ReturnType<typeof useGetSystemTeamMembersLazyQuery>;
+export type GetSystemTeamMembersSuspenseQueryHookResult = ReturnType<typeof useGetSystemTeamMembersSuspenseQuery>;
+export type GetSystemTeamMembersQueryResult = Apollo.QueryResult<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables>;
 export const CreateSystemIntakeGRBReviewerDocument = gql`
     mutation CreateSystemIntakeGRBReviewer($input: CreateSystemIntakeGRBReviewerInput!) {
   createSystemIntakeGRBReviewer(input: $input) {
@@ -3755,6 +3804,7 @@ export type UpdateTrbRequestLeadMutationResult = Apollo.MutationResult<UpdateTrb
 export type UpdateTrbRequestLeadMutationOptions = Apollo.BaseMutationOptions<UpdateTrbRequestLeadMutation, UpdateTrbRequestLeadMutationVariables>;
 export const TypedSystemIntakeWithReviewRequestedFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeWithReviewRequested"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntake"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}}]}}]} as unknown as DocumentNode<SystemIntakeWithReviewRequestedFragment, unknown>;
 export const TypedSystemIntakeGRBReviewerFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<SystemIntakeGRBReviewerFragment, unknown>;
+export const TypedGetSystemTeamMembersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemTeamMembers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystemDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"roles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assigneeUsername"}}]}}]}}]}}]} as unknown as DocumentNode<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables>;
 export const TypedCreateSystemIntakeGRBReviewerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeGRBReviewer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeGRBReviewerMutation, CreateSystemIntakeGRBReviewerMutationVariables>;
 export const TypedDeleteSystemIntakeGRBReviewerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteSystemIntakeGRBReviewer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteSystemIntakeGRBReviewerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteSystemIntakeGRBReviewer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<DeleteSystemIntakeGRBReviewerMutation, DeleteSystemIntakeGRBReviewerMutationVariables>;
 export const TypedGetSystemIntakeGRBReviewersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeGRBReviewers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbReviewers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>;

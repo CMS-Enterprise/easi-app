@@ -15,6 +15,7 @@ import {
   Label
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { useGetSystemTeamMembersQuery } from 'gql/gen/graphql';
 import * as yup from 'yup';
 
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -90,6 +91,13 @@ const TeamMemberForm = ({
   const { data, loading: roleTypesLoading } = useQuery<GetCedarRoleTypes>(
     GetCedarRoleTypesQuery
   );
+
+  const {
+    data: teamUsernames,
+    loading: teamUsernamesLoading
+  } = useGetSystemTeamMembersQuery({
+    variables: { cedarSystemId }
+  });
 
   const availableRolesText = t<Record<string, string[]>>(
     'singleSystem.editTeam.form.availableRoles',
@@ -168,7 +176,16 @@ const TeamMemberForm = ({
     }
   });
 
-  if (roleTypesLoading) {
+  const euaUserId = watch('euaUserId');
+
+  const memberAlreadySelected =
+    euaUserId !== undefined &&
+    euaUserId ===
+      teamUsernames?.cedarSystemDetails?.roles.find(
+        r => r.assigneeUsername === euaUserId
+      )?.assigneeUsername;
+
+  if (roleTypesLoading || teamUsernamesLoading) {
     return <PageLoading />;
   }
 
@@ -214,6 +231,13 @@ const TeamMemberForm = ({
                   className="maxw-none"
                   // onChange={cedarContact => console.log(cedarContact)}
                 />
+                {memberAlreadySelected && (
+                  <Alert slim type="info">
+                    {t(
+                      'singleSystem.editTeam.form.add.memberAlreadySelectedInfo'
+                    )}
+                  </Alert>
+                )}
               </FormGroup>
             )}
           />
@@ -298,7 +322,8 @@ const TeamMemberForm = ({
               loading ||
               !isDirty ||
               watch('desiredRoleTypeIDs').length === 0 ||
-              !watch('euaUserId')
+              !euaUserId ||
+              memberAlreadySelected
             }
             className="margin-0"
           >
