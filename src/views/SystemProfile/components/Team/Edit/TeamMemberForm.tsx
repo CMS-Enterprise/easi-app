@@ -100,15 +100,16 @@ const TeamMemberForm = ({
 
   const rolesOrdered: CedarRoleTypes[] = useMemo(() => {
     const roles = data?.roleTypes;
+
     if (roles === undefined) return [];
-    return roles.concat().sort((a, b) => {
-      const ari = teamRolesIndex()[a.name] ?? 999;
-      const bri = teamRolesIndex()[b.name] ?? 999;
-      if (ari !== bri) {
-        return ari - bri;
-      }
-      return 0;
-    });
+
+    /** Hide any undefined roles. */
+    const knownRoles = Object.keys(teamRolesIndex());
+
+    return roles
+      .concat()
+      .filter(r => knownRoles.includes(r.name))
+      .sort((a, b) => teamRolesIndex()[a.name] - teamRolesIndex()[b.name]);
   }, [data?.roleTypes]);
 
   const {
