@@ -940,7 +940,7 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 	logger := appcontext.ZLogger(ctx)
 	principalID := appcontext.Principal(ctx).ID()
 
-	// Asyncronously send an email to the CEDAR team notifying them of the change
+	// Asynchronously send an email to the CEDAR team notifying them of the change
 	go func(logger *zap.Logger, principalID string, preExistingRoles []*models.CedarRole) {
 		// make a new context and copy the logger to it, or else the request will cancel when the parent context cancels
 		emailCtx := appcontext.WithLogger(context.Background(), logger)
