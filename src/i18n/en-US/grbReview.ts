@@ -79,6 +79,13 @@ export default {
       'Add details about this Governance Review Board (GRB) reviewer, including their name, voting role, and GRB role such as the Budget Development Group (BDG) they represent.',
     returnToRequest_edit: 'Don’t save and return to request details',
     returnToRequest_add: 'Don’t add and return to request details',
+    addViaEUA: 'Add via EUA',
+    addFromRequest: 'Add from previous request',
+    addFromRequestDescription:
+      'EASi allows you to bulk-add GRB reviewers that were previously added to past GRB reviews.',
+    itGovernanceRequests: 'EASi IT Governance requests',
+    itGovernanceRequestsHelpText:
+      'Search this list of previous Governance requests. Any requests without assigned GRB reviewers are filtered out of this list.',
     grbMemberName: 'GRB member name',
     grbMemberNameHelpText: 'This field searches CMS’ EUA database.',
     votingRole: 'Voting role',
