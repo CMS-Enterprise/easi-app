@@ -86,6 +86,8 @@ export default {
     itGovernanceRequests: 'EASi IT Governance requests',
     itGovernanceRequestsHelpText:
       'Search this list of previous Governance requests. Any requests without assigned GRB reviewers are filtered out of this list.',
+    selectRequestAlert:
+      'Select a request above to populate a list of possible GRB reviewers to select from.',
     grbMemberName: 'GRB member name',
     grbMemberNameHelpText: 'This field searches CMS’ EUA database.',
     votingRole: 'Voting role',

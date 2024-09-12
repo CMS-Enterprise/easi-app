@@ -372,6 +372,10 @@ const GRBReviewerForm = ({
                   ]}
                 />
               </FormGroup>
+
+              <Alert type="info" className="margin-top-3" slim>
+                {t('form.selectRequestAlert')}
+              </Alert>
             </div>
           </TabPanel>
         </Tabs>
