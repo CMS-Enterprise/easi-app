@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -25,9 +25,13 @@ import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import MultiSelect from 'components/shared/MultiSelect';
 import Spinner from 'components/Spinner';
+import teamRolesIndex from 'constants/teamRolesIndex';
 import useMessage from 'hooks/useMessage';
 import { GetCedarRoleTypesQuery } from 'queries/CedarRoleQueries';
-import { GetCedarRoleTypes } from 'queries/types/GetCedarRoleTypes';
+import {
+  GetCedarRoleTypes,
+  GetCedarRoleTypes_roleTypes as CedarRoleTypes
+} from 'queries/types/GetCedarRoleTypes';
 import {
   SetRolesForUserOnSystem,
   SetRolesForUserOnSystemVariables
@@ -94,7 +98,18 @@ const TeamMemberForm = ({
     }
   );
 
-  // console.log(data?.roleTypes);
+  const rolesOrdered: CedarRoleTypes[] = useMemo(() => {
+    const roles = data?.roleTypes;
+    if (roles === undefined) return [];
+    return roles.concat().sort((a, b) => {
+      const ari = teamRolesIndex()[a.name] ?? 999;
+      const bri = teamRolesIndex()[b.name] ?? 999;
+      if (ari !== bri) {
+        return ari - bri;
+      }
+      return 0;
+    });
+  }, [data?.roleTypes]);
 
   const {
     control,
@@ -226,7 +241,7 @@ const TeamMemberForm = ({
               <MultiSelect
                 {...{ ...field, ref: null }}
                 name={field.name}
-                options={(data?.roleTypes || []).map(role => ({
+                options={rolesOrdered.map(role => ({
                   value: role.id,
                   label: role.name
                 }))}
