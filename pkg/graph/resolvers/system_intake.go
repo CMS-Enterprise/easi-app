@@ -114,8 +114,12 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
 	intake.UsesAITech = null.BoolFromPtr(input.UsesAiTech)
 
-	// TODO: NJD - fix these hard codings
-	softwareAcq := models.SystemIntakeSoftwareAcquisition{SystemIntakeID: intake.ID, UsingSoftware: null.StringFrom("Yes"), AcuqisitionMethods: []string{}}
+	softwareAcq := models.SystemIntakeSoftwareAcquisition{
+		ID:                 uuid.New(), // TODO: NJD - do this here? or before passing?
+		SystemIntakeID:     intake.ID,
+		UsingSoftware:      null.StringFromPtr(input.SoftwareAcquisition.UsingSoftware),
+		AcuqisitionMethods: input.SoftwareAcquisition.AcuqisitionMethods}
+
 	store.UpdateSystemIntakeSoftwareAcquisition(ctx, input.ID, &softwareAcq)
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)

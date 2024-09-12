@@ -25,8 +25,6 @@ func (s *Store) UpdateSystemIntakeSoftwareAcquisitionNP(ctx context.Context, tx 
 	// TODO: NJD - do I need CreatedAt?
 	// now := s.clock.Now()
 
-	appcontext.ZLogger(ctx).Info("NJD HERE 1")
-
 	deleteSoftwareAcquisitionSQL := `
 		DELETE FROM system_intake_software_acquisition
 		WHERE system_intake_id = $1;
@@ -37,7 +35,6 @@ func (s *Store) UpdateSystemIntakeSoftwareAcquisitionNP(ctx context.Context, tx 
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create Software Acquisition transaction, error %s", err))
 		return nil, err
 	}
-	appcontext.ZLogger(ctx).Info("NJD HERE 2")
 
 	const createSoftwareAcquisitionSQL = `
 				INSERT INTO system_intake_software_acquisition (
@@ -62,8 +59,6 @@ func (s *Store) UpdateSystemIntakeSoftwareAcquisitionNP(ctx context.Context, tx 
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to insert Software Acquisition information, error %s", err))
 		return nil, err
 	}
-
-	appcontext.ZLogger(ctx).Info("NJD HERE 3")
 
 	return softwareAcquisition, nil
 }

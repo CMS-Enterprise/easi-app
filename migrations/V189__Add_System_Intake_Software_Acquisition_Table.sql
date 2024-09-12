@@ -6,7 +6,7 @@ CREATE TABLE system_intake_software_acquisition (
     id uuid PRIMARY KEY NOT NULL,
     system_intake_id uuid NOT NULL REFERENCES system_intakes(id),
     using_software TEXT NOT NULL, 
-    acquisition_methods software_acquisition_method ARRAY NOT NULL
+    acquisition_methods software_acquisition_method[]
 );
 
 -- ALTER TABLE system_intakes ADD using_software_products TEXT NOT NULL;
@@ -15,3 +15,4 @@ CREATE TABLE system_intake_software_acquisition (
 --     estimated_num_instances INTEGER
 --     vendor/manufacture_name?
 --     software_name TEXT NOT NULL
+--     acquisition_methods software_acquisition_method ARRAY NOT NULL
