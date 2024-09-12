@@ -223,7 +223,7 @@ const systemProfile = {
           title: 'Add a team member',
           description:
             'Search for a team member to add to your system team. Team members are all able to view and edit your System Profile, including adding or removing team members. Team members can also create and work on IT Governance and technical assistance requests.',
-          buttonLabel: 'Add this team member',
+          buttonLabel: 'Add team member',
           returnButtonLabel:
             'Don’t add a team member and return to previous page',
           alertInfo:
