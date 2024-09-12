@@ -7,6 +7,11 @@ import _ "embed"
 //go:embed SQL/user_account/get_by_username.sql
 var userAccountGetByUsername string
 
+// Holds the SQL query to return user accounts by usernames
+//
+//go:embed SQL/user_account/get_by_usernames.sql
+var userAccountGetByUsernames string
+
 // Holds the SQL query to return a user account by a common name
 //
 //go:embed SQL/user_account/get_by_common_name.sql
@@ -36,6 +41,7 @@ var userAccountUpdateByUsername string
 // UserAccount holds all relevant SQL queries related to a user account
 var UserAccount = userAccount{
 	GetByUsername:    userAccountGetByUsername,
+	GetByUsernames:   userAccountGetByUsernames,
 	GetByCommonName:  userAccountGetByCommonName,
 	GetByID:          userAccountGetByID,
 	GetByIDs:         userAccountGetByIDs,
@@ -46,6 +52,8 @@ var UserAccount = userAccount{
 type userAccount struct {
 	// Holds the SQL query to return a user account by a given username
 	GetByUsername string
+	// Holds the SQL query to return user accounts by usernames
+	GetByUsernames string
 	// Holds the SQL query to return a user account by a common name
 	GetByCommonName string
 	// Holds the SQL to return a user account for a given internal UUID

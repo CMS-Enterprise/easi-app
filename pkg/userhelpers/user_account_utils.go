@@ -34,6 +34,9 @@ type AccountInfo OktaAccountInfo
 // GetAccountInfoFunc represents a type of function which takes a context and username and returns AccountInfo
 type GetAccountInfoFunc func(ctx context.Context, username string) (*AccountInfo, error)
 
+// GetAccountInfoFunc represents a type of function which takes a context and username and returns AccountInfo
+type GetAccountInfosFunc func(ctx context.Context, username []string) ([]*AccountInfo, error)
+
 // GetOktaAccountInfoFunc represents a type of function which takes a context and username and returns OktaAccountInfo
 type GetOktaAccountInfoFunc func(ctx context.Context, username string) (*OktaAccountInfo, error)
 
@@ -95,7 +98,7 @@ func GetOrCreateUserAccount(
 	username string,
 	hasLoggedIn bool,
 	getAccountInformation GetAccountInfoFunc) (*authentication.UserAccount, error) {
-	userAccount, accErr := store.UserAccountGetByUsername(username) //TODO: this could be expanded to check by either username or commonName
+	userAccount, accErr := store.UserAccountGetByUsername(ctx, np, username) //TODO: this could be expanded to check by either username or commonName
 	if accErr != nil {
 		return nil, errors.New("failed to get user information from the database")
 	}
@@ -132,6 +135,72 @@ func GetOrCreateUserAccount(
 		return nil, updateErr
 	}
 	return updatedAccount, nil
+}
+
+// GetOrCreateUserAccounts will return accounts if they exist, or create and return them if not
+func GetOrCreateUserAccounts(
+	ctx context.Context,
+	np sqlutils.NamedPreparer,
+	store *storage.Store,
+	usernames []string,
+	hasLoggedIn bool,
+	getAccountInformation GetAccountInfoFunc,
+) ([]*authentication.UserAccount, error) {
+	userAccounts, accErr := store.UserAccountGetByUsernames(ctx, np, usernames) //TODO: this could be expanded to check by either username or commonName
+	if accErr != nil {
+		return nil, errors.New("failed to get user information from the database")
+	}
+	acctMap := map[string]*authentication.UserAccount{}
+	createAccts := []*authentication.UserAccount{}
+	updateAccts := []*authentication.UserAccount{}
+	for i, username := range usernames {
+		acctMap[username] = userAccounts[i]
+	}
+	rtnAccts := []*authentication.UserAccount{}
+
+	for username, userAccount := range acctMap {
+		if userAccount != nil && userAccount.HasLoggedIn {
+			continue
+		}
+		accountInfo, err := getAccountInformation(ctx, username)
+		if err != nil {
+			return nil, err
+		}
+
+		if userAccount == nil {
+			userAccount = &authentication.UserAccount{}
+		}
+		userAccount.Username = accountInfo.PreferredUsername
+		userAccount.CommonName = accountInfo.Name
+		userAccount.Locale = accountInfo.Locale
+		userAccount.Email = accountInfo.Email
+		userAccount.GivenName = accountInfo.GivenName
+		userAccount.FamilyName = accountInfo.FamilyName
+		userAccount.ZoneInfo = accountInfo.ZoneInfo
+		userAccount.HasLoggedIn = hasLoggedIn
+
+		if userAccount.ID == uuid.Nil {
+			createAccts = append(createAccts, userAccount)
+			continue
+		}
+		updateAccts = append(updateAccts, userAccount)
+
+		// updatedAccount, updateErr := store.UserAccountUpdateByUserName(np, userAccount)
+		// if updateErr != nil {
+		// 	return nil, updateErr
+		// }
+		// rtnAccts = append(rtnAccts, updatedAccount)
+		// continue
+	}
+	// for username, userAccount := range createMap {
+	// newAccount, newErr := store.UserAccountCreate(np, userAccount)
+	// 		if newErr != nil {
+	// 			return nil, newErr
+	// 	}
+	//
+	// }
+
+	return rtnAccts, nil
 }
 
 // GetUserInfoAccountInfoWrapperFunc returns a function that returns *AccountInfo with the input of a function that returns UserInfo
