@@ -64,7 +64,7 @@ func (s *Store) CreateTRBRequestAttendee(ctx context.Context, np sqlutils.NamedP
 
 // UpdateTRBRequestAttendee updates a TRB request attendee record in the database
 func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := s.DB.PrepareNamed(`
 		UPDATE trb_request_attendees
 		SET role = :role,
 			component = :component,
@@ -104,7 +104,7 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 func (s *Store) GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestAttendee, error) {
 	results := []*models.TRBRequestAttendee{}
 
-	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestAttendees.GetByTRBID, args{
+	err := namedSelect(ctx, s.DB, &results, sqlqueries.TRBRequestAttendees.GetByTRBID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -124,7 +124,7 @@ func (s *Store) GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, trbReq
 func (s *Store) GetTRBRequestAttendeesByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestAttendee, error) {
 	results := []*models.TRBRequestAttendee{}
 
-	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestAttendees.GetByTRBIDs, args{
+	err := namedSelect(ctx, s.DB, &results, sqlqueries.TRBRequestAttendees.GetByTRBIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 
@@ -141,7 +141,7 @@ func (s *Store) GetTRBRequestAttendeesByTRBRequestIDs(ctx context.Context, trbRe
 
 // DeleteTRBRequestAttendee deletes an existing TRB request attendee record in the database
 func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error) {
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := s.DB.PrepareNamed(`
 		DELETE FROM trb_request_attendees
 		WHERE id = :id
 		RETURNING *;`)
@@ -177,7 +177,7 @@ func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*mo
 // GetAttendeeByEUAIDAndTRBID attempts to retrieve an attendee of a given EUA user ID and TRB Request ID
 func (s *Store) GetAttendeeByEUAIDAndTRBID(ctx context.Context, euaID string, trbRequestID uuid.UUID) (*models.TRBRequestAttendee, error) {
 	attendee := models.TRBRequestAttendee{}
-	err := namedGet(ctx, s, &attendee, sqlqueries.GetAttendeeByEUAIDAndTRBIDSQL, args{
+	err := namedGet(ctx, s.DB, &attendee, sqlqueries.GetAttendeeByEUAIDAndTRBIDSQL, args{
 		"trb_request_id": trbRequestID,
 		"eua_user_id":    euaID,
 	})
@@ -205,7 +205,7 @@ func (s *Store) GetAttendeeByEUAIDAndTRBID(ctx context.Context, euaID string, tr
 // GetAttendeesByEUAIDsAndTRBIDs attempts to retrieve a list of attendees given EUA user IDs and TRB Request IDs
 func (s *Store) GetAttendeesByEUAIDsAndTRBIDs(ctx context.Context, euaIDs []string, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestAttendee, error) {
 	attendees := []*models.TRBRequestAttendee{}
-	err := namedSelect(ctx, s, &attendees, sqlqueries.GetAttendeesByEUAIDsAndTRBIDsSQL, args{
+	err := namedSelect(ctx, s.DB, &attendees, sqlqueries.GetAttendeesByEUAIDsAndTRBIDsSQL, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 		"eua_user_ids":    pq.Array(euaIDs),
 	})

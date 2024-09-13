@@ -33,20 +33,26 @@ var userAccountGetByIDs string
 //go:embed SQL/user_account/create.sql
 var userAccountCreate string
 
-// Holds the SQL to update a user account record for a matching username
+// Holds the SQL to update a user account record
 //
-//go:embed SQL/user_account/update_by_username.sql
-var userAccountUpdateByUsername string
+//go:embed SQL/user_account/update.sql
+var userAccountUpdate string
+
+// Holds the SQL to update user account records
+//
+//go:embed SQL/user_account/bulk_update.sql
+var userAccountBulkUpdate string
 
 // UserAccount holds all relevant SQL queries related to a user account
 var UserAccount = userAccount{
-	GetByUsername:    userAccountGetByUsername,
-	GetByUsernames:   userAccountGetByUsernames,
-	GetByCommonName:  userAccountGetByCommonName,
-	GetByID:          userAccountGetByID,
-	GetByIDs:         userAccountGetByIDs,
-	Create:           userAccountCreate,
-	UpdateByUsername: userAccountUpdateByUsername,
+	GetByUsername:   userAccountGetByUsername,
+	GetByUsernames:  userAccountGetByUsernames,
+	GetByCommonName: userAccountGetByCommonName,
+	GetByID:         userAccountGetByID,
+	GetByIDs:        userAccountGetByIDs,
+	Create:          userAccountCreate,
+	Update:          userAccountUpdate,
+	BulkUpdate:      userAccountBulkUpdate,
 }
 
 type userAccount struct {
@@ -60,8 +66,10 @@ type userAccount struct {
 	GetByID string
 	// Holds the SQL to return a collection of user accounts for a collection of internal UUIDs
 	GetByIDs string
-	// Holds the SQL to create a new user account record
+	// Holds the SQL to create a new user account record(s)
 	Create string
-	//  Holds the SQL to update a user account record for a matching username
-	UpdateByUsername string
+	//  Holds the SQL to update a user account record
+	Update string
+	//  Holds the SQL to update multiple user account records
+	BulkUpdate string
 }

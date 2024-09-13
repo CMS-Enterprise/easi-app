@@ -22,7 +22,7 @@ import (
 
 // CreateTRBRequestFeedback creates a new TRB request feedback record in the database
 func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.TRBRequestFeedback, formToUpdate *models.TRBRequestForm) (*models.TRBRequestFeedback, error) {
-	return sqlutils.WithTransactionRet[*models.TRBRequestFeedback](ctx, s.db, func(tx *sqlx.Tx) (*models.TRBRequestFeedback, error) {
+	return sqlutils.WithTransactionRet[*models.TRBRequestFeedback](ctx, s.DB, func(tx *sqlx.Tx) (*models.TRBRequestFeedback, error) {
 		if feedback.ID == uuid.Nil {
 			feedback.ID = uuid.New()
 		}
@@ -114,7 +114,7 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 func (s *Store) GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestFeedback, error) {
 	results := []*models.TRBRequestFeedback{}
 
-	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestFeedback.GetByID, args{
+	err := namedSelect(ctx, s.DB, &results, sqlqueries.TRBRequestFeedback.GetByID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -134,7 +134,7 @@ func (s *Store) GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequ
 func (s *Store) GetTRBRequestFeedbackByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestFeedback, error) {
 	results := []*models.TRBRequestFeedback{}
 
-	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestFeedback.GetByIDs, args{
+	err := namedSelect(ctx, s.DB, &results, sqlqueries.TRBRequestFeedback.GetByIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 
@@ -153,7 +153,7 @@ func (s *Store) GetTRBRequestFeedbackByTRBRequestIDs(ctx context.Context, trbReq
 // matching the given TRB request ID
 func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestFeedback, error) {
 	feedback := models.TRBRequestFeedback{}
-	err := namedGet(ctx, s, &feedback, sqlqueries.TRBRequestFeedback.GetByNewestByID, args{
+	err := namedGet(ctx, s.DB, &feedback, sqlqueries.TRBRequestFeedback.GetByNewestByID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -179,7 +179,7 @@ func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestID(ctx context.Context, t
 // matching the given TRB request IDs
 func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestFeedback, error) {
 	feedback := []*models.TRBRequestFeedback{}
-	err := namedSelect(ctx, s, &feedback, sqlqueries.TRBRequestFeedback.GetByNewestsByIDs, args{
+	err := namedSelect(ctx, s.DB, &feedback, sqlqueries.TRBRequestFeedback.GetByNewestsByIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 

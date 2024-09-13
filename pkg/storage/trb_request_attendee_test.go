@@ -12,7 +12,7 @@ func (s *StoreTestSuite) TestCreateTRBRequestAttendee() {
 	trbRequest := models.NewTRBRequest(anonEua)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
-	_, err := s.store.CreateTRBRequest(ctx, s.store, trbRequest)
+	_, err := s.store.CreateTRBRequest(ctx, s.store.DB, trbRequest)
 	s.NoError(err)
 
 	s.Run("create a TRB request attendee", func() {
@@ -24,7 +24,7 @@ func (s *StoreTestSuite) TestCreateTRBRequestAttendee() {
 			Role:         &poRole,
 		}
 		attendee.CreatedBy = anonEua
-		createdAttendee, err := s.store.CreateTRBRequestAttendee(ctx, s.store, &attendee)
+		createdAttendee, err := s.store.CreateTRBRequestAttendee(ctx, s.store.DB, &attendee)
 		s.NoError(err)
 
 		createdAttendee.Role = &cnRole

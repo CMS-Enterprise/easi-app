@@ -48,7 +48,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.U
 
 	// Unsafe() is used to avoid errors from the initial_submitted_at and last_submitted_at columns that are in the database, but not in the Go model
 	// see https://jiraent.cms.gov/browse/EASI-1693
-	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, businessCaseID)
+	err := s.DB.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, businessCaseID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case %s", err),
@@ -65,7 +65,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.U
 // GetBusinessCaseBySystemIntakeID queries the DB for a business case matching the given ID of the System Intake
 func (s *Store) GetBusinessCaseBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.BusinessCase, error) {
 	businessCase := models.BusinessCase{}
-	err := namedGet(ctx, s, &businessCase, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeID, args{
+	err := namedGet(ctx, s.DB, &businessCase, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeID, args{
 		"system_intake_id": systemIntakeID,
 	})
 	if err != nil {
@@ -86,7 +86,7 @@ func (s *Store) GetBusinessCaseBySystemIntakeID(ctx context.Context, systemIntak
 // GetBusinessCaseBySystemIntakeIDs queries the DB for a business case matching the given ID of the System Intake
 func (s *Store) GetBusinessCaseBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.BusinessCase, error) {
 	businessCases := []*models.BusinessCase{}
-	err := namedSelect(ctx, s, &businessCases, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeIDs, args{
+	err := namedSelect(ctx, s.DB, &businessCases, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 	if err != nil {
@@ -101,7 +101,7 @@ func (s *Store) GetBusinessCaseBySystemIntakeIDs(ctx context.Context, systemInta
 // GetLifecycleCostsByBizCaseID queries the DB for a lifecycle costs by biz case ID
 func (s *Store) GetLifecycleCostsByBizCaseID(ctx context.Context, businessCaseID uuid.UUID) ([]*models.EstimatedLifecycleCost, error) {
 	estimatedLifecycleCosts := []*models.EstimatedLifecycleCost{}
-	err := namedSelect(ctx, s, &estimatedLifecycleCosts, sqlqueries.SystemIntakeBusinessCase.GetEstimatedLifecycleCostLinesByBizCaseID, args{
+	err := namedSelect(ctx, s.DB, &estimatedLifecycleCosts, sqlqueries.SystemIntakeBusinessCase.GetEstimatedLifecycleCostLinesByBizCaseID, args{
 		"business_case_id": businessCaseID,
 	})
 	if err != nil {
@@ -117,7 +117,7 @@ func (s *Store) GetLifecycleCostsByBizCaseID(ctx context.Context, businessCaseID
 // GetLifecycleCostsByBizCaseIDs queries the DB for a lifecycle costs by biz case ID
 func (s *Store) GetLifecycleCostsByBizCaseIDs(ctx context.Context, businessCaseIDs []uuid.UUID) ([]*models.EstimatedLifecycleCost, error) {
 	estimatedLifecycleCosts := []*models.EstimatedLifecycleCost{}
-	err := namedSelect(ctx, s, &estimatedLifecycleCosts, sqlqueries.SystemIntakeBusinessCase.GetEstimatedLifecycleCostLinesByBizCaseIDs, args{
+	err := namedSelect(ctx, s.DB, &estimatedLifecycleCosts, sqlqueries.SystemIntakeBusinessCase.GetEstimatedLifecycleCostLinesByBizCaseIDs, args{
 		"business_case_ids": pq.Array(businessCaseIDs),
 	})
 	if err != nil {
@@ -146,7 +146,7 @@ func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uu
 
 	// Unsafe() is used to avoid errors from the initial_submitted_at and last_submitted_at columns that are in the database, but not in the Go model
 	// see https://jiraent.cms.gov/browse/EASI-1693
-	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, intakeID)
+	err := s.DB.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, intakeID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case %s", err),
@@ -209,7 +209,7 @@ func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCas
 
 // CreateBusinessCase creates a business case
 func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
-	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) (*models.BusinessCaseWithCosts, error) {
+	return sqlutils.WithTransactionRet(ctx, s.DB, func(tx *sqlx.Tx) (*models.BusinessCaseWithCosts, error) {
 		id := uuid.New()
 		businessCase.ID = id
 		const createBusinessCaseSQL = `
@@ -362,7 +362,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 
 // UpdateBusinessCase creates a business case
 func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
-	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) (*models.BusinessCaseWithCosts, error) {
+	return sqlutils.WithTransactionRet(ctx, s.DB, func(tx *sqlx.Tx) (*models.BusinessCaseWithCosts, error) {
 		// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 		const updateBusinessCaseSQL = `
 		UPDATE business_cases

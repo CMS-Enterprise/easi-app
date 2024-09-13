@@ -18,7 +18,7 @@ import (
 func (s *Store) UserAccountGetByCommonName(commonName string) (*authentication.UserAccount, error) {
 	user := &authentication.UserAccount{}
 
-	stmt, err := s.db.PrepareNamed(sqlqueries.UserAccount.GetByCommonName)
+	stmt, err := s.DB.PrepareNamed(sqlqueries.UserAccount.GetByCommonName)
 	if err != nil {
 		return nil, err
 	}
@@ -56,11 +56,11 @@ func (s *Store) UserAccountGetByUsername(ctx context.Context, np sqlutils.NamedP
 	return user, nil
 }
 
-// UserAccountGetByUsername gets a user account by a give username
+// UserAccountGetByUsernames gets a user account by a give username
 func (s *Store) UserAccountGetByUsernames(ctx context.Context, np sqlutils.NamedPreparer, usernames []string) ([]*authentication.UserAccount, error) {
 	unmappedUsers := []*authentication.AcctByUsername{}
 
-	err := namedSelect(ctx, np, unmappedUsers, sqlqueries.UserAccount.GetByUsernames, args{
+	err := namedSelect(ctx, np, &unmappedUsers, sqlqueries.UserAccount.GetByUsernames, args{
 		"usernames": pq.Array(usernames),
 	})
 	if err != nil {
@@ -92,7 +92,7 @@ func (s *Store) UserAccountGetByID(ctx context.Context, np sqlutils.NamedPrepare
 // UserAccountsByIDs gets user accounts by user ID
 func (s *Store) UserAccountsByIDs(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, error) {
 	var accounts []*authentication.UserAccount
-	return accounts, namedSelect(ctx, s, &accounts, sqlqueries.UserAccount.GetByIDs, args{
+	return accounts, namedSelect(ctx, s.DB, &accounts, sqlqueries.UserAccount.GetByIDs, args{
 		"user_ids": pq.Array(userIDs),
 	})
 }
@@ -111,17 +111,28 @@ func (s *Store) UserAccountCreate(ctx context.Context, np sqlutils.NamedPreparer
 	return user, nil
 }
 
-// UserAccountCreate creates a new user account for a given username
-func (s *Store) UserAccountBulkCreate(ctx context.Context, np sqlutils.NamedPreparer, userAccounts []*authentication.UserAccount) (*authentication.UserAccount, error) {
-	users := &[]*authentication.UserAccount{}
-	accts := map[string]interface{}{}
-	for _, userAccount := range userAccounts {
+// UserAccountBulkCreate creates new user accounts for given usernames
+func (s *Store) UserAccountBulkCreate(ctx context.Context, np sqlutils.NamedPreparer, userAccounts []*authentication.UserAccount) ([]*authentication.UserAccount, error) {
+	for i := range userAccounts {
+		if userAccounts[i].ID == uuid.Nil {
+			userAccounts[i].ID = uuid.New()
+		}
+	}
+	_, err := namedExec(ctx, np, sqlqueries.UserAccount.Create, userAccounts)
+	if err != nil {
+		return nil, err
+	}
 
-	}
-	if userAccount.ID == uuid.Nil {
-		userAccount.ID = uuid.New()
-	}
-	err := namedGet(ctx, np, users, sqlqueries.UserAccount.Create, userAccount)
+	return userAccounts, nil
+}
+
+// UserAccountUpdate updates an existing user account
+func (s *Store) UserAccountUpdate(ctx context.Context, np sqlutils.NamedPreparer, userAccount *authentication.UserAccount) (
+	*authentication.UserAccount,
+	error,
+) {
+	user := &authentication.UserAccount{}
+	err := namedGet(ctx, np, user, sqlqueries.UserAccount.Update, userAccount)
 	if err != nil {
 		return nil, err
 	}
@@ -129,20 +140,46 @@ func (s *Store) UserAccountBulkCreate(ctx context.Context, np sqlutils.NamedPrep
 	return user, nil
 }
 
-// UserAccountUpdateByUserName updates an existing user account for a given username
-func (s *Store) UserAccountUpdateByUserName(ctx context.Context, np sqlutils.NamedPreparer, userAccount *authentication.UserAccount) (
-	*authentication.UserAccount,
+// UserAccountBulkUpdate updates existing user accounts
+func (s *Store) UserAccountBulkUpdate(ctx context.Context, np sqlutils.NamedPreparer, userAccounts []*authentication.UserAccount) (
+	[]*authentication.UserAccount,
 	error,
 ) {
+	users := []*authentication.UserAccount{}
 
-	user := &authentication.UserAccount{}
-	if userAccount.ID == uuid.Nil {
-		userAccount.ID = uuid.New()
+	ids := []uuid.UUID{}
+	commonNames := []string{}
+	locales := []string{}
+	emails := []string{}
+	givenNames := []string{}
+	familyNames := []string{}
+	zoneInfos := []string{}
+	hasLoggedIns := []bool{}
+
+	for _, userAccount := range userAccounts {
+		ids = append(ids, userAccount.ID)
+		commonNames = append(commonNames, userAccount.CommonName)
+		locales = append(locales, userAccount.Locale)
+		emails = append(emails, userAccount.Email)
+		givenNames = append(givenNames, userAccount.GivenName)
+		familyNames = append(familyNames, userAccount.FamilyName)
+		zoneInfos = append(zoneInfos, userAccount.ZoneInfo)
+		hasLoggedIns = append(hasLoggedIns, userAccount.HasLoggedIn)
 	}
-	err := namedGet(ctx, np, user, sqlqueries.UserAccount.UpdateByUsername, userAccount)
+	arguments := args{
+		"ids":            pq.Array(ids),
+		"common_names":   pq.Array(commonNames),
+		"locales":        pq.Array(locales),
+		"emails":         pq.Array(emails),
+		"given_names":    pq.Array(givenNames),
+		"family_names":   pq.Array(familyNames),
+		"zone_infos":     pq.Array(zoneInfos),
+		"has_logged_ins": pq.Array(hasLoggedIns),
+	}
+	err := namedSelect(ctx, np, &users, sqlqueries.UserAccount.BulkUpdate, arguments)
 	if err != nil {
 		return nil, err
 	}
 
-	return user, nil
+	return users, nil
 }

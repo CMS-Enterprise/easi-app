@@ -17,7 +17,7 @@ import (
 
 // Store performs database operations for EASi
 type Store struct {
-	db        *sqlx.DB
+	DB        *sqlx.DB
 	clock     clock.Clock
 	easternTZ *time.Location
 	ldClient  *ld.LDClient
@@ -39,13 +39,13 @@ type DBConfig struct {
 // Implementing the  sqlutils.NamedPreparer interface allows us to use a sqlx.Tx or a storage.Store as a parameter in our DB calls
 // (the former for when we want to implement transactions, the latter for when we don't)
 func (s *Store) PrepareNamed(query string) (*sqlx.NamedStmt, error) {
-	return s.db.PrepareNamed(query)
+	return s.DB.PrepareNamed(query)
 }
 
 // Beginx implements the TransactionPreparer interface
 // Implementing the sqlutils.TransactionPreparer interfaces allows us to use a sqlx.DB or a storage.Store to create a transaction
 func (s *Store) Beginx() (*sqlx.Tx, error) {
-	return s.db.Beginx()
+	return s.DB.Beginx()
 }
 
 // NewStore creates a new Store struct
@@ -95,7 +95,7 @@ func NewStore(
 	db.SetMaxOpenConns(config.MaxConnections)
 
 	return &Store{
-		db:        db,
+		DB:        db,
 		clock:     clock.New(),
 		easternTZ: tz,
 		ldClient:  ldClient,
@@ -158,11 +158,12 @@ func namedExec(ctx context.Context, np sqlutils.NamedPreparer, sqlStatement stri
 		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedExec")
 	}
 
-	stmt, err := np.PrepareNamed(sqlStatement)
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-
-	return stmt.ExecContext(ctx, arguments)
+	return np.NamedExecContext(ctx, sqlStatement, arguments)
+	// stmt, err := np.PrepareNamed(sqlStatement)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// defer stmt.Close()
+	//
+	// return stmt.ExecContext(ctx, arguments)
 }

@@ -83,7 +83,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 			trb.Type = models.TRBTNeedHelp
 			trb.State = models.TRBRequestStateOpen
 
-			createdTRB, err := s.store.CreateTRBRequest(ctx, s.store, trb) //Call the method on the store itself, so it is automatically created
+			createdTRB, err := s.store.CreateTRBRequest(ctx, s.store.DB, trb) //Call the method on the store itself, so it is automatically created
 			if err != nil {
 				return nil, err
 			}

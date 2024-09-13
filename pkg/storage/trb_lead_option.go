@@ -18,7 +18,7 @@ import (
 // CreateTRBLeadOption creates a new TRB lead option record in the database
 func (s *Store) CreateTRBLeadOption(ctx context.Context, leadOption *models.TRBLeadOption) (*models.TRBLeadOption, error) {
 	leadOption.ID = uuid.New()
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := s.DB.PrepareNamed(`
 		INSERT INTO trb_lead_options (
 			id,
 			eua_user_id,
@@ -53,7 +53,7 @@ func (s *Store) CreateTRBLeadOption(ctx context.Context, leadOption *models.TRBL
 
 // DeleteTRBLeadOption deletes an existing TRB lead option record in the database
 func (s *Store) DeleteTRBLeadOption(ctx context.Context, euaID string) (*models.TRBLeadOption, error) {
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := s.DB.PrepareNamed(`
 		DELETE FROM trb_lead_options
 		WHERE eua_user_id = :eua_user_id
 		RETURNING *;`)
@@ -90,7 +90,7 @@ func (s *Store) DeleteTRBLeadOption(ctx context.Context, euaID string) (*models.
 func (s *Store) GetTRBLeadOptions(ctx context.Context) ([]*models.TRBLeadOption, error) {
 	results := []*models.TRBLeadOption{}
 
-	err := s.db.Select(&results, `SELECT * FROM trb_lead_options`)
+	err := s.DB.Select(&results, `SELECT * FROM trb_lead_options`)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		appcontext.ZLogger(ctx).Error("Failed to fetch TRB lead options", zap.Error(err))

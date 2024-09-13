@@ -16,13 +16,11 @@ import (
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
-	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 )
 
@@ -106,14 +104,7 @@ func main() {
 
 	// generate closed requests
 	g, gCtx := errgroup.WithContext(ctx)
-	reviewer1, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, "A11Y", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
-	if err != nil {
-		fmt.Println(err)
-	}
-	reviewer2, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, "BTMN", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
-	if err != nil {
-		fmt.Println(err)
-	}
+
 	for i := range closedRequestCount {
 		caseNum := i + 1
 		g.Go(func() error {
@@ -126,23 +117,19 @@ func main() {
 				store,
 				time.Now().AddDate(2, 0, 0),
 			)
-			createdByID := appcontext.Principal(ctx).Account().ID
-			reviewer := models.NewSystemIntakeGRBReviewer(reviewer1.ID, createdByID)
-			reviewer.VotingRole = models.SIGRBRVRAlternate
-			reviewer.GRBRole = models.SIGRBRRACA3021Rep
-			reviewer.SystemIntakeID = sysIn.ID
-			err = store.CreateSystemIntakeGRBReviewer(ctx, store, reviewer)
-			if err != nil {
-				fmt.Println(err)
-				return err
-			}
-			reviewer.UserID = reviewer2.ID
-			reviewer.ID = uuid.New()
-			err = store.CreateSystemIntakeGRBReviewer(ctx, store, reviewer)
-			if err != nil {
-				fmt.Println(err)
-				return err
-			}
+			createSystemIntakeGRBReviewers(ctx, store, sysIn, []*models.CreateGRBReviewerInput{
+				{
+					EuaUserID:  "BTMN",
+					VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+					GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
+				},
+				{
+					EuaUserID:  "A11Y",
+					VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+					GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+				},
+			})
+
 			setSystemIntakeRelationExistingSystem(
 				gCtx,
 				store,
@@ -275,29 +262,32 @@ func main() {
 			fillForm:           true,
 		},
 	)
-	createSystemIntakeGRBReviewer(
+	createSystemIntakeGRBReviewers(
 		ctx,
 		store,
 		intake,
-		mock.PrincipalUser,
-		models.SystemIntakeGRBReviewerVotingRoleVoting,
-		models.SystemIntakeGRBReviewerRoleCmcsRep,
-	)
-	createSystemIntakeGRBReviewer(
-		ctx,
-		store,
-		intake,
-		"ABCD",
-		models.SystemIntakeGRBReviewerVotingRoleAlternate,
-		models.SystemIntakeGRBReviewerRoleCciioRep,
-	)
-	createSystemIntakeGRBReviewer(
-		ctx,
-		store,
-		intake,
-		"A11Y",
-		models.SystemIntakeGRBReviewerVotingRoleNonVoting,
-		models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+		[]*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  mock.PrincipalUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "BTMN",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "ABCD",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+		},
 	)
 
 	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")

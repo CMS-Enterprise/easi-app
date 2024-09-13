@@ -34,14 +34,17 @@ type AccountInfo OktaAccountInfo
 // GetAccountInfoFunc represents a type of function which takes a context and username and returns AccountInfo
 type GetAccountInfoFunc func(ctx context.Context, username string) (*AccountInfo, error)
 
-// GetAccountInfoFunc represents a type of function which takes a context and username and returns AccountInfo
-type GetAccountInfosFunc func(ctx context.Context, username []string) ([]*AccountInfo, error)
+// GetAccountInfosFunc represents a type of function which takes a context and username and returns AccountInfo
+type GetAccountInfosFunc func(ctx context.Context, usernames []string) ([]*AccountInfo, error)
 
 // GetOktaAccountInfoFunc represents a type of function which takes a context and username and returns OktaAccountInfo
 type GetOktaAccountInfoFunc func(ctx context.Context, username string) (*OktaAccountInfo, error)
 
 // GetUserInfoFunc represents a type of function which takes a context and username and returns UserInfo
 type GetUserInfoFunc func(ctx context.Context, username string) (*models.UserInfo, error)
+
+// GetUserInfosFunc represents a type of function which takes a context and username and returns UserInfo
+type GetUserInfosFunc func(ctx context.Context, usernames []string) ([]*models.UserInfo, error)
 
 // GetOrCreateUserAccountFullName will return an account if it exists after searching by Full Name, or create and return a new one if not
 func GetOrCreateUserAccountFullName(
@@ -76,14 +79,14 @@ func GetOrCreateUserAccountFullName(
 	userAccount.HasLoggedIn = hasLoggedIn
 
 	if userAccount.ID == uuid.Nil {
-		newAccount, newErr := store.UserAccountCreate(np, userAccount)
+		newAccount, newErr := store.UserAccountCreate(ctx, np, userAccount)
 		if newErr != nil {
 			return nil, newErr
 		}
 		return newAccount, nil
 	}
 
-	updatedAccount, updateErr := store.UserAccountUpdateByUserName(np, userAccount)
+	updatedAccount, updateErr := store.UserAccountUpdate(ctx, np, userAccount)
 	if updateErr != nil {
 		return nil, updateErr
 	}
@@ -97,7 +100,8 @@ func GetOrCreateUserAccount(
 	store *storage.Store,
 	username string,
 	hasLoggedIn bool,
-	getAccountInformation GetAccountInfoFunc) (*authentication.UserAccount, error) {
+	getAccountInformation GetAccountInfoFunc,
+) (*authentication.UserAccount, error) {
 	userAccount, accErr := store.UserAccountGetByUsername(ctx, np, username) //TODO: this could be expanded to check by either username or commonName
 	if accErr != nil {
 		return nil, errors.New("failed to get user information from the database")
@@ -110,8 +114,10 @@ func GetOrCreateUserAccount(
 		return nil, err
 	}
 
+	shouldCreateAccount := false
 	if userAccount == nil {
 		userAccount = &authentication.UserAccount{}
+		shouldCreateAccount = true
 	}
 	userAccount.Username = accountInfo.PreferredUsername
 	userAccount.CommonName = accountInfo.Name
@@ -122,15 +128,15 @@ func GetOrCreateUserAccount(
 	userAccount.ZoneInfo = accountInfo.ZoneInfo
 	userAccount.HasLoggedIn = hasLoggedIn
 
-	if userAccount.ID == uuid.Nil {
-		newAccount, newErr := store.UserAccountCreate(np, userAccount)
+	if shouldCreateAccount {
+		newAccount, newErr := store.UserAccountCreate(ctx, np, userAccount)
 		if newErr != nil {
 			return nil, newErr
 		}
 		return newAccount, nil
 	}
 
-	updatedAccount, updateErr := store.UserAccountUpdateByUserName(np, userAccount)
+	updatedAccount, updateErr := store.UserAccountUpdate(ctx, np, userAccount)
 	if updateErr != nil {
 		return nil, updateErr
 	}
@@ -144,30 +150,41 @@ func GetOrCreateUserAccounts(
 	store *storage.Store,
 	usernames []string,
 	hasLoggedIn bool,
-	getAccountInformation GetAccountInfoFunc,
+	getAccountInformation GetAccountInfosFunc,
 ) ([]*authentication.UserAccount, error) {
-	userAccounts, accErr := store.UserAccountGetByUsernames(ctx, np, usernames) //TODO: this could be expanded to check by either username or commonName
+	existingUserAccounts, accErr := store.UserAccountGetByUsernames(ctx, np, usernames)
 	if accErr != nil {
 		return nil, errors.New("failed to get user information from the database")
 	}
-	acctMap := map[string]*authentication.UserAccount{}
-	createAccts := []*authentication.UserAccount{}
-	updateAccts := []*authentication.UserAccount{}
-	for i, username := range usernames {
-		acctMap[username] = userAccounts[i]
-	}
-	rtnAccts := []*authentication.UserAccount{}
 
-	for username, userAccount := range acctMap {
-		if userAccount != nil && userAccount.HasLoggedIn {
+	// convert results into map keyed by username
+	acctMap := map[string]*authentication.UserAccount{}
+	for _, userAccount := range existingUserAccounts {
+		if userAccount != nil {
+			acctMap[userAccount.Username] = userAccount
+		}
+	}
+
+	// skip fetching info on accounts that have logged in
+	acctInfoToGet := []string{}
+	for _, username := range usernames {
+		if userAccount, ok := acctMap[username]; ok && userAccount.HasLoggedIn {
 			continue
 		}
-		accountInfo, err := getAccountInformation(ctx, username)
-		if err != nil {
-			return nil, err
-		}
+		acctInfoToGet = append(acctInfoToGet, username)
+	}
 
-		if userAccount == nil {
+	accountInfos, err := getAccountInformation(ctx, acctInfoToGet)
+	if err != nil {
+		return nil, err
+	}
+
+	accountsToCreate := []*authentication.UserAccount{}
+	accountsToUpdate := []*authentication.UserAccount{}
+	for _, accountInfo := range accountInfos {
+		// check if user account has been created, if not start one
+		userAccount, isExistingAccount := acctMap[accountInfo.PreferredUsername]
+		if !isExistingAccount {
 			userAccount = &authentication.UserAccount{}
 		}
 		userAccount.Username = accountInfo.PreferredUsername
@@ -179,26 +196,41 @@ func GetOrCreateUserAccounts(
 		userAccount.ZoneInfo = accountInfo.ZoneInfo
 		userAccount.HasLoggedIn = hasLoggedIn
 
-		if userAccount.ID == uuid.Nil {
-			createAccts = append(createAccts, userAccount)
+		if !isExistingAccount {
+			accountsToCreate = append(accountsToCreate, userAccount)
 			continue
 		}
-		updateAccts = append(updateAccts, userAccount)
-
-		// updatedAccount, updateErr := store.UserAccountUpdateByUserName(np, userAccount)
-		// if updateErr != nil {
-		// 	return nil, updateErr
-		// }
-		// rtnAccts = append(rtnAccts, updatedAccount)
-		// continue
+		accountsToUpdate = append(accountsToUpdate, userAccount)
 	}
-	// for username, userAccount := range createMap {
-	// newAccount, newErr := store.UserAccountCreate(np, userAccount)
-	// 		if newErr != nil {
-	// 			return nil, newErr
-	// 	}
-	//
-	// }
+
+	createdAccts := []*authentication.UserAccount{}
+	updatedAccts := []*authentication.UserAccount{}
+
+	if len(accountsToCreate) > 0 {
+		var err error
+		createdAccts, err = store.UserAccountBulkCreate(ctx, np, accountsToCreate)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if len(accountsToUpdate) > 0 {
+		var err error
+		updatedAccts, err = store.UserAccountBulkUpdate(ctx, np, accountsToUpdate)
+		if err != nil {
+			return nil, err
+		}
+	}
+	// combine created and updated accounts and update them in the map
+	for _, acct := range append(createdAccts, updatedAccts...) {
+		acctMap[acct.Username] = acct
+	}
+
+	// extract mapped accounts in the same order as the provided usernames
+	rtnAccts := []*authentication.UserAccount{}
+	for _, username := range usernames {
+		rtnAccts = append(rtnAccts, acctMap[username])
+	}
 
 	return rtnAccts, nil
 }
@@ -212,23 +244,55 @@ func GetUserInfoAccountInfoWrapperFunc(getUserInfo GetUserInfoFunc) GetAccountIn
 	return wrapperFunc
 }
 
+// GetUserInfoAccountInfosWrapperFunc returns a function that returns []*AccountInfo with the input of a function that returns UserInfos
+func GetUserInfoAccountInfosWrapperFunc(getUserInfos GetUserInfosFunc) GetAccountInfosFunc {
+
+	wrapperFunc := func(ctx context.Context, usernames []string) ([]*AccountInfo, error) {
+		return GetUserInfoAccountInfosWrapper(ctx, usernames, getUserInfos)
+	}
+	return wrapperFunc
+}
+
 // GetUserInfoAccountInfoWrapper this function appends models.UserInfo with needed account info fields as UNKNOWN
 func GetUserInfoAccountInfoWrapper(ctx context.Context, username string, getUserInfo GetUserInfoFunc) (*AccountInfo, error) {
-	userinfo, err := getUserInfo(ctx, username)
+	userInfo, err := getUserInfo(ctx, username)
 	if err != nil {
 		return nil, err
 	}
 
 	accountInfo := &AccountInfo{}
-	accountInfo.Name = userinfo.DisplayName
+	accountInfo.Name = userInfo.DisplayName
 	accountInfo.Locale = "UNKNOWN"
-	accountInfo.Email = userinfo.Email.String() // TODO: EASI-3341, can this be an email address type instead of string
-	accountInfo.PreferredUsername = userinfo.Username
-	accountInfo.GivenName = userinfo.FirstName
-	accountInfo.FamilyName = userinfo.LastName
+	accountInfo.Email = userInfo.Email.String() // TODO: EASI-3341, can this be an email address type instead of string
+	accountInfo.PreferredUsername = userInfo.Username
+	accountInfo.GivenName = userInfo.FirstName
+	accountInfo.FamilyName = userInfo.LastName
 	accountInfo.ZoneInfo = "UNKNOWN"
 
 	return accountInfo, nil
+}
+
+// GetUserInfoAccountInfosWrapper this function appends models.UserInfo with needed account info fields as UNKNOWN
+func GetUserInfoAccountInfosWrapper(ctx context.Context, usernames []string, getUserInfos GetUserInfosFunc) ([]*AccountInfo, error) {
+	userInfos, err := getUserInfos(ctx, usernames)
+	if err != nil {
+		return nil, err
+	}
+
+	accountInfos := []*AccountInfo{}
+	for _, userInfo := range userInfos {
+		accountInfo := &AccountInfo{}
+		accountInfo.Name = userInfo.DisplayName
+		accountInfo.Locale = "UNKNOWN"
+		accountInfo.Email = userInfo.Email.String() // TODO: EASI-3341, can this be an email address type instead of string
+		accountInfo.PreferredUsername = userInfo.Username
+		accountInfo.GivenName = userInfo.FirstName
+		accountInfo.FamilyName = userInfo.LastName
+		accountInfo.ZoneInfo = "UNKNOWN"
+		accountInfos = append(accountInfos, accountInfo)
+	}
+
+	return accountInfos, nil
 }
 
 // GetOktaAccountInfoWrapperFunction returns a function that returns *AccountInfo with the input of a function that returns OktaAccountInfo

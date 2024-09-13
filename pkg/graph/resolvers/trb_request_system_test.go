@@ -101,7 +101,7 @@ func (s *ResolverSuite) TestTRBRequestsByCedarSystemID() {
 		}
 		trb1.CreatedBy = testhelpers.RandomEUAIDNull().String
 
-		create1, err := s.testConfigs.Store.CreateTRBRequest(ctx, s.testConfigs.Store, &trb1)
+		create1, err := s.testConfigs.Store.CreateTRBRequest(ctx, s.testConfigs.Store.DB, &trb1)
 		s.NoError(err)
 		s.NotNil(create1)
 
@@ -114,7 +114,7 @@ func (s *ResolverSuite) TestTRBRequestsByCedarSystemID() {
 
 		trb2.CreatedBy = testhelpers.RandomEUAIDNull().String
 
-		create2, err := s.testConfigs.Store.CreateTRBRequest(ctx, s.testConfigs.Store, &trb2)
+		create2, err := s.testConfigs.Store.CreateTRBRequest(ctx, s.testConfigs.Store.DB, &trb2)
 		s.NoError(err)
 		s.NotNil(create2)
 
@@ -127,7 +127,7 @@ func (s *ResolverSuite) TestTRBRequestsByCedarSystemID() {
 
 		trb3.CreatedBy = testhelpers.RandomEUAIDNull().String
 
-		create3, err := s.testConfigs.Store.CreateTRBRequest(ctx, s.testConfigs.Store, &trb3)
+		create3, err := s.testConfigs.Store.CreateTRBRequest(ctx, s.testConfigs.Store.DB, &trb3)
 		s.NoError(err)
 		s.NotNil(create3)
 

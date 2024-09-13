@@ -27,7 +27,7 @@ func (s *ResolverSuite) TestGetUserAccountByID() {
 			HasLoggedIn: false,
 		}
 
-		_, err := store.UserAccountCreate(store, &user)
+		_, err := store.UserAccountCreate(s.testConfigs.Context, store.DB, &user)
 		s.NoError(err)
 
 		// get that user

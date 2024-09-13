@@ -39,7 +39,7 @@ func (s *Store) CreateTRBAdviceLetter(ctx context.Context, createdBy string, trb
 			:status
 		) RETURNING *;
 	`
-	stmt, err := s.db.PrepareNamed(trbAdviceLetterCreateSQL)
+	stmt, err := s.DB.PrepareNamed(trbAdviceLetterCreateSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for creating TRB advice letter with error %s", err),
@@ -79,7 +79,7 @@ func (s *Store) UpdateTRBAdviceLetterStatus(ctx context.Context, id uuid.UUID, s
 	RETURNING *;
 	`
 
-	stmt, err := s.db.PrepareNamed(trbAdviceLetterStatusUpdateSQL)
+	stmt, err := s.DB.PrepareNamed(trbAdviceLetterStatusUpdateSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for updating TRB advice letter status with error %s", err),
@@ -140,7 +140,7 @@ func (s *Store) UpdateTRBAdviceLetter(ctx context.Context, letter *models.TRBAdv
 		RETURNING *;
 	`
 
-	stmt, err := s.db.PrepareNamed(trbAdviceLetterUpdateSQL)
+	stmt, err := s.DB.PrepareNamed(trbAdviceLetterUpdateSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for updating TRB advice letter with error %s", err),
@@ -173,7 +173,7 @@ func (s *Store) UpdateTRBAdviceLetter(ctx context.Context, letter *models.TRBAdv
 func (s *Store) GetTRBAdviceLetterByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
 	letter := models.TRBAdviceLetter{}
 
-	err := namedGet(ctx, s, &letter, sqlqueries.TRBRequestAdviceLetter.GetByTRBID, args{
+	err := namedGet(ctx, s.DB, &letter, sqlqueries.TRBRequestAdviceLetter.GetByTRBID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -202,7 +202,7 @@ func (s *Store) GetTRBAdviceLetterByTRBRequestID(ctx context.Context, trbRequest
 func (s *Store) GetTRBAdviceLettersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBAdviceLetter, error) {
 	letters := []*models.TRBAdviceLetter{}
 
-	err := namedSelect(ctx, s, &letters, sqlqueries.TRBRequestAdviceLetter.GetByTRBIDs, args{
+	err := namedSelect(ctx, s.DB, &letters, sqlqueries.TRBRequestAdviceLetter.GetByTRBIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 

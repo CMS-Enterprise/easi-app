@@ -159,7 +159,7 @@ func NewEmailClient(sender *mockSender) *email.Client {
 // getTestPrincipal gets a user principal from database
 func (s *ResolverSuite) getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {
 
-	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store.DB, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
 
 	princ := &authentication.EUAPrincipal{
 		EUAID:       userName,
@@ -242,6 +242,22 @@ func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.Us
 	})
 	s.NoError(err)
 	return userAcct
+}
+
+// utility method to get userAcct in resolver tests
+func (s *ResolverSuite) getOrCreateUserAccts(euaUserIDs []string) []*authentication.UserAccount {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+	okta := local.NewOktaAPIClient()
+	userAccts, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) ([]*authentication.UserAccount, error) {
+		users, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, store, euaUserIDs, false, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos))
+		if err != nil {
+			return nil, err
+		}
+		return users, nil
+	})
+	s.NoError(err)
+	return userAccts
 }
 
 // ctxWithNewDataloaders sets new Dataloaders on the test suite's existing context and returns that context.

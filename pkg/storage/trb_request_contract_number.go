@@ -58,7 +58,7 @@ func (s *Store) SetTRBRequestContractNumbers(ctx context.Context, tx *sqlx.Tx, t
 
 func (s *Store) TRBRequestContractNumbersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestContractNumber, error) {
 	var trbRequestContractNumbers []*models.TRBRequestContractNumber
-	return trbRequestContractNumbers, namedSelect(ctx, s, &trbRequestContractNumbers, sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDs, args{
+	return trbRequestContractNumbers, namedSelect(ctx, s.DB, &trbRequestContractNumbers, sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 }

@@ -48,7 +48,7 @@ func (s *Store) CreateTRBRequestForm(ctx context.Context, np sqlutils.NamedPrepa
 
 // UpdateTRBRequestForm updates a TRB request form record in the database
 func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := s.DB.PrepareNamed(`
 		UPDATE trb_request_forms
 		SET
 			status = :status,
@@ -107,7 +107,7 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 // GetTRBRequestFormByTRBRequestID queries the DB for the TRB request form record matching the given TRB request ID
 func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestForm, error) {
 	var form models.TRBRequestForm
-	err := namedGet(ctx, s, &form, sqlqueries.TRBRequestForm.GetByID, args{
+	err := namedGet(ctx, s.DB, &form, sqlqueries.TRBRequestForm.GetByID, args{
 		"trb_request_id": trbRequestID,
 	})
 	if err != nil {
@@ -124,7 +124,7 @@ func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestI
 // GetTRBRequestFormsByTRBRequestIDs queries the DB for TRB request form records matching the given TRB request IDs
 func (s *Store) GetTRBRequestFormsByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestForm, error) {
 	var forms []*models.TRBRequestForm
-	err := namedSelect(ctx, s, &forms, sqlqueries.TRBRequestForm.GetByIDs, args{
+	err := namedSelect(ctx, s.DB, &forms, sqlqueries.TRBRequestForm.GetByIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 	if err != nil {
@@ -141,7 +141,7 @@ func (s *Store) GetTRBRequestFormsByTRBRequestIDs(ctx context.Context, trbReques
 // matching the given TRB request ID
 func (s *Store) GetTRBFundingSourcesByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBFundingSource, error) {
 	fundingSources := []*models.TRBFundingSource{}
-	err := namedSelect(ctx, s, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqID, args{
+	err := namedSelect(ctx, s.DB, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -164,7 +164,7 @@ func (s *Store) GetTRBFundingSourcesByRequestID(ctx context.Context, trbRequestI
 // matching the given TRB request IDs
 func (s *Store) GetTRBFundingSourcesByRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBFundingSource, error) {
 	fundingSources := []*models.TRBFundingSource{}
-	err := namedSelect(ctx, s, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqIDs, args{
+	err := namedSelect(ctx, s.DB, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 
@@ -184,7 +184,7 @@ func (s *Store) GetTRBFundingSourcesByRequestIDs(ctx context.Context, trbRequest
 
 // DeleteTRBRequestForm deletes an existing TRB request form record in the database
 func (s *Store) DeleteTRBRequestForm(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestForm, error) {
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := s.DB.PrepareNamed(`
 		DELETE FROM trb_request_forms
 		WHERE trb_request_id = :trb_request_id
 		RETURNING *;`)

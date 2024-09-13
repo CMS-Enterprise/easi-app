@@ -45,7 +45,7 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	trb_request
 	`
 
-	_, err := s.db.Exec("TRUNCATE " + tables)
+	_, err := s.DB.Exec("TRUNCATE " + tables)
 	if err != nil {
 		return err
 	}
@@ -56,6 +56,6 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 // DeleteUserAccountDANGEROUS deletes a given user account from the DB
 // only to be used in test code as we do not truncate `user_account` table
 func (s *Store) DeleteUserAccountDANGEROUS(username string) error {
-	_, err := s.db.Exec("DELETE FROM user_account WHERE username = $1", username)
+	_, err := s.DB.Exec("DELETE FROM user_account WHERE username = $1", username)
 	return err
 }

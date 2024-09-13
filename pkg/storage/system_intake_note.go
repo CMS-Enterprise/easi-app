@@ -40,7 +40,7 @@ func (s *Store) CreateSystemIntakeNote(ctx context.Context, note *models.SystemI
 		    :author_name,
 		    :content
 		)`
-	_, err := s.db.NamedExec(
+	_, err := s.DB.NamedExec(
 		createSystemIntakeNoteSQL,
 		note,
 	)
@@ -62,7 +62,7 @@ func (s *Store) CreateSystemIntakeNote(ctx context.Context, note *models.SystemI
 // UpdateSystemIntakeNote updates all of a IT governance admin note's mutable fields.
 // The note's IsArchived field _can_ be set, though SetNoteArchived() should be used when archiving a note.
 func (s *Store) UpdateSystemIntakeNote(ctx context.Context, note *models.SystemIntakeNote) (*models.SystemIntakeNote, error) {
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := s.DB.PrepareNamed(`
 	UPDATE notes
 	SET
 		content = :content,
@@ -104,7 +104,7 @@ func (s *Store) UpdateSystemIntakeNote(ctx context.Context, note *models.SystemI
 // FetchSystemIntakeNoteByID retrieves a single Note by its primary key identifier
 func (s *Store) FetchSystemIntakeNoteByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeNote, error) {
 	note := models.SystemIntakeNote{}
-	err := s.db.Get(&note, "SELECT * FROM public.notes WHERE id=$1", id)
+	err := s.DB.Get(&note, "SELECT * FROM public.notes WHERE id=$1", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch note %s", err),
@@ -121,7 +121,7 @@ func (s *Store) FetchSystemIntakeNoteByID(ctx context.Context, id uuid.UUID) (*m
 // FetchNotesBySystemIntakeID retrieves all (non archived/deleted) Notes associated with a specific SystemIntake
 func (s *Store) FetchNotesBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeNote, error) {
 	notes := []*models.SystemIntakeNote{}
-	err := namedSelect(ctx, s, &notes, sqlqueries.SystemIntakeNotes.SelectBySystemIntakeID, args{
+	err := namedSelect(ctx, s.DB, &notes, sqlqueries.SystemIntakeNotes.SelectBySystemIntakeID, args{
 		"system_intake_id": systemIntakeID,
 	})
 	if err != nil {
@@ -137,7 +137,7 @@ func (s *Store) FetchNotesBySystemIntakeID(ctx context.Context, systemIntakeID u
 // FetchNotesBySystemIntakeIDs retrieves all (non archived/deleted) Notes associated with a list of intake IDs
 func (s *Store) FetchNotesBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeNote, error) {
 	notes := []*models.SystemIntakeNote{}
-	err := namedSelect(ctx, s, &notes, sqlqueries.SystemIntakeNotes.SelectBySystemIntakeIDs, args{
+	err := namedSelect(ctx, s.DB, &notes, sqlqueries.SystemIntakeNotes.SelectBySystemIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 	if err != nil {

@@ -60,7 +60,7 @@ func CreateTRBRequestAttendee(
 	})
 
 	attendee.CreatedBy = appcontext.Principal(ctx).ID()
-	createdAttendee, err := store.CreateTRBRequestAttendee(ctx, store, attendee)
+	createdAttendee, err := store.CreateTRBRequestAttendee(ctx, store.DB, attendee)
 	if err != nil {
 		return nil, err
 	}

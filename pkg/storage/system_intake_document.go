@@ -13,7 +13,7 @@ import (
 // GetSystemIntakeDocumentsByRequestID queries the DB for all documents attached to the system intake with the given ID
 func (s *Store) GetSystemIntakeDocumentsByRequestID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeDocument, error) {
 	var documents []*models.SystemIntakeDocument
-	return documents, namedSelect(ctx, s, &documents, sqlqueries.SystemIntakeDocument.SelectDocumentsBySystemIntakeID, args{
+	return documents, namedSelect(ctx, s.DB, &documents, sqlqueries.SystemIntakeDocument.SelectDocumentsBySystemIntakeID, args{
 		"system_intake_id": systemIntakeID,
 	})
 }
@@ -21,21 +21,21 @@ func (s *Store) GetSystemIntakeDocumentsByRequestID(ctx context.Context, systemI
 // GetSystemIntakeDocumentsByRequestIDs queries the DB for all documents attached to system intakes with the given IDs
 func (s *Store) GetSystemIntakeDocumentsByRequestIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeDocument, error) {
 	var documents []*models.SystemIntakeDocument
-	return documents, namedSelect(ctx, s, &documents, sqlqueries.SystemIntakeDocument.SelectDocumentsBySystemIntakeIDs, args{
+	return documents, namedSelect(ctx, s.DB, &documents, sqlqueries.SystemIntakeDocument.SelectDocumentsBySystemIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 }
 
 func (s *Store) GetSystemIntakeDocumentByID(ctx context.Context, docID uuid.UUID) (*models.SystemIntakeDocument, error) {
 	var doc models.SystemIntakeDocument
-	return &doc, namedGet(ctx, s, &doc, sqlqueries.SystemIntakeDocument.GetByDocumentID, args{
+	return &doc, namedGet(ctx, s.DB, &doc, sqlqueries.SystemIntakeDocument.GetByDocumentID, args{
 		"id": docID,
 	})
 }
 
 func (s *Store) GetSystemIntakeDocumentByS3Key(ctx context.Context, s3Key string) (*models.SystemIntakeDocument, error) {
 	var doc models.SystemIntakeDocument
-	return &doc, namedGet(ctx, s, &doc, sqlqueries.SystemIntakeDocument.GetByS3Key, args{
+	return &doc, namedGet(ctx, s.DB, &doc, sqlqueries.SystemIntakeDocument.GetByS3Key, args{
 		"s3_key": s3Key,
 	})
 }
@@ -47,13 +47,13 @@ func (s *Store) CreateSystemIntakeDocument(ctx context.Context, document *models
 	}
 
 	var retDoc models.SystemIntakeDocument
-	return &retDoc, namedGet(ctx, s, &retDoc, sqlqueries.SystemIntakeDocument.Create, document)
+	return &retDoc, namedGet(ctx, s.DB, &retDoc, sqlqueries.SystemIntakeDocument.Create, document)
 }
 
 // DeleteSystemIntakeDocument deletes an existing SystemIntakeDocument, given its ID
 func (s *Store) DeleteSystemIntakeDocument(ctx context.Context, id uuid.UUID) (*models.SystemIntakeDocument, error) {
 	var retDoc models.SystemIntakeDocument
-	return &retDoc, namedGet(ctx, s, &retDoc, sqlqueries.SystemIntakeDocument.Delete, args{
+	return &retDoc, namedGet(ctx, s.DB, &retDoc, sqlqueries.SystemIntakeDocument.Delete, args{
 		"id": id,
 	})
 }

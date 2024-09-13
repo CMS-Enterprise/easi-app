@@ -19,31 +19,49 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 	okta := local.NewOktaAPIClient()
 
 	s.Run("create GRB Reviewer and add to intake", func() {
-		reviewerEUA := "ABCD"
-		votingRole := models.SystemIntakeGRBReviewerVotingRoleVoting
-		grbRole := models.SystemIntakeGRBReviewerRoleAca3021Rep
+		reviewerEUA1 := "ABCD"
+		votingRole1 := models.SystemIntakeGRBReviewerVotingRoleVoting
+		grbRole1 := models.SystemIntakeGRBReviewerRoleAca3021Rep
+		reviewerEUA2 := "A11Y"
+		votingRole2 := models.SystemIntakeGRBReviewerVotingRoleAlternate
+		grbRole2 := models.SystemIntakeGRBReviewerRoleFedAdminBdgChair
 
 		intake := s.createNewIntake()
-		userAcct := s.getOrCreateUserAcct(reviewerEUA)
+		userAccts := s.getOrCreateUserAccts([]string{reviewerEUA1, reviewerEUA2})
 
-		reviewer, err := CreateSystemIntakeGRBReviewer(
+		payload, err := CreateSystemIntakeGRBReviewers(
 			ctx,
 			store,
 			s.testConfigs.EmailClient,
-			userhelpers.GetUserInfoAccountInfoWrapperFunc(okta.FetchUserInfo),
-			&models.CreateSystemIntakeGRBReviewerInput{
+			userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
+			&models.CreateSystemIntakeGRBReviewersInput{
 				SystemIntakeID: intake.ID,
-				EuaUserID:      reviewerEUA,
-				VotingRole:     votingRole,
-				GrbRole:        grbRole,
+				Reviewers: []*models.CreateGRBReviewerInput{
+					{
+						EuaUserID:  reviewerEUA1,
+						VotingRole: votingRole1,
+						GrbRole:    grbRole1,
+					},
+					{
+						EuaUserID:  reviewerEUA2,
+						VotingRole: votingRole2,
+						GrbRole:    grbRole2,
+					},
+				},
 			},
 		)
+		reviewers := payload.Reviewers
 		s.NoError(err)
-		s.Equal(userAcct.ID, reviewer.UserID)
-		s.Equal(string(votingRole), string(reviewer.VotingRole))
-		s.Equal(string(grbRole), string(reviewer.GRBRole))
-		s.Equal(intake.ID, reviewer.SystemIntakeID)
-		s.Contains(s.testConfigs.Sender.toAddresses, models.EmailAddress(userAcct.Email))
+		s.Equal(userAccts[0].ID, reviewers[0].UserID)
+		s.Equal(string(votingRole1), string(reviewers[0].VotingRole))
+		s.Equal(string(grbRole1), string(reviewers[0].GRBRole))
+		s.Equal(intake.ID, reviewers[0].SystemIntakeID)
+		s.Equal(userAccts[1].ID, reviewers[1].UserID)
+		s.Equal(string(votingRole2), string(reviewers[1].VotingRole))
+		s.Equal(string(grbRole2), string(reviewers[1].GRBRole))
+		s.Equal(intake.ID, reviewers[1].SystemIntakeID)
+		s.Contains(s.testConfigs.Sender.toAddresses, models.EmailAddress(userAccts[0].Email))
+		s.Contains(s.testConfigs.Sender.toAddresses, models.EmailAddress(userAccts[1].Email))
 		s.Contains(s.testConfigs.Sender.body, fmt.Sprintf("Requester: %s", intake.Requester))
 		s.Contains(s.testConfigs.Sender.body, fmt.Sprintf("Project name: %s", intake.ProjectName.String))
 	})
@@ -168,7 +186,7 @@ func (s *ResolverSuite) createIntakeAndAddReviewers(reviewers ...reviewerToAdd) 
 			createdReviewer.VotingRole = reviewer.votingRole
 			createdReviewer.GRBRole = reviewer.grbRole
 			createdReviewer.SystemIntakeID = intake.ID
-			err = store.CreateSystemIntakeGRBReviewer(
+			_, err = store.CreateSystemIntakeGRBReviewer(
 				ctx,
 				tx,
 				createdReviewer,
