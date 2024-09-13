@@ -4,11 +4,13 @@ import SystemIntakeGRBReviewer from './SystemIntakeGRBReviewer';
 
 const CreateSystemIntakeGRBReviewer = gql(/* GraphQL */ `
   ${SystemIntakeGRBReviewer}
-  mutation CreateSystemIntakeGRBReviewer(
-    $input: CreateSystemIntakeGRBReviewerInput!
+  mutation CreateSystemIntakeGRBReviewers(
+    $input: CreateSystemIntakeGRBReviewersInput!
   ) {
-    createSystemIntakeGRBReviewer(input: $input) {
-      ...SystemIntakeGRBReviewer
+    createSystemIntakeGRBReviewers(input: $input) {
+      reviewers {
+        ...SystemIntakeGRBReviewer
+      }
     }
   }
 `);

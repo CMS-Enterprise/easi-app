@@ -148,6 +148,12 @@ type CreateCedarSystemBookmarkPayload struct {
 	CedarSystemBookmark *CedarSystemBookmark `json:"cedarSystemBookmark,omitempty"`
 }
 
+type CreateGRBReviewerInput struct {
+	EuaUserID  string                            `json:"euaUserId"`
+	VotingRole SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
+	GrbRole    SystemIntakeGRBReviewerRole       `json:"grbRole"`
+}
+
 // The data needed to associate a contact with a system intake
 type CreateSystemIntakeContactInput struct {
 	EuaUserID      string    `json:"euaUserId"`
@@ -176,11 +182,13 @@ type CreateSystemIntakeDocumentPayload struct {
 	Document *SystemIntakeDocument `json:"document,omitempty"`
 }
 
-type CreateSystemIntakeGRBReviewerInput struct {
-	SystemIntakeID uuid.UUID                         `json:"systemIntakeID"`
-	EuaUserID      string                            `json:"euaUserId"`
-	VotingRole     SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
-	GrbRole        SystemIntakeGRBReviewerRole       `json:"grbRole"`
+type CreateSystemIntakeGRBReviewersInput struct {
+	SystemIntakeID uuid.UUID                 `json:"systemIntakeID"`
+	Reviewers      []*CreateGRBReviewerInput `json:"reviewers"`
+}
+
+type CreateSystemIntakeGRBReviewersPayload struct {
+	Reviewers []*SystemIntakeGRBReviewer `json:"reviewers"`
 }
 
 // The input data used to initialize an IT governance request for a system
@@ -404,6 +412,11 @@ type SetTRBRequestRelationExistingSystemInput struct {
 type SetTRBRequestRelationNewSystemInput struct {
 	TrbRequestID    uuid.UUID `json:"trbRequestID"`
 	ContractNumbers []string  `json:"contractNumbers"`
+}
+
+// Input for starting a GRB Review, which notifies reviewers by email
+type StartGRBReviewInput struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
 }
 
 // Input to submit an intake for review

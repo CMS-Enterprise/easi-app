@@ -527,6 +527,12 @@ export type CreateCedarSystemBookmarkPayload = {
   cedarSystemBookmark?: Maybe<CedarSystemBookmark>;
 };
 
+export type CreateGRBReviewerInput = {
+  euaUserId: Scalars['String']['input'];
+  grbRole: SystemIntakeGRBReviewerRole;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
+};
+
 /** The data needed to associate a contact with a system intake */
 export type CreateSystemIntakeContactInput = {
   component: Scalars['String']['input'];
@@ -557,11 +563,14 @@ export type CreateSystemIntakeDocumentPayload = {
   document?: Maybe<SystemIntakeDocument>;
 };
 
-export type CreateSystemIntakeGRBReviewerInput = {
-  euaUserId: Scalars['String']['input'];
-  grbRole: SystemIntakeGRBReviewerRole;
+export type CreateSystemIntakeGRBReviewersInput = {
+  reviewers: Array<CreateGRBReviewerInput>;
   systemIntakeID: Scalars['UUID']['input'];
-  votingRole: SystemIntakeGRBReviewerVotingRole;
+};
+
+export type CreateSystemIntakeGRBReviewersPayload = {
+  __typename: 'CreateSystemIntakeGRBReviewersPayload';
+  reviewers: Array<SystemIntakeGRBReviewer>;
 };
 
 /** The input data used to initialize an IT governance request for a system */
@@ -921,7 +930,7 @@ export type Mutation = {
   createSystemIntakeActionUpdateLCID?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   createSystemIntakeDocument?: Maybe<CreateSystemIntakeDocumentPayload>;
-  createSystemIntakeGRBReviewer: SystemIntakeGRBReviewer;
+  createSystemIntakeGRBReviewers?: Maybe<CreateSystemIntakeGRBReviewersPayload>;
   createSystemIntakeNote?: Maybe<SystemIntakeNote>;
   createTRBAdminNoteAdviceLetter: TRBAdminNote;
   createTRBAdminNoteConsultSession: TRBAdminNote;
@@ -958,6 +967,7 @@ export type Mutation = {
   setTRBRequestRelationExistingService?: Maybe<TRBRequest>;
   setTRBRequestRelationExistingSystem?: Maybe<TRBRequest>;
   setTRBRequestRelationNewSystem?: Maybe<TRBRequest>;
+  startGRBReview?: Maybe<Scalars['String']['output']>;
   submitIntake?: Maybe<UpdateSystemIntakePayload>;
   unlinkSystemIntakeRelation?: Maybe<UpdateSystemIntakePayload>;
   unlinkTRBRequestRelation?: Maybe<TRBRequest>;
@@ -1092,8 +1102,8 @@ export type MutationCreateSystemIntakeDocumentArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateSystemIntakeGRBReviewerArgs = {
-  input: CreateSystemIntakeGRBReviewerInput;
+export type MutationCreateSystemIntakeGRBReviewersArgs = {
+  input: CreateSystemIntakeGRBReviewersInput;
 };
 
 
@@ -1311,6 +1321,12 @@ export type MutationSetTRBRequestRelationExistingSystemArgs = {
 /** Defines the mutations for the schema */
 export type MutationSetTRBRequestRelationNewSystemArgs = {
   input: SetTRBRequestRelationNewSystemInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationStartGRBReviewArgs = {
+  input: StartGRBReviewInput;
 };
 
 
@@ -1733,6 +1749,11 @@ export type SetTRBRequestRelationExistingSystemInput = {
 export type SetTRBRequestRelationNewSystemInput = {
   contractNumbers: Array<Scalars['String']['input']>;
   trbRequestID: Scalars['UUID']['input'];
+};
+
+/** Input for starting a GRB Review, which notifies reviewers by email */
+export type StartGRBReviewInput = {
+  systemIntakeID: Scalars['UUID']['input'];
 };
 
 /** Input to submit an intake for review */
@@ -3081,12 +3102,12 @@ export type UserInfo = {
   lastName: Scalars['String']['output'];
 };
 
-export type CreateSystemIntakeGRBReviewerMutationVariables = Exact<{
-  input: CreateSystemIntakeGRBReviewerInput;
+export type CreateSystemIntakeGRBReviewersMutationVariables = Exact<{
+  input: CreateSystemIntakeGRBReviewersInput;
 }>;
 
 
-export type CreateSystemIntakeGRBReviewerMutation = { __typename: 'Mutation', createSystemIntakeGRBReviewer: { __typename: 'SystemIntakeGRBReviewer', id: UUID, grbRole: SystemIntakeGRBReviewerRole, votingRole: SystemIntakeGRBReviewerVotingRole, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } };
+export type CreateSystemIntakeGRBReviewersMutation = { __typename: 'Mutation', createSystemIntakeGRBReviewers?: { __typename: 'CreateSystemIntakeGRBReviewersPayload', reviewers: Array<{ __typename: 'SystemIntakeGRBReviewer', id: UUID, grbRole: SystemIntakeGRBReviewerRole, votingRole: SystemIntakeGRBReviewerVotingRole, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }> } | null };
 
 export type DeleteSystemIntakeGRBReviewerMutationVariables = Exact<{
   input: DeleteSystemIntakeGRBReviewerInput;
@@ -3195,39 +3216,41 @@ export const SystemIntakeGRBReviewerFragmentDoc = gql`
   }
 }
     `;
-export const CreateSystemIntakeGRBReviewerDocument = gql`
-    mutation CreateSystemIntakeGRBReviewer($input: CreateSystemIntakeGRBReviewerInput!) {
-  createSystemIntakeGRBReviewer(input: $input) {
-    ...SystemIntakeGRBReviewer
+export const CreateSystemIntakeGRBReviewersDocument = gql`
+    mutation CreateSystemIntakeGRBReviewers($input: CreateSystemIntakeGRBReviewersInput!) {
+  createSystemIntakeGRBReviewers(input: $input) {
+    reviewers {
+      ...SystemIntakeGRBReviewer
+    }
   }
 }
     ${SystemIntakeGRBReviewerFragmentDoc}`;
-export type CreateSystemIntakeGRBReviewerMutationFn = Apollo.MutationFunction<CreateSystemIntakeGRBReviewerMutation, CreateSystemIntakeGRBReviewerMutationVariables>;
+export type CreateSystemIntakeGRBReviewersMutationFn = Apollo.MutationFunction<CreateSystemIntakeGRBReviewersMutation, CreateSystemIntakeGRBReviewersMutationVariables>;
 
 /**
- * __useCreateSystemIntakeGRBReviewerMutation__
+ * __useCreateSystemIntakeGRBReviewersMutation__
  *
- * To run a mutation, you first call `useCreateSystemIntakeGRBReviewerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateSystemIntakeGRBReviewerMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateSystemIntakeGRBReviewersMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSystemIntakeGRBReviewersMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createSystemIntakeGrbReviewerMutation, { data, loading, error }] = useCreateSystemIntakeGRBReviewerMutation({
+ * const [createSystemIntakeGrbReviewersMutation, { data, loading, error }] = useCreateSystemIntakeGRBReviewersMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useCreateSystemIntakeGRBReviewerMutation(baseOptions?: Apollo.MutationHookOptions<CreateSystemIntakeGRBReviewerMutation, CreateSystemIntakeGRBReviewerMutationVariables>) {
+export function useCreateSystemIntakeGRBReviewersMutation(baseOptions?: Apollo.MutationHookOptions<CreateSystemIntakeGRBReviewersMutation, CreateSystemIntakeGRBReviewersMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateSystemIntakeGRBReviewerMutation, CreateSystemIntakeGRBReviewerMutationVariables>(CreateSystemIntakeGRBReviewerDocument, options);
+        return Apollo.useMutation<CreateSystemIntakeGRBReviewersMutation, CreateSystemIntakeGRBReviewersMutationVariables>(CreateSystemIntakeGRBReviewersDocument, options);
       }
-export type CreateSystemIntakeGRBReviewerMutationHookResult = ReturnType<typeof useCreateSystemIntakeGRBReviewerMutation>;
-export type CreateSystemIntakeGRBReviewerMutationResult = Apollo.MutationResult<CreateSystemIntakeGRBReviewerMutation>;
-export type CreateSystemIntakeGRBReviewerMutationOptions = Apollo.BaseMutationOptions<CreateSystemIntakeGRBReviewerMutation, CreateSystemIntakeGRBReviewerMutationVariables>;
+export type CreateSystemIntakeGRBReviewersMutationHookResult = ReturnType<typeof useCreateSystemIntakeGRBReviewersMutation>;
+export type CreateSystemIntakeGRBReviewersMutationResult = Apollo.MutationResult<CreateSystemIntakeGRBReviewersMutation>;
+export type CreateSystemIntakeGRBReviewersMutationOptions = Apollo.BaseMutationOptions<CreateSystemIntakeGRBReviewersMutation, CreateSystemIntakeGRBReviewersMutationVariables>;
 export const DeleteSystemIntakeGRBReviewerDocument = gql`
     mutation DeleteSystemIntakeGRBReviewer($input: DeleteSystemIntakeGRBReviewerInput!) {
   deleteSystemIntakeGRBReviewer(input: $input)
@@ -3755,7 +3778,7 @@ export type UpdateTrbRequestLeadMutationResult = Apollo.MutationResult<UpdateTrb
 export type UpdateTrbRequestLeadMutationOptions = Apollo.BaseMutationOptions<UpdateTrbRequestLeadMutation, UpdateTrbRequestLeadMutationVariables>;
 export const TypedSystemIntakeWithReviewRequestedFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeWithReviewRequested"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntake"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}}]}}]} as unknown as DocumentNode<SystemIntakeWithReviewRequestedFragment, unknown>;
 export const TypedSystemIntakeGRBReviewerFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<SystemIntakeGRBReviewerFragment, unknown>;
-export const TypedCreateSystemIntakeGRBReviewerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeGRBReviewer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeGRBReviewerMutation, CreateSystemIntakeGRBReviewerMutationVariables>;
+export const TypedCreateSystemIntakeGRBReviewersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewersInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeGRBReviewers"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"reviewers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeGRBReviewersMutation, CreateSystemIntakeGRBReviewersMutationVariables>;
 export const TypedDeleteSystemIntakeGRBReviewerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteSystemIntakeGRBReviewer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteSystemIntakeGRBReviewerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteSystemIntakeGRBReviewer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<DeleteSystemIntakeGRBReviewerMutation, DeleteSystemIntakeGRBReviewerMutationVariables>;
 export const TypedGetSystemIntakeGRBReviewersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeGRBReviewers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbReviewers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>;
 export const TypedGetSystemIntakesWithReviewRequestedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakesWithReviewRequested"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakesWithReviewRequested"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeWithReviewRequested"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeWithReviewRequested"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntake"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}}]}}]} as unknown as DocumentNode<GetSystemIntakesWithReviewRequestedQuery, GetSystemIntakesWithReviewRequestedQueryVariables>;
