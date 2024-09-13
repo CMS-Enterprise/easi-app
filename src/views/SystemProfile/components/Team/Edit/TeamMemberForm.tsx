@@ -25,6 +25,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import MultiSelect from 'components/shared/MultiSelect';
+import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import Spinner from 'components/Spinner';
 import teamRolesIndex from 'constants/teamRolesIndex';
 import useMessage from 'hooks/useMessage';
@@ -209,6 +210,7 @@ const TeamMemberForm = ({
               <FormGroup error={!!error}>
                 <Label htmlFor={field.name} className="margin-bottom-05">
                   {t('singleSystem.editTeam.form.name')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText>
                   {t('singleSystem.editTeam.form.nameDescription')}
@@ -254,6 +256,7 @@ const TeamMemberForm = ({
             >
               <Label htmlFor={field.name} className="margin-bottom-05">
                 {t('singleSystem.editTeam.form.roles')}
+                <RequiredAsterisk />
               </Label>
               <HelpText>
                 {t('singleSystem.editTeam.form.rolesDescription')}
@@ -285,7 +288,7 @@ const TeamMemberForm = ({
               {t('singleSystem.editTeam.form.availableRoles.primaryLabel')}
             </strong>
           </p>
-          <ul>
+          <ul className="easi-list">
             {availableRolesText.primaryList.map(li => (
               <li key={li}>
                 <Trans>{li}</Trans>
@@ -301,7 +304,7 @@ const TeamMemberForm = ({
               {t('singleSystem.editTeam.form.availableRoles.pocText')}
             </span>
           </p>
-          <ul>
+          <ul className="easi-list">
             {availableRolesText.pocList.map(li => (
               <li key={li}>
                 <Trans>{li}</Trans>
@@ -322,8 +325,7 @@ const TeamMemberForm = ({
               loading ||
               !isDirty ||
               watch('desiredRoleTypeIDs').length === 0 ||
-              !euaUserId ||
-              memberAlreadySelected
+              !euaUserId
             }
             className="margin-0"
           >
