@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 import SystemIntakeGRBReviewer from './SystemIntakeGRBReviewer';
 
-const CreateSystemIntakeGRBReviewer = gql(/* GraphQL */ `
+const CreateSystemIntakeGRBReviewers = gql(/* GraphQL */ `
   ${SystemIntakeGRBReviewer}
   mutation CreateSystemIntakeGRBReviewers(
     $input: CreateSystemIntakeGRBReviewersInput!
@@ -15,4 +15,4 @@ const CreateSystemIntakeGRBReviewer = gql(/* GraphQL */ `
   }
 `);
 
-export default CreateSystemIntakeGRBReviewer;
+export default CreateSystemIntakeGRBReviewers;
