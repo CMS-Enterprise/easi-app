@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ses"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
@@ -47,12 +45,7 @@ func TestSESTestSuite(t *testing.T) {
 		Source:    config.GetString(appconfig.AWSSESSourceKey),
 	}
 
-	sesSession := session.Must(session.NewSession())
-	client := ses.New(sesSession)
-	sender := Sender{
-		client,
-		sesConfig,
-	}
+	sender := NewSender(sesConfig, env)
 
 	sesTestSuite := &SESTestSuite{
 		Suite:  suite.Suite{},
