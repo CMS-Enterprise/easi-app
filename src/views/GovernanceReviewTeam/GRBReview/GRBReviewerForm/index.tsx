@@ -16,7 +16,7 @@ import {
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
-  useCreateSystemIntakeGRBReviewerMutation,
+  useCreateSystemIntakeGRBReviewersMutation,
   useUpdateSystemIntakeGRBReviewerMutation
 } from 'gql/gen/graphql';
 import { toLower } from 'lodash';
@@ -73,7 +73,7 @@ const GRBReviewerForm = ({
     action: 'add' | 'edit';
   }>();
 
-  const [createGRBReviewer] = useCreateSystemIntakeGRBReviewerMutation({
+  const [createGRBReviewers] = useCreateSystemIntakeGRBReviewersMutation({
     refetchQueries: [
       {
         query: GetSystemIntakeGRBReviewersDocument,
@@ -122,12 +122,16 @@ const GRBReviewerForm = ({
         ? updateGRBReviewer({
             variables: { input: { ...values, reviewerID: activeReviewer.id } }
           })
-        : createGRBReviewer({
+        : createGRBReviewers({
             variables: {
               input: {
-                ...values,
                 systemIntakeID: systemId,
-                euaUserId: userAccount.username
+                reviewers: [
+                  {
+                    ...values,
+                    euaUserId: userAccount.username
+                  }
+                ]
               }
             }
           });
