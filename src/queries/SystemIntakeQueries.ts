@@ -72,6 +72,10 @@ export const UpdateSystemIntakeRequestDetails = gql`
         needsEaSupport
         hasUiChanges
         usesAiTech
+        softwareAcquisition {
+          usingSoftware
+          acquisitionMethods
+        }
       }
     }
   }

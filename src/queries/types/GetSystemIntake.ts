@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatusAdmin, SystemIntakeStatusRequester, SystemIntakeDocumentCommonType, SystemIntakeDocumentVersion, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState, RequestRelationType, TRBRequestStatus } from "./../../types/graphql-global-types";
+import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatusAdmin, SystemIntakeStatusRequester, SystemIntakeSoftwareAcquisitionMethods, SystemIntakeDocumentCommonType, SystemIntakeDocumentVersion, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState, RequestRelationType, TRBRequestStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntake
@@ -112,6 +112,13 @@ export interface GetSystemIntake_systemIntake_requester {
   component: string | null;
   email: string | null;
   name: string;
+}
+
+export interface GetSystemIntake_systemIntake_softwareAcquisition {
+  __typename: "SystemIntakeSoftwareAcquisition";
+  id: UUID;
+  usingSoftware: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
 }
 
 export interface GetSystemIntake_systemIntake_documents_documentType {
@@ -236,6 +243,7 @@ export interface GetSystemIntake_systemIntake {
   euaUserId: string | null;
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
+  softwareAcquisition: GetSystemIntake_systemIntake_softwareAcquisition | null;
   documents: GetSystemIntake_systemIntake_documents[];
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;

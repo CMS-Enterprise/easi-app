@@ -1,5 +1,6 @@
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
+import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
 import { FundingSource as FundingSourceType } from 'queries/types/FundingSource';
 import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 
@@ -45,6 +46,12 @@ export type SystemIntakeForm = {
   businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
+  usesAiTech: boolean | null;
+  hasUiChanges: boolean | null;
+  softwareAcquisition: {
+    usingSoftware: string | null;
+    acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[] | null;
+  };
   grtReviewEmailBody: string;
   decidedAt: string | null;
   businessCaseId?: string | null;
@@ -62,7 +69,6 @@ export type SystemIntakeForm = {
   grbDate: string | null;
   adminLead: string;
   requesterNameAndComponent: string;
-  hasUiChanges: boolean | null;
 } & ContractDetailsForm;
 
 export type ContactFields = Omit<

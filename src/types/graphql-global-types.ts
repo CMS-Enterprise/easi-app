@@ -254,6 +254,16 @@ export enum SystemIntakeRequestType {
 }
 
 /**
+ * SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
+ */
+export enum SystemIntakeSoftwareAcquisitionMethods {
+  CONTRACTOR_FURNISHED = "CONTRACTOR_FURNISHED",
+  ELA_OR_INTERNAL = "ELA_OR_INTERNAL",
+  FED_FURNISHED = "FED_FURNISHED",
+  OTHER = "OTHER",
+}
+
+/**
  * SystemIntakeState represents whether the intake is open or closed
  */
 export enum SystemIntakeState {
@@ -1012,7 +1022,7 @@ export interface SystemIntakeRetireLCIDInput {
  */
 export interface SystemIntakeSoftwareAcquisitionInput {
   usingSoftware?: string | null;
-  acuqisitionMethods: string[];
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
 }
 
 /**
@@ -1102,12 +1112,12 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   requestName?: string | null;
   businessNeed?: string | null;
   businessSolution?: string | null;
-  softwareAcquisition?: SystemIntakeSoftwareAcquisitionInput | null;
-  needsEaSupport?: boolean | null;
   currentStage?: string | null;
-  cedarSystemId?: string | null;
+  needsEaSupport?: boolean | null;
+  softwareAcquisition?: SystemIntakeSoftwareAcquisitionInput | null;
   hasUiChanges?: boolean | null;
   usesAiTech?: boolean | null;
+  cedarSystemId?: string | null;
 }
 
 /**

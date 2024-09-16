@@ -2367,16 +2367,24 @@ export type SystemIntakeRetireLCIDInput = {
 /** Represents information on software acquisition information assocatied with a system intake */
 export type SystemIntakeSoftwareAcquisition = {
   __typename: 'SystemIntakeSoftwareAcquisition';
-  acuqisitionMethods: Array<Scalars['String']['output']>;
+  acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>;
   id: Scalars['UUID']['output'];
   usingSoftware?: Maybe<Scalars['String']['output']>;
 };
 
 /** The input required to specify the software acquisition information associated with a system intake */
 export type SystemIntakeSoftwareAcquisitionInput = {
-  acuqisitionMethods: Array<Scalars['String']['input']>;
+  acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>;
   usingSoftware?: InputMaybe<Scalars['String']['input']>;
 };
+
+/** SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake */
+export enum SystemIntakeSoftwareAcquisitionMethods {
+  CONTRACTOR_FURNISHED = 'CONTRACTOR_FURNISHED',
+  ELA_OR_INTERNAL = 'ELA_OR_INTERNAL',
+  FED_FURNISHED = 'FED_FURNISHED',
+  OTHER = 'OTHER'
+}
 
 /** SystemIntakeState represents whether the intake is open or closed */
 export enum SystemIntakeState {

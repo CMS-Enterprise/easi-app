@@ -79,6 +79,11 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   adminLead: '',
   lcidCostBaseline: '',
   requesterNameAndComponent: '',
+  usesAiTech: null,
+  softwareAcquisition: {
+    usingSoftware: null,
+    acquisitionMethods: null
+  },
   hasUiChanges: null
 };
 

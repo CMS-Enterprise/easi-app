@@ -3,11 +3,17 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UpdateSystemIntakeRequestDetailsInput } from "./../../types/graphql-global-types";
+import { UpdateSystemIntakeRequestDetailsInput, SystemIntakeSoftwareAcquisitionMethods } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: UpdateSystemIntakeRequestDetails
 // ====================================================
+
+export interface UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetails_systemIntake_softwareAcquisition {
+  __typename: "SystemIntakeSoftwareAcquisition";
+  usingSoftware: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
+}
 
 export interface UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetails_systemIntake {
   __typename: "SystemIntake";
@@ -18,6 +24,7 @@ export interface UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetai
   needsEaSupport: boolean | null;
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
+  softwareAcquisition: UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetails_systemIntake_softwareAcquisition | null;
 }
 
 export interface UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetails {

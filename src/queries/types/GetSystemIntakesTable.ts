@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeStatusAdmin, SystemIntakeState } from "./../../types/graphql-global-types";
+import { SystemIntakeStatusAdmin, SystemIntakeState, SystemIntakeSoftwareAcquisitionMethods } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntakesTable
@@ -88,6 +88,13 @@ export interface GetSystemIntakesTable_systemIntakes_actions {
   createdAt: Time;
 }
 
+export interface GetSystemIntakesTable_systemIntakes_softwareAcquisition {
+  __typename: "SystemIntakeSoftwareAcquisition";
+  id: UUID;
+  usingSoftware: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
+}
+
 export interface GetSystemIntakesTable_systemIntakes {
   __typename: "SystemIntake";
   id: UUID;
@@ -130,6 +137,7 @@ export interface GetSystemIntakesTable_systemIntakes {
   actions: GetSystemIntakesTable_systemIntakes_actions[];
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
+  softwareAcquisition: GetSystemIntakesTable_systemIntakes_softwareAcquisition | null;
   decidedAt: Time | null;
   submittedAt: Time | null;
   updatedAt: Time | null;

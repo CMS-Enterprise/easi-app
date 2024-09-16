@@ -293,6 +293,11 @@ const intake = {
   },
   requestDetails: {
     heading: 'Request details',
+    subsectionHeadings: {
+      projectConcept: 'Project Concept',
+      collaboration: 'Collaboration',
+      projectDetails: 'Project Details'
+    },
     description:
       'Provide a brief explanation of the business need/issue/problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
     contractTitle: 'Contract/Request Title',
@@ -311,7 +316,7 @@ const intake = {
     usesAiTech: 'Does your request involve AI technologies?',
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
-    elas: {
+    softwareAcquisition: {
       usesSoftwareLabel:
         'Do you plan to use any software products to fulfill your business needs?',
       usesSoftwareHelp:

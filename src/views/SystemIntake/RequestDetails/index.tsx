@@ -10,7 +10,6 @@ import {
   Dropdown,
   Fieldset,
   Form,
-  FormGroup,
   Link as UswdsLink,
   Radio,
   Textarea,
@@ -30,7 +29,6 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import MultiSelect from 'components/shared/MultiSelect';
 import processStages from 'constants/enums/processStages';
 import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
 import {
@@ -58,7 +56,10 @@ type RequestDetailsForm = {
   needsEaSupport: boolean | null;
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
-  usesSoftwareProducts: string | null;
+  softwareAcquisition: {
+    usingSoftware: string | null;
+    acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods] | null;
+  } | null;
 };
 
 type RequestDetailsProps = {
@@ -77,7 +78,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     needsEaSupport,
     hasUiChanges,
     usesAiTech,
-    usesSoftwareProducts
+    softwareAcquisition
   } = systemIntake;
 
   const history = useHistory();
@@ -99,16 +100,15 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       currentStage: currentStage || '',
       needsEaSupport,
       hasUiChanges,
-      usesAiTech
+      usesAiTech,
+      softwareAcquisition: {
+        usingSoftware: softwareAcquisition?.usingSoftware || '',
+        acquisitionMethods: softwareAcquisition?.acquisitionMethods as [
+          SystemIntakeSoftwareAcquisitionMethods
+        ]
+      }
     }
   });
-
-  // TODO: NJD - get ELA list?
-  const NJDOptions = [
-    { label: 'Software 1', value: 'software-1' },
-    { label: 'Software 2', value: 'software-2' },
-    { label: 'Software 3', value: 'software-3' }
-  ];
 
   const [mutate] = useMutation<
     UpdateSystemIntakeRequestDetails,
@@ -225,7 +225,10 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       <MandatoryFieldsAlert className="tablet:grid-col-6" />
 
       <hr className="margin-bottom-1 margin-top-3 opacity-30" aria-hidden />
-      <span className="font-body-sm text-bold">Project Concept NJD</span>
+      <span className="font-body-sm text-bold">
+        {' '}
+        {t('requestDetails.subsectionHeadings.projectConcept')}
+      </span>
 
       <Form
         onSubmit={handleSubmit(() =>
@@ -325,7 +328,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         </FieldGroup>
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
-        <span className="font-body-sm text-bold">Collaboration NJD</span>
+        <span className="font-body-sm text-bold">
+          {t('requestDetails.subsectionHeadings.collaboration')}
+        </span>
 
         <FieldGroup
           scrollElement="needsEaSupport"
@@ -400,7 +405,10 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         </CollapsableLink>
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
-        <span className="font-body-sm text-bold">Project Details NJD</span>
+        <span className="font-body-sm text-bold">
+          {' '}
+          {t('requestDetails.subsectionHeadings.projectDetails')}
+        </span>
 
         <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>
           <Fieldset>
@@ -509,16 +517,16 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           </Fieldset>
         </FieldGroup>
 
-        {/* NJD add SWAM question(s) here */}
-        <FieldGroup scrollElement="NJD-anyELAs" error={!!errors.needsEaSupport}>
-          {/* NJD fix error */}
-          {/* NJD fix controller name */}
-          <Label htmlFor="elasNJD">
-            {t('requestDetails.elas.usesSoftwareLabel')}
+        <FieldGroup
+          scrollElement="softwareAcquisition"
+          error={!!errors.softwareAcquisition}
+        >
+          <Label htmlFor="softwareAcquisition">
+            {t('requestDetails.softwareAcquisition.usesSoftwareLabel')}
           </Label>
           <HelpText id="elasHelpText" className="margin-top-1">
             <Trans
-              i18nKey="intake:requestDetails.elas.usesSoftwareHelp"
+              i18nKey="intake:requestDetails.softwareAcquisition.usesSoftwareHelp"
               components={{
                 dvsmEmail: (
                   <UswdsLink href={`mailto:${CMS_DVSM_EMAIL}`}> </UswdsLink>
@@ -528,7 +536,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           </HelpText>
           <Controller
             control={control}
-            name="usesSoftwareProducts"
+            name="softwareAcquisition.usingSoftware"
             render={({ field: { ref, value, ...field } }) => (
               <Radio
                 {...field}
@@ -540,27 +548,29 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               />
             )}
           />
-          {/* If 'Yes' is selected, display additional software props (software MultiSelect and Acquisition Approach Checkboxes) */}
-          {watch('usesSoftwareProducts') === 'YES' && (
+          {/* If 'Yes' is selected, display additional software props (software MultiSelect (to come later) and Acquisition Approach Checkboxes) */}
+          {watch('softwareAcquisition.usingSoftware') === 'YES' && (
             <div className="margin-left-4 margin-bottom-3">
+              {/* TODO: We eventually want to display a ComboBox software/vendor the requester can select, before we can do this 
+                We need a list of "CMS known" software and/or vendors */}
+
+              {/* TODO: NJD - add question/helptext here */}
               {Object.values(SystemIntakeSoftwareAcquisitionMethods).map(
                 acqMethod => {
-                  // return acqMethod;
                   return (
                     <div key={acqMethod}>
                       <Controller
                         control={control}
-                        name="usesSoftwareProducts"
+                        name="softwareAcquisition.acquisitionMethods"
                         render={({ field: { ref, ...field } }) => {
                           return (
                             <Checkbox
                               {...field}
                               inputRef={ref}
                               id={`software-${acqMethod}`}
-                              label={acqMethod}
-                              // disabled={!isPresent}
+                              label={`software-${acqMethod}`} // TODO: NJD add enum translation
                               value="true"
-                              checked={field.value === acqMethod}
+                              // checked
                               onChange={() => field.onChange(!field.value)}
                             />
                           );
@@ -574,7 +584,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           )}
           <Controller
             control={control}
-            name="usesSoftwareProducts"
+            name="softwareAcquisition.usingSoftware"
             render={({ field: { ref, value, ...field } }) => (
               <Radio
                 {...field}
@@ -590,7 +600,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           />
           <Controller
             control={control}
-            name="usesSoftwareProducts"
+            name="softwareAcquisition.usingSoftware"
             render={({ field: { ref, value, ...field } }) => (
               <Radio
                 {...field}
@@ -606,29 +616,28 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           />
         </FieldGroup>
 
-        {/* NJD add SWAM question(s) here */}
-        <FieldGroup scrollElement="NJD-anyELAs" error={!!errors.needsEaSupport}>
-          {/* NJD fix error */}
-          {/* NJD fix controller name */}
-          <Label htmlFor="elasNJD">{t('requestDetails.elas.label')}</Label>
+        {/* <FieldGroup
+          scrollElement="whichSoftware"
+          error={!!errors.}
+        >
+          <Label htmlFor="whichSoftware">{t('requestDetails.softwareAcquisition.label')}</Label>
           <HelpText id="elasHelpText" className="margin-top-1">
-            {t('requestDetails.elas.help')}
+            {t('requestDetails.softwareAcquisition.help')}
           </HelpText>
           <Controller
             control={control}
-            name="needsEaSupport"
+            name="softwwareList"
             render={({ field }) => (
               <MultiSelect
                 name={field.name}
-                selectedLabel={t('requestDetails.elas.selectedLabel')}
-                // initialValues={field.value}
+                selectedLabel={t('requestDetails.softwareAcquisition.selectedLabel')}
                 initialValues={['']}
-                options={NJDOptions}
+                options={SoftwareOptions}
                 onChange={values => field.onChange(values)}
               />
             )}
           />
-        </FieldGroup>
+        </FieldGroup> */}
 
         <Pager
           next={{

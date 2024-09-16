@@ -110,6 +110,11 @@ export const SystemIntake = gql`
     euaUserId
     hasUiChanges
     usesAiTech
+    softwareAcquisition {
+      id
+      usingSoftware
+      acquisitionMethods
+    }
     documents {
       ...SystemIntakeDocument
     }
