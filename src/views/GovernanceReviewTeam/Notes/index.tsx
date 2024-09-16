@@ -64,21 +64,23 @@ const Notes = () => {
     ]
   });
 
-  const { error, data, refetch: refetchAdminNotesAndActions } = useQuery<
-    GetAdminNotesAndActions,
-    GetAdminNotesAndActionsVariables
-  >(GetAdminNotesAndActionsQuery, {
-    variables: {
-      id: systemId
+  const {
+    error,
+    data,
+    refetch: refetchAdminNotesAndActions
+  } = useQuery<GetAdminNotesAndActions, GetAdminNotesAndActionsVariables>(
+    GetAdminNotesAndActionsQuery,
+    {
+      variables: {
+        id: systemId
+      }
     }
-  });
+  );
 
-  const [
-    archiveNoteMutate,
-    archiveMutationResult
-  ] = useMutation<UpdateSystemIntakeNote>(UpdateSystemIntakeNoteQuery, {
-    errorPolicy: 'all'
-  });
+  const [archiveNoteMutate, archiveMutationResult] =
+    useMutation<UpdateSystemIntakeNote>(UpdateSystemIntakeNoteQuery, {
+      errorPolicy: 'all'
+    });
 
   // Archive System Intake Admin Note
   const archiveSystemIntakeNote = (noteID: string, noteContent: string) => {
@@ -95,12 +97,10 @@ const Notes = () => {
     });
   };
 
-  const [
-    updateNoteMutate,
-    updateMutationResult
-  ] = useMutation<UpdateSystemIntakeNote>(UpdateSystemIntakeNoteQuery, {
-    errorPolicy: 'all'
-  });
+  const [updateNoteMutate, updateMutationResult] =
+    useMutation<UpdateSystemIntakeNote>(UpdateSystemIntakeNoteQuery, {
+      errorPolicy: 'all'
+    });
 
   // Update content of System Intake Admin Note
   const updateSystemIntakeNote = (noteID: string, noteContent: string) => {
@@ -155,15 +155,8 @@ const Notes = () => {
   // New
   const notesByTimestamp =
     data?.systemIntake?.notes.map(note => {
-      const {
-        id,
-        createdAt,
-        content,
-        editor,
-        modifiedAt,
-        modifiedBy,
-        author
-      } = note;
+      const { id, createdAt, content, editor, modifiedAt, modifiedBy, author } =
+        note;
       return {
         createdAt,
         element: (
@@ -371,14 +364,8 @@ const Notes = () => {
 
   const actionsByTimestamp =
     data?.systemIntake?.actions.map(action => {
-      const {
-        id,
-        createdAt,
-        type,
-        actor,
-        feedback,
-        lcidExpirationChange
-      } = action;
+      const { id, createdAt, type, actor, feedback, lcidExpirationChange } =
+        action;
 
       return {
         createdAt,

@@ -129,8 +129,9 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
   );
 
   // Get initial first recipient as requester
-  const requester: TrbRecipient | undefined = useRef(watch('recipients')[0])
-    .current;
+  const requester: TrbRecipient | undefined = useRef(
+    watch('recipients')[0]
+  ).current;
 
   const recipientsCount = (watch('recipients') || []).filter(
     ({ id, userInfo }) =>
