@@ -186,6 +186,17 @@ const GRBReview = ({
             />
           </Alert>
 
+          {grbReviewStartDate && (
+            <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
+              <Trans
+                i18nKey="grbReview:reviewStartedOn"
+                components={{
+                  date: formatDateLocal(grbReviewStartDate, 'MM/dd/yyyy')
+                }}
+              />
+            </p>
+          )}
+
           {
             // Only show button if user is admin and review has not been started
             !grbReviewStartDate && isITGovAdmin && (
