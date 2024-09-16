@@ -203,6 +203,8 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
                         {...systemIntake}
                         businessCase={businessCase}
                         grbReviewers={grbReviewers}
+                        // TODO: Remove mock data after backend work is completed
+                        // grbReviewStartDate="2024-09-10T14:42:47.422022Z"
                       />
                     )}
                   />

@@ -47,6 +47,8 @@ type GRBReviewProps = {
   businessCase: BusinessCaseModel;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   documents: SystemIntakeDocument[];
+  // TODO: Update prop after backend work is completed
+  grbReviewStartDate?: string;
 };
 
 const GRBReview = ({
@@ -55,7 +57,8 @@ const GRBReview = ({
   submittedAt,
   state,
   grbReviewers,
-  documents
+  documents,
+  grbReviewStartDate
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -183,14 +186,18 @@ const GRBReview = ({
             />
           </Alert>
 
-          {/* TODO: Conditional rendering if review is already started */}
-          <Button
-            type="button"
-            onClick={() => startGRBReview()}
-            className="margin-top-3"
-          >
-            {t('startGrbReview')}
-          </Button>
+          {
+            // Only show button if user is admin and review has not been started
+            !grbReviewStartDate && isITGovAdmin && (
+              <Button
+                type="button"
+                onClick={() => startGRBReview()}
+                className="margin-top-3"
+              >
+                {t('startGrbReview')}
+              </Button>
+            )
+          }
 
           {/* Supporting Docs text */}
           <h2 className="margin-bottom-0 margin-top-6">
