@@ -15,7 +15,8 @@ import {
 import {
   GetSystemIntakeGRBReviewersDocument,
   SystemIntakeGRBReviewerFragment,
-  useDeleteSystemIntakeGRBReviewerMutation
+  useDeleteSystemIntakeGRBReviewerMutation,
+  useStartGRBReviewMutation
 } from 'gql/gen/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -79,6 +80,14 @@ const GRBReview = ({
         variables: { id }
       }
     ]
+  });
+
+  const [startGRBReview] = useStartGRBReviewMutation({
+    variables: {
+      input: {
+        systemIntakeID: id
+      }
+    }
   });
 
   const isITGovAdmin = useContext(ITGovAdminContext);
@@ -161,11 +170,7 @@ const GRBReview = ({
           </p>
 
           {/* Feature in progress alert */}
-          <Alert
-            type="info"
-            heading={t('featureInProgress')}
-            className="margin-bottom-5"
-          >
+          <Alert type="info" heading={t('featureInProgress')}>
             <Trans
               i18nKey="grbReview:featureInProgressText"
               components={{
@@ -178,8 +183,19 @@ const GRBReview = ({
             />
           </Alert>
 
+          {/* TODO: Conditional rendering if review is already started */}
+          <Button
+            type="button"
+            onClick={() => startGRBReview()}
+            className="margin-top-3"
+          >
+            {t('startGrbReview')}
+          </Button>
+
           {/* Supporting Docs text */}
-          <h2 className="margin-bottom-0">{t('supportingDocuments')}</h2>
+          <h2 className="margin-bottom-0 margin-top-6">
+            {t('supportingDocuments')}
+          </h2>
           <p className="margin-top-05 line-height-body-5">
             {t('supportingDocumentsText')}
           </p>
