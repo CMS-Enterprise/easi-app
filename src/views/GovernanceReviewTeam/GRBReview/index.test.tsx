@@ -54,6 +54,11 @@ describe('GRB review tab', () => {
     expect(await screen.findByRole('heading', { name: 'GRB review' }));
 
     expect(screen.getByRole('heading', { name: 'Available documentation' }));
+
+    // Hide start review button
+    expect(
+      screen.queryByRole('button', { name: 'Start GRB review' })
+    ).toBeNull();
   });
 
   it('renders GRT admin view', async () => {
@@ -75,7 +80,38 @@ describe('GRB review tab', () => {
 
     expect(await screen.findByRole('heading', { name: 'GRB review' }));
 
+    // Start review button
+    expect(
+      screen.getByRole('button', { name: 'Start GRB review' })
+    ).toBeInTheDocument();
+
+    // Add reviewer button
     expect(screen.getByRole('button', { name: 'Add a GRB reviewer' }));
+  });
+
+  it('renders GRB review start date', () => {
+    const date = '2024-09-10T14:42:47.422022Z';
+    render(
+      <MemoryRouter>
+        <VerboseMockedProvider>
+          <MessageProvider>
+            <ITGovAdminContext.Provider value>
+              <GRBReview
+                {...systemIntake}
+                businessCase={businessCase}
+                grbReviewers={[grbReviewer]}
+                // TODO: Update prop after backend work is done
+                grbReviewStartDate={date}
+              />
+            </ITGovAdminContext.Provider>
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByText('Review started on 09/10/2024')
+    ).toBeInTheDocument();
   });
 
   describe('Participants table', () => {
@@ -120,6 +156,7 @@ describe('GRB review tab', () => {
         </MemoryRouter>
       );
 
+      // Hides action buttons in Participants table
       expect(screen.queryByTestId('grbReviewerActions')).toBeNull();
     });
   });
