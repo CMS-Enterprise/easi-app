@@ -37,6 +37,7 @@ export default {
   featureInProgress: 'Feature in progress',
   featureInProgressText:
     'The capabilities currently available allow Governance Admin Team members to invite GRB reviewers to access documentation related to requests. Future capabilities will include voting, discussions with project teams and GRB members, timelines, and more. Currently, however, all communication with the GRB and the project team must be completed via email or during meetings. If you have any questions, please complete the <a>feedback form</a> in the footer of this page.',
+  startGrbReview: 'Start GRB review',
   participants: 'Participants',
   participantsText:
     'The Governance Admin Team has invited you to view documentation related to this IT Governance request. Use the navigation to the left or the buttons below to view the documentation.',

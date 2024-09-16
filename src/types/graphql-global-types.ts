@@ -795,6 +795,13 @@ export interface SetTRBRequestRelationNewSystemInput {
 }
 
 /**
+ * Input for starting a GRB Review, which notifies reviewers by email
+ */
+export interface StartGRBReviewInput {
+  systemIntakeID: UUID;
+}
+
+/**
  * Input to submit an intake for review
  */
 export interface SubmitIntakeInput {
