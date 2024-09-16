@@ -163,6 +163,8 @@ const GRBReview = ({
         <GRBReviewerForm
           setReviewerToRemove={setReviewerToRemove}
           grbReviewers={grbReviewers}
+          // TODO: Update prop after backend work is completed
+          grbReviewStartDate={grbReviewStartDate}
         />
       ) : (
         <div className="padding-bottom-4">

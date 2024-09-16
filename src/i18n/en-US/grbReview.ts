@@ -98,7 +98,9 @@ export default {
     submit_add: 'Add reviewer',
     submit_edit: 'Save changes',
     removeGrbReviewer: 'Remove GRB reviewer',
-    infoAlert:
+    infoAlertReviewNotStarted:
+      'Adding GRB reviewers will not send them an invitation until you start the GRB review, though they will still be able to access content if they sign into EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
+    infoAlertReviewStarted:
       'Adding a reviewer will send them an informational notification email with a link to EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
     error:
       'There was an issue adding this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
