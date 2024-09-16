@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
@@ -114,11 +115,20 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
 	intake.UsesAITech = null.BoolFromPtr(input.UsesAiTech)
 
+	acqMethods := pq.StringArray{}
+	for _, acqMethod := range input.SoftwareAcquisition.AcquisitionMethods {
+		acqMethods = append(acqMethods, acqMethod.String())
+	}
+	// TODO: NJD better way to do this? one liner? - AcquisitionMethods: pq.StringArray(input.SoftwareAcquisition.AcquisitionMethods),
+	// TODO: NJD make this a function in model_helpers? ReverseConvertEnums?
+
 	softwareAcq := models.SystemIntakeSoftwareAcquisition{
-		ID:                 uuid.New(), // TODO: NJD - do this here? or before passing?
+		ID:                 uuid.New(),
 		SystemIntakeID:     intake.ID,
 		UsingSoftware:      null.StringFromPtr(input.SoftwareAcquisition.UsingSoftware),
-		AcuqisitionMethods: input.SoftwareAcquisition.AcuqisitionMethods}
+		AcquisitionMethods: acqMethods,
+		CreatedAt:          &time.Time{},
+	}
 
 	store.UpdateSystemIntakeSoftwareAcquisition(ctx, input.ID, &softwareAcq)
 

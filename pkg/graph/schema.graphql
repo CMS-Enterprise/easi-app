@@ -928,12 +928,12 @@ input UpdateSystemIntakeRequestDetailsInput {
   requestName: String
   businessNeed: String
   businessSolution: String
-  softwareAcquisition: SystemIntakeSoftwareAcquisitionInput
-  needsEaSupport: Boolean
   currentStage: String
-  cedarSystemId: String
+  needsEaSupport: Boolean
+  softwareAcquisition: SystemIntakeSoftwareAcquisitionInput
   hasUiChanges: Boolean
   usesAiTech: Boolean
+  cedarSystemId: String
 }
 
 """
@@ -967,7 +967,7 @@ Represents information on software acquisition information assocatied with a sys
 type SystemIntakeSoftwareAcquisition {
   id: UUID!
   usingSoftware: String
-  acuqisitionMethods: [String!]! 
+  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]! 
 }
 
 """
@@ -975,7 +975,17 @@ The input required to specify the software acquisition information associated wi
 """
 input SystemIntakeSoftwareAcquisitionInput {
   usingSoftware: String
-  acuqisitionMethods: [String!]!
+  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
+}
+
+"""
+SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
+"""
+enum SystemIntakeSoftwareAcquisitionMethods {
+  CONTRACTOR_FURNISHED
+  FED_FURNISHED
+  ELA_OR_INTERNAL
+  OTHER
 }
 
 """

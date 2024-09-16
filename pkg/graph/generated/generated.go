@@ -876,7 +876,7 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeSoftwareAcquisition struct {
-		AcuqisitionMethods func(childComplexity int) int
+		AcquisitionMethods func(childComplexity int) int
 		ID                 func(childComplexity int) int
 		UsingSoftware      func(childComplexity int) int
 	}
@@ -1342,7 +1342,7 @@ type SystemIntakeNoteResolver interface {
 	Editor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error)
 }
 type SystemIntakeSoftwareAcquisitionResolver interface {
-	AcuqisitionMethods(ctx context.Context, obj *models.SystemIntakeSoftwareAcquisition) ([]string, error)
+	AcquisitionMethods(ctx context.Context, obj *models.SystemIntakeSoftwareAcquisition) ([]models.SystemIntakeSoftwareAcquisitionMethods, error)
 }
 type TRBAdminNoteResolver interface {
 	Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error)
@@ -6246,12 +6246,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeRequester.Name(childComplexity), true
 
-	case "SystemIntakeSoftwareAcquisition.acuqisitionMethods":
-		if e.complexity.SystemIntakeSoftwareAcquisition.AcuqisitionMethods == nil {
+	case "SystemIntakeSoftwareAcquisition.acquisitionMethods":
+		if e.complexity.SystemIntakeSoftwareAcquisition.AcquisitionMethods == nil {
 			break
 		}
 
-		return e.complexity.SystemIntakeSoftwareAcquisition.AcuqisitionMethods(childComplexity), true
+		return e.complexity.SystemIntakeSoftwareAcquisition.AcquisitionMethods(childComplexity), true
 
 	case "SystemIntakeSoftwareAcquisition.id":
 		if e.complexity.SystemIntakeSoftwareAcquisition.ID == nil {
@@ -8596,12 +8596,12 @@ input UpdateSystemIntakeRequestDetailsInput {
   requestName: String
   businessNeed: String
   businessSolution: String
-  softwareAcquisition: SystemIntakeSoftwareAcquisitionInput
-  needsEaSupport: Boolean
   currentStage: String
-  cedarSystemId: String
+  needsEaSupport: Boolean
+  softwareAcquisition: SystemIntakeSoftwareAcquisitionInput
   hasUiChanges: Boolean
   usesAiTech: Boolean
+  cedarSystemId: String
 }
 
 """
@@ -8635,7 +8635,7 @@ Represents information on software acquisition information assocatied with a sys
 type SystemIntakeSoftwareAcquisition {
   id: UUID!
   usingSoftware: String
-  acuqisitionMethods: [String!]! 
+  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]! 
 }
 
 """
@@ -8643,7 +8643,17 @@ The input required to specify the software acquisition information associated wi
 """
 input SystemIntakeSoftwareAcquisitionInput {
   usingSoftware: String
-  acuqisitionMethods: [String!]!
+  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
+}
+
+"""
+SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
+"""
+enum SystemIntakeSoftwareAcquisitionMethods {
+  CONTRACTOR_FURNISHED
+  FED_FURNISHED
+  ELA_OR_INTERNAL
+  OTHER
 }
 
 """
@@ -39122,8 +39132,8 @@ func (ec *executionContext) fieldContext_SystemIntake_softwareAcquisition(_ cont
 				return ec.fieldContext_SystemIntakeSoftwareAcquisition_id(ctx, field)
 			case "usingSoftware":
 				return ec.fieldContext_SystemIntakeSoftwareAcquisition_usingSoftware(ctx, field)
-			case "acuqisitionMethods":
-				return ec.fieldContext_SystemIntakeSoftwareAcquisition_acuqisitionMethods(ctx, field)
+			case "acquisitionMethods":
+				return ec.fieldContext_SystemIntakeSoftwareAcquisition_acquisitionMethods(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeSoftwareAcquisition", field.Name)
 		},
@@ -45620,8 +45630,8 @@ func (ec *executionContext) fieldContext_SystemIntakeSoftwareAcquisition_usingSo
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntakeSoftwareAcquisition_acuqisitionMethods(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSoftwareAcquisition) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeSoftwareAcquisition_acuqisitionMethods(ctx, field)
+func (ec *executionContext) _SystemIntakeSoftwareAcquisition_acquisitionMethods(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSoftwareAcquisition) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeSoftwareAcquisition_acquisitionMethods(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -45634,7 +45644,7 @@ func (ec *executionContext) _SystemIntakeSoftwareAcquisition_acuqisitionMethods(
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeSoftwareAcquisition().AcuqisitionMethods(rctx, obj)
+		return ec.resolvers.SystemIntakeSoftwareAcquisition().AcquisitionMethods(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -45646,19 +45656,19 @@ func (ec *executionContext) _SystemIntakeSoftwareAcquisition_acuqisitionMethods(
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]string)
+	res := resTmp.([]models.SystemIntakeSoftwareAcquisitionMethods)
 	fc.Result = res
-	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeSoftwareAcquisitionMethods2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionMethodsᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SystemIntakeSoftwareAcquisition_acuqisitionMethods(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntakeSoftwareAcquisition_acquisitionMethods(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeSoftwareAcquisition",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type SystemIntakeSoftwareAcquisitionMethods does not have child fields")
 		},
 	}
 	return fc, nil
@@ -58468,7 +58478,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeSoftwareAcquisitionInput(c
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"usingSoftware", "acuqisitionMethods"}
+	fieldsInOrder := [...]string{"usingSoftware", "acquisitionMethods"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -58482,13 +58492,13 @@ func (ec *executionContext) unmarshalInputSystemIntakeSoftwareAcquisitionInput(c
 				return it, err
 			}
 			it.UsingSoftware = data
-		case "acuqisitionMethods":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("acuqisitionMethods"))
-			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+		case "acquisitionMethods":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("acquisitionMethods"))
+			data, err := ec.unmarshalNSystemIntakeSoftwareAcquisitionMethods2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionMethodsᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.AcuqisitionMethods = data
+			it.AcquisitionMethods = data
 		}
 	}
 
@@ -58948,7 +58958,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "requestName", "businessNeed", "businessSolution", "softwareAcquisition", "needsEaSupport", "currentStage", "cedarSystemId", "hasUiChanges", "usesAiTech"}
+	fieldsInOrder := [...]string{"id", "requestName", "businessNeed", "businessSolution", "currentStage", "needsEaSupport", "softwareAcquisition", "hasUiChanges", "usesAiTech", "cedarSystemId"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -58983,20 +58993,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 				return it, err
 			}
 			it.BusinessSolution = data
-		case "softwareAcquisition":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("softwareAcquisition"))
-			data, err := ec.unmarshalOSystemIntakeSoftwareAcquisitionInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionInput(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.SoftwareAcquisition = data
-		case "needsEaSupport":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("needsEaSupport"))
-			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NeedsEaSupport = data
 		case "currentStage":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentStage"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
@@ -59004,13 +59000,20 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 				return it, err
 			}
 			it.CurrentStage = data
-		case "cedarSystemId":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+		case "needsEaSupport":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("needsEaSupport"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.CedarSystemID = data
+			it.NeedsEaSupport = data
+		case "softwareAcquisition":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("softwareAcquisition"))
+			data, err := ec.unmarshalOSystemIntakeSoftwareAcquisitionInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SoftwareAcquisition = data
 		case "hasUiChanges":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasUiChanges"))
 			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
@@ -59025,6 +59028,13 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 				return it, err
 			}
 			it.UsesAiTech = data
+		case "cedarSystemId":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CedarSystemID = data
 		}
 	}
 
@@ -66444,7 +66454,7 @@ func (ec *executionContext) _SystemIntakeSoftwareAcquisition(ctx context.Context
 			}
 		case "usingSoftware":
 			out.Values[i] = ec._SystemIntakeSoftwareAcquisition_usingSoftware(ctx, field, obj)
-		case "acuqisitionMethods":
+		case "acquisitionMethods":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -66453,7 +66463,7 @@ func (ec *executionContext) _SystemIntakeSoftwareAcquisition(ctx context.Context
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntakeSoftwareAcquisition_acuqisitionMethods(ctx, field, obj)
+				res = ec._SystemIntakeSoftwareAcquisition_acquisitionMethods(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -71730,6 +71740,77 @@ func (ec *executionContext) unmarshalNSystemIntakeRequesterWithComponentInput2�
 func (ec *executionContext) unmarshalNSystemIntakeRetireLCIDInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRetireLCIDInput(ctx context.Context, v interface{}) (models.SystemIntakeRetireLCIDInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeRetireLCIDInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeSoftwareAcquisitionMethods2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionMethods(ctx context.Context, v interface{}) (models.SystemIntakeSoftwareAcquisitionMethods, error) {
+	var res models.SystemIntakeSoftwareAcquisitionMethods
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeSoftwareAcquisitionMethods2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionMethods(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeSoftwareAcquisitionMethods) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeSoftwareAcquisitionMethods2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionMethodsᚄ(ctx context.Context, v interface{}) ([]models.SystemIntakeSoftwareAcquisitionMethods, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]models.SystemIntakeSoftwareAcquisitionMethods, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNSystemIntakeSoftwareAcquisitionMethods2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionMethods(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNSystemIntakeSoftwareAcquisitionMethods2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionMethodsᚄ(ctx context.Context, sel ast.SelectionSet, v []models.SystemIntakeSoftwareAcquisitionMethods) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSystemIntakeSoftwareAcquisitionMethods2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionMethods(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeState2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeState(ctx context.Context, v interface{}) (models.SystemIntakeState, error) {

@@ -725,8 +725,8 @@ type SystemIntakeRetireLCIDInput struct {
 
 // The input required to specify the software acquisition information associated with a system intake
 type SystemIntakeSoftwareAcquisitionInput struct {
-	UsingSoftware      *string  `json:"usingSoftware,omitempty"`
-	AcuqisitionMethods []string `json:"acuqisitionMethods"`
+	UsingSoftware      *string                                  `json:"usingSoftware,omitempty"`
+	AcquisitionMethods []SystemIntakeSoftwareAcquisitionMethods `json:"acquisitionMethods"`
 }
 
 // Input for updating an intake's LCID in IT Gov v2
@@ -861,12 +861,12 @@ type UpdateSystemIntakeRequestDetailsInput struct {
 	RequestName         *string                               `json:"requestName,omitempty"`
 	BusinessNeed        *string                               `json:"businessNeed,omitempty"`
 	BusinessSolution    *string                               `json:"businessSolution,omitempty"`
-	SoftwareAcquisition *SystemIntakeSoftwareAcquisitionInput `json:"softwareAcquisition,omitempty"`
-	NeedsEaSupport      *bool                                 `json:"needsEaSupport,omitempty"`
 	CurrentStage        *string                               `json:"currentStage,omitempty"`
-	CedarSystemID       *string                               `json:"cedarSystemId,omitempty"`
+	NeedsEaSupport      *bool                                 `json:"needsEaSupport,omitempty"`
+	SoftwareAcquisition *SystemIntakeSoftwareAcquisitionInput `json:"softwareAcquisition,omitempty"`
 	HasUIChanges        *bool                                 `json:"hasUiChanges,omitempty"`
 	UsesAiTech          *bool                                 `json:"usesAiTech,omitempty"`
+	CedarSystemID       *string                               `json:"cedarSystemId,omitempty"`
 }
 
 // Input data used to update GRT and GRB dates for a system request
@@ -1205,6 +1205,52 @@ func (e *SystemIntakeGRBReviewerVotingRole) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeGRBReviewerVotingRole) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
+type SystemIntakeSoftwareAcquisitionMethods string
+
+const (
+	SystemIntakeSoftwareAcquisitionMethodsContractorFurnished SystemIntakeSoftwareAcquisitionMethods = "CONTRACTOR_FURNISHED"
+	SystemIntakeSoftwareAcquisitionMethodsFedFurnished        SystemIntakeSoftwareAcquisitionMethods = "FED_FURNISHED"
+	SystemIntakeSoftwareAcquisitionMethodsElaOrInternal       SystemIntakeSoftwareAcquisitionMethods = "ELA_OR_INTERNAL"
+	SystemIntakeSoftwareAcquisitionMethodsOther               SystemIntakeSoftwareAcquisitionMethods = "OTHER"
+)
+
+var AllSystemIntakeSoftwareAcquisitionMethods = []SystemIntakeSoftwareAcquisitionMethods{
+	SystemIntakeSoftwareAcquisitionMethodsContractorFurnished,
+	SystemIntakeSoftwareAcquisitionMethodsFedFurnished,
+	SystemIntakeSoftwareAcquisitionMethodsElaOrInternal,
+	SystemIntakeSoftwareAcquisitionMethodsOther,
+}
+
+func (e SystemIntakeSoftwareAcquisitionMethods) IsValid() bool {
+	switch e {
+	case SystemIntakeSoftwareAcquisitionMethodsContractorFurnished, SystemIntakeSoftwareAcquisitionMethodsFedFurnished, SystemIntakeSoftwareAcquisitionMethodsElaOrInternal, SystemIntakeSoftwareAcquisitionMethodsOther:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeSoftwareAcquisitionMethods) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeSoftwareAcquisitionMethods) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeSoftwareAcquisitionMethods(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeSoftwareAcquisitionMethods", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeSoftwareAcquisitionMethods) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

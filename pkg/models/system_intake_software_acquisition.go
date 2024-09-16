@@ -24,9 +24,9 @@ type SystemIntakeSoftwareAcquisition struct {
 	ID                 uuid.UUID      `json:"id"`
 	SystemIntakeID     uuid.UUID      `json:"systemIntakeId" db:"system_intake_id"`
 	UsingSoftware      null.String    `json:"usingSoftware" db:"using_software"`
-	AcuqisitionMethods pq.StringArray `json:"acquisitionMethods" db:"acquisition_methods"`
+	AcquisitionMethods pq.StringArray `json:"acquisitionMethods" db:"acquisition_methods"`
 	// TODO: NJD pq.StringArray vs enum array?
-	// AcuqisitionMethods []SoftwareAcquisitionMethod `json:"acquisitionMethods" db:"acquisition_methods"`
+	// AcquisitionMethods []SoftwareAcquisitionMethod `json:"acquisitionMethods" db:"acquisition_methods"`
 	CreatedAt *time.Time `db:"created_at"`
 }
 

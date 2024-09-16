@@ -1987,9 +1987,9 @@ func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.Syste
 	return resolvers.SystemIntakeNoteEditor(ctx, obj)
 }
 
-// AcuqisitionMethods is the resolver for the acuqisitionMethods field.
-func (r *systemIntakeSoftwareAcquisitionResolver) AcuqisitionMethods(ctx context.Context, obj *models.SystemIntakeSoftwareAcquisition) ([]string, error) {
-	acqMethods := models.ConvertEnums[string](obj.AcuqisitionMethods)
+// AcquisitionMethods is the resolver for the acquisitionMethods field.
+func (r *systemIntakeSoftwareAcquisitionResolver) AcquisitionMethods(ctx context.Context, obj *models.SystemIntakeSoftwareAcquisition) ([]models.SystemIntakeSoftwareAcquisitionMethods, error) {
+	acqMethods := models.ConvertEnums[models.SystemIntakeSoftwareAcquisitionMethods](obj.AcquisitionMethods)
 	return acqMethods, nil
 }
 
