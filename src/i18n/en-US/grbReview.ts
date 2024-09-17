@@ -39,6 +39,14 @@ export default {
     'The capabilities currently available allow Governance Admin Team members to invite GRB reviewers to access documentation related to requests. Future capabilities will include voting, discussions with project teams and GRB members, timelines, and more. Currently, however, all communication with the GRB and the project team must be completed via email or during meetings. If you have any questions, please complete the <a>feedback form</a> in the footer of this page.',
   startGrbReview: 'Start GRB review',
   reviewStartedOn: 'Review started on {{date}}',
+  startReviewModal: {
+    heading: 'Start this GRB review?',
+    text:
+      'Starting this review will send email notifications to {{count}} GRB reviewers. Any reviewer you add after starting this review will automatically receive a notification.',
+    startReview: 'Start review and send notifications'
+  },
+  startGrbReviewError:
+    'There was an issue starting this GRB review. Please try again, and if the error persists, try again at a later date.',
   participantsStartReviewAlert:
     'Adding GRB reviewers will not send them an invitation until you start the GRB review using the <a>Start GRB Review</a> button above, though they will still be able to access content if they sign into EASi.',
   participants: 'Participants',

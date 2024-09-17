@@ -76,6 +76,10 @@ const GRBReview = ({
     setReviewerToRemove
   ] = useState<SystemIntakeGRBReviewerFragment | null>(null);
 
+  const [startReviewModalIsOpen, setStartReviewModalIsOpen] = useState<boolean>(
+    false
+  );
+
   const { showMessage } = useMessage();
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
@@ -169,160 +173,202 @@ const GRBReview = ({
           grbReviewStartDate={grbReviewStartDate}
         />
       ) : (
-        <div className="padding-bottom-4">
-          <PageHeading className="margin-y-0">{t('title')}</PageHeading>
-
-          <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
-            {t('description')}
-          </p>
-
-          {/* Feature in progress alert */}
-          <Alert type="info" heading={t('featureInProgress')}>
-            <Trans
-              i18nKey="grbReview:featureInProgressText"
-              components={{
-                a: (
-                  <UswdsReactLink to="/help/send-feedback" target="_blank">
-                    feedback form
-                  </UswdsReactLink>
-                )
-              }}
-            />
-          </Alert>
-
-          {grbReviewStartDate && (
-            <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
-              <Trans
-                i18nKey="grbReview:reviewStartedOn"
-                components={{
-                  date: formatDateLocal(grbReviewStartDate, 'MM/dd/yyyy')
-                }}
-              />
-            </p>
-          )}
-
+        <>
           {
-            // Only show button if user is admin and review has not been started
-            !grbReviewStartDate && isITGovAdmin && (
-              <Button
-                type="button"
-                onClick={() => startGRBReview()}
-                className="margin-top-3"
-                id="startGrbReview"
+            // Start GRB Review modal
+            startReviewModalIsOpen && (
+              <Modal
+                isOpen={startReviewModalIsOpen}
+                closeModal={() => setStartReviewModalIsOpen(false)}
               >
-                {t('startGrbReview')}
-              </Button>
+                <ModalHeading>{t('startReviewModal.heading')}</ModalHeading>
+                <p>{t('startReviewModal.text', { count: 12 })}</p>
+                <ModalFooter>
+                  <ButtonGroup>
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        startGRBReview()
+                          .then(() => setStartReviewModalIsOpen(false))
+                          .catch(() => {
+                            showMessage(t('startGrbReviewError'), {
+                              type: 'error'
+                            });
+                            setStartReviewModalIsOpen(false);
+                          })
+                      }
+                      className="margin-right-1"
+                    >
+                      {t('startReviewModal.startReview')}
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() => setStartReviewModalIsOpen(false)}
+                      unstyled
+                    >
+                      {t('Go back')}
+                    </Button>
+                  </ButtonGroup>
+                </ModalFooter>
+              </Modal>
             )
           }
 
-          {/* Supporting Docs text */}
-          <h2 className="margin-bottom-0 margin-top-6">
-            {t('supportingDocuments')}
-          </h2>
-          <p className="margin-top-05 line-height-body-5">
-            {t('supportingDocumentsText')}
-          </p>
+          <div className="padding-bottom-4">
+            <PageHeading className="margin-y-0">{t('title')}</PageHeading>
 
-          {/* Business Case Card */}
-          <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
-            <CardHeader>
-              <h3 className="display-inline-block margin-right-2 margin-bottom-0">
-                {t('businessCaseOverview.title')}
-              </h3>
-              {/* TODO: update these checks to use submittedAt when implemented */}
-              {businessCase.id && businessCase.updatedAt && (
-                <span className="text-base display-inline-block">
-                  {t('businessCaseOverview.submitted')}{' '}
-                  {formatDateLocal(businessCase.updatedAt, 'MM/dd/yyyy')}
-                </span>
-              )}
-            </CardHeader>
-            {businessCase.id && businessCase.businessNeed ? (
-              <>
-                <CardBody>
-                  <DescriptionList>
-                    <DescriptionTerm
-                      term={t('businessCaseOverview.need')}
-                      className="margin-bottom-0"
-                    />
-                    <DescriptionDefinition
-                      definition={businessCase.businessNeed}
-                      className="text-light font-body-md line-height-body-4"
-                    />
+            <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
+              {t('description')}
+            </p>
 
-                    <DescriptionTerm
-                      term={t('businessCaseOverview.preferredSolution')}
-                      className="margin-bottom-0 margin-top-2"
-                    />
-                    <DescriptionDefinition
-                      definition={
-                        businessCase?.preferredSolution?.summary ||
-                        t('businessCaseOverview.noSolution')
-                      }
-                      className="text-light font-body-md line-height-body-4"
-                    />
-                  </DescriptionList>
-                </CardBody>
-                <CardFooter>
-                  <UswdsReactLink
-                    to="./business-case"
-                    className="display-flex flex-row flex-align-center"
-                  >
-                    <span className="margin-right-1">
-                      {t('businessCaseOverview.linkToBusinessCase')}
-                    </span>
-                    <IconArrowForward />
-                  </UswdsReactLink>
-                </CardFooter>
-              </>
-            ) : (
-              <CardBody>
-                <Alert type="info" slim>
-                  {t('businessCaseOverview.unsubmittedAlertText')}
-                </Alert>
-              </CardBody>
+            {/* Feature in progress alert */}
+            <Alert type="info" heading={t('featureInProgress')}>
+              <Trans
+                i18nKey="grbReview:featureInProgressText"
+                components={{
+                  a: (
+                    <UswdsReactLink to="/help/send-feedback" target="_blank">
+                      feedback form
+                    </UswdsReactLink>
+                  )
+                }}
+              />
+            </Alert>
+
+            {grbReviewStartDate && (
+              <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
+                <Trans
+                  i18nKey="grbReview:reviewStartedOn"
+                  components={{
+                    date: formatDateLocal(grbReviewStartDate, 'MM/dd/yyyy')
+                  }}
+                />
+              </p>
             )}
+
+            {
+              // Only show button if user is admin and review has not been started
+              !grbReviewStartDate && isITGovAdmin && (
+                <Button
+                  type="button"
+                  onClick={() => setStartReviewModalIsOpen(true)}
+                  className="margin-top-3"
+                  id="startGrbReview"
+                >
+                  {t('startGrbReview')}
+                </Button>
+              )
+            }
+
+            {/* Supporting Docs text */}
+            <h2 className="margin-bottom-0 margin-top-6">
+              {t('supportingDocuments')}
+            </h2>
+            <p className="margin-top-05 line-height-body-5">
+              {t('supportingDocumentsText')}
+            </p>
+
+            {/* Business Case Card */}
+            <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
+              <CardHeader>
+                <h3 className="display-inline-block margin-right-2 margin-bottom-0">
+                  {t('businessCaseOverview.title')}
+                </h3>
+                {/* TODO: update these checks to use submittedAt when implemented */}
+                {businessCase.id && businessCase.updatedAt && (
+                  <span className="text-base display-inline-block">
+                    {t('businessCaseOverview.submitted')}{' '}
+                    {formatDateLocal(businessCase.updatedAt, 'MM/dd/yyyy')}
+                  </span>
+                )}
+              </CardHeader>
+              {businessCase.id && businessCase.businessNeed ? (
+                <>
+                  <CardBody>
+                    <DescriptionList>
+                      <DescriptionTerm
+                        term={t('businessCaseOverview.need')}
+                        className="margin-bottom-0"
+                      />
+                      <DescriptionDefinition
+                        definition={businessCase.businessNeed}
+                        className="text-light font-body-md line-height-body-4"
+                      />
+
+                      <DescriptionTerm
+                        term={t('businessCaseOverview.preferredSolution')}
+                        className="margin-bottom-0 margin-top-2"
+                      />
+                      <DescriptionDefinition
+                        definition={
+                          businessCase?.preferredSolution?.summary ||
+                          t('businessCaseOverview.noSolution')
+                        }
+                        className="text-light font-body-md line-height-body-4"
+                      />
+                    </DescriptionList>
+                  </CardBody>
+                  <CardFooter>
+                    <UswdsReactLink
+                      to="./business-case"
+                      className="display-flex flex-row flex-align-center"
+                    >
+                      <span className="margin-right-1">
+                        {t('businessCaseOverview.linkToBusinessCase')}
+                      </span>
+                      <IconArrowForward />
+                    </UswdsReactLink>
+                  </CardFooter>
+                </>
+              ) : (
+                <CardBody>
+                  <Alert type="info" slim>
+                    {t('businessCaseOverview.unsubmittedAlertText')}
+                  </Alert>
+                </CardBody>
+              )}
+            </div>
+
+            {/* Additional Documents Title and Link */}
+            <h3 className="margin-bottom-1" id="documents">
+              {t('additionalDocuments')}
+            </h3>
+
+            {isITGovAdmin && (
+              <UswdsReactLink
+                to="./documents/upload"
+                className="display-flex flex-align-center"
+              >
+                <IconAdd className="margin-right-1" />
+                <span>{t('additionalDocsLink')}</span>
+              </UswdsReactLink>
+            )}
+
+            {/* Intake Request Link */}
+            <p className="usa-card__container margin-x-0 padding-x-2 padding-y-1 display-inline-flex flex-row flex-wrap border-width-1px">
+              <span className="margin-right-1">
+                {t('documentsIntakeLinkTitle')}
+              </span>
+              <span className="margin-right-1 text-base">
+                ({t('documentsIntakeSubmitted')}{' '}
+                {formatDateLocal(submittedAt, 'MM/dd/yyyy')})
+              </span>
+              <UswdsReactLink to="./intake-request">
+                {t('documentsIntakeLinkText')}
+              </UswdsReactLink>
+            </p>
+
+            <DocumentsTable systemIntakeId={id} documents={documents} />
+
+            <ParticipantsTable
+              id={id}
+              state={state}
+              grbReviewers={grbReviewers}
+              setReviewerToRemove={setReviewerToRemove}
+              grbReviewStartDate={grbReviewStartDate}
+            />
           </div>
-
-          {/* Additional Documents Title and Link */}
-          <h3 className="margin-bottom-1" id="documents">
-            {t('additionalDocuments')}
-          </h3>
-
-          {isITGovAdmin && (
-            <UswdsReactLink
-              to="./documents/upload"
-              className="display-flex flex-align-center"
-            >
-              <IconAdd className="margin-right-1" />
-              <span>{t('additionalDocsLink')}</span>
-            </UswdsReactLink>
-          )}
-
-          {/* Intake Request Link */}
-          <p className="usa-card__container margin-x-0 padding-x-2 padding-y-1 display-inline-flex flex-row flex-wrap border-width-1px">
-            <span className="margin-right-1">
-              {t('documentsIntakeLinkTitle')}
-            </span>
-            <span className="margin-right-1 text-base">
-              ({t('documentsIntakeSubmitted')}{' '}
-              {formatDateLocal(submittedAt, 'MM/dd/yyyy')})
-            </span>
-            <UswdsReactLink to="./intake-request">
-              {t('documentsIntakeLinkText')}
-            </UswdsReactLink>
-          </p>
-
-          <DocumentsTable systemIntakeId={id} documents={documents} />
-
-          <ParticipantsTable
-            id={id}
-            state={state}
-            grbReviewers={grbReviewers}
-            setReviewerToRemove={setReviewerToRemove}
-            grbReviewStartDate={grbReviewStartDate}
-          />
-        </div>
+        </>
       )}
     </>
   );
