@@ -31,8 +31,6 @@ describe('GRB review tab', () => {
 
     expect(await screen.findByRole('heading', { name: 'GRB review' }));
 
-    expect(screen.getByRole('heading', { name: 'Available documentation' }));
-
     // Hide start review button
     expect(
       screen.queryByRole('button', { name: 'Start GRB review' })
@@ -62,9 +60,6 @@ describe('GRB review tab', () => {
     expect(
       screen.getByRole('button', { name: 'Start GRB review' })
     ).toBeInTheDocument();
-
-    // Add reviewer button
-    expect(screen.getByRole('button', { name: 'Add a GRB reviewer' }));
   });
 
   it('renders GRB review start date', () => {

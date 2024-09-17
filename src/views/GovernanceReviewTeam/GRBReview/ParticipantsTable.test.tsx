@@ -32,7 +32,7 @@ const grbReviewer: SystemIntakeGRBReviewerFragment = {
 };
 
 describe('GRB review participants table', () => {
-  it('renders the table', () => {
+  it('renders admin view', () => {
     render(
       <MemoryRouter>
         <ITGovAdminContext.Provider value>
@@ -46,12 +46,39 @@ describe('GRB review participants table', () => {
       </MemoryRouter>
     );
 
+    expect(screen.getByRole('button', { name: 'Add another GRB reviewer' }));
+
+    // Check for Start GRB Review alert
+    expect(
+      screen.getByRole('link', { name: 'Start GRB Review' })
+    ).toBeInTheDocument();
+
+    // Table renders GRB reviewer
     expect(screen.getByText(user.commonName)).toBeInTheDocument();
     expect(screen.getByText('Voting')).toBeInTheDocument();
     expect(screen.getByText('CMCS Rep')).toBeInTheDocument();
 
     // Renders action buttons for admins
     expect(screen.getByTestId('grbReviewerActions')).toBeInTheDocument();
+  });
+
+  it('hides alert after review is started', () => {
+    render(
+      <MemoryRouter>
+        <ITGovAdminContext.Provider value>
+          <ParticipantsTable
+            id={systemIntake.id}
+            state={SystemIntakeState.OPEN}
+            grbReviewers={[grbReviewer]}
+            setReviewerToRemove={() => null}
+            // TODO: Update prop after backend work is done
+            grbReviewStartDate="2024-09-10T14:42:47.422022Z"
+          />
+        </ITGovAdminContext.Provider>
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByRole('link', { name: 'Start GRB Review' })).toBeNull();
   });
 
   it('renders closed request state for admins', () => {
@@ -73,9 +100,11 @@ describe('GRB review participants table', () => {
     expect(
       screen.getByRole('button', { name: 'Add a GRB reviewer' })
     ).toBeDisabled();
+
+    expect(screen.queryByRole('link', { name: 'Start GRB Review' })).toBeNull();
   });
 
-  it('hides action buttons for GRB reviewers', () => {
+  it('renders GRB reviewer view', () => {
     render(
       <MemoryRouter>
         <ITGovAdminContext.Provider value={false}>
@@ -88,6 +117,14 @@ describe('GRB review participants table', () => {
         </ITGovAdminContext.Provider>
       </MemoryRouter>
     );
+
+    expect(screen.getByRole('heading', { name: 'Available documentation' }));
+
+    expect(
+      screen.queryByRole('link', { name: 'Add a GRB reviewer' })
+    ).toBeNull();
+
+    expect(screen.queryByRole('link', { name: 'Start GRB Review' })).toBeNull();
 
     expect(screen.queryByTestId('grbReviewerActions')).toBeNull();
   });
