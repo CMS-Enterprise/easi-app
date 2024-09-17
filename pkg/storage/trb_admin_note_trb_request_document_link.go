@@ -53,7 +53,7 @@ func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 
 	// insert all links and return the created rows immediately
 	// see Note [Use NamedQuery to insert multiple records]
-	createdLinkRows, err := s.DB.NamedQuery(trbAdminNoteTRBDocumentLinkCreateSQL, links)
+	createdLinkRows, err := s.db.NamedQuery(trbAdminNoteTRBDocumentLinkCreateSQL, links)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create links between TRB admin note and TRB documents with error %s", err),
@@ -98,7 +98,7 @@ func (s *Store) GetTRBRequestDocumentsByAdminNoteID(ctx context.Context, adminNo
 		WHERE trb_admin_notes_trb_request_documents_links.trb_admin_note_id = :admin_note_id
 	`
 
-	stmt, err := s.DB.PrepareNamed(trbRequestDocumentsGetByAdminNoteIDSQL)
+	stmt, err := s.db.PrepareNamed(trbRequestDocumentsGetByAdminNoteIDSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB request documents by admin note ID with error %s", err),

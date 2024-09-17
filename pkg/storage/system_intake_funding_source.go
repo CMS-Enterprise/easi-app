@@ -81,7 +81,7 @@ func (s *Store) UpdateSystemIntakeFundingSourcesNP(ctx context.Context, tx *sqlx
 // FetchSystemIntakeFundingSourcesByIntakeID fetches all funding sources for a system intake
 func (s *Store) FetchSystemIntakeFundingSourcesByIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeFundingSource, error) {
 	sources := []*models.SystemIntakeFundingSource{}
-	err := namedSelect(ctx, s.DB, &sources, sqlqueries.SystemIntakeFundingSources.GetAllBySystemIntakeID, args{
+	err := namedSelect(ctx, s.db, &sources, sqlqueries.SystemIntakeFundingSources.GetAllBySystemIntakeID, args{
 		"system_intake_id": systemIntakeID,
 	})
 
@@ -96,7 +96,7 @@ func (s *Store) FetchSystemIntakeFundingSourcesByIntakeID(ctx context.Context, s
 // FetchSystemIntakeFundingSourcesByIntakeIDs fetches all funding sources for a slice of system intake IDs
 func (s *Store) FetchSystemIntakeFundingSourcesByIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeFundingSource, error) {
 	sources := []*models.SystemIntakeFundingSource{}
-	err := namedSelect(ctx, s.DB, &sources, sqlqueries.SystemIntakeFundingSources.GetAllBySystemIntakeIDs, args{
+	err := namedSelect(ctx, s.db, &sources, sqlqueries.SystemIntakeFundingSources.GetAllBySystemIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 

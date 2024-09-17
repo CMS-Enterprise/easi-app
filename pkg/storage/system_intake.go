@@ -164,7 +164,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:created_at,
 			:updated_at
 		)`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		createIntakeSQL,
 		intake,
 	)
@@ -397,7 +397,7 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 // FetchSystemIntakes queries the DB for all system intakes
 func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.DB.Select(&intakes, fetchSystemIntakeSQL)
+	err := s.db.Select(&intakes, fetchSystemIntakeSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
 		return models.SystemIntakes{}, err
@@ -408,7 +408,7 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 // FetchSystemIntakesWithReviewRequested queries the DB for all open system intakes where user is requested
 func (s *Store) FetchSystemIntakesWithReviewRequested(ctx context.Context, userID uuid.UUID) ([]*models.SystemIntake, error) {
 	intakes := []*models.SystemIntake{}
-	err := namedSelect(ctx, s.DB, &intakes, sqlqueries.SystemIntakeGRBReviewer.GetIntakesWhereReviewRequested, args{
+	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntakeGRBReviewer.GetIntakesWhereReviewRequested, args{
 		"user_id": userID,
 	})
 	if err != nil {
@@ -422,7 +422,7 @@ func (s *Store) FetchSystemIntakesWithReviewRequested(ctx context.Context, userI
 // The intent of this query is to return all intakes that are in a state that is relevant to admins (i.e. not in a draft state, not archived)
 func (s *Store) FetchSystemIntakesByStateForAdmins(ctx context.Context, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
 	var intakes []*models.SystemIntake
-	err := s.DB.Select(&intakes, `
+	err := s.db.Select(&intakes, `
 		SELECT *
 		FROM system_intakes
 		WHERE state=$1
@@ -461,7 +461,7 @@ func (s *Store) GenerateLifecycleID(ctx context.Context) (string, error) {
 
 	countSQL := `SELECT COUNT(*) FROM system_intakes WHERE lcid ~ $1;`
 	var count int
-	if err := s.DB.Get(&count, countSQL, "^"+prefix); err != nil {
+	if err := s.db.Get(&count, countSQL, "^"+prefix); err != nil {
 		return "", err
 	}
 	return fmt.Sprintf("%s%d", prefix, count), nil
@@ -485,7 +485,7 @@ func (s *Store) UpdateAdminLead(ctx context.Context, id uuid.UUID, adminLead str
 			admin_lead = :admin_lead
 		WHERE system_intakes.id = :id
 	`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		updateSystemIntakeSQL,
 		intake,
 	)
@@ -520,7 +520,7 @@ func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *ti
 			grt_date = :grt_date
 		WHERE system_intakes.id = :id
 	`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		updateSystemIntakeSQL,
 		intake,
 	)
@@ -552,7 +552,7 @@ func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid
 		WHERE system_intakes.id = :id
 	`
 
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		updateSystemIntakeSQL,
 		intake,
 	)
@@ -567,7 +567,7 @@ func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid
 // GetSystemIntakesWithLCIDs retrieves all LCIDs that are in use
 func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.SystemIntake, error) {
 	intakes := []*models.SystemIntake{}
-	err := s.DB.Select(&intakes,
+	err := s.db.Select(&intakes,
 		fetchSystemIntakeSQL+`
 		WHERE lcid IS NOT NULL;
 	`)
@@ -580,7 +580,7 @@ func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.System
 func (s *Store) GetMySystemIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
 	var intakes []*models.SystemIntake
 
-	err := namedSelect(ctx, s.DB, &intakes, sqlqueries.SystemIntake.GetByUser, args{
+	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntake.GetByUser, args{
 		"eua_user_id": appcontext.Principal(ctx).Account().Username,
 	})
 

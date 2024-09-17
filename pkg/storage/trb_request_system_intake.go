@@ -19,7 +19,7 @@ import (
 
 // CreateTRBRequestSystemIntakes deletes all TRB Intake relations for the given trbRequestID and recreates them
 func (s *Store) CreateTRBRequestSystemIntakes(ctx context.Context, trbRequestID uuid.UUID, systemIntakeIDs []uuid.UUID) ([]*models.TRBRequestSystemIntake, error) {
-	return sqlutils.WithTransactionRet[[]*models.TRBRequestSystemIntake](ctx, s.DB, func(tx *sqlx.Tx) ([]*models.TRBRequestSystemIntake, error) {
+	return sqlutils.WithTransactionRet[[]*models.TRBRequestSystemIntake](ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBRequestSystemIntake, error) {
 
 		deleteTRBRequestSystemIntakesSQL := `
 		DELETE FROM trb_request_system_intakes
@@ -80,7 +80,7 @@ func (s *Store) CreateTRBRequestSystemIntakes(ctx context.Context, trbRequestID 
 // request ID
 func (s *Store) GetTRBRequestFormSystemIntakesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.SystemIntake, error) {
 	results := []*models.SystemIntake{}
-	err := namedSelect(ctx, s.DB, &results, sqlqueries.TRBRequestFormSystemIntakes.GetByTRBRequestID, args{
+	err := namedSelect(ctx, s.db, &results, sqlqueries.TRBRequestFormSystemIntakes.GetByTRBRequestID, args{
 		"trb_request_id": trbRequestID,
 	})
 	if err != nil {
@@ -103,7 +103,7 @@ func (s *Store) GetTRBRequestFormSystemIntakesByTRBRequestID(ctx context.Context
 // request IDs
 func (s *Store) GetTRBRequestFormSystemIntakesByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.RelatedSystemIntake, error) {
 	results := []*models.RelatedSystemIntake{}
-	err := namedSelect(ctx, s.DB, &results, sqlqueries.TRBRequestFormSystemIntakes.GetByTRBRequestIDs, args{
+	err := namedSelect(ctx, s.db, &results, sqlqueries.TRBRequestFormSystemIntakes.GetByTRBRequestIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 	if err != nil {

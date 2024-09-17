@@ -65,7 +65,7 @@ func TestStoreTestSuite(t *testing.T) {
 
 	storeTestSuite := &StoreTestSuite{
 		Suite:     suite.Suite{},
-		db:        store.DB,
+		db:        store.db,
 		logger:    logger,
 		store:     store,
 		Principal: princ,
@@ -82,7 +82,7 @@ func createTRBRequest(ctx context.Context, s *StoreTestSuite, createdBy string) 
 	trbRequest := models.NewTRBRequest(createdBy)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
-	createdRequest, err := s.store.CreateTRBRequest(ctx, s.store.DB, trbRequest)
+	createdRequest, err := s.store.CreateTRBRequest(ctx, s.store, trbRequest)
 	s.NoError(err)
 
 	return createdRequest.ID
@@ -102,7 +102,7 @@ func createTestPrincipal(store *Store, userName string) *authentication.EUAPrinc
 		HasLoggedIn: true,
 	}
 
-	userAccount, _ := store.UserAccountCreate(context.Background(), store.DB, &tAccount) //swallow error
+	userAccount, _ := store.UserAccountCreate(context.Background(), store, &tAccount) //swallow error
 	princ := &authentication.EUAPrincipal{
 		EUAID:       userName,
 		JobCodeEASi: true,

@@ -44,7 +44,7 @@ func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeConta
 			:created_at,
 			:updated_at
 		)`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		createSystemIntakeContactSQL,
 		systemIntakeContact,
 	)
@@ -69,7 +69,7 @@ func (s *Store) UpdateSystemIntakeContact(ctx context.Context, systemIntakeConta
 			updated_at = :updated_at
 		WHERE system_intake_contacts.id = :id
 	`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		createSystemIntakeContactSQL,
 		systemIntakeContact,
 	)
@@ -84,7 +84,7 @@ func (s *Store) UpdateSystemIntakeContact(ctx context.Context, systemIntakeConta
 func (s *Store) FetchSystemIntakeContactsBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContact, error) {
 	results := []*models.SystemIntakeContact{}
 
-	err := s.DB.Select(&results, `SELECT * FROM system_intake_contacts WHERE system_intake_id=$1`, systemIntakeID)
+	err := s.db.Select(&results, `SELECT * FROM system_intake_contacts WHERE system_intake_id=$1`, systemIntakeID)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts", zap.Error(err), zap.String("id", systemIntakeID.String()))
@@ -103,7 +103,7 @@ func (s *Store) DeleteSystemIntakeContact(ctx context.Context, systemIntakeConta
 		DELETE FROM system_intake_contacts
 		WHERE id = $1;`
 
-	_, err := s.DB.Exec(deleteSystemIntakeContactSQL, systemIntakeContact.ID)
+	_, err := s.db.Exec(deleteSystemIntakeContactSQL, systemIntakeContact.ID)
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete system intake contact with error %s", zap.Error(err))

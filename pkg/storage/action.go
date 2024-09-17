@@ -65,7 +65,7 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 			:lcid_retirement_change_new_date,
 			:lcid_retirement_change_previous_date
 		)`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		createActionSQL,
 		action,
 	)
@@ -82,7 +82,7 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 // GetActionsBySystemIntakeID fetches actions for a particular intake
 func (s *Store) GetActionsBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]models.Action, error) {
 	actions := []models.Action{}
-	err := namedSelect(ctx, s.DB, &actions, sqlqueries.SystemIntakeActions.SelectBySystemIntakeID, args{
+	err := namedSelect(ctx, s.db, &actions, sqlqueries.SystemIntakeActions.SelectBySystemIntakeID, args{
 		"system_intake_id": systemIntakeID,
 	})
 	if err != nil {
@@ -103,7 +103,7 @@ func (s *Store) GetActionsBySystemIntakeID(ctx context.Context, systemIntakeID u
 // GetActionsBySystemIntakeIDs fetches actions for a multiple intakes
 func (s *Store) GetActionsBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]models.Action, error) {
 	actions := []models.Action{}
-	err := namedSelect(ctx, s.DB, &actions, sqlqueries.SystemIntakeActions.SelectBySystemIntakeIDs, args{
+	err := namedSelect(ctx, s.db, &actions, sqlqueries.SystemIntakeActions.SelectBySystemIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 	if err != nil {

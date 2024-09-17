@@ -13,7 +13,7 @@ import (
 // RelatedSystemIntakesBySystemIntakeIDs retrieves related system intakes by system intake ID
 func (s *Store) RelatedSystemIntakesBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.RelatedSystemIntake, error) {
 	var relatedIntakes []*models.RelatedSystemIntake
-	return relatedIntakes, namedSelect(ctx, s.DB, &relatedIntakes, sqlqueries.RelatedRequests.IntakesByIntakeIDs, args{
+	return relatedIntakes, namedSelect(ctx, s.db, &relatedIntakes, sqlqueries.RelatedRequests.IntakesByIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 }
@@ -21,7 +21,7 @@ func (s *Store) RelatedSystemIntakesBySystemIntakeIDs(ctx context.Context, syste
 // RelatedSystemIntakesByTRBRequestIDs retrieves related system intakes by TRB Request ID
 func (s *Store) RelatedSystemIntakesByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.RelatedSystemIntake, error) {
 	var relatedIntakes []*models.RelatedSystemIntake
-	return relatedIntakes, namedSelect(ctx, s.DB, &relatedIntakes, sqlqueries.RelatedRequests.IntakesByTRBRequestIDs, args{
+	return relatedIntakes, namedSelect(ctx, s.db, &relatedIntakes, sqlqueries.RelatedRequests.IntakesByTRBRequestIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 }
@@ -29,7 +29,7 @@ func (s *Store) RelatedSystemIntakesByTRBRequestIDs(ctx context.Context, trbRequ
 // RelatedTRBRequestsBySystemIntakeIDs retrieves related TRB Requests by system intake ID
 func (s *Store) RelatedTRBRequestsBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.RelatedTRBRequest, error) {
 	var relatedTRBRequests []*models.RelatedTRBRequest
-	return relatedTRBRequests, namedSelect(ctx, s.DB, &relatedTRBRequests, sqlqueries.RelatedRequests.TRBRequestsByIntakeIDs, args{
+	return relatedTRBRequests, namedSelect(ctx, s.db, &relatedTRBRequests, sqlqueries.RelatedRequests.TRBRequestsByIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 }
@@ -37,7 +37,7 @@ func (s *Store) RelatedTRBRequestsBySystemIntakeIDs(ctx context.Context, systemI
 // RelatedTRBRequestsByTRBRequestIDs retrieves related TRB Requests by TRB Request ID
 func (s *Store) RelatedTRBRequestsByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.RelatedTRBRequest, error) {
 	var relatedTRBRequests []*models.RelatedTRBRequest
-	return relatedTRBRequests, namedSelect(ctx, s.DB, &relatedTRBRequests, sqlqueries.RelatedRequests.TRBRequestsByTRBRequestIDs, args{
+	return relatedTRBRequests, namedSelect(ctx, s.db, &relatedTRBRequests, sqlqueries.RelatedRequests.TRBRequestsByTRBRequestIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 }

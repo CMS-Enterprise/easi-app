@@ -47,7 +47,7 @@ func (s *Store) CreateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 			:applies_to_next_steps
 		) RETURNING *;
 	`
-	stmt, err := s.DB.PrepareNamed(trbAdminNoteCreateSQL)
+	stmt, err := s.db.PrepareNamed(trbAdminNoteCreateSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create TRB admin note with error %s", err),
@@ -76,7 +76,7 @@ func (s *Store) CreateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 // GetTRBAdminNotesByTRBRequestID returns all notes for a given TRB request
 func (s *Store) GetTRBAdminNotesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBAdminNote, error) {
 	notes := []*models.TRBAdminNote{}
-	err := namedSelect(ctx, s.DB, &notes, sqlqueries.TRBRequestAdminNotes.GetByTRBID, args{
+	err := namedSelect(ctx, s.db, &notes, sqlqueries.TRBRequestAdminNotes.GetByTRBID, args{
 		"trb_request_id": trbRequestID,
 	})
 	if err != nil {
@@ -98,7 +98,7 @@ func (s *Store) GetTRBAdminNotesByTRBRequestID(ctx context.Context, trbRequestID
 // GetTRBAdminNotesByTRBRequestIDs returns all notes for a given TRB request
 func (s *Store) GetTRBAdminNotesByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBAdminNote, error) {
 	notes := []*models.TRBAdminNote{}
-	err := namedSelect(ctx, s.DB, &notes, sqlqueries.TRBRequestAdminNotes.GetByTRBIDs, args{
+	err := namedSelect(ctx, s.db, &notes, sqlqueries.TRBRequestAdminNotes.GetByTRBIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 	if err != nil {
@@ -120,7 +120,7 @@ func (s *Store) GetTRBAdminNotesByTRBRequestIDs(ctx context.Context, trbRequestI
 func (s *Store) GetTRBAdminNoteByID(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
 	note := models.TRBAdminNote{}
 
-	stmt, err := s.DB.PrepareNamed(`SELECT * FROM trb_admin_notes WHERE id = :id`)
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_admin_notes WHERE id = :id`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch admin note",
@@ -157,7 +157,7 @@ func (s *Store) GetTRBAdminNoteByID(ctx context.Context, id uuid.UUID) (*models.
 // SetTRBAdminNoteArchived sets whether a TRB admin note is archived (soft-deleted)
 // It takes a modifiedBy argument because it doesn't take a full TRBAdminNote as an argument, and ModifiedBy fields are usually set by the resolver.
 func (s *Store) SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool, modifiedBy string) (*models.TRBAdminNote, error) {
-	stmt, err := s.DB.PrepareNamed(`
+	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_admin_notes
 		SET
 			is_archived = :is_archived,

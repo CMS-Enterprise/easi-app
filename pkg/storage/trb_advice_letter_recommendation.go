@@ -30,7 +30,7 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 	// besides the normal fields, set position_in_letter pased on the existing recommendations for this advice letter
 	// set position_in_letter to 1 + (the largeting existing position for this advice letter),
 	// defaulting to 0 if there are no existing recommendations for this advice letter
-	stmt, err := s.DB.PrepareNamed(`
+	stmt, err := s.db.PrepareNamed(`
 		INSERT INTO trb_advice_letter_recommendations (
 			id,
 			trb_request_id,
@@ -82,7 +82,7 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 // It will not return any entities that have a deleted_at value
 func (s *Store) GetTRBAdviceLetterRecommendationByID(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
 	recommendation := models.TRBAdviceLetterRecommendation{}
-	stmt, err := s.DB.PrepareNamed(`SELECT * FROM trb_advice_letter_recommendations WHERE id = :id AND deleted_at IS NULL`)
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_advice_letter_recommendations WHERE id = :id AND deleted_at IS NULL`)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationByID(ctx context.Context, id uui
 func (s *Store) GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBAdviceLetterRecommendation, error) {
 	results := []*models.TRBAdviceLetterRecommendation{}
 
-	err := s.DB.Select(&results, `
+	err := s.db.Select(&results, `
 		SELECT *
 		FROM trb_advice_letter_recommendations
 		WHERE trb_request_id = $1
@@ -133,7 +133,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Cont
 // GetTRBAdviceLetterRecommendationsSharingTRBRequestID queries the DB for all TRB advice letter recommendations with the same TRB request ID as the given recommendation
 // It will not return any entities that have a deleted_at value
 func (s *Store) GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx context.Context, recommendationID uuid.UUID) ([]*models.TRBAdviceLetterRecommendation, error) {
-	stmt, err := s.DB.PrepareNamed(`
+	stmt, err := s.db.PrepareNamed(`
 		SELECT *
 		FROM trb_advice_letter_recommendations
 		WHERE trb_request_id = (
@@ -175,7 +175,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx context
 // UpdateTRBAdviceLetterRecommendation updates an existing TRB advice letter recommendation record in the database
 // This purposely does not update the position_in_letter column - to update that, use UpdateTRBAdviceLetterRecommendationOrder()
 func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recommendation *models.TRBAdviceLetterRecommendation) (*models.TRBAdviceLetterRecommendation, error) {
-	stmt, err := s.DB.PrepareNamed(`
+	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_advice_letter_recommendations
 		SET
 			trb_request_id = :trb_request_id,
@@ -215,7 +215,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recomme
 
 // DeleteTRBAdviceLetterRecommendation deletes an existing TRB advice letter recommendation record in the database
 func (s *Store) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
-	stmt, err := s.DB.PrepareNamed(`
+	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_advice_letter_recommendations
 		SET deleted_at = CURRENT_TIMESTAMP, position_in_letter = NULL
 		WHERE id = :id
@@ -283,7 +283,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 	// json_to_recordset() lets us build a temporary table (new_positions) with the new positions for each recommendation,
 	// which we can use in a CTE (common table expression, denoted by the WITH keyword) to update the recommendations
 	// json_to_recordset() documentation - https://www.postgresql.org/docs/14/functions-json.html
-	stmt, err := s.DB.PrepareNamed(`
+	stmt, err := s.db.PrepareNamed(`
 		WITH new_positions AS (
 			SELECT *
 			FROM json_to_recordset(:newPositions)

@@ -19,7 +19,7 @@ import (
 func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
 	documents := []*models.TRBRequestDocument{}
 
-	err := namedSelect(ctx, s.DB, &documents, sqlqueries.TRBRequestDocuments.GetByTRBID, args{
+	err := namedSelect(ctx, s.db, &documents, sqlqueries.TRBRequestDocuments.GetByTRBID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -44,7 +44,7 @@ func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, trbReques
 func (s *Store) GetTRBRequestDocumentsByRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestDocument, error) {
 	documents := []*models.TRBRequestDocument{}
 
-	err := namedSelect(ctx, s.DB, &documents, sqlqueries.TRBRequestDocuments.GetByTRBIDs, args{
+	err := namedSelect(ctx, s.db, &documents, sqlqueries.TRBRequestDocuments.GetByTRBIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 
@@ -107,7 +107,7 @@ func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.T
 		document.ID = uuid.New()
 	}
 
-	stmt, err := s.DB.PrepareNamed(trbRequestDocumentCreateSQL)
+	stmt, err := s.db.PrepareNamed(trbRequestDocumentCreateSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create trb request document with error %s", err),
@@ -156,7 +156,7 @@ func (s *Store) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*mo
 			deleted_at
 	`
 
-	stmt, err := s.DB.PrepareNamed(trbRequestDocumentDeleteSQL)
+	stmt, err := s.db.PrepareNamed(trbRequestDocumentDeleteSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to delete trb request document with ID %s due to error %s", id, err),

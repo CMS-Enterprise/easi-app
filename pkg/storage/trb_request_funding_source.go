@@ -19,7 +19,7 @@ func (s *Store) UpdateTRBRequestFundingSources(
 	fundingNumber string,
 	fundingSources []*models.TRBFundingSource,
 ) ([]*models.TRBFundingSource, error) {
-	return sqlutils.WithTransactionRet[[]*models.TRBFundingSource](ctx, s.DB, func(tx *sqlx.Tx) ([]*models.TRBFundingSource, error) {
+	return sqlutils.WithTransactionRet[[]*models.TRBFundingSource](ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBFundingSource, error) {
 		deleteFundingSourcesSQL := `
 		DELETE FROM trb_request_funding_sources
 		WHERE trb_request_id = $1 AND funding_number = $2;
@@ -67,7 +67,7 @@ func (s *Store) DeleteTRBRequestFundingSources(
 	trbRequestID uuid.UUID,
 	fundingNumber string,
 ) ([]*models.TRBFundingSource, error) {
-	return sqlutils.WithTransactionRet[[]*models.TRBFundingSource](ctx, s.DB, func(tx *sqlx.Tx) ([]*models.TRBFundingSource, error) {
+	return sqlutils.WithTransactionRet[[]*models.TRBFundingSource](ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBFundingSource, error) {
 
 		deleteFundingSourcesSQL := `
 		DELETE FROM trb_request_funding_sources

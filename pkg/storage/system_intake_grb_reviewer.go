@@ -72,7 +72,7 @@ func (s *Store) DeleteSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, 
 
 func (s *Store) SystemIntakeGRBReviewersBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeGRBReviewer, error) {
 	var systemIntakeGRBReviewers []*models.SystemIntakeGRBReviewer
-	return systemIntakeGRBReviewers, namedSelect(ctx, s.DB, &systemIntakeGRBReviewers, sqlqueries.SystemIntakeGRBReviewer.GetBySystemIntakeID, args{
+	return systemIntakeGRBReviewers, namedSelect(ctx, s.db, &systemIntakeGRBReviewers, sqlqueries.SystemIntakeGRBReviewer.GetBySystemIntakeID, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 }

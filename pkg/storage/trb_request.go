@@ -128,7 +128,7 @@ func (s *Store) UpdateTRBRequestNP(ctx context.Context, np sqlutils.NamedPrepare
 func (s *Store) GetTRBRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
 	trbRequests := []*models.TRBRequest{}
 
-	stmt, err := s.DB.PrepareNamed(sqlqueries.TRBRequest.CollectionGet)
+	stmt, err := s.db.PrepareNamed(sqlqueries.TRBRequest.CollectionGet)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch trb requests",
@@ -160,7 +160,7 @@ func (s *Store) GetTRBRequests(ctx context.Context, archived bool) ([]*models.TR
 func (s *Store) GetMyTRBRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
 	trbRequests := []*models.TRBRequest{}
 
-	stmt, err := s.DB.PrepareNamed(sqlqueries.TRBRequest.CollectionGetByUserAndArchivedState)
+	stmt, err := s.db.PrepareNamed(sqlqueries.TRBRequest.CollectionGetByUserAndArchivedState)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch user's trb requests",

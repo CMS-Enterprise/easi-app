@@ -18,7 +18,7 @@ import (
 func (s *Store) UserAccountGetByCommonName(commonName string) (*authentication.UserAccount, error) {
 	user := &authentication.UserAccount{}
 
-	stmt, err := s.DB.PrepareNamed(sqlqueries.UserAccount.GetByCommonName)
+	stmt, err := s.db.PrepareNamed(sqlqueries.UserAccount.GetByCommonName)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (s *Store) UserAccountGetByID(ctx context.Context, np sqlutils.NamedPrepare
 // UserAccountsByIDs gets user accounts by user ID
 func (s *Store) UserAccountsByIDs(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, error) {
 	var accounts []*authentication.UserAccount
-	return accounts, namedSelect(ctx, s.DB, &accounts, sqlqueries.UserAccount.GetByIDs, args{
+	return accounts, namedSelect(ctx, s.db, &accounts, sqlqueries.UserAccount.GetByIDs, args{
 		"user_ids": pq.Array(userIDs),
 	})
 }

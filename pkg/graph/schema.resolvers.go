@@ -1560,7 +1560,7 @@ func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models
 
 // UserAccount is the resolver for the userAccount field.
 func (r *queryResolver) UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error) {
-	return resolvers.UserAccountGetByUsername(ctx, r.store, r.store.DB, username)
+	return resolvers.UserAccountGetByUsername(ctx, r.store, r.store, username)
 }
 
 // Actions is the resolver for the actions field.

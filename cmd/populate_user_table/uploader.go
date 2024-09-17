@@ -255,7 +255,7 @@ func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []stri
 			Username: username,
 		}
 		account, err := userhelpers.GetOrCreateUserAccount(ctx,
-			u.Store.DB,
+			u.Store,
 			u.Store,
 			username,
 			false,
@@ -286,7 +286,7 @@ func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, fullNa
 			Username: fullName,
 		}
 		account, err := userhelpers.GetOrCreateUserAccountFullName(ctx,
-			u.Store.DB,
+			u.Store,
 			u.Store,
 			fullName,
 			false,
