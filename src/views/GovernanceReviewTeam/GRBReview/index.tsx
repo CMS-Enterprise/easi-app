@@ -40,6 +40,8 @@ import ITGovAdminContext from '../ITGovAdminContext';
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
 
+import './index.scss';
+
 type GRBReviewProps = {
   id: string;
   submittedAt: string | null;
@@ -206,6 +208,7 @@ const GRBReview = ({
                 type="button"
                 onClick={() => startGRBReview()}
                 className="margin-top-3"
+                id="startGrbReview"
               >
                 {t('startGrbReview')}
               </Button>
@@ -317,6 +320,7 @@ const GRBReview = ({
             state={state}
             grbReviewers={grbReviewers}
             setReviewerToRemove={setReviewerToRemove}
+            grbReviewStartDate={grbReviewStartDate}
           />
         </div>
       )}
