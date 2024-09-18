@@ -36,8 +36,7 @@ const accessibilityStatement = {
     },
     requestInstructions:
       'Your request should include your name, phone number, type of information you need (if known) and the mailing address where we should send the materials. We may contact you for additional information.',
-    note:
-      '<0>Note:</0> If you’re enrolled in a Medicare Advantage Plan or Prescription Drug Plan, contact your plan to request their information in an accessible format. For Medicaid, contact your State or local Medicaid office.'
+    note: '<0>Note:</0> If you’re enrolled in a Medicare Advantage Plan or Prescription Drug Plan, contact your plan to request their information in an accessible format. For Medicaid, contact your State or local Medicaid office.'
   },
 
   // Nondiscrimination Notice

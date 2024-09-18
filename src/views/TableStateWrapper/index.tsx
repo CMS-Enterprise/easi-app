@@ -46,9 +46,8 @@ const initialTableStates: Record<string, TableStates> = {
   }
 };
 
-export const TableStateContext = createContext<Record<string, TableStates>>(
-  initialTableStates
-);
+export const TableStateContext =
+  createContext<Record<string, TableStates>>(initialTableStates);
 
 const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   // Checks to see if the current route is a part of IT Gov or home

@@ -147,18 +147,17 @@ export default function CedarContactSelect({
   );
 
   // If autoSearch, run initial query from name
-  const { contacts, queryCedarContacts, loading } = useCedarContactLookup(
-    searchTerm
-  );
+  const { contacts, queryCedarContacts, loading } =
+    useCedarContactLookup(searchTerm);
 
   // Selected contact
   const selectedContact = useRef(value?.euaUserId);
 
   /** Field should only autoSearch if initial commonName was provided */
-  const shouldAutoSearch = useMemo(() => autoSearch && value?.commonName, [
-    autoSearch,
-    value?.commonName
-  ]);
+  const shouldAutoSearch = useMemo(
+    () => autoSearch && value?.commonName,
+    [autoSearch, value?.commonName]
+  );
 
   // Show warning if autosearch returns multiple or no results
   const showWarning =
