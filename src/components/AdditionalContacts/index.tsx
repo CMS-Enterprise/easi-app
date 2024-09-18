@@ -295,11 +295,8 @@ export default function AdditionalContacts({
   const { t } = useTranslation('intake');
 
   // Contact mutations from custom hook
-  const {
-    createContact,
-    updateContact,
-    deleteContact
-  } = useSystemIntakeContacts(systemIntakeId);
+  const { createContact, updateContact, deleteContact } =
+    useSystemIntakeContacts(systemIntakeId);
 
   // Separate loading state to enable more control of loading spinner rendering
   const [

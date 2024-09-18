@@ -29,9 +29,8 @@ export default function BookmarkButton({
 }) {
   const { t } = useTranslation('systemProfile');
 
-  const [isBookmarkedState, setBookmarkedState] = useState<boolean>(
-    isBookmarked
-  );
+  const [isBookmarkedState, setBookmarkedState] =
+    useState<boolean>(isBookmarked);
 
   useEffect(() => {
     setBookmarkedState(isBookmarked);
