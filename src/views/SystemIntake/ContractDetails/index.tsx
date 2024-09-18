@@ -248,9 +248,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           classNames="margin-top-3"
           heading={t('form:inputError.checkFix')}
         >
-          {(Object.keys(fieldErrors) as Array<
-            FieldPath<ContractDetailsForm>
-          >).map(key => {
+          {(
+            Object.keys(fieldErrors) as Array<FieldPath<ContractDetailsForm>>
+          ).map(key => {
             return (
               <ErrorMessage
                 errors={errors}

@@ -53,13 +53,11 @@ const taskList = {
     heading: 'Recommendations',
     grb: {
       heading: 'GRT recommendations to the GRB',
-      help:
-        'These are the Governance Reiew Team recommendations for the Governance Review Board'
+      help: 'These are the Governance Reiew Team recommendations for the Governance Review Board'
     },
     businessOwner: {
       heading: 'GRT recommendations to the Business Owner',
-      help:
-        'These are the Governance Review Team recommendations for the Business Owner'
+      help: 'These are the Governance Review Team recommendations for the Business Owner'
     },
     descriptiveDate: 'Feedback given on {{date}}',
     pdfTitle: 'Feedback for {{requestName}}'
