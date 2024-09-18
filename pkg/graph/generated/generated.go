@@ -672,6 +672,7 @@ type ComplexityRoot struct {
 		FundingSources              func(childComplexity int) int
 		GRBDate                     func(childComplexity int) int
 		GRBMeetingState             func(childComplexity int) int
+		GRBReviewStartedAt          func(childComplexity int) int
 		GRTDate                     func(childComplexity int) int
 		GRTMeetingState             func(childComplexity int) int
 		GovernanceRequestFeedbacks  func(childComplexity int) int
@@ -1286,6 +1287,7 @@ type SystemIntakeResolver interface {
 
 	LastMeetingDate(ctx context.Context, obj *models.SystemIntake) (*time.Time, error)
 	NextMeetingDate(ctx context.Context, obj *models.SystemIntake) (*time.Time, error)
+
 	GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error)
 
 	Isso(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeIsso, error)
@@ -5265,6 +5267,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.GRBMeetingState(childComplexity), true
 
+	case "SystemIntake.grbReviewStartedAt":
+		if e.complexity.SystemIntake.GRBReviewStartedAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GRBReviewStartedAt(childComplexity), true
+
 	case "SystemIntake.grtDate":
 		if e.complexity.SystemIntake.GRTDate == nil {
 			break
@@ -8365,6 +8374,7 @@ type SystemIntake {
   grtDate: Time
   lastMeetingDate: Time
   nextMeetingDate: Time
+  grbReviewStartedAt: Time
   grbReviewers: [SystemIntakeGRBReviewer!]!
   id: UUID!
   isso: SystemIntakeISSO!
@@ -13474,6 +13484,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -22358,6 +22370,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -28651,6 +28665,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -28882,6 +28898,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -30293,6 +30311,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -34428,6 +34448,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -34635,6 +34657,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -34842,6 +34866,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -35038,6 +35064,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -35234,6 +35262,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -38717,6 +38747,47 @@ func (ec *executionContext) fieldContext_SystemIntake_nextMeetingDate(_ context.
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_grbReviewStartedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GRBReviewStartedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbReviewStartedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_grbReviewers(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 	if err != nil {
@@ -41024,6 +41095,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -41372,6 +41445,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -49522,6 +49597,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -52383,6 +52460,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -53133,6 +53212,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -64055,6 +64136,8 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "grbReviewStartedAt":
+			out.Values[i] = ec._SystemIntake_grbReviewStartedAt(ctx, field, obj)
 		case "grbReviewers":
 			field := field
 

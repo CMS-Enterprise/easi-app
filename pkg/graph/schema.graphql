@@ -711,6 +711,7 @@ type SystemIntake {
   grtDate: Time
   lastMeetingDate: Time
   nextMeetingDate: Time
+  grbReviewStartedAt: Time
   grbReviewers: [SystemIntakeGRBReviewer!]!
   id: UUID!
   isso: SystemIntakeISSO!

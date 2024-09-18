@@ -23,11 +23,15 @@ func createSystemIntakeGRBReviewer(
 		store,
 		nil, // email client
 		userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock),
-		&models.CreateSystemIntakeGRBReviewerInput{
+		&models.CreateSystemIntakeGRBReviewersInput{
 			SystemIntakeID: intake.ID,
-			EuaUserID:      euaUserID,
-			VotingRole:     votingRole,
-			GrbRole:        grbRole,
+			Reviewers: []*models.CreateGRBReviewerInput{
+				{
+					EuaUserID:  euaUserID,
+					VotingRole: votingRole,
+					GrbRole:    grbRole,
+				},
+			},
 		},
 	)
 	if err != nil {
