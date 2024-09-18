@@ -106,15 +106,17 @@ func StartGRBReview(
 	store *storage.Store,
 	intakeID uuid.UUID,
 ) (*string, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, intakeID)
-	if err != nil {
-		return nil, err
-	}
-	intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
-	intake, err = store.UpdateSystemIntake(ctx, intake)
-	if err != nil {
-		return nil, err
-	}
-	// TODO: Send notification emails to all reviewers
-	return helpers.PointerTo("started GRB review"), nil
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*string, error) {
+		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
+		if err != nil {
+			return nil, err
+		}
+		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+		intake, err = store.UpdateSystemIntakeNP(ctx, tx, intake)
+		if err != nil {
+			return nil, err
+		}
+		// TODO: Send notification emails to all reviewers
+		return helpers.PointerTo("started GRB review"), nil
+	})
 }
