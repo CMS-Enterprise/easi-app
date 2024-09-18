@@ -349,7 +349,11 @@ const TeamMemberForm = ({
 
       <IconLink
         icon={<IconArrowBack />}
-        to={`/systems/${cedarSystemId}/team/edit`}
+        to={
+          isWorkspace
+            ? `/systems/${cedarSystemId}/workspace`
+            : `/systems/${cedarSystemId}/team/edit`
+        }
         className="margin-top-3"
       >
         {t(`${keyPrefix}.returnButtonLabel`)}

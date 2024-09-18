@@ -225,7 +225,7 @@ const systemProfile = {
             'Search for a team member to add to your system team. Team members are all able to view and edit your System Profile, including adding or removing team members. Team members can also create and work on IT Governance and technical assistance requests.',
           buttonLabel: 'Add team member',
           returnButtonLabel:
-            'Don’t add a team member and return to previous page',
+            'Don’t add a team member (return to previous page)',
           alertInfo:
             'This new team member will be able to edit information about your system within EASi. Please make sure this individual should be able to do this before you proceed.',
           memberAlreadySelectedInfo:
