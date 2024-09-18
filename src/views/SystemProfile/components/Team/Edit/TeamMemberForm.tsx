@@ -16,6 +16,7 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { useGetSystemTeamMembersQuery } from 'gql/gen/graphql';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import * as yup from 'yup';
 
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -28,6 +29,7 @@ import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import Spinner from 'components/Spinner';
 import teamRolesIndex from 'constants/teamRolesIndex';
+import useIsWorkspaceParam from 'hooks/useIsWorkspaceParam';
 import useMessage from 'hooks/useMessage';
 import { GetCedarRoleTypesQuery } from 'queries/CedarRoleQueries';
 import {
@@ -75,11 +77,13 @@ const TeamMemberForm = ({
 }: TeamMemberFormProps) => {
   const { t } = useTranslation('systemProfile');
 
-  // const tmpflag = false;
+  const flags = useFlags();
+  const isWorkspace = useIsWorkspaceParam();
 
   const { showMessageOnNextPage, showMessage } = useMessage();
   const history = useHistory();
   const { state } = useLocation<{ user?: UsernameWithRoles }>();
+  /** A defined user also indicates form edit mode. */
   const user = state?.user;
 
   /* User commonName prop used for setting success/error messages */
@@ -196,13 +200,17 @@ const TeamMemberForm = ({
       <p className="margin-bottom-6">{t(`${keyPrefix}.description`)}</p>
 
       <Form onSubmit={submitForm} className="maxw-none">
-        {user ? (
+        {user && flags.systemWorkspaceTeam && !isWorkspace ? (
           // If editing, show contact card without roles
+          // when in the original system profile context (not workspace)
+          // Rendered in non-workspace edit only
           <CardGroup>
             <TeamContactCard user={user} displayRoles={false} />
           </CardGroup>
         ) : (
           // If adding new contact, show CEDAR contact select field
+          // Or if in workspace context show user info in disabled dropdown
+          // Rendered in workspace context for both edit + add modes
           <Controller
             name="euaUserId"
             control={control}
@@ -223,7 +231,17 @@ const TeamMemberForm = ({
                 <CedarContactSelect
                   {...{ ...field, ref: null }}
                   id={field.name}
-                  value={user}
+                  // A defined `user` in edit mode will display as a disabled dropdown
+                  value={
+                    user
+                      ? {
+                          euaUserId: user.assigneeUsername,
+                          commonName,
+                          email: user.roles[0].assigneeEmail || undefined
+                        }
+                      : undefined
+                  }
+                  disabled={!!user}
                   onChange={contact => {
                     if (contact) {
                       setValue('euaUserId', contact?.euaUserId);
@@ -244,7 +262,6 @@ const TeamMemberForm = ({
             )}
           />
         )}
-
         {/* Role multiselect */}
         <Controller
           name="desiredRoleTypeIDs"
@@ -278,7 +295,6 @@ const TeamMemberForm = ({
             </FormGroup>
           )}
         />
-
         <CollapsableLink
           id="availableRoles"
           label={t('singleSystem.editTeam.form.availableRoles.link')}
@@ -312,11 +328,9 @@ const TeamMemberForm = ({
             ))}
           </ul>
         </CollapsableLink>
-
         <Alert slim type="info">
           {t('singleSystem.editTeam.form.add.alertInfo')}
         </Alert>
-
         <div className="display-flex flex-align-center margin-top-6">
           <Button
             type="submit"
