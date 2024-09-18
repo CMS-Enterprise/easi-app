@@ -97,12 +97,10 @@ const TeamMemberForm = ({
     GetCedarRoleTypesQuery
   );
 
-  const {
-    data: teamUsernames,
-    loading: teamUsernamesLoading
-  } = useGetSystemTeamMembersQuery({
-    variables: { cedarSystemId }
-  });
+  const { data: teamUsernames, loading: teamUsernamesLoading } =
+    useGetSystemTeamMembersQuery({
+      variables: { cedarSystemId }
+    });
 
   const availableRolesText = t<Record<string, string[]>>(
     'singleSystem.editTeam.form.availableRoles',

@@ -3236,8 +3236,8 @@ export function useGetSystemTeamMembersLazyQuery(baseOptions?: Apollo.LazyQueryH
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables>(GetSystemTeamMembersDocument, options);
         }
-export function useGetSystemTeamMembersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetSystemTeamMembersSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetSystemTeamMembersQuery, GetSystemTeamMembersQueryVariables>(GetSystemTeamMembersDocument, options);
         }
 export type GetSystemTeamMembersQueryHookResult = ReturnType<typeof useGetSystemTeamMembersQuery>;
