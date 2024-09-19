@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -180,6 +180,15 @@ const TeamMemberForm = ({
   const memberAlreadySelected =
     euaUserId !== undefined && team.find(u => u.assigneeUsername === euaUserId);
 
+  useEffect(() => {
+    if (memberAlreadySelected) {
+      setValue(
+        'desiredRoleTypeIDs',
+        memberAlreadySelected.roles.map(r => r.roleTypeID)
+      );
+    }
+  }, [setValue, memberAlreadySelected]);
+
   if (roleTypesLoading) {
     return <PageLoading />;
   }
@@ -273,6 +282,7 @@ const TeamMemberForm = ({
                   {t('singleSystem.editTeam.form.rolesError')}
                 </FieldErrorMsg>
               )}
+              <div>{field.value}</div>
               <MultiSelect
                 {...{ ...field, ref: null }}
                 name={field.name}
