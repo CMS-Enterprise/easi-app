@@ -95,7 +95,13 @@ const GRBReview = ({
       input: {
         systemIntakeID: id
       }
-    }
+    },
+    refetchQueries: [
+      {
+        query: GetSystemIntakeGRBReviewersDocument,
+        variables: { id }
+      }
+    ]
   });
 
   const isITGovAdmin = useContext(ITGovAdminContext);
@@ -168,7 +174,6 @@ const GRBReview = ({
         <GRBReviewerForm
           setReviewerToRemove={setReviewerToRemove}
           grbReviewers={grbReviewers}
-          // TODO: Update prop after backend work is completed
           grbReviewStartedAt={grbReviewStartedAt}
         />
       ) : (
