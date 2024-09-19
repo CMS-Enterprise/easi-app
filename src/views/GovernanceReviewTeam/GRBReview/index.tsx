@@ -186,7 +186,9 @@ const GRBReview = ({
                 closeModal={() => setStartReviewModalIsOpen(false)}
               >
                 <ModalHeading>{t('startReviewModal.heading')}</ModalHeading>
-                <p>{t('startReviewModal.text', { count: 12 })}</p>
+                <p>
+                  {t('startReviewModal.text', { count: grbReviewers.length })}
+                </p>
                 <ModalFooter>
                   <ButtonGroup>
                     <Button
