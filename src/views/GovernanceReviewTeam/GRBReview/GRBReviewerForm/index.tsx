@@ -48,8 +48,7 @@ type GRBReviewerFormFields = {
 type GRBReviewerFormProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
-  // TODO: Update prop after backend work is completed
-  grbReviewStartDate?: string;
+  grbReviewStartedAt?: string | null;
 };
 
 /**
@@ -58,7 +57,7 @@ type GRBReviewerFormProps = {
 const GRBReviewerForm = ({
   grbReviewers,
   setReviewerToRemove,
-  grbReviewStartDate
+  grbReviewStartedAt
 }: GRBReviewerFormProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -317,7 +316,7 @@ const GRBReviewerForm = ({
           {action === 'add' && (
             <Alert type="info" slim className="margin-top-8">
               {t(
-                grbReviewStartDate
+                grbReviewStartedAt
                   ? 'form.infoAlertReviewStarted'
                   : 'form.infoAlertReviewNotStarted'
               )}

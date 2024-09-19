@@ -41,6 +41,7 @@ describe('GRB review participants table', () => {
             state={SystemIntakeState.OPEN}
             grbReviewers={[grbReviewer]}
             setReviewerToRemove={() => null}
+            grbReviewStartedAt={null}
           />
         </ITGovAdminContext.Provider>
       </MemoryRouter>
@@ -71,8 +72,7 @@ describe('GRB review participants table', () => {
             state={SystemIntakeState.OPEN}
             grbReviewers={[grbReviewer]}
             setReviewerToRemove={() => null}
-            // TODO: Update prop after backend work is done
-            grbReviewStartDate="2024-09-10T14:42:47.422022Z"
+            grbReviewStartedAt="2024-09-10T14:42:47.422022Z"
           />
         </ITGovAdminContext.Provider>
       </MemoryRouter>
@@ -90,6 +90,7 @@ describe('GRB review participants table', () => {
             state={SystemIntakeState.CLOSED}
             grbReviewers={[]}
             setReviewerToRemove={() => null}
+            grbReviewStartedAt={null}
           />
         </ITGovAdminContext.Provider>
       </MemoryRouter>
@@ -113,6 +114,7 @@ describe('GRB review participants table', () => {
             state={SystemIntakeState.OPEN}
             grbReviewers={[grbReviewer]}
             setReviewerToRemove={() => null}
+            grbReviewStartedAt={null}
           />
         </ITGovAdminContext.Provider>
       </MemoryRouter>

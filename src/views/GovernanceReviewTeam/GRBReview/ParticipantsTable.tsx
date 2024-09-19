@@ -22,8 +22,7 @@ type ParticipantsTableProps = {
   state: SystemIntakeState;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
-  // TODO: Update prop after backend work is completed
-  grbReviewStartDate?: string;
+  grbReviewStartedAt?: string | null;
 };
 
 /**
@@ -34,7 +33,7 @@ const ParticipantsTable = ({
   state,
   grbReviewers,
   setReviewerToRemove,
-  grbReviewStartDate
+  grbReviewStartedAt
 }: ParticipantsTableProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -108,8 +107,13 @@ const ParticipantsTable = ({
     useSortBy
   );
 
-  const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
-    table;
+  const {
+    getTableBodyProps,
+    getTableProps,
+    headerGroups,
+    prepareRow,
+    rows
+  } = table;
 
   return (
     <>
@@ -156,7 +160,7 @@ const ParticipantsTable = ({
             )}
           </div>
 
-          {state === SystemIntakeState.OPEN && !grbReviewStartDate && (
+          {state === SystemIntakeState.OPEN && !grbReviewStartedAt && (
             <Alert type="info" slim>
               <Trans
                 i18nKey="grbReview:participantsStartReviewAlert"

@@ -73,8 +73,7 @@ describe('GRB review tab', () => {
                 {...systemIntake}
                 businessCase={businessCase}
                 grbReviewers={[]}
-                // TODO: Update prop after backend work is done
-                grbReviewStartDate={date}
+                grbReviewStartedAt={date}
               />
             </ITGovAdminContext.Provider>
           </MessageProvider>

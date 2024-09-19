@@ -49,8 +49,7 @@ type GRBReviewProps = {
   businessCase: BusinessCaseModel;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   documents: SystemIntakeDocument[];
-  // TODO: Update prop after backend work is completed
-  grbReviewStartDate?: string;
+  grbReviewStartedAt?: string | null;
 };
 
 const GRBReview = ({
@@ -60,7 +59,7 @@ const GRBReview = ({
   state,
   grbReviewers,
   documents,
-  grbReviewStartDate
+  grbReviewStartedAt
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -170,7 +169,7 @@ const GRBReview = ({
           setReviewerToRemove={setReviewerToRemove}
           grbReviewers={grbReviewers}
           // TODO: Update prop after backend work is completed
-          grbReviewStartDate={grbReviewStartDate}
+          grbReviewStartedAt={grbReviewStartedAt}
         />
       ) : (
         <>
@@ -235,12 +234,12 @@ const GRBReview = ({
               />
             </Alert>
 
-            {grbReviewStartDate && (
+            {grbReviewStartedAt && (
               <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
                 <Trans
                   i18nKey="grbReview:reviewStartedOn"
                   components={{
-                    date: formatDateLocal(grbReviewStartDate, 'MM/dd/yyyy')
+                    date: formatDateLocal(grbReviewStartedAt, 'MM/dd/yyyy')
                   }}
                 />
               </p>
@@ -248,7 +247,7 @@ const GRBReview = ({
 
             {
               // Only show button if user is admin and review has not been started
-              !grbReviewStartDate && isITGovAdmin && (
+              !grbReviewStartedAt && isITGovAdmin && (
                 <Button
                   type="button"
                   onClick={() => setStartReviewModalIsOpen(true)}
@@ -365,7 +364,7 @@ const GRBReview = ({
               state={state}
               grbReviewers={grbReviewers}
               setReviewerToRemove={setReviewerToRemove}
-              grbReviewStartDate={grbReviewStartDate}
+              grbReviewStartedAt={grbReviewStartedAt}
             />
           </div>
         </>
