@@ -15,7 +15,6 @@ import {
   Label
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { useGetSystemTeamMembersQuery } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import * as yup from 'yup';
 
@@ -60,6 +59,7 @@ type TeamMemberFormProps = {
     >
   ) => Promise<FetchResult<SetRolesForUserOnSystem>>;
   loading: boolean;
+  team: UsernameWithRoles[];
 };
 
 const teamMemberSchema: yup.SchemaOf<TeamMemberFields> = yup.object({
@@ -73,7 +73,8 @@ const teamMemberSchema: yup.SchemaOf<TeamMemberFields> = yup.object({
 const TeamMemberForm = ({
   cedarSystemId,
   updateRoles,
-  loading
+  loading,
+  team
 }: TeamMemberFormProps) => {
   const { t } = useTranslation('systemProfile');
 
@@ -96,11 +97,6 @@ const TeamMemberForm = ({
   const { data, loading: roleTypesLoading } = useQuery<GetCedarRoleTypes>(
     GetCedarRoleTypesQuery
   );
-
-  const { data: teamUsernames, loading: teamUsernamesLoading } =
-    useGetSystemTeamMembersQuery({
-      variables: { cedarSystemId }
-    });
 
   const availableRolesText = t<Record<string, string[]>>(
     'singleSystem.editTeam.form.availableRoles',
@@ -182,13 +178,9 @@ const TeamMemberForm = ({
   const euaUserId = watch('euaUserId');
 
   const memberAlreadySelected =
-    euaUserId !== undefined &&
-    euaUserId ===
-      teamUsernames?.cedarSystemDetails?.roles.find(
-        r => r.assigneeUsername === euaUserId
-      )?.assigneeUsername;
+    euaUserId !== undefined && team.find(u => u.assigneeUsername === euaUserId);
 
-  if (roleTypesLoading || teamUsernamesLoading) {
+  if (roleTypesLoading) {
     return <PageLoading />;
   }
 

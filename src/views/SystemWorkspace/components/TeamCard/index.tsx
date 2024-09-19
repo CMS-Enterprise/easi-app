@@ -141,7 +141,10 @@ function TeamCard({ roles }: { roles: CedarRole[] }) {
           <UswdsReactLink
             variant="unstyled"
             className="usa-button usa-button--outline"
-            to="#"
+            to={{
+              pathname: `/systems/${systemId}/team/edit`,
+              search: 'workspace'
+            }}
           >
             {t('spaces.team.manage')}
           </UswdsReactLink>

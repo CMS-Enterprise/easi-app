@@ -87,6 +87,7 @@ describe('Edit team page', () => {
                 cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c"
                 updateRoles={mockUpdateRoles}
                 loading={false}
+                team={[]}
               />
             </Route>
           </MessageProvider>
@@ -122,6 +123,7 @@ describe('Edit team page', () => {
                 cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c"
                 updateRoles={mockUpdateRoles}
                 loading={false}
+                team={[]}
               />
             </Route>
           </MessageProvider>

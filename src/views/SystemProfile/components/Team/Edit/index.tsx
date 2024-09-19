@@ -193,6 +193,7 @@ const EditTeam = ({
           cedarSystemId={cedarSystemId}
           updateRoles={updateRoles}
           loading={loading}
+          team={team}
         />
       ) : (
         /* Edit team page */
@@ -305,27 +306,31 @@ const EditTeam = ({
           </Modal>
 
           {/* Team member list */}
-          <CardGroup data-testid="teamCardGroup">
-            {team.map(user => (
-              <TeamContactCard
-                user={user}
-                key={user.assigneeUsername}
-                footerActions={{
-                  editRoles: () =>
-                    history.push(
-                      `${pathname}/team-member`,
-                      // Send user info to edit form
-                      { user }
-                    ),
-                  removeTeamMember: () =>
-                    setMemberToDelete({
-                      euaUserId: user.assigneeUsername,
-                      commonName: getTeamMemberName(user)
-                    })
-                }}
-              />
-            ))}
-          </CardGroup>
+          {!isWorkspace ? (
+            <CardGroup data-testid="teamCardGroup">
+              {team.map(user => (
+                <TeamContactCard
+                  user={user}
+                  key={user.assigneeUsername}
+                  footerActions={{
+                    editRoles: () =>
+                      history.push(
+                        `${pathname}/team-member`,
+                        // Send user info to edit form
+                        { user }
+                      ),
+                    removeTeamMember: () =>
+                      setMemberToDelete({
+                        euaUserId: user.assigneeUsername,
+                        commonName: getTeamMemberName(user)
+                      })
+                  }}
+                />
+              ))}
+            </CardGroup>
+          ) : (
+            <div>table here</div>
+          )}
 
           <IconLink
             to={`/systems/${cedarSystemId}/team`}
