@@ -282,7 +282,7 @@ exports[`TeamCard > renders 1`] = `
           </a>
           <a
             class="usa-button usa-button--outline"
-            href="/systems/{11AB1A00-1234-5678-ABC1-1A001B00CC1B}/workspace"
+            href="/systems/{11AB1A00-1234-5678-ABC1-1A001B00CC1B}/team/edit?workspace"
           >
             Manage system team
           </a>
