@@ -636,7 +636,7 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 
 // StartGRBReview is the resolver for the startGRBReview field.
 func (r *mutationResolver) StartGRBReview(ctx context.Context, input models.StartGRBReviewInput) (*string, error) {
-	return helpers.PointerTo("started GRB review"), nil
+	return resolvers.StartGRBReview(ctx, r.store, input.SystemIntakeID)
 }
 
 // CreateSystemIntakeGRBReviewers is the resolver for the createSystemIntakeGRBReviewers field.

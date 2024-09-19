@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -11,6 +12,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -113,4 +115,24 @@ func SystemIntakeGRBReviewers(
 	intakeID uuid.UUID,
 ) ([]*models.SystemIntakeGRBReviewer, error) {
 	return dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intakeID)
+}
+
+func StartGRBReview(
+	ctx context.Context,
+	store *storage.Store,
+	intakeID uuid.UUID,
+) (*string, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*string, error) {
+		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
+		if err != nil {
+			return nil, err
+		}
+		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+		_, err = store.UpdateSystemIntakeNP(ctx, tx, intake)
+		if err != nil {
+			return nil, err
+		}
+		// TODO: Send notification emails to all reviewers
+		return helpers.PointerTo("started GRB review"), nil
+	})
 }

@@ -249,6 +249,7 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			archived_at = :archived_at,
 			grt_date = :grt_date,
 			grb_date = :grb_date,
+			grb_review_started_at = :grb_review_started_at,
 			alfabet_id = :alfabet_id,
 			lcid = :lcid,
 			lcid_expires_at = :lcid_expires_at,
