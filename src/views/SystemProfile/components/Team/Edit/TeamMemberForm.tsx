@@ -282,9 +282,9 @@ const TeamMemberForm = ({
                   {t('singleSystem.editTeam.form.rolesError')}
                 </FieldErrorMsg>
               )}
-              <div>{field.value}</div>
               <MultiSelect
                 {...{ ...field, ref: null }}
+                key={field.value.join()} // Doing this to rerender on value change
                 name={field.name}
                 options={rolesOrdered.map(role => ({
                   value: role.id,
