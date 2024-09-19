@@ -168,9 +168,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           classNames="margin-top-3"
           heading={t('form:inputError.checkFix')}
         >
-          {(Object.keys(fieldErrors) as Array<
-            FieldPath<RequestDetailsForm>
-          >).map(key => {
+          {(
+            Object.keys(fieldErrors) as Array<FieldPath<RequestDetailsForm>>
+          ).map(key => {
             return (
               <ErrorMessage
                 errors={errors}

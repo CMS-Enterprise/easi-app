@@ -57,13 +57,8 @@ const PreferredSolution = ({
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<PreferredSolutionForm>) => {
-        const {
-          values,
-          errors,
-          setErrors,
-          setFieldValue,
-          validateForm
-        } = formikProps;
+        const { values, errors, setErrors, setFieldValue, validateForm } =
+          formikProps;
 
         const flatErrors = flattenErrors(errors);
 

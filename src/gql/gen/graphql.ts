@@ -1797,6 +1797,7 @@ export type SystemIntake = {
   grbDate?: Maybe<Scalars['Time']['output']>;
   /** This is a calculated state based on if a date exists for the GRB Meeting date */
   grbMeetingState: SystemIntakeMeetingState;
+  grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
   grbReviewers: Array<SystemIntakeGRBReviewer>;
   grtDate?: Maybe<Scalars['Time']['output']>;
   /** This is a calculated state based on if a date exists for the GRT Meeting date */

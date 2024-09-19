@@ -127,8 +127,7 @@ export default {
     'There was an issue removing this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
   removeModal: {
     title: 'Remove {{commonName}} as a GRB reviewer?',
-    text:
-      'Removing this reviewer will remove their access to documentation about this request. You may add them again at a later date if necessary.',
+    text: 'Removing this reviewer will remove their access to documentation about this request. You may add them again at a later date if necessary.',
     remove: 'Remove reviewer'
   },
   homepage: {

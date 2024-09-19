@@ -317,14 +317,13 @@ const formatLifecycleCostsForApi = (
     const currentPhaseCosts: string[] = Object.values(years);
 
     /** Current phase costs reformatted for API */
-    const formattedLifecycleCosts: ApiLifecycleCostLine[] = currentPhaseCosts.map(
-      (cost, index) => ({
+    const formattedLifecycleCosts: ApiLifecycleCostLine[] =
+      currentPhaseCosts.map((cost, index) => ({
         solution,
         phase,
         year: (index + 1).toString(),
         cost: cost ? parseFloat(cost) : null
-      })
-    );
+      }));
 
     return [...acc, ...formattedLifecycleCosts];
   }, [] as ApiLifecycleCostLine[]);
