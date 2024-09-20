@@ -1,11 +1,11 @@
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
-import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
 import { FundingSource as FundingSourceType } from 'queries/types/FundingSource';
 import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 
 import {
   SystemIntakeCollaboratorInput,
+  SystemIntakeSoftwareAcquisitionMethods,
   SystemIntakeStatusAdmin
 } from './graphql-global-types';
 

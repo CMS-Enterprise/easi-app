@@ -10,6 +10,7 @@ import {
   Dropdown,
   Fieldset,
   Form,
+  FormGroup,
   Link as UswdsLink,
   Radio,
   Textarea,
@@ -30,7 +31,6 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import processStages from 'constants/enums/processStages';
-import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
 import {
   CMS_AI_EMAIL,
   CMS_DVSM_EMAIL,
@@ -43,7 +43,10 @@ import {
   UpdateSystemIntakeRequestDetails,
   UpdateSystemIntakeRequestDetailsVariables
 } from 'queries/types/UpdateSystemIntakeRequestDetails';
-import { SystemIntakeFormState } from 'types/graphql-global-types';
+import {
+  SystemIntakeFormState,
+  SystemIntakeSoftwareAcquisitionMethods
+} from 'types/graphql-global-types';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
@@ -58,8 +61,8 @@ type RequestDetailsForm = {
   usesAiTech: boolean | null;
   softwareAcquisition: {
     usingSoftware: string | null;
-    acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods] | null;
-  } | null;
+    acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
+  };
 };
 
 type RequestDetailsProps = {
@@ -103,9 +106,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       usesAiTech,
       softwareAcquisition: {
         usingSoftware: softwareAcquisition?.usingSoftware || '',
-        acquisitionMethods: softwareAcquisition?.acquisitionMethods as [
-          SystemIntakeSoftwareAcquisitionMethods
-        ]
+        acquisitionMethods: []
       }
     }
   });
@@ -551,35 +552,52 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           {/* If 'Yes' is selected, display additional software props (software MultiSelect (to come later) and Acquisition Approach Checkboxes) */}
           {watch('softwareAcquisition.usingSoftware') === 'YES' && (
             <div className="margin-left-4 margin-bottom-3">
-              {/* TODO: We eventually want to display a ComboBox software/vendor the requester can select, before we can do this 
-                We need a list of "CMS known" software and/or vendors */}
+              {/* TODO: We eventually want to display a ComboBox/MultiSelect of software the requester can select, before we 
+                can do this we need a list of "CMS known" software and/or vendors that is currently being evaluated by ICPG / DVSM */}
 
-              {/* TODO: NJD - add question/helptext here */}
-              {Object.values(SystemIntakeSoftwareAcquisitionMethods).map(
-                acqMethod => {
+              <Controller
+                control={control}
+                name="softwareAcquisition.acquisitionMethods"
+                render={({ field, fieldState: { error } }) => {
                   return (
-                    <div key={acqMethod}>
-                      <Controller
-                        control={control}
-                        name="softwareAcquisition.acquisitionMethods"
-                        render={({ field: { ref, ...field } }) => {
-                          return (
+                    <FormGroup error={!!error}>
+                      {error && (
+                        <ErrorMessage
+                          errors={errors}
+                          name="softwareAcquisition.acquisitionMethods"
+                          as={FieldErrorMsg}
+                        />
+                      )}
+                      {Object.values(
+                        SystemIntakeSoftwareAcquisitionMethods
+                      ).map(acqMethod => {
+                        return (
+                          <React.Fragment key={acqMethod}>
                             <Checkbox
-                              {...field}
-                              inputRef={ref}
-                              id={`software-${acqMethod}`}
-                              label={`software-${acqMethod}`} // TODO: NJD add enum translation
-                              value="true"
-                              // checked
-                              onChange={() => field.onChange(!field.value)}
+                              name={acqMethod}
+                              id={acqMethod}
+                              label={acqMethod} // TODO: NJD add enum translation
+                              value={acqMethod}
+                              onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                              ) => {
+                                // TODO: NJD should I be using useState() to manage the array state here?
+                                field.onChange(
+                                  e.target.checked
+                                    ? [...field.value, e.target.value]
+                                    : field.value.filter(
+                                        value => value !== e.target.value
+                                      )
+                                );
+                              }}
                             />
-                          );
-                        }}
-                      />
-                    </div>
+                          </React.Fragment>
+                        );
+                      })}
+                    </FormGroup>
                   );
-                }
-              )}
+                }}
+              />
             </div>
           )}
           <Controller
@@ -615,29 +633,6 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             )}
           />
         </FieldGroup>
-
-        {/* <FieldGroup
-          scrollElement="whichSoftware"
-          error={!!errors.}
-        >
-          <Label htmlFor="whichSoftware">{t('requestDetails.softwareAcquisition.label')}</Label>
-          <HelpText id="elasHelpText" className="margin-top-1">
-            {t('requestDetails.softwareAcquisition.help')}
-          </HelpText>
-          <Controller
-            control={control}
-            name="softwwareList"
-            render={({ field }) => (
-              <MultiSelect
-                name={field.name}
-                selectedLabel={t('requestDetails.softwareAcquisition.selectedLabel')}
-                initialValues={['']}
-                options={SoftwareOptions}
-                onChange={values => field.onChange(values)}
-              />
-            )}
-          />
-        </FieldGroup> */}
 
         <Pager
           next={{

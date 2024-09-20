@@ -82,7 +82,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   usesAiTech: null,
   softwareAcquisition: {
     usingSoftware: null,
-    acquisitionMethods: null
+    acquisitionMethods: []
   },
   hasUiChanges: null
 };
