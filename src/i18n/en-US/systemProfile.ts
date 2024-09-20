@@ -172,7 +172,8 @@ const systemProfile = {
         fte: 'Full-time employees (FTE)',
         businessOwners: 'Business Owners',
         projectLeads: 'Project Leads',
-        additional: 'Additional team members'
+        additional: 'Additional team members',
+        contractInformation: 'Contract Information'
       },
       noData: {
         businessOwners:
