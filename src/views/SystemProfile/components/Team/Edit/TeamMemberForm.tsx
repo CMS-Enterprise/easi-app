@@ -181,12 +181,12 @@ const TeamMemberForm = ({
     euaUserId !== undefined && team.find(u => u.assigneeUsername === euaUserId);
 
   useEffect(() => {
-    if (memberAlreadySelected) {
-      setValue(
-        'desiredRoleTypeIDs',
-        memberAlreadySelected.roles.map(r => r.roleTypeID)
-      );
-    }
+    setValue(
+      'desiredRoleTypeIDs',
+      memberAlreadySelected
+        ? memberAlreadySelected.roles.map(r => r.roleTypeID)
+        : []
+    );
   }, [setValue, memberAlreadySelected]);
 
   if (roleTypesLoading) {
