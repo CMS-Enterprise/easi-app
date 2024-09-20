@@ -234,27 +234,6 @@ export enum SystemIntakeFormStep {
   INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
 }
 
-export enum SystemIntakeGRBReviewerRole {
-  ACA_3021_REP = "ACA_3021_REP",
-  CCIIO_REP = "CCIIO_REP",
-  CMCS_REP = "CMCS_REP",
-  CO_CHAIR_CFO = "CO_CHAIR_CFO",
-  CO_CHAIR_CIO = "CO_CHAIR_CIO",
-  CO_CHAIR_HCA = "CO_CHAIR_HCA",
-  FED_ADMIN_BDG_CHAIR = "FED_ADMIN_BDG_CHAIR",
-  OTHER = "OTHER",
-  PROGRAM_INTEGRITY_BDG_CHAIR = "PROGRAM_INTEGRITY_BDG_CHAIR",
-  PROGRAM_OPERATIONS_BDG_CHAIR = "PROGRAM_OPERATIONS_BDG_CHAIR",
-  QIO_REP = "QIO_REP",
-  SUBJECT_MATTER_EXPERT = "SUBJECT_MATTER_EXPERT",
-}
-
-export enum SystemIntakeGRBReviewerVotingRole {
-  ALTERNATE = "ALTERNATE",
-  NON_VOTING = "NON_VOTING",
-  VOTING = "VOTING",
-}
-
 /**
  * The possible statuses that an issued LCID can be in
  */
@@ -550,12 +529,6 @@ export interface CreateCedarSystemBookmarkInput {
   cedarSystemId: string;
 }
 
-export interface CreateGRBReviewerInput {
-  euaUserId: string;
-  votingRole: SystemIntakeGRBReviewerVotingRole;
-  grbRole: SystemIntakeGRBReviewerRole;
-}
-
 /**
  * The data needed to associate a contact with a system intake
  */
@@ -576,11 +549,6 @@ export interface CreateSystemIntakeDocumentInput {
   version: SystemIntakeDocumentVersion;
   otherTypeDescription?: string | null;
   sendNotification?: boolean | null;
-}
-
-export interface CreateSystemIntakeGRBReviewersInput {
-  systemIntakeID: UUID;
-  reviewers: CreateGRBReviewerInput[];
 }
 
 /**
@@ -695,10 +663,6 @@ export interface DeleteSystemIntakeContactInput {
   id: UUID;
 }
 
-export interface DeleteSystemIntakeGRBReviewerInput {
-  reviewerID: UUID;
-}
-
 export interface DeleteTRBRequestFundingSourcesInput {
   trbRequestId: UUID;
   fundingNumber: string;
@@ -792,13 +756,6 @@ export interface SetTRBRequestRelationExistingSystemInput {
 export interface SetTRBRequestRelationNewSystemInput {
   trbRequestID: UUID;
   contractNumbers: string[];
-}
-
-/**
- * Input for starting a GRB Review, which notifies reviewers by email
- */
-export interface StartGRBReviewInput {
-  systemIntakeID: UUID;
 }
 
 /**
@@ -1120,12 +1077,6 @@ export interface UpdateSystemIntakeContractDetailsInput {
   contract?: SystemIntakeContractInput | null;
 }
 
-export interface UpdateSystemIntakeGRBReviewerInput {
-  reviewerID: UUID;
-  votingRole: SystemIntakeGRBReviewerVotingRole;
-  grbRole: SystemIntakeGRBReviewerRole;
-}
-
 /**
  * Input data for updating an IT governance admin note
  */
@@ -1238,14 +1189,6 @@ export interface UpdateTRBRequestFundingSourcesInput {
   trbRequestId: UUID;
   fundingNumber: string;
   sources: string[];
-}
-
-/**
- * The data needed assign a TRB lead to a TRB request
- */
-export interface UpdateTRBRequestTRBLeadInput {
-  trbRequestId: UUID;
-  trbLead: string;
 }
 
 //==============================================================
