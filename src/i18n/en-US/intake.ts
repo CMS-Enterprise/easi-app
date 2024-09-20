@@ -327,6 +327,13 @@ const intake = {
         'If known, please upload a bill of materials (BOM) on the document upload section of this form.',
       acquisitionStrategyLabel: 'How will the software be acquired?',
       acquisitionStrategyHelp: 'Select all that apply.',
+      strategyLabels: {
+        CONTRACTOR_FURNISHED: 'Furnished by the contractor',
+        FED_FURNISHED: 'FED_FURNISHED',
+        ELA_OR_INTERNAL: 'Acquired through an ELA or internal source',
+        OTHER: 'Other'
+        // TODO: NJD add "Not yest determined"
+      },
       softwareRequirements:
         'If sofware requirements are not yet determined or if the contractor(s) will be requested to provide as part of the requirement. CMS suggests that you include the need for a proposed software Bill of Materials (BOM) in the solicitation or contract.'
     },

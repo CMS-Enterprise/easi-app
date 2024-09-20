@@ -576,7 +576,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                             <Checkbox
                               name={acqMethod}
                               id={acqMethod}
-                              label={acqMethod} // TODO: NJD add enum translation
+                              label={t(
+                                `requestDetails.softwareAcquisition.strategyLabels.${acqMethod}`
+                              )}
                               value={acqMethod}
                               onChange={(
                                 e: React.ChangeEvent<HTMLInputElement>
@@ -624,7 +626,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 {...field}
                 inputRef={ref}
                 id="usesSoftwareNotSure"
-                label={t('Not Sure')} // TODO: NJD - fix this translation?
+                label={t('Not Sure')}
                 checked={value === 'NOT_SURE'}
                 onChange={() => {
                   field.onChange('NOT_SURE');
