@@ -244,6 +244,22 @@ func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.Us
 	return userAcct
 }
 
+// utility method to get userAcct in resolver tests
+func (s *ResolverSuite) getOrCreateUserAccts(euaUserIDs []string) []*authentication.UserAccount {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+	okta := local.NewOktaAPIClient()
+	userAccts, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) ([]*authentication.UserAccount, error) {
+		users, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, store, euaUserIDs, false, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos))
+		if err != nil {
+			return nil, err
+		}
+		return users, nil
+	})
+	s.NoError(err)
+	return userAccts
+}
+
 // ctxWithNewDataloaders sets new Dataloaders on the test suite's existing context and returns that context.
 // this is necessary in order to avoid the caching feature of the dataloadgen library.
 // that caching feature is great for app code, but in test code, where we often load something,
