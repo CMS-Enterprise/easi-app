@@ -10,28 +10,20 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
-func createSystemIntakeGRBReviewer(
+func createSystemIntakeGRBReviewers(
 	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
-	euaUserID string,
-	votingRole models.SystemIntakeGRBReviewerVotingRole,
-	grbRole models.SystemIntakeGRBReviewerRole,
+	reviewers []*models.CreateGRBReviewerInput,
 ) {
-	_, err := resolvers.CreateSystemIntakeGRBReviewer(
+	_, err := resolvers.CreateSystemIntakeGRBReviewers(
 		ctx,
 		store,
 		nil, // email client
-		userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock),
+		userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock),
 		&models.CreateSystemIntakeGRBReviewersInput{
 			SystemIntakeID: intake.ID,
-			Reviewers: []*models.CreateGRBReviewerInput{
-				{
-					EuaUserID:  euaUserID,
-					VotingRole: votingRole,
-					GrbRole:    grbRole,
-				},
-			},
+			Reviewers:      reviewers,
 		},
 	)
 	if err != nil {

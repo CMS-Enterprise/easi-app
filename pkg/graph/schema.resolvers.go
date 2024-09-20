@@ -641,7 +641,7 @@ func (r *mutationResolver) StartGRBReview(ctx context.Context, input models.Star
 
 // CreateSystemIntakeGRBReviewers is the resolver for the createSystemIntakeGRBReviewers field.
 func (r *mutationResolver) CreateSystemIntakeGRBReviewers(ctx context.Context, input models.CreateSystemIntakeGRBReviewersInput) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
-	return resolvers.CreateSystemIntakeGRBReviewer(ctx, r.store, r.emailClient, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo), &input)
+	return resolvers.CreateSystemIntakeGRBReviewers(ctx, r.store, r.emailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(r.service.FetchUserInfos), &input)
 }
 
 // UpdateSystemIntakeGRBReviewer is the resolver for the updateSystemIntakeGRBReviewer field.
@@ -1560,7 +1560,7 @@ func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models
 
 // UserAccount is the resolver for the userAccount field.
 func (r *queryResolver) UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error) {
-	return resolvers.UserAccountGetByUsername(r.store, username)
+	return resolvers.UserAccountGetByUsername(ctx, r.store, r.store, username)
 }
 
 // Actions is the resolver for the actions field.

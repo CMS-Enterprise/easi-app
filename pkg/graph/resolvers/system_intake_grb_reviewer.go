@@ -2,11 +2,14 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
@@ -16,62 +19,75 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
-// CreateSystemIntakeGRBReviewer creates a GRB Reviewer for a System Intake
-func CreateSystemIntakeGRBReviewer(
+// CreateSystemIntakeGRBReviewers creates GRB Reviewers for a System Intake
+func CreateSystemIntakeGRBReviewers(
 	ctx context.Context,
 	store *storage.Store,
 	emailClient *email.Client,
-	fetchUser userhelpers.GetAccountInfoFunc,
+	fetchUsers userhelpers.GetAccountInfosFunc,
 	input *models.CreateSystemIntakeGRBReviewersInput,
 ) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
-	return &models.CreateSystemIntakeGRBReviewersPayload{
-		Reviewers: []*models.SystemIntakeGRBReviewer{},
-	}, nil
-	// return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntakeGRBReviewer, error) {
-	// 	// Fetch intake by ID
-	// 	intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	if intake == nil {
-	// 		return nil, errors.New("system intake not found")
-	// 	}
-	// 	acct, err := userhelpers.GetOrCreateUserAccount(ctx, tx, store, input.EuaUserID, false, fetchUser)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	createdByID := appcontext.Principal(ctx).Account().ID
-	// 	reviewer := models.NewSystemIntakeGRBReviewer(acct.ID, createdByID)
-	// 	reviewer.VotingRole = models.SIGRBReviewerVotingRole(input.VotingRole)
-	// 	reviewer.GRBRole = models.SIGRBReviewerRole(input.GrbRole)
-	// 	reviewer.SystemIntakeID = input.SystemIntakeID
-	// 	err = store.CreateSystemIntakeGRBReviewer(ctx, tx, reviewer)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	//
-	// 	// send notification email to reviewer
-	// 	if emailClient != nil {
-	// 		err = emailClient.SystemIntake.SendCreateGRBReviewerNotification(
-	// 			ctx,
-	// 			models.EmailNotificationRecipients{
-	// 				RegularRecipientEmails: []models.EmailAddress{
-	// 					models.EmailAddress(acct.Email),
-	// 				},
-	// 				ShouldNotifyITGovernance: false,
-	// 				ShouldNotifyITInvestment: false,
-	// 			},
-	// 			intake.ID,
-	// 			intake.ProjectName.String,
-	// 			intake.Requester,
-	// 		)
-	// 		if err != nil {
-	// 			appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
-	// 		}
-	// 	}
-	//
-	// 	return reviewer, err
-	// })
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
+		// Fetch intake by ID
+		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
+		if err != nil {
+			return nil, err
+		}
+		if intake == nil {
+			return nil, errors.New("system intake not found")
+		}
+		euas := []string{}
+		reviewersByEUAMap := map[string]*models.CreateGRBReviewerInput{}
+		for _, reviewer := range input.Reviewers {
+			euas = append(euas, reviewer.EuaUserID)
+			reviewersByEUAMap[reviewer.EuaUserID] = reviewer
+		}
+		accts, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, store, euas, false, fetchUsers)
+		if err != nil {
+			return nil, err
+		}
+		createdByID := appcontext.Principal(ctx).Account().ID
+
+		reviewersToCreate := []*models.SystemIntakeGRBReviewer{}
+		for _, acct := range accts {
+			reviewerInput := reviewersByEUAMap[acct.Username]
+			reviewer := models.NewSystemIntakeGRBReviewer(acct.ID, createdByID)
+			reviewer.VotingRole = models.SIGRBReviewerVotingRole(reviewerInput.VotingRole)
+			reviewer.GRBRole = models.SIGRBReviewerRole(reviewerInput.GrbRole)
+			reviewer.SystemIntakeID = input.SystemIntakeID
+			reviewersToCreate = append(reviewersToCreate, reviewer)
+		}
+		createdReviewers, err := store.CreateSystemIntakeGRBReviewers(ctx, tx, reviewersToCreate)
+		if err != nil {
+			return nil, err
+		}
+
+		// send notification email to reviewer
+		if emailClient != nil {
+			emails := []models.EmailAddress{}
+			for _, reviewer := range accts {
+				emails = append(emails, models.EmailAddress(reviewer.Email))
+			}
+			err = emailClient.SystemIntake.SendCreateGRBReviewerNotification(
+				ctx,
+				models.EmailNotificationRecipients{
+					RegularRecipientEmails:   emails,
+					ShouldNotifyITGovernance: false,
+					ShouldNotifyITInvestment: false,
+				},
+				intake.ID,
+				intake.ProjectName.String,
+				intake.Requester,
+			)
+			if err != nil {
+				appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
+			}
+		}
+
+		return &models.CreateSystemIntakeGRBReviewersPayload{
+			Reviewers: createdReviewers,
+		}, nil
+	})
 }
 
 func UpdateSystemIntakeGRBReviewer(
@@ -112,7 +128,7 @@ func StartGRBReview(
 			return nil, err
 		}
 		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
-		intake, err = store.UpdateSystemIntakeNP(ctx, tx, intake)
+		_, err = store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
 		}
