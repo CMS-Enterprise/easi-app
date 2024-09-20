@@ -306,31 +306,27 @@ const EditTeam = ({
           </Modal>
 
           {/* Team member list */}
-          {!isWorkspace ? (
-            <CardGroup data-testid="teamCardGroup">
-              {team.map(user => (
-                <TeamContactCard
-                  user={user}
-                  key={user.assigneeUsername}
-                  footerActions={{
-                    editRoles: () =>
-                      history.push(
-                        `${pathname}/team-member`,
-                        // Send user info to edit form
-                        { user }
-                      ),
-                    removeTeamMember: () =>
-                      setMemberToDelete({
-                        euaUserId: user.assigneeUsername,
-                        commonName: getTeamMemberName(user)
-                      })
-                  }}
-                />
-              ))}
-            </CardGroup>
-          ) : (
-            <div>table here</div>
-          )}
+          <CardGroup data-testid="teamCardGroup">
+            {team.map(user => (
+              <TeamContactCard
+                user={user}
+                key={user.assigneeUsername}
+                footerActions={{
+                  editRoles: () =>
+                    history.push(
+                      `${pathname}/team-member`,
+                      // Send user info to edit form
+                      { user }
+                    ),
+                  removeTeamMember: () =>
+                    setMemberToDelete({
+                      euaUserId: user.assigneeUsername,
+                      commonName: getTeamMemberName(user)
+                    })
+                }}
+              />
+            ))}
+          </CardGroup>
 
           <IconLink
             to={`/systems/${cedarSystemId}/team`}
