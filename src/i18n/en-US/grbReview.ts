@@ -37,6 +37,18 @@ export default {
   featureInProgress: 'Feature in progress',
   featureInProgressText:
     'The capabilities currently available allow Governance Admin Team members to invite GRB reviewers to access documentation related to requests. Future capabilities will include voting, discussions with project teams and GRB members, timelines, and more. Currently, however, all communication with the GRB and the project team must be completed via email or during meetings. If you have any questions, please complete the <a>feedback form</a> in the footer of this page.',
+  startGrbReview: 'Start GRB review',
+  reviewStartedOn: 'Review started on {{date}}',
+  startReviewModal: {
+    heading: 'Start this GRB review?',
+    text:
+      'Starting this review will send email notifications to {{count}} GRB reviewers. Any reviewer you add after starting this review will automatically receive a notification.',
+    startReview: 'Start review and send notifications'
+  },
+  startGrbReviewError:
+    'There was an issue starting this GRB review. Please try again, and if the error persists, try again at a later date.',
+  participantsStartReviewAlert:
+    'Adding GRB reviewers will not send them an invitation until you start the GRB review using the <a>Start GRB Review</a> button above, though they will still be able to access content if they sign into EASi.',
   participants: 'Participants',
   participantsText:
     'The Governance Admin Team has invited you to view documentation related to this IT Governance request. Use the navigation to the left or the buttons below to view the documentation.',
@@ -96,8 +108,10 @@ export default {
     submit_add: 'Add reviewer',
     submit_edit: 'Save changes',
     removeGrbReviewer: 'Remove GRB reviewer',
-    infoAlert:
-      'This individual will be able to see information about this IT Governance request within EASi. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
+    infoAlertReviewNotStarted:
+      'Adding GRB reviewers will not send them an invitation until you start the GRB review, though they will still be able to access content if they sign into EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
+    infoAlertReviewStarted:
+      'Adding a reviewer will send them an informational notification email with a link to EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
     error:
       'There was an issue adding this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
     success_ALTERNATE:
@@ -113,7 +127,8 @@ export default {
     'There was an issue removing this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
   removeModal: {
     title: 'Remove {{commonName}} as a GRB reviewer?',
-    text: 'Removing this reviewer will remove their access to documentation about this request. You may add them again at a later date if necessary.',
+    text:
+      'Removing this reviewer will remove their access to documentation about this request. You may add them again at a later date if necessary.',
     remove: 'Remove reviewer'
   },
   homepage: {

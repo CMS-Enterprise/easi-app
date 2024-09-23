@@ -44,9 +44,13 @@ import './index.scss';
 
 type RequestOverviewProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
+  grbReviewStartedAt?: string | null;
 };
 
-const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
+const RequestOverview = ({
+  grbReviewers,
+  grbReviewStartedAt
+}: RequestOverviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const flags = useFlags();
 
@@ -203,6 +207,7 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
                         {...systemIntake}
                         businessCase={businessCase}
                         grbReviewers={grbReviewers}
+                        grbReviewStartedAt={grbReviewStartedAt}
                       />
                     )}
                   />
