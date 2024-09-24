@@ -351,7 +351,11 @@ const TeamMemberForm = ({
             }
             className="margin-0"
           >
-            {t(`${keyPrefix}.buttonLabel`)}
+            {t(
+              memberAlreadySelected
+                ? 'singleSystem.editTeam.form.edit.buttonLabel'
+                : `${keyPrefix}.buttonLabel`
+            )}
           </Button>
           {loading && <Spinner className="margin-left-1" />}
         </div>
