@@ -328,7 +328,7 @@ const TeamMemberForm = ({
             ))}
           </ul>
         </CollapsableLink>
-        <Alert slim type="info">
+        <Alert slim type="info" className="margin-top-6">
           {t('singleSystem.editTeam.form.add.alertInfo')}
         </Alert>
         <div className="display-flex flex-align-center margin-top-3">
