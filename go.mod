@@ -1,6 +1,7 @@
 module github.com/cms-enterprise/easi-app
 
-go 1.22.3
+go 1.22.7
+
 require (
 	github.com/99designs/gqlgen v0.17.54
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
