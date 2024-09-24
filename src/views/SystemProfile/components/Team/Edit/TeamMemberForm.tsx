@@ -196,7 +196,7 @@ const TeamMemberForm = ({
   return (
     <Grid className="tablet:grid-col-6">
       <h1 className="margin-bottom-1">{t(`${keyPrefix}.title`)}</h1>
-      <p className="margin-bottom-6">{t(`${keyPrefix}.description`)}</p>
+      <p className="margin-bottom-6 font-body-md text-light line-height-body-4">{t(`${keyPrefix}.description`)}</p>
 
       <Form onSubmit={submitForm} className="maxw-none">
         {user && flags.systemWorkspaceTeam && !isWorkspace ? (
