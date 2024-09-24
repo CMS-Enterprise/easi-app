@@ -331,7 +331,7 @@ const TeamMemberForm = ({
         <Alert slim type="info">
           {t('singleSystem.editTeam.form.add.alertInfo')}
         </Alert>
-        <div className="display-flex flex-align-center margin-top-6">
+        <div className="display-flex flex-align-center margin-top-3">
           <Button
             type="submit"
             disabled={
