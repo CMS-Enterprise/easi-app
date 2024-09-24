@@ -307,19 +307,19 @@ const TeamMemberForm = ({
           id="availableRoles"
           label={t('singleSystem.editTeam.form.availableRoles.link')}
         >
-          <p className="padding-top-0">
+          <p className="margin-y-0 line-heigt-body-5">
             <strong>
               {t('singleSystem.editTeam.form.availableRoles.primaryLabel')}
             </strong>
           </p>
           <ul className="easi-list padding-left-2">
             {availableRolesText.primaryList.map(li => (
-              <li key={li}>
+              <li key={li} className="margin-top-1">
                 <Trans>{li}</Trans>
               </li>
             ))}
           </ul>
-          <p>
+          <p className="margin-bottom-0 line-height-body-5">
             <strong>
               {t('singleSystem.editTeam.form.availableRoles.pocLabel')}
             </strong>
@@ -330,7 +330,7 @@ const TeamMemberForm = ({
           </p>
           <ul className="easi-list padding-left-2">
             {availableRolesText.pocList.map(li => (
-              <li key={li}>
+              <li key={li} className="margin-top-1">
                 <Trans>{li}</Trans>
               </li>
             ))}
