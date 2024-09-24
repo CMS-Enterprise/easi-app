@@ -151,7 +151,7 @@ const EditTeam = ({
     <GridContainer className="margin-bottom-10">
       {flags.systemWorkspaceTeam && !isWorkspace && (
         // Don't show crumbs in the workspace context
-        <BreadcrumbBar variant="wrap">
+        <BreadcrumbBar variant="wrap" className="padding-y-0 margin-y-2">
           <Breadcrumb>
             <BreadcrumbLink asCustom={Link} to="/systems">
               {t('singleSystem.editTeam.systems')}
@@ -185,7 +185,7 @@ const EditTeam = ({
         </BreadcrumbBar>
       )}
 
-      <Message />
+      <Message className="margin-top-2" />
 
       {action ? (
         /* Add/edit team member form */
