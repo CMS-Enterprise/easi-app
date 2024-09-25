@@ -322,7 +322,11 @@ const EditTeam = ({
               ))}
             </CardGroup>
           ) : (
-            <TeamTable team={team} />
+            <TeamTable
+              cedarSystemId={cedarSystemId}
+              team={team}
+              setMemberToDelete={setMemberToDelete}
+            />
           )}
 
           <IconLink

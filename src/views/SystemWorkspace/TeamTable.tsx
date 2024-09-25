@@ -14,7 +14,7 @@ import { Button, Table } from '@trussworks/react-uswds';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
-// import GlobalClientFilter from 'components/TableFilter';
+import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import { UsernameWithRoles } from 'types/systemProfile';
@@ -25,8 +25,22 @@ import {
   getHeaderSortIcon
 } from 'utils/tableSort';
 import { NotFoundPartial } from 'views/NotFound';
+import { getTeamMemberName } from 'views/SystemProfile/components/Team/Edit';
 
-function TeamTable({ team }: { team: UsernameWithRoles[] }) {
+function TeamTable({
+  cedarSystemId: systemId,
+  team,
+  setMemberToDelete
+}: {
+  cedarSystemId: string;
+  team: UsernameWithRoles[];
+  setMemberToDelete: React.Dispatch<
+    React.SetStateAction<{
+      euaUserId: string;
+      commonName: string;
+    } | null>
+  >;
+}) {
   const { t } = useTranslation('systemProfile');
 
   const columns: Column<UsernameWithRoles>[] = useMemo(
@@ -51,20 +65,40 @@ function TeamTable({ team }: { team: UsernameWithRoles[] }) {
         Cell: ({ row }: CellProps<UsernameWithRoles>) => {
           return row.original.roles.map(r => r.roleTypeName).join(', ');
         }
+        // sort
+        /*
+        "Alpha by first name, except with Business owner and Project lead roles at the top"
+        */
       },
       {
         Header: 'Actions',
         id: 'actions',
         Cell: ({ row }: CellProps<UsernameWithRoles>) => {
+          const user = row.original;
           return (
             <>
-              <UswdsReactLink to="" className="text-primary">
+              <UswdsReactLink
+                to={{
+                  pathname: `/systems/${systemId}/team/edit/team-member`,
+                  search: 'workspace',
+                  state: {
+                    user
+                  }
+                }}
+                className="text-primary"
+              >
                 {t('singleSystem.editTeam.editRoles')}
               </UswdsReactLink>
               <Button
                 type="button"
                 unstyled
                 className="margin-left-1 text-error"
+                onClick={() =>
+                  setMemberToDelete({
+                    euaUserId: user.assigneeUsername,
+                    commonName: getTeamMemberName(user)
+                  })
+                }
               >
                 {t('singleSystem.editTeam.remove')}
               </Button>
@@ -73,7 +107,7 @@ function TeamTable({ team }: { team: UsernameWithRoles[] }) {
         }
       }
     ],
-    [t]
+    [systemId, t, setMemberToDelete]
   );
 
   const {
@@ -90,7 +124,7 @@ function TeamTable({ team }: { team: UsernameWithRoles[] }) {
     prepareRow,
     previousPage,
     rows,
-    // setGlobalFilter,
+    setGlobalFilter,
     setPageSize,
     state
   } = useTable(
@@ -99,12 +133,12 @@ function TeamTable({ team }: { team: UsernameWithRoles[] }) {
       globalFilter: useMemo(() => globalFilterCellText, []),
       data: team,
       autoResetSortBy: false,
-      autoResetPage: true
-      // initialState: {
-      //   sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
-      //   pageIndex: 0,
-      //   pageSize: 5
-      // }
+      autoResetPage: true,
+      initialState: {
+        sortBy: useMemo(() => [{ id: 'role', desc: true }], []),
+        pageIndex: 0,
+        pageSize: 10
+      }
     },
     useFilters,
     useGlobalFilter,
@@ -126,13 +160,14 @@ function TeamTable({ team }: { team: UsernameWithRoles[] }) {
   }
   return (
     <div>
-      {/* crashes with empty data */}
-      {/* <GlobalClientFilter
-        setGlobalFilter={setGlobalFilter}
-        tableID="workspace-team-management"
-        tableName="Manage system team"
-        className="margin-bottom-5 maxw-mobile-lg"
-      /> */}
+      {team.length > state.pageSize && (
+        <GlobalClientFilter
+          setGlobalFilter={setGlobalFilter}
+          tableID={t<string>('relatedRequestsTable.id')}
+          tableName={t<string>('relatedRequestsTable.title')}
+          className="margin-bottom-4"
+        />
+      )}
 
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
