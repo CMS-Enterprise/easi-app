@@ -17,7 +17,7 @@ import {
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
-  useCreateSystemIntakeGRBReviewerMutation,
+  useCreateSystemIntakeGRBReviewersMutation,
   useUpdateSystemIntakeGRBReviewerMutation
 } from 'gql/gen/graphql';
 import { toLower } from 'lodash';
@@ -51,6 +51,7 @@ type GRBReviewerFormFields = {
 type GRBReviewerFormProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
+  grbReviewStartedAt?: string | null;
 };
 
 /**
@@ -58,7 +59,8 @@ type GRBReviewerFormProps = {
  */
 const GRBReviewerForm = ({
   grbReviewers,
-  setReviewerToRemove
+  setReviewerToRemove,
+  grbReviewStartedAt
 }: GRBReviewerFormProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -76,7 +78,7 @@ const GRBReviewerForm = ({
     action: 'add' | 'edit';
   }>();
 
-  const [createGRBReviewer] = useCreateSystemIntakeGRBReviewerMutation({
+  const [createGRBReviewers] = useCreateSystemIntakeGRBReviewersMutation({
     refetchQueries: [
       {
         query: GetSystemIntakeGRBReviewersDocument,
@@ -125,12 +127,16 @@ const GRBReviewerForm = ({
         ? updateGRBReviewer({
             variables: { input: { ...values, reviewerID: activeReviewer.id } }
           })
-        : createGRBReviewer({
+        : createGRBReviewers({
             variables: {
               input: {
-                ...values,
                 systemIntakeID: systemId,
-                euaUserId: userAccount.username
+                reviewers: [
+                  {
+                    ...values,
+                    euaUserId: userAccount.username
+                  }
+                ]
               }
             }
           });
@@ -357,8 +363,12 @@ const GRBReviewerForm = ({
           </Tabs>
 
           {action === 'add' && (
-            <Alert type="info" slim className="margin-top-4 tablet:grid-col-6">
-              {t('form.infoAlert')}
+            <Alert type="info" slim className="margin-top-8">
+              {t(
+                grbReviewStartedAt
+                  ? 'form.infoAlertReviewStarted'
+                  : 'form.infoAlertReviewNotStarted'
+              )}
             </Alert>
           )}
 
