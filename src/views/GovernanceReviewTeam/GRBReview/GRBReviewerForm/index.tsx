@@ -363,7 +363,7 @@ const GRBReviewerForm = ({
           </Tabs>
 
           {action === 'add' && (
-            <Alert type="info" slim className="margin-top-8">
+            <Alert type="info" slim className="margin-top-5 tablet:grid-col-6">
               {t(
                 grbReviewStartedAt
                   ? 'form.infoAlertReviewStarted'
