@@ -498,6 +498,22 @@ type ComplexityRoot struct {
 		Year           func(childComplexity int) int
 	}
 
+	GRBReviewerComparison struct {
+		EuaUserID         func(childComplexity int) int
+		GrbRole           func(childComplexity int) int
+		ID                func(childComplexity int) int
+		IsCurrentReviewer func(childComplexity int) int
+		UserAccount       func(childComplexity int) int
+		VotingRole        func(childComplexity int) int
+	}
+
+	GRBReviewerComparisonIntake struct {
+		ID              func(childComplexity int) int
+		IntakeCreatedAt func(childComplexity int) int
+		RequestName     func(childComplexity int) int
+		Reviewers       func(childComplexity int) int
+	}
+
 	GovernanceRequestFeedback struct {
 		Author       func(childComplexity int) int
 		CreatedAt    func(childComplexity int) int
@@ -621,6 +637,7 @@ type ComplexityRoot struct {
 		CedarSystemDetails               func(childComplexity int, cedarSystemID string) int
 		CedarSystems                     func(childComplexity int) int
 		CedarThreat                      func(childComplexity int, cedarSystemID string) int
+		CompareGRBReviewersByIntakeID    func(childComplexity int, id uuid.UUID) int
 		CurrentUser                      func(childComplexity int) int
 		Deployments                      func(childComplexity int, cedarSystemID string, deploymentType *string, state *string, status *string) int
 		Exchanges                        func(childComplexity int, cedarSystemID string) int
@@ -1241,6 +1258,7 @@ type QueryResolver interface {
 	MySystemIntakes(ctx context.Context) ([]*models.SystemIntake, error)
 	SystemIntakesWithReviewRequested(ctx context.Context) ([]*models.SystemIntake, error)
 	SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error)
+	CompareGRBReviewersByIntakeID(ctx context.Context, id uuid.UUID) ([]*models.GRBReviewerComparisonIntake, error)
 	CurrentUser(ctx context.Context) (*models.CurrentUser, error)
 	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error)
 	CedarBudget(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error)
@@ -3661,6 +3679,76 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.EstimatedLifecycleCost.Year(childComplexity), true
 
+	case "GRBReviewerComparison.euaUserId":
+		if e.complexity.GRBReviewerComparison.EuaUserID == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.EuaUserID(childComplexity), true
+
+	case "GRBReviewerComparison.grbRole":
+		if e.complexity.GRBReviewerComparison.GrbRole == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.GrbRole(childComplexity), true
+
+	case "GRBReviewerComparison.id":
+		if e.complexity.GRBReviewerComparison.ID == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.ID(childComplexity), true
+
+	case "GRBReviewerComparison.isCurrentReviewer":
+		if e.complexity.GRBReviewerComparison.IsCurrentReviewer == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.IsCurrentReviewer(childComplexity), true
+
+	case "GRBReviewerComparison.userAccount":
+		if e.complexity.GRBReviewerComparison.UserAccount == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.UserAccount(childComplexity), true
+
+	case "GRBReviewerComparison.votingRole":
+		if e.complexity.GRBReviewerComparison.VotingRole == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.VotingRole(childComplexity), true
+
+	case "GRBReviewerComparisonIntake.id":
+		if e.complexity.GRBReviewerComparisonIntake.ID == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparisonIntake.ID(childComplexity), true
+
+	case "GRBReviewerComparisonIntake.intakeCreatedAt":
+		if e.complexity.GRBReviewerComparisonIntake.IntakeCreatedAt == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparisonIntake.IntakeCreatedAt(childComplexity), true
+
+	case "GRBReviewerComparisonIntake.requestName":
+		if e.complexity.GRBReviewerComparisonIntake.RequestName == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparisonIntake.RequestName(childComplexity), true
+
+	case "GRBReviewerComparisonIntake.reviewers":
+		if e.complexity.GRBReviewerComparisonIntake.Reviewers == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparisonIntake.Reviewers(childComplexity), true
+
 	case "GovernanceRequestFeedback.author":
 		if e.complexity.GovernanceRequestFeedback.Author == nil {
 			break
@@ -4870,6 +4958,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.CedarThreat(childComplexity, args["cedarSystemId"].(string)), true
+
+	case "Query.compareGRBReviewersByIntakeID":
+		if e.complexity.Query.CompareGRBReviewersByIntakeID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_compareGRBReviewersByIntakeID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CompareGRBReviewersByIntakeID(childComplexity, args["id"].(uuid.UUID)), true
 
 	case "Query.currentUser":
 		if e.complexity.Query.CurrentUser == nil {
@@ -8796,6 +8896,22 @@ type SystemIntakeGRBReviewer {
   modifiedAt: Time
 }
 
+type GRBReviewerComparisonIntake {
+  id: UUID!
+  requestName: String!
+  reviewers: [GRBReviewerComparison!]!
+  intakeCreatedAt: Time
+}
+
+type GRBReviewerComparison {
+  id: UUID!
+  userAccount: UserAccount!
+  euaUserId: String!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+  isCurrentReviewer: Boolean!
+}
+
 input CreateGRBReviewerInput {
   euaUserId: String!
   votingRole: SystemIntakeGRBReviewerVotingRole!
@@ -10195,6 +10311,7 @@ type Query {
   mySystemIntakes:[SystemIntake!]!
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
+  compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarBudget(cedarSystemID: String!): [CedarBudget!]
@@ -13655,6 +13772,38 @@ func (ec *executionContext) field_Query_cedarThreat_argsCedarSystemID(
 	}
 
 	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_compareGRBReviewersByIntakeID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	arg0, err := ec.field_Query_compareGRBReviewersByIntakeID_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_compareGRBReviewersByIntakeID_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (uuid.UUID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal uuid.UUID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+	}
+
+	var zeroVal uuid.UUID
 	return zeroVal, nil
 }
 
@@ -28427,6 +28576,477 @@ func (ec *executionContext) fieldContext_EstimatedLifecycleCost_year(_ context.C
 	return fc, nil
 }
 
+func (ec *executionContext) _GRBReviewerComparison_id(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparison_userAccount(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_userAccount(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserAccount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*authentication.UserAccount)
+	fc.Result = res
+	return ec.marshalNUserAccount2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_userAccount(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_UserAccount_id(ctx, field)
+			case "username":
+				return ec.fieldContext_UserAccount_username(ctx, field)
+			case "commonName":
+				return ec.fieldContext_UserAccount_commonName(ctx, field)
+			case "locale":
+				return ec.fieldContext_UserAccount_locale(ctx, field)
+			case "email":
+				return ec.fieldContext_UserAccount_email(ctx, field)
+			case "givenName":
+				return ec.fieldContext_UserAccount_givenName(ctx, field)
+			case "familyName":
+				return ec.fieldContext_UserAccount_familyName(ctx, field)
+			case "zoneInfo":
+				return ec.fieldContext_UserAccount_zoneInfo(ctx, field)
+			case "hasLoggedIn":
+				return ec.fieldContext_UserAccount_hasLoggedIn(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserAccount", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparison_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_euaUserId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EuaUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_euaUserId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparison_votingRole(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_votingRole(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VotingRole, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeGRBReviewerVotingRole)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewerVotingRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerVotingRole(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_votingRole(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeGRBReviewerVotingRole does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparison_grbRole(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_grbRole(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GrbRole, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeGRBReviewerRole)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewerRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerRole(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_grbRole(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeGRBReviewerRole does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparison_isCurrentReviewer(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_isCurrentReviewer(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsCurrentReviewer, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_isCurrentReviewer(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparisonIntake_id(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparisonIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparisonIntake_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparisonIntake_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparisonIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparisonIntake_requestName(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparisonIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparisonIntake_requestName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RequestName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparisonIntake_requestName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparisonIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparisonIntake_reviewers(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparisonIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparisonIntake_reviewers(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reviewers, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.GRBReviewerComparison)
+	fc.Result = res
+	return ec.marshalNGRBReviewerComparison2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparisonIntake_reviewers(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparisonIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_GRBReviewerComparison_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_GRBReviewerComparison_userAccount(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_GRBReviewerComparison_euaUserId(ctx, field)
+			case "votingRole":
+				return ec.fieldContext_GRBReviewerComparison_votingRole(ctx, field)
+			case "grbRole":
+				return ec.fieldContext_GRBReviewerComparison_grbRole(ctx, field)
+			case "isCurrentReviewer":
+				return ec.fieldContext_GRBReviewerComparison_isCurrentReviewer(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GRBReviewerComparison", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparisonIntake_intakeCreatedAt(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparisonIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparisonIntake_intakeCreatedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IntakeCreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparisonIntake_intakeCreatedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparisonIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _GovernanceRequestFeedback_id(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_GovernanceRequestFeedback_id(ctx, field)
 	if err != nil {
@@ -37414,6 +38034,71 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_compareGRBReviewersByIntakeID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_compareGRBReviewersByIntakeID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CompareGRBReviewersByIntakeID(rctx, fc.Args["id"].(uuid.UUID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.GRBReviewerComparisonIntake)
+	fc.Result = res
+	return ec.marshalNGRBReviewerComparisonIntake2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonIntakeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_compareGRBReviewersByIntakeID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_GRBReviewerComparisonIntake_id(ctx, field)
+			case "requestName":
+				return ec.fieldContext_GRBReviewerComparisonIntake_requestName(ctx, field)
+			case "reviewers":
+				return ec.fieldContext_GRBReviewerComparisonIntake_reviewers(ctx, field)
+			case "intakeCreatedAt":
+				return ec.fieldContext_GRBReviewerComparisonIntake_intakeCreatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GRBReviewerComparisonIntake", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_compareGRBReviewersByIntakeID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -64105,6 +64790,121 @@ func (ec *executionContext) _EstimatedLifecycleCost(ctx context.Context, sel ast
 	return out
 }
 
+var gRBReviewerComparisonImplementors = []string{"GRBReviewerComparison"}
+
+func (ec *executionContext) _GRBReviewerComparison(ctx context.Context, sel ast.SelectionSet, obj *models.GRBReviewerComparison) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, gRBReviewerComparisonImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GRBReviewerComparison")
+		case "id":
+			out.Values[i] = ec._GRBReviewerComparison_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "userAccount":
+			out.Values[i] = ec._GRBReviewerComparison_userAccount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "euaUserId":
+			out.Values[i] = ec._GRBReviewerComparison_euaUserId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "votingRole":
+			out.Values[i] = ec._GRBReviewerComparison_votingRole(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "grbRole":
+			out.Values[i] = ec._GRBReviewerComparison_grbRole(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "isCurrentReviewer":
+			out.Values[i] = ec._GRBReviewerComparison_isCurrentReviewer(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var gRBReviewerComparisonIntakeImplementors = []string{"GRBReviewerComparisonIntake"}
+
+func (ec *executionContext) _GRBReviewerComparisonIntake(ctx context.Context, sel ast.SelectionSet, obj *models.GRBReviewerComparisonIntake) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, gRBReviewerComparisonIntakeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GRBReviewerComparisonIntake")
+		case "id":
+			out.Values[i] = ec._GRBReviewerComparisonIntake_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "requestName":
+			out.Values[i] = ec._GRBReviewerComparisonIntake_requestName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "reviewers":
+			out.Values[i] = ec._GRBReviewerComparisonIntake_reviewers(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "intakeCreatedAt":
+			out.Values[i] = ec._GRBReviewerComparisonIntake_intakeCreatedAt(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var governanceRequestFeedbackImplementors = []string{"GovernanceRequestFeedback"}
 
 func (ec *executionContext) _GovernanceRequestFeedback(ctx context.Context, sel ast.SelectionSet, obj *models.GovernanceRequestFeedback) graphql.Marshaler {
@@ -65116,6 +65916,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_systemIntakesWithLcids(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "compareGRBReviewersByIntakeID":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_compareGRBReviewersByIntakeID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -72433,6 +73255,114 @@ func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcms
 		return graphql.Null
 	}
 	return ec._EstimatedLifecycleCost(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNGRBReviewerComparison2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GRBReviewerComparison) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNGRBReviewerComparison2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparison(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNGRBReviewerComparison2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparison(ctx context.Context, sel ast.SelectionSet, v *models.GRBReviewerComparison) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GRBReviewerComparison(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNGRBReviewerComparisonIntake2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonIntakeᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GRBReviewerComparisonIntake) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNGRBReviewerComparisonIntake2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonIntake(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNGRBReviewerComparisonIntake2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonIntake(ctx context.Context, sel ast.SelectionSet, v *models.GRBReviewerComparisonIntake) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GRBReviewerComparisonIntake(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNGovernanceRequestFeedback2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GovernanceRequestFeedback) graphql.Marshaler {

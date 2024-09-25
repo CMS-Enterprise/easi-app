@@ -76,3 +76,10 @@ func (s *Store) SystemIntakeGRBReviewersBySystemIntakeIDs(ctx context.Context, s
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 }
+
+func (s *Store) CompareSystemIntakeGRBReviewers(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeGRBReviewerComparisonResponse, error) {
+	var comparisons []*models.SystemIntakeGRBReviewerComparisonResponse
+	return comparisons, namedSelect(ctx, s.db, &comparisons, sqlqueries.SystemIntakeGRBReviewer.CompareGRBReviewers, args{
+		"system_intake_id": systemIntakeID,
+	})
+}

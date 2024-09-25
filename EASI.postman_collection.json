@@ -1091,6 +1091,39 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Compare GRB Reviewers",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getReviewersComparisons($systemIntakeID: UUID!) {\n  compareGRBReviewersByIntakeID(id: $systemIntakeID) {\n    id\n    requestName\n    reviewers {\n      euaUserId\n      userAccount {\n        commonName\n      }\n      isCurrentReviewer\n      grbRole\n    }\n  }\n}",
+										"variables": "{\r\n    \"systemIntakeID\": \"5af245bc-fc54-4677-bab1-1b3e798bb43c\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
