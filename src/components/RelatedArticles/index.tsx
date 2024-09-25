@@ -10,7 +10,7 @@ import trbArticles from 'views/Help/TechnicalReviewBoard/articles';
 
 const helpArticles = [...itGovernanceArticles, ...trbArticles];
 
-type HelpArticle = typeof helpArticles[number];
+type HelpArticle = (typeof helpArticles)[number];
 
 type RelatedArticlesProps = {
   articles: HelpArticle['translation'][];

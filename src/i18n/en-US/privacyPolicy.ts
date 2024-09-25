@@ -5,8 +5,7 @@ const privacyPolicy = {
   policy: {
     heading: 'CMS.gov Privacy Policy',
 
-    info:
-      'Protecting your privacy is very important to us. This privacy policy describes what information we collect, why we collect it, and what we do with it.  This privacy notice covers CMS.gov, marketplace.cms.gov, innovation.cms.gov, partnershipforpatients.cms.gov, and hfpp.cms.gov.  These websites are referred to as “CMS.gov” throughout the rest of this notice and are maintained and operated by the Centers for Medicare & Medicaid Services (CMS).  The privacy notice for other CMS websites not listed above is available at ',
+    info: 'Protecting your privacy is very important to us. This privacy policy describes what information we collect, why we collect it, and what we do with it.  This privacy notice covers CMS.gov, marketplace.cms.gov, innovation.cms.gov, partnershipforpatients.cms.gov, and hfpp.cms.gov.  These websites are referred to as “CMS.gov” throughout the rest of this notice and are maintained and operated by the Centers for Medicare & Medicaid Services (CMS).  The privacy notice for other CMS websites not listed above is available at ',
     cmsPolicy:
       'https://www.cms.gov/About-CMS/Agency-Information/Aboutwebsite/Privacy-Policy',
 

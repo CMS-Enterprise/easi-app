@@ -139,7 +139,10 @@ func TestGraphQLTestSuite(t *testing.T) {
 		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
-	localSender := local.NewSender()
+
+	env, _ := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+
+	localSender := local.NewSender(env)
 	emailClient, err := email.NewClient(emailConfig, localSender)
 	if err != nil {
 		t.FailNow()

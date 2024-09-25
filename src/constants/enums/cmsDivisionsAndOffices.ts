@@ -105,7 +105,8 @@ const cmsDivisionsAndOffices = [
   }
 ] as const;
 
-export type CMSOfficeAcronym = typeof cmsDivisionsAndOffices[number]['acronym'];
-export type CMSOffice = typeof cmsDivisionsAndOffices[number]['name'];
+export type CMSOfficeAcronym =
+  (typeof cmsDivisionsAndOffices)[number]['acronym'];
+export type CMSOffice = (typeof cmsDivisionsAndOffices)[number]['name'];
 
 export default cmsDivisionsAndOffices;

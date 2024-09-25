@@ -103,13 +103,8 @@ const ParticipantsTable = ({
     useSortBy
   );
 
-  const {
-    getTableBodyProps,
-    getTableProps,
-    headerGroups,
-    prepareRow,
-    rows
-  } = table;
+  const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
+    table;
 
   return (
     <>

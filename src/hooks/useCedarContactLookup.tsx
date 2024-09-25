@@ -5,9 +5,7 @@ import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import { GetCedarContacts } from 'queries/types/GetCedarContacts';
 import { CedarContactProps } from 'types/systemIntake';
 
-function useCedarContactLookup(
-  query?: string | null
-): {
+function useCedarContactLookup(query?: string | null): {
   contacts: CedarContactProps[];
   queryCedarContacts: (commonName: string) => void;
   loading: boolean;

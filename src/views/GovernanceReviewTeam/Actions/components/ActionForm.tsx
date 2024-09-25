@@ -115,10 +115,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   const [isLoading, setIsLoading] = useState(true);
 
   // Active contact for adding/verifying recipients
-  const [
-    activeContact,
-    setActiveContact
-  ] = useState<SystemIntakeContactProps | null>(null);
+  const [activeContact, setActiveContact] =
+    useState<SystemIntakeContactProps | null>(null);
 
   const {
     control,

@@ -124,11 +124,8 @@ function getPlannedRetirement(
   // eslint-disable-next-line camelcase
   cedarSystemDetails: GetSystemProfile_cedarSystemDetails
 ): string | null {
-  const {
-    plansToRetireReplace,
-    quarterToRetireReplace,
-    yearToRetireReplace
-  } = cedarSystemDetails.systemMaintainerInformation;
+  const { plansToRetireReplace, quarterToRetireReplace, yearToRetireReplace } =
+    cedarSystemDetails.systemMaintainerInformation;
 
   // Return null if none of the original properties are truthy
   if (
@@ -288,13 +285,10 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
 
   // Header description expand toggle
   const descriptionRef = React.createRef<HTMLElement>();
-  const [
-    isDescriptionExpandable,
-    setIsDescriptionExpandable
-  ] = useState<boolean>(false);
-  const [descriptionExpanded, setDescriptionExpanded] = useState<boolean>(
-    false
-  );
+  const [isDescriptionExpandable, setIsDescriptionExpandable] =
+    useState<boolean>(false);
+  const [descriptionExpanded, setDescriptionExpanded] =
+    useState<boolean>(false);
 
   // Enable the description toggle if it overflows
   // eslint-disable-next-line react-hooks/exhaustive-deps

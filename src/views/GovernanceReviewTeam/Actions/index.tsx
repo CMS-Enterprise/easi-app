@@ -90,9 +90,8 @@ export type EditsRequestedKey =
  *
  * Used in form confirmation modal
  */
-export const EditsRequestedContext = createContext<EditsRequestedKey>(
-  undefined
-);
+export const EditsRequestedContext =
+  createContext<EditsRequestedKey>(undefined);
 
 const Actions = ({ systemIntake }: ActionsProps) => {
   const history = useHistory();
