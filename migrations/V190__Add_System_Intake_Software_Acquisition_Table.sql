@@ -1,4 +1,4 @@
-CREATE TYPE software_acquisition_method AS ENUM ('CONTRACTOR_FURNISHED', 'FED_FURNISHED', 'ELA_OR_INTERNAL', 'OTHER');
+CREATE TYPE software_acquisition_method AS ENUM ('CONTRACTOR_FURNISHED', 'FED_FURNISHED', 'ELA_OR_INTERNAL', 'NOT_YET_DETERMINED', 'OTHER');
 
 -- TODO: NJD - should we rename this to software_to_system_intake?
 -- TODO: NJD - can we make software_name an ENUM based on external (CEDAR) software list?

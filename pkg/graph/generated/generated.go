@@ -8653,6 +8653,7 @@ enum SystemIntakeSoftwareAcquisitionMethods {
   CONTRACTOR_FURNISHED
   FED_FURNISHED
   ELA_OR_INTERNAL
+  NOT_YET_DETERMINED
   OTHER
 }
 
@@ -30235,6 +30236,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
+			case "softwareAcquisition":
+				return ec.fieldContext_SystemIntake_softwareAcquisition(ctx, field)
 			case "notes":
 				return ec.fieldContext_SystemIntake_notes(ctx, field)
 			case "oitSecurityCollaborator":
@@ -34788,6 +34791,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
+			case "softwareAcquisition":
+				return ec.fieldContext_SystemIntake_softwareAcquisition(ctx, field)
 			case "notes":
 				return ec.fieldContext_SystemIntake_notes(ctx, field)
 			case "oitSecurityCollaborator":
@@ -73956,23 +73961,6 @@ func (ec *executionContext) unmarshalOSystemIntakeSoftwareAcquisitionInput2ᚖgi
 	}
 	res, err := ec.unmarshalInputSystemIntakeSoftwareAcquisitionInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOSystemIntakeStatusRequester2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusRequester(ctx context.Context, v interface{}) (*models.SystemIntakeStatusRequester, error) {
-	if v == nil {
-		return nil, nil
-	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.SystemIntakeStatusRequester(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOSystemIntakeStatusRequester2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusRequester(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeStatusRequester) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	res := graphql.MarshalString(string(*v))
-	return res
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeStep2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStep(ctx context.Context, v interface{}) (*models.SystemIntakeStep, error) {

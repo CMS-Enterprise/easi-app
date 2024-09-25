@@ -1215,6 +1215,7 @@ const (
 	SystemIntakeSoftwareAcquisitionMethodsContractorFurnished SystemIntakeSoftwareAcquisitionMethods = "CONTRACTOR_FURNISHED"
 	SystemIntakeSoftwareAcquisitionMethodsFedFurnished        SystemIntakeSoftwareAcquisitionMethods = "FED_FURNISHED"
 	SystemIntakeSoftwareAcquisitionMethodsElaOrInternal       SystemIntakeSoftwareAcquisitionMethods = "ELA_OR_INTERNAL"
+	SystemIntakeSoftwareAcquisitionMethodsNotYetDetermined    SystemIntakeSoftwareAcquisitionMethods = "NOT_YET_DETERMINED"
 	SystemIntakeSoftwareAcquisitionMethodsOther               SystemIntakeSoftwareAcquisitionMethods = "OTHER"
 )
 
@@ -1222,12 +1223,13 @@ var AllSystemIntakeSoftwareAcquisitionMethods = []SystemIntakeSoftwareAcquisitio
 	SystemIntakeSoftwareAcquisitionMethodsContractorFurnished,
 	SystemIntakeSoftwareAcquisitionMethodsFedFurnished,
 	SystemIntakeSoftwareAcquisitionMethodsElaOrInternal,
+	SystemIntakeSoftwareAcquisitionMethodsNotYetDetermined,
 	SystemIntakeSoftwareAcquisitionMethodsOther,
 }
 
 func (e SystemIntakeSoftwareAcquisitionMethods) IsValid() bool {
 	switch e {
-	case SystemIntakeSoftwareAcquisitionMethodsContractorFurnished, SystemIntakeSoftwareAcquisitionMethodsFedFurnished, SystemIntakeSoftwareAcquisitionMethodsElaOrInternal, SystemIntakeSoftwareAcquisitionMethodsOther:
+	case SystemIntakeSoftwareAcquisitionMethodsContractorFurnished, SystemIntakeSoftwareAcquisitionMethodsFedFurnished, SystemIntakeSoftwareAcquisitionMethodsElaOrInternal, SystemIntakeSoftwareAcquisitionMethodsNotYetDetermined, SystemIntakeSoftwareAcquisitionMethodsOther:
 		return true
 	}
 	return false

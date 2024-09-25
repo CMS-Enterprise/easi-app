@@ -119,7 +119,6 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	for _, acqMethod := range input.SoftwareAcquisition.AcquisitionMethods {
 		acqMethods = append(acqMethods, acqMethod.String())
 	}
-	// TODO: NJD better way to do this? one liner? - AcquisitionMethods: pq.StringArray(input.SoftwareAcquisition.AcquisitionMethods),
 	// TODO: NJD make this a function in model_helpers? ReverseConvertEnums?
 
 	softwareAcq := models.SystemIntakeSoftwareAcquisition{

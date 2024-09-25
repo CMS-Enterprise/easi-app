@@ -75,7 +75,7 @@ func fillOutInitialIntake(
 ) *models.SystemIntake {
 
 	usingSoftware := "Yes"
-	acqMethods := []string{"CONTRACTOR_FURNISHED", "FED_FURNISHED"}
+	acqMethods := []models.SystemIntakeSoftwareAcquisitionMethods{"CONTRACTOR_FURNISHED", "FED_FURNISHED"}
 	intake = updateSystemIntakeRequestDetails(ctx, store, intake,
 		requestName,
 		"An intense business need",

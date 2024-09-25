@@ -14,6 +14,7 @@ const (
 	SoftwareAcquisitionContractorFurnished SoftwareAcquisitionMethod = "CONTRACTOR_FURNISHED"
 	SoftwareAcquisitionFedFurnished        SoftwareAcquisitionMethod = "FED_FURNISHED"
 	SoftwareAcquisitionELAOrInternal       SoftwareAcquisitionMethod = "ELA_OR_INTERNAL"
+	SoftwareAcquisitionNotYetDetermined    SoftwareAcquisitionMethod = "NOT_YET_DETERMINED"
 	SoftwareAcquisitionOther               SoftwareAcquisitionMethod = "OTHER"
 )
 

@@ -317,9 +317,9 @@ const intake = {
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
     softwareAcquisition: {
-      usesSoftwareLabel:
+      usingSoftwareLabel:
         'Do you plan to use any software products to fulfill your business needs?',
-      usesSoftwareHelp:
+      usingSoftwareHelp:
         'This could include COTS products, infrastructure products, or other engineering and development tools. <dvsmEmail>Email the Division of Vendor and Software Management (DVSM)</dvsmEmail> to learn more about options at CMS related to software and Enterprise License Agreements (ELAs). If you mark "I\'m not sure", someone from DVSM may reach out to speak with you about available software and enterprise licenses.',
       selectedLabel: 'Selected software',
       whichSoftwareLabel: 'Which software?',
@@ -329,10 +329,10 @@ const intake = {
       acquisitionStrategyHelp: 'Select all that apply.',
       strategyLabels: {
         CONTRACTOR_FURNISHED: 'Furnished by the contractor',
-        FED_FURNISHED: 'FED_FURNISHED',
+        FED_FURNISHED: 'Provided as government furnished software',
         ELA_OR_INTERNAL: 'Acquired through an ELA or internal source',
-        OTHER: 'Other'
-        // TODO: NJD add "Not yest determined"
+        OTHER: 'Other',
+        NOT_YET_DETERMINED: 'Not yet determined'
       },
       softwareRequirements:
         'If sofware requirements are not yet determined or if the contractor(s) will be requested to provide as part of the requirement. CMS suggests that you include the need for a proposed software Bill of Materials (BOM) in the solicitation or contract.'
@@ -347,7 +347,8 @@ const intake = {
       explore:
         'Explore business solutions that might exist elsewhere within CMS',
       discuss: 'Discuss lessons learned from similar projects',
-      give: 'Give you and your team an enterprise-level view of the agency to avoid duplication of projects',
+      give:
+        'Give you and your team an enterprise-level view of the agency to avoid duplication of projects',
       help: 'Help you explore alternatives you might not have thought of',
       model: 'Model your business processes and document workflows'
     },
@@ -410,17 +411,21 @@ const intake = {
     cmsBusinessOwnerComponent: 'CMS Business Owner Component',
     cmsProjectManagerName: 'CMS Project/Product Manager or lead',
     cmsProjectManagerComponent: 'CMS Project/Product manager or lead Component',
-    isso: 'Does your project have an Information System Security Officer (ISSO)?',
+    isso:
+      'Does your project have an Information System Security Officer (ISSO)?',
     collaborating: 'I have started collaborating with',
     requestDetails: 'Request Details',
     projectName: 'Project Name',
     businessNeed: 'What is your business need?',
     solving: 'How are you thinking of solving it?',
     process: 'Where are you in the process?',
-    usesAiTech: 'Does your request involve AI technologies?',
     eaSupport: 'Do you need Enterprise Architecture (EA) support?',
+    usesAiTech: 'Does your request involve AI technologies?',
     hasUiChanges:
       'Does your project involve any user interface component, or changes to an interface component?',
+    usingSoftware:
+      'Do you plan to use software products to fulfull your business needs?',
+    softwareAcquisitionMethods: 'How will the software be acquired?',
     contractDetails: 'Contract Details',
     costs:
       'Do the costs for this request exceed what you are currently spending to meet your business need?',

@@ -31,8 +31,13 @@ type FundingSourcesObject = {
 export const SystemIntakeReview = ({
   systemIntake
 }: SystemIntakeReviewProps) => {
-  const { annualSpending, costs, contract, submittedAt, contractNumbers } =
-    systemIntake;
+  const {
+    annualSpending,
+    costs,
+    contract,
+    submittedAt,
+    contractNumbers
+  } = systemIntake;
   const {
     contacts: {
       data: { requester, businessOwner, productManager, isso }
@@ -109,6 +114,37 @@ export const SystemIntakeReview = ({
     return t('review.notSubmitted');
   };
 
+  const formatSoftwareAcquisition = () => {
+    return (
+      <>
+        <ReviewRow>
+          <div>
+            <DescriptionTerm term={t('review.usingSoftware')} />
+            <DescriptionDefinition
+              definition={
+                yesNoMap[
+                  String(systemIntake.softwareAcquisition?.usingSoftware)
+                ]
+              }
+            />
+          </div>
+        </ReviewRow>
+        {systemIntake.softwareAcquisition?.usingSoftware === 'YES' && (
+          <ReviewRow>
+            <div>
+              {/* TODO: NJD - translate enums to i18n before joining */}
+              <DescriptionTerm term={t('review.softwareAcquisitionMethods')} />
+              <DescriptionDefinition
+                definition={systemIntake.softwareAcquisition.acquisitionMethods.join(
+                  ', '
+                )}
+              />
+            </div>
+          </ReviewRow>
+        )}
+      </>
+    );
+  };
   /* Conditionally render cost and annual spending information depending on what info is present.
       Original: Display only "costs" info
       Intermediate: Display annual spending info
@@ -306,17 +342,17 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('review.usesAiTech')} />
+            <DescriptionTerm term={t('review.eaSupport')} />
             <DescriptionDefinition
-              definition={convertBoolToYesNo(systemIntake.usesAiTech)}
+              definition={convertBoolToYesNo(systemIntake.needsEaSupport)}
             />
           </div>
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('review.eaSupport')} />
+            <DescriptionTerm term={t('review.usesAiTech')} />
             <DescriptionDefinition
-              definition={convertBoolToYesNo(systemIntake.needsEaSupport)}
+              definition={convertBoolToYesNo(systemIntake.usesAiTech)}
             />
           </div>
         </ReviewRow>
@@ -328,6 +364,32 @@ export const SystemIntakeReview = ({
             />
           </div>
         </ReviewRow>
+        {formatSoftwareAcquisition()}
+        {/* <ReviewRow>
+          <div>
+            <DescriptionTerm term={t('review.usingSoftware')} />
+            <DescriptionDefinition
+              definition={
+                yesNoMap[
+                  String(systemIntake.softwareAcquisition?.usingSoftware)
+                ]
+              }
+            />
+          </div>
+        </ReviewRow>
+        {systemIntake.softwareAcquisition?.usingSoftware === 'YES' && (
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.softwareAcquisitionMethods')} />
+              <DescriptionDefinition
+                definition="test"
+                // definition={systemIntake.softwareAcquisition.acquisitionMethods.join(
+                //   ', '
+                // )}
+              />
+            </div>
+          </ReviewRow>
+        )} */}
       </DescriptionList>
 
       <hr className="system-intake__hr" />

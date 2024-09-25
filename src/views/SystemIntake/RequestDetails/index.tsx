@@ -186,9 +186,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           classNames="margin-top-3"
           heading={t('form:inputError.checkFix')}
         >
-          {(
-            Object.keys(fieldErrors) as Array<FieldPath<RequestDetailsForm>>
-          ).map(key => {
+          {(Object.keys(fieldErrors) as Array<
+            FieldPath<RequestDetailsForm>
+          >).map(key => {
             return (
               <ErrorMessage
                 errors={errors}
@@ -523,11 +523,11 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           error={!!errors.softwareAcquisition}
         >
           <Label htmlFor="softwareAcquisition">
-            {t('requestDetails.softwareAcquisition.usesSoftwareLabel')}
+            {t('requestDetails.softwareAcquisition.usingSoftwareLabel')}
           </Label>
           <HelpText id="elasHelpText" className="margin-top-1">
             <Trans
-              i18nKey="intake:requestDetails.softwareAcquisition.usesSoftwareHelp"
+              i18nKey="intake:requestDetails.softwareAcquisition.usingSoftwareHelp"
               components={{
                 dvsmEmail: (
                   <UswdsLink href={`mailto:${CMS_DVSM_EMAIL}`}> </UswdsLink>
@@ -542,7 +542,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               <Radio
                 {...field}
                 inputRef={ref}
-                id="usesSoftwareYes"
+                id="usingSoftwareYes"
                 label={t('Yes')}
                 checked={value === 'YES'}
                 onChange={() => field.onChange('YES')}
@@ -609,7 +609,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               <Radio
                 {...field}
                 inputRef={ref}
-                id="usesSoftwareNo"
+                id="usingSoftwareNo"
                 label={t('No')}
                 checked={value === 'NO'}
                 onChange={() => {
@@ -625,7 +625,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               <Radio
                 {...field}
                 inputRef={ref}
-                id="usesSoftwareNotSure"
+                id="usingSoftwareNotSure"
                 label={t('Not Sure')}
                 checked={value === 'NOT_SURE'}
                 onChange={() => {

@@ -985,6 +985,7 @@ enum SystemIntakeSoftwareAcquisitionMethods {
   CONTRACTOR_FURNISHED
   FED_FURNISHED
   ELA_OR_INTERNAL
+  NOT_YET_DETERMINED
   OTHER
 }
 
