@@ -11,6 +11,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/local"
@@ -40,7 +41,8 @@ func createEmailClient() email.Client {
 		TemplateDirectory: os.Getenv("EMAIL_TEMPLATE_DIR"),
 	}
 
-	sender := local.NewSMTPSender("localhost:1025")
+	env, _ := appconfig.NewEnvironment("local") // hardcoded as "local" as it's easier than fetching from envs since we only ever use this locally
+	sender := local.NewSMTPSender("localhost:1025", env)
 	emailClient, err := email.NewClient(emailConfig, sender)
 	noErr(err)
 	return emailClient
