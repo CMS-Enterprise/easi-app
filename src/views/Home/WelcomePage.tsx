@@ -104,7 +104,7 @@ const WelcomeText = () => {
             </Card>
           </CardGroup>
 
-          {/* If a user has an active okta session, replace router link with a button that automicatally authenticates the user for MINT.  Bypasses /signin */}
+          {/* If a user has an active okta session, replace router link with a button that automicatally authenticates the user for EASI.  Bypasses /signin */}
           {hasSession ? (
             <Button
               type="button"
