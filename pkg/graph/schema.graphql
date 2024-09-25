@@ -1133,6 +1133,22 @@ type SystemIntakeGRBReviewer {
   modifiedAt: Time
 }
 
+type GRBReviewerComparisonIntake {
+  id: UUID!
+  requestName: String!
+  reviewers: [GRBReviewerComparison!]!
+  intakeCreatedAt: Time
+}
+
+type GRBReviewerComparison {
+  id: UUID!
+  userAccount: UserAccount!
+  euaUserId: String!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+  isCurrentReviewer: Boolean!
+}
+
 input CreateGRBReviewerInput {
   euaUserId: String!
   votingRole: SystemIntakeGRBReviewerVotingRole!
@@ -2532,6 +2548,7 @@ type Query {
   mySystemIntakes:[SystemIntake!]!
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
+  compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarBudget(cedarSystemID: String!): [CedarBudget!]

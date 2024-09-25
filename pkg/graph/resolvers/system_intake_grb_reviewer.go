@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"slices"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,6 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
@@ -115,6 +117,64 @@ func SystemIntakeGRBReviewers(
 	intakeID uuid.UUID,
 ) ([]*models.SystemIntakeGRBReviewer, error) {
 	return dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intakeID)
+}
+
+func SystemIntakeCompareGRBReviewers(
+	ctx context.Context,
+	store *storage.Store,
+	intakeID uuid.UUID,
+) ([]*models.GRBReviewerComparisonIntake, error) {
+	comparisons, err := store.CompareSystemIntakeGRBReviewers(ctx, intakeID)
+	if err != nil {
+		return nil, err
+	}
+	// Organize reviewers into a map by intake IDs
+	intakeComparisons := map[uuid.UUID]*models.GRBReviewerComparisonIntake{}
+	for _, comparison := range comparisons {
+		// Create the struct for a reviewer comparison
+		reviewer := &models.GRBReviewerComparison{
+			ID: comparison.ID,
+			UserAccount: &authentication.UserAccount{
+				ID:          comparison.UserID,
+				Username:    comparison.EuaID,
+				CommonName:  comparison.CommonName,
+				Locale:      comparison.Locale,
+				Email:       comparison.Email,
+				GivenName:   comparison.GivenName,
+				FamilyName:  comparison.FamilyName,
+				ZoneInfo:    comparison.ZoneInfo,
+				HasLoggedIn: comparison.HasLoggedIn,
+			},
+			EuaUserID:         comparison.EuaID,
+			VotingRole:        models.SystemIntakeGRBReviewerVotingRole(comparison.VotingRole),
+			GrbRole:           models.SystemIntakeGRBReviewerRole(comparison.GRBRole),
+			IsCurrentReviewer: comparison.IsCurrentReviewer,
+		}
+		// Add the reviewer to the slice if an entry exists
+		if _, ok := intakeComparisons[comparison.SystemIntakeID]; ok {
+			intakeComparisons[comparison.SystemIntakeID].Reviewers = append(
+				intakeComparisons[comparison.SystemIntakeID].Reviewers,
+				reviewer,
+			)
+		} else {
+			// Create the entry if this system intake ID isn't in the map
+			intakeComparisons[comparison.SystemIntakeID] = &models.GRBReviewerComparisonIntake{
+				ID:              comparison.SystemIntakeID,
+				RequestName:     comparison.RequestName,
+				Reviewers:       []*models.GRBReviewerComparison{reviewer},
+				IntakeCreatedAt: comparison.IntakeCreatedAt,
+			}
+		}
+	}
+
+	var response []*models.GRBReviewerComparisonIntake
+	for _, intakeComparison := range intakeComparisons {
+		response = append(response, intakeComparison)
+	}
+	slices.SortFunc(response, func(i *models.GRBReviewerComparisonIntake, j *models.GRBReviewerComparisonIntake) int {
+		return j.IntakeCreatedAt.Compare(*i.IntakeCreatedAt)
+	})
+	return response, nil
 }
 
 func StartGRBReview(

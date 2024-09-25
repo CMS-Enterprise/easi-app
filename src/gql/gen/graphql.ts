@@ -731,6 +731,24 @@ export enum ExchangeDirection {
   SENDER = 'SENDER'
 }
 
+export type GRBReviewerComparison = {
+  __typename: 'GRBReviewerComparison';
+  euaUserId: Scalars['String']['output'];
+  grbRole: SystemIntakeGRBReviewerRole;
+  id: Scalars['UUID']['output'];
+  isCurrentReviewer: Scalars['Boolean']['output'];
+  userAccount: UserAccount;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
+};
+
+export type GRBReviewerComparisonIntake = {
+  __typename: 'GRBReviewerComparisonIntake';
+  id: Scalars['UUID']['output'];
+  intakeCreatedAt?: Maybe<Scalars['Time']['output']>;
+  requestName: Scalars['String']['output'];
+  reviewers: Array<GRBReviewerComparison>;
+};
+
 /** Feedback given to the requester on a governance request */
 export type GovernanceRequestFeedback = {
   __typename: 'GovernanceRequestFeedback';
@@ -1492,6 +1510,7 @@ export type Query = {
   cedarSystemDetails?: Maybe<CedarSystemDetails>;
   cedarSystems: Array<CedarSystem>;
   cedarThreat: Array<CedarThreat>;
+  compareGRBReviewersByIntakeID: Array<GRBReviewerComparisonIntake>;
   currentUser?: Maybe<CurrentUser>;
   deployments: Array<CedarDeployment>;
   exchanges: Array<CedarExchange>;
@@ -1575,6 +1594,12 @@ export type QueryCedarSystemDetailsArgs = {
 /** Query definition for the schema */
 export type QueryCedarThreatArgs = {
   cedarSystemId: Scalars['String']['input'];
+};
+
+
+/** Query definition for the schema */
+export type QueryCompareGRBReviewersByIntakeIDArgs = {
+  id: Scalars['UUID']['input'];
 };
 
 

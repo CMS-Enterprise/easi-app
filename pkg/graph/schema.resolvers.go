@@ -1230,6 +1230,11 @@ func (r *queryResolver) SystemIntakesWithLcids(ctx context.Context) ([]*models.S
 	return r.store.GetSystemIntakesWithLCIDs(ctx)
 }
 
+// CompareGRBReviewersByIntakeID is the resolver for the compareGRBReviewersByIntakeID field.
+func (r *queryResolver) CompareGRBReviewersByIntakeID(ctx context.Context, id uuid.UUID) ([]*models.GRBReviewerComparisonIntake, error) {
+	return resolvers.SystemIntakeCompareGRBReviewers(ctx, r.store, id)
+}
+
 // CurrentUser is the resolver for the currentUser field.
 func (r *queryResolver) CurrentUser(ctx context.Context) (*models.CurrentUser, error) {
 	ldUser := flags.Principal(ctx)
