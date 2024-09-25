@@ -75,7 +75,7 @@ const cedarContactsQuery = (
   }
 });
 
-const createSystemIntakeGRBReviewerQuery: MockedQuery<
+const createSystemIntakeGRBReviewersQuery: MockedQuery<
   CreateSystemIntakeGRBReviewersMutation,
   CreateSystemIntakeGRBReviewersMutationVariables
 > = {
@@ -164,7 +164,7 @@ describe('GRB reviewer form', () => {
           mocks={[
             cedarContactsQuery('Je'),
             cedarContactsQuery('Jerry Seinfeld'),
-            createSystemIntakeGRBReviewerQuery,
+            createSystemIntakeGRBReviewersQuery,
             getSystemIntakeGRBReviewersQuery(),
             getSystemIntakeGRBReviewersQuery(grbReviewer)
           ]}
