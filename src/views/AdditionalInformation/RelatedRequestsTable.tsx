@@ -77,15 +77,15 @@ const RelatedRequestsTable = ({
 
   const flags = useFlags();
 
-  const isTRBAdmin = useMemo(() => user.isTrbAdmin(groups, flags), [
-    flags,
-    groups
-  ]);
+  const isTRBAdmin = useMemo(
+    () => user.isTrbAdmin(groups, flags),
+    [flags, groups]
+  );
 
-  const isITGovAdmin = useMemo(() => user.isITGovAdmin(groups, flags), [
-    flags,
-    groups
-  ]);
+  const isITGovAdmin = useMemo(
+    () => user.isITGovAdmin(groups, flags),
+    [flags, groups]
+  );
 
   const tableData: LinkedRequestForTable[] = useMemo(() => {
     if (error !== undefined) {

@@ -70,14 +70,11 @@ const GRBReview = ({
 
   const isForm = !!action;
 
-  const [
-    reviewerToRemove,
-    setReviewerToRemove
-  ] = useState<SystemIntakeGRBReviewerFragment | null>(null);
+  const [reviewerToRemove, setReviewerToRemove] =
+    useState<SystemIntakeGRBReviewerFragment | null>(null);
 
-  const [startReviewModalIsOpen, setStartReviewModalIsOpen] = useState<boolean>(
-    false
-  );
+  const [startReviewModalIsOpen, setStartReviewModalIsOpen] =
+    useState<boolean>(false);
 
   const { showMessage } = useMessage();
 

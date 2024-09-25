@@ -17,8 +17,7 @@ const processStages = [
   },
   {
     value: 'inOMProposal',
-    name:
-      'I am in Operations & Maintenance but will be soliciting proposals for a different direction'
+    name: 'I am in Operations & Maintenance but will be soliciting proposals for a different direction'
   },
   {
     value: 'servicesContract',

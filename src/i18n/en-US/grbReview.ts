@@ -41,8 +41,7 @@ export default {
   reviewStartedOn: 'Review started on {{date}}',
   startReviewModal: {
     heading: 'Start this GRB review?',
-    text:
-      'Starting this review will send email notifications to {{count}} GRB reviewers. Any reviewer you add after starting this review will automatically receive a notification.',
+    text: 'Starting this review will send email notifications to {{count}} GRB reviewers. Any reviewer you add after starting this review will automatically receive a notification.',
     startReview: 'Start review and send notifications'
   },
   startGrbReviewError:
@@ -127,8 +126,7 @@ export default {
     'There was an issue removing this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
   removeModal: {
     title: 'Remove {{commonName}} as a GRB reviewer?',
-    text:
-      'Removing this reviewer will remove their access to documentation about this request. You may add them again at a later date if necessary.',
+    text: 'Removing this reviewer will remove their access to documentation about this request. You may add them again at a later date if necessary.',
     remove: 'Remove reviewer'
   },
   homepage: {

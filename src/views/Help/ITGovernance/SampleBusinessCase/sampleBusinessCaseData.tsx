@@ -29,10 +29,8 @@ const sampleBusinessCaseData: BusinessCaseModel = {
       'ServiceNow’s workflow process capabilities can be used to route the widget tracking process and automate the identification and counting of the widgets. Thier platform is being proposed, utilizing an existing licensing agreement.',
     acquisitionApproach:
       'We are planning to use the current instance of ServiceNow used elsewhere in OIT.',
-    pros:
-      'This solution can be accomplished prior to the end of the fiscal year, is user-friendly, and already meets agency security requirements.',
-    cons:
-      'The solution does not have invoicing capabilities and approximately fifteen hours of staff time per person will still be needed each week to accomplish all tasks, including the FORM Act.',
+    pros: 'This solution can be accomplished prior to the end of the fiscal year, is user-friendly, and already meets agency security requirements.',
+    cons: 'The solution does not have invoicing capabilities and approximately fifteen hours of staff time per person will still be needed each week to accomplish all tasks, including the FORM Act.',
     costSavings:
       'This solution will reduce widget tracking time needed by about 75%. If implemented, the staff hours freed up will mean that ICPG will not need to request additional staff to implement the FORM Act in two years, translating to $684,000 in cost avoidance in that first year.',
     estimatedLifecycleCost: {
@@ -150,10 +148,8 @@ const sampleBusinessCaseData: BusinessCaseModel = {
       'Atlassian’s workflow process capabilities can be used to route the widget tracking process and automate the identification, counting, and invoicing of widgets. Thier platform is being proposed, to be housed in AWS.',
     acquisitionApproach:
       'This will be a new procurement, using OAGM’s preferred contract vehicle.',
-    pros:
-      'This solution can perform the entirety of the widget processing workflow, including invoicing, thereby reducing staff time to approximately twelve hours per week per person to accomplish all tasks, including the FORM Act.',
-    cons:
-      'This solution will have higher operational costs than the other alternatives. WE are unsure of the onboarding process for Microsoft Azure Government and what the ATO process will look like',
+    pros: 'This solution can perform the entirety of the widget processing workflow, including invoicing, thereby reducing staff time to approximately twelve hours per week per person to accomplish all tasks, including the FORM Act.',
+    cons: 'This solution will have higher operational costs than the other alternatives. WE are unsure of the onboarding process for Microsoft Azure Government and what the ATO process will look like',
     costSavings:
       'This solution will reduce tracking time needed by about 80%. If implemented, the staff hours freed up will mean that ICPG will not need to request additional staff to implement the FORM Act in two years, translating to $684,000 in cost avoidance in that first year.',
     estimatedLifecycleCost: {
@@ -271,10 +267,8 @@ const sampleBusinessCaseData: BusinessCaseModel = {
       'Sharepoint’s workflow process capabilities can be used to route the widget tracking process and automate the identification and counting of the widgets. This platform already currently exists as a CMS enterprise service.',
     acquisitionApproach:
       'This solution exists in-house, with no procurement necessary.',
-    pros:
-      'This solution will not add any direct additional costs or infrastructure, security/privacy, and 508 compliance risks',
-    cons:
-      'The solution does not have invoicing or visualization capabilities and one additional FTE will still need to be hired to implement the FORM Act. It is also not as customizable as the other two proposed solutions.',
+    pros: 'This solution will not add any direct additional costs or infrastructure, security/privacy, and 508 compliance risks',
+    cons: 'The solution does not have invoicing or visualization capabilities and one additional FTE will still need to be hired to implement the FORM Act. It is also not as customizable as the other two proposed solutions.',
     costSavings:
       'This solution will reduce tracking time needed by about 40%. If implemented, ICPG will need to only request one additional FTE, rather than four to implement the FORM Act in two years, translating to $513,000 in cost avoidance in that first year.',
     estimatedLifecycleCost: {

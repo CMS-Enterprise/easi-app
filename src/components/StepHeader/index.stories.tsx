@@ -29,8 +29,7 @@ const Template: ComponentStory<typeof StepHeader> = (args: any) => (
 export const Default = Template.bind({});
 Default.args = {
   heading: 'TRB Request',
-  text:
-    'Tell the Technical Review Board (TRB) what type of technical support you need. The information you provide on this form helps the TRB understand context around your request in order to offer more targeted help.',
+  text: 'Tell the Technical Review Board (TRB) what type of technical support you need. The information you provide on this form helps the TRB understand context around your request in order to offer more targeted help.',
   subText:
     'After submitting this form, you will receive an automatic email from the TRB mailbox, and an TRB team member will reach out regarding next steps.',
   step: 2,

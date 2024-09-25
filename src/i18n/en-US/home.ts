@@ -54,8 +54,7 @@ const home = {
   actions: {
     itgov: {
       heading: 'IT Governance',
-      body:
-        'Get approval for a new IT project, apply for a new Life Cycle ID (LCID), and amend an existing LCID.',
+      body: 'Get approval for a new IT project, apply for a new Life Cycle ID (LCID), and amend an existing LCID.',
       learnMore: 'Learn more about the IT Governance process',
       link: '/system/making-a-request',
       button: 'Start a new IT Governance request',
@@ -63,8 +62,7 @@ const home = {
     },
     trb: {
       heading: 'Technical assistance',
-      body:
-        'Get help, feedback, and guidance for your IT project, courtesy of the Technical Review Board (TRB).',
+      body: 'Get help, feedback, and guidance for your IT project, courtesy of the Technical Review Board (TRB).',
       learnMore: 'Learn more about the technical assistance process',
       link: '/trb',
       button: 'Start a new TRB request',
