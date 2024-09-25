@@ -141,24 +141,21 @@ function useSystemIntakeContacts(
     [systemIntakeContacts, formatContacts]
   );
 
-  const [
-    createSystemIntakeContact
-  ] = useMutation<CreateSystemIntakeContactPayload>(CreateSystemIntakeContact, {
-    refetchQueries: ['GetSystemIntakeContactsQuery'],
-    awaitRefetchQueries: true
-  });
-  const [
-    updateSystemIntakeContact
-  ] = useMutation<UpdateSystemIntakeContactPayload>(UpdateSystemIntakeContact, {
-    refetchQueries: ['GetSystemIntakeContactsQuery'],
-    awaitRefetchQueries: true
-  });
-  const [
-    deleteSystemIntakeContact
-  ] = useMutation<DeleteSystemIntakeContactPayload>(DeleteSystemIntakeContact, {
-    refetchQueries: ['GetSystemIntakeContactsQuery'],
-    awaitRefetchQueries: true
-  });
+  const [createSystemIntakeContact] =
+    useMutation<CreateSystemIntakeContactPayload>(CreateSystemIntakeContact, {
+      refetchQueries: ['GetSystemIntakeContactsQuery'],
+      awaitRefetchQueries: true
+    });
+  const [updateSystemIntakeContact] =
+    useMutation<UpdateSystemIntakeContactPayload>(UpdateSystemIntakeContact, {
+      refetchQueries: ['GetSystemIntakeContactsQuery'],
+      awaitRefetchQueries: true
+    });
+  const [deleteSystemIntakeContact] =
+    useMutation<DeleteSystemIntakeContactPayload>(DeleteSystemIntakeContact, {
+      refetchQueries: ['GetSystemIntakeContactsQuery'],
+      awaitRefetchQueries: true
+    });
 
   /**
    * Create system intake contact in database

@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
 
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -22,17 +23,19 @@ type Config struct {
 // It lives in package "email" for now, but can be pulled out and imported
 // if necessary for testing
 type Sender struct {
-	client *ses.SES
-	config Config
+	client      *ses.SES
+	config      Config
+	environment appconfig.Environment
 }
 
 // NewSender constructs a Sender
-func NewSender(config Config) Sender {
+func NewSender(config Config, environment appconfig.Environment) Sender {
 	sesSession := session.Must(session.NewSession())
 	client := ses.New(sesSession)
 	return Sender{
 		client,
 		config,
+		environment,
 	}
 }
 
@@ -53,7 +56,7 @@ func (s Sender) Send(ctx context.Context, emailData email.Email) error {
 		Message: &ses.Message{
 			Subject: &ses.Content{
 				Charset: aws.String("UTF-8"),
-				Data:    aws.String(emailData.Subject),
+				Data:    aws.String(email.AddNonProdEnvToSubject(emailData.Subject, s.environment)),
 			},
 			Body: &ses.Body{
 				Html: &ses.Content{
