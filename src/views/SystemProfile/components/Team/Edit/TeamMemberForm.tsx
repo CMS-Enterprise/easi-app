@@ -116,7 +116,14 @@ const TeamMemberForm = ({
     return roles
       .concat()
       .filter(r => knownRoles.includes(r.name))
-      .sort((a, b) => teamRolesIndex()[a.name] - teamRolesIndex()[b.name]);
+      .sort((a, b) => teamRolesIndex()[a.name] - teamRolesIndex()[b.name])
+      .map(r => {
+        // Adjust the ISSO display name from the backend
+        if (r.name === 'ISSO') {
+          return { ...r, name: 'Information System Security Officer (ISSO)' };
+        }
+        return r;
+      });
   }, [data?.roleTypes]);
 
   const {
