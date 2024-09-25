@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/google/uuid"
 )
 
@@ -316,6 +317,22 @@ type DeleteTRBRequestDocumentPayload struct {
 type DeleteTRBRequestFundingSourcesInput struct {
 	TrbRequestID  uuid.UUID `json:"trbRequestId"`
 	FundingNumber string    `json:"fundingNumber"`
+}
+
+type GRBReviewerComparison struct {
+	ID                uuid.UUID                         `json:"id"`
+	UserAccount       *authentication.UserAccount       `json:"userAccount"`
+	EuaUserID         string                            `json:"euaUserId"`
+	VotingRole        SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
+	GrbRole           SystemIntakeGRBReviewerRole       `json:"grbRole"`
+	IsCurrentReviewer bool                              `json:"isCurrentReviewer"`
+}
+
+type GRBReviewerComparisonIntake struct {
+	ID              uuid.UUID                `json:"id"`
+	RequestName     string                   `json:"requestName"`
+	Reviewers       []*GRBReviewerComparison `json:"reviewers"`
+	IntakeCreatedAt *time.Time               `json:"intakeCreatedAt,omitempty"`
 }
 
 // The current user's Launch Darkly key

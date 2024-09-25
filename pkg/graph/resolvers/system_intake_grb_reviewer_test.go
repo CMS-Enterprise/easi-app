@@ -5,11 +5,9 @@ import (
 	"slices"
 
 	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
-	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
@@ -68,20 +66,20 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 
 	s.Run("fetch GRB reviewers", func() {
 		intake, reviewers := s.createIntakeAndAddReviewers(
-			reviewerToAdd{
-				euaUserID:  "ABCD",
-				votingRole: models.SIGRBRVRVoting,
-				grbRole:    models.SIGRBRRACA3021Rep,
+			&models.CreateGRBReviewerInput{
+				EuaUserID:  "ABCD",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
 			},
-			reviewerToAdd{
-				euaUserID:  "TEST",
-				votingRole: models.SIGRBRVRVoting,
-				grbRole:    models.SIGRBRRACA3021Rep,
+			&models.CreateGRBReviewerInput{
+				EuaUserID:  "TEST",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
 			},
-			reviewerToAdd{
-				euaUserID:  "A11Y",
-				votingRole: models.SIGRBRVRVoting,
-				grbRole:    models.SIGRBRRACA3021Rep,
+			&models.CreateGRBReviewerInput{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
 			},
 		)
 		s.Len(reviewers, 3)
@@ -99,16 +97,16 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 
 	s.Run("update GRB reviewer voting and GRB role", func() {
 		reviewerEUA := "ABCD"
-		originalVotingRole := models.SIGRBRVRAlternate
-		originalGRBRole := models.SIGRBRRACA3021Rep
+		originalVotingRole := models.SystemIntakeGRBReviewerVotingRoleAlternate
+		originalGRBRole := models.SystemIntakeGRBReviewerRoleAca3021Rep
 		newVotingRole := models.SIGRBRVRVoting
 		newGRBRole := models.SIGRBRRCMCSRep
 
 		userAcct := s.getOrCreateUserAcct(reviewerEUA)
-		intake, reviewer := s.createIntakeAndAddReviewer(reviewerToAdd{
-			euaUserID:  reviewerEUA,
-			votingRole: originalVotingRole,
-			grbRole:    originalGRBRole,
+		intake, reviewer := s.createIntakeAndAddReviewer(&models.CreateGRBReviewerInput{
+			EuaUserID:  reviewerEUA,
+			VotingRole: originalVotingRole,
+			GrbRole:    originalGRBRole,
 		})
 
 		updatedReviewer, err := UpdateSystemIntakeGRBReviewer(
@@ -131,14 +129,14 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 
 	s.Run("delete GRB reviewer", func() {
 		reviewerEUA := "ABCD"
-		originalVotingRole := models.SIGRBRVRAlternate
-		originalGRBRole := models.SIGRBRRACA3021Rep
+		originalVotingRole := models.SystemIntakeGRBReviewerVotingRoleVoting
+		originalGRBRole := models.SystemIntakeGRBReviewerRoleAca3021Rep
 
 		userAcct := s.getOrCreateUserAcct(reviewerEUA)
-		intake, reviewer := s.createIntakeAndAddReviewer(reviewerToAdd{
-			euaUserID:  reviewerEUA,
-			votingRole: originalVotingRole,
-			grbRole:    originalGRBRole,
+		intake, reviewer := s.createIntakeAndAddReviewer(&models.CreateGRBReviewerInput{
+			EuaUserID:  reviewerEUA,
+			VotingRole: originalVotingRole,
+			GrbRole:    originalGRBRole,
 		})
 		reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 		s.NoError(err)
@@ -158,46 +156,81 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 	})
 }
 
-type reviewerToAdd struct {
-	euaUserID  string
-	votingRole models.SIGRBReviewerVotingRole
-	grbRole    models.SIGRBReviewerRole
+func (s *ResolverSuite) TestSystemIntakeGRBReviewerComparison() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+
+	s.Run("compare GRB reviewers", func() {
+		commonReviewerEua := "ABCD"
+		uncommonReviewerEua := "A11Y"
+
+		// create an intake without reviewers, should not get returned in comparisons
+		s.createNewIntake()
+
+		// intake to compare reviewers for
+		intake1, reviewers1 := s.createIntakeAndAddReviewers(
+			&models.CreateGRBReviewerInput{
+				EuaUserID:  commonReviewerEua,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+		)
+		s.Len(reviewers1, 1)
+
+		// intake to compare against, should get returned in comparison
+		intake2, reviewers2 := s.createIntakeAndAddReviewers(
+			&models.CreateGRBReviewerInput{
+				EuaUserID:  commonReviewerEua,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+			&models.CreateGRBReviewerInput{
+				EuaUserID:  uncommonReviewerEua,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+		)
+		s.Len(reviewers2, 2)
+
+		comparisons, err := SystemIntakeCompareGRBReviewers(ctx, store, intake1.ID)
+		s.NoError(err)
+		// returned comparison should be other intake
+		s.Len(comparisons, 1)
+		s.Equal(intake2.ID.String(), comparisons[0].ID.String())
+		// should contain 2 reviewers, one of which is a current reviewer
+		s.Len(comparisons[0].Reviewers, 2)
+		for _, reviewer := range comparisons[0].Reviewers {
+			if reviewer.EuaUserID == commonReviewerEua {
+				s.True(reviewer.IsCurrentReviewer)
+				continue
+			}
+			s.False(reviewer.IsCurrentReviewer)
+		}
+
+	})
 }
 
-func (s *ResolverSuite) createIntakeAndAddReviewer(reviewer reviewerToAdd) (*models.SystemIntake, *models.SystemIntakeGRBReviewer) {
+func (s *ResolverSuite) createIntakeAndAddReviewer(reviewer *models.CreateGRBReviewerInput) (*models.SystemIntake, *models.SystemIntakeGRBReviewer) {
 	intake, reviewers := s.createIntakeAndAddReviewers(reviewer)
 	return intake, reviewers[0]
 }
 
-func (s *ResolverSuite) createIntakeAndAddReviewers(reviewers ...reviewerToAdd) (*models.SystemIntake, []*models.SystemIntakeGRBReviewer) {
+func (s *ResolverSuite) createIntakeAndAddReviewers(reviewers ...*models.CreateGRBReviewerInput) (*models.SystemIntake, []*models.SystemIntakeGRBReviewer) {
 	ctx := s.testConfigs.Context
 	store := s.testConfigs.Store
 	okta := local.NewOktaAPIClient()
 
 	intake := s.createNewIntake()
-	savedReviewers, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) ([]*models.SystemIntakeGRBReviewer, error) {
-		var createdReviewers []*models.SystemIntakeGRBReviewer
-		for _, reviewer := range reviewers {
-			user, err := userhelpers.GetOrCreateUserAccount(ctx, tx, store, reviewer.euaUserID, false, userhelpers.GetUserInfoAccountInfoWrapperFunc(okta.FetchUserInfo))
-			if err != nil {
-				return nil, err
-			}
-			createdReviewer := models.NewSystemIntakeGRBReviewer(user.ID, s.testConfigs.Principal.UserAccount.ID)
-			createdReviewer.VotingRole = reviewer.votingRole
-			createdReviewer.GRBRole = reviewer.grbRole
-			createdReviewer.SystemIntakeID = intake.ID
-			_, err = store.CreateSystemIntakeGRBReviewer(
-				ctx,
-				tx,
-				createdReviewer,
-			)
-			if err != nil {
-				return nil, err
-			}
-			createdReviewers = append(createdReviewers, createdReviewer)
-		}
-		return createdReviewers, nil
-	})
+	createPayload, err := CreateSystemIntakeGRBReviewers(
+		ctx,
+		store,
+		nil,
+		userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
+		&models.CreateSystemIntakeGRBReviewersInput{
+			SystemIntakeID: intake.ID,
+			Reviewers:      reviewers,
+		},
+	)
 	s.NoError(err)
-	return intake, savedReviewers
+	return intake, createPayload.Reviewers
 }
