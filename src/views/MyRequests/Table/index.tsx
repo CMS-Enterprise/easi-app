@@ -70,23 +70,22 @@ const Table = ({
 
   const flags = useFlags();
 
-  const {
-    loading,
-    error,
-    data: tableData
-  } = useQuery<GetRequests>(GetRequestsQuery, {
-    fetchPolicy: 'cache-and-network'
-  });
+  const { loading, error, data: tableData } = useQuery<GetRequests>(
+    GetRequestsQuery,
+    {
+      fetchPolicy: 'cache-and-network'
+    }
+  );
 
   const isITGovAdmin: boolean = useMemo(
     () => user.isITGovAdmin(groups, flags),
     [flags, groups]
   );
 
-  const isTRBAdmin: boolean = useMemo(
-    () => user.isTrbAdmin(groups, flags),
-    [flags, groups]
-  );
+  const isTRBAdmin: boolean = useMemo(() => user.isTrbAdmin(groups, flags), [
+    flags,
+    groups
+  ]);
 
   const columns: Column<MergedRequestsForTable>[] = useMemo<
     Column<MergedRequestsForTable>[]

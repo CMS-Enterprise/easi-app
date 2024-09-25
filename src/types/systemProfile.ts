@@ -29,7 +29,7 @@ import { CedarAssigneeType } from './graphql-global-types';
 
 // Team
 
-export type TeamSectionKey = (typeof teamSectionKeys)[number];
+export type TeamSectionKey = typeof teamSectionKeys[number];
 
 export interface CedarRoleAssigneePerson extends CedarRole {
   assigneeType: CedarAssigneeType.PERSON;
@@ -44,10 +44,10 @@ export interface UsernameWithRoles {
 
 export type AtoStatus = 'Active' | 'Due Soon' | 'Expired' | 'No ATO';
 
-export type ThreatLevel = (typeof threatLevelGrades)[number];
+export type ThreatLevel = typeof threatLevelGrades[number];
 
 export type SecurityFindings = Record<
-  (typeof securityFindingKeys)[number],
+  typeof securityFindingKeys[number],
   number
 >;
 

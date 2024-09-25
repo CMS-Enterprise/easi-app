@@ -154,11 +154,7 @@ const RequestLinkForm = ({
       ? useGetTrbRequestRelationQuery
       : useGetSystemIntakeRelationQuery;
 
-  const {
-    data,
-    error: relationError,
-    loading: relationLoading
-  } = query({
+  const { data, error: relationError, loading: relationLoading } = query({
     variables: { id }
   });
 
@@ -212,39 +208,43 @@ const RequestLinkForm = ({
       : UnlinkSystemIntakeRelationQuery
   );
 
-  const { control, watch, setValue, handleSubmit } =
-    useForm<RequestLinkFormFields>({
-      defaultValues: {
-        relationType: null,
-        cedarSystemIDs: [],
-        contractNumbers: '',
-        contractName: ''
-      },
-      values: (values => {
-        if (!values) return undefined;
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit
+  } = useForm<RequestLinkFormFields>({
+    defaultValues: {
+      relationType: null,
+      cedarSystemIDs: [],
+      contractNumbers: '',
+      contractName: ''
+    },
+    values: (values => {
+      if (!values) return undefined;
 
-        // Condition for prefilling existing systems on new requests
-        if (values.relationType === null && linkCedarSystemId) {
-          return {
-            relationType: RequestRelationType.EXISTING_SYSTEM,
-            cedarSystemIDs: [linkCedarSystemId],
-            contractNumbers: '',
-            contractName: ''
-          };
-        }
-
+      // Condition for prefilling existing systems on new requests
+      if (values.relationType === null && linkCedarSystemId) {
         return {
-          relationType: values.relationType || null,
-          cedarSystemIDs: values.systems.map(v => v.id),
-          contractNumbers: formatContractNumbers(values.contractNumbers),
-          contractName: values.contractName || ''
+          relationType: RequestRelationType.EXISTING_SYSTEM,
+          cedarSystemIDs: [linkCedarSystemId],
+          contractNumbers: '',
+          contractName: ''
         };
-      })(
-        requestType === 'trb'
-          ? data && 'trbRequest' in data && data.trbRequest
-          : data && 'systemIntake' in data && data.systemIntake
-      )
-    });
+      }
+
+      return {
+        relationType: values.relationType || null,
+        cedarSystemIDs: values.systems.map(v => v.id),
+        contractNumbers: formatContractNumbers(values.contractNumbers),
+        contractName: values.contractName || ''
+      };
+    })(
+      requestType === 'trb'
+        ? data && 'trbRequest' in data && data.trbRequest
+        : data && 'systemIntake' in data && data.systemIntake
+    )
+  });
 
   // Ref fields for some form behavior
   const fields = watch();
@@ -351,16 +351,14 @@ const RequestLinkForm = ({
       );
     }
 
-    p
-      ?.then(
-        res => {
-          if (res?.data) history.push(redirectUrl);
-        },
-        () => {}
-      )
-      .catch(() => {
-        setUserError(true);
-      });
+    p?.then(
+      res => {
+        if (res?.data) history.push(redirectUrl);
+      },
+      () => {}
+    ).catch(() => {
+      setUserError(true);
+    });
   });
 
   const unlink = () => {

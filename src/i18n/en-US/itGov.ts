@@ -18,15 +18,18 @@ export default {
     sampleBusinessCase: 'Sample Business Case (opens in a new tab)',
     decisionAlert: {
       heading: 'Decision issued',
-      text: 'A decision has been made for this request, and you can view the decision at the <decisionLink>bottom of this page</decisionLink>. For additional information, please check the email sent to you. If you have further questions, contact the Governance Team at <emailLink>{{email}}</emailLink>.'
+      text:
+        'A decision has been made for this request, and you can view the decision at the <decisionLink>bottom of this page</decisionLink>. For additional information, please check the email sent to you. If you have further questions, contact the Governance Team at <emailLink>{{email}}</emailLink>.'
     },
     closedAlert: {
       heading: 'Request closed',
-      text: 'The Governance Team has closed this request without issuing a decision. If you have questions, you may contact them at <emailLink>{{email}}</emailLink>.'
+      text:
+        'The Governance Team has closed this request without issuing a decision. If you have questions, you may contact them at <emailLink>{{email}}</emailLink>.'
     },
     generalFeedback: {
       heading: 'The Governance team has offered feedback about your request.',
-      text: 'Please review the feedback using the button below. It may have important information about your project and your IT Governance request.'
+      text:
+        'Please review the feedback using the button below. It may have important information about your project and your IT Governance request.'
     },
     step: {
       intakeForm: {
@@ -113,7 +116,8 @@ export default {
     noContractNumber: 'No contract number listed',
     actionRequiredAlert: {
       header: 'Action required',
-      text: 'Is this request part of an existing system, service, or other contract?',
+      text:
+        'Is this request part of an existing system, service, or other contract?',
       answer: 'Answer'
     },
     show: {
@@ -130,7 +134,8 @@ export default {
         systemOrService: {
           label:
             'Is this IT Governance request part of an existing system, service, or contract?',
-          hint: 'With any of the selections below, you may add contract number(s) if there are any in place to support this effort.',
+          hint:
+            'With any of the selections below, you may add contract number(s) if there are any in place to support this effort.',
           options: [
             'No, this is a completely new system, service, or contract',
             'Yes, an existing system',
@@ -141,16 +146,19 @@ export default {
         },
         contractNumberNew: {
           label: 'Contract number',
-          help: 'If this new work has one or more contract numbers, please add them here. If not, you may leave this field blank. Comma-separate multiple values.'
+          help:
+            'If this new work has one or more contract numbers, please add them here. If not, you may leave this field blank. Comma-separate multiple values.'
         },
         cmsSystem: {
           label: 'Which CMS system?',
           selectedLabel: 'Selected system',
-          help: 'This field searches existing CMS systems. Select all that apply.'
+          help:
+            'This field searches existing CMS systems. Select all that apply.'
         },
         contractNumberExisting: {
           label: 'Contract number',
-          help: 'If your work is associated with existing contract(s), please input the contract number(s) here. If it is not, you may leave this field blank. Comma-separate multiple values.'
+          help:
+            'If your work is associated with existing contract(s), please input the contract number(s) here. If it is not, you may leave this field blank. Comma-separate multiple values.'
         },
         serviceOrContractName: {
           label: 'Service or contract name'
@@ -168,7 +176,8 @@ export default {
     dontUpdate: 'Don’t update and return to task list',
     skipConfirm: {
       heading: 'Are you sure you want to skip this step?',
-      text: 'Linking this request to its system, service, or other contract provides additional benefits:',
+      text:
+        'Linking this request to its system, service, or other contract provides additional benefits:',
       list: [
         'The Governance Team can assist you in a more streamlined and comprehensive manner if they have information about your system, service, or contract.',
         'EASi can offer increased capabilities and features such as reminders, updates, and other notifications.'

@@ -24,8 +24,9 @@ const DocumentsTaskList = () => {
 
   const [documentsCount, setDocumentsCount] = useState(0);
   const [documentMessage, setDocumentMessage] = useState('');
-  const [documentStatus, setDocumentStatus] =
-    useState<DocumentStatusType>('success');
+  const [documentStatus, setDocumentStatus] = useState<DocumentStatusType>(
+    'success'
+  );
 
   return (
     <GridContainer>

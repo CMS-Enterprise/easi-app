@@ -203,7 +203,8 @@ const action = {
     },
     confirm: {
       head: 'Are you sure you want to complete this action to request edits?',
-      body: '<p>If you request changes to the {{formName}}, the requester will be able to make updates to any field within that form. While they are completing those changes, they will be unable to work on any other part of the process. You will receive an email notification once the requester has resubmitted their form.</p><p> If you progress this request to a new step before they have resubmitted their form, they will lose the ability to make the requested changes.</p>',
+      body:
+        '<p>If you request changes to the {{formName}}, the requester will be able to make updates to any field within that form. While they are completing those changes, they will be unable to work on any other part of the process. You will receive an email notification once the requester has resubmitted their form.</p><p> If you progress this request to a new step before they have resubmitted their form, they will lose the ability to make the requested changes.</p>',
       complete: 'Complete action',
       back: 'Go back'
     },

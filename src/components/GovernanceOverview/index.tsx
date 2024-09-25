@@ -29,11 +29,9 @@ const GovProcessCollapse = ({ className }: { className?: string }) => {
       <>
         {t('processExists.subheading')}
         <ul className="margin-bottom-0 margin-top-1 padding-left-205 line-height-body-5">
-          {(
-            t('processExists.listItems', {
-              returnObjects: true
-            }) as string[]
-          ).map(item => {
+          {(t('processExists.listItems', {
+            returnObjects: true
+          }) as string[]).map(item => {
             return <li key={item}>{item}</li>;
           })}
         </ul>
@@ -59,11 +57,9 @@ const GovernanceOverviewContent = ({
       >
         <p>{t('info.intro')}</p>
         <ul className="padding-left-205">
-          {(
-            t('info.listItems', {
-              returnObjects: true
-            }) as string[]
-          ).map(item => (
+          {(t('info.listItems', {
+            returnObjects: true
+          }) as string[]).map(item => (
             <li className="margin-y-1" key={item}>
               {item}
             </li>

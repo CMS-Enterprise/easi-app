@@ -257,8 +257,8 @@ const EmailRecipientsFields = ({
   >(contactsArray.filter(contact => !contact.id));
 
   /** Initial default recipients */
-  const defaultRecipients: EmailNotificationRecipients =
-    useRef(recipients).current;
+  const defaultRecipients: EmailNotificationRecipients = useRef(recipients)
+    .current;
 
   /** Number of selected recipients */
   const selectedCount = Object.values(recipients)

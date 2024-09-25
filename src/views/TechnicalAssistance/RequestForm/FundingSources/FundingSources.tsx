@@ -299,8 +299,11 @@ const FundingSources = ({
     combinedFields
   );
   const [fundingSources, setFundingSources] = fundingSourcesData.fundingSources;
-  const [activeFundingSource, setActiveFundingSource, action] =
-    fundingSourcesData.activeFundingSource;
+  const [
+    activeFundingSource,
+    setActiveFundingSource,
+    action
+  ] = fundingSourcesData.activeFundingSource;
   const { t } = useTranslation('intake');
   const editFundingSourceNumber = useRef('');
 

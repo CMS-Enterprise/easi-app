@@ -119,7 +119,8 @@ export const documents: SystemIntakeDocument[] = [
     version: SystemIntakeDocumentVersion.CURRENT,
     status: SystemIntakeDocumentStatus.AVAILABLE,
     uploadedAt: '2023-06-14T18:24:46.310929Z',
-    url: 'http://localhost:9004/easi-app-file-uploads/ead3f487-8aaa-47d2-aa26-335e9b560a92.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=f71d5d63d68958a2bd8526c2b2cdd5abe78b21eb69d10739fe8f8e6fd5d010ec',
+    url:
+      'http://localhost:9004/easi-app-file-uploads/ead3f487-8aaa-47d2-aa26-335e9b560a92.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=f71d5d63d68958a2bd8526c2b2cdd5abe78b21eb69d10739fe8f8e6fd5d010ec',
     canView: true,
     canDelete: true,
     systemIntakeId,
@@ -136,7 +137,8 @@ export const documents: SystemIntakeDocument[] = [
     version: SystemIntakeDocumentVersion.CURRENT,
     status: SystemIntakeDocumentStatus.PENDING,
     uploadedAt: '2023-06-14T18:24:46.32661Z',
-    url: 'http://localhost:9004/easi-app-file-uploads/7e047111-6228-4943-9c4b-0961f27858f4.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=0e3f337697c616b01533accd95a316cbeabeb6990961b9881911c757837cbf95',
+    url:
+      'http://localhost:9004/easi-app-file-uploads/7e047111-6228-4943-9c4b-0961f27858f4.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=0e3f337697c616b01533accd95a316cbeabeb6990961b9881911c757837cbf95',
     canView: true,
     canDelete: true,
     systemIntakeId,
@@ -153,7 +155,8 @@ export const documents: SystemIntakeDocument[] = [
     version: SystemIntakeDocumentVersion.HISTORICAL,
     status: SystemIntakeDocumentStatus.UNAVAILABLE,
     uploadedAt: '2023-06-14T18:24:46.342866Z',
-    url: 'http://localhost:9004/easi-app-file-uploads/f779e8e4-9c78-4b14-bbab-37618447f3f9.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=7e6755645a1f163d41d2fa7c19776d0ceb4cfd3ff8e1c2918c428a551fe44764',
+    url:
+      'http://localhost:9004/easi-app-file-uploads/f779e8e4-9c78-4b14-bbab-37618447f3f9.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=7e6755645a1f163d41d2fa7c19776d0ceb4cfd3ff8e1c2918c428a551fe44764',
     canView: true,
     canDelete: true,
     systemIntakeId,
@@ -529,31 +532,30 @@ export const systemIntakeWithLcid: SystemIntakeWithLcid = {
   lcidCostBaseline: 'Text cost baseline'
 };
 
-export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSType> =
-  {
-    request: {
-      query: GetSystemIntakesWithLCIDS,
-      variables: {}
-    },
-    result: {
-      data: {
-        systemIntakesWithLcids: [
-          systemIntakeWithLcid,
-          {
-            __typename: 'SystemIntake',
-            id: '8be3f86d-a4d6-446b-8a56-dc9da77ed326',
-            lcid: '654321',
-            requestName: 'Test request name 2',
-            lcidExpiresAt: null,
-            lcidScope: null,
-            decisionNextSteps: null,
-            trbFollowUpRecommendation: null,
-            lcidCostBaseline: null
-          }
-        ]
-      }
+export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSType> = {
+  request: {
+    query: GetSystemIntakesWithLCIDS,
+    variables: {}
+  },
+  result: {
+    data: {
+      systemIntakesWithLcids: [
+        systemIntakeWithLcid,
+        {
+          __typename: 'SystemIntake',
+          id: '8be3f86d-a4d6-446b-8a56-dc9da77ed326',
+          lcid: '654321',
+          requestName: 'Test request name 2',
+          lcidExpiresAt: null,
+          lcidScope: null,
+          decisionNextSteps: null,
+          trbFollowUpRecommendation: null,
+          lcidCostBaseline: null
+        }
+      ]
     }
-  };
+  }
+};
 
 export const getSystemIntakeContactsQuery: MockedQuery<
   GetSystemIntakeContactsType,
@@ -624,63 +626,62 @@ export const getGovernanceTaskListQuery = (
 });
 
 const currentYear = DateTime.local().year;
-export const systemIntakesWithReviewRequested: SystemIntakeWithReviewRequestedFragment[] =
-  [
-    {
-      id: 'a5689bec-e4cf-4f2b-a7de-72020e8d65be',
-      requestName: 'With GRB scheduled',
-      requesterName: users[3].commonName,
-      requesterComponent: 'Office of Enterprise Data and Analytics',
-      grbDate: `${currentYear + 2}-10-02T03:11:24.478056Z`,
-      __typename: 'SystemIntake'
-    },
-    {
-      id: '5af245bc-fc54-4677-bab1-1b3e798bb43c',
-      requestName: 'System Intake with GRB Reviewers',
-      requesterName: 'User One',
-      requesterComponent: 'Office of the Actuary',
-      grbDate: '2020-10-08T03:11:24.478056Z',
-      __typename: 'SystemIntake'
-    },
-    {
-      id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
-      requestName: 'Edits requested on initial request form',
-      requesterName: users[0].commonName,
-      requesterComponent: 'Federal Coordinated Health Care Office',
-      grbDate: null,
-      __typename: 'SystemIntake'
-    },
-    {
-      id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
-      requestName: 'Mock System Intake 1',
-      requesterName: users[1].commonName,
-      requesterComponent: 'Office of Communications',
-      grbDate: '2024-03-29T03:11:24.478056Z',
-      __typename: 'SystemIntake'
-    },
-    {
-      id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
-      requestName: 'Mock System Intake 2',
-      requesterName: users[2].commonName,
-      requesterComponent: 'Office of the Actuary',
-      grbDate: `${currentYear + 1}-06-09T03:11:24.478056Z`,
-      __typename: 'SystemIntake'
-    },
+export const systemIntakesWithReviewRequested: SystemIntakeWithReviewRequestedFragment[] = [
+  {
+    id: 'a5689bec-e4cf-4f2b-a7de-72020e8d65be',
+    requestName: 'With GRB scheduled',
+    requesterName: users[3].commonName,
+    requesterComponent: 'Office of Enterprise Data and Analytics',
+    grbDate: `${currentYear + 2}-10-02T03:11:24.478056Z`,
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '5af245bc-fc54-4677-bab1-1b3e798bb43c',
+    requestName: 'System Intake with GRB Reviewers',
+    requesterName: 'User One',
+    requesterComponent: 'Office of the Actuary',
+    grbDate: '2020-10-08T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Edits requested on initial request form',
+    requesterName: users[0].commonName,
+    requesterComponent: 'Federal Coordinated Health Care Office',
+    grbDate: null,
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Mock System Intake 1',
+    requesterName: users[1].commonName,
+    requesterComponent: 'Office of Communications',
+    grbDate: '2024-03-29T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Mock System Intake 2',
+    requesterName: users[2].commonName,
+    requesterComponent: 'Office of the Actuary',
+    grbDate: `${currentYear + 1}-06-09T03:11:24.478056Z`,
+    __typename: 'SystemIntake'
+  },
 
-    {
-      id: '20cbcfbf-6459-4c96-943b-e76b83122dbf',
-      requestName: 'Closable Request',
-      requesterName: users[3].commonName,
-      requesterComponent: 'Office of Information Technology',
-      grbDate: '2023-01-18T03:11:24.478056Z',
-      __typename: 'SystemIntake'
-    },
-    {
-      id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
-      requestName: 'Mock System Intake 3',
-      requesterName: users[2].commonName,
-      requesterComponent: 'Office of Information Technology',
-      grbDate: null,
-      __typename: 'SystemIntake'
-    }
-  ];
+  {
+    id: '20cbcfbf-6459-4c96-943b-e76b83122dbf',
+    requestName: 'Closable Request',
+    requesterName: users[3].commonName,
+    requesterComponent: 'Office of Information Technology',
+    grbDate: '2023-01-18T03:11:24.478056Z',
+    __typename: 'SystemIntake'
+  },
+  {
+    id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+    requestName: 'Mock System Intake 3',
+    requesterName: users[2].commonName,
+    requesterComponent: 'Office of Information Technology',
+    grbDate: null,
+    __typename: 'SystemIntake'
+  }
+];

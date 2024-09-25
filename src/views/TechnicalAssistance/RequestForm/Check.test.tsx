@@ -111,8 +111,10 @@ describe('Trb Request form: Check and submit', () => {
                 stepUrl={{
                   current:
                     '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/basic',
-                  next: '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/subject',
-                  back: '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/undefined'
+                  next:
+                    '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/subject',
+                  back:
+                    '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/undefined'
                 }}
                 refetchRequest={mockRefetch}
                 setIsStepSubmitting={() => {}}

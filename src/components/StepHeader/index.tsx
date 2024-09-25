@@ -115,7 +115,7 @@ function StepHeader({
                     'usa-step-indicator__segment--disabled': stp.disabled
                   })}
                   // `label` expects a string but can render jsx
-                  label={stp.label as unknown as string}
+                  label={(stp.label as unknown) as string}
                 />
               );
             })}

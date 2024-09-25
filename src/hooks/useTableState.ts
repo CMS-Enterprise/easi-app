@@ -25,8 +25,9 @@ const useTableState = (
   activeTable: ActiveStateType,
   data: any[]
 ) => {
-  const tableStates: Record<string, TableStates> =
-    useContext(TableStateContext);
+  const tableStates: Record<string, TableStates> = useContext(
+    TableStateContext
+  );
 
   const tableState = tableStates[tableName];
 

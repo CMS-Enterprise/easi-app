@@ -70,10 +70,13 @@ function ExchangeCard({ data }: { data: Exchange }) {
 
   // Header description expand toggle
   const descriptionRef = useRef<HTMLParagraphElement>(null);
-  const [isDescriptionExpandable, setIsDescriptionExpandable] =
-    useState<boolean>(false);
-  const [descriptionExpanded, setDescriptionExpanded] =
-    useState<boolean>(false);
+  const [
+    isDescriptionExpandable,
+    setIsDescriptionExpandable
+  ] = useState<boolean>(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState<boolean>(
+    false
+  );
 
   // Enable the description toggle if it overflows
   // eslint-disable-next-line react-hooks/exhaustive-deps

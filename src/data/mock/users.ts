@@ -376,7 +376,7 @@ export const users = [
   }
 ] as const;
 
-export type MockUserInfo = (typeof users)[number];
+export type MockUserInfo = typeof users[number];
 export type MockEuaUserId = MockUserInfo['euaUserId'];
 export type MockUserName = MockUserInfo['commonName'];
 

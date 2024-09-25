@@ -12,44 +12,49 @@ import SendFeedback from '.';
 
 describe('Help forms', () => {
   it('submits the "Send Feedback" form successfully after a failed attempt', async () => {
-    const { asFragment, findByText, getByLabelText, getByRole, getByTestId } =
-      render(
-        <MemoryRouter initialEntries={['/help/send-feedback']}>
-          <Route path="/help/send-feedback">
-            <MockedProvider
-              mocks={[
-                {
-                  request: {
-                    query: SendFeedbackEmailQuery,
-                    variables: {
-                      input: {
-                        howCanWeImprove: 'improve',
-                        howSatisfied: 'Very satisfied',
-                        hadAccessToInformation: 'Agree',
-                        questionsWereRelevant: 'Agree',
-                        didntNeedHelpAnswering: 'Agree',
-                        systemEasyToUse: 'Agree',
-                        cmsRole: 'role',
-                        easiServicesUsed: ['IT Governance'],
-                        canBeContacted: false,
-                        isAnonymous: true
-                      }
-                    }
-                  },
-                  result: {
-                    data: {
-                      sendFeedbackEmail: 'Feedback sent successfully'
+    const {
+      asFragment,
+      findByText,
+      getByLabelText,
+      getByRole,
+      getByTestId
+    } = render(
+      <MemoryRouter initialEntries={['/help/send-feedback']}>
+        <Route path="/help/send-feedback">
+          <MockedProvider
+            mocks={[
+              {
+                request: {
+                  query: SendFeedbackEmailQuery,
+                  variables: {
+                    input: {
+                      howCanWeImprove: 'improve',
+                      howSatisfied: 'Very satisfied',
+                      hadAccessToInformation: 'Agree',
+                      questionsWereRelevant: 'Agree',
+                      didntNeedHelpAnswering: 'Agree',
+                      systemEasyToUse: 'Agree',
+                      cmsRole: 'role',
+                      easiServicesUsed: ['IT Governance'],
+                      canBeContacted: false,
+                      isAnonymous: true
                     }
                   }
+                },
+                result: {
+                  data: {
+                    sendFeedbackEmail: 'Feedback sent successfully'
+                  }
                 }
-              ]}
-              addTypename={false}
-            >
-              <SendFeedback />
-            </MockedProvider>
-          </Route>
-        </MemoryRouter>
-      );
+              }
+            ]}
+            addTypename={false}
+          >
+            <SendFeedback />
+          </MockedProvider>
+        </Route>
+      </MemoryRouter>
+    );
 
     // Snapshot of the form's initial state
     expect(asFragment()).toMatchSnapshot();
@@ -87,41 +92,46 @@ describe('Help forms', () => {
   });
 
   it('submits the "Report A Problem" form successfully after a failed attempt', async () => {
-    const { asFragment, findByText, getByLabelText, getByRole, getByTestId } =
-      render(
-        <MemoryRouter initialEntries={['/help/report-a-problem']}>
-          <Route path="/help/report-a-problem">
-            <MockedProvider
-              mocks={[
-                {
-                  request: {
-                    query: SendReportAProblemEmailQuery,
-                    variables: {
-                      input: {
-                        isAnonymous: true,
-                        canBeContacted: false,
-                        easiService: 'IT Governance',
-                        whatWereYouDoing: 'were',
-                        whatWentWrong: 'went',
-                        howSevereWasTheProblem:
-                          'It prevented me from completing my task'
-                      }
-                    }
-                  },
-                  result: {
-                    data: {
-                      sendReportAProblemEmail: 'Feedback sent successfully'
+    const {
+      asFragment,
+      findByText,
+      getByLabelText,
+      getByRole,
+      getByTestId
+    } = render(
+      <MemoryRouter initialEntries={['/help/report-a-problem']}>
+        <Route path="/help/report-a-problem">
+          <MockedProvider
+            mocks={[
+              {
+                request: {
+                  query: SendReportAProblemEmailQuery,
+                  variables: {
+                    input: {
+                      isAnonymous: true,
+                      canBeContacted: false,
+                      easiService: 'IT Governance',
+                      whatWereYouDoing: 'were',
+                      whatWentWrong: 'went',
+                      howSevereWasTheProblem:
+                        'It prevented me from completing my task'
                     }
                   }
+                },
+                result: {
+                  data: {
+                    sendReportAProblemEmail: 'Feedback sent successfully'
+                  }
                 }
-              ]}
-              addTypename={false}
-            >
-              <ReportAProblem />
-            </MockedProvider>
-          </Route>
-        </MemoryRouter>
-      );
+              }
+            ]}
+            addTypename={false}
+          >
+            <ReportAProblem />
+          </MockedProvider>
+        </Route>
+      </MemoryRouter>
+    );
 
     // Snapshot of the form's initial state
     expect(asFragment()).toMatchSnapshot();

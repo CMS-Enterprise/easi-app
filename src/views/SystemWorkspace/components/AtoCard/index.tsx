@@ -30,8 +30,9 @@ function AtoCard({
 }: Props) {
   const { t } = useTranslation('systemWorkspace');
 
-  const [cfactsLinkModalOpen, setCfactsLinkModalOpen] =
-    useState<boolean>(false);
+  const [cfactsLinkModalOpen, setCfactsLinkModalOpen] = useState<boolean>(
+    false
+  );
 
   return (
     <>

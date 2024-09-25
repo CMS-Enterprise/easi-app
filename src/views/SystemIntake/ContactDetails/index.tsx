@@ -83,11 +83,17 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       ? '/'
       : `/governance-task-list/${systemIntake.id}`;
 
-  const [activeContact, setActiveContact] =
-    useState<SystemIntakeContactProps | null>(null);
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
 
-  const { contacts, createContact, updateContact, deleteContact } =
-    useSystemIntakeContacts(systemIntake.id);
+  const {
+    contacts,
+    createContact,
+    updateContact,
+    deleteContact
+  } = useSystemIntakeContacts(systemIntake.id);
 
   const [mutate] = useMutation<
     UpdateSystemIntakeContactDetails,

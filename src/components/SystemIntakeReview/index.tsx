@@ -31,8 +31,13 @@ type FundingSourcesObject = {
 export const SystemIntakeReview = ({
   systemIntake
 }: SystemIntakeReviewProps) => {
-  const { annualSpending, costs, contract, submittedAt, contractNumbers } =
-    systemIntake;
+  const {
+    annualSpending,
+    costs,
+    contract,
+    submittedAt,
+    contractNumbers
+  } = systemIntake;
   const {
     contacts: {
       data: { requester, businessOwner, productManager, isso }

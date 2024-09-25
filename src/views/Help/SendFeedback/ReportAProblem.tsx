@@ -63,8 +63,7 @@ export async function parseReportForm(
   Object.entries(values).forEach(([field, value]) => {
     // Parse fields of option groups with optional additional text
     if (field in reportOptionFieldsForTextInput) {
-      const additional =
-        `${field}${ADDITIONAL_TEXT_INPUT_SUFFIX}` as keyof SendReportAProblemEmailForm;
+      const additional = `${field}${ADDITIONAL_TEXT_INPUT_SUFFIX}` as keyof SendReportAProblemEmailForm;
 
       const optionForTextInput =
         reportOptionFieldsForTextInput[
@@ -130,7 +129,7 @@ const ReportAProblem = () => {
       />
       <Formik
         initialValues={
-          sendReportAProblemEmailFormSchema.getDefaultFromShape() as unknown as SendReportAProblemEmailForm
+          (sendReportAProblemEmailFormSchema.getDefaultFromShape() as unknown) as SendReportAProblemEmailForm
         }
         validationSchema={sendReportAProblemEmailFormSchema}
         validateOnBlur={false}

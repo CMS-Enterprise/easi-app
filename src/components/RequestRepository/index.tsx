@@ -78,8 +78,9 @@ const RequestRepository = () => {
   /* Controls Portfolio Update Report info modal */
   const [infoModalOpen, setInfoModalOpen] = useState<boolean>(false);
   /* Controls Configure Portfolio Update Report modal */
-  const [configReportModalOpen, setConfigReportModalOpen] =
-    useState<boolean>(false);
+  const [configReportModalOpen, setConfigReportModalOpen] = useState<boolean>(
+    false
+  );
 
   /* Date range for Portfolio Update Report */
   const { control, handleSubmit, watch } = useForm<{

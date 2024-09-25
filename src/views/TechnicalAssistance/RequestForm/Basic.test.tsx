@@ -71,42 +71,49 @@ const mockRefetch = async (
 
 describe('Trb Request form: Basic', () => {
   it('submits the form successfully after a failed attempt', async () => {
-    const { asFragment, findByText, getByLabelText, getByRole, getByTestId } =
-      render(
-        <MemoryRouter>
-          <MockedProvider>
-            <Basic
-              request={{
-                id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
-                name: 'Draft',
-                form: {
-                  ...mockEmptyFormFields,
-                  id: '452cf444-69b2-41a9-b8ab-ed354d209307',
-                  __typename: 'TRBRequestForm'
-                },
-                feedback: [],
-                type: TRBRequestType.NEED_HELP,
-                state: TRBRequestState.OPEN,
-                taskStatuses: {} as any,
-                relatedTRBRequests: [],
-                relatedIntakes: [],
-                __typename: 'TRBRequest'
-              }}
-              stepUrl={{
-                current:
-                  '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/basic',
-                next: '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/subject',
-                back: '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/undefined'
-              }}
-              refetchRequest={mockRefetch}
-              setIsStepSubmitting={() => {}}
-              setStepSubmit={() => {}}
-              setFormAlert={() => {}}
-              taskListUrl=""
-            />
-          </MockedProvider>
-        </MemoryRouter>
-      );
+    const {
+      asFragment,
+      findByText,
+      getByLabelText,
+      getByRole,
+      getByTestId
+    } = render(
+      <MemoryRouter>
+        <MockedProvider>
+          <Basic
+            request={{
+              id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
+              name: 'Draft',
+              form: {
+                ...mockEmptyFormFields,
+                id: '452cf444-69b2-41a9-b8ab-ed354d209307',
+                __typename: 'TRBRequestForm'
+              },
+              feedback: [],
+              type: TRBRequestType.NEED_HELP,
+              state: TRBRequestState.OPEN,
+              taskStatuses: {} as any,
+              relatedTRBRequests: [],
+              relatedIntakes: [],
+              __typename: 'TRBRequest'
+            }}
+            stepUrl={{
+              current:
+                '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/basic',
+              next:
+                '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/subject',
+              back:
+                '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/undefined'
+            }}
+            refetchRequest={mockRefetch}
+            setIsStepSubmitting={() => {}}
+            setStepSubmit={() => {}}
+            setFormAlert={() => {}}
+            taskListUrl=""
+          />
+        </MockedProvider>
+      </MemoryRouter>
+    );
 
     // Snapshot of the form's initial state
     expect(asFragment()).toMatchSnapshot();

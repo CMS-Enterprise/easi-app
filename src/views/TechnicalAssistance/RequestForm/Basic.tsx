@@ -101,11 +101,14 @@ function Basic({
   const history = useHistory();
   const { t } = useTranslation('technicalAssistance');
 
-  const [fundingSourcesFormActive, setFundingSourcesFormActive] =
-    useState(false);
+  const [fundingSourcesFormActive, setFundingSourcesFormActive] = useState(
+    false
+  );
 
-  const { data, loading: intakesLoading } =
-    useCacheQuery<GetSystemIntakesWithLCIDSType>(GetSystemIntakesWithLCIDS);
+  const {
+    data,
+    loading: intakesLoading
+  } = useCacheQuery<GetSystemIntakesWithLCIDSType>(GetSystemIntakesWithLCIDS);
 
   const systemIntakesWithLCIDs = useMemo(() => {
     const systemIntakes = data?.systemIntakesWithLcids
@@ -816,16 +819,15 @@ function Basic({
                       const val = v as TRBCollabGroupOption;
                       const optionKeyWordUpper = upperFirst(camelCase(v));
 
-                      const collabDateKey =
-                        `collabDate${optionKeyWordUpper}` as keyof Pick<
-                          TrbRequestFormBasic,
-                          | 'collabDateSecurity'
-                          | 'collabDateEnterpriseArchitecture'
-                          | 'collabDateCloud'
-                          | 'collabDatePrivacyAdvisor'
-                          | 'collabDateGovernanceReviewBoard'
-                          | 'collabDateOther'
-                        >;
+                      const collabDateKey = `collabDate${optionKeyWordUpper}` as keyof Pick<
+                        TrbRequestFormBasic,
+                        | 'collabDateSecurity'
+                        | 'collabDateEnterpriseArchitecture'
+                        | 'collabDateCloud'
+                        | 'collabDatePrivacyAdvisor'
+                        | 'collabDateGovernanceReviewBoard'
+                        | 'collabDateOther'
+                      >;
 
                       return (
                         <React.Fragment key={v}>

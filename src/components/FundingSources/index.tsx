@@ -48,8 +48,10 @@ type FundingSourcesProps = {
 const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
   const { t } = useTranslation('intake');
 
-  const [activeFundingSource, setActiveFundingSource] =
-    useState<FormattedFundingSource | null>(null);
+  const [
+    activeFundingSource,
+    setActiveFundingSource
+  ] = useState<FormattedFundingSource | null>(null);
 
   const [action, setAction] = useState<'Add' | 'Edit' | null>(null);
 

@@ -12,6 +12,6 @@ export const JOB_CODES = [
   TRB_ADMIN_PROD
 ] as const;
 
-export type JobCode = (typeof JOB_CODES)[number];
+export type JobCode = typeof JOB_CODES[number];
 
 export default JOB_CODES;

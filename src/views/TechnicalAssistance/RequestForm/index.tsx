@@ -49,12 +49,12 @@ const formStepSlugs = [
   'check'
 ] as const;
 
-type FormStepSlug = (typeof formStepSlugs)[number];
+type FormStepSlug = typeof formStepSlugs[number];
 
 /** All slugs under the Trb request form */
 const viewSlugs = [...formStepSlugs, 'done', 'view', 'feedback'] as const;
 
-type ViewSlug = (typeof viewSlugs)[number];
+type ViewSlug = typeof viewSlugs[number];
 
 /**
  * A promise wrapper for form step submit handlers.

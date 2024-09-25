@@ -49,8 +49,10 @@ export default function RecommendationsList({
 }: RecommendationsListProps) {
   const { t } = useTranslation('technicalAssistance');
 
-  const [recommendationToRemove, setRecommendationToRemove] =
-    useState<TRBRecommendation | null>(null);
+  const [
+    recommendationToRemove,
+    setRecommendationToRemove
+  ] = useState<TRBRecommendation | null>(null);
 
   const [updateOrder] = useMutation<
     UpdateTrbRecommendationOrder,

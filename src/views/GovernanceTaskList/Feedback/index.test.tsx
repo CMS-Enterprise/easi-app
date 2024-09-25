@@ -189,14 +189,21 @@ describe('Feedback page', () => {
 });
 
 describe('Feedback item component', () => {
-  const [editsRequestedFeedback, grbFeedback, requesterFeedback] =
-    governanceRequestFeedbacks;
+  const [
+    editsRequestedFeedback,
+    grbFeedback,
+    requesterFeedback
+  ] = governanceRequestFeedbacks;
 
   it('Renders feedback type - Edits requested', () => {
     render(<FeedbackItem {...editsRequestedFeedback} />);
 
-    const { createdAt, author, targetForm, feedback } =
-      governanceRequestFeedbacks[0];
+    const {
+      createdAt,
+      author,
+      targetForm,
+      feedback
+    } = governanceRequestFeedbacks[0];
 
     expect(
       screen.getByRole('heading', {

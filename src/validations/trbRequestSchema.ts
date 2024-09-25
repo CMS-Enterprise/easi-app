@@ -98,12 +98,11 @@ export interface TrbRequestFormBasic extends TrbFormInputBasic {
   name: string;
 }
 
-export const basicSchema: yup.SchemaOf<TrbRequestFormBasic> =
-  inputBasicSchema.concat(
-    yup.object({
-      name: yup.string().required()
-    })
-  );
+export const basicSchema: yup.SchemaOf<TrbRequestFormBasic> = inputBasicSchema.concat(
+  yup.object({
+    name: yup.string().required()
+  })
+);
 
 export const trbRequesterSchema = yup.object({
   euaUserId: yup.string().required('Requester name is a required field'),

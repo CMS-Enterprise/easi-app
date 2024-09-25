@@ -161,8 +161,10 @@ const AddRelatedCostField = ({
 }: AddRelatedCostFieldProps) => {
   const { t } = useTranslation('businessCase');
 
-  const [activeRelatedCost, setActiveRelatedCost] =
-    useState<LifecyclePhaseKey | null>(null);
+  const [
+    activeRelatedCost,
+    setActiveRelatedCost
+  ] = useState<LifecyclePhaseKey | null>(null);
 
   if (relatedCosts.length > 2) return null;
 

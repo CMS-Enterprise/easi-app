@@ -80,12 +80,12 @@ function useActionForm<
 
       const requesterEuaId = attendees[0]?.userInfo?.euaUserId;
 
-      return {
+      return ({
         copyTrbMailbox: true,
         ...formProps?.defaultValues,
         notifyEuaIds: [...(requesterEuaId ? [requesterEuaId] : [])],
         recipients: attendees
-      } as unknown as TFieldValues;
+      } as unknown) as TFieldValues;
     }
   });
 

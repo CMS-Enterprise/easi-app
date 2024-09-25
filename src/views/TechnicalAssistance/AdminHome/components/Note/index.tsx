@@ -82,8 +82,9 @@ const Note = ({ note, className, border = true }: NoteProps) => {
 
     switch (categorySpecificData.__typename) {
       case 'TRBAdminNoteInitialRequestFormCategoryData':
-        categorySpecificDataString =
-          initialRequestFormCategory(categorySpecificData);
+        categorySpecificDataString = initialRequestFormCategory(
+          categorySpecificData
+        );
         break;
       case 'TRBAdminNoteSupportingDocumentsCategoryData':
         categorySpecificDataString = documentsCategory(

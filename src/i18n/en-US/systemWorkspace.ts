@@ -79,7 +79,8 @@ const systemWorkspace = {
       learn: 'Learn more',
       modal: {
         header: 'Are you sure you want to leave EASi?',
-        text: 'CFACTS requires additional job codes and/or permissions as well as connectivity via VPN in order to access content within the system.',
+        text:
+          'CFACTS requires additional job codes and/or permissions as well as connectivity via VPN in order to access content within the system.',
         continue: 'Continue to CFACTS',
         cancel: 'Go back to EASi'
       }

@@ -15,8 +15,8 @@ const DevLogin = () => {
   const checkboxChange: ReactEventHandler<HTMLInputElement> = event => {
     setJobCodes({
       ...jobCodes,
-      [event.currentTarget.value as keyof typeof jobCodes]:
-        event.currentTarget.checked
+      [event.currentTarget.value as keyof typeof jobCodes]: event.currentTarget
+        .checked
     });
   };
 

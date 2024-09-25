@@ -70,7 +70,7 @@ const adviceFormSteps = [
   }
 ] as const;
 
-type AdviceFormStep = (typeof adviceFormSteps)[number];
+type AdviceFormStep = typeof adviceFormSteps[number];
 
 /**
  * TRB request admin advice letter form
@@ -189,8 +189,11 @@ const AdviceLetterForm = () => {
 
       // Check the Next Steps step
       if (!completed.includes('next-steps')) {
-        const { nextSteps, isFollowupRecommended, followupPoint } =
-          adviceLetter;
+        const {
+          nextSteps,
+          isFollowupRecommended,
+          followupPoint
+        } = adviceLetter;
 
         stepValidators.push(
           nextStepsSchema

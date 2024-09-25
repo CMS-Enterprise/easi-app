@@ -59,11 +59,7 @@ function Consult() {
   const feedbackStatus: TRBFeedbackStatus | undefined =
     formContext?.data?.trbRequest?.taskStatuses?.feedbackStatus;
 
-  const {
-    loading,
-    data,
-    error: pageError
-  } = useQuery<
+  const { loading, data, error: pageError } = useQuery<
     GetTrbRequestConsultMeeting,
     GetTrbRequestConsultMeetingVariables
   >(GetTrbRequestConsultMeetingQuery, {

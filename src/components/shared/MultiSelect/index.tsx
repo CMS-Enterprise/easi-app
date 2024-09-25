@@ -101,11 +101,9 @@ const MultiSelectTag = ({
               // Handler to focus on the first tag after one has been removed
               if (parentId) {
                 setTimeout(() => {
-                  (
-                    document?.querySelector(
-                      `#${parentId} .easi-multiselect--tag .usa-icon`
-                    ) as HTMLElement
-                  )?.focus();
+                  (document?.querySelector(
+                    `#${parentId} .easi-multiselect--tag .usa-icon`
+                  ) as HTMLElement)?.focus();
                 }, 0);
               }
             }
@@ -149,12 +147,14 @@ const MultiSelect = ({
   className?: string;
   inputRef?: RefCallBack;
 }) => {
-  const [selected, setSelected] =
-    useState<MultiValue<MultiSelectOptionProps> | null>(
-      initialValues && options.length
-        ? [...options].filter(option => initialValues.includes(option.value))
-        : null
-    );
+  const [
+    selected,
+    setSelected
+  ] = useState<MultiValue<MultiSelectOptionProps> | null>(
+    initialValues && options.length
+      ? [...options].filter(option => initialValues.includes(option.value))
+      : null
+  );
 
   useEffect(() => {
     if (!selected && initialValues && options.length) {
