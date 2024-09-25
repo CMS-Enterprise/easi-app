@@ -2,9 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
+import { Button } from '@trussworks/react-uswds';
 
 import { localAuthStorageKey } from 'constants/localAuth';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
+import useOktaSession from 'hooks/useOktaSession';
 
 import './index.scss';
 
@@ -14,6 +16,8 @@ export const Header = () => {
   const [userName, setUserName] = useState('');
 
   const isMobile = useCheckResponsiveScreen('tablet');
+
+  const { hasSession } = useOktaSession();
 
   const navbarRef = useRef<HTMLDivElement | null>(null); // Ref used for setting setNavbarHeight
 
@@ -70,9 +74,22 @@ export const Header = () => {
             </div>
           </div>
         ) : (
-          <Link className="easi-header__nav-link" to="/signin">
-            {t('header:signIn')}
-          </Link>
+          <div>
+            {/* If a user has an active okta session, replace router link with a button that automicatally authenticates the user for MINT.  Bypasses /signin */}
+            {hasSession ? (
+              <Button
+                type="button"
+                className="easi-header__nav-link bg-transparent margin-right-0"
+                onClick={() => oktaAuth.signInWithRedirect()}
+              >
+                {t('header:signIn')}
+              </Button>
+            ) : (
+              <Link className="easi-header__nav-link" to="/signin">
+                {t('header:signIn')}
+              </Link>
+            )}
+          </div>
         )}
       </div>
     </header>

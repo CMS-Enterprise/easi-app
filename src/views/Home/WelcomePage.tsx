@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
+  Button,
   Card,
   CardBody,
   CardGroup,
@@ -16,11 +17,14 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { IconList, IconListItem } from 'components/shared/IconList';
+import useOktaSession from 'hooks/useOktaSession';
 
 import './welcome.scss';
 
 const WelcomeText = () => {
   const { t } = useTranslation('home');
+
+  const { hasSession, oktaAuth } = useOktaSession();
 
   return (
     <>
@@ -99,9 +103,21 @@ const WelcomeText = () => {
               </CardBody>
             </Card>
           </CardGroup>
-          <UswdsReactLink className="usa-button width-auto" to="/signin">
-            {t('signIn')}
-          </UswdsReactLink>
+
+          {/* If a user has an active okta session, replace router link with a button that automicatally authenticates the user for MINT.  Bypasses /signin */}
+          {hasSession ? (
+            <Button
+              type="button"
+              className="usa-button width-auto"
+              onClick={() => oktaAuth.signInWithRedirect()}
+            >
+              {t('signIn')}
+            </Button>
+          ) : (
+            <UswdsReactLink className="usa-button width-auto" to="/signin">
+              {t('signIn')}
+            </UswdsReactLink>
+          )}
         </Grid>
       </section>
 
