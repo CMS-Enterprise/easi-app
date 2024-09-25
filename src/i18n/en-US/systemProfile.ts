@@ -214,6 +214,7 @@ const systemProfile = {
       addNewTeamMember: 'Add a new team member',
       currentTeamMembers: 'Current team members',
       editRoles: 'Edit roles',
+      remove: 'Remove',
       removeTeamMember: 'Remove team member',
       removeModalTitle: 'Are you sure you want to remove  this team member?',
       removeModalDescription:

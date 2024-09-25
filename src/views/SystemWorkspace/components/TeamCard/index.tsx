@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { Button, IconExpandMore } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -47,6 +48,10 @@ function MemberRole({ person }: { person: UsernameWithRoles }) {
 
 function TeamCard({ roles }: { roles: CedarRole[] }) {
   const { t } = useTranslation('systemWorkspace');
+
+  const { systemId } = useParams<{
+    systemId: string;
+  }>();
 
   const teamCountCap = 8;
   const [isExpanded, setExpanded] = useState<boolean>(false);
@@ -129,7 +134,10 @@ function TeamCard({ roles }: { roles: CedarRole[] }) {
           <UswdsReactLink
             variant="unstyled"
             className="usa-button usa-button--outline"
-            to="#"
+            to={{
+              pathname: `/systems/${systemId}/team/edit`,
+              search: 'workspace'
+            }}
           >
             {t('spaces.team.manage')}
           </UswdsReactLink>

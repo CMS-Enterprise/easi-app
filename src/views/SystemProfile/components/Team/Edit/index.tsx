@@ -26,6 +26,7 @@ import {
   SetRolesForUserOnSystemVariables
 } from 'queries/types/SetRolesForUserOnSystem';
 import { UsernameWithRoles } from 'types/systemProfile';
+import TeamTable from 'views/SystemWorkspace/TeamTable';
 
 import { TeamContactCard } from '..';
 
@@ -59,6 +60,8 @@ const EditTeam = ({
   const { t } = useTranslation('systemProfile');
   const history = useHistory();
   const { Message, showMessage } = useMessage();
+
+  const isWorkspace = true; // until param merged in
 
   const [memberToDelete, setMemberToDelete] = useState<{
     euaUserId: string;
@@ -185,7 +188,9 @@ const EditTeam = ({
         />
       ) : (
         /* Edit team page */
-        <Grid className="tablet:grid-col-6">
+        // move grid col rule
+        // <Grid className="tablet:grid-col-6">
+        <Grid className="">
           <h1 className="margin-bottom-1">
             {t('singleSystem.editTeam.title')}
           </h1>
@@ -294,27 +299,31 @@ const EditTeam = ({
           </Modal>
 
           {/* Team member list */}
-          <CardGroup data-testid="teamCardGroup">
-            {team.map(user => (
-              <TeamContactCard
-                user={user}
-                key={user.assigneeUsername}
-                footerActions={{
-                  editRoles: () =>
-                    history.push(
-                      `${pathname}/team-member`,
-                      // Send user info to edit form
-                      { user }
-                    ),
-                  removeTeamMember: () =>
-                    setMemberToDelete({
-                      euaUserId: user.assigneeUsername,
-                      commonName: getTeamMemberName(user)
-                    })
-                }}
-              />
-            ))}
-          </CardGroup>
+          {!isWorkspace ? (
+            <CardGroup data-testid="teamCardGroup">
+              {team.map(user => (
+                <TeamContactCard
+                  user={user}
+                  key={user.assigneeUsername}
+                  footerActions={{
+                    editRoles: () =>
+                      history.push(
+                        `${pathname}/team-member`,
+                        // Send user info to edit form
+                        { user }
+                      ),
+                    removeTeamMember: () =>
+                      setMemberToDelete({
+                        euaUserId: user.assigneeUsername,
+                        commonName: getTeamMemberName(user)
+                      })
+                  }}
+                />
+              ))}
+            </CardGroup>
+          ) : (
+            <TeamTable team={team} />
+          )}
 
           <IconLink
             to={`/systems/${cedarSystemId}/team`}
