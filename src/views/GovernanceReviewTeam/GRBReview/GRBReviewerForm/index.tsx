@@ -5,7 +5,6 @@ import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
-  ComboBox,
   Dropdown,
   Form,
   FormGroup,
@@ -23,10 +22,9 @@ import {
 import { toLower } from 'lodash';
 
 import CedarContactSelect from 'components/CedarContactSelect';
-import { useEasiForm } from 'components/EasiForm';
+import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
-import Divider from 'components/shared/Divider';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
@@ -37,6 +35,8 @@ import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
 import CreateGRBReviewerSchema from 'validations/grbReviewerSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
+
+import BulkAddGRBReviewersForm from './BulkAddGRBReviewersForm';
 
 type GRBReviewerFormFields = {
   userAccount: {
@@ -96,14 +96,7 @@ const GRBReviewerForm = ({
     ]
   });
 
-  const {
-    handleSubmit,
-    register,
-    watch,
-    setValue,
-    setError,
-    formState: { errors, isDirty, isSubmitted }
-  } = useEasiForm<GRBReviewerFormFields>({
+  const form = useEasiForm<GRBReviewerFormFields>({
     resolver: yupResolver(CreateGRBReviewerSchema(grbReviewers)),
     context: { action },
     defaultValues: {
@@ -116,6 +109,15 @@ const GRBReviewerForm = ({
       }
     }
   });
+
+  const {
+    handleSubmit,
+    register,
+    watch,
+    setValue,
+    setError,
+    formState: { errors, isDirty, isSubmitted }
+  } = form;
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
@@ -322,43 +324,9 @@ const GRBReviewerForm = ({
               id="addReviewersFromRequest"
               tabName={t('form.addFromRequest')}
             >
-              <div className="tablet:grid-col-6">
-                <p className="line-height-body-5 margin-top-3">
-                  {t('form.addFromRequestDescription')}
-                </p>
-
-                <FormGroup>
-                  <Label
-                    htmlFor="itGovernanceRequests"
-                    className="text-normal margin-bottom-05"
-                  >
-                    {t('form.itGovernanceRequests')}
-                  </Label>
-                  <HelpText id="itGovernanceRequestsHelpText">
-                    {t('form.itGovernanceRequestsHelpText')}
-                  </HelpText>
-
-                  <ComboBox
-                    id="itGovernanceRequests"
-                    name="itGovernanceRequests"
-                    className="maxw-none"
-                    // TODO: onChange
-                    onChange={val => null}
-                    // TODO: Set requests as options
-                    options={[
-                      { value: 'One', label: 'One' },
-                      { value: 'Two', label: 'Two' },
-                      { value: 'Three', label: 'Three' }
-                    ]}
-                  />
-                </FormGroup>
-
-                <Alert type="info" className="margin-top-3" slim>
-                  {t('form.selectRequestAlert')}
-                </Alert>
-
-                <Divider className="margin-top-6" />
-              </div>
+              <EasiFormProvider<GRBReviewerFormFields> {...form}>
+                <BulkAddGRBReviewersForm systemId={systemId} />
+              </EasiFormProvider>
             </TabPanel>
           </Tabs>
 

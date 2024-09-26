@@ -99,6 +99,8 @@ export default {
       'Search this list of previous Governance requests. Any requests without assigned GRB reviewers are filtered out of this list.',
     selectRequestAlert:
       'Select a request above to populate a list of possible GRB reviewers to select from.',
+    grbReviewerResults:
+      '<strong>{{count}} results.</strong> Select reviewers you wish to add to your current request’s GRB review. You may edit roles after adding reviewers. Checkbozes are disabled for individuals who have already been added to this review.',
     grbMemberName: 'GRB member name',
     grbMemberNameHelpText: 'This field searches CMS’ EUA database.',
     votingRole: 'Voting role',
