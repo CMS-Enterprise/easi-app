@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 import ReviewRow from 'components/ReviewRow';
 import {
@@ -114,27 +115,25 @@ export const SystemIntakeReview = ({
     return t('review.notSubmitted');
   };
 
+  /* Conditionally render software acquisition information depending on what is present.
+      Translate acquisition strategy enum values using i18n 
+  */
+
   const formatSoftwareAcquisition = () => {
-    // const allAcquisitionStrategies = t(
-    //   'requestDetails.softwareAcquisition.acquistionStrategyLabels',
-    //   {
-    //     returnObjects: true
-    //   }
-    // );
+    const translatedAcqStrategies: string[] = [];
 
-    // const intakeAcquisitionStrategies = Object.keys(
-    //   systemIntake.softwareAcquisition?.acquisitionMethods
-    // )
-    //   .filter(key => allAcquisitionStrategies.includes(key))
-    //   .reduce((obj, key) => {
-    //     // eslint-disable-next-line no-param-reassign
-    //     obj[key] = allAcquisitionStrategies[key];
-    //     return obj;
-    //   }, []);
-
-    // const acquistionStrategy = Object.keys(
-    //   systemIntake.softwareAcquisition?.acquisitionMethods
-    // ).filter((key: any) => {});
+    // Translate raw enumerations to i18n representation from intake
+    if (systemIntake.softwareAcquisition?.acquisitionMethods) {
+      Object.values(
+        systemIntake.softwareAcquisition?.acquisitionMethods
+      ).forEach(acqStrategy => {
+        translatedAcqStrategies.push(
+          i18next.t(
+            `intake:requestDetails.softwareAcquisition.acquistionStrategyLabels.${acqStrategy}`
+          )
+        );
+      });
+    }
 
     return (
       <>
@@ -153,12 +152,9 @@ export const SystemIntakeReview = ({
         {systemIntake.softwareAcquisition?.usingSoftware === 'YES' && (
           <ReviewRow>
             <div>
-              {/* TODO: NJD - translate enums to i18n before joining */}
               <DescriptionTerm term={t('review.softwareAcquisitionMethods')} />
               <DescriptionDefinition
-                definition={systemIntake.softwareAcquisition.acquisitionMethods.join(
-                  ', '
-                )}
+                definition={translatedAcqStrategies.join(', ')}
               />
             </div>
           </ReviewRow>
@@ -385,32 +381,8 @@ export const SystemIntakeReview = ({
             />
           </div>
         </ReviewRow>
+        {/* Format and conditionally render software acquisition information */}
         {formatSoftwareAcquisition()}
-        {/* <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('review.usingSoftware')} />
-            <DescriptionDefinition
-              definition={
-                yesNoMap[
-                  String(systemIntake.softwareAcquisition?.usingSoftware)
-                ]
-              }
-            />
-          </div>
-        </ReviewRow>
-        {systemIntake.softwareAcquisition?.usingSoftware === 'YES' && (
-          <ReviewRow>
-            <div>
-              <DescriptionTerm term={t('review.softwareAcquisitionMethods')} />
-              <DescriptionDefinition
-                definition="test"
-                // definition={systemIntake.softwareAcquisition.acquisitionMethods.join(
-                //   ', '
-                // )}
-              />
-            </div>
-          </ReviewRow>
-        )} */}
       </DescriptionList>
 
       <hr className="system-intake__hr" />
