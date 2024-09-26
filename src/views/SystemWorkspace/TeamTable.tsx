@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import {
   CellProps,
   Column,
+  Row,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -17,6 +18,7 @@ import { AvatarCircle } from 'components/shared/Avatar/Avatar';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
+import teamRolesIndex from 'constants/teamRolesIndex';
 import { UsernameWithRoles } from 'types/systemProfile';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -48,13 +50,15 @@ function TeamTable({
       {
         Header: 'Name',
         id: 'name',
-        Cell: ({ row }: CellProps<UsernameWithRoles>) => {
-          const p = row.original.roles[0];
-          const namestr = `${p.assigneeFirstName || ''} ${p.assigneeLastName || ''}`;
+        accessor: uwr => {
+          const p = uwr.roles[0];
+          return `${p.assigneeFirstName || ''} ${p.assigneeLastName || ''}`;
+        },
+        Cell: ({ value }: CellProps<UsernameWithRoles, string>) => {
           return (
             <div className="display-flex flex-align-center">
-              <AvatarCircle user={namestr} />
-              <span className="margin-left-1">{namestr}</span>
+              <AvatarCircle user={value} />
+              <span className="margin-left-1">{value}</span>
             </div>
           );
         }
@@ -62,13 +66,20 @@ function TeamTable({
       {
         Header: 'Role',
         id: 'role',
+        accessor: 'roles',
         Cell: ({ row }: CellProps<UsernameWithRoles>) => {
           return row.original.roles.map(r => r.roleTypeName).join(', ');
+        },
+        sortType: (a: Row<UsernameWithRoles>, b: Row<UsernameWithRoles>) => {
+          const ar = a.original.roles[0];
+          const br = b.original.roles[0];
+          const ari = teamRolesIndex()[ar.roleTypeName || ''] ?? 99;
+          const bri = teamRolesIndex()[br.roleTypeName || ''] ?? 99;
+          if (ari !== bri) {
+            return ari - bri;
+          }
+          return 0;
         }
-        // sort
-        /*
-        "Alpha by first name, except with Business owner and Project lead roles at the top"
-        */
       },
       {
         Header: 'Actions',
@@ -111,6 +122,31 @@ function TeamTable({
     [systemId, t, setMemberToDelete]
   );
 
+  const tableData: UsernameWithRoles[] = useMemo(() => {
+    // Alpha by first name, except with Business owner and Project lead roles at the top
+    const initIndex: { [v: string]: number } = {
+      'Business Owner': 0,
+      'Project Lead': 1
+    };
+
+    return team.concat().sort((a, b) => {
+      // Some roles
+      const ar = a.roles[0];
+      const br = b.roles[0];
+      const ari = initIndex[ar.roleTypeName || ''] ?? 9;
+      const bri = initIndex[br.roleTypeName || ''] ?? 9;
+      if (ari !== bri) {
+        return ari - bri;
+      }
+      // Then full names
+      const an = getTeamMemberName(a).toLowerCase();
+      const bn = getTeamMemberName(b).toLowerCase();
+      if (an < bn) return -1;
+      if (an > bn) return 1;
+      return 0;
+    });
+  }, [team]);
+
   const {
     canNextPage,
     canPreviousPage,
@@ -132,7 +168,7 @@ function TeamTable({
     {
       columns,
       globalFilter: useMemo(() => globalFilterCellText, []),
-      data: team,
+      data: tableData,
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
