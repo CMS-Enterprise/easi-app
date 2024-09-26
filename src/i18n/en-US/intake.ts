@@ -1,7 +1,8 @@
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import {
   SystemIntakeDocumentCommonType,
-  SystemIntakeDocumentVersion
+  SystemIntakeDocumentVersion,
+  SystemIntakeSoftwareAcquisitionMethods
 } from 'types/graphql-global-types';
 
 const hasContractLabels: Record<
@@ -41,6 +42,17 @@ export const abbreviatedType: Record<SystemIntakeDocumentCommonType, string> = {
   SOFTWARE_BILL_OF_MATERIALS: 'Software BOM',
   MEETING_MINUTES: 'Meeting Minutes',
   OTHER: 'Other'
+};
+
+export const acquistionStrategyLabels: Record<
+  SystemIntakeSoftwareAcquisitionMethods,
+  string
+> = {
+  CONTRACTOR_FURNISHED: 'Furnished by the contractor',
+  FED_FURNISHED: 'Provided as government furnished software',
+  ELA_OR_INTERNAL: 'Acquired through an ELA or internal source',
+  OTHER: 'Other',
+  NOT_YET_DETERMINED: 'Not yet determined'
 };
 
 const intake = {
@@ -327,15 +339,9 @@ const intake = {
         'If known, please upload a bill of materials (BOM) on the document upload section of this form.',
       acquisitionStrategyLabel: 'How will the software be acquired?',
       acquisitionStrategyHelp: 'Select all that apply.',
-      strategyLabels: {
-        CONTRACTOR_FURNISHED: 'Furnished by the contractor',
-        FED_FURNISHED: 'Provided as government furnished software',
-        ELA_OR_INTERNAL: 'Acquired through an ELA or internal source',
-        OTHER: 'Other',
-        NOT_YET_DETERMINED: 'Not yet determined'
-      },
-      softwareRequirements:
-        'If sofware requirements are not yet determined or if the contractor(s) will be requested to provide as part of the requirement. CMS suggests that you include the need for a proposed software Bill of Materials (BOM) in the solicitation or contract.'
+      acquistionStrategyLabels,
+      softwareRequirementsAlert:
+        'If sofware requirements are not yet determined or if the contractor(s) will be requested to provide them as part of the requirement. CMS suggests that you include the need for a proposed software Bill of Materials (BOM) in the solicitation or contract.'
     },
     needsEaSupport: 'Does your request need Enterprise Architecture support?',
     needsEaSupportHelpText:

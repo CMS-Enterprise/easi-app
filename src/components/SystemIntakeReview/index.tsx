@@ -115,6 +115,27 @@ export const SystemIntakeReview = ({
   };
 
   const formatSoftwareAcquisition = () => {
+    // const allAcquisitionStrategies = t(
+    //   'requestDetails.softwareAcquisition.acquistionStrategyLabels',
+    //   {
+    //     returnObjects: true
+    //   }
+    // );
+
+    // const intakeAcquisitionStrategies = Object.keys(
+    //   systemIntake.softwareAcquisition?.acquisitionMethods
+    // )
+    //   .filter(key => allAcquisitionStrategies.includes(key))
+    //   .reduce((obj, key) => {
+    //     // eslint-disable-next-line no-param-reassign
+    //     obj[key] = allAcquisitionStrategies[key];
+    //     return obj;
+    //   }, []);
+
+    // const acquistionStrategy = Object.keys(
+    //   systemIntake.softwareAcquisition?.acquisitionMethods
+    // ).filter((key: any) => {});
+
     return (
       <>
         <ReviewRow>

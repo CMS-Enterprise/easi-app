@@ -568,6 +568,28 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                           as={FieldErrorMsg}
                         />
                       )}
+                      <Label htmlFor="businessSolution">
+                        {t(
+                          'requestDetails.softwareAcquisition.acquisitionStrategyLabel'
+                        )}
+                      </Label>
+                      <HelpText
+                        id="businessSolutionHelpText"
+                        className="margin-top-1"
+                      >
+                        {t(
+                          'requestDetails.softwareAcquisition.acquisitionStrategyHelp'
+                        )}
+                      </HelpText>
+                      <Alert
+                        type="info"
+                        data-testid="mandatory-fields-alert"
+                        slim
+                      >
+                        {t(
+                          'requestDetails.softwareAcquisition.softwareRequirementsAlert'
+                        )}
+                      </Alert>
                       {Object.values(
                         SystemIntakeSoftwareAcquisitionMethods
                       ).map(acqMethod => {
@@ -577,7 +599,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                               name={acqMethod}
                               id={acqMethod}
                               label={t(
-                                `requestDetails.softwareAcquisition.strategyLabels.${acqMethod}`
+                                `requestDetails.softwareAcquisition.acquistionStrategyLabels.${acqMethod}`
                               )}
                               value={acqMethod}
                               onChange={(
