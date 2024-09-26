@@ -246,7 +246,7 @@ const systemProfile = {
         rolesDescription:
           'Add or remove roles by clicking in the box below. Select all that apply. You must select at least one role for this team member.',
         rolesError: 'You must select at least one role for this team member',
-        selectedRoles: 'Selected roles',
+        selectedRoles: 'Selected role(s)',
         successUpdateRoles: 'Roles for {{commonName}} have been updated.',
         errorUpdateRoles:
           'There was a problem saving your changes. Please try again. If the error persists, please try again at a later date.',
