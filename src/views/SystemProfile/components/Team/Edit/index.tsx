@@ -13,11 +13,13 @@ import {
   GridContainer,
   IconArrowBack
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Modal from 'components/Modal';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import Spinner from 'components/Spinner';
+import useIsWorkspaceParam from 'hooks/useIsWorkspaceParam';
 import useMessage from 'hooks/useMessage';
 import { SetRolesForUserOnSystemQuery } from 'queries/CedarRoleQueries';
 import { CedarRole } from 'queries/types/CedarRole';
@@ -61,7 +63,8 @@ const EditTeam = ({
   const history = useHistory();
   const { Message, showMessage } = useMessage();
 
-  const isWorkspace = true; // until param merged in
+  const flags = useFlags();
+  const isWorkspace = useIsWorkspaceParam();
 
   const [memberToDelete, setMemberToDelete] = useState<{
     euaUserId: string;
@@ -147,37 +150,43 @@ const EditTeam = ({
 
   return (
     <GridContainer className="margin-bottom-10">
-      <BreadcrumbBar variant="wrap">
-        <Breadcrumb>
-          <BreadcrumbLink asCustom={Link} to="/systems">
-            {t('singleSystem.editTeam.systems')}
-          </BreadcrumbLink>
-        </Breadcrumb>
-        <Breadcrumb>
-          <BreadcrumbLink asCustom={Link} to={`/systems/${cedarSystemId}/team`}>
-            {name}
-          </BreadcrumbLink>
-        </Breadcrumb>
-        {action === 'team-member' ? (
-          <>
-            <Breadcrumb>
-              <BreadcrumbLink
-                asCustom={Link}
-                to={`/systems/${cedarSystemId}/team/edit`}
-              >
-                {t('singleSystem.editTeam.title')}
-              </BreadcrumbLink>
-            </Breadcrumb>
-            <Breadcrumb>
-              {t(`singleSystem.editTeam.form.${actionType}.title`)}
-            </Breadcrumb>
-          </>
-        ) : (
-          <Breadcrumb>{t('singleSystem.editTeam.title')}</Breadcrumb>
-        )}
-      </BreadcrumbBar>
+      {flags.systemWorkspaceTeam && !isWorkspace && (
+        // Don't show crumbs in the workspace context
+        <BreadcrumbBar variant="wrap" className="padding-y-0 margin-y-2">
+          <Breadcrumb>
+            <BreadcrumbLink asCustom={Link} to="/systems">
+              {t('singleSystem.editTeam.systems')}
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb>
+            <BreadcrumbLink
+              asCustom={Link}
+              to={`/systems/${cedarSystemId}/team`}
+            >
+              {name}
+            </BreadcrumbLink>
+          </Breadcrumb>
+          {action === 'team-member' ? (
+            <>
+              <Breadcrumb>
+                <BreadcrumbLink
+                  asCustom={Link}
+                  to={`/systems/${cedarSystemId}/team/edit`}
+                >
+                  {t('singleSystem.editTeam.title')}
+                </BreadcrumbLink>
+              </Breadcrumb>
+              <Breadcrumb>
+                {t(`singleSystem.editTeam.form.${actionType}.title`)}
+              </Breadcrumb>
+            </>
+          ) : (
+            <Breadcrumb>{t('singleSystem.editTeam.title')}</Breadcrumb>
+          )}
+        </BreadcrumbBar>
+      )}
 
-      <Message />
+      <Message className="margin-top-2" />
 
       {action ? (
         /* Add/edit team member form */
@@ -185,6 +194,7 @@ const EditTeam = ({
           cedarSystemId={cedarSystemId}
           updateRoles={updateRoles}
           loading={loading}
+          team={team}
         />
       ) : (
         /* Edit team page */

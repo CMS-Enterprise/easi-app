@@ -32,7 +32,10 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
-	localSender := local.NewSender()
+
+	env, _ := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+
+	localSender := local.NewSender(env)
 	emailClient, err := email.NewClient(emailConfig, localSender)
 	if err != nil {
 		s.FailNow("Unable to construct email client with local sender")
