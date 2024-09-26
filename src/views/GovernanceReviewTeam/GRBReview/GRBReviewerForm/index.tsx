@@ -12,6 +12,7 @@ import {
   IconArrowBack
 } from '@trussworks/react-uswds';
 import {
+  CreateGRBReviewerInput,
   GetSystemIntakeGRBReviewersDocument,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
@@ -38,7 +39,7 @@ import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import BulkAddGRBReviewersForm from './BulkAddGRBReviewersForm';
 
-type GRBReviewerFormFields = {
+type GRBReviewerFields = {
   userAccount: {
     username: string;
     commonName: string;
@@ -49,7 +50,7 @@ type GRBReviewerFormFields = {
 };
 
 type GRBReviewerFormProps = {
-  grbReviewers: SystemIntakeGRBReviewerFragment[];
+  initialGRBReviewers: SystemIntakeGRBReviewerFragment[];
   setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
   grbReviewStartedAt?: string | null;
 };
@@ -58,7 +59,7 @@ type GRBReviewerFormProps = {
  * Form to add or edit a GRB reviewer
  */
 const GRBReviewerForm = ({
-  grbReviewers,
+  initialGRBReviewers,
   setReviewerToRemove,
   grbReviewStartedAt
 }: GRBReviewerFormProps) => {
@@ -96,17 +97,21 @@ const GRBReviewerForm = ({
     ]
   });
 
-  const form = useEasiForm<GRBReviewerFormFields>({
-    resolver: yupResolver(CreateGRBReviewerSchema(grbReviewers)),
-    context: { action },
+  const form = useEasiForm<{ grbReviewers: GRBReviewerFields[] }>({
+    resolver: yupResolver(CreateGRBReviewerSchema),
+    context: { action, initialGRBReviewers },
     defaultValues: {
-      votingRole: activeReviewer?.votingRole,
-      grbRole: activeReviewer?.grbRole,
-      userAccount: {
-        commonName: activeReviewer?.userAccount?.commonName,
-        username: activeReviewer?.userAccount?.username,
-        email: activeReviewer?.userAccount?.email
-      }
+      grbReviewers: [
+        {
+          votingRole: activeReviewer?.votingRole,
+          grbRole: activeReviewer?.grbRole,
+          userAccount: {
+            commonName: activeReviewer?.userAccount?.commonName,
+            username: activeReviewer?.userAccount?.username,
+            email: activeReviewer?.userAccount?.email
+          }
+        }
+      ]
     }
   });
 
@@ -121,24 +126,37 @@ const GRBReviewerForm = ({
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
-  const submit = handleSubmit(({ userAccount, ...values }) => {
+  const submit = handleSubmit(values => {
     if (!isDirty) return history.push(grbReviewPath);
 
+    const reviewers: CreateGRBReviewerInput[] = values.grbReviewers.map(
+      ({ votingRole, grbRole, userAccount }) => ({
+        euaUserId: userAccount.username,
+        grbRole,
+        votingRole
+      })
+    );
+
+    /** Single reviewer being created or updated */
+    const updatedReviewer = values.grbReviewers[0];
+
+    /** Form mutation based on type of form action */
     const mutate = () =>
       activeReviewer
         ? updateGRBReviewer({
-            variables: { input: { ...values, reviewerID: activeReviewer.id } }
+            variables: {
+              input: {
+                reviewerID: activeReviewer.id,
+                grbRole: updatedReviewer.grbRole,
+                votingRole: updatedReviewer.votingRole
+              }
+            }
           })
         : createGRBReviewers({
             variables: {
               input: {
                 systemIntakeID: systemId,
-                reviewers: [
-                  {
-                    ...values,
-                    euaUserId: userAccount.username
-                  }
-                ]
+                reviewers
               }
             }
           });
@@ -149,11 +167,13 @@ const GRBReviewerForm = ({
           <Trans
             i18nKey="grbReview:form.success"
             values={{
-              commonName: userAccount.commonName,
-              votingRole: toLower(t<string>(`votingRoles.${values.votingRole}`))
+              commonName: updatedReviewer.userAccount.commonName,
+              votingRole: toLower(
+                t<string>(`votingRoles.${updatedReviewer.votingRole}`)
+              )
             }}
             tOptions={{
-              context: values.votingRole
+              context: updatedReviewer.votingRole
             }}
           >
             Success message
@@ -216,11 +236,14 @@ const GRBReviewerForm = ({
                     as={<FieldErrorMsg />}
                   />
                   <CedarContactSelect
-                    {...{ ...register('userAccount'), ref: null }}
+                    {...{
+                      ...register('grbReviewers.0.userAccount'),
+                      ref: null
+                    }}
                     onChange={contact =>
                       contact?.euaUserId &&
                       setValue(
-                        'userAccount',
+                        'grbReviewers.0.userAccount',
                         {
                           username: contact.euaUserId,
                           commonName: contact.commonName,
@@ -230,9 +253,11 @@ const GRBReviewerForm = ({
                       )
                     }
                     value={{
-                      euaUserId: watch('userAccount.username'),
-                      commonName: watch('userAccount.commonName'),
-                      email: watch('userAccount.email')
+                      euaUserId: watch('grbReviewers.0.userAccount.username'),
+                      commonName: watch(
+                        'grbReviewers.0.userAccount.commonName'
+                      ),
+                      email: watch('grbReviewers.0.userAccount.email')
                     }}
                     id="userAccount"
                     ariaDescribedBy="userAccountHelpText"
@@ -249,7 +274,7 @@ const GRBReviewerForm = ({
                     as={<FieldErrorMsg />}
                   />
                   <Dropdown
-                    {...register('votingRole')}
+                    {...register('grbReviewers.0.votingRole')}
                     ref={null}
                     id="votingRole"
                   >
@@ -295,7 +320,7 @@ const GRBReviewerForm = ({
                     as={<FieldErrorMsg />}
                   />
                   <Dropdown
-                    {...register('grbRole')}
+                    {...register('grbReviewers.0.grbRole')}
                     ref={null}
                     id="grbRole"
                     aria-describedby="grbRoleHelpText"
@@ -324,7 +349,9 @@ const GRBReviewerForm = ({
               id="addReviewersFromRequest"
               tabName={t('form.addFromRequest')}
             >
-              <EasiFormProvider<GRBReviewerFormFields> {...form}>
+              <EasiFormProvider<{ grbReviewers: GRBReviewerFields[] }>
+                {...form}
+              >
                 <BulkAddGRBReviewersForm systemId={systemId} />
               </EasiFormProvider>
             </TabPanel>
@@ -344,13 +371,14 @@ const GRBReviewerForm = ({
             next={{
               text:
                 action === 'add'
-                  ? // TODO: Update count
-                    t('form.addReviewer', { count: 2 })
+                  ? t('form.addReviewer', {
+                      count: watch('grbReviewers').length
+                    })
                   : t('form.saveChanges'),
               disabled:
-                !watch('userAccount') ||
-                !watch('votingRole') ||
-                !watch('grbRole')
+                !watch('grbReviewers.0.userAccount') ||
+                !watch('grbReviewers.0.votingRole') ||
+                !watch('grbReviewers.0.grbRole')
             }}
             taskListUrl={grbReviewPath}
             saveExitText={t('form.returnToRequest', { context: action })}

@@ -170,7 +170,7 @@ const GRBReview = ({
       {isForm ? (
         <GRBReviewerForm
           setReviewerToRemove={setReviewerToRemove}
-          grbReviewers={grbReviewers}
+          initialGRBReviewers={grbReviewers}
           grbReviewStartedAt={grbReviewStartedAt}
         />
       ) : (
