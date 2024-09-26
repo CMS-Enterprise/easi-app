@@ -278,6 +278,7 @@ const EditTeam = ({
               {/* Confirm remove user */}
               <Button
                 type="button"
+                secondary
                 onClick={() => {
                   if (memberToDelete) removeUser(memberToDelete);
                 }}
@@ -291,7 +292,7 @@ const EditTeam = ({
                 className="margin-left-1"
                 unstyled
               >
-                {t('singleSystem.editTeam.keepTeamMember')}
+                {t('singleSystem.editTeam.cancel')}
               </Button>
 
               {loading && <Spinner className="margin-top-05" />}

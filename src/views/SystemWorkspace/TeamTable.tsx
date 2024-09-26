@@ -104,7 +104,8 @@ function TeamTable({
               </Button>
             </>
           );
-        }
+        },
+        disableSortBy: true
       }
     ],
     [systemId, t, setMemberToDelete]
@@ -135,7 +136,7 @@ function TeamTable({
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'role', desc: true }], []),
+        // sortBy: useMemo(() => [{ id: 'role', desc: true }], []),
         pageIndex: 0,
         pageSize: 10
       }

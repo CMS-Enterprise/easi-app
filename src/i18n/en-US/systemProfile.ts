@@ -218,8 +218,9 @@ const systemProfile = {
       removeTeamMember: 'Remove team member',
       removeModalTitle: 'Are you sure you want to remove  this team member?',
       removeModalDescription:
-        'Removing {{commonName}} will also remove any roles they have for this system.',
-      keepTeamMember: 'Keep team member',
+        'This action cannot be undone. Removing {{commonName}} will remove any roles and permissions they have for this system.',
+      keepTeamMember: 'Keep team member', //
+      cancel: 'Cancel',
       form: {
         add: {
           title: 'Add a team member',
