@@ -342,7 +342,11 @@ const GRBReviewerForm = ({
 
           <Pager
             next={{
-              text: t('form.submit', { context: action }),
+              text:
+                action === 'add'
+                  ? // TODO: Update count
+                    t('form.addReviewer', { count: 2 })
+                  : t('form.saveChanges'),
               disabled:
                 !watch('userAccount') ||
                 !watch('votingRole') ||

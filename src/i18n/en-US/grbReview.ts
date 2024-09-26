@@ -115,8 +115,9 @@ export default {
     grbRole: 'GRB role',
     grbRoleHelpText:
       'Select the role that this reviewer has on the GRB, such as the BDG that they represent.',
-    submit_add: 'Add reviewer',
-    submit_edit: 'Save changes',
+    addReviewer: 'Add reviewer',
+    addReviewer_plural: 'Add reviewers ({{count}})',
+    saveChanges: 'Save changes',
     removeGrbReviewer: 'Remove GRB reviewer',
     infoAlertReviewNotStarted:
       'Adding GRB reviewers will not send them an invitation until you start the GRB review, though they will still be able to access content if they sign into EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
