@@ -8,6 +8,7 @@ import (
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -130,11 +131,7 @@ var mockSystems = map[string]*models.CedarSystem{
 
 // GetAllSystems returns a mocked list of Cedar Systems
 func GetAllSystems() []*models.CedarSystem {
-	var systems []*models.CedarSystem
-	for _, v := range mockSystems {
-		systems = append(systems, v)
-	}
-	return systems
+	return helpers.MapToSlice(mockSystems)
 }
 
 // GetActiveSystems returns only active systems

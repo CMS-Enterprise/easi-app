@@ -41,7 +41,7 @@ func CreateSystemIntakeGRBReviewers(
 		euas := helpers.MapSlice(input.Reviewers, func(reviewer *models.CreateGRBReviewerInput) string {
 			return reviewer.EuaUserID
 		})
-		reviewersByEUAMap := helpers.ToMap(input.Reviewers, func(reviewer *models.CreateGRBReviewerInput) string {
+		reviewersByEUAMap := helpers.SliceToMap(input.Reviewers, func(reviewer *models.CreateGRBReviewerInput) string {
 			return reviewer.EuaUserID
 		})
 		accts, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, store, euas, false, fetchUsers)
