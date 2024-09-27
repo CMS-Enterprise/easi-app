@@ -302,7 +302,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dd
                 class="description-definition margin-0"
               >
-                N/A
+                No
               </dd>
             </div>
           </div>
