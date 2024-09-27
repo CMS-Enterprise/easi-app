@@ -50,7 +50,7 @@ describe('Edit team page', () => {
 
     expect(
       getByRole('button', {
-        name: i18next.t('systemProfile:singleSystem.editTeam.addNewTeamMember')
+        name: i18next.t('systemProfile:singleSystem.editTeam.addTeamMember')
       })
     ).toBeInTheDocument();
 

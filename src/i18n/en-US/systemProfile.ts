@@ -211,8 +211,7 @@ const systemProfile = {
         'How many full-time federal employees work on this system?',
       contractors: 'How many full-time contractors work on this system?',
       teamMembers: 'Team members',
-      addNewTeamMember: 'Add a new team member',
-      currentTeamMembers: 'Current team members',
+      addTeamMember: 'Add another team member',
       editRoles: 'Edit roles',
       remove: 'Remove',
       removeTeamMember: 'Remove team member',
@@ -221,6 +220,18 @@ const systemProfile = {
         'This action cannot be undone. Removing {{commonName}} will remove any roles and permissions they have for this system.',
       keepTeamMember: 'Keep team member', //
       cancel: 'Cancel',
+      workspace: {
+        title: 'Manage system team',
+        helpText: 'Add or remove team members and manage their roles.',
+        backLink: 'Return to system workspace',
+        teamRoleRequirementAlert:
+          'Please add additional system team members. Every system should have at least one:',
+        teamRoleRequirementAlertList: [
+          'Business Owner',
+          'System Maintainer',
+          'Contracting Officer’s Representative (COR), Government Task Lead (GTL), or Project Lead'
+        ]
+      },
       form: {
         add: {
           title: 'Add a team member',

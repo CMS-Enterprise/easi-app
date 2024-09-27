@@ -16,7 +16,6 @@ import {
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Modal from 'components/Modal';
-import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import Spinner from 'components/Spinner';
 import useIsWorkspaceParam from 'hooks/useIsWorkspaceParam';
@@ -198,78 +197,139 @@ const EditTeam = ({
         />
       ) : (
         /* Edit team page */
-        // move grid col rule
-        // <Grid className="tablet:grid-col-6">
-        <Grid className="">
-          <h1 className="margin-bottom-1">
-            {t('singleSystem.editTeam.title')}
+        <>
+          <h1 className="margin-bottom-05">
+            {t(
+              isWorkspace
+                ? 'singleSystem.editTeam.workspace.title'
+                : 'singleSystem.editTeam.title'
+            )}
           </h1>
-          <p>{t('singleSystem.editTeam.description')}</p>
-          <HelpText>{t('singleSystem.editTeam.helpText')}</HelpText>
+          <p className="margin-top-0 margin-bottom-1 text-darkest font-body-lg line-height-body-5 text-light">
+            {t(
+              isWorkspace
+                ? 'systemWorkspace:requests.subhead'
+                : 'singleSystem.editTeam.description'
+            )}
+          </p>
+          <p className="margin-y-1 font-body-md line-height-body-4 text-light">
+            {t(
+              isWorkspace
+                ? 'singleSystem.editTeam.workspace.helpText'
+                : 'singleSystem.editTeam.helpText'
+            )}
+          </p>
 
           <IconLink
-            to={`/systems/${cedarSystemId}/team`}
+            to={
+              isWorkspace
+                ? `/systems/${cedarSystemId}/workspace`
+                : `/systems/${cedarSystemId}/team`
+            }
             icon={<IconArrowBack />}
-            className="margin-top-3 margin-bottom-6"
+            className="margin-top-2 margin-bottom-6 line-height-body-4 text-primary"
           >
-            {t('returnToSystemProfile')}
+            {t(
+              isWorkspace
+                ? 'singleSystem.editTeam.workspace.backLink'
+                : 'returnToSystemProfile'
+            )}
           </IconLink>
 
           {/* Employees fields hidden until work to update in CEDAR is completed */}
-          {/* <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
-                <Controller
-                  name="numberOfFederalFte"
-                  control={control}
-                  render={({ field, fieldState: { error } }) => (
-                    <FormGroup error={!!error}>
-                      <Label htmlFor={field.name}>
-                        {t('singleSystem.editTeam.federalEmployees')}
-                      </Label>
-                      {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                      <TextInput
-                        {...field}
-                        ref={null}
-                        id={field.name}
-                        type="number"
-                      />
-                    </FormGroup>
-                  )}
-                />
-                <Controller
-                  name="numberOfContractorFte"
-                  control={control}
-                  render={({ field, fieldState: { error } }) => (
-                    <FormGroup error={!!error}>
-                      <Label htmlFor={field.name}>
-                        {t('singleSystem.editTeam.contractors')}
-                      </Label>
-                      {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                      <TextInput
-                        {...field}
-                        ref={null}
-                        id={field.name}
-                        type="number"
-                      />
-                    </FormGroup>
-                  )}
-                />
-              </Form> */}
+          {/*
+          <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
+            <Controller
+              name="numberOfFederalFte"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup error={!!error}>
+                  <Label htmlFor={field.name}>
+                    {t('singleSystem.editTeam.federalEmployees')}
+                  </Label>
+                  {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                  <TextInput
+                    {...field}
+                    ref={null}
+                    id={field.name}
+                    type="number"
+                  />
+                </FormGroup>
+              )}
+            />
+            <Controller
+              name="numberOfContractorFte"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup error={!!error}>
+                  <Label htmlFor={field.name}>
+                    {t('singleSystem.editTeam.contractors')}
+                  </Label>
+                  {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                  <TextInput
+                    {...field}
+                    ref={null}
+                    id={field.name}
+                    type="number"
+                  />
+                </FormGroup>
+              )}
+            />
+          </Form>
+          */}
 
           {/* Team Members section */}
-          <h2 className="margin-top-6 margin-bottom-205">
+          <h4 className="margin-top-5 margin-bottom-1">
             {t('singleSystem.editTeam.teamMembers')}
-          </h2>
+          </h4>
 
           <Button
             type="button"
             onClick={() => history.push(`${pathname}/team-member`)}
+            className="margin-bottom-05"
           >
-            {t('singleSystem.editTeam.addNewTeamMember')}
+            {t('singleSystem.editTeam.addTeamMember')}
           </Button>
 
-          <h4 className="margin-top-4">
-            {t('singleSystem.editTeam.currentTeamMembers')}
-          </h4>
+          {/* Team member list */}
+          {!isWorkspace ? (
+            <Grid className="tablet:grid-col-6">
+              <CardGroup className="margin-top-3" data-testid="teamCardGroup">
+                {team.map(user => (
+                  <TeamContactCard
+                    user={user}
+                    key={user.assigneeUsername}
+                    footerActions={{
+                      editRoles: () =>
+                        history.push(
+                          `${pathname}/team-member`,
+                          // Send user info to edit form
+                          { user }
+                        ),
+                      removeTeamMember: () =>
+                        setMemberToDelete({
+                          euaUserId: user.assigneeUsername,
+                          commonName: getTeamMemberName(user)
+                        })
+                    }}
+                  />
+                ))}
+              </CardGroup>
+              <IconLink
+                to={`/systems/${cedarSystemId}/team`}
+                icon={<IconArrowBack />}
+                className="margin-top-6"
+              >
+                {t('returnToSystemProfile')}
+              </IconLink>
+            </Grid>
+          ) : (
+            <TeamTable
+              cedarSystemId={cedarSystemId}
+              team={team}
+              setMemberToDelete={setMemberToDelete}
+            />
+          )}
 
           {/* Remove user modal */}
           <Modal
@@ -308,46 +368,7 @@ const EditTeam = ({
               {loading && <Spinner className="margin-top-05" />}
             </ButtonGroup>
           </Modal>
-
-          {/* Team member list */}
-          {!isWorkspace ? (
-            <CardGroup data-testid="teamCardGroup">
-              {team.map(user => (
-                <TeamContactCard
-                  user={user}
-                  key={user.assigneeUsername}
-                  footerActions={{
-                    editRoles: () =>
-                      history.push(
-                        `${pathname}/team-member`,
-                        // Send user info to edit form
-                        { user }
-                      ),
-                    removeTeamMember: () =>
-                      setMemberToDelete({
-                        euaUserId: user.assigneeUsername,
-                        commonName: getTeamMemberName(user)
-                      })
-                  }}
-                />
-              ))}
-            </CardGroup>
-          ) : (
-            <TeamTable
-              cedarSystemId={cedarSystemId}
-              team={team}
-              setMemberToDelete={setMemberToDelete}
-            />
-          )}
-
-          <IconLink
-            to={`/systems/${cedarSystemId}/team`}
-            icon={<IconArrowBack />}
-            className="margin-top-6"
-          >
-            {t('returnToSystemProfile')}
-          </IconLink>
-        </Grid>
+        </>
       )}
     </GridContainer>
   );
