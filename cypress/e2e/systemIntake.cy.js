@@ -391,7 +391,7 @@ describe('The System Intake Form', () => {
 
     cy.contains(
       '.easi-review-row dt',
-      'Does you request involve AI technologies?'
+      'Does your request involve AI technologies?'
     )
       .siblings('dd')
       .contains('No');
