@@ -106,7 +106,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       usesAiTech,
       softwareAcquisition: {
         usingSoftware: softwareAcquisition?.usingSoftware || '',
-        acquisitionMethods: []
+        acquisitionMethods: softwareAcquisition?.acquisitionMethods || []
       }
     }
   });
@@ -602,6 +602,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                                 `requestDetails.softwareAcquisition.acquistionStrategyLabels.${acqMethod}`
                               )}
                               value={acqMethod}
+                              checked={field.value.includes(acqMethod)}
                               onChange={(
                                 e: React.ChangeEvent<HTMLInputElement>
                               ) => {
