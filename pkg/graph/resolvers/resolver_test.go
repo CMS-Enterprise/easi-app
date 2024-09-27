@@ -95,6 +95,7 @@ type mockSender struct {
 	bccAddresses []models.EmailAddress
 	subject      string
 	body         string
+	emailWasSent bool
 }
 
 func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
@@ -103,6 +104,7 @@ func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
 	s.bccAddresses = emailData.BccAddresses
 	s.subject = emailData.Subject
 	s.body = emailData.Body
+	s.emailWasSent = true
 	return nil
 }
 
@@ -135,13 +137,13 @@ func (tc *TestConfigs) GetDefaults() {
 	// create the test context, note because of the data loaders, the context gets recreated before each test.
 	tc.Context = context.Background()
 
-	localSender := mockSender{}
-	tc.Sender = &localSender
-	emailClient := NewEmailClient(&localSender)
+	emailClient, localSender := NewEmailClient()
+	tc.Sender = localSender
 	tc.EmailClient = emailClient
 }
 
-func NewEmailClient(sender *mockSender) *email.Client {
+func NewEmailClient() (*email.Client, *mockSender) {
+	sender := &mockSender{}
 	config := testhelpers.NewConfig()
 	emailConfig := email.Config{
 		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
@@ -154,7 +156,7 @@ func NewEmailClient(sender *mockSender) *email.Client {
 	}
 
 	emailClient, _ := email.NewClient(emailConfig, sender)
-	return &emailClient
+	return &emailClient, sender
 }
 
 // getTestPrincipal gets a user principal from database

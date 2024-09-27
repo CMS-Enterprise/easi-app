@@ -11,7 +11,6 @@ import (
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"golang.org/x/sync/errgroup"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
@@ -103,45 +102,37 @@ func main() {
 	pastMeetingDate := time.Now().AddDate(0, -2, 0)
 
 	// generate closed requests
-	g, gCtx := errgroup.WithContext(ctx)
-
 	for i := range closedRequestCount {
 		caseNum := i + 1
-		g.Go(func() error {
-			ID := uuid.New()
-			sysIn := makeSystemIntakeAndIssueLCID(
-				gCtx,
-				fmt.Sprintf("closed request #%d", caseNum),
-				&ID,
-				mock.PrincipalUser,
-				store,
-				time.Now().AddDate(2, 0, 0),
-			)
-			createSystemIntakeGRBReviewers(ctx, store, sysIn, []*models.CreateGRBReviewerInput{
-				{
-					EuaUserID:  "BTMN",
-					VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
-					GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
-				},
-				{
-					EuaUserID:  "A11Y",
-					VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
-					GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
-				},
-			})
-
-			setSystemIntakeRelationExistingSystem(
-				gCtx,
-				store,
-				ID,
-				[]string{"111111", "111112"},
-				[]string{"1AB1A00-1234-5678-ABC1-1A001B00CC6G"},
-			)
-			return nil
+		ID := uuid.New()
+		sysIn := makeSystemIntakeAndIssueLCID(
+			ctx,
+			fmt.Sprintf("closed request #%d", caseNum),
+			&ID,
+			mock.PrincipalUser,
+			store,
+			time.Now().AddDate(2, 0, 0),
+		)
+		createSystemIntakeGRBReviewers(ctx, store, sysIn, []*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  "BTMN",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
+			},
+			{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
 		})
-	}
-	if err := g.Wait(); err != nil {
-		panic(err)
+
+		setSystemIntakeRelationExistingSystem(
+			ctx,
+			store,
+			ID,
+			[]string{"111111", "111112"},
+			[]string{"1AB1A00-1234-5678-ABC1-1A001B00CC6G"},
+		)
 	}
 
 	intakeID = uuid.MustParse("3a1d5160-c774-4cd9-9f69-afef824b2e3f")

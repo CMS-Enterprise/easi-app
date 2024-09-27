@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -17,6 +19,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 	okta := local.NewOktaAPIClient()
 
 	s.Run("create GRB Reviewer and add to intake", func() {
+		emailClient, sender := NewEmailClient()
 		reviewerEUA1 := "ABCD"
 		votingRole1 := models.SystemIntakeGRBReviewerVotingRoleVoting
 		grbRole1 := models.SystemIntakeGRBReviewerRoleAca3021Rep
@@ -30,7 +33,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		payload, err := CreateSystemIntakeGRBReviewers(
 			ctx,
 			store,
-			s.testConfigs.EmailClient,
+			emailClient,
 			userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
 			&models.CreateSystemIntakeGRBReviewersInput{
 				SystemIntakeID: intake.ID,
@@ -58,10 +61,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		s.Equal(string(votingRole2), string(reviewers[1].VotingRole))
 		s.Equal(string(grbRole2), string(reviewers[1].GRBRole))
 		s.Equal(intake.ID, reviewers[1].SystemIntakeID)
-		s.Contains(s.testConfigs.Sender.toAddresses, models.EmailAddress(userAccts[0].Email))
-		s.Contains(s.testConfigs.Sender.toAddresses, models.EmailAddress(userAccts[1].Email))
-		s.Contains(s.testConfigs.Sender.body, fmt.Sprintf("Requester: %s", intake.Requester))
-		s.Contains(s.testConfigs.Sender.body, fmt.Sprintf("Project name: %s", intake.ProjectName.String))
+		s.False(sender.emailWasSent)
 	})
 
 	s.Run("fetch GRB reviewers", func() {
@@ -153,6 +153,100 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		updatedReviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 		s.NoError(err)
 		s.Len(updatedReviewers, 0)
+	})
+}
+
+func (s *ResolverSuite) TestSystemIntakeStartGRBReview() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+	okta := local.NewOktaAPIClient()
+	intake := s.createNewIntake()
+	accts, err := userhelpers.GetOrCreateUserAccounts(
+		ctx,
+		store,
+		store,
+		[]string{"BTMN", "A11Y", "ABCD"},
+		false,
+		userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
+	)
+	s.NoError(err)
+	emails := helpers.MapSlice(accts, func(acct *authentication.UserAccount) models.EmailAddress {
+		return models.EmailAddress(acct.Email)
+	})
+	reviewers := []*models.CreateGRBReviewerInput{
+		{
+			EuaUserID:  "BTMN",
+			VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+			GrbRole:    models.SystemIntakeGRBReviewerRoleCoChairCfo,
+		},
+		{
+			EuaUserID:  "A11Y",
+			VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+			GrbRole:    models.SystemIntakeGRBReviewerRoleCoChairCfo,
+		},
+		{
+			EuaUserID:  "ABCD",
+			VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+			GrbRole:    models.SystemIntakeGRBReviewerRoleCoChairCfo,
+		},
+	}
+
+	s.Run("adding reviewers should not email them before start", func() {
+		emailClient, sender := NewEmailClient()
+		payload, err := CreateSystemIntakeGRBReviewers(
+			ctx,
+			store,
+			emailClient,
+			userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
+			&models.CreateSystemIntakeGRBReviewersInput{
+				SystemIntakeID: intake.ID,
+				Reviewers:      reviewers[0:2], //first two
+			},
+		)
+		s.NoError(err)
+		s.Len(payload.Reviewers, 2)
+		s.False(sender.emailWasSent)
+	})
+
+	s.Run("starting review should email reviewers", func() {
+		emailClient, sender := NewEmailClient()
+		_, err := StartGRBReview(ctx, store, emailClient, intake.ID)
+		s.NoError(err)
+		s.True(sender.emailWasSent)
+		s.Empty(sender.toAddresses)
+		s.Empty(sender.ccAddresses)
+		s.Len(sender.bccAddresses, 2)
+		s.ElementsMatch(sender.bccAddresses, emails[0:2])
+		s.Contains(sender.body, fmt.Sprintf("Requester: %s", intake.Requester))
+		s.Contains(sender.body, fmt.Sprintf("Project name: %s", intake.ProjectName.String))
+	})
+
+	s.Run("review cannot be started twice", func() {
+		emailClient, sender := NewEmailClient()
+		_, err := StartGRBReview(ctx, store, emailClient, intake.ID)
+		s.Error(err)
+		s.False(sender.emailWasSent)
+	})
+
+	s.Run("adding a reviewer after review starts sends email", func() {
+		emailClient, sender := NewEmailClient()
+		payload, err := CreateSystemIntakeGRBReviewers(
+			ctx,
+			store,
+			emailClient,
+			userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
+			&models.CreateSystemIntakeGRBReviewersInput{
+				SystemIntakeID: intake.ID,
+				Reviewers:      reviewers[2:], //last
+			},
+		)
+		s.NoError(err)
+		s.Len(payload.Reviewers, 1)
+		s.True(sender.emailWasSent)
+		s.Empty(sender.toAddresses)
+		s.Empty(sender.ccAddresses)
+		s.Len(sender.bccAddresses, 1)
+		s.Equal(sender.bccAddresses[0], emails[2])
 	})
 }
 

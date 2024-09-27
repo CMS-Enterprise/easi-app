@@ -38,12 +38,12 @@ func CreateSystemIntakeGRBReviewers(
 		if intake == nil {
 			return nil, errors.New("system intake not found")
 		}
-		euas := []string{}
-		reviewersByEUAMap := map[string]*models.CreateGRBReviewerInput{}
-		for _, reviewer := range input.Reviewers {
-			euas = append(euas, reviewer.EuaUserID)
-			reviewersByEUAMap[reviewer.EuaUserID] = reviewer
-		}
+		euas := helpers.MapSlice(input.Reviewers, func(reviewer *models.CreateGRBReviewerInput) string {
+			return reviewer.EuaUserID
+		})
+		reviewersByEUAMap := helpers.ToMap(input.Reviewers, func(reviewer *models.CreateGRBReviewerInput) string {
+			return reviewer.EuaUserID
+		})
 		accts, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, store, euas, false, fetchUsers)
 		if err != nil {
 			return nil, err
@@ -65,18 +65,15 @@ func CreateSystemIntakeGRBReviewers(
 		}
 
 		// send notification email to reviewer
-		if emailClient != nil {
+		// Note: GRB review cannot be set to future date currently
+		if emailClient != nil && intake.GRBReviewStartedAt != nil && intake.GRBReviewStartedAt.Before(time.Now()) {
 			emails := []models.EmailAddress{}
 			for _, reviewer := range accts {
 				emails = append(emails, models.EmailAddress(reviewer.Email))
 			}
 			err = emailClient.SystemIntake.SendCreateGRBReviewerNotification(
 				ctx,
-				models.EmailNotificationRecipients{
-					RegularRecipientEmails:   emails,
-					ShouldNotifyITGovernance: false,
-					ShouldNotifyITInvestment: false,
-				},
+				emails,
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
@@ -180,6 +177,7 @@ func SystemIntakeCompareGRBReviewers(
 func StartGRBReview(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	intakeID uuid.UUID,
 ) (*string, error) {
 	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*string, error) {
@@ -187,12 +185,40 @@ func StartGRBReview(
 		if err != nil {
 			return nil, err
 		}
+		if intake.GRBReviewStartedAt != nil {
+			return nil, errors.New("review already started")
+		}
 		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
 		_, err = store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
 		}
-		// TODO: Send notification emails to all reviewers
+		reviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intakeID)
+		if err != nil {
+			return nil, err
+		}
+		userIDs := helpers.MapSlice(reviewers, func(reviewer *models.SystemIntakeGRBReviewer) uuid.UUID {
+			return reviewer.UserID
+		})
+		accts, err := store.UserAccountsByIDs(ctx, userIDs)
+		if err != nil {
+			return nil, err
+		}
+		emails := helpers.MapSlice(accts, func(useraccount *authentication.UserAccount) models.EmailAddress {
+			return models.EmailAddress(useraccount.Email)
+		})
+		if emailClient != nil {
+			err = emailClient.SystemIntake.SendCreateGRBReviewerNotification(
+				ctx,
+				emails,
+				intake.ID,
+				intake.ProjectName.String,
+				intake.Requester,
+			)
+			if err != nil {
+				appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
+			}
+		}
 		return helpers.PointerTo("started GRB review"), nil
 	})
 }

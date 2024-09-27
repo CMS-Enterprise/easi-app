@@ -14,3 +14,20 @@ func DatesEqual(d1, d2 *time.Time) bool {
 	daysSame := d1.Day() == d2.Day()
 	return yearsSame && monthsSame && daysSame
 }
+
+func MapSlice[T any, R any](s []T, fx func(s T) R) []R {
+	var r []R
+	for _, item := range s {
+		r = append(r, fx(item))
+	}
+	return r
+}
+
+func ToMap[T any, K comparable](s []T, fx func(s T) K) map[K]T {
+	r := map[K]T{}
+	for _, item := range s {
+		key := fx(item)
+		r[key] = item
+	}
+	return r
+}
