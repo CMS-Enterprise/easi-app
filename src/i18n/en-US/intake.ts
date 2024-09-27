@@ -353,8 +353,7 @@ const intake = {
       explore:
         'Explore business solutions that might exist elsewhere within CMS',
       discuss: 'Discuss lessons learned from similar projects',
-      give:
-        'Give you and your team an enterprise-level view of the agency to avoid duplication of projects',
+      give: 'Give you and your team an enterprise-level view of the agency to avoid duplication of projects',
       help: 'Help you explore alternatives you might not have thought of',
       model: 'Model your business processes and document workflows'
     },
@@ -417,8 +416,7 @@ const intake = {
     cmsBusinessOwnerComponent: 'CMS Business Owner Component',
     cmsProjectManagerName: 'CMS Project/Product Manager or lead',
     cmsProjectManagerComponent: 'CMS Project/Product manager or lead Component',
-    isso:
-      'Does your project have an Information System Security Officer (ISSO)?',
+    isso: 'Does your project have an Information System Security Officer (ISSO)?',
     collaborating: 'I have started collaborating with',
     requestDetails: 'Request Details',
     projectName: 'Project Name',

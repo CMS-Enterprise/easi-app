@@ -3319,8 +3319,8 @@ export function useGetSystemIntakeGRBReviewersLazyQuery(baseOptions?: Apollo.Laz
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>(GetSystemIntakeGRBReviewersDocument, options);
         }
-export function useGetSystemIntakeGRBReviewersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetSystemIntakeGRBReviewersSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetSystemIntakeGRBReviewersQuery, GetSystemIntakeGRBReviewersQueryVariables>(GetSystemIntakeGRBReviewersDocument, options);
         }
 export type GetSystemIntakeGRBReviewersQueryHookResult = ReturnType<typeof useGetSystemIntakeGRBReviewersQuery>;
@@ -3358,8 +3358,8 @@ export function useGetSystemIntakesWithReviewRequestedLazyQuery(baseOptions?: Ap
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetSystemIntakesWithReviewRequestedQuery, GetSystemIntakesWithReviewRequestedQueryVariables>(GetSystemIntakesWithReviewRequestedDocument, options);
         }
-export function useGetSystemIntakesWithReviewRequestedSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSystemIntakesWithReviewRequestedQuery, GetSystemIntakesWithReviewRequestedQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetSystemIntakesWithReviewRequestedSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSystemIntakesWithReviewRequestedQuery, GetSystemIntakesWithReviewRequestedQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetSystemIntakesWithReviewRequestedQuery, GetSystemIntakesWithReviewRequestedQueryVariables>(GetSystemIntakesWithReviewRequestedDocument, options);
         }
 export type GetSystemIntakesWithReviewRequestedQueryHookResult = ReturnType<typeof useGetSystemIntakesWithReviewRequestedQuery>;
@@ -3485,8 +3485,8 @@ export function useGetSystemIntakeRelatedRequestsLazyQuery(baseOptions?: Apollo.
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>(GetSystemIntakeRelatedRequestsDocument, options);
         }
-export function useGetSystemIntakeRelatedRequestsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetSystemIntakeRelatedRequestsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>(GetSystemIntakeRelatedRequestsDocument, options);
         }
 export type GetSystemIntakeRelatedRequestsQueryHookResult = ReturnType<typeof useGetSystemIntakeRelatedRequestsQuery>;
@@ -3540,8 +3540,8 @@ export function useGetSystemIntakeRelationLazyQuery(baseOptions?: Apollo.LazyQue
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetSystemIntakeRelationQuery, GetSystemIntakeRelationQueryVariables>(GetSystemIntakeRelationDocument, options);
         }
-export function useGetSystemIntakeRelationSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSystemIntakeRelationQuery, GetSystemIntakeRelationQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetSystemIntakeRelationSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSystemIntakeRelationQuery, GetSystemIntakeRelationQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetSystemIntakeRelationQuery, GetSystemIntakeRelationQueryVariables>(GetSystemIntakeRelationDocument, options);
         }
 export type GetSystemIntakeRelationQueryHookResult = ReturnType<typeof useGetSystemIntakeRelationQuery>;
@@ -3580,8 +3580,8 @@ export function useGetTrbLeadOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHook
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetTrbLeadOptionsQuery, GetTrbLeadOptionsQueryVariables>(GetTrbLeadOptionsDocument, options);
         }
-export function useGetTrbLeadOptionsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetTrbLeadOptionsQuery, GetTrbLeadOptionsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetTrbLeadOptionsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTrbLeadOptionsQuery, GetTrbLeadOptionsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetTrbLeadOptionsQuery, GetTrbLeadOptionsQueryVariables>(GetTrbLeadOptionsDocument, options);
         }
 export type GetTrbLeadOptionsQueryHookResult = ReturnType<typeof useGetTrbLeadOptionsQuery>;
@@ -3640,8 +3640,8 @@ export function useGetTRBRequestRelatedRequestsLazyQuery(baseOptions?: Apollo.La
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetTRBRequestRelatedRequestsQuery, GetTRBRequestRelatedRequestsQueryVariables>(GetTRBRequestRelatedRequestsDocument, options);
         }
-export function useGetTRBRequestRelatedRequestsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetTRBRequestRelatedRequestsQuery, GetTRBRequestRelatedRequestsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetTRBRequestRelatedRequestsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTRBRequestRelatedRequestsQuery, GetTRBRequestRelatedRequestsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetTRBRequestRelatedRequestsQuery, GetTRBRequestRelatedRequestsQueryVariables>(GetTRBRequestRelatedRequestsDocument, options);
         }
 export type GetTRBRequestRelatedRequestsQueryHookResult = ReturnType<typeof useGetTRBRequestRelatedRequestsQuery>;
@@ -3695,8 +3695,8 @@ export function useGetTrbRequestRelationLazyQuery(baseOptions?: Apollo.LazyQuery
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetTrbRequestRelationQuery, GetTrbRequestRelationQueryVariables>(GetTrbRequestRelationDocument, options);
         }
-export function useGetTrbRequestRelationSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetTrbRequestRelationQuery, GetTrbRequestRelationQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetTrbRequestRelationSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTrbRequestRelationQuery, GetTrbRequestRelationQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetTrbRequestRelationQuery, GetTrbRequestRelationQueryVariables>(GetTrbRequestRelationDocument, options);
         }
 export type GetTrbRequestRelationQueryHookResult = ReturnType<typeof useGetTrbRequestRelationQuery>;

@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
+
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
-	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
-	"github.com/lib/pq"
 )
 
 // UpdateSystemIntakeSoftwareAcquisition clears and updates the Software Acquisition information of a system intake using an automatically created transaction
