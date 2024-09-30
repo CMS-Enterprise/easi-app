@@ -61,9 +61,9 @@ func (c Client) SendCedarNewTeamMemberEmail(
 	var recipients []models.EmailAddress
 
 	// find our project lead first
-	projectLeadEmail := determineProjectLeadEmail(existingTeamMembers, newTeamMemberEmail)
-	if len(projectLeadEmail) > 0 {
-		recipients = append(recipients, projectLeadEmail)
+	projectLeadEmails := determineProjectLeadEmail(existingTeamMembers, newTeamMemberEmail)
+	if len(projectLeadEmails) > 0 {
+		recipients = append(recipients, projectLeadEmails...)
 	}
 
 	// look for the rest of the roles
@@ -102,12 +102,16 @@ func (c Client) SendCedarNewTeamMemberEmail(
 	)
 }
 
-func determineProjectLeadEmail(roles []*models.CedarRole, newTeamMemberEmail string) models.EmailAddress {
+func determineProjectLeadEmail(roles []*models.CedarRole, newTeamMemberEmail string) []models.EmailAddress {
 	// we want to send to the Project Lead, Survey Point of Contact, and Business Owner
 	// * if no Project Lead, use Government Task Lead (GTL)
 	// * if no Government Task Lead (GTL), use Contracting Officer's Representative (COR)
 
-	var currBest models.EmailAddress
+	var (
+		projectLeads        []models.EmailAddress
+		governmentTaskLeads []models.EmailAddress
+		corRoles            []models.EmailAddress
+	)
 
 	for _, role := range roles {
 		if role == nil {
@@ -122,20 +126,25 @@ func determineProjectLeadEmail(roles []*models.CedarRole, newTeamMemberEmail str
 		switch role.RoleTypeName.String {
 		case models.ProjectLeadRole.String():
 			// ideal situation
-			return models.NewEmailAddress(role.AssigneeEmail.String)
+			projectLeads = append(projectLeads, models.NewEmailAddress(role.AssigneeEmail.String))
 
 		case models.GovernmentTaskLeadRole.String():
 			// second-best situation
-			currBest = models.NewEmailAddress(role.AssigneeEmail.String)
+			governmentTaskLeads = append(governmentTaskLeads, models.NewEmailAddress(role.AssigneeEmail.String))
 
 		case models.CORRole.String():
 			// third-best situation
-			// do not override if currBest is already filled in
-			if len(currBest) < 1 {
-				currBest = models.NewEmailAddress(role.AssigneeEmail.String)
-			}
+			corRoles = append(corRoles, models.NewEmailAddress(role.AssigneeEmail.String))
 		}
 	}
 
-	return currBest
+	if len(projectLeads) > 0 {
+		return projectLeads
+	}
+
+	if len(governmentTaskLeads) > 0 {
+		return governmentTaskLeads
+	}
+
+	return corRoles
 }
