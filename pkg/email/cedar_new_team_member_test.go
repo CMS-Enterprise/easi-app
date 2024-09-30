@@ -74,3 +74,154 @@ func (s *EmailTestSuite) TestSendCedarNewTeamMemberEmail() {
 		s.EqualHTML(expectedBody, ms.body)
 	})
 }
+
+func (s *EmailTestSuite) TestDetermineProjectLeads() {
+	// with one project lead
+	roles := []*models.CedarRole{{
+		AssigneeEmail: zero.StringFrom("test1@ok.com"),
+		RoleTypeName:  zero.StringFrom(models.ProjectLeadRole.String()),
+	}}
+
+	out := determineProjectLeadEmail(roles, "")
+	s.Len(out, 1)
+	s.Equal(out[0].String(), "test1@ok.com")
+
+	// with more than one project lead
+	roles = []*models.CedarRole{
+		{
+			AssigneeEmail: zero.StringFrom("test1@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.ProjectLeadRole.String()),
+		},
+		{
+			AssigneeEmail: zero.StringFrom("test2@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.ProjectLeadRole.String()),
+		},
+	}
+
+	out = determineProjectLeadEmail(roles, "")
+	s.Len(out, 2)
+	s.Equal(out[0].String(), "test1@ok.com")
+	s.Equal(out[1].String(), "test2@ok.com")
+
+	// with more than one project lead where one of the leads is the new team member
+	roles = []*models.CedarRole{
+		{
+			AssigneeEmail: zero.StringFrom("test1@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.ProjectLeadRole.String()),
+		},
+		{
+			AssigneeEmail: zero.StringFrom("test2@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.ProjectLeadRole.String()),
+		},
+	}
+
+	out = determineProjectLeadEmail(roles, "test1@ok.com")
+	s.Len(out, 1)
+	s.Equal(out[0].String(), "test2@ok.com")
+
+	// with no project leads but has GTL roles
+	roles = []*models.CedarRole{
+		{
+			AssigneeEmail: zero.StringFrom("test1@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.GovernmentTaskLeadRole.String()),
+		},
+		{
+			AssigneeEmail: zero.StringFrom("test2@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.GovernmentTaskLeadRole.String()),
+		},
+	}
+
+	out = determineProjectLeadEmail(roles, "")
+	s.Len(out, 2)
+	s.Equal(out[0].String(), "test1@ok.com")
+	s.Equal(out[1].String(), "test2@ok.com")
+
+	// with no project leads but has GTL roles, one of which is the new team member
+	roles = []*models.CedarRole{
+		{
+			AssigneeEmail: zero.StringFrom("test1@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.GovernmentTaskLeadRole.String()),
+		},
+		{
+			AssigneeEmail: zero.StringFrom("test2@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.GovernmentTaskLeadRole.String()),
+		},
+	}
+
+	out = determineProjectLeadEmail(roles, "test1@ok.com")
+	s.Len(out, 1)
+	s.Equal(out[0].String(), "test2@ok.com")
+
+	// with no project leads, no GTL roles, but has COR roles
+	roles = []*models.CedarRole{
+		{
+			AssigneeEmail: zero.StringFrom("test1@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.CORRole.String()),
+		},
+		{
+			AssigneeEmail: zero.StringFrom("test2@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.CORRole.String()),
+		},
+	}
+
+	out = determineProjectLeadEmail(roles, "")
+	s.Len(out, 2)
+	s.Equal(out[0].String(), "test1@ok.com")
+	s.Equal(out[1].String(), "test2@ok.com")
+
+	// with no project leads, no GTL roles, but has COR roles, one of which is the new team member
+	roles = []*models.CedarRole{
+		{
+			AssigneeEmail: zero.StringFrom("test1@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.CORRole.String()),
+		},
+		{
+			AssigneeEmail: zero.StringFrom("test2@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.CORRole.String()),
+		},
+	}
+
+	out = determineProjectLeadEmail(roles, "test1@ok.com")
+	s.Len(out, 1)
+	s.Equal(out[0].String(), "test2@ok.com")
+
+	// with one of each role
+	roles = []*models.CedarRole{
+		{
+			AssigneeEmail: zero.StringFrom("test1@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.ProjectLeadRole.String()),
+		},
+		{
+			AssigneeEmail: zero.StringFrom("test2@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.GovernmentTaskLeadRole.String()),
+		},
+		{
+			AssigneeEmail: zero.StringFrom("test3@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.CORRole.String()),
+		},
+	}
+
+	out = determineProjectLeadEmail(roles, "")
+	s.Len(out, 1)
+	s.Equal(out[0].String(), "test1@ok.com")
+
+	// with one of each role where the project lead is the new team member
+	roles = []*models.CedarRole{
+		{
+			AssigneeEmail: zero.StringFrom("test1@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.ProjectLeadRole.String()),
+		},
+		{
+			AssigneeEmail: zero.StringFrom("test2@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.GovernmentTaskLeadRole.String()),
+		},
+		{
+			AssigneeEmail: zero.StringFrom("test3@ok.com"),
+			RoleTypeName:  zero.StringFrom(models.CORRole.String()),
+		},
+	}
+
+	out = determineProjectLeadEmail(roles, "test1@ok.com")
+	s.Len(out, 1)
+	s.Equal(out[0].String(), "test2@ok.com")
+}
