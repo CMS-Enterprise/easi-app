@@ -61,7 +61,7 @@ func (c Client) SendCedarNewTeamMemberEmail(
 	var recipients []models.EmailAddress
 
 	// find our project lead first
-	projectLeadEmail := determineProjectLeadEmail(existingTeamMembers)
+	projectLeadEmail := determineProjectLeadEmail(existingTeamMembers, newTeamMemberEmail)
 	if len(projectLeadEmail) > 0 {
 		recipients = append(recipients, projectLeadEmail)
 	}
@@ -102,7 +102,7 @@ func (c Client) SendCedarNewTeamMemberEmail(
 	)
 }
 
-func determineProjectLeadEmail(roles []*models.CedarRole) models.EmailAddress {
+func determineProjectLeadEmail(roles []*models.CedarRole, newTeamMemberEmail string) models.EmailAddress {
 	// we want to send to the Project Lead, Survey Point of Contact, and Business Owner
 	// * if no Project Lead, use Government Task Lead (GTL)
 	// * if no Government Task Lead (GTL), use Contracting Officer's Representative (COR)
@@ -111,6 +111,11 @@ func determineProjectLeadEmail(roles []*models.CedarRole) models.EmailAddress {
 
 	for _, role := range roles {
 		if role == nil {
+			continue
+		}
+
+		// do not send to the new team member
+		if role.AssigneeEmail.String == newTeamMemberEmail {
 			continue
 		}
 
