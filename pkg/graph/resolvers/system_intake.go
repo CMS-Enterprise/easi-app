@@ -129,7 +129,11 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 		CreatedAt:          &time.Time{},
 	}
 
-	store.UpdateSystemIntakeSoftwareAcquisition(ctx, input.ID, &softwareAcq)
+	_, err = store.UpdateSystemIntakeSoftwareAcquisition(ctx, input.ID, &softwareAcq)
+
+	if err != nil {
+		return nil, err
+	}
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()
