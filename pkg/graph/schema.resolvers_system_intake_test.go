@@ -1131,7 +1131,10 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 				NeedsEaSupport      bool
 				HasUIChanges        bool
 				UsesAiTech          bool
-				SoftwareAcquisition models.SystemIntakeSoftwareAcquisition
+				SoftwareAcquisition struct {
+					UsingSoftware      string
+					AcquisitionMethods []string
+				}
 			}
 		}
 	}
@@ -1150,8 +1153,8 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 				hasUiChanges: false,
 				usesAiTech: true,
 				softwareAcquisition: {
-					usingSoftware: "NO"
-					acquisitionMethods: []
+					usingSoftware: "NO",
+					acquisitionMethods: [],
 				}
 			}) {
 				systemIntake {
@@ -1184,7 +1187,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 	s.Equal(respIntake.SoftwareAcquisition.UsingSoftware, "NO")
 }
 
-func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesNull() {
+func (s *GraphQLTestSuite) TestUpdateRequestDetailsNullFields() {
 	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1196,9 +1199,13 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesNull() {
 	var resp struct {
 		UpdateSystemIntakeRequestDetails struct {
 			SystemIntake struct {
-				ID           string
-				UsesAiTech   *bool
-				HasUIChanges *bool
+				ID                  string
+				UsesAiTech          *bool
+				HasUIChanges        *bool
+				SoftwareAcquisition struct {
+					UsingSoftware      *string
+					AcquisitionMethods []string
+				}
 			}
 		}
 	}
@@ -1209,11 +1216,19 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesNull() {
 				id: "%s",
 				usesAiTech: null,
 				hasUiChanges: null,
+				softwareAcquisition: {
+					usingSoftware: null,
+					acquisitionMethods: [],
+				}
 			}) {
 				systemIntake {
 					id
 					usesAiTech
 					hasUiChanges
+					softwareAcquisition {
+						usingSoftware
+						acquisitionMethods
+					}
 				}
 			}
 		}`, intake.ID), &resp)
@@ -1221,7 +1236,10 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesNull() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeRequestDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeRequestDetails.SystemIntake
+	s.Nil(respIntake.UsesAiTech)
 	s.Nil(respIntake.HasUIChanges)
+	s.Nil(respIntake.SoftwareAcquisition.UsingSoftware)
+	s.Equal(0, len(respIntake.SoftwareAcquisition.AcquisitionMethods))
 }
 
 func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
@@ -1236,9 +1254,13 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
 	var resp struct {
 		UpdateSystemIntakeRequestDetails struct {
 			SystemIntake struct {
-				ID           string
-				UsesAiTech   *bool
-				HasUIChanges *bool
+				ID                  string
+				UsesAiTech          *bool
+				HasUIChanges        *bool
+				SoftwareAcquisition struct {
+					UsingSoftware      *string
+					AcquisitionMethods []string
+				}
 			}
 		}
 	}
@@ -1249,11 +1271,19 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
 				id: "%s",
 				usesAiTech: true,
 				hasUiChanges: true,
+				softwareAcquisition: {
+					usingSoftware: null,
+					acquisitionMethods: [],
+				}
 			}) {
 				systemIntake {
 					id
 					usesAiTech
 					hasUiChanges
+					softwareAcquisition {
+						usingSoftware
+						acquisitionMethods
+					}
 				}
 			}
 		}`, intake.ID), &resp)
