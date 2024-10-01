@@ -82,7 +82,7 @@ func (s *EmailTestSuite) TestDetermineProjectLeads() {
 		RoleTypeName:  zero.StringFrom(models.ProjectLeadRole.String()),
 	}}
 
-	out := determineProjectLeadEmail(roles, "")
+	out := determineProjectLeadEmails(roles, "")
 	s.Len(out, 1)
 	s.Equal(out[0].String(), "test1@ok.com")
 
@@ -98,7 +98,7 @@ func (s *EmailTestSuite) TestDetermineProjectLeads() {
 		},
 	}
 
-	out = determineProjectLeadEmail(roles, "")
+	out = determineProjectLeadEmails(roles, "")
 	s.Len(out, 2)
 	s.Equal(out[0].String(), "test1@ok.com")
 	s.Equal(out[1].String(), "test2@ok.com")
@@ -115,7 +115,7 @@ func (s *EmailTestSuite) TestDetermineProjectLeads() {
 		},
 	}
 
-	out = determineProjectLeadEmail(roles, "test1@ok.com")
+	out = determineProjectLeadEmails(roles, "test1@ok.com")
 	s.Len(out, 1)
 	s.Equal(out[0].String(), "test2@ok.com")
 
@@ -131,7 +131,7 @@ func (s *EmailTestSuite) TestDetermineProjectLeads() {
 		},
 	}
 
-	out = determineProjectLeadEmail(roles, "")
+	out = determineProjectLeadEmails(roles, "")
 	s.Len(out, 2)
 	s.Equal(out[0].String(), "test1@ok.com")
 	s.Equal(out[1].String(), "test2@ok.com")
@@ -148,7 +148,7 @@ func (s *EmailTestSuite) TestDetermineProjectLeads() {
 		},
 	}
 
-	out = determineProjectLeadEmail(roles, "test1@ok.com")
+	out = determineProjectLeadEmails(roles, "test1@ok.com")
 	s.Len(out, 1)
 	s.Equal(out[0].String(), "test2@ok.com")
 
@@ -164,7 +164,7 @@ func (s *EmailTestSuite) TestDetermineProjectLeads() {
 		},
 	}
 
-	out = determineProjectLeadEmail(roles, "")
+	out = determineProjectLeadEmails(roles, "")
 	s.Len(out, 2)
 	s.Equal(out[0].String(), "test1@ok.com")
 	s.Equal(out[1].String(), "test2@ok.com")
@@ -181,7 +181,7 @@ func (s *EmailTestSuite) TestDetermineProjectLeads() {
 		},
 	}
 
-	out = determineProjectLeadEmail(roles, "test1@ok.com")
+	out = determineProjectLeadEmails(roles, "test1@ok.com")
 	s.Len(out, 1)
 	s.Equal(out[0].String(), "test2@ok.com")
 
@@ -201,7 +201,7 @@ func (s *EmailTestSuite) TestDetermineProjectLeads() {
 		},
 	}
 
-	out = determineProjectLeadEmail(roles, "")
+	out = determineProjectLeadEmails(roles, "")
 	s.Len(out, 1)
 	s.Equal(out[0].String(), "test1@ok.com")
 
@@ -221,7 +221,7 @@ func (s *EmailTestSuite) TestDetermineProjectLeads() {
 		},
 	}
 
-	out = determineProjectLeadEmail(roles, "test1@ok.com")
+	out = determineProjectLeadEmails(roles, "test1@ok.com")
 	s.Len(out, 1)
 	s.Equal(out[0].String(), "test2@ok.com")
 }
