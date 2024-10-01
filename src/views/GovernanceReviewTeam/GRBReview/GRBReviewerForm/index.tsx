@@ -49,11 +49,7 @@ const GRBReviewerForm = ({
 
   return (
     <>
-      {/* <ErrorMessage
-        errors={errors}
-        name="root"
-        as={<Alert type="error" className="margin-top-2" />}
-      /> */}
+      {/* TODO: server error message */}
 
       <Grid className="padding-y-4 margin-bottom-205">
         <h1 className="margin-bottom-1">{t('form.title')}</h1>
@@ -92,7 +88,10 @@ const GRBReviewerForm = ({
             id="addReviewersFromRequest"
             tabName={t('form.addFromRequest')}
           >
-            <BulkAddGRBReviewersForm systemId={systemId} />
+            <BulkAddGRBReviewersForm
+              systemId={systemId}
+              createGRBReviewers={createGRBReviewers}
+            />
           </TabPanel>
         </Tabs>
       </Grid>

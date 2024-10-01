@@ -21,7 +21,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
-import { GRBReviewerFormFields } from 'types/grbReview';
+import { GRBReviewerFields } from 'types/grbReview';
 import { GRBReviewerSchema } from 'validations/grbReviewerSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
@@ -63,11 +63,10 @@ const AddReviewerFromEua = ({
     watch,
     setValue,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitted, isDirty }
-  } = useEasiForm<GRBReviewerFormFields>({
+  } = useEasiForm<GRBReviewerFields>({
     resolver: yupResolver(GRBReviewerSchema),
-    context: { allowDuplicates: !!activeReviewer, initialGRBReviewers },
+    context: { errorOnDuplicates: !activeReviewer, initialGRBReviewers },
     defaultValues: {
       votingRole: activeReviewer?.votingRole,
       grbRole: activeReviewer?.grbRole,
@@ -82,8 +81,6 @@ const AddReviewerFromEua = ({
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
   const submit = handleSubmit(({ userAccount, ...values }) => {
-    if (!isDirty) return history.push(grbReviewPath);
-
     const mutate = () =>
       activeReviewer
         ? updateGRBReviewer({
@@ -103,31 +100,32 @@ const AddReviewerFromEua = ({
             }
           });
 
-    return mutate()
-      .then(() => {
-        showMessageOnNextPage(
-          <Trans
-            i18nKey="grbReview:form.success"
-            values={{
-              commonName: userAccount.commonName,
-              votingRole: toLower(t<string>(`votingRoles.${values.votingRole}`))
-            }}
-            tOptions={{
-              context: values.votingRole
-            }}
-          >
-            Success message
-          </Trans>,
-          { type: 'success' }
-        );
+    return (
+      mutate()
+        .then(() => {
+          showMessageOnNextPage(
+            <Trans
+              i18nKey="grbReview:form.success"
+              values={{
+                commonName: userAccount.commonName,
+                votingRole: toLower(
+                  t<string>(`votingRoles.${values.votingRole}`)
+                )
+              }}
+              tOptions={{
+                context: values.votingRole
+              }}
+            >
+              Success message
+            </Trans>,
+            { type: 'success' }
+          );
 
-        history.push(grbReviewPath);
-      })
-      .catch(() =>
-        setError('root', {
-          message: t('form.error')
+          history.push(grbReviewPath);
         })
-      );
+        // TODO: error message
+        .catch(() => null)
+    );
   });
 
   return (
@@ -252,9 +250,12 @@ const AddReviewerFromEua = ({
 
       <Pager
         next={{
-          text: activeReviewer ? t('form.addReviewer') : t('form.saveChanges'),
+          text: activeReviewer ? t('form.saveChanges') : t('form.addReviewer'),
           disabled:
-            !watch('userAccount') || !watch('votingRole') || !watch('grbRole')
+            !isDirty ||
+            !watch('userAccount') ||
+            !watch('votingRole') ||
+            !watch('grbRole')
         }}
         taskListUrl={grbReviewPath}
         saveExitText={t('form.returnToRequest', {

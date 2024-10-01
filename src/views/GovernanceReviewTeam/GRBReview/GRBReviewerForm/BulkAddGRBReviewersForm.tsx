@@ -1,26 +1,49 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useFieldArray } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { Column, useSortBy, useTable } from 'react-table';
-import { Button, ComboBox, FormGroup, Table } from '@trussworks/react-uswds';
-import { useGetGRBReviewersComparisonsQuery } from 'gql/gen/graphql';
+import { useHistory } from 'react-router-dom';
+import { Cell, Column, useSortBy, useTable } from 'react-table';
+import { yupResolver } from '@hookform/resolvers/yup';
+import {
+  Button,
+  ComboBox,
+  Form,
+  FormGroup,
+  Table
+} from '@trussworks/react-uswds';
+import {
+  CreateSystemIntakeGRBReviewersMutationFn,
+  useGetGRBReviewersComparisonsQuery
+} from 'gql/gen/graphql';
 
+import { useEasiForm } from 'components/EasiForm';
 import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import Spinner from 'components/Spinner';
-import { GRBReviewerComparison } from 'types/grbReview';
+import useMessage from 'hooks/useMessage';
+import { GRBReviewerComparison, GRBReviewerFields } from 'types/grbReview';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
+import { CreateGRBReviewersSchema } from 'validations/grbReviewerSchema';
+import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 type BulkAddGRBReviewersFormProps = {
   systemId: string;
+  createGRBReviewers: CreateSystemIntakeGRBReviewersMutationFn;
+  grbReviewStartedAt?: string | null;
 };
 
 const BulkAddGRBReviewersForm = ({
-  systemId
+  systemId,
+  createGRBReviewers,
+  grbReviewStartedAt
 }: BulkAddGRBReviewersFormProps) => {
   const { t } = useTranslation('grbReview');
+  const { showMessageOnNextPage } = useMessage();
+  const history = useHistory();
 
+  /** ID of selected IT Gov request */
   const [activeITGovernanceRequestId, setActiveITGovernanceRequestId] =
     useState<string>();
 
@@ -29,9 +52,46 @@ const BulkAddGRBReviewersForm = ({
       id: systemId
     }
   });
-
   const itGovernanceRequests = data?.compareGRBReviewersByIntakeID;
 
+  const { control, watch, handleSubmit } = useEasiForm<{
+    grbReviewers: GRBReviewerFields[];
+  }>({
+    resolver: yupResolver(CreateGRBReviewersSchema)
+  });
+
+  const { append, remove } = useFieldArray({
+    control,
+    name: 'grbReviewers'
+  });
+
+  const grbReviewers = watch('grbReviewers');
+
+  const grbReviewPath = `/it-governance/${systemId}/grb-review`;
+
+  /** Submit form and add GRB reviewers */
+  const submit = handleSubmit(({ grbReviewers: reviewers }) =>
+    createGRBReviewers({
+      variables: {
+        input: {
+          systemIntakeID: systemId,
+          reviewers: reviewers.map(({ userAccount, ...reviewer }) => ({
+            ...reviewer,
+            euaUserId: userAccount.username
+          }))
+        }
+      }
+    })
+      .then(() => {
+        // TODO: Update success message for bulk add
+        showMessageOnNextPage('GRB reviewers added', { type: 'success' });
+        history.push(grbReviewPath);
+      })
+      // TODO: error message
+      .catch(() => null)
+  );
+
+  /** Array of GRB reviewers from selected IT Gov request */
   const grbReviewersArray: GRBReviewerComparison[] | undefined = useMemo(() => {
     if (!activeITGovernanceRequestId) return undefined;
 
@@ -40,13 +100,78 @@ const BulkAddGRBReviewersForm = ({
     )?.reviewers;
   }, [activeITGovernanceRequestId, itGovernanceRequests]);
 
-  /** Columns for table */
+  /** Checkbox field for toggling GRB reviewer */
+  const GRBReviewerCheckbox = useCallback(
+    ({ reviewer }: { reviewer: GRBReviewerComparison }) => {
+      /** Reviewer index if already added to array */
+      const reviewerIndex = grbReviewers.findIndex(
+        ({ userAccount }) =>
+          userAccount.username === reviewer.userAccount.username
+      );
+
+      const { userAccount, grbRole, votingRole, isCurrentReviewer } = reviewer;
+
+      const isChecked: boolean = reviewerIndex > -1;
+
+      const toggleReviewer = () =>
+        isChecked
+          ? remove(reviewerIndex)
+          : append({
+              userAccount,
+              grbRole,
+              votingRole
+            });
+
+      return (
+        <input
+          type="checkbox"
+          id={`grbReviewSelect-${userAccount.username}`}
+          // Disable users that have already been added as reviewer
+          disabled={isCurrentReviewer}
+          checked={isChecked || isCurrentReviewer}
+          onChange={toggleReviewer}
+        />
+      );
+    },
+    [append, remove, grbReviewers]
+  );
+
   const columns = useMemo<Column<GRBReviewerComparison>[]>(() => {
     return [
       {
-        Header: t<string>('participantsTable.name'),
-        id: 'commonName',
-        accessor: ({ userAccount }) => userAccount.commonName
+        // Checkbox field to toggle reviewers
+        Header: <input type="checkbox" id="userAccount.username" />,
+        accessor: 'userAccount',
+        id: 'userAccount.username',
+        Cell: ({
+          row: { original: reviewer }
+        }: Cell<GRBReviewerComparison>) => (
+          <GRBReviewerCheckbox reviewer={reviewer} />
+        )
+      },
+      {
+        Header: (
+          <Label
+            htmlFor="userAccount.username"
+            className="margin-0 text-normal"
+          >
+            {t<string>('participantsTable.name')}
+          </Label>
+        ),
+        accessor: 'userAccount',
+        Cell: ({
+          value
+        }: Cell<
+          GRBReviewerComparison,
+          GRBReviewerComparison['userAccount']
+        >) => (
+          <Label
+            htmlFor={`grbReviewSelect-${value.username}`}
+            className="margin-0 text-normal"
+          >
+            {value.commonName}
+          </Label>
+        )
       },
       {
         Header: t<string>('participantsTable.votingRole'),
@@ -59,7 +184,7 @@ const BulkAddGRBReviewersForm = ({
         Cell: ({ value }) => t<string>(`reviewerRoles.${value}`)
       }
     ];
-  }, [t]);
+  }, [t, GRBReviewerCheckbox]);
 
   const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
     useTable(
@@ -68,9 +193,6 @@ const BulkAddGRBReviewersForm = ({
         data: grbReviewersArray || [],
         autoResetSortBy: false,
         autoResetPage: true
-        // initialState: {
-        //   sortBy: useMemo(() => [{ id: 'commonName', desc: false }], [])
-        // }
       },
       useSortBy
     );
@@ -78,7 +200,7 @@ const BulkAddGRBReviewersForm = ({
   if (loading || !itGovernanceRequests) return <Spinner />;
 
   return (
-    <>
+    <Form onSubmit={submit} className="maxw-none">
       <p className="line-height-body-5 margin-top-3 tablet:grid-col-6">
         {t('form.addFromRequestDescription')}
       </p>
@@ -125,7 +247,7 @@ const BulkAddGRBReviewersForm = ({
               <thead>
                 {headerGroups.map(headerGroup => (
                   <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column, index) => (
+                    {headerGroup.headers.map(column => (
                       <th
                         {...column.getHeaderProps(
                           column.getSortByToggleProps()
@@ -160,7 +282,7 @@ const BulkAddGRBReviewersForm = ({
                       {...row.getRowProps()}
                       data-testid={`grbReviewer-${row.original.userAccount.username}`}
                     >
-                      {row.cells.map((cell, index) => {
+                      {row.cells.map(cell => {
                         return (
                           <td {...cell.getCellProps()}>
                             {cell.render('Cell')}
@@ -183,7 +305,32 @@ const BulkAddGRBReviewersForm = ({
           </>
         )}
       </div>
-    </>
+
+      <Alert type="info" slim className="margin-top-5">
+        {t(
+          grbReviewStartedAt
+            ? 'form.infoAlertReviewStarted'
+            : 'form.infoAlertReviewNotStarted'
+        )}
+      </Alert>
+
+      <Pager
+        next={{
+          text:
+            grbReviewers.length > 1
+              ? t('form.addReviewer', { count: grbReviewers.length })
+              : t('form.addReviewer'),
+          disabled: grbReviewers.length === 0
+        }}
+        taskListUrl={grbReviewPath}
+        saveExitText={t('form.returnToRequest', {
+          context: 'add'
+        })}
+        border={false}
+        className="margin-top-4"
+        submitDisabled
+      />
+    </Form>
   );
 };
 

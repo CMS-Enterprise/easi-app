@@ -17,8 +17,8 @@ export const GRBReviewerSchema = Yup.object().shape({
       value => !!value.commonName && !!value.username
     )
     // Only check for duplicate reviewers when adding new reviewer
-    .when('$allowDuplicates', {
-      is: false,
+    .when('$errorOnDuplicate', {
+      is: true,
       then: schema =>
         schema.when(
           '$initialGRBReviewers',
@@ -43,7 +43,7 @@ export const GRBReviewerSchema = Yup.object().shape({
 });
 
 /** Array of GRB reviewers being added to IT Governance request */
-export const CreateGRBReviewerSchema = Yup.object({
+export const CreateGRBReviewersSchema = Yup.object({
   grbReviewers: Yup.array(GRBReviewerSchema).min(
     1,
     i18next.t('Please select at least one GRB reviewer')

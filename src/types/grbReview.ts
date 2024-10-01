@@ -4,7 +4,7 @@ import {
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/gen/graphql';
 
-export type GRBReviewerFormFields = {
+export type GRBReviewerFields = {
   userAccount: {
     username: string;
     commonName: string;
