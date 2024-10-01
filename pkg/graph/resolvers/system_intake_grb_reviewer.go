@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/samber/lo"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -38,10 +39,10 @@ func CreateSystemIntakeGRBReviewers(
 		if intake == nil {
 			return nil, errors.New("system intake not found")
 		}
-		euas := helpers.MapSlice(input.Reviewers, func(reviewer *models.CreateGRBReviewerInput) string {
+		euas := lo.Map(input.Reviewers, func(reviewer *models.CreateGRBReviewerInput, _ int) string {
 			return reviewer.EuaUserID
 		})
-		reviewersByEUAMap := helpers.SliceToMap(input.Reviewers, func(reviewer *models.CreateGRBReviewerInput) string {
+		reviewersByEUAMap := lo.KeyBy(input.Reviewers, func(reviewer *models.CreateGRBReviewerInput) string {
 			return reviewer.EuaUserID
 		})
 		accts, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, store, euas, false, fetchUsers)
@@ -197,14 +198,14 @@ func StartGRBReview(
 		if err != nil {
 			return nil, err
 		}
-		userIDs := helpers.MapSlice(reviewers, func(reviewer *models.SystemIntakeGRBReviewer) uuid.UUID {
+		userIDs := lo.Map(reviewers, func(reviewer *models.SystemIntakeGRBReviewer, _ int) uuid.UUID {
 			return reviewer.UserID
 		})
 		accts, err := store.UserAccountsByIDs(ctx, userIDs)
 		if err != nil {
 			return nil, err
 		}
-		emails := helpers.MapSlice(accts, func(useraccount *authentication.UserAccount) models.EmailAddress {
+		emails := lo.Map(accts, func(useraccount *authentication.UserAccount, _ int) models.EmailAddress {
 			return models.EmailAddress(useraccount.Email)
 		})
 		if emailClient != nil {

@@ -5,9 +5,9 @@ import (
 	"slices"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -170,7 +170,7 @@ func (s *ResolverSuite) TestSystemIntakeStartGRBReview() {
 		userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
 	)
 	s.NoError(err)
-	emails := helpers.MapSlice(accts, func(acct *authentication.UserAccount) models.EmailAddress {
+	emails := lo.Map(accts, func(acct *authentication.UserAccount, _ int) models.EmailAddress {
 		return models.EmailAddress(acct.Email)
 	})
 	reviewers := []*models.CreateGRBReviewerInput{
