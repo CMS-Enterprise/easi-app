@@ -73,20 +73,23 @@ const GRBReviewerForm = ({
         </IconLink>
 
         <Tabs defaultActiveTab={t('form.addViaEUA')}>
-          <TabPanel id="addReviewerFromEua" tabName={t('form.addViaEUA')}>
-            <div className="tablet:grid-col-6 margin-bottom-4">
-              <AddReviewerFromEua
-                systemId={systemId}
-                initialGRBReviewers={initialGRBReviewers}
-                createGRBReviewers={createGRBReviewers}
-                setReviewerToRemove={setReviewerToRemove}
-                grbReviewStartedAt={grbReviewStartedAt}
-              />
-            </div>
+          <TabPanel
+            id="addReviewerFromEua"
+            tabName={t('form.addViaEUA')}
+            className="outline-0"
+          >
+            <AddReviewerFromEua
+              systemId={systemId}
+              initialGRBReviewers={initialGRBReviewers}
+              createGRBReviewers={createGRBReviewers}
+              setReviewerToRemove={setReviewerToRemove}
+              grbReviewStartedAt={grbReviewStartedAt}
+            />
           </TabPanel>
           <TabPanel
             id="addReviewersFromRequest"
             tabName={t('form.addFromRequest')}
+            className="outline-0"
           >
             <BulkAddGRBReviewersForm
               systemId={systemId}

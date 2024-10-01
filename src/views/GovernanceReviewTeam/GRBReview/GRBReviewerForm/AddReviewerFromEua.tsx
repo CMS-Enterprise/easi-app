@@ -129,7 +129,7 @@ const AddReviewerFromEua = ({
   });
 
   return (
-    <Form onSubmit={submit} className="maxw-none">
+    <Form onSubmit={submit} className="maxw-none tablet:grid-col-6">
       <FormGroup>
         <Label htmlFor="react-select-userAccount-input" required>
           {t('form.grbMemberName')}
@@ -239,7 +239,7 @@ const AddReviewerFromEua = ({
       )}
 
       {!activeReviewer && (
-        <Alert type="info" slim className="margin-top-5">
+        <Alert type="info" slim className="margin-top-6">
           {t(
             grbReviewStartedAt
               ? 'form.infoAlertReviewStarted'

@@ -101,6 +101,7 @@ const BulkAddGRBReviewersForm = ({
   }, [activeITGovernanceRequestId, itGovernanceRequests]);
 
   /** Checkbox field for toggling GRB reviewer */
+  // TODO: Style checkbox
   const GRBReviewerCheckbox = useCallback(
     ({ reviewer }: { reviewer: GRBReviewerComparison }) => {
       /** Reviewer index if already added to array */
@@ -306,7 +307,7 @@ const BulkAddGRBReviewersForm = ({
         )}
       </div>
 
-      <Alert type="info" slim className="margin-top-5">
+      <Alert type="info" slim className="margin-top-5 tablet:grid-col-6">
         {t(
           grbReviewStartedAt
             ? 'form.infoAlertReviewStarted'
