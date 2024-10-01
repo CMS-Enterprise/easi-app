@@ -17,8 +17,8 @@ const GRBReviewerSchema = Yup.object().shape({
       value => !!value.commonName && !!value.username
     )
     // Only check for duplicate reviewers when adding new reviewer
-    .when('$action', {
-      is: 'add',
+    .when('$allowDuplicates', {
+      is: false,
       then: schema =>
         schema.when(
           '$initialGRBReviewers',
