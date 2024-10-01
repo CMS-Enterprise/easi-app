@@ -22,7 +22,7 @@ import Label from 'components/shared/Label';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
 import { GRBReviewerFormFields } from 'types/grbReview';
-import CreateGRBReviewerSchema from 'validations/grbReviewerSchema';
+import { GRBReviewerSchema } from 'validations/grbReviewerSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 type AddReviewerFromEuaProps = {
@@ -66,7 +66,7 @@ const AddReviewerFromEua = ({
     setError,
     formState: { errors, isSubmitted, isDirty }
   } = useEasiForm<GRBReviewerFormFields>({
-    resolver: yupResolver(CreateGRBReviewerSchema),
+    resolver: yupResolver(GRBReviewerSchema),
     context: { allowDuplicates: !!activeReviewer, initialGRBReviewers },
     defaultValues: {
       votingRole: activeReviewer?.votingRole,

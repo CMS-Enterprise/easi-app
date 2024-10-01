@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 
 /** GRB Reviewer for IT Governance request */
-const GRBReviewerSchema = Yup.object().shape({
+export const GRBReviewerSchema = Yup.object().shape({
   userAccount: Yup.object()
     .shape({
       username: Yup.string(),
@@ -43,11 +43,9 @@ const GRBReviewerSchema = Yup.object().shape({
 });
 
 /** Array of GRB reviewers being added to IT Governance request */
-const CreateGRBReviewerSchema = Yup.object({
+export const CreateGRBReviewerSchema = Yup.object({
   grbReviewers: Yup.array(GRBReviewerSchema).min(
     1,
     i18next.t('Please select at least one GRB reviewer')
   )
 });
-
-export default CreateGRBReviewerSchema;
