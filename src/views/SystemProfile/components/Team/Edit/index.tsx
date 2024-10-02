@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
+  Alert,
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
@@ -37,6 +38,17 @@ export const getTeamMemberName = (user: UsernameWithRoles) => {
   return `${user.roles[0].assigneeFirstName} ${user.roles[0].assigneeLastName}`;
 };
 
+const requisiteLevelsOfTeamRoles: string[][] = [
+  ['Business Owner'],
+  ['System Maintainer'],
+  [
+    // Treat this set as a matcher for any of these roles
+    'Contracting Officer’s Representative (COR)',
+    'Government Task Lead (GTL)',
+    'Project Lead'
+  ]
+];
+
 // type EmployeeFields = {
 //   numberOfFederalFte: number;
 //   numberOfContractorFte: number;
@@ -51,6 +63,9 @@ type EditTeamProps = {
 
 /**
  * Edit system profile team form
+ * This component has modes for:
+ * - Edit and add
+ * - `isWorkspace` or System Profile (original)
  */
 const EditTeam = ({
   name,
@@ -69,6 +84,40 @@ const EditTeam = ({
     euaUserId: string;
     commonName: string;
   } | null>(null);
+
+  /**
+   * Give the user some feedback on important roles when deleting.
+   * Find out if the `memberToDelete` is the last of a certain role.
+   */
+  const deletingLastOfRole = useMemo(() => {
+    if (memberToDelete) {
+      const member = team.find(
+        user => user.assigneeUsername === memberToDelete.euaUserId
+      );
+      // Find out if the member has any of the requisite roles
+      const requisiteRoleFound = member?.roles.find(
+        r =>
+          r.roleTypeName &&
+          requisiteLevelsOfTeamRoles.flat().includes(r.roleTypeName)
+      );
+      if (requisiteRoleFound) {
+        // Check the rest of the team to see if this is the last member with the role
+        const secondary = team.find(
+          user =>
+            user.assigneeUsername !== member?.assigneeUsername &&
+            user.roles.find(
+              r =>
+                r.roleTypeName &&
+                r.roleTypeName === requisiteRoleFound.roleTypeName
+            )
+        );
+        if (!secondary) {
+          return requisiteRoleFound.roleTypeName;
+        }
+      }
+    }
+    return null;
+  }, [memberToDelete, team]);
 
   const { pathname, state } = useLocation<{ user?: CedarRole }>();
 
@@ -146,6 +195,23 @@ const EditTeam = ({
   //     // console.log(error);
   //   }
   // );
+
+  /**
+   * Make sure all these requisite levels are fulfilled.
+   * Show an alert if there are any missing roles.
+   */
+  const showRequisiteRolesAlert = useMemo(() => {
+    return !requisiteLevelsOfTeamRoles.every(lvl =>
+      // At every role level
+      // With each role of a level
+      lvl.some(r =>
+        // Find someone on the team with a matching role in the current level
+        team.some(u => u.roles.some(ur => ur.roleTypeName === r))
+      )
+    );
+  }, [team]);
+
+  // console.log('showRequisiteRolesAlert', showRequisiteRolesAlert);
 
   return (
     <GridContainer className="margin-bottom-10">
@@ -278,6 +344,32 @@ const EditTeam = ({
           </Form>
           */}
 
+          {isWorkspace && showRequisiteRolesAlert && (
+            // If any requirement not met
+            <Alert type="warning" data-testid="requisite-roles-alert">
+              {t('singleSystem.editTeam.workspace.teamRoleRequirementAlert')}
+
+              {/* Causes Warning: validateDOMNesting(...): <div> cannot appear as a descendant of <p>.  */}
+              <ul className="easi-list padding-left-3">
+                <li>
+                  {t(
+                    'singleSystem.editTeam.workspace.teamRoleRequirementAlertList.0'
+                  )}
+                </li>
+                <li>
+                  {t(
+                    'singleSystem.editTeam.workspace.teamRoleRequirementAlertList.1'
+                  )}
+                </li>
+                <li>
+                  {t(
+                    'singleSystem.editTeam.workspace.teamRoleRequirementAlertList.2'
+                  )}
+                </li>
+              </ul>
+            </Alert>
+          )}
+
           {/* Team Members section */}
           <h4 className="margin-top-5 margin-bottom-1">
             {t('singleSystem.editTeam.teamMembers')}
@@ -340,9 +432,32 @@ const EditTeam = ({
               {t('singleSystem.editTeam.removeModalTitle')}
             </h3>
             <p>
-              {t('singleSystem.editTeam.removeModalDescription', {
-                commonName: memberToDelete?.commonName
-              })}
+              {!isWorkspace
+                ? t('singleSystem.editTeam.removeModalDescription', {
+                    commonName: memberToDelete?.commonName
+                  })
+                : t(
+                    'singleSystem.editTeam.workspace.removeModalDescription.text',
+                    {
+                      commonName: memberToDelete?.commonName,
+                      roleDetail: deletingLastOfRole
+                        ? t(
+                            `singleSystem.editTeam.workspace.removeModalDescription.${
+                              // GTL and COR roles use the same text key as Project Lead
+                              [
+                                'Government Task Lead (GTL)',
+                                'Contracting Officer’s Representative (COR)'
+                              ].includes(deletingLastOfRole)
+                                ? 'Project Lead'
+                                : deletingLastOfRole
+                            }`,
+                            {
+                              commonName: memberToDelete?.commonName
+                            }
+                          )
+                        : ''
+                    }
+                  )}
             </p>
             <ButtonGroup>
               {/* Confirm remove user */}

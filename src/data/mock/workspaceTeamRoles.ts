@@ -515,3 +515,96 @@ const teamRoles: CedarRoleAssigneePerson[] = [
 ];
 
 export default teamRoles;
+
+export const teamRequisiteRoles: CedarRoleAssigneePerson[] = [
+  {
+    application: 'alfabet',
+    objectID: '{mock-object-1}',
+    roleTypeID: '{mock-role-type-3}',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: 'OSYC',
+    assigneeEmail: 'OSYC@email.mock',
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: 'Eliezer',
+    assigneeLastName: 'Grant',
+    roleTypeName: 'Business Owner',
+    roleID: '{mock-role-4}',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '{mock-object-1}',
+    roleTypeID: '{mock-role-type-11}',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: 'MKCK',
+    assigneeEmail: 'MKCK@email.mock',
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: 'Forest',
+    assigneeLastName: 'Brown',
+    roleTypeName: 'System Maintainer',
+    roleID: '{mock-role-30}',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '{mock-object-1}',
+    roleTypeID: '{mock-role-type-6}',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: 'IVWG',
+    assigneeEmail: 'IVWG@email.mock',
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: 'King',
+    assigneeLastName: 'Tromp',
+    roleTypeName: 'Contracting Officer’s Representative (COR)',
+    roleID: '{mock-role-17}',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '{mock-object-1}',
+    roleTypeID: '{mock-role-type-7}',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: 'PJEA',
+    assigneeEmail: 'PJEA@email.mock',
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: 'Janae',
+    assigneeLastName: 'Stokes',
+    roleTypeName: 'Government Task Lead (GTL)',
+    roleID: '{mock-role-19}',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '{mock-object-1}',
+    roleTypeID: '{mock-role-type-8}',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: 'TCSK',
+    assigneeEmail: 'TCSK@email.mock',
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: 'Elbert',
+    assigneeLastName: 'Huel',
+    roleTypeName: 'Project Lead',
+    roleID: '{mock-role-23}',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '{mock-object-1}',
+    roleTypeID: '{mock-role-type-4}',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: 'FHEY',
+    assigneeEmail: 'FHEY@email.mock',
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: 'Sasha',
+    assigneeLastName: 'Barrows',
+    roleTypeName: 'AI Contact',
+    roleID: '{mock-role-8}',
+    __typename: 'CedarRole'
+  }
+];

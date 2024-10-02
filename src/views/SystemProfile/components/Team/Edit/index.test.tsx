@@ -1,11 +1,15 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 
 import { usernamesWithRoles } from 'data/mock/systemProfile';
+import teamRoles, { teamRequisiteRoles } from 'data/mock/workspaceTeamRoles';
 import { MessageProvider } from 'hooks/useMessage';
+import { UsernameWithRoles } from 'types/systemProfile';
+import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 
 import EditTeam from '.';
 
@@ -67,4 +71,96 @@ describe('Edit team page', () => {
       within(teamCards[0]).getByRole('button', { name: 'Remove team member' })
     ).toBeInTheDocument();
   });
+});
+
+describe('Workspace team page', () => {
+  function renderWorkspaceEditTeam(team: UsernameWithRoles[]) {
+    return render(
+      <MemoryRouter
+        initialEntries={[`/systems/${cedarSystemId}/team/edit?workspace`]}
+      >
+        <MessageProvider>
+          <MockedProvider>
+            <Route path="/systems/:systemId/team/edit">
+              <EditTeam
+                name=""
+                team={team}
+                numberOfFederalFte={undefined}
+                numberOfContractorFte={undefined}
+              />
+            </Route>
+          </MockedProvider>
+        </MessageProvider>
+      </MemoryRouter>
+    );
+  }
+
+  it('renders', async () => {
+    const team = getUsernamesWithRoles(teamRoles);
+    const { asFragment } = renderWorkspaceEditTeam(team);
+
+    // query and find no alert
+
+    // Snapshot captures the assignment and ordering of team members and their multiple roles
+    expect(asFragment()).toMatchSnapshot();
+  });
+
+  it.each([
+    ['Business Owner'],
+    ['System Maintainer'],
+    [
+      'Contracting Officer’s Representative (COR)',
+      'Government Task Lead (GTL)',
+      'Project Lead'
+    ]
+  ])(
+    'shows the alert for missing role: %s',
+    (...filterOutRoleNames: string[]) => {
+      const team = getUsernamesWithRoles(
+        teamRequisiteRoles.filter(
+          r => !filterOutRoleNames.includes(r.roleTypeName!)
+        )
+      );
+      renderWorkspaceEditTeam(team);
+      screen.getByTestId('requisite-roles-alert');
+    }
+  );
+
+  it.each([
+    // BO
+    {
+      i: 0,
+      t: 'This action cannot be undone. Each system should have at least one Business Owner, and Eliezer Grant is currently the only Business Owner listed for this system. Removing Eliezer Grant will remove any roles and permissions they have for this system.'
+    },
+    // Project Lead
+    {
+      i: 1,
+      t: "This action cannot be undone. Each system should have at least one Project Lead, Government Task Lead (GTL), or Contracting Officer's Representative (COR), and Elbert Huel is currently the only one listed of this system. Removing Elbert Huel will remove any roles and permissions they have for this system."
+    },
+    // System maintainer
+    {
+      i: 2,
+      t: 'This action cannot be undone. Each system should have at least one System Maintainer, and Forest Brown is currently the only System Maintainer listed for this system. Removing Forest Brown will remove any roles and permissions they have for this system.'
+    },
+    // Any other
+    {
+      i: 5,
+      t: 'This action cannot be undone. Removing Sasha Barrows will remove any roles and permissions they have for this system.'
+    }
+  ])(
+    'shows alert when one member of a required type is left %#',
+    async ({ i, t }) => {
+      const team = getUsernamesWithRoles(teamRequisiteRoles);
+      renderWorkspaceEditTeam(team);
+
+      const rms = screen.getAllByRole('button', { name: 'Remove' });
+
+      userEvent.click(rms[i]);
+
+      await screen.findByRole('heading', {
+        name: 'Are you sure you want to remove this team member?'
+      });
+      await screen.findByText(t);
+    }
+  );
 });
