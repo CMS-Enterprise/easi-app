@@ -10,7 +10,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func (d *dataReader) batchTRBRequestAdviceLettersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBGuidanceLetter, []error) {
+func (d *dataReader) batchTRBRequestGuidanceLettersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBGuidanceLetter, []error) {
 	data, err := d.db.GetTRBGuidanceLettersByTRBRequestIDs(ctx, trbRequestIDs)
 	if err != nil {
 		return nil, []error{err}
@@ -25,5 +25,5 @@ func GetTRBGuidanceLetterByTRBRequestID(ctx context.Context, trbRequestID uuid.U
 		return nil, errors.New("unexpected nil loaders in GetTRBGuidanceLetterByTRBRequestID")
 	}
 
-	return loaders.TRBRequestAdviceLetter.Load(ctx, trbRequestID)
+	return loaders.TRBRequestGuidanceLetter.Load(ctx, trbRequestID)
 }
