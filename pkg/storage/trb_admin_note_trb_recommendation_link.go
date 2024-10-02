@@ -12,22 +12,22 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// CreateTRBAdminNoteTRBRecommendationLinks creates multiple link records relating a single TRB admin note to all TRB advice letter recommendations it references
+// CreateTRBAdminNoteTRBRecommendationLinks creates multiple link records relating a single TRB admin note to all TRB guidance letter recommendations it references
 func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 	ctx context.Context,
 	trbRequestID uuid.UUID,
 	trbAdminNoteID uuid.UUID,
-	trbAdviceLetterRecommendationIDs []uuid.UUID,
-) ([]*models.TRBAdminNoteTRBAdviceLetterRecommendationLink, error) {
+	trbGuidanceLetterRecommendationIDs []uuid.UUID,
+) ([]*models.TRBAdminNoteTRBGuidanceLetterRecommendationLink, error) {
 	creatingUserEUAID := appcontext.Principal(ctx).ID()
 
-	links := []*models.TRBAdminNoteTRBAdviceLetterRecommendationLink{}
+	links := []*models.TRBAdminNoteTRBGuidanceLetterRecommendationLink{}
 
-	for _, recommendationID := range trbAdviceLetterRecommendationIDs {
-		link := models.TRBAdminNoteTRBAdviceLetterRecommendationLink{
-			TRBRequestID:                    trbRequestID,
-			TRBAdminNoteID:                  trbAdminNoteID,
-			TRBAdviceLetterRecommendationID: recommendationID,
+	for _, recommendationID := range trbGuidanceLetterRecommendationIDs {
+		link := models.TRBAdminNoteTRBGuidanceLetterRecommendationLink{
+			TRBRequestID:                      trbRequestID,
+			TRBAdminNoteID:                    trbAdminNoteID,
+			TRBGuidanceLetterRecommendationID: recommendationID,
 		}
 		link.ID = uuid.New()
 		link.CreatedBy = creatingUserEUAID
@@ -66,9 +66,9 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 	defer createdLinkRows.Close()
 
 	// loop through the sqlx.Rows value returned from NamedQuery(), scan the results back into structs
-	createdLinks := []*models.TRBAdminNoteTRBAdviceLetterRecommendationLink{}
+	createdLinks := []*models.TRBAdminNoteTRBGuidanceLetterRecommendationLink{}
 	for createdLinkRows.Next() {
-		var createdLink models.TRBAdminNoteTRBAdviceLetterRecommendationLink
+		var createdLink models.TRBAdminNoteTRBGuidanceLetterRecommendationLink
 		err = createdLinkRows.StructScan(&createdLink)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(

@@ -6,12 +6,12 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
+func (s *StoreTestSuite) TestTRBGuidanceLetterStoreMethods() {
 	ctx := context.Background()
 
 	anonEua := "ANON"
 
-	s.Run("Creating an advice letter returns a blank advice letter in the In Progress status", func() {
+	s.Run("Creating an guidance letter returns a blank guidance letter in the In Progress status", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBGuidanceLetter(ctx, anonEua, trbRequestID)
@@ -26,7 +26,7 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 		s.Nil(createdLetter.FollowupPoint)
 	})
 
-	s.Run("Creating, then fetching an advice letter returns a blank advice letter in the In Progress status", func() {
+	s.Run("Creating, then fetching an guidance letter returns a blank guidance letter in the In Progress status", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		_, err := s.store.CreateTRBGuidanceLetter(ctx, anonEua, trbRequestID)
@@ -46,7 +46,7 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 		s.Nil(fetchedLetter.FollowupPoint)
 	})
 
-	s.Run("Updating an advice letter returns an advice letter with updated data", func() {
+	s.Run("Updating an guidance letter returns an guidance letter with updated data", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBGuidanceLetter(ctx, anonEua, trbRequestID)
@@ -83,7 +83,7 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 		s.EqualValues(updatedFollowupPoint, *returnedLetter.FollowupPoint)
 	})
 
-	s.Run("Updating an advice letter to be ready for review changes the status while leaving DateSent nil", func() {
+	s.Run("Updating an guidance letter to be ready for review changes the status while leaving DateSent nil", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBGuidanceLetter(ctx, anonEua, trbRequestID)
@@ -96,7 +96,7 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 		s.Nil(updatedLetter.DateSent)
 	})
 
-	s.Run("Updating an advice letter to complete it changes the status and sets DateSent", func() {
+	s.Run("Updating an guidance letter to complete it changes the status and sets DateSent", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBGuidanceLetter(ctx, anonEua, trbRequestID)
