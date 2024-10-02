@@ -38,7 +38,7 @@ export const getTeamMemberName = (user: UsernameWithRoles) => {
   return `${user.roles[0].assigneeFirstName} ${user.roles[0].assigneeLastName}`;
 };
 
-const requisiteLevelsOfTeamRoles: string[][] = [
+export const requisiteLevelsOfTeamRoles: string[][] = [
   ['Business Owner'],
   ['System Maintainer'],
   [

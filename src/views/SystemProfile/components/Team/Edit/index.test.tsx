@@ -11,7 +11,7 @@ import { MessageProvider } from 'hooks/useMessage';
 import { UsernameWithRoles } from 'types/systemProfile';
 import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 
-import EditTeam from '.';
+import EditTeam, { requisiteLevelsOfTeamRoles } from '.';
 
 const cedarSystemId = '000-0000-1';
 
@@ -105,15 +105,7 @@ describe('Workspace team page', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it.each([
-    ['Business Owner'],
-    ['System Maintainer'],
-    [
-      "Contracting Officer's Representative (COR)",
-      'Government Task Lead (GTL)',
-      'Project Lead'
-    ]
-  ])(
+  it.each(requisiteLevelsOfTeamRoles)(
     'shows the alert for missing role: %s',
     (...filterOutRoleNames: string[]) => {
       const team = getUsernamesWithRoles(
