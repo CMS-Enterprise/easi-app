@@ -200,14 +200,10 @@ describe('The System Intake Form', () => {
       .select('Just an idea')
       .should('have.value', 'Just an idea');
 
-    cy.get('#usingSoftwareYes')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#usingSoftwareYes').check({ force: true }).should('be.checked');
 
     Object.values(SystemIntakeSoftwareAcquisitionMethods).map(acqMethod => {
-      cy.get(`#${acqMethod}`)
-        .check({ force: true })
-        .should('be.checked');
+      cy.get(`#${acqMethod}`).check({ force: true }).should('be.checked');
     });
 
     cy.contains('button', 'Next').click();
