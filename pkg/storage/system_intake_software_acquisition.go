@@ -42,13 +42,21 @@ func (s *Store) UpdateSystemIntakeSoftwareAcquisitionNP(ctx context.Context, tx 
 					id,
 					system_intake_id,
 					using_software,
-					acquisition_methods
+					acquisition_methods,
+					created_by,
+					created_at,
+					modified_by,
+					modified_at
 				)
 				VALUES (
 					:id,
 					:system_intake_id,
 					:using_software,
-					:acquisition_methods
+					:acquisition_methods,
+					:created_by,
+					:created_at,
+					:modified_by,
+					:modified_at
 				)`
 
 	_, err = tx.NamedExec(

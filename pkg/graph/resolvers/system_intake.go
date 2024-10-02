@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
-	"github.com/lib/pq"
+	"github.com/samber/lo"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
@@ -115,21 +115,18 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
 	intake.UsesAITech = null.BoolFromPtr(input.UsesAiTech)
 
-	acqMethods := pq.StringArray{}
-	for _, acqMethod := range input.SoftwareAcquisition.AcquisitionMethods {
-		acqMethods = append(acqMethods, acqMethod.String())
-	}
-	// TODO: NJD make this a function in model_helpers? ReverseConvertEnums?
+	acqMethods := lo.Map(input.SoftwareAcquisition.AcquisitionMethods, func(acqMethod models.SystemIntakeSoftwareAcquisitionMethods, idx int) string {
+		return acqMethod.String()
+	})
 
-	softwareAcq := models.SystemIntakeSoftwareAcquisition{
-		ID:                 uuid.New(),
-		SystemIntakeID:     intake.ID,
-		UsingSoftware:      null.StringFromPtr(input.SoftwareAcquisition.UsingSoftware),
-		AcquisitionMethods: acqMethods,
-		CreatedAt:          &time.Time{},
-	}
+	softwareAcq := models.NewSystemIntakeSoftwareAcquisition(appcontext.Principal(ctx).ID())
+	softwareAcq.SystemIntakeID = intake.ID
+	softwareAcq.UsingSoftware = null.StringFromPtr(input.SoftwareAcquisition.UsingSoftware)
+	softwareAcq.AcquisitionMethods = acqMethods
 
-	_, err = store.UpdateSystemIntakeSoftwareAcquisition(ctx, input.ID, &softwareAcq)
+	// TODO: NJD fill out BaseStruct? Also handle create vs. update (created_at vs modfied_at)
+
+	_, err = store.UpdateSystemIntakeSoftwareAcquisition(ctx, input.ID, softwareAcq)
 
 	if err != nil {
 		return nil, err

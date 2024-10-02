@@ -597,7 +597,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                           <React.Fragment key={acqMethod}>
                             <Checkbox
                               name={acqMethod}
-                              id={acqMethod}
+                              id={acqMethod} // NJD - change this to {`software-acquisition-{acqMethod}`}
                               label={t(
                                 `requestDetails.softwareAcquisition.acquistionStrategyLabels.${acqMethod}`
                               )}
@@ -606,7 +606,6 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                               onChange={(
                                 e: React.ChangeEvent<HTMLInputElement>
                               ) => {
-                                // TODO: NJD should I be using useState() to manage the array state here?
                                 field.onChange(
                                   e.target.checked
                                     ? [...field.value, e.target.value]

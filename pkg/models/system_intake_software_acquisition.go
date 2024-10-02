@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/lib/pq"
@@ -18,17 +16,19 @@ const (
 	SoftwareAcquisitionOther               SoftwareAcquisitionMethod = "OTHER"
 )
 
-// TODO: NJD - use BaseStruct?
-
 // SystemIntakeSoftwareAcquisition represents the software acquisition information associated with a SystemIntake
 type SystemIntakeSoftwareAcquisition struct {
-	ID                 uuid.UUID      `json:"id"`
+	BaseStruct
 	SystemIntakeID     uuid.UUID      `json:"systemIntakeId" db:"system_intake_id"`
 	UsingSoftware      null.String    `json:"usingSoftware" db:"using_software"`
 	AcquisitionMethods pq.StringArray `json:"acquisitionMethods" db:"acquisition_methods"`
-	// TODO: NJD pq.StringArray vs enum array?
-	// AcquisitionMethods []SoftwareAcquisitionMethod `json:"acquisitionMethods" db:"acquisition_methods"`
-	CreatedAt *time.Time `db:"created_at"`
+}
+
+// NewTRBRequest returns a new trb request object
+func NewSystemIntakeSoftwareAcquisition(createdBy string) *SystemIntakeSoftwareAcquisition {
+	return &SystemIntakeSoftwareAcquisition{
+		BaseStruct: NewBaseStruct(createdBy),
+	}
 }
 
 func (s SystemIntakeSoftwareAcquisition) GetMappingKey() uuid.UUID {
