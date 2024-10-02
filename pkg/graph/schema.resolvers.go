@@ -932,15 +932,23 @@ func (r *mutationResolver) DeleteTRBRequestFundingSources(ctx context.Context, i
 
 // SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
 func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input models.SetRolesForUserOnSystemInput) (*string, error) {
+	preExistingRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, input.CedarSystemID, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	rs, err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
 	if err != nil {
 		return nil, err
 	}
 
-	// Asyncronously send an email to the CEDAR team notifying them of the change
-	go func() {
+	logger := appcontext.ZLogger(ctx)
+	principalID := appcontext.Principal(ctx).ID()
+
+	// Asynchronously send an email to the CEDAR team notifying them of the change
+	go func(logger *zap.Logger, principalID string, preExistingRoles []*models.CedarRole) {
 		// make a new context and copy the logger to it, or else the request will cancel when the parent context cancels
-		emailCtx := appcontext.WithLogger(context.Background(), appcontext.ZLogger(ctx))
+		emailCtx := appcontext.WithLogger(context.Background(), logger)
 
 		// Fetch user info for _both_ the requester _and_ the user whose roles were changed
 		// We're using 2 calls to `FetchUserInfo` rather than 1 call to `FetchUserInfos` since we don't know what order they'll come back in with the latter function
@@ -948,7 +956,7 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 		var requesterUserInfo *models.UserInfo
 		var errRequester error
 		g.Go(func() error {
-			requesterUserInfo, errRequester = r.service.FetchUserInfo(emailCtx, appcontext.Principal(ctx).ID())
+			requesterUserInfo, errRequester = r.service.FetchUserInfo(emailCtx, principalID)
 			return errRequester
 		})
 
@@ -960,20 +968,33 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 		})
 
 		// wait for both calls to complete
-		err := g.Wait()
-		if err != nil {
+		if err := g.Wait(); err != nil {
 			// don't fail the request if the lookup fails, just log and return from the go func
 			appcontext.ZLogger(emailCtx).Error("failed to lookup user infos for CEDAR notification email", zap.Error(err))
 			return
 		}
 
-		err = r.emailClient.SendCedarRolesChangedEmail(emailCtx, requesterUserInfo.DisplayName, targetUserInfo.DisplayName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now())
-		if err != nil {
+		// _Always_ send an email to CEDAR with role change information
+		// This is used as an audit trail by the CEDAR team to help keep an eye on changes
+		if err := r.emailClient.SendCedarRolesChangedEmail(emailCtx, requesterUserInfo.DisplayName, targetUserInfo.DisplayName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now()); err != nil {
 			// don't fail the request if the email fails, just log and return from the go func
 			appcontext.ZLogger(emailCtx).Error("failed to send CEDAR notification email", zap.Error(err))
 			return
 		}
-	}()
+
+		if rs.DidAdd {
+			if err := r.emailClient.SendCedarYouHaveBeenAddedEmail(emailCtx, rs.SystemName, input.CedarSystemID, rs.RoleTypeNamesAfter, targetUserInfo.Email); err != nil {
+				// don't fail the request if the email fails, just log and return from the go func
+				appcontext.ZLogger(emailCtx).Error("failed to send CEDAR email to user who was added to team", zap.Error(err))
+				return
+			}
+
+			if err := r.emailClient.SendCedarNewTeamMemberEmail(emailCtx, targetUserInfo.DisplayName, targetUserInfo.Email.String(), rs.SystemName, input.CedarSystemID, rs.RoleTypeNamesAfter, preExistingRoles); err != nil {
+				appcontext.ZLogger(emailCtx).Error("failed to send CEDAR email for new team member added", zap.Error(err))
+				return
+			}
+		}
+	}(logger, principalID, preExistingRoles)
 
 	resp := "Roles changed successfully"
 	return &resp, nil
