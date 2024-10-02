@@ -297,7 +297,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Do you plan to use software products to fulfull your business needs?
+                Do you plan to use any software products to fulfill your business needs?
               </dt>
               <dd
                 class="description-definition margin-0"

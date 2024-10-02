@@ -428,7 +428,7 @@ const intake = {
     hasUiChanges:
       'Does your project involve any user interface component, or changes to an interface component?',
     usingSoftware:
-      'Do you plan to use software products to fulfull your business needs?',
+      'Do you plan to use any software products to fulfill your business needs?',
     softwareAcquisitionMethods: 'How will the software be acquired?',
     contractDetails: 'Contract Details',
     costs:
