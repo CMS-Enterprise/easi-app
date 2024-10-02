@@ -251,7 +251,13 @@ type SetRoleResponseMetadata struct {
 func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaUserID string, desiredRoleTypeIDs []string) (*SetRoleResponseMetadata, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return nil, nil
+		return &SetRoleResponseMetadata{
+			DidAdd:              true,
+			DidDelete:           true,
+			RoleTypeNamesBefore: nil,
+			RoleTypeNamesAfter:  []string{"Role 1", "Role 2", "Role 3"},
+			SystemName:          "Test System Name",
+		}, nil
 	}
 
 	roleTypesBefore := []models.CedarRoleType{}
