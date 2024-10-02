@@ -16,7 +16,8 @@ const PageWrapper = ({ className, children, ...props }: PageWrapperProps) => {
 
   const classes = classnames('easi-page-wrapper', className, {
     'easi-page-wrapper__pre-auth-home':
-      pathname === '/' && !authState?.isAuthenticated
+      pathname === '/' && !authState?.isAuthenticated,
+    'display-none': pathname === '/implicit/callback' // Hide the app/page wrapper on the implicit callback route
   });
 
   return (
