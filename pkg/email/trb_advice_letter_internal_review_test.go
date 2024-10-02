@@ -10,7 +10,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
+func (s *EmailTestSuite) TestTRBGuidanceLetterInternalReviewEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
 
@@ -20,11 +20,11 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 	getExpectedEmail := func(
 		leadName string,
 	) string {
-		trbAdminAdviceLetterLink := fmt.Sprintf(
+		trbAdminGuidanceLetterLink := fmt.Sprintf(
 			"%s://%s/%s",
 			s.config.URLScheme,
 			s.config.URLHost,
-			path.Join("trb", trbID.String(), "advice"),
+			path.Join("trb", trbID.String(), "guidance"),
 		)
 		var leadNameStr string
 		if leadName != "" {
@@ -38,21 +38,21 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 			`<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
-			<p>%s has a draft advice letter that is now ready for internal review. Please take a moment to look over the draft and make any suggestions for improvement.</p>
+			<p>%s has a draft guidance letter that is now ready for internal review. Please take a moment to look over the draft and make any suggestions for improvement.</p>
 
 			%s
 
 			<br>
-			<p><strong><a href="%s">View the Advice Letter</a></strong></p>`,
+			<p><strong><a href="%s">View the Guidance Letter</a></strong></p>`,
 			trbRequestName,
 			leadNameStr,
-			trbAdminAdviceLetterLink,
+			trbAdminGuidanceLetterLink,
 		)
 	}
 
 	s.Run("successful call has the right content", func() {
 		leadName := "Gary Jones"
-		input := SendTRBAdviceLetterInternalReviewEmailInput{
+		input := SendTRBGuidanceLetterInternalReviewEmailInput{
 			TRBRequestName: trbRequestName,
 			TRBLeadName:    leadName,
 			TRBRequestID:   trbID,
@@ -62,7 +62,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 		expectedBody := getExpectedEmail(
 			input.TRBLeadName,
 		)
-		err = client.SendTRBAdviceLetterInternalReviewEmail(ctx, input)
+		err = client.SendTRBGuidanceLetterInternalReviewEmail(ctx, input)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.TRBEmail})
 		s.EqualHTML(expectedBody, sender.body)
@@ -70,7 +70,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 
 	s.Run("omits lead name if blank", func() {
 		leadName := ""
-		input := SendTRBAdviceLetterInternalReviewEmailInput{
+		input := SendTRBGuidanceLetterInternalReviewEmailInput{
 			TRBRequestName: trbRequestName,
 			TRBLeadName:    leadName,
 			TRBRequestID:   trbID,
@@ -80,7 +80,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 		expectedBody := getExpectedEmail(
 			input.TRBLeadName,
 		)
-		err = client.SendTRBAdviceLetterInternalReviewEmail(ctx, input)
+		err = client.SendTRBGuidanceLetterInternalReviewEmail(ctx, input)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.TRBEmail})
 		s.EqualHTML(expectedBody, sender.body)

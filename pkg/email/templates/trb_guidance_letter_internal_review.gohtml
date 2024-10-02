@@ -1,0 +1,11 @@
+{{template "easi_header.gohtml"}}
+
+<p>{{.TRBRequestName}} has a draft guidance letter that is now ready for internal review. Please take a moment to look over the draft and make any suggestions for improvement.</p>
+
+{{ if .TRBLeadName -}}
+  <br>
+  <p class="no-margin"><strong>TRB Lead:</strong> {{.TRBLeadName}}</p>
+{{ end -}}
+
+<br>
+<p><strong><a href="{{.TRBAdminGuidanceLetterLink}}">View the Guidance Letter</a></strong></p>

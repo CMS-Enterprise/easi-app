@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SendTRBAdviceLetterInput } from "./../../types/graphql-global-types";
+import { SendTRBGuidanceLetterInput } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: SendTRBAdviceLetter
 // ====================================================
 
 export interface SendTRBAdviceLetter_sendTRBAdviceLetter {
-  __typename: "TRBAdviceLetter";
+  __typename: "TRBGuidanceLetter";
   id: UUID;
 }
 
@@ -19,5 +19,5 @@ export interface SendTRBAdviceLetter {
 }
 
 export interface SendTRBAdviceLetterVariables {
-  input: SendTRBAdviceLetterInput;
+  input: SendTRBGuidanceLetterInput;
 }

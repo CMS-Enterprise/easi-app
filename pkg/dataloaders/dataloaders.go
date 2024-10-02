@@ -84,7 +84,7 @@ type Dataloaders struct {
 	SystemIntakeSystems              *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
 	TRBFundingSources                *dataloadgen.Loader[uuid.UUID, []*models.TRBFundingSource]
 	TRBRequestAdminNotes             *dataloadgen.Loader[uuid.UUID, []*models.TRBAdminNote]
-	TRBRequestAdviceLetter           *dataloadgen.Loader[uuid.UUID, *models.TRBAdviceLetter]
+	TRBRequestAdviceLetter           *dataloadgen.Loader[uuid.UUID, *models.TRBGuidanceLetter]
 	TRBRequestAttendees              *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestAttendee]
 	TRBRequestAttendeeByEUA          *dataloadgen.Loader[models.TRBAttendeeByTRBAndEUAIDRequest, *models.TRBRequestAttendee]
 	TRBRequestContractNumbers        *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestContractNumber]

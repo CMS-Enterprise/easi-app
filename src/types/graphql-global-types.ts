@@ -352,26 +352,6 @@ export enum TRBAdminNoteCategory {
 }
 
 /**
- * Represents the status of the TRB advice letter step
- */
-export enum TRBAdviceLetterStatus {
-  CANNOT_START_YET = "CANNOT_START_YET",
-  COMPLETED = "COMPLETED",
-  IN_PROGRESS = "IN_PROGRESS",
-  READY_FOR_REVIEW = "READY_FOR_REVIEW",
-  READY_TO_START = "READY_TO_START",
-}
-
-/**
- * Represents the status of the TRB advice letter step
- */
-export enum TRBAdviceLetterStatusTaskList {
-  CANNOT_START_YET = "CANNOT_START_YET",
-  COMPLETED = "COMPLETED",
-  IN_REVIEW = "IN_REVIEW",
-}
-
-/**
  * Represents the status of the TRB consult attendance step
  */
 export enum TRBAttendConsultStatus {
@@ -439,6 +419,26 @@ export enum TRBFormStatus {
   COMPLETED = "COMPLETED",
   IN_PROGRESS = "IN_PROGRESS",
   READY_TO_START = "READY_TO_START",
+}
+
+/**
+ * Represents the status of the TRB guidance letter step
+ */
+export enum TRBGuidanceLetterStatus {
+  CANNOT_START_YET = "CANNOT_START_YET",
+  COMPLETED = "COMPLETED",
+  IN_PROGRESS = "IN_PROGRESS",
+  READY_FOR_REVIEW = "READY_FOR_REVIEW",
+  READY_TO_START = "READY_TO_START",
+}
+
+/**
+ * Represents the status of the TRB guidance letter step
+ */
+export enum TRBGuidanceLetterStatusTaskList {
+  CANNOT_START_YET = "CANNOT_START_YET",
+  COMPLETED = "COMPLETED",
+  IN_REVIEW = "IN_REVIEW",
 }
 
 /**
@@ -569,17 +569,6 @@ export interface CreateSystemIntakeNoteInput {
 }
 
 /**
- * The data needed to create a TRB admin note with the Advice Letter category
- */
-export interface CreateTRBAdminNoteAdviceLetterInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-  appliesToMeetingSummary: boolean;
-  appliesToNextSteps: boolean;
-  recommendationIDs: UUID[];
-}
-
-/**
  * The data needed to create a TRB admin note with the Consult Session category
  */
 export interface CreateTRBAdminNoteConsultSessionInput {
@@ -593,6 +582,17 @@ export interface CreateTRBAdminNoteConsultSessionInput {
 export interface CreateTRBAdminNoteGeneralRequestInput {
   trbRequestId: UUID;
   noteText: HTML;
+}
+
+/**
+ * The data needed to create a TRB admin note with the Guidance Letter category
+ */
+export interface CreateTRBAdminNoteGuidanceLetterInput {
+  trbRequestId: UUID;
+  noteText: HTML;
+  appliesToMeetingSummary: boolean;
+  appliesToNextSteps: boolean;
+  recommendationIDs: UUID[];
 }
 
 /**
@@ -616,9 +616,9 @@ export interface CreateTRBAdminNoteSupportingDocumentsInput {
 }
 
 /**
- * The input required to add a recommendation & links to a TRB advice letter
+ * The input required to add a recommendation & links to a TRB guidance letter
  */
-export interface CreateTRBAdviceLetterRecommendationInput {
+export interface CreateTRBGuidanceLetterRecommendationInput {
   trbRequestId: UUID;
   title: string;
   recommendation: HTML;
@@ -710,9 +710,9 @@ export interface SendReportAProblemEmailInput {
 }
 
 /**
- * The data needed to send a TRB advice letter, including who to notify
+ * The data needed to send a TRB guidance letter, including who to notify
  */
-export interface SendTRBAdviceLetterInput {
+export interface SendTRBGuidanceLetterInput {
   id: UUID;
   copyTrbMailbox: boolean;
   notifyEuaIds: string[];
@@ -1111,9 +1111,9 @@ export interface UpdateSystemIntakeReviewDatesInput {
 }
 
 /**
- * The data needed to update a TRB advice letter
+ * The data needed to update a TRB guidance letter
  */
-export interface UpdateTRBAdviceLetterInput {
+export interface UpdateTRBGuidanceLetterInput {
   trbRequestId: UUID;
   meetingSummary?: HTML | null;
   nextSteps?: HTML | null;
@@ -1122,16 +1122,16 @@ export interface UpdateTRBAdviceLetterInput {
 }
 
 /**
- * The input required to update a recommendation to a TRB advice letter
+ * The input required to update a recommendation to a TRB guidance letter
  */
-export interface UpdateTRBAdviceLetterRecommendationInput {
+export interface UpdateTRBGuidanceLetterRecommendationInput {
   id: UUID;
   title?: string | null;
   recommendation?: HTML | null;
   links?: string[] | null;
 }
 
-export interface UpdateTRBAdviceLetterRecommendationOrderInput {
+export interface UpdateTRBGuidanceLetterRecommendationOrderInput {
   trbRequestId: UUID;
   newOrder: UUID[];
 }

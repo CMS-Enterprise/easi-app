@@ -10,8 +10,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func (d *dataReader) batchTRBRequestAdviceLettersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBAdviceLetter, []error) {
-	data, err := d.db.GetTRBAdviceLettersByTRBRequestIDs(ctx, trbRequestIDs)
+func (d *dataReader) batchTRBRequestAdviceLettersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBGuidanceLetter, []error) {
+	data, err := d.db.GetTRBGuidanceLettersByTRBRequestIDs(ctx, trbRequestIDs)
 	if err != nil {
 		return nil, []error{err}
 	}
@@ -19,10 +19,10 @@ func (d *dataReader) batchTRBRequestAdviceLettersByTRBRequestIDs(ctx context.Con
 	return helpers.OneToOne(trbRequestIDs, data), nil
 }
 
-func GetTRBAdviceLetterByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
+func GetTRBGuidanceLetterByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBGuidanceLetter, error) {
 	loaders, ok := loadersFromCTX(ctx)
 	if !ok {
-		return nil, errors.New("unexpected nil loaders in GetTRBAdviceLetterByTRBRequestID")
+		return nil, errors.New("unexpected nil loaders in GetTRBGuidanceLetterByTRBRequestID")
 	}
 
 	return loaders.TRBRequestAdviceLetter.Load(ctx, trbRequestID)

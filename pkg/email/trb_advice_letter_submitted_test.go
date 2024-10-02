@@ -12,7 +12,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
+func (s *EmailTestSuite) TestTRBGuidanceLetterSubmittedEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
 
@@ -50,11 +50,11 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 			path.Join("trb", trbID.String(), "request"),
 		)
 
-		adviceLetterLink := fmt.Sprintf(
+		guidanceLetterLink := fmt.Sprintf(
 			"%s://%s/%s",
 			s.config.URLScheme,
 			s.config.URLHost,
-			path.Join("trb", "advice-letter", trbID.String()),
+			path.Join("trb", "guidance-letter", trbID.String()),
 		)
 
 		trbInbox := s.config.TRBEmail.String()
@@ -67,10 +67,10 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 			`<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
-			<p>The Technical Review Board (TRB) has compiled an advice letter for %s. Use the link below to view recommendations from the TRB as well as a summary of the initial support request.</p>
+			<p>The Technical Review Board (TRB) has compiled a guidance letter for %s. Use the link below to view recommendations from the TRB as well as a summary of the initial support request.</p>
 
 			<br>
-			<p class="no-margin-top"><strong><a href="%s">View the Advice Letter</a></strong></p>
+			<p class="no-margin-top"><strong><a href="%s">View the Guidance Letter</a></strong></p>
 
 			<br>
 			<p class="no-margin-top">Any further communication or follow-up sessions may be organized via email with the TRB or via a new request in EASi.</p>
@@ -90,7 +90,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 			<div class="no-margin">
 			<p>View this request in EASi:</p>
 			  <ul>
-				<li>If you are the initial requester, you may <a href="%s">click here</a> to view the advice letter and your request task list.</li>
+				<li>If you are the initial requester, you may <a href="%s">click here</a> to view the guidance letter and your request task list.</li>
 				<li>TRB team members may <a href="%s">click here</a> to view the request details.</li>
 				<li>Others should contact %s or the TRB for more information about this request.</li>
 			  </ul>
@@ -99,7 +99,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 			<br>
 			<p>If you have questions or need to request a reschedule, please email the TRB at <a href="mailto:%s">%s</a>.</p>`,
 			requestName,
-			adviceLetterLink,
+			guidanceLetterLink,
 			submissionDate.Format("January 2, 2006"),
 			requesterName,
 			translation.GetComponentAcronym(component),
@@ -118,7 +118,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 		s.NoError(err)
 
 		requestType := models.TRBTNeedHelp
-		input := SendTRBAdviceLetterSubmittedEmailInput{
+		input := SendTRBGuidanceLetterSubmittedEmailInput{
 			TRBRequestID:   trbID,
 			RequestName:    "Test TRB Request",
 			RequestType:    string(requestType),
@@ -139,7 +139,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 			input.ConsultDate,
 			requestType,
 		)
-		err = client.SendTRBAdviceLetterSubmittedEmail(ctx, input)
+		err = client.SendTRBGuidanceLetterSubmittedEmail(ctx, input)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, allRecipients)
 		s.EqualHTML(expectedBody, sender.body)
@@ -150,7 +150,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 		s.NoError(err)
 
 		requestType := models.TRBTNeedHelp
-		input := SendTRBAdviceLetterSubmittedEmailInput{
+		input := SendTRBGuidanceLetterSubmittedEmailInput{
 			TRBRequestID:   trbID,
 			RequestName:    "Test TRB Request",
 			RequestType:    string(requestType),
@@ -170,7 +170,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 			input.ConsultDate,
 			requestType,
 		)
-		err = client.SendTRBAdviceLetterSubmittedEmail(ctx, input)
+		err = client.SendTRBGuidanceLetterSubmittedEmail(ctx, input)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, recipients)
 		s.EqualHTML(expectedBody, sender.body)

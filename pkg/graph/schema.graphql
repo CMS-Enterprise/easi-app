@@ -1534,7 +1534,7 @@ type TRBRequest {
   feedback: [TRBRequestFeedback!]!
   documents: [TRBRequestDocument!]! # This query will not return deleted documents -- see pkg/storage/trb_request_document.go `GetTRBRequestDocumentsByRequestID`
   form: TRBRequestForm!
-  adviceLetter: TRBAdviceLetter
+  adviceLetter: TRBGuidanceLetter
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
   lastMeetingDate: Time
@@ -1590,8 +1590,8 @@ type TRBTaskStatuses {
   feedbackStatus: TRBFeedbackStatus!
   consultPrepStatus: TRBConsultPrepStatus!
   attendConsultStatus: TRBAttendConsultStatus!
-  adviceLetterStatus: TRBAdviceLetterStatus!
-  adviceLetterStatusTaskList: TRBAdviceLetterStatusTaskList!
+  adviceLetterStatus: TRBGuidanceLetterStatus!
+  adviceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList!
 }
 
 """
@@ -1890,9 +1890,9 @@ enum TRBAttendConsultStatus {
 }
 
 """
-Represents the status of the TRB advice letter step
+Represents the status of the TRB guidance letter step
 """
-enum TRBAdviceLetterStatus {
+enum TRBGuidanceLetterStatus {
   CANNOT_START_YET
   READY_TO_START
   IN_PROGRESS
@@ -1901,9 +1901,9 @@ enum TRBAdviceLetterStatus {
 }
 
 """
-Represents the status of the TRB advice letter step
+Represents the status of the TRB guidance letter step
 """
-enum TRBAdviceLetterStatusTaskList {
+enum TRBGuidanceLetterStatusTaskList {
   CANNOT_START_YET
   IN_REVIEW
   COMPLETED
@@ -2150,16 +2150,16 @@ type TRBAdminNoteConsultSessionCategoryData {
 }
 
 """
-Data specific to admin notes in the Advice Letter category
+Data specific to admin notes in the Guidance Letter category
 The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
 """
-type TRBAdminNoteAdviceLetterCategoryData {
+type TRBAdminNoteGuidanceLetterCategoryData {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
-  recommendations: [TRBAdviceLetterRecommendation!]!
+  recommendations: [TRBGuidanceLetterRecommendation!]!
 }
 
-union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteAdviceLetterCategoryData
+union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGuidanceLetterCategoryData
 
 """
 Represents an admin note attached to a TRB request
@@ -2179,9 +2179,9 @@ type TRBAdminNote {
 }
 
 """
-Represents an advice letter for a TRB request
+Represents a guidance letter for a TRB request
 """
-type TRBAdviceLetter {
+type TRBGuidanceLetter {
   id: UUID!
   trbRequestId: UUID!
   author: UserInfo!
@@ -2193,7 +2193,7 @@ type TRBAdviceLetter {
   """
   List of recommendations in the order specified by users
   """
-  recommendations: [TRBAdviceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_advice_letter_recommendation.go `GetTRBAdviceLetterRecommendationsByTRBRequestID`
+  recommendations: [TRBGuidanceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_guidance_letter_recommendation.go `GetTRBGuidanceLetterRecommendationsByTRBRequestID`
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2249,9 +2249,9 @@ input CreateTRBAdminNoteConsultSessionInput {
 }
 
 """
-The data needed to create a TRB admin note with the Advice Letter category
+The data needed to create a TRB admin note with the Guidance Letter category
 """
-input CreateTRBAdminNoteAdviceLetterInput {
+input CreateTRBAdminNoteGuidanceLetterInput {
   # common fields used by all TRB admin notes
   trbRequestId: UUID!
   noteText: HTML!
@@ -2263,9 +2263,9 @@ input CreateTRBAdminNoteAdviceLetterInput {
 }
 
 """
-The data needed to update a TRB advice letter
+The data needed to update a TRB guidance letter
 """
-input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBGuidanceLetterInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
   meetingSummary: HTML
   nextSteps: HTML
@@ -2274,18 +2274,18 @@ input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
 }
 
 """
-The data needed to send a TRB advice letter, including who to notify
+The data needed to send a TRB guidance letter, including who to notify
 """
-input SendTRBAdviceLetterInput {
+input SendTRBGuidanceLetterInput {
   id: UUID!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
 
 """
-Represents a recommendation and links that have been added to a TRB advice letter
+Represents a recommendation and links that have been added to a TRB guidance letter
 """
-type TRBAdviceLetterRecommendation {
+type TRBGuidanceLetterRecommendation {
   id: UUID!
   trbRequestId: UUID!
   title: String!
@@ -2300,9 +2300,9 @@ type TRBAdviceLetterRecommendation {
 }
 
 """
-The input required to add a recommendation & links to a TRB advice letter
+The input required to add a recommendation & links to a TRB guidance letter
 """
-input CreateTRBAdviceLetterRecommendationInput {
+input CreateTRBGuidanceLetterRecommendationInput {
   trbRequestId: UUID!
   title: String!
   recommendation: HTML!
@@ -2310,9 +2310,9 @@ input CreateTRBAdviceLetterRecommendationInput {
 }
 
 """
-The input required to update a recommendation to a TRB advice letter
+The input required to update a recommendation to a TRB guidance letter
 """
-input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
   recommendation: HTML
@@ -2321,7 +2321,7 @@ input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]inter
 
 """
 """
-input UpdateTRBAdviceLetterRecommendationOrderInput {
+input UpdateTRBGuidanceLetterRecommendationOrderInput {
   trbRequestId: UUID!
   """
   List of the recommendation IDs in the new order they should be displayed
@@ -2471,25 +2471,25 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteConsultSession(input: CreateTRBAdminNoteConsultSessionInput!): TRBAdminNote!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdminNoteAdviceLetter(input: CreateTRBAdminNoteAdviceLetterInput!): TRBAdminNote!
+  createTRBAdminNoteAdviceLetter(input: CreateTRBAdminNoteGuidanceLetterInput!): TRBAdminNote!
   @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdviceLetter(trbRequestId: UUID!): TRBAdviceLetter!
+  createTRBAdviceLetter(trbRequestId: UUID!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBAdviceLetter(input: UpdateTRBAdviceLetterInput!): TRBAdviceLetter!
+  updateTRBAdviceLetter(input: UpdateTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  requestReviewForTRBAdviceLetter(id: UUID!): TRBAdviceLetter!
+  requestReviewForTRBAdviceLetter(id: UUID!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  sendTRBAdviceLetter(input: SendTRBAdviceLetterInput!): TRBAdviceLetter!
+  sendTRBAdviceLetter(input: SendTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdviceLetterRecommendation(input: CreateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
+  createTRBAdviceLetterRecommendation(input: CreateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
+  updateTRBAdviceLetterRecommendation(input: UpdateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBAdviceLetterRecommendationOrder(input: UpdateTRBAdviceLetterRecommendationOrderInput!): [TRBAdviceLetterRecommendation!]!
+  updateTRBAdviceLetterRecommendationOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterRecommendation!]!
   @hasRole(role: EASI_TRB_ADMIN)
-  deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
+  deleteTRBAdviceLetterRecommendation(id: UUID!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
   @hasRole(role: EASI_TRB_ADMIN)

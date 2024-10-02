@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBSubjectAreaOption, TRBFeedbackAction, TRBRequestStatus, SystemIntakeDecisionState } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBGuidanceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBSubjectAreaOption, TRBFeedbackAction, TRBRequestStatus, SystemIntakeDecisionState } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetTrbRequest
@@ -15,7 +15,7 @@ export interface GetTrbRequest_trbRequest_taskStatuses {
   feedbackStatus: TRBFeedbackStatus;
   consultPrepStatus: TRBConsultPrepStatus;
   attendConsultStatus: TRBAttendConsultStatus;
-  adviceLetterStatus: TRBAdviceLetterStatus;
+  adviceLetterStatus: TRBGuidanceLetterStatus;
 }
 
 export interface GetTrbRequest_trbRequest_form_fundingSources {

@@ -10,35 +10,35 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// SendTRBAdviceLetterInternalReviewEmailInput contains the data needed to to send the TRB advice
+// SendTRBGuidanceLetterInternalReviewEmailInput contains the data needed to to send the TRB guidance
 // letter internal review email
-type SendTRBAdviceLetterInternalReviewEmailInput struct {
+type SendTRBGuidanceLetterInternalReviewEmailInput struct {
 	TRBRequestID   uuid.UUID
 	TRBRequestName string
 	TRBLeadName    string
 }
 
-// trbAdviceLetterInternalReviewEmailTemplateParams contains the data needed for interpolation in
-// the TRB advice letter internal review email template
-type trbAdviceLetterInternalReviewEmailTemplateParams struct {
-	TRBLeadName              string
-	TRBRequestName           string
-	TRBAdminAdviceLetterLink string
+// trbGuidanceLetterInternalReviewEmailTemplateParams contains the data needed for interpolation in
+// the TRB guidance letter internal review email template
+type trbGuidanceLetterInternalReviewEmailTemplateParams struct {
+	TRBLeadName                string
+	TRBRequestName             string
+	TRBAdminGuidanceLetterLink string
 }
 
-// SendTRBAdviceLetterInternalReviewEmail sends an email to the EASI admin team indicating that an advice letter
+// SendTRBGuidanceLetterInternalReviewEmail sends an email to the EASI admin team indicating that a guidance letter
 // is ready for internal review
-func (c Client) SendTRBAdviceLetterInternalReviewEmail(ctx context.Context, input SendTRBAdviceLetterInternalReviewEmailInput) error {
-	subject := "Advice letter for " + input.TRBRequestName + " is ready for internal review"
+func (c Client) SendTRBGuidanceLetterInternalReviewEmail(ctx context.Context, input SendTRBGuidanceLetterInternalReviewEmailInput) error {
+	subject := "Guidance letter for " + input.TRBRequestName + " is ready for internal review"
 
-	templateParams := trbAdviceLetterInternalReviewEmailTemplateParams{
-		TRBLeadName:              input.TRBLeadName,
-		TRBRequestName:           input.TRBRequestName,
-		TRBAdminAdviceLetterLink: c.urlFromPath(path.Join("trb", input.TRBRequestID.String(), "advice")),
+	templateParams := trbGuidanceLetterInternalReviewEmailTemplateParams{
+		TRBLeadName:                input.TRBLeadName,
+		TRBRequestName:             input.TRBRequestName,
+		TRBAdminGuidanceLetterLink: c.urlFromPath(path.Join("trb", input.TRBRequestID.String(), "guidance")),
 	}
 
 	var b bytes.Buffer
-	err := c.templates.trbAdviceLetterInternalReview.Execute(&b, templateParams)
+	err := c.templates.trbGuidanceLetterInternalReview.Execute(&b, templateParams)
 
 	if err != nil {
 		return err
