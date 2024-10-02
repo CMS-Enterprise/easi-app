@@ -126,7 +126,9 @@ function TeamTable({
     // Alpha by first name, except with Business owner and Project lead roles at the top
     const initIndex: { [v: string]: number } = {
       'Business Owner': 0,
-      'Project Lead': 1
+      'Project Lead': 1,
+      'Government Task Lead (GTL)': 2,
+      "Contracting Officer's Representative (COR)": 3
     };
 
     return team.concat().sort((a, b) => {
