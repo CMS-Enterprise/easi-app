@@ -43,7 +43,7 @@ const requisiteLevelsOfTeamRoles: string[][] = [
   ['System Maintainer'],
   [
     // Treat this set as a matcher for any of these roles
-    'Contracting Officer’s Representative (COR)',
+    "Contracting Officer's Representative (COR)",
     'Government Task Lead (GTL)',
     'Project Lead'
   ]
@@ -446,7 +446,7 @@ const EditTeam = ({
                               // GTL and COR roles use the same text key as Project Lead
                               [
                                 'Government Task Lead (GTL)',
-                                'Contracting Officer’s Representative (COR)'
+                                "Contracting Officer's Representative (COR)"
                               ].includes(deletingLastOfRole)
                                 ? 'Project Lead'
                                 : deletingLastOfRole

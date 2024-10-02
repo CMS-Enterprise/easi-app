@@ -109,7 +109,7 @@ describe('Workspace team page', () => {
     ['Business Owner'],
     ['System Maintainer'],
     [
-      'Contracting Officer’s Representative (COR)',
+      "Contracting Officer's Representative (COR)",
       'Government Task Lead (GTL)',
       'Project Lead'
     ]

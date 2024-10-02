@@ -558,7 +558,7 @@ export const teamRequisiteRoles: CedarRoleAssigneePerson[] = [
     assigneeOrgName: null,
     assigneeFirstName: 'King',
     assigneeLastName: 'Tromp',
-    roleTypeName: 'Contracting Officer’s Representative (COR)',
+    roleTypeName: "Contracting Officer's Representative (COR)",
     roleID: '{mock-role-17}',
     __typename: 'CedarRole'
   },
