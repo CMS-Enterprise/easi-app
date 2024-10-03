@@ -6,6 +6,7 @@ import { Cell, Column, useSortBy, useTable } from 'react-table';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
+  Checkbox,
   ComboBox,
   Form,
   FormGroup,
@@ -102,7 +103,6 @@ const BulkAddGRBReviewersForm = ({
   }, [activeITGovernanceRequestId, itGovernanceRequests]);
 
   /** Checkbox field for toggling GRB reviewer */
-  // TODO: Style checkbox
   const GRBReviewerCheckbox = useCallback(
     ({ reviewer }: { reviewer: GRBReviewerComparison }) => {
       /** Reviewer index if already added to array */
@@ -125,13 +125,15 @@ const BulkAddGRBReviewersForm = ({
             });
 
       return (
-        <input
-          type="checkbox"
+        <Checkbox
+          className="grb-review-select-checkbox"
           id={`grbReviewSelect-${userAccount.username}`}
+          name={`grbReviewSelect-${userAccount.username}`}
+          checked={isChecked || isCurrentReviewer}
+          label={userAccount.commonName}
+          onChange={toggleReviewer}
           // Disable users that have already been added as reviewer
           disabled={isCurrentReviewer}
-          checked={isChecked || isCurrentReviewer}
-          onChange={toggleReviewer}
         />
       );
     },
@@ -141,38 +143,21 @@ const BulkAddGRBReviewersForm = ({
   const columns = useMemo<Column<GRBReviewerComparison>[]>(() => {
     return [
       {
-        // Checkbox field to toggle reviewers
-        Header: <input type="checkbox" id="userAccount.username" />,
+        Header: (
+          <Checkbox
+            className="grb-review-select-checkbox grb-review-select-checkbox_header"
+            id="grbReviewSelect-header"
+            name="grbReviewSelect-header"
+            label={t<string>('participantsTable.name')}
+            disabled
+            checked
+          />
+        ),
         accessor: 'userAccount',
-        id: 'userAccount.username',
         Cell: ({
           row: { original: reviewer }
         }: Cell<GRBReviewerComparison>) => (
           <GRBReviewerCheckbox reviewer={reviewer} />
-        )
-      },
-      {
-        Header: (
-          <Label
-            htmlFor="userAccount.username"
-            className="margin-0 text-normal"
-          >
-            {t<string>('participantsTable.name')}
-          </Label>
-        ),
-        accessor: 'userAccount',
-        Cell: ({
-          value
-        }: Cell<
-          GRBReviewerComparison,
-          GRBReviewerComparison['userAccount']
-        >) => (
-          <Label
-            htmlFor={`grbReviewSelect-${value.username}`}
-            className="margin-0 text-normal"
-          >
-            {value.commonName}
-          </Label>
         )
       },
       {
