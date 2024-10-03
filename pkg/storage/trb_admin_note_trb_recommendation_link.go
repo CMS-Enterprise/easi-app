@@ -40,13 +40,13 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 			id,
 			trb_request_id,
 			trb_admin_note_id,
-			trb_advice_letter_recommendation_id,
+			trb_guidance_letter_recommendation_id,
 			created_by
 		) VALUES (
 			:id,
 			:trb_request_id,
 			:trb_admin_note_id,
-			:trb_advice_letter_recommendation_id,
+			:trb_guidance_letter_recommendation_id,
 			:created_by
 		) RETURNING *;
 	`
@@ -56,7 +56,7 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 	createdLinkRows, err := s.db.NamedQuery(trbAdminNoteRecommendationLinkCreateSQL, links)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to create links between TRB admin note and TRB advice letter recommendations with error %s", err),
+			fmt.Sprintf("Failed to create links between TRB admin note and TRB guidance letter recommendations with error %s", err),
 			zap.Error(err),
 			zap.String("user", creatingUserEUAID),
 			zap.String("trbAdminNoteID", trbAdminNoteID.String()),
@@ -72,7 +72,7 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 		err = createdLinkRows.StructScan(&createdLink)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(
-				fmt.Sprintf("Failed to read results from creating links between TRB admin note and TRB advice letter recommendations with error %s", err),
+				fmt.Sprintf("Failed to read results from creating links between TRB admin note and TRB guidance letter recommendations with error %s", err),
 				zap.Error(err),
 				zap.String("user", creatingUserEUAID),
 				zap.String("trbAdminNoteID", trbAdminNoteID.String()),
@@ -101,7 +101,7 @@ func (s *Store) GetTRBRecommendationsByAdminNoteID(ctx context.Context, adminNot
 	stmt, err := s.db.PrepareNamed(trbRequestRecommendationsGetByAdminNoteIDSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB advice letter recommendations by admin note ID with error %s", err),
+			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB guidance letter recommendations by admin note ID with error %s", err),
 			zap.Error(err),
 			zap.String("adminNoteID", adminNoteID.String()),
 		)
@@ -117,7 +117,7 @@ func (s *Store) GetTRBRecommendationsByAdminNoteID(ctx context.Context, adminNot
 	err = stmt.Select(&recommendations, arg)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch TRB advice letter recommendations by admin note ID with error %s", err),
+			fmt.Sprintf("Failed to fetch TRB guidance letter recommendations by admin note ID with error %s", err),
 			zap.Error(err),
 			zap.String("adminNoteID", adminNoteID.String()),
 		)

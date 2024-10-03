@@ -17,7 +17,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// CreateTRBGuidanceLetterRecommendation creates a new TRB advice letter recommendation record in the database.
+// CreateTRBGuidanceLetterRecommendation creates a new TRB guidance letter recommendation record in the database.
 // This recommendation will be positioned at the end of the advice letter upon creation.
 func (s *Store) CreateTRBGuidanceLetterRecommendation(
 	ctx context.Context,
@@ -55,7 +55,7 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to prepare SQL statement for creating TRB advice letter recommendation with error %s", err),
+			fmt.Sprintf("Failed to prepare SQL statement for creating TRB guidance letter recommendation with error %s", err),
 			zap.Error(err),
 			zap.String("user", recommendation.CreatedBy),
 		)
@@ -68,7 +68,7 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 	err = stmt.Get(&created, recommendation)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to create TRB advice letter recommendation with error %s", err),
+			fmt.Sprintf("Failed to create TRB guidance letter recommendation with error %s", err),
 			zap.Error(err),
 			zap.String("user", recommendation.CreatedBy),
 		)
@@ -78,7 +78,7 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 	return &created, nil
 }
 
-// GetTRBGuidanceLetterRecommendationByID retrieves a TRB advice letter recommendation record from the database
+// GetTRBGuidanceLetterRecommendationByID retrieves a TRB guidance letter recommendation record from the database
 // It will not return any entities that have a deleted_at value
 func (s *Store) GetTRBGuidanceLetterRecommendationByID(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
 	recommendation := models.TRBGuidanceLetterRecommendation{}
@@ -93,7 +93,7 @@ func (s *Store) GetTRBGuidanceLetterRecommendationByID(ctx context.Context, id u
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			"Failed to fetch TRB advice letter recommendation",
+			"Failed to fetch TRB guidance letter recommendation",
 			zap.Error(err),
 			zap.String("id", id.String()),
 		)
@@ -106,7 +106,7 @@ func (s *Store) GetTRBGuidanceLetterRecommendationByID(ctx context.Context, id u
 	return &recommendation, err
 }
 
-// GetTRBGuidanceLetterRecommendationsByTRBRequestID queries the DB for all the TRB advice letter recommendations,
+// GetTRBGuidanceLetterRecommendationsByTRBRequestID queries the DB for all the TRB guidance letter recommendations,
 // filtering by the given TRB request ID and ordered in the user-specified positions
 func (s *Store) GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	results := []*models.TRBGuidanceLetterRecommendation{}
@@ -120,7 +120,7 @@ func (s *Store) GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx context.Co
 	`, trbRequestID)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		appcontext.ZLogger(ctx).Error("Failed to fetch TRB advice letter recommendations", zap.Error(err), zap.String("id", trbRequestID.String()))
+		appcontext.ZLogger(ctx).Error("Failed to fetch TRB guidance letter recommendations", zap.Error(err), zap.String("id", trbRequestID.String()))
 		return nil, &apperrors.QueryError{
 			Err:       err,
 			Model:     models.TRBGuidanceLetterRecommendation{},
@@ -130,7 +130,7 @@ func (s *Store) GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx context.Co
 	return results, nil
 }
 
-// GetTRBGuidanceLetterRecommendationsSharingTRBRequestID queries the DB for all TRB advice letter recommendations with the same TRB request ID as the given recommendation
+// GetTRBGuidanceLetterRecommendationsSharingTRBRequestID queries the DB for all TRB guidance letter recommendations with the same TRB request ID as the given recommendation
 // It will not return any entities that have a deleted_at value
 func (s *Store) GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx context.Context, recommendationID uuid.UUID) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
@@ -159,7 +159,7 @@ func (s *Store) GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx conte
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch TRB advice letter recommendations with error %s", err),
+			fmt.Sprintf("Failed to fetch TRB guidance letter recommendations with error %s", err),
 			zap.Error(err),
 			zap.String("id", recommendationID.String()),
 		)
@@ -188,7 +188,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recom
 		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update TRB advice letter recommendation %s", err),
+			fmt.Sprintf("Failed to update TRB guidance letter recommendation %s", err),
 			zap.String("id", recommendation.ID.String()),
 		)
 		return nil, err
@@ -200,7 +200,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recom
 	err = stmt.Get(&updated, recommendation)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update TRB advice letter recommendation %s", err),
+			fmt.Sprintf("Failed to update TRB guidance letter recommendation %s", err),
 			zap.String("id", recommendation.ID.String()),
 		)
 		return nil, &apperrors.QueryError{
@@ -222,7 +222,7 @@ func (s *Store) DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uu
 		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to delete TRB advice letter recommendation %s", err),
+			fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
 			zap.String("id", id.String()),
 		)
 		return nil, err
@@ -236,7 +236,7 @@ func (s *Store) DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uu
 	err = stmt.Get(&deleted, &toDelete)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to delete TRB advice letter recommendation %s", err),
+			fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
 			zap.String("id", id.String()),
 		)
 		return nil, &apperrors.QueryError{
