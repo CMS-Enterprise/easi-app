@@ -3,31 +3,49 @@ import {
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/gen/graphql';
 
-export const grbReviewerVotingRolesTranslation: Record<
-  SystemIntakeGRBReviewerVotingRole,
-  string
-> = {
-  VOTING: 'Voting',
-  NON_VOTING: 'Non-voting',
-  ALTERNATE: 'Alternate'
-};
+import { GRBReviewFormAction } from 'types/grbReview';
+import { Translation } from 'types/util';
 
-export const grbReviewerRolesTranslation: Record<
-  SystemIntakeGRBReviewerRole,
-  string
-> = {
-  CO_CHAIR_CIO: 'Co-Chair - CIO',
-  CO_CHAIR_CFO: 'CO-Chair - CFO',
-  CO_CHAIR_HCA: 'CO-Chair - HCA',
-  ACA_3021_REP: 'ACA 3021 Rep',
-  CCIIO_REP: 'CCIIO Rep',
-  PROGRAM_OPERATIONS_BDG_CHAIR: 'Program Operations BDG Chair',
-  CMCS_REP: 'CMCS Rep',
-  FED_ADMIN_BDG_CHAIR: 'Fed Admin BDG Chair',
-  PROGRAM_INTEGRITY_BDG_CHAIR: 'Program Integrity BDG Chair',
-  QIO_REP: 'QIO Rep',
-  SUBJECT_MATTER_EXPERT: 'Subject Matter Expert (SME)',
-  OTHER: 'Other'
+export const grbReviewerVotingRolesTranslation: Translation<SystemIntakeGRBReviewerVotingRole> =
+  {
+    VOTING: 'Voting',
+    NON_VOTING: 'Non-voting',
+    ALTERNATE: 'Alternate'
+  };
+
+export const grbReviewerRolesTranslation: Translation<SystemIntakeGRBReviewerRole> =
+  {
+    CO_CHAIR_CIO: 'Co-Chair - CIO',
+    CO_CHAIR_CFO: 'CO-Chair - CFO',
+    CO_CHAIR_HCA: 'CO-Chair - HCA',
+    ACA_3021_REP: 'ACA 3021 Rep',
+    CCIIO_REP: 'CCIIO Rep',
+    PROGRAM_OPERATIONS_BDG_CHAIR: 'Program Operations BDG Chair',
+    CMCS_REP: 'CMCS Rep',
+    FED_ADMIN_BDG_CHAIR: 'Fed Admin BDG Chair',
+    PROGRAM_INTEGRITY_BDG_CHAIR: 'Program Integrity BDG Chair',
+    QIO_REP: 'QIO Rep',
+    SUBJECT_MATTER_EXPERT: 'Subject Matter Expert (SME)',
+    OTHER: 'Other'
+  };
+
+const messages: {
+  error: Translation<GRBReviewFormAction>;
+  success: Translation<GRBReviewFormAction>;
+} = {
+  error: {
+    add: 'There was an issue adding GRB reviewers. Please try again, and if the error persists, try again at a later date.',
+    edit: 'There was an issue updating roles for this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
+    remove:
+      'There was an issue removing this GRB reviewer. Please try again, and if the error persists, try again at a later date.'
+  },
+  success: {
+    add: 'You added <strong>1 reviewer</strong> to this GRB review.',
+    add_plural:
+      'You added <strong>{{count}} reviewers</strong> to this GRB review.',
+    edit: 'You updated roles for {{commonName}} for this GRB review.',
+    remove: 'You removed <strong>{{commonName}}</strong> as a GRB reviewer.'
+  }
 };
 
 export default {
@@ -122,20 +140,11 @@ export default {
     infoAlertReviewNotStarted:
       'Adding GRB reviewers will not send them an invitation until you start the GRB review, though they will still be able to access content if they sign into EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
     infoAlertReviewStarted:
-      'Adding a reviewer will send them an informational notification email with a link to EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
-    error:
-      'There was an issue adding this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
-    success_ALTERNATE:
-      'You added <strong>{{commonName}}</strong> as an <strong>alternate member</strong> for this GRB review.',
-    success:
-      'You added <strong>{{commonName}}</strong> as a <strong>{{votingRole}} member</strong> for this GRB review.'
+      'Adding a reviewer will send them an informational notification email with a link to EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.'
   },
+  messages,
   votingRoles: grbReviewerVotingRolesTranslation,
   reviewerRoles: grbReviewerRolesTranslation,
-  removeSuccess:
-    'You removed <strong>{{commonName}}</strong> as a GRB reviewer.',
-  removeError:
-    'There was an issue removing this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
   removeModal: {
     title: 'Remove {{commonName}} as a GRB reviewer?',
     text: 'Removing this reviewer will remove their access to documentation about this request. You may add them again at a later date if necessary.',

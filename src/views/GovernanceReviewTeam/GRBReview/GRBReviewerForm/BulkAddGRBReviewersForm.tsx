@@ -40,7 +40,7 @@ const BulkAddGRBReviewersForm = ({
   grbReviewStartedAt
 }: BulkAddGRBReviewersFormProps) => {
   const { t } = useTranslation('grbReview');
-  const { showMessageOnNextPage } = useMessage();
+  const { showMessage, showMessageOnNextPage } = useMessage();
   const history = useHistory();
 
   /** ID of selected IT Gov request */
@@ -83,12 +83,13 @@ const BulkAddGRBReviewersForm = ({
       }
     })
       .then(() => {
-        // TODO: Update success message for bulk add
-        showMessageOnNextPage('GRB reviewers added', { type: 'success' });
+        showMessageOnNextPage(
+          t('messages.success.add', { count: grbReviewers.length }),
+          { type: 'success' }
+        );
         history.push(grbReviewPath);
       })
-      // TODO: error message
-      .catch(() => null)
+      .catch(() => showMessage(t('messages.error.add'), { type: 'error' }))
   );
 
   /** Array of GRB reviewers from selected IT Gov request */

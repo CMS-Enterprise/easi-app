@@ -10,7 +10,6 @@ import {
   SystemIntakeGRBReviewerFragment,
   useUpdateSystemIntakeGRBReviewerMutation
 } from 'gql/gen/graphql';
-import { toLower } from 'lodash';
 
 import CedarContactSelect from 'components/CedarContactSelect';
 import { useEasiForm } from 'components/EasiForm';
@@ -21,7 +20,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
-import { GRBReviewerFields } from 'types/grbReview';
+import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
 import { GRBReviewerSchema } from 'validations/grbReviewerSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
@@ -41,7 +40,7 @@ const AddReviewerFromEua = ({
   grbReviewStartedAt
 }: AddReviewerFromEuaProps) => {
   const { t } = useTranslation('grbReview');
-  const { showMessageOnNextPage } = useMessage();
+  const { showMessage, showMessageOnNextPage } = useMessage();
   const history = useHistory();
 
   const {
@@ -80,7 +79,11 @@ const AddReviewerFromEua = ({
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
-  const submit = handleSubmit(({ userAccount, ...values }) => {
+  /** Whether the user is adding or updating a reviewer */
+  const action: GRBReviewFormAction = activeReviewer ? 'edit' : 'add';
+
+  /** Submit form and add or update reviewer */
+  const submit = handleSubmit(async ({ userAccount, ...values }) => {
     const mutate = () =>
       activeReviewer
         ? updateGRBReviewer({
@@ -100,32 +103,17 @@ const AddReviewerFromEua = ({
             }
           });
 
-    return (
-      mutate()
-        .then(() => {
-          showMessageOnNextPage(
-            <Trans
-              i18nKey="grbReview:form.success"
-              values={{
-                commonName: userAccount.commonName,
-                votingRole: toLower(
-                  t<string>(`votingRoles.${values.votingRole}`)
-                )
-              }}
-              tOptions={{
-                context: values.votingRole
-              }}
-            >
-              Success message
-            </Trans>,
-            { type: 'success' }
-          );
+    return mutate()
+      .then(() => {
+        showMessageOnNextPage(t(`messages.success.${action}`, { count: 1 }), {
+          type: 'success'
+        });
 
-          history.push(grbReviewPath);
-        })
-        // TODO: error message
-        .catch(() => null)
-    );
+        history.push(grbReviewPath);
+      })
+      .catch(() =>
+        showMessage(t(`messages.error.${action}`), { type: 'error' })
+      );
   });
 
   return (
