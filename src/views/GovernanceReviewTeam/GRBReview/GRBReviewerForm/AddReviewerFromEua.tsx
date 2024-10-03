@@ -19,7 +19,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
-import { GRBReviewerFields } from 'types/grbReview';
+import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
 import { GRBReviewerSchema } from 'validations/grbReviewerSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
@@ -31,6 +31,7 @@ type AddReviewerFromEuaProps = {
   grbReviewStartedAt?: string | null;
 };
 
+/** Form to add or update GRB Reviewer */
 const AddReviewerFromEua = ({
   systemId,
   initialGRBReviewers,
@@ -65,6 +66,7 @@ const AddReviewerFromEua = ({
   } = useEasiForm<GRBReviewerFields>({
     resolver: yupResolver(GRBReviewerSchema),
     context: { errorOnDuplicates: !activeReviewer, initialGRBReviewers },
+    // Set default values if updating existing reviewer
     defaultValues: {
       votingRole: activeReviewer?.votingRole,
       grbRole: activeReviewer?.grbRole,
@@ -78,6 +80,9 @@ const AddReviewerFromEua = ({
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
+  const action: GRBReviewFormAction = activeReviewer ? 'edit' : 'add';
+
+  /** Update roles for existing reviewer */
   const updateRoles = ({ userAccount, ...reviewer }: GRBReviewerFields) =>
     updateGRBReviewer({
       variables: {
@@ -102,11 +107,9 @@ const AddReviewerFromEua = ({
 
   return (
     <Form
-      onSubmit={() =>
-        handleSubmit(values =>
-          activeReviewer ? updateRoles(values) : createGRBReviewers([values])
-        )
-      }
+      onSubmit={handleSubmit(values =>
+        activeReviewer ? updateRoles(values) : createGRBReviewers([values])
+      )}
       className="maxw-none tablet:grid-col-6"
     >
       <FormGroup>
@@ -145,6 +148,7 @@ const AddReviewerFromEua = ({
           disabled={!!activeReviewer}
         />
       </FormGroup>
+
       <FormGroup>
         <Label htmlFor="votingRole" required>
           {t('form.votingRole')}
@@ -163,6 +167,7 @@ const AddReviewerFromEua = ({
           ))}
         </Dropdown>
       </FormGroup>
+
       <CollapsableLink
         id="votingRolesInfoList"
         label={t('form.votingRolesInfo.label')}
@@ -184,6 +189,7 @@ const AddReviewerFromEua = ({
           ))}
         </dl>
       </CollapsableLink>
+
       <FormGroup>
         <Label htmlFor="grbRole" required>
           {t('form.grbRole')}
@@ -206,6 +212,7 @@ const AddReviewerFromEua = ({
           ))}
         </Dropdown>
       </FormGroup>
+
       {activeReviewer && (
         <Button
           type="button"
@@ -229,7 +236,7 @@ const AddReviewerFromEua = ({
 
       <Pager
         next={{
-          text: activeReviewer ? t('form.saveChanges') : t('form.addReviewer'),
+          text: t('form.submit', { context: action }),
           disabled:
             !isDirty ||
             !watch('userAccount') ||
@@ -238,7 +245,7 @@ const AddReviewerFromEua = ({
         }}
         taskListUrl={grbReviewPath}
         saveExitText={t('form.returnToRequest', {
-          context: activeReviewer ? 'edit' : 'add'
+          context: action
         })}
         border={false}
         className="margin-top-4"

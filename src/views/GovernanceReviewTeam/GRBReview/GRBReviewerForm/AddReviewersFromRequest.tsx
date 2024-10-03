@@ -24,17 +24,18 @@ import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import { CreateGRBReviewersSchema } from 'validations/grbReviewerSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
-type BulkAddGRBReviewersFormProps = {
+type AddReviewersFromRequestProps = {
   systemId: string;
   createGRBReviewers: (reviewers: GRBReviewerFields[]) => Promise<void>;
   grbReviewStartedAt?: string | null;
 };
 
-const BulkAddGRBReviewersForm = ({
+/** Form to add multiple GRB Reviewers from existing IT Governance request */
+const AddReviewersFromRequest = ({
   systemId,
   createGRBReviewers,
   grbReviewStartedAt
-}: BulkAddGRBReviewersFormProps) => {
+}: AddReviewersFromRequestProps) => {
   const { t } = useTranslation('grbReview');
 
   /** ID of selected IT Gov request */
@@ -158,9 +159,7 @@ const BulkAddGRBReviewersForm = ({
 
   return (
     <Form
-      onSubmit={() =>
-        handleSubmit(values => createGRBReviewers(values.grbReviewers))
-      }
+      onSubmit={handleSubmit(values => createGRBReviewers(values.grbReviewers))}
       className="maxw-none"
     >
       <p className="line-height-body-5 margin-top-3 tablet:grid-col-6">
@@ -278,10 +277,10 @@ const BulkAddGRBReviewersForm = ({
 
       <Pager
         next={{
-          text:
-            grbReviewers.length > 1
-              ? t('form.addReviewer', { count: grbReviewers.length })
-              : t('form.addReviewer'),
+          text: t('form.submit', {
+            context: 'add',
+            count: grbReviewers.length > 1 ? grbReviewers.length : 1
+          }),
           disabled: grbReviewers.length === 0
         }}
         taskListUrl={grbReviewPath}
@@ -296,4 +295,4 @@ const BulkAddGRBReviewersForm = ({
   );
 };
 
-export default BulkAddGRBReviewersForm;
+export default AddReviewersFromRequest;

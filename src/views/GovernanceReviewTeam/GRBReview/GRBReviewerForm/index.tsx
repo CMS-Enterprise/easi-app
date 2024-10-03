@@ -15,7 +15,7 @@ import useMessage from 'hooks/useMessage';
 import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
 
 import AddReviewerFromEua from './AddReviewerFromEua';
-import BulkAddGRBReviewersForm from './BulkAddGRBReviewersForm';
+import AddReviewersFromRequest from './AddReviewersFromRequest';
 
 type GRBReviewerFormProps = {
   initialGRBReviewers: SystemIntakeGRBReviewerFragment[];
@@ -78,8 +78,6 @@ const GRBReviewerForm = ({
 
   return (
     <>
-      {/* TODO: server error message */}
-
       <Grid className="padding-y-4 margin-bottom-205">
         <h1 className="margin-bottom-1">{t('form.title')}</h1>
         <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-105 tablet:grid-col-8">
@@ -120,7 +118,7 @@ const GRBReviewerForm = ({
             tabName={t('form.addFromRequest')}
             className="outline-0"
           >
-            <BulkAddGRBReviewersForm
+            <AddReviewersFromRequest
               systemId={systemId}
               createGRBReviewers={createGRBReviewers}
             />
