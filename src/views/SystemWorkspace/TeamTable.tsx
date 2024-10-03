@@ -204,7 +204,7 @@ function TeamTable({
           setGlobalFilter={setGlobalFilter}
           tableID={t<string>('relatedRequestsTable.id')}
           tableName={t<string>('relatedRequestsTable.title')}
-          className="margin-bottom-4"
+          className="margin-y-3"
         />
       )}
 
@@ -254,7 +254,7 @@ function TeamTable({
 
       {rows.length === 0 && (
         <div className="padding-x-2 padding-bottom-1 border-bottom-1px margin-top-neg-105 line-height-body-5">
-          empty table data
+          {t('singleSystem.noDataAvailable')}
         </div>
       )}
 
@@ -273,7 +273,7 @@ function TeamTable({
               pageSize={state.pageSize}
               setPageSize={setPageSize}
               page={[]}
-              className="desktop:grid-col-auto desktop:padding-bottom-0 desktop:margin-bottom-0"
+              className="desktop:grid-col-fill flex-justify-start margin-left-neg-1 desktop:padding-bottom-0 desktop:margin-bottom-0"
             />
             <TablePageSize
               className="desktop:grid-col-auto"

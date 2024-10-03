@@ -57,6 +57,51 @@ exports[`Workspace team page > renders 1`] = `
       Add another team member
     </button>
     <div>
+      <form
+        class="usa-form usa-search margin-y-3"
+        data-testid="table-client-filter"
+        role="search"
+      >
+        <label
+          class="usa-sr-only"
+          data-testid="label"
+          for="relatedRequestsTable.id-search"
+        >
+          Search table
+        </label>
+        <input
+          class="usa-input"
+          data-testid="textInput"
+          id="relatedRequestsTable.id-search"
+          name="relatedRequestsTable.title Search"
+          role="searchbox"
+          type="search"
+          value=""
+        />
+        <button
+          class="usa-button grid-row flex-justify-center flex-align-center no-pointer"
+          data-testid="button"
+          type="submit"
+        >
+          <svg
+            class="usa-icon usa-icon--size-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+            />
+          </svg>
+        </button>
+      </form>
       <div
         class="usa-table-container--scrollable"
         data-testid="scrollable-table-container"
@@ -395,51 +440,6 @@ exports[`Workspace team page > renders 1`] = `
                   class="display-flex flex-align-center"
                 >
                   <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-red-cool-10 "
-                    data-testid="avatar--basic"
-                  >
-                    AW
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Abner Waelchi
-                  </span>
-                </div>
-              </td>
-              <td
-                role="cell"
-              >
-                Technical System Issues Contact
-              </td>
-              <td
-                role="cell"
-              >
-                <a
-                  class="usa-link text-primary"
-                  href="/systems/000-0000-1/team/edit/team-member?workspace"
-                >
-                  Edit roles
-                </a>
-                <button
-                  class="usa-button usa-button--unstyled margin-left-1 text-error"
-                  data-testid="button"
-                  type="button"
-                >
-                  Remove
-                </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
-            >
-              <td
-                role="cell"
-              >
-                <div
-                  class="display-flex flex-align-center"
-                >
-                  <div
                     class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
                     data-testid="avatar--basic"
                   >
@@ -456,96 +456,6 @@ exports[`Workspace team page > renders 1`] = `
                 role="cell"
               >
                 Contracting Officer's Representative (COR), Government Task Lead (GTL)
-              </td>
-              <td
-                role="cell"
-              >
-                <a
-                  class="usa-link text-primary"
-                  href="/systems/000-0000-1/team/edit/team-member?workspace"
-                >
-                  Edit roles
-                </a>
-                <button
-                  class="usa-button usa-button--unstyled margin-left-1 text-error"
-                  data-testid="button"
-                  type="button"
-                >
-                  Remove
-                </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
-            >
-              <td
-                role="cell"
-              >
-                <div
-                  class="display-flex flex-align-center"
-                >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-yellow-5 "
-                    data-testid="avatar--basic"
-                  >
-                    FB
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Forest Brown
-                  </span>
-                </div>
-              </td>
-              <td
-                role="cell"
-              >
-                Data Center Contact
-              </td>
-              <td
-                role="cell"
-              >
-                <a
-                  class="usa-link text-primary"
-                  href="/systems/000-0000-1/team/edit/team-member?workspace"
-                >
-                  Edit roles
-                </a>
-                <button
-                  class="usa-button usa-button--unstyled margin-left-1 text-error"
-                  data-testid="button"
-                  type="button"
-                >
-                  Remove
-                </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
-            >
-              <td
-                role="cell"
-              >
-                <div
-                  class="display-flex flex-align-center"
-                >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
-                    data-testid="avatar--basic"
-                  >
-                    JS
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Janae Stokes
-                  </span>
-                </div>
-              </td>
-              <td
-                role="cell"
-              >
-                ISSO, Budget Analyst, API Contact
               </td>
               <td
                 role="cell"
@@ -655,6 +565,141 @@ exports[`Workspace team page > renders 1`] = `
                 </button>
               </td>
             </tr>
+            <tr
+              role="row"
+            >
+              <td
+                role="cell"
+              >
+                <div
+                  class="display-flex flex-align-center"
+                >
+                  <div
+                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-red-cool-10 "
+                    data-testid="avatar--basic"
+                  >
+                    AW
+                  </div>
+                  <span
+                    class="margin-left-1"
+                  >
+                    Abner Waelchi
+                  </span>
+                </div>
+              </td>
+              <td
+                role="cell"
+              >
+                Technical System Issues Contact
+              </td>
+              <td
+                role="cell"
+              >
+                <a
+                  class="usa-link text-primary"
+                  href="/systems/000-0000-1/team/edit/team-member?workspace"
+                >
+                  Edit roles
+                </a>
+                <button
+                  class="usa-button usa-button--unstyled margin-left-1 text-error"
+                  data-testid="button"
+                  type="button"
+                >
+                  Remove
+                </button>
+              </td>
+            </tr>
+            <tr
+              role="row"
+            >
+              <td
+                role="cell"
+              >
+                <div
+                  class="display-flex flex-align-center"
+                >
+                  <div
+                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-yellow-5 "
+                    data-testid="avatar--basic"
+                  >
+                    FB
+                  </div>
+                  <span
+                    class="margin-left-1"
+                  >
+                    Forest Brown
+                  </span>
+                </div>
+              </td>
+              <td
+                role="cell"
+              >
+                Data Center Contact
+              </td>
+              <td
+                role="cell"
+              >
+                <a
+                  class="usa-link text-primary"
+                  href="/systems/000-0000-1/team/edit/team-member?workspace"
+                >
+                  Edit roles
+                </a>
+                <button
+                  class="usa-button usa-button--unstyled margin-left-1 text-error"
+                  data-testid="button"
+                  type="button"
+                >
+                  Remove
+                </button>
+              </td>
+            </tr>
+            <tr
+              role="row"
+            >
+              <td
+                role="cell"
+              >
+                <div
+                  class="display-flex flex-align-center"
+                >
+                  <div
+                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
+                    data-testid="avatar--basic"
+                  >
+                    JS
+                  </div>
+                  <span
+                    class="margin-left-1"
+                  >
+                    Janae Stokes
+                  </span>
+                </div>
+              </td>
+              <td
+                role="cell"
+              >
+                ISSO, Budget Analyst, API Contact
+              </td>
+              <td
+                role="cell"
+              >
+                <a
+                  class="usa-link text-primary"
+                  href="/systems/000-0000-1/team/edit/team-member?workspace"
+                >
+                  Edit roles
+                </a>
+                <button
+                  class="usa-button usa-button--unstyled margin-left-1 text-error"
+                  data-testid="button"
+                  type="button"
+                >
+                  Remove
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -663,7 +708,7 @@ exports[`Workspace team page > renders 1`] = `
       >
         <nav
           aria-label="Pagination"
-          class="usa-pagination padding-bottom-1 desktop:grid-col-auto desktop:padding-bottom-0 desktop:margin-bottom-0"
+          class="usa-pagination padding-bottom-1 desktop:grid-col-fill flex-justify-start margin-left-neg-1 desktop:padding-bottom-0 desktop:margin-bottom-0"
           data-testid="table-pagination"
         >
           <ul

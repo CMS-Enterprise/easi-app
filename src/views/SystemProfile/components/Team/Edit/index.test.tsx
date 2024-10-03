@@ -131,7 +131,7 @@ describe('Workspace team page', () => {
     },
     // System maintainer
     {
-      i: 2,
+      i: 4,
       t: 'This action cannot be undone. Each system should have at least one System Maintainer, and Forest Brown is currently the only System Maintainer listed for this system. Removing Forest Brown will remove any roles and permissions they have for this system.'
     },
     // Any other
