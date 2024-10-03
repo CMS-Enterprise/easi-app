@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import { Cell, Column, useSortBy, useTable } from 'react-table';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -12,10 +11,7 @@ import {
   FormGroup,
   Table
 } from '@trussworks/react-uswds';
-import {
-  CreateSystemIntakeGRBReviewersMutationFn,
-  useGetGRBReviewersComparisonsQuery
-} from 'gql/gen/graphql';
+import { useGetGRBReviewersComparisonsQuery } from 'gql/gen/graphql';
 
 import { useEasiForm } from 'components/EasiForm';
 import Alert from 'components/shared/Alert';
@@ -23,7 +19,6 @@ import Divider from 'components/shared/Divider';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import Spinner from 'components/Spinner';
-import useMessage from 'hooks/useMessage';
 import { GRBReviewerComparison, GRBReviewerFields } from 'types/grbReview';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import { CreateGRBReviewersSchema } from 'validations/grbReviewerSchema';
@@ -31,7 +26,7 @@ import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 type BulkAddGRBReviewersFormProps = {
   systemId: string;
-  createGRBReviewers: CreateSystemIntakeGRBReviewersMutationFn;
+  createGRBReviewers: (reviewers: GRBReviewerFields[]) => Promise<void>;
   grbReviewStartedAt?: string | null;
 };
 
@@ -41,8 +36,6 @@ const BulkAddGRBReviewersForm = ({
   grbReviewStartedAt
 }: BulkAddGRBReviewersFormProps) => {
   const { t } = useTranslation('grbReview');
-  const { showMessage, showMessageOnNextPage } = useMessage();
-  const history = useHistory();
 
   /** ID of selected IT Gov request */
   const [activeITGovernanceRequestId, setActiveITGovernanceRequestId] =
@@ -69,32 +62,6 @@ const BulkAddGRBReviewersForm = ({
   const grbReviewers = watch('grbReviewers');
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
-
-  /** Submit form and add GRB reviewers */
-  const submit = handleSubmit(({ grbReviewers: reviewers }) =>
-    createGRBReviewers({
-      variables: {
-        input: {
-          systemIntakeID: systemId,
-          reviewers: reviewers.map(({ userAccount, ...reviewer }) => ({
-            ...reviewer,
-            euaUserId: userAccount.username
-          }))
-        }
-      }
-    })
-      .then(() => {
-        showMessageOnNextPage(
-          <Trans
-            i18nKey="grbReview:messages.success.add"
-            count={grbReviewers.length}
-          />,
-          { type: 'success' }
-        );
-        history.push(grbReviewPath);
-      })
-      .catch(() => showMessage(t('messages.error.add'), { type: 'error' }))
-  );
 
   /** Array of GRB reviewers from selected IT Gov request */
   const grbReviewersArray: GRBReviewerComparison[] | undefined = useMemo(() => {
@@ -190,7 +157,12 @@ const BulkAddGRBReviewersForm = ({
   if (loading || !itGovernanceRequests) return <Spinner />;
 
   return (
-    <Form onSubmit={submit} className="maxw-none">
+    <Form
+      onSubmit={() =>
+        handleSubmit(values => createGRBReviewers(values.grbReviewers))
+      }
+      className="maxw-none"
+    >
       <p className="line-height-body-5 margin-top-3 tablet:grid-col-6">
         {t('form.addFromRequestDescription')}
       </p>

@@ -5,7 +5,6 @@ import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Dropdown, Form, FormGroup } from '@trussworks/react-uswds';
 import {
-  CreateSystemIntakeGRBReviewersMutationFn,
   GetSystemIntakeGRBReviewersDocument,
   SystemIntakeGRBReviewerFragment,
   useUpdateSystemIntakeGRBReviewerMutation
@@ -20,14 +19,14 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
-import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
+import { GRBReviewerFields } from 'types/grbReview';
 import { GRBReviewerSchema } from 'validations/grbReviewerSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 type AddReviewerFromEuaProps = {
   systemId: string;
   initialGRBReviewers: SystemIntakeGRBReviewerFragment[];
-  createGRBReviewers: CreateSystemIntakeGRBReviewersMutationFn;
+  createGRBReviewers: (reviewers: GRBReviewerFields[]) => Promise<void>;
   setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
   grbReviewStartedAt?: string | null;
 };
@@ -40,8 +39,8 @@ const AddReviewerFromEua = ({
   grbReviewStartedAt
 }: AddReviewerFromEuaProps) => {
   const { t } = useTranslation('grbReview');
-  const { showMessage, showMessageOnNextPage } = useMessage();
   const history = useHistory();
+  const { showMessage, showMessageOnNextPage } = useMessage();
 
   const {
     /** Active reviewer when editing */
@@ -79,48 +78,37 @@ const AddReviewerFromEua = ({
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
-  /** Whether the user is adding or updating a reviewer */
-  const action: GRBReviewFormAction = activeReviewer ? 'edit' : 'add';
-
-  /** Submit form and add or update reviewer */
-  const submit = handleSubmit(async ({ userAccount, ...values }) => {
-    const mutate = () =>
-      activeReviewer
-        ? updateGRBReviewer({
-            variables: { input: { ...values, reviewerID: activeReviewer.id } }
-          })
-        : createGRBReviewers({
-            variables: {
-              input: {
-                systemIntakeID: systemId,
-                reviewers: [
-                  {
-                    ...values,
-                    euaUserId: userAccount.username
-                  }
-                ]
-              }
-            }
-          });
-
-    return mutate()
+  const updateRoles = ({ userAccount, ...reviewer }: GRBReviewerFields) =>
+    updateGRBReviewer({
+      variables: {
+        input: {
+          ...reviewer,
+          reviewerID: activeReviewer?.id || ''
+        }
+      }
+    })
       .then(() => {
         showMessageOnNextPage(
-          <Trans i18nKey={`grbReview:messages.success.${action}`} count={1} />,
-          {
-            type: 'success'
-          }
+          <Trans
+            i18nKey="grbReview:messages.success.edit"
+            values={{ commonName: userAccount.commonName }}
+          />,
+          { type: 'success' }
         );
 
         history.push(grbReviewPath);
       })
-      .catch(() =>
-        showMessage(t(`messages.error.${action}`), { type: 'error' })
-      );
-  });
+      .catch(() => showMessage(t(`messages.error.edit`), { type: 'error' }));
 
   return (
-    <Form onSubmit={submit} className="maxw-none tablet:grid-col-6">
+    <Form
+      onSubmit={() =>
+        handleSubmit(values =>
+          activeReviewer ? updateRoles(values) : createGRBReviewers([values])
+        )
+      }
+      className="maxw-none tablet:grid-col-6"
+    >
       <FormGroup>
         <Label htmlFor="react-select-userAccount-input" required>
           {t('form.grbMemberName')}

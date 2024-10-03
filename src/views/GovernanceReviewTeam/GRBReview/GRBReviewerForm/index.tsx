@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Grid, IconArrowBack } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewersDocument,
@@ -11,6 +11,8 @@ import {
 import IconLink from 'components/shared/IconLink';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import { TabPanel, Tabs } from 'components/Tabs';
+import useMessage from 'hooks/useMessage';
+import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
 
 import AddReviewerFromEua from './AddReviewerFromEua';
 import BulkAddGRBReviewersForm from './BulkAddGRBReviewersForm';
@@ -30,13 +32,15 @@ const GRBReviewerForm = ({
   grbReviewStartedAt
 }: GRBReviewerFormProps) => {
   const { t } = useTranslation('grbReview');
+  const { showMessage, showMessageOnNextPage } = useMessage();
+  const history = useHistory();
 
   const { systemId, action } = useParams<{
     systemId: string;
-    action: 'add' | 'edit';
+    action: GRBReviewFormAction;
   }>();
 
-  const [createGRBReviewers] = useCreateSystemIntakeGRBReviewersMutation({
+  const [mutate] = useCreateSystemIntakeGRBReviewersMutation({
     refetchQueries: [
       {
         query: GetSystemIntakeGRBReviewersDocument,
@@ -44,6 +48,31 @@ const GRBReviewerForm = ({
       }
     ]
   });
+
+  const createGRBReviewers = (reviewers: GRBReviewerFields[]) =>
+    mutate({
+      variables: {
+        input: {
+          systemIntakeID: systemId,
+          reviewers: reviewers.map(({ userAccount, ...reviewer }) => ({
+            ...reviewer,
+            euaUserId: userAccount.username
+          }))
+        }
+      }
+    })
+      .then(() => {
+        showMessageOnNextPage(
+          <Trans
+            i18nKey="grbReview:messages.success.add"
+            count={reviewers.length}
+          />,
+          { type: 'success' }
+        );
+
+        history.push(grbReviewPath);
+      })
+      .catch(() => showMessage(t(`messages.error.add`), { type: 'error' }));
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
