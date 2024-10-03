@@ -31,7 +31,7 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 	// set position_in_letter to 1 + (the largeting existing position for this advice letter),
 	// defaulting to 0 if there are no existing recommendations for this advice letter
 	stmt, err := s.db.PrepareNamed(`
-		INSERT INTO trb_advice_letter_recommendations (
+		INSERT INTO trb_guidance_letter_recommendations (
 			id,
 			trb_request_id,
 			title,
@@ -50,7 +50,7 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 			:created_by,
 			:modified_by,
 			COALESCE(MAX(position_in_letter) + 1, 0)
-		FROM trb_advice_letter_recommendations
+		FROM trb_guidance_letter_recommendations
 		WHERE trb_request_id = :trb_request_id
 		RETURNING *;`)
 	if err != nil {
@@ -82,7 +82,7 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 // It will not return any entities that have a deleted_at value
 func (s *Store) GetTRBGuidanceLetterRecommendationByID(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
 	recommendation := models.TRBGuidanceLetterRecommendation{}
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_advice_letter_recommendations WHERE id = :id AND deleted_at IS NULL`)
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_guidance_letter_recommendations WHERE id = :id AND deleted_at IS NULL`)
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (s *Store) GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx context.Co
 
 	err := s.db.Select(&results, `
 		SELECT *
-		FROM trb_advice_letter_recommendations
+		FROM trb_guidance_letter_recommendations
 		WHERE trb_request_id = $1
 		AND deleted_at IS NULL
 		ORDER BY position_in_letter ASC
@@ -135,10 +135,10 @@ func (s *Store) GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx context.Co
 func (s *Store) GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx context.Context, recommendationID uuid.UUID) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		SELECT *
-		FROM trb_advice_letter_recommendations
+		FROM trb_guidance_letter_recommendations
 		WHERE trb_request_id = (
 			SELECT trb_request_id
-			FROM trb_advice_letter_recommendations
+			FROM trb_guidance_letter_recommendations
 			WHERE id = :recommendationID
 		) AND deleted_at IS NULL`)
 	if err != nil {
@@ -172,11 +172,11 @@ func (s *Store) GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx conte
 	return results, nil
 }
 
-// UpdateTRBGuidanceLetterRecommendation updates an existing TRB advice letter recommendation record in the database
+// UpdateTRBGuidanceLetterRecommendation updates an existing TRB guidance letter recommendation record in the database
 // This purposely does not update the position_in_letter column - to update that, use UpdateTRBGuidanceLetterRecommendationOrder()
 func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recommendation *models.TRBGuidanceLetterRecommendation) (*models.TRBGuidanceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
-		UPDATE trb_advice_letter_recommendations
+		UPDATE trb_guidance_letter_recommendations
 		SET
 			trb_request_id = :trb_request_id,
 			title = :title,
@@ -213,10 +213,10 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recom
 	return &updated, err
 }
 
-// DeleteTRBGuidanceLetterRecommendation deletes an existing TRB advice letter recommendation record in the database
+// DeleteTRBGuidanceLetterRecommendation deletes an existing TRB guidance letter recommendation record in the database
 func (s *Store) DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
-		UPDATE trb_advice_letter_recommendations
+		UPDATE trb_guidance_letter_recommendations
 		SET deleted_at = CURRENT_TIMESTAMP, position_in_letter = NULL
 		WHERE id = :id
 		RETURNING *;`)
@@ -289,11 +289,11 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 			FROM json_to_recordset(:newPositions)
 			AS new_positions (id uuid, position_in_letter int)
 		)
-		UPDATE trb_advice_letter_recommendations
+		UPDATE trb_guidance_letter_recommendations
 		SET position_in_letter = new_positions.position_in_letter
 		FROM new_positions
-		WHERE trb_advice_letter_recommendations.id = new_positions.id
-		AND trb_advice_letter_recommendations.trb_request_id = :trbRequestID
+		WHERE trb_guidance_letter_recommendations.id = new_positions.id
+		AND trb_guidance_letter_recommendations.trb_request_id = :trbRequestID
 		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(

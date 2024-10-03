@@ -27,7 +27,7 @@ func (s *Store) CreateTRBGuidanceLetter(ctx context.Context, createdBy string, t
 	guidanceLetter.CreatedBy = createdBy
 
 	const trbGuidanceLetterCreateSQL = `
-		INSERT INTO trb_advice_letters (
+		INSERT INTO trb_guidance_letters (
 			id,
 			trb_request_id,
 			created_by,
@@ -69,7 +69,7 @@ func (s *Store) CreateTRBGuidanceLetter(ctx context.Context, createdBy string, t
 // When it sends the letter, it also updates the DateSent field.
 func (s *Store) UpdateTRBGuidanceLetterStatus(ctx context.Context, id uuid.UUID, status models.TRBGuidanceLetterStatus) (*models.TRBGuidanceLetter, error) {
 	const trbGuidanceLetterStatusUpdateSQL = `
-	UPDATE trb_advice_letters
+	UPDATE trb_guidance_letters
 	SET
 		status = :status,
 		date_sent = :date_sent,
@@ -125,7 +125,7 @@ func (s *Store) UpdateTRBGuidanceLetterStatus(ctx context.Context, id uuid.UUID,
 // The letter's status _can_ be set, though UpdateTRBGuidanceLetterStatus() should be used when setting a letter ready for review or sending a letter.
 func (s *Store) UpdateTRBGuidanceLetter(ctx context.Context, letter *models.TRBGuidanceLetter) (*models.TRBGuidanceLetter, error) {
 	const trbGuidanceLetterUpdateSQL = `
-		UPDATE trb_advice_letters
+		UPDATE trb_guidance_letters
 		SET
 			trb_request_id = :trb_request_id,
 			status = :status,
