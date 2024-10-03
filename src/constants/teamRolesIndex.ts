@@ -2,7 +2,7 @@ import { parseSortIndex } from 'utils/tableRequestStatusIndex';
 
 // This role list is slightly different from types/systemProfile.ts#RoleTypeName
 // RoleTypeName also wasn't initially intended to be an ordered list
-const teamRolesIndex = parseSortIndex([
+const teamCardRolesIndex = parseSortIndex([
   'Business Owner',
   'System Maintainer',
   "Contracting Officer's Representative (COR)",
@@ -22,4 +22,4 @@ const teamRolesIndex = parseSortIndex([
   'AI Contact'
 ]);
 
-export default teamRolesIndex;
+export default teamCardRolesIndex;

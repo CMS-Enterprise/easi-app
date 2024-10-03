@@ -27,7 +27,7 @@ import IconLink from 'components/shared/IconLink';
 import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import Spinner from 'components/Spinner';
-import teamRolesIndex from 'constants/teamRolesIndex';
+import teamCardRolesIndex from 'constants/teamRolesIndex';
 import useIsWorkspaceParam from 'hooks/useIsWorkspaceParam';
 import useMessage from 'hooks/useMessage';
 import { GetCedarRoleTypesQuery } from 'queries/CedarRoleQueries';
@@ -111,12 +111,14 @@ const TeamMemberForm = ({
     if (roles === undefined) return [];
 
     /** Hide any undefined roles. */
-    const knownRoles = Object.keys(teamRolesIndex());
+    const knownRoles = Object.keys(teamCardRolesIndex());
 
     return roles
       .concat()
       .filter(r => knownRoles.includes(r.name))
-      .sort((a, b) => teamRolesIndex()[a.name] - teamRolesIndex()[b.name])
+      .sort(
+        (a, b) => teamCardRolesIndex()[a.name] - teamCardRolesIndex()[b.name]
+      )
       .map(r => {
         // Adjust the ISSO display name from the backend
         if (r.name === 'ISSO') {

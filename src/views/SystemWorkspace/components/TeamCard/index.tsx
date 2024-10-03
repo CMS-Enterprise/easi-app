@@ -5,7 +5,7 @@ import { Button, IconExpandMore } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
-import teamRolesIndex from 'constants/teamRolesIndex';
+import teamCardRolesIndex from 'constants/teamRolesIndex';
 import { CedarRole } from 'queries/types/CedarRole';
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import {
@@ -58,19 +58,33 @@ function TeamCard({ roles }: { roles: CedarRole[] }) {
 
   const teamSorted: UsernameWithRoles[] = useMemo(() => {
     const team: UsernameWithRoles[] = getUsernamesWithRoles(
-      roles.filter(
-        (role): role is CedarRoleAssigneePerson =>
-          role.assigneeType === CedarAssigneeType.PERSON
-      )
+      roles
+        .concat() // Make sure to not mutate passed in roles
+        .filter(
+          (role): role is CedarRoleAssigneePerson =>
+            role.assigneeType === CedarAssigneeType.PERSON
+        )
     );
 
+    const roleEndIdx = Object.keys(teamCardRolesIndex()).length;
+
+    // Sort an individual's roles first
+    // eslint-disable-next-line no-restricted-syntax
+    for (const p of team) {
+      p.roles.sort((a, b) => {
+        return (
+          (teamCardRolesIndex()[a.roleTypeName || ''] ?? roleEndIdx) -
+          (teamCardRolesIndex()[b.roleTypeName || ''] ?? roleEndIdx)
+        );
+      });
+    }
+
     // Sort by roles with any unlisted moved to the end
-    const roleEndIdx = Object.keys(teamRolesIndex()).length;
     return team.sort((a, b) => {
       const ar = a.roles[0];
       const br = b.roles[0];
-      const ari = teamRolesIndex()[ar.roleTypeName || ''] ?? roleEndIdx;
-      const bri = teamRolesIndex()[br.roleTypeName || ''] ?? roleEndIdx;
+      const ari = teamCardRolesIndex()[ar.roleTypeName || ''] ?? roleEndIdx;
+      const bri = teamCardRolesIndex()[br.roleTypeName || ''] ?? roleEndIdx;
       if (ari !== bri) {
         return ari - bri;
       }

@@ -11,6 +11,7 @@ import {
   useTable
 } from 'react-table';
 import { Button, Table } from '@trussworks/react-uswds';
+import { cloneDeep } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
@@ -18,7 +19,7 @@ import { AvatarCircle } from 'components/shared/Avatar/Avatar';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
-import teamRolesIndex from 'constants/teamRolesIndex';
+import teamCardRolesIndex from 'constants/teamRolesIndex';
 import { UsernameWithRoles } from 'types/systemProfile';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -73,8 +74,8 @@ function TeamTable({
         sortType: (a: Row<UsernameWithRoles>, b: Row<UsernameWithRoles>) => {
           const ar = a.original.roles[0];
           const br = b.original.roles[0];
-          const ari = teamRolesIndex()[ar.roleTypeName || ''] ?? 99;
-          const bri = teamRolesIndex()[br.roleTypeName || ''] ?? 99;
+          const ari = teamCardRolesIndex()[ar.roleTypeName || ''] ?? 99;
+          const bri = teamCardRolesIndex()[br.roleTypeName || ''] ?? 99;
           if (ari !== bri) {
             return ari - bri;
           }
@@ -131,12 +132,28 @@ function TeamTable({
       "Contracting Officer's Representative (COR)": 3
     };
 
-    return team.concat().sort((a, b) => {
+    const roleEndIdx = Object.keys(initIndex).length;
+
+    // Make sure to not mutate the passed in team list
+    const teamData = cloneDeep(team);
+
+    // Sort an individual's roles first
+    // eslint-disable-next-line no-restricted-syntax
+    for (const p of teamData) {
+      p.roles.sort((a, b) => {
+        return (
+          (teamCardRolesIndex()[a.roleTypeName || ''] ?? roleEndIdx) -
+          (teamCardRolesIndex()[b.roleTypeName || ''] ?? roleEndIdx)
+        );
+      });
+    }
+
+    return teamData.sort((a, b) => {
       // Some roles
       const ar = a.roles[0];
       const br = b.roles[0];
-      const ari = initIndex[ar.roleTypeName || ''] ?? 9;
-      const bri = initIndex[br.roleTypeName || ''] ?? 9;
+      const ari = initIndex[ar.roleTypeName || ''] ?? roleEndIdx;
+      const bri = initIndex[br.roleTypeName || ''] ?? roleEndIdx;
       if (ari !== bri) {
         return ari - bri;
       }
