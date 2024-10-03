@@ -99,12 +99,39 @@ const GRBReviewerForm = ({
           {t('form.returnToRequest', { context: action })}
         </IconLink>
 
-        <Tabs defaultActiveTab={t('form.addViaEUA')}>
-          <TabPanel
-            id="addReviewerFromEua"
-            tabName={t('form.addViaEUA')}
-            className="outline-0"
-          >
+        {
+          /**
+           * Only show tabbed layout when adding new reviewer(s)
+           *
+           * Otherwise, show add from EUA form
+           */
+          action === 'add' ? (
+            <Tabs defaultActiveTab={t('form.addViaEUA')}>
+              <TabPanel
+                id="addReviewerFromEua"
+                tabName={t('form.addViaEUA')}
+                className="outline-0"
+              >
+                <AddReviewerFromEua
+                  systemId={systemId}
+                  initialGRBReviewers={initialGRBReviewers}
+                  createGRBReviewers={createGRBReviewers}
+                  setReviewerToRemove={setReviewerToRemove}
+                  grbReviewStartedAt={grbReviewStartedAt}
+                />
+              </TabPanel>
+              <TabPanel
+                id="addReviewersFromRequest"
+                tabName={t('form.addFromRequest')}
+                className="outline-0"
+              >
+                <AddReviewersFromRequest
+                  systemId={systemId}
+                  createGRBReviewers={createGRBReviewers}
+                />
+              </TabPanel>
+            </Tabs>
+          ) : (
             <AddReviewerFromEua
               systemId={systemId}
               initialGRBReviewers={initialGRBReviewers}
@@ -112,18 +139,8 @@ const GRBReviewerForm = ({
               setReviewerToRemove={setReviewerToRemove}
               grbReviewStartedAt={grbReviewStartedAt}
             />
-          </TabPanel>
-          <TabPanel
-            id="addReviewersFromRequest"
-            tabName={t('form.addFromRequest')}
-            className="outline-0"
-          >
-            <AddReviewersFromRequest
-              systemId={systemId}
-              createGRBReviewers={createGRBReviewers}
-            />
-          </TabPanel>
-        </Tabs>
+          )
+        }
       </Grid>
     </>
   );
