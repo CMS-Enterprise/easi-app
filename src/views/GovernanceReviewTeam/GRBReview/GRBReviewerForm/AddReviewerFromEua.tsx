@@ -105,9 +105,12 @@ const AddReviewerFromEua = ({
 
     return mutate()
       .then(() => {
-        showMessageOnNextPage(t(`messages.success.${action}`, { count: 1 }), {
-          type: 'success'
-        });
+        showMessageOnNextPage(
+          <Trans i18nKey={`grbReview:messages.success.${action}`} count={1} />,
+          {
+            type: 'success'
+          }
+        );
 
         history.push(grbReviewPath);
       })

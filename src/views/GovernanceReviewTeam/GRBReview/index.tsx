@@ -112,9 +112,7 @@ const GRBReview = ({
             <Trans
               i18nKey="grbReview:messages.success.remove"
               values={{ commonName: reviewer.userAccount.commonName }}
-            >
-              success
-            </Trans>,
+            />,
             { type: 'success' }
           )
         )

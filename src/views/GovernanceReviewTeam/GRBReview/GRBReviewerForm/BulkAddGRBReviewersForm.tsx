@@ -85,7 +85,10 @@ const BulkAddGRBReviewersForm = ({
     })
       .then(() => {
         showMessageOnNextPage(
-          t('messages.success.add', { count: grbReviewers.length }),
+          <Trans
+            i18nKey="grbReview:messages.success.add"
+            count={grbReviewers.length}
+          />,
           { type: 'success' }
         );
         history.push(grbReviewPath);
