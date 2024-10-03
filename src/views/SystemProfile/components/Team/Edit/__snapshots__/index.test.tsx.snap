@@ -65,15 +65,15 @@ exports[`Workspace team page > renders 1`] = `
         <label
           class="usa-sr-only"
           data-testid="label"
-          for="relatedRequestsTable.id-search"
+          for="workspace-team-table-search"
         >
           Search table
         </label>
         <input
           class="usa-input"
           data-testid="textInput"
-          id="relatedRequestsTable.id-search"
-          name="relatedRequestsTable.title Search"
+          id="workspace-team-table-search"
+          name="Team members Search"
           role="searchbox"
           type="search"
           value=""

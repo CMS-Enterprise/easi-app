@@ -202,8 +202,8 @@ function TeamTable({
       {team.length > state.pageSize && (
         <GlobalClientFilter
           setGlobalFilter={setGlobalFilter}
-          tableID={t<string>('relatedRequestsTable.id')}
-          tableName={t<string>('relatedRequestsTable.title')}
+          tableID="workspace-team-table"
+          tableName={t('singleSystem.editTeam.teamMembers')}
           className="margin-y-3"
         />
       )}
