@@ -36,6 +36,7 @@ type seederConfig struct {
 const closedRequestCount int = 10
 
 func main() {
+	_ = 1
 	config := testhelpers.NewConfig()
 
 	// https://pkg.go.dev/go.uber.org/zap#example-AtomicLevel
