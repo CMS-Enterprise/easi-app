@@ -27,7 +27,7 @@ import {
   SetRolesForUserOnSystem,
   SetRolesForUserOnSystemVariables
 } from 'queries/types/SetRolesForUserOnSystem';
-import { UsernameWithRoles } from 'types/systemProfile';
+import { TeamMemberRoleTypeName, UsernameWithRoles } from 'types/systemProfile';
 import TeamTable from 'views/SystemWorkspace/TeamTable';
 
 import { TeamContactCard } from '..';
@@ -38,7 +38,7 @@ export const getTeamMemberName = (user: UsernameWithRoles) => {
   return `${user.roles[0].assigneeFirstName} ${user.roles[0].assigneeLastName}`;
 };
 
-export const requisiteLevelsOfTeamRoles: string[][] = [
+export const requisiteLevelsOfTeamRoles: TeamMemberRoleTypeName[][] = [
   ['Business Owner'],
   ['System Maintainer'],
   [
@@ -94,25 +94,28 @@ const EditTeam = ({
       const member = team.find(
         user => user.assigneeUsername === memberToDelete.euaUserId
       );
-      // Find out if the member has any of the requisite roles
-      const requisiteRoleFound = member?.roles.find(
-        r =>
-          r.roleTypeName &&
-          requisiteLevelsOfTeamRoles.flat().includes(r.roleTypeName)
-      );
-      if (requisiteRoleFound) {
+      const requisiteRoleSetFound = requisiteLevelsOfTeamRoles.find(lvl => {
+        return member?.roles.some(r =>
+          lvl.includes(r.roleTypeName as TeamMemberRoleTypeName)
+        );
+      });
+      if (requisiteRoleSetFound) {
         // Check the rest of the team to see if this is the last member with the role
         const secondary = team.find(
           user =>
             user.assigneeUsername !== member?.assigneeUsername &&
-            user.roles.find(
-              r =>
-                r.roleTypeName &&
-                r.roleTypeName === requisiteRoleFound.roleTypeName
+            user.roles.find(r =>
+              requisiteRoleSetFound.includes(
+                r.roleTypeName as TeamMemberRoleTypeName
+              )
             )
         );
         if (!secondary) {
-          return requisiteRoleFound.roleTypeName;
+          if (requisiteRoleSetFound.includes('Project Lead')) {
+            // Special case to shorten the Project Lead set, which is used as a key value later on
+            return 'Project Lead';
+          }
+          return requisiteRoleSetFound[0]; // Other sets have 1 element
         }
       }
     }

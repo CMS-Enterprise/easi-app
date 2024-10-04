@@ -124,11 +124,6 @@ describe('Workspace team page', () => {
       i: 0,
       t: 'This action cannot be undone. Each system should have at least one Business Owner, and Eliezer Grant is currently the only Business Owner listed for this system. Removing Eliezer Grant will remove any roles and permissions they have for this system.'
     },
-    // Project Lead
-    {
-      i: 1,
-      t: "This action cannot be undone. Each system should have at least one Project Lead, Government Task Lead (GTL), or Contracting Officer's Representative (COR), and Elbert Huel is currently the only one listed of this system. Removing Elbert Huel will remove any roles and permissions they have for this system."
-    },
     // System maintainer
     {
       i: 4,
@@ -140,7 +135,7 @@ describe('Workspace team page', () => {
       t: 'This action cannot be undone. Removing Sasha Barrows will remove any roles and permissions they have for this system.'
     }
   ])(
-    'shows alert when one member of a required type is left %#',
+    'shows modal feedback when one member of a required role type is left %#',
     async ({ i, t }) => {
       const team = getUsernamesWithRoles(teamRequisiteRoles);
       renderWorkspaceEditTeam(team);
@@ -155,4 +150,27 @@ describe('Workspace team page', () => {
       await screen.findByText(t);
     }
   );
+
+  it('shows modal feedback when one member of the role set which includes project lead is left', async () => {
+    const team = getUsernamesWithRoles(
+      teamRequisiteRoles.filter(r => {
+        return (
+          r.roleTypeName !== 'Government Task Lead (GTL)' &&
+          r.roleTypeName !== "Contracting Officer's Representative (COR)"
+        );
+      })
+    );
+    renderWorkspaceEditTeam(team);
+
+    const rms = screen.getAllByRole('button', { name: 'Remove' });
+
+    userEvent.click(rms[1]);
+
+    await screen.findByRole('heading', {
+      name: 'Are you sure you want to remove this team member?'
+    });
+    await screen.findByText(
+      "This action cannot be undone. Each system should have at least one Project Lead, Government Task Lead (GTL), or Contracting Officer's Representative (COR), and Elbert Huel is currently the only one listed of this system. Removing Elbert Huel will remove any roles and permissions they have for this system."
+    );
+  });
 });

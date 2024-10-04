@@ -137,7 +137,6 @@ function TeamTable({
     // Make sure to not mutate the passed in team list
     const teamData = cloneDeep(team);
 
-    // Sort an individual's roles first
     const roleEndIdx = Object.keys(teamManagementRolesIndex).length;
     // eslint-disable-next-line no-restricted-syntax
     for (const p of teamData) {
