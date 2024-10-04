@@ -1,25 +1,29 @@
-import { parseSortIndex } from 'utils/tableRequestStatusIndex';
+import { TeamMemberRoleTypeName } from 'types/systemProfile';
 
-// This role list is slightly different from types/systemProfile.ts#RoleTypeName
-// RoleTypeName also wasn't initially intended to be an ordered list
-const teamCardRolesIndex = parseSortIndex([
-  'Business Owner',
-  'System Maintainer',
-  "Contracting Officer's Representative (COR)",
-  'Government Task Lead (GTL)',
-  'Project Lead',
+/** A sort index that covers most cedar roles */
+const teamRolesIndex: Record<TeamMemberRoleTypeName, number> = {
+  'Business Owner': 0,
+  'System Maintainer': 1,
+  "Contracting Officer's Representative (COR)": 2,
+  'Government Task Lead (GTL)': 3,
+  'Project Lead': 4,
+  ISSO: 5,
+  'Subject Matter Expert (SME)': 6,
+  'Budget Analyst': 7,
+  'Support Staff': 8,
+  'Business Question Contact': 9,
+  'Technical System Issues Contact': 10,
+  'Data Center Contact': 11,
+  'API Contact': 12,
+  'AI Contact': 13
+};
 
-  // 'Information System Security Officer (ISSO)',
-  'ISSO', // As from cedar api
+export default teamRolesIndex;
 
-  'Subject Matter Expert (SME)',
-  'Budget Analyst',
-  'Support Staff',
-  'Business Question Contact',
-  'Technical System Issues Contact',
-  'Data Center Contact',
-  'API Contact',
-  'AI Contact'
-]);
-
-export default teamCardRolesIndex;
+/** A sort index of roles for workspace team management */
+export const teamManagementRolesIndex: Partial<typeof teamRolesIndex> = {
+  'Business Owner': 0,
+  'Project Lead': 1,
+  'Government Task Lead (GTL)': 2,
+  "Contracting Officer's Representative (COR)": 3
+};

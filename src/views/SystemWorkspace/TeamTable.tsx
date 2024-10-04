@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import {
   CellProps,
   Column,
-  Row,
+  // Row,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -19,8 +19,8 @@ import { AvatarCircle } from 'components/shared/Avatar/Avatar';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
-import teamCardRolesIndex from 'constants/teamRolesIndex';
-import { UsernameWithRoles } from 'types/systemProfile';
+import { teamManagementRolesIndex } from 'constants/teamRolesIndex';
+import { TeamMemberRoleTypeName, UsernameWithRoles } from 'types/systemProfile';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -70,7 +70,7 @@ function TeamTable({
         accessor: 'roles',
         Cell: ({ row }: CellProps<UsernameWithRoles>) => {
           return row.original.roles.map(r => r.roleTypeName).join(', ');
-        },
+        } /* ,
         sortType: (a: Row<UsernameWithRoles>, b: Row<UsernameWithRoles>) => {
           const ar = a.original.roles[0];
           const br = b.original.roles[0];
@@ -80,7 +80,7 @@ function TeamTable({
             return ari - bri;
           }
           return 0;
-        }
+        } */
       },
       {
         Header: 'Actions',
@@ -125,14 +125,8 @@ function TeamTable({
 
   const tableData: UsernameWithRoles[] = useMemo(() => {
     // Alpha by first name, except with Business owner and Project lead roles at the top
-    const initIndex: { [v: string]: number } = {
-      'Business Owner': 0,
-      'Project Lead': 1,
-      'Government Task Lead (GTL)': 2,
-      "Contracting Officer's Representative (COR)": 3
-    };
 
-    const roleEndIdx = Object.keys(initIndex).length;
+    const roleEndIdx = Object.keys(teamManagementRolesIndex).length;
 
     // Make sure to not mutate the passed in team list
     const teamData = cloneDeep(team);
@@ -142,8 +136,10 @@ function TeamTable({
     for (const p of teamData) {
       p.roles.sort((a, b) => {
         return (
-          (teamCardRolesIndex()[a.roleTypeName || ''] ?? roleEndIdx) -
-          (teamCardRolesIndex()[b.roleTypeName || ''] ?? roleEndIdx)
+          (teamManagementRolesIndex[a.roleTypeName as TeamMemberRoleTypeName] ??
+            roleEndIdx) -
+          (teamManagementRolesIndex[b.roleTypeName as TeamMemberRoleTypeName] ??
+            roleEndIdx)
         );
       });
     }
@@ -152,8 +148,12 @@ function TeamTable({
       // Some roles
       const ar = a.roles[0];
       const br = b.roles[0];
-      const ari = initIndex[ar.roleTypeName || ''] ?? roleEndIdx;
-      const bri = initIndex[br.roleTypeName || ''] ?? roleEndIdx;
+      const ari =
+        teamManagementRolesIndex[ar.roleTypeName as TeamMemberRoleTypeName] ??
+        roleEndIdx;
+      const bri =
+        teamManagementRolesIndex[br.roleTypeName as TeamMemberRoleTypeName] ??
+        roleEndIdx;
       if (ari !== bri) {
         return ari - bri;
       }

@@ -320,7 +320,7 @@ exports[`Workspace team page > renders 1`] = `
               <td
                 role="cell"
               >
-                Business Owner, ISSO, Budget Analyst, Support Staff, API Contact
+                Business Owner, ISSO, API Contact, Budget Analyst, Support Staff
               </td>
               <td
                 role="cell"
@@ -440,6 +440,51 @@ exports[`Workspace team page > renders 1`] = `
                   class="display-flex flex-align-center"
                 >
                   <div
+                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-blue-10 "
+                    data-testid="avatar--basic"
+                  >
+                    SB
+                  </div>
+                  <span
+                    class="margin-left-1"
+                  >
+                    Sasha Barrows
+                  </span>
+                </div>
+              </td>
+              <td
+                role="cell"
+              >
+                Project Lead, Contracting Officer's Representative (COR), Budget Analyst, System Maintainer, AI Contact
+              </td>
+              <td
+                role="cell"
+              >
+                <a
+                  class="usa-link text-primary"
+                  href="/systems/000-0000-1/team/edit/team-member?workspace"
+                >
+                  Edit roles
+                </a>
+                <button
+                  class="usa-button usa-button--unstyled margin-left-1 text-error"
+                  data-testid="button"
+                  type="button"
+                >
+                  Remove
+                </button>
+              </td>
+            </tr>
+            <tr
+              role="row"
+            >
+              <td
+                role="cell"
+              >
+                <div
+                  class="display-flex flex-align-center"
+                >
+                  <div
                     class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
                     data-testid="avatar--basic"
                   >
@@ -455,7 +500,7 @@ exports[`Workspace team page > renders 1`] = `
               <td
                 role="cell"
               >
-                Contracting Officer's Representative (COR), Government Task Lead (GTL)
+                Government Task Lead (GTL), Contracting Officer's Representative (COR)
               </td>
               <td
                 role="cell"
@@ -636,51 +681,6 @@ exports[`Workspace team page > renders 1`] = `
                 role="cell"
               >
                 Data Center Contact
-              </td>
-              <td
-                role="cell"
-              >
-                <a
-                  class="usa-link text-primary"
-                  href="/systems/000-0000-1/team/edit/team-member?workspace"
-                >
-                  Edit roles
-                </a>
-                <button
-                  class="usa-button usa-button--unstyled margin-left-1 text-error"
-                  data-testid="button"
-                  type="button"
-                >
-                  Remove
-                </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
-            >
-              <td
-                role="cell"
-              >
-                <div
-                  class="display-flex flex-align-center"
-                >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
-                    data-testid="avatar--basic"
-                  >
-                    JS
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Janae Stokes
-                  </span>
-                </div>
-              </td>
-              <td
-                role="cell"
-              >
-                ISSO, Budget Analyst, API Contact
               </td>
               <td
                 role="cell"
