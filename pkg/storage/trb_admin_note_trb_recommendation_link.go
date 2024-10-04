@@ -94,7 +94,7 @@ func (s *Store) GetTRBRecommendationsByAdminNoteID(ctx context.Context, adminNot
 		SELECT trb_guidance_letter_recommendations.*
 		FROM trb_guidance_letter_recommendations
 		INNER JOIN trb_admin_notes_trb_admin_note_recommendations_links
-			ON trb_guidance_letter_recommendations.id = trb_admin_notes_trb_admin_note_recommendations_links.trb_advice_letter_recommendation_id
+			ON trb_guidance_letter_recommendations.id = trb_admin_notes_trb_admin_note_recommendations_links.trb_guidance_letter_recommendation_id
 		WHERE trb_admin_notes_trb_admin_note_recommendations_links.trb_admin_note_id = :admin_note_id
 	`
 
