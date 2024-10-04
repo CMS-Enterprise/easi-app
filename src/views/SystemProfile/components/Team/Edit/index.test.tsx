@@ -99,7 +99,10 @@ describe('Workspace team page', () => {
     const team = getUsernamesWithRoles(teamRoles);
     const { asFragment } = renderWorkspaceEditTeam(team);
 
-    // query and find no alert
+    // Mock data for this test should have all requisite roles present
+    expect(
+      screen.queryByTestId('requisite-roles-alert')
+    ).not.toBeInTheDocument();
 
     // Snapshot captures the assignment and ordering of team members and their multiple roles
     expect(asFragment()).toMatchSnapshot();
