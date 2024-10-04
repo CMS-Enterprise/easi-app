@@ -4,6 +4,9 @@
 import React, { useEffect, useRef } from 'react';
 import OktaSignIn from '@okta/okta-signin-widget';
 
+import Spinner from 'components/Spinner';
+import useOktaSession from 'hooks/useOktaSession';
+
 import './index.scss';
 
 type OktaSignInWidgetProps = {
@@ -13,6 +16,8 @@ type OktaSignInWidgetProps = {
 
 const OktaSignInWidget = ({ onSuccess, onError }: OktaSignInWidgetProps) => {
   const widgetRef = useRef(null);
+
+  const { hasSession, oktaAuth } = useOktaSession();
 
   useEffect(() => {
     let signIn: any;
@@ -40,12 +45,27 @@ const OktaSignInWidget = ({ onSuccess, onError }: OktaSignInWidgetProps) => {
         .catch(onError);
     }
 
+    if (hasSession) {
+      oktaAuth.signInWithRedirect();
+    }
+
     return () => signIn.remove();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [hasSession, oktaAuth]);
 
-  return <div id="easi-okta-sign-in" ref={widgetRef} />;
+  return (
+    <div className="center-container">
+      <div className="okta-sign-in-container">
+        <div id="easi-okta-sign-in" ref={widgetRef} />
+        {hasSession !== false && (
+          <div className="nested-overlay">
+            <Spinner size="large" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default OktaSignInWidget;

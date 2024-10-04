@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
 
 import { localAuthStorageKey } from 'constants/localAuth';
+import useOktaSession from 'hooks/useOktaSession';
 import { setUser } from 'reducers/authReducer';
 import { isLocalAuthEnabled } from 'utils/auth';
 
@@ -19,6 +20,8 @@ type oktaUserProps = {
 const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
   const dispatch = useDispatch();
   const { authState, oktaAuth } = useOktaAuth();
+
+  const { hasSession } = useOktaSession();
 
   const storeUserInfo = async () => {
     if (
@@ -50,6 +53,15 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState?.isAuthenticated]);
+
+  // Return null until we know if the user is authenticated.  This prevents unwanted UX flicker. Does not trigger condition for local auth/non okta development
+  if (
+    !window.localStorage[localAuthStorageKey] &&
+    oktaAuth.authStateManager.getAuthState() === null &&
+    !hasSession
+  ) {
+    return null;
+  }
 
   return <>{children}</>;
 };

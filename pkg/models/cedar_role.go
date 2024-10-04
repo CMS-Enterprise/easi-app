@@ -13,6 +13,32 @@ const (
 	OrganizationAssignee CedarAssigneeType = "ORGANIZATION"
 )
 
+type CedarRoleNameType string
+
+const (
+	AIContactRole                     CedarRoleNameType = "AI Contact"
+	APIContactRole                    CedarRoleNameType = "API Contact"
+	BudgetAnalystRole                 CedarRoleNameType = "Budget Analyst"
+	BusinessOwnerRole                 CedarRoleNameType = "Business Owner"
+	CORRole                           CedarRoleNameType = "Contracting Officer's Representative (COR)"
+	DataCenterContactRole             CedarRoleNameType = "Data Center Contact"
+	ISSORole                          CedarRoleNameType = "ISSO"
+	GovernmentTaskLeadRole            CedarRoleNameType = "Government Task Lead (GTL)"
+	ProjectLeadRole                   CedarRoleNameType = "Project Lead"
+	SubjectMatterExpertRole           CedarRoleNameType = "Subject Matter Expert (SME)"
+	SupportStaffRole                  CedarRoleNameType = "Support Staff"
+	SurveyPointOfContactRole          CedarRoleNameType = "Survey Point of Contact"
+	SystemBusinessQuestionContactRole CedarRoleNameType = "Business Question Contact"
+	SystemDataCenterContactRole       CedarRoleNameType = "Data Center Contact"
+	SystemIssuesContactRole           CedarRoleNameType = "System Issues Contact"
+	SystemMaintainerRole              CedarRoleNameType = "System Maintainer"
+	TechnicalSystemIssuesContactRole  CedarRoleNameType = "Technical System Issues Contact"
+)
+
+func (c CedarRoleNameType) String() string {
+	return string(c)
+}
+
 // CedarRole is the model for the role that a user holds for some system
 type CedarRole struct {
 	// always-present fields
