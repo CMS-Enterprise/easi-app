@@ -1,4 +1,4 @@
-FROM nginx:mainline as builder
+FROM nginx:1.27.1 as builder
 
 ARG ENABLED_MODULES=cachepurge
 
@@ -58,7 +58,7 @@ RUN apt-get update \
     && echo "BUILT_MODULES=\"$BUILT_MODULES\"" > /tmp/packages/modules.env \
     && rm -rf /var/lib/apt/lists/*
 
-FROM nginx:mainline
+FROM nginx:1.27.1
 ENV NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
 COPY ./nginx.conf /etc/nginx/templates/nginx.conf.template
 RUN --mount=type=bind,target=/tmp/packages/,source=/tmp/packages/,from=builder \
