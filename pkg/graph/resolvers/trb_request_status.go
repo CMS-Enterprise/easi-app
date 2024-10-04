@@ -160,7 +160,7 @@ func GetTRBTaskStatuses(ctx context.Context, trbRequest models.TRBRequest) (*mod
 		return nil, err
 	}
 	if guidanceLetterStatus == nil {
-		return nil, fmt.Errorf("advice letter status is nil for trb request %v", trbRequest.ID)
+		return nil, fmt.Errorf("guidance letter status is nil for trb request %v", trbRequest.ID)
 	}
 
 	guidanceLetterStatusTaskList := models.TRBGuidanceLetterStatusTaskListInReview

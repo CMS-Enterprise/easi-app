@@ -11,7 +11,7 @@ func (s *StoreTestSuite) TestTRBGuidanceLetterStoreMethods() {
 
 	anonEua := "ANON"
 
-	s.Run("Creating an guidance letter returns a blank guidance letter in the In Progress status", func() {
+	s.Run("Creating a guidance letter returns a blank guidance letter in the In Progress status", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBGuidanceLetter(ctx, anonEua, trbRequestID)
@@ -26,7 +26,7 @@ func (s *StoreTestSuite) TestTRBGuidanceLetterStoreMethods() {
 		s.Nil(createdLetter.FollowupPoint)
 	})
 
-	s.Run("Creating, then fetching an guidance letter returns a blank guidance letter in the In Progress status", func() {
+	s.Run("Creating, then fetching a guidance letter returns a blank guidance letter in the In Progress status", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		_, err := s.store.CreateTRBGuidanceLetter(ctx, anonEua, trbRequestID)
@@ -46,7 +46,7 @@ func (s *StoreTestSuite) TestTRBGuidanceLetterStoreMethods() {
 		s.Nil(fetchedLetter.FollowupPoint)
 	})
 
-	s.Run("Updating an guidance letter returns an guidance letter with updated data", func() {
+	s.Run("Updating a guidance letter returns a guidance letter with updated data", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBGuidanceLetter(ctx, anonEua, trbRequestID)
@@ -83,7 +83,7 @@ func (s *StoreTestSuite) TestTRBGuidanceLetterStoreMethods() {
 		s.EqualValues(updatedFollowupPoint, *returnedLetter.FollowupPoint)
 	})
 
-	s.Run("Updating an guidance letter to be ready for review changes the status while leaving DateSent nil", func() {
+	s.Run("Updating a guidance letter to be ready for review changes the status while leaving DateSent nil", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBGuidanceLetter(ctx, anonEua, trbRequestID)
@@ -96,7 +96,7 @@ func (s *StoreTestSuite) TestTRBGuidanceLetterStoreMethods() {
 		s.Nil(updatedLetter.DateSent)
 	})
 
-	s.Run("Updating an guidance letter to complete it changes the status and sets DateSent", func() {
+	s.Run("Updating a guidance letter to complete it changes the status and sets DateSent", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBGuidanceLetter(ctx, anonEua, trbRequestID)

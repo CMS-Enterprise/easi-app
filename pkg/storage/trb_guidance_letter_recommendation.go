@@ -18,7 +18,7 @@ import (
 )
 
 // CreateTRBGuidanceLetterRecommendation creates a new TRB guidance letter recommendation record in the database.
-// This recommendation will be positioned at the end of the advice letter upon creation.
+// This recommendation will be positioned at the end of the guidance letter upon creation.
 func (s *Store) CreateTRBGuidanceLetterRecommendation(
 	ctx context.Context,
 	recommendation *models.TRBGuidanceLetterRecommendation,
@@ -27,9 +27,9 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 		recommendation.ID = uuid.New()
 	}
 
-	// besides the normal fields, set position_in_letter pased on the existing recommendations for this advice letter
-	// set position_in_letter to 1 + (the largeting existing position for this advice letter),
-	// defaulting to 0 if there are no existing recommendations for this advice letter
+	// besides the normal fields, set position_in_letter pased on the existing recommendations for this guidance letter
+	// set position_in_letter to 1 + (the largeting existing position for this guidance letter),
+	// defaulting to 0 if there are no existing recommendations for this guidance letter
 	stmt, err := s.db.PrepareNamed(`
 		INSERT INTO trb_guidance_letter_recommendations (
 			id,
@@ -249,7 +249,7 @@ func (s *Store) DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uu
 	return &deleted, err
 }
 
-// UpdateTRBGuidanceLetterRecommendationOrder updates the ordering of recommendations for a given advice letter,
+// UpdateTRBGuidanceLetterRecommendationOrder updates the ordering of recommendations for a given guidance letter,
 // using the order of the recommendation IDs passed in as newOrder. No other recommendation columns/fields are updated.
 func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	ctx context.Context,
@@ -272,7 +272,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	newPositionsSerialized, err := json.Marshal(newPositions)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to marshal the JSON for updating TRB recommendation advice letters with error %s", err),
+			fmt.Sprintf("Failed to marshal the JSON for updating TRB recommendation guidance letters with error %s", err),
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),
 		)
@@ -314,7 +314,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	err = stmt.Select(&updatedRecommendations, arg)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update the order of TRB recommendation advice letters with error %s", err),
+			fmt.Sprintf("Failed to update the order of TRB recommendation guidance letters with error %s", err),
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),
 		)

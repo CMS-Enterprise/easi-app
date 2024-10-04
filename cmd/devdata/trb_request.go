@@ -422,7 +422,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	// link to 2 of the recommendations so we can check that it links to multiple recs *and* that it doesn't link to all the recs on the request
 	guidanceLetterNoteInput := models.CreateTRBAdminNoteGuidanceLetterInput{
 		TrbRequestID:            trb.ID,
-		NoteText:                "This is an guidance letter admin note from seed data",
+		NoteText:                "This is a guidance letter admin note from seed data",
 		AppliesToMeetingSummary: true,
 		AppliesToNextSteps:      false,
 		RecommendationIDs: []uuid.UUID{
@@ -635,7 +635,7 @@ func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
 
 			guidanceLetterNoteInput := models.CreateTRBAdminNoteGuidanceLetterInput{
 				TrbRequestID:            trbRequest.ID,
-				NoteText:                "This is an guidance letter admin note from seed data",
+				NoteText:                "This is a guidance letter admin note from seed data",
 				AppliesToMeetingSummary: true,
 				AppliesToNextSteps:      false,
 				RecommendationIDs: []uuid.UUID{
