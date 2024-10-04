@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import {
   CellProps,
   Column,
-  // Row,
+  Row,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -22,11 +22,7 @@ import TablePagination from 'components/TablePagination';
 import { teamManagementRolesIndex } from 'constants/teamRolesIndex';
 import { TeamMemberRoleTypeName, UsernameWithRoles } from 'types/systemProfile';
 import globalFilterCellText from 'utils/globalFilterCellText';
-import {
-  currentTableSortDescription,
-  getColumnSortStatus,
-  getHeaderSortIcon
-} from 'utils/tableSort';
+import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import { NotFoundPartial } from 'views/NotFound';
 import { getTeamMemberName } from 'views/SystemProfile/components/Team/Edit';
 
@@ -70,17 +66,30 @@ function TeamTable({
         accessor: 'roles',
         Cell: ({ row }: CellProps<UsernameWithRoles>) => {
           return row.original.roles.map(r => r.roleTypeName).join(', ');
-        } /* ,
+        },
         sortType: (a: Row<UsernameWithRoles>, b: Row<UsernameWithRoles>) => {
           const ar = a.original.roles[0];
           const br = b.original.roles[0];
-          const ari = teamCardRolesIndex()[ar.roleTypeName || ''] ?? 99;
-          const bri = teamCardRolesIndex()[br.roleTypeName || ''] ?? 99;
+          // Sort on particular roles for this context
+          const roleEndIdx = Object.keys(teamManagementRolesIndex).length;
+          const ari =
+            teamManagementRolesIndex[
+              ar.roleTypeName as TeamMemberRoleTypeName
+            ] ?? roleEndIdx;
+          const bri =
+            teamManagementRolesIndex[
+              br.roleTypeName as TeamMemberRoleTypeName
+            ] ?? roleEndIdx;
           if (ari !== bri) {
-            return ari - bri;
+            return bri - ari;
           }
+          // Then full names
+          const an = getTeamMemberName(a.original).toLowerCase();
+          const bn = getTeamMemberName(b.original).toLowerCase();
+          if (an < bn) return 1;
+          if (an > bn) return -1;
           return 0;
-        } */
+        }
       },
       {
         Header: 'Actions',
@@ -123,15 +132,13 @@ function TeamTable({
     [systemId, t, setMemberToDelete]
   );
 
+  // Resort roles for every member for this context
   const tableData: UsernameWithRoles[] = useMemo(() => {
-    // Alpha by first name, except with Business owner and Project lead roles at the top
-
-    const roleEndIdx = Object.keys(teamManagementRolesIndex).length;
-
     // Make sure to not mutate the passed in team list
     const teamData = cloneDeep(team);
 
     // Sort an individual's roles first
+    const roleEndIdx = Object.keys(teamManagementRolesIndex).length;
     // eslint-disable-next-line no-restricted-syntax
     for (const p of teamData) {
       p.roles.sort((a, b) => {
@@ -144,26 +151,7 @@ function TeamTable({
       });
     }
 
-    return teamData.sort((a, b) => {
-      // Some roles
-      const ar = a.roles[0];
-      const br = b.roles[0];
-      const ari =
-        teamManagementRolesIndex[ar.roleTypeName as TeamMemberRoleTypeName] ??
-        roleEndIdx;
-      const bri =
-        teamManagementRolesIndex[br.roleTypeName as TeamMemberRoleTypeName] ??
-        roleEndIdx;
-      if (ari !== bri) {
-        return ari - bri;
-      }
-      // Then full names
-      const an = getTeamMemberName(a).toLowerCase();
-      const bn = getTeamMemberName(b).toLowerCase();
-      if (an < bn) return -1;
-      if (an > bn) return 1;
-      return 0;
-    });
+    return teamData;
   }, [team]);
 
   const {
@@ -191,7 +179,7 @@ function TeamTable({
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        // sortBy: useMemo(() => [{ id: 'role', desc: true }], []),
+        sortBy: useMemo(() => [{ id: 'role', desc: true }], []),
         pageIndex: 0,
         pageSize: 10
       }
@@ -297,13 +285,6 @@ function TeamTable({
               pageSize={state.pageSize}
               setPageSize={setPageSize}
             />
-          </div>
-
-          <div
-            className="usa-sr-only usa-table__announcement-region"
-            aria-live="polite"
-          >
-            {currentTableSortDescription(headerGroups[0])}
           </div>
         </>
       )}
