@@ -29,6 +29,7 @@ import {
 } from 'queries/types/SetRolesForUserOnSystem';
 import { TeamMemberRoleTypeName, UsernameWithRoles } from 'types/systemProfile';
 import TeamTable from 'views/SystemWorkspace/TeamTable';
+import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import { TeamContactCard } from '..';
 
@@ -73,7 +74,7 @@ const EditTeam = ({
   numberOfFederalFte,
   numberOfContractorFte
 }: EditTeamProps) => {
-  const { t } = useTranslation('systemProfile');
+  const { t } = useTranslation(['systemProfile', 'systemWorkspace']);
   const history = useHistory();
   const { Message, showMessage } = useMessage();
 
@@ -219,7 +220,6 @@ const EditTeam = ({
   return (
     <GridContainer className="margin-bottom-10">
       {flags.systemWorkspaceTeam && !isWorkspace && (
-        // Don't show crumbs in the workspace context
         <BreadcrumbBar variant="wrap" className="padding-y-0 margin-y-2">
           <Breadcrumb>
             <BreadcrumbLink asCustom={Link} to="/systems">
@@ -255,6 +255,19 @@ const EditTeam = ({
       )}
 
       <Message className="margin-top-2" />
+
+      {flags.systemWorkspaceTeam && isWorkspace && !action && (
+        <Breadcrumbs
+          items={[
+            { text: t('systemWorkspace:breadcrumbs.home'), url: `/systems/` },
+            {
+              text: t('systemWorkspace:header'),
+              url: `/systems/${cedarSystemId}/workspace`
+            },
+            { text: t('singleSystem.editTeam.workspace.title') }
+          ]}
+        />
+      )}
 
       {action ? (
         /* Add/edit team member form */
