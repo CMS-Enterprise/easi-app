@@ -176,4 +176,12 @@ describe('Workspace team page', () => {
       "This action cannot be undone. Each system should have at least one Project Lead, Government Task Lead (GTL), or Contracting Officer's Representative (COR), and Elbert Huel is currently the only one listed of this system. Removing Elbert Huel will remove any roles and permissions they have for this system."
     );
   });
+
+  it('does not show the remove action for the last remaining team member', async () => {
+    const team = getUsernamesWithRoles([teamRoles[0]]);
+    renderWorkspaceEditTeam(team);
+    expect(
+      screen.queryByRole('button', { name: 'Remove' })
+    ).not.toBeInTheDocument();
+  });
 });

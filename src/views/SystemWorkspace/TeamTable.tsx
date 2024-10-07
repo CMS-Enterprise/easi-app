@@ -110,26 +110,30 @@ function TeamTable({
               >
                 {t('singleSystem.editTeam.editRoles')}
               </UswdsReactLink>
-              <Button
-                type="button"
-                unstyled
-                className="margin-left-1 text-error"
-                onClick={() =>
-                  setMemberToDelete({
-                    euaUserId: user.assigneeUsername,
-                    commonName: getTeamMemberName(user)
-                  })
-                }
-              >
-                {t('singleSystem.editTeam.remove')}
-              </Button>
+
+              {/* Cannot remove the last member */}
+              {team.length > 1 && (
+                <Button
+                  type="button"
+                  unstyled
+                  className="margin-left-1 text-error"
+                  onClick={() =>
+                    setMemberToDelete({
+                      euaUserId: user.assigneeUsername,
+                      commonName: getTeamMemberName(user)
+                    })
+                  }
+                >
+                  {t('singleSystem.editTeam.remove')}
+                </Button>
+              )}
             </>
           );
         },
         disableSortBy: true
       }
     ],
-    [systemId, t, setMemberToDelete]
+    [systemId, t, setMemberToDelete, team.length]
   );
 
   // Resort roles for every member for this context
