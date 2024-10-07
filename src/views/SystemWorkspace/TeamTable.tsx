@@ -97,7 +97,7 @@ function TeamTable({
         Cell: ({ row }: CellProps<UsernameWithRoles>) => {
           const user = row.original;
           return (
-            <>
+            <div className="text-no-wrap">
               <UswdsReactLink
                 to={{
                   pathname: `/systems/${systemId}/team/edit/team-member`,
@@ -127,7 +127,7 @@ function TeamTable({
                   {t('singleSystem.editTeam.remove')}
                 </Button>
               )}
-            </>
+            </div>
           );
         },
         disableSortBy: true
@@ -216,7 +216,7 @@ function TeamTable({
         />
       )}
 
-      <Table bordered={false} fullWidth scrollable {...getTableProps()}>
+      <Table bordered={false} fullWidth {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>

@@ -102,183 +102,182 @@ exports[`Workspace team page > renders 1`] = `
           </svg>
         </button>
       </form>
-      <div
-        class="usa-table-container--scrollable"
-        data-testid="scrollable-table-container"
+      <table
+        class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
+        data-testid="table"
       >
-        <table
-          class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
-          data-testid="table"
-        >
-          <thead>
-            <tr
-              role="row"
-            >
-              <th
-                aria-sort="none"
-                class="border-bottom-2px"
-                colspan="1"
-                role="columnheader"
-                scope="col"
-                style="cursor: pointer;"
-                title="Toggle SortBy"
-              >
-                <button
-                  class="usa-button usa-button--unstyled width-full display-flex"
-                  data-testid="button"
-                  style="cursor: pointer;"
-                  title="Toggle SortBy"
-                  type="button"
-                >
-                  <div
-                    class="flex-fill text-no-wrap"
-                  >
-                    Name
-                  </div>
-                  <div
-                    class="position-relative width-205 margin-left-05"
-                  >
-                    <svg
-                      class="usa-icon margin-left-05 position-absolute"
-                      data-testid="caret--sort"
-                      focusable="false"
-                      height="1em"
-                      role="img"
-                      viewBox="0 0 24 24"
-                      width="1em"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M0 0h24v24H0z"
-                        fill="none"
-                      />
-                      <path
-                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
-                      />
-                    </svg>
-                  </div>
-                </button>
-              </th>
-              <th
-                aria-sort="descending"
-                class="border-bottom-2px"
-                colspan="1"
-                role="columnheader"
-                scope="col"
-                style="cursor: pointer;"
-                title="Toggle SortBy"
-              >
-                <button
-                  class="usa-button usa-button--unstyled width-full display-flex"
-                  data-testid="button"
-                  style="cursor: pointer;"
-                  title="Toggle SortBy"
-                  type="button"
-                >
-                  <div
-                    class="flex-fill text-no-wrap"
-                  >
-                    Role
-                  </div>
-                  <div
-                    class="position-relative width-205 margin-left-05"
-                  >
-                    <svg
-                      class="usa-icon margin-left-05 position-absolute"
-                      data-testid="caret--down"
-                      focusable="false"
-                      height="1em"
-                      role="img"
-                      viewBox="0 0 24 24"
-                      width="1em"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M0 0h24v24H0z"
-                        fill="none"
-                      />
-                      <path
-                        d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
-                      />
-                    </svg>
-                  </div>
-                </button>
-              </th>
-              <th
-                aria-sort="none"
-                class="border-bottom-2px"
-                colspan="1"
-                role="columnheader"
-                scope="col"
-              >
-                <button
-                  class="usa-button usa-button--unstyled width-full display-flex"
-                  data-testid="button"
-                  type="button"
-                >
-                  <div
-                    class="flex-fill text-no-wrap"
-                  >
-                    Actions
-                  </div>
-                  <div
-                    class="position-relative width-205 margin-left-05"
-                  >
-                    <svg
-                      class="usa-icon margin-left-05 position-absolute"
-                      data-testid="caret--sort"
-                      focusable="false"
-                      height="1em"
-                      role="img"
-                      viewBox="0 0 24 24"
-                      width="1em"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M0 0h24v24H0z"
-                        fill="none"
-                      />
-                      <path
-                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
-                      />
-                    </svg>
-                  </div>
-                </button>
-              </th>
-            </tr>
-          </thead>
-          <tbody
-            role="rowgroup"
+        <thead>
+          <tr
+            role="row"
           >
-            <tr
-              role="row"
+            <th
+              aria-sort="none"
+              class="border-bottom-2px"
+              colspan="1"
+              role="columnheader"
+              scope="col"
+              style="cursor: pointer;"
+              title="Toggle SortBy"
             >
-              <td
-                role="cell"
+              <button
+                class="usa-button usa-button--unstyled width-full display-flex"
+                data-testid="button"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+                type="button"
               >
                 <div
-                  class="display-flex flex-align-center"
+                  class="flex-fill text-no-wrap"
                 >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-blue-10 "
-                    data-testid="avatar--basic"
-                  >
-                    AL
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Aletha Leannon
-                  </span>
+                  Name
                 </div>
-              </td>
-              <td
-                role="cell"
+                <div
+                  class="position-relative width-205 margin-left-05"
+                >
+                  <svg
+                    class="usa-icon margin-left-05 position-absolute"
+                    data-testid="caret--sort"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </th>
+            <th
+              aria-sort="descending"
+              class="border-bottom-2px"
+              colspan="1"
+              role="columnheader"
+              scope="col"
+              style="cursor: pointer;"
+              title="Toggle SortBy"
+            >
+              <button
+                class="usa-button usa-button--unstyled width-full display-flex"
+                data-testid="button"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+                type="button"
               >
-                Business Owner
-              </td>
-              <td
-                role="cell"
+                <div
+                  class="flex-fill text-no-wrap"
+                >
+                  Role
+                </div>
+                <div
+                  class="position-relative width-205 margin-left-05"
+                >
+                  <svg
+                    class="usa-icon margin-left-05 position-absolute"
+                    data-testid="caret--down"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </th>
+            <th
+              aria-sort="none"
+              class="border-bottom-2px"
+              colspan="1"
+              role="columnheader"
+              scope="col"
+            >
+              <button
+                class="usa-button usa-button--unstyled width-full display-flex"
+                data-testid="button"
+                type="button"
+              >
+                <div
+                  class="flex-fill text-no-wrap"
+                >
+                  Actions
+                </div>
+                <div
+                  class="position-relative width-205 margin-left-05"
+                >
+                  <svg
+                    class="usa-icon margin-left-05 position-absolute"
+                    data-testid="caret--sort"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          role="rowgroup"
+        >
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
+            >
+              <div
+                class="display-flex flex-align-center"
+              >
+                <div
+                  class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-blue-10 "
+                  data-testid="avatar--basic"
+                >
+                  AL
+                </div>
+                <span
+                  class="margin-left-1"
+                >
+                  Aletha Leannon
+                </span>
+              </div>
+            </td>
+            <td
+              role="cell"
+            >
+              Business Owner
+            </td>
+            <td
+              role="cell"
+            >
+              <div
+                class="text-no-wrap"
               >
                 <a
                   class="usa-link text-primary"
@@ -293,37 +292,41 @@ exports[`Workspace team page > renders 1`] = `
                 >
                   Remove
                 </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
+              </div>
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
             >
-              <td
-                role="cell"
+              <div
+                class="display-flex flex-align-center"
               >
                 <div
-                  class="display-flex flex-align-center"
+                  class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-orange-warm-10 "
+                  data-testid="avatar--basic"
                 >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-orange-warm-10 "
-                    data-testid="avatar--basic"
-                  >
-                    EH
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Elbert Huel
-                  </span>
+                  EH
                 </div>
-              </td>
-              <td
-                role="cell"
-              >
-                Business Owner, ISSO, API Contact, Budget Analyst, Support Staff
-              </td>
-              <td
-                role="cell"
+                <span
+                  class="margin-left-1"
+                >
+                  Elbert Huel
+                </span>
+              </div>
+            </td>
+            <td
+              role="cell"
+            >
+              Business Owner, ISSO, API Contact, Budget Analyst, Support Staff
+            </td>
+            <td
+              role="cell"
+            >
+              <div
+                class="text-no-wrap"
               >
                 <a
                   class="usa-link text-primary"
@@ -338,37 +341,41 @@ exports[`Workspace team page > renders 1`] = `
                 >
                   Remove
                 </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
+              </div>
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
             >
-              <td
-                role="cell"
+              <div
+                class="display-flex flex-align-center"
               >
                 <div
-                  class="display-flex flex-align-center"
+                  class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
+                  data-testid="avatar--basic"
                 >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
-                    data-testid="avatar--basic"
-                  >
-                    VD
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Vickie Denesik
-                  </span>
+                  VD
                 </div>
-              </td>
-              <td
-                role="cell"
-              >
-                Business Owner, Subject Matter Expert (SME)
-              </td>
-              <td
-                role="cell"
+                <span
+                  class="margin-left-1"
+                >
+                  Vickie Denesik
+                </span>
+              </div>
+            </td>
+            <td
+              role="cell"
+            >
+              Business Owner, Subject Matter Expert (SME)
+            </td>
+            <td
+              role="cell"
+            >
+              <div
+                class="text-no-wrap"
               >
                 <a
                   class="usa-link text-primary"
@@ -383,37 +390,41 @@ exports[`Workspace team page > renders 1`] = `
                 >
                   Remove
                 </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
+              </div>
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
             >
-              <td
-                role="cell"
+              <div
+                class="display-flex flex-align-center"
               >
                 <div
-                  class="display-flex flex-align-center"
+                  class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-yellow-5 "
+                  data-testid="avatar--basic"
                 >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-yellow-5 "
-                    data-testid="avatar--basic"
-                  >
-                    MS
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Mariam Schaden
-                  </span>
+                  MS
                 </div>
-              </td>
-              <td
-                role="cell"
-              >
-                Project Lead, Business Question Contact
-              </td>
-              <td
-                role="cell"
+                <span
+                  class="margin-left-1"
+                >
+                  Mariam Schaden
+                </span>
+              </div>
+            </td>
+            <td
+              role="cell"
+            >
+              Project Lead, Business Question Contact
+            </td>
+            <td
+              role="cell"
+            >
+              <div
+                class="text-no-wrap"
               >
                 <a
                   class="usa-link text-primary"
@@ -428,37 +439,41 @@ exports[`Workspace team page > renders 1`] = `
                 >
                   Remove
                 </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
+              </div>
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
             >
-              <td
-                role="cell"
+              <div
+                class="display-flex flex-align-center"
               >
                 <div
-                  class="display-flex flex-align-center"
+                  class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-blue-10 "
+                  data-testid="avatar--basic"
                 >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-blue-10 "
-                    data-testid="avatar--basic"
-                  >
-                    SB
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Sasha Barrows
-                  </span>
+                  SB
                 </div>
-              </td>
-              <td
-                role="cell"
-              >
-                Project Lead, Contracting Officer's Representative (COR), Budget Analyst, System Maintainer, AI Contact
-              </td>
-              <td
-                role="cell"
+                <span
+                  class="margin-left-1"
+                >
+                  Sasha Barrows
+                </span>
+              </div>
+            </td>
+            <td
+              role="cell"
+            >
+              Project Lead, Contracting Officer's Representative (COR), Budget Analyst, System Maintainer, AI Contact
+            </td>
+            <td
+              role="cell"
+            >
+              <div
+                class="text-no-wrap"
               >
                 <a
                   class="usa-link text-primary"
@@ -473,37 +488,41 @@ exports[`Workspace team page > renders 1`] = `
                 >
                   Remove
                 </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
+              </div>
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
             >
-              <td
-                role="cell"
+              <div
+                class="display-flex flex-align-center"
               >
                 <div
-                  class="display-flex flex-align-center"
+                  class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
+                  data-testid="avatar--basic"
                 >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
-                    data-testid="avatar--basic"
-                  >
-                    EG
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Eliezer Grant
-                  </span>
+                  EG
                 </div>
-              </td>
-              <td
-                role="cell"
-              >
-                Government Task Lead (GTL), Contracting Officer's Representative (COR)
-              </td>
-              <td
-                role="cell"
+                <span
+                  class="margin-left-1"
+                >
+                  Eliezer Grant
+                </span>
+              </div>
+            </td>
+            <td
+              role="cell"
+            >
+              Government Task Lead (GTL), Contracting Officer's Representative (COR)
+            </td>
+            <td
+              role="cell"
+            >
+              <div
+                class="text-no-wrap"
               >
                 <a
                   class="usa-link text-primary"
@@ -518,37 +537,41 @@ exports[`Workspace team page > renders 1`] = `
                 >
                   Remove
                 </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
+              </div>
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
             >
-              <td
-                role="cell"
+              <div
+                class="display-flex flex-align-center"
               >
                 <div
-                  class="display-flex flex-align-center"
+                  class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-yellow-5 "
+                  data-testid="avatar--basic"
                 >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-yellow-5 "
-                    data-testid="avatar--basic"
-                  >
-                    JS
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Jefferey Schmidt
-                  </span>
+                  JS
                 </div>
-              </td>
-              <td
-                role="cell"
-              >
-                Contracting Officer's Representative (COR)
-              </td>
-              <td
-                role="cell"
+                <span
+                  class="margin-left-1"
+                >
+                  Jefferey Schmidt
+                </span>
+              </div>
+            </td>
+            <td
+              role="cell"
+            >
+              Contracting Officer's Representative (COR)
+            </td>
+            <td
+              role="cell"
+            >
+              <div
+                class="text-no-wrap"
               >
                 <a
                   class="usa-link text-primary"
@@ -563,37 +586,41 @@ exports[`Workspace team page > renders 1`] = `
                 >
                   Remove
                 </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
+              </div>
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
             >
-              <td
-                role="cell"
+              <div
+                class="display-flex flex-align-center"
               >
                 <div
-                  class="display-flex flex-align-center"
+                  class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
+                  data-testid="avatar--basic"
                 >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
-                    data-testid="avatar--basic"
-                  >
-                    KT
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    King Tromp
-                  </span>
+                  KT
                 </div>
-              </td>
-              <td
-                role="cell"
-              >
-                Contracting Officer's Representative (COR), Subject Matter Expert (SME), Support Staff
-              </td>
-              <td
-                role="cell"
+                <span
+                  class="margin-left-1"
+                >
+                  King Tromp
+                </span>
+              </div>
+            </td>
+            <td
+              role="cell"
+            >
+              Contracting Officer's Representative (COR), Subject Matter Expert (SME), Support Staff
+            </td>
+            <td
+              role="cell"
+            >
+              <div
+                class="text-no-wrap"
               >
                 <a
                   class="usa-link text-primary"
@@ -608,37 +635,41 @@ exports[`Workspace team page > renders 1`] = `
                 >
                   Remove
                 </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
+              </div>
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
             >
-              <td
-                role="cell"
+              <div
+                class="display-flex flex-align-center"
               >
                 <div
-                  class="display-flex flex-align-center"
+                  class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-red-cool-10 "
+                  data-testid="avatar--basic"
                 >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-red-cool-10 "
-                    data-testid="avatar--basic"
-                  >
-                    AW
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Abner Waelchi
-                  </span>
+                  AW
                 </div>
-              </td>
-              <td
-                role="cell"
-              >
-                Technical System Issues Contact
-              </td>
-              <td
-                role="cell"
+                <span
+                  class="margin-left-1"
+                >
+                  Abner Waelchi
+                </span>
+              </div>
+            </td>
+            <td
+              role="cell"
+            >
+              Technical System Issues Contact
+            </td>
+            <td
+              role="cell"
+            >
+              <div
+                class="text-no-wrap"
               >
                 <a
                   class="usa-link text-primary"
@@ -653,37 +684,41 @@ exports[`Workspace team page > renders 1`] = `
                 >
                   Remove
                 </button>
-              </td>
-            </tr>
-            <tr
-              role="row"
+              </div>
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
             >
-              <td
-                role="cell"
+              <div
+                class="display-flex flex-align-center"
               >
                 <div
-                  class="display-flex flex-align-center"
+                  class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-yellow-5 "
+                  data-testid="avatar--basic"
                 >
-                  <div
-                    class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-yellow-5 "
-                    data-testid="avatar--basic"
-                  >
-                    FB
-                  </div>
-                  <span
-                    class="margin-left-1"
-                  >
-                    Forest Brown
-                  </span>
+                  FB
                 </div>
-              </td>
-              <td
-                role="cell"
-              >
-                Data Center Contact
-              </td>
-              <td
-                role="cell"
+                <span
+                  class="margin-left-1"
+                >
+                  Forest Brown
+                </span>
+              </div>
+            </td>
+            <td
+              role="cell"
+            >
+              Data Center Contact
+            </td>
+            <td
+              role="cell"
+            >
+              <div
+                class="text-no-wrap"
               >
                 <a
                   class="usa-link text-primary"
@@ -698,11 +733,11 @@ exports[`Workspace team page > renders 1`] = `
                 >
                   Remove
                 </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div
         class="grid-row grid-gap grid-gap-lg"
       >
