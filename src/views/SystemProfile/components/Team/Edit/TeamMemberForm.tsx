@@ -169,7 +169,10 @@ const TeamMemberForm = ({
               type: 'success'
             }
           );
-          history.push(`/systems/${cedarSystemId}/team/edit`);
+          history.push({
+            pathname: `/systems/${cedarSystemId}/team/edit`,
+            search: isWorkspace ? 'workspace' : undefined
+          });
         })
         .catch(() => {
           showMessage(
