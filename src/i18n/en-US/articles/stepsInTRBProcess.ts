@@ -49,7 +49,7 @@ const stepsInTRBProcess = {
         'Consult sessions are usually scheduled as 1-hour sessions on Tuesday or Thursday.'
       ],
       list: [
-        'SMEs to provide additional advice and insight',
+        'SMEs to provide additional guidance and insight',
         'any additional project team members you’ve specified',
         '1 or more TRB team members'
       ]
@@ -57,7 +57,7 @@ const stepsInTRBProcess = {
     {
       heading: 'Guidance letter and next steps',
       text: [
-        'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any advice for your project team as well as any recommended next steps.'
+        'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any guidance for your project team as well as any recommended next steps.'
       ]
     }
   ],

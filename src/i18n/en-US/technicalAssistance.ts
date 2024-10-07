@@ -142,7 +142,7 @@ const technicalAssistance = {
   },
   guidanceLetter: {
     introText:
-      'The guidance letter is sent to the requester after the consult is complete. It outlines any outcomes, advice, recommendations, and next steps that the TRB has for this request.',
+      'The guidance letter is sent to the requester after the consult is complete. It outlines any outcomes, guidance, recommendations, and next steps that the TRB has for this request.',
     alerts: {
       error:
         'There was an error creating this guidance letter. Please try again. If the error persists, please try again at a later date.',
@@ -178,7 +178,7 @@ const technicalAssistance = {
   guidanceLetterForm: {
     heading: 'Guidance letter',
     description:
-      'Document any outcomes, advice, findings, recommendations, or next steps that the TRB has for this request.',
+      'Document any outcomes, guidance, findings, recommendations, or next steps that the TRB has for this request.',
     text: 'After submitting this form, the requester will receive an automatic notification letting them know their guidance letter is available.',
     returnToRequest: 'Save and return to request',
     steps: [
@@ -382,7 +382,7 @@ const technicalAssistance = {
       },
       FORMAL_REVIEW: {
         heading: 'Formal design review',
-        text: 'Though the TRB has shifted to become more of a consultation and advice service, you can still request a more formal design review or readiness review. Choose this option if:',
+        text: 'Though the TRB has shifted to become more of a consultation and guidance service, you can still request a more formal design review or readiness review. Choose this option if:',
         list: [
           'you have a architecture solution in mind and would like a review',
           'you are ready to go live and would like one final review with the TRB to make sure your team didn’t miss anything',
@@ -451,11 +451,11 @@ const technicalAssistance = {
       },
       {
         heading: 'Attend the TRB consult session',
-        text: 'A TRB team member will schedule a consult session for your project. Attendees could include Subject Matter Experts (SMEs) to provide additional advice and insight, any additional attendees you’ve specified from your team, and 1 or more TRB team members. Consult sessions are usually 1-hour sessions on Tuesday or Thursday.'
+        text: 'A TRB team member will schedule a consult session for your project. Attendees could include Subject Matter Experts (SMEs) to provide additional guidance and insight, any additional attendees you’ve specified from your team, and 1 or more TRB team members. Consult sessions are usually 1-hour sessions on Tuesday or Thursday.'
       },
       {
         heading: 'Guidance letter and next steps',
-        text: 'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any advice for your project team as well as any recommended next steps.'
+        text: 'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any guidance for your project team as well as any recommended next steps.'
       }
     ]
   },
