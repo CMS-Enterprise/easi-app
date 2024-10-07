@@ -55,7 +55,7 @@ const stepsInTRBProcess = {
       ]
     },
     {
-      heading: 'Advice letter and next steps',
+      heading: 'Guidance letter and next steps',
       text: [
         'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any advice for your project team as well as any recommended next steps.'
       ]
