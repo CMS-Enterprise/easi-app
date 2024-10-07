@@ -17,6 +17,7 @@ import {
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Modal from 'components/Modal';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import IconLink from 'components/shared/IconLink';
 import Spinner from 'components/Spinner';
 import useIsWorkspaceParam from 'hooks/useIsWorkspaceParam';
@@ -29,7 +30,6 @@ import {
 } from 'queries/types/SetRolesForUserOnSystem';
 import { TeamMemberRoleTypeName, UsernameWithRoles } from 'types/systemProfile';
 import TeamTable from 'views/SystemWorkspace/TeamTable';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import { TeamContactCard } from '..';
 

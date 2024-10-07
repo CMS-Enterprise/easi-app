@@ -4,7 +4,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { IconArrowBack } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 
 import StepHeader from '.';
 
