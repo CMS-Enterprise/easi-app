@@ -215,8 +215,6 @@ const EditTeam = ({
     );
   }, [team]);
 
-  // console.log('showRequisiteRolesAlert', showRequisiteRolesAlert);
-
   return (
     <GridContainer className="margin-bottom-10">
       {flags.systemWorkspaceTeam && !isWorkspace && (
