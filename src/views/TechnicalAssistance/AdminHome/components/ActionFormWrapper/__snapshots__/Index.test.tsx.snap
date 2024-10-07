@@ -18,7 +18,7 @@ exports[`Email recipient fields component > renders recipients 1`] = `
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb"
           >
             <span>
@@ -30,7 +30,7 @@ exports[`Email recipient fields component > renders recipients 1`] = `
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb/undefined/initial-request-form"
           >
             <span>
