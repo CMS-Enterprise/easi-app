@@ -128,7 +128,7 @@ const Review = ({
         />
       ) : (
         <Alert type="warning" slim>
-          {t('adviceLetterForm.notesAlert')}
+          {t('guidanceLetterForm.notesAlert')}
         </Alert>
       )}
       {/* Review */}
@@ -215,7 +215,7 @@ const Review = ({
               loading: formSubmitting
             }}
             taskListUrl={`/trb/${trbRequestId}/advice`}
-            saveExitText={t('adviceLetterForm.returnToRequest')}
+            saveExitText={t('guidanceLetterForm.returnToRequest')}
             submitDisabled
             border={false}
           />

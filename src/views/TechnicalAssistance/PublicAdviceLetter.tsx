@@ -81,8 +81,8 @@ function PublicAdviceLetter() {
   ) {
     return (
       <GridContainer className="full-width margin-y-6">
-        <Alert type="info" heading={t('adviceLetter.incomplete')}>
-          {t('adviceLetter.incompleteCheckLater')}
+        <Alert type="info" heading={t('guidanceLetter.incomplete')}>
+          {t('guidanceLetter.incompleteCheckLater')}
         </Alert>
       </GridContainer>
     );
@@ -102,7 +102,7 @@ function PublicAdviceLetter() {
       url: `/trb/task-list/${id}`
     });
   }
-  breadcrumbs.push({ text: t('adviceLetterForm.heading') });
+  breadcrumbs.push({ text: t('guidanceLetterForm.heading') });
 
   return (
     <>
@@ -110,7 +110,7 @@ function PublicAdviceLetter() {
         <Breadcrumbs items={breadcrumbs} />
 
         <PageHeading className="margin-top-6 margin-bottom-1">
-          {t('adviceLetterForm.heading')}
+          {t('guidanceLetterForm.heading')}
         </PageHeading>
 
         {fromTaskList ? (
@@ -121,7 +121,7 @@ function PublicAdviceLetter() {
             </UswdsReactLink>
 
             <p className="line-height-body-5 font-body-lg text-light margin-top-6 margin-bottom-105">
-              {t('adviceLetter.thankYou')}
+              {t('guidanceLetter.thankYou')}
             </p>
           </>
         ) : (
@@ -138,7 +138,7 @@ function PublicAdviceLetter() {
 
         {!!adviceLetter && (
           <PDFExportButton handlePrint={handlePrint}>
-            {t('adviceLetter.downloadAsPdf')}
+            {t('guidanceLetter.downloadAsPdf')}
           </PDFExportButton>
         )}
       </GridContainer>
@@ -147,16 +147,16 @@ function PublicAdviceLetter() {
         <div className="bg-primary-lighter margin-y-6 padding-y-6 trb-advice-letter-request-summary">
           <GridContainer className="full-width">
             <h2 className="margin-top-0 margin-bottom-3">
-              {t('adviceLetter.requestSummary')}
+              {t('guidanceLetter.requestSummary')}
             </h2>
             <CollapsableLink
               eyeIcon
               startOpen
               labelPosition="bottom"
-              closeLabel={t('adviceLetter.hideSummary')}
+              closeLabel={t('guidanceLetter.hideSummary')}
               styleLeftBar={false}
               id="trb-advice-letter-request-summary"
-              label={t('adviceLetter.showSummary')}
+              label={t('guidanceLetter.showSummary')}
             >
               <dl className="easi-dl">
                 <Grid row gap>
@@ -202,7 +202,9 @@ function PublicAdviceLetter() {
       <GridContainer className="full-width">
         {adviceLetter && (
           <div ref={printRef}>
-            <h1 className="easi-only-print">{t('adviceLetterForm.heading')}</h1>
+            <h1 className="easi-only-print">
+              {t('guidanceLetterForm.heading')}
+            </h1>
             <ReviewAdviceLetter
               trbRequestId={id}
               adviceLetter={adviceLetter}
@@ -219,7 +221,7 @@ function PublicAdviceLetter() {
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <SummaryBox
-              heading={t('adviceLetter.haveQuestions')}
+              heading={t('guidanceLetter.haveQuestions')}
               className="margin-top-6"
             >
               <Trans

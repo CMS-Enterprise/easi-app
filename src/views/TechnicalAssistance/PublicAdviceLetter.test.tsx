@@ -93,12 +93,14 @@ describe('Trb Public Advice Letter', () => {
 
     await screen.findAllByRole('heading', {
       level: 1,
-      name: i18next.t<string>('technicalAssistance:adviceLetterForm.heading')
+      name: i18next.t<string>('technicalAssistance:guidanceLetterForm.heading')
     });
 
     await findByRole('heading', {
       level: 2,
-      name: i18next.t<string>('technicalAssistance:adviceLetter.requestSummary')
+      name: i18next.t<string>(
+        'technicalAssistance:guidanceLetter.requestSummary'
+      )
     });
 
     expect(asFragment()).toMatchSnapshot();
@@ -176,7 +178,7 @@ describe('Trb Public Advice Letter', () => {
 
     await findByRole('heading', {
       level: 4,
-      name: i18next.t<string>('technicalAssistance:adviceLetter.incomplete')
+      name: i18next.t<string>('technicalAssistance:guidanceLetter.incomplete')
     });
   });
 
@@ -218,7 +220,7 @@ describe('Trb Public Advice Letter', () => {
 
     await screen.findAllByRole('heading', {
       level: 1,
-      name: i18next.t<string>('technicalAssistance:adviceLetterForm.heading')
+      name: i18next.t<string>('technicalAssistance:guidanceLetterForm.heading')
     });
 
     expect(

@@ -161,7 +161,7 @@ const RecommendationsForm = ({
             url: `/trb/${trbRequestId}/advice`
           },
           {
-            text: t('adviceLetterForm.heading'),
+            text: t('guidanceLetterForm.heading'),
             url: `/trb/${trbRequestId}/advice/recommendations`
           },
           {

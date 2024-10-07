@@ -277,9 +277,9 @@ const AdviceLetterForm = () => {
       {/** Form page header */}
       {!subpage && (
         <StepHeader
-          heading={t('adviceLetterForm.heading')}
-          text={t('adviceLetterForm.description')}
-          subText={t('adviceLetterForm.text')}
+          heading={t('guidanceLetterForm.heading')}
+          text={t('guidanceLetterForm.description')}
+          subText={t('guidanceLetterForm.text')}
           step={currentStepIndex + 1}
           steps={steps.map((step, index) => ({
             key: step.name,
@@ -313,7 +313,7 @@ const AdviceLetterForm = () => {
                   text: t('adminHome.breadcrumb'),
                   url: `/trb/${id}/advice`
                 },
-                { text: t('adviceLetterForm.heading') }
+                { text: t('guidanceLetterForm.heading') }
               ]}
             />
           }
@@ -348,7 +348,7 @@ const AdviceLetterForm = () => {
                 }}
               >
                 <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-                {t('adviceLetterForm.returnToRequest')}
+                {t('guidanceLetterForm.returnToRequest')}
               </Button>
             )
           }

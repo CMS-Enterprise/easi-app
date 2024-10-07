@@ -57,7 +57,7 @@ const ReviewAdviceLetter = ({
   return (
     <div className={className}>
       {/* Thank you text for PDF version */}
-      <p className="easi-only-print">{t('adviceLetter.thankYou')}</p>
+      <p className="easi-only-print">{t('guidanceLetter.thankYou')}</p>
 
       {!publicView && trbRequest && (
         <div className="easi-only-print">
@@ -95,13 +95,13 @@ const ReviewAdviceLetter = ({
           {showDateSent && (
             <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
               <p className="text-bold margin-y-0 easi-no-print">
-                {t('adviceLetter.sendDate')}
+                {t('guidanceLetter.sendDate')}
               </p>
 
               <p className="margin-top-1 easi-no-print">
                 {adviceLetter.dateSent
                   ? formatDateLocal(adviceLetter.dateSent, 'MMMM d, yyyy')
-                  : t('adviceLetter.notYetSent')}
+                  : t('guidanceLetter.notYetSent')}
               </p>
             </Grid>
           )}
@@ -110,7 +110,7 @@ const ReviewAdviceLetter = ({
           {trbRequest && trbRequest.consultMeetingTime && (
             <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
               <p className="text-bold margin-y-0">
-                {t('adviceLetter.consultSessionDate')}
+                {t('guidanceLetter.consultSessionDate')}
               </p>
               <p className="margin-top-1">
                 {t('adminHome.consultDate', {
@@ -136,7 +136,7 @@ const ReviewAdviceLetter = ({
           'margin-top-5': !showSectionBorders
         })}
       >
-        <h2 className="margin-bottom-1">{t('adviceLetter.whatWeHeard')}</h2>
+        <h2 className="margin-bottom-1">{t('guidanceLetter.whatWeHeard')}</h2>
 
         {showSectionEditLinks && (
           <UswdsReactLink
@@ -149,7 +149,7 @@ const ReviewAdviceLetter = ({
 
         {!publicView && (
           <p className="easi-no-print text-bold margin-top-4 margin-bottom-0">
-            {t('adviceLetter.meetingSummary')}
+            {t('guidanceLetter.meetingSummary')}
           </p>
         )}
 
@@ -169,7 +169,9 @@ const ReviewAdviceLetter = ({
           'margin-top-5': !showSectionBorders
         })}
       >
-        <h2 className="margin-bottom-1">{t('adviceLetter.whatWeRecommend')}</h2>
+        <h2 className="margin-bottom-1">
+          {t('guidanceLetter.whatWeRecommend')}
+        </h2>
 
         {showSectionEditLinks && (
           <UswdsReactLink
@@ -183,7 +185,7 @@ const ReviewAdviceLetter = ({
         {
           // If no recommendations, return text
           recommendations.length === 0 ? (
-            <p className="margin-top-4">{t('adviceLetter.notSpecified')}</p>
+            <p className="margin-top-4">{t('guidanceLetter.notSpecified')}</p>
           ) : (
             <RecommendationsList
               recommendations={recommendations}
@@ -204,7 +206,7 @@ const ReviewAdviceLetter = ({
           'margin-top-5': !showSectionBorders
         })}
       >
-        <h2 className="margin-bottom-1">{t('adviceLetter.nextSteps')}</h2>
+        <h2 className="margin-bottom-1">{t('guidanceLetter.nextSteps')}</h2>
         {showSectionEditLinks && (
           <UswdsReactLink
             to={`/trb/${trbRequestId}/advice/next-steps`}
@@ -215,7 +217,7 @@ const ReviewAdviceLetter = ({
         )}
 
         <p className="text-bold margin-top-4 margin-bottom-1">
-          {t('adviceLetter.nextSteps')}
+          {t('guidanceLetter.nextSteps')}
         </p>
 
         {adviceLetter.nextSteps ? (
@@ -225,19 +227,19 @@ const ReviewAdviceLetter = ({
           />
         ) : (
           <p className="margin-top-1 line-height-body-5">
-            {t('adviceLetter.notSpecified')}
+            {t('guidanceLetter.notSpecified')}
           </p>
         )}
 
         {/* Follow up */}
         <p className="text-bold margin-top-3 margin-bottom-1">
-          {t('adviceLetter.followup')}
+          {t('guidanceLetter.followup')}
         </p>
 
         <p className="margin-top-1 line-height-body-5">
           {adviceLetter.isFollowupRecommended
             ? t(`Yes, ${adviceLetter.followupPoint}`)
-            : t('adviceLetterForm.notNecessary')}
+            : t('guidanceLetterForm.notNecessary')}
         </p>
       </SectionWrapper>
     </div>

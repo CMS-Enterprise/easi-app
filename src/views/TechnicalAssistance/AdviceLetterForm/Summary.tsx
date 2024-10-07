@@ -150,7 +150,7 @@ const Summary = ({
                 htmlFor="meetingSummary"
                 required
               >
-                {t('adviceLetterForm.meetingSummary')}{' '}
+                {t('guidanceLetterForm.meetingSummary')}{' '}
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
               <RichTextEditor
@@ -184,7 +184,7 @@ const Summary = ({
             )
         }}
         taskListUrl={`/trb/${trbRequestId}/advice`}
-        saveExitText={t('adviceLetterForm.returnToRequest')}
+        saveExitText={t('guidanceLetterForm.returnToRequest')}
         submit={submit}
         border={false}
       />

@@ -100,10 +100,10 @@ const InternalReview = ({
       {/* Internal review needed alert */}
       <Alert
         type="warning"
-        heading={t('adviceLetterForm.internalReviewNeeded.heading')}
+        heading={t('guidanceLetterForm.internalReviewNeeded.heading')}
         className="margin-top-4 margin-bottom-5"
       >
-        {t('adviceLetterForm.internalReviewNeeded.text')}
+        {t('guidanceLetterForm.internalReviewNeeded.text')}
       </Alert>
 
       {/* Form pager buttons */}
@@ -159,7 +159,7 @@ const InternalReview = ({
           </Trans>
         ]}
         taskListUrl={`/trb/${trbRequestId}/advice`}
-        saveExitText={t('adviceLetterForm.returnToRequest')}
+        saveExitText={t('guidanceLetterForm.returnToRequest')}
         submitDisabled
         border={false}
       />

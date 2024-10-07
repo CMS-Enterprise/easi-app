@@ -379,7 +379,7 @@ function TaskList() {
                         state: { fromTaskList: true }
                       }}
                     >
-                      {t('taskList.viewAdviceLetter')}
+                      {t('taskList.viewGuidanceLetter')}
                     </UswdsReactLink>
                   )}
                 </TaskListItem>

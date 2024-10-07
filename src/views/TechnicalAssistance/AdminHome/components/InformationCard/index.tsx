@@ -60,7 +60,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
       trbRequest.taskStatuses.adviceLetterStatus ===
         TRBAdviceLetterStatus.READY_TO_START
     ) {
-      return t('adminHome.startAdvice');
+      return t('adminHome.startGuidance');
     }
     if (
       trbRequest.taskStatuses.adviceLetterStatus ===
@@ -68,7 +68,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
     ) {
       return t('adminHome.view');
     }
-    return t('adminHome.viewAdvice');
+    return t('adminHome.viewGuidance');
   };
 
   switch (type) {
@@ -88,7 +88,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
       break;
     case 'adviceLetter':
       cardDetails = {
-        header: t('adminHome.adviceLetter'),
+        header: t('adminHome.guidanceLetter'),
         description: t('adminHome.toBeCompleted'),
         status: trbRequest.taskStatuses.adviceLetterStatus,
         buttonText: returnAdviceText(),

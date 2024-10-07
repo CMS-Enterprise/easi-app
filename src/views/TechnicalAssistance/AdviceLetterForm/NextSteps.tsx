@@ -162,7 +162,7 @@ const NextSteps = ({
                 htmlFor="nextSteps"
                 required
               >
-                {t('adviceLetterForm.nextSteps')}
+                {t('guidanceLetterForm.nextSteps')}
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
               <RichTextEditor
@@ -190,7 +190,7 @@ const NextSteps = ({
               <Fieldset
                 legend={
                   <>
-                    {t('adviceLetterForm.isFollowupRecommended')}
+                    {t('guidanceLetterForm.isFollowupRecommended')}
                     <span className="text-red"> *</span>
                   </>
                 }
@@ -204,7 +204,7 @@ const NextSteps = ({
                   {...field}
                   ref={null}
                   id="isFollowupRecommendedYes"
-                  label={t('adviceLetterForm.followupYes')}
+                  label={t('guidanceLetterForm.followupYes')}
                   value="true"
                   checked={field.value === true}
                   onChange={() => field.onChange(true)}
@@ -227,7 +227,7 @@ const NextSteps = ({
                             {t('When?')}
                           </Label>
                           <HelpText>
-                            {t('adviceLetterForm.followupHelpText')}
+                            {t('guidanceLetterForm.followupHelpText')}
                           </HelpText>
                           {input.fieldState.error && (
                             <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
@@ -249,7 +249,7 @@ const NextSteps = ({
                   {...field}
                   ref={null}
                   id="isFollowupRecommendedNo"
-                  label={t('adviceLetterForm.notNecessary')}
+                  label={t('guidanceLetterForm.notNecessary')}
                   value="false"
                   checked={field.value === false}
                   onChange={() => field.onChange(false)}
@@ -279,7 +279,7 @@ const NextSteps = ({
             )
         }}
         taskListUrl={`/trb/${trbRequestId}/advice`}
-        saveExitText={t('adviceLetterForm.returnToRequest')}
+        saveExitText={t('guidanceLetterForm.returnToRequest')}
         submit={submit}
         border={false}
       />

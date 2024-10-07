@@ -51,7 +51,7 @@ const Done = () => {
                 text: t('adminHome.breadcrumb'),
                 url: `/trb/${id}/advice`
               },
-              { text: t('adviceLetterForm.heading') }
+              { text: t('guidanceLetterForm.heading') }
             ]}
           />
           <PageHeading className="margin-bottom-0">
@@ -66,7 +66,7 @@ const Done = () => {
                 to={`/trb/${id}/advice/review`}
                 className="usa-button"
               >
-                {t('adviceLetterForm.done.backToAdviceLetter')}
+                {t('guidanceLetterForm.done.backToGuidanceLetter')}
               </UswdsReactLink>
             )}
             <UswdsReactLink
@@ -76,7 +76,7 @@ const Done = () => {
                 'margin-left-neg-05': success
               })}
             >
-              {t('adviceLetterForm.done.returnToRequestHome')}
+              {t('guidanceLetterForm.done.returnToRequestHome')}
             </UswdsReactLink>
           </ButtonGroup>
         </GridContainer>

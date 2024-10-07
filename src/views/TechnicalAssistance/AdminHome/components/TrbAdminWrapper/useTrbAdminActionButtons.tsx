@@ -121,11 +121,11 @@ const useTrbAdminActionButtons = ({
         link: `/trb/${trbRequestId}/documents`
       },
       viewAdviceLetter: {
-        label: t('adminAction.buttons.viewAdviceLetter'),
+        label: t('adminAction.buttons.viewGuidanceLetter'),
         link: `/trb/${trbRequestId}/advice`
       },
       startAdviceLetter: {
-        label: t('adminAction.buttons.startAdviceLetter'),
+        label: t('adminAction.buttons.startGuidanceLetter'),
         onClick: () =>
           createAdviceLetter()
             .then(
@@ -141,7 +141,7 @@ const useTrbAdminActionButtons = ({
             )
       },
       continueAdviceLetter: {
-        label: t('adminAction.buttons.continueAdviceLetter'),
+        label: t('adminAction.buttons.continueGuidanceLetter'),
         link: {
           pathname: `/trb/${trbRequestId}/advice/summary`,
           state: {
@@ -150,7 +150,7 @@ const useTrbAdminActionButtons = ({
         }
       },
       finalizeAdviceLetter: {
-        label: t('adminAction.buttons.finalizeAdviceLetter'),
+        label: t('adminAction.buttons.finalizeGuidanceLetter'),
         link: `/trb/${trbRequestId}/advice/review`
       },
       addNote: {

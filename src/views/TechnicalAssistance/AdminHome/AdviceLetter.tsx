@@ -48,8 +48,8 @@ const AdviceLetter = ({
     <TrbAdminWrapper
       activePage="advice"
       trbRequestId={id}
-      title={t('adminHome.adviceLetter')}
-      description={t('adviceLetter.introText')}
+      title={t('adminHome.guidanceLetter')}
+      description={t('guidanceLetter.introText')}
       disableStep={
         taskStatuses?.adviceLetterStatus ===
         TRBAdviceLetterStatus.CANNOT_START_YET
@@ -71,9 +71,9 @@ const AdviceLetter = ({
       pdfExportProps={
         adviceLetter
           ? {
-              label: t('adviceLetter.downloadAsPdf'),
+              label: t('guidanceLetter.downloadAsPdf'),
               filename: `advice letter ${id}.pdf`,
-              title: t('adviceLetterForm.heading')
+              title: t('guidanceLetterForm.heading')
             }
           : undefined
       }
@@ -82,7 +82,7 @@ const AdviceLetter = ({
         // If advice letter status is CANNOT_START_YET, show alert message
         adviceLetterStatus === 'CANNOT_START_YET' ? (
           <Alert type="info" slim>
-            {t('adviceLetter.alerts.info')}
+            {t('guidanceLetter.alerts.info')}
           </Alert>
         ) : (
           <>

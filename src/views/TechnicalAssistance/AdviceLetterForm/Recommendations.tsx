@@ -111,7 +111,7 @@ const Recommendations = ({
             /* No recommendations message */
             !hasRecommendations ? (
               <Alert type="info" slim>
-                {t('adviceLetterForm.noRecommendations')}
+                {t('guidanceLetterForm.noRecommendations')}
               </Alert>
             ) : (
               <RecommendationsList
@@ -171,7 +171,7 @@ const Recommendations = ({
               disabled: !!loading,
               text: hasRecommendations
                 ? t('button.next')
-                : t('adviceLetterForm.continueWithoutAdding'),
+                : t('guidanceLetterForm.continueWithoutAdding'),
               onClick: () => {
                 if (
                   setStepsCompleted &&
@@ -187,7 +187,7 @@ const Recommendations = ({
             }}
             taskListUrl={`/trb/${trbRequestId}/advice`}
             submit={async callback => callback?.()}
-            saveExitText={t('adviceLetterForm.returnToRequest')}
+            saveExitText={t('guidanceLetterForm.returnToRequest')}
             border={false}
           />
         </div>

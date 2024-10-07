@@ -80,7 +80,7 @@ export default function RecommendationsList({
           newOrder
         }
       }
-    }).catch(() => setReorderError?.(t('adviceLetterForm.reorderError')));
+    }).catch(() => setReorderError?.(t('guidanceLetterForm.reorderError')));
   };
 
   // Clear error on initial render
@@ -111,7 +111,7 @@ export default function RecommendationsList({
 
       {recommendations.length > 0 && editable && (
         <Alert type="info" slim className="margin-bottom-4">
-          {t('adviceLetterForm.reorderRecommendations')}
+          {t('guidanceLetterForm.reorderRecommendations')}
         </Alert>
       )}
 
@@ -183,7 +183,7 @@ export default function RecommendationsList({
                   {links.length > 0 && (
                     <>
                       <p className="text-bold margin-bottom-0 margin-top-2">
-                        {t('adviceLetter.resources')}
+                        {t('guidanceLetter.resources')}
                       </p>
                       <RecommendationLinks
                         links={links}
@@ -204,7 +204,7 @@ export default function RecommendationsList({
                         onClick={() => edit(recommendation)}
                         unstyled
                       >
-                        {t('adviceLetterForm.editRecommendation')}
+                        {t('guidanceLetterForm.editRecommendation')}
                       </Button>
                     )}
                     {remove && (
@@ -216,7 +216,7 @@ export default function RecommendationsList({
                         }
                         unstyled
                       >
-                        {t('adviceLetterForm.removeRecommendation')}
+                        {t('guidanceLetterForm.removeRecommendation')}
                       </Button>
                     )}
                   </ButtonGroup>
