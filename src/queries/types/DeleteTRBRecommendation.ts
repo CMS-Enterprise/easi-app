@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface DeleteTRBRecommendation_deleteTRBAdviceLetterRecommendation {
-  __typename: "TRBAdviceLetterRecommendation";
+  __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
   recommendation: HTML;

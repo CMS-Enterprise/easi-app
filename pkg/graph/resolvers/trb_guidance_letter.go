@@ -15,14 +15,14 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
-// GetTRBAdviceLetterByTRBRequestID fetches a TRB advice letter record by its associated request's ID.
-func GetTRBAdviceLetterByTRBRequestID(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetter, error) {
-	return dataloaders.GetTRBAdviceLetterByTRBRequestID(ctx, id)
+// GetTRBGuidanceLetterByTRBRequestID fetches a TRB guidance letter record by its associated request's ID.
+func GetTRBGuidanceLetterByTRBRequestID(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetter, error) {
+	return dataloaders.GetTRBGuidanceLetterByTRBRequestID(ctx, id)
 }
 
-// CreateTRBAdviceLetter creates an advice letter for a TRB request, in the "In Progress" status, when the advice letter is ready to be worked on.
-func CreateTRBAdviceLetter(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
-	letter, err := store.CreateTRBAdviceLetter(ctx, appcontext.Principal(ctx).ID(), trbRequestID)
+// CreateTRBGuidanceLetter creates a guidance letter for a TRB request, in the "In Progress" status, when the guidance letter is ready to be worked on.
+func CreateTRBGuidanceLetter(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBGuidanceLetter, error) {
+	letter, err := store.CreateTRBGuidanceLetter(ctx, appcontext.Principal(ctx).ID(), trbRequestID)
 	if err != nil {
 		return nil, err
 	}
@@ -30,8 +30,8 @@ func CreateTRBAdviceLetter(ctx context.Context, store *storage.Store, trbRequest
 	return letter, nil
 }
 
-// UpdateTRBAdviceLetter handles general updates to a TRB advice letter
-func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdviceLetter, error) {
+// UpdateTRBGuidanceLetter handles general updates to a TRB guidance letter
+func UpdateTRBGuidanceLetter(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBGuidanceLetter, error) {
 	idIface, idFound := input["trbRequestId"]
 	if !idFound {
 		return nil, errors.New("missing required property trbRequestId")
@@ -39,10 +39,10 @@ func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[
 
 	id, ok := idIface.(uuid.UUID)
 	if !ok {
-		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB advice letter: %v", idIface)
+		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB guidance letter: %v", idIface)
 	}
 
-	letter, err := store.GetTRBAdviceLetterByTRBRequestID(ctx, id)
+	letter, err := store.GetTRBGuidanceLetterByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[
 		return nil, err
 	}
 
-	updatedLetter, err := store.UpdateTRBAdviceLetter(ctx, letter)
+	updatedLetter, err := store.UpdateTRBGuidanceLetter(ctx, letter)
 	if err != nil {
 		return nil, err
 	}
@@ -60,15 +60,15 @@ func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[
 	return updatedLetter, err
 }
 
-// RequestReviewForTRBAdviceLetter sets a TRB advice letter as ready for review and notifies the given recipients.
-func RequestReviewForTRBAdviceLetter(
+// RequestReviewForTRBGuidanceLetter sets a TRB guidance letter as ready for review and notifies the given recipients.
+func RequestReviewForTRBGuidanceLetter(
 	ctx context.Context,
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	id uuid.UUID,
-) (*models.TRBAdviceLetter, error) {
-	letter, err := store.UpdateTRBAdviceLetterStatus(ctx, id, models.TRBAdviceLetterStatusReadyForReview)
+) (*models.TRBGuidanceLetter, error) {
+	letter, err := store.UpdateTRBGuidanceLetterStatus(ctx, id, models.TRBGuidanceLetterStatusReadyForReview)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func RequestReviewForTRBAdviceLetter(
 		leadName = leadInfo.DisplayName
 	}
 
-	emailInput := email.SendTRBAdviceLetterInternalReviewEmailInput{
+	emailInput := email.SendTRBGuidanceLetterInternalReviewEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
 		TRBLeadName:    leadName,
@@ -96,7 +96,7 @@ func RequestReviewForTRBAdviceLetter(
 	// Email client can be nil when this is called from tests - the email client itself tests this
 	// separately in the email package test
 	if emailClient != nil {
-		err = emailClient.SendTRBAdviceLetterInternalReviewEmail(ctx, emailInput)
+		err = emailClient.SendTRBGuidanceLetterInternalReviewEmail(ctx, emailInput)
 		if err != nil {
 			return nil, err
 		}
@@ -105,8 +105,8 @@ func RequestReviewForTRBAdviceLetter(
 	return letter, nil
 }
 
-// SendTRBAdviceLetter sends a TRB advice letter, setting its DateSent field, and (TODO) notifies the given recipients.
-func SendTRBAdviceLetter(ctx context.Context,
+// SendTRBGuidanceLetter sends a TRB guidance letter, setting its DateSent field, and (TODO) notifies the given recipients.
+func SendTRBGuidanceLetter(ctx context.Context,
 	store *storage.Store,
 	id uuid.UUID,
 	emailClient *email.Client,
@@ -114,14 +114,14 @@ func SendTRBAdviceLetter(ctx context.Context,
 	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
 	copyTRBMailbox bool,
 	notifyEUAIDs []string,
-) (*models.TRBAdviceLetter, error) {
+) (*models.TRBGuidanceLetter, error) {
 	// Fetch user info for each EUA ID we want to notify
 	notifyUserInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
 	if err != nil {
 		return nil, err
 	}
 
-	letter, err := store.UpdateTRBAdviceLetterStatus(ctx, id, models.TRBAdviceLetterStatusCompleted)
+	letter, err := store.UpdateTRBGuidanceLetterStatus(ctx, id, models.TRBGuidanceLetterStatusCompleted)
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +166,7 @@ func SendTRBAdviceLetter(ctx context.Context,
 		component = *form.Component
 	}
 
-	emailInput := email.SendTRBAdviceLetterSubmittedEmailInput{
+	emailInput := email.SendTRBGuidanceLetterSubmittedEmailInput{
 		TRBRequestID:   trb.ID,
 		RequestName:    trb.GetName(),
 		RequestType:    string(trb.Type),
@@ -181,7 +181,7 @@ func SendTRBAdviceLetter(ctx context.Context,
 	// Email client can be nil when this is called from tests - the email client itself tests this
 	// separately in the email package test
 	if emailClient != nil {
-		err = emailClient.SendTRBAdviceLetterSubmittedEmail(ctx, emailInput)
+		err = emailClient.SendTRBGuidanceLetterSubmittedEmail(ctx, emailInput)
 		if err != nil {
 			return nil, err
 		}

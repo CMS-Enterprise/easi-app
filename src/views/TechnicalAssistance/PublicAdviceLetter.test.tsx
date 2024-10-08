@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 
 import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
+import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 
 import PublicAdviceLetter from './PublicAdviceLetter';
 
@@ -42,7 +42,7 @@ describe('Trb Public Advice Letter', () => {
             title: 'Restart your computer',
             recommendation: 'I recommend you restart your computer',
             links: ['google.com', 'askjeeves.com'],
-            __typename: 'TRBAdviceLetterRecommendation'
+            __typename: 'TRBGuidanceLetterRecommendation'
           }
         ],
         author: {
@@ -55,7 +55,7 @@ describe('Trb Public Advice Letter', () => {
         __typename: 'TRBAdviceLetter'
       },
       taskStatuses: {
-        adviceLetterStatus: TRBAdviceLetterStatus.COMPLETED,
+        adviceLetterStatus: TRBGuidanceLetterStatus.COMPLETED,
         __typename: 'TRBTaskStatuses'
       },
       __typename: 'TRBRequest'
@@ -157,7 +157,8 @@ describe('Trb Public Advice Letter', () => {
                 trbRequest: {
                   ...data.trbRequest,
                   taskStatuses: {
-                    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
+                    adviceLetterStatus:
+                      TRBGuidanceLetterStatus.CANNOT_START_YET,
                     __typename: 'TRBTaskStatuses'
                   }
                 }

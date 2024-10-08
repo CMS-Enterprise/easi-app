@@ -14,7 +14,7 @@ const (
 	TRBAdminNoteCategoryInitialRequestForm  TRBAdminNoteCategory = "INITIAL_REQUEST_FORM"
 	TRBAdminNoteCategorySupportingDocuments TRBAdminNoteCategory = "SUPPORTING_DOCUMENTS"
 	TRBAdminNoteCategoryConsultSession      TRBAdminNoteCategory = "CONSULT_SESSION"
-	TRBAdminNoteCategoryAdviceLetter        TRBAdminNoteCategory = "ADVICE_LETTER"
+	TRBAdminNoteCategoryGuidanceLetter      TRBAdminNoteCategory = "ADVICE_LETTER"
 )
 
 // TRBAdminNote represents the data for a note attached to a TRB request by an admin
@@ -41,7 +41,7 @@ type TRBAdminNote struct {
 
 	// Consult Session - no additional fields
 
-	// Advice Letter
+	// Guidance Letter
 	AppliesToMeetingSummary null.Bool `json:"appliesToMeetingSummary" db:"applies_to_meeting_summary"`
 	AppliesToNextSteps      null.Bool `json:"appliesToNextSteps" db:"applies_to_next_steps"`
 	// the list of recommendations in the GQL schema is handled by a many-to-many link table with a separate model

@@ -577,15 +577,6 @@ export type CreateSystemIntakeNoteInput = {
   intakeId: Scalars['UUID']['input'];
 };
 
-/** The data needed to create a TRB admin note with the Advice Letter category */
-export type CreateTRBAdminNoteAdviceLetterInput = {
-  appliesToMeetingSummary: Scalars['Boolean']['input'];
-  appliesToNextSteps: Scalars['Boolean']['input'];
-  noteText: Scalars['HTML']['input'];
-  recommendationIDs: Array<Scalars['UUID']['input']>;
-  trbRequestId: Scalars['UUID']['input'];
-};
-
 /** The data needed to create a TRB admin note with the Consult Session category */
 export type CreateTRBAdminNoteConsultSessionInput = {
   noteText: Scalars['HTML']['input'];
@@ -595,6 +586,15 @@ export type CreateTRBAdminNoteConsultSessionInput = {
 /** The data needed to create a TRB admin note with the General Request category */
 export type CreateTRBAdminNoteGeneralRequestInput = {
   noteText: Scalars['HTML']['input'];
+  trbRequestId: Scalars['UUID']['input'];
+};
+
+/** The data needed to create a TRB admin note with the Guidance Letter category */
+export type CreateTRBAdminNoteGuidanceLetterInput = {
+  appliesToMeetingSummary: Scalars['Boolean']['input'];
+  appliesToNextSteps: Scalars['Boolean']['input'];
+  noteText: Scalars['HTML']['input'];
+  recommendationIDs: Array<Scalars['UUID']['input']>;
   trbRequestId: Scalars['UUID']['input'];
 };
 
@@ -614,8 +614,8 @@ export type CreateTRBAdminNoteSupportingDocumentsInput = {
   trbRequestId: Scalars['UUID']['input'];
 };
 
-/** The input required to add a recommendation & links to a TRB advice letter */
-export type CreateTRBAdviceLetterRecommendationInput = {
+/** The input required to add a recommendation & links to a TRB guidance letter */
+export type CreateTRBGuidanceLetterRecommendationInput = {
   links: Array<Scalars['String']['input']>;
   recommendation: Scalars['HTML']['input'];
   title: Scalars['String']['input'];
@@ -928,8 +928,8 @@ export type Mutation = {
   createTRBAdminNoteGeneralRequest: TRBAdminNote;
   createTRBAdminNoteInitialRequestForm: TRBAdminNote;
   createTRBAdminNoteSupportingDocuments: TRBAdminNote;
-  createTRBAdviceLetter: TRBAdviceLetter;
-  createTRBAdviceLetterRecommendation: TRBAdviceLetterRecommendation;
+  createTRBAdviceLetter: TRBGuidanceLetter;
+  createTRBAdviceLetterRecommendation: TRBGuidanceLetterRecommendation;
   createTRBRequest: TRBRequest;
   createTRBRequestAttendee: TRBRequestAttendee;
   createTRBRequestDocument?: Maybe<CreateTRBRequestDocumentPayload>;
@@ -939,17 +939,17 @@ export type Mutation = {
   deleteSystemIntakeContact?: Maybe<DeleteSystemIntakeContactPayload>;
   deleteSystemIntakeDocument?: Maybe<DeleteSystemIntakeDocumentPayload>;
   deleteSystemIntakeGRBReviewer: Scalars['UUID']['output'];
-  deleteTRBAdviceLetterRecommendation: TRBAdviceLetterRecommendation;
+  deleteTRBAdviceLetterRecommendation: TRBGuidanceLetterRecommendation;
   deleteTRBRequestAttendee: TRBRequestAttendee;
   deleteTRBRequestDocument?: Maybe<DeleteTRBRequestDocumentPayload>;
   deleteTRBRequestFundingSources: Array<TRBFundingSource>;
   deleteTrbLeadOption: Scalars['Boolean']['output'];
   reopenTrbRequest: TRBRequest;
-  requestReviewForTRBAdviceLetter: TRBAdviceLetter;
+  requestReviewForTRBAdviceLetter: TRBGuidanceLetter;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
-  sendTRBAdviceLetter: TRBAdviceLetter;
+  sendTRBAdviceLetter: TRBGuidanceLetter;
   setRolesForUserOnSystem?: Maybe<Scalars['String']['output']>;
   setSystemIntakeRelationExistingService?: Maybe<UpdateSystemIntakePayload>;
   setSystemIntakeRelationExistingSystem?: Maybe<UpdateSystemIntakePayload>;
@@ -971,9 +971,9 @@ export type Mutation = {
   updateSystemIntakeRequestDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeRequestType: SystemIntake;
   updateSystemIntakeReviewDates?: Maybe<UpdateSystemIntakePayload>;
-  updateTRBAdviceLetter: TRBAdviceLetter;
-  updateTRBAdviceLetterRecommendation: TRBAdviceLetterRecommendation;
-  updateTRBAdviceLetterRecommendationOrder: Array<TRBAdviceLetterRecommendation>;
+  updateTRBAdviceLetter: TRBGuidanceLetter;
+  updateTRBAdviceLetterRecommendation: TRBGuidanceLetterRecommendation;
+  updateTRBAdviceLetterRecommendationOrder: Array<TRBGuidanceLetterRecommendation>;
   updateTRBRequest: TRBRequest;
   updateTRBRequestAttendee: TRBRequestAttendee;
   updateTRBRequestConsultMeetingTime: TRBRequest;
@@ -1105,7 +1105,7 @@ export type MutationCreateSystemIntakeNoteArgs = {
 
 /** Defines the mutations for the schema */
 export type MutationCreateTRBAdminNoteAdviceLetterArgs = {
-  input: CreateTRBAdminNoteAdviceLetterInput;
+  input: CreateTRBAdminNoteGuidanceLetterInput;
 };
 
 
@@ -1141,7 +1141,7 @@ export type MutationCreateTRBAdviceLetterArgs = {
 
 /** Defines the mutations for the schema */
 export type MutationCreateTRBAdviceLetterRecommendationArgs = {
-  input: CreateTRBAdviceLetterRecommendationInput;
+  input: CreateTRBGuidanceLetterRecommendationInput;
 };
 
 
@@ -1261,7 +1261,7 @@ export type MutationSendReportAProblemEmailArgs = {
 
 /** Defines the mutations for the schema */
 export type MutationSendTRBAdviceLetterArgs = {
-  input: SendTRBAdviceLetterInput;
+  input: SendTRBGuidanceLetterInput;
 };
 
 
@@ -1395,19 +1395,19 @@ export type MutationUpdateSystemIntakeReviewDatesArgs = {
 
 /** Defines the mutations for the schema */
 export type MutationUpdateTRBAdviceLetterArgs = {
-  input: UpdateTRBAdviceLetterInput;
+  input: UpdateTRBGuidanceLetterInput;
 };
 
 
 /** Defines the mutations for the schema */
 export type MutationUpdateTRBAdviceLetterRecommendationArgs = {
-  input: UpdateTRBAdviceLetterRecommendationInput;
+  input: UpdateTRBGuidanceLetterRecommendationInput;
 };
 
 
 /** Defines the mutations for the schema */
 export type MutationUpdateTRBAdviceLetterRecommendationOrderArgs = {
-  input: UpdateTRBAdviceLetterRecommendationOrderInput;
+  input: UpdateTRBGuidanceLetterRecommendationOrderInput;
 };
 
 
@@ -1688,8 +1688,8 @@ export type SendReportAProblemEmailInput = {
   whatWereYouDoing: Scalars['String']['input'];
 };
 
-/** The data needed to send a TRB advice letter, including who to notify */
-export type SendTRBAdviceLetterInput = {
+/** The data needed to send a TRB guidance letter, including who to notify */
+export type SendTRBGuidanceLetterInput = {
   copyTrbMailbox: Scalars['Boolean']['input'];
   id: Scalars['UUID']['input'];
   notifyEuaIds: Array<Scalars['String']['input']>;
@@ -2467,17 +2467,6 @@ export type TRBAdminNote = {
   trbRequestId: Scalars['UUID']['output'];
 };
 
-/**
- * Data specific to admin notes in the Advice Letter category
- * The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
- */
-export type TRBAdminNoteAdviceLetterCategoryData = {
-  __typename: 'TRBAdminNoteAdviceLetterCategoryData';
-  appliesToMeetingSummary: Scalars['Boolean']['output'];
-  appliesToNextSteps: Scalars['Boolean']['output'];
-  recommendations: Array<TRBAdviceLetterRecommendation>;
-};
-
 /** Represents the category of a single TRB admin note */
 export enum TRBAdminNoteCategory {
   ADVICE_LETTER = 'ADVICE_LETTER',
@@ -2487,7 +2476,7 @@ export enum TRBAdminNoteCategory {
   SUPPORTING_DOCUMENTS = 'SUPPORTING_DOCUMENTS'
 }
 
-export type TRBAdminNoteCategorySpecificData = TRBAdminNoteAdviceLetterCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData;
+export type TRBAdminNoteCategorySpecificData = TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteGuidanceLetterCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData;
 
 /**
  * Data specific to admin notes in the Consult Session category
@@ -2509,6 +2498,17 @@ export type TRBAdminNoteGeneralRequestCategoryData = {
   placeholderField?: Maybe<Scalars['Boolean']['output']>;
 };
 
+/**
+ * Data specific to admin notes in the Guidance Letter category
+ * The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
+ */
+export type TRBAdminNoteGuidanceLetterCategoryData = {
+  __typename: 'TRBAdminNoteGuidanceLetterCategoryData';
+  appliesToMeetingSummary: Scalars['Boolean']['output'];
+  appliesToNextSteps: Scalars['Boolean']['output'];
+  recommendations: Array<TRBGuidanceLetterRecommendation>;
+};
+
 /** Data specific to admin notes in the Initial Request Form category */
 export type TRBAdminNoteInitialRequestFormCategoryData = {
   __typename: 'TRBAdminNoteInitialRequestFormCategoryData';
@@ -2525,57 +2525,6 @@ export type TRBAdminNoteSupportingDocumentsCategoryData = {
   __typename: 'TRBAdminNoteSupportingDocumentsCategoryData';
   documents: Array<TRBRequestDocument>;
 };
-
-/** Represents an advice letter for a TRB request */
-export type TRBAdviceLetter = {
-  __typename: 'TRBAdviceLetter';
-  author: UserInfo;
-  createdAt: Scalars['Time']['output'];
-  createdBy: Scalars['String']['output'];
-  dateSent?: Maybe<Scalars['Time']['output']>;
-  followupPoint?: Maybe<Scalars['String']['output']>;
-  id: Scalars['UUID']['output'];
-  isFollowupRecommended?: Maybe<Scalars['Boolean']['output']>;
-  meetingSummary?: Maybe<Scalars['HTML']['output']>;
-  modifiedAt?: Maybe<Scalars['Time']['output']>;
-  modifiedBy?: Maybe<Scalars['String']['output']>;
-  nextSteps?: Maybe<Scalars['HTML']['output']>;
-  /** List of recommendations in the order specified by users */
-  recommendations: Array<TRBAdviceLetterRecommendation>;
-  trbRequestId: Scalars['UUID']['output'];
-};
-
-/** Represents a recommendation and links that have been added to a TRB advice letter */
-export type TRBAdviceLetterRecommendation = {
-  __typename: 'TRBAdviceLetterRecommendation';
-  author: UserInfo;
-  createdAt: Scalars['Time']['output'];
-  createdBy: Scalars['String']['output'];
-  deletedAt?: Maybe<Scalars['Time']['output']>;
-  id: Scalars['UUID']['output'];
-  links: Array<Scalars['String']['output']>;
-  modifiedAt?: Maybe<Scalars['Time']['output']>;
-  modifiedBy?: Maybe<Scalars['String']['output']>;
-  recommendation: Scalars['HTML']['output'];
-  title: Scalars['String']['output'];
-  trbRequestId: Scalars['UUID']['output'];
-};
-
-/** Represents the status of the TRB advice letter step */
-export enum TRBAdviceLetterStatus {
-  CANNOT_START_YET = 'CANNOT_START_YET',
-  COMPLETED = 'COMPLETED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  READY_FOR_REVIEW = 'READY_FOR_REVIEW',
-  READY_TO_START = 'READY_TO_START'
-}
-
-/** Represents the status of the TRB advice letter step */
-export enum TRBAdviceLetterStatusTaskList {
-  CANNOT_START_YET = 'CANNOT_START_YET',
-  COMPLETED = 'COMPLETED',
-  IN_REVIEW = 'IN_REVIEW'
-}
 
 /** Represents the status of the TRB consult attendance step */
 export enum TRBAttendConsultStatus {
@@ -2648,11 +2597,62 @@ export type TRBFundingSource = {
   trbRequestId: Scalars['UUID']['output'];
 };
 
+/** Represents a guidance letter for a TRB request */
+export type TRBGuidanceLetter = {
+  __typename: 'TRBGuidanceLetter';
+  author: UserInfo;
+  createdAt: Scalars['Time']['output'];
+  createdBy: Scalars['String']['output'];
+  dateSent?: Maybe<Scalars['Time']['output']>;
+  followupPoint?: Maybe<Scalars['String']['output']>;
+  id: Scalars['UUID']['output'];
+  isFollowupRecommended?: Maybe<Scalars['Boolean']['output']>;
+  meetingSummary?: Maybe<Scalars['HTML']['output']>;
+  modifiedAt?: Maybe<Scalars['Time']['output']>;
+  modifiedBy?: Maybe<Scalars['String']['output']>;
+  nextSteps?: Maybe<Scalars['HTML']['output']>;
+  /** List of recommendations in the order specified by users */
+  recommendations: Array<TRBGuidanceLetterRecommendation>;
+  trbRequestId: Scalars['UUID']['output'];
+};
+
+/** Represents a recommendation and links that have been added to a TRB guidance letter */
+export type TRBGuidanceLetterRecommendation = {
+  __typename: 'TRBGuidanceLetterRecommendation';
+  author: UserInfo;
+  createdAt: Scalars['Time']['output'];
+  createdBy: Scalars['String']['output'];
+  deletedAt?: Maybe<Scalars['Time']['output']>;
+  id: Scalars['UUID']['output'];
+  links: Array<Scalars['String']['output']>;
+  modifiedAt?: Maybe<Scalars['Time']['output']>;
+  modifiedBy?: Maybe<Scalars['String']['output']>;
+  recommendation: Scalars['HTML']['output'];
+  title: Scalars['String']['output'];
+  trbRequestId: Scalars['UUID']['output'];
+};
+
+/** Represents the status of the TRB guidance letter step */
+export enum TRBGuidanceLetterStatus {
+  CANNOT_START_YET = 'CANNOT_START_YET',
+  COMPLETED = 'COMPLETED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  READY_FOR_REVIEW = 'READY_FOR_REVIEW',
+  READY_TO_START = 'READY_TO_START'
+}
+
+/** Represents the status of the TRB guidance letter step */
+export enum TRBGuidanceLetterStatusTaskList {
+  CANNOT_START_YET = 'CANNOT_START_YET',
+  COMPLETED = 'COMPLETED',
+  IN_REVIEW = 'IN_REVIEW'
+}
+
 /** Represents a request for support from the Technical Review Board (TRB) */
 export type TRBRequest = {
   __typename: 'TRBRequest';
   adminNotes: Array<TRBAdminNote>;
-  adviceLetter?: Maybe<TRBAdviceLetter>;
+  adviceLetter?: Maybe<TRBGuidanceLetter>;
   archived: Scalars['Boolean']['output'];
   attendees: Array<TRBRequestAttendee>;
   consultMeetingTime?: Maybe<Scalars['Time']['output']>;
@@ -2857,8 +2857,8 @@ export enum TRBSubjectAreaOption {
 /** Wraps all of the various status on the TRB task list into one type */
 export type TRBTaskStatuses = {
   __typename: 'TRBTaskStatuses';
-  adviceLetterStatus: TRBAdviceLetterStatus;
-  adviceLetterStatusTaskList: TRBAdviceLetterStatusTaskList;
+  adviceLetterStatus: TRBGuidanceLetterStatus;
+  adviceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList;
   attendConsultStatus: TRBAttendConsultStatus;
   consultPrepStatus: TRBConsultPrepStatus;
   feedbackStatus: TRBFeedbackStatus;
@@ -2961,8 +2961,8 @@ export type UpdateSystemIntakeReviewDatesInput = {
   id: Scalars['UUID']['input'];
 };
 
-/** The data needed to update a TRB advice letter */
-export type UpdateTRBAdviceLetterInput = {
+/** The data needed to update a TRB guidance letter */
+export type UpdateTRBGuidanceLetterInput = {
   followupPoint?: InputMaybe<Scalars['String']['input']>;
   isFollowupRecommended?: InputMaybe<Scalars['Boolean']['input']>;
   meetingSummary?: InputMaybe<Scalars['HTML']['input']>;
@@ -2970,15 +2970,15 @@ export type UpdateTRBAdviceLetterInput = {
   trbRequestId: Scalars['UUID']['input'];
 };
 
-/** The input required to update a recommendation to a TRB advice letter */
-export type UpdateTRBAdviceLetterRecommendationInput = {
+/** The input required to update a recommendation to a TRB guidance letter */
+export type UpdateTRBGuidanceLetterRecommendationInput = {
   id: Scalars['UUID']['input'];
   links?: InputMaybe<Array<Scalars['String']['input']>>;
   recommendation?: InputMaybe<Scalars['HTML']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateTRBAdviceLetterRecommendationOrderInput = {
+export type UpdateTRBGuidanceLetterRecommendationOrderInput = {
   /** List of the recommendation IDs in the new order they should be displayed */
   newOrder: Array<Scalars['UUID']['input']>;
   trbRequestId: Scalars['UUID']['input'];
