@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { Button, IconExpandMore } from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
@@ -112,7 +112,7 @@ function TeamCard({ roles }: { roles: CedarRole[] }) {
                   setExpanded(!isExpanded);
                 }}
               >
-                <IconExpandMore
+                <Icon.ExpandMore
                   className="margin-right-05 margin-bottom-2px text-tbottom"
                   style={{
                     transform: isExpanded ? 'rotate(180deg)' : ''

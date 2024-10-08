@@ -11,7 +11,7 @@ import {
   Button,
   Grid,
   GridContainer,
-  IconExpandMore,
+  Icon,
   Link,
   SideNav,
   SummaryBox
@@ -500,7 +500,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                                   ? 'singleSystem.description.less'
                                   : 'singleSystem.description.more'
                               )}
-                              <IconExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
+                              <Icon.ExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
                             </Button>
                           </div>
                         )}

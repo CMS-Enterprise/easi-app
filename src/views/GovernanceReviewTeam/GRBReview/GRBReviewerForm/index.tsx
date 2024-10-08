@@ -9,7 +9,7 @@ import {
   Form,
   FormGroup,
   Grid,
-  IconArrowBack
+  Icon
 } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewersDocument,
@@ -180,7 +180,7 @@ const GRBReviewerForm = ({
         </p>
 
         <IconLink
-          icon={<IconArrowBack />}
+          icon={<Icon.ArrowBack />}
           to={grbReviewPath}
           className="margin-top-3 margin-bottom-5"
         >

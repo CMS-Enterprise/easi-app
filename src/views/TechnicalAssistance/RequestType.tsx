@@ -10,8 +10,7 @@ import {
   CardGroup,
   CardHeader,
   GridContainer,
-  IconArrowBack,
-  IconArrowForward
+  Icon
 } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -92,7 +91,7 @@ function RequestType() {
         }}
         className="display-flex flex-align-center margin-top-2"
       >
-        <IconArrowBack className="margin-right-1" />
+        <Icon.ArrowBack className="margin-right-1" />
         {t(isNew ? 'requestType.goBack' : 'requestType.goBackWithoutChange')}
       </UswdsReactLink>
 
@@ -178,7 +177,7 @@ function RequestType() {
                 }}
               >
                 {t('requestType.services.other')}
-                <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
+                <Icon.ArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
               </UswdsReactLink>
             ) : (
               <Button
@@ -191,7 +190,7 @@ function RequestType() {
                 }}
               >
                 {t('requestType.services.other')}
-                <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
+                <Icon.ArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
               </Button>
             )}
           </li>

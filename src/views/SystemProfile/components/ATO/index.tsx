@@ -6,7 +6,7 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  IconInfo,
+  Icon,
   Link,
   ProcessList,
   ProcessListHeading,
@@ -180,7 +180,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                 className="display-flex"
                 data-testid="atoExpirationLogicHelpText"
               >
-                <IconInfo className="margin-right-1" />
+                <Icon.Info className="margin-right-1" />
                 {t('singleSystem.ato.atoExpiringSoonLogicInfo')}
               </HelpText>
             ) : (

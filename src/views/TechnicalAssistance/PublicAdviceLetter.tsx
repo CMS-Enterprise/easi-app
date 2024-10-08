@@ -6,7 +6,7 @@ import { useQuery } from '@apollo/client';
 import {
   Grid,
   GridContainer,
-  IconArrowBack,
+  Icon,
   Link,
   SummaryBox
 } from '@trussworks/react-uswds';
@@ -116,7 +116,7 @@ function PublicAdviceLetter() {
         {fromTaskList ? (
           <>
             <UswdsReactLink to={`/trb/task-list/${id}`}>
-              <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+              <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
               {t('requestFeedback.returnToTaskList')}
             </UswdsReactLink>
 
@@ -238,7 +238,7 @@ function PublicAdviceLetter() {
             className="display-inline-block margin-top-5"
             to={`/trb/task-list/${id}`}
           >
-            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+            <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
             {t('requestFeedback.returnToTaskList')}
           </UswdsReactLink>
         )}

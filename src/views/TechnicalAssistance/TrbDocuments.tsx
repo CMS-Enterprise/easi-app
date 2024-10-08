@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
+import { Grid, GridContainer, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -62,7 +62,7 @@ const DocumentsTaskList = () => {
         </p>
 
         <UswdsReactLink to={`/trb/task-list/${requestID}`}>
-          <IconArrowBack className="margin-right-1 text-middle" />
+          <Icon.ArrowBack className="margin-right-1 text-middle" />
           <span className="line-height-body-5">
             {t('requestFeedback.returnToTaskList')}
           </span>
@@ -91,7 +91,7 @@ const DocumentsTaskList = () => {
 
         <div className="margin-top-5">
           <UswdsReactLink to={`/trb/task-list/${requestID}`}>
-            <IconArrowBack className="margin-right-1 text-middle" />
+            <Icon.ArrowBack className="margin-right-1 text-middle" />
             <span className="line-height-body-5">
               {t('requestFeedback.returnToTaskList')}
             </span>

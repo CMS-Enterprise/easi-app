@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { IconLightbulbOutline, SummaryBox } from '@trussworks/react-uswds';
+import { Icon, SummaryBox } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -33,7 +33,7 @@ export const HelpLinks = ({
         <div className="display-flex flex-align-center flex-justify">
           <h3 className="margin-y-0">{t('helpLinks.header')}</h3>
 
-          <IconLightbulbOutline size={4} className="text-primary" />
+          <Icon.LightbulbOutline size={4} className="text-primary" />
         </div>
 
         <p className="margin-top-1">{t('helpLinks.description')}</p>

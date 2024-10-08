@@ -11,7 +11,7 @@ import {
   CardGroup,
   Grid,
   GridContainer,
-  IconArrowBack
+  Icon
 } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -206,7 +206,7 @@ const EditTeam = ({
 
           <IconLink
             to={`/systems/${cedarSystemId}/team`}
-            icon={<IconArrowBack />}
+            icon={<Icon.ArrowBack />}
             className="margin-top-3 margin-bottom-6"
           >
             {t('returnToSystemProfile')}
@@ -330,7 +330,7 @@ const EditTeam = ({
 
           <IconLink
             to={`/systems/${cedarSystemId}/team`}
-            icon={<IconArrowBack />}
+            icon={<Icon.ArrowBack />}
             className="margin-top-6"
           >
             {t('returnToSystemProfile')}

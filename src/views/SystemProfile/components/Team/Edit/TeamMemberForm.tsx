@@ -11,7 +11,7 @@ import {
   Form,
   FormGroup,
   Grid,
-  IconArrowBack,
+  Icon,
   Label
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -370,7 +370,7 @@ const TeamMemberForm = ({
       </Form>
 
       <IconLink
-        icon={<IconArrowBack />}
+        icon={<Icon.ArrowBack />}
         to={
           isWorkspace
             ? `/systems/${cedarSystemId}/workspace`

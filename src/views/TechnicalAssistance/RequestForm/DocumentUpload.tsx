@@ -12,7 +12,7 @@ import {
   Form,
   FormGroup,
   Grid,
-  IconArrowBack,
+  Icon,
   Label,
   Radio,
   TextInput
@@ -297,7 +297,7 @@ const DocumentUpload = ({
           variant="unstyled"
           to={`/trb/${prevRoute}/${requestID}/documents`}
         >
-          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+          <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
           {t('documents.upload.dontUploadAndReturn')}
         </UswdsReactLink>
       </div>
