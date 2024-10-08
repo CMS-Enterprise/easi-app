@@ -417,7 +417,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
             )}
           </>
         ) : (
-          <Alert type="info">
+          <Alert type="info" headingLevel="h4">
             {t('singleSystem.systemData.noExchangesAlert')}
           </Alert>
         )}

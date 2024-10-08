@@ -102,6 +102,7 @@ function AdditionalRequestInfo({
       {system.relationType === null && (
         <Alert
           type="warning"
+          headingLevel="h4"
           heading={t('additionalRequestInfo.actionRequiredAlert.header')}
         >
           {t('additionalRequestInfo.actionRequiredAlert.text')}

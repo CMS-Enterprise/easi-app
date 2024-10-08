@@ -600,6 +600,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
           <GridContainer className="margin-bottom-3 margin-top-2 desktop:margin-bottom-3">
             <Alert
               type="info"
+              headingLevel="h4"
               heading={t('singleSystem.editPage.tempEditBanner.heading')}
             >
               <Trans i18nKey="systemProfile:singleSystem.editPage.tempEditBanner.content">

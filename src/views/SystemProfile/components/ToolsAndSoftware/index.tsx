@@ -135,7 +135,12 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
           )}
         </>
       ) : (
-        <Alert slim type="info" data-testid="no-software-products-alert">
+        <Alert
+          headingLevel="h4"
+          slim
+          type="info"
+          data-testid="no-software-products-alert"
+        >
           {t('singleSystem.toolsAndSoftware.noToolsOrSoftware')}
         </Alert>
       )}

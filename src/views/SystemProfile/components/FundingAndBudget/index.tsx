@@ -91,7 +91,12 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
         {/* If no system cost info is available, display an alert */}
         {system.budgetSystemCosts?.budgetActualCost === undefined ||
           (system.budgetSystemCosts?.budgetActualCost.length === 0 && (
-            <Alert slim type="info" data-testid="no-budget-projects-alert">
+            <Alert
+              headingLevel="h4"
+              slim
+              type="info"
+              data-testid="no-budget-projects-alert"
+            >
               {t('singleSystem.fundingAndBudget.noSystemCostInfo')}
             </Alert>
           ))}
@@ -219,7 +224,12 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
           )}
         </SectionWrapper>
       ) : (
-        <Alert slim type="info" data-testid="no-budget-projects-alert">
+        <Alert
+          headingLevel="h4"
+          slim
+          type="info"
+          data-testid="no-budget-projects-alert"
+        >
           {t('singleSystem.fundingAndBudget.noBudgetProjects')}
         </Alert>
       )}

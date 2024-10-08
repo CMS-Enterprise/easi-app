@@ -104,7 +104,7 @@ const SystemSubSystems = ({ system }: SystemProfileSubviewProps) => {
           )}
         </>
       ) : (
-        <Alert type="info" className="margin-bottom-2">
+        <Alert headingLevel="h4" type="info" className="margin-bottom-2">
           {t('singleSystem.subSystems.noSubsystems')}
         </Alert>
       )}
