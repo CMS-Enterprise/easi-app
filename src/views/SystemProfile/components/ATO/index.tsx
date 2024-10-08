@@ -12,6 +12,8 @@ import {
   ProcessListHeading,
   ProcessListItem,
   SummaryBox,
+  SummaryBoxContent,
+  SummaryBoxHeading,
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -245,48 +247,53 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
         )}
 
         <SectionWrapper className="margin-bottom-4 margin-top-4">
-          <SummaryBox heading={t('singleSystem.ato.securityAndPrivacy.header')}>
-            <p>{t('singleSystem.ato.securityAndPrivacy.atoInfo')}</p>
-            <div className="margin-top-1">
-              <Link
-                aria-label="Open 'Lean more about ATO' in a new tab"
-                className="line-height-body-5"
-                href="https://security.cms.gov/learn/authorization-operate-ato"
-                variant="external"
-                target="_blank"
-              >
-                {t('singleSystem.ato.securityAndPrivacy.learnMoreAboutATO')}
-                <span aria-hidden>&nbsp;</span>
-              </Link>
-            </div>
-            <p>{t('singleSystem.ato.securityAndPrivacy.cfactsInfo')}</p>
-            <div className="margin-top-1 margin-bottom-2">
-              <Link
-                aria-label="Open 'CFACTS' in a new tab"
-                className="line-height-body-5"
-                href="https://cfacts.cms.gov"
-                variant="external"
-                target="_blank"
-              >
-                {t('singleSystem.ato.goToCfacts')}
-                <span aria-hidden>&nbsp;</span>
-              </Link>
-            </div>
-            <Divider />
-            <div className="margin-top-2">
-              <Link
-                aria-label="Open 'Cybergeek' in a new tab"
-                className="line-height-body-5"
-                href="https://security.cms.gov"
-                variant="external"
-                target="_blank"
-              >
-                {t(
-                  'singleSystem.ato.securityAndPrivacy.learnMoreAboutSecurityAndPrivacy'
-                )}
-                <span aria-hidden>&nbsp;</span>
-              </Link>
-            </div>
+          <SummaryBox>
+            <SummaryBoxHeading headingLevel="h3">
+              {t('singleSystem.ato.securityAndPrivacy.header')}
+            </SummaryBoxHeading>
+            <SummaryBoxContent>
+              <p>{t('singleSystem.ato.securityAndPrivacy.atoInfo')}</p>
+              <div className="margin-top-1">
+                <Link
+                  aria-label="Open 'Lean more about ATO' in a new tab"
+                  className="line-height-body-5"
+                  href="https://security.cms.gov/learn/authorization-operate-ato"
+                  variant="external"
+                  target="_blank"
+                >
+                  {t('singleSystem.ato.securityAndPrivacy.learnMoreAboutATO')}
+                  <span aria-hidden>&nbsp;</span>
+                </Link>
+              </div>
+              <p>{t('singleSystem.ato.securityAndPrivacy.cfactsInfo')}</p>
+              <div className="margin-top-1 margin-bottom-2">
+                <Link
+                  aria-label="Open 'CFACTS' in a new tab"
+                  className="line-height-body-5"
+                  href="https://cfacts.cms.gov"
+                  variant="external"
+                  target="_blank"
+                >
+                  {t('singleSystem.ato.goToCfacts')}
+                  <span aria-hidden>&nbsp;</span>
+                </Link>
+              </div>
+              <Divider />
+              <div className="margin-top-2">
+                <Link
+                  aria-label="Open 'Cybergeek' in a new tab"
+                  className="line-height-body-5"
+                  href="https://security.cms.gov"
+                  variant="external"
+                  target="_blank"
+                >
+                  {t(
+                    'singleSystem.ato.securityAndPrivacy.learnMoreAboutSecurityAndPrivacy'
+                  )}
+                  <span aria-hidden>&nbsp;</span>
+                </Link>
+              </div>
+            </SummaryBoxContent>
           </SummaryBox>
         </SectionWrapper>
         {/* TODO: add security methodologies and programs (e.g. Zero Trust, DevSecOps) when/if data becomes available */}

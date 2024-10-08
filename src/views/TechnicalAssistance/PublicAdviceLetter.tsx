@@ -8,7 +8,9 @@ import {
   GridContainer,
   Icon,
   Link,
-  SummaryBox
+  SummaryBox,
+  SummaryBoxContent,
+  SummaryBoxHeading
 } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -218,17 +220,19 @@ function PublicAdviceLetter() {
       <GridContainer className="full-width">
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <SummaryBox
-              heading={t('adviceLetter.haveQuestions')}
-              className="margin-top-6"
-            >
-              <Trans
-                i18nKey="technicalAssistance:adviceLetter.haveQuestionsContact"
-                components={{
-                  a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
-                  email: CMS_TRB_EMAIL
-                }}
-              />
+            <SummaryBox className="margin-top-6">
+              <SummaryBoxHeading headingLevel="h3">
+                {t('adviceLetter.haveQuestions')}
+              </SummaryBoxHeading>
+              <SummaryBoxContent>
+                <Trans
+                  i18nKey="technicalAssistance:adviceLetter.haveQuestionsContact"
+                  components={{
+                    a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
+                    email: CMS_TRB_EMAIL
+                  }}
+                />
+              </SummaryBoxContent>
             </SummaryBox>
           </Grid>
         </Grid>

@@ -14,7 +14,8 @@ import {
   Icon,
   Link,
   SideNav,
-  SummaryBox
+  SummaryBox,
+  SummaryBoxContent
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -402,197 +403,196 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
   return (
     <MainContent>
       <div id="system-profile">
-        <SummaryBox
-          heading=""
-          className="padding-0 border-0 radius-0 bg-primary-lighter"
-        >
-          <div className="padding-top-3 padding-bottom-3 margin-top-neg-1 height-full">
-            <Grid
-              className={classnames('grid-container', {
-                'maxw-none': modal
-              })}
-            >
-              <div className="display-flex flex-align-center margin-top-neg-05">
-                {!modal && (
-                  <BreadcrumbBar
-                    variant="wrap"
-                    className="bg-transparent padding-0"
-                  >
-                    <Breadcrumb>
-                      <span>&larr; </span>
-                      <BreadcrumbLink asCustom={RouterLink} to="/systems">
-                        <span>{t('singleSystem.summary.back')}</span>
-                      </BreadcrumbLink>
-                    </Breadcrumb>
-                  </BreadcrumbBar>
-                )}
-                <div className="margin-left-auto" style={{ flexShrink: 0 }}>
-                  <BookmarkButton
-                    id={cedarSystem.id}
-                    isBookmarked={cedarSystem.isBookmarked}
-                  />
-                </div>
-              </div>
-
-              <PageHeading className="margin-top-1 margin-bottom-0 line-height-heading-2">
-                {cedarSystem.name}
-                <span className="margin-left-05 text-normal font-body-lg">
-                  ({cedarSystem.acronym})
-                </span>
-              </PageHeading>
-
-              {flags.systemWorkspace &&
-                systemProfileData.cedarSystemDetails?.isMySystem && (
-                  <div className="margin-top-2 margin-bottom-05">
-                    <UswdsReactLink
-                      className="text-no-underline"
-                      to={`/systems/${systemId}/workspace`}
+        <SummaryBox className="padding-0 border-0 radius-0 bg-primary-lighter">
+          <SummaryBoxContent>
+            <div className="padding-top-3 padding-bottom-3 margin-top-neg-1 height-full">
+              <Grid
+                className={classnames('grid-container', {
+                  'maxw-none': modal
+                })}
+              >
+                <div className="display-flex flex-align-center margin-top-neg-05">
+                  {!modal && (
+                    <BreadcrumbBar
+                      variant="wrap"
+                      className="bg-transparent padding-0"
                     >
-                      <span className="text-underline">
-                        {t('singleSystem.summary.goToWorkspace')}
-                      </span>
-                      <span aria-hidden>&nbsp;</span>
-                      <span aria-hidden>&rarr; </span>
-                    </UswdsReactLink>
-                  </div>
-                )}
-
-              <div className="text-normal font-body-md">
-                <CollapsableLink
-                  className="margin-top-3"
-                  eyeIcon
-                  startOpen
-                  labelPosition="bottom"
-                  closeLabel={t('singleSystem.summary.hide')}
-                  styleLeftBar={false}
-                  id={t('singleSystem.id')}
-                  label={t('singleSystem.summary.expand')}
-                  bold={false}
-                >
-                  <div
-                    className={classnames(
-                      'description-truncated',
-                      'margin-bottom-2',
-                      {
-                        expanded: descriptionExpanded
-                      }
-                    )}
-                  >
-                    {cedarSystem.description ? (
-                      <>
-                        <DescriptionDefinition
-                          definition={cedarSystem.description}
-                          ref={descriptionRef}
-                          className="font-body-lg line-height-body-5 text-light"
-                        />
-                        {isDescriptionExpandable && (
-                          <div>
-                            <Button
-                              unstyled
-                              type="button"
-                              className="margin-top-1"
-                              onClick={() => {
-                                setDescriptionExpanded(!descriptionExpanded);
-                              }}
-                            >
-                              {t(
-                                descriptionExpanded
-                                  ? 'singleSystem.description.less'
-                                  : 'singleSystem.description.more'
-                              )}
-                              <Icon.ExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
-                            </Button>
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div className="font-heading-lg line-height-heading-2 text-italic text-base-dark">
-                        {t('singleSystem.noDescription')}
-                      </div>
-                    )}
-                  </div>
-                  {productionLocation && productionLocation.address && (
-                    <Link
-                      aria-label={t('singleSystem.summary.label')}
-                      className="line-height-body-5"
-                      href={productionLocation.address}
-                      variant="external"
-                      target="_blank"
-                    >
-                      {t('singleSystem.summary.view')} {cedarSystem.name}
-                      <span aria-hidden>&nbsp;</span>
-                    </Link>
+                      <Breadcrumb>
+                        <span>&larr; </span>
+                        <BreadcrumbLink asCustom={RouterLink} to="/systems">
+                          <span>{t('singleSystem.summary.back')}</span>
+                        </BreadcrumbLink>
+                      </Breadcrumb>
+                    </BreadcrumbBar>
                   )}
-                  <Grid row className="margin-top-4">
-                    {/* CMS component owner */}
-                    <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                      <DescriptionDefinition
-                        className="font-body-xs line-height-body-2"
-                        definition={t('singleSystem.summary.subheader1')}
-                      />
-                      <DescriptionTerm
-                        className="font-heading-lg line-height-heading-2"
-                        term={showSystemVal(cmsComponent, {
-                          defaultClassName:
-                            'text-normal text-italic text-base-dark'
-                        })}
-                      />
-                    </Grid>
-                    {/* Business Owner */}
-                    <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                      <DescriptionDefinition
-                        className="font-body-xs line-height-body-2"
-                        definition={t('singleSystem.summary.subheader2', {
-                          count: businessOwners.length
-                        })}
-                      />
-                      <DescriptionTerm
-                        className="font-heading-lg line-height-heading-2"
-                        term={
-                          businessOwners.length
-                            ? businessOwners
-                                .map(bo => getPersonFullName(bo))
-                                .join(', ')
-                            : showSystemVal(null, {
-                                defaultClassName:
-                                  'text-normal text-italic text-base-dark'
-                              })
+                  <div className="margin-left-auto" style={{ flexShrink: 0 }}>
+                    <BookmarkButton
+                      id={cedarSystem.id}
+                      isBookmarked={cedarSystem.isBookmarked}
+                    />
+                  </div>
+                </div>
+
+                <PageHeading className="margin-top-1 margin-bottom-0 line-height-heading-2">
+                  {cedarSystem.name}
+                  <span className="margin-left-05 text-normal font-body-lg">
+                    ({cedarSystem.acronym})
+                  </span>
+                </PageHeading>
+
+                {flags.systemWorkspace &&
+                  systemProfileData.cedarSystemDetails?.isMySystem && (
+                    <div className="margin-top-2 margin-bottom-05">
+                      <UswdsReactLink
+                        className="text-no-underline"
+                        to={`/systems/${systemId}/workspace`}
+                      >
+                        <span className="text-underline">
+                          {t('singleSystem.summary.goToWorkspace')}
+                        </span>
+                        <span aria-hidden>&nbsp;</span>
+                        <span aria-hidden>&rarr; </span>
+                      </UswdsReactLink>
+                    </div>
+                  )}
+
+                <div className="text-normal font-body-md">
+                  <CollapsableLink
+                    className="margin-top-3"
+                    eyeIcon
+                    startOpen
+                    labelPosition="bottom"
+                    closeLabel={t('singleSystem.summary.hide')}
+                    styleLeftBar={false}
+                    id={t('singleSystem.id')}
+                    label={t('singleSystem.summary.expand')}
+                    bold={false}
+                  >
+                    <div
+                      className={classnames(
+                        'description-truncated',
+                        'margin-bottom-2',
+                        {
+                          expanded: descriptionExpanded
                         }
-                      />
+                      )}
+                    >
+                      {cedarSystem.description ? (
+                        <>
+                          <DescriptionDefinition
+                            definition={cedarSystem.description}
+                            ref={descriptionRef}
+                            className="font-body-lg line-height-body-5 text-light"
+                          />
+                          {isDescriptionExpandable && (
+                            <div>
+                              <Button
+                                unstyled
+                                type="button"
+                                className="margin-top-1"
+                                onClick={() => {
+                                  setDescriptionExpanded(!descriptionExpanded);
+                                }}
+                              >
+                                {t(
+                                  descriptionExpanded
+                                    ? 'singleSystem.description.less'
+                                    : 'singleSystem.description.more'
+                                )}
+                                <Icon.ExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
+                              </Button>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="font-heading-lg line-height-heading-2 text-italic text-base-dark">
+                          {t('singleSystem.noDescription')}
+                        </div>
+                      )}
+                    </div>
+                    {productionLocation && productionLocation.address && (
+                      <Link
+                        aria-label={t('singleSystem.summary.label')}
+                        className="line-height-body-5"
+                        href={productionLocation.address}
+                        variant="external"
+                        target="_blank"
+                      >
+                        {t('singleSystem.summary.view')} {cedarSystem.name}
+                        <span aria-hidden>&nbsp;</span>
+                      </Link>
+                    )}
+                    <Grid row className="margin-top-4">
+                      {/* CMS component owner */}
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          className="font-body-xs line-height-body-2"
+                          definition={t('singleSystem.summary.subheader1')}
+                        />
+                        <DescriptionTerm
+                          className="font-heading-lg line-height-heading-2"
+                          term={showSystemVal(cmsComponent, {
+                            defaultClassName:
+                              'text-normal text-italic text-base-dark'
+                          })}
+                        />
+                      </Grid>
+                      {/* Business Owner */}
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          className="font-body-xs line-height-body-2"
+                          definition={t('singleSystem.summary.subheader2', {
+                            count: businessOwners.length
+                          })}
+                        />
+                        <DescriptionTerm
+                          className="font-heading-lg line-height-heading-2"
+                          term={
+                            businessOwners.length
+                              ? businessOwners
+                                  .map(bo => getPersonFullName(bo))
+                                  .join(', ')
+                              : showSystemVal(null, {
+                                  defaultClassName:
+                                    'text-normal text-italic text-base-dark'
+                                })
+                          }
+                        />
+                      </Grid>
+                      {/* Go live date */}
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          className="font-body-xs line-height-body-2"
+                          definition={t('singleSystem.summary.subheader3')}
+                        />
+                        <DescriptionTerm
+                          className="font-heading-lg line-height-heading-2"
+                          term={showSystemVal(null, {
+                            defaultClassName:
+                              'text-normal text-italic text-base-dark'
+                          })}
+                        />
+                      </Grid>
+                      {/* Most recent major change */}
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          className="font-body-xs line-height-body-2"
+                          definition={t('singleSystem.summary.subheader4')}
+                        />
+                        <DescriptionTerm
+                          className="font-heading-lg line-height-heading-2"
+                          term={showSystemVal(null, {
+                            defaultClassName:
+                              'text-normal text-italic text-base-dark'
+                          })}
+                        />
+                      </Grid>
                     </Grid>
-                    {/* Go live date */}
-                    <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                      <DescriptionDefinition
-                        className="font-body-xs line-height-body-2"
-                        definition={t('singleSystem.summary.subheader3')}
-                      />
-                      <DescriptionTerm
-                        className="font-heading-lg line-height-heading-2"
-                        term={showSystemVal(null, {
-                          defaultClassName:
-                            'text-normal text-italic text-base-dark'
-                        })}
-                      />
-                    </Grid>
-                    {/* Most recent major change */}
-                    <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                      <DescriptionDefinition
-                        className="font-body-xs line-height-body-2"
-                        definition={t('singleSystem.summary.subheader4')}
-                      />
-                      <DescriptionTerm
-                        className="font-heading-lg line-height-heading-2"
-                        term={showSystemVal(null, {
-                          defaultClassName:
-                            'text-normal text-italic text-base-dark'
-                        })}
-                      />
-                    </Grid>
-                  </Grid>
-                </CollapsableLink>
-              </div>
-            </Grid>
-          </div>
+                  </CollapsableLink>
+                </div>
+              </Grid>
+            </div>
+          </SummaryBoxContent>
         </SummaryBox>
 
         {/* Only display temporary edit system profile banner if sub page does not have full edit functionality */}

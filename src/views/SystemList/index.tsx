@@ -12,7 +12,8 @@ import {
   CardGroup,
   Grid,
   Icon,
-  SummaryBox
+  SummaryBox,
+  SummaryBoxContent
 } from '@trussworks/react-uswds';
 
 import BookmarkCard from 'components/BookmarkCard';
@@ -70,15 +71,17 @@ export const SystemList = () => {
           {t('systemProfile:systemTable.jumpToSystems')}
         </Button>
 
-        <SummaryBox heading="" className="easi-request__container">
-          <p>{t('systemProfile:newRequest.info')}</p>
+        <SummaryBox className="easi-request__container">
+          <SummaryBoxContent>
+            <p>{t('systemProfile:newRequest.info')}</p>
 
-          <UswdsReactLink
-            to="/system/request-type"
-            className="easi-request__button-link"
-          >
-            {t('systemProfile:newRequest.button')}
-          </UswdsReactLink>
+            <UswdsReactLink
+              to="/system/request-type"
+              className="easi-request__button-link"
+            >
+              {t('systemProfile:newRequest.button')}
+            </UswdsReactLink>
+          </SummaryBoxContent>
         </SummaryBox>
       </SectionWrapper>
 
