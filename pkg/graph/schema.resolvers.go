@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -2021,22 +2020,33 @@ func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *mo
 
 // Author is the resolver for the author field.
 func (r *tRBGuidanceLetterResolver) Author(ctx context.Context, obj *models.TRBGuidanceLetter) (*models.UserInfo, error) {
-	panic(fmt.Errorf("not implemented: Author - author"))
+	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	return authorInfo, nil
 }
 
 // Recommendations is the resolver for the recommendations field.
 func (r *tRBGuidanceLetterResolver) Recommendations(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterRecommendation, error) {
-	panic(fmt.Errorf("not implemented: Recommendations - recommendations"))
+	return resolvers.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
 }
 
 // Links is the resolver for the links field.
 func (r *tRBGuidanceLetterRecommendationResolver) Links(ctx context.Context, obj *models.TRBGuidanceLetterRecommendation) ([]string, error) {
-	panic(fmt.Errorf("not implemented: Links - links"))
+	links := models.ConvertEnums[string](obj.Links)
+	return links, nil
 }
 
 // Author is the resolver for the author field.
 func (r *tRBGuidanceLetterRecommendationResolver) Author(ctx context.Context, obj *models.TRBGuidanceLetterRecommendation) (*models.UserInfo, error) {
-	panic(fmt.Errorf("not implemented: Author - author"))
+	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	return authorInfo, nil
 }
 
 // Status is the resolver for the status field.
@@ -2206,12 +2216,12 @@ func (r *tRBRequestFormResolver) SubjectAreaOptions(ctx context.Context, obj *mo
 
 // AdviceLetterStatus is the resolver for the adviceLetterStatus field.
 func (r *tRBTaskStatusesResolver) AdviceLetterStatus(ctx context.Context, obj *models.TRBTaskStatuses) (models.TRBGuidanceLetterStatus, error) {
-	panic(fmt.Errorf("not implemented: AdviceLetterStatus - adviceLetterStatus"))
+	return obj.GuidanceLetterStatus, nil
 }
 
 // AdviceLetterStatusTaskList is the resolver for the adviceLetterStatusTaskList field.
 func (r *tRBTaskStatusesResolver) AdviceLetterStatusTaskList(ctx context.Context, obj *models.TRBTaskStatuses) (models.TRBGuidanceLetterStatusTaskList, error) {
-	panic(fmt.Errorf("not implemented: AdviceLetterStatusTaskList - adviceLetterStatusTaskList"))
+	return obj.GuidanceLetterStatusTaskList, nil
 }
 
 // CommonName is the resolver for the commonName field.

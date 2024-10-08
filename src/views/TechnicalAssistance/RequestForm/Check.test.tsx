@@ -14,12 +14,12 @@ import {
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
 import {
-  TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
   TRBCollabGroupOption,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
+  TRBGuidanceLetterStatus,
   TRBRequestState,
   TRBRequestType,
   TRBSubjectAreaOption,
@@ -38,7 +38,7 @@ const mockTrbRequestData: TrbRequest = {
     feedbackStatus: TRBFeedbackStatus.READY_TO_START,
     consultPrepStatus: TRBConsultPrepStatus.READY_TO_START,
     attendConsultStatus: TRBAttendConsultStatus.READY_TO_SCHEDULE,
-    adviceLetterStatus: TRBAdviceLetterStatus.READY_TO_START
+    adviceLetterStatus: TRBGuidanceLetterStatus.READY_TO_START
   },
   feedback: [],
   type: TRBRequestType.NEED_HELP,

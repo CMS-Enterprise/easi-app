@@ -30,7 +30,7 @@ import {
 } from 'queries/types/CreateTRBAdminNoteSupportingDocuments';
 import { TRBAdminNoteFragment as TRBAdminNote } from 'queries/types/TRBAdminNoteFragment';
 import {
-  CreateTRBAdminNoteAdviceLetterInput,
+  CreateTRBAdminNoteGuidanceLetterInput,
   TRBAdminNoteCategory
 } from 'types/graphql-global-types';
 
@@ -162,7 +162,7 @@ const useAddNote = (trbRequestId: string) => {
 
     if (formData.category === TRBAdminNoteCategory.ADVICE_LETTER) {
       /** Default input values */
-      const input: CreateTRBAdminNoteAdviceLetterInput = {
+      const input: CreateTRBAdminNoteGuidanceLetterInput = {
         trbRequestId,
         noteText: formData.noteText,
         appliesToMeetingSummary: false,

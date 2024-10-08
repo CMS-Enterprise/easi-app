@@ -23,7 +23,7 @@ import {
   GetTrbPublicAdviceLetter,
   GetTrbPublicAdviceLetterVariables
 } from 'queries/types/GetTrbPublicAdviceLetter';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
+import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import NotFound from 'views/NotFound';
@@ -77,7 +77,7 @@ function PublicAdviceLetter() {
   // Alert if the letter is incomplete
   if (
     data?.trbRequest.taskStatuses.adviceLetterStatus !==
-    TRBAdviceLetterStatus.COMPLETED
+    TRBGuidanceLetterStatus.COMPLETED
   ) {
     return (
       <GridContainer className="full-width margin-y-6">

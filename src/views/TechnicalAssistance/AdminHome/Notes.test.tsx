@@ -78,17 +78,17 @@ const adminNotes: TRBAdminNoteFragment[] = [
       commonName: 'Jerry Seinfeld'
     },
     categorySpecificData: {
-      __typename: 'TRBAdminNoteAdviceLetterCategoryData',
+      __typename: 'TRBAdminNoteGuidanceLetterCategoryData',
       appliesToMeetingSummary: true,
       appliesToNextSteps: false,
       recommendations: [
         {
-          __typename: 'TRBAdviceLetterRecommendation',
+          __typename: 'TRBGuidanceLetterRecommendation',
           title: 'Recommendation One',
           deletedAt: null
         },
         {
-          __typename: 'TRBAdviceLetterRecommendation',
+          __typename: 'TRBGuidanceLetterRecommendation',
           title: 'Recommendation Two',
           deletedAt: null
         }
