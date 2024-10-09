@@ -103,7 +103,13 @@ const AddReviewerFromEua = ({
 
         history.push(grbReviewPath);
       })
-      .catch(() => showMessage(t(`messages.error.edit`), { type: 'error' }));
+      .catch(() => {
+        showMessage(t(`messages.error.edit`), { type: 'error' });
+
+        // Scroll to error
+        const err = document.querySelector('.usa-alert');
+        err?.scrollIntoView();
+      });
 
   return (
     <Form

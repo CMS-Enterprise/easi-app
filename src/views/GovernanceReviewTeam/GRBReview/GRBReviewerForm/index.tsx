@@ -72,7 +72,13 @@ const GRBReviewerForm = ({
 
         history.push(grbReviewPath);
       })
-      .catch(() => showMessage(t(`messages.error.add`), { type: 'error' }));
+      .catch(() => {
+        showMessage(t(`messages.error.add`), { type: 'error' });
+
+        // Scroll to error
+        const err = document.querySelector('.usa-alert');
+        err?.scrollIntoView();
+      });
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
