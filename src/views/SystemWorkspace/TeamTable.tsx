@@ -45,7 +45,7 @@ function TeamTable({
   const columns: Column<UsernameWithRoles>[] = useMemo(
     () => [
       {
-        Header: 'Name',
+        Header: t<string>('singleSystem.editTeam.tableHeader.name'),
         id: 'name',
         accessor: uwr => {
           const p = uwr.roles[0];
@@ -61,7 +61,7 @@ function TeamTable({
         }
       },
       {
-        Header: 'Role',
+        Header: t<string>('singleSystem.editTeam.tableHeader.roles'),
         id: 'role',
         accessor: 'roles',
         Cell: ({ row }: CellProps<UsernameWithRoles>) => {
@@ -92,7 +92,7 @@ function TeamTable({
         }
       },
       {
-        Header: 'Actions',
+        Header: t<string>('singleSystem.editTeam.tableHeader.actions'),
         id: 'actions',
         Cell: ({ row }: CellProps<UsernameWithRoles>) => {
           const user = row.original;

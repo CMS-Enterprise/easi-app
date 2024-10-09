@@ -220,6 +220,11 @@ const systemProfile = {
         'This action cannot be undone. Removing {{commonName}} will remove any roles and permissions they have for this system.',
       keepTeamMember: 'Keep team member', //
       cancel: 'Cancel',
+      tableHeader: {
+        name: 'Name',
+        roles: 'Role(s)',
+        actions: 'Actions'
+      },
       workspace: {
         title: 'Manage system team',
         helpText: 'Add or remove team members and manage their roles.',
