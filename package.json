@@ -180,12 +180,14 @@
     "marked": "0.7.0",
     "node-fetch": "2.6.1",
     "graphql": "15.8.0",
-    "@graphql-typed-document-node/core": "3.2.0"
+    "@graphql-typed-document-node/core": "3.2.0",
+    "@apollo/federation": "0.38.1"
   },
   "comments": {
     "on_resolutions": {
       "graphql": "Having graphql fixed at 15.8.0 allows apollo codegen and graphql-codegen to work together. Once the former is deprecated, you can remove this",
-      "typed_document_node": "https://github.com/dotansimha/graphql-code-generator/issues/9293"
+      "typed_document_node": "https://github.com/dotansimha/graphql-code-generator/issues/9293",
+      "@apollo/federation": "https://github.com/apollographql/federation/issues/216"
     }
   },
   "jest": {
