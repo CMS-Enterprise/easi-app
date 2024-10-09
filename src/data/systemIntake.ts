@@ -80,10 +80,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   lcidCostBaseline: '',
   requesterNameAndComponent: '',
   usesAiTech: null,
-  softwareAcquisition: {
-    usingSoftware: null,
-    acquisitionMethods: []
-  },
+  usingSoftware: null,
+  acquisitionMethods: [],
   hasUiChanges: null
 };
 
@@ -115,6 +113,8 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
   const usesAiTech = convertBoolToYesNo(intake?.usesAiTech);
   const needsEaSupport = convertBoolToYesNo(intake?.needsEaSupport);
   const hasUiChanges = convertBoolToYesNo(intake?.hasUiChanges);
+  const usingSoftware = intake?.usingSoftware;
+  const acquisitionMethods = intake?.acquisitionMethods;
 
   const contractNumber = formatContractNumbers(intake.contractNumbers);
   const cmsSystem = intake.systems.map(v => v.name).join(', ');
@@ -131,6 +131,8 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     usesAiTech,
     needsEaSupport,
     hasUiChanges,
+    usingSoftware,
+    acquisitionMethods,
     // Formatted dates
     createdAt,
     submittedAt,

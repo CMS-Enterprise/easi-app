@@ -202,7 +202,7 @@ describe('The System Intake Form', () => {
 
     cy.get('#usingSoftwareYes').check({ force: true }).should('be.checked');
 
-    Object.values(SystemIntakeSoftwareAcquisitionMethods).map(acqMethod => {
+    Object.values(SystemIntakeSoftwareAcquisitionMethods).forEach(acqMethod => {
       cy.get(`#${acqMethod}`).check({ force: true }).should('be.checked');
     });
 

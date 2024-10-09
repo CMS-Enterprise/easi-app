@@ -2,4 +2,3 @@ CREATE TYPE software_acquisition_method AS ENUM ('CONTRACTOR_FURNISHED', 'FED_FU
 
 ALTER TABLE system_intakes ADD COLUMN using_software TEXT;
 ALTER TABLE system_intakes ADD COLUMN acquisition_methods software_acquisition_method[];
-
