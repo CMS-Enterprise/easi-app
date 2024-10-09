@@ -594,7 +594,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                           <React.Fragment key={acqMethod}>
                             <Checkbox
                               name={acqMethod}
-                              id={acqMethod} // NJD - change this to {`software-acquisition-{acqMethod}`}
+                              id={`software-acquisition-${acqMethod}`}
                               label={t(
                                 `requestDetails.softwareAcquisition.acquistionStrategyLabels.${acqMethod}`
                               )}
