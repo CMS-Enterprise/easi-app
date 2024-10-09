@@ -59,10 +59,8 @@ type RequestDetailsForm = {
   needsEaSupport: boolean | null;
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
-  softwareAcquisition: {
-    usingSoftware: string | null;
-    acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
-  };
+  usingSoftware: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
 };
 
 type RequestDetailsProps = {
@@ -81,7 +79,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     needsEaSupport,
     hasUiChanges,
     usesAiTech,
-    softwareAcquisition
+    usingSoftware,
+    acquisitionMethods
   } = systemIntake;
 
   const history = useHistory();
@@ -104,10 +103,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       needsEaSupport,
       hasUiChanges,
       usesAiTech,
-      softwareAcquisition: {
-        usingSoftware: softwareAcquisition?.usingSoftware || '',
-        acquisitionMethods: softwareAcquisition?.acquisitionMethods || []
-      }
+      usingSoftware,
+      acquisitionMethods
     }
   });
 
@@ -520,7 +517,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
         <FieldGroup
           scrollElement="softwareAcquisition"
-          error={!!errors.softwareAcquisition}
+          error={!!errors.usingSoftware}
         >
           <Label htmlFor="softwareAcquisition">
             {t('requestDetails.softwareAcquisition.usingSoftwareLabel')}
@@ -537,7 +534,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           </HelpText>
           <Controller
             control={control}
-            name="softwareAcquisition.usingSoftware"
+            name="usingSoftware"
             render={({ field: { ref, value, ...field } }) => (
               <Radio
                 {...field}
@@ -550,21 +547,21 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             )}
           />
           {/* If 'Yes' is selected, display additional software props (software MultiSelect (to come later) and Acquisition Approach Checkboxes) */}
-          {watch('softwareAcquisition.usingSoftware') === 'YES' && (
+          {watch('usingSoftware') === 'YES' && (
             <div className="margin-left-4 margin-bottom-3">
               {/* TODO: We eventually want to display a ComboBox/MultiSelect of software the requester can select, before we 
                 can do this we need a list of "CMS known" software and/or vendors that is currently being evaluated by ICPG / DVSM */}
 
               <Controller
                 control={control}
-                name="softwareAcquisition.acquisitionMethods"
+                name="acquisitionMethods"
                 render={({ field, fieldState: { error } }) => {
                   return (
                     <FormGroup error={!!error}>
                       {error && (
                         <ErrorMessage
                           errors={errors}
-                          name="softwareAcquisition.acquisitionMethods"
+                          name="acquisitionMethods"
                           as={FieldErrorMsg}
                         />
                       )}
@@ -626,7 +623,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           )}
           <Controller
             control={control}
-            name="softwareAcquisition.usingSoftware"
+            name="usingSoftware"
             render={({ field: { ref, value, ...field } }) => (
               <Radio
                 {...field}
@@ -642,7 +639,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           />
           <Controller
             control={control}
-            name="softwareAcquisition.usingSoftware"
+            name="usingSoftware"
             render={({ field: { ref, value, ...field } }) => (
               <Radio
                 {...field}

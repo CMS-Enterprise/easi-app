@@ -101,12 +101,8 @@ export default gql`
 
       hasUiChanges
       usesAiTech
-
-      softwareAcquisition {
-        id
-        usingSoftware
-        acquisitionMethods
-      }
+      usingSoftware
+      acquisitionMethods
 
       decidedAt
       submittedAt

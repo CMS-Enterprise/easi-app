@@ -114,23 +114,13 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
 	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
 	intake.UsesAITech = null.BoolFromPtr(input.UsesAiTech)
+	intake.UsingSoftware = null.StringFromPtr(input.UsingSoftware)
 
-	acqMethods := lo.Map(input.SoftwareAcquisition.AcquisitionMethods, func(acqMethod models.SystemIntakeSoftwareAcquisitionMethods, idx int) string {
+	// Create string array from SoftwareAcqisitionMethods enum array
+	acqMethods := lo.Map(input.AcquisitionMethods, func(acqMethod models.SystemIntakeSoftwareAcquisitionMethods, idx int) string {
 		return acqMethod.String()
 	})
-
-	softwareAcq := models.NewSystemIntakeSoftwareAcquisition(appcontext.Principal(ctx).ID())
-	softwareAcq.SystemIntakeID = intake.ID
-	softwareAcq.UsingSoftware = null.StringFromPtr(input.SoftwareAcquisition.UsingSoftware)
-	softwareAcq.AcquisitionMethods = acqMethods
-
-	// TODO: NJD fill out BaseStruct? Also handle create vs. update (created_at vs modfied_at)
-
-	_, err = store.UpdateSystemIntakeSoftwareAcquisition(ctx, input.ID, softwareAcq)
-
-	if err != nil {
-		return nil, err
-	}
+	intake.AcquisitionMethods = acqMethods
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()

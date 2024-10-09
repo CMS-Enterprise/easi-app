@@ -9,12 +9,6 @@ import { UpdateSystemIntakeRequestDetailsInput, SystemIntakeSoftwareAcquisitionM
 // GraphQL mutation operation: UpdateSystemIntakeRequestDetails
 // ====================================================
 
-export interface UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetails_systemIntake_softwareAcquisition {
-  __typename: "SystemIntakeSoftwareAcquisition";
-  usingSoftware: string | null;
-  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
-}
-
 export interface UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetails_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
@@ -24,7 +18,8 @@ export interface UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetai
   needsEaSupport: boolean | null;
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
-  softwareAcquisition: UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetails_systemIntake_softwareAcquisition | null;
+  usingSoftware: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
 }
 
 export interface UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetails {

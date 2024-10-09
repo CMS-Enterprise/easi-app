@@ -118,9 +118,9 @@ export const SystemIntakeReview = ({
     const translatedAcqStrategies: string[] = [];
 
     // Translate raw enumerations to i18n representation from intake
-    if (systemIntake.softwareAcquisition?.acquisitionMethods) {
+    if (systemIntake.acquisitionMethods) {
       Object.values(
-        systemIntake.softwareAcquisition?.acquisitionMethods
+        systemIntake.acquisitionMethods
       ).forEach(acqStrategy => {
         translatedAcqStrategies.push(
           i18next.t(
@@ -138,13 +138,13 @@ export const SystemIntakeReview = ({
             <DescriptionDefinition
               definition={
                 yesNoMap[
-                  String(systemIntake.softwareAcquisition?.usingSoftware)
+                  String(systemIntake.usingSoftware)
                 ]
               }
             />
           </div>
         </ReviewRow>
-        {systemIntake.softwareAcquisition?.usingSoftware === 'YES' && (
+        {systemIntake.usingSoftware === 'YES' && (
           <ReviewRow>
             <div>
               <DescriptionTerm term={t('review.softwareAcquisitionMethods')} />

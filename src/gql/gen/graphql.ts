@@ -1743,6 +1743,7 @@ export type SubmitIntakeInput = {
 /** Represents an IT governance request for a system */
 export type SystemIntake = {
   __typename: 'SystemIntake';
+  acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>;
   actions: Array<SystemIntakeAction>;
   adminLead?: Maybe<Scalars['String']['output']>;
   annualSpending?: Maybe<SystemIntakeAnnualSpending>;
@@ -1813,7 +1814,6 @@ export type SystemIntake = {
   requester: SystemIntakeRequester;
   requesterComponent?: Maybe<Scalars['String']['output']>;
   requesterName?: Maybe<Scalars['String']['output']>;
-  softwareAcquisition?: Maybe<SystemIntakeSoftwareAcquisition>;
   state: SystemIntakeState;
   statusAdmin: SystemIntakeStatusAdmin;
   statusRequester: SystemIntakeStatusRequester;
@@ -1826,6 +1826,7 @@ export type SystemIntake = {
   trbFollowUpRecommendation?: Maybe<SystemIntakeTRBFollowUp>;
   updatedAt?: Maybe<Scalars['Time']['output']>;
   usesAiTech?: Maybe<Scalars['Boolean']['output']>;
+  usingSoftware?: Maybe<Scalars['String']['output']>;
 };
 
 /** An action taken on a system intake, often resulting in a change in status. */
@@ -2362,20 +2363,6 @@ export type SystemIntakeRetireLCIDInput = {
   reason?: InputMaybe<Scalars['HTML']['input']>;
   retiresAt: Scalars['Time']['input'];
   systemIntakeID: Scalars['UUID']['input'];
-};
-
-/** Represents information on software acquisition information assocatied with a system intake */
-export type SystemIntakeSoftwareAcquisition = {
-  __typename: 'SystemIntakeSoftwareAcquisition';
-  acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>;
-  id: Scalars['UUID']['output'];
-  usingSoftware?: Maybe<Scalars['String']['output']>;
-};
-
-/** The input required to specify the software acquisition information associated with a system intake */
-export type SystemIntakeSoftwareAcquisitionInput = {
-  acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>;
-  usingSoftware?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake */
@@ -2967,6 +2954,7 @@ export type UpdateSystemIntakePayload = {
 
 /** Input to update some fields on a system request */
 export type UpdateSystemIntakeRequestDetailsInput = {
+  acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>;
   businessNeed?: InputMaybe<Scalars['String']['input']>;
   businessSolution?: InputMaybe<Scalars['String']['input']>;
   cedarSystemId?: InputMaybe<Scalars['String']['input']>;
@@ -2975,8 +2963,8 @@ export type UpdateSystemIntakeRequestDetailsInput = {
   id: Scalars['UUID']['input'];
   needsEaSupport?: InputMaybe<Scalars['Boolean']['input']>;
   requestName?: InputMaybe<Scalars['String']['input']>;
-  softwareAcquisition?: InputMaybe<SystemIntakeSoftwareAcquisitionInput>;
   usesAiTech?: InputMaybe<Scalars['Boolean']['input']>;
+  usingSoftware?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Input data used to update GRT and GRB dates for a system request */

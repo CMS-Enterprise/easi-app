@@ -114,13 +114,6 @@ export interface GetSystemIntake_systemIntake_requester {
   name: string;
 }
 
-export interface GetSystemIntake_systemIntake_softwareAcquisition {
-  __typename: "SystemIntakeSoftwareAcquisition";
-  id: UUID;
-  usingSoftware: string | null;
-  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
-}
-
 export interface GetSystemIntake_systemIntake_documents_documentType {
   __typename: "SystemIntakeDocumentType";
   commonType: SystemIntakeDocumentCommonType;
@@ -243,7 +236,8 @@ export interface GetSystemIntake_systemIntake {
   euaUserId: string | null;
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
-  softwareAcquisition: GetSystemIntake_systemIntake_softwareAcquisition | null;
+  usingSoftware: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
   documents: GetSystemIntake_systemIntake_documents[];
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;

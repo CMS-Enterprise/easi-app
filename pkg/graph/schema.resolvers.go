@@ -1827,9 +1827,10 @@ func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.S
 	return obj.EASupportRequest.Ptr(), nil
 }
 
-// SoftwareAcquisition is the resolver for the softwareAcquisition field.
-func (r *systemIntakeResolver) SoftwareAcquisition(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeSoftwareAcquisition, error) {
-	return dataloaders.GetSystemIntakeSoftwareAcquisitionBySystemIntakeID(ctx, obj.ID)
+// AcquisitionMethods is the resolver for the acquisitionMethods field.
+func (r *systemIntakeResolver) AcquisitionMethods(ctx context.Context, obj *models.SystemIntake) ([]models.SystemIntakeSoftwareAcquisitionMethods, error) {
+	acqMethods := models.ConvertEnums[models.SystemIntakeSoftwareAcquisitionMethods](obj.AcquisitionMethods)
+	return acqMethods, nil
 }
 
 // Notes is the resolver for the notes field.
@@ -2006,12 +2007,6 @@ func (r *systemIntakeNoteResolver) Author(ctx context.Context, obj *models.Syste
 // Editor is the resolver for the editor field.
 func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error) {
 	return resolvers.SystemIntakeNoteEditor(ctx, obj)
-}
-
-// AcquisitionMethods is the resolver for the acquisitionMethods field.
-func (r *systemIntakeSoftwareAcquisitionResolver) AcquisitionMethods(ctx context.Context, obj *models.SystemIntakeSoftwareAcquisition) ([]models.SystemIntakeSoftwareAcquisitionMethods, error) {
-	acqMethods := models.ConvertEnums[models.SystemIntakeSoftwareAcquisitionMethods](obj.AcquisitionMethods)
-	return acqMethods, nil
 }
 
 // Author is the resolver for the author field.
@@ -2292,11 +2287,6 @@ func (r *Resolver) SystemIntakeNote() generated.SystemIntakeNoteResolver {
 	return &systemIntakeNoteResolver{r}
 }
 
-// SystemIntakeSoftwareAcquisition returns generated.SystemIntakeSoftwareAcquisitionResolver implementation.
-func (r *Resolver) SystemIntakeSoftwareAcquisition() generated.SystemIntakeSoftwareAcquisitionResolver {
-	return &systemIntakeSoftwareAcquisitionResolver{r}
-}
-
 // TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
 func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
 
@@ -2349,7 +2339,6 @@ type systemIntakeResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
-type systemIntakeSoftwareAcquisitionResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
 type tRBAdviceLetterResolver struct{ *Resolver }
 type tRBAdviceLetterRecommendationResolver struct{ *Resolver }

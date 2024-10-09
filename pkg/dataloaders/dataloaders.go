@@ -81,7 +81,6 @@ type Dataloaders struct {
 	SystemIntakeNotes                *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeNote]
 	SystemIntakeRelatedSystemIntakes *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
 	SystemIntakeRelatedTRBRequests   *dataloadgen.Loader[uuid.UUID, []*models.TRBRequest]
-	SystemIntakeSoftwareAcquisition  *dataloadgen.Loader[uuid.UUID, *models.SystemIntakeSoftwareAcquisition]
 	SystemIntakeSystems              *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
 	TRBFundingSources                *dataloadgen.Loader[uuid.UUID, []*models.TRBFundingSource]
 	TRBRequestAdminNotes             *dataloadgen.Loader[uuid.UUID, []*models.TRBAdminNote]
@@ -124,7 +123,6 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		SystemIntakeNotes:                dataloadgen.NewLoader(dr.batchSystemIntakeNotesBySystemIntakeIDs),
 		SystemIntakeRelatedSystemIntakes: dataloadgen.NewLoader(dr.batchRelatedSystemIntakesBySystemIntakeIDs),
 		SystemIntakeRelatedTRBRequests:   dataloadgen.NewLoader(dr.batchRelatedTRBRequestsBySystemIntakeIDs),
-		SystemIntakeSoftwareAcquisition:  dataloadgen.NewLoader(dr.batchSystemIntakeSoftwareAcquisitionBySystemIntakeIDs),
 		SystemIntakeSystems:              dataloadgen.NewLoader(dr.batchSystemIntakeSystemsBySystemIntakeIDs),
 		TRBFundingSources:                dataloadgen.NewLoader(dr.batchTRBFundingSourcesByTRBRequestIDs),
 		TRBRequestAdminNotes:             dataloadgen.NewLoader(dr.batchTRBRequestAdminNotesByTRBRequestIDs),

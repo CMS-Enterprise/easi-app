@@ -723,12 +723,6 @@ type SystemIntakeRetireLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
-// The input required to specify the software acquisition information associated with a system intake
-type SystemIntakeSoftwareAcquisitionInput struct {
-	UsingSoftware      *string                                  `json:"usingSoftware,omitempty"`
-	AcquisitionMethods []SystemIntakeSoftwareAcquisitionMethods `json:"acquisitionMethods"`
-}
-
 // Input for updating an intake's LCID in IT Gov v2
 type SystemIntakeUpdateLCIDInput struct {
 	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
@@ -857,16 +851,17 @@ type UpdateSystemIntakePayload struct {
 
 // Input to update some fields on a system request
 type UpdateSystemIntakeRequestDetailsInput struct {
-	ID                  uuid.UUID                             `json:"id"`
-	RequestName         *string                               `json:"requestName,omitempty"`
-	BusinessNeed        *string                               `json:"businessNeed,omitempty"`
-	BusinessSolution    *string                               `json:"businessSolution,omitempty"`
-	CurrentStage        *string                               `json:"currentStage,omitempty"`
-	NeedsEaSupport      *bool                                 `json:"needsEaSupport,omitempty"`
-	SoftwareAcquisition *SystemIntakeSoftwareAcquisitionInput `json:"softwareAcquisition,omitempty"`
-	HasUIChanges        *bool                                 `json:"hasUiChanges,omitempty"`
-	UsesAiTech          *bool                                 `json:"usesAiTech,omitempty"`
-	CedarSystemID       *string                               `json:"cedarSystemId,omitempty"`
+	ID                 uuid.UUID                                `json:"id"`
+	RequestName        *string                                  `json:"requestName,omitempty"`
+	BusinessNeed       *string                                  `json:"businessNeed,omitempty"`
+	BusinessSolution   *string                                  `json:"businessSolution,omitempty"`
+	CurrentStage       *string                                  `json:"currentStage,omitempty"`
+	NeedsEaSupport     *bool                                    `json:"needsEaSupport,omitempty"`
+	HasUIChanges       *bool                                    `json:"hasUiChanges,omitempty"`
+	UsesAiTech         *bool                                    `json:"usesAiTech,omitempty"`
+	UsingSoftware      *string                                  `json:"usingSoftware,omitempty"`
+	AcquisitionMethods []SystemIntakeSoftwareAcquisitionMethods `json:"acquisitionMethods"`
+	CedarSystemID      *string                                  `json:"cedarSystemId,omitempty"`
 }
 
 // Input data used to update GRT and GRB dates for a system request

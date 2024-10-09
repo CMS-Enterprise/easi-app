@@ -88,13 +88,6 @@ export interface GetSystemIntakesTable_systemIntakes_actions {
   createdAt: Time;
 }
 
-export interface GetSystemIntakesTable_systemIntakes_softwareAcquisition {
-  __typename: "SystemIntakeSoftwareAcquisition";
-  id: UUID;
-  usingSoftware: string | null;
-  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
-}
-
 export interface GetSystemIntakesTable_systemIntakes {
   __typename: "SystemIntake";
   id: UUID;
@@ -137,7 +130,8 @@ export interface GetSystemIntakesTable_systemIntakes {
   actions: GetSystemIntakesTable_systemIntakes_actions[];
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
-  softwareAcquisition: GetSystemIntakesTable_systemIntakes_softwareAcquisition | null;
+  usingSoftware: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
   decidedAt: Time | null;
   submittedAt: Time | null;
   updatedAt: Time | null;

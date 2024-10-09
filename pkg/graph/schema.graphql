@@ -721,7 +721,8 @@ type SystemIntake {
   lcidCostBaseline: String
   lcidRetiresAt: Time
   needsEaSupport: Boolean
-  softwareAcquisition: SystemIntakeSoftwareAcquisition
+  usingSoftware: String
+  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
@@ -830,6 +831,17 @@ enum SystemIntakeStep {
 }
 
 """
+SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
+"""
+enum SystemIntakeSoftwareAcquisitionMethods {
+  CONTRACTOR_FURNISHED
+  FED_FURNISHED
+  ELA_OR_INTERNAL
+  NOT_YET_DETERMINED
+  OTHER
+}
+
+"""
 The statuses of the different steps in the IT Gov v2 workflow
 """
 type ITGovTaskStatuses {
@@ -930,9 +942,10 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessSolution: String
   currentStage: String
   needsEaSupport: Boolean
-  softwareAcquisition: SystemIntakeSoftwareAcquisitionInput
   hasUiChanges: Boolean
   usesAiTech: Boolean
+  usingSoftware: String
+  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
   cedarSystemId: String
 }
 
@@ -959,34 +972,6 @@ The input required to specify the funding source(s) for a system intake
 input SystemIntakeFundingSourcesInput {
   existingFunding: Boolean
   fundingSources: [SystemIntakeFundingSourceInput!]!
-}
-
-"""
-Represents information on software acquisition information assocatied with a system intake
-"""
-type SystemIntakeSoftwareAcquisition {
-  id: UUID!
-  usingSoftware: String
-  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]! 
-}
-
-"""
-The input required to specify the software acquisition information associated with a system intake
-"""
-input SystemIntakeSoftwareAcquisitionInput {
-  usingSoftware: String
-  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
-}
-
-"""
-SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
-"""
-enum SystemIntakeSoftwareAcquisitionMethods {
-  CONTRACTOR_FURNISHED
-  FED_FURNISHED
-  ELA_OR_INTERNAL
-  NOT_YET_DETERMINED
-  OTHER
 }
 
 """

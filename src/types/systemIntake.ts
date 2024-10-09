@@ -48,10 +48,8 @@ export type SystemIntakeForm = {
   needsEaSupport: boolean | null;
   usesAiTech: boolean | null;
   hasUiChanges: boolean | null;
-  softwareAcquisition: {
-    usingSoftware: string | null;
-    acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[] | null;
-  };
+  usingSoftware: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[] | null;
   grtReviewEmailBody: string;
   decidedAt: string | null;
   businessCaseId?: string | null;

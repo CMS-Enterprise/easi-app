@@ -1019,14 +1019,6 @@ export interface SystemIntakeRetireLCIDInput {
 }
 
 /**
- * The input required to specify the software acquisition information associated with a system intake
- */
-export interface SystemIntakeSoftwareAcquisitionInput {
-  usingSoftware?: string | null;
-  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
-}
-
-/**
  * Input for updating an intake's LCID in IT Gov v2
  */
 export interface SystemIntakeUpdateLCIDInput {
@@ -1115,9 +1107,10 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   businessSolution?: string | null;
   currentStage?: string | null;
   needsEaSupport?: boolean | null;
-  softwareAcquisition?: SystemIntakeSoftwareAcquisitionInput | null;
   hasUiChanges?: boolean | null;
   usesAiTech?: boolean | null;
+  usingSoftware?: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
   cedarSystemId?: string | null;
 }
 

@@ -74,8 +74,8 @@ func fillOutInitialIntake(
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
 
-	usingSoftware := "Yes"
 	acqMethods := []models.SystemIntakeSoftwareAcquisitionMethods{"CONTRACTOR_FURNISHED", "FED_FURNISHED"}
+
 	intake = updateSystemIntakeRequestDetails(ctx, store, intake,
 		requestName,
 		"An intense business need",
@@ -85,10 +85,8 @@ func fillOutInitialIntake(
 		"Some CEDAR System ID",
 		"the current stage",
 		true,
-		&models.SystemIntakeSoftwareAcquisitionInput{
-			UsingSoftware:      &usingSoftware,
-			AcquisitionMethods: acqMethods,
-		},
+		"Yes",
+		acqMethods,
 	)
 	updateSystemIntakeContact(ctx, store,
 		"USR1",
@@ -213,19 +211,20 @@ func updateSystemIntakeRequestDetails(
 	currentStage string,
 	cedarSystemID string,
 	hasUIChanges bool,
-	softwareAcquisition *models.SystemIntakeSoftwareAcquisitionInput,
+	usingSoftware string,
+	acquisitionMethods []models.SystemIntakeSoftwareAcquisitionMethods,
 ) *models.SystemIntake {
 	input := models.UpdateSystemIntakeRequestDetailsInput{
-		ID:                  intake.ID,
-		RequestName:         &requestName,
-		BusinessNeed:        &businessNeed,
-		BusinessSolution:    &businessSolution,
-		NeedsEaSupport:      &needsEaSupport,
-		UsesAiTech:          &usesAiTech,
-		CurrentStage:        &currentStage,
-		CedarSystemID:       &cedarSystemID,
-		HasUIChanges:        &hasUIChanges,
-		SoftwareAcquisition: softwareAcquisition,
+		ID:               intake.ID,
+		RequestName:      &requestName,
+		BusinessNeed:     &businessNeed,
+		BusinessSolution: &businessSolution,
+		NeedsEaSupport:   &needsEaSupport,
+		UsesAiTech:       &usesAiTech,
+		CurrentStage:     &currentStage,
+		CedarSystemID:    &cedarSystemID,
+		HasUIChanges:     &hasUIChanges,
+		UsingSoftware:    &usingSoftware,
 	}
 	fetchCedarSystemMock := func(context.Context, string) (*models.CedarSystem, error) {
 		return &models.CedarSystem{}, nil
