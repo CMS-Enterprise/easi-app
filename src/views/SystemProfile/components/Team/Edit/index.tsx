@@ -391,7 +391,12 @@ const EditTeam = ({
 
           <Button
             type="button"
-            onClick={() => history.push(`${pathname}/team-member`)}
+            onClick={() =>
+              history.push({
+                pathname: `${pathname}/team-member`,
+                search: isWorkspace ? 'workspace' : undefined
+              })
+            }
             className="margin-bottom-05"
           >
             {t('singleSystem.editTeam.addTeamMember')}
