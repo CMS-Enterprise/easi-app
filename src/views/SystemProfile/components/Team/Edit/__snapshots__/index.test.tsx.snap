@@ -2,9 +2,11 @@
 
 exports[`Workspace team page > renders 1`] = `
 <DocumentFragment>
-  <div
-    class="grid-container margin-bottom-10"
-    data-testid="gridContainer"
+  <main
+    class="easi-main-content grid-container margin-bottom-10"
+    id="main-content"
+    role="main"
+    tabindex="-1"
   >
     <h1
       class="margin-bottom-05"
@@ -743,7 +745,7 @@ exports[`Workspace team page > renders 1`] = `
       >
         <nav
           aria-label="Pagination"
-          class="usa-pagination padding-bottom-1 desktop:grid-col-fill flex-justify-start margin-left-neg-1 desktop:padding-bottom-0 desktop:margin-bottom-0"
+          class="usa-pagination padding-bottom-1 desktop:grid-col-fill flex-justify-start desktop:padding-bottom-0 desktop:margin-bottom-0"
           data-testid="table-pagination"
         >
           <ul
@@ -834,6 +836,6 @@ exports[`Workspace team page > renders 1`] = `
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </DocumentFragment>
 `;

@@ -281,7 +281,7 @@ function TeamTable({
               pageSize={state.pageSize}
               setPageSize={setPageSize}
               page={[]}
-              className="desktop:grid-col-fill flex-justify-start margin-left-neg-1 desktop:padding-bottom-0 desktop:margin-bottom-0"
+              className="desktop:grid-col-fill flex-justify-start desktop:padding-bottom-0 desktop:margin-bottom-0"
             />
             <TablePageSize
               className="desktop:grid-col-auto"

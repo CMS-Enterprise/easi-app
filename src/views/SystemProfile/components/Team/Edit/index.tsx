@@ -11,11 +11,11 @@ import {
   ButtonGroup,
   CardGroup,
   Grid,
-  GridContainer,
   IconArrowBack
 } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
 import Breadcrumbs from 'components/shared/Breadcrumbs';
 import IconLink from 'components/shared/IconLink';
@@ -216,7 +216,7 @@ const EditTeam = ({
   }, [team]);
 
   return (
-    <GridContainer className="margin-bottom-10">
+    <MainContent className="grid-container margin-bottom-10">
       {flags.systemWorkspaceTeam && !isWorkspace && (
         <BreadcrumbBar variant="wrap" className="padding-y-0 margin-y-2">
           <Breadcrumb>
@@ -499,7 +499,7 @@ const EditTeam = ({
           </Modal>
         </>
       )}
-    </GridContainer>
+    </MainContent>
   );
 };
 
