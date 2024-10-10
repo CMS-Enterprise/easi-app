@@ -9,7 +9,7 @@ on:
         description: Environment to build frontend assets for
 
 env:
-  EASI_APP_NODE_VERSION: "18.20.4"
+  EASI_APP_NODE_VERSION: "20.18.0"
   GIT_HASH: ${{ github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
