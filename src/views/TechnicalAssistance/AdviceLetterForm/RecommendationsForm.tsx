@@ -164,7 +164,7 @@ const RecommendationsForm = ({
           },
           {
             text: t(
-              `guidanceLetterForm.${watch('id') ? 'edit' : 'add'}Recommendation`
+              `guidanceLetterForm.${watch('id') ? 'edit' : 'add'}Guidance`
             )
           }
         ]}
@@ -176,14 +176,14 @@ const RecommendationsForm = ({
           <Alert type="error" className="margin-bottom-5" slim>
             {t('guidanceLetterForm.error', {
               action: 'saving',
-              type: 'recommendation'
+              type: 'guidance'
             })}
           </Alert>
         )
       }
 
       <h1 className="margin-bottom-0">
-        {t(`guidanceLetterForm.${watch('id') ? 'edit' : 'add'}Recommendation`)}
+        {t(`guidanceLetterForm.${watch('id') ? 'edit' : 'add'}Guidance`)}
       </h1>
       {/* Required fields text */}
       <HelpText className="margin-top-1 margin-bottom-2 text-base">

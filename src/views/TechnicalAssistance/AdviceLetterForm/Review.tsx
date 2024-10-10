@@ -152,7 +152,7 @@ const Review = ({
                 type: 'error',
                 message: t('guidanceLetterForm.error', {
                   action: 'removing',
-                  type: 'recommendation'
+                  type: 'guidance'
                 })
               })
             )

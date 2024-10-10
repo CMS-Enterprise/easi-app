@@ -147,7 +147,9 @@ export default function RecommendationsList({
                         type="button"
                         onClick={() => sort(id, index - 1)}
                         className="height-3"
-                        aria-label="Increase recommendation sort order"
+                        aria-label={t(
+                          'guidanceLetterForm.increaseOrderAriaLabel'
+                        )}
                         unstyled
                       >
                         <IconArrowDropUp size={3} className="text-primary" />
@@ -157,7 +159,9 @@ export default function RecommendationsList({
                         type="button"
                         onClick={() => sort(id, index + 1)}
                         className="height-3"
-                        aria-label="Decrease recommendation sort order"
+                        aria-label={t(
+                          'guidanceLetterForm.decreaseOrderAriaLabel'
+                        )}
                         unstyled
                       >
                         <IconArrowDropDown size={3} className="text-primary" />

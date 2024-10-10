@@ -137,10 +137,7 @@ const Recommendations = ({
                     .then(() => {
                       setFormAlert({
                         type: 'success',
-                        message: t('guidanceLetterForm.removeSuccess', {
-                          action: 'removing',
-                          type: 'recommendation'
-                        })
+                        message: t('guidanceLetterForm.removeSuccess')
                       });
                     })
                     .catch(() =>
@@ -148,7 +145,7 @@ const Recommendations = ({
                         type: 'error',
                         message: t('guidanceLetterForm.error', {
                           action: 'removing',
-                          type: 'recommendation'
+                          type: 'guidance'
                         })
                       })
                     )

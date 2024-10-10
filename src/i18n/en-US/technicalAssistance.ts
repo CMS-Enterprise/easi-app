@@ -217,6 +217,8 @@ const technicalAssistance = {
       'Nothing has been added yet. Use the button above to add guidance, or click next if you have no guidance to add.',
     reorderGuidance:
       'If you have two or more items per category, you can use arrows on the left side of each to reorder them within the category. Edit the guidance to change the category.',
+    increaseOrderAriaLabel: 'Increase guidance sort order',
+    decreaseOrderAriaLabel: 'Decrease guidance sort order',
     reorderError:
       'There was an issue saving your guidance. Please try again, and if the problem persists, try again later.',
     continueWithoutAdding: 'Continue without adding guidance',
