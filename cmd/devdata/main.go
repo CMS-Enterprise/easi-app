@@ -131,7 +131,7 @@ func main() {
 			store,
 			ID,
 			[]string{"111111", "111112"},
-			[]string{"1AB1A00-1234-5678-ABC1-1A001B00CC6G"},
+			[]string{"11AB1A00-1234-5678-ABC1-1A001B00CC6G"},
 		)
 	}
 
