@@ -209,21 +209,21 @@ const useTrbAdminActionButtons = ({
         }
       case TRBRequestStatus.CONSULT_COMPLETE:
         switch (activePage) {
-          case 'advice':
+          case 'guidance':
             return [buttons.startAdviceLetter, buttons.orCloseRequest];
           default:
             return [buttons.viewAdviceLetter, buttons.orCloseRequest];
         }
       case TRBRequestStatus.DRAFT_ADVICE_LETTER:
         switch (activePage) {
-          case 'advice':
+          case 'guidance':
             return [buttons.continueAdviceLetter, buttons.orCloseRequest];
           default:
             return [buttons.viewAdviceLetter, buttons.orCloseRequest];
         }
       case TRBRequestStatus.ADVICE_LETTER_IN_REVIEW:
         switch (activePage) {
-          case 'advice':
+          case 'guidance':
             return [
               buttons.addNote,
               { ...buttons.finalizeAdviceLetter, outline: true },

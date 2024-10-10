@@ -66,7 +66,7 @@ export type TrbAdminPath =
   | 'initial-request-form'
   | 'documents'
   | 'feedback'
-  | 'advice'
+  | 'guidance'
   | 'additional-information'
   | 'notes';
 

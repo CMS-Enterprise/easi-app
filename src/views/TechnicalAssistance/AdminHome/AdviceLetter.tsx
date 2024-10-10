@@ -46,7 +46,7 @@ const AdviceLetter = ({
 
   return (
     <TrbAdminWrapper
-      activePage="advice"
+      activePage="guidance"
       trbRequestId={id}
       title={t('adminHome.guidanceLetter')}
       description={t('guidanceLetter.introText')}
@@ -72,7 +72,7 @@ const AdviceLetter = ({
         adviceLetter
           ? {
               label: t('guidanceLetter.downloadAsPdf'),
-              filename: `advice letter ${id}.pdf`,
+              filename: `guidance letter ${id}.pdf`,
               title: t('guidanceLetterForm.heading')
             }
           : undefined

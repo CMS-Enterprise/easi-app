@@ -31,8 +31,8 @@ const trbAdminPages: TrbAdminPage[] = [
     component: Feedback
   },
   {
-    path: 'advice',
-    text: 'technicalAssistance:adminHome.adviceLetter',
+    path: 'guidance',
+    text: 'technicalAssistance:adminHome.guidanceLetter',
     component: AdviceLetter,
     groupEnd: true
   },
