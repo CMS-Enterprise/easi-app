@@ -9,7 +9,7 @@ on:
         default: false
 
 env:
-  EASI_APP_NODE_VERSION: "20.18.0"
+  EASI_APP_NODE_VERSION: "18.20.4"
   GIT_HASH: ${{ github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   DOCKER_BUILDKIT: 1

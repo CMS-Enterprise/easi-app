@@ -9,7 +9,7 @@ on:
         default: true # Per EASI-4374, we want to force cedarproxy deployments in the event pipeline deployment is skipped/cancelled
 
 env:
-  EASI_APP_NODE_VERSION: "20.18.0"
+  EASI_APP_NODE_VERSION: "18.20.4"
   GIT_HASH: ${{ github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   GIT_REF_NAME: ${{ github.ref }}
