@@ -12,7 +12,7 @@ FROM modules AS build
 COPY cmd ./cmd
 COPY pkg ./pkg
 
-FROM cypress/base:16.18.1
+FROM cypress/base:18.20.4
 
 # mc - minio client, used for tagging uploaded files
 RUN apt-get update && apt-get install --no-install-recommends -y wget && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
