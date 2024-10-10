@@ -26,7 +26,7 @@ import {
 } from 'validations/trbRequestSchema';
 import NotFound from 'views/NotFound';
 
-import Breadcrumbs from '../Breadcrumbs';
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 import { StepSubmit } from '../RequestForm';
 
 import Done from './Done';

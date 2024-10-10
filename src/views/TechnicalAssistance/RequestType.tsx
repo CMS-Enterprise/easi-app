@@ -27,7 +27,7 @@ import linkCedarSystemIdQueryString, {
   useLinkCedarSystemIdQueryParam
 } from 'utils/linkCedarSystemIdQueryString';
 
-import Breadcrumbs from './Breadcrumbs';
+import Breadcrumbs from '../../components/shared/Breadcrumbs';
 
 /**
  * This component sets a `TRBRequestType` for new or existing Requests.
