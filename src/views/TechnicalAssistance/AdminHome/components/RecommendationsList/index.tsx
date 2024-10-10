@@ -102,7 +102,7 @@ export default function RecommendationsList({
           }
         >
           <p>
-            {t('adviceLetterForm.modal.removingTitle', {
+            {t('guidanceLetterForm.modal.removingTitle', {
               title: recommendationToRemove?.title
             })}
           </p>
@@ -111,7 +111,7 @@ export default function RecommendationsList({
 
       {recommendations.length > 0 && editable && (
         <Alert type="info" slim className="margin-bottom-4">
-          {t('guidanceLetterForm.reorderRecommendations')}
+          {t('guidanceLetterForm.reorderGuidance')}
         </Alert>
       )}
 
@@ -204,7 +204,7 @@ export default function RecommendationsList({
                         onClick={() => edit(recommendation)}
                         unstyled
                       >
-                        {t('guidanceLetterForm.editRecommendation')}
+                        {t('guidanceLetterForm.editGuidance')}
                       </Button>
                     )}
                     {remove && (
@@ -216,7 +216,7 @@ export default function RecommendationsList({
                         }
                         unstyled
                       >
-                        {t('guidanceLetterForm.removeRecommendation')}
+                        {t('guidanceLetterForm.removeGuidance')}
                       </Button>
                     )}
                   </ButtonGroup>

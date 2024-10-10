@@ -100,8 +100,8 @@ const Recommendations = ({
           >
             {t(
               hasRecommendations
-                ? 'adviceLetterForm.addAnotherRecommendation'
-                : 'adviceLetterForm.addRecommendation'
+                ? 'guidanceLetterForm.addAdditionalGuidance'
+                : 'guidanceLetterForm.addGuidance'
             )}
           </Button>
 
@@ -111,7 +111,7 @@ const Recommendations = ({
             /* No recommendations message */
             !hasRecommendations ? (
               <Alert type="info" slim>
-                {t('guidanceLetterForm.noRecommendations')}
+                {t('guidanceLetterForm.noGuidance')}
               </Alert>
             ) : (
               <RecommendationsList
@@ -137,7 +137,7 @@ const Recommendations = ({
                     .then(() => {
                       setFormAlert({
                         type: 'success',
-                        message: t('adviceLetterForm.removeSuccess', {
+                        message: t('guidanceLetterForm.removeSuccess', {
                           action: 'removing',
                           type: 'recommendation'
                         })
@@ -146,7 +146,7 @@ const Recommendations = ({
                     .catch(() =>
                       setFormAlert({
                         type: 'error',
-                        message: t('adviceLetterForm.error', {
+                        message: t('guidanceLetterForm.error', {
                           action: 'removing',
                           type: 'recommendation'
                         })

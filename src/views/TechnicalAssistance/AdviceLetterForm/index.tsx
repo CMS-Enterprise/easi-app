@@ -115,7 +115,9 @@ const AdviceLetterForm = () => {
   const [formAlert, setFormAlert] = useState<FormAlertObject | null>(null);
 
   /** Form steps translated text object */
-  const steps = t<StepsText>('adviceLetterForm.steps', { returnObjects: true });
+  const steps = t<StepsText>('guidanceLetterForm.steps', {
+    returnObjects: true
+  });
 
   /** Index of current form step - will return -1 if invalid URL */
   const currentStepIndex: number = adviceFormSteps.findIndex(
@@ -251,7 +253,7 @@ const AdviceLetterForm = () => {
       const type = location?.state?.error ? 'error' : 'info';
       setFormAlert({
         type,
-        message: t(`adviceLetter.alerts.${type}`)
+        message: t(`guidanceLetter.alerts.${type}`)
       });
     }
   }, [adviceLetter, loading, location?.state?.error, t]);

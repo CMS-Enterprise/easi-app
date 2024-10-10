@@ -71,13 +71,13 @@ const technicalAssistance = {
       CONSULT_COMPLETE: {
         title: 'Draft guidance letter',
         description:
-          'Compile an guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.',
+          'Compile a guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any requirements, recommendations, considerations, and other next steps you include.',
         list: {
           label: 'What should I include in the guidance letter?',
           text: 'EASi will direct you to complete the following parts of the guidance letter:',
           unorderedItems: [
             '<b>Meeting summary (“What we heard”):</b> Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.',
-            '<b>Recommendations and feedback (“What we recommend”):</b> Work with SMEs and other TRB members to compile recommendations for the requester and project team. Provide a title, description, and any useful resources for each recommendation.',
+            '<b>Requirements, recommendations, and considerations (“Guidance and insights”):</b> Work with SMEs and other TRB members to compile guidance for the requester and project team. Provide a title, description, priority, and any useful resources for each item.',
             '<b>Next steps:</b> Outline any additional steps that the project team should take, including whether the project team should schedule another consult session with the TRB in the future.'
           ]
         }
@@ -85,13 +85,13 @@ const technicalAssistance = {
       DRAFT_ADVICE_LETTER: {
         title: 'Draft guidance letter',
         description:
-          'Compile an guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.',
+          'Compile a guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any requirements, recommendations, considerations, and other next steps you include.',
         list: {
           label: 'What should I include in the guidance letter?',
           text: 'EASi will direct you to complete the following parts of the guidance letter:',
           unorderedItems: [
             '<b>Meeting summary (“What we heard”):</b> Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.',
-            '<b>Recommendations and feedback (“What we recommend”):</b> Work with SMEs and other TRB members to compile recommendations for the requester and project team. Provide a title, description, and any useful resources for each recommendation.',
+            '<b>Requirements, recommendations, and considerations (“Guidance and insights”):</b> Work with SMEs and other TRB members to compile guidance for the requester and project team. Provide a title, description, priority, and any useful resources for each item.',
             '<b>Next steps:</b> Outline any additional steps that the project team should take, including whether the project team should schedule another consult session with the TRB in the future.'
           ]
         }
@@ -142,7 +142,7 @@ const technicalAssistance = {
   },
   guidanceLetter: {
     introText:
-      'The guidance letter is sent to the requester after the consult is complete. It outlines any outcomes, guidance, recommendations, and next steps that the TRB has for this request.',
+      'The guidance letter is sent to the requester after the consult is complete. It outlines any outcomes, requirements, recommendations, considerations, and other next steps that the TRB has for this request.',
     alerts: {
       error:
         'There was an error creating this guidance letter. Please try again. If the error persists, please try again at a later date.',
@@ -154,7 +154,7 @@ const technicalAssistance = {
     notYetSent: 'Not yet sent',
     whatWeHeard: 'What we heard',
     meetingSummary: 'Meeting summary',
-    whatWeRecommend: 'What we recommend',
+    guidanceAndInsights: 'Guidance and insights',
     resources: 'Resources',
     nextSteps: 'Next steps',
     notSpecified: 'Not specified yet',
@@ -178,7 +178,7 @@ const technicalAssistance = {
   guidanceLetterForm: {
     heading: 'Guidance letter',
     description:
-      'Document any outcomes, guidance, findings, recommendations, or next steps that the TRB has for this request.',
+      'Document any outcomes, requirements, recommendations, considerations, and other next steps that the TRB has for this request.',
     text: 'After submitting this form, the requester will receive an automatic notification letting them know their guidance letter is available.',
     returnToRequest: 'Save and return to request',
     steps: [
@@ -188,7 +188,8 @@ const technicalAssistance = {
           'Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.'
       },
       {
-        name: 'What we recommend',
+        name: 'Guidance and Insights',
+        // TODO EASI-4626: Update step description text
         description:
           'Add recommendations for the project team. Provide a title, description, and any useful resources for each recommendation.'
       },
@@ -210,37 +211,34 @@ const technicalAssistance = {
       }
     ],
     meetingSummary: 'Meeting summary',
-    addRecommendation: 'Add a recommendation',
-    addAnotherRecommendation: 'Add another recommendation',
-    noRecommendations:
-      'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
-    reorderRecommendations:
-      'If you have two or more recommendations, you can use arrows on the left side of each recommendation to reorder them.',
+    addGuidance: 'Add guidance',
+    addAdditionalGuidance: 'Add additional guidance',
+    noGuidance:
+      'Nothing has been added yet. Use the button above to add guidance, or click next if you have no guidance to add.',
+    reorderGuidance:
+      'If you have two or more items per category, you can use arrows on the left side of each to reorder them within the category. Edit the guidance to change the category.',
     reorderError:
-      'There was an issue saving your recommendation. Please try again, and if the problem persists, try again later.',
-    continueWithoutAdding: 'Continue without adding recommendations',
+      'There was an issue saving your guidance. Please try again, and if the problem persists, try again later.',
+    continueWithoutAdding: 'Continue without adding guidance',
     addResourceLink: 'Add a resource link',
     addAnotherResourceLink: 'Add another resource link',
-    returnToGuidanceLetter:
-      'Don’t add a recommendation and return to guidance letter',
-    editReturnToGuidanceLetter:
-      'Don’t edit recommendation and return to guidance letter',
-    editRecommendation: 'Edit recommendation',
-    removeRecommendation: 'Remove recommendation',
+    returnToGuidanceLetter: 'Don’t add and return to guidance letter',
+    editReturnToGuidanceLetter: 'Don’t edit and return to guidance letter',
+    editGuidance: 'Edit guidance',
+    removeGuidance: 'Remove guidance',
     nextSteps: 'Next steps',
     isFollowupRecommended: 'Should the team return for a follow-up session?',
     followupYes: 'Yes, a follow-up is recommended',
     notNecessary: 'Not necessary',
     followupHelpText: 'Examples: in 6 months, when development is complete',
-    removeSuccess: 'Your recommendation was removed from this guidance letter.',
+    removeSuccess: 'Your guidance was removed from this letter.',
     error:
       'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
-    recommendationSuccess:
-      'Your recommendation was added to this guidance letter.',
-    editRecommendationSuccess: 'Your recommendation was edited',
+    guidanceSuccess: 'Your guidance was added to this letter.',
+    editGuidanceSuccess: 'Your guidance was edited',
     modal: {
-      title: 'Confirm you want to remove this recommendation.',
-      text: 'This action cannot be undone. If you remove this recommendation, all content related to it will be removed and will not be sent as a part of the guidance letter.',
+      title: 'Confirm you want to remove this guidance.',
+      text: 'This action cannot be undone. If you remove this guidance, all content related to it will be removed and will not be sent as a part of the guidance letter.',
       removingTitle: 'Removing: {{title}}'
     },
     internalReviewNeeded: {
@@ -455,7 +453,7 @@ const technicalAssistance = {
       },
       {
         heading: 'Guidance letter and next steps',
-        text: 'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any guidance for your project team as well as any recommended next steps.'
+        text: 'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any outcomes, requirements, recommendations, considerations, and other next steps that the TRB has for this request.'
       }
     ]
   },
@@ -869,8 +867,8 @@ const technicalAssistance = {
     toBeCompleted: 'To be completed by TRB',
     lastUpdated: 'Last updated',
     view: 'View',
-    viewAdvice: 'View guidance letter',
-    startAdvice: 'Start guidance letter',
+    viewGuidance: 'View guidance letter',
+    startGuidance: 'Start guidance letter',
     notStarted: 'Not started',
     supportingDocs: 'Supporting documents',
     docInfo:

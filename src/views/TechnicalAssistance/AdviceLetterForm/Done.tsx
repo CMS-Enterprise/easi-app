@@ -58,7 +58,7 @@ const Done = () => {
             {t(`done.${success ? 'success' : 'error'}.heading`)}
           </PageHeading>
           <p className="font-body-lg line-height-body-5 text-light margin-top-05">
-            {t(`adviceLetterForm.done.${success ? 'success' : 'error'}`)}
+            {t(`guidanceLetterForm.done.${success ? 'success' : 'error'}`)}
           </p>
           <ButtonGroup>
             {!success && (

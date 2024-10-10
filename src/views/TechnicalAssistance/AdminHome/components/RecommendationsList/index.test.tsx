@@ -52,7 +52,7 @@ describe('TRB recommendations list', () => {
     expect(
       screen.getByText(
         i18next.t<string>(
-          'technicalAssistance:adviceLetterForm.reorderRecommendations'
+          'technicalAssistance:guidanceLetterForm.reorderGuidance'
         )
       )
     );

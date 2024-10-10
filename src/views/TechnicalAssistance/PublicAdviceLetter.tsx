@@ -48,7 +48,7 @@ function PublicAdviceLetter() {
 
   const printRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
-    documentTitle: `advice letter ${id}.pdf`,
+    documentTitle: `guidance letter ${id}.pdf`,
     content: () => printRef.current,
     // The lib default is to have no margin, which hides window.prints()'s built in pagination
     // Set auto margins back to show everything the browser renders
@@ -127,7 +127,7 @@ function PublicAdviceLetter() {
         ) : (
           <p className="line-height-body-5 font-body-lg text-light margin-top-0 margin-bottom-2">
             <Trans
-              i18nKey="technicalAssistance:adviceLetter.description"
+              i18nKey="technicalAssistance:guidanceLetter.description"
               components={{
                 a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
                 email: CMS_TRB_EMAIL
@@ -225,7 +225,7 @@ function PublicAdviceLetter() {
               className="margin-top-6"
             >
               <Trans
-                i18nKey="technicalAssistance:adviceLetter.haveQuestionsContact"
+                i18nKey="technicalAssistance:guidanceLetter.haveQuestionsContact"
                 components={{
                   a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
                   email: CMS_TRB_EMAIL

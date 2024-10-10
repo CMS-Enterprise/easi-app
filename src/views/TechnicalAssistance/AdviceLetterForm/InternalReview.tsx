@@ -85,7 +85,7 @@ const InternalReview = ({
             remove({ variables: { id: recommendation.id } }).catch(() =>
               setFormAlert({
                 type: 'error',
-                message: t('adviceLetterForm.error', {
+                message: t('guidanceLetterForm.error', {
                   action: 'removing',
                   type: 'recommendation'
                 })
@@ -115,7 +115,7 @@ const InternalReview = ({
         }}
         next={{
           text: t(
-            `adviceLetterForm.${
+            `guidanceLetterForm.${
               adviceLetterStatus === TRBAdviceLetterStatus.IN_PROGRESS
                 ? 'requestInternalReview'
                 : 'requestAnotherInternalReview'
@@ -129,7 +129,7 @@ const InternalReview = ({
                 if (error instanceof ApolloError) {
                   setFormAlert({
                     type: 'error',
-                    message: t('adviceLetterForm.error', {
+                    message: t('guidanceLetterForm.error', {
                       action: 'submitting',
                       type: 'advice letter for internal review'
                     })
@@ -139,7 +139,7 @@ const InternalReview = ({
           }
         }}
         buttons={[
-          <Trans i18nKey="technicalAssistance:adviceLetterForm.progressToNextStep">
+          <Trans i18nKey="technicalAssistance:guidanceLetterForm.progressToNextStep">
             one
             <Button
               type="button"

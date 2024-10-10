@@ -170,7 +170,7 @@ const ReviewAdviceLetter = ({
         })}
       >
         <h2 className="margin-bottom-1">
-          {t('guidanceLetter.whatWeRecommend')}
+          {t('guidanceLetter.guidanceAndInsights')}
         </h2>
 
         {showSectionEditLinks && (

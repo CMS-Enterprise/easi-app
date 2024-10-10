@@ -107,7 +107,7 @@ const Review = ({
       {/* Notes */}
       <p>
         <Trans
-          i18nKey="technicalAssistance:adviceLetterForm.notesCount"
+          i18nKey="technicalAssistance:guidanceLetterForm.notesCount"
           components={{ bold: <span className="text-bold" /> }}
           count={notes.length}
           values={{ plural: notes.length === 1 ? '' : 's' }}
@@ -150,7 +150,7 @@ const Review = ({
             remove({ variables: { id: recommendation.id } }).catch(() =>
               setFormAlert({
                 type: 'error',
-                message: t('adviceLetterForm.error', {
+                message: t('guidanceLetterForm.error', {
                   action: 'removing',
                   type: 'recommendation'
                 })

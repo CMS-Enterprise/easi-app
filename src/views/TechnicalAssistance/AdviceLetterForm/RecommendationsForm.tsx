@@ -124,10 +124,8 @@ const RecommendationsForm = ({
             setFormAlert({
               type: 'success',
               message: t(
-                `adviceLetterForm.${
-                  watch('id')
-                    ? 'editRecommendationSuccess'
-                    : 'recommendationSuccess'
+                `guidanceLetterForm.${
+                  watch('id') ? 'editGuidanceSuccess' : 'guidanceSuccess'
                 }`
               )
             });
@@ -166,7 +164,7 @@ const RecommendationsForm = ({
           },
           {
             text: t(
-              `adviceLetterForm.${watch('id') ? 'edit' : 'add'}Recommendation`
+              `guidanceLetterForm.${watch('id') ? 'edit' : 'add'}Recommendation`
             )
           }
         ]}
@@ -176,7 +174,7 @@ const RecommendationsForm = ({
         /* Error alert for gql errors */
         showFormError && (
           <Alert type="error" className="margin-bottom-5" slim>
-            {t('adviceLetterForm.error', {
+            {t('guidanceLetterForm.error', {
               action: 'saving',
               type: 'recommendation'
             })}
@@ -185,7 +183,7 @@ const RecommendationsForm = ({
       }
 
       <h1 className="margin-bottom-0">
-        {t(`adviceLetterForm.${watch('id') ? 'edit' : 'add'}Recommendation`)}
+        {t(`guidanceLetterForm.${watch('id') ? 'edit' : 'add'}Recommendation`)}
       </h1>
       {/* Required fields text */}
       <HelpText className="margin-top-1 margin-bottom-2 text-base">
@@ -271,8 +269,10 @@ const RecommendationsForm = ({
       >
         <IconArrowBack className="margin-right-05" />
         {t(
-          `adviceLetterForm.${
-            watch('id') ? 'editReturnToAdviceLetter' : 'returnToAdviceLetter'
+          `guidanceLetterForm.${
+            watch('id')
+              ? 'editReturnToGuidanceLetter'
+              : 'returnToGuidanceLetter'
           }`
         )}
       </Button>

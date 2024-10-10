@@ -104,8 +104,8 @@ export default function LinkArrayField() {
         <IconAdd className="margin-right-05" />
         {t(
           fields.length === 0
-            ? 'adviceLetterForm.addResourceLink'
-            : 'adviceLetterForm.addAnotherResourceLink'
+            ? 'guidanceLetterForm.addResourceLink'
+            : 'guidanceLetterForm.addAnotherResourceLink'
         )}
       </Button>
     </div>

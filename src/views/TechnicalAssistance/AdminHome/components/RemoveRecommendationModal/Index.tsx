@@ -41,7 +41,7 @@ const RemoveRecommendationModal = ({
             closeModal();
           }}
         >
-          {t('guidanceLetterForm.removeRecommendation')}
+          {t('guidanceLetterForm.removeGuidance')}
         </Button>
 
         <Button
