@@ -17,7 +17,7 @@ import linkCedarSystemIdQueryString, {
 } from 'utils/linkCedarSystemIdQueryString';
 import { StepsInProcessContent } from 'views/Help/TechnicalReviewBoard/StepsInProcess';
 
-import Breadcrumbs from './Breadcrumbs';
+import Breadcrumbs from '../../components/shared/Breadcrumbs';
 
 /**
  * Process flow info where the user proceeds to create a new Trb Request.

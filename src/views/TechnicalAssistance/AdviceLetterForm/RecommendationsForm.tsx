@@ -31,7 +31,7 @@ import {
 } from 'types/technicalAssistance';
 import formatUrl from 'utils/formatUrl';
 
-import Breadcrumbs from '../Breadcrumbs';
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 import { StepSubmit } from '../RequestForm';
 
 import LinksArrayField from './LinksArrayField/Index';

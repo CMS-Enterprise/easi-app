@@ -11,7 +11,7 @@ import Divider from 'components/shared/Divider';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import { TRBFeedbackAction } from 'types/graphql-global-types';
 
-import Breadcrumbs from '../Breadcrumbs';
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 import TrbRequestFeedbackList from '../TrbRequestFeedbackList';
 
 type FeedbackProps = {

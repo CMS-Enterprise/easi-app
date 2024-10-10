@@ -35,7 +35,7 @@ import {
   TrbRequestInputDocument
 } from 'validations/trbRequestSchema';
 
-import Breadcrumbs from '../Breadcrumbs';
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 
 import { TrbFormAlert } from '.';
 

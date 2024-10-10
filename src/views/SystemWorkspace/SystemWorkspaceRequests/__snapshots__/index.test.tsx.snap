@@ -20,7 +20,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/"
           >
             <span>
@@ -32,7 +32,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/systems/{11AB1A00-1234-5678-ABC1-1A001B00CC1B}/workspace"
           >
             <span>
@@ -780,7 +780,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/"
           >
             <span>
@@ -792,7 +792,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/systems/{11AB1A00-1234-5678-ABC1-1A001B00CC1B}/workspace"
           >
             <span>

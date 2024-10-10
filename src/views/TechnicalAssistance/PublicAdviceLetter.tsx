@@ -30,8 +30,11 @@ import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import NotFound from 'views/NotFound';
 
+import Breadcrumbs, {
+  BreadcrumbsProps
+} from '../../components/shared/Breadcrumbs';
+
 import ReviewAdviceLetter from './AdminHome/components/ReviewAdviceLetter';
-import Breadcrumbs, { BreadcrumbsProps } from './Breadcrumbs';
 
 /**
  * The public view of a TRB Request Advice Letter.

@@ -7,12 +7,10 @@ import classNames from 'classnames';
 
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import Breadcrumbs, { BreadcrumbsProps } from 'components/shared/Breadcrumbs'; // BreadcrumbsProps
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import useMessage from 'hooks/useMessage';
-import Breadcrumbs, {
-  BreadcrumbsProps
-} from 'views/TechnicalAssistance/Breadcrumbs'; // BreadcrumbsProps
 import Pager, {
   PageButtonProps,
   PagerProps

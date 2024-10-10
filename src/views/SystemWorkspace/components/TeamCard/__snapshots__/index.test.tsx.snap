@@ -38,7 +38,7 @@ exports[`TeamCard > renders 1`] = `
                 class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
                 data-testid="avatar--basic"
               >
-                SJ
+                VD
               </div>
               <div
                 class="margin-left-1 margin-right-05"
@@ -46,14 +46,14 @@ exports[`TeamCard > renders 1`] = `
                 <p
                   class="margin-y-05 line-height-body-5"
                 >
-                  Sabina Jakubowski
+                  Vickie Denesik
                 </p>
                 <p
                   class="font-body-2xs line-height-body-2 margin-y-0"
                 >
                   Business Owner
                   <br />
-                  +3 more roles
+                  +1 more role
                 </p>
               </div>
             </div>
@@ -61,10 +61,10 @@ exports[`TeamCard > renders 1`] = `
               class="grid-col-6 desktop:grid-col-3 margin-bottom-1 display-flex"
             >
               <div
-                class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-yellow-5 "
+                class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-orange-warm-10 "
                 data-testid="avatar--basic"
               >
-                DL
+                EH
               </div>
               <div
                 class="margin-left-1 margin-right-05"
@@ -72,7 +72,33 @@ exports[`TeamCard > renders 1`] = `
                 <p
                   class="margin-y-05 line-height-body-5"
                 >
-                  Davion Lubowitz
+                  Elbert Huel
+                </p>
+                <p
+                  class="font-body-2xs line-height-body-2 margin-y-0"
+                >
+                  Business Owner
+                  <br />
+                  +4 more roles
+                </p>
+              </div>
+            </div>
+            <div
+              class="grid-col-6 desktop:grid-col-3 margin-bottom-1 display-flex"
+            >
+              <div
+                class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-blue-10 "
+                data-testid="avatar--basic"
+              >
+                AL
+              </div>
+              <div
+                class="margin-left-1 margin-right-05"
+              >
+                <p
+                  class="margin-y-05 line-height-body-5"
+                >
+                  Aletha Leannon
                 </p>
                 <p
                   class="font-body-2xs line-height-body-2 margin-y-0"
@@ -85,10 +111,10 @@ exports[`TeamCard > renders 1`] = `
               class="grid-col-6 desktop:grid-col-3 margin-bottom-1 display-flex"
             >
               <div
-                class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-yellow-5 "
+                class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-blue-10 "
                 data-testid="avatar--basic"
               >
-                ZS
+                SB
               </div>
               <div
                 class="margin-left-1 margin-right-05"
@@ -96,7 +122,7 @@ exports[`TeamCard > renders 1`] = `
                 <p
                   class="margin-y-05 line-height-body-5"
                 >
-                  Zechariah Shields
+                  Sasha Barrows
                 </p>
                 <p
                   class="font-body-2xs line-height-body-2 margin-y-0"
@@ -111,10 +137,10 @@ exports[`TeamCard > renders 1`] = `
               class="grid-col-6 desktop:grid-col-3 margin-bottom-1 display-flex"
             >
               <div
-                class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-blue-10 "
+                class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
                 data-testid="avatar--basic"
               >
-                MB
+                RO
               </div>
               <div
                 class="margin-left-1 margin-right-05"
@@ -122,14 +148,12 @@ exports[`TeamCard > renders 1`] = `
                 <p
                   class="margin-y-05 line-height-body-5"
                 >
-                  Matt Bogisich
+                  Ramon Olson
                 </p>
                 <p
                   class="font-body-2xs line-height-body-2 margin-y-0"
                 >
-                  Contracting Officer's Representative (COR)
-                  <br />
-                  +4 more roles
+                  System Maintainer
                 </p>
               </div>
             </div>
@@ -140,7 +164,7 @@ exports[`TeamCard > renders 1`] = `
                 class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
                 data-testid="avatar--basic"
               >
-                DT
+                EG
               </div>
               <div
                 class="margin-left-1 margin-right-05"
@@ -148,14 +172,14 @@ exports[`TeamCard > renders 1`] = `
                 <p
                   class="margin-y-05 line-height-body-5"
                 >
-                  David Tillman
+                  Eliezer Grant
                 </p>
                 <p
                   class="font-body-2xs line-height-body-2 margin-y-0"
                 >
-                  Government Task Lead (GTL)
+                  Contracting Officer's Representative (COR)
                   <br />
-                  +3 more roles
+                  +1 more role
                 </p>
               </div>
             </div>
@@ -166,7 +190,7 @@ exports[`TeamCard > renders 1`] = `
                 class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-yellow-5 "
                 data-testid="avatar--basic"
               >
-                AG
+                JS
               </div>
               <div
                 class="margin-left-1 margin-right-05"
@@ -174,14 +198,12 @@ exports[`TeamCard > renders 1`] = `
                 <p
                   class="margin-y-05 line-height-body-5"
                 >
-                  Ariane Grant
+                  Jefferey Schmidt
                 </p>
                 <p
                   class="font-body-2xs line-height-body-2 margin-y-0"
                 >
-                  Project Lead
-                  <br />
-                  +1 more role
+                  Contracting Officer's Representative (COR)
                 </p>
               </div>
             </div>
@@ -189,10 +211,10 @@ exports[`TeamCard > renders 1`] = `
               class="grid-col-6 desktop:grid-col-3 margin-bottom-1 display-flex"
             >
               <div
-                class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-orange-warm-10 "
+                class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 "
                 data-testid="avatar--basic"
               >
-                VS
+                KT
               </div>
               <div
                 class="margin-left-1 margin-right-05"
@@ -200,40 +222,14 @@ exports[`TeamCard > renders 1`] = `
                 <p
                   class="margin-y-05 line-height-body-5"
                 >
-                  Vinnie Schuster
+                  King Tromp
                 </p>
                 <p
                   class="font-body-2xs line-height-body-2 margin-y-0"
                 >
-                  ISSO
+                  Contracting Officer's Representative (COR)
                   <br />
-                  +1 more role
-                </p>
-              </div>
-            </div>
-            <div
-              class="grid-col-6 desktop:grid-col-3 margin-bottom-1 display-flex"
-            >
-              <div
-                class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-red-cool-10 "
-                data-testid="avatar--basic"
-              >
-                RC
-              </div>
-              <div
-                class="margin-left-1 margin-right-05"
-              >
-                <p
-                  class="margin-y-05 line-height-body-5"
-                >
-                  Roselyn Cremin
-                </p>
-                <p
-                  class="font-body-2xs line-height-body-2 margin-y-0"
-                >
-                  Subject Matter Expert (SME)
-                  <br />
-                  +3 more roles
+                  +2 more roles
                 </p>
               </div>
             </div>

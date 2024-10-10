@@ -18,7 +18,7 @@ import {
 } from 'types/technicalAssistance';
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
-import Breadcrumbs from '../../Breadcrumbs';
+import Breadcrumbs from '../../../../components/shared/Breadcrumbs';
 import { initialAttendee } from '../Attendees';
 import Pager from '../Pager';
 import { TrbFormAlert } from '..';

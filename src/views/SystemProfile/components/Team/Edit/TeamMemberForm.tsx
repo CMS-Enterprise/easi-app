@@ -14,7 +14,6 @@ import {
   Icon,
   Label
 } from '@trussworks/react-uswds';
-import classNames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import * as yup from 'yup';
 
@@ -39,7 +38,7 @@ import {
   SetRolesForUserOnSystem,
   SetRolesForUserOnSystemVariables
 } from 'queries/types/SetRolesForUserOnSystem';
-import { UsernameWithRoles } from 'types/systemProfile';
+import { TeamMemberRoleTypeName, UsernameWithRoles } from 'types/systemProfile';
 
 import { TeamContactCard } from '..';
 
@@ -84,15 +83,15 @@ const TeamMemberForm = ({
   const { showMessageOnNextPage, showMessage } = useMessage();
   const history = useHistory();
   const { state } = useLocation<{ user?: UsernameWithRoles }>();
-  /** A defined user also indicates form edit mode. */
   const user = state?.user;
+  const isEdit = !!user;
 
   /* User commonName prop used for setting success/error messages */
   const [commonName, setCommonName] = useState<string>(
     user ? getTeamMemberName(user) : ''
   );
 
-  const keyPrefix = `singleSystem.editTeam.form.${user ? 'edit' : 'add'}`;
+  const keyPrefix = `singleSystem.editTeam.form.${isEdit ? 'edit' : 'add'}`;
 
   const { data, loading: roleTypesLoading } = useQuery<GetCedarRoleTypes>(
     GetCedarRoleTypesQuery
@@ -111,12 +110,16 @@ const TeamMemberForm = ({
     if (roles === undefined) return [];
 
     /** Hide any undefined roles. */
-    const knownRoles = Object.keys(teamRolesIndex());
+    const knownRoles = Object.keys(teamRolesIndex);
 
     return roles
       .concat()
       .filter(r => knownRoles.includes(r.name))
-      .sort((a, b) => teamRolesIndex()[a.name] - teamRolesIndex()[b.name])
+      .sort(
+        (a, b) =>
+          teamRolesIndex[a.name as TeamMemberRoleTypeName] -
+          teamRolesIndex[b.name as TeamMemberRoleTypeName]
+      )
       .map(r => {
         // Adjust the ISSO display name from the backend
         if (r.name === 'ISSO') {
@@ -155,7 +158,7 @@ const TeamMemberForm = ({
           showMessageOnNextPage(
             t(
               `singleSystem.editTeam.form.${
-                user ? 'successUpdateRoles' : 'successAddContact'
+                isEdit ? 'successUpdateRoles' : 'successAddContact'
               }`,
               {
                 commonName
@@ -165,13 +168,16 @@ const TeamMemberForm = ({
               type: 'success'
             }
           );
-          history.push(`/systems/${cedarSystemId}/team/edit`);
+          history.push({
+            pathname: `/systems/${cedarSystemId}/team/edit`,
+            search: isWorkspace ? 'workspace' : undefined
+          });
         })
         .catch(() => {
           showMessage(
             t(
               `singleSystem.editTeam.form.${
-                user ? 'errorUpdateRoles' : 'errorAddContact'
+                isEdit ? 'errorUpdateRoles' : 'errorAddContact'
               }`
             ),
             {
@@ -214,7 +220,7 @@ const TeamMemberForm = ({
       </p>
 
       <Form onSubmit={submitForm} className="maxw-none">
-        {user && flags.systemWorkspaceTeam && !isWorkspace ? (
+        {isEdit && flags.systemWorkspaceTeam && !isWorkspace ? (
           // If editing, show contact card without roles
           // when in the original system profile context (not workspace)
           // Rendered in non-workspace edit only
@@ -245,9 +251,9 @@ const TeamMemberForm = ({
                 <CedarContactSelect
                   {...{ ...field, ref: null }}
                   id={field.name}
-                  // A defined `user` in edit mode will display as a disabled dropdown
+                  // Edit mode will display the user in a disabled dropdown
                   value={
-                    user
+                    isEdit
                       ? {
                           euaUserId: user.assigneeUsername,
                           commonName,
@@ -255,7 +261,7 @@ const TeamMemberForm = ({
                         }
                       : undefined
                   }
-                  disabled={!!user}
+                  disabled={isEdit}
                   onChange={contact => {
                     if (contact) {
                       setValue('euaUserId', contact?.euaUserId);
@@ -265,7 +271,7 @@ const TeamMemberForm = ({
                   className="maxw-none"
                   // onChange={cedarContact => console.log(cedarContact)}
                 />
-                {memberAlreadySelected && (
+                {!isEdit && memberAlreadySelected && (
                   <Alert slim type="info" headingLevel="h4">
                     {t(
                       'singleSystem.editTeam.form.add.memberAlreadySelectedInfo'
@@ -281,10 +287,7 @@ const TeamMemberForm = ({
           name="desiredRoleTypeIDs"
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <FormGroup
-              error={!!error}
-              className={classNames({ 'margin-top-1': !!user })}
-            >
+            <FormGroup error={!!error}>
               <Label htmlFor={field.name} className="margin-bottom-05">
                 {t('singleSystem.editTeam.form.roles')}
                 <RequiredAsterisk />
@@ -344,28 +347,34 @@ const TeamMemberForm = ({
             ))}
           </ul>
         </CollapsableLink>
-        <Alert headingLevel="h4" slim type="info" className="margin-top-6">
-          {t('singleSystem.editTeam.form.add.alertInfo')}
-        </Alert>
-        <div className="display-flex flex-align-center margin-top-3">
-          <Button
-            type="submit"
-            disabled={
-              isSubmitting ||
-              loading ||
-              !isDirty ||
-              watch('desiredRoleTypeIDs').length === 0 ||
-              !euaUserId
-            }
-            className="margin-0"
-          >
-            {t(
-              memberAlreadySelected
-                ? 'singleSystem.editTeam.form.edit.buttonLabel'
-                : `${keyPrefix}.buttonLabel`
-            )}
-          </Button>
-          {loading && <Spinner className="margin-left-1" />}
+
+        <div className="margin-top-6">
+          {!isEdit && (
+            <Alert headingLevel="h4" slim type="info">
+              {t('singleSystem.editTeam.form.add.alertInfo')}
+            </Alert>
+          )}
+
+          <div className="display-flex flex-align-center margin-top-3">
+            <Button
+              type="submit"
+              disabled={
+                isSubmitting ||
+                loading ||
+                !isDirty ||
+                watch('desiredRoleTypeIDs').length === 0 ||
+                !euaUserId
+              }
+              className="margin-0"
+            >
+              {t(
+                memberAlreadySelected
+                  ? 'singleSystem.editTeam.form.edit.buttonLabel'
+                  : `${keyPrefix}.buttonLabel`
+              )}
+            </Button>
+            {loading && <Spinner className="margin-left-1" />}
+          </div>
         </div>
       </Form>
 

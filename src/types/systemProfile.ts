@@ -100,6 +100,26 @@ export enum RoleTypeName {
 //   SYSTEM_MAINTAINER = '{36335B21-40F4-48de-8D16-8F85277C54B8}'
 // }
 
+/**
+ * A pick of Cedar Role Type Names.
+ * These are known names that are also referenced from UX.
+ */
+export type TeamMemberRoleTypeName =
+  | 'Business Owner'
+  | 'System Maintainer'
+  | "Contracting Officer's Representative (COR)"
+  | 'Government Task Lead (GTL)'
+  | 'Project Lead'
+  | 'ISSO' // ISSO is what we get from cedar. Intended display is: 'Information System Security Officer (ISSO)'
+  | 'Subject Matter Expert (SME)'
+  | 'Budget Analyst'
+  | 'Support Staff'
+  | 'Business Question Contact'
+  | 'Technical System Issues Contact'
+  | 'Data Center Contact'
+  | 'API Contact'
+  | 'AI Contact';
+
 // Development Tags
 
 export type DevelopmentTag = 'Agile Methodology';
