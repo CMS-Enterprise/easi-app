@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { IconNavigateBefore } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -30,7 +30,7 @@ const Confirmation = ({
             to={`/governance-task-list/${businessCase.systemIntakeId}`}
             className="display-flex"
           >
-            <IconNavigateBefore className="margin-x-05" aria-hidden />
+            <Icon.NavigateBefore className="margin-x-05" aria-hidden />
             {t('businessCase:submission.confirmation.taskListCta')}
           </Link>
         </div>

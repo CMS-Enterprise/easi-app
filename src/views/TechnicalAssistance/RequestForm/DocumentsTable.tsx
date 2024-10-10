@@ -353,7 +353,7 @@ function DocumentsTable({
           </tbody>
         </Table>
       ) : (
-        <Alert type="info" slim>
+        <Alert headingLevel="h4" type="info" slim>
           {t('documents.table.noDocuments')}
         </Alert>
       )}

@@ -7,11 +7,7 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  IconCheck,
-  IconClose,
-  IconEdit,
-  IconGroups,
-  IconNotificationsActive
+  Icon
 } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -67,7 +63,7 @@ const WelcomeText = () => {
                     return (
                       <IconListItem
                         key={item}
-                        icon={<IconCheck className="text-green" />}
+                        icon={<Icon.Check className="text-green" />}
                       >
                         {item}
                       </IconListItem>
@@ -89,7 +85,7 @@ const WelcomeText = () => {
                       <IconListItem
                         key={item}
                         icon={
-                          <IconClose
+                          <Icon.Close
                             className="text-red margin-right-1"
                             size={3}
                           />
@@ -131,7 +127,7 @@ const WelcomeText = () => {
           <CardGroup>
             <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
-                <IconNotificationsActive
+                <Icon.NotificationsActive
                   size={5}
                   className="text-primary-vivid"
                 />
@@ -145,7 +141,7 @@ const WelcomeText = () => {
             </Card>
             <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
-                <IconGroups size={5} className="text-primary-vivid" />
+                <Icon.Groups size={5} className="text-primary-vivid" />
                 <h3 className="line-height-body-2">
                   {t('welcome.collaboration')}
                 </h3>
@@ -156,7 +152,7 @@ const WelcomeText = () => {
             </Card>
             <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
-                <IconEdit size={5} className="text-primary-vivid" />
+                <Icon.Edit size={5} className="text-primary-vivid" />
                 <h3 className="line-height-body-2">{t('welcome.editing')}</h3>
               </CardHeader>
               <CardBody>

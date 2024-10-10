@@ -8,7 +8,7 @@ import {
   ErrorMessage,
   Form,
   FormGroup,
-  IconArrowBack,
+  Icon,
   TextInput
 } from '@trussworks/react-uswds';
 
@@ -269,7 +269,7 @@ const RecommendationsForm = ({
         unstyled
         onClick={() => history.push(returnLink)}
       >
-        <IconArrowBack className="margin-right-05" />
+        <Icon.ArrowBack className="margin-right-05" />
         {t(
           `adviceLetterForm.${
             watch('id') ? 'editReturnToAdviceLetter' : 'returnToAdviceLetter'

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Button, ButtonGroup, IconArrowBack } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
 import PageNumber from 'components/PageNumber';
@@ -168,7 +168,7 @@ const AlternativeSolutionB = ({
 
             <IconButton
               type="button"
-              icon={<IconArrowBack />}
+              icon={<Icon.ArrowBack />}
               className="margin-top-2 margin-bottom-3"
               onClick={() => {
                 dispatchSave();

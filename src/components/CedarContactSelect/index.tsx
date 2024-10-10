@@ -16,7 +16,7 @@ import Select, {
   MenuProps,
   OptionProps
 } from 'react-select';
-import { IconWarning } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import Spinner from 'components/Spinner';
@@ -109,7 +109,7 @@ const IndicatorsContainer = (
   return (
     <components.IndicatorsContainer {...props}>
       {!loading && resultsWarning && (
-        <IconWarning className="text-warning" size={3} />
+        <Icon.Warning className="text-warning" size={3} />
       )}
       {loading && <Spinner size="small" />}
       {children}

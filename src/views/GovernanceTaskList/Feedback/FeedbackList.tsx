@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useReactToPrint } from 'react-to-print';
-import { IconArrowBack } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -65,7 +65,7 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
         <>
           <IconLink
             to={returnLink.path}
-            icon={<IconArrowBack />}
+            icon={<Icon.ArrowBack />}
             className="margin-bottom-1 tablet:margin-bottom-0"
           >
             {returnLink.text}

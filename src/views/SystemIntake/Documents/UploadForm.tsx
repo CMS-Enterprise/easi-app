@@ -11,7 +11,7 @@ import {
   FileInput,
   Form,
   FormGroup,
-  IconArrowBack,
+  Icon,
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
@@ -147,7 +147,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
           />
         </p>
 
-        <IconLink to={requestDetailsLink} icon={<IconArrowBack />}>
+        <IconLink to={requestDetailsLink} icon={<Icon.ArrowBack />}>
           {t('intake:documents.dontUpload', { context: type })}
         </IconLink>
 

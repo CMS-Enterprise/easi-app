@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
-import { Button, Card, IconBookmark } from '@trussworks/react-uswds';
+import { Button, Card, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -66,7 +66,7 @@ const BookmarkCard = ({
             type="button"
             unstyled
           >
-            <IconBookmark size={5} />
+            <Icon.Bookmark size={5} />
           </Button>
         </div>
         <p className="margin-0">{acronym}</p>

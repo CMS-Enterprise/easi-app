@@ -282,7 +282,7 @@ function SubmittedRequest({
             )}
           </div>
         ) : (
-          <Alert type="info" slim>
+          <Alert headingLevel="h4" type="info" slim>
             {t('check.noSubjectAreas')}
           </Alert>
         )}
@@ -307,7 +307,7 @@ function SubmittedRequest({
       )}
       <div className="margin-top-3 margin-bottom-6">
         {attendees.length === 0 ? (
-          <Alert type="info" slim>
+          <Alert headingLevel="h4" type="info" slim>
             {t('check.noAttendees')}
           </Alert>
         ) : (

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { NavHashLink } from 'react-router-hash-link';
-import { IconArrowBack } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -45,7 +45,7 @@ const SideNavigation = ({
             <li className="margin-bottom-4">
               <IconLink
                 to={returnLink.to}
-                icon={<IconArrowBack />}
+                icon={<Icon.ArrowBack />}
                 className="text-primary hover:text-primary-dark text-underline"
               >
                 {t(returnLink.text)}

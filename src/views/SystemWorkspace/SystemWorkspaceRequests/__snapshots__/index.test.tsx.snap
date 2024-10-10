@@ -196,6 +196,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
       <div
         class="usa-table-container--scrollable"
         data-testid="scrollable-table-container"
+        tabindex="0"
       >
         <table
           class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
@@ -955,6 +956,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
       <div
         class="usa-table-container--scrollable"
         data-testid="scrollable-table-container"
+        tabindex="0"
       >
         <table
           class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"

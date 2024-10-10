@@ -5,7 +5,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { NavHashLink } from 'react-router-hash-link';
 import {
   Header,
-  IconMenu,
+  Icon,
   Menu,
   NavDropDownButton,
   NavMenuButton,
@@ -253,7 +253,7 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
             )}
             <NavMenuButton
               onClick={() => setExpanded(prvExpanded => !prvExpanded)}
-              label={<IconMenu size={3} />}
+              label={<Icon.Menu size={3} />}
             />
           </div>
           <PrimaryNav

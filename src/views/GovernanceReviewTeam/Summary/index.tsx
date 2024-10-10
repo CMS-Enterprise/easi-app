@@ -10,7 +10,7 @@ import {
   ButtonGroup,
   Grid,
   GridContainer,
-  IconError,
+  Icon,
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
@@ -94,7 +94,7 @@ const RequestSummary = ({
           className="display-flex flex-align-center"
           data-testid="admin-lead"
         >
-          {!adminLead && <IconError className="text-error margin-right-05" />}
+          {!adminLead && <Icon.Error className="text-error margin-right-05" />}
           {adminLead || t('governanceReviewTeam:adminLeads.notAssigned')}
         </span>
         {isITGovAdmin && (

@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Button,
-  IconExpandMore,
-  IconNavigateNext
-} from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import { RichTextViewer } from 'components/RichTextEditor';
@@ -70,7 +66,7 @@ const TruncatedText = ({
         className={classnames({ 'text-bold': isOpen })}
         unstyled
       >
-        {isOpen ? <IconExpandMore /> : <IconNavigateNext />}
+        {isOpen ? <Icon.ExpandMore /> : <Icon.NavigateNext />}
         {isOpen ? closeLabel || label : label}
       </Button>
     </div>

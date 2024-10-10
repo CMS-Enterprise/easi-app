@@ -11,7 +11,7 @@ import {
   useTable
 } from 'react-table';
 import { useQuery } from '@apollo/client';
-import { Button, IconArrowBack, Table } from '@trussworks/react-uswds';
+import { Button, Icon, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -376,7 +376,7 @@ function SystemWorkspaceRequests() {
       <div className="display-flex">
         <IconLink
           className="text-primary"
-          icon={<IconArrowBack />}
+          icon={<Icon.ArrowBack />}
           to={workspacePath}
         >
           {t('returnToWorkspace')}

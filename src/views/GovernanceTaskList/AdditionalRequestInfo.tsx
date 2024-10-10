@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Alert,
-  Button,
-  IconArrowForward,
-  IconExpandMore
-} from '@trussworks/react-uswds';
+import { Alert, Button, Icon } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
@@ -34,7 +29,7 @@ function SystemCardItem({ item }: { item: SystemCardItemProps }) {
       <Divider className="margin-y-2" />
       <UswdsReactLink to={`/systems/${item.id}`}>
         {t('additionalRequestInfo.viewSystemProfile')}
-        <IconArrowForward className="text-middle margin-left-05" />
+        <Icon.ArrowForward className="text-middle margin-left-05" />
       </UswdsReactLink>
     </div>
   );
@@ -65,7 +60,7 @@ function SystemCardList({ items }: { items: SystemCardItemProps[] }) {
             {t(`additionalRequestInfo.show.${isShowMore ? 'less' : 'more'}`, {
               count: numMore
             })}
-            <IconExpandMore
+            <Icon.ExpandMore
               className="text-middle margin-left-05"
               style={{ transform: `scaleY(${isShowMore ? -1 : 1})` }}
             />
@@ -107,6 +102,7 @@ function AdditionalRequestInfo({
       {system.relationType === null && (
         <Alert
           type="warning"
+          headingLevel="h4"
           heading={t('additionalRequestInfo.actionRequiredAlert.header')}
         >
           {t('additionalRequestInfo.actionRequiredAlert.text')}

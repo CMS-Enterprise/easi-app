@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { CellProps, Column, Row } from 'react-table';
-import { IconError } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import TruncatedText from 'components/shared/TruncatedText';
@@ -77,7 +77,7 @@ const useRequestTableColumns = (
           <div className="display-flex flex-align-center">
             {/* TODO: should probably make this a button that opens up the assign admin
                 lead automatically. Similar to the Dates functionality */}
-            <IconError className="text-secondary margin-right-05" />
+            <Icon.Error className="text-secondary margin-right-05" />
             {adminLead}
           </div>
         );

@@ -122,7 +122,8 @@ const Review = ({
               'MM/dd/yyyy'
             )})`,
             content: <RichTextViewer value={note.noteText} />,
-            expanded: false
+            expanded: false,
+            headingLevel: 'h4'
           }))}
           bordered
         />
