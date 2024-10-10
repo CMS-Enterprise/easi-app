@@ -9,15 +9,18 @@ button#startGrbReview {
     margin-top: 0;
   }
 
-  &_header {
-    .usa-checkbox__input:disabled + [class*=__label], .usa-checkbox__input[aria-disabled=true] + [class*=__label] {
-      cursor: pointer;
+  &__header {
+    .usa-checkbox__label {
       color: color('primary');
+      text-decoration: underline;
+
+      &::before {
+        z-index: 2;
+      }
     }
 
-    .usa-checkbox__input:checked:disabled + [class*=__label]::before, .usa-checkbox__input:checked[aria-disabled=true] + [class*=__label]::before {
-      background-color: color('primary');
-      box-shadow: 0 0 0 2px color('primary');
+    &:hover .usa-checkbox__label {
+      color: color('primary-dark');
     }
   }
 }

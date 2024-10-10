@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { Cell, Column, useSortBy, useTable } from 'react-table';
+import { Cell, Column, HeaderGroup, useSortBy, useTable } from 'react-table';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -55,7 +55,7 @@ const AddReviewersFromRequest = ({
     resolver: yupResolver(CreateGRBReviewersSchema)
   });
 
-  const { append, remove } = useFieldArray({
+  const { append, remove, replace } = useFieldArray({
     control,
     name: 'grbReviewers'
   });
@@ -72,6 +72,67 @@ const AddReviewersFromRequest = ({
       ({ id }) => id === activeITGovernanceRequestId
     )?.reviewers;
   }, [activeITGovernanceRequestId, itGovernanceRequests]);
+
+  /** Reviewers that have NOT already been added to this intake request */
+  const availableReviewers: GRBReviewerComparison[] = useMemo(() => {
+    return (
+      grbReviewersArray?.filter(reviewer => !reviewer.isCurrentReviewer) || []
+    );
+  }, [grbReviewersArray]);
+
+  /** Checkbox header to toggle select all GRB reviewers */
+  const SelectAllCheckbox = useCallback(
+    ({ column }: { column: HeaderGroup<GRBReviewerComparison> }) => {
+      const isChecked: boolean =
+        grbReviewers?.length > 0 &&
+        grbReviewers?.length === availableReviewers.length;
+
+      const toggleSelectAll = () => {
+        if (isChecked) return remove();
+
+        return replace(
+          availableReviewers.map(
+            ({ id, isCurrentReviewer, ...reviewer }) => reviewer
+          )
+        );
+      };
+
+      return (
+        <div className="grb-review-select-checkbox grb-review-select-checkbox__header usa-checkbox position-relative">
+          <input
+            className="usa-checkbox__input"
+            type="checkbox"
+            id="grbReviewSelect-header"
+            name="grbReviewSelect-header"
+            checked={isChecked}
+            onChange={toggleSelectAll}
+            aria-label={t('Toggle select all reviewers')}
+          />
+
+          <label
+            className="usa-checkbox__label margin-top-0"
+            htmlFor="grbReviewSelect-header"
+          >
+            {t('participantsTable.name')}
+          </label>
+
+          {/* Button for toggling column sort */}
+          <Button
+            className="margin-top-0 position-absolute top-0 bottom-0 width-full display-flex flex-justify-end"
+            type="button"
+            aria-label={t('Toggle sort by name')}
+            unstyled
+            {...column.getSortByToggleProps()}
+          >
+            <div className="width-205 margin-top-05">
+              {getHeaderSortIcon(column)}
+            </div>
+          </Button>
+        </div>
+      );
+    },
+    [t, availableReviewers, grbReviewers?.length, remove, replace]
+  );
 
   /** Checkbox field for toggling GRB reviewer */
   const GRBReviewerCheckbox = useCallback(
@@ -114,16 +175,11 @@ const AddReviewersFromRequest = ({
   const columns = useMemo<Column<GRBReviewerComparison>[]>(() => {
     return [
       {
-        Header: (
-          <Checkbox
-            className="grb-review-select-checkbox grb-review-select-checkbox_header"
-            id="grbReviewSelect-header"
-            name="grbReviewSelect-header"
-            label={t<string>('participantsTable.name')}
-            disabled
-            checked
-          />
-        ),
+        Header: ({
+          column
+        }: {
+          column: HeaderGroup<GRBReviewerComparison>;
+        }) => <SelectAllCheckbox column={column} />,
         accessor: 'userAccount',
         Cell: ({
           row: { original: reviewer }
@@ -142,7 +198,7 @@ const AddReviewersFromRequest = ({
         Cell: ({ value }) => t<string>(`reviewerRoles.${value}`)
       }
     ];
-  }, [t, GRBReviewerCheckbox]);
+  }, [t, GRBReviewerCheckbox, SelectAllCheckbox]);
 
   const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
     useTable(
@@ -210,26 +266,29 @@ const AddReviewersFromRequest = ({
                   <tr {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map(column => (
                       <th
-                        {...column.getHeaderProps(
-                          column.getSortByToggleProps()
-                        )}
+                        {...column.getHeaderProps()}
                         aria-sort={getColumnSortStatus(column)}
                         scope="col"
                         className="border-bottom-2px"
                       >
-                        <Button
-                          type="button"
-                          unstyled
-                          className="width-full display-flex margin-top-0"
-                          {...column.getSortByToggleProps()}
-                        >
-                          <div className="flex-fill text-no-wrap">
-                            {column.render('Header')}
-                          </div>
-                          <div className="position-relative width-205 margin-left-05">
-                            {getHeaderSortIcon(column)}
-                          </div>
-                        </Button>
+                        {column.id === 'userAccount' ? (
+                          // Name column header with checkbox
+                          column.render('Header')
+                        ) : (
+                          <Button
+                            type="button"
+                            unstyled
+                            className="width-full display-flex margin-top-0"
+                            {...column.getSortByToggleProps()}
+                          >
+                            <div className="flex-fill text-no-wrap">
+                              {column.render('Header')}
+                            </div>
+                            <div className="position-relative width-205 margin-left-05">
+                              {getHeaderSortIcon(column)}
+                            </div>
+                          </Button>
+                        )}
                       </th>
                     ))}
                   </tr>
