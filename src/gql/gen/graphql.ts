@@ -1743,6 +1743,7 @@ export type SubmitIntakeInput = {
 /** Represents an IT governance request for a system */
 export type SystemIntake = {
   __typename: 'SystemIntake';
+  acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>;
   actions: Array<SystemIntakeAction>;
   adminLead?: Maybe<Scalars['String']['output']>;
   annualSpending?: Maybe<SystemIntakeAnnualSpending>;
@@ -1825,6 +1826,7 @@ export type SystemIntake = {
   trbFollowUpRecommendation?: Maybe<SystemIntakeTRBFollowUp>;
   updatedAt?: Maybe<Scalars['Time']['output']>;
   usesAiTech?: Maybe<Scalars['Boolean']['output']>;
+  usingSoftware?: Maybe<Scalars['String']['output']>;
 };
 
 /** An action taken on a system intake, often resulting in a change in status. */
@@ -2362,6 +2364,15 @@ export type SystemIntakeRetireLCIDInput = {
   retiresAt: Scalars['Time']['input'];
   systemIntakeID: Scalars['UUID']['input'];
 };
+
+/** SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake */
+export enum SystemIntakeSoftwareAcquisitionMethods {
+  CONTRACTOR_FURNISHED = 'CONTRACTOR_FURNISHED',
+  ELA_OR_INTERNAL = 'ELA_OR_INTERNAL',
+  FED_FURNISHED = 'FED_FURNISHED',
+  NOT_YET_DETERMINED = 'NOT_YET_DETERMINED',
+  OTHER = 'OTHER'
+}
 
 /** SystemIntakeState represents whether the intake is open or closed */
 export enum SystemIntakeState {
@@ -2943,6 +2954,7 @@ export type UpdateSystemIntakePayload = {
 
 /** Input to update some fields on a system request */
 export type UpdateSystemIntakeRequestDetailsInput = {
+  acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>;
   businessNeed?: InputMaybe<Scalars['String']['input']>;
   businessSolution?: InputMaybe<Scalars['String']['input']>;
   cedarSystemId?: InputMaybe<Scalars['String']['input']>;
@@ -2952,6 +2964,7 @@ export type UpdateSystemIntakeRequestDetailsInput = {
   needsEaSupport?: InputMaybe<Scalars['Boolean']['input']>;
   requestName?: InputMaybe<Scalars['String']['input']>;
   usesAiTech?: InputMaybe<Scalars['Boolean']['input']>;
+  usingSoftware?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Input data used to update GRT and GRB dates for a system request */

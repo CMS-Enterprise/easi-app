@@ -249,22 +249,6 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Does your request involve AI technologies?
-              </dt>
-              <dd
-                class="description-definition margin-0"
-              >
-                Yes
-              </dd>
-            </div>
-          </div>
-          <div
-            class="easi-review-row"
-          >
-            <div>
-              <dt
-                class="text-bold margin-bottom-05"
-              >
                 Do you need Enterprise Architecture (EA) support?
               </dt>
               <dd
@@ -281,7 +265,39 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
+                Does your request involve AI technologies?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Yes
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
                 Does your project involve any user interface component, or changes to an interface component?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                No
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Do you plan to use any software products to fulfill your business needs?
               </dt>
               <dd
                 class="description-definition margin-0"

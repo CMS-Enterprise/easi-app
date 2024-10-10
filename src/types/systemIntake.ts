@@ -5,6 +5,7 @@ import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts 
 
 import {
   SystemIntakeCollaboratorInput,
+  SystemIntakeSoftwareAcquisitionMethods,
   SystemIntakeStatusAdmin
 } from './graphql-global-types';
 
@@ -45,6 +46,10 @@ export type SystemIntakeForm = {
   businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
+  usesAiTech: boolean | null;
+  hasUiChanges: boolean | null;
+  usingSoftware: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[] | null;
   grtReviewEmailBody: string;
   decidedAt: string | null;
   businessCaseId?: string | null;
@@ -62,7 +67,6 @@ export type SystemIntakeForm = {
   grbDate: string | null;
   adminLead: string;
   requesterNameAndComponent: string;
-  hasUiChanges: boolean | null;
 } & ContractDetailsForm;
 
 export type ContactFields = Omit<

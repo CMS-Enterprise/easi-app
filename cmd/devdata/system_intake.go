@@ -73,6 +73,9 @@ func fillOutInitialIntake(
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
+
+	acqMethods := []models.SystemIntakeSoftwareAcquisitionMethods{"CONTRACTOR_FURNISHED", "FED_FURNISHED"}
+
 	intake = updateSystemIntakeRequestDetails(ctx, store, intake,
 		requestName,
 		"An intense business need",
@@ -82,6 +85,8 @@ func fillOutInitialIntake(
 		"Some CEDAR System ID",
 		"the current stage",
 		true,
+		"Yes",
+		acqMethods,
 	)
 	updateSystemIntakeContact(ctx, store,
 		"USR1",
@@ -206,6 +211,8 @@ func updateSystemIntakeRequestDetails(
 	currentStage string,
 	cedarSystemID string,
 	hasUIChanges bool,
+	usingSoftware string,
+	acquisitionMethods []models.SystemIntakeSoftwareAcquisitionMethods,
 ) *models.SystemIntake {
 	input := models.UpdateSystemIntakeRequestDetailsInput{
 		ID:               intake.ID,
@@ -217,6 +224,7 @@ func updateSystemIntakeRequestDetails(
 		CurrentStage:     &currentStage,
 		CedarSystemID:    &cedarSystemID,
 		HasUIChanges:     &hasUIChanges,
+		UsingSoftware:    &usingSoftware,
 	}
 	fetchCedarSystemMock := func(context.Context, string) (*models.CedarSystem, error) {
 		return &models.CedarSystem{}, nil
