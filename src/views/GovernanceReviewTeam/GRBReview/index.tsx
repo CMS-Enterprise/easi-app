@@ -32,6 +32,7 @@ import useMessage from 'hooks/useMessage';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeState } from 'types/graphql-global-types';
+import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
@@ -65,7 +66,7 @@ const GRBReview = ({
   const history = useHistory();
 
   const { action } = useParams<{
-    action?: 'add' | 'edit';
+    action?: GRBReviewFormAction;
   }>();
 
   const isForm = !!action;
@@ -109,15 +110,15 @@ const GRBReview = ({
         .then(() =>
           showMessage(
             <Trans
-              i18nKey="grbReview:removeSuccess"
+              i18nKey="grbReview:messages.success.remove"
               values={{ commonName: reviewer.userAccount.commonName }}
-            >
-              success
-            </Trans>,
+            />,
             { type: 'success' }
           )
         )
-        .catch(() => showMessage(t('removeError'), { type: 'error' }));
+        .catch(() =>
+          showMessage(t('form.messages.error.remove'), { type: 'error' })
+        );
 
       // Reset `reviewerToRemove` to close modal
       setReviewerToRemove(null);
@@ -170,7 +171,7 @@ const GRBReview = ({
       {isForm ? (
         <GRBReviewerForm
           setReviewerToRemove={setReviewerToRemove}
-          grbReviewers={grbReviewers}
+          initialGRBReviewers={grbReviewers}
           grbReviewStartedAt={grbReviewStartedAt}
         />
       ) : (

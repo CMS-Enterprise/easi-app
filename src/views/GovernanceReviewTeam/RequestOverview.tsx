@@ -113,13 +113,16 @@ const RequestOverview = ({
 
       {!fullPageLayout && <AccordionNavigation items={navItems} />}
 
-      <section
-        className={classnames('grid-container', {
-          'margin-bottom-5 margin-top-7': !fullPageLayout
-        })}
-      >
-        <Message className="margin-bottom-6 margin-top-neg-4" />
-        <Grid row gap>
+      <section className="grid-container">
+        <Message className="margin-top-2" />
+
+        <Grid
+          row
+          gap
+          className={classnames({
+            'margin-bottom-5 margin-top-7': !fullPageLayout
+          })}
+        >
           {!fullPageLayout && (
             <SideNavigation
               items={navItems}
