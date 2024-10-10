@@ -43,9 +43,9 @@ const prepareTrbConsultMeeting = {
   outcomes: {
     title: 'Potential outcomes',
     description:
-      'After the meeting, the TRB will deliberate and provide recommendations and next steps. Within 5 business days, the TRB will compile an guidance letter for your project and send it to you. The guidance letter may contain:',
+      'After the meeting, the TRB will deliberate and provide guidance and next steps. Within 5 business days, the TRB will compile a guidance letter for your project and send it to you. The guidance letter may contain:',
     list: [
-      'recommendations for changes to your system or solution',
+      'any requirements, recommendations, considerations, and other next steps for your system or solution.',
       'additional teams or points of contact to reach out to who may be able to help you further',
       'suggestions for systems, services, or solutions to use to implement your idea or solve your problem',
       'a request for a follow-up consultation session'
