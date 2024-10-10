@@ -250,6 +250,7 @@ function Consult() {
                 }}
                 step={5}
                 defaultValue={field.value}
+                label=""
               />
             </FormGroup>
           )}

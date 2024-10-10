@@ -21,7 +21,7 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
       tabindex="0"
     >
       <table
-        class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
+        class="usa-table usa-table--borderless width-full"
         data-testid="table"
       >
         <thead>
@@ -62,10 +62,6 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
                     <path
                       d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
                     />
@@ -108,10 +104,6 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
                       d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
                     />
                   </svg>
@@ -153,10 +145,6 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
                       d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
                     />
                   </svg>
@@ -197,10 +185,6 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
                     <path
                       d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
                     />
@@ -356,10 +340,6 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
-        <path
           d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
         />
       </svg>
@@ -450,10 +430,6 @@ exports[`Trb Request form: Supporting documents > renders states without documen
         width="1em"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
         <path
           d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
         />

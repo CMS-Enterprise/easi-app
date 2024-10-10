@@ -412,7 +412,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
             tabindex="0"
           >
             <table
-              class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
+              class="usa-table usa-table--borderless width-full"
               data-testid="table"
             >
               <thead>
@@ -453,10 +453,6 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                           width="1em"
                           xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path
-                            d="M0 0h24v24H0z"
-                            fill="none"
-                          />
                           <path
                             d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
                           />
@@ -499,10 +495,6 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            d="M0 0h24v24H0z"
-                            fill="none"
-                          />
-                          <path
                             d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
                           />
                         </svg>
@@ -543,10 +535,6 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                           width="1em"
                           xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path
-                            d="M0 0h24v24H0z"
-                            fill="none"
-                          />
                           <path
                             d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
                           />
@@ -589,10 +577,6 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            d="M0 0h24v24H0z"
-                            fill="none"
-                          />
-                          <path
                             d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
                           />
                         </svg>
@@ -629,10 +613,6 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
           width="1em"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
           <path
             d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
           />
