@@ -1082,8 +1082,8 @@ func (r *mutationResolver) CreateTRBAdminNoteConsultSession(ctx context.Context,
 }
 
 // CreateTRBAdminNoteAdviceLetter is the resolver for the createTRBAdminNoteAdviceLetter field.
-func (r *mutationResolver) CreateTRBAdminNoteAdviceLetter(ctx context.Context, input models.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
-	return resolvers.CreateTRBAdminNoteAdviceLetter(ctx, r.store, input)
+func (r *mutationResolver) CreateTRBAdminNoteAdviceLetter(ctx context.Context, input models.CreateTRBAdminNoteGuidanceLetterInput) (*models.TRBAdminNote, error) {
+	return resolvers.CreateTRBAdminNoteGuidanceLetter(ctx, r.store, input)
 }
 
 // SetTRBAdminNoteArchived is the resolver for the setTRBAdminNoteArchived field.
@@ -1092,18 +1092,18 @@ func (r *mutationResolver) SetTRBAdminNoteArchived(ctx context.Context, id uuid.
 }
 
 // CreateTRBAdviceLetter is the resolver for the createTRBAdviceLetter field.
-func (r *mutationResolver) CreateTRBAdviceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
-	return resolvers.CreateTRBAdviceLetter(ctx, r.store, trbRequestID)
+func (r *mutationResolver) CreateTRBAdviceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBGuidanceLetter, error) {
+	return resolvers.CreateTRBGuidanceLetter(ctx, r.store, trbRequestID)
 }
 
 // UpdateTRBAdviceLetter is the resolver for the updateTRBAdviceLetter field.
-func (r *mutationResolver) UpdateTRBAdviceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBAdviceLetter, error) {
-	return resolvers.UpdateTRBAdviceLetter(ctx, r.store, input)
+func (r *mutationResolver) UpdateTRBAdviceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetter, error) {
+	return resolvers.UpdateTRBGuidanceLetter(ctx, r.store, input)
 }
 
 // RequestReviewForTRBAdviceLetter is the resolver for the requestReviewForTRBAdviceLetter field.
-func (r *mutationResolver) RequestReviewForTRBAdviceLetter(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetter, error) {
-	return resolvers.RequestReviewForTRBAdviceLetter(
+func (r *mutationResolver) RequestReviewForTRBAdviceLetter(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetter, error) {
+	return resolvers.RequestReviewForTRBGuidanceLetter(
 		ctx,
 		r.store,
 		r.emailClient,
@@ -1112,8 +1112,8 @@ func (r *mutationResolver) RequestReviewForTRBAdviceLetter(ctx context.Context, 
 }
 
 // SendTRBAdviceLetter is the resolver for the sendTRBAdviceLetter field.
-func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input models.SendTRBAdviceLetterInput) (*models.TRBAdviceLetter, error) {
-	return resolvers.SendTRBAdviceLetter(
+func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input models.SendTRBGuidanceLetterInput) (*models.TRBGuidanceLetter, error) {
+	return resolvers.SendTRBGuidanceLetter(
 		ctx,
 		r.store,
 		input.ID,
@@ -1125,12 +1125,12 @@ func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input models
 }
 
 // CreateTRBAdviceLetterRecommendation is the resolver for the createTRBAdviceLetterRecommendation field.
-func (r *mutationResolver) CreateTRBAdviceLetterRecommendation(ctx context.Context, input models.CreateTRBAdviceLetterRecommendationInput) (*models.TRBAdviceLetterRecommendation, error) {
+func (r *mutationResolver) CreateTRBAdviceLetterRecommendation(ctx context.Context, input models.CreateTRBGuidanceLetterRecommendationInput) (*models.TRBGuidanceLetterRecommendation, error) {
 	links := models.ConvertEnums[string](input.Links)
-	return resolvers.CreateTRBAdviceLetterRecommendation(
+	return resolvers.CreateTRBGuidanceLetterRecommendation(
 		ctx,
 		r.store,
-		&models.TRBAdviceLetterRecommendation{
+		&models.TRBGuidanceLetterRecommendation{
 			TRBRequestID:   input.TrbRequestID,
 			Title:          input.Title,
 			Recommendation: input.Recommendation,
@@ -1139,18 +1139,18 @@ func (r *mutationResolver) CreateTRBAdviceLetterRecommendation(ctx context.Conte
 }
 
 // UpdateTRBAdviceLetterRecommendation is the resolver for the updateTRBAdviceLetterRecommendation field.
-func (r *mutationResolver) UpdateTRBAdviceLetterRecommendation(ctx context.Context, input map[string]interface{}) (*models.TRBAdviceLetterRecommendation, error) {
-	return resolvers.UpdateTRBAdviceLetterRecommendation(ctx, r.store, input)
+func (r *mutationResolver) UpdateTRBAdviceLetterRecommendation(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error) {
+	return resolvers.UpdateTRBGuidanceLetterRecommendation(ctx, r.store, input)
 }
 
-// UpdateTRBAdviceLetterRecommendationOrder is the resolver for the updateTRBAdviceLetterRecommendationOrder field.
-func (r *mutationResolver) UpdateTRBAdviceLetterRecommendationOrder(ctx context.Context, input models.UpdateTRBAdviceLetterRecommendationOrderInput) ([]*models.TRBAdviceLetterRecommendation, error) {
-	return resolvers.UpdateTRBAdviceLetterRecommendationOrder(ctx, r.store, input.TrbRequestID, input.NewOrder)
+// UpdateTRBAdviceLetterRecommendationOrder is the resolver for the updateTRBGuidanceLetterRecommendationOrder field.
+func (r *mutationResolver) UpdateTRBAdviceLetterRecommendationOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) ([]*models.TRBGuidanceLetterRecommendation, error) {
+	return resolvers.UpdateTRBGuidanceLetterRecommendationOrder(ctx, r.store, input.TrbRequestID, input.NewOrder)
 }
 
-// DeleteTRBAdviceLetterRecommendation is the resolver for the deleteTRBAdviceLetterRecommendation field.
-func (r *mutationResolver) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
-	return resolvers.DeleteTRBAdviceLetterRecommendation(ctx, r.store, id)
+// DeleteTRBAdviceLetterRecommendation is the resolver for the deleteTRBGuidanceLetterRecommendation field.
+func (r *mutationResolver) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
+	return resolvers.DeleteTRBGuidanceLetterRecommendation(ctx, r.store, id)
 }
 
 // CloseTRBRequest is the resolver for the closeTRBRequest field.
@@ -2019,7 +2019,7 @@ func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *mo
 }
 
 // Author is the resolver for the author field.
-func (r *tRBAdviceLetterResolver) Author(ctx context.Context, obj *models.TRBAdviceLetter) (*models.UserInfo, error) {
+func (r *tRBGuidanceLetterResolver) Author(ctx context.Context, obj *models.TRBGuidanceLetter) (*models.UserInfo, error) {
 	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
 	if err != nil {
 		return nil, err
@@ -2029,18 +2029,18 @@ func (r *tRBAdviceLetterResolver) Author(ctx context.Context, obj *models.TRBAdv
 }
 
 // Recommendations is the resolver for the recommendations field.
-func (r *tRBAdviceLetterResolver) Recommendations(ctx context.Context, obj *models.TRBAdviceLetter) ([]*models.TRBAdviceLetterRecommendation, error) {
-	return resolvers.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
+func (r *tRBGuidanceLetterResolver) Recommendations(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterRecommendation, error) {
+	return resolvers.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
 }
 
 // Links is the resolver for the links field.
-func (r *tRBAdviceLetterRecommendationResolver) Links(ctx context.Context, obj *models.TRBAdviceLetterRecommendation) ([]string, error) {
+func (r *tRBGuidanceLetterRecommendationResolver) Links(ctx context.Context, obj *models.TRBGuidanceLetterRecommendation) ([]string, error) {
 	links := models.ConvertEnums[string](obj.Links)
 	return links, nil
 }
 
 // Author is the resolver for the author field.
-func (r *tRBAdviceLetterRecommendationResolver) Author(ctx context.Context, obj *models.TRBAdviceLetterRecommendation) (*models.UserInfo, error) {
+func (r *tRBGuidanceLetterRecommendationResolver) Author(ctx context.Context, obj *models.TRBGuidanceLetterRecommendation) (*models.UserInfo, error) {
 	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
 	if err != nil {
 		return nil, err
@@ -2075,8 +2075,8 @@ func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (
 }
 
 // AdviceLetter is the resolver for the adviceLetter field.
-func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBAdviceLetter, error) {
-	return resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, obj.ID)
+func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBGuidanceLetter, error) {
+	return resolvers.GetTRBGuidanceLetterByTRBRequestID(ctx, obj.ID)
 }
 
 // TaskStatuses is the resolver for the taskStatuses field.
@@ -2214,6 +2214,16 @@ func (r *tRBRequestFormResolver) SubjectAreaOptions(ctx context.Context, obj *mo
 	return subjectAreas, nil
 }
 
+// AdviceLetterStatus is the resolver for the adviceLetterStatus field.
+func (r *tRBTaskStatusesResolver) AdviceLetterStatus(ctx context.Context, obj *models.TRBTaskStatuses) (models.TRBGuidanceLetterStatus, error) {
+	return obj.GuidanceLetterStatus, nil
+}
+
+// AdviceLetterStatusTaskList is the resolver for the adviceLetterStatusTaskList field.
+func (r *tRBTaskStatusesResolver) AdviceLetterStatusTaskList(ctx context.Context, obj *models.TRBTaskStatuses) (models.TRBGuidanceLetterStatusTaskList, error) {
+	return obj.GuidanceLetterStatusTaskList, nil
+}
+
 // CommonName is the resolver for the commonName field.
 func (r *userInfoResolver) CommonName(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return obj.DisplayName, nil
@@ -2284,14 +2294,14 @@ func (r *Resolver) SystemIntakeNote() generated.SystemIntakeNoteResolver {
 // TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
 func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
 
-// TRBAdviceLetter returns generated.TRBAdviceLetterResolver implementation.
-func (r *Resolver) TRBAdviceLetter() generated.TRBAdviceLetterResolver {
-	return &tRBAdviceLetterResolver{r}
+// TRBGuidanceLetter returns generated.TRBGuidanceLetterResolver implementation.
+func (r *Resolver) TRBGuidanceLetter() generated.TRBGuidanceLetterResolver {
+	return &tRBGuidanceLetterResolver{r}
 }
 
-// TRBAdviceLetterRecommendation returns generated.TRBAdviceLetterRecommendationResolver implementation.
-func (r *Resolver) TRBAdviceLetterRecommendation() generated.TRBAdviceLetterRecommendationResolver {
-	return &tRBAdviceLetterRecommendationResolver{r}
+// TRBGuidanceLetterRecommendation returns generated.TRBGuidanceLetterRecommendationResolver implementation.
+func (r *Resolver) TRBGuidanceLetterRecommendation() generated.TRBGuidanceLetterRecommendationResolver {
+	return &tRBGuidanceLetterRecommendationResolver{r}
 }
 
 // TRBRequest returns generated.TRBRequestResolver implementation.
@@ -2317,6 +2327,11 @@ func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 	return &tRBRequestFormResolver{r}
 }
 
+// TRBTaskStatuses returns generated.TRBTaskStatusesResolver implementation.
+func (r *Resolver) TRBTaskStatuses() generated.TRBTaskStatusesResolver {
+	return &tRBTaskStatusesResolver{r}
+}
+
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2334,11 +2349,12 @@ type systemIntakeDocumentResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
-type tRBAdviceLetterResolver struct{ *Resolver }
-type tRBAdviceLetterRecommendationResolver struct{ *Resolver }
+type tRBGuidanceLetterResolver struct{ *Resolver }
+type tRBGuidanceLetterRecommendationResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
 type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }
 type tRBRequestFeedbackResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
+type tRBTaskStatusesResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

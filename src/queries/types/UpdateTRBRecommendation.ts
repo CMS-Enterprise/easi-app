@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UpdateTRBAdviceLetterRecommendationInput } from "./../../types/graphql-global-types";
+import { UpdateTRBGuidanceLetterRecommendationInput } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: UpdateTRBRecommendation
 // ====================================================
 
 export interface UpdateTRBRecommendation_updateTRBAdviceLetterRecommendation {
-  __typename: "TRBAdviceLetterRecommendation";
+  __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
   recommendation: HTML;
@@ -22,5 +22,5 @@ export interface UpdateTRBRecommendation {
 }
 
 export interface UpdateTRBRecommendationVariables {
-  input: UpdateTRBAdviceLetterRecommendationInput;
+  input: UpdateTRBGuidanceLetterRecommendationInput;
 }

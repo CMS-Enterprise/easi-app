@@ -5,8 +5,8 @@ import i18next from 'i18next';
 
 import { GetTrbRequestHome_trbRequest as GetTrbRequestHomeType } from 'queries/types/GetTrbRequestHome';
 import {
-  TRBAdviceLetterStatus,
-  TRBFormStatus
+  TRBFormStatus,
+  TRBGuidanceLetterStatus
 } from 'types/graphql-global-types';
 
 import InformationCard from '.';
@@ -18,7 +18,7 @@ const trbRequest: GetTrbRequestHomeType = {
   consultMeetingTime: '2024-01-05T05:00:00Z',
   taskStatuses: {
     formStatus: TRBFormStatus.COMPLETED,
-    adviceLetterStatus: TRBAdviceLetterStatus.READY_TO_START,
+    adviceLetterStatus: TRBGuidanceLetterStatus.READY_TO_START,
     __typename: 'TRBTaskStatuses'
   },
   form: {
@@ -27,7 +27,7 @@ const trbRequest: GetTrbRequestHomeType = {
     __typename: 'TRBRequestForm'
   },
   adviceLetter: {
-    __typename: 'TRBAdviceLetter',
+    __typename: 'TRBGuidanceLetter',
     id: '123',
     modifiedAt: '2023-02-05T05:00:00Z'
   },

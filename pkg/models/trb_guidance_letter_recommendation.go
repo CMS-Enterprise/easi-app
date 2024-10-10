@@ -8,8 +8,8 @@ import (
 	"github.com/lib/pq"
 )
 
-// TRBAdviceLetterRecommendation represents the data for a TRB advice letter recommendation
-type TRBAdviceLetterRecommendation struct {
+// TRBGuidanceLetterRecommendation represents the data for a TRB guidance letter recommendation
+type TRBGuidanceLetterRecommendation struct {
 	BaseStruct
 	TRBRequestID     uuid.UUID      `json:"trbRequestId" db:"trb_request_id"`
 	Title            string         `json:"title" db:"title"`

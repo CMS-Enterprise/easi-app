@@ -12,8 +12,8 @@ import {
 import TaskStatusTag from 'components/shared/TaskStatusTag';
 import { GetTrbRequestHome_trbRequest as GetTrbRequestHomeType } from 'queries/types/GetTrbRequestHome';
 import {
-  TRBAdviceLetterStatus,
-  TRBFormStatus
+  TRBFormStatus,
+  TRBGuidanceLetterStatus
 } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
@@ -27,7 +27,7 @@ type InformationCardProps = {
 interface CardDetailsType {
   header: string;
   description: string;
-  status: TRBAdviceLetterStatus | TRBFormStatus;
+  status: TRBGuidanceLetterStatus | TRBFormStatus;
   buttonText: string;
   buttonClass: string;
   buttonLink: string;
@@ -56,15 +56,15 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
   const returnAdviceText = () => {
     if (
       trbRequest.taskStatuses.adviceLetterStatus ===
-        TRBAdviceLetterStatus.CANNOT_START_YET ||
+        TRBGuidanceLetterStatus.CANNOT_START_YET ||
       trbRequest.taskStatuses.adviceLetterStatus ===
-        TRBAdviceLetterStatus.READY_TO_START
+        TRBGuidanceLetterStatus.READY_TO_START
     ) {
       return t('adminHome.startAdvice');
     }
     if (
       trbRequest.taskStatuses.adviceLetterStatus ===
-      TRBAdviceLetterStatus.COMPLETED
+      TRBGuidanceLetterStatus.COMPLETED
     ) {
       return t('adminHome.view');
     }
@@ -94,7 +94,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
         buttonText: returnAdviceText(),
         buttonClass:
           trbRequest.taskStatuses.adviceLetterStatus ===
-          TRBAdviceLetterStatus.COMPLETED
+          TRBGuidanceLetterStatus.COMPLETED
             ? 'usa-button--outline'
             : '',
         buttonLink: 'advice',
@@ -103,7 +103,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
           : t('adminHome.notStarted'),
         disabled:
           trbRequest.taskStatuses.adviceLetterStatus ===
-          TRBAdviceLetterStatus.CANNOT_START_YET
+          TRBGuidanceLetterStatus.CANNOT_START_YET
       };
       break;
     default:

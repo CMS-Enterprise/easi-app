@@ -50,12 +50,12 @@ import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsult
 import {
   PersonRole,
   TRBAdminNoteCategory,
-  TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
   TRBCollabGroupOption,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
+  TRBGuidanceLetterStatus,
   TRBRequestState,
   TRBRequestStatus,
   TRBRequestType,
@@ -99,7 +99,7 @@ export const taskStatuses: TaskStatuses = {
   feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
   consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
   attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-  adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
+  adviceLetterStatus: TRBGuidanceLetterStatus.CANNOT_START_YET
 };
 
 const adminNotes: GetTrbAdminNotes['trbRequest']['adminNotes'] = [
@@ -336,7 +336,7 @@ export const updateTrbRequestConsultMeetingQuery: MockedQuery<
 export const adviceLetter: NonNullable<
   GetTrbAdviceLetter['trbRequest']['adviceLetter']
 > = {
-  __typename: 'TRBAdviceLetter',
+  __typename: 'TRBGuidanceLetter',
   id: '1b68aeca-f0d4-42e8-90ef-70ed2de1a34b',
   meetingSummary: 'Meeting summary text',
   nextSteps: 'These are the next steps',
@@ -345,21 +345,21 @@ export const adviceLetter: NonNullable<
   followupPoint: 'Six months from now',
   recommendations: [
     {
-      __typename: 'TRBAdviceLetterRecommendation',
+      __typename: 'TRBGuidanceLetterRecommendation',
       id: '682c9839-ac4c-48f5-8ac3-8693573e4dd8',
       title: 'Recommendation 1',
       recommendation: 'This is the recommendation text',
       links: ['easi.cms.gov', 'https://google.com']
     },
     {
-      __typename: 'TRBAdviceLetterRecommendation',
+      __typename: 'TRBGuidanceLetterRecommendation',
       id: 'a118705f-c87b-48ef-a812-b3264ad00abe',
       title: 'Recommendation 2',
       recommendation: 'This is the recommendation text',
       links: ['easi.cms.gov', 'cms.gov']
     },
     {
-      __typename: 'TRBAdviceLetterRecommendation',
+      __typename: 'TRBGuidanceLetterRecommendation',
       id: 'e73fefbd-0d1a-4345-a217-2ce1ebe64d4f',
       title: 'Recommendation 3',
       recommendation: 'This is the recommendation text',
@@ -396,7 +396,7 @@ export const getTrbAdviceLetterQuery: MockedQuery<
         consultMeetingTime: null,
         taskStatuses: {
           __typename: 'TRBTaskStatuses',
-          adviceLetterStatus: TRBAdviceLetterStatus.COMPLETED
+          adviceLetterStatus: TRBGuidanceLetterStatus.COMPLETED
         },
         adviceLetter
       }

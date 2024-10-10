@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 const TRBRecommendation = gql`
-  fragment TRBRecommendation on TRBAdviceLetterRecommendation {
+  fragment TRBRecommendation on TRBGuidanceLetterRecommendation {
     id
     title
     recommendation
@@ -12,7 +12,7 @@ const TRBRecommendation = gql`
 /** Advice letter fields fragment */
 export const TRBAdviceLetter = gql`
   ${TRBRecommendation}
-  fragment TRBAdviceLetter on TRBAdviceLetter {
+  fragment TRBAdviceLetter on TRBGuidanceLetter {
     id
     meetingSummary
     nextSteps
@@ -64,7 +64,7 @@ export const CreateTrbAdviceLetterQuery = gql`
 /** Update advice letter */
 export const UpdateTrbAdviceLetterQuery = gql`
   ${TRBAdviceLetter}
-  mutation UpdateTrbAdviceLetter($input: UpdateTRBAdviceLetterInput!) {
+  mutation UpdateTrbAdviceLetter($input: UpdateTRBGuidanceLetterInput!) {
     updateTRBAdviceLetter(input: $input) {
       ...TRBAdviceLetter
     }
@@ -89,7 +89,7 @@ export const GetTrbRecommendationsQuery = gql`
 export const CreateTrbRecommendationQuery = gql`
   ${TRBRecommendation}
   mutation CreateTRBRecommendation(
-    $input: CreateTRBAdviceLetterRecommendationInput!
+    $input: CreateTRBGuidanceLetterRecommendationInput!
   ) {
     createTRBAdviceLetterRecommendation(input: $input) {
       ...TRBRecommendation
@@ -101,7 +101,7 @@ export const CreateTrbRecommendationQuery = gql`
 export const UpdateTrbRecommendationQuery = gql`
   ${TRBRecommendation}
   mutation UpdateTRBRecommendation(
-    $input: UpdateTRBAdviceLetterRecommendationInput!
+    $input: UpdateTRBGuidanceLetterRecommendationInput!
   ) {
     updateTRBAdviceLetterRecommendation(input: $input) {
       ...TRBRecommendation
@@ -113,7 +113,7 @@ export const UpdateTrbRecommendationQuery = gql`
 export const UpdateTrbRecommendationOrderQuery = gql`
   ${TRBRecommendation}
   mutation UpdateTrbRecommendationOrder(
-    $input: UpdateTRBAdviceLetterRecommendationOrderInput!
+    $input: UpdateTRBGuidanceLetterRecommendationOrderInput!
   ) {
     updateTRBAdviceLetterRecommendationOrder(input: $input) {
       ...TRBRecommendation
@@ -140,7 +140,7 @@ export const RequestReviewForTRBAdviceLetterQuery = gql`
 `;
 
 export const SendTRBAdviceLetterQuery = gql`
-  mutation SendTRBAdviceLetter($input: SendTRBAdviceLetterInput!) {
+  mutation SendTRBAdviceLetter($input: SendTRBGuidanceLetterInput!) {
     sendTRBAdviceLetter(input: $input) {
       id
     }

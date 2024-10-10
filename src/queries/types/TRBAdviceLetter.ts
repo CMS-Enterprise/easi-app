@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface TRBAdviceLetter_recommendations {
-  __typename: "TRBAdviceLetterRecommendation";
+  __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
   recommendation: HTML;
@@ -22,7 +22,7 @@ export interface TRBAdviceLetter_author {
 }
 
 export interface TRBAdviceLetter {
-  __typename: "TRBAdviceLetter";
+  __typename: "TRBGuidanceLetter";
   id: UUID;
   meetingSummary: HTML | null;
   nextSteps: HTML | null;

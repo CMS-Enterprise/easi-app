@@ -65,17 +65,17 @@ const noteAdviceLetter: TRBAdminNoteFragment = {
     commonName: 'Jerry Seinfeld'
   },
   categorySpecificData: {
-    __typename: 'TRBAdminNoteAdviceLetterCategoryData',
+    __typename: 'TRBAdminNoteGuidanceLetterCategoryData',
     appliesToMeetingSummary: true,
     appliesToNextSteps: false,
     recommendations: [
       {
-        __typename: 'TRBAdviceLetterRecommendation',
+        __typename: 'TRBGuidanceLetterRecommendation',
         title: 'Recommendation One',
         deletedAt: null
       },
       {
-        __typename: 'TRBAdviceLetterRecommendation',
+        __typename: 'TRBGuidanceLetterRecommendation',
         title: 'Recommendation Two',
         deletedAt: null
       }
@@ -177,12 +177,12 @@ describe('TRB Admin Note', () => {
     const note: TRBAdminNoteFragment = {
       ...noteAdviceLetter,
       categorySpecificData: {
-        __typename: 'TRBAdminNoteAdviceLetterCategoryData',
+        __typename: 'TRBAdminNoteGuidanceLetterCategoryData',
         appliesToMeetingSummary: true,
         appliesToNextSteps: false,
         recommendations: [
           {
-            __typename: 'TRBAdviceLetterRecommendation',
+            __typename: 'TRBGuidanceLetterRecommendation',
             title: 'Recommendation One',
             deletedAt: '2023-03-28T13:20:37.852099Z'
           }

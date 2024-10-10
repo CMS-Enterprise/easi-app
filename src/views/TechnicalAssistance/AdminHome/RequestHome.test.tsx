@@ -7,8 +7,8 @@ import i18next from 'i18next';
 import { trbRequestSummary } from 'data/mock/trbRequest';
 import GetTrbRequestHomeQuery from 'queries/GetTrbRequestHomeQuery';
 import {
-  TRBAdviceLetterStatus,
   TRBFormStatus,
+  TRBGuidanceLetterStatus,
   TRBRequestStatus
 } from 'types/graphql-global-types';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
@@ -45,7 +45,8 @@ describe('Trb Admin Request Home', () => {
                   consultMeetingTime: null,
                   taskStatuses: {
                     formStatus: TRBFormStatus.READY_TO_START,
-                    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
+                    adviceLetterStatus:
+                      TRBGuidanceLetterStatus.CANNOT_START_YET,
                     __typename: 'TRBTaskStatuses'
                   },
                   form: {
@@ -138,7 +139,7 @@ describe('Trb Admin Request Home', () => {
                   consultMeetingTime: '2024-01-05T05:00:00Z',
                   taskStatuses: {
                     formStatus: TRBFormStatus.COMPLETED,
-                    adviceLetterStatus: TRBAdviceLetterStatus.READY_TO_START,
+                    adviceLetterStatus: TRBGuidanceLetterStatus.READY_TO_START,
                     __typename: 'TRBTaskStatuses'
                   },
                   form: {

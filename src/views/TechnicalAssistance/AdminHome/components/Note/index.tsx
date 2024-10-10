@@ -11,7 +11,7 @@ import {
   GetTrbAdminNotes_trbRequest_adminNotes_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents as Document
 } from 'queries/types/GetTrbAdminNotes';
 import {
-  TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData as AdviceLetterCategoryData,
+  TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData as AdviceLetterCategoryData,
   TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteInitialRequestFormCategoryData as InitialRequestFormCategoryData
 } from 'queries/types/TRBAdminNoteFragment';
 import { formatDateLocal } from 'utils/date';
@@ -90,7 +90,7 @@ const Note = ({ note, className, border = true }: NoteProps) => {
           categorySpecificData.documents
         );
         break;
-      case 'TRBAdminNoteAdviceLetterCategoryData':
+      case 'TRBAdminNoteGuidanceLetterCategoryData':
         categorySpecificDataString = adviceLetterCategory(categorySpecificData);
         break;
 
