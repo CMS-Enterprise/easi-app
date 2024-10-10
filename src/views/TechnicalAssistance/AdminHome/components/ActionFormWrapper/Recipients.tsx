@@ -4,10 +4,10 @@ import { Trans, useTranslation } from 'react-i18next';
 import {
   Button,
   ButtonGroup,
+  Dropdown,
   ErrorMessage,
   Fieldset,
-  FormGroup,
-  Select
+  FormGroup
 } from '@trussworks/react-uswds';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -412,7 +412,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                                       'emailRecipientFields.newRecipientComponent'
                                     )}
                                   </Label>
-                                  <Select
+                                  <Dropdown
                                     id={field.name}
                                     {...field}
                                     ref={null}
@@ -423,7 +423,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                                       disabled
                                     />
                                     {cmsDivisionsAndOfficesOptions('component')}
-                                  </Select>
+                                  </Dropdown>
                                 </FormGroup>
                               );
                             }}
@@ -448,7 +448,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                                   {error && (
                                     <ErrorMessage>{error.message}</ErrorMessage>
                                   )}
-                                  <Select
+                                  <Dropdown
                                     id={field.name}
                                     {...field}
                                     ref={null}
@@ -467,7 +467,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                                         )}
                                       />
                                     ))}
-                                  </Select>
+                                  </Dropdown>
                                 </FormGroup>
                               );
                             }}

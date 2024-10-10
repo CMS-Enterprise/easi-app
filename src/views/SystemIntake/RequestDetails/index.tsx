@@ -6,11 +6,11 @@ import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  Dropdown,
   Fieldset,
   Form,
   Link as UswdsLink,
   Radio,
-  Select,
   Textarea,
   TextInput
 } from '@trussworks/react-uswds';
@@ -287,7 +287,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             name="currentStage"
             as={FieldErrorMsg}
           />
-          <Select
+          <Dropdown
             {...register('currentStage')}
             ref={null}
             id="currentStage"
@@ -301,7 +301,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 {name}
               </option>
             ))}
-          </Select>
+          </Dropdown>
         </FieldGroup>
 
         <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>

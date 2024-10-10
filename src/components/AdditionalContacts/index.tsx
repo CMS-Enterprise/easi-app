@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Label, Select } from '@trussworks/react-uswds';
+import { Button, Dropdown, Label } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -186,7 +186,7 @@ const ContactForm = ({
           {t('contactDetails.additionalContacts.component', { type })}
         </Label>
         <FieldErrorMsg>{errors.component}</FieldErrorMsg>
-        <Select
+        <Dropdown
           id="IntakeForm-ContactComponent"
           name="systemIntakeContact.component"
           data-testid="IntakeForm-ContactComponent"
@@ -202,7 +202,7 @@ const ContactForm = ({
             {t('contactDetails.additionalContacts.select')}
           </option>
           {cmsDivisionsAndOfficesOptions('systemIntakeContact')}
-        </Select>
+        </Dropdown>
       </FieldGroup>
 
       {/* Contact Role */}
@@ -211,7 +211,7 @@ const ContactForm = ({
           {t('contactDetails.additionalContacts.role', { type })}
         </Label>
         <FieldErrorMsg>{errors.role}</FieldErrorMsg>
-        <Select
+        <Dropdown
           id="IntakeForm-ContactRole"
           name="systemIntakeContact.role"
           data-testid="IntakeForm-ContactRole"
@@ -228,7 +228,7 @@ const ContactForm = ({
               {role}
             </option>
           ))}
-        </Select>
+        </Dropdown>
       </FieldGroup>
 
       <ExternalRecipientAlert email={activeContact?.email} />

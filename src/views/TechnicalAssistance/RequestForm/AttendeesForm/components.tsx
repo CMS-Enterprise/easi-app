@@ -13,12 +13,12 @@ import { FetchResult } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
+  Dropdown,
   ErrorMessage,
   FormGroup,
   Grid,
   Label,
   Link,
-  Select,
   Table
 } from '@trussworks/react-uswds';
 
@@ -190,7 +190,7 @@ const AttendeeFields = ({
                   {error && (
                     <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                   )}
-                  <Select
+                  <Dropdown
                     id="component"
                     data-testid={`trb-${type}-component`}
                     {...field}
@@ -202,7 +202,7 @@ const AttendeeFields = ({
                       disabled
                     />
                     {cmsDivisionsAndOfficesOptions('component')}
-                  </Select>
+                  </Dropdown>
                 </FormGroup>
               );
             }}
@@ -221,7 +221,7 @@ const AttendeeFields = ({
                   {error && (
                     <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                   )}
-                  <Select
+                  <Dropdown
                     id="role"
                     data-testid={`trb-${type}-role`}
                     {...field}
@@ -235,7 +235,7 @@ const AttendeeFields = ({
                     {(Object.keys(contactRoles) as PersonRole[]).map(key => (
                       <option key={key} value={key} label={contactRoles[key]} />
                     ))}
-                  </Select>
+                  </Dropdown>
                 </FormGroup>
               );
             }}

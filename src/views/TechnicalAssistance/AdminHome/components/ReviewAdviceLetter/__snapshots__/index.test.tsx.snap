@@ -117,6 +117,10 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
+                    <path
                       d="m7 14 5-5 5 5z"
                     />
                   </svg>
@@ -141,6 +145,10 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
+                    <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
                     <path
                       d="m7 10 5 5 5-5z"
                     />
@@ -234,6 +242,10 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
+                    <path
                       d="m7 14 5-5 5 5z"
                     />
                   </svg>
@@ -258,6 +270,10 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
+                    <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
                     <path
                       d="m7 10 5 5 5-5z"
                     />
@@ -351,6 +367,10 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
+                    <path
                       d="m7 14 5-5 5 5z"
                     />
                   </svg>
@@ -375,6 +395,10 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
+                    <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
                     <path
                       d="m7 10 5 5 5-5z"
                     />

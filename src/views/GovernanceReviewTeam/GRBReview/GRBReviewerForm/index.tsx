@@ -5,11 +5,11 @@ import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
+  Dropdown,
   Form,
   FormGroup,
   Grid,
-  Icon,
-  Select
+  Icon
 } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewersDocument,
@@ -237,14 +237,14 @@ const GRBReviewerForm = ({
               name="votingRole"
               as={<FieldErrorMsg />}
             />
-            <Select {...register('votingRole')} ref={null} id="votingRole">
+            <Dropdown {...register('votingRole')} ref={null} id="votingRole">
               <option value="">{t('form:dropdownInitialSelect')}</option>
               {grbReviewerVotingRoles.map(key => (
                 <option value={key} key={key}>
                   {t(`votingRoles.${key}`)}
                 </option>
               ))}
-            </Select>
+            </Dropdown>
           </FormGroup>
 
           <CollapsableLink
@@ -281,7 +281,7 @@ const GRBReviewerForm = ({
               name="grbRole"
               as={<FieldErrorMsg />}
             />
-            <Select
+            <Dropdown
               {...register('grbRole')}
               ref={null}
               id="grbRole"
@@ -293,7 +293,7 @@ const GRBReviewerForm = ({
                   {t(`reviewerRoles.${key}`)}
                 </option>
               ))}
-            </Select>
+            </Dropdown>
           </FormGroup>
 
           {activeReviewer && (

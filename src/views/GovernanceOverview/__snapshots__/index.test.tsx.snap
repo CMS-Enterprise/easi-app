@@ -58,311 +58,9 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+        d="M0 0h24v24H0z"
+        fill="none"
       />
-    </svg>
-    <span>
-      Change request type
-    </span>
-  </a>
-  <p
-    className="line-height-body-5 font-body-lg text-light"
-  >
-    To add a new system or service, you need to go through a set of steps and get approved by the Governance Review Board (GRB).
-  </p>
-  <p
-    className="easi-governance-overview__indented-body"
-  >
-    Use this process only if you'd like to add a new system, service or make major changes and upgrades to an existing one.
-  </p>
-  <div
-    className="governance-overview__content"
-  >
-    <div
-      className="overflow-hidden padding-y-1undefined"
-    >
-      <p>
-        Working through this step-by-step process will help you:
-      </p>
-      <ul
-        className="padding-left-205"
-      >
-        <li
-          className="margin-y-1"
-        >
-          work with Subject Matter Experts (SMEs) to refine your Business Case
-        </li>
-        <li
-          className="margin-y-1"
-        >
-          get a Life Cycle ID
-        </li>
-        <li
-          className="margin-y-1"
-        >
-          get approval for your request to then seek funding
-        </li>
-      </ul>
-      <p>
-        It can take 4 to 6 weeks to go through all the steps and get a decision.
-      </p>
-    </div>
-    <div
-      className="tablet:grid-col-6"
-    >
-      <h2
-        className="font-heading-xl margin-bottom-2"
-      >
-        Steps in the governance process
-      </h2>
-      <ol
-        className="usa-process-list margin-top-2"
-      >
-        <li
-          className="usa-process-list__item"
-        >
-          <h3
-            className="usa-process-list__heading"
-            data-testid="processListHeading"
-          >
-            Fill the intake request form
-          </h3>
-          <p
-            className="margin-bottom-1"
-          >
-            Tell the Governance Admin Team about your project or idea and upload any existing documentation.
-          </p>
-        </li>
-        <li
-          className="usa-process-list__item"
-        >
-          <h3
-            className="usa-process-list__heading"
-            data-testid="processListHeading"
-          >
-            Feedback from initial review
-          </h3>
-          <p
-            className="margin-bottom-1"
-          >
-            The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps.
-          </p>
-        </li>
-      </ol>
-      <div
-        className="easi-divider margin-bottom-3"
-      />
-      <ol
-        className="usa-process-list easi-governance-overview__governance-steps"
-        start={3}
-      >
-        <li
-          className="usa-process-list__item"
-        >
-          <h3
-            className="usa-process-list__heading"
-            data-testid="processListHeading"
-          >
-            Prepare your business case
-          </h3>
-          <p
-            className="margin-bottom-1"
-          >
-            Draft different solutions and the corresponding costs involved.
-          </p>
-        </li>
-        <li
-          className="usa-process-list__item"
-        >
-          <h3
-            className="usa-process-list__heading"
-            data-testid="processListHeading"
-          >
-            Attend the Governance Review Team meeting
-          </h3>
-          <p
-            className="margin-bottom-1"
-          >
-            Discuss your draft Business Case with the Governance Review Team (GRT). They will give you feedback and help you refine your Business Case before you present to the Governance Review Board (GRB).
-          </p>
-          <a
-            className="usa-link"
-            href="/help/it-governance/prepare-for-grt"
-            onClick={[Function]}
-            target="_blank"
-          >
-            Prepare for the GRT meeting (opens in new tab)
-          </a>
-        </li>
-        <li
-          className="usa-process-list__item"
-        >
-          <h3
-            className="usa-process-list__heading"
-            data-testid="processListHeading"
-          >
-            Feedback from the Governance Review Team
-          </h3>
-          <p
-            className="margin-bottom-1"
-          >
-            If the Governance Review Team has any additional comments or feedback, they may ask you to update your Business Case before submitting it to the Governance Review Board.
-          </p>
-        </li>
-        <li
-          className="usa-process-list__item"
-        >
-          <h3
-            className="usa-process-list__heading"
-            data-testid="processListHeading"
-          >
-            Submit the business case for final approval
-          </h3>
-          <p
-            className="margin-bottom-1"
-          >
-            Update your Business Case based on feedback from the Governance Review Team and submit it to the Governance Review Board.
-          </p>
-        </li>
-        <li
-          className="usa-process-list__item"
-        >
-          <h3
-            className="usa-process-list__heading"
-            data-testid="processListHeading"
-          >
-            Attend the Governance Review Board Meeting
-          </h3>
-          <p
-            className="margin-bottom-1"
-          >
-            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.
-          </p>
-          <a
-            className="usa-link"
-            href="/help/it-governance/prepare-for-grb"
-            onClick={[Function]}
-            target="_blank"
-          >
-            Prepare for the GRB meeting (opens in new tab)
-          </a>
-        </li>
-        <li
-          className="usa-process-list__item"
-        >
-          <h3
-            className="usa-process-list__heading"
-            data-testid="processListHeading"
-          >
-            Decision and next steps
-          </h3>
-          <p
-            className="margin-bottom-1"
-          >
-            If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.
-          </p>
-        </li>
-      </ol>
-    </div>
-    <div
-      className="margin-bottom-7"
-    >
-      <div
-        className="easi-collapsable-link"
-      >
-        <button
-          aria-controls="GovernanceOverview-WhyGovernanceExists"
-          aria-expanded={false}
-          className="usa-button usa-button--unstyled display-flex flex-align-center"
-          data-testid="collapsable-link"
-          onClick={[Function]}
-          type="button"
-        >
-          <svg
-            className="usa-icon margin-right-05"
-            focusable={false}
-            height="1em"
-            role="img"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-            />
-          </svg>
-          Why does the governance process exist?
-        </button>
-      </div>
-    </div>
-  </div>
-  <a
-    className="usa-button margin-bottom-5"
-    href="/system/link/test-intake-guid"
-    onClick={[Function]}
-  >
-    Get started
-  </a>
-</main>
-`;
-
-exports[`The governance overview page > matches the snapshot (w/o id param) 1`] = `
-<main
-  className="easi-main-content easi-governance-overview grid-container margin-bottom-2"
-  data-testid="governance-overview"
-  id="main-content"
-  role="main"
-  tabIndex={-1}
->
-  <nav
-    aria-label="Breadcrumbs"
-    className="usa-breadcrumb usa-breadcrumb--wrap"
-  >
-    <ol
-      className="usa-breadcrumb__list"
-    >
-      <li
-        className="usa-breadcrumb__list-item"
-      >
-        <a
-          className="usa-breadcrumb__link"
-          href="/"
-          onClick={[Function]}
-        >
-          <span>
-            IT Governance
-          </span>
-        </a>
-      </li>
-      <li
-        aria-current="page"
-        className="usa-breadcrumb__list-item usa-current"
-      >
-        Start an IT Governance request
-      </li>
-    </ol>
-  </nav>
-  <h1
-    aria-live="polite"
-    className="easi-h1 margin-bottom-2"
-    tabIndex={-1}
-  >
-    Add a new system or service
-  </h1>
-  <a
-    className="display-flex flex-align-center text-primary"
-    href="/system/request-type/"
-    onClick={[Function]}
-  >
-    <svg
-      className="usa-icon text-no-underline"
-      focusable={false}
-      height="1em"
-      role="img"
-      viewBox="0 0 24 24"
-      width="1em"
-      xmlns="http://www.w3.org/2000/svg"
-    >
       <path
         d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
       />
@@ -593,6 +291,324 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
             width="1em"
             xmlns="http://www.w3.org/2000/svg"
           >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+            />
+          </svg>
+          Why does the governance process exist?
+        </button>
+      </div>
+    </div>
+  </div>
+  <a
+    className="usa-button margin-bottom-5"
+    href="/system/link/test-intake-guid"
+    onClick={[Function]}
+  >
+    Get started
+  </a>
+</main>
+`;
+
+exports[`The governance overview page > matches the snapshot (w/o id param) 1`] = `
+<main
+  className="easi-main-content easi-governance-overview grid-container margin-bottom-2"
+  data-testid="governance-overview"
+  id="main-content"
+  role="main"
+  tabIndex={-1}
+>
+  <nav
+    aria-label="Breadcrumbs"
+    className="usa-breadcrumb usa-breadcrumb--wrap"
+  >
+    <ol
+      className="usa-breadcrumb__list"
+    >
+      <li
+        className="usa-breadcrumb__list-item"
+      >
+        <a
+          className="usa-breadcrumb__link"
+          href="/"
+          onClick={[Function]}
+        >
+          <span>
+            IT Governance
+          </span>
+        </a>
+      </li>
+      <li
+        aria-current="page"
+        className="usa-breadcrumb__list-item usa-current"
+      >
+        Start an IT Governance request
+      </li>
+    </ol>
+  </nav>
+  <h1
+    aria-live="polite"
+    className="easi-h1 margin-bottom-2"
+    tabIndex={-1}
+  >
+    Add a new system or service
+  </h1>
+  <a
+    className="display-flex flex-align-center text-primary"
+    href="/system/request-type/"
+    onClick={[Function]}
+  >
+    <svg
+      className="usa-icon text-no-underline"
+      focusable={false}
+      height="1em"
+      role="img"
+      viewBox="0 0 24 24"
+      width="1em"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0 0h24v24H0z"
+        fill="none"
+      />
+      <path
+        d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+      />
+    </svg>
+    <span>
+      Change request type
+    </span>
+  </a>
+  <p
+    className="line-height-body-5 font-body-lg text-light"
+  >
+    To add a new system or service, you need to go through a set of steps and get approved by the Governance Review Board (GRB).
+  </p>
+  <p
+    className="easi-governance-overview__indented-body"
+  >
+    Use this process only if you'd like to add a new system, service or make major changes and upgrades to an existing one.
+  </p>
+  <div
+    className="governance-overview__content"
+  >
+    <div
+      className="overflow-hidden padding-y-1undefined"
+    >
+      <p>
+        Working through this step-by-step process will help you:
+      </p>
+      <ul
+        className="padding-left-205"
+      >
+        <li
+          className="margin-y-1"
+        >
+          work with Subject Matter Experts (SMEs) to refine your Business Case
+        </li>
+        <li
+          className="margin-y-1"
+        >
+          get a Life Cycle ID
+        </li>
+        <li
+          className="margin-y-1"
+        >
+          get approval for your request to then seek funding
+        </li>
+      </ul>
+      <p>
+        It can take 4 to 6 weeks to go through all the steps and get a decision.
+      </p>
+    </div>
+    <div
+      className="tablet:grid-col-6"
+    >
+      <h2
+        className="font-heading-xl margin-bottom-2"
+      >
+        Steps in the governance process
+      </h2>
+      <ol
+        className="usa-process-list margin-top-2"
+      >
+        <li
+          className="usa-process-list__item"
+        >
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Fill the intake request form
+          </h3>
+          <p
+            className="margin-bottom-1"
+          >
+            Tell the Governance Admin Team about your project or idea and upload any existing documentation.
+          </p>
+        </li>
+        <li
+          className="usa-process-list__item"
+        >
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Feedback from initial review
+          </h3>
+          <p
+            className="margin-bottom-1"
+          >
+            The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps.
+          </p>
+        </li>
+      </ol>
+      <div
+        className="easi-divider margin-bottom-3"
+      />
+      <ol
+        className="usa-process-list easi-governance-overview__governance-steps"
+        start={3}
+      >
+        <li
+          className="usa-process-list__item"
+        >
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Prepare your business case
+          </h3>
+          <p
+            className="margin-bottom-1"
+          >
+            Draft different solutions and the corresponding costs involved.
+          </p>
+        </li>
+        <li
+          className="usa-process-list__item"
+        >
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Attend the Governance Review Team meeting
+          </h3>
+          <p
+            className="margin-bottom-1"
+          >
+            Discuss your draft Business Case with the Governance Review Team (GRT). They will give you feedback and help you refine your Business Case before you present to the Governance Review Board (GRB).
+          </p>
+          <a
+            className="usa-link"
+            href="/help/it-governance/prepare-for-grt"
+            onClick={[Function]}
+            target="_blank"
+          >
+            Prepare for the GRT meeting (opens in new tab)
+          </a>
+        </li>
+        <li
+          className="usa-process-list__item"
+        >
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Feedback from the Governance Review Team
+          </h3>
+          <p
+            className="margin-bottom-1"
+          >
+            If the Governance Review Team has any additional comments or feedback, they may ask you to update your Business Case before submitting it to the Governance Review Board.
+          </p>
+        </li>
+        <li
+          className="usa-process-list__item"
+        >
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Submit the business case for final approval
+          </h3>
+          <p
+            className="margin-bottom-1"
+          >
+            Update your Business Case based on feedback from the Governance Review Team and submit it to the Governance Review Board.
+          </p>
+        </li>
+        <li
+          className="usa-process-list__item"
+        >
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Attend the Governance Review Board Meeting
+          </h3>
+          <p
+            className="margin-bottom-1"
+          >
+            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.
+          </p>
+          <a
+            className="usa-link"
+            href="/help/it-governance/prepare-for-grb"
+            onClick={[Function]}
+            target="_blank"
+          >
+            Prepare for the GRB meeting (opens in new tab)
+          </a>
+        </li>
+        <li
+          className="usa-process-list__item"
+        >
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Decision and next steps
+          </h3>
+          <p
+            className="margin-bottom-1"
+          >
+            If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.
+          </p>
+        </li>
+      </ol>
+    </div>
+    <div
+      className="margin-bottom-7"
+    >
+      <div
+        className="easi-collapsable-link"
+      >
+        <button
+          aria-controls="GovernanceOverview-WhyGovernanceExists"
+          aria-expanded={false}
+          className="usa-button usa-button--unstyled display-flex flex-align-center"
+          data-testid="collapsable-link"
+          onClick={[Function]}
+          type="button"
+        >
+          <svg
+            className="usa-icon margin-right-05"
+            focusable={false}
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
             <path
               d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
             />
