@@ -2,6 +2,7 @@ package local
 
 import (
 	"context"
+	"slices"
 
 	"github.com/jordan-wright/email"
 	"go.uber.org/zap"
@@ -54,8 +55,8 @@ func NewSMTPSender(serverAddress string, env appconfig.Environment) SMTPSender {
 
 // Send sends and logs an email
 func (sender SMTPSender) Send(ctx context.Context, emailData easiemail.Email) error {
-	// Don't send an email if there's no recipients (even if there are ccAddresses)
-	if len(emailData.ToAddresses) == 0 {
+	// Don't send an email if there's no recipients
+	if len(slices.Concat(emailData.ToAddresses, emailData.BccAddresses, emailData.CcAddresses)) == 0 {
 		return nil
 	}
 

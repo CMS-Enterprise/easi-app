@@ -107,7 +107,7 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 // GetTRBRequestFormByTRBRequestID queries the DB for the TRB request form record matching the given TRB request ID
 func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestForm, error) {
 	var form models.TRBRequestForm
-	err := namedGet(ctx, s, &form, sqlqueries.TRBRequestForm.GetByID, args{
+	err := namedGet(ctx, s.db, &form, sqlqueries.TRBRequestForm.GetByID, args{
 		"trb_request_id": trbRequestID,
 	})
 	if err != nil {
@@ -124,7 +124,7 @@ func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestI
 // GetTRBRequestFormsByTRBRequestIDs queries the DB for TRB request form records matching the given TRB request IDs
 func (s *Store) GetTRBRequestFormsByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestForm, error) {
 	var forms []*models.TRBRequestForm
-	err := namedSelect(ctx, s, &forms, sqlqueries.TRBRequestForm.GetByIDs, args{
+	err := namedSelect(ctx, s.db, &forms, sqlqueries.TRBRequestForm.GetByIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 	if err != nil {
@@ -141,7 +141,7 @@ func (s *Store) GetTRBRequestFormsByTRBRequestIDs(ctx context.Context, trbReques
 // matching the given TRB request ID
 func (s *Store) GetTRBFundingSourcesByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBFundingSource, error) {
 	fundingSources := []*models.TRBFundingSource{}
-	err := namedSelect(ctx, s, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqID, args{
+	err := namedSelect(ctx, s.db, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -164,7 +164,7 @@ func (s *Store) GetTRBFundingSourcesByRequestID(ctx context.Context, trbRequestI
 // matching the given TRB request IDs
 func (s *Store) GetTRBFundingSourcesByRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBFundingSource, error) {
 	fundingSources := []*models.TRBFundingSource{}
-	err := namedSelect(ctx, s, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqIDs, args{
+	err := namedSelect(ctx, s.db, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 

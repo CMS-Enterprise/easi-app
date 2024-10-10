@@ -173,7 +173,7 @@ func (s *Store) UpdateTRBAdviceLetter(ctx context.Context, letter *models.TRBAdv
 func (s *Store) GetTRBAdviceLetterByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
 	letter := models.TRBAdviceLetter{}
 
-	err := namedGet(ctx, s, &letter, sqlqueries.TRBRequestAdviceLetter.GetByTRBID, args{
+	err := namedGet(ctx, s.db, &letter, sqlqueries.TRBRequestAdviceLetter.GetByTRBID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -202,7 +202,7 @@ func (s *Store) GetTRBAdviceLetterByTRBRequestID(ctx context.Context, trbRequest
 func (s *Store) GetTRBAdviceLettersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBAdviceLetter, error) {
 	letters := []*models.TRBAdviceLetter{}
 
-	err := namedSelect(ctx, s, &letters, sqlqueries.TRBRequestAdviceLetter.GetByTRBIDs, args{
+	err := namedSelect(ctx, s.db, &letters, sqlqueries.TRBRequestAdviceLetter.GetByTRBIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 

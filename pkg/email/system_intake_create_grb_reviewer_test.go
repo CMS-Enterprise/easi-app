@@ -24,11 +24,7 @@ func (s *EmailTestSuite) TestCreateSystemIntakeGRBReviewerNotification() {
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
-	recipients := models.EmailNotificationRecipients{
-		RegularRecipientEmails:   []models.EmailAddress{recipient},
-		ShouldNotifyITGovernance: false,
-		ShouldNotifyITInvestment: false,
-	}
+	recipients := []models.EmailAddress{recipient}
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
 
@@ -74,7 +70,9 @@ func (s *EmailTestSuite) TestCreateSystemIntakeGRBReviewerNotification() {
 		allRecipients := []models.EmailAddress{
 			recipient,
 		}
-		s.ElementsMatch(sender.toAddresses, allRecipients)
+		s.Empty(sender.toAddresses)
+		s.Empty(sender.ccAddresses)
+		s.ElementsMatch(sender.bccAddresses, allRecipients)
 	})
 
 	s.Run("all info is included", func() {

@@ -97,7 +97,7 @@ func (s *Store) FetchCedarSystemIsBookmarkedByCedarSystemIDs(ctx context.Context
 	}
 
 	var results []models.BookmarkRequest
-	if err := namedSelect(ctx, s, &results, sqlqueries.CedarBookmarkSystemsForm.SelectByCedarSystemIDs, args{
+	if err := namedSelect(ctx, s.db, &results, sqlqueries.CedarBookmarkSystemsForm.SelectByCedarSystemIDs, args{
 		"eua_user_ids":     pq.Array(euaUserIDs),
 		"cedar_system_ids": pq.Array(systemIDs),
 	}); err != nil {

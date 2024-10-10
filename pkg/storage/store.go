@@ -42,6 +42,11 @@ func (s *Store) PrepareNamed(query string) (*sqlx.NamedStmt, error) {
 	return s.db.PrepareNamed(query)
 }
 
+// NamedExecContext implements the NamedPreparer interface
+func (s *Store) NamedExecContext(ctx context.Context, sqlStatement string, arguments any) (sql.Result, error) {
+	return s.db.NamedExecContext(ctx, sqlStatement, arguments)
+}
+
 // Beginx implements the TransactionPreparer interface
 // Implementing the sqlutils.TransactionPreparer interfaces allows us to use a sqlx.DB or a storage.Store to create a transaction
 func (s *Store) Beginx() (*sqlx.Tx, error) {
@@ -158,11 +163,12 @@ func namedExec(ctx context.Context, np sqlutils.NamedPreparer, sqlStatement stri
 		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedExec")
 	}
 
-	stmt, err := np.PrepareNamed(sqlStatement)
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-
-	return stmt.ExecContext(ctx, arguments)
+	return np.NamedExecContext(ctx, sqlStatement, arguments)
+	// stmt, err := np.PrepareNamed(sqlStatement)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// defer stmt.Close()
+	//
+	// return stmt.ExecContext(ctx, arguments)
 }

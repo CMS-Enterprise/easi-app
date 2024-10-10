@@ -7,6 +7,7 @@ type TabPanelProps = {
   children: React.ReactNode;
   isActive?: boolean;
   bordered?: boolean;
+  className?: string;
 };
 
 /**
@@ -19,12 +20,17 @@ const TabPanel = ({
   tabName,
   isActive,
   children,
-  bordered
+  bordered,
+  className
 }: TabPanelProps) => {
-  const classes = classnames('easi-tabs__tab-panel overflow-visible', {
-    'easi-only-print': !isActive,
-    'easi-tabs__tab-panel--bordered': bordered
-  });
+  const classes = classnames(
+    'easi-tabs__tab-panel overflow-visible',
+    {
+      'easi-only-print': !isActive,
+      'easi-tabs__tab-panel--bordered': bordered
+    },
+    className
+  );
 
   return (
     <section

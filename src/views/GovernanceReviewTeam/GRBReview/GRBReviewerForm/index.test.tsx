@@ -3,9 +3,9 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
-  CreateSystemIntakeGRBReviewerDocument,
-  CreateSystemIntakeGRBReviewerMutation,
-  CreateSystemIntakeGRBReviewerMutationVariables,
+  CreateSystemIntakeGRBReviewersDocument,
+  CreateSystemIntakeGRBReviewersMutation,
+  CreateSystemIntakeGRBReviewersMutationVariables,
   GetSystemIntakeGRBReviewersDocument,
   GetSystemIntakeGRBReviewersQuery,
   GetSystemIntakeGRBReviewersQueryVariables,
@@ -75,25 +75,32 @@ const cedarContactsQuery = (
   }
 });
 
-const createSystemIntakeGRBReviewerQuery: MockedQuery<
-  CreateSystemIntakeGRBReviewerMutation,
-  CreateSystemIntakeGRBReviewerMutationVariables
+const createSystemIntakeGRBReviewersQuery: MockedQuery<
+  CreateSystemIntakeGRBReviewersMutation,
+  CreateSystemIntakeGRBReviewersMutationVariables
 > = {
   request: {
-    query: CreateSystemIntakeGRBReviewerDocument,
+    query: CreateSystemIntakeGRBReviewersDocument,
     variables: {
       input: {
         systemIntakeID: systemIntake.id,
-        euaUserId: contact.euaUserId,
-        votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
-        grbRole: SystemIntakeGRBReviewerRole.CMCS_REP
+        reviewers: [
+          {
+            euaUserId: contact.euaUserId,
+            votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
+            grbRole: SystemIntakeGRBReviewerRole.CMCS_REP
+          }
+        ]
       }
     }
   },
   result: {
     data: {
       __typename: 'Mutation',
-      createSystemIntakeGRBReviewer: grbReviewer
+      createSystemIntakeGRBReviewers: {
+        __typename: 'CreateSystemIntakeGRBReviewersPayload',
+        reviewers: [grbReviewer]
+      }
     }
   }
 };
@@ -157,7 +164,7 @@ describe('GRB reviewer form', () => {
           mocks={[
             cedarContactsQuery('Je'),
             cedarContactsQuery('Jerry Seinfeld'),
-            createSystemIntakeGRBReviewerQuery,
+            createSystemIntakeGRBReviewersQuery,
             getSystemIntakeGRBReviewersQuery(),
             getSystemIntakeGRBReviewersQuery(grbReviewer)
           ]}

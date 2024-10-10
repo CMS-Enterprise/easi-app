@@ -249,6 +249,7 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			archived_at = :archived_at,
 			grt_date = :grt_date,
 			grb_date = :grb_date,
+			grb_review_started_at = :grb_review_started_at,
 			alfabet_id = :alfabet_id,
 			lcid = :lcid,
 			lcid_expires_at = :lcid_expires_at,
@@ -408,7 +409,7 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 // FetchSystemIntakesWithReviewRequested queries the DB for all open system intakes where user is requested
 func (s *Store) FetchSystemIntakesWithReviewRequested(ctx context.Context, userID uuid.UUID) ([]*models.SystemIntake, error) {
 	intakes := []*models.SystemIntake{}
-	err := namedSelect(ctx, s, &intakes, sqlqueries.SystemIntakeGRBReviewer.GetIntakesWhereReviewRequested, args{
+	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntakeGRBReviewer.GetIntakesWhereReviewRequested, args{
 		"user_id": userID,
 	})
 	if err != nil {
@@ -580,7 +581,7 @@ func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.System
 func (s *Store) GetMySystemIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
 	var intakes []*models.SystemIntake
 
-	err := namedSelect(ctx, s, &intakes, sqlqueries.SystemIntake.GetByUser, args{
+	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntake.GetByUser, args{
 		"eua_user_id": appcontext.Principal(ctx).Account().Username,
 	})
 

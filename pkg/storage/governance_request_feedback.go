@@ -69,7 +69,7 @@ func (s *Store) CreateGovernanceRequestFeedback(ctx context.Context, requestFeed
 func (s *Store) GetGovernanceRequestFeedbacksByIntakeID(ctx context.Context, intakeID uuid.UUID) ([]*models.GovernanceRequestFeedback, error) {
 	feedbacks := []*models.GovernanceRequestFeedback{}
 
-	err := namedSelect(ctx, s, &feedbacks, sqlqueries.SystemIntakeGovReqFeedback.GetBySystemIntakeID, args{
+	err := namedSelect(ctx, s.db, &feedbacks, sqlqueries.SystemIntakeGovReqFeedback.GetBySystemIntakeID, args{
 		"system_intake_id": intakeID,
 	})
 	if err != nil {
@@ -88,7 +88,7 @@ func (s *Store) GetGovernanceRequestFeedbacksByIntakeID(ctx context.Context, int
 func (s *Store) GetGovernanceRequestFeedbacksByIntakeIDs(ctx context.Context, intakeIDs []uuid.UUID) ([]*models.GovernanceRequestFeedback, error) {
 	feedbacks := []*models.GovernanceRequestFeedback{}
 
-	err := namedSelect(ctx, s, &feedbacks, sqlqueries.SystemIntakeGovReqFeedback.GetBySystemIntakeIDs, args{
+	err := namedSelect(ctx, s.db, &feedbacks, sqlqueries.SystemIntakeGovReqFeedback.GetBySystemIntakeIDs, args{
 		"system_intake_ids": pq.Array(intakeIDs),
 	})
 	if err != nil {

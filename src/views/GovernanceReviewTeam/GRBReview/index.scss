@@ -1,0 +1,26 @@
+@use 'uswds-core' as *;
+
+button#startGrbReview {
+  scroll-margin-top: 4rem;
+}
+
+.grb-review-select-checkbox {
+  label {
+    margin-top: 0;
+  }
+
+  &__header {
+    .usa-checkbox__label {
+      color: color('primary');
+      text-decoration: underline;
+
+      &::before {
+        z-index: 2;
+      }
+    }
+
+    &:hover .usa-checkbox__label {
+      color: color('primary-dark');
+    }
+  }
+}

@@ -23,3 +23,10 @@ export interface MockedQuery<
   request: MockedRequest<TVariables>;
   result: FetchResult<TData>;
 }
+
+/** i18Next translation object */
+export type Translation<T extends string> = Record<
+  // Key allows for use of i18next context or plurals
+  T | `${T}_${string}`,
+  string
+>;

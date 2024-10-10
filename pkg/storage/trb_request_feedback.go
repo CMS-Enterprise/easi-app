@@ -114,7 +114,7 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 func (s *Store) GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestFeedback, error) {
 	results := []*models.TRBRequestFeedback{}
 
-	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestFeedback.GetByID, args{
+	err := namedSelect(ctx, s.db, &results, sqlqueries.TRBRequestFeedback.GetByID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -134,7 +134,7 @@ func (s *Store) GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequ
 func (s *Store) GetTRBRequestFeedbackByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestFeedback, error) {
 	results := []*models.TRBRequestFeedback{}
 
-	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestFeedback.GetByIDs, args{
+	err := namedSelect(ctx, s.db, &results, sqlqueries.TRBRequestFeedback.GetByIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 
@@ -153,7 +153,7 @@ func (s *Store) GetTRBRequestFeedbackByTRBRequestIDs(ctx context.Context, trbReq
 // matching the given TRB request ID
 func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestFeedback, error) {
 	feedback := models.TRBRequestFeedback{}
-	err := namedGet(ctx, s, &feedback, sqlqueries.TRBRequestFeedback.GetByNewestByID, args{
+	err := namedGet(ctx, s.db, &feedback, sqlqueries.TRBRequestFeedback.GetByNewestByID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -179,7 +179,7 @@ func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestID(ctx context.Context, t
 // matching the given TRB request IDs
 func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestFeedback, error) {
 	feedback := []*models.TRBRequestFeedback{}
-	err := namedSelect(ctx, s, &feedback, sqlqueries.TRBRequestFeedback.GetByNewestsByIDs, args{
+	err := namedSelect(ctx, s.db, &feedback, sqlqueries.TRBRequestFeedback.GetByNewestsByIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 

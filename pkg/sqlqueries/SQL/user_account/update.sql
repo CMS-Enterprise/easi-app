@@ -8,7 +8,7 @@ SET
     zone_info = :zone_info,
     has_logged_in = :has_logged_in
 
-WHERE username = :username
+WHERE id = :id
 RETURNING
 id,
 username,

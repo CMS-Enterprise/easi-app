@@ -44,10 +44,10 @@ func (s *StoreTestSuite) TestUserAccountsByIDs() {
 	}
 
 	// create
-	_, err := s.store.UserAccountCreate(s.store, &user1)
+	_, err := s.store.UserAccountCreate(ctx, s.store, &user1)
 	s.NoError(err)
 
-	_, err = s.store.UserAccountCreate(s.store, &user2)
+	_, err = s.store.UserAccountCreate(ctx, s.store, &user2)
 	s.NoError(err)
 
 	// get both

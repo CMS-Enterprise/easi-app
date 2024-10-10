@@ -19,7 +19,7 @@ import (
 func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
 	documents := []*models.TRBRequestDocument{}
 
-	err := namedSelect(ctx, s, &documents, sqlqueries.TRBRequestDocuments.GetByTRBID, args{
+	err := namedSelect(ctx, s.db, &documents, sqlqueries.TRBRequestDocuments.GetByTRBID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -44,7 +44,7 @@ func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, trbReques
 func (s *Store) GetTRBRequestDocumentsByRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestDocument, error) {
 	documents := []*models.TRBRequestDocument{}
 
-	err := namedSelect(ctx, s, &documents, sqlqueries.TRBRequestDocuments.GetByTRBIDs, args{
+	err := namedSelect(ctx, s.db, &documents, sqlqueries.TRBRequestDocuments.GetByTRBIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 

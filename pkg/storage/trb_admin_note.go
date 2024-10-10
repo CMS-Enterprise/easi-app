@@ -76,7 +76,7 @@ func (s *Store) CreateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 // GetTRBAdminNotesByTRBRequestID returns all notes for a given TRB request
 func (s *Store) GetTRBAdminNotesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBAdminNote, error) {
 	notes := []*models.TRBAdminNote{}
-	err := namedSelect(ctx, s, &notes, sqlqueries.TRBRequestAdminNotes.GetByTRBID, args{
+	err := namedSelect(ctx, s.db, &notes, sqlqueries.TRBRequestAdminNotes.GetByTRBID, args{
 		"trb_request_id": trbRequestID,
 	})
 	if err != nil {
@@ -98,7 +98,7 @@ func (s *Store) GetTRBAdminNotesByTRBRequestID(ctx context.Context, trbRequestID
 // GetTRBAdminNotesByTRBRequestIDs returns all notes for a given TRB request
 func (s *Store) GetTRBAdminNotesByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBAdminNote, error) {
 	notes := []*models.TRBAdminNote{}
-	err := namedSelect(ctx, s, &notes, sqlqueries.TRBRequestAdminNotes.GetByTRBIDs, args{
+	err := namedSelect(ctx, s.db, &notes, sqlqueries.TRBRequestAdminNotes.GetByTRBIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 	if err != nil {

@@ -18,29 +18,26 @@
   &__tab {
     display: inline-flex;
     align-items: center;
-    height: 54px;
+    height: 51px;
     flex-shrink: 0;
     position: relative;
-    border: 1px solid color($theme-color-base-lighter);
-    border-right: 1px solid color($theme-color-base-lighter);
+    margin-right: 2rem;
 
     &:after {
-      background-color: $easi-bright-blue;
+      background-color: color('primary');
       content: "";
       height: 4px;
       left: -1px;
       opacity: 0;
       position: absolute;
       right: -1px;
-      top: -1px;
+      bottom: -1px;
       transform: scaleX(0);
     }
 
     &--selected {
-      border-bottom: 1px solid color('white');
-
       .easi-tabs__tab-btn {
-        color: $easi-bright-blue;
+        color: color('primary');
       }
 
       &:after {
@@ -56,14 +53,11 @@
     background: none;
     border: 0;
     font-weight: bold;
+    color: color('base-dark');
 
     &:hover {
       cursor: pointer;
     }
-  }
-
-  &__tab-text {
-    margin: 0 1.5em;
   }
 
   &__tab-panel {

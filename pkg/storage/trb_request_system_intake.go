@@ -80,7 +80,7 @@ func (s *Store) CreateTRBRequestSystemIntakes(ctx context.Context, trbRequestID 
 // request ID
 func (s *Store) GetTRBRequestFormSystemIntakesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.SystemIntake, error) {
 	results := []*models.SystemIntake{}
-	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestFormSystemIntakes.GetByTRBRequestID, args{
+	err := namedSelect(ctx, s.db, &results, sqlqueries.TRBRequestFormSystemIntakes.GetByTRBRequestID, args{
 		"trb_request_id": trbRequestID,
 	})
 	if err != nil {
@@ -103,7 +103,7 @@ func (s *Store) GetTRBRequestFormSystemIntakesByTRBRequestID(ctx context.Context
 // request IDs
 func (s *Store) GetTRBRequestFormSystemIntakesByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.RelatedSystemIntake, error) {
 	results := []*models.RelatedSystemIntake{}
-	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestFormSystemIntakes.GetByTRBRequestIDs, args{
+	err := namedSelect(ctx, s.db, &results, sqlqueries.TRBRequestFormSystemIntakes.GetByTRBRequestIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 	if err != nil {
