@@ -360,7 +360,11 @@ const EditTeam = ({
 
           {isWorkspace && showRequisiteRolesAlert && (
             // If any requirement not met
-            <Alert type="warning" data-testid="requisite-roles-alert">
+            <Alert
+              headingLevel="h4"
+              type="warning"
+              data-testid="requisite-roles-alert"
+            >
               {t('singleSystem.editTeam.workspace.teamRoleRequirementAlert')}
 
               {/* Causes Warning: validateDOMNesting(...): <div> cannot appear as a descendant of <p>.  */}
@@ -428,7 +432,7 @@ const EditTeam = ({
               </CardGroup>
               <IconLink
                 to={`/systems/${cedarSystemId}/team`}
-                icon={<IconArrowBack />}
+                icon={<Icon.ArrowBack />}
                 className="margin-top-6"
               >
                 {t('returnToSystemProfile')}
