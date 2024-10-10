@@ -37,7 +37,7 @@ import {
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
-import Breadcrumbs from '../../Breadcrumbs';
+import Breadcrumbs from '../../../../components/shared/Breadcrumbs';
 import { ModalViewType } from '../components/NoteModal';
 import { TRBRequestContext } from '../RequestContext';
 

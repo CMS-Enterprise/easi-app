@@ -211,14 +211,41 @@ const systemProfile = {
         'How many full-time federal employees work on this system?',
       contractors: 'How many full-time contractors work on this system?',
       teamMembers: 'Team members',
-      addNewTeamMember: 'Add a new team member',
-      currentTeamMembers: 'Current team members',
+      addTeamMember: 'Add another team member',
       editRoles: 'Edit roles',
+      remove: 'Remove',
       removeTeamMember: 'Remove team member',
       removeModalTitle: 'Are you sure you want to remove  this team member?',
       removeModalDescription:
-        'Removing {{commonName}} will also remove any roles they have for this system.',
-      keepTeamMember: 'Keep team member',
+        'This action cannot be undone. Removing {{commonName}} will remove any roles and permissions they have for this system.',
+      keepTeamMember: 'Keep team member', //
+      cancel: 'Cancel',
+      tableHeader: {
+        name: 'Name',
+        roles: 'Role(s)',
+        actions: 'Actions'
+      },
+      workspace: {
+        title: 'Manage system team',
+        helpText: 'Add or remove team members and manage their roles.',
+        backLink: 'Return to system workspace',
+        teamRoleRequirementAlert:
+          'Please add additional system team members. Every system should have at least one:',
+        teamRoleRequirementAlertList: [
+          'Business Owner',
+          'System Maintainer',
+          'Contracting Officer’s Representative (COR), Government Task Lead (GTL), or Project Lead'
+        ],
+        removeModalDescription: {
+          text: 'This action cannot be undone. {{roleDetail}} Removing {{commonName}} will remove any roles and permissions they have for this system.',
+          'Business Owner':
+            'Each system should have at least one Business Owner, and {{commonName}} is currently the only Business Owner listed for this system.',
+          'System Maintainer':
+            'Each system should have at least one System Maintainer, and {{commonName}} is currently the only System Maintainer listed for this system.',
+          'Project Lead':
+            "Each system should have at least one Project Lead, Government Task Lead (GTL), or Contracting Officer's Representative (COR), and {{commonName}} is currently the only one listed of this system."
+        }
+      },
       form: {
         add: {
           title: 'Add a team member',
