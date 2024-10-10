@@ -375,7 +375,7 @@ function TaskList() {
                       variant="unstyled"
                       className="usa-button"
                       to={{
-                        pathname: `/trb/advice-letter/${id}`,
+                        pathname: `/trb/guidance-letter/${id}`,
                         state: { fromTaskList: true }
                       }}
                     >

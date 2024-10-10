@@ -174,16 +174,16 @@ const Summary = ({
         back={{
           outline: true,
           text: t('button.cancel'),
-          onClick: () => history.push(`/trb/${trbRequestId}/advice`)
+          onClick: () => history.push(`/trb/${trbRequestId}/guidance`)
         }}
         next={{
           disabled: isSubmitting || !watch('meetingSummary'),
           onClick: () =>
             submit(() =>
-              history.push(`/trb/${trbRequestId}/advice/recommendations`)
+              history.push(`/trb/${trbRequestId}/guidance/recommendations`)
             )
         }}
-        taskListUrl={`/trb/${trbRequestId}/advice`}
+        taskListUrl={`/trb/${trbRequestId}/guidance`}
         saveExitText={t('guidanceLetterForm.returnToRequest')}
         submit={submit}
         border={false}

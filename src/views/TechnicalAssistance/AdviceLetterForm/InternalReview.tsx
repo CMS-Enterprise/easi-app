@@ -75,7 +75,7 @@ const InternalReview = ({
           setReorderError: error =>
             setFormAlert(error ? { type: 'error', message: error } : null),
           edit: recommendation =>
-            history.push(`/trb/${trbRequestId}/advice/recommendations/form`, {
+            history.push(`/trb/${trbRequestId}/guidance/recommendations/form`, {
               recommendation: {
                 ...recommendation,
                 links: recommendation.links.map(link => ({ link }))
@@ -110,7 +110,8 @@ const InternalReview = ({
       <Pager
         back={{
           outline: true,
-          onClick: () => history.push(`/trb/${trbRequestId}/advice/next-steps`)
+          onClick: () =>
+            history.push(`/trb/${trbRequestId}/guidance/next-steps`)
         }}
         next={{
           text: t(
@@ -123,7 +124,7 @@ const InternalReview = ({
           disabled: isSubmitting,
           onClick: () => {
             requestReview()
-              .then(() => history.push(`/trb/${trbRequestId}/advice`))
+              .then(() => history.push(`/trb/${trbRequestId}/guidance`))
               .catch(error => {
                 if (error instanceof ApolloError) {
                   setFormAlert({
@@ -151,14 +152,14 @@ const InternalReview = ({
                 ) {
                   setStepsCompleted([...stepsCompleted, 'internal-review']);
                 }
-                history.push(`/trb/${trbRequestId}/advice/review`);
+                history.push(`/trb/${trbRequestId}/guidance/review`);
               }}
             >
               button
             </Button>
           </Trans>
         ]}
-        taskListUrl={`/trb/${trbRequestId}/advice`}
+        taskListUrl={`/trb/${trbRequestId}/guidance`}
         saveExitText={t('guidanceLetterForm.returnToRequest')}
         submitDisabled
         border={false}

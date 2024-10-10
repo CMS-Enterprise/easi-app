@@ -129,7 +129,7 @@ const Recommendations = ({
                   });
 
                   history.push(
-                    `/trb/${trbRequestId}/advice/recommendations/form`
+                    `/trb/${trbRequestId}/guidance/recommendations/form`
                   );
                 }}
                 remove={recommendation =>
@@ -164,7 +164,7 @@ const Recommendations = ({
               outline: true,
               onClick: () => {
                 setFormAlert(null);
-                history.push(`/trb/${trbRequestId}/advice/summary`);
+                history.push(`/trb/${trbRequestId}/guidance/summary`);
               }
             }}
             next={{
@@ -181,11 +181,11 @@ const Recommendations = ({
                   setStepsCompleted([...stepsCompleted, 'recommendations']);
                 }
                 setFormAlert(null);
-                history.push(`/trb/${trbRequestId}/advice/next-steps`);
+                history.push(`/trb/${trbRequestId}/guidance/next-steps`);
               },
               outline: !hasRecommendations
             }}
-            taskListUrl={`/trb/${trbRequestId}/advice`}
+            taskListUrl={`/trb/${trbRequestId}/guidance`}
             submit={async callback => callback?.()}
             saveExitText={t('guidanceLetterForm.returnToRequest')}
             border={false}

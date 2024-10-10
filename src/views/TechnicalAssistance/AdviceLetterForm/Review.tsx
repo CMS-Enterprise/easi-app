@@ -140,7 +140,7 @@ const Review = ({
           setReorderError: error =>
             setFormAlert(error ? { type: 'error', message: error } : null),
           edit: recommendation =>
-            history.push(`/trb/${trbRequestId}/advice/recommendations/form`, {
+            history.push(`/trb/${trbRequestId}/guidance/recommendations/form`, {
               recommendation: {
                 ...recommendation,
                 links: recommendation.links.map(link => ({ link }))
@@ -179,7 +179,7 @@ const Review = ({
                 ) {
                   setStepsCompleted([...stepsCompleted, 'review']);
                 }
-                history.push(`/trb/${trbRequestId}/advice/done`, {
+                history.push(`/trb/${trbRequestId}/guidance/done`, {
                   success: true
                 });
               })
@@ -191,7 +191,7 @@ const Review = ({
                 ) {
                   setStepsCompleted([...stepsCompleted, 'review']);
                 }
-                history.push(`/trb/${trbRequestId}/advice/done`, {
+                history.push(`/trb/${trbRequestId}/guidance/done`, {
                   success: false
                 });
               })
@@ -207,14 +207,14 @@ const Review = ({
             back={{
               outline: true,
               onClick: () =>
-                history.push(`/trb/${trbRequestId}/advice/internal-review`)
+                history.push(`/trb/${trbRequestId}/guidance/internal-review`)
             }}
             next={{
               text: t('Send'),
               disabled: formSubmitting,
               loading: formSubmitting
             }}
-            taskListUrl={`/trb/${trbRequestId}/advice`}
+            taskListUrl={`/trb/${trbRequestId}/guidance`}
             saveExitText={t('guidanceLetterForm.returnToRequest')}
             submitDisabled
             border={false}

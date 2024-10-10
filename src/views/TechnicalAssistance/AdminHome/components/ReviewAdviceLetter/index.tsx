@@ -140,7 +140,7 @@ const ReviewAdviceLetter = ({
 
         {showSectionEditLinks && (
           <UswdsReactLink
-            to={`/trb/${trbRequestId}/advice/summary`}
+            to={`/trb/${trbRequestId}/guidance/summary`}
             className="display-block margin-bottom-5"
           >
             {t('check.edit')}
@@ -175,7 +175,7 @@ const ReviewAdviceLetter = ({
 
         {showSectionEditLinks && (
           <UswdsReactLink
-            to={`/trb/${trbRequestId}/advice/recommendations`}
+            to={`/trb/${trbRequestId}/guidance/recommendations`}
             className="display-block margin-bottom-2"
           >
             {t('check.edit')}
@@ -209,7 +209,7 @@ const ReviewAdviceLetter = ({
         <h2 className="margin-bottom-1">{t('guidanceLetter.nextSteps')}</h2>
         {showSectionEditLinks && (
           <UswdsReactLink
-            to={`/trb/${trbRequestId}/advice/next-steps`}
+            to={`/trb/${trbRequestId}/guidance/next-steps`}
             className="display-block margin-bottom-5"
           >
             {t('check.edit')}

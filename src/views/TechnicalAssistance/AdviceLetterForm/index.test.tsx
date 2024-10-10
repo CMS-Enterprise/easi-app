@@ -90,7 +90,7 @@ const renderForm = (
     <MemoryRouter
       initialEntries={[
         {
-          pathname: `/trb/${mockTrbRequestId}/advice/${step}`,
+          pathname: `/trb/${mockTrbRequestId}/guidance/${step}`,
           state: { error }
         }
       ]}
@@ -103,7 +103,7 @@ const renderForm = (
             }
             addTypename={false}
           >
-            <Route path="/trb/:id/advice/:formStep/:subpage?">
+            <Route path="/trb/:id/guidance/:formStep/:subpage?">
               <AdviceLetterForm />
             </Route>
           </MockedProvider>

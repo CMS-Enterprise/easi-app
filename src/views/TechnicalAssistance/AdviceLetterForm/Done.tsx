@@ -29,7 +29,7 @@ const Done = () => {
 
   // Redirect to first step if success state is undefined
   if (success === undefined) {
-    history.replace(`/trb/${id}/advice/summary`);
+    history.replace(`/trb/${id}/guidance/summary`);
   }
 
   return (
@@ -49,7 +49,7 @@ const Done = () => {
               { text: t('Home'), url: '/trb' },
               {
                 text: t('adminHome.breadcrumb'),
-                url: `/trb/${id}/advice`
+                url: `/trb/${id}/guidance`
               },
               { text: t('guidanceLetterForm.heading') }
             ]}
@@ -63,7 +63,7 @@ const Done = () => {
           <ButtonGroup>
             {!success && (
               <UswdsReactLink
-                to={`/trb/${id}/advice/review`}
+                to={`/trb/${id}/guidance/review`}
                 className="usa-button"
               >
                 {t('guidanceLetterForm.done.backToGuidanceLetter')}

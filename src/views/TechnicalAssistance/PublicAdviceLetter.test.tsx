@@ -83,8 +83,8 @@ describe('Trb Public Advice Letter', () => {
           }
         ]}
       >
-        <MemoryRouter initialEntries={[`/trb/advice-letter/${id}`]}>
-          <Route exact path="/trb/advice-letter/:id">
+        <MemoryRouter initialEntries={[`/trb/guidance-letter/${id}`]}>
+          <Route exact path="/trb/guidance-letter/:id">
             <PublicAdviceLetter />
           </Route>
         </MemoryRouter>
@@ -125,8 +125,8 @@ describe('Trb Public Advice Letter', () => {
           }
         ]}
       >
-        <MemoryRouter initialEntries={[`/trb/advice-letter/${id}`]}>
-          <Route exact path="/trb/advice-letter/:id">
+        <MemoryRouter initialEntries={[`/trb/guidance-letter/${id}`]}>
+          <Route exact path="/trb/guidance-letter/:id">
             <PublicAdviceLetter />
           </Route>
         </MemoryRouter>
@@ -168,8 +168,8 @@ describe('Trb Public Advice Letter', () => {
           }
         ]}
       >
-        <MemoryRouter initialEntries={[`/trb/advice-letter/${id}`]}>
-          <Route exact path="/trb/advice-letter/:id">
+        <MemoryRouter initialEntries={[`/trb/guidance-letter/${id}`]}>
+          <Route exact path="/trb/guidance-letter/:id">
             <PublicAdviceLetter />
           </Route>
         </MemoryRouter>
@@ -206,12 +206,12 @@ describe('Trb Public Advice Letter', () => {
         <MemoryRouter
           initialEntries={[
             {
-              pathname: `/trb/advice-letter/${id}`,
+              pathname: `/trb/guidance-letter/${id}`,
               state: { fromTaskList: true }
             }
           ]}
         >
-          <Route exact path="/trb/advice-letter/:id">
+          <Route exact path="/trb/guidance-letter/:id">
             <PublicAdviceLetter />
           </Route>
         </MemoryRouter>

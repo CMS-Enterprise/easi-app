@@ -72,7 +72,7 @@ function TechnicalAssistance() {
         </Route>
 
         {/* Public advice letter */}
-        <Route exact path={`${path}/advice-letter/:id`}>
+        <Route exact path={`${path}/guidance-letter/:id`}>
           <PublicAdviceLetter />
         </Route>
 
@@ -81,7 +81,7 @@ function TechnicalAssistance() {
           <RequestForm />
         </Route>
 
-        <Route path={`${path}/:id/advice/:formStep/:subpage?`}>
+        <Route path={`${path}/:id/guidance/:formStep/:subpage?`}>
           <AdviceLetterForm />
         </Route>
 

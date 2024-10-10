@@ -122,7 +122,7 @@ const useTrbAdminActionButtons = ({
       },
       viewAdviceLetter: {
         label: t('adminAction.buttons.viewGuidanceLetter'),
-        link: `/trb/${trbRequestId}/advice`
+        link: `/trb/${trbRequestId}/guidance`
       },
       startAdviceLetter: {
         label: t('adminAction.buttons.startGuidanceLetter'),
@@ -131,11 +131,11 @@ const useTrbAdminActionButtons = ({
             .then(
               result =>
                 !result.errors &&
-                history.push(`/trb/${trbRequestId}/advice/summary`)
+                history.push(`/trb/${trbRequestId}/guidance/summary`)
             )
             // If error, display on advice letter form
             .catch(() =>
-              history.push(`/trb/${trbRequestId}/advice/summary`, {
+              history.push(`/trb/${trbRequestId}/guidance/summary`, {
                 error: true
               })
             )
@@ -143,7 +143,7 @@ const useTrbAdminActionButtons = ({
       continueAdviceLetter: {
         label: t('adminAction.buttons.continueGuidanceLetter'),
         link: {
-          pathname: `/trb/${trbRequestId}/advice/summary`,
+          pathname: `/trb/${trbRequestId}/guidance/summary`,
           state: {
             fromAdmin: true
           }
@@ -151,7 +151,7 @@ const useTrbAdminActionButtons = ({
       },
       finalizeAdviceLetter: {
         label: t('adminAction.buttons.finalizeGuidanceLetter'),
-        link: `/trb/${trbRequestId}/advice/review`
+        link: `/trb/${trbRequestId}/guidance/review`
       },
       addNote: {
         label: t('adminAction.buttons.addNote'),

@@ -266,7 +266,7 @@ const NextSteps = ({
         back={{
           outline: true,
           onClick: () =>
-            history.push(`/trb/${trbRequestId}/advice/recommendations`)
+            history.push(`/trb/${trbRequestId}/guidance/recommendations`)
         }}
         next={{
           disabled:
@@ -275,10 +275,10 @@ const NextSteps = ({
             (!!watch().isFollowupRecommended && !watch().followupPoint),
           onClick: () =>
             submit(() =>
-              history.push(`/trb/${trbRequestId}/advice/internal-review`)
+              history.push(`/trb/${trbRequestId}/guidance/internal-review`)
             )
         }}
-        taskListUrl={`/trb/${trbRequestId}/advice`}
+        taskListUrl={`/trb/${trbRequestId}/guidance`}
         saveExitText={t('guidanceLetterForm.returnToRequest')}
         submit={submit}
         border={false}

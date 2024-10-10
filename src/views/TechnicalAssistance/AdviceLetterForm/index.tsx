@@ -152,7 +152,7 @@ const AdviceLetterForm = () => {
       if (!adviceFormSteps[stepRedirectIndex]?.slug) return;
       // Redirect to latest available step
       history.replace(
-        `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
+        `/trb/${id}/guidance/${adviceFormSteps[stepRedirectIndex].slug}`
       );
     }
   }, [
@@ -296,7 +296,7 @@ const AdviceLetterForm = () => {
             description: step.description,
             completed: index < currentStepIndex,
             onClick: async () => {
-              const url = `/trb/${id}/advice/${adviceFormSteps[index].slug}`;
+              const url = `/trb/${id}/guidance/${adviceFormSteps[index].slug}`;
 
               if (stepSubmit) {
                 stepSubmit?.(() => history.push(url));
@@ -311,7 +311,7 @@ const AdviceLetterForm = () => {
                 { text: t('adminHome.home'), url: '/trb' },
                 {
                   text: t('adminHome.breadcrumb'),
-                  url: `/trb/${id}/advice`
+                  url: `/trb/${id}/guidance`
                 },
                 { text: t('guidanceLetterForm.heading') }
               ]}
@@ -339,7 +339,7 @@ const AdviceLetterForm = () => {
                 unstyled
                 disabled={isStepSubmitting}
                 onClick={() => {
-                  const url = `/trb/${id}/advice`;
+                  const url = `/trb/${id}/guidance`;
                   if (stepSubmit) {
                     stepSubmit?.(() => history.push(url), false);
                   } else {

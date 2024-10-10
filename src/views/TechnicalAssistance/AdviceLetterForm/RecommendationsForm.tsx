@@ -73,8 +73,8 @@ const RecommendationsForm = ({
   const returnLink = useMemo(
     () =>
       state?.recommendation
-        ? `/trb/${trbRequestId}/advice/internal-review`
-        : `/trb/${trbRequestId}/advice/recommendations`,
+        ? `/trb/${trbRequestId}/guidance/internal-review`
+        : `/trb/${trbRequestId}/guidance/recommendations`,
     [state?.recommendation, trbRequestId]
   );
 
@@ -158,11 +158,11 @@ const RecommendationsForm = ({
           { text: t('Home'), url: '/trb' },
           {
             text: t(`Request ${trbRequestId}`),
-            url: `/trb/${trbRequestId}/advice`
+            url: `/trb/${trbRequestId}/guidance`
           },
           {
             text: t('guidanceLetterForm.heading'),
-            url: `/trb/${trbRequestId}/advice/recommendations`
+            url: `/trb/${trbRequestId}/guidance/recommendations`
           },
           {
             text: t(
