@@ -13,7 +13,7 @@
     "@okta/okta-react": "^6.9.0",
     "@okta/okta-signin-widget": "^7.23.0",
     "@toast-ui/react-editor": "^3.2.3",
-    "@trussworks/react-uswds": "3",
+    "@trussworks/react-uswds": "^3.2.0",
     "@types/apollo-upload-client": "^17.0.2",
     "@types/dompurify": "^3.0.5",
     "@types/enzyme": "^3.10.3",
