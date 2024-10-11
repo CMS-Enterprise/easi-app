@@ -74,7 +74,7 @@ const RecommendationsForm = ({
     () =>
       state?.recommendation
         ? `/trb/${trbRequestId}/guidance/internal-review`
-        : `/trb/${trbRequestId}/guidance/recommendations`,
+        : `/trb/${trbRequestId}/guidance/insights`,
     [state?.recommendation, trbRequestId]
   );
 
@@ -160,7 +160,7 @@ const RecommendationsForm = ({
           },
           {
             text: t('guidanceLetterForm.heading'),
-            url: `/trb/${trbRequestId}/guidance/recommendations`
+            url: `/trb/${trbRequestId}/guidance/insights`
           },
           {
             text: t(

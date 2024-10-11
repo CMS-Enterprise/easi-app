@@ -19,7 +19,10 @@ import {
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
-import { FormAlertObject } from 'types/technicalAssistance';
+import {
+  FormAlertObject,
+  GuidanceFormStepKey
+} from 'types/technicalAssistance';
 import {
   meetingSummarySchema,
   nextStepsSchema
@@ -40,20 +43,13 @@ import './index.scss';
 
 type StepsText = { name: string; longName?: string; description?: string }[];
 
-export type FormStepKey =
-  | 'summary'
-  | 'recommendations'
-  | 'next-steps'
-  | 'internal-review'
-  | 'review';
-
 const adviceFormSteps = [
   {
     slug: 'summary',
     component: Summary
   },
   {
-    slug: 'recommendations',
+    slug: 'insights',
     component: Recommendations
   },
   {
@@ -109,7 +105,7 @@ const AdviceLetterForm = () => {
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
   const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
 
-  const [stepsCompleted, setStepsCompleted] = useState<FormStepKey[]>();
+  const [stepsCompleted, setStepsCompleted] = useState<GuidanceFormStepKey[]>();
 
   // Form level alerts from step components
   const [formAlert, setFormAlert] = useState<FormAlertObject | null>(null);
@@ -169,7 +165,9 @@ const AdviceLetterForm = () => {
   useEffect(() => {
     if (!adviceLetter) return;
     (async () => {
-      let completed: FormStepKey[] = stepsCompleted ? [...stepsCompleted] : [];
+      let completed: GuidanceFormStepKey[] = stepsCompleted
+        ? [...stepsCompleted]
+        : [];
       const stepValidators = [];
 
       // Check the Meeting Summary step
@@ -205,7 +203,7 @@ const AdviceLetterForm = () => {
             .then(valid => {
               // Internal review should be marked completed with next steps
               if (valid) {
-                completed = ['summary', 'recommendations', 'next-steps'];
+                completed = ['summary', 'insights', 'next-steps'];
               }
             })
         );
@@ -216,12 +214,7 @@ const AdviceLetterForm = () => {
           TRBAdviceLetterStatus.READY_FOR_REVIEW &&
         !stepsCompleted?.includes('review')
       ) {
-        completed = [
-          'summary',
-          'recommendations',
-          'next-steps',
-          'internal-review'
-        ];
+        completed = ['summary', 'insights', 'next-steps', 'internal-review'];
       }
 
       Promise.allSettled(stepValidators).then(() => {

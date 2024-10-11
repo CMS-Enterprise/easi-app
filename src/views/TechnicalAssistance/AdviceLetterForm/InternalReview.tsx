@@ -75,7 +75,7 @@ const InternalReview = ({
           setReorderError: error =>
             setFormAlert(error ? { type: 'error', message: error } : null),
           edit: recommendation =>
-            history.push(`/trb/${trbRequestId}/guidance/recommendations/form`, {
+            history.push(`/trb/${trbRequestId}/guidance/insights/form`, {
               recommendation: {
                 ...recommendation,
                 links: recommendation.links.map(link => ({ link }))

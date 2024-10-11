@@ -128,9 +128,7 @@ const Recommendations = ({
                     links: recommendation.links.map(link => ({ link }))
                   });
 
-                  history.push(
-                    `/trb/${trbRequestId}/guidance/recommendations/form`
-                  );
+                  history.push(`/trb/${trbRequestId}/guidance/insights/form`);
                 }}
                 remove={recommendation =>
                   remove({ variables: { id: recommendation.id } })
@@ -173,9 +171,9 @@ const Recommendations = ({
                 if (
                   setStepsCompleted &&
                   stepsCompleted &&
-                  !stepsCompleted?.includes('recommendations')
+                  !stepsCompleted?.includes('insights')
                 ) {
-                  setStepsCompleted([...stepsCompleted, 'recommendations']);
+                  setStepsCompleted([...stepsCompleted, 'insights']);
                 }
                 setFormAlert(null);
                 history.push(`/trb/${trbRequestId}/guidance/next-steps`);

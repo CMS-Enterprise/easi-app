@@ -175,7 +175,7 @@ const ReviewAdviceLetter = ({
 
         {showSectionEditLinks && (
           <UswdsReactLink
-            to={`/trb/${trbRequestId}/guidance/recommendations`}
+            to={`/trb/${trbRequestId}/guidance/insights`}
             className="display-block margin-bottom-2"
           >
             {t('check.edit')}

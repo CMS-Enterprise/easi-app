@@ -179,9 +179,7 @@ const Summary = ({
         next={{
           disabled: isSubmitting || !watch('meetingSummary'),
           onClick: () =>
-            submit(() =>
-              history.push(`/trb/${trbRequestId}/guidance/recommendations`)
-            )
+            submit(() => history.push(`/trb/${trbRequestId}/guidance/insights`))
         }}
         taskListUrl={`/trb/${trbRequestId}/guidance`}
         saveExitText={t('guidanceLetterForm.returnToRequest')}

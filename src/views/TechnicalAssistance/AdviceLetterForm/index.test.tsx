@@ -24,6 +24,7 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
+import { GuidanceFormStepKey } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
@@ -81,7 +82,7 @@ const getAdviceLetterCannotStart: MockedQuery<
 };
 
 const renderForm = (
-  step: string,
+  step: GuidanceFormStepKey,
   mocks?: MockedResponse[],
   error?: boolean
 ) => {
@@ -156,7 +157,7 @@ describe('TRB Advice Letter Form', () => {
   });
 
   it('renders the recommendations form', async () => {
-    const { findByRole, findByTestId } = renderForm('recommendations');
+    const { findByRole, findByTestId } = renderForm('insights');
 
     const button = await findByRole('button', {
       name: 'Add another recommendation'

@@ -265,8 +265,7 @@ const NextSteps = ({
         className="margin-top-4"
         back={{
           outline: true,
-          onClick: () =>
-            history.push(`/trb/${trbRequestId}/guidance/recommendations`)
+          onClick: () => history.push(`/trb/${trbRequestId}/guidance/insights`)
         }}
         next={{
           disabled:
