@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y wget && apt-get
 RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
 
 COPY package.json yarn.lock /
-RUN npm install -g yarn
+# RUN npm install -g yarn
 RUN yarn install --immutable
 
 COPY cypress /cypress
