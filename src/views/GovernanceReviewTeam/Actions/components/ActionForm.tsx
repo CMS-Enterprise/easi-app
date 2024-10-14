@@ -19,6 +19,7 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
@@ -27,7 +28,6 @@ import useMessage from 'hooks/useMessage';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary, { ActionsSummaryProps } from './ActionsSummary';

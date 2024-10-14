@@ -10,6 +10,7 @@ import { CedarRole } from 'queries/types/CedarRole';
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import {
   CedarRoleAssigneePerson,
+  TeamMemberRoleTypeName,
   UsernameWithRoles
 } from 'types/systemProfile';
 import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
@@ -58,19 +59,38 @@ function TeamCard({ roles }: { roles: CedarRole[] }) {
 
   const teamSorted: UsernameWithRoles[] = useMemo(() => {
     const team: UsernameWithRoles[] = getUsernamesWithRoles(
-      roles.filter(
-        (role): role is CedarRoleAssigneePerson =>
-          role.assigneeType === CedarAssigneeType.PERSON
-      )
+      roles
+        .concat() // Make sure to not mutate passed in roles
+        .filter(
+          (role): role is CedarRoleAssigneePerson =>
+            role.assigneeType === CedarAssigneeType.PERSON
+        )
     );
 
+    const roleEndIdx = Object.keys(teamRolesIndex).length;
+
+    // Sort an individual's roles first
+    // eslint-disable-next-line no-restricted-syntax
+    for (const p of team) {
+      p.roles.sort((a, b) => {
+        return (
+          (teamRolesIndex[a.roleTypeName as TeamMemberRoleTypeName] ??
+            roleEndIdx) -
+          (teamRolesIndex[b.roleTypeName as TeamMemberRoleTypeName] ??
+            roleEndIdx)
+        );
+      });
+    }
+
     // Sort by roles with any unlisted moved to the end
-    const roleEndIdx = Object.keys(teamRolesIndex()).length;
     return team.sort((a, b) => {
       const ar = a.roles[0];
       const br = b.roles[0];
-      const ari = teamRolesIndex()[ar.roleTypeName || ''] ?? roleEndIdx;
-      const bri = teamRolesIndex()[br.roleTypeName || ''] ?? roleEndIdx;
+      const ari =
+        teamRolesIndex[ar.roleTypeName as TeamMemberRoleTypeName] ?? roleEndIdx;
+      const bri =
+        teamRolesIndex[br.roleTypeName as TeamMemberRoleTypeName] ?? roleEndIdx;
+
       if (ari !== bri) {
         return ari - bri;
       }

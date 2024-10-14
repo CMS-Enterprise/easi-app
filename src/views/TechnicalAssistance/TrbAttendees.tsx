@@ -5,8 +5,9 @@ import { Grid, GridContainer } from '@trussworks/react-uswds';
 
 import Alert from 'components/shared/Alert';
 
+import Breadcrumbs from '../../components/shared/Breadcrumbs';
+
 import Attendees from './RequestForm/Attendees';
-import Breadcrumbs from './Breadcrumbs';
 import { TrbFormAlert } from './RequestForm';
 
 const TrbAttendees = () => {

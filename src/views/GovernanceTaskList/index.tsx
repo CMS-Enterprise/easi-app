@@ -17,6 +17,7 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import { TaskListContainer } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
@@ -32,7 +33,6 @@ import {
   SystemIntakeStep
 } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import { useArchiveSystemIntakeMutation } from '../../gql/gen/graphql';
 
