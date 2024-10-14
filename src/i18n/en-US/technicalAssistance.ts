@@ -1044,7 +1044,7 @@ const technicalAssistance = {
     },
     noDocuments: 'There are no documents uploaded for this request.',
     categories: {
-      ADVICE_LETTER: 'Advice letter',
+      GUIDANCE_LETTER: 'GUIDANCE letter',
       CONSULT_SESSION: 'Consult session',
       GENERAL_REQUEST: 'General note about this request',
       INITIAL_REQUEST_FORM: 'Initial request form',

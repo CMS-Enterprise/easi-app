@@ -260,7 +260,7 @@ const AddNote = ({
                       TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
                       TRBAdminNoteCategory.SUPPORTING_DOCUMENTS,
                       TRBAdminNoteCategory.CONSULT_SESSION,
-                      TRBAdminNoteCategory.ADVICE_LETTER
+                      TRBAdminNoteCategory.GUIDANCE_LETTER
                     ].map(key => (
                       <option key={key} value={key}>
                         {t(`notes.categories.${key}`)}
@@ -370,7 +370,7 @@ const AddNote = ({
               />
             )}
 
-            {category === TRBAdminNoteCategory.ADVICE_LETTER && (
+            {category === TRBAdminNoteCategory.GUIDANCE_LETTER && (
               <Controller
                 control={control}
                 name="sections"

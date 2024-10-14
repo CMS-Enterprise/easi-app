@@ -13,7 +13,7 @@ import { TrbAdminPath } from 'types/technicalAssistance';
 import NotesModal from '../NoteModal';
 
 export const noteCategoryPageMap: Record<string, TRBAdminNoteCategory> = {
-  advice: TRBAdminNoteCategory.ADVICE_LETTER,
+  advice: TRBAdminNoteCategory.GUIDANCE_LETTER,
   request: TRBAdminNoteCategory.GENERAL_REQUEST,
   'initial-request-form': TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
   documents: TRBAdminNoteCategory.SUPPORTING_DOCUMENTS

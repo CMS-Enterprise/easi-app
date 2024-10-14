@@ -55,7 +55,7 @@ const Notes = ({
 
   const adminActionDisabled: boolean =
     trbRequest?.state !== TRBRequestState.CLOSED &&
-    trbRequest?.status !== TRBRequestStatus.ADVICE_LETTER_SENT;
+    trbRequest?.status !== TRBRequestStatus.GUIDANCE_LETTER_SENT;
 
   return (
     <TrbAdminWrapper

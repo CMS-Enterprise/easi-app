@@ -47,7 +47,7 @@ type AddNoteInitialRequestFormFields = {
 
 type AddNoteAdviceLetterFields = {
   sections: Array<'appliesToMeetingSummary' | 'appliesToNextSteps' | string>;
-} & AddNoteCommonFields<TRBAdminNoteCategory.ADVICE_LETTER>;
+} & AddNoteCommonFields<TRBAdminNoteCategory.GUIDANCE_LETTER>;
 
 type AddNoteSupportingDocumentsFields = {
   documentIDs: string[];
@@ -160,7 +160,7 @@ const useAddNote = (trbRequestId: string) => {
       });
     }
 
-    if (formData.category === TRBAdminNoteCategory.ADVICE_LETTER) {
+    if (formData.category === TRBAdminNoteCategory.GUIDANCE_LETTER) {
       /** Default input values */
       const input: CreateTRBAdminNoteGuidanceLetterInput = {
         trbRequestId,

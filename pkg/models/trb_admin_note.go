@@ -14,7 +14,7 @@ const (
 	TRBAdminNoteCategoryInitialRequestForm  TRBAdminNoteCategory = "INITIAL_REQUEST_FORM"
 	TRBAdminNoteCategorySupportingDocuments TRBAdminNoteCategory = "SUPPORTING_DOCUMENTS"
 	TRBAdminNoteCategoryConsultSession      TRBAdminNoteCategory = "CONSULT_SESSION"
-	TRBAdminNoteCategoryGuidanceLetter      TRBAdminNoteCategory = "ADVICE_LETTER"
+	TRBAdminNoteCategoryGuidanceLetter      TRBAdminNoteCategory = "GUIDANCE_LETTER"
 )
 
 // TRBAdminNote represents the data for a note attached to a TRB request by an admin

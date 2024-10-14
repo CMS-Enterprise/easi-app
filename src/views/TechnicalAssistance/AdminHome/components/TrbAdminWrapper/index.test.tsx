@@ -123,7 +123,7 @@ describe('TRB Admin Wrapper', () => {
   it('renders re-open request admin action', () => {
     const { getByRole } = renderWrapper(
       'notes',
-      TRBRequestStatus.ADVICE_LETTER_SENT,
+      TRBRequestStatus.GUIDANCE_LETTER_SENT,
       TRBRequestState.CLOSED
     );
 

@@ -214,14 +214,14 @@ const useTrbAdminActionButtons = ({
           default:
             return [buttons.viewAdviceLetter, buttons.orCloseRequest];
         }
-      case TRBRequestStatus.DRAFT_ADVICE_LETTER:
+      case TRBRequestStatus.DRAFT_GUIDANCE_LETTER:
         switch (activePage) {
           case 'advice':
             return [buttons.continueAdviceLetter, buttons.orCloseRequest];
           default:
             return [buttons.viewAdviceLetter, buttons.orCloseRequest];
         }
-      case TRBRequestStatus.ADVICE_LETTER_IN_REVIEW:
+      case TRBRequestStatus.GUIDANCE_LETTER_IN_REVIEW:
         switch (activePage) {
           case 'advice':
             return [
@@ -233,7 +233,7 @@ const useTrbAdminActionButtons = ({
             return [buttons.viewAdviceLetter, buttons.orCloseRequest];
         }
       case TRBRequestStatus.FOLLOW_UP_REQUESTED:
-      case TRBRequestStatus.ADVICE_LETTER_SENT:
+      case TRBRequestStatus.GUIDANCE_LETTER_SENT:
         return [buttons.closeRequest];
       default:
         return [];
