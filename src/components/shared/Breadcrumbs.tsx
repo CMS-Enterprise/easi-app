@@ -38,6 +38,7 @@ function Breadcrumbs({ items }: BreadcrumbsProps) {
               asCustom={Link}
               to={link.url!}
               onClick={link.onClick}
+              className="text-primary"
             >
               <span>{link.text}</span>
             </BreadcrumbLink>

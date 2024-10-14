@@ -18,6 +18,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import IconLink from 'components/shared/IconLink';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
@@ -38,7 +39,6 @@ import {
   getHeaderSortIcon
 } from 'utils/tableSort';
 import { NotFoundPartial } from 'views/NotFound';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 const processName = {
   SystemIntake: 'IT Governance',

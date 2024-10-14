@@ -6,13 +6,13 @@ import { Form, Grid } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import Label from 'components/shared/Label';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import NotFound from 'views/NotFound';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary from '../components/ActionsSummary';

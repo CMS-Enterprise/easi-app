@@ -44,7 +44,7 @@ import { formatDateLocal } from 'utils/date';
 import AdditionalRequestInfo from 'views/GovernanceTaskList/AdditionalRequestInfo';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 
-import Breadcrumbs from './Breadcrumbs';
+import Breadcrumbs from '../../components/shared/Breadcrumbs';
 
 function TaskList() {
   const { t } = useTranslation('technicalAssistance');

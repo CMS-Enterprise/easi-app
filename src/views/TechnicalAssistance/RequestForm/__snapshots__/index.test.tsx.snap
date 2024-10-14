@@ -18,7 +18,7 @@ exports[`TRB Request Form Feedback > goes to and renders the feedback view 1`] =
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb"
           >
             <span>
@@ -30,7 +30,7 @@ exports[`TRB Request Form Feedback > goes to and renders the feedback view 1`] =
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb/task-list/d8ebedca-0031-4ccd-9690-37390726c50e"
           >
             <span>
@@ -42,7 +42,7 @@ exports[`TRB Request Form Feedback > goes to and renders the feedback view 1`] =
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb/requests/d8ebedca-0031-4ccd-9690-37390726c50e/basic"
           >
             <span>
