@@ -200,6 +200,8 @@ jobs:
           wget -O swagger https://github.com/go-swagger/go-swagger/releases/download/v0.30.5/swagger_linux_amd64
           chmod +x swagger
       - uses: actions/setup-python@v5 # Python is required for pre-commit/action
+        with:
+          python-version: '3.9'
       - name: Pre-commit checks
         uses: pre-commit/action@v3.0.1
         env:
