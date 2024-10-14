@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -94,6 +95,7 @@ type mockSender struct {
 	bccAddresses []models.EmailAddress
 	subject      string
 	body         string
+	emailWasSent bool
 }
 
 func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
@@ -102,6 +104,7 @@ func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
 	s.bccAddresses = emailData.BccAddresses
 	s.subject = emailData.Subject
 	s.body = emailData.Body
+	s.emailWasSent = true
 	return nil
 }
 
@@ -134,13 +137,13 @@ func (tc *TestConfigs) GetDefaults() {
 	// create the test context, note because of the data loaders, the context gets recreated before each test.
 	tc.Context = context.Background()
 
-	localSender := mockSender{}
-	tc.Sender = &localSender
-	emailClient := NewEmailClient(&localSender)
+	emailClient, localSender := NewEmailClient()
+	tc.Sender = localSender
 	tc.EmailClient = emailClient
 }
 
-func NewEmailClient(sender *mockSender) *email.Client {
+func NewEmailClient() (*email.Client, *mockSender) {
+	sender := &mockSender{}
 	config := testhelpers.NewConfig()
 	emailConfig := email.Config{
 		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
@@ -153,7 +156,7 @@ func NewEmailClient(sender *mockSender) *email.Client {
 	}
 
 	emailClient, _ := email.NewClient(emailConfig, sender)
-	return &emailClient
+	return &emailClient, sender
 }
 
 // getTestPrincipal gets a user principal from database
@@ -198,6 +201,7 @@ func newS3Config() upload.Config {
 // utility method for creating a valid new system intake, checking for any errors
 func (s *ResolverSuite) createNewIntake(ops ...func(*models.SystemIntake)) *models.SystemIntake {
 	newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
+		ProjectName: null.StringFrom("TEST"),
 		// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -242,6 +246,22 @@ func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.Us
 	})
 	s.NoError(err)
 	return userAcct
+}
+
+// utility method to get userAcct in resolver tests
+func (s *ResolverSuite) getOrCreateUserAccts(euaUserIDs []string) []*authentication.UserAccount {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+	okta := local.NewOktaAPIClient()
+	userAccts, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) ([]*authentication.UserAccount, error) {
+		users, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, store, euaUserIDs, false, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos))
+		if err != nil {
+			return nil, err
+		}
+		return users, nil
+	})
+	s.NoError(err)
+	return userAccts
 }
 
 // ctxWithNewDataloaders sets new Dataloaders on the test suite's existing context and returns that context.

@@ -65,7 +65,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.U
 // GetBusinessCaseBySystemIntakeID queries the DB for a business case matching the given ID of the System Intake
 func (s *Store) GetBusinessCaseBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.BusinessCase, error) {
 	businessCase := models.BusinessCase{}
-	err := namedGet(ctx, s, &businessCase, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeID, args{
+	err := namedGet(ctx, s.db, &businessCase, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeID, args{
 		"system_intake_id": systemIntakeID,
 	})
 	if err != nil {
@@ -86,7 +86,7 @@ func (s *Store) GetBusinessCaseBySystemIntakeID(ctx context.Context, systemIntak
 // GetBusinessCaseBySystemIntakeIDs queries the DB for a business case matching the given ID of the System Intake
 func (s *Store) GetBusinessCaseBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.BusinessCase, error) {
 	businessCases := []*models.BusinessCase{}
-	err := namedSelect(ctx, s, &businessCases, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeIDs, args{
+	err := namedSelect(ctx, s.db, &businessCases, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 	if err != nil {
@@ -101,7 +101,7 @@ func (s *Store) GetBusinessCaseBySystemIntakeIDs(ctx context.Context, systemInta
 // GetLifecycleCostsByBizCaseID queries the DB for a lifecycle costs by biz case ID
 func (s *Store) GetLifecycleCostsByBizCaseID(ctx context.Context, businessCaseID uuid.UUID) ([]*models.EstimatedLifecycleCost, error) {
 	estimatedLifecycleCosts := []*models.EstimatedLifecycleCost{}
-	err := namedSelect(ctx, s, &estimatedLifecycleCosts, sqlqueries.SystemIntakeBusinessCase.GetEstimatedLifecycleCostLinesByBizCaseID, args{
+	err := namedSelect(ctx, s.db, &estimatedLifecycleCosts, sqlqueries.SystemIntakeBusinessCase.GetEstimatedLifecycleCostLinesByBizCaseID, args{
 		"business_case_id": businessCaseID,
 	})
 	if err != nil {
@@ -117,7 +117,7 @@ func (s *Store) GetLifecycleCostsByBizCaseID(ctx context.Context, businessCaseID
 // GetLifecycleCostsByBizCaseIDs queries the DB for a lifecycle costs by biz case ID
 func (s *Store) GetLifecycleCostsByBizCaseIDs(ctx context.Context, businessCaseIDs []uuid.UUID) ([]*models.EstimatedLifecycleCost, error) {
 	estimatedLifecycleCosts := []*models.EstimatedLifecycleCost{}
-	err := namedSelect(ctx, s, &estimatedLifecycleCosts, sqlqueries.SystemIntakeBusinessCase.GetEstimatedLifecycleCostLinesByBizCaseIDs, args{
+	err := namedSelect(ctx, s.db, &estimatedLifecycleCosts, sqlqueries.SystemIntakeBusinessCase.GetEstimatedLifecycleCostLinesByBizCaseIDs, args{
 		"business_case_ids": pq.Array(businessCaseIDs),
 	})
 	if err != nil {

@@ -21,3 +21,14 @@ type UserAccount struct {
 
 // GetUserAccountFromDBFunc defines a function that returns a user account from the database
 type GetUserAccountFromDBFunc func(ctx context.Context, id uuid.UUID) (*UserAccount, error)
+
+type AcctByUsername struct {
+	UserAccount
+}
+
+func (a AcctByUsername) GetMappingKey() string {
+	return a.Username
+}
+func (a AcctByUsername) GetMappingVal() *UserAccount {
+	return &a.UserAccount
+}

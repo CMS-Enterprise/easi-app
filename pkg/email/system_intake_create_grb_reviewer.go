@@ -46,7 +46,7 @@ func (sie systemIntakeEmails) createGRBReviewerBody(
 // SendCreateGRBReviewerNotification notifies user-selected recipients that a system intake form needs edits
 func (sie systemIntakeEmails) SendCreateGRBReviewerNotification(
 	ctx context.Context,
-	recipients models.EmailNotificationRecipients,
+	recipients []models.EmailAddress,
 	systemIntakeID uuid.UUID,
 	projectTitle string,
 	requesterName string,
@@ -63,7 +63,7 @@ func (sie systemIntakeEmails) SendCreateGRBReviewerNotification(
 	return sie.client.sender.Send(
 		ctx,
 		NewEmail().
-			WithToAddresses(sie.client.listAllRecipients(recipients)).
+			WithBCCAddresses(recipients).
 			WithSubject(subject).
 			WithBody(body),
 	)
