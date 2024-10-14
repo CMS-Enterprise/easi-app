@@ -731,6 +731,14 @@ export enum ExchangeDirection {
   SENDER = 'SENDER'
 }
 
+/**
+ * GRBReviewerComparison represents an individual GRB Reviewer within the context of a
+ * comparison operation between two system intakes.
+ *
+ * For this reason, it is similar to a regular "type GRBReviewer", but has an extra
+ * field for "isCurrentReviewer", representing whether or not the specific GRB Reviewer
+ * is already on the intake being compared against or not.
+ */
 export type GRBReviewerComparison = {
   __typename: 'GRBReviewerComparison';
   euaUserId: Scalars['String']['output'];
@@ -741,6 +749,13 @@ export type GRBReviewerComparison = {
   votingRole: SystemIntakeGRBReviewerVotingRole;
 };
 
+/**
+ * GRBReviewerComparisonIntake represents a response when searching for System Intakes
+ * that have GRB reviewers as compared to another Intake.
+ *
+ * It's effectively a smaller subset of some of the fields on the entire Intake, plus a special
+ * "reviewers" field specific to the comparison operation.
+ */
 export type GRBReviewerComparisonIntake = {
   __typename: 'GRBReviewerComparisonIntake';
   id: Scalars['UUID']['output'];
