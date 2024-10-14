@@ -22,8 +22,8 @@ import {
   UpdateTrbRecommendationQuery
 } from 'queries/TrbAdviceLetterQueries';
 import {
-  CreateTRBAdviceLetterRecommendationInput,
-  UpdateTRBAdviceLetterRecommendationInput
+  CreateTRBGuidanceLetterRecommendationInput,
+  UpdateTRBGuidanceLetterRecommendationInput
 } from 'types/graphql-global-types';
 import {
   AdviceLetterRecommendationFields,
@@ -31,7 +31,7 @@ import {
 } from 'types/technicalAssistance';
 import formatUrl from 'utils/formatUrl';
 
-import Breadcrumbs from '../Breadcrumbs';
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 import { StepSubmit } from '../RequestForm';
 
 import LinksArrayField from './LinksArrayField/Index';
@@ -62,11 +62,11 @@ const RecommendationsForm = ({
     formState: { isSubmitting, isDirty }
   } = useFormContext<AdviceLetterRecommendationFields>();
 
-  const [create] = useMutation<CreateTRBAdviceLetterRecommendationInput>(
+  const [create] = useMutation<CreateTRBGuidanceLetterRecommendationInput>(
     CreateTrbRecommendationQuery
   );
 
-  const [update] = useMutation<UpdateTRBAdviceLetterRecommendationInput>(
+  const [update] = useMutation<UpdateTRBGuidanceLetterRecommendationInput>(
     UpdateTrbRecommendationQuery
   );
 

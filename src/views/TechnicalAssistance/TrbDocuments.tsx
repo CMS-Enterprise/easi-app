@@ -8,8 +8,9 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 
+import Breadcrumbs from '../../components/shared/Breadcrumbs';
+
 import DocumentsTable from './RequestForm/DocumentsTable';
-import Breadcrumbs from './Breadcrumbs';
 
 export type DocumentStatusType = 'success' | 'error';
 

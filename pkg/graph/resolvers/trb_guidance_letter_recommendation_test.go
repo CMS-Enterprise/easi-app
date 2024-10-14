@@ -7,8 +7,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// TestTRBAdviceLetterRecommendationCRUD tests CRUD for TRB advice letter recommendations
-func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
+// TestTRBGuidanceLetterRecommendationCRUD tests CRUD for TRB guidance letter recommendations
+func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 	ctx := s.testConfigs.Context
 	anonEua := "ANON"
 	store := s.testConfigs.Store
@@ -21,14 +21,14 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		s.NoError(err)
 
 		// Test creation of a recommendation
-		toCreate := models.TRBAdviceLetterRecommendation{
+		toCreate := models.TRBGuidanceLetterRecommendation{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer",
 			Recommendation: "I recommend you restart your computer",
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		}
 
-		created, err := CreateTRBAdviceLetterRecommendation(ctx, store, &toCreate)
+		created, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &toCreate)
 		s.NoError(err)
 		s.EqualValues(toCreate.Title, created.Title)
 		s.EqualValues(toCreate.Recommendation, created.Recommendation)
@@ -36,7 +36,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		s.EqualValues(toCreate.Links[1], created.Links[1])
 
 		// Test fetch of recommendations list
-		recommendations, err := GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, store, trbRequest.ID)
+		recommendations, err := GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, store, trbRequest.ID)
 		s.NoError(err)
 		s.True(len(recommendations) == 1)
 
@@ -52,7 +52,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		s.NoError(err)
 
 		// Test updating a recommendation
-		updated, err := UpdateTRBAdviceLetterRecommendation(ctx, store, changes)
+		updated, err := UpdateTRBGuidanceLetterRecommendation(ctx, store, changes)
 		s.NoError(err)
 		s.EqualValues(changes["title"], updated.Title)
 		s.EqualValues(changes["recommendation"], updated.Recommendation)
@@ -61,7 +61,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		s.EqualValues(linksChanges[2], updated.Links[2])
 
 		// Test deletion of a recommendation
-		_, err = DeleteTRBAdviceLetterRecommendation(ctx, store, created.ID)
+		_, err = DeleteTRBGuidanceLetterRecommendation(ctx, store, created.ID)
 		s.NoError(err)
 	})
 
@@ -73,7 +73,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		s.NoError(err)
 
 		// Test creation of a recommendation
-		toCreate := models.TRBAdviceLetterRecommendation{
+		toCreate := models.TRBGuidanceLetterRecommendation{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer",
 			Recommendation: "I recommend you restart your computer",
@@ -81,11 +81,11 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		}
 
 		// Create a recommendation
-		created, err := CreateTRBAdviceLetterRecommendation(ctx, store, &toCreate)
+		created, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &toCreate)
 		s.NoError(err)
 
 		// Delete the recommendation
-		_, err = DeleteTRBAdviceLetterRecommendation(ctx, store, created.ID)
+		_, err = DeleteTRBGuidanceLetterRecommendation(ctx, store, created.ID)
 		s.NoError(err)
 
 		// Attempt to update the recommendation
@@ -99,7 +99,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		}
 
 		// This update should fail, since the resolver won't be able to fetch the row
-		_, err = UpdateTRBAdviceLetterRecommendation(ctx, store, changes)
+		_, err = UpdateTRBGuidanceLetterRecommendation(ctx, store, changes)
 		s.Error(err)
 	})
 
@@ -110,26 +110,26 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
 		s.NoError(err)
 
-		createdRecommendations := []*models.TRBAdviceLetterRecommendation{}
+		createdRecommendations := []*models.TRBGuidanceLetterRecommendation{}
 		for i := 0; i < 3; i++ {
-			toCreate := models.TRBAdviceLetterRecommendation{
+			toCreate := models.TRBGuidanceLetterRecommendation{
 				TRBRequestID:   trbRequest.ID,
 				Title:          "Restart your computer",
 				Recommendation: "I recommend you restart your computer",
 				Links:          pq.StringArray{"google.com", "askjeeves.com"},
 			}
-			created, err := CreateTRBAdviceLetterRecommendation(ctx, store, &toCreate)
+			created, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &toCreate)
 			s.NoError(err)
 			s.EqualValues(i, created.PositionInLetter.ValueOrZero()) // check that positions were ordered oldest-to-newest during creation
 			createdRecommendations = append(createdRecommendations, created)
 		}
 
 		// delete recommendation in the middle of the order
-		_, err = DeleteTRBAdviceLetterRecommendation(ctx, store, createdRecommendations[1].ID)
+		_, err = DeleteTRBGuidanceLetterRecommendation(ctx, store, createdRecommendations[1].ID)
 		s.NoError(err)
 
 		// check that the last recommendation's position was adjusted from 2 to 1 to close the gap
-		lastRecommendationAfterDelete, err := store.GetTRBAdviceLetterRecommendationByID(ctx, createdRecommendations[2].ID)
+		lastRecommendationAfterDelete, err := store.GetTRBGuidanceLetterRecommendationByID(ctx, createdRecommendations[2].ID)
 		s.NoError(err)
 		s.EqualValues(1, lastRecommendationAfterDelete.PositionInLetter.ValueOrZero())
 	})

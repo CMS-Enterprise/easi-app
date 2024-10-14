@@ -18,7 +18,7 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
+import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import {
   FormAlertObject,
   GuidanceFormStepKey
@@ -29,7 +29,7 @@ import {
 } from 'validations/trbRequestSchema';
 import NotFound from 'views/NotFound';
 
-import Breadcrumbs from '../Breadcrumbs';
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 import { StepSubmit } from '../RequestForm';
 
 import Done from './Done';
@@ -211,7 +211,7 @@ const AdviceLetterForm = () => {
 
       if (
         trbRequest?.taskStatuses.adviceLetterStatus ===
-          TRBAdviceLetterStatus.READY_FOR_REVIEW &&
+          TRBGuidanceLetterStatus.READY_FOR_REVIEW &&
         !stepsCompleted?.includes('review')
       ) {
         completed = ['summary', 'insights', 'next-steps', 'internal-review'];

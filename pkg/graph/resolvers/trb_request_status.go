@@ -99,10 +99,10 @@ func getTRBAttendConsultStatus(ctx context.Context, trbRequest models.TRBRequest
 	return &status, nil
 }
 
-func getTRBAdviceLetterStatus(ctx context.Context, trbRequest models.TRBRequest) (*models.TRBAdviceLetterStatus, error) {
-	var status models.TRBAdviceLetterStatus
+func getTRBGuidanceLetterStatus(ctx context.Context, trbRequest models.TRBRequest) (*models.TRBGuidanceLetterStatus, error) {
+	var status models.TRBGuidanceLetterStatus
 
-	letter, err := dataloaders.GetTRBAdviceLetterByTRBRequestID(ctx, trbRequest.ID)
+	letter, err := dataloaders.GetTRBGuidanceLetterByTRBRequestID(ctx, trbRequest.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -110,9 +110,9 @@ func getTRBAdviceLetterStatus(ctx context.Context, trbRequest models.TRBRequest)
 	// if letter hasn't been created yet
 	if letter == nil {
 		if trbRequest.ConsultMeetingTime != nil && time.Now().After(*trbRequest.ConsultMeetingTime) {
-			status = models.TRBAdviceLetterStatusReadyToStart
+			status = models.TRBGuidanceLetterStatusReadyToStart
 		} else {
-			status = models.TRBAdviceLetterStatusCannotStartYet
+			status = models.TRBGuidanceLetterStatusCannotStartYet
 		}
 	} else {
 		status = letter.Status
@@ -155,28 +155,28 @@ func GetTRBTaskStatuses(ctx context.Context, trbRequest models.TRBRequest) (*mod
 		return nil, fmt.Errorf("attend consult status is nil for trb request %v", trbRequest.ID)
 	}
 
-	adviceLetterStatus, err := getTRBAdviceLetterStatus(ctx, trbRequest)
+	guidanceLetterStatus, err := getTRBGuidanceLetterStatus(ctx, trbRequest)
 	if err != nil {
 		return nil, err
 	}
-	if adviceLetterStatus == nil {
-		return nil, fmt.Errorf("advice letter status is nil for trb request %v", trbRequest.ID)
+	if guidanceLetterStatus == nil {
+		return nil, fmt.Errorf("guidance letter status is nil for trb request %v", trbRequest.ID)
 	}
 
-	adviceLetterStatusTaskList := models.TRBAdviceLetterStatusTaskListInReview
-	if *adviceLetterStatus == models.TRBAdviceLetterStatusCannotStartYet {
-		adviceLetterStatusTaskList = models.TRBAdviceLetterStatusTaskListCannotStartYet
-	} else if *adviceLetterStatus == models.TRBAdviceLetterStatusCompleted {
-		adviceLetterStatusTaskList = models.TRBAdviceLetterStatusTaskListCompleted
+	guidanceLetterStatusTaskList := models.TRBGuidanceLetterStatusTaskListInReview
+	if *guidanceLetterStatus == models.TRBGuidanceLetterStatusCannotStartYet {
+		guidanceLetterStatusTaskList = models.TRBGuidanceLetterStatusTaskListCannotStartYet
+	} else if *guidanceLetterStatus == models.TRBGuidanceLetterStatusCompleted {
+		guidanceLetterStatusTaskList = models.TRBGuidanceLetterStatusTaskListCompleted
 	}
 
 	statuses := models.TRBTaskStatuses{
-		FormStatus:                 *formStatus,
-		FeedbackStatus:             *feedbackStatus,
-		ConsultPrepStatus:          *consultPrepStatus,
-		AttendConsultStatus:        *attendConsultStatus,
-		AdviceLetterStatus:         *adviceLetterStatus,
-		AdviceLetterStatusTaskList: adviceLetterStatusTaskList,
+		FormStatus:                   *formStatus,
+		FeedbackStatus:               *feedbackStatus,
+		ConsultPrepStatus:            *consultPrepStatus,
+		AttendConsultStatus:          *attendConsultStatus,
+		GuidanceLetterStatus:         *guidanceLetterStatus,
+		GuidanceLetterStatusTaskList: guidanceLetterStatusTaskList,
 	}
 
 	return &statuses, nil
@@ -196,7 +196,7 @@ func GetTRBRequestStatus(ctx context.Context, trbRequest models.TRBRequest) (mod
 	feedbackStatus := taskStatuses.FeedbackStatus
 	consultPrepStatus := taskStatuses.ConsultPrepStatus
 	attendConsultStatus := taskStatuses.AttendConsultStatus
-	adviceLetterStatus := taskStatuses.AdviceLetterStatus
+	guidanceLetterStatus := taskStatuses.GuidanceLetterStatus
 
 	// New - form status will be "ready to start"
 	if formStatus == models.TRBFormStatusReadyToStart {
@@ -224,32 +224,32 @@ func GetTRBRequestStatus(ctx context.Context, trbRequest models.TRBRequest) (mod
 	}
 
 	// Consult complete
-	if attendConsultStatus == models.TRBAttendConsultStatusCompleted && adviceLetterStatus == models.TRBAdviceLetterStatusReadyToStart {
+	if attendConsultStatus == models.TRBAttendConsultStatusCompleted && guidanceLetterStatus == models.TRBGuidanceLetterStatusReadyToStart {
 		status = models.TRBRequestStatusConsultComplete
 	}
 
-	// Draft advice letter
-	if adviceLetterStatus == models.TRBAdviceLetterStatusInProgress {
-		status = models.TRBRequestStatusDraftAdviceLetter
+	// Draft guidance letter
+	if guidanceLetterStatus == models.TRBGuidanceLetterStatusInProgress {
+		status = models.TRBRequestStatusDraftGuidanceLetter
 	}
 
-	// Advice letter in review
-	if adviceLetterStatus == models.TRBAdviceLetterStatusReadyForReview {
-		status = models.TRBRequestStatusAdviceLetterInReview
+	// Guidance letter in review
+	if guidanceLetterStatus == models.TRBGuidanceLetterStatusReadyForReview {
+		status = models.TRBRequestStatusGuidanceLetterInReview
 	}
 
-	// Advice letter sent
-	if adviceLetterStatus == models.TRBAdviceLetterStatusCompleted {
-		// Get the advice letter and check if follow-up was recommended
-		adviceLetter, err := GetTRBAdviceLetterByTRBRequestID(ctx, trbRequest.ID)
+	// Guidance letter sent
+	if guidanceLetterStatus == models.TRBGuidanceLetterStatusCompleted {
+		// Get the guidance letter and check if follow-up was recommended
+		guidanceLetter, err := GetTRBGuidanceLetterByTRBRequestID(ctx, trbRequest.ID)
 		if err != nil {
 			return status, err
 		}
-		followupRecommended := adviceLetter.IsFollowupRecommended
+		followupRecommended := guidanceLetter.IsFollowupRecommended
 		if followupRecommended != nil && *followupRecommended {
 			status = models.TRBRequestStatusFollowUpRequested
 		} else {
-			status = models.TRBRequestStatusAdviceLetterSent
+			status = models.TRBRequestStatusGuidanceLetterSent
 		}
 	}
 	return status, nil

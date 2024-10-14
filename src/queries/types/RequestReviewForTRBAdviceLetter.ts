@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface RequestReviewForTRBAdviceLetter_requestReviewForTRBAdviceLetter {
-  __typename: "TRBAdviceLetter";
+  __typename: "TRBGuidanceLetter";
   id: UUID;
 }
 

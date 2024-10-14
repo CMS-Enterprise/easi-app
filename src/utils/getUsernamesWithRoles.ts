@@ -1,4 +1,3 @@
-import teamRolesIndex from 'constants/teamRolesIndex';
 import {
   CedarRoleAssigneePerson,
   UsernameWithRoles
@@ -27,18 +26,6 @@ export default function getUsernamesWithRoles(
 
       person.roles.push(role);
     }
-  }
-
-  const rolesIndexEnd = Object.keys(teamRolesIndex()).length;
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const p of people) {
-    p.roles.sort((a, b) => {
-      return (
-        (teamRolesIndex()[a.roleTypeName || ''] ?? rolesIndexEnd) -
-        (teamRolesIndex()[b.roleTypeName || ''] ?? rolesIndexEnd)
-      );
-    });
   }
 
   return people;

@@ -9,7 +9,7 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
+import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
 import ReviewAdviceLetter from './components/ReviewAdviceLetter';
@@ -52,12 +52,12 @@ const AdviceLetter = ({
       description={t('guidanceLetter.introText')}
       disableStep={
         taskStatuses?.adviceLetterStatus ===
-        TRBAdviceLetterStatus.CANNOT_START_YET
+        TRBGuidanceLetterStatus.CANNOT_START_YET
       }
       statusTagProps={{
         status:
           taskStatuses?.adviceLetterStatus ||
-          TRBAdviceLetterStatus.CANNOT_START_YET,
+          TRBGuidanceLetterStatus.CANNOT_START_YET,
         name: author?.commonName!,
         date: adviceLetter?.modifiedAt || adviceLetter?.createdAt || ''
       }}

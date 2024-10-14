@@ -5,7 +5,7 @@ import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'quer
 import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'queries/types/GetTrbRequestSummary';
 import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
 
-import { PersonRole, TRBAdviceLetterStatus } from './graphql-global-types';
+import { PersonRole, TRBGuidanceLetterStatus } from './graphql-global-types';
 
 /* eslint-disable camelcase */
 export type { GetTrbAdminTeamHome_trbRequests as TrbAdminTeamHomeRequest } from 'queries/types/GetTrbAdminTeamHome';
@@ -132,7 +132,7 @@ export type FormAlertObject = {
 export type StepComponentProps = {
   trbRequestId: string;
   adviceLetter: AdviceLetter;
-  adviceLetterStatus: TRBAdviceLetterStatus;
+  adviceLetterStatus: TRBGuidanceLetterStatus;
   /**
    * Set the current form step component submit handler
    * so that in can be used in other places like the header.

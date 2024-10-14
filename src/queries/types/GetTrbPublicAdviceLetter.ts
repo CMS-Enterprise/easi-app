@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBRequestType, TRBAdviceLetterStatus } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBGuidanceLetterStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetTrbPublicAdviceLetter
@@ -23,7 +23,7 @@ export interface GetTrbPublicAdviceLetter_trbRequest_form {
 }
 
 export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter_recommendations {
-  __typename: "TRBAdviceLetterRecommendation";
+  __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
   recommendation: HTML;
@@ -37,7 +37,7 @@ export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter_author {
 }
 
 export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter {
-  __typename: "TRBAdviceLetter";
+  __typename: "TRBGuidanceLetter";
   id: UUID;
   meetingSummary: HTML | null;
   nextSteps: HTML | null;
@@ -55,7 +55,7 @@ export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter {
 
 export interface GetTrbPublicAdviceLetter_trbRequest_taskStatuses {
   __typename: "TRBTaskStatuses";
-  adviceLetterStatus: TRBAdviceLetterStatus;
+  adviceLetterStatus: TRBGuidanceLetterStatus;
 }
 
 export interface GetTrbPublicAdviceLetter_trbRequest {

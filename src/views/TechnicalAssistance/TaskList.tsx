@@ -34,17 +34,17 @@ import {
 } from 'queries/types/UpdateTrbRequestArchived';
 import UpdateTrbRequestArchivedQuery from 'queries/UpdateTrbRequestArchivedQuery';
 import {
-  TRBAdviceLetterStatusTaskList,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
-  TRBFormStatus
+  TRBFormStatus,
+  TRBGuidanceLetterStatusTaskList
 } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import AdditionalRequestInfo from 'views/GovernanceTaskList/AdditionalRequestInfo';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 
-import Breadcrumbs from './Breadcrumbs';
+import Breadcrumbs from '../../components/shared/Breadcrumbs';
 
 function TaskList() {
   const { t } = useTranslation('technicalAssistance');
@@ -370,7 +370,7 @@ function TaskList() {
                   </TaskListDescription>
 
                   {taskStatuses?.adviceLetterStatusTaskList ===
-                    TRBAdviceLetterStatusTaskList.COMPLETED && (
+                    TRBGuidanceLetterStatusTaskList.COMPLETED && (
                     <UswdsReactLink
                       variant="unstyled"
                       className="usa-button"

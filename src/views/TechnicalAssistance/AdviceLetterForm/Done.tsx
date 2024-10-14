@@ -9,7 +9,7 @@ import PageHeading from 'components/PageHeading';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 
-import Breadcrumbs from '../Breadcrumbs';
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 
 /**
  * Last form step for confirmation

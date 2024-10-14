@@ -19,7 +19,7 @@ import {
   RequestReviewForTRBAdviceLetter,
   RequestReviewForTRBAdviceLetterVariables
 } from 'queries/types/RequestReviewForTRBAdviceLetter';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
+import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { StepComponentProps } from 'types/technicalAssistance';
 
 import ReviewAdviceLetter from '../AdminHome/components/ReviewAdviceLetter';
@@ -116,7 +116,7 @@ const InternalReview = ({
         next={{
           text: t(
             `guidanceLetterForm.${
-              adviceLetterStatus === TRBAdviceLetterStatus.IN_PROGRESS
+              adviceLetterStatus === TRBGuidanceLetterStatus.IN_PROGRESS
                 ? 'requestInternalReview'
                 : 'requestAnotherInternalReview'
             }`

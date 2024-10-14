@@ -32,7 +32,7 @@ exports[`TRB Advice Letter Form > matches the snapshot 1`] = `
                   class="usa-breadcrumb__list-item"
                 >
                   <a
-                    class="usa-breadcrumb__link"
+                    class="text-primary usa-breadcrumb__link"
                     href="/trb"
                   >
                     <span>
