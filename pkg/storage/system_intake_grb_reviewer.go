@@ -15,16 +15,32 @@ import (
 )
 
 // CreateSystemIntakeGRBReviewer creates a GRB Reviewer
-func (s *Store) CreateSystemIntakeGRBReviewer(ctx context.Context, np sqlutils.NamedPreparer, reviewer *models.SystemIntakeGRBReviewer) error {
+func (s *Store) CreateSystemIntakeGRBReviewer(ctx context.Context, np sqlutils.NamedPreparer, reviewer *models.SystemIntakeGRBReviewer) (*models.SystemIntakeGRBReviewer, error) {
 	if reviewer.ID == uuid.Nil {
 		reviewer.ID = uuid.New()
 	}
-	if _, err := namedExec(ctx, np, sqlqueries.SystemIntakeGRBReviewer.Create, reviewer); err != nil {
+	createdReviewer := &models.SystemIntakeGRBReviewer{}
+	if err := namedGet(ctx, np, createdReviewer, sqlqueries.SystemIntakeGRBReviewer.Create, reviewer); err != nil {
 		appcontext.ZLogger(ctx).Error("failed to create GRB reviewer", zap.Error(err))
-		return err
+		return nil, err
 	}
 
-	return nil
+	return createdReviewer, nil
+}
+
+// CreateSystemIntakeGRBReviewers creates a GRB Reviewer
+func (s *Store) CreateSystemIntakeGRBReviewers(ctx context.Context, np sqlutils.NamedPreparer, reviewers []*models.SystemIntakeGRBReviewer) ([]*models.SystemIntakeGRBReviewer, error) {
+	for i := range reviewers {
+		if reviewers[i].ID == uuid.Nil {
+			reviewers[i].ID = uuid.New()
+		}
+	}
+	if _, err := namedExec(ctx, np, sqlqueries.SystemIntakeGRBReviewer.Create, reviewers); err != nil {
+		appcontext.ZLogger(ctx).Error("failed to create GRB reviewer", zap.Error(err))
+		return nil, err
+	}
+
+	return reviewers, nil
 }
 
 func (s *Store) UpdateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, reviewerID uuid.UUID, votingRole models.SystemIntakeGRBReviewerVotingRole, grbRole models.SystemIntakeGRBReviewerRole) (*models.SystemIntakeGRBReviewer, error) {
@@ -56,7 +72,14 @@ func (s *Store) DeleteSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, 
 
 func (s *Store) SystemIntakeGRBReviewersBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeGRBReviewer, error) {
 	var systemIntakeGRBReviewers []*models.SystemIntakeGRBReviewer
-	return systemIntakeGRBReviewers, namedSelect(ctx, s, &systemIntakeGRBReviewers, sqlqueries.SystemIntakeGRBReviewer.GetBySystemIntakeID, args{
+	return systemIntakeGRBReviewers, namedSelect(ctx, s.db, &systemIntakeGRBReviewers, sqlqueries.SystemIntakeGRBReviewer.GetBySystemIntakeID, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
+	})
+}
+
+func (s *Store) CompareSystemIntakeGRBReviewers(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeGRBReviewerComparisonResponse, error) {
+	var comparisons []*models.SystemIntakeGRBReviewerComparisonResponse
+	return comparisons, namedSelect(ctx, s.db, &comparisons, sqlqueries.SystemIntakeGRBReviewer.CompareGRBReviewers, args{
+		"system_intake_id": systemIntakeID,
 	})
 }

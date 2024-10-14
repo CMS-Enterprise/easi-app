@@ -177,7 +177,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx context
 func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recommendation *models.TRBAdviceLetterRecommendation) (*models.TRBAdviceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_advice_letter_recommendations
-		SET 
+		SET
 			trb_request_id = :trb_request_id,
 			title = :title,
 			recommendation = :recommendation,
