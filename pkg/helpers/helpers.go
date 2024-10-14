@@ -1,6 +1,8 @@
 package helpers
 
-import "time"
+import (
+	"time"
+)
 
 // DatesEqual compares 2 *time.Time. If either is nil, returns false.
 // Otherwise, returns true if the years, months, and days are the same.

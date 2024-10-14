@@ -173,7 +173,7 @@ func (s *Store) UpdateTRBGuidanceLetter(ctx context.Context, letter *models.TRBG
 func (s *Store) GetTRBGuidanceLetterByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBGuidanceLetter, error) {
 	letter := models.TRBGuidanceLetter{}
 
-	err := namedGet(ctx, s, &letter, sqlqueries.TRBRequestGuidanceLetter.GetByTRBID, args{
+	err := namedGet(ctx, s.db, &letter, sqlqueries.TRBRequestGuidanceLetter.GetByTRBID, args{
 		"trb_request_id": trbRequestID,
 	})
 
@@ -202,7 +202,7 @@ func (s *Store) GetTRBGuidanceLetterByTRBRequestID(ctx context.Context, trbReque
 func (s *Store) GetTRBGuidanceLettersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBGuidanceLetter, error) {
 	letters := []*models.TRBGuidanceLetter{}
 
-	err := namedSelect(ctx, s, &letters, sqlqueries.TRBRequestGuidanceLetter.GetByTRBIDs, args{
+	err := namedSelect(ctx, s.db, &letters, sqlqueries.TRBRequestGuidanceLetter.GetByTRBIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 
