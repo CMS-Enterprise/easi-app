@@ -2524,7 +2524,7 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdviceLetter(trbRequestId: UUID!): TRBGuidanceLetter!
+  createTRBGuidanceLetter(trbRequestId: UUID!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetter(input: UpdateTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)

@@ -5,11 +5,11 @@ import { useMutation } from '@apollo/client';
 import { ModalRef } from '@trussworks/react-uswds';
 
 import { AdminActionButton } from 'components/shared/AdminAction';
-import { CreateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { CreateTrbGuidanceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
-  CreateTrbAdviceLetter,
-  CreateTrbAdviceLetterVariables
-} from 'queries/types/CreateTrbAdviceLetter';
+  CreateTrbGuidanceLetter,
+  CreateTrbGuidanceLetterVariables
+} from 'queries/types/CreateTrbGuidanceLetter';
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 
@@ -62,9 +62,9 @@ const useTrbAdminActionButtons = ({
     !!trbContextData.data?.trbRequest?.trbLeadInfo?.commonName;
 
   const [createGuidanceLetter] = useMutation<
-    CreateTrbAdviceLetter,
-    CreateTrbAdviceLetterVariables
-  >(CreateTrbAdviceLetterQuery, {
+    CreateTrbGuidanceLetter,
+    CreateTrbGuidanceLetterVariables
+  >(CreateTrbGuidanceLetterQuery, {
     variables: {
       trbRequestId
     }

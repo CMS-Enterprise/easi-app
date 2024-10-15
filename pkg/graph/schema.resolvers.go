@@ -1096,8 +1096,8 @@ func (r *mutationResolver) SetTRBAdminNoteArchived(ctx context.Context, id uuid.
 	return resolvers.SetTRBAdminNoteArchived(ctx, r.store, id, isArchived)
 }
 
-// CreateTRBAdviceLetter is the resolver for the createTRBAdviceLetter field.
-func (r *mutationResolver) CreateTRBAdviceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBGuidanceLetter, error) {
+// CreateTRBGuidanceLetter is the resolver for the createTRBGuidanceLetter field.
+func (r *mutationResolver) CreateTRBGuidanceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBGuidanceLetter, error) {
 	return resolvers.CreateTRBGuidanceLetter(ctx, r.store, trbRequestID)
 }
 

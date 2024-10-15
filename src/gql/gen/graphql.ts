@@ -970,8 +970,8 @@ export type Mutation = {
   createTRBAdminNoteGuidanceLetter: TRBAdminNote;
   createTRBAdminNoteInitialRequestForm: TRBAdminNote;
   createTRBAdminNoteSupportingDocuments: TRBAdminNote;
-  createTRBAdviceLetter: TRBGuidanceLetter;
   createTRBAdviceLetterRecommendation: TRBGuidanceLetterRecommendation;
+  createTRBGuidanceLetter: TRBGuidanceLetter;
   createTRBRequest: TRBRequest;
   createTRBRequestAttendee: TRBRequestAttendee;
   createTRBRequestDocument?: Maybe<CreateTRBRequestDocumentPayload>;
@@ -1177,14 +1177,14 @@ export type MutationCreateTRBAdminNoteSupportingDocumentsArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTRBAdviceLetterArgs = {
-  trbRequestId: Scalars['UUID']['input'];
+export type MutationCreateTRBAdviceLetterRecommendationArgs = {
+  input: CreateTRBGuidanceLetterRecommendationInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTRBAdviceLetterRecommendationArgs = {
-  input: CreateTRBGuidanceLetterRecommendationInput;
+export type MutationCreateTRBGuidanceLetterArgs = {
+  trbRequestId: Scalars['UUID']['input'];
 };
 
 

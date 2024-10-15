@@ -52,10 +52,10 @@ export const GetTrbAdviceLetterQuery = gql`
 `;
 
 /** Create guidance letter */
-export const CreateTrbAdviceLetterQuery = gql`
+export const CreateTrbGuidanceLetterQuery = gql`
   ${TRBAdviceLetter}
-  mutation CreateTrbAdviceLetter($trbRequestId: UUID!) {
-    createTRBAdviceLetter(trbRequestId: $trbRequestId) {
+  mutation CreateTrbGuidanceLetter($trbRequestId: UUID!) {
+    createTRBGuidanceLetter(trbRequestId: $trbRequestId) {
       ...TRBAdviceLetter
     }
   }

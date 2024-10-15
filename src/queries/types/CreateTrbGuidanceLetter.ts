@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: CreateTrbAdviceLetter
+// GraphQL mutation operation: CreateTrbGuidanceLetter
 // ====================================================
 
-export interface CreateTrbAdviceLetter_createTRBAdviceLetter_recommendations {
+export interface CreateTrbGuidanceLetter_createTRBGuidanceLetter_recommendations {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -15,13 +15,13 @@ export interface CreateTrbAdviceLetter_createTRBAdviceLetter_recommendations {
   links: string[];
 }
 
-export interface CreateTrbAdviceLetter_createTRBAdviceLetter_author {
+export interface CreateTrbGuidanceLetter_createTRBGuidanceLetter_author {
   __typename: "UserInfo";
   euaUserId: string;
   commonName: string;
 }
 
-export interface CreateTrbAdviceLetter_createTRBAdviceLetter {
+export interface CreateTrbGuidanceLetter_createTRBGuidanceLetter {
   __typename: "TRBGuidanceLetter";
   id: UUID;
   meetingSummary: HTML | null;
@@ -32,16 +32,16 @@ export interface CreateTrbAdviceLetter_createTRBAdviceLetter {
   /**
    * List of recommendations in the order specified by users
    */
-  recommendations: CreateTrbAdviceLetter_createTRBAdviceLetter_recommendations[];
-  author: CreateTrbAdviceLetter_createTRBAdviceLetter_author;
+  recommendations: CreateTrbGuidanceLetter_createTRBGuidanceLetter_recommendations[];
+  author: CreateTrbGuidanceLetter_createTRBGuidanceLetter_author;
   createdAt: Time;
   modifiedAt: Time | null;
 }
 
-export interface CreateTrbAdviceLetter {
-  createTRBAdviceLetter: CreateTrbAdviceLetter_createTRBAdviceLetter;
+export interface CreateTrbGuidanceLetter {
+  createTRBGuidanceLetter: CreateTrbGuidanceLetter_createTRBGuidanceLetter;
 }
 
-export interface CreateTrbAdviceLetterVariables {
+export interface CreateTrbGuidanceLetterVariables {
   trbRequestId: UUID;
 }
