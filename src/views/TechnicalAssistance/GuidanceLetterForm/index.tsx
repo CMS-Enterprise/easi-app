@@ -43,7 +43,7 @@ import './index.scss';
 
 type StepsText = { name: string; longName?: string; description?: string }[];
 
-const adviceFormSteps = [
+const guidanceFormSteps = [
   {
     slug: 'summary',
     component: Summary
@@ -66,7 +66,7 @@ const adviceFormSteps = [
   }
 ] as const;
 
-type AdviceFormStep = (typeof adviceFormSteps)[number];
+type AdviceFormStep = (typeof guidanceFormSteps)[number];
 
 /**
  * TRB request admin advice letter form
@@ -116,18 +116,18 @@ const AdviceLetterForm = () => {
   });
 
   /** Index of current form step - will return -1 if invalid URL */
-  const currentStepIndex: number = adviceFormSteps.findIndex(
+  const currentStepIndex: number = guidanceFormSteps.findIndex(
     ({ slug }) => slug === formStep
   );
 
   /** Current form step object */
-  const currentFormStep: AdviceFormStep = adviceFormSteps[currentStepIndex];
+  const currentFormStep: AdviceFormStep = guidanceFormSteps[currentStepIndex];
 
   // When navigating to a different step, checks if all previous form steps are valid
   const checkValidSteps = useCallback(
     (index: number): boolean => {
       return (
-        adviceFormSteps.filter(
+        guidanceFormSteps.filter(
           (step, i) => stepsCompleted?.includes(step.slug) && i < index
         ).length === index
       );
@@ -142,15 +142,15 @@ const AdviceLetterForm = () => {
       const stepRedirectIndex = !stepsCompleted.includes('summary')
         ? 0
         : // If summary is completed, return index of last completed step plus 1
-          adviceFormSteps.findIndex(
+          guidanceFormSteps.findIndex(
             step => step.slug === stepsCompleted?.slice(-1)[0]
           ) + 1;
 
       if (!fromAdmin && currentStepIndex === 0) return;
-      if (!adviceFormSteps[stepRedirectIndex]?.slug) return;
+      if (!guidanceFormSteps[stepRedirectIndex]?.slug) return;
       // Redirect to latest available step
       history.replace(
-        `/trb/${id}/guidance/${adviceFormSteps[stepRedirectIndex].slug}`
+        `/trb/${id}/guidance/${guidanceFormSteps[stepRedirectIndex].slug}`
       );
     }
   }, [
@@ -291,7 +291,7 @@ const AdviceLetterForm = () => {
             description: step.description,
             completed: index < currentStepIndex,
             onClick: async () => {
-              const url = `/trb/${id}/guidance/${adviceFormSteps[index].slug}`;
+              const url = `/trb/${id}/guidance/${guidanceFormSteps[index].slug}`;
 
               if (stepSubmit) {
                 stepSubmit?.(() => history.push(url));

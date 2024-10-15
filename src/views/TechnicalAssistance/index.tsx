@@ -13,7 +13,7 @@ import TRBRequestInfoWrapper from './AdminHome/RequestContext';
 import RequestEdits from './AdminHome/RequestEdits';
 import DocumentUpload from './RequestForm/DocumentUpload';
 import AdminHome from './AdminHome';
-import AdviceLetterForm from './AdviceLetterForm';
+import GuidanceLetterForm from './GuidanceLetterForm';
 import Homepage from './Homepage';
 import ProcessFlow from './ProcessFlow';
 import PublicAdviceLetter from './PublicAdviceLetter';
@@ -82,7 +82,7 @@ function TechnicalAssistance() {
         </Route>
 
         <Route path={`${path}/:id/guidance/:formStep/:subpage?`}>
-          <AdviceLetterForm />
+          <GuidanceLetterForm />
         </Route>
 
         {/* Admin view */}

@@ -30,7 +30,7 @@ import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import typeRichText from 'utils/testing/typeRichText';
 
-import AdviceLetterForm from '.';
+import GuidanceLetterForm from '.';
 
 const mockRecommendation = {
   trbRequestId: mockTrbRequestId,
@@ -105,7 +105,7 @@ const renderForm = (
             addTypename={false}
           >
             <Route path="/trb/:id/guidance/:formStep/:subpage?">
-              <AdviceLetterForm />
+              <GuidanceLetterForm />
             </Route>
           </MockedProvider>
         </Provider>

@@ -109,7 +109,7 @@ export type AdviceLetterNextSteps = {
 };
 
 /** Advice letter form fields */
-export type AdviceLetterFormFields = {
+export type GuidanceLetterFormFields = {
   meetingSummary: string | null;
   nextSteps: string | null;
   isFollowupRecommended: boolean | null;
@@ -120,7 +120,7 @@ export type AdviceLetterFormFields = {
 };
 
 export type UpdateAdviceLetterType = (
-  fields?: (keyof AdviceLetterFormFields)[],
+  fields?: (keyof GuidanceLetterFormFields)[],
   redirectUrl?: string
 ) => Promise<void>;
 
