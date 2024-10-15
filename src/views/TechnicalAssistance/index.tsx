@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { GridContainer } from '@trussworks/react-uswds';
 
 import MainContent from 'components/MainContent';
@@ -31,6 +31,9 @@ function TechnicalAssistance() {
   return (
     <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
       <Switch>
+        {/* Redirect to handle advice -> guidance route change */}
+        <Redirect from="*advice*" to="*guidance*" />
+
         <Route exact path={path}>
           <Homepage />
         </Route>
