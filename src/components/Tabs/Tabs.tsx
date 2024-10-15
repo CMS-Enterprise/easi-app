@@ -6,6 +6,7 @@ import './index.scss';
 type TabsProps = {
   defaultActiveTab?: string;
   children: React.ReactElement[];
+  className?: string;
 };
 
 const DIRECTION: { [key: string]: number } = {
@@ -29,7 +30,7 @@ const KEYS = {
 // Disable left/right arrows and use up down
 // Need to use aria-direction
 
-const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
+const Tabs = ({ defaultActiveTab, children, className }: TabsProps) => {
   const tabsRef = useRef<HTMLUListElement>(null);
   const [tabEls = [], setTabEls] = useState<NodeList>();
   const tabObjs = children.map(child => ({
@@ -116,7 +117,7 @@ const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
   }, [tabEls]);
 
   return (
-    <div className={classnames('easi-tabs')} data-testid="easi-tabs">
+    <div className={classnames(className, 'easi-tabs')} data-testid="easi-tabs">
       <ul className="easi-tabs__tab-list" role="tablist" ref={tabsRef}>
         {tabObjs.map(tab => {
           const { id, name } = tab;

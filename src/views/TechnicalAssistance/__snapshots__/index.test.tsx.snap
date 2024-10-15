@@ -18,7 +18,7 @@ exports[`TRB Subview snapshots > matches Process Flow 1`] = `
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb"
           >
             <span>
@@ -246,7 +246,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb"
           >
             <span>

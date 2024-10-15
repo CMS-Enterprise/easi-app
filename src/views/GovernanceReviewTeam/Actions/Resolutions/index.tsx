@@ -6,6 +6,7 @@ import { Form, Grid } from '@trussworks/react-uswds';
 import { camelCase } from 'lodash';
 
 import PageHeading from 'components/PageHeading';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import Label from 'components/shared/Label';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
@@ -14,7 +15,6 @@ import {
   SystemIntakeState
 } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary from '../components/ActionsSummary';

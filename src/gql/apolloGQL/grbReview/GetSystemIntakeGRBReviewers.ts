@@ -7,6 +7,7 @@ const GetSystemIntakeGRBReviewers = gql(/* GraphQL */ `
   query GetSystemIntakeGRBReviewers($id: UUID!) {
     systemIntake(id: $id) {
       id
+      grbReviewStartedAt
       grbReviewers {
         ...SystemIntakeGRBReviewer
       }

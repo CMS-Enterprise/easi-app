@@ -634,9 +634,14 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	}, nil
 }
 
-// CreateSystemIntakeGRBReviewer is the resolver for the createSystemIntakeGRBReviewer field.
-func (r *mutationResolver) CreateSystemIntakeGRBReviewer(ctx context.Context, input models.CreateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
-	return resolvers.CreateSystemIntakeGRBReviewer(ctx, r.store, r.emailClient, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo), &input)
+// StartGRBReview is the resolver for the startGRBReview field.
+func (r *mutationResolver) StartGRBReview(ctx context.Context, input models.StartGRBReviewInput) (*string, error) {
+	return resolvers.StartGRBReview(ctx, r.store, r.emailClient, input.SystemIntakeID)
+}
+
+// CreateSystemIntakeGRBReviewers is the resolver for the createSystemIntakeGRBReviewers field.
+func (r *mutationResolver) CreateSystemIntakeGRBReviewers(ctx context.Context, input models.CreateSystemIntakeGRBReviewersInput) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
+	return resolvers.CreateSystemIntakeGRBReviewers(ctx, r.store, r.emailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(r.service.FetchUserInfos), &input)
 }
 
 // UpdateSystemIntakeGRBReviewer is the resolver for the updateSystemIntakeGRBReviewer field.
@@ -1246,6 +1251,11 @@ func (r *queryResolver) SystemIntakesWithLcids(ctx context.Context) ([]*models.S
 	return r.store.GetSystemIntakesWithLCIDs(ctx)
 }
 
+// CompareGRBReviewersByIntakeID is the resolver for the compareGRBReviewersByIntakeID field.
+func (r *queryResolver) CompareGRBReviewersByIntakeID(ctx context.Context, id uuid.UUID) ([]*models.GRBReviewerComparisonIntake, error) {
+	return resolvers.SystemIntakeCompareGRBReviewers(ctx, r.store, id)
+}
+
 // CurrentUser is the resolver for the currentUser field.
 func (r *queryResolver) CurrentUser(ctx context.Context) (*models.CurrentUser, error) {
 	ldUser := flags.Principal(ctx)
@@ -1576,7 +1586,7 @@ func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models
 
 // UserAccount is the resolver for the userAccount field.
 func (r *queryResolver) UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error) {
-	return resolvers.UserAccountGetByUsername(r.store, username)
+	return resolvers.UserAccountGetByUsername(ctx, r.store, r.store, username)
 }
 
 // Actions is the resolver for the actions field.

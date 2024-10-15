@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/google/uuid"
 )
 
@@ -148,6 +149,12 @@ type CreateCedarSystemBookmarkPayload struct {
 	CedarSystemBookmark *CedarSystemBookmark `json:"cedarSystemBookmark,omitempty"`
 }
 
+type CreateGRBReviewerInput struct {
+	EuaUserID  string                            `json:"euaUserId"`
+	VotingRole SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
+	GrbRole    SystemIntakeGRBReviewerRole       `json:"grbRole"`
+}
+
 // The data needed to associate a contact with a system intake
 type CreateSystemIntakeContactInput struct {
 	EuaUserID      string    `json:"euaUserId"`
@@ -176,11 +183,13 @@ type CreateSystemIntakeDocumentPayload struct {
 	Document *SystemIntakeDocument `json:"document,omitempty"`
 }
 
-type CreateSystemIntakeGRBReviewerInput struct {
-	SystemIntakeID uuid.UUID                         `json:"systemIntakeID"`
-	EuaUserID      string                            `json:"euaUserId"`
-	VotingRole     SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
-	GrbRole        SystemIntakeGRBReviewerRole       `json:"grbRole"`
+type CreateSystemIntakeGRBReviewersInput struct {
+	SystemIntakeID uuid.UUID                 `json:"systemIntakeID"`
+	Reviewers      []*CreateGRBReviewerInput `json:"reviewers"`
+}
+
+type CreateSystemIntakeGRBReviewersPayload struct {
+	Reviewers []*SystemIntakeGRBReviewer `json:"reviewers"`
 }
 
 // The input data used to initialize an IT governance request for a system
@@ -310,6 +319,33 @@ type DeleteTRBRequestFundingSourcesInput struct {
 	FundingNumber string    `json:"fundingNumber"`
 }
 
+// GRBReviewerComparison represents an individual GRB Reviewer within the context of a
+// comparison operation between two system intakes.
+//
+// For this reason, it is similar to a regular "type GRBReviewer", but has an extra
+// field for "isCurrentReviewer", representing whether or not the specific GRB Reviewer
+// is already on the intake being compared against or not.
+type GRBReviewerComparison struct {
+	ID                uuid.UUID                         `json:"id"`
+	UserAccount       *authentication.UserAccount       `json:"userAccount"`
+	EuaUserID         string                            `json:"euaUserId"`
+	VotingRole        SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
+	GrbRole           SystemIntakeGRBReviewerRole       `json:"grbRole"`
+	IsCurrentReviewer bool                              `json:"isCurrentReviewer"`
+}
+
+// GRBReviewerComparisonIntake represents a response when searching for System Intakes
+// that have GRB reviewers as compared to another Intake.
+//
+// It's effectively a smaller subset of some of the fields on the entire Intake, plus a special
+// "reviewers" field specific to the comparison operation.
+type GRBReviewerComparisonIntake struct {
+	ID              uuid.UUID                `json:"id"`
+	RequestName     string                   `json:"requestName"`
+	Reviewers       []*GRBReviewerComparison `json:"reviewers"`
+	IntakeCreatedAt *time.Time               `json:"intakeCreatedAt,omitempty"`
+}
+
 // The current user's Launch Darkly key
 type LaunchDarklySettings struct {
 	UserKey    string `json:"userKey"`
@@ -404,6 +440,11 @@ type SetTRBRequestRelationExistingSystemInput struct {
 type SetTRBRequestRelationNewSystemInput struct {
 	TrbRequestID    uuid.UUID `json:"trbRequestID"`
 	ContractNumbers []string  `json:"contractNumbers"`
+}
+
+// Input for starting a GRB Review, which notifies reviewers by email
+type StartGRBReviewInput struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
 }
 
 // Input to submit an intake for review

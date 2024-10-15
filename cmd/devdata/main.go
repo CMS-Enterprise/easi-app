@@ -11,18 +11,15 @@ import (
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"golang.org/x/sync/errgroup"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
-	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 )
 
@@ -105,56 +102,37 @@ func main() {
 	pastMeetingDate := time.Now().AddDate(0, -2, 0)
 
 	// generate closed requests
-	g, gCtx := errgroup.WithContext(ctx)
-	reviewer1, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, "A11Y", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
-	if err != nil {
-		fmt.Println(err)
-	}
-	reviewer2, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, "BTMN", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
-	if err != nil {
-		fmt.Println(err)
-	}
 	for i := range closedRequestCount {
 		caseNum := i + 1
-		g.Go(func() error {
-			ID := uuid.New()
-			sysIn := makeSystemIntakeAndIssueLCID(
-				gCtx,
-				fmt.Sprintf("closed request #%d", caseNum),
-				&ID,
-				mock.PrincipalUser,
-				store,
-				time.Now().AddDate(2, 0, 0),
-			)
-			createdByID := appcontext.Principal(ctx).Account().ID
-			reviewer := models.NewSystemIntakeGRBReviewer(reviewer1.ID, createdByID)
-			reviewer.VotingRole = models.SIGRBRVRAlternate
-			reviewer.GRBRole = models.SIGRBRRACA3021Rep
-			reviewer.SystemIntakeID = sysIn.ID
-			err = store.CreateSystemIntakeGRBReviewer(ctx, store, reviewer)
-			if err != nil {
-				fmt.Println(err)
-				return err
-			}
-			reviewer.UserID = reviewer2.ID
-			reviewer.ID = uuid.New()
-			err = store.CreateSystemIntakeGRBReviewer(ctx, store, reviewer)
-			if err != nil {
-				fmt.Println(err)
-				return err
-			}
-			setSystemIntakeRelationExistingSystem(
-				gCtx,
-				store,
-				ID,
-				[]string{"111111", "111112"},
-				[]string{"1AB1A00-1234-5678-ABC1-1A001B00CC6G"},
-			)
-			return nil
+		ID := uuid.New()
+		sysIn := makeSystemIntakeAndIssueLCID(
+			ctx,
+			fmt.Sprintf("closed request #%d", caseNum),
+			&ID,
+			mock.PrincipalUser,
+			store,
+			time.Now().AddDate(2, 0, 0),
+		)
+		createSystemIntakeGRBReviewers(ctx, store, sysIn, []*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  "BTMN",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
+			},
+			{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
 		})
-	}
-	if err := g.Wait(); err != nil {
-		panic(err)
+
+		setSystemIntakeRelationExistingSystem(
+			ctx,
+			store,
+			ID,
+			[]string{"111111", "111112"},
+			[]string{"11AB1A00-1234-5678-ABC1-1A001B00CC6G"},
+		)
 	}
 
 	intakeID = uuid.MustParse("3a1d5160-c774-4cd9-9f69-afef824b2e3f")
@@ -275,29 +253,79 @@ func main() {
 			fillForm:           true,
 		},
 	)
-	createSystemIntakeGRBReviewer(
+	createSystemIntakeGRBReviewers(
 		ctx,
 		store,
 		intake,
+		[]*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  mock.PrincipalUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "BTMN",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "ABCD",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+		},
+	)
+
+	intakeID = uuid.MustParse("61efa6eb-1976-4431-a158-d89cc00ce31d")
+	intake = makeSystemIntakeAndProgressToStep(
+		ctx,
+		"System Intake with some different GRB Reviewers",
+		&intakeID,
 		mock.PrincipalUser,
-		models.SystemIntakeGRBReviewerVotingRoleVoting,
-		models.SystemIntakeGRBReviewerRoleCmcsRep,
+		store,
+		models.SystemIntakeStepToProgressToGrbMeeting,
+		&progressOptions{
+			meetingDate:        &futureMeetingDate,
+			completeOtherSteps: true,
+			fillForm:           true,
+		},
 	)
-	createSystemIntakeGRBReviewer(
+	createSystemIntakeGRBReviewers(
 		ctx,
 		store,
 		intake,
-		"ABCD",
-		models.SystemIntakeGRBReviewerVotingRoleAlternate,
-		models.SystemIntakeGRBReviewerRoleCciioRep,
-	)
-	createSystemIntakeGRBReviewer(
-		ctx,
-		store,
-		intake,
-		"A11Y",
-		models.SystemIntakeGRBReviewerVotingRoleNonVoting,
-		models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+		[]*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  mock.PrincipalUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "USR2",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "USR3",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "USR4",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+			{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
+			},
+		},
 	)
 
 	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")

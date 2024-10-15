@@ -28,8 +28,8 @@ import {
 } from 'validations/trbRequestSchema';
 import { NotFoundPartial } from 'views/NotFound';
 
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 import StepHeader from '../../../components/StepHeader';
-import Breadcrumbs from '../Breadcrumbs';
 
 import Attendees from './Attendees';
 import Basic, { basicBlankValues } from './Basic';

@@ -18,7 +18,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb"
           >
             <span>
@@ -416,7 +416,7 @@ exports[`Trb Public Advice Letter > renders from task list link 1`] = `
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb"
           >
             <span>
@@ -428,7 +428,7 @@ exports[`Trb Public Advice Letter > renders from task list link 1`] = `
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb/task-list/6e0d1524-204a-4014-b6d9-e995b1db3987"
           >
             <span>

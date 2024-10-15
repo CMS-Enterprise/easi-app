@@ -120,6 +120,7 @@ type SystemIntake struct {
 	ArchivedAt                      *time.Time                   `json:"archivedAt" db:"archived_at"`
 	GRTDate                         *time.Time                   `json:"grtDate" db:"grt_date"`
 	GRBDate                         *time.Time                   `json:"grbDate" db:"grb_date"`
+	GRBReviewStartedAt              *time.Time                   `json:"grbReviewStartedAt" db:"grb_review_started_at"`
 	AlfabetID                       null.String                  `json:"alfabetID" db:"alfabet_id"`
 	GrtReviewEmailBody              null.String                  `json:"grtReviewEmailBody" db:"grt_review_email_body"`
 	RequesterEmailAddress           null.String                  `json:"requesterEmailAddress" db:"requester_email_address"`
