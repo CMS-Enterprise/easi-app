@@ -23,7 +23,7 @@ import {
   UpdateTrbAdviceLetterVariables
 } from 'queries/types/UpdateTrbAdviceLetter';
 import {
-  AdviceLetterNextSteps,
+  GuidanceLetterNextSteps,
   StepComponentProps
 } from 'types/technicalAssistance';
 import { nextStepsSchema } from 'validations/trbRequestSchema';
@@ -54,7 +54,7 @@ const NextSteps = ({
     control,
     watch,
     formState: { isSubmitting, isDirty }
-  } = useEasiForm<AdviceLetterNextSteps>({
+  } = useEasiForm<GuidanceLetterNextSteps>({
     resolver: yupResolver(nextStepsSchema),
     defaultValues: {
       nextSteps: nextSteps || '',

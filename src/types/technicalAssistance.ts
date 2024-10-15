@@ -90,7 +90,7 @@ export type TrbAdminPage = {
   groupEnd?: boolean;
 };
 
-export type AdviceLetterRecommendationFields = {
+export type GuidanceLetterRecommendationFields = {
   id?: string;
   title: string;
   recommendation: string;
@@ -98,31 +98,15 @@ export type AdviceLetterRecommendationFields = {
   links?: { link: string }[];
 };
 
-export type AdviceLetterSummary = {
+export type GuidanceLetterSummary = {
   meetingSummary: string | null;
 };
 
-export type AdviceLetterNextSteps = {
+export type GuidanceLetterNextSteps = {
   nextSteps: string | null;
   isFollowupRecommended: boolean | null;
   followupPoint: string | null;
 };
-
-/** Advice letter form fields */
-export type GuidanceLetterFormFields = {
-  meetingSummary: string | null;
-  nextSteps: string | null;
-  isFollowupRecommended: boolean | null;
-  followupPoint: string | null;
-  // recommendations: AdviceLetterRecommendationFields[];
-  // internalReview: string;
-  // review: string;
-};
-
-export type UpdateAdviceLetterType = (
-  fields?: (keyof GuidanceLetterFormFields)[],
-  redirectUrl?: string
-) => Promise<void>;
 
 export type FormAlertObject = {
   type: 'success' | 'warning' | 'error' | 'info';

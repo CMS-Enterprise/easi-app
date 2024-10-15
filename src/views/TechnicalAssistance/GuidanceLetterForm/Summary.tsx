@@ -16,7 +16,7 @@ import {
   UpdateTrbAdviceLetterVariables
 } from 'queries/types/UpdateTrbAdviceLetter';
 import {
-  AdviceLetterSummary,
+  GuidanceLetterSummary,
   StepComponentProps
 } from 'types/technicalAssistance';
 import { meetingSummarySchema } from 'validations/trbRequestSchema';
@@ -47,7 +47,7 @@ const Summary = ({
     watch,
     partialSubmit,
     formState: { isSubmitting, isDirty }
-  } = useEasiForm<AdviceLetterSummary>({
+  } = useEasiForm<GuidanceLetterSummary>({
     resolver: yupResolver(meetingSummarySchema),
     defaultValues: {
       meetingSummary

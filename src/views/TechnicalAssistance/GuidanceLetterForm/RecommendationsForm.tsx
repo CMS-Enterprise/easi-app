@@ -26,8 +26,8 @@ import {
   UpdateTRBGuidanceLetterRecommendationInput
 } from 'types/graphql-global-types';
 import {
-  AdviceLetterRecommendationFields,
-  FormAlertObject
+  FormAlertObject,
+  GuidanceLetterRecommendationFields
 } from 'types/technicalAssistance';
 import formatUrl from 'utils/formatUrl';
 
@@ -49,7 +49,7 @@ const RecommendationsForm = ({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
   const { state } = useLocation<{
-    recommendation: AdviceLetterRecommendationFields;
+    recommendation: GuidanceLetterRecommendationFields;
   }>();
 
   const [showFormError, setShowFormError] = useState<boolean>(false);
@@ -60,7 +60,7 @@ const RecommendationsForm = ({
     watch,
     reset,
     formState: { isSubmitting, isDirty }
-  } = useFormContext<AdviceLetterRecommendationFields>();
+  } = useFormContext<GuidanceLetterRecommendationFields>();
 
   const [create] = useMutation<CreateTRBGuidanceLetterRecommendationInput>(
     CreateTrbRecommendationQuery

@@ -10,7 +10,7 @@ import {
 } from '@trussworks/react-uswds';
 
 import Label from 'components/shared/Label';
-import { AdviceLetterRecommendationFields } from 'types/technicalAssistance';
+import { GuidanceLetterRecommendationFields } from 'types/technicalAssistance';
 
 /**
  * TRB Recommendation links field using React Hook Forms useFieldArray hook
@@ -22,7 +22,7 @@ export default function LinkArrayField() {
     control,
     watch,
     formState: { errors }
-  } = useFormContext<AdviceLetterRecommendationFields>();
+  } = useFormContext<GuidanceLetterRecommendationFields>();
 
   const { fields, append, remove } = useFieldArray({
     name: 'links'

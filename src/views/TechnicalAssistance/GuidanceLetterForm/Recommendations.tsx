@@ -17,7 +17,7 @@ import {
   DeleteTRBRecommendationVariables
 } from 'queries/types/DeleteTRBRecommendation';
 import {
-  AdviceLetterRecommendationFields,
+  GuidanceLetterRecommendationFields,
   StepComponentProps
 } from 'types/technicalAssistance';
 import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
@@ -27,7 +27,7 @@ import Pager from '../RequestForm/Pager';
 
 import RecommendationsForm from './RecommendationsForm';
 
-const defaultValues: AdviceLetterRecommendationFields = {
+const defaultValues: GuidanceLetterRecommendationFields = {
   id: undefined,
   title: '',
   recommendation: '',
@@ -49,7 +49,7 @@ const Recommendations = ({
   /** Whether recommendations have been added to the request */
   const hasRecommendations: boolean = recommendations.length > 0;
 
-  const formMethods = useForm<AdviceLetterRecommendationFields>({
+  const formMethods = useForm<GuidanceLetterRecommendationFields>({
     resolver: yupResolver(adviceRecommendationSchema),
     defaultValues
   });
@@ -77,7 +77,7 @@ const Recommendations = ({
     <Switch>
       {/* Recommendations Form */}
       <Route exact path={`${path}/form`}>
-        <FormProvider<AdviceLetterRecommendationFields> {...formMethods}>
+        <FormProvider<GuidanceLetterRecommendationFields> {...formMethods}>
           <RecommendationsForm
             trbRequestId={trbRequestId}
             setFormAlert={setFormAlert}
