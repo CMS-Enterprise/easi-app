@@ -27,7 +27,7 @@ type ActionButtonsProps = {
   openNotes: Dispatch<SetStateAction<boolean>>;
 };
 
-type ActionButtonKey =
+export type ActionButtonKey =
   | 'orCloseRequest'
   | 'orCloseRequestWithoutSending'
   | 'closeRequest'
@@ -38,10 +38,10 @@ type ActionButtonKey =
   | 'addDateTime'
   | 'assignTrbLead'
   | 'viewSupportingDocuments'
-  | 'viewAdviceLetter'
-  | 'startAdviceLetter'
-  | 'continueAdviceLetter'
-  | 'finalizeAdviceLetter'
+  | 'viewGuidanceLetter'
+  | 'startGuidanceLetter'
+  | 'continueGuidanceLetter'
+  | 'finalizeGuidanceLetter'
   | 'addNote';
 
 const useTrbAdminActionButtons = ({
@@ -61,7 +61,7 @@ const useTrbAdminActionButtons = ({
   const leadAssigned =
     !!trbContextData.data?.trbRequest?.trbLeadInfo?.commonName;
 
-  const [createAdviceLetter] = useMutation<
+  const [createGuidanceLetter] = useMutation<
     CreateTrbAdviceLetter,
     CreateTrbAdviceLetterVariables
   >(CreateTrbAdviceLetterQuery, {
@@ -120,14 +120,14 @@ const useTrbAdminActionButtons = ({
         label: t('adminAction.buttons.viewSupportingDocuments'),
         link: `/trb/${trbRequestId}/documents`
       },
-      viewAdviceLetter: {
+      viewGuidanceLetter: {
         label: t('adminAction.buttons.viewGuidanceLetter'),
         link: `/trb/${trbRequestId}/guidance`
       },
-      startAdviceLetter: {
+      startGuidanceLetter: {
         label: t('adminAction.buttons.startGuidanceLetter'),
         onClick: () =>
-          createAdviceLetter()
+          createGuidanceLetter()
             .then(
               result =>
                 !result.errors &&
@@ -140,7 +140,7 @@ const useTrbAdminActionButtons = ({
               })
             )
       },
-      continueAdviceLetter: {
+      continueGuidanceLetter: {
         label: t('adminAction.buttons.continueGuidanceLetter'),
         link: {
           pathname: `/trb/${trbRequestId}/guidance/summary`,
@@ -149,7 +149,7 @@ const useTrbAdminActionButtons = ({
           }
         }
       },
-      finalizeAdviceLetter: {
+      finalizeGuidanceLetter: {
         label: t('adminAction.buttons.finalizeGuidanceLetter'),
         link: `/trb/${trbRequestId}/guidance/review`
       },
@@ -210,27 +210,27 @@ const useTrbAdminActionButtons = ({
       case TRBRequestStatus.CONSULT_COMPLETE:
         switch (activePage) {
           case 'guidance':
-            return [buttons.startAdviceLetter, buttons.orCloseRequest];
+            return [buttons.startGuidanceLetter, buttons.orCloseRequest];
           default:
-            return [buttons.viewAdviceLetter, buttons.orCloseRequest];
+            return [buttons.viewGuidanceLetter, buttons.orCloseRequest];
         }
       case TRBRequestStatus.DRAFT_ADVICE_LETTER:
         switch (activePage) {
           case 'guidance':
-            return [buttons.continueAdviceLetter, buttons.orCloseRequest];
+            return [buttons.continueGuidanceLetter, buttons.orCloseRequest];
           default:
-            return [buttons.viewAdviceLetter, buttons.orCloseRequest];
+            return [buttons.viewGuidanceLetter, buttons.orCloseRequest];
         }
       case TRBRequestStatus.ADVICE_LETTER_IN_REVIEW:
         switch (activePage) {
           case 'guidance':
             return [
               buttons.addNote,
-              { ...buttons.finalizeAdviceLetter, outline: true },
+              { ...buttons.finalizeGuidanceLetter, outline: true },
               buttons.orCloseRequestWithoutSending
             ];
           default:
-            return [buttons.viewAdviceLetter, buttons.orCloseRequest];
+            return [buttons.viewGuidanceLetter, buttons.orCloseRequest];
         }
       case TRBRequestStatus.FOLLOW_UP_REQUESTED:
       case TRBRequestStatus.ADVICE_LETTER_SENT:
@@ -245,7 +245,7 @@ const useTrbAdminActionButtons = ({
     state,
     trbRequestId,
     history,
-    createAdviceLetter,
+    createGuidanceLetter,
     assignLeadModalRef,
     assignLeadModalTrbRequestIdRef,
     leadAssigned,

@@ -88,8 +88,8 @@ describe('TRB Admin Wrapper', () => {
       'assignTrbLead',
       'orCloseRequest'
     ],
-    CONSULT_COMPLETE: ['viewAdviceLetter', 'orCloseRequest'],
-    ADVICE_LETTER_IN_REVIEW: ['viewAdviceLetter', 'orCloseRequest'],
+    CONSULT_COMPLETE: ['viewGuidanceLetter', 'orCloseRequest'],
+    ADVICE_LETTER_IN_REVIEW: ['viewGuidanceLetter', 'orCloseRequest'],
     ADVICE_LETTER_SENT: ['closeRequest']
   };
   const statusKeys = Object.keys(statuses);
