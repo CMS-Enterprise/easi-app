@@ -965,9 +965,9 @@ export type Mutation = {
   createSystemIntakeDocument?: Maybe<CreateSystemIntakeDocumentPayload>;
   createSystemIntakeGRBReviewers?: Maybe<CreateSystemIntakeGRBReviewersPayload>;
   createSystemIntakeNote?: Maybe<SystemIntakeNote>;
-  createTRBAdminNoteAdviceLetter: TRBAdminNote;
   createTRBAdminNoteConsultSession: TRBAdminNote;
   createTRBAdminNoteGeneralRequest: TRBAdminNote;
+  createTRBAdminNoteGuidanceLetter: TRBAdminNote;
   createTRBAdminNoteInitialRequestForm: TRBAdminNote;
   createTRBAdminNoteSupportingDocuments: TRBAdminNote;
   createTRBAdviceLetter: TRBGuidanceLetter;
@@ -1147,12 +1147,6 @@ export type MutationCreateSystemIntakeNoteArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTRBAdminNoteAdviceLetterArgs = {
-  input: CreateTRBAdminNoteGuidanceLetterInput;
-};
-
-
-/** Defines the mutations for the schema */
 export type MutationCreateTRBAdminNoteConsultSessionArgs = {
   input: CreateTRBAdminNoteConsultSessionInput;
 };
@@ -1161,6 +1155,12 @@ export type MutationCreateTRBAdminNoteConsultSessionArgs = {
 /** Defines the mutations for the schema */
 export type MutationCreateTRBAdminNoteGeneralRequestArgs = {
   input: CreateTRBAdminNoteGeneralRequestInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationCreateTRBAdminNoteGuidanceLetterArgs = {
+  input: CreateTRBAdminNoteGuidanceLetterInput;
 };
 
 

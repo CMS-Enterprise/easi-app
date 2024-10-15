@@ -51,12 +51,12 @@ export const CreateTrbAdminNoteConsultSessionQuery = gql`
 `;
 
 // Guidance letter
-export const CreateTrbAdminNoteAdviceLetterQuery = gql`
+export const CreateTrbAdminNoteGuidanceLetterQuery = gql`
   ${TRBAdminNoteFragment}
-  mutation CreateTRBAdminNoteAdviceLetter(
+  mutation CreateTRBAdminNoteGuidanceLetter(
     $input: CreateTRBAdminNoteGuidanceLetterInput!
   ) {
-    createTRBAdminNoteAdviceLetter(input: $input) {
+    createTRBAdminNoteGuidanceLetter(input: $input) {
       ...TRBAdminNoteFragment
     }
   }

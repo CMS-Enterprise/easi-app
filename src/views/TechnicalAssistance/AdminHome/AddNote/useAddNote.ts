@@ -2,16 +2,12 @@ import { ApolloCache, FetchResult, useMutation } from '@apollo/client';
 
 import { TRBAdminNoteFragment } from 'queries/GetTrbAdminNotesQuery';
 import {
-  CreateTrbAdminNoteAdviceLetterQuery,
   CreateTrbAdminNoteConsultSessionQuery,
   CreateTrbAdminNoteGeneralRequestQuery,
+  CreateTrbAdminNoteGuidanceLetterQuery,
   CreateTrbAdminNoteInitialRequestFormQuery,
   CreateTrbAdminNoteSupportingDocumentsQuery
 } from 'queries/TrbAdminNoteQueries';
-import {
-  CreateTRBAdminNoteAdviceLetter,
-  CreateTRBAdminNoteAdviceLetterVariables
-} from 'queries/types/CreateTRBAdminNoteAdviceLetter';
 import {
   CreateTRBAdminNoteConsultSession,
   CreateTRBAdminNoteConsultSessionVariables
@@ -20,6 +16,10 @@ import {
   CreateTRBAdminNoteGeneralRequest,
   CreateTRBAdminNoteGeneralRequestVariables
 } from 'queries/types/CreateTRBAdminNoteGeneralRequest';
+import {
+  CreateTRBAdminNoteGuidanceLetter,
+  CreateTRBAdminNoteGuidanceLetterVariables
+} from 'queries/types/CreateTRBAdminNoteGuidanceLetter';
 import {
   CreateTRBAdminNoteInitialRequestForm,
   CreateTRBAdminNoteInitialRequestFormVariables
@@ -116,11 +116,11 @@ const useAddNote = (trbRequestId: string) => {
   });
 
   const [createNoteAdviceLetter] = useMutation<
-    CreateTRBAdminNoteAdviceLetter,
-    CreateTRBAdminNoteAdviceLetterVariables
-  >(CreateTrbAdminNoteAdviceLetterQuery, {
+    CreateTRBAdminNoteGuidanceLetter,
+    CreateTRBAdminNoteGuidanceLetterVariables
+  >(CreateTrbAdminNoteGuidanceLetterQuery, {
     update: (cache, result) =>
-      modifyCache(cache, result.data?.createTRBAdminNoteAdviceLetter)
+      modifyCache(cache, result.data?.createTRBAdminNoteGuidanceLetter)
   });
 
   const createNote = (formData: AddNoteFields): Promise<FetchResult> => {

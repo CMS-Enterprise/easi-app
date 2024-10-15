@@ -565,9 +565,9 @@ type ComplexityRoot struct {
 		CreateSystemIntakeDocument                       func(childComplexity int, input models.CreateSystemIntakeDocumentInput) int
 		CreateSystemIntakeGRBReviewers                   func(childComplexity int, input models.CreateSystemIntakeGRBReviewersInput) int
 		CreateSystemIntakeNote                           func(childComplexity int, input models.CreateSystemIntakeNoteInput) int
-		CreateTRBAdminNoteAdviceLetter                   func(childComplexity int, input models.CreateTRBAdminNoteGuidanceLetterInput) int
 		CreateTRBAdminNoteConsultSession                 func(childComplexity int, input models.CreateTRBAdminNoteConsultSessionInput) int
 		CreateTRBAdminNoteGeneralRequest                 func(childComplexity int, input models.CreateTRBAdminNoteGeneralRequestInput) int
+		CreateTRBAdminNoteGuidanceLetter                 func(childComplexity int, input models.CreateTRBAdminNoteGuidanceLetterInput) int
 		CreateTRBAdminNoteInitialRequestForm             func(childComplexity int, input models.CreateTRBAdminNoteInitialRequestFormInput) int
 		CreateTRBAdminNoteSupportingDocuments            func(childComplexity int, input models.CreateTRBAdminNoteSupportingDocumentsInput) int
 		CreateTRBAdviceLetter                            func(childComplexity int, trbRequestID uuid.UUID) int
@@ -1238,7 +1238,7 @@ type MutationResolver interface {
 	CreateTRBAdminNoteInitialRequestForm(ctx context.Context, input models.CreateTRBAdminNoteInitialRequestFormInput) (*models.TRBAdminNote, error)
 	CreateTRBAdminNoteSupportingDocuments(ctx context.Context, input models.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error)
 	CreateTRBAdminNoteConsultSession(ctx context.Context, input models.CreateTRBAdminNoteConsultSessionInput) (*models.TRBAdminNote, error)
-	CreateTRBAdminNoteAdviceLetter(ctx context.Context, input models.CreateTRBAdminNoteGuidanceLetterInput) (*models.TRBAdminNote, error)
+	CreateTRBAdminNoteGuidanceLetter(ctx context.Context, input models.CreateTRBAdminNoteGuidanceLetterInput) (*models.TRBAdminNote, error)
 	SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool) (*models.TRBAdminNote, error)
 	CreateTRBAdviceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBGuidanceLetter, error)
 	UpdateTRBAdviceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetter, error)
@@ -4134,18 +4134,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateSystemIntakeNote(childComplexity, args["input"].(models.CreateSystemIntakeNoteInput)), true
 
-	case "Mutation.createTRBAdminNoteAdviceLetter":
-		if e.complexity.Mutation.CreateTRBAdminNoteAdviceLetter == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createTRBAdminNoteAdviceLetter_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateTRBAdminNoteAdviceLetter(childComplexity, args["input"].(models.CreateTRBAdminNoteGuidanceLetterInput)), true
-
 	case "Mutation.createTRBAdminNoteConsultSession":
 		if e.complexity.Mutation.CreateTRBAdminNoteConsultSession == nil {
 			break
@@ -4169,6 +4157,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateTRBAdminNoteGeneralRequest(childComplexity, args["input"].(models.CreateTRBAdminNoteGeneralRequestInput)), true
+
+	case "Mutation.createTRBAdminNoteGuidanceLetter":
+		if e.complexity.Mutation.CreateTRBAdminNoteGuidanceLetter == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createTRBAdminNoteGuidanceLetter_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateTRBAdminNoteGuidanceLetter(childComplexity, args["input"].(models.CreateTRBAdminNoteGuidanceLetterInput)), true
 
 	case "Mutation.createTRBAdminNoteInitialRequestForm":
 		if e.complexity.Mutation.CreateTRBAdminNoteInitialRequestForm == nil {
@@ -10288,7 +10288,7 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteConsultSession(input: CreateTRBAdminNoteConsultSessionInput!): TRBAdminNote!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdminNoteAdviceLetter(input: CreateTRBAdminNoteGuidanceLetterInput!): TRBAdminNote!
+  createTRBAdminNoteGuidanceLetter(input: CreateTRBAdminNoteGuidanceLetterInput!): TRBAdminNote!
   @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
   @hasRole(role: EASI_TRB_ADMIN)
@@ -11506,38 +11506,6 @@ func (ec *executionContext) field_Mutation_createSystemIntake_argsInput(
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_createTRBAdminNoteAdviceLetter_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	arg0, err := ec.field_Mutation_createTRBAdminNoteAdviceLetter_argsInput(ctx, rawArgs)
-	if err != nil {
-		return nil, err
-	}
-	args["input"] = arg0
-	return args, nil
-}
-func (ec *executionContext) field_Mutation_createTRBAdminNoteAdviceLetter_argsInput(
-	ctx context.Context,
-	rawArgs map[string]interface{},
-) (models.CreateTRBAdminNoteGuidanceLetterInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
-		var zeroVal models.CreateTRBAdminNoteGuidanceLetterInput
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNCreateTRBAdminNoteGuidanceLetterInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBAdminNoteGuidanceLetterInput(ctx, tmp)
-	}
-
-	var zeroVal models.CreateTRBAdminNoteGuidanceLetterInput
-	return zeroVal, nil
-}
-
 func (ec *executionContext) field_Mutation_createTRBAdminNoteConsultSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -11599,6 +11567,38 @@ func (ec *executionContext) field_Mutation_createTRBAdminNoteGeneralRequest_args
 	}
 
 	var zeroVal models.CreateTRBAdminNoteGeneralRequestInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_createTRBAdminNoteGuidanceLetter_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	arg0, err := ec.field_Mutation_createTRBAdminNoteGuidanceLetter_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_createTRBAdminNoteGuidanceLetter_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (models.CreateTRBAdminNoteGuidanceLetterInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal models.CreateTRBAdminNoteGuidanceLetterInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCreateTRBAdminNoteGuidanceLetterInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBAdminNoteGuidanceLetterInput(ctx, tmp)
+	}
+
+	var zeroVal models.CreateTRBAdminNoteGuidanceLetterInput
 	return zeroVal, nil
 }
 
@@ -35505,8 +35505,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBAdminNoteConsultSessi
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_createTRBAdminNoteAdviceLetter(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createTRBAdminNoteAdviceLetter(ctx, field)
+func (ec *executionContext) _Mutation_createTRBAdminNoteGuidanceLetter(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createTRBAdminNoteGuidanceLetter(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -35520,7 +35520,7 @@ func (ec *executionContext) _Mutation_createTRBAdminNoteAdviceLetter(ctx context
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateTRBAdminNoteAdviceLetter(rctx, fc.Args["input"].(models.CreateTRBAdminNoteGuidanceLetterInput))
+			return ec.resolvers.Mutation().CreateTRBAdminNoteGuidanceLetter(rctx, fc.Args["input"].(models.CreateTRBAdminNoteGuidanceLetterInput))
 		}
 
 		directive1 := func(ctx context.Context) (interface{}, error) {
@@ -35563,7 +35563,7 @@ func (ec *executionContext) _Mutation_createTRBAdminNoteAdviceLetter(ctx context
 	return ec.marshalNTRBAdminNote2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNote(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_createTRBAdminNoteAdviceLetter(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_createTRBAdminNoteGuidanceLetter(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -35604,7 +35604,7 @@ func (ec *executionContext) fieldContext_Mutation_createTRBAdminNoteAdviceLetter
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createTRBAdminNoteAdviceLetter_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_createTRBAdminNoteGuidanceLetter_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -65701,9 +65701,9 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "createTRBAdminNoteAdviceLetter":
+		case "createTRBAdminNoteGuidanceLetter":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createTRBAdminNoteAdviceLetter(ctx, field)
+				return ec._Mutation_createTRBAdminNoteGuidanceLetter(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++

@@ -1086,8 +1086,8 @@ func (r *mutationResolver) CreateTRBAdminNoteConsultSession(ctx context.Context,
 	return resolvers.CreateTRBAdminNoteConsultSession(ctx, r.store, input)
 }
 
-// CreateTRBAdminNoteAdviceLetter is the resolver for the createTRBAdminNoteAdviceLetter field.
-func (r *mutationResolver) CreateTRBAdminNoteAdviceLetter(ctx context.Context, input models.CreateTRBAdminNoteGuidanceLetterInput) (*models.TRBAdminNote, error) {
+// CreateTRBAdminNoteGuidanceLetter is the resolver for the createTRBAdminNoteGuidanceLetter field.
+func (r *mutationResolver) CreateTRBAdminNoteGuidanceLetter(ctx context.Context, input models.CreateTRBAdminNoteGuidanceLetterInput) (*models.TRBAdminNote, error) {
 	return resolvers.CreateTRBAdminNoteGuidanceLetter(ctx, r.store, input)
 }
 
