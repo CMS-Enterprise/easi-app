@@ -16,7 +16,7 @@ import { formatDateLocal } from 'utils/date';
 
 import RecommendationsList from '../RecommendationsList';
 
-type ReviewAdviceLetterProps = {
+type ReviewGuidanceLetterProps = {
   adviceLetter: AdviceLetter;
   trbRequestId: string;
   trbRequest?: TrbRequest;
@@ -35,9 +35,9 @@ type ReviewAdviceLetterProps = {
 };
 
 /**
- * Displays advice letter for review
+ * Displays guidance letter for review
  */
-const ReviewAdviceLetter = ({
+const ReviewGuidanceLetter = ({
   adviceLetter,
   trbRequestId,
   trbRequest,
@@ -49,7 +49,7 @@ const ReviewAdviceLetter = ({
   editable = true,
   publicView = false,
   className
-}: ReviewAdviceLetterProps) => {
+}: ReviewGuidanceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { recommendations } = adviceLetter;
@@ -246,4 +246,4 @@ const ReviewAdviceLetter = ({
   );
 };
 
-export default ReviewAdviceLetter;
+export default ReviewGuidanceLetter;

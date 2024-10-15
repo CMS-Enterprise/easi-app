@@ -12,7 +12,7 @@ import {
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
-import ReviewAdviceLetter from './components/ReviewAdviceLetter';
+import ReviewGuidanceLetter from './components/ReviewGuidanceLetter';
 import TrbAdminWrapper from './components/TrbAdminWrapper';
 
 const GuidanceLetter = ({
@@ -85,7 +85,7 @@ const GuidanceLetter = ({
         ) : (
           <>
             {data && adviceLetter && (
-              <ReviewAdviceLetter
+              <ReviewGuidanceLetter
                 adviceLetter={adviceLetter}
                 trbRequestId={trbRequest.id}
                 trbRequest={data.trbRequest}

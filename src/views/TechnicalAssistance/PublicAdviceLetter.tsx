@@ -32,7 +32,7 @@ import Breadcrumbs, {
   BreadcrumbsProps
 } from '../../components/shared/Breadcrumbs';
 
-import ReviewAdviceLetter from './AdminHome/components/ReviewAdviceLetter';
+import ReviewGuidanceLetter from './AdminHome/components/ReviewGuidanceLetter';
 
 /**
  * The public view of a TRB Request Advice Letter.
@@ -208,7 +208,7 @@ function PublicAdviceLetter() {
             <h1 className="easi-only-print">
               {t('guidanceLetterForm.heading')}
             </h1>
-            <ReviewAdviceLetter
+            <ReviewGuidanceLetter
               trbRequestId={id}
               adviceLetter={adviceLetter}
               showDateSent={false}

@@ -38,7 +38,7 @@ import { trbActionSchema } from 'validations/trbRequestSchema';
 
 import Recipients from '../AdminHome/components/ActionFormWrapper/Recipients';
 import useActionForm from '../AdminHome/components/ActionFormWrapper/useActionForm';
-import ReviewAdviceLetter from '../AdminHome/components/ReviewAdviceLetter';
+import ReviewGuidanceLetter from '../AdminHome/components/ReviewGuidanceLetter';
 import Pager from '../RequestForm/Pager';
 
 const Review = ({
@@ -132,7 +132,7 @@ const Review = ({
         </Alert>
       )}
       {/* Review */}
-      <ReviewAdviceLetter
+      <ReviewGuidanceLetter
         trbRequestId={trbRequestId}
         adviceLetter={adviceLetter}
         className="margin-top-5 margin-bottom-4"
