@@ -2,12 +2,12 @@ import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import i18next from 'i18next';
 
-import { adviceLetter, trbRequest } from 'data/mock/trbRequest';
+import { guidanceLetter, trbRequest } from 'data/mock/trbRequest';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import RecommendationsList from '.';
 
-const { recommendations } = adviceLetter;
+const { recommendations } = guidanceLetter;
 
 /** Render component for testing within single recommendation list item */
 const renderRecommendation = (index: number, editable: boolean = true) => {

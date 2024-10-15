@@ -11,8 +11,8 @@ import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 
 import {
-  adviceLetter,
-  getTrbAdviceLetterQuery,
+  getTrbGuidanceLetterQuery,
+  guidanceLetter,
   taskStatuses
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
@@ -70,11 +70,11 @@ const getAdviceLetterCannotStart: MockedQuery<
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 > = {
-  ...getTrbAdviceLetterQuery,
+  ...getTrbGuidanceLetterQuery,
   result: {
     data: {
       trbRequest: {
-        ...getTrbAdviceLetterQuery.result.data?.trbRequest!,
+        ...getTrbGuidanceLetterQuery.result.data?.trbRequest!,
         adviceLetter: null,
         taskStatuses
       }
@@ -101,7 +101,7 @@ const renderForm = (
         <Provider store={defaultStore}>
           <MockedProvider
             mocks={
-              mocks || [getTrbAdviceLetterQuery, createTrbRecommendationQuery]
+              mocks || [getTrbGuidanceLetterQuery, createTrbRecommendationQuery]
             }
             addTypename={false}
           >
@@ -203,7 +203,7 @@ describe('TRB Guidance Letter Form', () => {
 
     const nextStepsInput = await screen.findByTestId('nextSteps');
 
-    expect(nextStepsInput).toContainHTML(`<p>${adviceLetter.nextSteps!}</p>`);
+    expect(nextStepsInput).toContainHTML(`<p>${guidanceLetter.nextSteps!}</p>`);
 
     expect(
       getByRole('radio', {
@@ -212,7 +212,7 @@ describe('TRB Guidance Letter Form', () => {
     ).toBeChecked();
 
     const followupPointInput = getByRole('textbox', { name: 'When?' });
-    expect(followupPointInput).toHaveValue(adviceLetter.followupPoint);
+    expect(followupPointInput).toHaveValue(guidanceLetter.followupPoint);
 
     // Check that followup point input is hidden when followup radio field is false
     userEvent.click(getByRole('radio', { name: 'Not necessary' }));

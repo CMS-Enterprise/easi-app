@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
 
 import {
-  getTrbAdviceLetterQuery,
+  getTrbGuidanceLetterQuery,
   taskStatuses,
   trbRequestSummary
 } from 'data/mock/trbRequest';
@@ -47,7 +47,7 @@ describe('TRB Admin Wrapper', () => {
   ) =>
     render(
       <Provider store={store}>
-        <VerboseMockedProvider mocks={[getTrbAdviceLetterQuery]}>
+        <VerboseMockedProvider mocks={[getTrbGuidanceLetterQuery]}>
           <MemoryRouter>
             <TrbAdminWrapper
               activePage={activePage}

@@ -13,9 +13,9 @@ import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 
 import {
-  adviceLetter,
   getTRBRequestAttendeesQuery,
   getTrbRequestSummaryQuery,
+  guidanceLetter,
   requester
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
@@ -49,7 +49,7 @@ import AdminHome from '..';
 
 import AddNote from '.';
 
-const { recommendations } = adviceLetter;
+const { recommendations } = guidanceLetter;
 
 const getTrbRecommendationsQuery: MockedQuery<
   GetTrbRecommendations,
