@@ -65,7 +65,7 @@ const InternalReview = ({
   }, [setIsStepSubmitting, isSubmitting]);
 
   return (
-    <div id="trbAdviceInternalReview">
+    <div id="trbGuidanceInternalReview">
       {/* Internal Review */}
       <ReviewGuidanceLetter
         trbRequestId={trbRequestId}
@@ -131,7 +131,7 @@ const InternalReview = ({
                     type: 'error',
                     message: t('guidanceLetterForm.error', {
                       action: 'submitting',
-                      type: 'advice letter for internal review'
+                      type: 'guidance letter for internal review'
                     })
                   });
                 }

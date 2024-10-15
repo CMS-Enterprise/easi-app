@@ -145,7 +145,7 @@ describe('TRB Admin Note', () => {
 
     expect(
       screen.getByText(
-        'Advice letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)'
+        'Guidance letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)'
       )
     ).toBeInTheDocument();
   });
@@ -193,7 +193,7 @@ describe('TRB Admin Note', () => {
 
     expect(
       screen.getByText(
-        'Advice letter: Meeting summary, Removed recommendation (Recommendation One)'
+        'Guidance letter: Meeting summary, Removed recommendation (Recommendation One)'
       )
     ).toBeInTheDocument();
   });

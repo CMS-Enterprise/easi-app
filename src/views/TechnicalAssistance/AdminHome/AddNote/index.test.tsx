@@ -210,7 +210,7 @@ describe('Trb Admin Notes: Add Note', () => {
 
     /* Guidance letter */
 
-    userEvent.selectOptions(categorySelect, ['Advice letter']);
+    userEvent.selectOptions(categorySelect, ['Guidance letter']);
     const adviceLetterSectionSelect = screen.getByRole('combobox', {
       name: 'Which section?'
     });

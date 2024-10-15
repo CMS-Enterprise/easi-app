@@ -8,6 +8,7 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import i18next from 'i18next';
 
 import {
   adviceLetter,
@@ -127,31 +128,25 @@ describe('TRB Guidance Letter Form', () => {
   });
 
   it('Renders no guidance letter alert', async () => {
-    const { findByText, findByTestId } = renderForm('summary', [
-      getAdviceLetterCannotStart
-    ]);
+    renderForm('summary', [getAdviceLetterCannotStart]);
 
-    expect(await findByTestId('alert')).toBeInTheDocument();
+    expect(await screen.findByTestId('alert')).toBeInTheDocument();
 
     expect(
-      await findByText(
-        'There is no advice letter for this request yet. Once the consult date has passed, you may create an advice letter for this request.'
+      await screen.findByText(
+        i18next.t<string>('technicalAssistance:guidanceLetter.alerts.info')
       )
     ).toBeInTheDocument();
   });
 
   it('Renders error creating guidance letter alert', async () => {
-    const { findByText, findByTestId } = renderForm(
-      'summary',
-      [getAdviceLetterCannotStart],
-      true
-    );
+    renderForm('summary', [getAdviceLetterCannotStart], true);
 
-    expect(await findByTestId('alert')).toBeInTheDocument();
+    expect(await screen.findByTestId('alert')).toBeInTheDocument();
 
     expect(
-      await findByText(
-        'There was an error creating this advice letter. Please try again. If the error persists, please try again at a later date.'
+      await screen.findByText(
+        i18next.t<string>('technicalAssistance:guidanceLetter.alerts.error')
       )
     ).toBeInTheDocument();
   });
