@@ -44,7 +44,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                   class="usa-breadcrumb__list-item"
                 >
                   <a
-                    class="usa-breadcrumb__link"
+                    class="text-primary usa-breadcrumb__link"
                     href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/guidance"
                   >
                     <span>
@@ -57,7 +57,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                   class="usa-breadcrumb__list-item usa-current"
                 >
                   <span>
-                    Advice letter
+                    Guidance letter
                   </span>
                 </li>
               </ol>
@@ -67,17 +67,17 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
               class="easi-h1 margin-bottom-0"
               tabindex="-1"
             >
-              Advice letter
+              Guidance letter
             </h1>
             <div
               class="font-body-lg line-height-body-5 text-light"
             >
-              Document any outcomes, advice, findings, recommendations, or next steps that the TRB has for this request.
+              Document any outcomes, requirements, recommendations, considerations, and other next steps that the TRB has for this request.
             </div>
             <div
               class="margin-top-2 line-height-body-5"
             >
-              After submitting this form, the requester will receive an automatic notification letting them know their advice letter is available.
+              After submitting this form, the requester will receive an automatic notification letting them know their guidance letter is available.
             </div>
             <div
               class="margin-top-3"
@@ -152,12 +152,12 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
               <span
                 class="name"
               >
-                What we recommend
+                Guidance and Insights
               </span>
               <span
                 class="long"
               >
-                What we recommend
+                Guidance and Insights
               </span>
                
               <span
@@ -229,7 +229,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
               <span
                 class="long"
               >
-                Check the content of your advice letter and send it to the requester
+                Check the content of your guidance letter and send it to the requester
               </span>
                
               <span
@@ -302,7 +302,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
       <form
         class="usa-form maxw-tablet"
         data-testid="form"
-        id="trbAdviceSummary"
+        id="trbGuidanceSummary"
       >
         <div
           class="easi-help-text margin-top-1 margin-bottom-1 text-base"

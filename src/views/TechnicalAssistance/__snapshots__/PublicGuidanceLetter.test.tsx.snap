@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Trb Public Advice Letter > renders from email link 1`] = `
+exports[`Trb Public Guidance Letter > renders from email link 1`] = `
 <DocumentFragment>
   <div
     class="grid-container full-width"
@@ -31,7 +31,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
           class="usa-breadcrumb__list-item usa-current"
         >
           <span>
-            Advice letter
+            Guidance letter
           </span>
         </li>
       </ol>
@@ -41,12 +41,12 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
       class="easi-h1 margin-top-6 margin-bottom-1"
       tabindex="-1"
     >
-      Advice letter
+      Guidance letter
     </h1>
     <p
       class="line-height-body-5 font-body-lg text-light margin-top-0 margin-bottom-2"
     >
-      This is an advice letter that was sent to the project team for the request summarized below. If you have any questions about this advice letter, you may reach out to the TRB at 
+      This is an guidance letter that was sent to the project team for the request summarized below. If you have any questions about this guidance letter, you may reach out to the TRB at 
       <a
         class="usa-link"
         href="mailto:cms-trb@cms.hhs.gov"
@@ -77,7 +77,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
           d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
         />
       </svg>
-      Download advice letter as PDF
+      Download guidance letter as PDF
     </button>
   </div>
   <div
@@ -125,7 +125,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
                   Project title
                 </dt>
                 <dd>
-                  Case 7 - Advice letter in review
+                  Case 7 - Guidance letter in review
                 </dd>
               </div>
               <div
@@ -201,7 +201,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
       <h1
         class="easi-only-print"
       >
-        Advice letter
+        Guidance letter
       </h1>
       <div>
         <p
@@ -244,7 +244,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
           <h2
             class="margin-bottom-1"
           >
-            What we recommend
+            Guidance and insights
           </h2>
           <div
             class="margin-top-4"
@@ -377,7 +377,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
             <h3
               class="usa-summary-box__heading"
             >
-              Have questions about this advice letter?
+              Have questions about this guidance letter?
             </h3>
             <div
               class="usa-summary-box__text"
@@ -398,7 +398,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Trb Public Advice Letter > renders from task list link 1`] = `
+exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
 <DocumentFragment>
   <div
     class="grid-container full-width"
@@ -441,7 +441,7 @@ exports[`Trb Public Advice Letter > renders from task list link 1`] = `
           class="usa-breadcrumb__list-item usa-current"
         >
           <span>
-            Advice letter
+            Guidance letter
           </span>
         </li>
       </ol>
@@ -451,7 +451,7 @@ exports[`Trb Public Advice Letter > renders from task list link 1`] = `
       class="easi-h1 margin-top-6 margin-bottom-1"
       tabindex="-1"
     >
-      Advice letter
+      Guidance letter
     </h1>
     <a
       class="usa-link"
@@ -503,7 +503,7 @@ exports[`Trb Public Advice Letter > renders from task list link 1`] = `
           d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
         />
       </svg>
-      Download advice letter as PDF
+      Download guidance letter as PDF
     </button>
   </div>
   <div
@@ -514,7 +514,7 @@ exports[`Trb Public Advice Letter > renders from task list link 1`] = `
       <h1
         class="easi-only-print"
       >
-        Advice letter
+        Guidance letter
       </h1>
       <div>
         <p
@@ -557,7 +557,7 @@ exports[`Trb Public Advice Letter > renders from task list link 1`] = `
           <h2
             class="margin-bottom-1"
           >
-            What we recommend
+            Guidance and insights
           </h2>
           <div
             class="margin-top-4"
@@ -690,7 +690,7 @@ exports[`Trb Public Advice Letter > renders from task list link 1`] = `
             <h3
               class="usa-summary-box__heading"
             >
-              Have questions about this advice letter?
+              Have questions about this guidance letter?
             </h3>
             <div
               class="usa-summary-box__text"
