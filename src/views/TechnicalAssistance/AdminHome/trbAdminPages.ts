@@ -1,8 +1,8 @@
 import { TrbAdminPage } from 'types/technicalAssistance';
 
 import AdditionalInformation from './components/AdditionalInformation';
-import AdviceLetter from './AdviceLetter';
 import Feedback from './Feedback';
+import GuidanceLetter from './GuidanceLetter';
 import InitialRequestForm from './InitialRequestForm';
 import Notes from './Notes';
 import RequestHome from './RequestHome';
@@ -33,7 +33,7 @@ const trbAdminPages: TrbAdminPage[] = [
   {
     path: 'guidance',
     text: 'technicalAssistance:adminHome.guidanceLetter',
-    component: AdviceLetter,
+    component: GuidanceLetter,
     groupEnd: true
   },
   {

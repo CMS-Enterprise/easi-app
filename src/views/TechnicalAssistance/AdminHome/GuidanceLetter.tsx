@@ -15,9 +15,7 @@ import { TrbAdminPageProps } from 'types/technicalAssistance';
 import ReviewAdviceLetter from './components/ReviewAdviceLetter';
 import TrbAdminWrapper from './components/TrbAdminWrapper';
 
-import './AdviceLetter.scss';
-
-const AdviceLetter = ({
+const GuidanceLetter = ({
   trbRequest,
   requesterString,
   assignLeadModalTrbRequestIdRef,
@@ -79,7 +77,7 @@ const AdviceLetter = ({
       }
     >
       {
-        // If advice letter status is CANNOT_START_YET, show alert message
+        // If guidance letter status is CANNOT_START_YET, show alert message
         adviceLetterStatus === 'CANNOT_START_YET' ? (
           <Alert type="info" slim>
             {t('guidanceLetter.alerts.info')}
@@ -103,4 +101,4 @@ const AdviceLetter = ({
   );
 };
 
-export default AdviceLetter;
+export default GuidanceLetter;
