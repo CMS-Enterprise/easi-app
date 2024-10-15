@@ -7,14 +7,14 @@ import i18next from 'i18next';
 import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 
-import PublicAdviceLetter from './PublicAdviceLetter';
+import PublicGuidanceLetter from './PublicGuidanceLetter';
 
-describe('Trb Public Advice Letter', () => {
+describe('Trb Public Guidance Letter', () => {
   const id = '6e0d1524-204a-4014-b6d9-e995b1db3987';
   const data = {
     trbRequest: {
       id,
-      name: 'Case 7 - Advice letter in review',
+      name: 'Case 7 - Guidance letter in review',
       requesterInfo: {
         commonName: 'Adeline Aarons',
         __typename: 'UserInfo'
@@ -83,9 +83,9 @@ describe('Trb Public Advice Letter', () => {
           }
         ]}
       >
-        <MemoryRouter initialEntries={[`/trb/advice-letter/${id}`]}>
-          <Route exact path="/trb/advice-letter/:id">
-            <PublicAdviceLetter />
+        <MemoryRouter initialEntries={[`/trb/guidance-letter/${id}`]}>
+          <Route exact path="/trb/guidance-letter/:id">
+            <PublicGuidanceLetter />
           </Route>
         </MemoryRouter>
       </MockedProvider>
@@ -93,12 +93,14 @@ describe('Trb Public Advice Letter', () => {
 
     await screen.findAllByRole('heading', {
       level: 1,
-      name: i18next.t<string>('technicalAssistance:adviceLetterForm.heading')
+      name: i18next.t<string>('technicalAssistance:guidanceLetterForm.heading')
     });
 
     await findByRole('heading', {
       level: 2,
-      name: i18next.t<string>('technicalAssistance:adviceLetter.requestSummary')
+      name: i18next.t<string>(
+        'technicalAssistance:guidanceLetter.requestSummary'
+      )
     });
 
     expect(asFragment()).toMatchSnapshot();
@@ -123,9 +125,9 @@ describe('Trb Public Advice Letter', () => {
           }
         ]}
       >
-        <MemoryRouter initialEntries={[`/trb/advice-letter/${id}`]}>
-          <Route exact path="/trb/advice-letter/:id">
-            <PublicAdviceLetter />
+        <MemoryRouter initialEntries={[`/trb/guidance-letter/${id}`]}>
+          <Route exact path="/trb/guidance-letter/:id">
+            <PublicGuidanceLetter />
           </Route>
         </MemoryRouter>
       </MockedProvider>
@@ -167,9 +169,9 @@ describe('Trb Public Advice Letter', () => {
           }
         ]}
       >
-        <MemoryRouter initialEntries={[`/trb/advice-letter/${id}`]}>
-          <Route exact path="/trb/advice-letter/:id">
-            <PublicAdviceLetter />
+        <MemoryRouter initialEntries={[`/trb/guidance-letter/${id}`]}>
+          <Route exact path="/trb/guidance-letter/:id">
+            <PublicGuidanceLetter />
           </Route>
         </MemoryRouter>
       </MockedProvider>
@@ -177,7 +179,7 @@ describe('Trb Public Advice Letter', () => {
 
     await findByRole('heading', {
       level: 4,
-      name: i18next.t<string>('technicalAssistance:adviceLetter.incomplete')
+      name: i18next.t<string>('technicalAssistance:guidanceLetter.incomplete')
     });
   });
 
@@ -205,13 +207,13 @@ describe('Trb Public Advice Letter', () => {
         <MemoryRouter
           initialEntries={[
             {
-              pathname: `/trb/advice-letter/${id}`,
+              pathname: `/trb/guidance-letter/${id}`,
               state: { fromTaskList: true }
             }
           ]}
         >
-          <Route exact path="/trb/advice-letter/:id">
-            <PublicAdviceLetter />
+          <Route exact path="/trb/guidance-letter/:id">
+            <PublicGuidanceLetter />
           </Route>
         </MemoryRouter>
       </MockedProvider>
@@ -219,7 +221,7 @@ describe('Trb Public Advice Letter', () => {
 
     await screen.findAllByRole('heading', {
       level: 1,
-      name: i18next.t<string>('technicalAssistance:adviceLetterForm.heading')
+      name: i18next.t<string>('technicalAssistance:guidanceLetterForm.heading')
     });
 
     expect(

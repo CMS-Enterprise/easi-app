@@ -12,12 +12,10 @@ import {
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
-import ReviewAdviceLetter from './components/ReviewAdviceLetter';
+import ReviewGuidanceLetter from './components/ReviewGuidanceLetter';
 import TrbAdminWrapper from './components/TrbAdminWrapper';
 
-import './AdviceLetter.scss';
-
-const AdviceLetter = ({
+const GuidanceLetter = ({
   trbRequest,
   requesterString,
   assignLeadModalTrbRequestIdRef,
@@ -46,10 +44,10 @@ const AdviceLetter = ({
 
   return (
     <TrbAdminWrapper
-      activePage="advice"
+      activePage="guidance"
       trbRequestId={id}
-      title={t('adminHome.adviceLetter')}
-      description={t('adviceLetter.introText')}
+      title={t('adminHome.guidanceLetter')}
+      description={t('guidanceLetter.introText')}
       disableStep={
         taskStatuses?.adviceLetterStatus ===
         TRBGuidanceLetterStatus.CANNOT_START_YET
@@ -71,23 +69,23 @@ const AdviceLetter = ({
       pdfExportProps={
         adviceLetter
           ? {
-              label: t('adviceLetter.downloadAsPdf'),
-              filename: `advice letter ${id}.pdf`,
-              title: t('adviceLetterForm.heading')
+              label: t('guidanceLetter.downloadAsPdf'),
+              filename: `guidance letter ${id}.pdf`,
+              title: t('guidanceLetterForm.heading')
             }
           : undefined
       }
     >
       {
-        // If advice letter status is CANNOT_START_YET, show alert message
+        // If guidance letter status is CANNOT_START_YET, show alert message
         adviceLetterStatus === 'CANNOT_START_YET' ? (
           <Alert type="info" slim>
-            {t('adviceLetter.alerts.info')}
+            {t('guidanceLetter.alerts.info')}
           </Alert>
         ) : (
           <>
             {data && adviceLetter && (
-              <ReviewAdviceLetter
+              <ReviewGuidanceLetter
                 adviceLetter={adviceLetter}
                 trbRequestId={trbRequest.id}
                 trbRequest={data.trbRequest}
@@ -103,4 +101,4 @@ const AdviceLetter = ({
   );
 };
 
-export default AdviceLetter;
+export default GuidanceLetter;

@@ -23,7 +23,7 @@ import {
   UpdateTrbAdviceLetterVariables
 } from 'queries/types/UpdateTrbAdviceLetter';
 import {
-  AdviceLetterNextSteps,
+  GuidanceLetterNextSteps,
   StepComponentProps
 } from 'types/technicalAssistance';
 import { nextStepsSchema } from 'validations/trbRequestSchema';
@@ -54,7 +54,7 @@ const NextSteps = ({
     control,
     watch,
     formState: { isSubmitting, isDirty }
-  } = useEasiForm<AdviceLetterNextSteps>({
+  } = useEasiForm<GuidanceLetterNextSteps>({
     resolver: yupResolver(nextStepsSchema),
     defaultValues: {
       nextSteps: nextSteps || '',
@@ -63,14 +63,13 @@ const NextSteps = ({
     }
   });
 
-  /** Submit next steps fields and update advice letter */
+  /** Submit next steps fields and update guidance letter */
   const submit = useCallback<StepSubmit>(
     (callback, shouldValidate = true) =>
       handleSubmit(
         async formData => {
           try {
             if (isDirty) {
-              // UpdateTrbAdviceLetter mutation
               await update({
                 variables: {
                   input: {
@@ -90,9 +89,9 @@ const NextSteps = ({
             if (e instanceof ApolloError) {
               setFormAlert({
                 type: 'error',
-                message: t('adviceLetterForm.error', {
+                message: t('guidanceLetterForm.error', {
                   action: 'saving',
-                  type: 'advice letter'
+                  type: 'guidance letter'
                 })
               });
             }
@@ -138,7 +137,7 @@ const NextSteps = ({
   return (
     <Form
       onSubmit={e => e.preventDefault()}
-      id="trbAdviceNextSteps"
+      id="trbGuidanceNextSteps"
       className="maxw-tablet"
     >
       {/* Required fields help text */}
@@ -162,7 +161,7 @@ const NextSteps = ({
                 htmlFor="nextSteps"
                 required
               >
-                {t('adviceLetterForm.nextSteps')}
+                {t('guidanceLetterForm.nextSteps')}
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
               <RichTextEditor
@@ -190,7 +189,7 @@ const NextSteps = ({
               <Fieldset
                 legend={
                   <>
-                    {t('adviceLetterForm.isFollowupRecommended')}
+                    {t('guidanceLetterForm.isFollowupRecommended')}
                     <span className="text-red"> *</span>
                   </>
                 }
@@ -204,7 +203,7 @@ const NextSteps = ({
                   {...field}
                   ref={null}
                   id="isFollowupRecommendedYes"
-                  label={t('adviceLetterForm.followupYes')}
+                  label={t('guidanceLetterForm.followupYes')}
                   value="true"
                   checked={field.value === true}
                   onChange={() => field.onChange(true)}
@@ -227,7 +226,7 @@ const NextSteps = ({
                             {t('When?')}
                           </Label>
                           <HelpText>
-                            {t('adviceLetterForm.followupHelpText')}
+                            {t('guidanceLetterForm.followupHelpText')}
                           </HelpText>
                           {input.fieldState.error && (
                             <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
@@ -249,7 +248,7 @@ const NextSteps = ({
                   {...field}
                   ref={null}
                   id="isFollowupRecommendedNo"
-                  label={t('adviceLetterForm.notNecessary')}
+                  label={t('guidanceLetterForm.notNecessary')}
                   value="false"
                   checked={field.value === false}
                   onChange={() => field.onChange(false)}
@@ -265,8 +264,7 @@ const NextSteps = ({
         className="margin-top-4"
         back={{
           outline: true,
-          onClick: () =>
-            history.push(`/trb/${trbRequestId}/advice/recommendations`)
+          onClick: () => history.push(`/trb/${trbRequestId}/guidance/insights`)
         }}
         next={{
           disabled:
@@ -275,11 +273,11 @@ const NextSteps = ({
             (!!watch().isFollowupRecommended && !watch().followupPoint),
           onClick: () =>
             submit(() =>
-              history.push(`/trb/${trbRequestId}/advice/internal-review`)
+              history.push(`/trb/${trbRequestId}/guidance/internal-review`)
             )
         }}
-        taskListUrl={`/trb/${trbRequestId}/advice`}
-        saveExitText={t('adviceLetterForm.returnToRequest')}
+        taskListUrl={`/trb/${trbRequestId}/guidance`}
+        saveExitText={t('guidanceLetterForm.returnToRequest')}
         submit={submit}
         border={false}
       />

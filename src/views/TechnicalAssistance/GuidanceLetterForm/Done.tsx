@@ -29,7 +29,7 @@ const Done = () => {
 
   // Redirect to first step if success state is undefined
   if (success === undefined) {
-    history.replace(`/trb/${id}/advice/summary`);
+    history.replace(`/trb/${id}/guidance/summary`);
   }
 
   return (
@@ -49,24 +49,24 @@ const Done = () => {
               { text: t('Home'), url: '/trb' },
               {
                 text: t('adminHome.breadcrumb'),
-                url: `/trb/${id}/advice`
+                url: `/trb/${id}/guidance`
               },
-              { text: t('adviceLetterForm.heading') }
+              { text: t('guidanceLetterForm.heading') }
             ]}
           />
           <PageHeading className="margin-bottom-0">
             {t(`done.${success ? 'success' : 'error'}.heading`)}
           </PageHeading>
           <p className="font-body-lg line-height-body-5 text-light margin-top-05">
-            {t(`adviceLetterForm.done.${success ? 'success' : 'error'}`)}
+            {t(`guidanceLetterForm.done.${success ? 'success' : 'error'}`)}
           </p>
           <ButtonGroup>
             {!success && (
               <UswdsReactLink
-                to={`/trb/${id}/advice/review`}
+                to={`/trb/${id}/guidance/review`}
                 className="usa-button"
               >
-                {t('adviceLetterForm.done.backToAdviceLetter')}
+                {t('guidanceLetterForm.done.backToGuidanceLetter')}
               </UswdsReactLink>
             )}
             <UswdsReactLink
@@ -76,7 +76,7 @@ const Done = () => {
                 'margin-left-neg-05': success
               })}
             >
-              {t('adviceLetterForm.done.returnToRequestHome')}
+              {t('guidanceLetterForm.done.returnToRequestHome')}
             </UswdsReactLink>
           </ButtonGroup>
         </GridContainer>

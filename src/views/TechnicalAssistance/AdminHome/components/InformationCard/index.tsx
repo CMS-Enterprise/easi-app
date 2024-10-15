@@ -21,7 +21,7 @@ import './index.scss';
 
 type InformationCardProps = {
   trbRequest: GetTrbRequestHomeType;
-  type: 'initialRequestForm' | 'adviceLetter';
+  type: 'initialRequestForm' | 'guidanceLetter';
 };
 
 interface CardDetailsType {
@@ -53,14 +53,14 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
     disabled: false
   };
 
-  const returnAdviceText = () => {
+  const returnGuidanceText = () => {
     if (
       trbRequest.taskStatuses.adviceLetterStatus ===
         TRBGuidanceLetterStatus.CANNOT_START_YET ||
       trbRequest.taskStatuses.adviceLetterStatus ===
         TRBGuidanceLetterStatus.READY_TO_START
     ) {
-      return t('adminHome.startAdvice');
+      return t('adminHome.startGuidance');
     }
     if (
       trbRequest.taskStatuses.adviceLetterStatus ===
@@ -68,7 +68,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
     ) {
       return t('adminHome.view');
     }
-    return t('adminHome.viewAdvice');
+    return t('adminHome.viewGuidance');
   };
 
   switch (type) {
@@ -86,18 +86,18 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
         disabled: false
       };
       break;
-    case 'adviceLetter':
+    case 'guidanceLetter':
       cardDetails = {
-        header: t('adminHome.adviceLetter'),
+        header: t('adminHome.guidanceLetter'),
         description: t('adminHome.toBeCompleted'),
         status: trbRequest.taskStatuses.adviceLetterStatus,
-        buttonText: returnAdviceText(),
+        buttonText: returnGuidanceText(),
         buttonClass:
           trbRequest.taskStatuses.adviceLetterStatus ===
           TRBGuidanceLetterStatus.COMPLETED
             ? 'usa-button--outline'
             : '',
-        buttonLink: 'advice',
+        buttonLink: 'guidance',
         modified: trbRequest.adviceLetter?.modifiedAt
           ? formatDateLocal(trbRequest.adviceLetter.modifiedAt, 'MMMM d, yyyy')
           : t('adminHome.notStarted'),

@@ -333,7 +333,7 @@ export const updateTrbRequestConsultMeetingQuery: MockedQuery<
   }
 };
 
-export const adviceLetter: NonNullable<
+export const guidanceLetter: NonNullable<
   GetTrbAdviceLetter['trbRequest']['adviceLetter']
 > = {
   __typename: 'TRBGuidanceLetter',
@@ -375,7 +375,7 @@ export const adviceLetter: NonNullable<
   modifiedAt: null
 };
 
-export const getTrbAdviceLetterQuery: MockedQuery<
+export const getTrbGuidanceLetterQuery: MockedQuery<
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 > = {
@@ -398,7 +398,7 @@ export const getTrbAdviceLetterQuery: MockedQuery<
           __typename: 'TRBTaskStatuses',
           adviceLetterStatus: TRBGuidanceLetterStatus.COMPLETED
         },
-        adviceLetter
+        adviceLetter: guidanceLetter
       }
     }
   }

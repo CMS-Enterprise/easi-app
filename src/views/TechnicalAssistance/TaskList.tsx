@@ -359,7 +359,7 @@ function TaskList() {
                   </TaskListDescription>
                 </TaskListItem>
 
-                {/* Advice letter and next steps */}
+                {/* Guidance letter and next steps */}
                 <TaskListItem
                   heading={taskListText[4].heading}
                   status={taskStatuses?.adviceLetterStatusTaskList}
@@ -375,11 +375,11 @@ function TaskList() {
                       variant="unstyled"
                       className="usa-button"
                       to={{
-                        pathname: `/trb/advice-letter/${id}`,
+                        pathname: `/trb/guidance-letter/${id}`,
                         state: { fromTaskList: true }
                       }}
                     >
-                      {t('taskList.viewAdviceLetter')}
+                      {t('taskList.viewGuidanceLetter')}
                     </UswdsReactLink>
                   )}
                 </TaskListItem>

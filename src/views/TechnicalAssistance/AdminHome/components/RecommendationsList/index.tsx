@@ -35,7 +35,7 @@ type RecommendationsListProps = {
 };
 
 /**
- * Displays list of TRB advice letter recommendations
+ * Displays list of TRB guidance letter recommendations
  * with optional buttons to edit, remove, and order recommendations
  */
 export default function RecommendationsList({
@@ -80,7 +80,7 @@ export default function RecommendationsList({
           newOrder
         }
       }
-    }).catch(() => setReorderError?.(t('adviceLetterForm.reorderError')));
+    }).catch(() => setReorderError?.(t('guidanceLetterForm.reorderError')));
   };
 
   // Clear error on initial render
@@ -102,7 +102,7 @@ export default function RecommendationsList({
           }
         >
           <p>
-            {t('adviceLetterForm.modal.removingTitle', {
+            {t('guidanceLetterForm.modal.removingTitle', {
               title: recommendationToRemove?.title
             })}
           </p>
@@ -111,7 +111,7 @@ export default function RecommendationsList({
 
       {recommendations.length > 0 && editable && (
         <Alert type="info" slim className="margin-bottom-4">
-          {t('adviceLetterForm.reorderRecommendations')}
+          {t('guidanceLetterForm.reorderGuidance')}
         </Alert>
       )}
 
@@ -147,7 +147,9 @@ export default function RecommendationsList({
                         type="button"
                         onClick={() => sort(id, index - 1)}
                         className="height-3"
-                        aria-label="Increase recommendation sort order"
+                        aria-label={t(
+                          'guidanceLetterForm.increaseOrderAriaLabel'
+                        )}
                         unstyled
                       >
                         <IconArrowDropUp size={3} className="text-primary" />
@@ -157,7 +159,9 @@ export default function RecommendationsList({
                         type="button"
                         onClick={() => sort(id, index + 1)}
                         className="height-3"
-                        aria-label="Decrease recommendation sort order"
+                        aria-label={t(
+                          'guidanceLetterForm.decreaseOrderAriaLabel'
+                        )}
                         unstyled
                       >
                         <IconArrowDropDown size={3} className="text-primary" />
@@ -183,7 +187,7 @@ export default function RecommendationsList({
                   {links.length > 0 && (
                     <>
                       <p className="text-bold margin-bottom-0 margin-top-2">
-                        {t('adviceLetter.resources')}
+                        {t('guidanceLetter.resources')}
                       </p>
                       <RecommendationLinks
                         links={links}
@@ -204,7 +208,7 @@ export default function RecommendationsList({
                         onClick={() => edit(recommendation)}
                         unstyled
                       >
-                        {t('adviceLetterForm.editRecommendation')}
+                        {t('guidanceLetterForm.editGuidance')}
                       </Button>
                     )}
                     {remove && (
@@ -216,7 +220,7 @@ export default function RecommendationsList({
                         }
                         unstyled
                       >
-                        {t('adviceLetterForm.removeRecommendation')}
+                        {t('guidanceLetterForm.removeGuidance')}
                       </Button>
                     )}
                   </ButtonGroup>

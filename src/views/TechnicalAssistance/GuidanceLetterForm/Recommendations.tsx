@@ -17,17 +17,17 @@ import {
   DeleteTRBRecommendationVariables
 } from 'queries/types/DeleteTRBRecommendation';
 import {
-  AdviceLetterRecommendationFields,
+  GuidanceLetterRecommendationFields,
   StepComponentProps
 } from 'types/technicalAssistance';
-import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
+import { guidanceRecommendationSchema } from 'validations/trbRequestSchema';
 
 import RecommendationsList from '../AdminHome/components/RecommendationsList';
 import Pager from '../RequestForm/Pager';
 
 import RecommendationsForm from './RecommendationsForm';
 
-const defaultValues: AdviceLetterRecommendationFields = {
+const defaultValues: GuidanceLetterRecommendationFields = {
   id: undefined,
   title: '',
   recommendation: '',
@@ -49,8 +49,8 @@ const Recommendations = ({
   /** Whether recommendations have been added to the request */
   const hasRecommendations: boolean = recommendations.length > 0;
 
-  const formMethods = useForm<AdviceLetterRecommendationFields>({
-    resolver: yupResolver(adviceRecommendationSchema),
+  const formMethods = useForm<GuidanceLetterRecommendationFields>({
+    resolver: yupResolver(guidanceRecommendationSchema),
     defaultValues
   });
   const { reset } = formMethods;
@@ -77,7 +77,7 @@ const Recommendations = ({
     <Switch>
       {/* Recommendations Form */}
       <Route exact path={`${path}/form`}>
-        <FormProvider<AdviceLetterRecommendationFields> {...formMethods}>
+        <FormProvider<GuidanceLetterRecommendationFields> {...formMethods}>
           <RecommendationsForm
             trbRequestId={trbRequestId}
             setFormAlert={setFormAlert}
@@ -87,7 +87,7 @@ const Recommendations = ({
 
       {/* Recommendations form step */}
       <Route exact path={`${path}`}>
-        <div id="trbAdviceRecommendations">
+        <div id="trbGuidanceRecommendations">
           {/* Add recommendation button */}
           <Button
             className="margin-top-5 margin-bottom-1"
@@ -100,8 +100,8 @@ const Recommendations = ({
           >
             {t(
               hasRecommendations
-                ? 'adviceLetterForm.addAnotherRecommendation'
-                : 'adviceLetterForm.addRecommendation'
+                ? 'guidanceLetterForm.addAdditionalGuidance'
+                : 'guidanceLetterForm.addGuidance'
             )}
           </Button>
 
@@ -111,7 +111,7 @@ const Recommendations = ({
             /* No recommendations message */
             !hasRecommendations ? (
               <Alert type="info" slim>
-                {t('adviceLetterForm.noRecommendations')}
+                {t('guidanceLetterForm.noGuidance')}
               </Alert>
             ) : (
               <RecommendationsList
@@ -128,27 +128,22 @@ const Recommendations = ({
                     links: recommendation.links.map(link => ({ link }))
                   });
 
-                  history.push(
-                    `/trb/${trbRequestId}/advice/recommendations/form`
-                  );
+                  history.push(`/trb/${trbRequestId}/guidance/insights/form`);
                 }}
                 remove={recommendation =>
                   remove({ variables: { id: recommendation.id } })
                     .then(() => {
                       setFormAlert({
                         type: 'success',
-                        message: t('adviceLetterForm.removeSuccess', {
-                          action: 'removing',
-                          type: 'recommendation'
-                        })
+                        message: t('guidanceLetterForm.removeSuccess')
                       });
                     })
                     .catch(() =>
                       setFormAlert({
                         type: 'error',
-                        message: t('adviceLetterForm.error', {
+                        message: t('guidanceLetterForm.error', {
                           action: 'removing',
-                          type: 'recommendation'
+                          type: 'guidance'
                         })
                       })
                     )
@@ -164,30 +159,30 @@ const Recommendations = ({
               outline: true,
               onClick: () => {
                 setFormAlert(null);
-                history.push(`/trb/${trbRequestId}/advice/summary`);
+                history.push(`/trb/${trbRequestId}/guidance/summary`);
               }
             }}
             next={{
               disabled: !!loading,
               text: hasRecommendations
                 ? t('button.next')
-                : t('adviceLetterForm.continueWithoutAdding'),
+                : t('guidanceLetterForm.continueWithoutAdding'),
               onClick: () => {
                 if (
                   setStepsCompleted &&
                   stepsCompleted &&
-                  !stepsCompleted?.includes('recommendations')
+                  !stepsCompleted?.includes('insights')
                 ) {
-                  setStepsCompleted([...stepsCompleted, 'recommendations']);
+                  setStepsCompleted([...stepsCompleted, 'insights']);
                 }
                 setFormAlert(null);
-                history.push(`/trb/${trbRequestId}/advice/next-steps`);
+                history.push(`/trb/${trbRequestId}/guidance/next-steps`);
               },
               outline: !hasRecommendations
             }}
-            taskListUrl={`/trb/${trbRequestId}/advice`}
+            taskListUrl={`/trb/${trbRequestId}/guidance`}
             submit={async callback => callback?.()}
-            saveExitText={t('adviceLetterForm.returnToRequest')}
+            saveExitText={t('guidanceLetterForm.returnToRequest')}
             border={false}
           />
         </div>
