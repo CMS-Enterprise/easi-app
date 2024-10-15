@@ -462,6 +462,10 @@ type ComplexityRoot struct {
 		Document func(childComplexity int) int
 	}
 
+	CreateSystemIntakeGRBReviewersPayload struct {
+		Reviewers func(childComplexity int) int
+	}
+
 	CreateTRBRequestDocumentPayload struct {
 		Document func(childComplexity int) int
 	}
@@ -493,6 +497,22 @@ type ComplexityRoot struct {
 		Phase          func(childComplexity int) int
 		Solution       func(childComplexity int) int
 		Year           func(childComplexity int) int
+	}
+
+	GRBReviewerComparison struct {
+		EuaUserID         func(childComplexity int) int
+		GrbRole           func(childComplexity int) int
+		ID                func(childComplexity int) int
+		IsCurrentReviewer func(childComplexity int) int
+		UserAccount       func(childComplexity int) int
+		VotingRole        func(childComplexity int) int
+	}
+
+	GRBReviewerComparisonIntake struct {
+		ID              func(childComplexity int) int
+		IntakeCreatedAt func(childComplexity int) int
+		RequestName     func(childComplexity int) int
+		Reviewers       func(childComplexity int) int
 	}
 
 	GovernanceRequestFeedback struct {
@@ -543,7 +563,7 @@ type ComplexityRoot struct {
 		CreateSystemIntakeActionUpdateLcid               func(childComplexity int, input models.SystemIntakeUpdateLCIDInput) int
 		CreateSystemIntakeContact                        func(childComplexity int, input models.CreateSystemIntakeContactInput) int
 		CreateSystemIntakeDocument                       func(childComplexity int, input models.CreateSystemIntakeDocumentInput) int
-		CreateSystemIntakeGRBReviewer                    func(childComplexity int, input models.CreateSystemIntakeGRBReviewerInput) int
+		CreateSystemIntakeGRBReviewers                   func(childComplexity int, input models.CreateSystemIntakeGRBReviewersInput) int
 		CreateSystemIntakeNote                           func(childComplexity int, input models.CreateSystemIntakeNoteInput) int
 		CreateTRBAdminNoteAdviceLetter                   func(childComplexity int, input models.CreateTRBAdminNoteGuidanceLetterInput) int
 		CreateTRBAdminNoteConsultSession                 func(childComplexity int, input models.CreateTRBAdminNoteConsultSessionInput) int
@@ -580,6 +600,7 @@ type ComplexityRoot struct {
 		SetTRBRequestRelationExistingService             func(childComplexity int, input models.SetTRBRequestRelationExistingServiceInput) int
 		SetTRBRequestRelationExistingSystem              func(childComplexity int, input models.SetTRBRequestRelationExistingSystemInput) int
 		SetTRBRequestRelationNewSystem                   func(childComplexity int, input models.SetTRBRequestRelationNewSystemInput) int
+		StartGRBReview                                   func(childComplexity int, input models.StartGRBReviewInput) int
 		SubmitIntake                                     func(childComplexity int, input models.SubmitIntakeInput) int
 		UnlinkSystemIntakeRelation                       func(childComplexity int, intakeID uuid.UUID) int
 		UnlinkTRBRequestRelation                         func(childComplexity int, trbRequestID uuid.UUID) int
@@ -617,6 +638,7 @@ type ComplexityRoot struct {
 		CedarSystemDetails               func(childComplexity int, cedarSystemID string) int
 		CedarSystems                     func(childComplexity int) int
 		CedarThreat                      func(childComplexity int, cedarSystemID string) int
+		CompareGRBReviewersByIntakeID    func(childComplexity int, id uuid.UUID) int
 		CurrentUser                      func(childComplexity int) int
 		Deployments                      func(childComplexity int, cedarSystemID string, deploymentType *string, state *string, status *string) int
 		Exchanges                        func(childComplexity int, cedarSystemID string) int
@@ -668,6 +690,7 @@ type ComplexityRoot struct {
 		FundingSources              func(childComplexity int) int
 		GRBDate                     func(childComplexity int) int
 		GRBMeetingState             func(childComplexity int) int
+		GRBReviewStartedAt          func(childComplexity int) int
 		GRTDate                     func(childComplexity int) int
 		GRTMeetingState             func(childComplexity int) int
 		GovernanceRequestFeedbacks  func(childComplexity int) int
@@ -1182,7 +1205,8 @@ type MutationResolver interface {
 	CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error)
 	UpdateSystemIntakeContact(ctx context.Context, input models.UpdateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error)
 	DeleteSystemIntakeContact(ctx context.Context, input models.DeleteSystemIntakeContactInput) (*models.DeleteSystemIntakeContactPayload, error)
-	CreateSystemIntakeGRBReviewer(ctx context.Context, input models.CreateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error)
+	StartGRBReview(ctx context.Context, input models.StartGRBReviewInput) (*string, error)
+	CreateSystemIntakeGRBReviewers(ctx context.Context, input models.CreateSystemIntakeGRBReviewersInput) (*models.CreateSystemIntakeGRBReviewersPayload, error)
 	UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error)
 	DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error)
 	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
@@ -1235,6 +1259,7 @@ type QueryResolver interface {
 	MySystemIntakes(ctx context.Context) ([]*models.SystemIntake, error)
 	SystemIntakesWithReviewRequested(ctx context.Context) ([]*models.SystemIntake, error)
 	SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error)
+	CompareGRBReviewersByIntakeID(ctx context.Context, id uuid.UUID) ([]*models.GRBReviewerComparisonIntake, error)
 	CurrentUser(ctx context.Context) (*models.CurrentUser, error)
 	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error)
 	CedarBudget(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error)
@@ -1281,6 +1306,7 @@ type SystemIntakeResolver interface {
 
 	LastMeetingDate(ctx context.Context, obj *models.SystemIntake) (*time.Time, error)
 	NextMeetingDate(ctx context.Context, obj *models.SystemIntake) (*time.Time, error)
+
 	GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error)
 
 	Isso(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeIsso, error)
@@ -3567,6 +3593,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateSystemIntakeDocumentPayload.Document(childComplexity), true
 
+	case "CreateSystemIntakeGRBReviewersPayload.reviewers":
+		if e.complexity.CreateSystemIntakeGRBReviewersPayload.Reviewers == nil {
+			break
+		}
+
+		return e.complexity.CreateSystemIntakeGRBReviewersPayload.Reviewers(childComplexity), true
+
 	case "CreateTRBRequestDocumentPayload.document":
 		if e.complexity.CreateTRBRequestDocumentPayload.Document == nil {
 			break
@@ -3650,6 +3683,76 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.EstimatedLifecycleCost.Year(childComplexity), true
+
+	case "GRBReviewerComparison.euaUserId":
+		if e.complexity.GRBReviewerComparison.EuaUserID == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.EuaUserID(childComplexity), true
+
+	case "GRBReviewerComparison.grbRole":
+		if e.complexity.GRBReviewerComparison.GrbRole == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.GrbRole(childComplexity), true
+
+	case "GRBReviewerComparison.id":
+		if e.complexity.GRBReviewerComparison.ID == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.ID(childComplexity), true
+
+	case "GRBReviewerComparison.isCurrentReviewer":
+		if e.complexity.GRBReviewerComparison.IsCurrentReviewer == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.IsCurrentReviewer(childComplexity), true
+
+	case "GRBReviewerComparison.userAccount":
+		if e.complexity.GRBReviewerComparison.UserAccount == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.UserAccount(childComplexity), true
+
+	case "GRBReviewerComparison.votingRole":
+		if e.complexity.GRBReviewerComparison.VotingRole == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparison.VotingRole(childComplexity), true
+
+	case "GRBReviewerComparisonIntake.id":
+		if e.complexity.GRBReviewerComparisonIntake.ID == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparisonIntake.ID(childComplexity), true
+
+	case "GRBReviewerComparisonIntake.intakeCreatedAt":
+		if e.complexity.GRBReviewerComparisonIntake.IntakeCreatedAt == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparisonIntake.IntakeCreatedAt(childComplexity), true
+
+	case "GRBReviewerComparisonIntake.requestName":
+		if e.complexity.GRBReviewerComparisonIntake.RequestName == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparisonIntake.RequestName(childComplexity), true
+
+	case "GRBReviewerComparisonIntake.reviewers":
+		if e.complexity.GRBReviewerComparisonIntake.Reviewers == nil {
+			break
+		}
+
+		return e.complexity.GRBReviewerComparisonIntake.Reviewers(childComplexity), true
 
 	case "GovernanceRequestFeedback.author":
 		if e.complexity.GovernanceRequestFeedback.Author == nil {
@@ -4007,17 +4110,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateSystemIntakeDocument(childComplexity, args["input"].(models.CreateSystemIntakeDocumentInput)), true
 
-	case "Mutation.createSystemIntakeGRBReviewer":
-		if e.complexity.Mutation.CreateSystemIntakeGRBReviewer == nil {
+	case "Mutation.createSystemIntakeGRBReviewers":
+		if e.complexity.Mutation.CreateSystemIntakeGRBReviewers == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_createSystemIntakeGRBReviewer_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_createSystemIntakeGRBReviewers_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeGRBReviewer(childComplexity, args["input"].(models.CreateSystemIntakeGRBReviewerInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeGRBReviewers(childComplexity, args["input"].(models.CreateSystemIntakeGRBReviewersInput)), true
 
 	case "Mutation.createSystemIntakeNote":
 		if e.complexity.Mutation.CreateSystemIntakeNote == nil {
@@ -4451,6 +4554,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.SetTRBRequestRelationNewSystem(childComplexity, args["input"].(models.SetTRBRequestRelationNewSystemInput)), true
 
+	case "Mutation.startGRBReview":
+		if e.complexity.Mutation.StartGRBReview == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_startGRBReview_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.StartGRBReview(childComplexity, args["input"].(models.StartGRBReviewInput)), true
+
 	case "Mutation.submitIntake":
 		if e.complexity.Mutation.SubmitIntake == nil {
 			break
@@ -4849,6 +4964,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.CedarThreat(childComplexity, args["cedarSystemId"].(string)), true
 
+	case "Query.compareGRBReviewersByIntakeID":
+		if e.complexity.Query.CompareGRBReviewersByIntakeID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_compareGRBReviewersByIntakeID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CompareGRBReviewersByIntakeID(childComplexity, args["id"].(uuid.UUID)), true
+
 	case "Query.currentUser":
 		if e.complexity.Query.CurrentUser == nil {
 			break
@@ -5244,6 +5371,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.GRBMeetingState(childComplexity), true
+
+	case "SystemIntake.grbReviewStartedAt":
+		if e.complexity.SystemIntake.GRBReviewStartedAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GRBReviewStartedAt(childComplexity), true
 
 	case "SystemIntake.grtDate":
 		if e.complexity.SystemIntake.GRTDate == nil {
@@ -7460,9 +7594,10 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCloseTRBRequestInput,
 		ec.unmarshalInputCreateCedarSystemBookmarkInput,
+		ec.unmarshalInputCreateGRBReviewerInput,
 		ec.unmarshalInputCreateSystemIntakeContactInput,
 		ec.unmarshalInputCreateSystemIntakeDocumentInput,
-		ec.unmarshalInputCreateSystemIntakeGRBReviewerInput,
+		ec.unmarshalInputCreateSystemIntakeGRBReviewersInput,
 		ec.unmarshalInputCreateSystemIntakeInput,
 		ec.unmarshalInputCreateSystemIntakeNoteInput,
 		ec.unmarshalInputCreateTRBAdminNoteConsultSessionInput,
@@ -7490,6 +7625,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSetTRBRequestRelationExistingServiceInput,
 		ec.unmarshalInputSetTRBRequestRelationExistingSystemInput,
 		ec.unmarshalInputSetTRBRequestRelationNewSystemInput,
+		ec.unmarshalInputStartGRBReviewInput,
 		ec.unmarshalInputSubmitIntakeInput,
 		ec.unmarshalInputSystemIntakeAnnualSpendingInput,
 		ec.unmarshalInputSystemIntakeBusinessOwnerInput,
@@ -8343,6 +8479,7 @@ type SystemIntake {
   grtDate: Time
   lastMeetingDate: Time
   nextMeetingDate: Time
+  grbReviewStartedAt: Time
   grbReviewers: [SystemIntakeGRBReviewer!]!
   id: UUID!
   isso: SystemIntakeISSO!
@@ -8743,6 +8880,13 @@ type SystemIntakeActionActor {
 }
 
 """
+Input for starting a GRB Review, which notifies reviewers by email
+"""
+input StartGRBReviewInput {
+  systemIntakeID: UUID!
+}
+
+"""
 GRB Reviewers for a system intake request
 """
 type SystemIntakeGRBReviewer {
@@ -8757,11 +8901,50 @@ type SystemIntakeGRBReviewer {
   modifiedAt: Time
 }
 
-input CreateSystemIntakeGRBReviewerInput {
-  systemIntakeID: UUID!
+"""
+GRBReviewerComparisonIntake represents a response when searching for System Intakes
+that have GRB reviewers as compared to another Intake.
+
+It's effectively a smaller subset of some of the fields on the entire Intake, plus a special
+"reviewers" field specific to the comparison operation.
+"""
+type GRBReviewerComparisonIntake {
+  id: UUID!
+  requestName: String!
+  reviewers: [GRBReviewerComparison!]!
+  intakeCreatedAt: Time
+}
+
+"""
+GRBReviewerComparison represents an individual GRB Reviewer within the context of a
+comparison operation between two system intakes.
+
+For this reason, it is similar to a regular "type GRBReviewer", but has an extra
+field for "isCurrentReviewer", representing whether or not the specific GRB Reviewer
+is already on the intake being compared against or not.
+"""
+type GRBReviewerComparison {
+  id: UUID!
+  userAccount: UserAccount!
   euaUserId: String!
   votingRole: SystemIntakeGRBReviewerVotingRole!
   grbRole: SystemIntakeGRBReviewerRole!
+  isCurrentReviewer: Boolean!
+}
+
+input CreateGRBReviewerInput {
+  euaUserId: String!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+}
+
+input CreateSystemIntakeGRBReviewersInput {
+  systemIntakeID: UUID!
+  reviewers: [CreateGRBReviewerInput!]!
+}
+
+type CreateSystemIntakeGRBReviewersPayload {
+  reviewers: [SystemIntakeGRBReviewer!]!
 }
 
 input UpdateSystemIntakeGRBReviewerInput {
@@ -10058,7 +10241,9 @@ type Mutation {
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
 
-  createSystemIntakeGRBReviewer(input: CreateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
+  startGRBReview(input: StartGRBReviewInput!): String
+
+  createSystemIntakeGRBReviewers(input: CreateSystemIntakeGRBReviewersInput!): CreateSystemIntakeGRBReviewersPayload
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
   deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
 
@@ -10146,6 +10331,7 @@ type Query {
   mySystemIntakes:[SystemIntake!]!
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
+  compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarBudget(cedarSystemID: String!): [CedarBudget!]
@@ -11224,35 +11410,35 @@ func (ec *executionContext) field_Mutation_createSystemIntakeDocument_argsInput(
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_createSystemIntakeGRBReviewer_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_createSystemIntakeGRBReviewers_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	arg0, err := ec.field_Mutation_createSystemIntakeGRBReviewer_argsInput(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_createSystemIntakeGRBReviewers_argsInput(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_createSystemIntakeGRBReviewer_argsInput(
+func (ec *executionContext) field_Mutation_createSystemIntakeGRBReviewers_argsInput(
 	ctx context.Context,
 	rawArgs map[string]interface{},
-) (models.CreateSystemIntakeGRBReviewerInput, error) {
+) (models.CreateSystemIntakeGRBReviewersInput, error) {
 	// We won't call the directive if the argument is null.
 	// Set call_argument_directives_with_null to true to call directives
 	// even if the argument is null.
 	_, ok := rawArgs["input"]
 	if !ok {
-		var zeroVal models.CreateSystemIntakeGRBReviewerInput
+		var zeroVal models.CreateSystemIntakeGRBReviewersInput
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNCreateSystemIntakeGRBReviewerInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBReviewerInput(ctx, tmp)
+		return ec.unmarshalNCreateSystemIntakeGRBReviewersInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBReviewersInput(ctx, tmp)
 	}
 
-	var zeroVal models.CreateSystemIntakeGRBReviewerInput
+	var zeroVal models.CreateSystemIntakeGRBReviewersInput
 	return zeroVal, nil
 }
 
@@ -12467,6 +12653,38 @@ func (ec *executionContext) field_Mutation_setTRBRequestRelationNewSystem_argsIn
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_startGRBReview_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	arg0, err := ec.field_Mutation_startGRBReview_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_startGRBReview_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (models.StartGRBReviewInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal models.StartGRBReviewInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNStartGRBReviewInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐStartGRBReviewInput(ctx, tmp)
+	}
+
+	var zeroVal models.StartGRBReviewInput
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_submitIntake_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -13574,6 +13792,38 @@ func (ec *executionContext) field_Query_cedarThreat_argsCedarSystemID(
 	}
 
 	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_compareGRBReviewersByIntakeID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	arg0, err := ec.field_Query_compareGRBReviewersByIntakeID_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_compareGRBReviewersByIntakeID_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (uuid.UUID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal uuid.UUID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+	}
+
+	var zeroVal uuid.UUID
 	return zeroVal, nil
 }
 
@@ -15331,6 +15581,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -24215,6 +24467,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -27702,6 +27956,70 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeDocumentPayload_docum
 	return fc, nil
 }
 
+func (ec *executionContext) _CreateSystemIntakeGRBReviewersPayload_reviewers(ctx context.Context, field graphql.CollectedField, obj *models.CreateSystemIntakeGRBReviewersPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CreateSystemIntakeGRBReviewersPayload_reviewers(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reviewers, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeGRBReviewer)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewer2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CreateSystemIntakeGRBReviewersPayload_reviewers(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CreateSystemIntakeGRBReviewersPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeGRBReviewer_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeGRBReviewer_userAccount(ctx, field)
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
+			case "votingRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_votingRole(ctx, field)
+			case "grbRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewer", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CreateTRBRequestDocumentPayload_document(ctx context.Context, field graphql.CollectedField, obj *models.CreateTRBRequestDocumentPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CreateTRBRequestDocumentPayload_document(ctx, field)
 	if err != nil {
@@ -28273,6 +28591,477 @@ func (ec *executionContext) fieldContext_EstimatedLifecycleCost_year(_ context.C
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type LifecycleCostYear does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparison_id(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparison_userAccount(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_userAccount(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserAccount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*authentication.UserAccount)
+	fc.Result = res
+	return ec.marshalNUserAccount2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_userAccount(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_UserAccount_id(ctx, field)
+			case "username":
+				return ec.fieldContext_UserAccount_username(ctx, field)
+			case "commonName":
+				return ec.fieldContext_UserAccount_commonName(ctx, field)
+			case "locale":
+				return ec.fieldContext_UserAccount_locale(ctx, field)
+			case "email":
+				return ec.fieldContext_UserAccount_email(ctx, field)
+			case "givenName":
+				return ec.fieldContext_UserAccount_givenName(ctx, field)
+			case "familyName":
+				return ec.fieldContext_UserAccount_familyName(ctx, field)
+			case "zoneInfo":
+				return ec.fieldContext_UserAccount_zoneInfo(ctx, field)
+			case "hasLoggedIn":
+				return ec.fieldContext_UserAccount_hasLoggedIn(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserAccount", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparison_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_euaUserId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EuaUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_euaUserId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparison_votingRole(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_votingRole(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VotingRole, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeGRBReviewerVotingRole)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewerVotingRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerVotingRole(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_votingRole(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeGRBReviewerVotingRole does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparison_grbRole(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_grbRole(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GrbRole, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeGRBReviewerRole)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewerRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerRole(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_grbRole(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeGRBReviewerRole does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparison_isCurrentReviewer(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparison) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparison_isCurrentReviewer(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsCurrentReviewer, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparison_isCurrentReviewer(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparison",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparisonIntake_id(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparisonIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparisonIntake_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparisonIntake_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparisonIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparisonIntake_requestName(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparisonIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparisonIntake_requestName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RequestName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparisonIntake_requestName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparisonIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparisonIntake_reviewers(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparisonIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparisonIntake_reviewers(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reviewers, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.GRBReviewerComparison)
+	fc.Result = res
+	return ec.marshalNGRBReviewerComparison2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparisonIntake_reviewers(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparisonIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_GRBReviewerComparison_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_GRBReviewerComparison_userAccount(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_GRBReviewerComparison_euaUserId(ctx, field)
+			case "votingRole":
+				return ec.fieldContext_GRBReviewerComparison_votingRole(ctx, field)
+			case "grbRole":
+				return ec.fieldContext_GRBReviewerComparison_grbRole(ctx, field)
+			case "isCurrentReviewer":
+				return ec.fieldContext_GRBReviewerComparison_isCurrentReviewer(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GRBReviewerComparison", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBReviewerComparisonIntake_intakeCreatedAt(ctx context.Context, field graphql.CollectedField, obj *models.GRBReviewerComparisonIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBReviewerComparisonIntake_intakeCreatedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IntakeCreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBReviewerComparisonIntake_intakeCreatedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBReviewerComparisonIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -30489,6 +31278,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -30723,6 +31514,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -31757,8 +32550,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteSystemIntakeContact(ctx 
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_createSystemIntakeGRBReviewer(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createSystemIntakeGRBReviewer(ctx, field)
+func (ec *executionContext) _Mutation_startGRBReview(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_startGRBReview(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -31771,51 +32564,28 @@ func (ec *executionContext) _Mutation_createSystemIntakeGRBReviewer(ctx context.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateSystemIntakeGRBReviewer(rctx, fc.Args["input"].(models.CreateSystemIntakeGRBReviewerInput))
+		return ec.resolvers.Mutation().StartGRBReview(rctx, fc.Args["input"].(models.StartGRBReviewInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.SystemIntakeGRBReviewer)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNSystemIntakeGRBReviewer2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewer(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_createSystemIntakeGRBReviewer(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_startGRBReview(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_SystemIntakeGRBReviewer_id(ctx, field)
-			case "userAccount":
-				return ec.fieldContext_SystemIntakeGRBReviewer_userAccount(ctx, field)
-			case "systemIntakeID":
-				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
-			case "votingRole":
-				return ec.fieldContext_SystemIntakeGRBReviewer_votingRole(ctx, field)
-			case "grbRole":
-				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
-			case "createdBy":
-				return ec.fieldContext_SystemIntakeGRBReviewer_createdBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_SystemIntakeGRBReviewer_createdAt(ctx, field)
-			case "modifiedBy":
-				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedBy(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewer", field.Name)
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	defer func() {
@@ -31825,7 +32595,63 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntakeGRBReviewer(
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createSystemIntakeGRBReviewer_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_startGRBReview_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createSystemIntakeGRBReviewers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createSystemIntakeGRBReviewers(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateSystemIntakeGRBReviewers(rctx, fc.Args["input"].(models.CreateSystemIntakeGRBReviewersInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.CreateSystemIntakeGRBReviewersPayload)
+	fc.Result = res
+	return ec.marshalOCreateSystemIntakeGRBReviewersPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBReviewersPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createSystemIntakeGRBReviewers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "reviewers":
+				return ec.fieldContext_CreateSystemIntakeGRBReviewersPayload_reviewers(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CreateSystemIntakeGRBReviewersPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createSystemIntakeGRBReviewers_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -32107,6 +32933,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -36305,6 +37133,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -36512,6 +37342,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -36719,6 +37551,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -36915,6 +37749,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -37111,6 +37947,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -37216,6 +38054,71 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_compareGRBReviewersByIntakeID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_compareGRBReviewersByIntakeID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CompareGRBReviewersByIntakeID(rctx, fc.Args["id"].(uuid.UUID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.GRBReviewerComparisonIntake)
+	fc.Result = res
+	return ec.marshalNGRBReviewerComparisonIntake2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonIntakeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_compareGRBReviewersByIntakeID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_GRBReviewerComparisonIntake_id(ctx, field)
+			case "requestName":
+				return ec.fieldContext_GRBReviewerComparisonIntake_requestName(ctx, field)
+			case "reviewers":
+				return ec.fieldContext_GRBReviewerComparisonIntake_reviewers(ctx, field)
+			case "intakeCreatedAt":
+				return ec.fieldContext_GRBReviewerComparisonIntake_intakeCreatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GRBReviewerComparisonIntake", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_compareGRBReviewersByIntakeID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -40600,6 +41503,47 @@ func (ec *executionContext) fieldContext_SystemIntake_nextMeetingDate(_ context.
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_grbReviewStartedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GRBReviewStartedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbReviewStartedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_grbReviewers(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 	if err != nil {
@@ -42907,6 +43851,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -43255,6 +44201,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -51408,6 +52356,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -54269,6 +55219,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -55019,6 +55971,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_lastMeetingDate(ctx, field)
 			case "nextMeetingDate":
 				return ec.fieldContext_SystemIntake_nextMeetingDate(ctx, field)
+			case "grbReviewStartedAt":
+				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
 			case "id":
@@ -57724,6 +58678,47 @@ func (ec *executionContext) unmarshalInputCreateCedarSystemBookmarkInput(ctx con
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateGRBReviewerInput(ctx context.Context, obj interface{}) (models.CreateGRBReviewerInput, error) {
+	var it models.CreateGRBReviewerInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"euaUserId", "votingRole", "grbRole"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "euaUserId":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.EuaUserID = data
+		case "votingRole":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("votingRole"))
+			data, err := ec.unmarshalNSystemIntakeGRBReviewerVotingRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerVotingRole(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.VotingRole = data
+		case "grbRole":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbRole"))
+			data, err := ec.unmarshalNSystemIntakeGRBReviewerRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerRole(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.GrbRole = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateSystemIntakeContactInput(ctx context.Context, obj interface{}) (models.CreateSystemIntakeContactInput, error) {
 	var it models.CreateSystemIntakeContactInput
 	asMap := map[string]interface{}{}
@@ -57834,14 +58829,14 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeDocumentInput(ctx co
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateSystemIntakeGRBReviewerInput(ctx context.Context, obj interface{}) (models.CreateSystemIntakeGRBReviewerInput, error) {
-	var it models.CreateSystemIntakeGRBReviewerInput
+func (ec *executionContext) unmarshalInputCreateSystemIntakeGRBReviewersInput(ctx context.Context, obj interface{}) (models.CreateSystemIntakeGRBReviewersInput, error) {
+	var it models.CreateSystemIntakeGRBReviewersInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "euaUserId", "votingRole", "grbRole"}
+	fieldsInOrder := [...]string{"systemIntakeID", "reviewers"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -57855,27 +58850,13 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeGRBReviewerInput(ctx
 				return it, err
 			}
 			it.SystemIntakeID = data
-		case "euaUserId":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+		case "reviewers":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reviewers"))
+			data, err := ec.unmarshalNCreateGRBReviewerInput2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateGRBReviewerInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.EuaUserID = data
-		case "votingRole":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("votingRole"))
-			data, err := ec.unmarshalNSystemIntakeGRBReviewerVotingRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerVotingRole(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.VotingRole = data
-		case "grbRole":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbRole"))
-			data, err := ec.unmarshalNSystemIntakeGRBReviewerRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerRole(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.GrbRole = data
+			it.Reviewers = data
 		}
 	}
 
@@ -59039,6 +60020,33 @@ func (ec *executionContext) unmarshalInputSetTRBRequestRelationNewSystemInput(ct
 				return it, err
 			}
 			it.ContractNumbers = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputStartGRBReviewInput(ctx context.Context, obj interface{}) (models.StartGRBReviewInput, error) {
+	var it models.StartGRBReviewInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
 		}
 	}
 
@@ -63489,6 +64497,45 @@ func (ec *executionContext) _CreateSystemIntakeDocumentPayload(ctx context.Conte
 	return out
 }
 
+var createSystemIntakeGRBReviewersPayloadImplementors = []string{"CreateSystemIntakeGRBReviewersPayload"}
+
+func (ec *executionContext) _CreateSystemIntakeGRBReviewersPayload(ctx context.Context, sel ast.SelectionSet, obj *models.CreateSystemIntakeGRBReviewersPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createSystemIntakeGRBReviewersPayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateSystemIntakeGRBReviewersPayload")
+		case "reviewers":
+			out.Values[i] = ec._CreateSystemIntakeGRBReviewersPayload_reviewers(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var createTRBRequestDocumentPayloadImplementors = []string{"CreateTRBRequestDocumentPayload"}
 
 func (ec *executionContext) _CreateTRBRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, obj *models.CreateTRBRequestDocumentPayload) graphql.Marshaler {
@@ -63740,6 +64787,121 @@ func (ec *executionContext) _EstimatedLifecycleCost(ctx context.Context, sel ast
 			out.Values[i] = ec._EstimatedLifecycleCost_solution(ctx, field, obj)
 		case "year":
 			out.Values[i] = ec._EstimatedLifecycleCost_year(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var gRBReviewerComparisonImplementors = []string{"GRBReviewerComparison"}
+
+func (ec *executionContext) _GRBReviewerComparison(ctx context.Context, sel ast.SelectionSet, obj *models.GRBReviewerComparison) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, gRBReviewerComparisonImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GRBReviewerComparison")
+		case "id":
+			out.Values[i] = ec._GRBReviewerComparison_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "userAccount":
+			out.Values[i] = ec._GRBReviewerComparison_userAccount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "euaUserId":
+			out.Values[i] = ec._GRBReviewerComparison_euaUserId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "votingRole":
+			out.Values[i] = ec._GRBReviewerComparison_votingRole(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "grbRole":
+			out.Values[i] = ec._GRBReviewerComparison_grbRole(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "isCurrentReviewer":
+			out.Values[i] = ec._GRBReviewerComparison_isCurrentReviewer(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var gRBReviewerComparisonIntakeImplementors = []string{"GRBReviewerComparisonIntake"}
+
+func (ec *executionContext) _GRBReviewerComparisonIntake(ctx context.Context, sel ast.SelectionSet, obj *models.GRBReviewerComparisonIntake) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, gRBReviewerComparisonIntakeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GRBReviewerComparisonIntake")
+		case "id":
+			out.Values[i] = ec._GRBReviewerComparisonIntake_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "requestName":
+			out.Values[i] = ec._GRBReviewerComparisonIntake_requestName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "reviewers":
+			out.Values[i] = ec._GRBReviewerComparisonIntake_reviewers(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "intakeCreatedAt":
+			out.Values[i] = ec._GRBReviewerComparisonIntake_intakeCreatedAt(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -64353,13 +65515,14 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteSystemIntakeContact(ctx, field)
 			})
-		case "createSystemIntakeGRBReviewer":
+		case "startGRBReview":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createSystemIntakeGRBReviewer(ctx, field)
+				return ec._Mutation_startGRBReview(ctx, field)
 			})
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
+		case "createSystemIntakeGRBReviewers":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createSystemIntakeGRBReviewers(ctx, field)
+			})
 		case "updateSystemIntakeGRBReviewer":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateSystemIntakeGRBReviewer(ctx, field)
@@ -64773,6 +65936,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_systemIntakesWithLcids(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "compareGRBReviewersByIntakeID":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_compareGRBReviewersByIntakeID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -65847,6 +67032,8 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "grbReviewStartedAt":
+			out.Values[i] = ec._SystemIntake_grbReviewStartedAt(ctx, field, obj)
 		case "grbReviewers":
 			field := field
 
@@ -71987,6 +73174,28 @@ func (ec *executionContext) unmarshalNCreateCedarSystemBookmarkInput2githubᚗco
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateGRBReviewerInput2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateGRBReviewerInputᚄ(ctx context.Context, v interface{}) ([]*models.CreateGRBReviewerInput, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*models.CreateGRBReviewerInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNCreateGRBReviewerInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateGRBReviewerInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNCreateGRBReviewerInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateGRBReviewerInput(ctx context.Context, v interface{}) (*models.CreateGRBReviewerInput, error) {
+	res, err := ec.unmarshalInputCreateGRBReviewerInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateSystemIntakeContactInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeContactInput(ctx context.Context, v interface{}) (models.CreateSystemIntakeContactInput, error) {
 	res, err := ec.unmarshalInputCreateSystemIntakeContactInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -71997,8 +73206,8 @@ func (ec *executionContext) unmarshalNCreateSystemIntakeDocumentInput2githubᚗc
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateSystemIntakeGRBReviewerInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBReviewerInput(ctx context.Context, v interface{}) (models.CreateSystemIntakeGRBReviewerInput, error) {
-	res, err := ec.unmarshalInputCreateSystemIntakeGRBReviewerInput(ctx, v)
+func (ec *executionContext) unmarshalNCreateSystemIntakeGRBReviewersInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBReviewersInput(ctx context.Context, v interface{}) (models.CreateSystemIntakeGRBReviewersInput, error) {
+	res, err := ec.unmarshalInputCreateSystemIntakeGRBReviewersInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -72128,6 +73337,114 @@ func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcms
 		return graphql.Null
 	}
 	return ec._EstimatedLifecycleCost(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNGRBReviewerComparison2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GRBReviewerComparison) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNGRBReviewerComparison2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparison(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNGRBReviewerComparison2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparison(ctx context.Context, sel ast.SelectionSet, v *models.GRBReviewerComparison) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GRBReviewerComparison(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNGRBReviewerComparisonIntake2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonIntakeᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GRBReviewerComparisonIntake) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNGRBReviewerComparisonIntake2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonIntake(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNGRBReviewerComparisonIntake2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonIntake(ctx context.Context, sel ast.SelectionSet, v *models.GRBReviewerComparisonIntake) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GRBReviewerComparisonIntake(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNGovernanceRequestFeedback2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GovernanceRequestFeedback) graphql.Marshaler {
@@ -72477,6 +73794,11 @@ func (ec *executionContext) unmarshalNSetTRBRequestRelationExistingSystemInput2g
 
 func (ec *executionContext) unmarshalNSetTRBRequestRelationNewSystemInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSetTRBRequestRelationNewSystemInput(ctx context.Context, v interface{}) (models.SetTRBRequestRelationNewSystemInput, error) {
 	res, err := ec.unmarshalInputSetTRBRequestRelationNewSystemInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNStartGRBReviewInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐStartGRBReviewInput(ctx context.Context, v interface{}) (models.StartGRBReviewInput, error) {
+	res, err := ec.unmarshalInputStartGRBReviewInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -75024,6 +76346,13 @@ func (ec *executionContext) marshalOCreateSystemIntakeDocumentPayload2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._CreateSystemIntakeDocumentPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCreateSystemIntakeGRBReviewersPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBReviewersPayload(ctx context.Context, sel ast.SelectionSet, v *models.CreateSystemIntakeGRBReviewersPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateSystemIntakeGRBReviewersPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCreateTRBRequestDocumentPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *models.CreateTRBRequestDocumentPayload) graphql.Marshaler {

@@ -1,11 +1,13 @@
 import React, { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 import { Column, useSortBy, useTable } from 'react-table';
 import { Button, ButtonGroup, Table } from '@trussworks/react-uswds';
 import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import Alert from 'components/shared/Alert';
 import { SystemIntakeState } from 'types/graphql-global-types';
 import {
   currentTableSortDescription,
@@ -20,6 +22,7 @@ type ParticipantsTableProps = {
   state: SystemIntakeState;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
+  grbReviewStartedAt?: string | null;
 };
 
 /**
@@ -29,7 +32,8 @@ const ParticipantsTable = ({
   id,
   state,
   grbReviewers,
-  setReviewerToRemove
+  setReviewerToRemove,
+  grbReviewStartedAt
 }: ParticipantsTableProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -116,8 +120,58 @@ const ParticipantsTable = ({
         {t('participantsText')}
       </p>
 
-      {!isITGovAdmin ? (
-        // GRB Reviewer documentation links
+      {isITGovAdmin ? (
+        /* IT Gov Admin view */
+        <>
+          <div className="desktop:display-flex flex-align-center">
+            <Button
+              type="button"
+              onClick={() => history.push(`${pathname}/add`)}
+              disabled={state === SystemIntakeState.CLOSED}
+              outline={grbReviewers.length > 0}
+            >
+              {t(
+                grbReviewers.length > 0
+                  ? 'addAnotherGrbReviewer'
+                  : 'addGrbReviewer'
+              )}
+            </Button>
+
+            {state === SystemIntakeState.CLOSED && (
+              <p className="desktop:margin-y-0 desktop:margin-left-1">
+                <Trans
+                  i18nKey="grbReview:closedRequest"
+                  components={{
+                    a: (
+                      <UswdsReactLink
+                        to={`/it-governance/${id}/resolutions/re-open-request`}
+                      >
+                        re-open
+                      </UswdsReactLink>
+                    )
+                  }}
+                />
+              </p>
+            )}
+          </div>
+
+          {state === SystemIntakeState.OPEN && !grbReviewStartedAt && (
+            <Alert type="info" slim>
+              <Trans
+                i18nKey="grbReview:participantsStartReviewAlert"
+                components={{
+                  a: (
+                    <HashLink to="#startGrbReview" className="usa-link">
+                      Start GRB Review
+                    </HashLink>
+                  )
+                }}
+              />
+            </Alert>
+          )}
+        </>
+      ) : (
+        /* GRB Reviewer view */
         <div className="bg-base-lightest padding-2">
           <h4 className="margin-top-0 margin-bottom-1">
             {t('availableDocumentation')}
@@ -139,39 +193,6 @@ const ParticipantsTable = ({
               {t('viewOtherDocuments')}
             </UswdsReactLink>
           </ButtonGroup>
-        </div>
-      ) : (
-        // Add GRB reviewer button
-        <div className="desktop:display-flex flex-align-center">
-          <Button
-            type="button"
-            onClick={() => history.push(`${pathname}/add`)}
-            disabled={state === SystemIntakeState.CLOSED}
-            outline={grbReviewers.length > 0}
-          >
-            {t(
-              grbReviewers.length > 0
-                ? 'addAnotherGrbReviewer'
-                : 'addGrbReviewer'
-            )}
-          </Button>
-
-          {state === SystemIntakeState.CLOSED && (
-            <p className="desktop:margin-y-0 desktop:margin-left-1">
-              <Trans
-                i18nKey="grbReview:closedRequest"
-                components={{
-                  a: (
-                    <UswdsReactLink
-                      to={`/it-governance/${id}/resolutions/re-open-request`}
-                    >
-                      re-open
-                    </UswdsReactLink>
-                  )
-                }}
-              />
-            </p>
-          )}
         </div>
       )}
 

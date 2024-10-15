@@ -1,7 +1,11 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
+
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 )
 
 type SIGRBReviewerRole string
@@ -50,4 +54,14 @@ func (r SystemIntakeGRBReviewer) GetMappingKey() uuid.UUID {
 }
 func (r SystemIntakeGRBReviewer) GetMappingVal() *SystemIntakeGRBReviewer {
 	return &r
+}
+
+type SystemIntakeGRBReviewerComparisonResponse struct {
+	authentication.UserAccount
+	SystemIntakeGRBReviewer
+	IsCurrentReviewer bool       `db:"is_current_reviewer"`
+	RequestName       string     `db:"project_name"`
+	EuaID             string     `db:"username"`
+	CommonName        string     `db:"common_name"`
+	IntakeCreatedAt   *time.Time `db:"intake_created_at"`
 }
