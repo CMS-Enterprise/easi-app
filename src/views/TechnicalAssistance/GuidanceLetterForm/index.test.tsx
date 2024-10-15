@@ -66,7 +66,7 @@ const defaultStore = easiMockStore({
   groups: ['EASI_TRB_ADMIN_D']
 });
 
-const getAdviceLetterCannotStart: MockedQuery<
+const getGuidanceLetterCannotStart: MockedQuery<
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 > = {
@@ -128,7 +128,7 @@ describe('TRB Guidance Letter Form', () => {
   });
 
   it('Renders no guidance letter alert', async () => {
-    renderForm('summary', [getAdviceLetterCannotStart]);
+    renderForm('summary', [getGuidanceLetterCannotStart]);
 
     expect(await screen.findByTestId('alert')).toBeInTheDocument();
 
@@ -140,7 +140,7 @@ describe('TRB Guidance Letter Form', () => {
   });
 
   it('Renders error creating guidance letter alert', async () => {
-    renderForm('summary', [getAdviceLetterCannotStart], true);
+    renderForm('summary', [getGuidanceLetterCannotStart], true);
 
     expect(await screen.findByTestId('alert')).toBeInTheDocument();
 
