@@ -20,7 +20,7 @@ import {
   GuidanceLetterRecommendationFields,
   StepComponentProps
 } from 'types/technicalAssistance';
-import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
+import { guidanceRecommendationSchema } from 'validations/trbRequestSchema';
 
 import RecommendationsList from '../AdminHome/components/RecommendationsList';
 import Pager from '../RequestForm/Pager';
@@ -50,7 +50,7 @@ const Recommendations = ({
   const hasRecommendations: boolean = recommendations.length > 0;
 
   const formMethods = useForm<GuidanceLetterRecommendationFields>({
-    resolver: yupResolver(adviceRecommendationSchema),
+    resolver: yupResolver(guidanceRecommendationSchema),
     defaultValues
   });
   const { reset } = formMethods;
