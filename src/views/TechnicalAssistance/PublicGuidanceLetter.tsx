@@ -16,6 +16,7 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import { PDFExportButton } from 'components/PDFExport';
 import Alert from 'components/shared/Alert';
+import Breadcrumbs, { BreadcrumbsProps } from 'components/shared/Breadcrumbs';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
 import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
@@ -28,10 +29,6 @@ import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import NotFound from 'views/NotFound';
 
-import Breadcrumbs, {
-  BreadcrumbsProps
-} from '../../components/shared/Breadcrumbs';
-
 import ReviewGuidanceLetter from './AdminHome/components/ReviewGuidanceLetter';
 
 /**
@@ -39,7 +36,7 @@ import ReviewGuidanceLetter from './AdminHome/components/ReviewGuidanceLetter';
  * This component's url is referred to from the Task List view, or email link.
  * Views from the task list are indicated by `fromTaskList`.
  */
-function PublicAdviceLetter() {
+function PublicGuidanceLetter() {
   const { t } = useTranslation('technicalAssistance');
 
   const { id } = useParams<{
@@ -147,7 +144,7 @@ function PublicAdviceLetter() {
       </GridContainer>
 
       {!fromTaskList && (
-        <div className="bg-primary-lighter margin-y-6 padding-y-6 trb-advice-letter-request-summary">
+        <div className="bg-primary-lighter margin-y-6 padding-y-6 trb-guidance-letter-request-summary">
           <GridContainer className="full-width">
             <h2 className="margin-top-0 margin-bottom-3">
               {t('guidanceLetter.requestSummary')}
@@ -158,7 +155,7 @@ function PublicAdviceLetter() {
               labelPosition="bottom"
               closeLabel={t('guidanceLetter.hideSummary')}
               styleLeftBar={false}
-              id="trb-advice-letter-request-summary"
+              id="trb-guidance-letter-request-summary"
               label={t('guidanceLetter.showSummary')}
             >
               <dl className="easi-dl">
@@ -252,4 +249,4 @@ function PublicAdviceLetter() {
   );
 }
 
-export default PublicAdviceLetter;
+export default PublicGuidanceLetter;

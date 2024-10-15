@@ -7,7 +7,7 @@ import i18next from 'i18next';
 import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 
-import PublicAdviceLetter from './PublicAdviceLetter';
+import PublicGuidanceLetter from './PublicGuidanceLetter';
 
 describe('Trb Public Guidance Letter', () => {
   const id = '6e0d1524-204a-4014-b6d9-e995b1db3987';
@@ -85,7 +85,7 @@ describe('Trb Public Guidance Letter', () => {
       >
         <MemoryRouter initialEntries={[`/trb/guidance-letter/${id}`]}>
           <Route exact path="/trb/guidance-letter/:id">
-            <PublicAdviceLetter />
+            <PublicGuidanceLetter />
           </Route>
         </MemoryRouter>
       </MockedProvider>
@@ -127,7 +127,7 @@ describe('Trb Public Guidance Letter', () => {
       >
         <MemoryRouter initialEntries={[`/trb/guidance-letter/${id}`]}>
           <Route exact path="/trb/guidance-letter/:id">
-            <PublicAdviceLetter />
+            <PublicGuidanceLetter />
           </Route>
         </MemoryRouter>
       </MockedProvider>
@@ -171,7 +171,7 @@ describe('Trb Public Guidance Letter', () => {
       >
         <MemoryRouter initialEntries={[`/trb/guidance-letter/${id}`]}>
           <Route exact path="/trb/guidance-letter/:id">
-            <PublicAdviceLetter />
+            <PublicGuidanceLetter />
           </Route>
         </MemoryRouter>
       </MockedProvider>
@@ -213,7 +213,7 @@ describe('Trb Public Guidance Letter', () => {
           ]}
         >
           <Route exact path="/trb/guidance-letter/:id">
-            <PublicAdviceLetter />
+            <PublicGuidanceLetter />
           </Route>
         </MemoryRouter>
       </MockedProvider>

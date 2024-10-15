@@ -81,7 +81,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
     </button>
   </div>
   <div
-    class="bg-primary-lighter margin-y-6 padding-y-6 trb-advice-letter-request-summary"
+    class="bg-primary-lighter margin-y-6 padding-y-6 trb-guidance-letter-request-summary"
   >
     <div
       class="grid-container full-width"
@@ -97,7 +97,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
       >
         <div
           class="easi-collapsable-link__content-no-bar"
-          id="trb-advice-letter-request-summary"
+          id="trb-guidance-letter-request-summary"
         >
           <dl
             class="easi-dl"
@@ -165,7 +165,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
           </dl>
         </div>
         <button
-          aria-controls="trb-advice-letter-request-summary"
+          aria-controls="trb-guidance-letter-request-summary"
           aria-expanded="true"
           class="usa-button usa-button--unstyled display-flex flex-align-center text-bold"
           data-testid="collapsable-link"

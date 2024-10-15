@@ -16,7 +16,7 @@ import AdminHome from './AdminHome';
 import GuidanceLetterForm from './GuidanceLetterForm';
 import Homepage from './Homepage';
 import ProcessFlow from './ProcessFlow';
-import PublicAdviceLetter from './PublicAdviceLetter';
+import PublicGuidanceLetter from './PublicGuidanceLetter';
 import RequestForm from './RequestForm';
 import RequestType from './RequestType';
 import TaskList from './TaskList';
@@ -73,7 +73,7 @@ function TechnicalAssistance() {
 
         {/* Public guidance letter */}
         <Route exact path={`${path}/guidance-letter/:id`}>
-          <PublicAdviceLetter />
+          <PublicGuidanceLetter />
         </Route>
 
         {/* Create new or edit existing request */}
