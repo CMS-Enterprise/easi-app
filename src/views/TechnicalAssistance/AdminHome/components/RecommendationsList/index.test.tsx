@@ -28,7 +28,7 @@ const renderRecommendation = (index: number, editable: boolean = true) => {
   return within(elements[index]);
 };
 
-describe('TRB recommendations list', () => {
+describe('TRB guidance and insights list', () => {
   it('renders the recommendation', () => {
     const recommendation = renderRecommendation(0);
 
@@ -60,13 +60,13 @@ describe('TRB recommendations list', () => {
     // Check for edit and remove buttons
     expect(
       recommendation.getByRole('button', {
-        name: 'Edit recommendation'
+        name: 'Edit guidance'
       })
     );
 
     expect(
       recommendation.getByRole('button', {
-        name: 'Remove recommendation'
+        name: 'Remove guidance'
       })
     );
 
@@ -77,13 +77,13 @@ describe('TRB recommendations list', () => {
 
     expect(
       reorderControls.getByRole('button', {
-        name: 'Increase recommendation sort order'
+        name: 'Increase guidance sort order'
       })
     );
 
     expect(
       reorderControls.getByRole('button', {
-        name: 'Decrease recommendation sort order'
+        name: 'Decrease guidance sort order'
       })
     );
 
@@ -94,12 +94,10 @@ describe('TRB recommendations list', () => {
   it('renders non-editable view', () => {
     renderRecommendation(0, false);
 
-    expect(
-      screen.queryByRole('button', { name: 'Edit recommendation' })
-    ).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Edit guidance' })).toBeNull();
 
     expect(
-      screen.queryByRole('button', { name: 'Remove recommendation' })
+      screen.queryByRole('button', { name: 'Remove guidance' })
     ).toBeNull();
 
     expect(screen.queryByTestId('reorder-controls')).toBeNull();

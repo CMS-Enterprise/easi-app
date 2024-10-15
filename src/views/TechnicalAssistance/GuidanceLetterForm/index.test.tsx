@@ -155,7 +155,7 @@ describe('TRB Guidance Letter Form', () => {
     const { findByRole, findByTestId } = renderForm('insights');
 
     const button = await findByRole('button', {
-      name: 'Add another recommendation'
+      name: 'Add additional guidance'
     });
 
     userEvent.click(button);
