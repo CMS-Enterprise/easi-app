@@ -73,24 +73,26 @@ describe('TRB Admin InformationCard', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('Renders correct advice letter info', () => {
+  it('Renders correct guidance letter info', () => {
     const { getByText, asFragment, getByRole } = render(
       <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
         <Route exact path="/trb/:id/:activePage">
-          <InformationCard trbRequest={trbRequest} type="adviceLetter" />
+          <InformationCard trbRequest={trbRequest} type="guidanceLetter" />
         </Route>
       </MemoryRouter>
     );
 
     expect(
-      getByText(i18next.t<string>('technicalAssistance:adminHome.adviceLetter'))
+      getByText(
+        i18next.t<string>('technicalAssistance:adminHome.guidanceLetter')
+      )
     ).toBeInTheDocument();
 
     expect(getByText('February 5, 2023')).toBeInTheDocument();
 
     expect(
       getByRole('button', {
-        name: i18next.t<string>('technicalAssistance:adminHome.startAdvice')
+        name: i18next.t<string>('technicalAssistance:adminHome.startGuidance')
       })
     ).toBeInTheDocument();
 

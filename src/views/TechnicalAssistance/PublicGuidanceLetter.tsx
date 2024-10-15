@@ -16,6 +16,7 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import { PDFExportButton } from 'components/PDFExport';
 import Alert from 'components/shared/Alert';
+import Breadcrumbs, { BreadcrumbsProps } from 'components/shared/Breadcrumbs';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
 import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
@@ -28,18 +29,14 @@ import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import NotFound from 'views/NotFound';
 
-import Breadcrumbs, {
-  BreadcrumbsProps
-} from '../../components/shared/Breadcrumbs';
-
-import ReviewAdviceLetter from './AdminHome/components/ReviewAdviceLetter';
+import ReviewGuidanceLetter from './AdminHome/components/ReviewGuidanceLetter';
 
 /**
- * The public view of a TRB Request Advice Letter.
+ * The public view of a TRB Request Guidance Letter.
  * This component's url is referred to from the Task List view, or email link.
  * Views from the task list are indicated by `fromTaskList`.
  */
-function PublicAdviceLetter() {
+function PublicGuidanceLetter() {
   const { t } = useTranslation('technicalAssistance');
 
   const { id } = useParams<{
@@ -51,7 +48,7 @@ function PublicAdviceLetter() {
 
   const printRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
-    documentTitle: `advice letter ${id}.pdf`,
+    documentTitle: `guidance letter ${id}.pdf`,
     content: () => printRef.current,
     // The lib default is to have no margin, which hides window.prints()'s built in pagination
     // Set auto margins back to show everything the browser renders
@@ -84,8 +81,8 @@ function PublicAdviceLetter() {
   ) {
     return (
       <GridContainer className="full-width margin-y-6">
-        <Alert type="info" heading={t('adviceLetter.incomplete')}>
-          {t('adviceLetter.incompleteCheckLater')}
+        <Alert type="info" heading={t('guidanceLetter.incomplete')}>
+          {t('guidanceLetter.incompleteCheckLater')}
         </Alert>
       </GridContainer>
     );
@@ -105,7 +102,7 @@ function PublicAdviceLetter() {
       url: `/trb/task-list/${id}`
     });
   }
-  breadcrumbs.push({ text: t('adviceLetterForm.heading') });
+  breadcrumbs.push({ text: t('guidanceLetterForm.heading') });
 
   return (
     <>
@@ -113,7 +110,7 @@ function PublicAdviceLetter() {
         <Breadcrumbs items={breadcrumbs} />
 
         <PageHeading className="margin-top-6 margin-bottom-1">
-          {t('adviceLetterForm.heading')}
+          {t('guidanceLetterForm.heading')}
         </PageHeading>
 
         {fromTaskList ? (
@@ -124,13 +121,13 @@ function PublicAdviceLetter() {
             </UswdsReactLink>
 
             <p className="line-height-body-5 font-body-lg text-light margin-top-6 margin-bottom-105">
-              {t('adviceLetter.thankYou')}
+              {t('guidanceLetter.thankYou')}
             </p>
           </>
         ) : (
           <p className="line-height-body-5 font-body-lg text-light margin-top-0 margin-bottom-2">
             <Trans
-              i18nKey="technicalAssistance:adviceLetter.description"
+              i18nKey="technicalAssistance:guidanceLetter.description"
               components={{
                 a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
                 email: CMS_TRB_EMAIL
@@ -141,25 +138,25 @@ function PublicAdviceLetter() {
 
         {!!adviceLetter && (
           <PDFExportButton handlePrint={handlePrint}>
-            {t('adviceLetter.downloadAsPdf')}
+            {t('guidanceLetter.downloadAsPdf')}
           </PDFExportButton>
         )}
       </GridContainer>
 
       {!fromTaskList && (
-        <div className="bg-primary-lighter margin-y-6 padding-y-6 trb-advice-letter-request-summary">
+        <div className="bg-primary-lighter margin-y-6 padding-y-6 trb-guidance-letter-request-summary">
           <GridContainer className="full-width">
             <h2 className="margin-top-0 margin-bottom-3">
-              {t('adviceLetter.requestSummary')}
+              {t('guidanceLetter.requestSummary')}
             </h2>
             <CollapsableLink
               eyeIcon
               startOpen
               labelPosition="bottom"
-              closeLabel={t('adviceLetter.hideSummary')}
+              closeLabel={t('guidanceLetter.hideSummary')}
               styleLeftBar={false}
-              id="trb-advice-letter-request-summary"
-              label={t('adviceLetter.showSummary')}
+              id="trb-guidance-letter-request-summary"
+              label={t('guidanceLetter.showSummary')}
             >
               <dl className="easi-dl">
                 <Grid row gap>
@@ -205,8 +202,10 @@ function PublicAdviceLetter() {
       <GridContainer className="full-width">
         {adviceLetter && (
           <div ref={printRef}>
-            <h1 className="easi-only-print">{t('adviceLetterForm.heading')}</h1>
-            <ReviewAdviceLetter
+            <h1 className="easi-only-print">
+              {t('guidanceLetterForm.heading')}
+            </h1>
+            <ReviewGuidanceLetter
               trbRequestId={id}
               adviceLetter={adviceLetter}
               showDateSent={false}
@@ -222,11 +221,11 @@ function PublicAdviceLetter() {
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <SummaryBox
-              heading={t('adviceLetter.haveQuestions')}
+              heading={t('guidanceLetter.haveQuestions')}
               className="margin-top-6"
             >
               <Trans
-                i18nKey="technicalAssistance:adviceLetter.haveQuestionsContact"
+                i18nKey="technicalAssistance:guidanceLetter.haveQuestionsContact"
                 components={{
                   a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
                   email: CMS_TRB_EMAIL
@@ -250,4 +249,4 @@ function PublicAdviceLetter() {
   );
 }
 
-export default PublicAdviceLetter;
+export default PublicGuidanceLetter;

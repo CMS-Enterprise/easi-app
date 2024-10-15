@@ -19,7 +19,10 @@ import {
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
-import { FormAlertObject } from 'types/technicalAssistance';
+import {
+  FormAlertObject,
+  GuidanceFormStepKey
+} from 'types/technicalAssistance';
 import {
   meetingSummarySchema,
   nextStepsSchema
@@ -40,20 +43,13 @@ import './index.scss';
 
 type StepsText = { name: string; longName?: string; description?: string }[];
 
-export type FormStepKey =
-  | 'summary'
-  | 'recommendations'
-  | 'next-steps'
-  | 'internal-review'
-  | 'review';
-
-const adviceFormSteps = [
+const guidanceFormSteps = [
   {
     slug: 'summary',
     component: Summary
   },
   {
-    slug: 'recommendations',
+    slug: 'insights',
     component: Recommendations
   },
   {
@@ -70,12 +66,12 @@ const adviceFormSteps = [
   }
 ] as const;
 
-type AdviceFormStep = (typeof adviceFormSteps)[number];
+type GuidanceFormStep = (typeof guidanceFormSteps)[number];
 
 /**
- * TRB request admin advice letter form
+ * TRB request admin guidance letter form
  */
-const AdviceLetterForm = () => {
+const GuidanceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
   const location = useLocation<{
@@ -109,27 +105,29 @@ const AdviceLetterForm = () => {
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
   const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
 
-  const [stepsCompleted, setStepsCompleted] = useState<FormStepKey[]>();
+  const [stepsCompleted, setStepsCompleted] = useState<GuidanceFormStepKey[]>();
 
   // Form level alerts from step components
   const [formAlert, setFormAlert] = useState<FormAlertObject | null>(null);
 
   /** Form steps translated text object */
-  const steps = t<StepsText>('adviceLetterForm.steps', { returnObjects: true });
+  const steps = t<StepsText>('guidanceLetterForm.steps', {
+    returnObjects: true
+  });
 
   /** Index of current form step - will return -1 if invalid URL */
-  const currentStepIndex: number = adviceFormSteps.findIndex(
+  const currentStepIndex: number = guidanceFormSteps.findIndex(
     ({ slug }) => slug === formStep
   );
 
   /** Current form step object */
-  const currentFormStep: AdviceFormStep = adviceFormSteps[currentStepIndex];
+  const currentFormStep: GuidanceFormStep = guidanceFormSteps[currentStepIndex];
 
   // When navigating to a different step, checks if all previous form steps are valid
   const checkValidSteps = useCallback(
     (index: number): boolean => {
       return (
-        adviceFormSteps.filter(
+        guidanceFormSteps.filter(
           (step, i) => stepsCompleted?.includes(step.slug) && i < index
         ).length === index
       );
@@ -144,15 +142,15 @@ const AdviceLetterForm = () => {
       const stepRedirectIndex = !stepsCompleted.includes('summary')
         ? 0
         : // If summary is completed, return index of last completed step plus 1
-          adviceFormSteps.findIndex(
+          guidanceFormSteps.findIndex(
             step => step.slug === stepsCompleted?.slice(-1)[0]
           ) + 1;
 
       if (!fromAdmin && currentStepIndex === 0) return;
-      if (!adviceFormSteps[stepRedirectIndex]?.slug) return;
+      if (!guidanceFormSteps[stepRedirectIndex]?.slug) return;
       // Redirect to latest available step
       history.replace(
-        `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
+        `/trb/${id}/guidance/${guidanceFormSteps[stepRedirectIndex].slug}`
       );
     }
   }, [
@@ -167,7 +165,9 @@ const AdviceLetterForm = () => {
   useEffect(() => {
     if (!adviceLetter) return;
     (async () => {
-      let completed: FormStepKey[] = stepsCompleted ? [...stepsCompleted] : [];
+      let completed: GuidanceFormStepKey[] = stepsCompleted
+        ? [...stepsCompleted]
+        : [];
       const stepValidators = [];
 
       // Check the Meeting Summary step
@@ -203,7 +203,7 @@ const AdviceLetterForm = () => {
             .then(valid => {
               // Internal review should be marked completed with next steps
               if (valid) {
-                completed = ['summary', 'recommendations', 'next-steps'];
+                completed = ['summary', 'insights', 'next-steps'];
               }
             })
         );
@@ -214,12 +214,7 @@ const AdviceLetterForm = () => {
           TRBGuidanceLetterStatus.READY_FOR_REVIEW &&
         !stepsCompleted?.includes('review')
       ) {
-        completed = [
-          'summary',
-          'recommendations',
-          'next-steps',
-          'internal-review'
-        ];
+        completed = ['summary', 'insights', 'next-steps', 'internal-review'];
       }
 
       Promise.allSettled(stepValidators).then(() => {
@@ -251,7 +246,7 @@ const AdviceLetterForm = () => {
       const type = location?.state?.error ? 'error' : 'info';
       setFormAlert({
         type,
-        message: t(`adviceLetter.alerts.${type}`)
+        message: t(`guidanceLetter.alerts.${type}`)
       });
     }
   }, [adviceLetter, loading, location?.state?.error, t]);
@@ -277,9 +272,9 @@ const AdviceLetterForm = () => {
       {/** Form page header */}
       {!subpage && (
         <StepHeader
-          heading={t('adviceLetterForm.heading')}
-          text={t('adviceLetterForm.description')}
-          subText={t('adviceLetterForm.text')}
+          heading={t('guidanceLetterForm.heading')}
+          text={t('guidanceLetterForm.description')}
+          subText={t('guidanceLetterForm.text')}
           step={currentStepIndex + 1}
           steps={steps.map((step, index) => ({
             key: step.name,
@@ -296,7 +291,7 @@ const AdviceLetterForm = () => {
             description: step.description,
             completed: index < currentStepIndex,
             onClick: async () => {
-              const url = `/trb/${id}/advice/${adviceFormSteps[index].slug}`;
+              const url = `/trb/${id}/guidance/${guidanceFormSteps[index].slug}`;
 
               if (stepSubmit) {
                 stepSubmit?.(() => history.push(url));
@@ -311,9 +306,9 @@ const AdviceLetterForm = () => {
                 { text: t('adminHome.home'), url: '/trb' },
                 {
                   text: t('adminHome.breadcrumb'),
-                  url: `/trb/${id}/advice`
+                  url: `/trb/${id}/guidance`
                 },
-                { text: t('adviceLetterForm.heading') }
+                { text: t('guidanceLetterForm.heading') }
               ]}
             />
           }
@@ -339,7 +334,7 @@ const AdviceLetterForm = () => {
                 unstyled
                 disabled={isStepSubmitting}
                 onClick={() => {
-                  const url = `/trb/${id}/advice`;
+                  const url = `/trb/${id}/guidance`;
                   if (stepSubmit) {
                     stepSubmit?.(() => history.push(url), false);
                   } else {
@@ -348,7 +343,7 @@ const AdviceLetterForm = () => {
                 }}
               >
                 <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-                {t('adviceLetterForm.returnToRequest')}
+                {t('guidanceLetterForm.returnToRequest')}
               </Button>
             )
           }
@@ -376,4 +371,4 @@ const AdviceLetterForm = () => {
   );
 };
 
-export default AdviceLetterForm;
+export default GuidanceLetterForm;

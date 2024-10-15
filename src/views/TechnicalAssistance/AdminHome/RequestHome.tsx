@@ -152,7 +152,7 @@ const RequestHome = ({
             />
 
             <InformationCard
-              type="adviceLetter"
+              type="guidanceLetter"
               trbRequest={data?.trbRequest}
             />
           </CardGroup>

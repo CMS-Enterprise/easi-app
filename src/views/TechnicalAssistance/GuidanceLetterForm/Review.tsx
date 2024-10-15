@@ -38,7 +38,7 @@ import { trbActionSchema } from 'validations/trbRequestSchema';
 
 import Recipients from '../AdminHome/components/ActionFormWrapper/Recipients';
 import useActionForm from '../AdminHome/components/ActionFormWrapper/useActionForm';
-import ReviewAdviceLetter from '../AdminHome/components/ReviewAdviceLetter';
+import ReviewGuidanceLetter from '../AdminHome/components/ReviewGuidanceLetter';
 import Pager from '../RequestForm/Pager';
 
 const Review = ({
@@ -103,11 +103,11 @@ const Review = ({
   }, [setIsStepSubmitting, isSubmitting]);
 
   return (
-    <div id="trbAdviceReview" className="margin-top-5">
+    <div id="trbGuidanceReview" className="margin-top-5">
       {/* Notes */}
       <p>
         <Trans
-          i18nKey="technicalAssistance:adviceLetterForm.notesCount"
+          i18nKey="technicalAssistance:guidanceLetterForm.notesCount"
           components={{ bold: <span className="text-bold" /> }}
           count={notes.length}
           values={{ plural: notes.length === 1 ? '' : 's' }}
@@ -128,11 +128,11 @@ const Review = ({
         />
       ) : (
         <Alert type="warning" slim>
-          {t('adviceLetterForm.notesAlert')}
+          {t('guidanceLetterForm.notesAlert')}
         </Alert>
       )}
       {/* Review */}
-      <ReviewAdviceLetter
+      <ReviewGuidanceLetter
         trbRequestId={trbRequestId}
         adviceLetter={adviceLetter}
         className="margin-top-5 margin-bottom-4"
@@ -140,7 +140,7 @@ const Review = ({
           setReorderError: error =>
             setFormAlert(error ? { type: 'error', message: error } : null),
           edit: recommendation =>
-            history.push(`/trb/${trbRequestId}/advice/recommendations/form`, {
+            history.push(`/trb/${trbRequestId}/guidance/insights/form`, {
               recommendation: {
                 ...recommendation,
                 links: recommendation.links.map(link => ({ link }))
@@ -150,9 +150,9 @@ const Review = ({
             remove({ variables: { id: recommendation.id } }).catch(() =>
               setFormAlert({
                 type: 'error',
-                message: t('adviceLetterForm.error', {
+                message: t('guidanceLetterForm.error', {
                   action: 'removing',
-                  type: 'recommendation'
+                  type: 'guidance'
                 })
               })
             )
@@ -179,7 +179,7 @@ const Review = ({
                 ) {
                   setStepsCompleted([...stepsCompleted, 'review']);
                 }
-                history.push(`/trb/${trbRequestId}/advice/done`, {
+                history.push(`/trb/${trbRequestId}/guidance/done`, {
                   success: true
                 });
               })
@@ -191,7 +191,7 @@ const Review = ({
                 ) {
                   setStepsCompleted([...stepsCompleted, 'review']);
                 }
-                history.push(`/trb/${trbRequestId}/advice/done`, {
+                history.push(`/trb/${trbRequestId}/guidance/done`, {
                   success: false
                 });
               })
@@ -207,15 +207,15 @@ const Review = ({
             back={{
               outline: true,
               onClick: () =>
-                history.push(`/trb/${trbRequestId}/advice/internal-review`)
+                history.push(`/trb/${trbRequestId}/guidance/internal-review`)
             }}
             next={{
               text: t('Send'),
               disabled: formSubmitting,
               loading: formSubmitting
             }}
-            taskListUrl={`/trb/${trbRequestId}/advice`}
-            saveExitText={t('adviceLetterForm.returnToRequest')}
+            taskListUrl={`/trb/${trbRequestId}/guidance`}
+            saveExitText={t('guidanceLetterForm.returnToRequest')}
             submitDisabled
             border={false}
           />

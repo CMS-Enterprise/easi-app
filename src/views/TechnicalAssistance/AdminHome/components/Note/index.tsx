@@ -11,7 +11,7 @@ import {
   GetTrbAdminNotes_trbRequest_adminNotes_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents as Document
 } from 'queries/types/GetTrbAdminNotes';
 import {
-  TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData as AdviceLetterCategoryData,
+  TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData as GuidanceLetterCategoryData,
   TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteInitialRequestFormCategoryData as InitialRequestFormCategoryData
 } from 'queries/types/TRBAdminNoteFragment';
 import { formatDateLocal } from 'utils/date';
@@ -45,12 +45,12 @@ const Note = ({ note, className, border = true }: NoteProps) => {
       ...(appliesToAttendees ? [t('notes.labels.appliesToAttendees')] : [])
     ].join(', ');
 
-  /** Converts advice letter category data into string */
-  const adviceLetterCategory = ({
+  /** Converts guidance letter category data into string */
+  const guidanceLetterCategory = ({
     appliesToMeetingSummary,
     appliesToNextSteps,
     recommendations
-  }: AdviceLetterCategoryData) =>
+  }: GuidanceLetterCategoryData) =>
     [
       ...(appliesToMeetingSummary ? [t('notes.labels.meetingSummary')] : []),
       ...(appliesToNextSteps ? [t('notes.labels.nextSteps')] : []),
@@ -91,7 +91,8 @@ const Note = ({ note, className, border = true }: NoteProps) => {
         );
         break;
       case 'TRBAdminNoteGuidanceLetterCategoryData':
-        categorySpecificDataString = adviceLetterCategory(categorySpecificData);
+        categorySpecificDataString =
+          guidanceLetterCategory(categorySpecificData);
         break;
 
       default:

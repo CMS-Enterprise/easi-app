@@ -16,7 +16,7 @@ import {
   UpdateTrbAdviceLetterVariables
 } from 'queries/types/UpdateTrbAdviceLetter';
 import {
-  AdviceLetterSummary,
+  GuidanceLetterSummary,
   StepComponentProps
 } from 'types/technicalAssistance';
 import { meetingSummarySchema } from 'validations/trbRequestSchema';
@@ -47,14 +47,14 @@ const Summary = ({
     watch,
     partialSubmit,
     formState: { isSubmitting, isDirty }
-  } = useEasiForm<AdviceLetterSummary>({
+  } = useEasiForm<GuidanceLetterSummary>({
     resolver: yupResolver(meetingSummarySchema),
     defaultValues: {
       meetingSummary
     }
   });
 
-  /** Submit meeting summary fields and update advice letter */
+  /** Submit meeting summary fields and update guidance letter */
   const submit = useCallback<StepSubmit>(
     (callback, shouldValidate = true) =>
       handleSubmit(
@@ -77,9 +77,9 @@ const Summary = ({
             if (e instanceof ApolloError) {
               setFormAlert({
                 type: 'error',
-                message: t('adviceLetterForm.error', {
+                message: t('guidanceLetterForm.error', {
                   action: 'saving',
-                  type: 'advice letter'
+                  type: 'guidance letter'
                 })
               });
             }
@@ -125,7 +125,7 @@ const Summary = ({
   return (
     <Form
       onSubmit={e => e.preventDefault()}
-      id="trbAdviceSummary"
+      id="trbGuidanceSummary"
       className="maxw-tablet"
     >
       {/* Required fields help text */}
@@ -150,7 +150,7 @@ const Summary = ({
                 htmlFor="meetingSummary"
                 required
               >
-                {t('adviceLetterForm.meetingSummary')}{' '}
+                {t('guidanceLetterForm.meetingSummary')}{' '}
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
               <RichTextEditor
@@ -174,17 +174,15 @@ const Summary = ({
         back={{
           outline: true,
           text: t('button.cancel'),
-          onClick: () => history.push(`/trb/${trbRequestId}/advice`)
+          onClick: () => history.push(`/trb/${trbRequestId}/guidance`)
         }}
         next={{
           disabled: isSubmitting || !watch('meetingSummary'),
           onClick: () =>
-            submit(() =>
-              history.push(`/trb/${trbRequestId}/advice/recommendations`)
-            )
+            submit(() => history.push(`/trb/${trbRequestId}/guidance/insights`))
         }}
-        taskListUrl={`/trb/${trbRequestId}/advice`}
-        saveExitText={t('adviceLetterForm.returnToRequest')}
+        taskListUrl={`/trb/${trbRequestId}/guidance`}
+        saveExitText={t('guidanceLetterForm.returnToRequest')}
         submit={submit}
         border={false}
       />

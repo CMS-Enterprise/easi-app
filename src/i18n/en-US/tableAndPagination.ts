@@ -30,9 +30,9 @@ const tableAndPagination = {
       READY_FOR_CONSULT: 'Ready for consult',
       CONSULT_SCHEDULED: 'Consult scheduled',
       CONSULT_COMPLETE: 'Consult complete',
-      DRAFT_ADVICE_LETTER: 'Draft advice letter',
-      ADVICE_LETTER_IN_REVIEW: 'Advice letter in review',
-      ADVICE_LETTER_SENT: 'Advice letter sent',
+      DRAFT_ADVICE_LETTER: 'Draft guidance letter',
+      ADVICE_LETTER_IN_REVIEW: 'Guidance letter in review',
+      ADVICE_LETTER_SENT: 'Guidance letter sent',
       FOLLOW_UP_REQUESTED: 'Follow-up requested'
     }
   },

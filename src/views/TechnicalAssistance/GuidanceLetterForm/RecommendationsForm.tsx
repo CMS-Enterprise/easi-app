@@ -26,8 +26,8 @@ import {
   UpdateTRBGuidanceLetterRecommendationInput
 } from 'types/graphql-global-types';
 import {
-  AdviceLetterRecommendationFields,
-  FormAlertObject
+  FormAlertObject,
+  GuidanceLetterRecommendationFields
 } from 'types/technicalAssistance';
 import formatUrl from 'utils/formatUrl';
 
@@ -49,7 +49,7 @@ const RecommendationsForm = ({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
   const { state } = useLocation<{
-    recommendation: AdviceLetterRecommendationFields;
+    recommendation: GuidanceLetterRecommendationFields;
   }>();
 
   const [showFormError, setShowFormError] = useState<boolean>(false);
@@ -60,7 +60,7 @@ const RecommendationsForm = ({
     watch,
     reset,
     formState: { isSubmitting, isDirty }
-  } = useFormContext<AdviceLetterRecommendationFields>();
+  } = useFormContext<GuidanceLetterRecommendationFields>();
 
   const [create] = useMutation<CreateTRBGuidanceLetterRecommendationInput>(
     CreateTrbRecommendationQuery
@@ -73,8 +73,8 @@ const RecommendationsForm = ({
   const returnLink = useMemo(
     () =>
       state?.recommendation
-        ? `/trb/${trbRequestId}/advice/internal-review`
-        : `/trb/${trbRequestId}/advice/recommendations`,
+        ? `/trb/${trbRequestId}/guidance/internal-review`
+        : `/trb/${trbRequestId}/guidance/insights`,
     [state?.recommendation, trbRequestId]
   );
 
@@ -124,10 +124,8 @@ const RecommendationsForm = ({
             setFormAlert({
               type: 'success',
               message: t(
-                `adviceLetterForm.${
-                  watch('id')
-                    ? 'editRecommendationSuccess'
-                    : 'recommendationSuccess'
+                `guidanceLetterForm.${
+                  watch('id') ? 'editGuidanceSuccess' : 'guidanceSuccess'
                 }`
               )
             });
@@ -158,15 +156,15 @@ const RecommendationsForm = ({
           { text: t('Home'), url: '/trb' },
           {
             text: t(`Request ${trbRequestId}`),
-            url: `/trb/${trbRequestId}/advice`
+            url: `/trb/${trbRequestId}/guidance`
           },
           {
-            text: t('adviceLetterForm.heading'),
-            url: `/trb/${trbRequestId}/advice/recommendations`
+            text: t('guidanceLetterForm.heading'),
+            url: `/trb/${trbRequestId}/guidance/insights`
           },
           {
             text: t(
-              `adviceLetterForm.${watch('id') ? 'edit' : 'add'}Recommendation`
+              `guidanceLetterForm.${watch('id') ? 'edit' : 'add'}Guidance`
             )
           }
         ]}
@@ -176,16 +174,16 @@ const RecommendationsForm = ({
         /* Error alert for gql errors */
         showFormError && (
           <Alert type="error" className="margin-bottom-5" slim>
-            {t('adviceLetterForm.error', {
+            {t('guidanceLetterForm.error', {
               action: 'saving',
-              type: 'recommendation'
+              type: 'guidance'
             })}
           </Alert>
         )
       }
 
       <h1 className="margin-bottom-0">
-        {t(`adviceLetterForm.${watch('id') ? 'edit' : 'add'}Recommendation`)}
+        {t(`guidanceLetterForm.${watch('id') ? 'edit' : 'add'}Guidance`)}
       </h1>
       {/* Required fields text */}
       <HelpText className="margin-top-1 margin-bottom-2 text-base">
@@ -271,8 +269,10 @@ const RecommendationsForm = ({
       >
         <IconArrowBack className="margin-right-05" />
         {t(
-          `adviceLetterForm.${
-            watch('id') ? 'editReturnToAdviceLetter' : 'returnToAdviceLetter'
+          `guidanceLetterForm.${
+            watch('id')
+              ? 'editReturnToGuidanceLetter'
+              : 'returnToGuidanceLetter'
           }`
         )}
       </Button>

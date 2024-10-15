@@ -9,7 +9,7 @@ const TRBRecommendation = gql`
   }
 `;
 
-/** Advice letter fields fragment */
+/** Guidance letter fields fragment */
 export const TRBAdviceLetter = gql`
   ${TRBRecommendation}
   fragment TRBAdviceLetter on TRBGuidanceLetter {
@@ -31,7 +31,7 @@ export const TRBAdviceLetter = gql`
   }
 `;
 
-/** Get TRB advice letter and status */
+/** Get TRB guidance letter and status */
 export const GetTrbAdviceLetterQuery = gql`
   ${TRBAdviceLetter}
   query GetTrbAdviceLetter($id: UUID!) {
@@ -51,7 +51,7 @@ export const GetTrbAdviceLetterQuery = gql`
   }
 `;
 
-/** Create advice letter */
+/** Create guidance letter */
 export const CreateTrbAdviceLetterQuery = gql`
   ${TRBAdviceLetter}
   mutation CreateTrbAdviceLetter($trbRequestId: UUID!) {
@@ -61,7 +61,7 @@ export const CreateTrbAdviceLetterQuery = gql`
   }
 `;
 
-/** Update advice letter */
+/** Update guidance letter */
 export const UpdateTrbAdviceLetterQuery = gql`
   ${TRBAdviceLetter}
   mutation UpdateTrbAdviceLetter($input: UpdateTRBGuidanceLetterInput!) {
@@ -71,7 +71,7 @@ export const UpdateTrbAdviceLetterQuery = gql`
   }
 `;
 
-/** Get advice letter recommendations */
+/** Get guidance letter recommendations */
 export const GetTrbRecommendationsQuery = gql`
   ${TRBRecommendation}
   query GetTrbRecommendations($id: UUID!) {
@@ -85,7 +85,7 @@ export const GetTrbRecommendationsQuery = gql`
   }
 `;
 
-/** Create advice letter recommendation */
+/** Create guidance letter recommendation */
 export const CreateTrbRecommendationQuery = gql`
   ${TRBRecommendation}
   mutation CreateTRBRecommendation(
@@ -97,7 +97,7 @@ export const CreateTrbRecommendationQuery = gql`
   }
 `;
 
-/** Update advice letter recommendation */
+/** Update guidance letter recommendation */
 export const UpdateTrbRecommendationQuery = gql`
   ${TRBRecommendation}
   mutation UpdateTRBRecommendation(
@@ -109,7 +109,7 @@ export const UpdateTrbRecommendationQuery = gql`
   }
 `;
 
-/** Reorder advice letters */
+/** Reorder guidance letters */
 export const UpdateTrbRecommendationOrderQuery = gql`
   ${TRBRecommendation}
   mutation UpdateTrbRecommendationOrder(
@@ -121,7 +121,7 @@ export const UpdateTrbRecommendationOrderQuery = gql`
   }
 `;
 
-/** Delete advice letter recommendation */
+/** Delete guidance letter recommendation */
 export const DeleteTrbRecommendationQuery = gql`
   ${TRBRecommendation}
   mutation DeleteTRBRecommendation($id: UUID!) {

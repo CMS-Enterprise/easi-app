@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
+exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
 <DocumentFragment>
   <div>
     <p
@@ -68,7 +68,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
       <h2
         class="margin-bottom-1"
       >
-        What we recommend
+        Guidance and insights
       </h2>
       <div
         class="margin-top-4"
@@ -83,7 +83,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
             <p
               class="usa-alert__text"
             >
-              If you have two or more recommendations, you can use arrows on the left side of each recommendation to reorder them.
+              If you have two or more items per category, you can use arrows on the left side of each to reorder them within the category. Edit the guidance to change the category.
             </p>
           </div>
         </div>
@@ -102,7 +102,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                 data-testid="reorder-controls"
               >
                 <button
-                  aria-label="Increase recommendation sort order"
+                  aria-label="Increase guidance sort order"
                   class="usa-button usa-button--unstyled height-3"
                   data-testid="button"
                   type="button"
@@ -131,7 +131,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                   1
                 </span>
                 <button
-                  aria-label="Decrease recommendation sort order"
+                  aria-label="Decrease guidance sort order"
                   class="usa-button usa-button--unstyled height-3"
                   data-testid="button"
                   type="button"
@@ -227,7 +227,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                 data-testid="reorder-controls"
               >
                 <button
-                  aria-label="Increase recommendation sort order"
+                  aria-label="Increase guidance sort order"
                   class="usa-button usa-button--unstyled height-3"
                   data-testid="button"
                   type="button"
@@ -256,7 +256,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                   2
                 </span>
                 <button
-                  aria-label="Decrease recommendation sort order"
+                  aria-label="Decrease guidance sort order"
                   class="usa-button usa-button--unstyled height-3"
                   data-testid="button"
                   type="button"
@@ -352,7 +352,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                 data-testid="reorder-controls"
               >
                 <button
-                  aria-label="Increase recommendation sort order"
+                  aria-label="Increase guidance sort order"
                   class="usa-button usa-button--unstyled height-3"
                   data-testid="button"
                   type="button"
@@ -381,7 +381,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                   3
                 </span>
                 <button
-                  aria-label="Decrease recommendation sort order"
+                  aria-label="Decrease guidance sort order"
                   class="usa-button usa-button--unstyled height-3"
                   data-testid="button"
                   type="button"

@@ -3,7 +3,6 @@ import { ModalRef } from '@trussworks/react-uswds';
 
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'queries/types/GetTrbRequestSummary';
-import { FormStepKey } from 'views/TechnicalAssistance/AdviceLetterForm';
 import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
 
 import { PersonRole, TRBGuidanceLetterStatus } from './graphql-global-types';
@@ -66,9 +65,16 @@ export type TrbAdminPath =
   | 'initial-request-form'
   | 'documents'
   | 'feedback'
-  | 'advice'
+  | 'guidance'
   | 'additional-information'
   | 'notes';
+
+export type GuidanceFormStepKey =
+  | 'summary'
+  | 'insights'
+  | 'next-steps'
+  | 'internal-review'
+  | 'review';
 
 export type TrbAdminPage = {
   /** Label translation key */
@@ -84,7 +90,7 @@ export type TrbAdminPage = {
   groupEnd?: boolean;
 };
 
-export type AdviceLetterRecommendationFields = {
+export type GuidanceLetterRecommendationFields = {
   id?: string;
   title: string;
   recommendation: string;
@@ -92,31 +98,15 @@ export type AdviceLetterRecommendationFields = {
   links?: { link: string }[];
 };
 
-export type AdviceLetterSummary = {
+export type GuidanceLetterSummary = {
   meetingSummary: string | null;
 };
 
-export type AdviceLetterNextSteps = {
+export type GuidanceLetterNextSteps = {
   nextSteps: string | null;
   isFollowupRecommended: boolean | null;
   followupPoint: string | null;
 };
-
-/** Advice letter form fields */
-export type AdviceLetterFormFields = {
-  meetingSummary: string | null;
-  nextSteps: string | null;
-  isFollowupRecommended: boolean | null;
-  followupPoint: string | null;
-  // recommendations: AdviceLetterRecommendationFields[];
-  // internalReview: string;
-  // review: string;
-};
-
-export type UpdateAdviceLetterType = (
-  fields?: (keyof AdviceLetterFormFields)[],
-  redirectUrl?: string
-) => Promise<void>;
 
 export type FormAlertObject = {
   type: 'success' | 'warning' | 'error' | 'info';
@@ -137,9 +127,9 @@ export type StepComponentProps = {
   setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
   /** Set a form level alert message from within step components */
   setFormAlert: React.Dispatch<React.SetStateAction<FormAlertObject | null>>;
-  stepsCompleted?: FormStepKey[] | undefined;
+  stepsCompleted?: GuidanceFormStepKey[] | undefined;
   setStepsCompleted?: React.Dispatch<
-    React.SetStateAction<FormStepKey[] | undefined>
+    React.SetStateAction<GuidanceFormStepKey[] | undefined>
   >;
 };
 
