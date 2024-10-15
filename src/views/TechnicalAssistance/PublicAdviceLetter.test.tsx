@@ -9,12 +9,12 @@ import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 
 import PublicAdviceLetter from './PublicAdviceLetter';
 
-describe('Trb Public Advice Letter', () => {
+describe('Trb Public Guidance Letter', () => {
   const id = '6e0d1524-204a-4014-b6d9-e995b1db3987';
   const data = {
     trbRequest: {
       id,
-      name: 'Case 7 - Advice letter in review',
+      name: 'Case 7 - Guidance letter in review',
       requesterInfo: {
         commonName: 'Adeline Aarons',
         __typename: 'UserInfo'

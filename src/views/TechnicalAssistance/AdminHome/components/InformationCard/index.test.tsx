@@ -73,7 +73,7 @@ describe('TRB Admin InformationCard', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('Renders correct advice letter info', () => {
+  it('Renders correct guidance letter info', () => {
     const { getByText, asFragment, getByRole } = render(
       <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
         <Route exact path="/trb/:id/:activePage">

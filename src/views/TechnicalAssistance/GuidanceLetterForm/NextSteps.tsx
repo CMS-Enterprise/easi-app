@@ -63,7 +63,7 @@ const NextSteps = ({
     }
   });
 
-  /** Submit next steps fields and update advice letter */
+  /** Submit next steps fields and update guidance letter */
   const submit = useCallback<StepSubmit>(
     (callback, shouldValidate = true) =>
       handleSubmit(

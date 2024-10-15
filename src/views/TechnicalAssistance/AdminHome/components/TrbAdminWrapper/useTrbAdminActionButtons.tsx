@@ -133,7 +133,7 @@ const useTrbAdminActionButtons = ({
                 !result.errors &&
                 history.push(`/trb/${trbRequestId}/guidance/summary`)
             )
-            // If error, display on advice letter form
+            // If error, display on guidance letter form
             .catch(() =>
               history.push(`/trb/${trbRequestId}/guidance/summary`, {
                 error: true

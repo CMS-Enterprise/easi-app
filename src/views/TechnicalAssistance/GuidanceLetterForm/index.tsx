@@ -69,7 +69,7 @@ const guidanceFormSteps = [
 type AdviceFormStep = (typeof guidanceFormSteps)[number];
 
 /**
- * TRB request admin advice letter form
+ * TRB request admin guidance letter form
  */
 const AdviceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');

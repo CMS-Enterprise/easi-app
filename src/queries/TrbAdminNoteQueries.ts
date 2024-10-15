@@ -50,7 +50,7 @@ export const CreateTrbAdminNoteConsultSessionQuery = gql`
   }
 `;
 
-// Advice letter
+// Guidance letter
 export const CreateTrbAdminNoteAdviceLetterQuery = gql`
   ${TRBAdminNoteFragment}
   mutation CreateTRBAdminNoteAdviceLetter(

@@ -208,7 +208,7 @@ describe('Trb Admin Notes: Add Note', () => {
     expect(screen.getByRole('checkbox', { name: documents[0].fileName }));
     expect(screen.getByRole('checkbox', { name: documents[1].fileName }));
 
-    /* Advice letter */
+    /* Guidance letter */
 
     userEvent.selectOptions(categorySelect, ['Advice letter']);
     const adviceLetterSectionSelect = screen.getByRole('combobox', {

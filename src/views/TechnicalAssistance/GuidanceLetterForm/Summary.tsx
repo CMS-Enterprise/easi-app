@@ -54,7 +54,7 @@ const Summary = ({
     }
   });
 
-  /** Submit meeting summary fields and update advice letter */
+  /** Submit meeting summary fields and update guidance letter */
   const submit = useCallback<StepSubmit>(
     (callback, shouldValidate = true) =>
       handleSubmit(

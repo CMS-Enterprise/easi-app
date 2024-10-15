@@ -71,7 +71,7 @@ function TechnicalAssistance() {
           <TrbAttendees />
         </Route>
 
-        {/* Public advice letter */}
+        {/* Public guidance letter */}
         <Route exact path={`${path}/guidance-letter/:id`}>
           <PublicAdviceLetter />
         </Route>

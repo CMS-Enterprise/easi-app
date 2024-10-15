@@ -35,7 +35,7 @@ import Breadcrumbs, {
 import ReviewGuidanceLetter from './AdminHome/components/ReviewGuidanceLetter';
 
 /**
- * The public view of a TRB Request Advice Letter.
+ * The public view of a TRB Request Guidance Letter.
  * This component's url is referred to from the Task List view, or email link.
  * Views from the task list are indicated by `fromTaskList`.
  */

@@ -13,7 +13,7 @@ type RemoveRecommendationModalProps = {
 };
 
 /**
- * Modal to warn user before removing TRB advice letter recommendation
+ * Modal to warn user before removing TRB guidance letter recommendation
  */
 const RemoveRecommendationModal = ({
   modalProps,

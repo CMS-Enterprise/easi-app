@@ -45,7 +45,7 @@ const Note = ({ note, className, border = true }: NoteProps) => {
       ...(appliesToAttendees ? [t('notes.labels.appliesToAttendees')] : [])
     ].join(', ');
 
-  /** Converts advice letter category data into string */
+  /** Converts guidance letter category data into string */
   const adviceLetterCategory = ({
     appliesToMeetingSummary,
     appliesToNextSteps,

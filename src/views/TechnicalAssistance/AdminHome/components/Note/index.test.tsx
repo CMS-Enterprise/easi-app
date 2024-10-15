@@ -59,7 +59,7 @@ const noteAdviceLetter: TRBAdminNoteFragment = {
   id: 'badd3c6c-86f2-40fd-af1b-4ab46c4f8c34',
   isArchived: false,
   category: TRBAdminNoteCategory.ADVICE_LETTER,
-  noteText: 'Advice Letter Note',
+  noteText: 'Guidance Letter Note',
   author: {
     __typename: 'UserInfo',
     commonName: 'Jerry Seinfeld'
@@ -139,7 +139,7 @@ describe('TRB Admin Note', () => {
     ).toBeInTheDocument();
   });
 
-  it('Renders category specific data - advice letter', () => {
+  it('Renders category specific data - guidance letter', () => {
     const note = noteAdviceLetter;
     render(<Note note={note} />);
 

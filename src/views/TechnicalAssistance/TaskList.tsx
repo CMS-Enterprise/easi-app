@@ -359,7 +359,7 @@ function TaskList() {
                   </TaskListDescription>
                 </TaskListItem>
 
-                {/* Advice letter and next steps */}
+                {/* Guidance letter and next steps */}
                 <TaskListItem
                   heading={taskListText[4].heading}
                   status={taskStatuses?.adviceLetterStatusTaskList}

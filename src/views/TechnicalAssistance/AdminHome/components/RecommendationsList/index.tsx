@@ -35,7 +35,7 @@ type RecommendationsListProps = {
 };
 
 /**
- * Displays list of TRB advice letter recommendations
+ * Displays list of TRB guidance letter recommendations
  * with optional buttons to edit, remove, and order recommendations
  */
 export default function RecommendationsList({

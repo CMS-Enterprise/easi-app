@@ -107,7 +107,7 @@ describe('Trb Admin Request Home', () => {
       'There are 0 additional documents uploaded as a part of this request.'
     );
 
-    // Start advice letter button disabled
+    // Start guidance letter button disabled
     expect(
       getByRole('button', {
         name: i18next.t<string>('technicalAssistance:adminHome.startGuidance')

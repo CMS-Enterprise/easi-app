@@ -117,7 +117,7 @@ const renderForm = (
 const waitForPageLoad = async () =>
   waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
-describe('TRB Advice Letter Form', () => {
+describe('TRB Guidance Letter Form', () => {
   it('matches the snapshot', async () => {
     const { asFragment } = renderForm('summary');
 
@@ -126,7 +126,7 @@ describe('TRB Advice Letter Form', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('Renders no advice letter alert', async () => {
+  it('Renders no guidance letter alert', async () => {
     const { findByText, findByTestId } = renderForm('summary', [
       getAdviceLetterCannotStart
     ]);
@@ -140,7 +140,7 @@ describe('TRB Advice Letter Form', () => {
     ).toBeInTheDocument();
   });
 
-  it('Renders error creating advice letter alert', async () => {
+  it('Renders error creating guidance letter alert', async () => {
     const { findByText, findByTestId } = renderForm(
       'summary',
       [getAdviceLetterCannotStart],
