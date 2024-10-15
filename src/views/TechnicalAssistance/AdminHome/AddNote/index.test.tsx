@@ -211,11 +211,11 @@ describe('Trb Admin Notes: Add Note', () => {
     /* Guidance letter */
 
     userEvent.selectOptions(categorySelect, ['Guidance letter']);
-    const adviceLetterSectionSelect = screen.getByRole('combobox', {
+    const guidanceLetterSectionSelect = screen.getByRole('combobox', {
       name: 'Which section?'
     });
 
-    selectEvent.openMenu(adviceLetterSectionSelect);
+    selectEvent.openMenu(guidanceLetterSectionSelect);
     expect(
       screen.getByRole('checkbox', {
         name: `Recommendation (${recommendations[0].title})`

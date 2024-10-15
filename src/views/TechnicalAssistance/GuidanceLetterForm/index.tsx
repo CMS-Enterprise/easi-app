@@ -66,12 +66,12 @@ const guidanceFormSteps = [
   }
 ] as const;
 
-type AdviceFormStep = (typeof guidanceFormSteps)[number];
+type GuidanceFormStep = (typeof guidanceFormSteps)[number];
 
 /**
  * TRB request admin guidance letter form
  */
-const AdviceLetterForm = () => {
+const GuidanceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
   const location = useLocation<{
@@ -121,7 +121,7 @@ const AdviceLetterForm = () => {
   );
 
   /** Current form step object */
-  const currentFormStep: AdviceFormStep = guidanceFormSteps[currentStepIndex];
+  const currentFormStep: GuidanceFormStep = guidanceFormSteps[currentStepIndex];
 
   // When navigating to a different step, checks if all previous form steps are valid
   const checkValidSteps = useCallback(
@@ -371,4 +371,4 @@ const AdviceLetterForm = () => {
   );
 };
 
-export default AdviceLetterForm;
+export default GuidanceLetterForm;

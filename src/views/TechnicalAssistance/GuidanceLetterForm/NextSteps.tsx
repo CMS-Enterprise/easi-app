@@ -70,7 +70,6 @@ const NextSteps = ({
         async formData => {
           try {
             if (isDirty) {
-              // UpdateTrbAdviceLetter mutation
               await update({
                 variables: {
                   input: {
@@ -92,7 +91,7 @@ const NextSteps = ({
                 type: 'error',
                 message: t('guidanceLetterForm.error', {
                   action: 'saving',
-                  type: 'advice letter'
+                  type: 'guidance letter'
                 })
               });
             }
@@ -138,7 +137,7 @@ const NextSteps = ({
   return (
     <Form
       onSubmit={e => e.preventDefault()}
-      id="trbAdviceNextSteps"
+      id="trbGuidanceNextSteps"
       className="maxw-tablet"
     >
       {/* Required fields help text */}

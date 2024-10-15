@@ -54,7 +54,7 @@ const noteSupportingDocuments: TRBAdminNoteFragment = {
   createdAt: '2024-03-27T13:20:37.852099Z'
 };
 
-const noteAdviceLetter: TRBAdminNoteFragment = {
+const noteGuidanceLetter: TRBAdminNoteFragment = {
   __typename: 'TRBAdminNote',
   id: 'badd3c6c-86f2-40fd-af1b-4ab46c4f8c34',
   isArchived: false,
@@ -140,7 +140,7 @@ describe('TRB Admin Note', () => {
   });
 
   it('Renders category specific data - guidance letter', () => {
-    const note = noteAdviceLetter;
+    const note = noteGuidanceLetter;
     render(<Note note={note} />);
 
     expect(
@@ -175,7 +175,7 @@ describe('TRB Admin Note', () => {
 
   it('Renders label for removed recommendation', () => {
     const note: TRBAdminNoteFragment = {
-      ...noteAdviceLetter,
+      ...noteGuidanceLetter,
       categorySpecificData: {
         __typename: 'TRBAdminNoteGuidanceLetterCategoryData',
         appliesToMeetingSummary: true,

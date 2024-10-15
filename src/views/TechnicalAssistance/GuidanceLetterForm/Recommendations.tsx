@@ -87,7 +87,7 @@ const Recommendations = ({
 
       {/* Recommendations form step */}
       <Route exact path={`${path}`}>
-        <div id="trbAdviceRecommendations">
+        <div id="trbGuidanceRecommendations">
           {/* Add recommendation button */}
           <Button
             className="margin-top-5 margin-bottom-1"

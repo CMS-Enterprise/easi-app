@@ -79,7 +79,7 @@ const Summary = ({
                 type: 'error',
                 message: t('guidanceLetterForm.error', {
                   action: 'saving',
-                  type: 'advice letter'
+                  type: 'guidance letter'
                 })
               });
             }
@@ -125,7 +125,7 @@ const Summary = ({
   return (
     <Form
       onSubmit={e => e.preventDefault()}
-      id="trbAdviceSummary"
+      id="trbGuidanceSummary"
       className="maxw-tablet"
     >
       {/* Required fields help text */}

@@ -103,7 +103,7 @@ const Review = ({
   }, [setIsStepSubmitting, isSubmitting]);
 
   return (
-    <div id="trbAdviceReview" className="margin-top-5">
+    <div id="trbGuidanceReview" className="margin-top-5">
       {/* Notes */}
       <p>
         <Trans
