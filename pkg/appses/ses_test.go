@@ -43,9 +43,9 @@ func TestSESTestSuite(t *testing.T) {
 	}
 
 	sesConfig := Config{
-		SourceARN:      config.GetString(appconfig.AWSSESSourceARNKey),
-		Source:         config.GetString(appconfig.AWSSESSourceKey),
-		RecipientRegex: nil,
+		SourceARN:               config.GetString(appconfig.AWSSESSourceARNKey),
+		Source:                  config.GetString(appconfig.AWSSESSourceKey),
+		RecipientAllowListRegex: nil,
 	}
 
 	sender := NewSender(sesConfig, env)

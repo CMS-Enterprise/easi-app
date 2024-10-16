@@ -80,7 +80,7 @@ func (s Server) NewSESConfig() appses.Config {
 	s.checkRequiredConfig(appconfig.AWSSESSourceKey)
 
 	// Parse the regex config if configured (not required)
-	sesRegexString := s.Config.GetString(appconfig.SESRecipientRegexKey)
+	sesRegexString := s.Config.GetString(appconfig.SESRecipientAllowListRegexKey)
 	var sesRegex *regexp.Regexp
 	if sesRegexString != "" { // only attempt to parse if it's a non-empty string
 		sesRegex = regexp.MustCompile(sesRegexString)
@@ -88,9 +88,9 @@ func (s Server) NewSESConfig() appses.Config {
 	}
 
 	return appses.Config{
-		SourceARN:      s.Config.GetString(appconfig.AWSSESSourceARNKey),
-		Source:         s.Config.GetString(appconfig.AWSSESSourceKey),
-		RecipientRegex: sesRegex,
+		SourceARN:               s.Config.GetString(appconfig.AWSSESSourceARNKey),
+		Source:                  s.Config.GetString(appconfig.AWSSESSourceKey),
+		RecipientAllowListRegex: sesRegex,
 	}
 }
 

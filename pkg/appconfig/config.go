@@ -146,8 +146,8 @@ const ClientProtocolKey = "CLIENT_PROTOCOL"
 // EmailTemplateDirectoryKey is the key for getting the email template directory
 const EmailTemplateDirectoryKey = "EMAIL_TEMPLATE_DIR"
 
-// SESRecipientRegexKey is the key for getting the regex that Email recipients (SES specifically) must match
-const SESRecipientRegexKey = "SES_RECIPIENT_REGEX"
+// SESRecipientAllowListRegexKey is the key for getting the regex that Email recipients (SES specifically) must match
+const SESRecipientAllowListRegexKey = "SES_RECIPIENT_ALLOWLIST_REGEX"
 
 // AWSS3FileUploadBucket is the key for the bucket we upload files to
 const AWSS3FileUploadBucket = "AWS_S3_FILE_UPLOAD_BUCKET"
