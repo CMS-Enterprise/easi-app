@@ -64,7 +64,6 @@ type ResolverRoot interface {
 	TRBRequestDocument() TRBRequestDocumentResolver
 	TRBRequestFeedback() TRBRequestFeedbackResolver
 	TRBRequestForm() TRBRequestFormResolver
-	TRBTaskStatuses() TRBTaskStatusesResolver
 	UserInfo() UserInfoResolver
 }
 
@@ -1096,12 +1095,12 @@ type ComplexityRoot struct {
 	}
 
 	TRBTaskStatuses struct {
-		AdviceLetterStatusTaskList func(childComplexity int) int
-		AttendConsultStatus        func(childComplexity int) int
-		ConsultPrepStatus          func(childComplexity int) int
-		FeedbackStatus             func(childComplexity int) int
-		FormStatus                 func(childComplexity int) int
-		GuidanceLetterStatus       func(childComplexity int) int
+		AttendConsultStatus          func(childComplexity int) int
+		ConsultPrepStatus            func(childComplexity int) int
+		FeedbackStatus               func(childComplexity int) int
+		FormStatus                   func(childComplexity int) int
+		GuidanceLetterStatus         func(childComplexity int) int
+		GuidanceLetterStatusTaskList func(childComplexity int) int
 	}
 
 	UpdateSystemIntakePayload struct {
@@ -1418,9 +1417,6 @@ type TRBRequestFormResolver interface {
 	FundingSources(ctx context.Context, obj *models.TRBRequestForm) ([]*models.TRBFundingSource, error)
 	SystemIntakes(ctx context.Context, obj *models.TRBRequestForm) ([]*models.SystemIntake, error)
 	SubjectAreaOptions(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBSubjectAreaOption, error)
-}
-type TRBTaskStatusesResolver interface {
-	AdviceLetterStatusTaskList(ctx context.Context, obj *models.TRBTaskStatuses) (models.TRBGuidanceLetterStatusTaskList, error)
 }
 type UserInfoResolver interface {
 	CommonName(ctx context.Context, obj *models.UserInfo) (string, error)
@@ -7415,13 +7411,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestForm.WhereInProcessOther(childComplexity), true
 
-	case "TRBTaskStatuses.adviceLetterStatusTaskList":
-		if e.complexity.TRBTaskStatuses.AdviceLetterStatusTaskList == nil {
-			break
-		}
-
-		return e.complexity.TRBTaskStatuses.AdviceLetterStatusTaskList(childComplexity), true
-
 	case "TRBTaskStatuses.attendConsultStatus":
 		if e.complexity.TRBTaskStatuses.AttendConsultStatus == nil {
 			break
@@ -7456,6 +7445,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBTaskStatuses.GuidanceLetterStatus(childComplexity), true
+
+	case "TRBTaskStatuses.guidanceLetterStatusTaskList":
+		if e.complexity.TRBTaskStatuses.GuidanceLetterStatusTaskList == nil {
+			break
+		}
+
+		return e.complexity.TRBTaskStatuses.GuidanceLetterStatusTaskList(childComplexity), true
 
 	case "UpdateSystemIntakePayload.systemIntake":
 		if e.complexity.UpdateSystemIntakePayload.SystemIntake == nil {
@@ -9405,7 +9401,7 @@ type TRBTaskStatuses {
   consultPrepStatus: TRBConsultPrepStatus!
   attendConsultStatus: TRBAttendConsultStatus!
   guidanceLetterStatus: TRBGuidanceLetterStatus!
-  adviceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList!
+  guidanceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList!
 }
 
 """
@@ -51411,8 +51407,8 @@ func (ec *executionContext) fieldContext_TRBRequest_taskStatuses(_ context.Conte
 				return ec.fieldContext_TRBTaskStatuses_attendConsultStatus(ctx, field)
 			case "guidanceLetterStatus":
 				return ec.fieldContext_TRBTaskStatuses_guidanceLetterStatus(ctx, field)
-			case "adviceLetterStatusTaskList":
-				return ec.fieldContext_TRBTaskStatuses_adviceLetterStatusTaskList(ctx, field)
+			case "guidanceLetterStatusTaskList":
+				return ec.fieldContext_TRBTaskStatuses_guidanceLetterStatusTaskList(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBTaskStatuses", field.Name)
 		},
@@ -55842,8 +55838,8 @@ func (ec *executionContext) fieldContext_TRBTaskStatuses_guidanceLetterStatus(_ 
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBTaskStatuses_adviceLetterStatusTaskList(ctx context.Context, field graphql.CollectedField, obj *models.TRBTaskStatuses) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBTaskStatuses_adviceLetterStatusTaskList(ctx, field)
+func (ec *executionContext) _TRBTaskStatuses_guidanceLetterStatusTaskList(ctx context.Context, field graphql.CollectedField, obj *models.TRBTaskStatuses) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBTaskStatuses_guidanceLetterStatusTaskList(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -55856,7 +55852,7 @@ func (ec *executionContext) _TRBTaskStatuses_adviceLetterStatusTaskList(ctx cont
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBTaskStatuses().AdviceLetterStatusTaskList(rctx, obj)
+		return obj.GuidanceLetterStatusTaskList, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -55873,12 +55869,12 @@ func (ec *executionContext) _TRBTaskStatuses_adviceLetterStatusTaskList(ctx cont
 	return ec.marshalNTRBGuidanceLetterStatusTaskList2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterStatusTaskList(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBTaskStatuses_adviceLetterStatusTaskList(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBTaskStatuses_guidanceLetterStatusTaskList(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "TRBTaskStatuses",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type TRBGuidanceLetterStatusTaskList does not have child fields")
 		},
@@ -71557,64 +71553,33 @@ func (ec *executionContext) _TRBTaskStatuses(ctx context.Context, sel ast.Select
 		case "formStatus":
 			out.Values[i] = ec._TRBTaskStatuses_formStatus(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		case "feedbackStatus":
 			out.Values[i] = ec._TRBTaskStatuses_feedbackStatus(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		case "consultPrepStatus":
 			out.Values[i] = ec._TRBTaskStatuses_consultPrepStatus(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		case "attendConsultStatus":
 			out.Values[i] = ec._TRBTaskStatuses_attendConsultStatus(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		case "guidanceLetterStatus":
 			out.Values[i] = ec._TRBTaskStatuses_guidanceLetterStatus(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
-		case "adviceLetterStatusTaskList":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._TRBTaskStatuses_adviceLetterStatusTaskList(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
+		case "guidanceLetterStatusTaskList":
+			out.Values[i] = ec._TRBTaskStatuses_guidanceLetterStatusTaskList(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
 			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

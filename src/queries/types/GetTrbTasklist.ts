@@ -20,7 +20,7 @@ export interface GetTrbTasklist_trbRequest_taskStatuses {
   feedbackStatus: TRBFeedbackStatus;
   consultPrepStatus: TRBConsultPrepStatus;
   attendConsultStatus: TRBAttendConsultStatus;
-  adviceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList;
+  guidanceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList;
 }
 
 export interface GetTrbTasklist_trbRequest_feedback {

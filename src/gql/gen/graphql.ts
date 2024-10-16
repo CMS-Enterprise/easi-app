@@ -2919,12 +2919,12 @@ export enum TRBSubjectAreaOption {
 /** Wraps all of the various status on the TRB task list into one type */
 export type TRBTaskStatuses = {
   __typename: 'TRBTaskStatuses';
-  adviceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList;
   attendConsultStatus: TRBAttendConsultStatus;
   consultPrepStatus: TRBConsultPrepStatus;
   feedbackStatus: TRBFeedbackStatus;
   formStatus: TRBFormStatus;
   guidanceLetterStatus: TRBGuidanceLetterStatus;
+  guidanceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList;
 };
 
 /** Represents an option selected to the "where are you in the process?" TRB request form */

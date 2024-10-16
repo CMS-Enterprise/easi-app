@@ -2224,11 +2224,6 @@ func (r *tRBRequestFormResolver) SubjectAreaOptions(ctx context.Context, obj *mo
 	return subjectAreas, nil
 }
 
-// AdviceLetterStatusTaskList is the resolver for the adviceLetterStatusTaskList field.
-func (r *tRBTaskStatusesResolver) AdviceLetterStatusTaskList(ctx context.Context, obj *models.TRBTaskStatuses) (models.TRBGuidanceLetterStatusTaskList, error) {
-	return obj.GuidanceLetterStatusTaskList, nil
-}
-
 // CommonName is the resolver for the commonName field.
 func (r *userInfoResolver) CommonName(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return obj.DisplayName, nil
@@ -2332,11 +2327,6 @@ func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 	return &tRBRequestFormResolver{r}
 }
 
-// TRBTaskStatuses returns generated.TRBTaskStatusesResolver implementation.
-func (r *Resolver) TRBTaskStatuses() generated.TRBTaskStatusesResolver {
-	return &tRBTaskStatusesResolver{r}
-}
-
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2361,5 +2351,4 @@ type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }
 type tRBRequestFeedbackResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
-type tRBTaskStatusesResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }
