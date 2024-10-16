@@ -52,7 +52,7 @@ const createTrbRecommendationQuery: MockedQuery<
   },
   result: {
     data: {
-      createTRBAdviceLetterRecommendation: {
+      createTRBGuidanceLetterRecommendation: {
         __typename: 'TRBGuidanceLetterRecommendation',
         id: '670fdf6d-761b-415f-a108-2ebc814288c3',
         ...mockRecommendation

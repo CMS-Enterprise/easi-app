@@ -91,7 +91,7 @@ export const CreateTrbRecommendationQuery = gql`
   mutation CreateTRBRecommendation(
     $input: CreateTRBGuidanceLetterRecommendationInput!
   ) {
-    createTRBAdviceLetterRecommendation(input: $input) {
+    createTRBGuidanceLetterRecommendation(input: $input) {
       ...TRBRecommendation
     }
   }

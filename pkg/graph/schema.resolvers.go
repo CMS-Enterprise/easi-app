@@ -1129,8 +1129,8 @@ func (r *mutationResolver) SendTRBGuidanceLetter(ctx context.Context, input mode
 		input.NotifyEuaIds)
 }
 
-// CreateTRBAdviceLetterRecommendation is the resolver for the createTRBAdviceLetterRecommendation field.
-func (r *mutationResolver) CreateTRBAdviceLetterRecommendation(ctx context.Context, input models.CreateTRBGuidanceLetterRecommendationInput) (*models.TRBGuidanceLetterRecommendation, error) {
+// CreateTRBGuidanceLetterRecommendation is the resolver for the createTRBGuidanceLetterRecommendation field.
+func (r *mutationResolver) CreateTRBGuidanceLetterRecommendation(ctx context.Context, input models.CreateTRBGuidanceLetterRecommendationInput) (*models.TRBGuidanceLetterRecommendation, error) {
 	links := models.ConvertEnums[string](input.Links)
 	return resolvers.CreateTRBGuidanceLetterRecommendation(
 		ctx,
