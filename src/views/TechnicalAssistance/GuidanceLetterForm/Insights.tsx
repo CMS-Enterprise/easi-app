@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,6 +9,7 @@ import {
   useDeleteTRBGuidanceLetterInsightMutation
 } from 'gql/gen/graphql';
 
+import { useEasiForm } from 'components/EasiForm';
 import { Alert } from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import {
@@ -21,13 +22,6 @@ import InsightsList from '../AdminHome/components/InsightsList';
 import Pager from '../RequestForm/Pager';
 
 import InsightsForm from './InsightsForm';
-
-const defaultValues: GuidanceLetterInsightFields = {
-  id: undefined,
-  title: '',
-  recommendation: '',
-  links: []
-};
 
 const Insights = ({
   trbRequestId,
@@ -44,9 +38,13 @@ const Insights = ({
   /** Whether insights have been added to the request */
   const hasInsights: boolean = insights.length > 0;
 
-  const formMethods = useForm<GuidanceLetterInsightFields>({
+  const formMethods = useEasiForm<GuidanceLetterInsightFields>({
     resolver: yupResolver(guidanceInsightSchema),
-    defaultValues
+    defaultValues: {
+      title: '',
+      recommendation: '',
+      links: []
+    }
   });
   const { reset } = formMethods;
 
@@ -85,7 +83,7 @@ const Insights = ({
             className="margin-top-5 margin-bottom-1"
             type="button"
             onClick={() => {
-              reset(defaultValues);
+              reset();
               history.push(`${url}/form`);
             }}
             outline={hasInsights}
