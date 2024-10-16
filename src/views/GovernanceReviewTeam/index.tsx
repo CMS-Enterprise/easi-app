@@ -30,7 +30,7 @@ const GovernanceReviewTeam = () => {
     }
   });
 
-  const grbReviewers = data?.systemIntake?.grbReviewers;
+  const { grbReviewers, grbReviewStartedAt } = data?.systemIntake || {};
 
   /** Check if current user is set as GRB reviewer */
   const isGrbReviewer: boolean = useMemo(() => {
@@ -59,7 +59,10 @@ const GovernanceReviewTeam = () => {
               path="/it-governance/:systemId/:activePage/:subPage?"
               exact
             >
-              <RequestOverview grbReviewers={grbReviewers || []} />
+              <RequestOverview
+                grbReviewers={grbReviewers || []}
+                grbReviewStartedAt={grbReviewStartedAt}
+              />
             </Route>
 
             <Route path="*" component={NotFound} />

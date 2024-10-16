@@ -135,41 +135,41 @@ func (s *ResolverSuite) TestSystemIntakeWithReviewRequested() {
 
 	s.Run("fetch GRB reviewers", func() {
 		intake, reviewers := s.createIntakeAndAddReviewers(
-			reviewerToAdd{
+			&models.CreateGRBReviewerInput{
 				// should be "TEST"
-				euaUserID:  appcontext.Principal(ctx).Account().Username,
-				votingRole: models.SIGRBRVRVoting,
-				grbRole:    models.SIGRBRRACA3021Rep,
+				EuaUserID:  appcontext.Principal(ctx).Account().Username,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
 			},
-			reviewerToAdd{
-				euaUserID:  "ABCD",
-				votingRole: models.SIGRBRVRVoting,
-				grbRole:    models.SIGRBRRACA3021Rep,
+			&models.CreateGRBReviewerInput{
+				EuaUserID:  "ABCD",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
 			},
-			reviewerToAdd{
-				euaUserID:  "A11Y",
-				votingRole: models.SIGRBRVRVoting,
-				grbRole:    models.SIGRBRRACA3021Rep,
+			&models.CreateGRBReviewerInput{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
 			},
 		)
 		s.Len(reviewers, 3)
 
 		closedIntake, reviewers := s.createIntakeAndAddReviewers(
-			reviewerToAdd{
+			&models.CreateGRBReviewerInput{
 				// should be "TEST"
-				euaUserID:  appcontext.Principal(ctx).Account().Username,
-				votingRole: models.SIGRBRVRVoting,
-				grbRole:    models.SIGRBRRACA3021Rep,
+				EuaUserID:  appcontext.Principal(ctx).Account().Username,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
 			},
-			reviewerToAdd{
-				euaUserID:  "ABCD",
-				votingRole: models.SIGRBRVRVoting,
-				grbRole:    models.SIGRBRRACA3021Rep,
+			&models.CreateGRBReviewerInput{
+				EuaUserID:  "ABCD",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
 			},
-			reviewerToAdd{
-				euaUserID:  "A11Y",
-				votingRole: models.SIGRBRVRVoting,
-				grbRole:    models.SIGRBRRACA3021Rep,
+			&models.CreateGRBReviewerInput{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
 			},
 		)
 		s.Len(reviewers, 3)

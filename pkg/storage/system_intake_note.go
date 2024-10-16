@@ -121,7 +121,7 @@ func (s *Store) FetchSystemIntakeNoteByID(ctx context.Context, id uuid.UUID) (*m
 // FetchNotesBySystemIntakeID retrieves all (non archived/deleted) Notes associated with a specific SystemIntake
 func (s *Store) FetchNotesBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeNote, error) {
 	notes := []*models.SystemIntakeNote{}
-	err := namedSelect(ctx, s, &notes, sqlqueries.SystemIntakeNotes.SelectBySystemIntakeID, args{
+	err := namedSelect(ctx, s.db, &notes, sqlqueries.SystemIntakeNotes.SelectBySystemIntakeID, args{
 		"system_intake_id": systemIntakeID,
 	})
 	if err != nil {
@@ -137,7 +137,7 @@ func (s *Store) FetchNotesBySystemIntakeID(ctx context.Context, systemIntakeID u
 // FetchNotesBySystemIntakeIDs retrieves all (non archived/deleted) Notes associated with a list of intake IDs
 func (s *Store) FetchNotesBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeNote, error) {
 	notes := []*models.SystemIntakeNote{}
-	err := namedSelect(ctx, s, &notes, sqlqueries.SystemIntakeNotes.SelectBySystemIntakeIDs, args{
+	err := namedSelect(ctx, s.db, &notes, sqlqueries.SystemIntakeNotes.SelectBySystemIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 	if err != nil {
