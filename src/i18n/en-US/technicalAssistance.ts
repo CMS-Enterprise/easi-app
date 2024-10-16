@@ -223,8 +223,7 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without adding guidance',
     addResourceLink: 'Add a resource link',
     addAnotherResourceLink: 'Add another resource link',
-    returnToGuidanceLetter: 'Don’t add and return to guidance letter',
-    editReturnToGuidanceLetter: 'Don’t edit and return to guidance letter',
+    returnToGuidanceLetter: 'Don’t {{formType}} and return to guidance letter',
     editGuidance: 'Edit guidance',
     removeGuidance: 'Remove guidance',
     nextSteps: 'Next steps',
@@ -236,7 +235,7 @@ const technicalAssistance = {
     error:
       'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
     guidanceSuccess: 'Your guidance was added to this letter.',
-    editGuidanceSuccess: 'Your guidance was edited',
+    guidanceSuccess_edit: 'Your guidance was edited',
     modal: {
       title: 'Confirm you want to remove this guidance.',
       text: 'This action cannot be undone. If you remove this guidance, all content related to it will be removed and will not be sent as a part of the guidance letter.',

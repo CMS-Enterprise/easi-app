@@ -1,19 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
-import {
-  Button,
-  ErrorMessage,
-  Form,
-  FormGroup,
-  IconArrowBack,
-  TextInput
-} from '@trussworks/react-uswds';
+import { ErrorMessage } from '@hookform/error-message';
+import { Form, FormGroup, TextInput } from '@trussworks/react-uswds';
 
+import { useEasiFormContext } from 'components/EasiForm';
 import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import {
@@ -33,6 +29,7 @@ import formatUrl from 'utils/formatUrl';
 
 import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 import { StepSubmit } from '../RequestForm';
+import Pager from '../RequestForm/Pager';
 
 import LinksArrayField from './LinksArrayField/Index';
 
@@ -59,8 +56,9 @@ const RecommendationsForm = ({
     control,
     watch,
     reset,
-    formState: { isSubmitting, isDirty }
-  } = useFormContext<GuidanceLetterRecommendationFields>();
+    register,
+    formState: { isSubmitting, isDirty, errors }
+  } = useEasiFormContext<GuidanceLetterRecommendationFields>();
 
   const [create] = useMutation<CreateTRBGuidanceLetterRecommendationInput>(
     CreateTrbRecommendationQuery
@@ -69,6 +67,8 @@ const RecommendationsForm = ({
   const [update] = useMutation<UpdateTRBGuidanceLetterRecommendationInput>(
     UpdateTrbRecommendationQuery
   );
+
+  const formType = watch('id') ? 'edit' : 'add';
 
   const returnLink = useMemo(
     () =>
@@ -123,11 +123,9 @@ const RecommendationsForm = ({
             setShowFormError(false);
             setFormAlert({
               type: 'success',
-              message: t(
-                `guidanceLetterForm.${
-                  watch('id') ? 'editGuidanceSuccess' : 'guidanceSuccess'
-                }`
-              )
+              message: t(`guidanceLetterForm.guidanceSuccess`, {
+                context: formType
+              })
             });
           }
           callback?.();
@@ -145,7 +143,7 @@ const RecommendationsForm = ({
       update,
       create,
       setFormAlert,
-      watch
+      formType
     ]
   );
 
@@ -163,9 +161,7 @@ const RecommendationsForm = ({
             url: `/trb/${trbRequestId}/guidance/insights`
           },
           {
-            text: t(
-              `guidanceLetterForm.${watch('id') ? 'edit' : 'add'}Guidance`
-            )
+            text: t(`guidanceLetterForm.${formType}Guidance`)
           }
         ]}
       />
@@ -183,7 +179,7 @@ const RecommendationsForm = ({
       }
 
       <h1 className="margin-bottom-0">
-        {t(`guidanceLetterForm.${watch('id') ? 'edit' : 'add'}Guidance`)}
+        {t(`guidanceLetterForm.${formType}Guidance`)}
       </h1>
       {/* Required fields text */}
       <HelpText className="margin-top-1 margin-bottom-2 text-base">
@@ -195,87 +191,75 @@ const RecommendationsForm = ({
 
       <Form onSubmit={e => e.preventDefault()} className="maxw-tablet">
         {/* Title */}
-        <Controller
-          name="title"
-          control={control}
-          render={({ field, fieldState: { error } }) => {
-            return (
-              <FormGroup className="margin-top-3" error={!!error}>
-                <Label className="text-normal" htmlFor="title" required>
-                  {t('Title')}
-                </Label>
-                {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-                <TextInput type="text" id="title" {...field} ref={null} />
-              </FormGroup>
-            );
-          }}
-        />
+        <FormGroup className="margin-top-3" error={!!errors?.title}>
+          <Label className="text-normal" htmlFor="title" required>
+            {t('Title')}
+          </Label>
+          <ErrorMessage
+            errors={errors}
+            name="title"
+            render={() => (
+              <FieldErrorMsg>{t('errors.fillBlank')}</FieldErrorMsg>
+            )}
+          />
+          <TextInput type="text" id="title" {...register('title')} />
+        </FormGroup>
 
         {/* Description */}
-        <Controller
-          name="recommendation"
-          control={control}
-          render={({ field, fieldState: { error } }) => {
-            return (
-              <FormGroup className="margin-top-3" error={!!error}>
-                <Label
-                  className="text-normal"
-                  id="recommendation-label"
-                  htmlFor="recommendation"
-                  required
-                >
-                  {t('Description')}
-                </Label>
-                {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-                <RichTextEditor
-                  editableProps={{
-                    id: 'recommendation',
-                    'data-testid': 'recommendation',
-                    'aria-describedby': 'recommendation-hint',
-                    'aria-labelledby': 'recommendation-label'
-                  }}
-                  field={{ ...field, value: field.value || '' }}
-                  required
-                />
-              </FormGroup>
-            );
-          }}
-        />
+        <FormGroup className="margin-top-3" error={!!errors?.recommendation}>
+          <Label
+            className="text-normal"
+            id="recommendation-label"
+            htmlFor="recommendation"
+            required
+          >
+            {t('Description')}
+          </Label>
+          <ErrorMessage
+            errors={errors}
+            name="recommendation"
+            render={() => (
+              <FieldErrorMsg>{t('errors.fillBlank')}</FieldErrorMsg>
+            )}
+          />
+          <Controller
+            name="recommendation"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <RichTextEditor
+                editableProps={{
+                  id: 'recommendation',
+                  'data-testid': 'recommendation',
+                  'aria-labelledby': 'recommendation-label'
+                }}
+                field={{ ...field, value: field.value || '' }}
+                required
+              />
+            )}
+          />
+        </FormGroup>
 
         {/* Links */}
         <LinksArrayField />
 
-        {/* Save */}
-        <Button
-          type="submit"
+        <Pager
           className="margin-top-6"
-          disabled={
-            watch('title').length === 0 ||
-            watch('recommendation').length === 0 ||
-            isSubmitting
-          }
-          onClick={() => submit(() => history.push(returnLink))}
-        >
-          {t('button.save')}
-        </Button>
+          next={{
+            text: t('button.save'),
+            onClick: () => submit(() => history.push(returnLink)),
+            disabled:
+              watch('title').length === 0 ||
+              watch('recommendation').length === 0 ||
+              isSubmitting
+          }}
+          saveExitText={t(`guidanceLetterForm.returnToGuidanceLetter`, {
+            formType
+          })}
+          taskListUrl={returnLink}
+          border={false}
+          submitDisabled
+        />
       </Form>
-
-      {/* Return without adding recommendation */}
-      <Button
-        className="margin-top-205 display-flex flex-align-center"
-        type="button"
-        unstyled
-        onClick={() => history.push(returnLink)}
-      >
-        <IconArrowBack className="margin-right-05" />
-        {t(
-          `guidanceLetterForm.${
-            watch('id')
-              ? 'editReturnToGuidanceLetter'
-              : 'returnToGuidanceLetter'
-          }`
-        )}
-      </Button>
     </div>
   );
 };

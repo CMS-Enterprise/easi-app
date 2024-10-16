@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@trussworks/react-uswds';
 
+import { useEasiForm } from 'components/EasiForm';
 import { Alert } from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import {
@@ -42,7 +43,7 @@ const Recommendations = ({
   /** Whether recommendations have been added to the request */
   const hasRecommendations: boolean = recommendations.length > 0;
 
-  const formMethods = useForm<GuidanceLetterRecommendationFields>({
+  const formMethods = useEasiForm<GuidanceLetterRecommendationFields>({
     resolver: yupResolver(guidanceRecommendationSchema),
     defaultValues: {
       title: '',
