@@ -60,8 +60,8 @@ func (s Sender) Send(ctx context.Context, emailData email.Email) error {
 		return nil
 	}
 
-	// If we're not in a production environment AND we've configured a filter, filter out any addresses that don't match our allow-list
-	if !s.environment.Prod() && s.recipientRegex != nil {
+	// If a filter has been configured, filter out any addresses that don't match our allow-list
+	if s.recipientRegex != nil {
 		emailData.ToAddresses = filterAddresses(emailData.ToAddresses, s.recipientRegex)
 		emailData.CcAddresses = filterAddresses(emailData.CcAddresses, s.recipientRegex)
 		emailData.BccAddresses = filterAddresses(emailData.BccAddresses, s.recipientRegex)
