@@ -66,6 +66,7 @@ jobs:
           IT_INVESTMENT_EMAIL: success@simulator.amazonses.com
           EASI_HELP_EMAIL: success@simulator.amazonses.com
           TRB_EMAIL: success@simulator.amazonses.com
+          SES_RECIPIENT_ALLOWLIST_REGEX: ''
           OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
           OKTA_DOMAIN: https://test.idp.idm.cms.gov
           OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
@@ -199,7 +200,9 @@ jobs:
           cd /usr/local/bin
           wget -O swagger https://github.com/go-swagger/go-swagger/releases/download/v0.30.5/swagger_linux_amd64
           chmod +x swagger
-      - uses: actions/setup-python@v3 # Python is required for pre-commit/action
+      - uses: actions/setup-python@v5 # Python is required for pre-commit/action
+        with:
+          python-version: '3.9'
       - name: Pre-commit checks
         uses: pre-commit/action@v3.0.1
         env:

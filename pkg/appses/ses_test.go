@@ -3,8 +3,10 @@ package appses
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
@@ -41,8 +43,9 @@ func TestSESTestSuite(t *testing.T) {
 	}
 
 	sesConfig := Config{
-		SourceARN: config.GetString(appconfig.AWSSESSourceARNKey),
-		Source:    config.GetString(appconfig.AWSSESSourceKey),
+		SourceARN:               config.GetString(appconfig.AWSSESSourceARNKey),
+		Source:                  config.GetString(appconfig.AWSSESSourceKey),
+		RecipientAllowListRegex: nil,
 	}
 
 	sender := NewSender(sesConfig, env)
@@ -99,4 +102,34 @@ func (s *SESTestSuite) TestSend() {
 
 		s.NoError(err)
 	})
+}
+
+// TestFilterAddresses is just a unit test for one of the helper functions (filterAddresses) in the ses package, so it's purposefully
+// not part of the SES Test suite, which tests real SES logic
+func TestFilterAddresses(t *testing.T) {
+	emails := []models.EmailAddress{"gary@domain-one.com", "john@domain-two.com", "", "not_an_email"}
+
+	// Should filter nothing out when nil
+	assert.ElementsMatch(t, filterAddresses(emails, nil), emails)
+
+	// Filters out elements that don't match
+	assert.ElementsMatch(
+		t,
+		filterAddresses(emails, regexp.MustCompile(`domain-.*\.com$`)),
+		[]models.EmailAddress{"gary@domain-one.com", "john@domain-two.com"},
+	)
+
+	// Filters out elements that don't match (more specific)
+	assert.ElementsMatch(
+		t,
+		filterAddresses(emails, regexp.MustCompile(`domain-two`)),
+		[]models.EmailAddress{"john@domain-two.com"},
+	)
+
+	// Filters out everything with no match
+	assert.Len(
+		t,
+		filterAddresses(emails, regexp.MustCompile("wooooooooooooo")),
+		0,
+	)
 }
