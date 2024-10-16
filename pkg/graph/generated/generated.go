@@ -581,7 +581,7 @@ type ComplexityRoot struct {
 		DeleteSystemIntakeContact                        func(childComplexity int, input models.DeleteSystemIntakeContactInput) int
 		DeleteSystemIntakeDocument                       func(childComplexity int, id uuid.UUID) int
 		DeleteSystemIntakeGRBReviewer                    func(childComplexity int, input models.DeleteSystemIntakeGRBReviewerInput) int
-		DeleteTRBAdviceLetterRecommendation              func(childComplexity int, id uuid.UUID) int
+		DeleteTRBGuidanceLetterRecommendation            func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestDocument                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestFundingSources                   func(childComplexity int, input models.DeleteTRBRequestFundingSourcesInput) int
@@ -1247,7 +1247,7 @@ type MutationResolver interface {
 	CreateTRBGuidanceLetterRecommendation(ctx context.Context, input models.CreateTRBGuidanceLetterRecommendationInput) (*models.TRBGuidanceLetterRecommendation, error)
 	UpdateTRBGuidanceLetterRecommendation(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error)
 	UpdateTRBGuidanceLetterRecommendationOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) ([]*models.TRBGuidanceLetterRecommendation, error)
-	DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error)
+	DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error)
 	CloseTRBRequest(ctx context.Context, input models.CloseTRBRequestInput) (*models.TRBRequest, error)
 	ReopenTrbRequest(ctx context.Context, input models.ReopenTRBRequestInput) (*models.TRBRequest, error)
 	CreateTrbLeadOption(ctx context.Context, eua string) (*models.UserInfo, error)
@@ -4326,17 +4326,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteSystemIntakeGRBReviewer(childComplexity, args["input"].(models.DeleteSystemIntakeGRBReviewerInput)), true
 
-	case "Mutation.deleteTRBAdviceLetterRecommendation":
-		if e.complexity.Mutation.DeleteTRBAdviceLetterRecommendation == nil {
+	case "Mutation.deleteTRBGuidanceLetterRecommendation":
+		if e.complexity.Mutation.DeleteTRBGuidanceLetterRecommendation == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_deleteTRBAdviceLetterRecommendation_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_deleteTRBGuidanceLetterRecommendation_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteTRBAdviceLetterRecommendation(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Mutation.DeleteTRBGuidanceLetterRecommendation(childComplexity, args["id"].(uuid.UUID)), true
 
 	case "Mutation.deleteTRBRequestAttendee":
 		if e.complexity.Mutation.DeleteTRBRequestAttendee == nil {
@@ -10306,7 +10306,7 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   updateTRBGuidanceLetterRecommendationOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterRecommendation!]!
   @hasRole(role: EASI_TRB_ADMIN)
-  deleteTRBAdviceLetterRecommendation(id: UUID!): TRBGuidanceLetterRecommendation!
+  deleteTRBGuidanceLetterRecommendation(id: UUID!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
   @hasRole(role: EASI_TRB_ADMIN)
@@ -12018,17 +12018,17 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeGRBReviewer_argsInp
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_deleteTRBAdviceLetterRecommendation_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterRecommendation_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	arg0, err := ec.field_Mutation_deleteTRBAdviceLetterRecommendation_argsID(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_deleteTRBGuidanceLetterRecommendation_argsID(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["id"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_deleteTRBAdviceLetterRecommendation_argsID(
+func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterRecommendation_argsID(
 	ctx context.Context,
 	rawArgs map[string]interface{},
 ) (uuid.UUID, error) {
@@ -36475,8 +36475,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecomme
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_deleteTRBAdviceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_deleteTRBAdviceLetterRecommendation(ctx, field)
+func (ec *executionContext) _Mutation_deleteTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteTRBGuidanceLetterRecommendation(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -36490,7 +36490,7 @@ func (ec *executionContext) _Mutation_deleteTRBAdviceLetterRecommendation(ctx co
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().DeleteTRBAdviceLetterRecommendation(rctx, fc.Args["id"].(uuid.UUID))
+			return ec.resolvers.Mutation().DeleteTRBGuidanceLetterRecommendation(rctx, fc.Args["id"].(uuid.UUID))
 		}
 
 		directive1 := func(ctx context.Context) (interface{}, error) {
@@ -36533,7 +36533,7 @@ func (ec *executionContext) _Mutation_deleteTRBAdviceLetterRecommendation(ctx co
 	return ec.marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_deleteTRBAdviceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_deleteTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -36574,7 +36574,7 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBAdviceLetterRecommend
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_deleteTRBAdviceLetterRecommendation_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_deleteTRBGuidanceLetterRecommendation_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -65764,9 +65764,9 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "deleteTRBAdviceLetterRecommendation":
+		case "deleteTRBGuidanceLetterRecommendation":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_deleteTRBAdviceLetterRecommendation(ctx, field)
+				return ec._Mutation_deleteTRBGuidanceLetterRecommendation(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++

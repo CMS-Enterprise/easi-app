@@ -1153,8 +1153,8 @@ func (r *mutationResolver) UpdateTRBGuidanceLetterRecommendationOrder(ctx contex
 	return resolvers.UpdateTRBGuidanceLetterRecommendationOrder(ctx, r.store, input.TrbRequestID, input.NewOrder)
 }
 
-// DeleteTRBAdviceLetterRecommendation is the resolver for the deleteTRBGuidanceLetterRecommendation field.
-func (r *mutationResolver) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
+// DeleteTRBGuidanceLetterRecommendation is the resolver for the deleteTRBGuidanceLetterRecommendation field.
+func (r *mutationResolver) DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
 	return resolvers.DeleteTRBGuidanceLetterRecommendation(ctx, r.store, id)
 }
 

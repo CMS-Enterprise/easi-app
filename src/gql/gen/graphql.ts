@@ -981,7 +981,7 @@ export type Mutation = {
   deleteSystemIntakeContact?: Maybe<DeleteSystemIntakeContactPayload>;
   deleteSystemIntakeDocument?: Maybe<DeleteSystemIntakeDocumentPayload>;
   deleteSystemIntakeGRBReviewer: Scalars['UUID']['output'];
-  deleteTRBAdviceLetterRecommendation: TRBGuidanceLetterRecommendation;
+  deleteTRBGuidanceLetterRecommendation: TRBGuidanceLetterRecommendation;
   deleteTRBRequestAttendee: TRBRequestAttendee;
   deleteTRBRequestDocument?: Maybe<DeleteTRBRequestDocumentPayload>;
   deleteTRBRequestFundingSources: Array<TRBFundingSource>;
@@ -1243,7 +1243,7 @@ export type MutationDeleteSystemIntakeGRBReviewerArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationDeleteTRBAdviceLetterRecommendationArgs = {
+export type MutationDeleteTRBGuidanceLetterRecommendationArgs = {
   id: Scalars['UUID']['input'];
 };
 
