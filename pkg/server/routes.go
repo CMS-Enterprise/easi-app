@@ -144,6 +144,7 @@ func (s *Server) routes() {
 		var sesRegex *regexp.Regexp
 		if sesRegexString != "" { // only attempt to parse if it's a non-empty string
 			sesRegex = regexp.MustCompile(sesRegexString)
+			s.logger.Info("successfully parsed ses regex:", zap.String("parsedRegex", sesRegex.String()))
 		}
 		sesConfig := s.NewSESConfig()
 		sesSender := appses.NewSender(sesConfig, s.environment, sesRegex)
