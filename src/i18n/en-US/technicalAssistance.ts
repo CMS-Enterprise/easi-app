@@ -82,7 +82,7 @@ const technicalAssistance = {
           ]
         }
       },
-      DRAFT_ADVICE_LETTER: {
+      DRAFT_GUIDANCE_LETTER: {
         title: 'Draft guidance letter',
         description:
           'Compile a guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any requirements, recommendations, considerations, and other next steps you include.',
@@ -96,12 +96,12 @@ const technicalAssistance = {
           ]
         }
       },
-      ADVICE_LETTER_IN_REVIEW: {
+      GUIDANCE_LETTER_IN_REVIEW: {
         title: 'Review guidance letter before sending',
         description:
           'Review this draft guidance letter and leave a note with any comments or corrections. The TRB lead for this request will then edit the guidance letter to incorporate your comments and feedback before finalizing the letter and sending it to the requester and project team.'
       },
-      ADVICE_LETTER_SENT: {
+      GUIDANCE_LETTER_SENT: {
         title: 'Close request',
         description:
           'If this is a Consult as a Service request (CaaS), you may choose to leave this request open until the engagement is complete. For all other requests, you may close this request at any time.'
@@ -327,9 +327,9 @@ const technicalAssistance = {
       READY_FOR_CONSULT: 'Ready for consult',
       CONSULT_SCHEDULED: 'Consult scheduled',
       CONSULT_COMPLETE: 'Consult complete',
-      DRAFT_ADVICE_LETTER: 'Draft guidance letter',
-      ADVICE_LETTER_IN_REVIEW: 'Guidance letter in review',
-      ADVICE_LETTER_SENT: 'Guidance letter sent',
+      DRAFT_GUIDANCE_LETTER: 'Draft guidance letter',
+      GUIDANCE_LETTER_IN_REVIEW: 'Guidance letter in review',
+      GUIDANCE_LETTER_SENT: 'Guidance letter sent',
       FOLLOW_UP_REQUESTED: 'Follow-up requested'
     },
     noRequests:
@@ -812,11 +812,11 @@ const technicalAssistance = {
       CLOSED: 'Closed'
     },
     trbRequestStatuses: {
-      ADVICE_LETTER_IN_REVIEW: 'Guidance letter in review',
-      ADVICE_LETTER_SENT: 'Guidance letter sent',
+      GUIDANCE_LETTER_IN_REVIEW: 'Guidance letter in review',
+      GUIDANCE_LETTER_SENT: 'Guidance letter sent',
       CONSULT_COMPLETE: 'Consult complete',
       CONSULT_SCHEDULED: 'Consult scheduled',
-      DRAFT_ADVICE_LETTER: 'Draft guidance letter',
+      DRAFT_GUIDANCE_LETTER: 'Draft guidance letter',
       DRAFT_REQUEST_FORM: 'Draft request form',
       FOLLOW_UP_REQUESTED: 'Follow-up requested',
       NEW: 'New',
@@ -1044,7 +1044,7 @@ const technicalAssistance = {
     },
     noDocuments: 'There are no documents uploaded for this request.',
     categories: {
-      ADVICE_LETTER: 'Guidance letter',
+      GUIDANCE_LETTER: 'Guidance letter',
       CONSULT_SESSION: 'Consult session',
       GENERAL_REQUEST: 'General note about this request',
       INITIAL_REQUEST_FORM: 'Initial request form',

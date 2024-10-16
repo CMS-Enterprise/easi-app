@@ -89,8 +89,8 @@ describe('TRB Admin Wrapper', () => {
       'orCloseRequest'
     ],
     CONSULT_COMPLETE: ['viewGuidanceLetter', 'orCloseRequest'],
-    ADVICE_LETTER_IN_REVIEW: ['viewGuidanceLetter', 'orCloseRequest'],
-    ADVICE_LETTER_SENT: ['closeRequest']
+    GUIDANCE_LETTER_IN_REVIEW: ['viewGuidanceLetter', 'orCloseRequest'],
+    GUIDANCE_LETTER_SENT: ['closeRequest']
   };
   const statusKeys = Object.keys(statuses);
 
