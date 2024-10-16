@@ -131,9 +131,9 @@ export const DeleteTrbRecommendationQuery = gql`
   }
 `;
 
-export const RequestReviewForTRBAdviceLetterQuery = gql`
-  mutation RequestReviewForTRBAdviceLetter($id: UUID!) {
-    requestReviewForTRBAdviceLetter(id: $id) {
+export const RequestReviewForTRBGuidanceLetterQuery = gql`
+  mutation RequestReviewForTRBGuidanceLetter($id: UUID!) {
+    requestReviewForTRBGuidanceLetter(id: $id) {
       id
     }
   }

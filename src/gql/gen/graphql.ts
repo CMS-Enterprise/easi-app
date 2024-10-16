@@ -987,7 +987,7 @@ export type Mutation = {
   deleteTRBRequestFundingSources: Array<TRBFundingSource>;
   deleteTrbLeadOption: Scalars['Boolean']['output'];
   reopenTrbRequest: TRBRequest;
-  requestReviewForTRBAdviceLetter: TRBGuidanceLetter;
+  requestReviewForTRBGuidanceLetter: TRBGuidanceLetter;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
@@ -1279,7 +1279,7 @@ export type MutationReopenTrbRequestArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationRequestReviewForTRBAdviceLetterArgs = {
+export type MutationRequestReviewForTRBGuidanceLetterArgs = {
   id: Scalars['UUID']['input'];
 };
 

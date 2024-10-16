@@ -2528,7 +2528,7 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   updateTRBGuidanceLetter(input: UpdateTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  requestReviewForTRBAdviceLetter(id: UUID!): TRBGuidanceLetter!
+  requestReviewForTRBGuidanceLetter(id: UUID!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
   sendTRBAdviceLetter(input: SendTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)

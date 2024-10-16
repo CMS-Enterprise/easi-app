@@ -9,16 +9,16 @@ import Divider from 'components/shared/Divider';
 import {
   DeleteTrbRecommendationQuery,
   GetTrbAdviceLetterQuery,
-  RequestReviewForTRBAdviceLetterQuery
+  RequestReviewForTRBGuidanceLetterQuery
 } from 'queries/TrbAdviceLetterQueries';
 import {
   DeleteTRBRecommendation,
   DeleteTRBRecommendationVariables
 } from 'queries/types/DeleteTRBRecommendation';
 import {
-  RequestReviewForTRBAdviceLetter,
-  RequestReviewForTRBAdviceLetterVariables
-} from 'queries/types/RequestReviewForTRBAdviceLetter';
+  RequestReviewForTRBGuidanceLetter,
+  RequestReviewForTRBGuidanceLetterVariables
+} from 'queries/types/RequestReviewForTRBGuidanceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { StepComponentProps } from 'types/technicalAssistance';
 
@@ -38,9 +38,9 @@ const InternalReview = ({
   const history = useHistory();
 
   const [requestReview, { loading: isSubmitting }] = useMutation<
-    RequestReviewForTRBAdviceLetter,
-    RequestReviewForTRBAdviceLetterVariables
-  >(RequestReviewForTRBAdviceLetterQuery, {
+    RequestReviewForTRBGuidanceLetter,
+    RequestReviewForTRBGuidanceLetterVariables
+  >(RequestReviewForTRBGuidanceLetterQuery, {
     variables: {
       id: adviceLetter.id
     }
