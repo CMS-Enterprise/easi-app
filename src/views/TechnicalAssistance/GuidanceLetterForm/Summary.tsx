@@ -10,11 +10,11 @@ import useEasiForm from 'components/EasiForm/useEasiForm';
 import RichTextEditor from 'components/RichTextEditor';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import { UpdateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { UpdateTrbGuidanceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
-  UpdateTrbAdviceLetter,
-  UpdateTrbAdviceLetterVariables
-} from 'queries/types/UpdateTrbAdviceLetter';
+  UpdateTrbGuidanceLetter,
+  UpdateTrbGuidanceLetterVariables
+} from 'queries/types/UpdateTrbGuidanceLetter';
 import {
   GuidanceLetterSummary,
   StepComponentProps
@@ -37,9 +37,9 @@ const Summary = ({
   const { meetingSummary } = adviceLetter;
 
   const [update] = useMutation<
-    UpdateTrbAdviceLetter,
-    UpdateTrbAdviceLetterVariables
-  >(UpdateTrbAdviceLetterQuery);
+    UpdateTrbGuidanceLetter,
+    UpdateTrbGuidanceLetterVariables
+  >(UpdateTrbGuidanceLetterQuery);
 
   const {
     handleSubmit,

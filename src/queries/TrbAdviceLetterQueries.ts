@@ -10,9 +10,9 @@ const TRBRecommendation = gql`
 `;
 
 /** Guidance letter fields fragment */
-export const TRBAdviceLetter = gql`
+export const TRBGuidanceLetter = gql`
   ${TRBRecommendation}
-  fragment TRBAdviceLetter on TRBGuidanceLetter {
+  fragment TRBGuidanceLetter on TRBGuidanceLetter {
     id
     meetingSummary
     nextSteps
@@ -33,7 +33,7 @@ export const TRBAdviceLetter = gql`
 
 /** Get TRB guidance letter and status */
 export const GetTrbAdviceLetterQuery = gql`
-  ${TRBAdviceLetter}
+  ${TRBGuidanceLetter}
   query GetTrbAdviceLetter($id: UUID!) {
     trbRequest(id: $id) {
       id
@@ -45,7 +45,7 @@ export const GetTrbAdviceLetterQuery = gql`
         adviceLetterStatus
       }
       adviceLetter {
-        ...TRBAdviceLetter
+        ...TRBGuidanceLetter
       }
     }
   }
@@ -53,20 +53,20 @@ export const GetTrbAdviceLetterQuery = gql`
 
 /** Create guidance letter */
 export const CreateTrbGuidanceLetterQuery = gql`
-  ${TRBAdviceLetter}
+  ${TRBGuidanceLetter}
   mutation CreateTrbGuidanceLetter($trbRequestId: UUID!) {
     createTRBGuidanceLetter(trbRequestId: $trbRequestId) {
-      ...TRBAdviceLetter
+      ...TRBGuidanceLetter
     }
   }
 `;
 
 /** Update guidance letter */
-export const UpdateTrbAdviceLetterQuery = gql`
-  ${TRBAdviceLetter}
-  mutation UpdateTrbAdviceLetter($input: UpdateTRBGuidanceLetterInput!) {
-    updateTRBAdviceLetter(input: $input) {
-      ...TRBAdviceLetter
+export const UpdateTrbGuidanceLetterQuery = gql`
+  ${TRBGuidanceLetter}
+  mutation UpdateTrbGuidanceLetter($input: UpdateTRBGuidanceLetterInput!) {
+    updateTRBGuidanceLetter(input: $input) {
+      ...TRBGuidanceLetter
     }
   }
 `;

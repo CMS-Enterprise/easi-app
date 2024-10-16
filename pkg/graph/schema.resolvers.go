@@ -1101,8 +1101,8 @@ func (r *mutationResolver) CreateTRBGuidanceLetter(ctx context.Context, trbReque
 	return resolvers.CreateTRBGuidanceLetter(ctx, r.store, trbRequestID)
 }
 
-// UpdateTRBAdviceLetter is the resolver for the updateTRBAdviceLetter field.
-func (r *mutationResolver) UpdateTRBAdviceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetter, error) {
+// UpdateTRBGuidanceLetter is the resolver for the updateTRBGuidanceLetter field.
+func (r *mutationResolver) UpdateTRBGuidanceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetter, error) {
 	return resolvers.UpdateTRBGuidanceLetter(ctx, r.store, input)
 }
 
