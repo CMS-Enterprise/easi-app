@@ -1019,14 +1019,6 @@ export interface SystemIntakeRetireLCIDInput {
 }
 
 /**
- * The input required to specify the software acquisition information associated with a system intake
- */
-export interface SystemIntakeSoftwareAcquisitionInput {
-  usingSoftware?: string | null;
-  acuqisitionMethods: string[];
-}
-
-/**
  * Input for updating an intake's LCID in IT Gov v2
  */
 export interface SystemIntakeUpdateLCIDInput {
