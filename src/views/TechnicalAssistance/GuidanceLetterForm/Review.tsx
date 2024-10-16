@@ -13,7 +13,7 @@ import useCacheQuery from 'hooks/useCacheQuery';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import {
   DeleteTrbRecommendationQuery,
-  GetTrbAdviceLetterQuery,
+  GetTrbGuidanceLetterQuery,
   SendTRBGuidanceLetterQuery
 } from 'queries/TrbAdviceLetterQueries';
 import {
@@ -43,7 +43,7 @@ import Pager from '../RequestForm/Pager';
 
 const Review = ({
   trbRequestId,
-  adviceLetter,
+  guidanceLetter,
   guidanceLetterStatus,
   setFormAlert,
   setIsStepSubmitting,
@@ -75,7 +75,7 @@ const Review = ({
   >(DeleteTrbRecommendationQuery, {
     refetchQueries: [
       {
-        query: GetTrbAdviceLetterQuery,
+        query: GetTrbGuidanceLetterQuery,
         variables: {
           id: trbRequestId
         }
@@ -134,7 +134,7 @@ const Review = ({
       {/* Review */}
       <ReviewGuidanceLetter
         trbRequestId={trbRequestId}
-        adviceLetter={adviceLetter}
+        guidanceLetter={guidanceLetter}
         className="margin-top-5 margin-bottom-4"
         recommendationActions={{
           setReorderError: error =>
@@ -169,7 +169,7 @@ const Review = ({
         <Form
           onSubmit={handleSubmit(formData =>
             mutate({
-              variables: { input: { ...formData, id: adviceLetter.id } }
+              variables: { input: { ...formData, id: guidanceLetter.id } }
             })
               .then(() => {
                 if (

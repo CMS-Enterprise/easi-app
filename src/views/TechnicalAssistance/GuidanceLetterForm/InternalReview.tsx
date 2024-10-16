@@ -8,7 +8,7 @@ import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import {
   DeleteTrbRecommendationQuery,
-  GetTrbAdviceLetterQuery,
+  GetTrbGuidanceLetterQuery,
   RequestReviewForTRBGuidanceLetterQuery
 } from 'queries/TrbAdviceLetterQueries';
 import {
@@ -27,7 +27,7 @@ import Pager from '../RequestForm/Pager';
 
 const InternalReview = ({
   trbRequestId,
-  adviceLetter,
+  guidanceLetter,
   guidanceLetterStatus,
   setFormAlert,
   setIsStepSubmitting,
@@ -42,7 +42,7 @@ const InternalReview = ({
     RequestReviewForTRBGuidanceLetterVariables
   >(RequestReviewForTRBGuidanceLetterQuery, {
     variables: {
-      id: adviceLetter.id
+      id: guidanceLetter.id
     }
   });
 
@@ -52,7 +52,7 @@ const InternalReview = ({
   >(DeleteTrbRecommendationQuery, {
     refetchQueries: [
       {
-        query: GetTrbAdviceLetterQuery,
+        query: GetTrbGuidanceLetterQuery,
         variables: {
           id: trbRequestId
         }
@@ -69,7 +69,7 @@ const InternalReview = ({
       {/* Internal Review */}
       <ReviewGuidanceLetter
         trbRequestId={trbRequestId}
-        adviceLetter={adviceLetter}
+        guidanceLetter={guidanceLetter}
         className="margin-top-5 margin-bottom-4"
         recommendationActions={{
           setReorderError: error =>

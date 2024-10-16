@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
 import useCacheQuery from 'hooks/useCacheQuery';
-import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTrbGuidanceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
-  GetTrbAdviceLetter,
-  GetTrbAdviceLetterVariables
-} from 'queries/types/GetTrbAdviceLetter';
+  GetTrbGuidanceLetter,
+  GetTrbGuidanceLetterVariables
+} from 'queries/types/GetTrbGuidanceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
@@ -27,17 +27,17 @@ const GuidanceLetter = ({
 
   // TRB request query
   const { data, loading } = useCacheQuery<
-    GetTrbAdviceLetter,
-    GetTrbAdviceLetterVariables
-  >(GetTrbAdviceLetterQuery, {
+    GetTrbGuidanceLetter,
+    GetTrbGuidanceLetterVariables
+  >(GetTrbGuidanceLetterQuery, {
     variables: { id }
   });
 
-  const { adviceLetter, taskStatuses } = data?.trbRequest || {};
+  const { guidanceLetter, taskStatuses } = data?.trbRequest || {};
 
   const guidanceLetterStatus = taskStatuses?.guidanceLetterStatus;
 
-  const author = adviceLetter?.author;
+  const author = guidanceLetter?.author;
 
   // Page loading
   if (loading) return <PageLoading />;
@@ -57,7 +57,7 @@ const GuidanceLetter = ({
           taskStatuses?.guidanceLetterStatus ||
           TRBGuidanceLetterStatus.CANNOT_START_YET,
         name: author?.commonName!,
-        date: adviceLetter?.modifiedAt || adviceLetter?.createdAt || ''
+        date: guidanceLetter?.modifiedAt || guidanceLetter?.createdAt || ''
       }}
       noteCount={trbRequest.adminNotes.length}
       adminActionProps={{
@@ -67,7 +67,7 @@ const GuidanceLetter = ({
         assignLeadModalRef
       }}
       pdfExportProps={
-        adviceLetter
+        guidanceLetter
           ? {
               label: t('guidanceLetter.downloadAsPdf'),
               filename: `guidance letter ${id}.pdf`,
@@ -84,9 +84,9 @@ const GuidanceLetter = ({
           </Alert>
         ) : (
           <>
-            {data && adviceLetter && (
+            {data && guidanceLetter && (
               <ReviewGuidanceLetter
-                adviceLetter={adviceLetter}
+                guidanceLetter={guidanceLetter}
                 trbRequestId={trbRequest.id}
                 trbRequest={data.trbRequest}
                 requesterString={requesterString || ''}

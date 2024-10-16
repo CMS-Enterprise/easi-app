@@ -26,7 +26,7 @@ import Pager from '../RequestForm/Pager';
 
 const Summary = ({
   trbRequestId,
-  adviceLetter,
+  guidanceLetter,
   setFormAlert,
   setStepSubmit,
   setIsStepSubmitting
@@ -34,7 +34,7 @@ const Summary = ({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const { meetingSummary } = adviceLetter;
+  const { meetingSummary } = guidanceLetter;
 
   const [update] = useMutation<
     UpdateTrbGuidanceLetter,

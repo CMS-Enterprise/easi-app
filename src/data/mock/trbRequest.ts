@@ -9,7 +9,7 @@ import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTrbGuidanceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import {
   GetRequests,
@@ -21,9 +21,9 @@ import {
 } from 'queries/types/GetTrbAdminNotes';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
 import {
-  GetTrbAdviceLetter,
-  GetTrbAdviceLetterVariables
-} from 'queries/types/GetTrbAdviceLetter';
+  GetTrbGuidanceLetter,
+  GetTrbGuidanceLetterVariables
+} from 'queries/types/GetTrbGuidanceLetter';
 import {
   GetTrbRequest,
   GetTrbRequestVariables
@@ -334,7 +334,7 @@ export const updateTrbRequestConsultMeetingQuery: MockedQuery<
 };
 
 export const guidanceLetter: NonNullable<
-  GetTrbAdviceLetter['trbRequest']['adviceLetter']
+  GetTrbGuidanceLetter['trbRequest']['guidanceLetter']
 > = {
   __typename: 'TRBGuidanceLetter',
   id: '1b68aeca-f0d4-42e8-90ef-70ed2de1a34b',
@@ -376,11 +376,11 @@ export const guidanceLetter: NonNullable<
 };
 
 export const getTrbGuidanceLetterQuery: MockedQuery<
-  GetTrbAdviceLetter,
-  GetTrbAdviceLetterVariables
+  GetTrbGuidanceLetter,
+  GetTrbGuidanceLetterVariables
 > = {
   request: {
-    query: GetTrbAdviceLetterQuery,
+    query: GetTrbGuidanceLetterQuery,
     variables: {
       id: trbRequestId
     }
@@ -398,7 +398,7 @@ export const getTrbGuidanceLetterQuery: MockedQuery<
           __typename: 'TRBTaskStatuses',
           guidanceLetterStatus: TRBGuidanceLetterStatus.COMPLETED
         },
-        adviceLetter: guidanceLetter
+        guidanceLetter
       }
     }
   }

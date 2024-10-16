@@ -18,7 +18,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import {
   CreateTrbRecommendationQuery,
-  GetTrbAdviceLetterQuery,
+  GetTrbGuidanceLetterQuery,
   UpdateTrbRecommendationQuery
 } from 'queries/TrbAdviceLetterQueries';
 import {
@@ -113,7 +113,7 @@ const RecommendationsForm = ({
               },
               refetchQueries: [
                 {
-                  query: GetTrbAdviceLetterQuery,
+                  query: GetTrbGuidanceLetterQuery,
                   variables: {
                     id: trbRequestId
                   }

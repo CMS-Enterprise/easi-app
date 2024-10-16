@@ -8,16 +8,16 @@ import UswdsReactLink from 'components/LinkWrapper';
 import { RichTextViewer } from 'components/RichTextEditor';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import {
-  GetTrbAdviceLetter_trbRequest as TrbRequest,
-  GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter
-} from 'queries/types/GetTrbAdviceLetter';
+  GetTrbGuidanceLetter_trbRequest as TrbRequest,
+  GetTrbGuidanceLetter_trbRequest_guidanceLetter as GuidanceLetter
+} from 'queries/types/GetTrbGuidanceLetter';
 import { TRBRecommendation } from 'queries/types/TRBRecommendation';
 import { formatDateLocal } from 'utils/date';
 
 import RecommendationsList from '../RecommendationsList';
 
 type ReviewGuidanceLetterProps = {
-  adviceLetter: AdviceLetter;
+  guidanceLetter: GuidanceLetter;
   trbRequestId: string;
   trbRequest?: TrbRequest;
   requesterString?: string;
@@ -38,7 +38,7 @@ type ReviewGuidanceLetterProps = {
  * Displays guidance letter for review
  */
 const ReviewGuidanceLetter = ({
-  adviceLetter,
+  guidanceLetter,
   trbRequestId,
   trbRequest,
   requesterString,
@@ -52,7 +52,7 @@ const ReviewGuidanceLetter = ({
 }: ReviewGuidanceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { recommendations } = adviceLetter;
+  const { recommendations } = guidanceLetter;
 
   return (
     <div className={className}>
@@ -99,8 +99,8 @@ const ReviewGuidanceLetter = ({
               </p>
 
               <p className="margin-top-1 easi-no-print">
-                {adviceLetter.dateSent
-                  ? formatDateLocal(adviceLetter.dateSent, 'MMMM d, yyyy')
+                {guidanceLetter.dateSent
+                  ? formatDateLocal(guidanceLetter.dateSent, 'MMMM d, yyyy')
                   : t('guidanceLetter.notYetSent')}
               </p>
             </Grid>
@@ -153,10 +153,10 @@ const ReviewGuidanceLetter = ({
           </p>
         )}
 
-        {adviceLetter.meetingSummary && (
+        {guidanceLetter.meetingSummary && (
           <RichTextViewer
             className="margin-top-1"
-            value={adviceLetter.meetingSummary}
+            value={guidanceLetter.meetingSummary}
           />
         )}
       </SectionWrapper>
@@ -220,10 +220,10 @@ const ReviewGuidanceLetter = ({
           {t('guidanceLetter.nextSteps')}
         </p>
 
-        {adviceLetter.nextSteps ? (
+        {guidanceLetter.nextSteps ? (
           <RichTextViewer
             className="margin-top-1"
-            value={adviceLetter.nextSteps}
+            value={guidanceLetter.nextSteps}
           />
         ) : (
           <p className="margin-top-1 line-height-body-5">
@@ -237,8 +237,8 @@ const ReviewGuidanceLetter = ({
         </p>
 
         <p className="margin-top-1 line-height-body-5">
-          {adviceLetter.isFollowupRecommended
-            ? t(`Yes, ${adviceLetter.followupPoint}`)
+          {guidanceLetter.isFollowupRecommended
+            ? t(`Yes, ${guidanceLetter.followupPoint}`)
             : t('guidanceLetterForm.notNecessary')}
         </p>
       </SectionWrapper>

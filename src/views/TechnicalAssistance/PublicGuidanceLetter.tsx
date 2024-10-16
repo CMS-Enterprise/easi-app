@@ -89,9 +89,9 @@ function PublicGuidanceLetter() {
   }
 
   const request = data?.trbRequest;
-  const adviceLetter = request?.adviceLetter;
+  const guidanceLetter = request?.guidanceLetter;
 
-  if (!request || !adviceLetter) return null;
+  if (!request || !guidanceLetter) return null;
 
   const breadcrumbs: BreadcrumbsProps['items'] = [
     { text: t('breadcrumbs.technicalAssistance'), url: '/trb' }
@@ -136,7 +136,7 @@ function PublicGuidanceLetter() {
           </p>
         )}
 
-        {!!adviceLetter && (
+        {!!guidanceLetter && (
           <PDFExportButton handlePrint={handlePrint}>
             {t('guidanceLetter.downloadAsPdf')}
           </PDFExportButton>
@@ -200,14 +200,14 @@ function PublicGuidanceLetter() {
       )}
 
       <GridContainer className="full-width">
-        {adviceLetter && (
+        {guidanceLetter && (
           <div ref={printRef}>
             <h1 className="easi-only-print">
               {t('guidanceLetterForm.heading')}
             </h1>
             <ReviewGuidanceLetter
               trbRequestId={id}
-              adviceLetter={adviceLetter}
+              guidanceLetter={guidanceLetter}
               showDateSent={false}
               showSectionBorders={false}
               editable={false}

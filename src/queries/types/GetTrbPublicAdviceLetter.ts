@@ -22,7 +22,7 @@ export interface GetTrbPublicAdviceLetter_trbRequest_form {
   needsAssistanceWith: string | null;
 }
 
-export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter_recommendations {
+export interface GetTrbPublicAdviceLetter_trbRequest_guidanceLetter_recommendations {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -30,13 +30,13 @@ export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter_recommendation
   links: string[];
 }
 
-export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter_author {
+export interface GetTrbPublicAdviceLetter_trbRequest_guidanceLetter_author {
   __typename: "UserInfo";
   euaUserId: string;
   commonName: string;
 }
 
-export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter {
+export interface GetTrbPublicAdviceLetter_trbRequest_guidanceLetter {
   __typename: "TRBGuidanceLetter";
   id: UUID;
   meetingSummary: HTML | null;
@@ -47,8 +47,8 @@ export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter {
   /**
    * List of recommendations in the order specified by users
    */
-  recommendations: GetTrbPublicAdviceLetter_trbRequest_adviceLetter_recommendations[];
-  author: GetTrbPublicAdviceLetter_trbRequest_adviceLetter_author;
+  recommendations: GetTrbPublicAdviceLetter_trbRequest_guidanceLetter_recommendations[];
+  author: GetTrbPublicAdviceLetter_trbRequest_guidanceLetter_author;
   createdAt: Time;
   modifiedAt: Time | null;
 }
@@ -67,7 +67,7 @@ export interface GetTrbPublicAdviceLetter_trbRequest {
   form: GetTrbPublicAdviceLetter_trbRequest_form;
   type: TRBRequestType;
   consultMeetingTime: Time | null;
-  adviceLetter: GetTrbPublicAdviceLetter_trbRequest_adviceLetter | null;
+  guidanceLetter: GetTrbPublicAdviceLetter_trbRequest_guidanceLetter | null;
   taskStatuses: GetTrbPublicAdviceLetter_trbRequest_taskStatuses;
 }
 

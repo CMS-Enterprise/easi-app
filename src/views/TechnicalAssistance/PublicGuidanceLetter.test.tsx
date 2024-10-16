@@ -29,7 +29,7 @@ describe('Trb Public Guidance Letter', () => {
       },
       type: 'NEED_HELP',
       consultMeetingTime: '2023-04-14T10:13:01.586156Z',
-      adviceLetter: {
+      guidanceLetter: {
         id: 'a59f516a-107c-4baf-bdce-834ff1dc9a27',
         meetingSummary: 'Talked about stuff',
         nextSteps: null,

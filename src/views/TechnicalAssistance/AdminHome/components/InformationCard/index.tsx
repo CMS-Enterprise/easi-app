@@ -98,8 +98,11 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
             ? 'usa-button--outline'
             : '',
         buttonLink: 'guidance',
-        modified: trbRequest.adviceLetter?.modifiedAt
-          ? formatDateLocal(trbRequest.adviceLetter.modifiedAt, 'MMMM d, yyyy')
+        modified: trbRequest.guidanceLetter?.modifiedAt
+          ? formatDateLocal(
+              trbRequest.guidanceLetter.modifiedAt,
+              'MMMM d, yyyy'
+            )
           : t('adminHome.notStarted'),
         disabled:
           trbRequest.taskStatuses.guidanceLetterStatus ===

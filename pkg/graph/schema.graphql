@@ -1581,7 +1581,7 @@ type TRBRequest {
   feedback: [TRBRequestFeedback!]!
   documents: [TRBRequestDocument!]! # This query will not return deleted documents -- see pkg/storage/trb_request_document.go `GetTRBRequestDocumentsByRequestID`
   form: TRBRequestForm!
-  adviceLetter: TRBGuidanceLetter
+  guidanceLetter: TRBGuidanceLetter
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
   lastMeetingDate: Time

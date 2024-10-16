@@ -977,7 +977,6 @@ type ComplexityRoot struct {
 
 	TRBRequest struct {
 		AdminNotes         func(childComplexity int) int
-		AdviceLetter       func(childComplexity int) int
 		Archived           func(childComplexity int) int
 		Attendees          func(childComplexity int) int
 		ConsultMeetingTime func(childComplexity int) int
@@ -988,6 +987,7 @@ type ComplexityRoot struct {
 		Documents          func(childComplexity int) int
 		Feedback           func(childComplexity int) int
 		Form               func(childComplexity int) int
+		GuidanceLetter     func(childComplexity int) int
 		ID                 func(childComplexity int) int
 		IsRecent           func(childComplexity int) int
 		LastMeetingDate    func(childComplexity int) int
@@ -1378,7 +1378,7 @@ type TRBRequestResolver interface {
 	Feedback(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestFeedback, error)
 	Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error)
 	Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error)
-	AdviceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBGuidanceLetter, error)
+	GuidanceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBGuidanceLetter, error)
 	TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error)
 
 	LastMeetingDate(ctx context.Context, obj *models.TRBRequest) (*time.Time, error)
@@ -6732,13 +6732,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequest.AdminNotes(childComplexity), true
 
-	case "TRBRequest.adviceLetter":
-		if e.complexity.TRBRequest.AdviceLetter == nil {
-			break
-		}
-
-		return e.complexity.TRBRequest.AdviceLetter(childComplexity), true
-
 	case "TRBRequest.archived":
 		if e.complexity.TRBRequest.Archived == nil {
 			break
@@ -6808,6 +6801,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBRequest.Form(childComplexity), true
+
+	case "TRBRequest.guidanceLetter":
+		if e.complexity.TRBRequest.GuidanceLetter == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.GuidanceLetter(childComplexity), true
 
 	case "TRBRequest.id":
 		if e.complexity.TRBRequest.ID == nil {
@@ -9344,7 +9344,7 @@ type TRBRequest {
   feedback: [TRBRequestFeedback!]!
   documents: [TRBRequestDocument!]! # This query will not return deleted documents -- see pkg/storage/trb_request_document.go ` + "`" + `GetTRBRequestDocumentsByRequestID` + "`" + `
   form: TRBRequestForm!
-  adviceLetter: TRBGuidanceLetter
+  guidanceLetter: TRBGuidanceLetter
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
   lastMeetingDate: Time
@@ -24315,8 +24315,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedTrbRequests(ctx conte
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -33265,8 +33265,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -33384,8 +33384,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -34406,8 +34406,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestConsultMeeting
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -34552,8 +34552,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestTRBLead(ctx co
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -34668,8 +34668,8 @@ func (ec *executionContext) fieldContext_Mutation_setTRBRequestRelationNewSystem
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -34784,8 +34784,8 @@ func (ec *executionContext) fieldContext_Mutation_setTRBRequestRelationExistingS
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -34900,8 +34900,8 @@ func (ec *executionContext) fieldContext_Mutation_setTRBRequestRelationExistingS
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -35016,8 +35016,8 @@ func (ec *executionContext) fieldContext_Mutation_unlinkTRBRequestRelation(ctx c
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -36662,8 +36662,8 @@ func (ec *executionContext) fieldContext_Mutation_closeTRBRequest(ctx context.Co
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -36808,8 +36808,8 @@ func (ec *executionContext) fieldContext_Mutation_reopenTrbRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -39674,8 +39674,8 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -39820,8 +39820,8 @@ func (ec *executionContext) fieldContext_Query_trbRequests(ctx context.Context, 
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -39939,8 +39939,8 @@ func (ec *executionContext) fieldContext_Query_myTrbRequests(ctx context.Context
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -44016,8 +44016,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedTRBRequests(_ conte
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -51289,8 +51289,8 @@ func (ec *executionContext) fieldContext_TRBRequest_form(_ context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBRequest_adviceLetter(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+func (ec *executionContext) _TRBRequest_guidanceLetter(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51303,7 +51303,7 @@ func (ec *executionContext) _TRBRequest_adviceLetter(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBRequest().AdviceLetter(rctx, obj)
+		return ec.resolvers.TRBRequest().GuidanceLetter(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -51317,7 +51317,7 @@ func (ec *executionContext) _TRBRequest_adviceLetter(ctx context.Context, field 
 	return ec.marshalOTRBGuidanceLetter2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetter(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBRequest_adviceLetter(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBRequest_guidanceLetter(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "TRBRequest",
 		Field:      field,
@@ -52521,8 +52521,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedTRBRequests(_ context
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "adviceLetter":
-				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "guidanceLetter":
+				return ec.fieldContext_TRBRequest_guidanceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -70229,7 +70229,7 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "adviceLetter":
+		case "guidanceLetter":
 			field := field
 
 			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
@@ -70238,7 +70238,7 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._TRBRequest_adviceLetter(ctx, field, obj)
+				res = ec._TRBRequest_guidanceLetter(ctx, field, obj)
 				return res
 			}
 

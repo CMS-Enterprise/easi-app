@@ -6,15 +6,15 @@
 import { TRBRequestType, TRBGuidanceLetterStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
-// GraphQL query operation: GetTrbAdviceLetter
+// GraphQL query operation: GetTrbGuidanceLetter
 // ====================================================
 
-export interface GetTrbAdviceLetter_trbRequest_taskStatuses {
+export interface GetTrbGuidanceLetter_trbRequest_taskStatuses {
   __typename: "TRBTaskStatuses";
   guidanceLetterStatus: TRBGuidanceLetterStatus;
 }
 
-export interface GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations {
+export interface GetTrbGuidanceLetter_trbRequest_guidanceLetter_recommendations {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -22,13 +22,13 @@ export interface GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations {
   links: string[];
 }
 
-export interface GetTrbAdviceLetter_trbRequest_adviceLetter_author {
+export interface GetTrbGuidanceLetter_trbRequest_guidanceLetter_author {
   __typename: "UserInfo";
   euaUserId: string;
   commonName: string;
 }
 
-export interface GetTrbAdviceLetter_trbRequest_adviceLetter {
+export interface GetTrbGuidanceLetter_trbRequest_guidanceLetter {
   __typename: "TRBGuidanceLetter";
   id: UUID;
   meetingSummary: HTML | null;
@@ -39,27 +39,27 @@ export interface GetTrbAdviceLetter_trbRequest_adviceLetter {
   /**
    * List of recommendations in the order specified by users
    */
-  recommendations: GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations[];
-  author: GetTrbAdviceLetter_trbRequest_adviceLetter_author;
+  recommendations: GetTrbGuidanceLetter_trbRequest_guidanceLetter_recommendations[];
+  author: GetTrbGuidanceLetter_trbRequest_guidanceLetter_author;
   createdAt: Time;
   modifiedAt: Time | null;
 }
 
-export interface GetTrbAdviceLetter_trbRequest {
+export interface GetTrbGuidanceLetter_trbRequest {
   __typename: "TRBRequest";
   id: UUID;
   name: string | null;
   type: TRBRequestType;
   createdAt: Time;
   consultMeetingTime: Time | null;
-  taskStatuses: GetTrbAdviceLetter_trbRequest_taskStatuses;
-  adviceLetter: GetTrbAdviceLetter_trbRequest_adviceLetter | null;
+  taskStatuses: GetTrbGuidanceLetter_trbRequest_taskStatuses;
+  guidanceLetter: GetTrbGuidanceLetter_trbRequest_guidanceLetter | null;
 }
 
-export interface GetTrbAdviceLetter {
-  trbRequest: GetTrbAdviceLetter_trbRequest;
+export interface GetTrbGuidanceLetter {
+  trbRequest: GetTrbGuidanceLetter_trbRequest;
 }
 
-export interface GetTrbAdviceLetterVariables {
+export interface GetTrbGuidanceLetterVariables {
   id: UUID;
 }

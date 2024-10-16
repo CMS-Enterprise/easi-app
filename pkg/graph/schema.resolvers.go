@@ -2084,8 +2084,8 @@ func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (
 	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, obj.ID)
 }
 
-// AdviceLetter is the resolver for the adviceLetter field.
-func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBGuidanceLetter, error) {
+// GuidanceLetter is the resolver for the guidancLetter field.
+func (r *tRBRequestResolver) GuidanceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBGuidanceLetter, error) {
 	return resolvers.GetTRBGuidanceLetterByTRBRequestID(ctx, obj.ID)
 }
 

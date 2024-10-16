@@ -32,9 +32,9 @@ export const TRBGuidanceLetter = gql`
 `;
 
 /** Get TRB guidance letter and status */
-export const GetTrbAdviceLetterQuery = gql`
+export const GetTrbGuidanceLetterQuery = gql`
   ${TRBGuidanceLetter}
-  query GetTrbAdviceLetter($id: UUID!) {
+  query GetTrbGuidanceLetter($id: UUID!) {
     trbRequest(id: $id) {
       id
       name
@@ -44,7 +44,7 @@ export const GetTrbAdviceLetterQuery = gql`
       taskStatuses {
         guidanceLetterStatus
       }
-      adviceLetter {
+      guidanceLetter {
         ...TRBGuidanceLetter
       }
     }
@@ -76,7 +76,7 @@ export const GetTrbRecommendationsQuery = gql`
   ${TRBRecommendation}
   query GetTrbRecommendations($id: UUID!) {
     trbRequest(id: $id) {
-      adviceLetter {
+      guidanceLetter {
         recommendations {
           ...TRBRecommendation
         }

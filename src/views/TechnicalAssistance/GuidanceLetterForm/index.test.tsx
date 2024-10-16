@@ -22,9 +22,9 @@ import {
   CreateTRBRecommendationVariables
 } from 'queries/types/CreateTRBRecommendation';
 import {
-  GetTrbAdviceLetter,
-  GetTrbAdviceLetterVariables
-} from 'queries/types/GetTrbAdviceLetter';
+  GetTrbGuidanceLetter,
+  GetTrbGuidanceLetterVariables
+} from 'queries/types/GetTrbGuidanceLetter';
 import { GuidanceFormStepKey } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
@@ -67,15 +67,15 @@ const defaultStore = easiMockStore({
 });
 
 const getGuidanceLetterCannotStart: MockedQuery<
-  GetTrbAdviceLetter,
-  GetTrbAdviceLetterVariables
+  GetTrbGuidanceLetter,
+  GetTrbGuidanceLetterVariables
 > = {
   ...getTrbGuidanceLetterQuery,
   result: {
     data: {
       trbRequest: {
         ...getTrbGuidanceLetterQuery.result.data?.trbRequest!,
-        adviceLetter: null,
+        guidanceLetter: null,
         taskStatuses
       }
     }

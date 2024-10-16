@@ -65,7 +65,7 @@ const getTrbRecommendationsQuery: MockedQuery<
     data: {
       trbRequest: {
         __typename: 'TRBRequest',
-        adviceLetter: {
+        guidanceLetter: {
           __typename: 'TRBGuidanceLetter',
           recommendations
         }

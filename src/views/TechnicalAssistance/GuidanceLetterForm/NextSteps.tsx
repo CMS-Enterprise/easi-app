@@ -33,7 +33,7 @@ import Pager from '../RequestForm/Pager';
 
 const NextSteps = ({
   trbRequestId,
-  adviceLetter,
+  guidanceLetter,
   setFormAlert,
   setStepSubmit,
   setIsStepSubmitting
@@ -41,7 +41,7 @@ const NextSteps = ({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const { nextSteps, isFollowupRecommended, followupPoint } = adviceLetter;
+  const { nextSteps, isFollowupRecommended, followupPoint } = guidanceLetter;
 
   const [update] = useMutation<
     UpdateTrbGuidanceLetter,

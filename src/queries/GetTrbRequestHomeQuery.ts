@@ -16,7 +16,7 @@ export default gql`
         modifiedAt
       }
 
-      adviceLetter {
+      guidanceLetter {
         id
         modifiedAt
       }

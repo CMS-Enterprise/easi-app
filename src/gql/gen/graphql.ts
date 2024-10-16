@@ -2714,7 +2714,6 @@ export enum TRBGuidanceLetterStatusTaskList {
 export type TRBRequest = {
   __typename: 'TRBRequest';
   adminNotes: Array<TRBAdminNote>;
-  adviceLetter?: Maybe<TRBGuidanceLetter>;
   archived: Scalars['Boolean']['output'];
   attendees: Array<TRBRequestAttendee>;
   consultMeetingTime?: Maybe<Scalars['Time']['output']>;
@@ -2726,6 +2725,7 @@ export type TRBRequest = {
   documents: Array<TRBRequestDocument>;
   feedback: Array<TRBRequestFeedback>;
   form: TRBRequestForm;
+  guidanceLetter?: Maybe<TRBGuidanceLetter>;
   id: Scalars['UUID']['output'];
   isRecent: Scalars['Boolean']['output'];
   lastMeetingDate?: Maybe<Scalars['Time']['output']>;

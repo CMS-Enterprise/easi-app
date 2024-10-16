@@ -84,7 +84,8 @@ const AddNote = ({
 
   const recommendations = useMemo(
     () =>
-      recommendationsQuery.data?.trbRequest.adviceLetter?.recommendations || [],
+      recommendationsQuery.data?.trbRequest.guidanceLetter?.recommendations ||
+      [],
     [recommendationsQuery.data]
   );
 

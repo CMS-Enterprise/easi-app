@@ -20,7 +20,7 @@ export default gql`
       }
       type
       consultMeetingTime
-      adviceLetter {
+      guidanceLetter {
         ...TRBGuidanceLetter
       }
       taskStatuses {

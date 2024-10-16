@@ -54,7 +54,7 @@ describe('Trb Admin Request Home', () => {
                     modifiedAt: null,
                     __typename: 'TRBRequestForm'
                   },
-                  adviceLetter: null,
+                  guidanceLetter: null,
                   trbLeadInfo: {
                     commonName: '',
                     email: '',
@@ -148,7 +148,7 @@ describe('Trb Admin Request Home', () => {
                     modifiedAt: '2023-01-05T05:00:00Z',
                     __typename: 'TRBRequestForm'
                   },
-                  adviceLetter: {
+                  guidanceLetter: {
                     __typename: 'TRBAdviceLetter',
                     id: '123',
                     modifiedAt: '2023-02-05T05:00:00Z'
