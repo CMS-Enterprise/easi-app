@@ -44,7 +44,7 @@ import Pager from '../RequestForm/Pager';
 const Review = ({
   trbRequestId,
   adviceLetter,
-  adviceLetterStatus,
+  guidanceLetterStatus,
   setFormAlert,
   setIsStepSubmitting,
   stepsCompleted,

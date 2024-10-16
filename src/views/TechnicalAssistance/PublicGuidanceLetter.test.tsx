@@ -55,7 +55,7 @@ describe('Trb Public Guidance Letter', () => {
         __typename: 'TRBAdviceLetter'
       },
       taskStatuses: {
-        adviceLetterStatus: TRBGuidanceLetterStatus.COMPLETED,
+        guidanceLetterStatus: TRBGuidanceLetterStatus.COMPLETED,
         __typename: 'TRBTaskStatuses'
       },
       __typename: 'TRBRequest'
@@ -159,7 +159,7 @@ describe('Trb Public Guidance Letter', () => {
                 trbRequest: {
                   ...data.trbRequest,
                   taskStatuses: {
-                    adviceLetterStatus:
+                    guidanceLetterStatus:
                       TRBGuidanceLetterStatus.CANNOT_START_YET,
                     __typename: 'TRBTaskStatuses'
                   }

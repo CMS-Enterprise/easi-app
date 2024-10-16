@@ -24,7 +24,7 @@ export default gql`
         ...TRBGuidanceLetter
       }
       taskStatuses {
-        adviceLetterStatus
+        guidanceLetterStatus
       }
     }
   }

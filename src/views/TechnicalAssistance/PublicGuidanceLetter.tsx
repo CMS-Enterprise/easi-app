@@ -76,7 +76,7 @@ function PublicGuidanceLetter() {
 
   // Alert if the letter is incomplete
   if (
-    data?.trbRequest.taskStatuses.adviceLetterStatus !==
+    data?.trbRequest.taskStatuses.guidanceLetterStatus !==
     TRBGuidanceLetterStatus.COMPLETED
   ) {
     return (

@@ -210,7 +210,7 @@ const GuidanceLetterForm = () => {
       }
 
       if (
-        trbRequest?.taskStatuses.adviceLetterStatus ===
+        trbRequest?.taskStatuses.guidanceLetterStatus ===
           TRBGuidanceLetterStatus.READY_FOR_REVIEW &&
         !stepsCompleted?.includes('review')
       ) {
@@ -229,7 +229,7 @@ const GuidanceLetterForm = () => {
   }, [
     stepsCompleted,
     adviceLetter,
-    trbRequest?.taskStatuses?.adviceLetterStatus,
+    trbRequest?.taskStatuses?.guidanceLetterStatus,
     redirectStep,
     formStep
   ]);
@@ -260,7 +260,7 @@ const GuidanceLetterForm = () => {
   }
 
   const {
-    taskStatuses: { adviceLetterStatus }
+    taskStatuses: { guidanceLetterStatus }
   } = trbRequest;
 
   if (formStep === 'done') {
@@ -357,7 +357,7 @@ const GuidanceLetterForm = () => {
             <currentFormStep.component
               trbRequestId={id}
               adviceLetter={adviceLetter}
-              adviceLetterStatus={adviceLetterStatus}
+              guidanceLetterStatus={guidanceLetterStatus}
               setFormAlert={setFormAlert}
               setStepSubmit={setStepSubmit}
               setIsStepSubmitting={setIsStepSubmitting}

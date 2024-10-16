@@ -55,7 +55,7 @@ export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter {
 
 export interface GetTrbPublicAdviceLetter_trbRequest_taskStatuses {
   __typename: "TRBTaskStatuses";
-  adviceLetterStatus: TRBGuidanceLetterStatus;
+  guidanceLetterStatus: TRBGuidanceLetterStatus;
 }
 
 export interface GetTrbPublicAdviceLetter_trbRequest {

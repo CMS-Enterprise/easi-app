@@ -1637,7 +1637,7 @@ type TRBTaskStatuses {
   feedbackStatus: TRBFeedbackStatus!
   consultPrepStatus: TRBConsultPrepStatus!
   attendConsultStatus: TRBAttendConsultStatus!
-  adviceLetterStatus: TRBGuidanceLetterStatus!
+  guidanceLetterStatus: TRBGuidanceLetterStatus!
   adviceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList!
 }
 

@@ -45,7 +45,7 @@ describe('Trb Admin Request Home', () => {
                   consultMeetingTime: null,
                   taskStatuses: {
                     formStatus: TRBFormStatus.READY_TO_START,
-                    adviceLetterStatus:
+                    guidanceLetterStatus:
                       TRBGuidanceLetterStatus.CANNOT_START_YET,
                     __typename: 'TRBTaskStatuses'
                   },
@@ -139,7 +139,8 @@ describe('Trb Admin Request Home', () => {
                   consultMeetingTime: '2024-01-05T05:00:00Z',
                   taskStatuses: {
                     formStatus: TRBFormStatus.COMPLETED,
-                    adviceLetterStatus: TRBGuidanceLetterStatus.READY_TO_START,
+                    guidanceLetterStatus:
+                      TRBGuidanceLetterStatus.READY_TO_START,
                     __typename: 'TRBTaskStatuses'
                   },
                   form: {

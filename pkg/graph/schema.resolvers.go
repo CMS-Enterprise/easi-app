@@ -2224,11 +2224,6 @@ func (r *tRBRequestFormResolver) SubjectAreaOptions(ctx context.Context, obj *mo
 	return subjectAreas, nil
 }
 
-// AdviceLetterStatus is the resolver for the adviceLetterStatus field.
-func (r *tRBTaskStatusesResolver) AdviceLetterStatus(ctx context.Context, obj *models.TRBTaskStatuses) (models.TRBGuidanceLetterStatus, error) {
-	return obj.GuidanceLetterStatus, nil
-}
-
 // AdviceLetterStatusTaskList is the resolver for the adviceLetterStatusTaskList field.
 func (r *tRBTaskStatusesResolver) AdviceLetterStatusTaskList(ctx context.Context, obj *models.TRBTaskStatuses) (models.TRBGuidanceLetterStatusTaskList, error) {
 	return obj.GuidanceLetterStatusTaskList, nil

@@ -35,7 +35,7 @@ const GuidanceLetter = ({
 
   const { adviceLetter, taskStatuses } = data?.trbRequest || {};
 
-  const adviceLetterStatus = taskStatuses?.adviceLetterStatus;
+  const guidanceLetterStatus = taskStatuses?.guidanceLetterStatus;
 
   const author = adviceLetter?.author;
 
@@ -49,12 +49,12 @@ const GuidanceLetter = ({
       title={t('adminHome.guidanceLetter')}
       description={t('guidanceLetter.introText')}
       disableStep={
-        taskStatuses?.adviceLetterStatus ===
+        taskStatuses?.guidanceLetterStatus ===
         TRBGuidanceLetterStatus.CANNOT_START_YET
       }
       statusTagProps={{
         status:
-          taskStatuses?.adviceLetterStatus ||
+          taskStatuses?.guidanceLetterStatus ||
           TRBGuidanceLetterStatus.CANNOT_START_YET,
         name: author?.commonName!,
         date: adviceLetter?.modifiedAt || adviceLetter?.createdAt || ''
@@ -78,7 +78,7 @@ const GuidanceLetter = ({
     >
       {
         // If guidance letter status is CANNOT_START_YET, show alert message
-        adviceLetterStatus === 'CANNOT_START_YET' ? (
+        guidanceLetterStatus === 'CANNOT_START_YET' ? (
           <Alert type="info" slim>
             {t('guidanceLetter.alerts.info')}
           </Alert>

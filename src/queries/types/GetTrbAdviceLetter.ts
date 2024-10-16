@@ -11,7 +11,7 @@ import { TRBRequestType, TRBGuidanceLetterStatus } from "./../../types/graphql-g
 
 export interface GetTrbAdviceLetter_trbRequest_taskStatuses {
   __typename: "TRBTaskStatuses";
-  adviceLetterStatus: TRBGuidanceLetterStatus;
+  guidanceLetterStatus: TRBGuidanceLetterStatus;
 }
 
 export interface GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations {

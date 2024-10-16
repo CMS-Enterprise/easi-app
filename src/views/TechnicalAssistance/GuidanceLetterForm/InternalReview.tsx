@@ -28,7 +28,7 @@ import Pager from '../RequestForm/Pager';
 const InternalReview = ({
   trbRequestId,
   adviceLetter,
-  adviceLetterStatus,
+  guidanceLetterStatus,
   setFormAlert,
   setIsStepSubmitting,
   stepsCompleted,
@@ -116,7 +116,7 @@ const InternalReview = ({
         next={{
           text: t(
             `guidanceLetterForm.${
-              adviceLetterStatus === TRBGuidanceLetterStatus.IN_PROGRESS
+              guidanceLetterStatus === TRBGuidanceLetterStatus.IN_PROGRESS
                 ? 'requestInternalReview'
                 : 'requestAnotherInternalReview'
             }`

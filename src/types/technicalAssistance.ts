@@ -116,7 +116,7 @@ export type FormAlertObject = {
 export type StepComponentProps = {
   trbRequestId: string;
   adviceLetter: AdviceLetter;
-  adviceLetterStatus: TRBGuidanceLetterStatus;
+  guidanceLetterStatus: TRBGuidanceLetterStatus;
   /**
    * Set the current form step component submit handler
    * so that in can be used in other places like the header.

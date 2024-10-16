@@ -99,7 +99,7 @@ export const taskStatuses: TaskStatuses = {
   feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
   consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
   attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-  adviceLetterStatus: TRBGuidanceLetterStatus.CANNOT_START_YET
+  guidanceLetterStatus: TRBGuidanceLetterStatus.CANNOT_START_YET
 };
 
 const adminNotes: GetTrbAdminNotes['trbRequest']['adminNotes'] = [
@@ -396,7 +396,7 @@ export const getTrbGuidanceLetterQuery: MockedQuery<
         consultMeetingTime: null,
         taskStatuses: {
           __typename: 'TRBTaskStatuses',
-          adviceLetterStatus: TRBGuidanceLetterStatus.COMPLETED
+          guidanceLetterStatus: TRBGuidanceLetterStatus.COMPLETED
         },
         adviceLetter: guidanceLetter
       }

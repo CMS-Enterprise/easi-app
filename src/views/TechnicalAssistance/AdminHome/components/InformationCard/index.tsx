@@ -55,15 +55,15 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
 
   const returnGuidanceText = () => {
     if (
-      trbRequest.taskStatuses.adviceLetterStatus ===
+      trbRequest.taskStatuses.guidanceLetterStatus ===
         TRBGuidanceLetterStatus.CANNOT_START_YET ||
-      trbRequest.taskStatuses.adviceLetterStatus ===
+      trbRequest.taskStatuses.guidanceLetterStatus ===
         TRBGuidanceLetterStatus.READY_TO_START
     ) {
       return t('adminHome.startGuidance');
     }
     if (
-      trbRequest.taskStatuses.adviceLetterStatus ===
+      trbRequest.taskStatuses.guidanceLetterStatus ===
       TRBGuidanceLetterStatus.COMPLETED
     ) {
       return t('adminHome.view');
@@ -90,10 +90,10 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
       cardDetails = {
         header: t('adminHome.guidanceLetter'),
         description: t('adminHome.toBeCompleted'),
-        status: trbRequest.taskStatuses.adviceLetterStatus,
+        status: trbRequest.taskStatuses.guidanceLetterStatus,
         buttonText: returnGuidanceText(),
         buttonClass:
-          trbRequest.taskStatuses.adviceLetterStatus ===
+          trbRequest.taskStatuses.guidanceLetterStatus ===
           TRBGuidanceLetterStatus.COMPLETED
             ? 'usa-button--outline'
             : '',
@@ -102,7 +102,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
           ? formatDateLocal(trbRequest.adviceLetter.modifiedAt, 'MMMM d, yyyy')
           : t('adminHome.notStarted'),
         disabled:
-          trbRequest.taskStatuses.adviceLetterStatus ===
+          trbRequest.taskStatuses.guidanceLetterStatus ===
           TRBGuidanceLetterStatus.CANNOT_START_YET
       };
       break;

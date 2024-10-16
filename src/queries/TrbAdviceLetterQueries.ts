@@ -42,7 +42,7 @@ export const GetTrbAdviceLetterQuery = gql`
       createdAt
       consultMeetingTime
       taskStatuses {
-        adviceLetterStatus
+        guidanceLetterStatus
       }
       adviceLetter {
         ...TRBGuidanceLetter

@@ -8,7 +8,7 @@ export default gql`
 
       taskStatuses {
         formStatus
-        adviceLetterStatus
+        guidanceLetterStatus
       }
 
       form {

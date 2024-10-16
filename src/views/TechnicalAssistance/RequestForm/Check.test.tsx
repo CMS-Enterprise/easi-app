@@ -38,7 +38,7 @@ const mockTrbRequestData: TrbRequest = {
     feedbackStatus: TRBFeedbackStatus.READY_TO_START,
     consultPrepStatus: TRBConsultPrepStatus.READY_TO_START,
     attendConsultStatus: TRBAttendConsultStatus.READY_TO_SCHEDULE,
-    adviceLetterStatus: TRBGuidanceLetterStatus.READY_TO_START
+    guidanceLetterStatus: TRBGuidanceLetterStatus.READY_TO_START
   },
   feedback: [],
   type: TRBRequestType.NEED_HELP,

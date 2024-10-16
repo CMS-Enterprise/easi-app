@@ -12,7 +12,7 @@ import { TRBFormStatus, TRBGuidanceLetterStatus } from "./../../types/graphql-gl
 export interface GetTrbRequestHome_trbRequest_taskStatuses {
   __typename: "TRBTaskStatuses";
   formStatus: TRBFormStatus;
-  adviceLetterStatus: TRBGuidanceLetterStatus;
+  guidanceLetterStatus: TRBGuidanceLetterStatus;
 }
 
 export interface GetTrbRequestHome_trbRequest_form {
