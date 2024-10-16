@@ -10,7 +10,7 @@ import useEasiForm from 'components/EasiForm/useEasiForm';
 import RichTextEditor from 'components/RichTextEditor';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import { UpdateTrbGuidanceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { UpdateTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   UpdateTrbGuidanceLetter,
   UpdateTrbGuidanceLetterVariables
@@ -61,7 +61,7 @@ const Summary = ({
         async formData => {
           try {
             if (isDirty) {
-              // UpdateTrbAdviceLetter mutation
+              // UpdateTrbGuidanceLetter mutation
               await update({
                 variables: {
                   input: {

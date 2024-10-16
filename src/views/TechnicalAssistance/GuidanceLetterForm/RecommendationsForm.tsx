@@ -20,7 +20,7 @@ import {
   CreateTrbRecommendationQuery,
   GetTrbGuidanceLetterQuery,
   UpdateTrbRecommendationQuery
-} from 'queries/TrbAdviceLetterQueries';
+} from 'queries/TrbGuidanceLetterQueries';
 import {
   CreateTRBGuidanceLetterRecommendationInput,
   UpdateTRBGuidanceLetterRecommendationInput

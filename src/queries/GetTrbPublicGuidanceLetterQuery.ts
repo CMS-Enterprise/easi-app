@@ -1,10 +1,10 @@
 import { gql } from '@apollo/client';
 
-import { TRBGuidanceLetter } from './TrbAdviceLetterQueries';
+import { TRBGuidanceLetter } from './TrbGuidanceLetterQueries';
 
 export default gql`
   ${TRBGuidanceLetter}
-  query GetTrbPublicAdviceLetter($id: UUID!) {
+  query GetTrbPublicGuidanceLetter($id: UUID!) {
     trbRequest(id: $id) {
       id
       name

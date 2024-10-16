@@ -11,7 +11,7 @@ import classNames from 'classnames';
 
 import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
-import { UpdateTrbRecommendationOrderQuery } from 'queries/TrbAdviceLetterQueries';
+import { UpdateTrbRecommendationOrderQuery } from 'queries/TrbGuidanceLetterQueries';
 import { TRBRecommendation } from 'queries/types/TRBRecommendation';
 import {
   UpdateTrbRecommendationOrder,
@@ -56,7 +56,7 @@ export default function RecommendationsList({
     UpdateTrbRecommendationOrder,
     UpdateTrbRecommendationOrderVariables
   >(UpdateTrbRecommendationOrderQuery, {
-    refetchQueries: ['GetTrbAdviceLetter']
+    refetchQueries: ['GetTrbGuidanceLetter']
   });
 
   const enableReorderControls: boolean = editable && recommendations.length > 1;

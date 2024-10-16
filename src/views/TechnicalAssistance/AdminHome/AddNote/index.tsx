@@ -25,7 +25,7 @@ import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
-import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTrbRecommendationsQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   GetTrbRecommendations,
   GetTrbRecommendationsVariables

@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 
-import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
+import GetTrbPublicGuidanceLetterQuery from 'queries/GetTrbPublicGuidanceLetterQuery';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 
 import PublicGuidanceLetter from './PublicGuidanceLetter';
@@ -52,7 +52,7 @@ describe('Trb Public Guidance Letter', () => {
         },
         createdAt: '2023-04-21T14:13:01.589972Z',
         modifiedAt: '2023-04-21T14:13:01.595102Z',
-        __typename: 'TRBAdviceLetter'
+        __typename: 'TRBGuidanceLetter'
       },
       taskStatuses: {
         guidanceLetterStatus: TRBGuidanceLetterStatus.COMPLETED,
@@ -72,7 +72,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicAdviceLetterQuery,
+              query: GetTrbPublicGuidanceLetterQuery,
               variables: {
                 id
               }
@@ -116,7 +116,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicAdviceLetterQuery,
+              query: GetTrbPublicGuidanceLetterQuery,
               variables: {
                 id
               }
@@ -149,7 +149,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicAdviceLetterQuery,
+              query: GetTrbPublicGuidanceLetterQuery,
               variables: {
                 id
               }
@@ -193,7 +193,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicAdviceLetterQuery,
+              query: GetTrbPublicGuidanceLetterQuery,
               variables: {
                 id
               }

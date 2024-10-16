@@ -16,7 +16,7 @@ import {
   taskStatuses
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import { CreateTrbRecommendationQuery } from 'queries/TrbAdviceLetterQueries';
+import { CreateTrbRecommendationQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   CreateTRBRecommendation,
   CreateTRBRecommendationVariables

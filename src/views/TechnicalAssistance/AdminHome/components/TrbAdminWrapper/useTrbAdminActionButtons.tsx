@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/client';
 import { ModalRef } from '@trussworks/react-uswds';
 
 import { AdminActionButton } from 'components/shared/AdminAction';
-import { CreateTrbGuidanceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { CreateTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   CreateTrbGuidanceLetter,
   CreateTrbGuidanceLetterVariables

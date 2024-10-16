@@ -13,7 +13,7 @@ import PageLoading from 'components/PageLoading';
 import { Alert } from 'components/shared/Alert';
 import StepHeader from 'components/StepHeader';
 import useCacheQuery from 'hooks/useCacheQuery';
-import { GetTrbGuidanceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   GetTrbGuidanceLetter,
   GetTrbGuidanceLetterVariables

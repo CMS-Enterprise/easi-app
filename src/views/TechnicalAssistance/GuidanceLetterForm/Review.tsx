@@ -15,7 +15,7 @@ import {
   DeleteTrbRecommendationQuery,
   GetTrbGuidanceLetterQuery,
   SendTRBGuidanceLetterQuery
-} from 'queries/TrbAdviceLetterQueries';
+} from 'queries/TrbGuidanceLetterQueries';
 import {
   DeleteTRBRecommendation,
   DeleteTRBRecommendationVariables
@@ -64,7 +64,7 @@ const Review = ({
 
   const notes: AdminNote[] = data?.trbRequest?.adminNotes || [];
 
-  const [mutate, adviceLetterResult] = useMutation<
+  const [mutate, guidanceLetterResult] = useMutation<
     SendTRBGuidanceLetter,
     SendTRBGuidanceLetterVariables
   >(SendTRBGuidanceLetterQuery);
@@ -96,7 +96,7 @@ const Review = ({
     formState: { isSubmitting }
   } = actionForm;
 
-  const formSubmitting: boolean = isSubmitting || adviceLetterResult.loading;
+  const formSubmitting: boolean = isSubmitting || guidanceLetterResult.loading;
 
   useEffect(() => {
     setIsStepSubmitting(isSubmitting);

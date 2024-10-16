@@ -10,7 +10,7 @@ import {
   DeleteTrbRecommendationQuery,
   GetTrbGuidanceLetterQuery,
   RequestReviewForTRBGuidanceLetterQuery
-} from 'queries/TrbAdviceLetterQueries';
+} from 'queries/TrbGuidanceLetterQueries';
 import {
   DeleteTRBRecommendation,
   DeleteTRBRecommendationVariables

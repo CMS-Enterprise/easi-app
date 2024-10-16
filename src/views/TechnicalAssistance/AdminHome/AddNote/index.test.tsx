@@ -21,7 +21,7 @@ import {
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
-import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTrbRecommendationsQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   CreateTRBAdminNoteGeneralRequest,
   CreateTRBAdminNoteGeneralRequestVariables

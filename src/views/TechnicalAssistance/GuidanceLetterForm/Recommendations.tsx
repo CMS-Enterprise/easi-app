@@ -11,7 +11,7 @@ import Divider from 'components/shared/Divider';
 import {
   DeleteTrbRecommendationQuery,
   GetTrbGuidanceLetterQuery
-} from 'queries/TrbAdviceLetterQueries';
+} from 'queries/TrbGuidanceLetterQueries';
 import {
   DeleteTRBRecommendation,
   DeleteTRBRecommendationVariables

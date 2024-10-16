@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
 import useCacheQuery from 'hooks/useCacheQuery';
-import { GetTrbGuidanceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   GetTrbGuidanceLetter,
   GetTrbGuidanceLetterVariables

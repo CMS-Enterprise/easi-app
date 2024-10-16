@@ -45,7 +45,7 @@ type AddNoteInitialRequestFormFields = {
   appliesToAttendees: boolean;
 } & AddNoteCommonFields<TRBAdminNoteCategory.INITIAL_REQUEST_FORM>;
 
-type AddNoteAdviceLetterFields = {
+type AddNoteGuidanceLetterFields = {
   sections: Array<'appliesToMeetingSummary' | 'appliesToNextSteps' | string>;
 } & AddNoteCommonFields<TRBAdminNoteCategory.GUIDANCE_LETTER>;
 
@@ -56,7 +56,7 @@ type AddNoteSupportingDocumentsFields = {
 /** Add note fields based on category */
 export type AddNoteFields =
   | AddNoteInitialRequestFormFields
-  | AddNoteAdviceLetterFields
+  | AddNoteGuidanceLetterFields
   | AddNoteSupportingDocumentsFields
   | AddNoteCommonFields<TRBAdminNoteCategory.GENERAL_REQUEST>
   | AddNoteCommonFields<TRBAdminNoteCategory.CONSULT_SESSION>;
@@ -115,7 +115,7 @@ const useAddNote = (trbRequestId: string) => {
       modifyCache(cache, result.data?.createTRBAdminNoteConsultSession)
   });
 
-  const [createNoteAdviceLetter] = useMutation<
+  const [createNoteGuidanceLetter] = useMutation<
     CreateTRBAdminNoteGuidanceLetter,
     CreateTRBAdminNoteGuidanceLetterVariables
   >(CreateTrbAdminNoteGuidanceLetterQuery, {
@@ -185,7 +185,7 @@ const useAddNote = (trbRequestId: string) => {
         }
       });
 
-      return createNoteAdviceLetter({
+      return createNoteGuidanceLetter({
         variables: {
           input
         }

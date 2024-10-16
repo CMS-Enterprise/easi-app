@@ -19,11 +19,11 @@ import Alert from 'components/shared/Alert';
 import Breadcrumbs, { BreadcrumbsProps } from 'components/shared/Breadcrumbs';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
-import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
+import GetTrbPublicGuidanceLetterQuery from 'queries/GetTrbPublicGuidanceLetterQuery';
 import {
-  GetTrbPublicAdviceLetter,
-  GetTrbPublicAdviceLetterVariables
-} from 'queries/types/GetTrbPublicAdviceLetter';
+  GetTrbPublicGuidanceLetter,
+  GetTrbPublicGuidanceLetterVariables
+} from 'queries/types/GetTrbPublicGuidanceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
@@ -60,9 +60,9 @@ function PublicGuidanceLetter() {
   });
 
   const { data, error, loading } = useQuery<
-    GetTrbPublicAdviceLetter,
-    GetTrbPublicAdviceLetterVariables
-  >(GetTrbPublicAdviceLetterQuery, {
+    GetTrbPublicGuidanceLetter,
+    GetTrbPublicGuidanceLetterVariables
+  >(GetTrbPublicGuidanceLetterQuery, {
     variables: { id }
   });
 

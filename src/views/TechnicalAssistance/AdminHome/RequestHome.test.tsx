@@ -149,7 +149,7 @@ describe('Trb Admin Request Home', () => {
                     __typename: 'TRBRequestForm'
                   },
                   guidanceLetter: {
-                    __typename: 'TRBAdviceLetter',
+                    __typename: 'TRBGuidanceLetter',
                     id: '123',
                     modifiedAt: '2023-02-05T05:00:00Z'
                   },

@@ -9,8 +9,8 @@ import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTrbGuidanceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
+import { GetTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   GetRequests,
   GetRequests_myTrbRequests as MyTrbRequests
