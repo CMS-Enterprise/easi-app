@@ -221,6 +221,16 @@ const technicalAssistance = {
     reorderError:
       'There was an issue saving your guidance. Please try again, and if the problem persists, try again later.',
     continueWithoutAdding: 'Continue without adding guidance',
+    priorityCategory: 'Priority category',
+    requirement: 'Requirement',
+    requirementDescription:
+      'A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding.',
+    recommendation: 'Recommendation',
+    recommendationDescription:
+      'A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS.',
+    consideration: 'Consideration',
+    considerationDescription:
+      'A consideration suggests that the project team should evaluate this option, but it will not significantly impact their system or CMS.',
     addResourceLink: 'Add a resource link',
     addAnotherResourceLink: 'Add another resource link',
     returnToGuidanceLetter: 'Don’t {{formType}} and return to guidance letter',

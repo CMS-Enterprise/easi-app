@@ -1,6 +1,9 @@
 import React from 'react';
 import { ModalRef } from '@trussworks/react-uswds';
-import { TRBGuidanceLetterFragment } from 'gql/gen/graphql';
+import {
+  TRBGuidanceLetterFragment,
+  TRBGuidanceLetterRecommendationCategory
+} from 'gql/gen/graphql';
 
 import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'queries/types/GetTrbRequestSummary';
 import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
@@ -94,6 +97,7 @@ export type GuidanceLetterInsightFields = {
   id?: string;
   title: string;
   recommendation: string;
+  category?: TRBGuidanceLetterRecommendationCategory | null;
   /** Links array - object type to get useFieldArray hook to work */
   links?: { link: string }[];
 };

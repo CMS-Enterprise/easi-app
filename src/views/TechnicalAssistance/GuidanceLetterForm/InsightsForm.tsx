@@ -4,7 +4,13 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { ApolloError } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
-import { Form, FormGroup, TextInput } from '@trussworks/react-uswds';
+import {
+  Fieldset,
+  Form,
+  FormGroup,
+  Radio,
+  TextInput
+} from '@trussworks/react-uswds';
 import {
   GetTRBGuidanceLetterDocument,
   TRBGuidanceLetterRecommendationCategory,
@@ -219,7 +225,53 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
               <FieldErrorMsg>{t('errors.fillBlank')}</FieldErrorMsg>
             )}
           />
-          <TextInput type="text" id="title" {...register('title')} />
+          <TextInput type="text" id="title" {...register('title')} ref={null} />
+        </FormGroup>
+
+        {/* Category */}
+        <FormGroup error={!!errors?.category}>
+          <Controller
+            control={control}
+            name="category"
+            render={({ field: { ref, ...field }, fieldState: { error } }) => (
+              <Fieldset>
+                <legend className="usa-legend text-normal">
+                  {t('guidanceLetterForm.priorityCategory')}{' '}
+                  <span className="text-red">*</span>
+                </legend>
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="requirement"
+                  label={t('guidanceLetterForm.requirement')}
+                  labelDescription={t(
+                    'guidanceLetterForm.requirementDescription'
+                  )}
+                  value={TRBGuidanceLetterRecommendationCategory.REQUIREMENT}
+                />
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="recommendation"
+                  label={t('guidanceLetterForm.recommendation')}
+                  labelDescription={t(
+                    'guidanceLetterForm.recommendationDescription'
+                  )}
+                  value={TRBGuidanceLetterRecommendationCategory.RECOMMENDATION}
+                />
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="consideration"
+                  label={t('guidanceLetterForm.consideration')}
+                  labelDescription={t(
+                    'guidanceLetterForm.considerationDescription'
+                  )}
+                  value={TRBGuidanceLetterRecommendationCategory.CONSIDERATION}
+                />
+              </Fieldset>
+            )}
+          />
         </FormGroup>
 
         {/* Description */}
