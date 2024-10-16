@@ -19,7 +19,7 @@ import (
 type Config struct {
 	SourceARN               string
 	Source                  string
-	RecipientAllowListRegex *regexp.Regexp // if not nil, a regex that a recipient must match in order to be sent to
+	RecipientAllowListRegex *regexp.Regexp // a regex that a recipient must match in order to be sent to
 }
 
 // Sender is an implementation for sending email with the SES Go SDK
@@ -53,14 +53,13 @@ func filterAddresses(emails []models.EmailAddress, regex *regexp.Regexp) []model
 
 // Send sends an email. It will only return an error if there's an error connecting to SES; an invalid address/bounced email will *not* return an error.
 func (s Sender) Send(ctx context.Context, emailData email.Email) error {
-	// If a filter has been configured, filter out any addresses that don't match our allow-list
-	if s.config.RecipientAllowListRegex != nil {
-		emailData.ToAddresses = filterAddresses(emailData.ToAddresses, s.config.RecipientAllowListRegex)
-		emailData.CcAddresses = filterAddresses(emailData.CcAddresses, s.config.RecipientAllowListRegex)
-		emailData.BccAddresses = filterAddresses(emailData.BccAddresses, s.config.RecipientAllowListRegex)
-	}
+	// Filter out any addresses that don't match the configured regex
+	// If the env var that populates this is empty (""), everything will be allowed through (since the regex "" matches all strings)
+	emailData.ToAddresses = filterAddresses(emailData.ToAddresses, s.config.RecipientAllowListRegex)
+	emailData.CcAddresses = filterAddresses(emailData.CcAddresses, s.config.RecipientAllowListRegex)
+	emailData.BccAddresses = filterAddresses(emailData.BccAddresses, s.config.RecipientAllowListRegex)
 
-	// Don't send an email if there are no recipients
+	// Don't send an email if there are no recipients (post-filter)
 	if len(emailData.ToAddresses) == 0 && len(emailData.CcAddresses) == 0 && len(emailData.BccAddresses) == 0 {
 		appcontext.ZLogger(ctx).Warn("attempted to send an email with no recipients")
 		return nil
