@@ -84,7 +84,7 @@ func (s Server) NewSESConfig() appses.Config {
 	var sesRegex *regexp.Regexp
 	if sesRegexString != "" { // only attempt to parse if it's a non-empty string
 		sesRegex = regexp.MustCompile(sesRegexString)
-		s.logger.Info("successfully parsed ses regex:", zap.String("parsedRegex", sesRegex.String()))
+		s.logger.Debug("successfully parsed ses regex:", zap.String("parsedRegex", sesRegex.String()))
 	}
 
 	return appses.Config{

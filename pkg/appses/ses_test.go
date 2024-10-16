@@ -107,7 +107,7 @@ func (s *SESTestSuite) TestSend() {
 // TestFilterAddresses is just a unit test for one of the helper functions (filterAddresses) in the ses package, so it's purposefully
 // not part of the SES Test suite, which tests real SES logic
 func TestFilterAddresses(t *testing.T) {
-	emails := []models.EmailAddress{"abc", "123", "", "hell0world"}
+	emails := []models.EmailAddress{"gary@domain-one.com", "john@domain-two.com", "", "not_an_email"}
 
 	// Should filter nothing out when nil
 	assert.ElementsMatch(t, filterAddresses(emails, nil), emails)
@@ -115,8 +115,15 @@ func TestFilterAddresses(t *testing.T) {
 	// Filters out elements that don't match
 	assert.ElementsMatch(
 		t,
-		filterAddresses(emails, regexp.MustCompile(`\d`)),
-		[]models.EmailAddress{"123", "hell0world"},
+		filterAddresses(emails, regexp.MustCompile(`domain-.*\.com$`)),
+		[]models.EmailAddress{"gary@domain-one.com", "john@domain-two.com"},
+	)
+
+	// Filters out elements that don't match (more specific)
+	assert.ElementsMatch(
+		t,
+		filterAddresses(emails, regexp.MustCompile(`domain-two`)),
+		[]models.EmailAddress{"john@domain-two.com"},
 	)
 
 	// Filters out everything with no match
