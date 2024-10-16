@@ -1014,9 +1014,9 @@ export type Mutation = {
   updateSystemIntakeRequestDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeRequestType: SystemIntake;
   updateSystemIntakeReviewDates?: Maybe<UpdateSystemIntakePayload>;
-  updateTRBAdviceLetterRecommendation: TRBGuidanceLetterRecommendation;
   updateTRBAdviceLetterRecommendationOrder: Array<TRBGuidanceLetterRecommendation>;
   updateTRBGuidanceLetter: TRBGuidanceLetter;
+  updateTRBGuidanceLetterRecommendation: TRBGuidanceLetterRecommendation;
   updateTRBRequest: TRBRequest;
   updateTRBRequestAttendee: TRBRequestAttendee;
   updateTRBRequestConsultMeetingTime: TRBRequest;
@@ -1443,12 +1443,6 @@ export type MutationUpdateSystemIntakeReviewDatesArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTRBAdviceLetterRecommendationArgs = {
-  input: UpdateTRBGuidanceLetterRecommendationInput;
-};
-
-
-/** Defines the mutations for the schema */
 export type MutationUpdateTRBAdviceLetterRecommendationOrderArgs = {
   input: UpdateTRBGuidanceLetterRecommendationOrderInput;
 };
@@ -1457,6 +1451,12 @@ export type MutationUpdateTRBAdviceLetterRecommendationOrderArgs = {
 /** Defines the mutations for the schema */
 export type MutationUpdateTRBGuidanceLetterArgs = {
   input: UpdateTRBGuidanceLetterInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationUpdateTRBGuidanceLetterRecommendationArgs = {
+  input: UpdateTRBGuidanceLetterRecommendationInput;
 };
 
 

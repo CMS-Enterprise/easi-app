@@ -9,7 +9,7 @@ import { UpdateTRBGuidanceLetterRecommendationInput } from "./../../types/graphq
 // GraphQL mutation operation: UpdateTRBRecommendation
 // ====================================================
 
-export interface UpdateTRBRecommendation_updateTRBAdviceLetterRecommendation {
+export interface UpdateTRBRecommendation_updateTRBGuidanceLetterRecommendation {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -18,7 +18,7 @@ export interface UpdateTRBRecommendation_updateTRBAdviceLetterRecommendation {
 }
 
 export interface UpdateTRBRecommendation {
-  updateTRBAdviceLetterRecommendation: UpdateTRBRecommendation_updateTRBAdviceLetterRecommendation;
+  updateTRBGuidanceLetterRecommendation: UpdateTRBRecommendation_updateTRBGuidanceLetterRecommendation;
 }
 
 export interface UpdateTRBRecommendationVariables {

@@ -103,7 +103,7 @@ export const UpdateTrbRecommendationQuery = gql`
   mutation UpdateTRBRecommendation(
     $input: UpdateTRBGuidanceLetterRecommendationInput!
   ) {
-    updateTRBAdviceLetterRecommendation(input: $input) {
+    updateTRBGuidanceLetterRecommendation(input: $input) {
       ...TRBRecommendation
     }
   }
