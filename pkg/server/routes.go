@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -139,15 +138,8 @@ func (s *Server) routes() {
 	var emailClient email.Client
 	switch {
 	case s.environment.Deployed():
-		// Parse the regex config and pass it to the Sender if configured
-		sesRegexString := s.Config.GetString(appconfig.SESRecipientRegexKey)
-		var sesRegex *regexp.Regexp
-		if sesRegexString != "" { // only attempt to parse if it's a non-empty string
-			sesRegex = regexp.MustCompile(sesRegexString)
-			s.logger.Info("successfully parsed ses regex:", zap.String("parsedRegex", sesRegex.String()))
-		}
 		sesConfig := s.NewSESConfig()
-		sesSender := appses.NewSender(sesConfig, s.environment, sesRegex)
+		sesSender := appses.NewSender(sesConfig, s.environment)
 		emailClient, err = email.NewClient(emailConfig, sesSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))

@@ -17,29 +17,28 @@ import (
 
 // Config is email configs used only for SES
 type Config struct {
-	SourceARN string
-	Source    string
+	SourceARN      string
+	Source         string
+	RecipientRegex *regexp.Regexp // if not nil, a regex that a recipient must match in order to be sent to
 }
 
 // Sender is an implementation for sending email with the SES Go SDK
 // It lives in package "email" for now, but can be pulled out and imported
 // if necessary for testing
 type Sender struct {
-	client         *ses.SES
-	config         Config
-	environment    appconfig.Environment
-	recipientRegex *regexp.Regexp // if not nil, a regex that a recipient must match in order to be sent to
+	client      *ses.SES
+	config      Config
+	environment appconfig.Environment
 }
 
 // NewSender constructs a Sender
-func NewSender(config Config, environment appconfig.Environment, recipientRegex *regexp.Regexp) Sender {
+func NewSender(config Config, environment appconfig.Environment) Sender {
 	sesSession := session.Must(session.NewSession())
 	client := ses.New(sesSession)
 	return Sender{
 		client,
 		config,
 		environment,
-		recipientRegex,
 	}
 }
 
@@ -61,10 +60,10 @@ func (s Sender) Send(ctx context.Context, emailData email.Email) error {
 	}
 
 	// If a filter has been configured, filter out any addresses that don't match our allow-list
-	if s.recipientRegex != nil {
-		emailData.ToAddresses = filterAddresses(emailData.ToAddresses, s.recipientRegex)
-		emailData.CcAddresses = filterAddresses(emailData.CcAddresses, s.recipientRegex)
-		emailData.BccAddresses = filterAddresses(emailData.BccAddresses, s.recipientRegex)
+	if s.config.RecipientRegex != nil {
+		emailData.ToAddresses = filterAddresses(emailData.ToAddresses, s.config.RecipientRegex)
+		emailData.CcAddresses = filterAddresses(emailData.CcAddresses, s.config.RecipientRegex)
+		emailData.BccAddresses = filterAddresses(emailData.BccAddresses, s.config.RecipientRegex)
 	}
 
 	input := &ses.SendEmailInput{

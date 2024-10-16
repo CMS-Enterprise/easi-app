@@ -2,7 +2,10 @@ package server
 
 import (
 	"fmt"
+	"regexp"
 	"time"
+
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appses"
@@ -76,9 +79,18 @@ func (s Server) NewSESConfig() appses.Config {
 	s.checkRequiredConfig(appconfig.AWSSESSourceARNKey)
 	s.checkRequiredConfig(appconfig.AWSSESSourceKey)
 
+	// Parse the regex config if configured (not required)
+	sesRegexString := s.Config.GetString(appconfig.SESRecipientRegexKey)
+	var sesRegex *regexp.Regexp
+	if sesRegexString != "" { // only attempt to parse if it's a non-empty string
+		sesRegex = regexp.MustCompile(sesRegexString)
+		s.logger.Info("successfully parsed ses regex:", zap.String("parsedRegex", sesRegex.String()))
+	}
+
 	return appses.Config{
-		SourceARN: s.Config.GetString(appconfig.AWSSESSourceARNKey),
-		Source:    s.Config.GetString(appconfig.AWSSESSourceKey),
+		SourceARN:      s.Config.GetString(appconfig.AWSSESSourceARNKey),
+		Source:         s.Config.GetString(appconfig.AWSSESSourceKey),
+		RecipientRegex: sesRegex,
 	}
 }
 
