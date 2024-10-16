@@ -117,10 +117,9 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.UsingSoftware = null.StringFromPtr(input.UsingSoftware)
 
 	// Create string array from SoftwareAcqisitionMethods enum array
-	acqMethods := lo.Map(input.AcquisitionMethods, func(acqMethod models.SystemIntakeSoftwareAcquisitionMethods, idx int) string {
+	intake.AcquisitionMethods = lo.Map(input.AcquisitionMethods, func(acqMethod models.SystemIntakeSoftwareAcquisitionMethods, idx int) string {
 		return acqMethod.String()
 	})
-	intake.AcquisitionMethods = acqMethods
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()

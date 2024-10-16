@@ -110,11 +110,11 @@ export const SystemIntakeReview = ({
     return t('review.notSubmitted');
   };
 
-  /* Conditionally render software acquisition information depending on what is present.
+  /* Component used to conditionally render software acquisition information depending on what is present.
       Translate acquisition strategy enum values using i18n 
   */
 
-  const formatSoftwareAcquisition = () => {
+  const SoftwareAcquisition = () => {
     const translatedAcqStrategies: string[] = [];
 
     // Translate raw enumerations to i18n representation from intake
@@ -151,6 +151,7 @@ export const SystemIntakeReview = ({
       </>
     );
   };
+
   /* Conditionally render cost and annual spending information depending on what info is present.
       Original: Display only "costs" info
       Intermediate: Display annual spending info
@@ -370,8 +371,8 @@ export const SystemIntakeReview = ({
             />
           </div>
         </ReviewRow>
-        {/* Format and conditionally render software acquisition information */}
-        {formatSoftwareAcquisition()}
+        {/* Component that formats and conditionally renders software acquisition information */}
+        <SoftwareAcquisition />
       </DescriptionList>
 
       <hr className="system-intake__hr" />
