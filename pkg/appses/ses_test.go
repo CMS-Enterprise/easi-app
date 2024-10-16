@@ -3,8 +3,10 @@ package appses
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
@@ -45,7 +47,7 @@ func TestSESTestSuite(t *testing.T) {
 		Source:    config.GetString(appconfig.AWSSESSourceKey),
 	}
 
-	sender := NewSender(sesConfig, env)
+	sender := NewSender(sesConfig, env, nil)
 
 	sesTestSuite := &SESTestSuite{
 		Suite:  suite.Suite{},
@@ -99,4 +101,27 @@ func (s *SESTestSuite) TestSend() {
 
 		s.NoError(err)
 	})
+}
+
+// TestFilterAddresses is just a unit test for one of the helper functions (filterAddresses) in the ses package, so it's purposefully
+// not part of the SES Test suite, which tests real SES logic
+func TestFilterAddresses(t *testing.T) {
+	emails := []models.EmailAddress{"abc", "123", "", "hell0world"}
+
+	// Should filter nothing out when nil
+	assert.ElementsMatch(t, filterAddresses(emails, nil), emails)
+
+	// Filters out elements that don't match
+	assert.ElementsMatch(
+		t,
+		filterAddresses(emails, regexp.MustCompile(`\d`)),
+		[]models.EmailAddress{"123", "hell0world"},
+	)
+
+	// Filters out everything with no match
+	assert.Len(
+		t,
+		filterAddresses(emails, regexp.MustCompile("wooooooooooooo")),
+		0,
+	)
 }

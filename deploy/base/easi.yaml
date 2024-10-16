@@ -25,6 +25,7 @@ data:
   IT_INVESTMENT_EMAIL: success@simulator.amazonses.com
   EASI_HELP_EMAIL: success@simulator.amazonses.com
   TRB_EMAIL: success@simulator.amazonses.com
+  SES_RECIPIENT_REGEX: ''
   EMAIL_TEMPLATE_DIR: /easi/pkg/email/templates
   AWS_REGION: us-west-2
   AWS_SES_SOURCE: '\"EASi Local\" <no-reply-local@info.easi.cms.gov>'
