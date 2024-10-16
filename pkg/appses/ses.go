@@ -53,17 +53,17 @@ func filterAddresses(emails []models.EmailAddress, regex *regexp.Regexp) []model
 
 // Send sends an email. It will only return an error if there's an error connecting to SES; an invalid address/bounced email will *not* return an error.
 func (s Sender) Send(ctx context.Context, emailData email.Email) error {
-	// Don't send an email if there are no recipients
-	if len(emailData.ToAddresses) == 0 && len(emailData.CcAddresses) == 0 && len(emailData.BccAddresses) == 0 {
-		appcontext.ZLogger(ctx).Warn("attempted to send an email with no recipients")
-		return nil
-	}
-
 	// If a filter has been configured, filter out any addresses that don't match our allow-list
 	if s.config.RecipientRegex != nil {
 		emailData.ToAddresses = filterAddresses(emailData.ToAddresses, s.config.RecipientRegex)
 		emailData.CcAddresses = filterAddresses(emailData.CcAddresses, s.config.RecipientRegex)
 		emailData.BccAddresses = filterAddresses(emailData.BccAddresses, s.config.RecipientRegex)
+	}
+
+	// Don't send an email if there are no recipients
+	if len(emailData.ToAddresses) == 0 && len(emailData.CcAddresses) == 0 && len(emailData.BccAddresses) == 0 {
+		appcontext.ZLogger(ctx).Warn("attempted to send an email with no recipients")
+		return nil
 	}
 
 	input := &ses.SendEmailInput{
