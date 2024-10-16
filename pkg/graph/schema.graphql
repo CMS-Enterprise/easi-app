@@ -2536,7 +2536,7 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   updateTRBGuidanceLetterRecommendation(input: UpdateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBAdviceLetterRecommendationOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterRecommendation!]!
+  updateTRBGuidanceLetterRecommendationOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterRecommendation!]!
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)

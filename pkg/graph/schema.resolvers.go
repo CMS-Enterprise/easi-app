@@ -1148,8 +1148,8 @@ func (r *mutationResolver) UpdateTRBGuidanceLetterRecommendation(ctx context.Con
 	return resolvers.UpdateTRBGuidanceLetterRecommendation(ctx, r.store, input)
 }
 
-// UpdateTRBAdviceLetterRecommendationOrder is the resolver for the updateTRBGuidanceLetterRecommendationOrder field.
-func (r *mutationResolver) UpdateTRBAdviceLetterRecommendationOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) ([]*models.TRBGuidanceLetterRecommendation, error) {
+// UpdateTRBGuidanceLetterRecommendationOrder is the resolver for the updateTRBGuidanceLetterRecommendationOrder field.
+func (r *mutationResolver) UpdateTRBGuidanceLetterRecommendationOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	return resolvers.UpdateTRBGuidanceLetterRecommendationOrder(ctx, r.store, input.TrbRequestID, input.NewOrder)
 }
 
