@@ -139,9 +139,9 @@ export const RequestReviewForTRBGuidanceLetterQuery = gql`
   }
 `;
 
-export const SendTRBAdviceLetterQuery = gql`
-  mutation SendTRBAdviceLetter($input: SendTRBGuidanceLetterInput!) {
-    sendTRBAdviceLetter(input: $input) {
+export const SendTRBGuidanceLetterQuery = gql`
+  mutation SendTRBGuidanceLetter($input: SendTRBGuidanceLetterInput!) {
+    sendTRBGuidanceLetter(input: $input) {
       id
     }
   }

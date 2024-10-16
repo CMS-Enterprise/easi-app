@@ -6,18 +6,18 @@
 import { SendTRBGuidanceLetterInput } from "./../../types/graphql-global-types";
 
 // ====================================================
-// GraphQL mutation operation: SendTRBAdviceLetter
+// GraphQL mutation operation: SendTRBGuidanceLetter
 // ====================================================
 
-export interface SendTRBAdviceLetter_sendTRBAdviceLetter {
+export interface SendTRBGuidanceLetter_sendTRBGuidanceLetter {
   __typename: "TRBGuidanceLetter";
   id: UUID;
 }
 
-export interface SendTRBAdviceLetter {
-  sendTRBAdviceLetter: SendTRBAdviceLetter_sendTRBAdviceLetter;
+export interface SendTRBGuidanceLetter {
+  sendTRBGuidanceLetter: SendTRBGuidanceLetter_sendTRBGuidanceLetter;
 }
 
-export interface SendTRBAdviceLetterVariables {
+export interface SendTRBGuidanceLetterVariables {
   input: SendTRBGuidanceLetterInput;
 }

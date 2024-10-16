@@ -14,7 +14,7 @@ import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import {
   DeleteTrbRecommendationQuery,
   GetTrbAdviceLetterQuery,
-  SendTRBAdviceLetterQuery
+  SendTRBGuidanceLetterQuery
 } from 'queries/TrbAdviceLetterQueries';
 import {
   DeleteTRBRecommendation,
@@ -26,9 +26,9 @@ import {
   GetTrbAdminNotesVariables
 } from 'queries/types/GetTrbAdminNotes';
 import {
-  SendTRBAdviceLetter,
-  SendTRBAdviceLetterVariables
-} from 'queries/types/SendTRBAdviceLetter';
+  SendTRBGuidanceLetter,
+  SendTRBGuidanceLetterVariables
+} from 'queries/types/SendTRBGuidanceLetter';
 import {
   StepComponentProps,
   TrbRecipientFields
@@ -65,9 +65,9 @@ const Review = ({
   const notes: AdminNote[] = data?.trbRequest?.adminNotes || [];
 
   const [mutate, adviceLetterResult] = useMutation<
-    SendTRBAdviceLetter,
-    SendTRBAdviceLetterVariables
-  >(SendTRBAdviceLetterQuery);
+    SendTRBGuidanceLetter,
+    SendTRBGuidanceLetterVariables
+  >(SendTRBGuidanceLetterQuery);
 
   const [remove] = useMutation<
     DeleteTRBRecommendation,

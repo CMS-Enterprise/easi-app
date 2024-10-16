@@ -1106,7 +1106,7 @@ func (r *mutationResolver) UpdateTRBGuidanceLetter(ctx context.Context, input ma
 	return resolvers.UpdateTRBGuidanceLetter(ctx, r.store, input)
 }
 
-// RequestReviewForTRBGuidanceLetter is the resolver for the requestReviewForTRBAdviceLetter field.
+// RequestReviewForTRBGuidanceLetter is the resolver for the requestReviewForTRBGuidanceLetter field.
 func (r *mutationResolver) RequestReviewForTRBGuidanceLetter(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetter, error) {
 	return resolvers.RequestReviewForTRBGuidanceLetter(
 		ctx,
@@ -1116,8 +1116,8 @@ func (r *mutationResolver) RequestReviewForTRBGuidanceLetter(ctx context.Context
 		id)
 }
 
-// SendTRBAdviceLetter is the resolver for the sendTRBAdviceLetter field.
-func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input models.SendTRBGuidanceLetterInput) (*models.TRBGuidanceLetter, error) {
+// SendTRBGuidanceLetter is the resolver for the sendTRBGuidanceLetter field.
+func (r *mutationResolver) SendTRBGuidanceLetter(ctx context.Context, input models.SendTRBGuidanceLetterInput) (*models.TRBGuidanceLetter, error) {
 	return resolvers.SendTRBGuidanceLetter(
 		ctx,
 		r.store,

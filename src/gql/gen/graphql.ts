@@ -991,7 +991,7 @@ export type Mutation = {
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
-  sendTRBAdviceLetter: TRBGuidanceLetter;
+  sendTRBGuidanceLetter: TRBGuidanceLetter;
   setRolesForUserOnSystem?: Maybe<Scalars['String']['output']>;
   setSystemIntakeRelationExistingService?: Maybe<UpdateSystemIntakePayload>;
   setSystemIntakeRelationExistingSystem?: Maybe<UpdateSystemIntakePayload>;
@@ -1303,7 +1303,7 @@ export type MutationSendReportAProblemEmailArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationSendTRBAdviceLetterArgs = {
+export type MutationSendTRBGuidanceLetterArgs = {
   input: SendTRBGuidanceLetterInput;
 };
 
