@@ -8,6 +8,7 @@ import {
   TRBWhereInProcessOption,
   UpdateTRBRequestFormInput
 } from 'types/graphql-global-types';
+import { TRBGuidanceLetterRecommendationCategory } from 'types/technicalAssistance';
 // import { fileObjectSchema } from './fileSchema';
 
 type TrbFormInputBasic = Pick<
@@ -152,6 +153,10 @@ export const documentSchema = yup.object({
 
 export const guidanceRecommendationSchema = yup.object({
   title: yup.string().required(),
+  category: yup
+    .mixed()
+    .oneOf(Object.values(TRBGuidanceLetterRecommendationCategory))
+    .required(),
   recommendation: yup.string().required(),
   links: yup.array(
     yup.object({

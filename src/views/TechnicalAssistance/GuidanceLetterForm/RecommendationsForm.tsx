@@ -64,7 +64,7 @@ const RecommendationsForm = ({
     watch,
     reset,
     register,
-    formState: { isSubmitting, isDirty, errors }
+    formState: { isSubmitting, isDirty, errors, isValid }
   } = useEasiFormContext<GuidanceLetterRecommendationFields>();
 
   const [create] = useMutation<CreateTRBGuidanceLetterRecommendationInput>(
@@ -300,10 +300,7 @@ const RecommendationsForm = ({
           next={{
             text: t('button.save'),
             onClick: () => submit(() => history.push(returnLink)),
-            disabled:
-              watch('title').length === 0 ||
-              watch('recommendation').length === 0 ||
-              isSubmitting
+            disabled: !isValid || isSubmitting
           }}
           saveExitText={t(`guidanceLetterForm.returnToGuidanceLetter`, {
             formType
