@@ -27,13 +27,6 @@ import Pager from '../RequestForm/Pager';
 
 import RecommendationsForm from './RecommendationsForm';
 
-const defaultValues: GuidanceLetterRecommendationFields = {
-  id: undefined,
-  title: '',
-  recommendation: '',
-  links: []
-};
-
 const Recommendations = ({
   trbRequestId,
   adviceLetter: { recommendations },
@@ -51,8 +44,13 @@ const Recommendations = ({
 
   const formMethods = useForm<GuidanceLetterRecommendationFields>({
     resolver: yupResolver(guidanceRecommendationSchema),
-    defaultValues
+    defaultValues: {
+      title: '',
+      recommendation: '',
+      links: []
+    }
   });
+
   const { reset } = formMethods;
 
   const [remove, { loading }] = useMutation<
@@ -93,7 +91,7 @@ const Recommendations = ({
             className="margin-top-5 margin-bottom-1"
             type="button"
             onClick={() => {
-              reset(defaultValues);
+              reset();
               history.push(`${url}/form`);
             }}
             outline={hasRecommendations}

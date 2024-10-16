@@ -90,9 +90,21 @@ export type TrbAdminPage = {
   groupEnd?: boolean;
 };
 
+/**
+ * Mock category enum
+ *
+ * Replace with enum from schema after backend work
+ */
+export enum TRBGuidanceLetterRecommendationCategory {
+  REQUIREMENT = 'REQUIREMENT',
+  RECOMMENDATION = 'RECOMMENDATION',
+  CONSIDERATION = 'CONSIDERATION'
+}
+
 export type GuidanceLetterRecommendationFields = {
   id?: string;
   title: string;
+  category: TRBGuidanceLetterRecommendationCategory;
   recommendation: string;
   /** Links array - object type to get useFieldArray hook to work */
   links?: { link: string }[];
