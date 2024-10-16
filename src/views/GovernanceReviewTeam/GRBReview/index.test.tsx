@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
@@ -16,22 +17,6 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import ITGovAdminContext from '../ITGovAdminContext';
 
 import GRBReview from '.';
-
-const user = users[0];
-
-const grbReviewer: SystemIntakeGRBReviewerFragment = {
-  __typename: 'SystemIntakeGRBReviewer',
-  id: 'b62addad-d490-42ab-a170-9b178a2f24eb',
-  grbRole: SystemIntakeGRBReviewerRole.CMCS_REP,
-  votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
-  userAccount: {
-    __typename: 'UserAccount',
-    id: '38e6e472-5de2-49b4-aad2-cf1fd61ca87e',
-    username: user.euaUserId,
-    commonName: user.commonName,
-    email: user.email
-  }
-};
 
 describe('GRB review tab', () => {
   it('renders GRB reviewer view', async () => {
@@ -53,7 +38,10 @@ describe('GRB review tab', () => {
 
     expect(await screen.findByRole('heading', { name: 'GRB review' }));
 
-    expect(screen.getByRole('heading', { name: 'Available documentation' }));
+    // Hide start review button
+    expect(
+      screen.queryByRole('button', { name: 'Start GRB review' })
+    ).toBeNull();
   });
 
   it('renders GRT admin view', async () => {
@@ -75,52 +63,95 @@ describe('GRB review tab', () => {
 
     expect(await screen.findByRole('heading', { name: 'GRB review' }));
 
-    expect(screen.getByRole('button', { name: 'Add a GRB reviewer' }));
+    // Start review button
+    expect(
+      screen.getByRole('button', { name: 'Start GRB review' })
+    ).toBeInTheDocument();
   });
 
-  describe('Participants table', () => {
-    it('renders table for GRT admins', () => {
-      render(
-        <MemoryRouter>
-          <VerboseMockedProvider>
-            <MessageProvider>
-              <ITGovAdminContext.Provider value>
-                <GRBReview
-                  {...systemIntake}
-                  businessCase={businessCase}
-                  grbReviewers={[grbReviewer]}
-                />
-              </ITGovAdminContext.Provider>
-            </MessageProvider>
-          </VerboseMockedProvider>
-        </MemoryRouter>
-      );
+  it('renders GRB review start date', () => {
+    const date = '2024-09-10T14:42:47.422022Z';
+    render(
+      <MemoryRouter>
+        <VerboseMockedProvider>
+          <MessageProvider>
+            <ITGovAdminContext.Provider value>
+              <GRBReview
+                {...systemIntake}
+                businessCase={businessCase}
+                grbReviewers={[]}
+                grbReviewStartedAt={date}
+              />
+            </ITGovAdminContext.Provider>
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
 
-      expect(screen.getByText(user.commonName)).toBeInTheDocument();
-      expect(screen.getByText('Voting')).toBeInTheDocument();
-      expect(screen.getByText('CMCS Rep')).toBeInTheDocument();
+    expect(
+      screen.getByText('Review started on 09/10/2024')
+    ).toBeInTheDocument();
+  });
 
-      expect(screen.getByTestId('grbReviewerActions')).toBeInTheDocument();
+  it('renders Start GRB Review modal', async () => {
+    const grbReviewers: SystemIntakeGRBReviewerFragment[] = [
+      {
+        __typename: 'SystemIntakeGRBReviewer',
+        id: 'b62addad-d490-42ab-a170-9b178a2f24eb',
+        grbRole: SystemIntakeGRBReviewerRole.CMCS_REP,
+        votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
+        userAccount: {
+          __typename: 'UserAccount',
+          id: '38e6e472-5de2-49b4-aad2-cf1fd61ca87e',
+          username: users[0].euaUserId,
+          commonName: users[0].commonName,
+          email: users[0].email
+        }
+      },
+      {
+        __typename: 'SystemIntakeGRBReviewer',
+        id: 'b62addad-d490-42ab-a170-9b178a2f24eb',
+        grbRole: SystemIntakeGRBReviewerRole.PROGRAM_INTEGRITY_BDG_CHAIR,
+        votingRole: SystemIntakeGRBReviewerVotingRole.NON_VOTING,
+        userAccount: {
+          __typename: 'UserAccount',
+          id: '38e6e472-5de2-49b4-aad2-cf1fd61ca87e',
+          username: users[1].euaUserId,
+          commonName: users[1].commonName,
+          email: users[1].email
+        }
+      }
+    ];
+
+    render(
+      <MemoryRouter>
+        <VerboseMockedProvider>
+          <MessageProvider>
+            <ITGovAdminContext.Provider value>
+              <GRBReview
+                {...systemIntake}
+                businessCase={businessCase}
+                grbReviewers={grbReviewers}
+                grbReviewStartedAt={null}
+              />
+            </ITGovAdminContext.Provider>
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    const startGrbReviewButton = screen.getByRole('button', {
+      name: 'Start GRB review'
     });
 
-    it('hides action buttons for GRB reviewers', () => {
-      render(
-        <MemoryRouter>
-          <VerboseMockedProvider>
-            <MessageProvider>
-              <ITGovAdminContext.Provider value={false}>
-                <GRBReview
-                  {...systemIntake}
-                  businessCase={businessCase}
-                  grbReviewers={[grbReviewer]}
-                />
-              </ITGovAdminContext.Provider>
-            </MessageProvider>
-          </VerboseMockedProvider>
-        </MemoryRouter>
-      );
+    userEvent.click(startGrbReviewButton);
 
-      expect(screen.queryByTestId('grbReviewerActions')).toBeNull();
-    });
+    // Check that modal text displays correct number of reviewers
+    const modalText = await screen.findByText(
+      `Starting this review will send email notifications to ${grbReviewers.length} GRB reviewers.`,
+      { exact: false }
+    );
+
+    expect(modalText).toBeInTheDocument();
   });
 });

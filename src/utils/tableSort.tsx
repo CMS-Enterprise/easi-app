@@ -23,6 +23,7 @@ export const getColumnSortStatus = <T extends {}>(
 // Returns header sort icon based on sort status
 export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
   const sharedClassName = 'margin-left-05 position-absolute';
+
   if (!column.isSorted) {
     return (
       <Icon.UnfoldMore className={sharedClassName} data-testid="caret--sort" />
