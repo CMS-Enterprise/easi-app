@@ -215,16 +215,17 @@ func updateSystemIntakeRequestDetails(
 	acquisitionMethods []models.SystemIntakeSoftwareAcquisitionMethods,
 ) *models.SystemIntake {
 	input := models.UpdateSystemIntakeRequestDetailsInput{
-		ID:               intake.ID,
-		RequestName:      &requestName,
-		BusinessNeed:     &businessNeed,
-		BusinessSolution: &businessSolution,
-		NeedsEaSupport:   &needsEaSupport,
-		UsesAiTech:       &usesAiTech,
-		CurrentStage:     &currentStage,
-		CedarSystemID:    &cedarSystemID,
-		HasUIChanges:     &hasUIChanges,
-		UsingSoftware:    &usingSoftware,
+		ID:                 intake.ID,
+		RequestName:        &requestName,
+		BusinessNeed:       &businessNeed,
+		BusinessSolution:   &businessSolution,
+		NeedsEaSupport:     &needsEaSupport,
+		UsesAiTech:         &usesAiTech,
+		CurrentStage:       &currentStage,
+		CedarSystemID:      &cedarSystemID,
+		HasUIChanges:       &hasUIChanges,
+		UsingSoftware:      &usingSoftware,
+		AcquisitionMethods: acquisitionMethods,
 	}
 	fetchCedarSystemMock := func(context.Context, string) (*models.CedarSystem, error) {
 		return &models.CedarSystem{}, nil

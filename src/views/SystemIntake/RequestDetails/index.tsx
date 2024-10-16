@@ -92,6 +92,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     handleSubmit,
     setError,
     watch,
+    setValue,
     formState: { errors, isSubmitting, isDirty }
   } = useEasiForm<RequestDetailsForm>({
     resolver: yupResolver(SystemIntakeValidationSchema.requestDetails),
@@ -532,6 +533,11 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               }}
             />
           </HelpText>
+          <ErrorMessage
+            errors={errors}
+            name="usingSoftware"
+            as={FieldErrorMsg}
+          />
           <Controller
             control={control}
             name="usingSoftware"
@@ -558,13 +564,6 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 render={({ field, fieldState: { error } }) => {
                   return (
                     <FormGroup error={!!error}>
-                      {error && (
-                        <ErrorMessage
-                          errors={errors}
-                          name="acquisitionMethods"
-                          as={FieldErrorMsg}
-                        />
-                      )}
                       <Label htmlFor="businessSolution">
                         {t(
                           'requestDetails.softwareAcquisition.acquisitionStrategyLabel'
@@ -578,6 +577,11 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                           'requestDetails.softwareAcquisition.acquisitionStrategyHelp'
                         )}
                       </HelpText>
+                      <ErrorMessage
+                        errors={errors}
+                        name="acquisitionMethods"
+                        as={FieldErrorMsg}
+                      />
                       <Alert
                         type="info"
                         data-testid="mandatory-fields-alert"
@@ -633,6 +637,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 checked={value === 'NO'}
                 onChange={() => {
                   field.onChange('NO');
+                  setValue('acquisitionMethods', []);
                 }}
               />
             )}
@@ -649,6 +654,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 checked={value === 'NOT_SURE'}
                 onChange={() => {
                   field.onChange('NOT_SURE');
+                  setValue('acquisitionMethods', []);
                 }}
               />
             )}
