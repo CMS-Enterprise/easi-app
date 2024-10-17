@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeStatusAdmin, SystemIntakeState } from "./../../types/graphql-global-types";
+import { SystemIntakeStatusAdmin, SystemIntakeState, SystemIntakeSoftwareAcquisitionMethods } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntakesTable
@@ -130,6 +130,8 @@ export interface GetSystemIntakesTable_systemIntakes {
   actions: GetSystemIntakesTable_systemIntakes_actions[];
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
+  usingSoftware: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
   decidedAt: Time | null;
   submittedAt: Time | null;
   updatedAt: Time | null;
