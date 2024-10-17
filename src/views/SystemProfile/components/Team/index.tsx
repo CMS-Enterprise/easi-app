@@ -10,8 +10,7 @@ import {
   CardHeader,
   Grid,
   GridContainer,
-  IconExpandMore,
-  IconMailOutline,
+  Icon,
   Link
 } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -134,7 +133,7 @@ export const TeamContactCard = ({
             target="_blank"
           >
             {person.assigneeEmail}
-            <IconMailOutline className="margin-left-1" />
+            <Icon.MailOutline className="margin-left-1" />
           </Link>
         )}
       </CardHeader>
@@ -219,7 +218,7 @@ export const TeamSection = ({
               }}
             >
               {t(`singleSystem.team.show${isExpanded ? 'Less' : 'More'}`)}
-              <IconExpandMore
+              <Icon.ExpandMore
                 className="margin-left-05 margin-bottom-2px text-tbottom"
                 style={{
                   transform: isExpanded ? 'rotate(180deg)' : ''

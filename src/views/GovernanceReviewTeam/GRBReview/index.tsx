@@ -7,8 +7,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  IconAdd,
-  IconArrowForward,
+  Icon,
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
@@ -320,7 +319,7 @@ const GRBReview = ({
                       <span className="margin-right-1">
                         {t('businessCaseOverview.linkToBusinessCase')}
                       </span>
-                      <IconArrowForward />
+                      <Icon.ArrowForward />
                     </UswdsReactLink>
                   </CardFooter>
                 </>
@@ -343,7 +342,7 @@ const GRBReview = ({
                 to="./documents/upload"
                 className="display-flex flex-align-center"
               >
-                <IconAdd className="margin-right-1" />
+                <Icon.Add className="margin-right-1" />
                 <span>{t('additionalDocsLink')}</span>
               </UswdsReactLink>
             )}

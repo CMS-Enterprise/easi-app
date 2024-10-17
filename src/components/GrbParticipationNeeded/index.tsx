@@ -1,13 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column, usePagination, useSortBy, useTable } from 'react-table';
-import {
-  Button,
-  IconGroups,
-  IconVisibilityOff,
-  IconVisiblity,
-  Table
-} from '@trussworks/react-uswds';
+import { Button, Icon, Table } from '@trussworks/react-uswds';
 import {
   SystemIntakeWithReviewRequestedFragment,
   useGetSystemIntakesWithReviewRequestedQuery
@@ -140,7 +134,7 @@ const GrbParticipationNeeded = () => {
           <h2 className="margin-y-0 margin-right-2">
             {t('homepage.participationNeeded')}
           </h2>
-          <IconGroups size={4} className="text-primary" />
+          <Icon.Groups size={4} className="text-primary" />
         </div>
 
         <p className="line-height-body-5 margin-top-1 margin-bottom-3">
@@ -150,7 +144,7 @@ const GrbParticipationNeeded = () => {
         {/* Toggle GRB reviews button */}
         <IconButton
           onClick={() => setShowGrbReviews(!showGrbReviews)}
-          icon={showGrbReviews ? <IconVisibilityOff /> : <IconVisiblity />}
+          icon={showGrbReviews ? <Icon.VisibilityOff /> : <Icon.Visibility />}
           type="button"
           unstyled
         >

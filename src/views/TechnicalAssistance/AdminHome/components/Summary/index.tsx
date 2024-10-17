@@ -7,7 +7,7 @@ import {
   BreadcrumbLink,
   Grid,
   GridContainer,
-  IconError,
+  Icon,
   ModalRef
 } from '@trussworks/react-uswds';
 
@@ -120,7 +120,7 @@ export default function Summary({
               </h4>
               <span className="display-flex flex-align-center">
                 {!trbLead && (
-                  <IconError className="text-error margin-right-05" />
+                  <Icon.Error className="text-error margin-right-05" />
                 )}
                 {trbLead || t('adminHome.notAssigned')}
               </span>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, ButtonGroup, IconLaunch, Link } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Icon, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import Modal from 'components/Modal';
@@ -90,7 +90,7 @@ function AtoCard({
               className="margin-left-1 display-flex flex-align-center text-primary"
             >
               {t('spaces.ato.learn')}
-              <IconLaunch className="margin-left-1" />
+              <Icon.Launch className="margin-left-1" />
             </Link>
           </div>
         }
