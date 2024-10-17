@@ -1,12 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import {
-  Button,
-  Grid,
-  GridContainer,
-  IconArrowBack
-} from '@trussworks/react-uswds';
+import { Button, Grid, GridContainer, Icon } from '@trussworks/react-uswds';
 import { isEqual } from 'lodash';
 
 import PageLoading from 'components/PageLoading';
@@ -342,7 +337,7 @@ const GuidanceLetterForm = () => {
                   }
                 }}
               >
-                <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+                <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
                 {t('guidanceLetterForm.returnToRequest')}
               </Button>
             )

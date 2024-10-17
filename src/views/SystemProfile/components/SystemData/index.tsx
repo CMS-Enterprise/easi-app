@@ -8,10 +8,7 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  IconExpandMore,
-  IconFileDownload,
-  IconFileUpload,
-  IconHelpOutline,
+  Icon,
   Table
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -43,19 +40,19 @@ function ExchangeDirectionTag({
     <Tag className="text-base-darker bg-base-lighter  display-flex flex-align-center">
       {data === ExchangeDirection.RECEIVER && (
         <>
-          <IconFileDownload className="margin-right-1" />
+          <Icon.FileDownload className="margin-right-1" />
           {t('singleSystem.systemData.exchangeDirection.receives')}
         </>
       )}
       {data === ExchangeDirection.SENDER && (
         <>
-          <IconFileUpload className="margin-right-1" />
+          <Icon.FileUpload className="margin-right-1" />
           {t('singleSystem.systemData.exchangeDirection.sends')}
         </>
       )}
       {data === null && (
         <>
-          <IconHelpOutline className="margin-right-1" />
+          <Icon.HelpOutline className="margin-right-1" />
           <span className="text-normal text-italic">
             {t('singleSystem.systemData.exchangeDirection.unknown')}
           </span>
@@ -91,7 +88,7 @@ function ExchangeCard({ data }: { data: Exchange }) {
         <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
           <h3 className="margin-top-0 margin-bottom-1">{data.exchangeName}</h3>
           <Tag className="bg-base-lighter text-darker text-normal text-italic display-flex flex-align-center">
-            <IconHelpOutline className="margin-right-1" />
+            <Icon.HelpOutline className="margin-right-1" />
             {t('singleSystem.systemData.statusUnknown')}
           </Tag>
         </div>
@@ -123,7 +120,7 @@ function ExchangeCard({ data }: { data: Exchange }) {
                     ? 'singleSystem.description.less'
                     : 'singleSystem.description.more'
                 )}
-                <IconExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
+                <Icon.ExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
               </Button>
             </div>
           )}
@@ -410,7 +407,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
                     isExchangesExpanded ? 'less' : 'more'
                   }`
                 )}
-                <IconExpandMore
+                <Icon.ExpandMore
                   className="margin-left-05 margin-bottom-2px text-tbottom"
                   style={{
                     transform: isExchangesExpanded ? 'rotate(180deg)' : ''
@@ -420,7 +417,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
             )}
           </>
         ) : (
-          <Alert type="info">
+          <Alert type="info" headingLevel="h4">
             {t('singleSystem.systemData.noExchangesAlert')}
           </Alert>
         )}

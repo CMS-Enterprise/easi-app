@@ -27,11 +27,6 @@ exports[`The making a request page > matches the snapshot 1`] = `
     <div
       className="usa-summary-box__body"
     >
-      <h3
-        className="usa-summary-box__heading"
-      >
-        
-      </h3>
       <div
         className="usa-summary-box__text"
       >

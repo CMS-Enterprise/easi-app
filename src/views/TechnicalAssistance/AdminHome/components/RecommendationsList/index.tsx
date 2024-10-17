@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
-import {
-  Button,
-  ButtonGroup,
-  IconArrowDropDown,
-  IconArrowDropUp
-} from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import { RichTextViewer } from 'components/RichTextEditor';
@@ -152,7 +147,7 @@ export default function RecommendationsList({
                         )}
                         unstyled
                       >
-                        <IconArrowDropUp size={3} className="text-primary" />
+                        <Icon.ArrowDropUp size={3} className="text-primary" />
                       </Button>
                       <span data-testid="order-index">{index + 1}</span>
                       <Button
@@ -164,7 +159,7 @@ export default function RecommendationsList({
                         )}
                         unstyled
                       >
-                        <IconArrowDropDown size={3} className="text-primary" />
+                        <Icon.ArrowDropDown size={3} className="text-primary" />
                       </Button>
                     </div>
                   )

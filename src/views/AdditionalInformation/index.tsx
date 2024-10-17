@@ -65,13 +65,23 @@ const AdditionalInformation = ({
       )}
 
       {request.relationType === null && (
-        <Alert type="warning" slim className="margin-top-3 margin-bottom-2">
+        <Alert
+          type="warning"
+          headingLevel="h4"
+          slim
+          className="margin-top-3 margin-bottom-2"
+        >
           {t('unlinkedAlert')}
         </Alert>
       )}
 
       {request.relationType === RequestRelationType.NEW_SYSTEM && (
-        <Alert type="info" slim className="margin-top-3 margin-bottom-2">
+        <Alert
+          type="info"
+          headingLevel="h4"
+          slim
+          className="margin-top-3 margin-bottom-2"
+        >
           {t('newSystemAlert')}
         </Alert>
       )}

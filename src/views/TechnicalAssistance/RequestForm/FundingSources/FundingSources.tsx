@@ -58,7 +58,6 @@ const FundingSourcesListItem = ({
       {handleEdit && (
         <Button
           unstyled
-          small
           onClick={() => handleEdit()}
           type="button"
           className="margin-right-1 margin-top-1"
@@ -70,7 +69,6 @@ const FundingSourcesListItem = ({
       {handleDelete && (
         <Button
           unstyled
-          small
           onClick={() => handleDelete()}
           type="button"
           className="text-error margin-top-1"

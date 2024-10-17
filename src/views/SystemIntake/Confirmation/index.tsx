@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { IconNavigateBefore } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 
@@ -23,7 +23,7 @@ const Confirmation = () => {
             to={`/governance-task-list/${systemId}`}
             className="display-flex"
           >
-            <IconNavigateBefore className="margin-x-05" aria-hidden />
+            <Icon.NavigateBefore className="margin-x-05" aria-hidden />
             {t('submission.confirmation.taskListCta')}
           </Link>
         </div>
