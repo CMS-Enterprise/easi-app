@@ -3,7 +3,7 @@ import {
   Card,
   CardBody,
   CardHeader,
-  IconArrowForward,
+  Icon,
   Link
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -56,7 +56,7 @@ const SystemHelpCard = ({
             aria-label={header}
           >
             {linkText}
-            <IconArrowForward className="margin-left-1" />
+            <Icon.ArrowForward className="margin-left-1" />
           </UswdsReactLink>
         )}
       </CardBody>

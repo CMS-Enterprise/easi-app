@@ -18,9 +18,6 @@ exports[`System Profile parent request > matches snapshot 1`] = `
         <div
           class="usa-summary-box__body"
         >
-          <h3
-            class="usa-summary-box__heading"
-          />
           <div
             class="usa-summary-box__text"
           >

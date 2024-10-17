@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, Grid, IconArrowForward } from '@trussworks/react-uswds';
+import { Card, Grid, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -72,7 +72,7 @@ const SystemCard = ({
           className="display-flex flex-align-center"
         >
           {t('viewSystem')}
-          <IconArrowForward className="margin-left-1" />
+          <Icon.ArrowForward className="margin-left-1" />
         </UswdsReactLink>
       </Grid>
     </Card>

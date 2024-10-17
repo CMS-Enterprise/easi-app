@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { IconExpandMore, IconNavigateNext } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -183,9 +183,9 @@ const ResponsiveTabs = ({
               aria-expanded={isMoreMenuOpen}
             >
               {isMoreMenuOpen ? (
-                <IconExpandMore size={5} />
+                <Icon.ExpandMore size={5} />
               ) : (
-                <IconNavigateNext size={5} />
+                <Icon.NavigateNext size={5} />
               )}
               <span>More</span>
             </button>

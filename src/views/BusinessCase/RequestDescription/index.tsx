@@ -1,12 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  ButtonGroup,
-  IconArrowBack,
-  Label
-} from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Icon, Label } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import PageNumber from 'components/PageNumber';
@@ -233,7 +228,7 @@ const RequestDescription = ({
 
             <IconButton
               type="button"
-              icon={<IconArrowBack />}
+              icon={<Icon.ArrowBack />}
               className="margin-bottom-3 margin-top-2"
               onClick={() => {
                 dispatchSave();

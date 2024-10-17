@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { GridContainer, IconArrowBack } from '@trussworks/react-uswds';
+import { GridContainer, Icon } from '@trussworks/react-uswds';
 import { sortBy } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -36,7 +36,7 @@ function Feedback({ request, taskListUrl, prevStep }: FeedbackProps) {
   const returnToFormLink = useMemo(
     () => (
       <UswdsReactLink to={returnUrl}>
-        <IconArrowBack className="margin-right-1 text-middle" />
+        <Icon.ArrowBack className="margin-right-1 text-middle" />
         <span className="line-height-body-5">
           {fromTaskList
             ? t('requestFeedback.returnToTaskList')

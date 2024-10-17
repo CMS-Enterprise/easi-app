@@ -7,7 +7,7 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  IconExpandMore
+  Icon
 } from '@trussworks/react-uswds';
 
 import {
@@ -125,7 +125,7 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
                   count: productsLeft
                 }
               )}
-              <IconExpandMore
+              <Icon.ExpandMore
                 className="margin-left-05 margin-bottom-2px text-tbottom"
                 style={{
                   transform: isExpanded ? 'rotate(180deg)' : ''
@@ -135,7 +135,12 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
           )}
         </>
       ) : (
-        <Alert slim type="info" data-testid="no-software-products-alert">
+        <Alert
+          headingLevel="h4"
+          slim
+          type="info"
+          data-testid="no-software-products-alert"
+        >
           {t('singleSystem.toolsAndSoftware.noToolsOrSoftware')}
         </Alert>
       )}
