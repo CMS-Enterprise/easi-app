@@ -17,17 +17,22 @@ exports[`Governance Overview Content > renders default version without crashing 
         <li
           class="margin-y-1"
         >
-          work with Subject Matter Experts (SMEs) to refine your Business Case
+          Work with GRT Subject Matter Experts (SMEs) to refine your Business Case
         </li>
         <li
           class="margin-y-1"
         >
-          get a Life Cycle ID
+          Justify your Business Case to the GRB
         </li>
         <li
           class="margin-y-1"
         >
-          get approval for your request to then seek funding
+          Complete or initiate any new requirements from the GRT and/or GRB
+        </li>
+        <li
+          class="margin-y-1"
+        >
+          Get a Life Cycle ID (LCID) certifying compliance with HHS standards for IT investments to use on your acquisition documentation
         </li>
       </ul>
       <p>
@@ -90,7 +95,7 @@ exports[`Governance Overview Content > renders default version without crashing 
             class="usa-process-list__heading"
             data-testid="processListHeading"
           >
-            Prepare your business case
+            Prepare your Business Case
           </h3>
           <p
             class="margin-bottom-1"
@@ -142,12 +147,12 @@ exports[`Governance Overview Content > renders default version without crashing 
             class="usa-process-list__heading"
             data-testid="processListHeading"
           >
-            Submit the business case for final approval
+            Submit your final Business Case
           </h3>
           <p
             class="margin-bottom-1"
           >
-            Update your Business Case based on feedback from the Governance Review Team and submit it to the Governance Review Board.
+            Update your Business Case based on feedback and incorporate any requirements from the review meeting or Governance Review Team for submission to the Governance Review Board.
           </p>
         </li>
         <li
@@ -184,7 +189,7 @@ exports[`Governance Overview Content > renders default version without crashing 
           <p
             class="margin-bottom-1"
           >
-            If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.
+            If your request is ready to move forard, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.
           </p>
         </li>
       </ol>
@@ -244,17 +249,22 @@ exports[`Governance Overview Content > renders help section version without cras
         <li
           class="margin-y-1"
         >
-          work with Subject Matter Experts (SMEs) to refine your Business Case
+          Work with GRT Subject Matter Experts (SMEs) to refine your Business Case
         </li>
         <li
           class="margin-y-1"
         >
-          get a Life Cycle ID
+          Justify your Business Case to the GRB
         </li>
         <li
           class="margin-y-1"
         >
-          get approval for your request to then seek funding
+          Complete or initiate any new requirements from the GRT and/or GRB
+        </li>
+        <li
+          class="margin-y-1"
+        >
+          Get a Life Cycle ID (LCID) certifying compliance with HHS standards for IT investments to use on your acquisition documentation
         </li>
       </ul>
       <p>
@@ -347,7 +357,7 @@ exports[`Governance Overview Content > renders help section version without cras
             class="usa-process-list__heading"
             data-testid="processListHeading"
           >
-            Prepare your business case
+            Prepare your Business Case
           </h3>
           <p
             class="margin-bottom-1"
@@ -399,12 +409,12 @@ exports[`Governance Overview Content > renders help section version without cras
             class="usa-process-list__heading"
             data-testid="processListHeading"
           >
-            Submit the business case for final approval
+            Submit your final Business Case
           </h3>
           <p
             class="margin-bottom-1"
           >
-            Update your Business Case based on feedback from the Governance Review Team and submit it to the Governance Review Board.
+            Update your Business Case based on feedback and incorporate any requirements from the review meeting or Governance Review Team for submission to the Governance Review Board.
           </p>
         </li>
         <li
@@ -441,7 +451,7 @@ exports[`Governance Overview Content > renders help section version without cras
           <p
             class="margin-bottom-1"
           >
-            If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.
+            If your request is ready to move forard, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.
           </p>
         </li>
       </ol>
