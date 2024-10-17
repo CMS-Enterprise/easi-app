@@ -10,22 +10,22 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// IsNewRecommendationOrderValid checks that a new order for TRB advice letter recommendations is valid for the current recommendations
-func IsNewRecommendationOrderValid(currentRecommendations []*models.TRBAdviceLetterRecommendation, newOrder []uuid.UUID) error {
+// IsNewRecommendationOrderValid checks that a new order for TRB guidance letter recommendations is valid for the current recommendations
+func IsNewRecommendationOrderValid(currentRecommendations []*models.TRBGuidanceLetterRecommendation, newOrder []uuid.UUID) error {
 	// check that newOrder has the same number of IDs as there are in the current recommendations
 	if len(newOrder) != len(currentRecommendations) {
 		return &apperrors.BadRequestError{
-			Err: errors.New("new order for TRB advice letter recommendations must have the same number of IDs as there are current recommendations"),
+			Err: errors.New("new order for TRB guidance letter recommendations must have the same number of IDs as there are current recommendations"),
 		}
 	}
 
 	// check that all IDs in newOrder are present in currentRecommendations
 	for _, newOrderID := range newOrder {
-		if !slices.ContainsFunc(currentRecommendations, func(currentRecommendation *models.TRBAdviceLetterRecommendation) bool {
+		if !slices.ContainsFunc(currentRecommendations, func(currentRecommendation *models.TRBGuidanceLetterRecommendation) bool {
 			return newOrderID == currentRecommendation.ID
 		}) {
 			return &apperrors.BadRequestError{
-				Err: errors.New("new order for TRB advice letter recommendations must contain all IDs of current recommendations"),
+				Err: errors.New("new order for TRB guidance letter recommendations must contain all IDs of current recommendations"),
 			}
 		}
 	}
@@ -35,7 +35,7 @@ func IsNewRecommendationOrderValid(currentRecommendations []*models.TRBAdviceLet
 	for _, newOrderID := range newOrder {
 		if _, ok := newOrderIDs[newOrderID]; ok { // non-distinct ID detected
 			return &apperrors.BadRequestError{
-				Err: errors.New("new order for TRB advice letter recommendations must contain distinct IDs"),
+				Err: errors.New("new order for TRB guidance letter recommendations must contain distinct IDs"),
 			}
 		}
 

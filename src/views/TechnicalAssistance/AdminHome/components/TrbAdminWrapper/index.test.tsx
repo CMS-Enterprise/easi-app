@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
 
 import {
-  getTrbAdviceLetterQuery,
+  getTrbGuidanceLetterQuery,
   taskStatuses,
   trbRequestSummary
 } from 'data/mock/trbRequest';
@@ -47,7 +47,7 @@ describe('TRB Admin Wrapper', () => {
   ) =>
     render(
       <Provider store={store}>
-        <VerboseMockedProvider mocks={[getTrbAdviceLetterQuery]}>
+        <VerboseMockedProvider mocks={[getTrbGuidanceLetterQuery]}>
           <MemoryRouter>
             <TrbAdminWrapper
               activePage={activePage}
@@ -88,8 +88,8 @@ describe('TRB Admin Wrapper', () => {
       'assignTrbLead',
       'orCloseRequest'
     ],
-    CONSULT_COMPLETE: ['viewAdviceLetter', 'orCloseRequest'],
-    ADVICE_LETTER_IN_REVIEW: ['viewAdviceLetter', 'orCloseRequest'],
+    CONSULT_COMPLETE: ['viewGuidanceLetter', 'orCloseRequest'],
+    ADVICE_LETTER_IN_REVIEW: ['viewGuidanceLetter', 'orCloseRequest'],
     ADVICE_LETTER_SENT: ['closeRequest']
   };
   const statusKeys = Object.keys(statuses);

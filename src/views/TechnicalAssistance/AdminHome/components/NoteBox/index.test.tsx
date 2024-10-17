@@ -9,7 +9,7 @@ describe('TRB Admin Note Box', () => {
       <NoteBox
         trbRequestId="861fa6c5-c9af-4cda-a559-0995b7b76855"
         noteCount={4}
-        activePage="advice"
+        activePage="guidance"
       />
     );
 

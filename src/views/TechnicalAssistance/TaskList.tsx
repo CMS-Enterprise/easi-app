@@ -34,11 +34,11 @@ import {
 } from 'queries/types/UpdateTrbRequestArchived';
 import UpdateTrbRequestArchivedQuery from 'queries/UpdateTrbRequestArchivedQuery';
 import {
-  TRBAdviceLetterStatusTaskList,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
-  TRBFormStatus
+  TRBFormStatus,
+  TRBGuidanceLetterStatusTaskList
 } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import AdditionalRequestInfo from 'views/GovernanceTaskList/AdditionalRequestInfo';
@@ -359,7 +359,7 @@ function TaskList() {
                   </TaskListDescription>
                 </TaskListItem>
 
-                {/* Advice letter and next steps */}
+                {/* Guidance letter and next steps */}
                 <TaskListItem
                   heading={taskListText[4].heading}
                   status={taskStatuses?.adviceLetterStatusTaskList}
@@ -370,16 +370,16 @@ function TaskList() {
                   </TaskListDescription>
 
                   {taskStatuses?.adviceLetterStatusTaskList ===
-                    TRBAdviceLetterStatusTaskList.COMPLETED && (
+                    TRBGuidanceLetterStatusTaskList.COMPLETED && (
                     <UswdsReactLink
                       variant="unstyled"
                       className="usa-button"
                       to={{
-                        pathname: `/trb/advice-letter/${id}`,
+                        pathname: `/trb/guidance-letter/${id}`,
                         state: { fromTaskList: true }
                       }}
                     >
-                      {t('taskList.viewAdviceLetter')}
+                      {t('taskList.viewGuidanceLetter')}
                     </UswdsReactLink>
                   )}
                 </TaskListItem>

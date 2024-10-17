@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBFormStatus, TRBAdviceLetterStatus } from "./../../types/graphql-global-types";
+import { TRBFormStatus, TRBGuidanceLetterStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetTrbRequestHome
@@ -12,7 +12,7 @@ import { TRBFormStatus, TRBAdviceLetterStatus } from "./../../types/graphql-glob
 export interface GetTrbRequestHome_trbRequest_taskStatuses {
   __typename: "TRBTaskStatuses";
   formStatus: TRBFormStatus;
-  adviceLetterStatus: TRBAdviceLetterStatus;
+  adviceLetterStatus: TRBGuidanceLetterStatus;
 }
 
 export interface GetTrbRequestHome_trbRequest_form {
@@ -22,7 +22,7 @@ export interface GetTrbRequestHome_trbRequest_form {
 }
 
 export interface GetTrbRequestHome_trbRequest_adviceLetter {
-  __typename: "TRBAdviceLetter";
+  __typename: "TRBGuidanceLetter";
   id: UUID;
   modifiedAt: Time | null;
 }

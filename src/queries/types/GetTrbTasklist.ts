@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBRequestType, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatusTaskList, RequestRelationType } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBGuidanceLetterStatusTaskList, RequestRelationType } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetTrbTasklist
@@ -20,7 +20,7 @@ export interface GetTrbTasklist_trbRequest_taskStatuses {
   feedbackStatus: TRBFeedbackStatus;
   consultPrepStatus: TRBConsultPrepStatus;
   attendConsultStatus: TRBAttendConsultStatus;
-  adviceLetterStatusTaskList: TRBAdviceLetterStatusTaskList;
+  adviceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList;
 }
 
 export interface GetTrbTasklist_trbRequest_feedback {

@@ -15,7 +15,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	s.Run("Creating an admin note returns a non-archived admin note with the passed-in data", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 
-		category := models.TRBAdminNoteCategoryAdviceLetter
+		category := models.TRBAdminNoteCategoryGuidanceLetter
 		noteText := models.HTML("Creation test")
 		noteToCreate := models.TRBAdminNote{
 			Category:                category,

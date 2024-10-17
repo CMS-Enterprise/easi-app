@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CreateTRBAdminNoteAdviceLetterInput, TRBAdminNoteCategory } from "./../../types/graphql-global-types";
+import { CreateTRBAdminNoteGuidanceLetterInput, TRBAdminNoteCategory } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: CreateTRBAdminNoteAdviceLetter
@@ -36,20 +36,20 @@ export interface CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_c
   documents: CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents[];
 }
 
-export interface CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData_recommendations {
-  __typename: "TRBAdviceLetterRecommendation";
+export interface CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData_recommendations {
+  __typename: "TRBGuidanceLetterRecommendation";
   title: string;
   deletedAt: Time | null;
 }
 
-export interface CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData {
-  __typename: "TRBAdminNoteAdviceLetterCategoryData";
+export interface CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData {
+  __typename: "TRBAdminNoteGuidanceLetterCategoryData";
   appliesToMeetingSummary: boolean;
   appliesToNextSteps: boolean;
-  recommendations: CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData_recommendations[];
+  recommendations: CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData_recommendations[];
 }
 
-export type CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData = CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteGeneralRequestCategoryData | CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteInitialRequestFormCategoryData | CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData | CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData;
+export type CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData = CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteGeneralRequestCategoryData | CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteInitialRequestFormCategoryData | CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData | CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData;
 
 export interface CreateTRBAdminNoteAdviceLetter_createTRBAdminNoteAdviceLetter {
   __typename: "TRBAdminNote";
@@ -67,5 +67,5 @@ export interface CreateTRBAdminNoteAdviceLetter {
 }
 
 export interface CreateTRBAdminNoteAdviceLetterVariables {
-  input: CreateTRBAdminNoteAdviceLetterInput;
+  input: CreateTRBAdminNoteGuidanceLetterInput;
 }

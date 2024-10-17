@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface GetTrbRecommendations_trbRequest_adviceLetter_recommendations {
-  __typename: "TRBAdviceLetterRecommendation";
+  __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
   recommendation: HTML;
@@ -16,7 +16,7 @@ export interface GetTrbRecommendations_trbRequest_adviceLetter_recommendations {
 }
 
 export interface GetTrbRecommendations_trbRequest_adviceLetter {
-  __typename: "TRBAdviceLetter";
+  __typename: "TRBGuidanceLetter";
   /**
    * List of recommendations in the order specified by users
    */

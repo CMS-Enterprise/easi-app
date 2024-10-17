@@ -26,7 +26,7 @@ export const TRBAdminNoteFragment = gql`
         }
       }
 
-      ... on TRBAdminNoteAdviceLetterCategoryData {
+      ... on TRBAdminNoteGuidanceLetterCategoryData {
         appliesToMeetingSummary
         appliesToNextSteps
         recommendations {

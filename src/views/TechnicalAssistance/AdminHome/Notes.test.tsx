@@ -72,23 +72,23 @@ const adminNotes: TRBAdminNoteFragment[] = [
     id: 'badd3c6c-86f2-40fd-af1b-4ab46c4f8c34',
     isArchived: false,
     category: TRBAdminNoteCategory.ADVICE_LETTER,
-    noteText: 'Advice Letter Note',
+    noteText: 'Guidance Letter Note',
     author: {
       __typename: 'UserInfo',
       commonName: 'Jerry Seinfeld'
     },
     categorySpecificData: {
-      __typename: 'TRBAdminNoteAdviceLetterCategoryData',
+      __typename: 'TRBAdminNoteGuidanceLetterCategoryData',
       appliesToMeetingSummary: true,
       appliesToNextSteps: false,
       recommendations: [
         {
-          __typename: 'TRBAdviceLetterRecommendation',
+          __typename: 'TRBGuidanceLetterRecommendation',
           title: 'Recommendation One',
           deletedAt: null
         },
         {
-          __typename: 'TRBAdviceLetterRecommendation',
+          __typename: 'TRBGuidanceLetterRecommendation',
           title: 'Recommendation Two',
           deletedAt: null
         }

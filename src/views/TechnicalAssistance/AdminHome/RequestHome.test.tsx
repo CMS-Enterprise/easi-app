@@ -7,8 +7,8 @@ import i18next from 'i18next';
 import { trbRequestSummary } from 'data/mock/trbRequest';
 import GetTrbRequestHomeQuery from 'queries/GetTrbRequestHomeQuery';
 import {
-  TRBAdviceLetterStatus,
   TRBFormStatus,
+  TRBGuidanceLetterStatus,
   TRBRequestStatus
 } from 'types/graphql-global-types';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
@@ -45,7 +45,8 @@ describe('Trb Admin Request Home', () => {
                   consultMeetingTime: null,
                   taskStatuses: {
                     formStatus: TRBFormStatus.READY_TO_START,
-                    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
+                    adviceLetterStatus:
+                      TRBGuidanceLetterStatus.CANNOT_START_YET,
                     __typename: 'TRBTaskStatuses'
                   },
                   form: {
@@ -106,10 +107,10 @@ describe('Trb Admin Request Home', () => {
       'There are 0 additional documents uploaded as a part of this request.'
     );
 
-    // Start advice letter button disabled
+    // Start guidance letter button disabled
     expect(
       getByRole('button', {
-        name: i18next.t<string>('technicalAssistance:adminHome.startAdvice')
+        name: i18next.t<string>('technicalAssistance:adminHome.startGuidance')
       })
     ).toBeDisabled();
 
@@ -138,7 +139,7 @@ describe('Trb Admin Request Home', () => {
                   consultMeetingTime: '2024-01-05T05:00:00Z',
                   taskStatuses: {
                     formStatus: TRBFormStatus.COMPLETED,
-                    adviceLetterStatus: TRBAdviceLetterStatus.READY_TO_START,
+                    adviceLetterStatus: TRBGuidanceLetterStatus.READY_TO_START,
                     __typename: 'TRBTaskStatuses'
                   },
                   form: {
@@ -200,7 +201,7 @@ describe('Trb Admin Request Home', () => {
 
     expect(
       getByRole('button', {
-        name: i18next.t<string>('technicalAssistance:adminHome.startAdvice')
+        name: i18next.t<string>('technicalAssistance:adminHome.startGuidance')
       })
     ).not.toBeDisabled();
   });
