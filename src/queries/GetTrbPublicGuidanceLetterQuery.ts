@@ -1,10 +1,10 @@
 import { gql } from '@apollo/client';
 
-import { TRBAdviceLetter } from './TrbAdviceLetterQueries';
+import { TRBGuidanceLetter } from './TrbGuidanceLetterQueries';
 
 export default gql`
-  ${TRBAdviceLetter}
-  query GetTrbPublicAdviceLetter($id: UUID!) {
+  ${TRBGuidanceLetter}
+  query GetTrbPublicGuidanceLetter($id: UUID!) {
     trbRequest(id: $id) {
       id
       name
@@ -20,11 +20,11 @@ export default gql`
       }
       type
       consultMeetingTime
-      adviceLetter {
-        ...TRBAdviceLetter
+      guidanceLetter {
+        ...TRBGuidanceLetter
       }
       taskStatuses {
-        adviceLetterStatus
+        guidanceLetterStatus
       }
     }
   }

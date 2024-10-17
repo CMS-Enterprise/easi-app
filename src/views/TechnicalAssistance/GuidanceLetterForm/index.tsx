@@ -8,11 +8,11 @@ import PageLoading from 'components/PageLoading';
 import { Alert } from 'components/shared/Alert';
 import StepHeader from 'components/StepHeader';
 import useCacheQuery from 'hooks/useCacheQuery';
-import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
-  GetTrbAdviceLetter,
-  GetTrbAdviceLetterVariables
-} from 'queries/types/GetTrbAdviceLetter';
+  GetTrbGuidanceLetter,
+  GetTrbGuidanceLetterVariables
+} from 'queries/types/GetTrbGuidanceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import {
   FormAlertObject,
@@ -86,15 +86,15 @@ const GuidanceLetterForm = () => {
 
   // TRB request query
   const { data, loading } = useCacheQuery<
-    GetTrbAdviceLetter,
-    GetTrbAdviceLetterVariables
-  >(GetTrbAdviceLetterQuery, {
+    GetTrbGuidanceLetter,
+    GetTrbGuidanceLetterVariables
+  >(GetTrbGuidanceLetterQuery, {
     variables: { id }
   });
 
   /** Current trb request */
   const trbRequest = data?.trbRequest;
-  const { adviceLetter } = trbRequest || {};
+  const { guidanceLetter } = trbRequest || {};
 
   // References to the submit handler and submitting state of the current form step
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
@@ -158,7 +158,7 @@ const GuidanceLetterForm = () => {
   ]);
 
   useEffect(() => {
-    if (!adviceLetter) return;
+    if (!guidanceLetter) return;
     (async () => {
       let completed: GuidanceFormStepKey[] = stepsCompleted
         ? [...stepsCompleted]
@@ -167,7 +167,7 @@ const GuidanceLetterForm = () => {
 
       // Check the Meeting Summary step
       if (!completed.includes('summary')) {
-        const { meetingSummary } = adviceLetter || {};
+        const { meetingSummary } = guidanceLetter || {};
         stepValidators.push(
           meetingSummarySchema
             .isValid(
@@ -185,7 +185,7 @@ const GuidanceLetterForm = () => {
       // Check the Next Steps step
       if (!completed.includes('next-steps')) {
         const { nextSteps, isFollowupRecommended, followupPoint } =
-          adviceLetter;
+          guidanceLetter;
 
         stepValidators.push(
           nextStepsSchema
@@ -205,7 +205,7 @@ const GuidanceLetterForm = () => {
       }
 
       if (
-        trbRequest?.taskStatuses.adviceLetterStatus ===
+        trbRequest?.taskStatuses.guidanceLetterStatus ===
           TRBGuidanceLetterStatus.READY_FOR_REVIEW &&
         !stepsCompleted?.includes('review')
       ) {
@@ -223,8 +223,8 @@ const GuidanceLetterForm = () => {
     })();
   }, [
     stepsCompleted,
-    adviceLetter,
-    trbRequest?.taskStatuses?.adviceLetterStatus,
+    guidanceLetter,
+    trbRequest?.taskStatuses?.guidanceLetterStatus,
     redirectStep,
     formStep
   ]);
@@ -237,14 +237,14 @@ const GuidanceLetterForm = () => {
   }, [formAlert]);
 
   useEffect(() => {
-    if (!adviceLetter && !loading) {
+    if (!guidanceLetter && !loading) {
       const type = location?.state?.error ? 'error' : 'info';
       setFormAlert({
         type,
         message: t(`guidanceLetter.alerts.${type}`)
       });
     }
-  }, [adviceLetter, loading, location?.state?.error, t]);
+  }, [guidanceLetter, loading, location?.state?.error, t]);
 
   // Page loading
   if (loading) return <PageLoading />;
@@ -255,7 +255,7 @@ const GuidanceLetterForm = () => {
   }
 
   const {
-    taskStatuses: { adviceLetterStatus }
+    taskStatuses: { guidanceLetterStatus }
   } = trbRequest;
 
   if (formStep === 'done') {
@@ -319,11 +319,11 @@ const GuidanceLetterForm = () => {
               </Alert>
             )
           }
-          hideSteps={!adviceLetter}
+          hideSteps={!guidanceLetter}
         >
           {
             /* Save and return to request button */
-            !!adviceLetter && (
+            !!guidanceLetter && (
               <Button
                 type="button"
                 unstyled
@@ -348,11 +348,11 @@ const GuidanceLetterForm = () => {
       {/* Current form step component */}
       <GridContainer>
         <Grid>
-          {adviceLetter && (
+          {guidanceLetter && (
             <currentFormStep.component
               trbRequestId={id}
-              adviceLetter={adviceLetter}
-              adviceLetterStatus={adviceLetterStatus}
+              guidanceLetter={guidanceLetter}
+              guidanceLetterStatus={guidanceLetterStatus}
               setFormAlert={setFormAlert}
               setStepSubmit={setStepSubmit}
               setIsStepSubmitting={setIsStepSubmitting}

@@ -362,14 +362,14 @@ function TaskList() {
                 {/* Guidance letter and next steps */}
                 <TaskListItem
                   heading={taskListText[4].heading}
-                  status={taskStatuses?.adviceLetterStatusTaskList}
+                  status={taskStatuses?.guidanceLetterStatusTaskList}
                   testId={kebabCase(taskListText[4].heading)}
                 >
                   <TaskListDescription>
                     <p>{taskListText[4].text}</p>
                   </TaskListDescription>
 
-                  {taskStatuses?.adviceLetterStatusTaskList ===
+                  {taskStatuses?.guidanceLetterStatusTaskList ===
                     TRBGuidanceLetterStatusTaskList.COMPLETED && (
                     <UswdsReactLink
                       variant="unstyled"

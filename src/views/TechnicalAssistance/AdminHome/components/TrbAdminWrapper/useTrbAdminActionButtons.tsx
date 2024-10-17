@@ -5,11 +5,11 @@ import { useMutation } from '@apollo/client';
 import { ModalRef } from '@trussworks/react-uswds';
 
 import { AdminActionButton } from 'components/shared/AdminAction';
-import { CreateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { CreateTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
-  CreateTrbAdviceLetter,
-  CreateTrbAdviceLetterVariables
-} from 'queries/types/CreateTrbAdviceLetter';
+  CreateTrbGuidanceLetter,
+  CreateTrbGuidanceLetterVariables
+} from 'queries/types/CreateTrbGuidanceLetter';
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 
@@ -62,9 +62,9 @@ const useTrbAdminActionButtons = ({
     !!trbContextData.data?.trbRequest?.trbLeadInfo?.commonName;
 
   const [createGuidanceLetter] = useMutation<
-    CreateTrbAdviceLetter,
-    CreateTrbAdviceLetterVariables
-  >(CreateTrbAdviceLetterQuery, {
+    CreateTrbGuidanceLetter,
+    CreateTrbGuidanceLetterVariables
+  >(CreateTrbGuidanceLetterQuery, {
     variables: {
       trbRequestId
     }
@@ -214,14 +214,14 @@ const useTrbAdminActionButtons = ({
           default:
             return [buttons.viewGuidanceLetter, buttons.orCloseRequest];
         }
-      case TRBRequestStatus.DRAFT_ADVICE_LETTER:
+      case TRBRequestStatus.DRAFT_GUIDANCE_LETTER:
         switch (activePage) {
           case 'guidance':
             return [buttons.continueGuidanceLetter, buttons.orCloseRequest];
           default:
             return [buttons.viewGuidanceLetter, buttons.orCloseRequest];
         }
-      case TRBRequestStatus.ADVICE_LETTER_IN_REVIEW:
+      case TRBRequestStatus.GUIDANCE_LETTER_IN_REVIEW:
         switch (activePage) {
           case 'guidance':
             return [
@@ -233,7 +233,7 @@ const useTrbAdminActionButtons = ({
             return [buttons.viewGuidanceLetter, buttons.orCloseRequest];
         }
       case TRBRequestStatus.FOLLOW_UP_REQUESTED:
-      case TRBRequestStatus.ADVICE_LETTER_SENT:
+      case TRBRequestStatus.GUIDANCE_LETTER_SENT:
         return [buttons.closeRequest];
       default:
         return [];

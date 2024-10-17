@@ -21,11 +21,11 @@ import Alert from 'components/shared/Alert';
 import Breadcrumbs, { BreadcrumbsProps } from 'components/shared/Breadcrumbs';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
-import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
+import GetTrbPublicGuidanceLetterQuery from 'queries/GetTrbPublicGuidanceLetterQuery';
 import {
-  GetTrbPublicAdviceLetter,
-  GetTrbPublicAdviceLetterVariables
-} from 'queries/types/GetTrbPublicAdviceLetter';
+  GetTrbPublicGuidanceLetter,
+  GetTrbPublicGuidanceLetterVariables
+} from 'queries/types/GetTrbPublicGuidanceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
@@ -62,9 +62,9 @@ function PublicGuidanceLetter() {
   });
 
   const { data, error, loading } = useQuery<
-    GetTrbPublicAdviceLetter,
-    GetTrbPublicAdviceLetterVariables
-  >(GetTrbPublicAdviceLetterQuery, {
+    GetTrbPublicGuidanceLetter,
+    GetTrbPublicGuidanceLetterVariables
+  >(GetTrbPublicGuidanceLetterQuery, {
     variables: { id }
   });
 
@@ -78,7 +78,7 @@ function PublicGuidanceLetter() {
 
   // Alert if the letter is incomplete
   if (
-    data?.trbRequest.taskStatuses.adviceLetterStatus !==
+    data?.trbRequest.taskStatuses.guidanceLetterStatus !==
     TRBGuidanceLetterStatus.COMPLETED
   ) {
     return (
@@ -91,9 +91,9 @@ function PublicGuidanceLetter() {
   }
 
   const request = data?.trbRequest;
-  const adviceLetter = request?.adviceLetter;
+  const guidanceLetter = request?.guidanceLetter;
 
-  if (!request || !adviceLetter) return null;
+  if (!request || !guidanceLetter) return null;
 
   const breadcrumbs: BreadcrumbsProps['items'] = [
     { text: t('breadcrumbs.technicalAssistance'), url: '/trb' }
@@ -138,7 +138,7 @@ function PublicGuidanceLetter() {
           </p>
         )}
 
-        {!!adviceLetter && (
+        {!!guidanceLetter && (
           <PDFExportButton handlePrint={handlePrint}>
             {t('guidanceLetter.downloadAsPdf')}
           </PDFExportButton>
@@ -202,14 +202,14 @@ function PublicGuidanceLetter() {
       )}
 
       <GridContainer className="full-width">
-        {adviceLetter && (
+        {guidanceLetter && (
           <div ref={printRef}>
             <h1 className="easi-only-print">
               {t('guidanceLetterForm.heading')}
             </h1>
             <ReviewGuidanceLetter
               trbRequestId={id}
-              adviceLetter={adviceLetter}
+              guidanceLetter={guidanceLetter}
               showDateSent={false}
               showSectionBorders={false}
               editable={false}

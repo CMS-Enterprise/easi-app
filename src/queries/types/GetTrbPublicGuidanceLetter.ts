@@ -6,15 +6,15 @@
 import { TRBRequestType, TRBGuidanceLetterStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
-// GraphQL query operation: GetTrbPublicAdviceLetter
+// GraphQL query operation: GetTrbPublicGuidanceLetter
 // ====================================================
 
-export interface GetTrbPublicAdviceLetter_trbRequest_requesterInfo {
+export interface GetTrbPublicGuidanceLetter_trbRequest_requesterInfo {
   __typename: "UserInfo";
   commonName: string;
 }
 
-export interface GetTrbPublicAdviceLetter_trbRequest_form {
+export interface GetTrbPublicGuidanceLetter_trbRequest_form {
   __typename: "TRBRequestForm";
   id: UUID;
   submittedAt: Time | null;
@@ -22,7 +22,7 @@ export interface GetTrbPublicAdviceLetter_trbRequest_form {
   needsAssistanceWith: string | null;
 }
 
-export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter_recommendations {
+export interface GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter_recommendations {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -30,13 +30,13 @@ export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter_recommendation
   links: string[];
 }
 
-export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter_author {
+export interface GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter_author {
   __typename: "UserInfo";
   euaUserId: string;
   commonName: string;
 }
 
-export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter {
+export interface GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter {
   __typename: "TRBGuidanceLetter";
   id: UUID;
   meetingSummary: HTML | null;
@@ -47,34 +47,34 @@ export interface GetTrbPublicAdviceLetter_trbRequest_adviceLetter {
   /**
    * List of recommendations in the order specified by users
    */
-  recommendations: GetTrbPublicAdviceLetter_trbRequest_adviceLetter_recommendations[];
-  author: GetTrbPublicAdviceLetter_trbRequest_adviceLetter_author;
+  recommendations: GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter_recommendations[];
+  author: GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter_author;
   createdAt: Time;
   modifiedAt: Time | null;
 }
 
-export interface GetTrbPublicAdviceLetter_trbRequest_taskStatuses {
+export interface GetTrbPublicGuidanceLetter_trbRequest_taskStatuses {
   __typename: "TRBTaskStatuses";
-  adviceLetterStatus: TRBGuidanceLetterStatus;
+  guidanceLetterStatus: TRBGuidanceLetterStatus;
 }
 
-export interface GetTrbPublicAdviceLetter_trbRequest {
+export interface GetTrbPublicGuidanceLetter_trbRequest {
   __typename: "TRBRequest";
   id: UUID;
   name: string | null;
-  requesterInfo: GetTrbPublicAdviceLetter_trbRequest_requesterInfo;
+  requesterInfo: GetTrbPublicGuidanceLetter_trbRequest_requesterInfo;
   requesterComponent: string | null;
-  form: GetTrbPublicAdviceLetter_trbRequest_form;
+  form: GetTrbPublicGuidanceLetter_trbRequest_form;
   type: TRBRequestType;
   consultMeetingTime: Time | null;
-  adviceLetter: GetTrbPublicAdviceLetter_trbRequest_adviceLetter | null;
-  taskStatuses: GetTrbPublicAdviceLetter_trbRequest_taskStatuses;
+  guidanceLetter: GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter | null;
+  taskStatuses: GetTrbPublicGuidanceLetter_trbRequest_taskStatuses;
 }
 
-export interface GetTrbPublicAdviceLetter {
-  trbRequest: GetTrbPublicAdviceLetter_trbRequest;
+export interface GetTrbPublicGuidanceLetter {
+  trbRequest: GetTrbPublicGuidanceLetter_trbRequest;
 }
 
-export interface GetTrbPublicAdviceLetterVariables {
+export interface GetTrbPublicGuidanceLetterVariables {
   id: UUID;
 }
