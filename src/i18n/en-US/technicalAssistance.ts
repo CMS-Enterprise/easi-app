@@ -337,7 +337,7 @@ const technicalAssistance = {
   },
   // Higher level errors
   errors: {
-    // Some of these genrealized translation keys are copied to error.ts file
+    // Some of these generalized translation keys are copied to error.ts file
     // todo remove this and use form.ts
     checkFix: 'Please check and fix the following',
     fillBlank: 'Please fill in the blank',
@@ -385,7 +385,7 @@ const technicalAssistance = {
         text: 'Though the TRB has shifted to become more of a consultation and guidance service, you can still request a more formal design review or readiness review. Choose this option if:',
         list: [
           'you have a architecture solution in mind and would like a review',
-          'you are ready to go live and would like one final review with the TRB to make sure your team didn’t miss anything',
+          "you are ready to go live and would like one final review with the TRB to make sure your team didn't miss anything",
           'you would like a formal review of how your solution aligns with CMS’s Technical Reference Architecture (TRA)'
         ]
       },
@@ -902,7 +902,7 @@ const technicalAssistance = {
       'From EASi’s TRB home, you can review, assign, and manage incoming and existing TRB support requests.',
     jumpToExistingRequests: 'Jump to existing requests',
     downloadAllTrbRequests: 'Download all TRB requests (csv)',
-    switchToDifferentAdminView: 'Swich to a different admin view',
+    switchToDifferentAdminView: 'Switch to a different admin view',
     submitYourOwnRequest: 'Submit your own technical assistance request',
     newRequests: {
       heading: 'New requests',
