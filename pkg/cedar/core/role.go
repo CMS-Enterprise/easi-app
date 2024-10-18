@@ -242,6 +242,7 @@ type newRole struct {
 type SetRoleResponseMetadata struct {
 	DidAdd              bool
 	DidDelete           bool
+	IsNewUser           bool
 	RoleTypeNamesBefore []string
 	RoleTypeNamesAfter  []string
 	SystemName          string
@@ -250,14 +251,8 @@ type SetRoleResponseMetadata struct {
 // SetRolesForUser sets the desired roles for a user on a given system to *exactly* the requested role types, adding and deleting role assignments in CEDAR as necessary
 func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaUserID string, desiredRoleTypeIDs []string) (*SetRoleResponseMetadata, error) {
 	if c.mockEnabled {
+		// all the client methods this method depends on will return mocked data and not call out to CEDAR if mocking enabled
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return &SetRoleResponseMetadata{
-			DidAdd:              true,
-			DidDelete:           true,
-			RoleTypeNamesBefore: nil,
-			RoleTypeNamesAfter:  []string{"Role 1", "Role 2", "Role 3"},
-			SystemName:          "Test System Name",
-		}, nil
 	}
 
 	roleTypesBefore := []models.CedarRoleType{}
@@ -356,6 +351,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	roleResponse := &SetRoleResponseMetadata{
 		DidAdd:    len(newRoles) > 0,
 		DidDelete: len(roleIDsToDelete) > 0,
+		IsNewUser: len(currentRolesForUser) == 0 && len(newRoles) > 0,
 	}
 
 	roleResponse.RoleTypeNamesBefore = lo.Map(roleTypesBefore, func(roleType models.CedarRoleType, _ int) string {

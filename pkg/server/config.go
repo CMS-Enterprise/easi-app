@@ -58,16 +58,18 @@ func (s Server) NewEmailConfig() email.Config {
 	s.checkRequiredConfig(appconfig.ClientProtocolKey)
 	s.checkRequiredConfig(appconfig.EmailTemplateDirectoryKey)
 	s.checkRequiredConfig(appconfig.CEDAREmailAddress)
+	s.checkRequiredConfig(appconfig.OITFeedbackChannelSlackLink)
 
 	return email.Config{
-		GRTEmail:          models.NewEmailAddress(s.Config.GetString(appconfig.GRTEmailKey)),
-		ITInvestmentEmail: models.NewEmailAddress(s.Config.GetString(appconfig.ITInvestmentEmailKey)),
-		EASIHelpEmail:     models.NewEmailAddress(s.Config.GetString(appconfig.EASIHelpEmailKey)),
-		TRBEmail:          models.NewEmailAddress(s.Config.GetString(appconfig.TRBEmailKey)),
-		CEDARTeamEmail:    models.NewEmailAddress(s.Config.GetString(appconfig.CEDAREmailAddress)),
-		URLHost:           s.Config.GetString(appconfig.ClientHostKey),
-		URLScheme:         s.Config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory: s.Config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:                    models.NewEmailAddress(s.Config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail:           models.NewEmailAddress(s.Config.GetString(appconfig.ITInvestmentEmailKey)),
+		EASIHelpEmail:               models.NewEmailAddress(s.Config.GetString(appconfig.EASIHelpEmailKey)),
+		TRBEmail:                    models.NewEmailAddress(s.Config.GetString(appconfig.TRBEmailKey)),
+		CEDARTeamEmail:              models.NewEmailAddress(s.Config.GetString(appconfig.CEDAREmailAddress)),
+		OITFeedbackChannelSlackLink: s.Config.GetString(appconfig.OITFeedbackChannelSlackLink),
+		URLHost:                     s.Config.GetString(appconfig.ClientHostKey),
+		URLScheme:                   s.Config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory:           s.Config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 }
 
