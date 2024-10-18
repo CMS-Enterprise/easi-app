@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"sync"
 	"testing"
 
 	"github.com/guregu/null"
@@ -98,7 +99,9 @@ type mockSender struct {
 	subject      string
 	body         string
 	emailWasSent bool
-	sentEmails   []email.Email
+
+	mu         *sync.Mutex
+	sentEmails []email.Email
 }
 
 func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
@@ -108,8 +111,29 @@ func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
 	s.subject = emailData.Subject
 	s.body = emailData.Body
 	s.emailWasSent = true
-	s.sentEmails = append(s.sentEmails, emailData)
+	s.addNew(emailData)
 	return nil
+}
+
+func (s *mockSender) addNew(emailData email.Email) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.sentEmails = append(s.sentEmails, emailData)
+}
+
+func (s *mockSender) getList() []email.Email {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	return s.sentEmails
+}
+
+func (s *mockSender) clearList() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.sentEmails = []email.Email{}
 }
 
 func (s *mockSender) Clear() {
@@ -119,7 +143,7 @@ func (s *mockSender) Clear() {
 	s.subject = ""
 	s.body = ""
 	s.emailWasSent = false
-	s.sentEmails = []email.Email{}
+	s.clearList()
 }
 
 // GetDefaultTestConfigs returns a TestConfigs struct with all the dependencies needed to run a test
@@ -157,7 +181,9 @@ func (tc *TestConfigs) GetDefaults() {
 }
 
 func NewEmailClient() (*email.Client, *mockSender) {
-	sender := &mockSender{}
+	sender := &mockSender{
+		mu: &sync.Mutex{},
+	}
 	config := testhelpers.NewConfig()
 	emailConfig := email.Config{
 		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
