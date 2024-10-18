@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FilterValue, useAsyncDebounce } from 'react-table';
-import {
-  Button,
-  Form,
-  IconSearch,
-  Label,
-  TextInput
-} from '@trussworks/react-uswds';
+import { Button, Form, Icon, Label, TextInput } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -72,7 +66,7 @@ const GlobalClientFilter = ({
         type="submit"
         className="grid-row flex-justify-center flex-align-center no-pointer"
       >
-        <IconSearch size={3} />
+        <Icon.Search size={3} />
       </Button>
     </Form>
   );

@@ -9,9 +9,7 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  IconCalendarToday,
-  IconExpandMore,
-  IconHelpOutline,
+  Icon,
   Table,
   Tag
   // Grid
@@ -93,7 +91,12 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
         {/* If no system cost info is available, display an alert */}
         {system.budgetSystemCosts?.budgetActualCost === undefined ||
           (system.budgetSystemCosts?.budgetActualCost.length === 0 && (
-            <Alert slim type="info" data-testid="no-budget-projects-alert">
+            <Alert
+              headingLevel="h4"
+              slim
+              type="info"
+              data-testid="no-budget-projects-alert"
+            >
               {t('singleSystem.fundingAndBudget.noSystemCostInfo')}
             </Alert>
           ))}
@@ -124,7 +127,7 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
                   {budget.fiscalYear ? (
                     <div>
                       <dd>
-                        <IconCalendarToday
+                        <Icon.CalendarToday
                           width="1rem"
                           height="1rem"
                           className="margin-right-1"
@@ -137,7 +140,7 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
                   ) : (
                     <div>
                       <dd>
-                        <IconHelpOutline
+                        <Icon.HelpOutline
                           width="1rem"
                           height="1rem"
                           className="margin-right-1"
@@ -211,7 +214,7 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
               {isExpanded
                 ? t('singleSystem.fundingAndBudget.viewLessFunding')
                 : t('singleSystem.fundingAndBudget.viewMoreFunding')}
-              <IconExpandMore
+              <Icon.ExpandMore
                 className="margin-left-05 margin-bottom-2px text-tbottom"
                 style={{
                   transform: isExpanded ? 'rotate(180deg)' : ''
@@ -221,7 +224,12 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
           )}
         </SectionWrapper>
       ) : (
-        <Alert slim type="info" data-testid="no-budget-projects-alert">
+        <Alert
+          headingLevel="h4"
+          slim
+          type="info"
+          data-testid="no-budget-projects-alert"
+        >
           {t('singleSystem.fundingAndBudget.noBudgetProjects')}
         </Alert>
       )}

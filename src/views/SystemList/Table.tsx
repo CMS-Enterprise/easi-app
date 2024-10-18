@@ -21,8 +21,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
-  IconArrowForward,
-  IconBookmark,
+  Icon,
   Link,
   Table as UswdsTable
 } from '@trussworks/react-uswds';
@@ -151,7 +150,7 @@ export const Table = ({
 
     if (!isHomePage) {
       cols.push({
-        Header: <IconBookmark />,
+        Header: <Icon.Bookmark />,
         accessor: 'id',
         id: 'systemId',
         disableGlobalFilter: true,
@@ -165,7 +164,7 @@ export const Table = ({
             type="button"
             unstyled
           >
-            <IconBookmark
+            <Icon.Bookmark
               className={classNames({
                 'text-base-lighter': !isBookmarked(row.original.id)
               })}
@@ -458,7 +457,7 @@ export const Table = ({
                   ),
                   link2: <UswdsReactLink to="/systems"> </UswdsReactLink>,
                   iconForward: (
-                    <IconArrowForward className="icon-top margin-left-05" />
+                    <Icon.ArrowForward className="icon-top margin-left-05" />
                   )
                 }}
               />
@@ -486,7 +485,7 @@ export const Table = ({
             components={{
               link1: <UswdsReactLink to="/systems"> </UswdsReactLink>,
               iconForward: (
-                <IconArrowForward className="icon-top margin-left-05" />
+                <Icon.ArrowForward className="icon-top margin-left-05" />
               )
             }}
           />

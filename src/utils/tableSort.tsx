@@ -1,10 +1,6 @@
 import React from 'react';
 import { HeaderGroup } from 'react-table';
-import {
-  IconExpandLess,
-  IconExpandMore,
-  IconUnfoldMore
-} from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 export type sortColumnProps = null | string | number | DateTime;
@@ -30,17 +26,19 @@ export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
 
   if (!column.isSorted) {
     return (
-      <IconUnfoldMore className={sharedClassName} data-testid="caret--sort" />
+      <Icon.UnfoldMore className={sharedClassName} data-testid="caret--sort" />
     );
   }
 
   if (column.isSortedDesc) {
     return (
-      <IconExpandMore className={sharedClassName} data-testid="caret--down" />
+      <Icon.ExpandMore className={sharedClassName} data-testid="caret--down" />
     );
   }
 
-  return <IconExpandLess className={sharedClassName} data-testid="caret--up" />;
+  return (
+    <Icon.ExpandLess className={sharedClassName} data-testid="caret--up" />
+  );
 };
 
 // Description beneath tables for sorting status

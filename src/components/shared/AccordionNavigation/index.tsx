@@ -2,11 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { NavHashLink } from 'react-router-hash-link';
-import {
-  IconArrowBack,
-  IconExpandLess,
-  IconExpandMore
-} from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -43,7 +39,7 @@ const AccordionNavigation = ({
   }, [items, pathname]);
 
   const MenuButtonIcon = useMemo(
-    () => (isAccordionOpen ? IconExpandLess : IconExpandMore),
+    () => (isAccordionOpen ? Icon.ExpandLess : Icon.ExpandMore),
     [isAccordionOpen]
   );
 
@@ -122,7 +118,7 @@ const AccordionNavigation = ({
             <li className="margin-top-2">
               <IconLink
                 to="/"
-                icon={<IconArrowBack />}
+                icon={<Icon.ArrowBack />}
                 className="text-underline"
               >
                 {t('back.allRequests')}
