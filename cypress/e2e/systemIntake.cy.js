@@ -1,4 +1,5 @@
 import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
+import SystemIntakeSoftwareAcquisitionMethods from '../../src/constants/enums/SystemIntakeSoftwareAcquisitionMethods';
 import { BASIC_USER_PROD } from '../../src/constants/jobCodes';
 import testSystemIntakeName from '../support/systemIntake';
 
@@ -199,6 +200,14 @@ describe('The System Intake Form', () => {
       .select('Just an idea')
       .should('have.value', 'Just an idea');
 
+    cy.get('#usingSoftwareYes').check({ force: true }).should('be.checked');
+
+    Object.values(SystemIntakeSoftwareAcquisitionMethods).forEach(acqMethod => {
+      cy.get(`#software-acquisition-${acqMethod}`)
+        .check({ force: true })
+        .should('be.checked');
+    });
+
     cy.contains('button', 'Next').click();
 
     // Contract Details
@@ -391,10 +400,24 @@ describe('The System Intake Form', () => {
 
     cy.contains(
       '.easi-review-row dt',
+      'Does your request involve AI technologies?'
+    )
+      .siblings('dd')
+      .contains('Yes');
+
+    cy.contains(
+      '.easi-review-row dt',
       'Does your project involve any user interface component, or changes to an interface component?'
     )
       .siblings('dd')
       .contains('No');
+
+    cy.contains(
+      '.easi-review-row dt',
+      'Do you plan to use any software products to fulfill your business needs?'
+    )
+      .siblings('dd')
+      .contains('Yes');
 
     cy.contains('.easi-review-row dt', 'Where are you in the process?')
       .siblings('dd')

@@ -2,5 +2,6 @@
 export const yesNoMap: any = {
   YES: 'Yes',
   NO: 'No',
-  NOT_SURE: "I'm not sure"
+  NOT_SURE: "I'm not sure",
+  undefined: 'N/A'
 };
