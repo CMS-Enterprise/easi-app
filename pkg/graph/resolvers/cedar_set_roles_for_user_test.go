@@ -1,8 +1,6 @@
 package resolvers
 
 import (
-	"time"
-
 	"github.com/samber/lo"
 
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
@@ -33,12 +31,9 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 			DesiredRoleTypeIDs: []string{currentUserCurrentRoleID},
 		})
 
-		// easiest way to make sure the async calls finish without opening a channel or modifying the resolver
-		time.Sleep(time.Millisecond)
-
 		s.NotNil(resp)
 		s.NoError(err)
-		s.Len(sender.sentEmails, 1)
+		s.Len(sender.getList(), 1)
 		s.Equal(sender.subject, "CEDAR Roles modified for (Adeline Aarons)")
 	})
 
@@ -50,18 +45,15 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 			DesiredRoleTypeIDs: []string{currentUserCurrentRoleID, otherRoleID1, otherRoleID2},
 		})
 
-		// easiest way to make sure the async calls finish without opening a channel or modifying the resolver
-		time.Sleep(time.Millisecond)
-
 		s.NotNil(resp)
 		s.NoError(err)
-		s.Len(sender.sentEmails, 2)
-		_, found := lo.Find(sender.sentEmails, func(e email.Email) bool {
+		s.Len(sender.getList(), 2)
+		_, found := lo.Find(sender.getList(), func(e email.Email) bool {
 			return e.Subject == "CEDAR Roles modified for (Adeline Aarons)"
 		})
 		s.True(found)
 
-		_, found = lo.Find(sender.sentEmails, func(e email.Email) bool {
+		_, found = lo.Find(sender.getList(), func(e email.Email) bool {
 			return e.Subject == "Adeline Aarons has been added as a team member for Centers for Management Services"
 		})
 		s.True(found)
@@ -75,13 +67,10 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 			DesiredRoleTypeIDs: []string{},
 		})
 
-		// easiest way to make sure the async calls finish without opening a channel or modifying the resolver
-		time.Sleep(time.Millisecond)
-
 		s.NotNil(resp)
 		s.NoError(err)
-		s.Len(sender.sentEmails, 1)
-		_, found := lo.Find(sender.sentEmails, func(e email.Email) bool {
+		s.Len(sender.getList(), 1)
+		_, found := lo.Find(sender.getList(), func(e email.Email) bool {
 			return e.Subject == "CEDAR Roles modified for (Adeline Aarons)"
 		})
 		s.True(found)
@@ -95,23 +84,20 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 			DesiredRoleTypeIDs: []string{otherRoleID1, otherRoleID2},
 		})
 
-		// easiest way to make sure the async calls finish without opening a channel or modifying the resolver
-		time.Sleep(time.Millisecond)
-
 		s.NotNil(resp)
 		s.NoError(err)
-		s.Len(sender.sentEmails, 3)
-		_, found := lo.Find(sender.sentEmails, func(e email.Email) bool {
+		s.Len(sender.getList(), 3)
+		_, found := lo.Find(sender.getList(), func(e email.Email) bool {
 			return e.Subject == "CEDAR Roles modified for (User One)"
 		})
 		s.True(found)
 
-		_, found = lo.Find(sender.sentEmails, func(e email.Email) bool {
+		_, found = lo.Find(sender.getList(), func(e email.Email) bool {
 			return e.Subject == "User One has been added as a team member for Centers for Management Services"
 		})
 		s.True(found)
 
-		_, found = lo.Find(sender.sentEmails, func(e email.Email) bool {
+		_, found = lo.Find(sender.getList(), func(e email.Email) bool {
 			return e.Subject == "You have been added as a team member for Centers for Management Services"
 		})
 		s.True(found)
