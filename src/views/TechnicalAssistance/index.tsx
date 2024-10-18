@@ -31,7 +31,11 @@ function TechnicalAssistance() {
   return (
     <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
       <Switch>
-        {/* Redirect to handle advice -> guidance route change */}
+        {/*
+        What we now call "Guidance Letter" used to be called "Advice Letter", so we
+        create a redirect here to generically handle the advice -> guidance route change (that
+        way old emails, bookmarks, and browser history isn't messed up)
+        */}
         <Redirect from="*advice*" to="*guidance*" />
 
         <Route exact path={path}>

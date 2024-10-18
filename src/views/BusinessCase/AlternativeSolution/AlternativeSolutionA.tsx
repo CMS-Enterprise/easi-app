@@ -1,12 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  ButtonGroup,
-  IconAdd,
-  IconArrowBack
-} from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
 import PageNumber from 'components/PageNumber';
@@ -111,7 +106,7 @@ const AlternativeSolutionA = ({
                   <HelpText>{t('additionalAlternativesHelpText')}</HelpText>
                   <IconButton
                     type="button"
-                    icon={<IconAdd />}
+                    icon={<Icon.Add />}
                     className="margin-top-2"
                     onClick={() => {
                       if (
@@ -179,7 +174,7 @@ const AlternativeSolutionA = ({
 
             <IconButton
               type="button"
-              icon={<IconArrowBack />}
+              icon={<Icon.ArrowBack />}
               className="margin-bottom-3 margin-top-2"
               onClick={() => {
                 dispatchSave();

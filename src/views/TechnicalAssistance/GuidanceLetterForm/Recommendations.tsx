@@ -11,8 +11,8 @@ import { Alert } from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import {
   DeleteTrbRecommendationQuery,
-  GetTrbAdviceLetterQuery
-} from 'queries/TrbAdviceLetterQueries';
+  GetTrbGuidanceLetterQuery
+} from 'queries/TrbGuidanceLetterQueries';
 import {
   DeleteTRBRecommendation,
   DeleteTRBRecommendationVariables
@@ -30,7 +30,7 @@ import RecommendationsForm from './RecommendationsForm';
 
 const Recommendations = ({
   trbRequestId,
-  adviceLetter: { recommendations },
+  guidanceLetter: { recommendations },
   setIsStepSubmitting,
   setFormAlert,
   stepsCompleted,
@@ -60,7 +60,7 @@ const Recommendations = ({
   >(DeleteTrbRecommendationQuery, {
     refetchQueries: [
       {
-        query: GetTrbAdviceLetterQuery,
+        query: GetTrbGuidanceLetterQuery,
         variables: {
           id: trbRequestId
         }

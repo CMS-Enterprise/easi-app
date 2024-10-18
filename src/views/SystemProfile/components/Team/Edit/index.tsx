@@ -11,7 +11,7 @@ import {
   ButtonGroup,
   CardGroup,
   Grid,
-  IconArrowBack
+  Icon
 } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -306,7 +306,7 @@ const EditTeam = ({
                 ? `/systems/${cedarSystemId}/workspace`
                 : `/systems/${cedarSystemId}/team`
             }
-            icon={<IconArrowBack />}
+            icon={<Icon.ArrowBack />}
             className="margin-top-2 margin-bottom-6 line-height-body-4 text-primary"
           >
             {t(
@@ -360,7 +360,11 @@ const EditTeam = ({
 
           {isWorkspace && showRequisiteRolesAlert && (
             // If any requirement not met
-            <Alert type="warning" data-testid="requisite-roles-alert">
+            <Alert
+              headingLevel="h4"
+              type="warning"
+              data-testid="requisite-roles-alert"
+            >
               {t('singleSystem.editTeam.workspace.teamRoleRequirementAlert')}
 
               {/* Causes Warning: validateDOMNesting(...): <div> cannot appear as a descendant of <p>.  */}
@@ -428,7 +432,7 @@ const EditTeam = ({
               </CardGroup>
               <IconLink
                 to={`/systems/${cedarSystemId}/team`}
-                icon={<IconArrowBack />}
+                icon={<Icon.ArrowBack />}
                 className="margin-top-6"
               >
                 {t('returnToSystemProfile')}

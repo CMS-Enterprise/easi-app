@@ -8,9 +8,7 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  IconCheckCircle,
-  IconExpandMore,
-  IconVerifiedUser,
+  Icon,
   Link
 } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -139,10 +137,8 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={
-                'December 12, 2017' ||
-                t('singleSystem.systemDetails.noMigrationDate')
-              }
+              definition="December 12, 2017"
+              // definition={t('singleSystem.systemDetails.noMigrationDate')}
             />
           </>
         )}
@@ -192,7 +188,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                       </h3>
                       {location.isBehindWebApplicationFirewall && (
                         <div className="margin-top-1">
-                          <IconVerifiedUser
+                          <Icon.VerifiedUser
                             width="1rem"
                             color="#00a91c"
                             height="1rem"
@@ -253,7 +249,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                     isLocationsExpanded ? 'less' : 'more'
                   }`
                 )}
-                <IconExpandMore
+                <Icon.ExpandMore
                   className="margin-left-05 margin-bottom-2px text-tbottom"
                   style={{
                     transform: isLocationsExpanded ? 'rotate(180deg)' : ''
@@ -286,7 +282,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             key={tag}
             className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
           >
-            <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
+            <Icon.CheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
             {tag}
           </Tag>
         ))}
@@ -380,7 +376,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
 
         {cedarSystemDetails?.systemMaintainerInformation.ecapParticipation && (
           <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
-            <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
+            <Icon.CheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
             {t('singleSystem.systemDetails.eCapInitiative')}
           </Tag>
         )}

@@ -36,9 +36,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
         <div
           class="usa-summary-box__body"
         >
-          <h3
-            class="usa-summary-box__heading"
-          />
           <div
             class="usa-summary-box__text"
           >
@@ -203,6 +200,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
           <div
             class="usa-table-container--scrollable"
             data-testid="scrollable-table-container"
+            tabindex="0"
           >
             <table
               class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"

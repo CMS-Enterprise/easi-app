@@ -60,7 +60,7 @@ const getTrbTasklistQuery: MockedQuery<
           feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
           consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
           attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-          adviceLetterStatusTaskList:
+          guidanceLetterStatusTaskList:
             TRBGuidanceLetterStatusTaskList.CANNOT_START_YET,
           __typename: 'TRBTaskStatuses'
         },

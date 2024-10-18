@@ -47,8 +47,8 @@ const InitialRequestForm = ({
       disableStep={
         trbRequest.status === TRBRequestStatus.READY_FOR_CONSULT ||
         trbRequest.status === TRBRequestStatus.CONSULT_COMPLETE ||
-        trbRequest.status === TRBRequestStatus.DRAFT_ADVICE_LETTER ||
-        trbRequest.status === TRBRequestStatus.ADVICE_LETTER_IN_REVIEW
+        trbRequest.status === TRBRequestStatus.DRAFT_GUIDANCE_LETTER ||
+        trbRequest.status === TRBRequestStatus.GUIDANCE_LETTER_IN_REVIEW
       }
       statusTagProps={{
         status: trbRequest.taskStatuses.formStatus || TRBFormStatus.IN_PROGRESS,

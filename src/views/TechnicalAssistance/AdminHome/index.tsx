@@ -2,12 +2,7 @@ import React, { useContext, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
-import {
-  Grid,
-  GridContainer,
-  IconArrowBack,
-  ModalRef
-} from '@trussworks/react-uswds';
+import { Grid, GridContainer, Icon, ModalRef } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -47,7 +42,7 @@ const SideNavigation = ({
       <ul className="trb-admin__nav-list usa-list usa-list--unstyled">
         <li className="trb-admin__view-all-link margin-bottom-4">
           <Link to="/">
-            <IconArrowBack aria-hidden />
+            <Icon.ArrowBack aria-hidden />
             {t('adminHome.backToRequests')}
           </Link>
         </li>

@@ -2,16 +2,12 @@ import { ApolloCache, FetchResult, useMutation } from '@apollo/client';
 
 import { TRBAdminNoteFragment } from 'queries/GetTrbAdminNotesQuery';
 import {
-  CreateTrbAdminNoteAdviceLetterQuery,
   CreateTrbAdminNoteConsultSessionQuery,
   CreateTrbAdminNoteGeneralRequestQuery,
+  CreateTrbAdminNoteGuidanceLetterQuery,
   CreateTrbAdminNoteInitialRequestFormQuery,
   CreateTrbAdminNoteSupportingDocumentsQuery
 } from 'queries/TrbAdminNoteQueries';
-import {
-  CreateTRBAdminNoteAdviceLetter,
-  CreateTRBAdminNoteAdviceLetterVariables
-} from 'queries/types/CreateTRBAdminNoteAdviceLetter';
 import {
   CreateTRBAdminNoteConsultSession,
   CreateTRBAdminNoteConsultSessionVariables
@@ -20,6 +16,10 @@ import {
   CreateTRBAdminNoteGeneralRequest,
   CreateTRBAdminNoteGeneralRequestVariables
 } from 'queries/types/CreateTRBAdminNoteGeneralRequest';
+import {
+  CreateTRBAdminNoteGuidanceLetter,
+  CreateTRBAdminNoteGuidanceLetterVariables
+} from 'queries/types/CreateTRBAdminNoteGuidanceLetter';
 import {
   CreateTRBAdminNoteInitialRequestForm,
   CreateTRBAdminNoteInitialRequestFormVariables
@@ -45,9 +45,9 @@ type AddNoteInitialRequestFormFields = {
   appliesToAttendees: boolean;
 } & AddNoteCommonFields<TRBAdminNoteCategory.INITIAL_REQUEST_FORM>;
 
-type AddNoteAdviceLetterFields = {
+type AddNoteGuidanceLetterFields = {
   sections: Array<'appliesToMeetingSummary' | 'appliesToNextSteps' | string>;
-} & AddNoteCommonFields<TRBAdminNoteCategory.ADVICE_LETTER>;
+} & AddNoteCommonFields<TRBAdminNoteCategory.GUIDANCE_LETTER>;
 
 type AddNoteSupportingDocumentsFields = {
   documentIDs: string[];
@@ -56,7 +56,7 @@ type AddNoteSupportingDocumentsFields = {
 /** Add note fields based on category */
 export type AddNoteFields =
   | AddNoteInitialRequestFormFields
-  | AddNoteAdviceLetterFields
+  | AddNoteGuidanceLetterFields
   | AddNoteSupportingDocumentsFields
   | AddNoteCommonFields<TRBAdminNoteCategory.GENERAL_REQUEST>
   | AddNoteCommonFields<TRBAdminNoteCategory.CONSULT_SESSION>;
@@ -115,12 +115,12 @@ const useAddNote = (trbRequestId: string) => {
       modifyCache(cache, result.data?.createTRBAdminNoteConsultSession)
   });
 
-  const [createNoteAdviceLetter] = useMutation<
-    CreateTRBAdminNoteAdviceLetter,
-    CreateTRBAdminNoteAdviceLetterVariables
-  >(CreateTrbAdminNoteAdviceLetterQuery, {
+  const [createNoteGuidanceLetter] = useMutation<
+    CreateTRBAdminNoteGuidanceLetter,
+    CreateTRBAdminNoteGuidanceLetterVariables
+  >(CreateTrbAdminNoteGuidanceLetterQuery, {
     update: (cache, result) =>
-      modifyCache(cache, result.data?.createTRBAdminNoteAdviceLetter)
+      modifyCache(cache, result.data?.createTRBAdminNoteGuidanceLetter)
   });
 
   const createNote = (formData: AddNoteFields): Promise<FetchResult> => {
@@ -160,7 +160,7 @@ const useAddNote = (trbRequestId: string) => {
       });
     }
 
-    if (formData.category === TRBAdminNoteCategory.ADVICE_LETTER) {
+    if (formData.category === TRBAdminNoteCategory.GUIDANCE_LETTER) {
       /** Default input values */
       const input: CreateTRBAdminNoteGuidanceLetterInput = {
         trbRequestId,
@@ -185,7 +185,7 @@ const useAddNote = (trbRequestId: string) => {
         }
       });
 
-      return createNoteAdviceLetter({
+      return createNoteGuidanceLetter({
         variables: {
           input
         }

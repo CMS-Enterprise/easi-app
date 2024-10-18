@@ -21,7 +21,7 @@ import {
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
-import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTrbRecommendationsQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   CreateTRBAdminNoteGeneralRequest,
   CreateTRBAdminNoteGeneralRequestVariables
@@ -65,7 +65,7 @@ const getTrbRecommendationsQuery: MockedQuery<
     data: {
       trbRequest: {
         __typename: 'TRBRequest',
-        adviceLetter: {
+        guidanceLetter: {
           __typename: 'TRBGuidanceLetter',
           recommendations
         }

@@ -7,7 +7,7 @@ import {
   CardBody,
   CardGroup,
   CardHeader,
-  IconExpandMore
+  Icon
 } from '@trussworks/react-uswds';
 
 import {
@@ -94,7 +94,7 @@ const SystemSubSystems = ({ system }: SystemProfileSubviewProps) => {
                   isSystemsExpanded ? 'less' : 'more'
                 }`
               )}
-              <IconExpandMore
+              <Icon.ExpandMore
                 className="margin-left-05 margin-bottom-2px text-tbottom"
                 style={{
                   transform: isSystemsExpanded ? 'rotate(180deg)' : ''
@@ -104,7 +104,7 @@ const SystemSubSystems = ({ system }: SystemProfileSubviewProps) => {
           )}
         </>
       ) : (
-        <Alert type="info" className="margin-bottom-2">
+        <Alert headingLevel="h4" type="info" className="margin-bottom-2">
           {t('singleSystem.subSystems.noSubsystems')}
         </Alert>
       )}

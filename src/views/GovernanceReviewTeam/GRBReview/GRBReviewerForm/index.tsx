@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { Grid, IconArrowBack } from '@trussworks/react-uswds';
+import { Grid, Icon } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewersDocument,
   SystemIntakeGRBReviewerFragment,
@@ -98,7 +98,7 @@ const GRBReviewerForm = ({
         </p>
 
         <IconLink
-          icon={<IconArrowBack />}
+          icon={<Icon.ArrowBack />}
           to={grbReviewPath}
           className="margin-top-3 margin-bottom-5"
         >

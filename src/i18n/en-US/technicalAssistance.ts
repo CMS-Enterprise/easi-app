@@ -82,7 +82,7 @@ const technicalAssistance = {
           ]
         }
       },
-      DRAFT_ADVICE_LETTER: {
+      DRAFT_GUIDANCE_LETTER: {
         title: 'Draft guidance letter',
         description:
           'Compile a guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any requirements, recommendations, considerations, and other next steps you include.',
@@ -96,12 +96,12 @@ const technicalAssistance = {
           ]
         }
       },
-      ADVICE_LETTER_IN_REVIEW: {
+      GUIDANCE_LETTER_IN_REVIEW: {
         title: 'Review guidance letter before sending',
         description:
           'Review this draft guidance letter and leave a note with any comments or corrections. The TRB lead for this request will then edit the guidance letter to incorporate your comments and feedback before finalizing the letter and sending it to the requester and project team.'
       },
-      ADVICE_LETTER_SENT: {
+      GUIDANCE_LETTER_SENT: {
         title: 'Close request',
         description:
           'If this is a Consult as a Service request (CaaS), you may choose to leave this request open until the engagement is complete. For all other requests, you may close this request at any time.'
@@ -335,9 +335,9 @@ const technicalAssistance = {
       READY_FOR_CONSULT: 'Ready for consult',
       CONSULT_SCHEDULED: 'Consult scheduled',
       CONSULT_COMPLETE: 'Consult complete',
-      DRAFT_ADVICE_LETTER: 'Draft guidance letter',
-      ADVICE_LETTER_IN_REVIEW: 'Guidance letter in review',
-      ADVICE_LETTER_SENT: 'Guidance letter sent',
+      DRAFT_GUIDANCE_LETTER: 'Draft guidance letter',
+      GUIDANCE_LETTER_IN_REVIEW: 'Guidance letter in review',
+      GUIDANCE_LETTER_SENT: 'Guidance letter sent',
       FOLLOW_UP_REQUESTED: 'Follow-up requested'
     },
     noRequests:
@@ -345,7 +345,7 @@ const technicalAssistance = {
   },
   // Higher level errors
   errors: {
-    // Some of these genrealized translation keys are copied to error.ts file
+    // Some of these generalized translation keys are copied to error.ts file
     // todo remove this and use form.ts
     checkFix: 'Please check and fix the following',
     fillBlank: 'Please fill in the blank',
@@ -393,7 +393,7 @@ const technicalAssistance = {
         text: 'Though the TRB has shifted to become more of a consultation and guidance service, you can still request a more formal design review or readiness review. Choose this option if:',
         list: [
           'you have a architecture solution in mind and would like a review',
-          'you are ready to go live and would like one final review with the TRB to make sure your team didn’t miss anything',
+          "you are ready to go live and would like one final review with the TRB to make sure your team didn't miss anything",
           'you would like a formal review of how your solution aligns with CMS’s Technical Reference Architecture (TRA)'
         ]
       },
@@ -820,11 +820,11 @@ const technicalAssistance = {
       CLOSED: 'Closed'
     },
     trbRequestStatuses: {
-      ADVICE_LETTER_IN_REVIEW: 'Guidance letter in review',
-      ADVICE_LETTER_SENT: 'Guidance letter sent',
+      GUIDANCE_LETTER_IN_REVIEW: 'Guidance letter in review',
+      GUIDANCE_LETTER_SENT: 'Guidance letter sent',
       CONSULT_COMPLETE: 'Consult complete',
       CONSULT_SCHEDULED: 'Consult scheduled',
-      DRAFT_ADVICE_LETTER: 'Draft guidance letter',
+      DRAFT_GUIDANCE_LETTER: 'Draft guidance letter',
       DRAFT_REQUEST_FORM: 'Draft request form',
       FOLLOW_UP_REQUESTED: 'Follow-up requested',
       NEW: 'New',
@@ -910,7 +910,7 @@ const technicalAssistance = {
       'From EASi’s TRB home, you can review, assign, and manage incoming and existing TRB support requests.',
     jumpToExistingRequests: 'Jump to existing requests',
     downloadAllTrbRequests: 'Download all TRB requests (csv)',
-    switchToDifferentAdminView: 'Swich to a different admin view',
+    switchToDifferentAdminView: 'Switch to a different admin view',
     submitYourOwnRequest: 'Submit your own technical assistance request',
     newRequests: {
       heading: 'New requests',
@@ -1052,7 +1052,7 @@ const technicalAssistance = {
     },
     noDocuments: 'There are no documents uploaded for this request.',
     categories: {
-      ADVICE_LETTER: 'Guidance letter',
+      GUIDANCE_LETTER: 'Guidance letter',
       CONSULT_SESSION: 'Consult session',
       GENERAL_REQUEST: 'General note about this request',
       INITIAL_REQUEST_FORM: 'Initial request form',

@@ -15,7 +15,7 @@ export interface TrbRequestFormFields_taskStatuses {
   feedbackStatus: TRBFeedbackStatus;
   consultPrepStatus: TRBConsultPrepStatus;
   attendConsultStatus: TRBAttendConsultStatus;
-  adviceLetterStatus: TRBGuidanceLetterStatus;
+  guidanceLetterStatus: TRBGuidanceLetterStatus;
 }
 
 export interface TrbRequestFormFields_form_fundingSources {

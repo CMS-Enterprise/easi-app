@@ -19,7 +19,7 @@ type IconButtonProps = {
   accentStyle?: 'cool' | 'warm';
   outline?: boolean;
   inverse?: boolean;
-  size?: 'big' | 'small';
+  size?: 'big';
   unstyled?: boolean;
 } & JSX.IntrinsicElements['button'];
 

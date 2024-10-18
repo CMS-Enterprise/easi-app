@@ -7,7 +7,7 @@
 // GraphQL query operation: GetTrbRecommendations
 // ====================================================
 
-export interface GetTrbRecommendations_trbRequest_adviceLetter_recommendations {
+export interface GetTrbRecommendations_trbRequest_guidanceLetter_recommendations {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -15,17 +15,17 @@ export interface GetTrbRecommendations_trbRequest_adviceLetter_recommendations {
   links: string[];
 }
 
-export interface GetTrbRecommendations_trbRequest_adviceLetter {
+export interface GetTrbRecommendations_trbRequest_guidanceLetter {
   __typename: "TRBGuidanceLetter";
   /**
    * List of recommendations in the order specified by users
    */
-  recommendations: GetTrbRecommendations_trbRequest_adviceLetter_recommendations[];
+  recommendations: GetTrbRecommendations_trbRequest_guidanceLetter_recommendations[];
 }
 
 export interface GetTrbRecommendations_trbRequest {
   __typename: "TRBRequest";
-  adviceLetter: GetTrbRecommendations_trbRequest_adviceLetter | null;
+  guidanceLetter: GetTrbRecommendations_trbRequest_guidanceLetter | null;
 }
 
 export interface GetTrbRecommendations {

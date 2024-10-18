@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
-import { IconSearch } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 
 import './index.scss';
 
@@ -101,7 +101,7 @@ const SearchBar = ({
         type="submit"
         data-testid="search-bar-search-btn"
       >
-        <IconSearch />
+        <Icon.Search />
         <span className="usa-sr-only">Search</span>
       </button>
     </form>

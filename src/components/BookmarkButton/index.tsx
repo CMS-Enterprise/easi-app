@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
-import { Button, IconBookmark } from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQuery';
@@ -78,7 +78,7 @@ export default function BookmarkButton({
       )}
       onClick={toggle}
     >
-      <IconBookmark
+      <Icon.Bookmark
         className={classnames('margin-right-1', {
           'outline text-base': !isBookmarkedState
         })}

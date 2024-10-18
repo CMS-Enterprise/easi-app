@@ -15,6 +15,7 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
     <div
       class="usa-table-container--scrollable"
       data-testid="scrollable-table-container"
+      tabindex="0"
     >
       <table
         class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"

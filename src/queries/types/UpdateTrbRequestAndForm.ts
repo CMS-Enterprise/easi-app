@@ -20,7 +20,7 @@ export interface UpdateTrbRequestAndForm_updateTRBRequest_taskStatuses {
   feedbackStatus: TRBFeedbackStatus;
   consultPrepStatus: TRBConsultPrepStatus;
   attendConsultStatus: TRBAttendConsultStatus;
-  adviceLetterStatus: TRBGuidanceLetterStatus;
+  guidanceLetterStatus: TRBGuidanceLetterStatus;
 }
 
 export interface UpdateTrbRequestAndForm_updateTRBRequest_form_fundingSources {

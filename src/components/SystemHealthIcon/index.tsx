@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  IconCheckCircleOutline,
-  IconErrorOutline,
-  IconHighlightOff
-} from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import { IconStatus } from 'types/iconStatus';
@@ -48,7 +44,7 @@ const SystemHealthIcon = ({
   const iconSwitcher = (iconStatus: string) => {
     if (iconStatus === 'success') {
       return (
-        <IconCheckCircleOutline
+        <Icon.CheckCircleOutline
           className={classes}
           size={sizeChecker(size)}
           data-testid="system-health-icon"
@@ -57,7 +53,7 @@ const SystemHealthIcon = ({
     }
     if (iconStatus === 'fail') {
       return (
-        <IconHighlightOff
+        <Icon.HighlightOff
           className={classes}
           size={sizeChecker(size)}
           data-testid="system-health-icon"
@@ -66,7 +62,7 @@ const SystemHealthIcon = ({
     }
     if (iconStatus === 'warning') {
       return (
-        <IconErrorOutline
+        <Icon.ErrorOutline
           className={classes}
           size={sizeChecker(size)}
           data-testid="system-health-icon"

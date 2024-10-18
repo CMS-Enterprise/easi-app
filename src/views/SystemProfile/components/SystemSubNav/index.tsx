@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
-import {
-  Button,
-  IconExpandLess,
-  IconExpandMore
-} from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import useCheckResponsiveScreen from 'hooks/checkMobile';
@@ -52,9 +48,9 @@ const SystemSubNav = ({
       >
         <h3 className="padding-left-1">{t(`navigation.${subinfo}`)}</h3>
         {!isAccordionOpen ? (
-          <IconExpandMore size={3} />
+          <Icon.ExpandMore size={3} />
         ) : (
-          <IconExpandLess size={3} />
+          <Icon.ExpandLess size={3} />
         )}
       </button>
       {isAccordionOpen && (

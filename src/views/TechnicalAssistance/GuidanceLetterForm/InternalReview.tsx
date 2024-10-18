@@ -8,17 +8,17 @@ import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import {
   DeleteTrbRecommendationQuery,
-  GetTrbAdviceLetterQuery,
-  RequestReviewForTRBAdviceLetterQuery
-} from 'queries/TrbAdviceLetterQueries';
+  GetTrbGuidanceLetterQuery,
+  RequestReviewForTRBGuidanceLetterQuery
+} from 'queries/TrbGuidanceLetterQueries';
 import {
   DeleteTRBRecommendation,
   DeleteTRBRecommendationVariables
 } from 'queries/types/DeleteTRBRecommendation';
 import {
-  RequestReviewForTRBAdviceLetter,
-  RequestReviewForTRBAdviceLetterVariables
-} from 'queries/types/RequestReviewForTRBAdviceLetter';
+  RequestReviewForTRBGuidanceLetter,
+  RequestReviewForTRBGuidanceLetterVariables
+} from 'queries/types/RequestReviewForTRBGuidanceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { StepComponentProps } from 'types/technicalAssistance';
 
@@ -27,8 +27,8 @@ import Pager from '../RequestForm/Pager';
 
 const InternalReview = ({
   trbRequestId,
-  adviceLetter,
-  adviceLetterStatus,
+  guidanceLetter,
+  guidanceLetterStatus,
   setFormAlert,
   setIsStepSubmitting,
   stepsCompleted,
@@ -38,11 +38,11 @@ const InternalReview = ({
   const history = useHistory();
 
   const [requestReview, { loading: isSubmitting }] = useMutation<
-    RequestReviewForTRBAdviceLetter,
-    RequestReviewForTRBAdviceLetterVariables
-  >(RequestReviewForTRBAdviceLetterQuery, {
+    RequestReviewForTRBGuidanceLetter,
+    RequestReviewForTRBGuidanceLetterVariables
+  >(RequestReviewForTRBGuidanceLetterQuery, {
     variables: {
-      id: adviceLetter.id
+      id: guidanceLetter.id
     }
   });
 
@@ -52,7 +52,7 @@ const InternalReview = ({
   >(DeleteTrbRecommendationQuery, {
     refetchQueries: [
       {
-        query: GetTrbAdviceLetterQuery,
+        query: GetTrbGuidanceLetterQuery,
         variables: {
           id: trbRequestId
         }
@@ -69,7 +69,7 @@ const InternalReview = ({
       {/* Internal Review */}
       <ReviewGuidanceLetter
         trbRequestId={trbRequestId}
-        adviceLetter={adviceLetter}
+        guidanceLetter={guidanceLetter}
         className="margin-top-5 margin-bottom-4"
         recommendationActions={{
           setReorderError: error =>
@@ -116,7 +116,7 @@ const InternalReview = ({
         next={{
           text: t(
             `guidanceLetterForm.${
-              adviceLetterStatus === TRBGuidanceLetterStatus.IN_PROGRESS
+              guidanceLetterStatus === TRBGuidanceLetterStatus.IN_PROGRESS
                 ? 'requestInternalReview'
                 : 'requestAnotherInternalReview'
             }`

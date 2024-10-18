@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { IconFileDownload } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import IconButton from 'components/shared/IconButton';
@@ -20,7 +20,7 @@ export const PDFExportButton = ({
 }: PDFExportButtonProps) => {
   return (
     <IconButton
-      icon={<IconFileDownload />}
+      icon={<Icon.FileDownload />}
       className={classNames('easi-no-print', className)}
       type="button"
       onClick={handlePrint}

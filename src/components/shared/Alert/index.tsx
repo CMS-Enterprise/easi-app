@@ -74,6 +74,7 @@ export const Alert = ({
           slim={slim}
           noIcon={noIcon}
           className={classes}
+          headingLevel="h4"
           {...props}
         >
           {children}

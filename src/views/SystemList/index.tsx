@@ -11,8 +11,9 @@ import {
   Button,
   CardGroup,
   Grid,
-  IconBookmark,
-  SummaryBox
+  Icon,
+  SummaryBox,
+  SummaryBoxContent
 } from '@trussworks/react-uswds';
 
 import BookmarkCard from 'components/BookmarkCard';
@@ -70,15 +71,17 @@ export const SystemList = () => {
           {t('systemProfile:systemTable.jumpToSystems')}
         </Button>
 
-        <SummaryBox heading="" className="easi-request__container">
-          <p>{t('systemProfile:newRequest.info')}</p>
+        <SummaryBox className="easi-request__container">
+          <SummaryBoxContent>
+            <p>{t('systemProfile:newRequest.info')}</p>
 
-          <UswdsReactLink
-            to="/system/request-type"
-            className="easi-request__button-link"
-          >
-            {t('systemProfile:newRequest.button')}
-          </UswdsReactLink>
+            <UswdsReactLink
+              to="/system/request-type"
+              className="easi-request__button-link"
+            >
+              {t('systemProfile:newRequest.button')}
+            </UswdsReactLink>
+          </SummaryBoxContent>
         </SummaryBox>
       </SectionWrapper>
 
@@ -110,7 +113,7 @@ export const SystemList = () => {
                     <span className="margin-0">
                       {t('systemProfile:noBookmark.text1')}
                     </span>
-                    <IconBookmark />
+                    <Icon.Bookmark />
                     <span className="margin-0">
                       {t('systemProfile:noBookmark.text2')}
                     </span>
@@ -139,7 +142,7 @@ export const SystemList = () => {
             <Trans
               i18nKey="systemProfile:systemTable.subtitle"
               components={{
-                icon: <IconBookmark className="text-bookmark-icon" />
+                icon: <Icon.Bookmark className="text-bookmark-icon" />
               }}
             />
 

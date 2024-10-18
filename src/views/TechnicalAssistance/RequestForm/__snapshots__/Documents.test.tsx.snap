@@ -18,6 +18,7 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
     <div
       class="usa-table-container--scrollable"
       data-testid="scrollable-table-container"
+      tabindex="0"
     >
       <table
         class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"

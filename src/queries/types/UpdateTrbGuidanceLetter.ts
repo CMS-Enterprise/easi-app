@@ -6,10 +6,10 @@
 import { UpdateTRBGuidanceLetterInput } from "./../../types/graphql-global-types";
 
 // ====================================================
-// GraphQL mutation operation: UpdateTrbAdviceLetter
+// GraphQL mutation operation: UpdateTrbGuidanceLetter
 // ====================================================
 
-export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter_recommendations {
+export interface UpdateTrbGuidanceLetter_updateTRBGuidanceLetter_recommendations {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -17,13 +17,13 @@ export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter_recommendations {
   links: string[];
 }
 
-export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter_author {
+export interface UpdateTrbGuidanceLetter_updateTRBGuidanceLetter_author {
   __typename: "UserInfo";
   euaUserId: string;
   commonName: string;
 }
 
-export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter {
+export interface UpdateTrbGuidanceLetter_updateTRBGuidanceLetter {
   __typename: "TRBGuidanceLetter";
   id: UUID;
   meetingSummary: HTML | null;
@@ -34,16 +34,16 @@ export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter {
   /**
    * List of recommendations in the order specified by users
    */
-  recommendations: UpdateTrbAdviceLetter_updateTRBAdviceLetter_recommendations[];
-  author: UpdateTrbAdviceLetter_updateTRBAdviceLetter_author;
+  recommendations: UpdateTrbGuidanceLetter_updateTRBGuidanceLetter_recommendations[];
+  author: UpdateTrbGuidanceLetter_updateTRBGuidanceLetter_author;
   createdAt: Time;
   modifiedAt: Time | null;
 }
 
-export interface UpdateTrbAdviceLetter {
-  updateTRBAdviceLetter: UpdateTrbAdviceLetter_updateTRBAdviceLetter;
+export interface UpdateTrbGuidanceLetter {
+  updateTRBGuidanceLetter: UpdateTrbGuidanceLetter_updateTRBGuidanceLetter;
 }
 
-export interface UpdateTrbAdviceLetterVariables {
+export interface UpdateTrbGuidanceLetterVariables {
   input: UpdateTRBGuidanceLetterInput;
 }

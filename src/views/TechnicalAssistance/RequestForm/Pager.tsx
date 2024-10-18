@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button, ButtonGroup, IconArrowBack } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import Spinner from 'components/Spinner';
@@ -120,7 +120,7 @@ export function Pager({
             }
           }}
         >
-          <IconArrowBack className="margin-right-05" />
+          <Icon.ArrowBack className="margin-right-05" />
           {saveExitText || t('button.saveAndExit')}
         </Button>
       )}

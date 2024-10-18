@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
-  IconArrowBack,
+  Icon,
   Label,
   Radio,
   TextInput
@@ -608,7 +608,7 @@ const PreferredSolution = ({
 
             <IconButton
               type="button"
-              icon={<IconArrowBack />}
+              icon={<Icon.ArrowBack />}
               className="margin-bottom-3 margin-top-2"
               onClick={() => {
                 dispatchSave();

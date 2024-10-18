@@ -10,11 +10,11 @@ import useEasiForm from 'components/EasiForm/useEasiForm';
 import RichTextEditor from 'components/RichTextEditor';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import { UpdateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { UpdateTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
-  UpdateTrbAdviceLetter,
-  UpdateTrbAdviceLetterVariables
-} from 'queries/types/UpdateTrbAdviceLetter';
+  UpdateTrbGuidanceLetter,
+  UpdateTrbGuidanceLetterVariables
+} from 'queries/types/UpdateTrbGuidanceLetter';
 import {
   GuidanceLetterSummary,
   StepComponentProps
@@ -26,7 +26,7 @@ import Pager from '../RequestForm/Pager';
 
 const Summary = ({
   trbRequestId,
-  adviceLetter,
+  guidanceLetter,
   setFormAlert,
   setStepSubmit,
   setIsStepSubmitting
@@ -34,12 +34,12 @@ const Summary = ({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const { meetingSummary } = adviceLetter;
+  const { meetingSummary } = guidanceLetter;
 
   const [update] = useMutation<
-    UpdateTrbAdviceLetter,
-    UpdateTrbAdviceLetterVariables
-  >(UpdateTrbAdviceLetterQuery);
+    UpdateTrbGuidanceLetter,
+    UpdateTrbGuidanceLetterVariables
+  >(UpdateTrbGuidanceLetterQuery);
 
   const {
     handleSubmit,
@@ -61,7 +61,7 @@ const Summary = ({
         async formData => {
           try {
             if (isDirty) {
-              // UpdateTrbAdviceLetter mutation
+              // UpdateTrbGuidanceLetter mutation
               await update({
                 variables: {
                   input: {
