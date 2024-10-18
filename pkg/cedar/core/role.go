@@ -10,7 +10,6 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/samber/lo"
 	"go.uber.org/zap"
-	"golang.org/x/sync/errgroup"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	apiroles "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/role"
@@ -318,34 +317,21 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	})
 
 	// addRoles() and deleteRoles() each take several hundred milliseconds for CEDAR to respond; calling them concurrently noticeably helps
-	g := new(errgroup.Group)
 
-	g.Go(func() error {
-		// length check is necessary because CEDAR will error if we call addRoles() with no role type IDs
-		if len(newRoles) > 0 {
-			err = c.addRoles(ctx, cedarSystemID, newRoles)
-			if err != nil {
-				return err
-			}
+	// length check is necessary because CEDAR will error if we call addRoles() with no role type IDs
+	if len(newRoles) > 0 {
+		err = c.addRoles(ctx, cedarSystemID, newRoles)
+		if err != nil {
+			return nil, err
 		}
+	}
 
-		return nil
-	})
-
-	g.Go(func() error {
-		// length check is necessary because CEDAR will error if we call deleteRoles() with no role IDs
-		if len(roleIDsToDelete) > 0 {
-			err = c.deleteRoles(ctx, roleIDsToDelete)
-			if err != nil {
-				return err
-			}
+	// length check is necessary because CEDAR will error if we call deleteRoles() with no role IDs
+	if len(roleIDsToDelete) > 0 {
+		err = c.deleteRoles(ctx, roleIDsToDelete)
+		if err != nil {
+			return nil, err
 		}
-
-		return nil
-	})
-
-	if err := g.Wait(); err != nil {
-		return nil, err
 	}
 
 	roleResponse := &SetRoleResponseMetadata{
