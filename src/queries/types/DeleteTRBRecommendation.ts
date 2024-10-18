@@ -7,8 +7,8 @@
 // GraphQL mutation operation: DeleteTRBRecommendation
 // ====================================================
 
-export interface DeleteTRBRecommendation_deleteTRBAdviceLetterRecommendation {
-  __typename: "TRBAdviceLetterRecommendation";
+export interface DeleteTRBRecommendation_deleteTRBGuidanceLetterRecommendation {
+  __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
   recommendation: HTML;
@@ -16,7 +16,7 @@ export interface DeleteTRBRecommendation_deleteTRBAdviceLetterRecommendation {
 }
 
 export interface DeleteTRBRecommendation {
-  deleteTRBAdviceLetterRecommendation: DeleteTRBRecommendation_deleteTRBAdviceLetterRecommendation;
+  deleteTRBGuidanceLetterRecommendation: DeleteTRBRecommendation_deleteTRBGuidanceLetterRecommendation;
 }
 
 export interface DeleteTRBRecommendationVariables {

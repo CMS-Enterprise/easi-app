@@ -148,9 +148,9 @@ export const documentSchema = yup.object({
   })
 });
 
-// Advice letter form schemas
+// Guidance letter form schemas
 
-export const adviceRecommendationSchema = yup.object({
+export const guidanceRecommendationSchema = yup.object({
   title: yup.string().required(),
   recommendation: yup.string().required(),
   links: yup.array(

@@ -25,7 +25,7 @@ import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
-import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTrbRecommendationsQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   GetTrbRecommendations,
   GetTrbRecommendationsVariables
@@ -84,7 +84,8 @@ const AddNote = ({
 
   const recommendations = useMemo(
     () =>
-      recommendationsQuery.data?.trbRequest.adviceLetter?.recommendations || [],
+      recommendationsQuery.data?.trbRequest.guidanceLetter?.recommendations ||
+      [],
     [recommendationsQuery.data]
   );
 
@@ -260,7 +261,7 @@ const AddNote = ({
                       TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
                       TRBAdminNoteCategory.SUPPORTING_DOCUMENTS,
                       TRBAdminNoteCategory.CONSULT_SESSION,
-                      TRBAdminNoteCategory.ADVICE_LETTER
+                      TRBAdminNoteCategory.GUIDANCE_LETTER
                     ].map(key => (
                       <option key={key} value={key}>
                         {t(`notes.categories.${key}`)}
@@ -370,7 +371,7 @@ const AddNote = ({
               />
             )}
 
-            {category === TRBAdminNoteCategory.ADVICE_LETTER && (
+            {category === TRBAdminNoteCategory.GUIDANCE_LETTER && (
               <Controller
                 control={control}
                 name="sections"

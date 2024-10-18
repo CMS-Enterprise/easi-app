@@ -20,11 +20,11 @@ import {
 } from 'queries/types/UpdateTrbRequestArchived';
 import UpdateTrbRequestArchivedQuery from 'queries/UpdateTrbRequestArchivedQuery';
 import {
-  TRBAdviceLetterStatusTaskList,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
+  TRBGuidanceLetterStatusTaskList,
   TRBRequestType
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
@@ -60,8 +60,8 @@ const getTrbTasklistQuery: MockedQuery<
           feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
           consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
           attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-          adviceLetterStatusTaskList:
-            TRBAdviceLetterStatusTaskList.CANNOT_START_YET,
+          guidanceLetterStatusTaskList:
+            TRBGuidanceLetterStatusTaskList.CANNOT_START_YET,
           __typename: 'TRBTaskStatuses'
         },
         feedback: [],

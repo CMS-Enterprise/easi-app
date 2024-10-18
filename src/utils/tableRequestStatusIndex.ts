@@ -67,9 +67,9 @@ export const TRBRequestStatusIndex = parseSortIndex([
   TRBRequestStatus.READY_FOR_CONSULT,
   TRBRequestStatus.CONSULT_SCHEDULED,
   TRBRequestStatus.CONSULT_COMPLETE,
-  TRBRequestStatus.DRAFT_ADVICE_LETTER,
-  TRBRequestStatus.ADVICE_LETTER_IN_REVIEW,
-  TRBRequestStatus.ADVICE_LETTER_SENT,
+  TRBRequestStatus.DRAFT_GUIDANCE_LETTER,
+  TRBRequestStatus.GUIDANCE_LETTER_IN_REVIEW,
+  TRBRequestStatus.GUIDANCE_LETTER_SENT,
   TRBRequestStatus.FOLLOW_UP_REQUESTED,
   TRBRequestState.CLOSED
 ]);

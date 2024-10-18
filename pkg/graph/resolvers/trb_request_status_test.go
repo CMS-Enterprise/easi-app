@@ -82,12 +82,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		taskStatuses, err := GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
-			FormStatus:                 models.TRBFormStatusReadyToStart,
-			FeedbackStatus:             models.TRBFeedbackStatusCannotStartYet,
-			ConsultPrepStatus:          models.TRBConsultPrepStatusCannotStartYet,
-			AttendConsultStatus:        models.TRBAttendConsultStatusCannotStartYet,
-			AdviceLetterStatus:         models.TRBAdviceLetterStatusCannotStartYet,
-			AdviceLetterStatusTaskList: models.TRBAdviceLetterStatusTaskListCannotStartYet,
+			FormStatus:                   models.TRBFormStatusReadyToStart,
+			FeedbackStatus:               models.TRBFeedbackStatusCannotStartYet,
+			ConsultPrepStatus:            models.TRBConsultPrepStatusCannotStartYet,
+			AttendConsultStatus:          models.TRBAttendConsultStatusCannotStartYet,
+			GuidanceLetterStatus:         models.TRBGuidanceLetterStatusCannotStartYet,
+			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListCannotStartYet,
 		}, *taskStatuses)
 
 		// Test the "DRAFT_REQUEST_FORM" status by making a random update to the form but not
@@ -111,12 +111,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
-			FormStatus:                 models.TRBFormStatusInProgress,
-			FeedbackStatus:             models.TRBFeedbackStatusCannotStartYet,
-			ConsultPrepStatus:          models.TRBConsultPrepStatusCannotStartYet,
-			AttendConsultStatus:        models.TRBAttendConsultStatusCannotStartYet,
-			AdviceLetterStatus:         models.TRBAdviceLetterStatusCannotStartYet,
-			AdviceLetterStatusTaskList: models.TRBAdviceLetterStatusTaskListCannotStartYet,
+			FormStatus:                   models.TRBFormStatusInProgress,
+			FeedbackStatus:               models.TRBFeedbackStatusCannotStartYet,
+			ConsultPrepStatus:            models.TRBConsultPrepStatusCannotStartYet,
+			AttendConsultStatus:          models.TRBAttendConsultStatusCannotStartYet,
+			GuidanceLetterStatus:         models.TRBGuidanceLetterStatusCannotStartYet,
+			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListCannotStartYet,
 		}, *taskStatuses)
 
 		// Test the "REQUEST_FORM_COMPLETE" status by submitting it
@@ -139,12 +139,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
-			FormStatus:                 models.TRBFormStatusCompleted,
-			FeedbackStatus:             models.TRBFeedbackStatusInReview,
-			ConsultPrepStatus:          models.TRBConsultPrepStatusCannotStartYet,
-			AttendConsultStatus:        models.TRBAttendConsultStatusCannotStartYet,
-			AdviceLetterStatus:         models.TRBAdviceLetterStatusCannotStartYet,
-			AdviceLetterStatusTaskList: models.TRBAdviceLetterStatusTaskListCannotStartYet,
+			FormStatus:                   models.TRBFormStatusCompleted,
+			FeedbackStatus:               models.TRBFeedbackStatusInReview,
+			ConsultPrepStatus:            models.TRBConsultPrepStatusCannotStartYet,
+			AttendConsultStatus:          models.TRBAttendConsultStatusCannotStartYet,
+			GuidanceLetterStatus:         models.TRBGuidanceLetterStatusCannotStartYet,
+			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListCannotStartYet,
 		}, *taskStatuses)
 
 		// Test the "READY_FOR_CONSULT" status by creating an approving feedback
@@ -174,12 +174,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
-			FormStatus:                 models.TRBFormStatusCompleted,
-			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
-			ConsultPrepStatus:          models.TRBConsultPrepStatusReadyToStart,
-			AttendConsultStatus:        models.TRBAttendConsultStatusReadyToSchedule,
-			AdviceLetterStatus:         models.TRBAdviceLetterStatusCannotStartYet,
-			AdviceLetterStatusTaskList: models.TRBAdviceLetterStatusTaskListCannotStartYet,
+			FormStatus:                   models.TRBFormStatusCompleted,
+			FeedbackStatus:               models.TRBFeedbackStatusCompleted,
+			ConsultPrepStatus:            models.TRBConsultPrepStatusReadyToStart,
+			AttendConsultStatus:          models.TRBAttendConsultStatusReadyToSchedule,
+			GuidanceLetterStatus:         models.TRBGuidanceLetterStatusCannotStartYet,
+			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListCannotStartYet,
 		}, *taskStatuses)
 
 		// Test the "CONSULT_SCHEDULED" status by scheduling a consult session in the future
@@ -207,12 +207,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
-			FormStatus:                 models.TRBFormStatusCompleted,
-			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
-			ConsultPrepStatus:          models.TRBConsultPrepStatusReadyToStart,
-			AttendConsultStatus:        models.TRBAttendConsultStatusScheduled,
-			AdviceLetterStatus:         models.TRBAdviceLetterStatusCannotStartYet,
-			AdviceLetterStatusTaskList: models.TRBAdviceLetterStatusTaskListCannotStartYet,
+			FormStatus:                   models.TRBFormStatusCompleted,
+			FeedbackStatus:               models.TRBFeedbackStatusCompleted,
+			ConsultPrepStatus:            models.TRBConsultPrepStatusReadyToStart,
+			AttendConsultStatus:          models.TRBAttendConsultStatusScheduled,
+			GuidanceLetterStatus:         models.TRBGuidanceLetterStatusCannotStartYet,
+			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListCannotStartYet,
 		}, *taskStatuses)
 
 		// Test the "CONSULT_COMPLETE" status by updating the meeting time to be a time in the past
@@ -240,87 +240,87 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
-			FormStatus:                 models.TRBFormStatusCompleted,
-			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
-			ConsultPrepStatus:          models.TRBConsultPrepStatusCompleted,
-			AttendConsultStatus:        models.TRBAttendConsultStatusCompleted,
-			AdviceLetterStatus:         models.TRBAdviceLetterStatusReadyToStart,
-			AdviceLetterStatusTaskList: models.TRBAdviceLetterStatusTaskListInReview,
+			FormStatus:                   models.TRBFormStatusCompleted,
+			FeedbackStatus:               models.TRBFeedbackStatusCompleted,
+			ConsultPrepStatus:            models.TRBConsultPrepStatusCompleted,
+			AttendConsultStatus:          models.TRBAttendConsultStatusCompleted,
+			GuidanceLetterStatus:         models.TRBGuidanceLetterStatusReadyToStart,
+			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListInReview,
 		}, *taskStatuses)
 
-		// Test the "DRAFT_ADVICE_LETTER" status by making a change to the advice letter
-		adviceLetter, err := CreateTRBAdviceLetter(ctx, store, trb.ID)
+		// Test the "DRAFT_GUIDANCE_LETTER" status by making a change to the guidance letter
+		guidanceLetter, err := CreateTRBGuidanceLetter(ctx, store, trb.ID)
 		s.NoError(err)
-		s.NotNil(adviceLetter)
-		adviceLetterChanges := map[string]interface{}{
+		s.NotNil(guidanceLetter)
+		guidanceLetterChanges := map[string]interface{}{
 			"trbRequestId":   trb.ID,
 			"meetingSummary": "Talked about stuff",
 		}
-		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
+		_, err = UpdateTRBGuidanceLetter(ctx, store, guidanceLetterChanges)
 		s.NoError(err)
 		// Fetch the updated request
 		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
-		s.EqualValues(models.TRBRequestStatusDraftAdviceLetter, trbStatus)
+		s.EqualValues(models.TRBRequestStatusDraftGuidanceLetter, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
-			FormStatus:                 models.TRBFormStatusCompleted,
-			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
-			ConsultPrepStatus:          models.TRBConsultPrepStatusCompleted,
-			AttendConsultStatus:        models.TRBAttendConsultStatusCompleted,
-			AdviceLetterStatus:         models.TRBAdviceLetterStatusInProgress,
-			AdviceLetterStatusTaskList: models.TRBAdviceLetterStatusTaskListInReview,
+			FormStatus:                   models.TRBFormStatusCompleted,
+			FeedbackStatus:               models.TRBFeedbackStatusCompleted,
+			ConsultPrepStatus:            models.TRBConsultPrepStatusCompleted,
+			AttendConsultStatus:          models.TRBAttendConsultStatusCompleted,
+			GuidanceLetterStatus:         models.TRBGuidanceLetterStatusInProgress,
+			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListInReview,
 		}, *taskStatuses)
 
-		// Test the "ADVICE_LETTER_IN_REVIEW" status by requesting review for the advice letter
-		_, err = RequestReviewForTRBAdviceLetter(ctx, store, &emailClient, stubFetchUserInfo, adviceLetter.ID)
+		// Test the "GUIDANCE_LETTER_IN_REVIEW" status by requesting review for the guidance letter
+		_, err = RequestReviewForTRBGuidanceLetter(ctx, store, &emailClient, stubFetchUserInfo, guidanceLetter.ID)
 		s.NoError(err)
 		// Fetch the updated request
 		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
-		s.EqualValues(models.TRBRequestStatusAdviceLetterInReview, trbStatus)
+		s.EqualValues(models.TRBRequestStatusGuidanceLetterInReview, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
-			FormStatus:                 models.TRBFormStatusCompleted,
-			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
-			ConsultPrepStatus:          models.TRBConsultPrepStatusCompleted,
-			AttendConsultStatus:        models.TRBAttendConsultStatusCompleted,
-			AdviceLetterStatus:         models.TRBAdviceLetterStatusReadyForReview,
-			AdviceLetterStatusTaskList: models.TRBAdviceLetterStatusTaskListInReview,
+			FormStatus:                   models.TRBFormStatusCompleted,
+			FeedbackStatus:               models.TRBFeedbackStatusCompleted,
+			ConsultPrepStatus:            models.TRBConsultPrepStatusCompleted,
+			AttendConsultStatus:          models.TRBAttendConsultStatusCompleted,
+			GuidanceLetterStatus:         models.TRBGuidanceLetterStatusReadyForReview,
+			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListInReview,
 		}, *taskStatuses)
 
-		// Test the "ADVICE_LETTER_SENT" status by sending the advice letter
-		_, err = SendTRBAdviceLetter(ctx, store, adviceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos, false, nil)
+		// Test the "GUIDANCE_LETTER_SENT" status by sending the guidance letter
+		_, err = SendTRBGuidanceLetter(ctx, store, guidanceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos, false, nil)
 		s.NoError(err)
 		// Fetch the updated request
 		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
-		s.EqualValues(models.TRBRequestStatusAdviceLetterSent, trbStatus)
+		s.EqualValues(models.TRBRequestStatusGuidanceLetterSent, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
-			FormStatus:                 models.TRBFormStatusCompleted,
-			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
-			ConsultPrepStatus:          models.TRBConsultPrepStatusCompleted,
-			AttendConsultStatus:        models.TRBAttendConsultStatusCompleted,
-			AdviceLetterStatus:         models.TRBAdviceLetterStatusCompleted,
-			AdviceLetterStatusTaskList: models.TRBAdviceLetterStatusTaskListCompleted,
+			FormStatus:                   models.TRBFormStatusCompleted,
+			FeedbackStatus:               models.TRBFeedbackStatusCompleted,
+			ConsultPrepStatus:            models.TRBConsultPrepStatusCompleted,
+			AttendConsultStatus:          models.TRBAttendConsultStatusCompleted,
+			GuidanceLetterStatus:         models.TRBGuidanceLetterStatusCompleted,
+			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListCompleted,
 		}, *taskStatuses)
 
-		// Test the "FOLLOW_UP_REQUESTED" status by updating the advice letter to recommend follow up
-		adviceLetterChanges = map[string]interface{}{
+		// Test the "FOLLOW_UP_REQUESTED" status by updating the guidance letter to recommend follow up
+		guidanceLetterChanges = map[string]interface{}{
 			"trbRequestId":          trb.ID,
 			"isFollowupRecommended": true,
 		}
-		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
+		_, err = UpdateTRBGuidanceLetter(ctx, store, guidanceLetterChanges)
 		s.NoError(err)
 		// Fetch the updated request
 		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
@@ -331,12 +331,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
-			FormStatus:                 models.TRBFormStatusCompleted,
-			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
-			ConsultPrepStatus:          models.TRBConsultPrepStatusCompleted,
-			AttendConsultStatus:        models.TRBAttendConsultStatusCompleted,
-			AdviceLetterStatus:         models.TRBAdviceLetterStatusCompleted,
-			AdviceLetterStatusTaskList: models.TRBAdviceLetterStatusTaskListCompleted,
+			FormStatus:                   models.TRBFormStatusCompleted,
+			FeedbackStatus:               models.TRBFeedbackStatusCompleted,
+			ConsultPrepStatus:            models.TRBConsultPrepStatusCompleted,
+			AttendConsultStatus:          models.TRBAttendConsultStatusCompleted,
+			GuidanceLetterStatus:         models.TRBGuidanceLetterStatusCompleted,
+			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListCompleted,
 		}, *taskStatuses)
 	})
 }

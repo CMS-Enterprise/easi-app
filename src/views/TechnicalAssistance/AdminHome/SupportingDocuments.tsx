@@ -24,7 +24,7 @@ const SupportingDocuments = ({
       noteCount={trbRequest.adminNotes.length}
       disableStep={
         trbRequest.status !== TRBRequestStatus.CONSULT_SCHEDULED &&
-        trbRequest.status !== TRBRequestStatus.ADVICE_LETTER_SENT &&
+        trbRequest.status !== TRBRequestStatus.GUIDANCE_LETTER_SENT &&
         trbRequest.state !== TRBRequestState.CLOSED
       }
       adminActionProps={{

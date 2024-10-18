@@ -5,8 +5,8 @@ import i18next from 'i18next';
 
 import { GetTrbRequestHome_trbRequest as GetTrbRequestHomeType } from 'queries/types/GetTrbRequestHome';
 import {
-  TRBAdviceLetterStatus,
-  TRBFormStatus
+  TRBFormStatus,
+  TRBGuidanceLetterStatus
 } from 'types/graphql-global-types';
 
 import InformationCard from '.';
@@ -18,7 +18,7 @@ const trbRequest: GetTrbRequestHomeType = {
   consultMeetingTime: '2024-01-05T05:00:00Z',
   taskStatuses: {
     formStatus: TRBFormStatus.COMPLETED,
-    adviceLetterStatus: TRBAdviceLetterStatus.READY_TO_START,
+    guidanceLetterStatus: TRBGuidanceLetterStatus.READY_TO_START,
     __typename: 'TRBTaskStatuses'
   },
   form: {
@@ -26,8 +26,8 @@ const trbRequest: GetTrbRequestHomeType = {
     modifiedAt: '2023-01-05T05:00:00Z',
     __typename: 'TRBRequestForm'
   },
-  adviceLetter: {
-    __typename: 'TRBAdviceLetter',
+  guidanceLetter: {
+    __typename: 'TRBGuidanceLetter',
     id: '123',
     modifiedAt: '2023-02-05T05:00:00Z'
   },
@@ -73,24 +73,26 @@ describe('TRB Admin InformationCard', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('Renders correct advice letter info', () => {
+  it('Renders correct guidance letter info', () => {
     const { getByText, asFragment, getByRole } = render(
       <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
         <Route exact path="/trb/:id/:activePage">
-          <InformationCard trbRequest={trbRequest} type="adviceLetter" />
+          <InformationCard trbRequest={trbRequest} type="guidanceLetter" />
         </Route>
       </MemoryRouter>
     );
 
     expect(
-      getByText(i18next.t<string>('technicalAssistance:adminHome.adviceLetter'))
+      getByText(
+        i18next.t<string>('technicalAssistance:adminHome.guidanceLetter')
+      )
     ).toBeInTheDocument();
 
     expect(getByText('February 5, 2023')).toBeInTheDocument();
 
     expect(
       getByRole('button', {
-        name: i18next.t<string>('technicalAssistance:adminHome.startAdvice')
+        name: i18next.t<string>('technicalAssistance:adminHome.startGuidance')
       })
     ).toBeInTheDocument();
 

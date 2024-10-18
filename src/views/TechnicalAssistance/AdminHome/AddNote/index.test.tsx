@@ -13,15 +13,15 @@ import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 
 import {
-  adviceLetter,
   getTRBRequestAttendeesQuery,
   getTrbRequestSummaryQuery,
+  guidanceLetter,
   requester
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
-import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTrbRecommendationsQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   CreateTRBAdminNoteGeneralRequest,
   CreateTRBAdminNoteGeneralRequestVariables
@@ -49,7 +49,7 @@ import AdminHome from '..';
 
 import AddNote from '.';
 
-const { recommendations } = adviceLetter;
+const { recommendations } = guidanceLetter;
 
 const getTrbRecommendationsQuery: MockedQuery<
   GetTrbRecommendations,
@@ -65,8 +65,8 @@ const getTrbRecommendationsQuery: MockedQuery<
     data: {
       trbRequest: {
         __typename: 'TRBRequest',
-        adviceLetter: {
-          __typename: 'TRBAdviceLetter',
+        guidanceLetter: {
+          __typename: 'TRBGuidanceLetter',
           recommendations
         }
       }
@@ -208,14 +208,14 @@ describe('Trb Admin Notes: Add Note', () => {
     expect(screen.getByRole('checkbox', { name: documents[0].fileName }));
     expect(screen.getByRole('checkbox', { name: documents[1].fileName }));
 
-    /* Advice letter */
+    /* Guidance letter */
 
-    userEvent.selectOptions(categorySelect, ['Advice letter']);
-    const adviceLetterSectionSelect = screen.getByRole('combobox', {
+    userEvent.selectOptions(categorySelect, ['Guidance letter']);
+    const guidanceLetterSectionSelect = screen.getByRole('combobox', {
       name: 'Which section?'
     });
 
-    selectEvent.openMenu(adviceLetterSectionSelect);
+    selectEvent.openMenu(guidanceLetterSectionSelect);
     expect(
       screen.getByRole('checkbox', {
         name: `Recommendation (${recommendations[0].title})`

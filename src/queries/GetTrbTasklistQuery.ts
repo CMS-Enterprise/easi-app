@@ -13,7 +13,7 @@ export default gql`
         feedbackStatus
         consultPrepStatus
         attendConsultStatus
-        adviceLetterStatusTaskList
+        guidanceLetterStatusTaskList
       }
       feedback {
         id

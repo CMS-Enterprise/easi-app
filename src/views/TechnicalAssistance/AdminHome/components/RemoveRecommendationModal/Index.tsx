@@ -13,7 +13,7 @@ type RemoveRecommendationModalProps = {
 };
 
 /**
- * Modal to warn user before removing TRB advice letter recommendation
+ * Modal to warn user before removing TRB guidance letter recommendation
  */
 const RemoveRecommendationModal = ({
   modalProps,
@@ -26,10 +26,10 @@ const RemoveRecommendationModal = ({
   return (
     <Modal {...modalProps}>
       <h3 className="margin-y-0 line-height-heading-2">
-        {t('adviceLetterForm.modal.title')}
+        {t('guidanceLetterForm.modal.title')}
       </h3>
 
-      <p>{t('adviceLetterForm.modal.text')}</p>
+      <p>{t('guidanceLetterForm.modal.text')}</p>
 
       {children}
 
@@ -41,7 +41,7 @@ const RemoveRecommendationModal = ({
             closeModal();
           }}
         >
-          {t('adviceLetterForm.removeRecommendation')}
+          {t('guidanceLetterForm.removeGuidance')}
         </Button>
 
         <Button

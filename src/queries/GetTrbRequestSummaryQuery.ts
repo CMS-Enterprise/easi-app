@@ -17,7 +17,7 @@ export default gql`
         feedbackStatus
         consultPrepStatus
         attendConsultStatus
-        adviceLetterStatus
+        guidanceLetterStatus
       }
       adminNotes {
         id
