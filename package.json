@@ -89,6 +89,7 @@
     "test": "vitest --run",
     "test:watch": "vitest",
     "test:coverage": "vitest --coverage --run",
+    "test:ci": "vitest --coverage --run --reporter=default --reporter=github-actions",
     "lint": "eslint '**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
     "cypress:open": "cypress open",
