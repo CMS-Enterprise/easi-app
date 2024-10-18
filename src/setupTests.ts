@@ -41,4 +41,4 @@ Document.prototype.elementFromPoint = (x: number, y: number) => null;
 // Usually for alerts and form field attention
 window.scroll = vi.fn;
 window.scrollTo = vi.fn;
-Element.prototype.scrollIntoView = vi.fn;
+Element.prototype.scrollIntoView = vi.fn();
