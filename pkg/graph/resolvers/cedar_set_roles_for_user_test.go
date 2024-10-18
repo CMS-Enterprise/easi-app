@@ -1,8 +1,6 @@
 package resolvers
 
 import (
-	"time"
-
 	"github.com/samber/lo"
 
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
@@ -33,9 +31,6 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 			DesiredRoleTypeIDs: []string{currentUserCurrentRoleID},
 		})
 
-		// easiest way to make sure the async calls finish without opening a channel or modifying the resolver
-		time.Sleep(time.Millisecond)
-
 		s.NotNil(resp)
 		s.NoError(err)
 		s.Len(sender.sentEmails, 1)
@@ -49,9 +44,6 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 			EuaUserID:          currentUserEUA,
 			DesiredRoleTypeIDs: []string{currentUserCurrentRoleID, otherRoleID1, otherRoleID2},
 		})
-
-		// easiest way to make sure the async calls finish without opening a channel or modifying the resolver
-		time.Sleep(time.Millisecond)
 
 		s.NotNil(resp)
 		s.NoError(err)
@@ -75,9 +67,6 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 			DesiredRoleTypeIDs: []string{},
 		})
 
-		// easiest way to make sure the async calls finish without opening a channel or modifying the resolver
-		time.Sleep(time.Millisecond)
-
 		s.NotNil(resp)
 		s.NoError(err)
 		s.Len(sender.sentEmails, 1)
@@ -94,9 +83,6 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 			EuaUserID:          notCurrentUserEUA,
 			DesiredRoleTypeIDs: []string{otherRoleID1, otherRoleID2},
 		})
-
-		// easiest way to make sure the async calls finish without opening a channel or modifying the resolver
-		time.Sleep(time.Millisecond)
 
 		s.NotNil(resp)
 		s.NoError(err)

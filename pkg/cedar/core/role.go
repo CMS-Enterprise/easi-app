@@ -323,7 +323,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	g.Go(func() error {
 		// length check is necessary because CEDAR will error if we call addRoles() with no role type IDs
 		if len(newRoles) > 0 {
-			err = c.addRoles(ctx, cedarSystemID, newRoles)
+			err := c.addRoles(ctx, cedarSystemID, newRoles)
 			if err != nil {
 				return err
 			}
@@ -335,7 +335,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	g.Go(func() error {
 		// length check is necessary because CEDAR will error if we call deleteRoles() with no role IDs
 		if len(roleIDsToDelete) > 0 {
-			err = c.deleteRoles(ctx, roleIDsToDelete)
+			err := c.deleteRoles(ctx, roleIDsToDelete)
 			if err != nil {
 				return err
 			}
