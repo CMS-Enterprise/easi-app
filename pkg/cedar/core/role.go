@@ -174,8 +174,8 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 	return retVal, nil
 }
 
-func PurgeRoleCache(ctx context.Context, cedarSystemID string) error {
-	return PurgeCacheByPath(ctx, "/role?application="+cedarRoleApplication+"&objectId="+url.QueryEscape(cedarSystemID))
+func (c *Client) PurgeRoleCache(ctx context.Context, cedarSystemID string) error {
+	return c.PurgeCacheByPath(ctx, "/role?application="+cedarRoleApplication+"&objectId="+url.QueryEscape(cedarSystemID))
 }
 
 // GetRoleTypes queries CEDAR for the list of supported role types
@@ -361,11 +361,11 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		return roleType.Name.String
 	})
 
-	err = PurgeRoleCache(ctx, cedarSystemID)
+	err = c.PurgeRoleCache(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
 	}
-	err = PurgeSystemCacheByEUA(ctx, euaUserID)
+	err = c.PurgeSystemCacheByEUA(ctx, euaUserID)
 	if err != nil {
 		return nil, err
 	}
@@ -438,7 +438,7 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 		}
 		return fmt.Errorf("unknown error")
 	}
-	err = PurgeRoleCache(ctx, cedarSystemID)
+	err = c.PurgeRoleCache(ctx, cedarSystemID)
 	if err != nil {
 		return err
 	}

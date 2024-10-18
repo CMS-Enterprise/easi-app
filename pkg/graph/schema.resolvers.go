@@ -931,7 +931,7 @@ func (r *mutationResolver) DeleteTRBRequestFundingSources(ctx context.Context, i
 
 // SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
 func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input models.SetRolesForUserOnSystemInput) (*string, error) {
-	return resolvers.SetRolesForUserOnCEDARSystem(ctx, r.service.FetchUserInfo, r.cedarCoreClient, r.emailClient, input)
+	return resolvers.SetRolesForUserOnCEDARSystem(ctx, r.service.FetchUserInfos, r.cedarCoreClient, r.emailClient, input)
 }
 
 // CreateTRBRequestFeedback is the resolver for the createTRBRequestFeedback field.
