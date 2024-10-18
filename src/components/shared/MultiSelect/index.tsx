@@ -6,7 +6,7 @@ import Select, {
   MultiValue,
   OptionProps
 } from 'react-select';
-import { IconClose, Tag } from '@trussworks/react-uswds';
+import { Icon, Tag } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import color from 'utils/uswdsColor';
@@ -93,7 +93,7 @@ const MultiSelectTag = ({
     >
       {label}{' '}
       {handleRemove && (
-        <IconClose
+        <Icon.Close
           onClick={() => handleRemove(label)}
           onKeyDown={e => {
             if (e.key === 'Enter') {

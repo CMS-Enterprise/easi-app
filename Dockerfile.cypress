@@ -12,14 +12,17 @@ FROM modules AS build
 COPY cmd ./cmd
 COPY pkg ./pkg
 
-FROM cypress/base:16.18.1
+# Notably, at time of implementation, cypress/base:18.20.4 doesn't exist, even though we're on Node 18.20.4
+# This small difference is incredibly unlikely to cause an issue, but is worth noting that the version used here
+# and the version in our .nvmrc doesn't quite match!
+FROM cypress/base:18.20.3
 
 # mc - minio client, used for tagging uploaded files
 RUN apt-get update && apt-get install --no-install-recommends -y wget && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
 
 COPY package.json yarn.lock /
-RUN npm install -g yarn
+# RUN npm install -g yarn
 RUN yarn install --immutable
 
 COPY cypress /cypress

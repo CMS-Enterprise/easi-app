@@ -1,6 +1,6 @@
 import React from 'react';
 import { CSVLink } from 'react-csv';
-import { IconFileDownload } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 interface CsvLinkProps {
@@ -34,7 +34,7 @@ export default function CsvDownloadLink({
       role="link"
       {...props}
     >
-      <IconFileDownload className="text-middle margin-right-1" />
+      <Icon.FileDownload className="text-middle margin-right-1" />
       {children}
     </CSVLink>
   );

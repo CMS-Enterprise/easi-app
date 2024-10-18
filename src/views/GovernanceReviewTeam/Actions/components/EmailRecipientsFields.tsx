@@ -1,11 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  ButtonGroup,
-  IconWarning,
-  Label
-} from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Icon, Label } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import AdditionalContacts from 'components/AdditionalContacts';
@@ -92,7 +87,7 @@ const Recipient = ({
       {!id && !isActive && (
         <div className="margin-left-4 margin-top-1 margin-bottom-2">
           <p className="text-base display-flex flex-align-center margin-y-1">
-            <IconWarning className="text-warning margin-right-1" />
+            <Icon.Warning className="text-warning margin-right-1" />
             {t('emailRecipients.unverifiedRecipient')}
           </p>
           {/* Button to open form to verify recipient */}

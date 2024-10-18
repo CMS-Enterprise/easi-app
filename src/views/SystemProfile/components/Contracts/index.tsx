@@ -6,7 +6,7 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  IconVerified
+  Icon
 } from '@trussworks/react-uswds';
 
 import Alert from 'components/shared/Alert';
@@ -36,7 +36,7 @@ const ContractCard = ({ contract }: { contract: ContractType }) => {
       <CardBody className="padding-x-2 padding-y-0">
         {contract.isDeliveryOrg && (
           <div className="display-flex flex-align-center margin-y-1">
-            <IconVerified className="margin-right-1 text-info-dark" />
+            <Icon.Verified className="margin-right-1 text-info-dark" />
             <span style={{ marginTop: '1px' }}>
               {t('singleSystem.contracts.isDeliveryOrg')}
             </span>

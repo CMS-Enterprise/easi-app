@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button, IconArrowBack, IconClose } from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 type HelpBreadcrumbProps = {
@@ -33,9 +33,9 @@ export default function HelpBreadcrumb({
       className={classNames('margin-top-6', className)}
     >
       {type === 'close' ? (
-        <IconClose className="margin-right-05 margin-top-3px text-tbottom" />
+        <Icon.Close className="margin-right-05 margin-top-3px text-tbottom" />
       ) : (
-        <IconArrowBack className="margin-right-05 margin-top-3px text-tbottom" />
+        <Icon.ArrowBack className="margin-right-05 margin-top-3px text-tbottom" />
       )}
       {text ?? t(type)}
     </Button>

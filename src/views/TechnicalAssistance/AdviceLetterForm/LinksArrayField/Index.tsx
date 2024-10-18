@@ -5,7 +5,7 @@ import {
   Button,
   ErrorMessage,
   FormGroup,
-  IconAdd,
+  Icon,
   TextInput
 } from '@trussworks/react-uswds';
 
@@ -101,7 +101,7 @@ export default function LinkArrayField() {
         disabled={links.length > 0 && !lastLinkInput}
         unstyled
       >
-        <IconAdd className="margin-right-05" />
+        <Icon.Add className="margin-right-05" />
         {t(
           fields.length === 0
             ? 'adviceLetterForm.addResourceLink'

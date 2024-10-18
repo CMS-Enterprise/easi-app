@@ -7,9 +7,7 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  IconBookmark,
-  IconCheckCircleOutline,
-  IconFileDownload,
+  Icon,
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -278,11 +276,11 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                             className="margin-bottom-1 text-bold"
                             key={data.id}
                           >
-                            <IconCheckCircleOutline className="text-success" />{' '}
+                            <Icon.CheckCircleOutline className="text-success" />{' '}
                             <span className="text-tbottom line-height-body-3">
                               {data.title}{' '}
                             </span>
-                            <IconFileDownload className="text-base" />
+                            <Icon.FileDownload className="text-base" />
                           </div>
                         )
                     )}
@@ -336,7 +334,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                       (subSystem, index) =>
                         (index < 2 || toggleSubSystems) && (
                           <div className="margin-bottom-1" key={subSystem.id}>
-                            <IconBookmark className="text-base-lighter margin-right-1" />
+                            <Icon.Bookmark className="text-base-lighter margin-right-1" />
                             <UswdsReactLink
                               className="link-header margin-bottom-1 text-bold"
                               to={`/systems/${system.id}/sub-systems`}
