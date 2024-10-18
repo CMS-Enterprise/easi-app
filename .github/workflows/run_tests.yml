@@ -228,7 +228,9 @@ jobs:
           cache: 'yarn'
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
-      - run: yarn test:ci
+      - env:
+          GITHUB_ACTIONS: true
+        run: yarn test:ci
       - name: Announce failure
         if: ${{ failure() }}
         run: |
