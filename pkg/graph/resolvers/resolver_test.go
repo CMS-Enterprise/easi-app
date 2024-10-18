@@ -58,6 +58,8 @@ func (s *ResolverSuite) SetupTest() {
 	s.testConfigs.Context = appcontext.WithLogger(s.testConfigs.Context, s.testConfigs.Logger)
 	s.testConfigs.Context = appcontext.WithPrincipal(s.testConfigs.Context, princ)
 
+	// Clear email data between tests
+	s.testConfigs.Sender.Clear()
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -96,6 +98,7 @@ type mockSender struct {
 	subject      string
 	body         string
 	emailWasSent bool
+	sentEmails   []email.Email
 }
 
 func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
@@ -105,7 +108,18 @@ func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
 	s.subject = emailData.Subject
 	s.body = emailData.Body
 	s.emailWasSent = true
+	s.sentEmails = append(s.sentEmails, emailData)
 	return nil
+}
+
+func (s *mockSender) Clear() {
+	s.toAddresses = []models.EmailAddress{}
+	s.ccAddresses = []models.EmailAddress{}
+	s.bccAddresses = []models.EmailAddress{}
+	s.subject = ""
+	s.body = ""
+	s.emailWasSent = false
+	s.sentEmails = []email.Email{}
 }
 
 // GetDefaultTestConfigs returns a TestConfigs struct with all the dependencies needed to run a test
