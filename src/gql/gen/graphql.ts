@@ -965,13 +965,13 @@ export type Mutation = {
   createSystemIntakeDocument?: Maybe<CreateSystemIntakeDocumentPayload>;
   createSystemIntakeGRBReviewers?: Maybe<CreateSystemIntakeGRBReviewersPayload>;
   createSystemIntakeNote?: Maybe<SystemIntakeNote>;
-  createTRBAdminNoteAdviceLetter: TRBAdminNote;
   createTRBAdminNoteConsultSession: TRBAdminNote;
   createTRBAdminNoteGeneralRequest: TRBAdminNote;
+  createTRBAdminNoteGuidanceLetter: TRBAdminNote;
   createTRBAdminNoteInitialRequestForm: TRBAdminNote;
   createTRBAdminNoteSupportingDocuments: TRBAdminNote;
-  createTRBAdviceLetter: TRBGuidanceLetter;
-  createTRBAdviceLetterRecommendation: TRBGuidanceLetterRecommendation;
+  createTRBGuidanceLetter: TRBGuidanceLetter;
+  createTRBGuidanceLetterRecommendation: TRBGuidanceLetterRecommendation;
   createTRBRequest: TRBRequest;
   createTRBRequestAttendee: TRBRequestAttendee;
   createTRBRequestDocument?: Maybe<CreateTRBRequestDocumentPayload>;
@@ -981,17 +981,17 @@ export type Mutation = {
   deleteSystemIntakeContact?: Maybe<DeleteSystemIntakeContactPayload>;
   deleteSystemIntakeDocument?: Maybe<DeleteSystemIntakeDocumentPayload>;
   deleteSystemIntakeGRBReviewer: Scalars['UUID']['output'];
-  deleteTRBAdviceLetterRecommendation: TRBGuidanceLetterRecommendation;
+  deleteTRBGuidanceLetterRecommendation: TRBGuidanceLetterRecommendation;
   deleteTRBRequestAttendee: TRBRequestAttendee;
   deleteTRBRequestDocument?: Maybe<DeleteTRBRequestDocumentPayload>;
   deleteTRBRequestFundingSources: Array<TRBFundingSource>;
   deleteTrbLeadOption: Scalars['Boolean']['output'];
   reopenTrbRequest: TRBRequest;
-  requestReviewForTRBAdviceLetter: TRBGuidanceLetter;
+  requestReviewForTRBGuidanceLetter: TRBGuidanceLetter;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
-  sendTRBAdviceLetter: TRBGuidanceLetter;
+  sendTRBGuidanceLetter: TRBGuidanceLetter;
   setRolesForUserOnSystem?: Maybe<Scalars['String']['output']>;
   setSystemIntakeRelationExistingService?: Maybe<UpdateSystemIntakePayload>;
   setSystemIntakeRelationExistingSystem?: Maybe<UpdateSystemIntakePayload>;
@@ -1014,9 +1014,9 @@ export type Mutation = {
   updateSystemIntakeRequestDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeRequestType: SystemIntake;
   updateSystemIntakeReviewDates?: Maybe<UpdateSystemIntakePayload>;
-  updateTRBAdviceLetter: TRBGuidanceLetter;
-  updateTRBAdviceLetterRecommendation: TRBGuidanceLetterRecommendation;
-  updateTRBAdviceLetterRecommendationOrder: Array<TRBGuidanceLetterRecommendation>;
+  updateTRBGuidanceLetter: TRBGuidanceLetter;
+  updateTRBGuidanceLetterRecommendation: TRBGuidanceLetterRecommendation;
+  updateTRBGuidanceLetterRecommendationOrder: Array<TRBGuidanceLetterRecommendation>;
   updateTRBRequest: TRBRequest;
   updateTRBRequestAttendee: TRBRequestAttendee;
   updateTRBRequestConsultMeetingTime: TRBRequest;
@@ -1147,12 +1147,6 @@ export type MutationCreateSystemIntakeNoteArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTRBAdminNoteAdviceLetterArgs = {
-  input: CreateTRBAdminNoteGuidanceLetterInput;
-};
-
-
-/** Defines the mutations for the schema */
 export type MutationCreateTRBAdminNoteConsultSessionArgs = {
   input: CreateTRBAdminNoteConsultSessionInput;
 };
@@ -1161,6 +1155,12 @@ export type MutationCreateTRBAdminNoteConsultSessionArgs = {
 /** Defines the mutations for the schema */
 export type MutationCreateTRBAdminNoteGeneralRequestArgs = {
   input: CreateTRBAdminNoteGeneralRequestInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationCreateTRBAdminNoteGuidanceLetterArgs = {
+  input: CreateTRBAdminNoteGuidanceLetterInput;
 };
 
 
@@ -1177,13 +1177,13 @@ export type MutationCreateTRBAdminNoteSupportingDocumentsArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTRBAdviceLetterArgs = {
+export type MutationCreateTRBGuidanceLetterArgs = {
   trbRequestId: Scalars['UUID']['input'];
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationCreateTRBAdviceLetterRecommendationArgs = {
+export type MutationCreateTRBGuidanceLetterRecommendationArgs = {
   input: CreateTRBGuidanceLetterRecommendationInput;
 };
 
@@ -1243,7 +1243,7 @@ export type MutationDeleteSystemIntakeGRBReviewerArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationDeleteTRBAdviceLetterRecommendationArgs = {
+export type MutationDeleteTRBGuidanceLetterRecommendationArgs = {
   id: Scalars['UUID']['input'];
 };
 
@@ -1279,7 +1279,7 @@ export type MutationReopenTrbRequestArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationRequestReviewForTRBAdviceLetterArgs = {
+export type MutationRequestReviewForTRBGuidanceLetterArgs = {
   id: Scalars['UUID']['input'];
 };
 
@@ -1303,7 +1303,7 @@ export type MutationSendReportAProblemEmailArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationSendTRBAdviceLetterArgs = {
+export type MutationSendTRBGuidanceLetterArgs = {
   input: SendTRBGuidanceLetterInput;
 };
 
@@ -1443,19 +1443,19 @@ export type MutationUpdateSystemIntakeReviewDatesArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTRBAdviceLetterArgs = {
+export type MutationUpdateTRBGuidanceLetterArgs = {
   input: UpdateTRBGuidanceLetterInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTRBAdviceLetterRecommendationArgs = {
+export type MutationUpdateTRBGuidanceLetterRecommendationArgs = {
   input: UpdateTRBGuidanceLetterRecommendationInput;
 };
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateTRBAdviceLetterRecommendationOrderArgs = {
+export type MutationUpdateTRBGuidanceLetterRecommendationOrderArgs = {
   input: UpdateTRBGuidanceLetterRecommendationOrderInput;
 };
 
@@ -2531,9 +2531,9 @@ export type TRBAdminNote = {
 
 /** Represents the category of a single TRB admin note */
 export enum TRBAdminNoteCategory {
-  ADVICE_LETTER = 'ADVICE_LETTER',
   CONSULT_SESSION = 'CONSULT_SESSION',
   GENERAL_REQUEST = 'GENERAL_REQUEST',
+  GUIDANCE_LETTER = 'GUIDANCE_LETTER',
   INITIAL_REQUEST_FORM = 'INITIAL_REQUEST_FORM',
   SUPPORTING_DOCUMENTS = 'SUPPORTING_DOCUMENTS'
 }
@@ -2714,7 +2714,6 @@ export enum TRBGuidanceLetterStatusTaskList {
 export type TRBRequest = {
   __typename: 'TRBRequest';
   adminNotes: Array<TRBAdminNote>;
-  adviceLetter?: Maybe<TRBGuidanceLetter>;
   archived: Scalars['Boolean']['output'];
   attendees: Array<TRBRequestAttendee>;
   consultMeetingTime?: Maybe<Scalars['Time']['output']>;
@@ -2726,6 +2725,7 @@ export type TRBRequest = {
   documents: Array<TRBRequestDocument>;
   feedback: Array<TRBRequestFeedback>;
   form: TRBRequestForm;
+  guidanceLetter?: Maybe<TRBGuidanceLetter>;
   id: Scalars['UUID']['output'];
   isRecent: Scalars['Boolean']['output'];
   lastMeetingDate?: Maybe<Scalars['Time']['output']>;
@@ -2874,13 +2874,13 @@ export enum TRBRequestState {
 }
 
 export enum TRBRequestStatus {
-  ADVICE_LETTER_IN_REVIEW = 'ADVICE_LETTER_IN_REVIEW',
-  ADVICE_LETTER_SENT = 'ADVICE_LETTER_SENT',
   CONSULT_COMPLETE = 'CONSULT_COMPLETE',
   CONSULT_SCHEDULED = 'CONSULT_SCHEDULED',
-  DRAFT_ADVICE_LETTER = 'DRAFT_ADVICE_LETTER',
+  DRAFT_GUIDANCE_LETTER = 'DRAFT_GUIDANCE_LETTER',
   DRAFT_REQUEST_FORM = 'DRAFT_REQUEST_FORM',
   FOLLOW_UP_REQUESTED = 'FOLLOW_UP_REQUESTED',
+  GUIDANCE_LETTER_IN_REVIEW = 'GUIDANCE_LETTER_IN_REVIEW',
+  GUIDANCE_LETTER_SENT = 'GUIDANCE_LETTER_SENT',
   NEW = 'NEW',
   READY_FOR_CONSULT = 'READY_FOR_CONSULT',
   REQUEST_FORM_COMPLETE = 'REQUEST_FORM_COMPLETE'
@@ -2919,12 +2919,12 @@ export enum TRBSubjectAreaOption {
 /** Wraps all of the various status on the TRB task list into one type */
 export type TRBTaskStatuses = {
   __typename: 'TRBTaskStatuses';
-  adviceLetterStatus: TRBGuidanceLetterStatus;
-  adviceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList;
   attendConsultStatus: TRBAttendConsultStatus;
   consultPrepStatus: TRBConsultPrepStatus;
   feedbackStatus: TRBFeedbackStatus;
   formStatus: TRBFormStatus;
+  guidanceLetterStatus: TRBGuidanceLetterStatus;
+  guidanceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList;
 };
 
 /** Represents an option selected to the "where are you in the process?" TRB request form */

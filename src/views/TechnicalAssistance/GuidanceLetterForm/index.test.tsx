@@ -16,15 +16,15 @@ import {
   taskStatuses
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import { CreateTrbRecommendationQuery } from 'queries/TrbAdviceLetterQueries';
+import { CreateTrbRecommendationQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   CreateTRBRecommendation,
   CreateTRBRecommendationVariables
 } from 'queries/types/CreateTRBRecommendation';
 import {
-  GetTrbAdviceLetter,
-  GetTrbAdviceLetterVariables
-} from 'queries/types/GetTrbAdviceLetter';
+  GetTrbGuidanceLetter,
+  GetTrbGuidanceLetterVariables
+} from 'queries/types/GetTrbGuidanceLetter';
 import { GuidanceFormStepKey } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
@@ -52,7 +52,7 @@ const createTrbRecommendationQuery: MockedQuery<
   },
   result: {
     data: {
-      createTRBAdviceLetterRecommendation: {
+      createTRBGuidanceLetterRecommendation: {
         __typename: 'TRBGuidanceLetterRecommendation',
         id: '670fdf6d-761b-415f-a108-2ebc814288c3',
         ...mockRecommendation
@@ -67,15 +67,15 @@ const defaultStore = easiMockStore({
 });
 
 const getGuidanceLetterCannotStart: MockedQuery<
-  GetTrbAdviceLetter,
-  GetTrbAdviceLetterVariables
+  GetTrbGuidanceLetter,
+  GetTrbGuidanceLetterVariables
 > = {
   ...getTrbGuidanceLetterQuery,
   result: {
     data: {
       trbRequest: {
         ...getTrbGuidanceLetterQuery.result.data?.trbRequest!,
-        adviceLetter: null,
+        guidanceLetter: null,
         taskStatuses
       }
     }

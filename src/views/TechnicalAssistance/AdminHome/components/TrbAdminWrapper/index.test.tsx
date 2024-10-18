@@ -89,8 +89,8 @@ describe('TRB Admin Wrapper', () => {
       'orCloseRequest'
     ],
     CONSULT_COMPLETE: ['viewGuidanceLetter', 'orCloseRequest'],
-    ADVICE_LETTER_IN_REVIEW: ['viewGuidanceLetter', 'orCloseRequest'],
-    ADVICE_LETTER_SENT: ['closeRequest']
+    GUIDANCE_LETTER_IN_REVIEW: ['viewGuidanceLetter', 'orCloseRequest'],
+    GUIDANCE_LETTER_SENT: ['closeRequest']
   };
   const statusKeys = Object.keys(statuses);
 
@@ -123,7 +123,7 @@ describe('TRB Admin Wrapper', () => {
   it('renders re-open request admin action', () => {
     const { getByRole } = renderWrapper(
       'notes',
-      TRBRequestStatus.ADVICE_LETTER_SENT,
+      TRBRequestStatus.GUIDANCE_LETTER_SENT,
       TRBRequestState.CLOSED
     );
 

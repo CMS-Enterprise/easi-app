@@ -248,7 +248,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListInReview,
 		}, *taskStatuses)
 
-		// Test the "DRAFT_ADVICE_LETTER" status by making a change to the guidance letter
+		// Test the "DRAFT_GUIDANCE_LETTER" status by making a change to the guidance letter
 		guidanceLetter, err := CreateTRBGuidanceLetter(ctx, store, trb.ID)
 		s.NoError(err)
 		s.NotNil(guidanceLetter)
@@ -275,7 +275,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListInReview,
 		}, *taskStatuses)
 
-		// Test the "ADVICE_LETTER_IN_REVIEW" status by requesting review for the guidance letter
+		// Test the "GUIDANCE_LETTER_IN_REVIEW" status by requesting review for the guidance letter
 		_, err = RequestReviewForTRBGuidanceLetter(ctx, store, &emailClient, stubFetchUserInfo, guidanceLetter.ID)
 		s.NoError(err)
 		// Fetch the updated request
@@ -295,7 +295,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 			GuidanceLetterStatusTaskList: models.TRBGuidanceLetterStatusTaskListInReview,
 		}, *taskStatuses)
 
-		// Test the "ADVICE_LETTER_SENT" status by sending the guidance letter
+		// Test the "GUIDANCE_LETTER_SENT" status by sending the guidance letter
 		_, err = SendTRBGuidanceLetter(ctx, store, guidanceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos, false, nil)
 		s.NoError(err)
 		// Fetch the updated request

@@ -36,6 +36,10 @@ ALTER TABLE trb_guidance_letters
 ALTER TYPE trb_advice_letter_status
   RENAME TO trb_guidance_letter_status;
 
+-- enum type rename
+ALTER TYPE trb_admin_note_category
+  RENAME VALUE 'ADVICE_LETTER' TO 'GUIDANCE_LETTER';
+
 -- column
 ALTER TABLE trb_admin_notes_trb_admin_note_recommendations_links
   RENAME COLUMN trb_advice_letter_recommendation_id

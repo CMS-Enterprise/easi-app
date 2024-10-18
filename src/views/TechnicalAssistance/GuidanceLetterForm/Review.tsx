@@ -13,9 +13,9 @@ import useCacheQuery from 'hooks/useCacheQuery';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import {
   DeleteTrbRecommendationQuery,
-  GetTrbAdviceLetterQuery,
-  SendTRBAdviceLetterQuery
-} from 'queries/TrbAdviceLetterQueries';
+  GetTrbGuidanceLetterQuery,
+  SendTRBGuidanceLetterQuery
+} from 'queries/TrbGuidanceLetterQueries';
 import {
   DeleteTRBRecommendation,
   DeleteTRBRecommendationVariables
@@ -26,9 +26,9 @@ import {
   GetTrbAdminNotesVariables
 } from 'queries/types/GetTrbAdminNotes';
 import {
-  SendTRBAdviceLetter,
-  SendTRBAdviceLetterVariables
-} from 'queries/types/SendTRBAdviceLetter';
+  SendTRBGuidanceLetter,
+  SendTRBGuidanceLetterVariables
+} from 'queries/types/SendTRBGuidanceLetter';
 import {
   StepComponentProps,
   TrbRecipientFields
@@ -43,8 +43,8 @@ import Pager from '../RequestForm/Pager';
 
 const Review = ({
   trbRequestId,
-  adviceLetter,
-  adviceLetterStatus,
+  guidanceLetter,
+  guidanceLetterStatus,
   setFormAlert,
   setIsStepSubmitting,
   stepsCompleted,
@@ -64,10 +64,10 @@ const Review = ({
 
   const notes: AdminNote[] = data?.trbRequest?.adminNotes || [];
 
-  const [mutate, adviceLetterResult] = useMutation<
-    SendTRBAdviceLetter,
-    SendTRBAdviceLetterVariables
-  >(SendTRBAdviceLetterQuery);
+  const [mutate, guidanceLetterResult] = useMutation<
+    SendTRBGuidanceLetter,
+    SendTRBGuidanceLetterVariables
+  >(SendTRBGuidanceLetterQuery);
 
   const [remove] = useMutation<
     DeleteTRBRecommendation,
@@ -75,7 +75,7 @@ const Review = ({
   >(DeleteTrbRecommendationQuery, {
     refetchQueries: [
       {
-        query: GetTrbAdviceLetterQuery,
+        query: GetTrbGuidanceLetterQuery,
         variables: {
           id: trbRequestId
         }
@@ -96,7 +96,7 @@ const Review = ({
     formState: { isSubmitting }
   } = actionForm;
 
-  const formSubmitting: boolean = isSubmitting || adviceLetterResult.loading;
+  const formSubmitting: boolean = isSubmitting || guidanceLetterResult.loading;
 
   useEffect(() => {
     setIsStepSubmitting(isSubmitting);
@@ -135,7 +135,7 @@ const Review = ({
       {/* Review */}
       <ReviewGuidanceLetter
         trbRequestId={trbRequestId}
-        adviceLetter={adviceLetter}
+        guidanceLetter={guidanceLetter}
         className="margin-top-5 margin-bottom-4"
         recommendationActions={{
           setReorderError: error =>
@@ -170,7 +170,7 @@ const Review = ({
         <Form
           onSubmit={handleSubmit(formData =>
             mutate({
-              variables: { input: { ...formData, id: adviceLetter.id } }
+              variables: { input: { ...formData, id: guidanceLetter.id } }
             })
               .then(() => {
                 if (

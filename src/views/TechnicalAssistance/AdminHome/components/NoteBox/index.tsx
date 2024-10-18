@@ -15,7 +15,7 @@ import NotesModal from '../NoteModal';
 export const noteCategoryPageMap: Partial<
   Record<TrbAdminPath, TRBAdminNoteCategory>
 > = {
-  guidance: TRBAdminNoteCategory.ADVICE_LETTER,
+  guidance: TRBAdminNoteCategory.GUIDANCE_LETTER,
   request: TRBAdminNoteCategory.GENERAL_REQUEST,
   'initial-request-form': TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
   documents: TRBAdminNoteCategory.SUPPORTING_DOCUMENTS

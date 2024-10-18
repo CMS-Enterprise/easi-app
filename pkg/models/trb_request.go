@@ -86,8 +86,8 @@ type TRBTaskStatuses struct {
 	FeedbackStatus               TRBFeedbackStatus               `json:"feedbackStatus"`
 	ConsultPrepStatus            TRBConsultPrepStatus            `json:"consultPrepStatus"`
 	AttendConsultStatus          TRBAttendConsultStatus          `json:"attendConsultStatus"`
-	GuidanceLetterStatus         TRBGuidanceLetterStatus         `json:"adviceLetterStatus"`
-	GuidanceLetterStatusTaskList TRBGuidanceLetterStatusTaskList `json:"adviceLetterStatusTaskList"`
+	GuidanceLetterStatus         TRBGuidanceLetterStatus         `json:"guidanceLetterStatus"`
+	GuidanceLetterStatusTaskList TRBGuidanceLetterStatusTaskList `json:"guidanceLetterStatusTaskList"`
 }
 
 // TRBRequestStatus is an enumeration of the possible values for the overall status of a TRB request
@@ -101,9 +101,9 @@ const (
 	TRBRequestStatusReadyForConsult        = "READY_FOR_CONSULT"
 	TRBRequestStatusConsultScheduled       = "CONSULT_SCHEDULED"
 	TRBRequestStatusConsultComplete        = "CONSULT_COMPLETE"
-	TRBRequestStatusDraftGuidanceLetter    = "DRAFT_ADVICE_LETTER"
-	TRBRequestStatusGuidanceLetterInReview = "ADVICE_LETTER_IN_REVIEW"
-	TRBRequestStatusGuidanceLetterSent     = "ADVICE_LETTER_SENT"
+	TRBRequestStatusDraftGuidanceLetter    = "DRAFT_GUIDANCE_LETTER"
+	TRBRequestStatusGuidanceLetterInReview = "GUIDANCE_LETTER_IN_REVIEW"
+	TRBRequestStatusGuidanceLetterSent     = "GUIDANCE_LETTER_SENT"
 	TRBRequestStatusFollowUpRequested      = "FOLLOW_UP_REQUESTED"
 )
 

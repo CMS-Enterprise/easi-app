@@ -11,7 +11,7 @@ describe('TRB Guidance Letter review component', () => {
     const { getByText, asFragment } = render(
       <VerboseMockedProvider>
         <ReviewGuidanceLetter
-          adviceLetter={guidanceLetter}
+          guidanceLetter={guidanceLetter}
           trbRequestId="8d8bbac8-4ce5-43c5-9d47-a698be37d152"
         />
       </VerboseMockedProvider>

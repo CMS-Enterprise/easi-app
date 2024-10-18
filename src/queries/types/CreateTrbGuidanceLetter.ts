@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: TRBAdviceLetter
+// GraphQL mutation operation: CreateTrbGuidanceLetter
 // ====================================================
 
-export interface TRBAdviceLetter_recommendations {
+export interface CreateTrbGuidanceLetter_createTRBGuidanceLetter_recommendations {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -15,13 +15,13 @@ export interface TRBAdviceLetter_recommendations {
   links: string[];
 }
 
-export interface TRBAdviceLetter_author {
+export interface CreateTrbGuidanceLetter_createTRBGuidanceLetter_author {
   __typename: "UserInfo";
   euaUserId: string;
   commonName: string;
 }
 
-export interface TRBAdviceLetter {
+export interface CreateTrbGuidanceLetter_createTRBGuidanceLetter {
   __typename: "TRBGuidanceLetter";
   id: UUID;
   meetingSummary: HTML | null;
@@ -32,8 +32,16 @@ export interface TRBAdviceLetter {
   /**
    * List of recommendations in the order specified by users
    */
-  recommendations: TRBAdviceLetter_recommendations[];
-  author: TRBAdviceLetter_author;
+  recommendations: CreateTrbGuidanceLetter_createTRBGuidanceLetter_recommendations[];
+  author: CreateTrbGuidanceLetter_createTRBGuidanceLetter_author;
   createdAt: Time;
   modifiedAt: Time | null;
+}
+
+export interface CreateTrbGuidanceLetter {
+  createTRBGuidanceLetter: CreateTrbGuidanceLetter_createTRBGuidanceLetter;
+}
+
+export interface CreateTrbGuidanceLetterVariables {
+  trbRequestId: UUID;
 }

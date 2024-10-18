@@ -8,5 +8,5 @@ type TRBAdminNoteTRBGuidanceLetterRecommendationLink struct {
 	BaseStruct
 	TRBRequestID                      uuid.UUID `json:"trbRequestId" db:"trb_request_id"`
 	TRBAdminNoteID                    uuid.UUID `json:"trbAdminNoteId" db:"trb_admin_note_id"`
-	TRBGuidanceLetterRecommendationID uuid.UUID `json:"trbAdviceLetterRecommendationId" db:"trb_guidance_letter_recommendation_id"`
+	TRBGuidanceLetterRecommendationID uuid.UUID `json:"trbGuidanceLetterRecommendationId" db:"trb_guidance_letter_recommendation_id"`
 }

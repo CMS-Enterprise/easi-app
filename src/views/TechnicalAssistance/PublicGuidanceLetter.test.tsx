@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 
-import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
+import GetTrbPublicGuidanceLetterQuery from 'queries/GetTrbPublicGuidanceLetterQuery';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 
 import PublicGuidanceLetter from './PublicGuidanceLetter';
@@ -29,7 +29,7 @@ describe('Trb Public Guidance Letter', () => {
       },
       type: 'NEED_HELP',
       consultMeetingTime: '2023-04-14T10:13:01.586156Z',
-      adviceLetter: {
+      guidanceLetter: {
         id: 'a59f516a-107c-4baf-bdce-834ff1dc9a27',
         meetingSummary: 'Talked about stuff',
         nextSteps: null,
@@ -52,10 +52,10 @@ describe('Trb Public Guidance Letter', () => {
         },
         createdAt: '2023-04-21T14:13:01.589972Z',
         modifiedAt: '2023-04-21T14:13:01.595102Z',
-        __typename: 'TRBAdviceLetter'
+        __typename: 'TRBGuidanceLetter'
       },
       taskStatuses: {
-        adviceLetterStatus: TRBGuidanceLetterStatus.COMPLETED,
+        guidanceLetterStatus: TRBGuidanceLetterStatus.COMPLETED,
         __typename: 'TRBTaskStatuses'
       },
       __typename: 'TRBRequest'
@@ -72,7 +72,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicAdviceLetterQuery,
+              query: GetTrbPublicGuidanceLetterQuery,
               variables: {
                 id
               }
@@ -116,7 +116,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicAdviceLetterQuery,
+              query: GetTrbPublicGuidanceLetterQuery,
               variables: {
                 id
               }
@@ -149,7 +149,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicAdviceLetterQuery,
+              query: GetTrbPublicGuidanceLetterQuery,
               variables: {
                 id
               }
@@ -159,7 +159,7 @@ describe('Trb Public Guidance Letter', () => {
                 trbRequest: {
                   ...data.trbRequest,
                   taskStatuses: {
-                    adviceLetterStatus:
+                    guidanceLetterStatus:
                       TRBGuidanceLetterStatus.CANNOT_START_YET,
                     __typename: 'TRBTaskStatuses'
                   }
@@ -193,7 +193,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicAdviceLetterQuery,
+              query: GetTrbPublicGuidanceLetterQuery,
               variables: {
                 id
               }

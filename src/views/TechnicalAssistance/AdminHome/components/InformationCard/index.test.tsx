@@ -18,7 +18,7 @@ const trbRequest: GetTrbRequestHomeType = {
   consultMeetingTime: '2024-01-05T05:00:00Z',
   taskStatuses: {
     formStatus: TRBFormStatus.COMPLETED,
-    adviceLetterStatus: TRBGuidanceLetterStatus.READY_TO_START,
+    guidanceLetterStatus: TRBGuidanceLetterStatus.READY_TO_START,
     __typename: 'TRBTaskStatuses'
   },
   form: {
@@ -26,7 +26,7 @@ const trbRequest: GetTrbRequestHomeType = {
     modifiedAt: '2023-01-05T05:00:00Z',
     __typename: 'TRBRequestForm'
   },
-  adviceLetter: {
+  guidanceLetter: {
     __typename: 'TRBGuidanceLetter',
     id: '123',
     modifiedAt: '2023-02-05T05:00:00Z'
