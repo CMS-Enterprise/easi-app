@@ -39,7 +39,8 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 			links,
 			created_by,
 			modified_by,
-			position_in_letter
+			position_in_letter,
+			category
 		)
 		SELECT
 			:id,
@@ -49,7 +50,8 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 			:links,
 			:created_by,
 			:modified_by,
-			COALESCE(MAX(position_in_letter) + 1, 0)
+			COALESCE(MAX(position_in_letter) + 1, 0),
+			:category
 		FROM trb_guidance_letter_recommendations
 		WHERE trb_request_id = :trb_request_id
 		RETURNING *;`)

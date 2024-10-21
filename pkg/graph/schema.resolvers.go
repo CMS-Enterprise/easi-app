@@ -1140,6 +1140,7 @@ func (r *mutationResolver) CreateTRBGuidanceLetterRecommendation(ctx context.Con
 			Title:          input.Title,
 			Recommendation: input.Recommendation,
 			Links:          links,
+			Category:       input.Category,
 		})
 }
 

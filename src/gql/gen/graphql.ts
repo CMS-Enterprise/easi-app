@@ -625,6 +625,7 @@ export type CreateTRBAdminNoteSupportingDocumentsInput = {
 
 /** The input required to add a recommendation & links to a TRB guidance letter */
 export type CreateTRBGuidanceLetterRecommendationInput = {
+  category: TRBGuidanceLetterRecommendationCategory;
   links: Array<Scalars['String']['input']>;
   recommendation: Scalars['HTML']['input'];
   title: Scalars['String']['input'];
@@ -2694,6 +2695,12 @@ export type TRBGuidanceLetterRecommendation = {
   trbRequestId: Scalars['UUID']['output'];
 };
 
+export enum TRBGuidanceLetterRecommendationCategory {
+  CONSIDERATION = 'CONSIDERATION',
+  RECOMMENDATION = 'RECOMMENDATION',
+  REQUIREMENT = 'REQUIREMENT'
+}
+
 /** Represents the status of the TRB guidance letter step */
 export enum TRBGuidanceLetterStatus {
   CANNOT_START_YET = 'CANNOT_START_YET',
@@ -3041,6 +3048,7 @@ export type UpdateTRBGuidanceLetterRecommendationInput = {
 };
 
 export type UpdateTRBGuidanceLetterRecommendationOrderInput = {
+  category: TRBGuidanceLetterRecommendationCategory;
   /** List of the recommendation IDs in the new order they should be displayed */
   newOrder: Array<Scalars['UUID']['input']>;
   trbRequestId: Scalars['UUID']['input'];

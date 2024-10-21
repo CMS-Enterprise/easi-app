@@ -2354,6 +2354,7 @@ input CreateTRBGuidanceLetterRecommendationInput {
   title: String!
   recommendation: HTML!
   links: [String!]!
+  category: TRBGuidanceLetterRecommendationCategory!
 }
 
 """
@@ -2366,6 +2367,12 @@ input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]int
   links: [String!]
 }
 
+enum TRBGuidanceLetterRecommendationCategory {
+  REQUIREMENT
+  RECOMMENDATION
+  CONSIDERATION
+}
+
 """
 """
 input UpdateTRBGuidanceLetterRecommendationOrderInput {
@@ -2374,6 +2381,7 @@ input UpdateTRBGuidanceLetterRecommendationOrderInput {
   List of the recommendation IDs in the new order they should be displayed
   """
   newOrder: [UUID!]!
+  category: TRBGuidanceLetterRecommendationCategory!
 }
 
 """

@@ -244,10 +244,11 @@ type CreateTRBAdminNoteSupportingDocumentsInput struct {
 
 // The input required to add a recommendation & links to a TRB guidance letter
 type CreateTRBGuidanceLetterRecommendationInput struct {
-	TrbRequestID   uuid.UUID `json:"trbRequestId"`
-	Title          string    `json:"title"`
-	Recommendation HTML      `json:"recommendation"`
-	Links          []string  `json:"links"`
+	TrbRequestID   uuid.UUID                               `json:"trbRequestId"`
+	Title          string                                  `json:"title"`
+	Recommendation HTML                                    `json:"recommendation"`
+	Links          []string                                `json:"links"`
+	Category       TRBGuidanceLetterRecommendationCategory `json:"category"`
 }
 
 // The data needed add a TRB request attendee to a TRB request
@@ -913,7 +914,8 @@ type UpdateSystemIntakeReviewDatesInput struct {
 type UpdateTRBGuidanceLetterRecommendationOrderInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
 	// List of the recommendation IDs in the new order they should be displayed
-	NewOrder []uuid.UUID `json:"newOrder"`
+	NewOrder []uuid.UUID                             `json:"newOrder"`
+	Category TRBGuidanceLetterRecommendationCategory `json:"category"`
 }
 
 // Represents an EUA user who is included as an attendee for a TRB request
@@ -1285,5 +1287,48 @@ func (e *SystemIntakeStepToProgressTo) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeStepToProgressTo) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type TRBGuidanceLetterRecommendationCategory string
+
+const (
+	TRBGuidanceLetterRecommendationCategoryRequirement    TRBGuidanceLetterRecommendationCategory = "REQUIREMENT"
+	TRBGuidanceLetterRecommendationCategoryRecommendation TRBGuidanceLetterRecommendationCategory = "RECOMMENDATION"
+	TRBGuidanceLetterRecommendationCategoryConsideration  TRBGuidanceLetterRecommendationCategory = "CONSIDERATION"
+)
+
+var AllTRBGuidanceLetterRecommendationCategory = []TRBGuidanceLetterRecommendationCategory{
+	TRBGuidanceLetterRecommendationCategoryRequirement,
+	TRBGuidanceLetterRecommendationCategoryRecommendation,
+	TRBGuidanceLetterRecommendationCategoryConsideration,
+}
+
+func (e TRBGuidanceLetterRecommendationCategory) IsValid() bool {
+	switch e {
+	case TRBGuidanceLetterRecommendationCategoryRequirement, TRBGuidanceLetterRecommendationCategoryRecommendation, TRBGuidanceLetterRecommendationCategoryConsideration:
+		return true
+	}
+	return false
+}
+
+func (e TRBGuidanceLetterRecommendationCategory) String() string {
+	return string(e)
+}
+
+func (e *TRBGuidanceLetterRecommendationCategory) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBGuidanceLetterRecommendationCategory(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBGuidanceLetterRecommendationCategory", str)
+	}
+	return nil
+}
+
+func (e TRBGuidanceLetterRecommendationCategory) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

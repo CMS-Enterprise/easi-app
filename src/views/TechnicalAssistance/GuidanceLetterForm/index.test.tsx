@@ -31,13 +31,16 @@ import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import typeRichText from 'utils/testing/typeRichText';
 
+import { TRBGuidanceLetterRecommendationCategory } from '../../../types/graphql-global-types';
+
 import GuidanceLetterForm from '.';
 
 const mockRecommendation = {
   trbRequestId: mockTrbRequestId,
   title: 'Recommendation 3',
   recommendation: 'Recommendation description text',
-  links: ['google.com', 'easi.cms.gov']
+  links: ['google.com', 'easi.cms.gov'],
+  category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
 };
 
 const createTrbRecommendationQuery: MockedQuery<

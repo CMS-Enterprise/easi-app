@@ -10117,6 +10117,7 @@ input CreateTRBGuidanceLetterRecommendationInput {
   title: String!
   recommendation: HTML!
   links: [String!]!
+  category: TRBGuidanceLetterRecommendationCategory!
 }
 
 """
@@ -10129,6 +10130,12 @@ input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]int
   links: [String!]
 }
 
+enum TRBGuidanceLetterRecommendationCategory {
+  REQUIREMENT
+  RECOMMENDATION
+  CONSIDERATION
+}
+
 """
 """
 input UpdateTRBGuidanceLetterRecommendationOrderInput {
@@ -10137,6 +10144,7 @@ input UpdateTRBGuidanceLetterRecommendationOrderInput {
   List of the recommendation IDs in the new order they should be displayed
   """
   newOrder: [UUID!]!
+  category: TRBGuidanceLetterRecommendationCategory!
 }
 
 """
@@ -59159,7 +59167,7 @@ func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterRecommendationI
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "title", "recommendation", "links"}
+	fieldsInOrder := [...]string{"trbRequestId", "title", "recommendation", "links", "category"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -59194,6 +59202,13 @@ func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterRecommendationI
 				return it, err
 			}
 			it.Links = data
+		case "category":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
+			data, err := ec.unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Category = data
 		}
 	}
 
@@ -61922,7 +61937,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationO
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "newOrder"}
+	fieldsInOrder := [...]string{"trbRequestId", "newOrder", "category"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -61943,6 +61958,13 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationO
 				return it, err
 			}
 			it.NewOrder = data
+		case "category":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
+			data, err := ec.unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Category = data
 		}
 	}
 
@@ -75152,6 +75174,16 @@ func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗ
 		return graphql.Null
 	}
 	return ec._TRBGuidanceLetterRecommendation(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v interface{}) (models.TRBGuidanceLetterRecommendationCategory, error) {
+	var res models.TRBGuidanceLetterRecommendationCategory
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNTRBGuidanceLetterStatus2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterStatus(ctx context.Context, v interface{}) (models.TRBGuidanceLetterStatus, error) {
