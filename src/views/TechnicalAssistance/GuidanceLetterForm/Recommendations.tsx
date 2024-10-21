@@ -26,6 +26,7 @@ import { guidanceRecommendationSchema } from 'validations/trbRequestSchema';
 import RecommendationsList from '../AdminHome/components/RecommendationsList';
 import Pager from '../RequestForm/Pager';
 
+import { mockRecommendations } from './mockTRBRecommendations';
 import RecommendationsForm from './RecommendationsForm';
 
 const Recommendations = ({
@@ -114,7 +115,8 @@ const Recommendations = ({
               </Alert>
             ) : (
               <RecommendationsList
-                recommendations={recommendations}
+                className="margin-bottom-7"
+                recommendations={mockRecommendations}
                 trbRequestId={trbRequestId}
                 setReorderError={error =>
                   setFormAlert(error ? { type: 'error', message: error } : null)

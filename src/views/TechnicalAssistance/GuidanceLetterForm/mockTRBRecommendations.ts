@@ -10,12 +10,12 @@ export interface MockTRBRecommendation extends TRBRecommendation {
   category: TRBGuidanceLetterRecommendationCategory;
 }
 
-export type RecommendationsObject = Record<
+export type MockTRBRecommendationsObject = Record<
   TRBGuidanceLetterRecommendationCategory,
   Array<MockTRBRecommendation>
 >;
 
-export const mockRecommendations: RecommendationsObject = {
+export const mockRecommendations: MockTRBRecommendationsObject = {
   [TRBGuidanceLetterRecommendationCategory.RECOMMENDATION]: [
     {
       __typename: 'TRBGuidanceLetterRecommendation',

@@ -4,6 +4,7 @@ import i18next from 'i18next';
 
 import { guidanceLetter, trbRequest } from 'data/mock/trbRequest';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
+import { mockRecommendations } from 'views/TechnicalAssistance/GuidanceLetterForm/mockTRBRecommendations';
 
 import RecommendationsList from '.';
 
@@ -14,7 +15,7 @@ const renderRecommendation = (index: number, editable: boolean = true) => {
   render(
     <VerboseMockedProvider>
       <RecommendationsList
-        recommendations={recommendations}
+        recommendations={mockRecommendations}
         trbRequestId={trbRequest.id}
         editable={editable}
         {...(editable ? { edit: () => null, remove: () => null } : {})}

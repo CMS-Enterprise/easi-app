@@ -13,6 +13,7 @@ import {
 } from 'queries/types/GetTrbGuidanceLetter';
 import { TRBRecommendation } from 'queries/types/TRBRecommendation';
 import { formatDateLocal } from 'utils/date';
+import { mockRecommendations } from 'views/TechnicalAssistance/GuidanceLetterForm/mockTRBRecommendations';
 
 import RecommendationsList from '../RecommendationsList';
 
@@ -188,7 +189,7 @@ const ReviewGuidanceLetter = ({
             <p className="margin-top-4">{t('guidanceLetter.notSpecified')}</p>
           ) : (
             <RecommendationsList
-              recommendations={recommendations}
+              recommendations={mockRecommendations}
               trbRequestId={trbRequestId}
               className="margin-top-4"
               editable={editable}
