@@ -1,1 +1,0 @@
-SELECT * FROM system_intake_software_acquisition WHERE system_intake_software_acquisition.system_intake_id = :system_intake_id
