@@ -62,7 +62,7 @@ const governanceOverview = {
     {
       heading: 'Decision and next steps',
       content:
-        'If your request is ready to move forard, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.'
+        'If your request is ready to move forward, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.'
     }
   ],
   processExists: {
