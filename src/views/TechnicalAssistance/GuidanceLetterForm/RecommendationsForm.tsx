@@ -29,8 +29,7 @@ import {
 } from 'types/graphql-global-types';
 import {
   FormAlertObject,
-  GuidanceLetterRecommendationFields,
-  TRBGuidanceLetterRecommendationCategory
+  GuidanceLetterRecommendationFields
 } from 'types/technicalAssistance';
 import formatUrl from 'utils/formatUrl';
 
@@ -39,6 +38,7 @@ import { StepSubmit } from '../RequestForm';
 import Pager from '../RequestForm/Pager';
 
 import LinksArrayField from './LinksArrayField/Index';
+import { TRBGuidanceLetterRecommendationCategory } from './mockTRBRecommendations';
 
 type RecommendationsFormProps = {
   trbRequestId: string;

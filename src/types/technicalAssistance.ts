@@ -3,6 +3,7 @@ import { ModalRef } from '@trussworks/react-uswds';
 
 import { GetTrbGuidanceLetter_trbRequest_guidanceLetter as GuidanceLetter } from 'queries/types/GetTrbGuidanceLetter';
 import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'queries/types/GetTrbRequestSummary';
+import { TRBGuidanceLetterRecommendationCategory } from 'views/TechnicalAssistance/GuidanceLetterForm/mockTRBRecommendations';
 import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
 
 import { PersonRole, TRBGuidanceLetterStatus } from './graphql-global-types';
@@ -89,17 +90,6 @@ export type TrbAdminPage = {
    */
   groupEnd?: boolean;
 };
-
-/**
- * Mock category enum
- *
- * Replace with enum from schema after backend work
- */
-export enum TRBGuidanceLetterRecommendationCategory {
-  REQUIREMENT = 'REQUIREMENT',
-  RECOMMENDATION = 'RECOMMENDATION',
-  CONSIDERATION = 'CONSIDERATION'
-}
 
 export type GuidanceLetterRecommendationFields = {
   id?: string;

@@ -8,8 +8,7 @@ import {
   TRBWhereInProcessOption,
   UpdateTRBRequestFormInput
 } from 'types/graphql-global-types';
-import { TRBGuidanceLetterRecommendationCategory } from 'types/technicalAssistance';
-// import { fileObjectSchema } from './fileSchema';
+import { TRBGuidanceLetterRecommendationCategory } from 'views/TechnicalAssistance/GuidanceLetterForm/mockTRBRecommendations';
 
 type TrbFormInputBasic = Pick<
   UpdateTRBRequestFormInput,
