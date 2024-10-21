@@ -257,6 +257,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	ctx context.Context,
 	trbRequestID uuid.UUID,
 	newOrder []uuid.UUID,
+	category models.TRBGuidanceLetterRecommendationCategory,
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	// convert newOrder into a slice of maps with entries for recommendation ID and new position,
 	// which can then be passed to SQL as JSON, then used in the query via json_to_recordset()
@@ -296,6 +297,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 		FROM new_positions
 		WHERE trb_guidance_letter_recommendations.id = new_positions.id
 		AND trb_guidance_letter_recommendations.trb_request_id = :trbRequestID
+		AND trb_guidance_letter_recommendations.category = :category
 		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -311,6 +313,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	arg := map[string]interface{}{
 		"newPositions": string(newPositionsSerialized),
 		"trbRequestID": trbRequestID.String(),
+		"category":     category,
 	}
 
 	err = stmt.Select(&updatedRecommendations, arg)

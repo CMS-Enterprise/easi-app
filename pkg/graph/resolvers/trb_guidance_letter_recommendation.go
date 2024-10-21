@@ -7,7 +7,6 @@ import (
 	"slices"
 
 	"github.com/google/uuid"
-	"golang.org/x/sync/errgroup"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/trb/recommendations"
@@ -78,6 +77,7 @@ func UpdateTRBGuidanceLetterRecommendationOrder(
 	store *storage.Store,
 	trbRequestID uuid.UUID,
 	newOrder []uuid.UUID,
+	category models.TRBGuidanceLetterRecommendationCategory,
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	// this extra database query is necessary for validation, so we don't mess up the recommendations' positions with an invalid order,
 	// but requiring an extra database call is unfortunate
@@ -97,7 +97,7 @@ func UpdateTRBGuidanceLetterRecommendationOrder(
 		return nil, err
 	}
 
-	updated, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, trbRequestID, newOrder)
+	updated, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, trbRequestID, newOrder, category)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,11 @@ func UpdateTRBGuidanceLetterRecommendationOrder(
 }
 
 // DeleteTRBGuidanceLetterRecommendation deletes a TRBGuidanceLetterRecommendation record from the database
-func DeleteTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
+func DeleteTRBGuidanceLetterRecommendation(
+	ctx context.Context,
+	store *storage.Store,
+	id uuid.UUID,
+) (*models.TRBGuidanceLetterRecommendation, error) {
 	// as well as deleting the recommendation, we need to update the position of the remaining recommendations for that TRB request, so there aren't any gaps in the ordering
 
 	allRecommendationsForRequest, err := store.GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx, id)
@@ -128,28 +132,12 @@ func DeleteTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 		}
 	}
 
-	// deleting the given recommendation and updating the other recommendations can be done concurrently
-	// ideally, we'd do this in a single transaction, but our code doesn't support that at this time - see Note [Database calls from resolvers aren't atomic]
-	errGroup := new(errgroup.Group)
-	var deletedRecommendation *models.TRBGuidanceLetterRecommendation // declare this outside the function we pass to errGroup.Go() so we can return it
+	deletedRecommendation, err := store.DeleteTRBGuidanceLetterRecommendation(ctx, id)
+	if err != nil {
+		return nil, err
+	}
 
-	errGroup.Go(func() error {
-		deletedRecommendation, err = store.DeleteTRBGuidanceLetterRecommendation(ctx, id)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-
-	errGroup.Go(func() error {
-		_, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, trbRequestID, newOrder)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-
-	if err := errGroup.Wait(); err != nil {
+	if _, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, trbRequestID, newOrder, deletedRecommendation.Category); err != nil {
 		return nil, err
 	}
 
