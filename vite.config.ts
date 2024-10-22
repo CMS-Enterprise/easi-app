@@ -28,11 +28,9 @@ export default defineConfig({
     devSourcemap: true,
     preprocessorOptions: {
       scss: {
+        api: 'modern',
         sourceMap: true,
-        includePaths: [
-          './src/stylesheets',
-          './node_modules/@uswds/uswds/packages'
-        ]
+        loadPaths: ['./src/stylesheets', './node_modules/@uswds/uswds/packages']
       }
     },
     postcss: {
