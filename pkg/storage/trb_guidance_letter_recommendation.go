@@ -267,6 +267,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 			// important to use the same keys as the columns in the SQL table, otherwise sqlx returns "missing destination name position" error
 			"id":                 recommendationID,
 			"position_in_letter": index,
+			"category":           update.Category,
 		}
 		newPositions = append(newPositions, newEntry)
 	}
