@@ -12,8 +12,8 @@ import {
   UpdateTrbRecommendationOrder,
   UpdateTrbRecommendationOrderVariables
 } from 'queries/types/UpdateTrbRecommendationOrder';
+import { TRBGuidanceLetterRecommendationCategory } from 'types/graphql-global-types';
 
-import { TRBGuidanceLetterRecommendationCategory } from '../../../../../types/graphql-global-types';
 import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
 
 import RecommendationLinks from './RecommendationLinks';

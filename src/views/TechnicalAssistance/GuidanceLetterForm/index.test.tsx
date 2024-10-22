@@ -25,13 +25,12 @@ import {
   GetTrbGuidanceLetter,
   GetTrbGuidanceLetterVariables
 } from 'queries/types/GetTrbGuidanceLetter';
+import { TRBGuidanceLetterRecommendationCategory } from 'types/graphql-global-types';
 import { GuidanceFormStepKey } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import typeRichText from 'utils/testing/typeRichText';
-
-import { TRBGuidanceLetterRecommendationCategory } from '../../../types/graphql-global-types';
 
 import GuidanceLetterForm from '.';
 
