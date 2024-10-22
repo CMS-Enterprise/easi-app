@@ -66,7 +66,7 @@ jobs:
           IT_INVESTMENT_EMAIL: success@simulator.amazonses.com
           EASI_HELP_EMAIL: success@simulator.amazonses.com
           TRB_EMAIL: success@simulator.amazonses.com
-          OIT_FEEDBACK_CHANNEL_SLACK_LINK: 'https://oddball.slack.com/archives/C059N01AYGM'
+          OIT_FEEDBACK_CHANNEL_SLACK_LINK: ''
           SES_RECIPIENT_ALLOWLIST_REGEX: ''
           OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
           OKTA_DOMAIN: https://test.idp.idm.cms.gov
