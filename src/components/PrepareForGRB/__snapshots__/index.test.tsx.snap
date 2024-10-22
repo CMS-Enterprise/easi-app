@@ -128,10 +128,10 @@ exports[`Prepare for GRB > renders help mode without crashing 1`] = `
         class="usa-list usa-list--unstyled list-style-none line-height-body-5 margin-top-1 padding-y-0"
       >
         <li>
-          LCID Issued: If the business proposal is acceptable to the Governance Review Board, an LCID will be issued, and future review will occur at regular intervals specific to your project.
+          LCID Issued: If the business proposal is acceptable to the Governance Review Board, a Life Cycle ID will be issued, and future review will occur at regular intervals specific to your project.
         </li>
         <li>
-          LCID Delayed: If there are two or more objections, an LCID will not be issued. The project team will receive next steps to outline which concerns or requirements must be addressed before they can apply for an LCID again 
+          LCID Delayed: If there are two or more objections, a Life Cycle ID will not be issued. The project team will receive next steps to outline which concerns or requirements must be addressed before they can apply for an LCID again 
         </li>
       </ul>
     </div>
@@ -278,10 +278,10 @@ exports[`Prepare for GRB > renders without crashing 1`] = `
         class="usa-list usa-list--unstyled list-style-none line-height-body-5 margin-top-1 padding-y-0"
       >
         <li>
-          LCID Issued: If the business proposal is acceptable to the Governance Review Board, an LCID will be issued, and future review will occur at regular intervals specific to your project.
+          LCID Issued: If the business proposal is acceptable to the Governance Review Board, a Life Cycle ID will be issued, and future review will occur at regular intervals specific to your project.
         </li>
         <li>
-          LCID Delayed: If there are two or more objections, an LCID will not be issued. The project team will receive next steps to outline which concerns or requirements must be addressed before they can apply for an LCID again 
+          LCID Delayed: If there are two or more objections, a Life Cycle ID will not be issued. The project team will receive next steps to outline which concerns or requirements must be addressed before they can apply for an LCID again 
         </li>
       </ul>
     </div>

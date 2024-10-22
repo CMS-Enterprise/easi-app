@@ -189,7 +189,7 @@ exports[`Governance Overview Content > renders default version without crashing 
           <p
             class="margin-bottom-1"
           >
-            If your request is ready to move forard, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.
+            If your request is ready to move forward, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.
           </p>
         </li>
       </ol>
@@ -451,7 +451,7 @@ exports[`Governance Overview Content > renders help section version without cras
           <p
             class="margin-bottom-1"
           >
-            If your request is ready to move forard, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.
+            If your request is ready to move forward, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.
           </p>
         </li>
       </ol>

@@ -268,7 +268,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
           <p
             className="margin-bottom-1"
           >
-            If your request is ready to move forard, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.
+            If your request is ready to move forward, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.
           </p>
         </li>
       </ol>
@@ -587,7 +587,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
           <p
             className="margin-bottom-1"
           >
-            If your request is ready to move forard, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.
+            If your request is ready to move forward, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.
           </p>
         </li>
       </ol>
