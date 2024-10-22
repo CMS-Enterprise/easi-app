@@ -2,6 +2,7 @@
   "name": "cms-easi-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@apollo/client": "^3.11.8",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
