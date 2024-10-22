@@ -8,7 +8,12 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
-    outDir: 'build'
+    outDir: 'build',
+    // Node modules that use `require` statements need to be transpiled to use `import`
+    // One of the problematic modules is (at time of writing) @okta/okta-signin-widget
+    commonjsOptions: {
+      transformMixedEsModules: true
+    }
   },
   plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
   server: {
