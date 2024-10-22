@@ -75,13 +75,11 @@ func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 func UpdateTRBGuidanceLetterRecommendationOrder(
 	ctx context.Context,
 	store *storage.Store,
-	trbRequestID uuid.UUID,
-	newOrder []uuid.UUID,
-	category models.TRBGuidanceLetterRecommendationCategory,
+	input models.UpdateTRBGuidanceLetterRecommendationOrderInput,
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	// this extra database query is necessary for validation, so we don't mess up the recommendations' positions with an invalid order,
 	// but requiring an extra database call is unfortunate
-	currentRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, trbRequestID)
+	currentRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, input.TrbRequestID)
 	if err != nil {
 		return nil, err
 	}
@@ -92,12 +90,12 @@ func UpdateTRBGuidanceLetterRecommendationOrder(
 	// due to the low likelihood of multiple users concurrently editing the same guidance letter.
 	// There are issues that could occur in theory, though, such as a recommendation getting deleted between when this function queries and when it updates;
 	// that could lead to a `newOrder` with more elements than there are recommendations being accepted, which would throw off the recs' positions.
-	err = recommendations.IsNewRecommendationOrderValid(currentRecommendations, newOrder)
+	err = recommendations.IsNewRecommendationOrderValid(currentRecommendations, input.NewOrder)
 	if err != nil {
 		return nil, err
 	}
 
-	updated, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, trbRequestID, newOrder, category)
+	updated, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, input)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +135,11 @@ func DeleteTRBGuidanceLetterRecommendation(
 		return nil, err
 	}
 
-	if _, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, trbRequestID, newOrder, deletedRecommendation.Category); err != nil {
+	if _, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
+		TrbRequestID: trbRequestID,
+		NewOrder:     newOrder,
+		Category:     deletedRecommendation.Category,
+	}); err != nil {
 		return nil, err
 	}
 

@@ -185,7 +185,8 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recom
 			recommendation = :recommendation,
 			links = :links,
 			created_by = :created_by,
-			modified_by = :modified_by
+			modified_by = :modified_by,
+			category = :category
 		WHERE id = :id
 		RETURNING *;`)
 	if err != nil {
@@ -255,15 +256,13 @@ func (s *Store) DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uu
 // using the order of the recommendation IDs passed in as newOrder. No other recommendation columns/fields are updated.
 func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	ctx context.Context,
-	trbRequestID uuid.UUID,
-	newOrder []uuid.UUID,
-	category models.TRBGuidanceLetterRecommendationCategory,
+	update models.UpdateTRBGuidanceLetterRecommendationOrderInput,
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	// convert newOrder into a slice of maps with entries for recommendation ID and new position,
 	// which can then be passed to SQL as JSON, then used in the query via json_to_recordset()
 	newPositions := []map[string]any{}
 
-	for index, recommendationID := range newOrder {
+	for index, recommendationID := range update.NewOrder {
 		newEntry := map[string]any{
 			// important to use the same keys as the columns in the SQL table, otherwise sqlx returns "missing destination name position" error
 			"id":                 recommendationID,
@@ -277,7 +276,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to marshal the JSON for updating TRB recommendation guidance letters with error %s", err),
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
+			zap.String("trbRequestID", update.TrbRequestID.String()),
 		)
 
 		return nil, err
@@ -303,7 +302,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for UpdateTRBGuidanceLetterRecommendationOrder() with error %s", err),
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
+			zap.String("trbRequestID", update.TrbRequestID.String()),
 		)
 		return nil, err
 	}
@@ -312,8 +311,8 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	updatedRecommendations := []*models.TRBGuidanceLetterRecommendation{}
 	arg := map[string]interface{}{
 		"newPositions": string(newPositionsSerialized),
-		"trbRequestID": trbRequestID.String(),
-		"category":     category,
+		"trbRequestID": update.TrbRequestID.String(),
+		"category":     update.Category,
 	}
 
 	err = stmt.Select(&updatedRecommendations, arg)
@@ -321,7 +320,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update the order of TRB recommendation guidance letters with error %s", err),
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
+			zap.String("trbRequestID", update.TrbRequestID.String()),
 		)
 		return nil, err
 	}
