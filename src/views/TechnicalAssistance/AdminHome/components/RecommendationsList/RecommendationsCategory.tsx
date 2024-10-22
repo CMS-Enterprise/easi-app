@@ -74,7 +74,7 @@ const RecommendationsCategory = ({
   return (
     <div>
       <h3 className="margin-bottom-05">
-        {t(`guidanceLetterForm.${categoryString}`)}
+        {t(`guidanceLetterForm.${categoryString}s`)}
       </h3>
       <p className="margin-top-05 margin-bottom-4 line-height-body-5">
         {t(`guidanceLetterForm.${categoryString}Description`)}
@@ -92,12 +92,12 @@ const RecommendationsCategory = ({
             <li
               data-testid="recommendations_list-item"
               key={id}
-              className="margin-bottom-3"
+              className="margin-bottom-4"
             >
               <div
                 className={classNames(
-                  'bg-base-lightest padding-top-2 padding-bottom-105 padding-left-105 padding-right-3 display-flex',
-                  { 'padding-x-5': !enableReorderControls }
+                  'bg-base-lightest padding-top-105 padding-bottom-1 padding-left-105 padding-right-3 display-flex',
+                  { 'padding-x-3': !enableReorderControls }
                 )}
               >
                 {

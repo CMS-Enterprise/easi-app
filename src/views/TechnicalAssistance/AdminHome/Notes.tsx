@@ -17,6 +17,11 @@ import { GetTrbRequestSummary_trbRequest as GetTrbRequestSummaryType } from 'que
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { NotFoundPartial } from 'views/NotFound';
 
+import {
+  MockTRBAdminNote,
+  mockTRBGuidanceLetterNote
+} from '../GuidanceLetterForm/mockTRBRecommendations';
+
 import Note from './components/Note';
 import { ModalViewType } from './components/NoteModal';
 import TrbAdminWrapper from './components/TrbAdminWrapper';
@@ -38,16 +43,21 @@ const Notes = ({
 
   const [noteCount, setNoteCount] = useState<number>(5);
 
-  const { data, error, loading } = useCacheQuery<
-    GetTrbAdminNotes,
-    GetTrbAdminNotesVariables
-  >(GetTRBAdminNotesQuery, {
-    variables: {
-      id: trbRequestId
+  const {
+    // data,
+    error,
+    loading
+  } = useCacheQuery<GetTrbAdminNotes, GetTrbAdminNotesVariables>(
+    GetTRBAdminNotesQuery,
+    {
+      variables: {
+        id: trbRequestId
+      }
     }
-  });
+  );
 
-  const notes: GetTrbAdminNotesType[] = data?.trbRequest?.adminNotes || [];
+  // const notes: GetTrbAdminNotesType[] = data?.trbRequest?.adminNotes || [];
+  const notes: GetTrbAdminNotesType[] = [mockTRBGuidanceLetterNote];
 
   if (error) {
     return <NotFoundPartial />;
@@ -123,7 +133,8 @@ const Notes = ({
               const isLastNote = index === array.length - 1;
               return (
                 <Note
-                  note={note}
+                  // TODO: remove mock data type
+                  note={note as MockTRBAdminNote}
                   border={!isLastNote}
                   key={note.id}
                   {...(isLastNote ? { className: 'margin-bottom-0' } : {})}

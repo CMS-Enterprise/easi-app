@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { TRBAdminNoteFragment } from 'queries/types/TRBAdminNoteFragment';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
+import { MockTRBAdminNote } from 'views/TechnicalAssistance/GuidanceLetterForm/mockTRBRecommendations';
 
 import Note from '.';
 
@@ -103,7 +104,7 @@ const noteGeneralRequest: TRBAdminNoteFragment = {
 describe('TRB Admin Note', () => {
   it('Renders correct note information', () => {
     const note = noteGeneralRequest;
-    const { asFragment } = render(<Note note={note} />);
+    const { asFragment } = render(<Note note={note as MockTRBAdminNote} />);
 
     const submissionDate = formatDateLocal(note.createdAt, 'MMMM d, yyyy');
     expect(screen.getByText(submissionDate)).toBeInTheDocument();
@@ -121,7 +122,7 @@ describe('TRB Admin Note', () => {
 
   it('Renders category specific data - initial request form', () => {
     const note = noteInitialRequestForm;
-    render(<Note note={note} />);
+    render(<Note note={note as MockTRBAdminNote} />);
 
     expect(
       screen.getByText(
@@ -132,7 +133,7 @@ describe('TRB Admin Note', () => {
 
   it('Renders category specific data - supporting documents', () => {
     const note = noteSupportingDocuments;
-    render(<Note note={note} />);
+    render(<Note note={note as MockTRBAdminNote} />);
 
     expect(
       screen.getByText('Supporting documents: documentOne.pdf, documentTwo.pdf')
@@ -141,7 +142,7 @@ describe('TRB Admin Note', () => {
 
   it('Renders category specific data - guidance letter', () => {
     const note = noteGuidanceLetter;
-    render(<Note note={note} />);
+    render(<Note note={note as MockTRBAdminNote} />);
 
     expect(
       screen.getByText(
@@ -164,7 +165,7 @@ describe('TRB Admin Note', () => {
         ]
       }
     };
-    render(<Note note={note} />);
+    render(<Note note={note as MockTRBAdminNote} />);
 
     expect(
       screen.getByText(
@@ -189,7 +190,7 @@ describe('TRB Admin Note', () => {
         ]
       }
     };
-    render(<Note note={note} />);
+    render(<Note note={note as MockTRBAdminNote} />);
 
     expect(
       screen.getByText(

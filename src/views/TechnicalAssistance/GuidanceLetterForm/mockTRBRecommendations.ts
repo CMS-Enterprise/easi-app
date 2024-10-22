@@ -1,3 +1,15 @@
+import { TRBAdminNoteCategory } from 'gql/gen/graphql';
+
+import {
+  GetTrbAdminNotes_trbRequest_adminNotes as AdminNote,
+  GetTrbAdminNotes_trbRequest_adminNotes_categorySpecificData_TRBAdminNoteGeneralRequestCategoryData as GeneralRequestCategoryData,
+  GetTrbAdminNotes_trbRequest_adminNotes_categorySpecificData_TRBAdminNoteInitialRequestFormCategoryData as RequestFormCategoryData,
+  GetTrbAdminNotes_trbRequest_adminNotes_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData as DocumentsCategoryData
+} from 'queries/types/GetTrbAdminNotes';
+import {
+  TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData as CategoryData,
+  TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData_recommendations as NoteRecommendation
+} from 'queries/types/TRBAdminNoteFragment';
 import { TRBRecommendation } from 'queries/types/TRBRecommendation';
 
 export enum TRBGuidanceLetterRecommendationCategory {
@@ -10,10 +22,28 @@ export interface MockTRBRecommendation extends TRBRecommendation {
   category: TRBGuidanceLetterRecommendationCategory;
 }
 
+export interface MockTRBNoteRecommendation extends NoteRecommendation {
+  category: TRBGuidanceLetterRecommendationCategory;
+}
+
 export type MockTRBRecommendationsObject = Record<
   TRBGuidanceLetterRecommendationCategory,
   Array<MockTRBRecommendation>
 >;
+
+export interface MockTRBCategoryData
+  extends Omit<CategoryData, 'recommendations'> {
+  recommendations: MockTRBNoteRecommendation[];
+}
+
+export interface MockTRBAdminNote
+  extends Omit<AdminNote, 'categorySpecificData'> {
+  categorySpecificData:
+    | MockTRBCategoryData
+    | GeneralRequestCategoryData
+    | RequestFormCategoryData
+    | DocumentsCategoryData;
+}
 
 export const mockRecommendations: MockTRBRecommendationsObject = {
   [TRBGuidanceLetterRecommendationCategory.RECOMMENDATION]: [
@@ -103,4 +133,80 @@ export const mockRecommendations: MockTRBRecommendationsObject = {
       links: []
     }
   ]
+};
+
+export const mockNoteRecommendations: MockTRBNoteRecommendation[] = [
+  {
+    __typename: 'TRBGuidanceLetterRecommendation',
+    title: 'Recommendation #1',
+    category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
+    deletedAt: null
+  },
+  {
+    __typename: 'TRBGuidanceLetterRecommendation',
+    title: 'Recommendation #2',
+    category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
+    deletedAt: null
+  },
+  {
+    __typename: 'TRBGuidanceLetterRecommendation',
+    title: 'Recommendation #3',
+    category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
+    deletedAt: null
+  },
+  {
+    __typename: 'TRBGuidanceLetterRecommendation',
+    title: 'Requirement #1',
+    category: TRBGuidanceLetterRecommendationCategory.REQUIREMENT,
+    deletedAt: null
+  },
+  {
+    __typename: 'TRBGuidanceLetterRecommendation',
+    title: 'Requirement #2',
+    category: TRBGuidanceLetterRecommendationCategory.REQUIREMENT,
+    deletedAt: null
+  },
+  {
+    __typename: 'TRBGuidanceLetterRecommendation',
+    title: 'Requirement #3',
+    category: TRBGuidanceLetterRecommendationCategory.REQUIREMENT,
+    deletedAt: null
+  },
+  {
+    __typename: 'TRBGuidanceLetterRecommendation',
+    title: 'Consideration #1',
+    category: TRBGuidanceLetterRecommendationCategory.CONSIDERATION,
+    deletedAt: null
+  },
+  {
+    __typename: 'TRBGuidanceLetterRecommendation',
+    title: 'Consideration #2',
+    category: TRBGuidanceLetterRecommendationCategory.CONSIDERATION,
+    deletedAt: null
+  },
+  {
+    __typename: 'TRBGuidanceLetterRecommendation',
+    title: 'Consideration #3',
+    category: TRBGuidanceLetterRecommendationCategory.CONSIDERATION,
+    deletedAt: null
+  }
+];
+
+export const mockTRBGuidanceLetterNote: MockTRBAdminNote = {
+  __typename: 'TRBAdminNote',
+  id: '01bee443-73d8-4477-9a8b-03828e95e52e',
+  isArchived: false,
+  category: TRBAdminNoteCategory.GUIDANCE_LETTER,
+  noteText: 'This is a note about the guidance letter',
+  author: {
+    __typename: 'UserInfo',
+    commonName: 'Jerry Seinfeld'
+  },
+  createdAt: '2024-10-18T17:39:35.716132Z',
+  categorySpecificData: {
+    __typename: 'TRBAdminNoteGuidanceLetterCategoryData',
+    appliesToMeetingSummary: true,
+    appliesToNextSteps: false,
+    recommendations: [mockNoteRecommendations[0], mockNoteRecommendations[6]]
+  }
 };

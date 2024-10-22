@@ -14,6 +14,7 @@ import classNames from 'classnames';
 import PageHeading from 'components/PageHeading';
 import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -35,9 +36,10 @@ import {
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+import { mockRecommendations } from 'views/TechnicalAssistance/GuidanceLetterForm/mockTRBRecommendations';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
-import Breadcrumbs from '../../../../components/shared/Breadcrumbs';
+import formatTRBRecommendationTitle from '../components/Note/formatTRBRecommendationTitle';
 import { ModalViewType } from '../components/NoteModal';
 import { TRBRequestContext } from '../RequestContext';
 
@@ -82,12 +84,8 @@ const AddNote = ({
     variables: { id: trbRequestId || id }
   });
 
-  const recommendations = useMemo(
-    () =>
-      recommendationsQuery.data?.trbRequest.guidanceLetter?.recommendations ||
-      [],
-    [recommendationsQuery.data]
-  );
+  // TODO: replace with query data once backend work is done
+  const recommendations = Object.values(mockRecommendations).flat();
 
   const history = useHistory();
 
@@ -401,9 +399,7 @@ const AddNote = ({
                             value: 'appliesToNextSteps'
                           },
                           ...recommendations.map(rec => ({
-                            label: t('notes.labels.recommendation', {
-                              title: rec.title
-                            }),
+                            label: formatTRBRecommendationTitle(rec),
                             value: rec.id
                           }))
                         ]}

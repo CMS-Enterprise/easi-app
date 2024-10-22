@@ -7,17 +7,24 @@ import classNames from 'classnames';
 
 import { RichTextViewer } from 'components/RichTextEditor';
 import {
-  GetTrbAdminNotes_trbRequest_adminNotes as NoteType,
+  // GetTrbAdminNotes_trbRequest_adminNotes as NoteType,
   GetTrbAdminNotes_trbRequest_adminNotes_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents as Document
 } from 'queries/types/GetTrbAdminNotes';
 import {
-  TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData as GuidanceLetterCategoryData,
+  // TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData as GuidanceLetterCategoryData,
   TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteInitialRequestFormCategoryData as InitialRequestFormCategoryData
 } from 'queries/types/TRBAdminNoteFragment';
 import { formatDateLocal } from 'utils/date';
+import {
+  MockTRBAdminNote,
+  MockTRBCategoryData
+} from 'views/TechnicalAssistance/GuidanceLetterForm/mockTRBRecommendations';
+
+import formatTRBRecommendationTitle from './formatTRBRecommendationTitle';
 
 type NoteProps = {
-  note: NoteType;
+  // note: NoteType;
+  note: MockTRBAdminNote;
   className?: string;
   border?: boolean;
 };
@@ -50,18 +57,11 @@ const Note = ({ note, className, border = true }: NoteProps) => {
     appliesToMeetingSummary,
     appliesToNextSteps,
     recommendations
-  }: GuidanceLetterCategoryData) =>
+  }: MockTRBCategoryData) =>
     [
       ...(appliesToMeetingSummary ? [t('notes.labels.meetingSummary')] : []),
       ...(appliesToNextSteps ? [t('notes.labels.nextSteps')] : []),
-      ...recommendations.map(rec =>
-        t(
-          `notes.labels.${
-            rec.deletedAt ? 'removedRecommendation' : 'recommendation'
-          }`,
-          { title: rec.title }
-        )
-      )
+      ...recommendations.map(rec => formatTRBRecommendationTitle(rec))
     ].join(', ');
 
   /** Converts documents category data into string */
@@ -93,6 +93,12 @@ const Note = ({ note, className, border = true }: NoteProps) => {
       case 'TRBAdminNoteGuidanceLetterCategoryData':
         categorySpecificDataString =
           guidanceLetterCategory(categorySpecificData);
+
+        // TODO: remove mock data
+        // categorySpecificDataString = guidanceLetterCategory({
+        //   ...categorySpecificData,
+        //   recommendations: mockNoteRecommendations
+        // });
         break;
 
       default:

@@ -223,12 +223,15 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without adding guidance',
     priorityCategory: 'Priority category',
     requirement: 'Requirement',
+    requirements: 'Requirements',
     requirementDescription:
       'A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding.',
     recommendation: 'Recommendation',
+    recommendations: 'Recommendations',
     recommendationDescription:
       'A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS.',
     consideration: 'Consideration',
+    considerations: 'Considerations',
     considerationDescription:
       'A consideration suggests that the project team should evaluate this option, but it will not significantly impact their system or CMS.',
     addResourceLink: 'Add a resource link',
@@ -1046,8 +1049,10 @@ const technicalAssistance = {
       selectedDocuments: 'Selected documents',
       meetingSummary: 'Meeting summary',
       nextSteps: 'Next steps',
-      recommendation: 'Recommendation ({{title}})',
-      removedRecommendation: 'Removed recommendation ({{title}})',
+      recommendationTitle_RECOMMENDATION: 'Recommendation ({{title}})',
+      recommendationTitle_REQUIREMENT: 'Requirement ({{title}})',
+      recommendationTitle_CONSIDERATION: 'Consideration ({{title}})',
+      removedRecommendationTitle: 'Removed recommendation ({{title}})',
       removedDocument: 'Removed document ({{fileName}})'
     },
     noDocuments: 'There are no documents uploaded for this request.',
