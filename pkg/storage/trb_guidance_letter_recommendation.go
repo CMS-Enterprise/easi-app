@@ -290,14 +290,13 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 		WITH new_positions AS (
 			SELECT *
 			FROM json_to_recordset(:newPositions)
-			AS new_positions (id uuid, position_in_letter int)
+			AS new_positions (id uuid, position_in_letter int, category guidance_recommendation_category_type)
 		)
 		UPDATE trb_guidance_letter_recommendations
-		SET position_in_letter = new_positions.position_in_letter
+		SET position_in_letter = new_positions.position_in_letter, category = new_positions.category
 		FROM new_positions
 		WHERE trb_guidance_letter_recommendations.id = new_positions.id
 		AND trb_guidance_letter_recommendations.trb_request_id = :trbRequestID
-		AND trb_guidance_letter_recommendations.category = :category
 		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
