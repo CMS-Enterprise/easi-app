@@ -229,7 +229,7 @@ jobs:
           cache: 'yarn'
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
-      - run: yarn test:coverage
+      - run: yarn test:ci
       - name: Announce failure
         if: ${{ failure() }}
         run: |
