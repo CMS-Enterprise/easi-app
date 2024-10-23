@@ -16,6 +16,8 @@ type cedarYouHaveBeenAddedEmailParameters struct {
 	Roles               string
 	SystemWorkspaceLink string
 	TeamLink            string
+	FeedbackFormLink    string
+	FeedbackSlackLink   string
 }
 
 func (c Client) cedarYouHaveBeenAddedEmailBody(systemName string, systemID string, roles []string) (string, error) {
@@ -27,7 +29,9 @@ func (c Client) cedarYouHaveBeenAddedEmailBody(systemName string, systemID strin
 		SystemName:          systemName,
 		Roles:               buildRoleString(roles),
 		SystemWorkspaceLink: c.urlFromPath(path.Join("systems", systemID, "workspace")),
-		TeamLink:            c.urlFromPath(path.Join("systems", systemID, "team", "edit", "team-member")),
+		TeamLink:            c.urlFromPath(path.Join("systems", systemID, "team", "edit")) + "?workspace",
+		FeedbackFormLink:    c.urlFromPath(path.Join("help", "send-feedback")),
+		FeedbackSlackLink:   c.config.OITFeedbackChannelSlackLink,
 	}
 
 	var b bytes.Buffer

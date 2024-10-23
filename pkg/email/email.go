@@ -14,14 +14,15 @@ import (
 
 // Config holds EASi application specific configs for SES
 type Config struct {
-	GRTEmail          models.EmailAddress
-	ITInvestmentEmail models.EmailAddress
-	EASIHelpEmail     models.EmailAddress
-	TRBEmail          models.EmailAddress
-	CEDARTeamEmail    models.EmailAddress
-	URLHost           string
-	URLScheme         string
-	TemplateDirectory string
+	GRTEmail                    models.EmailAddress
+	ITInvestmentEmail           models.EmailAddress
+	EASIHelpEmail               models.EmailAddress
+	TRBEmail                    models.EmailAddress
+	CEDARTeamEmail              models.EmailAddress
+	OITFeedbackChannelSlackLink string
+	URLHost                     string
+	URLScheme                   string
+	TemplateDirectory           string
 }
 
 // templateCaller is an interface to helping with testing template dependencies

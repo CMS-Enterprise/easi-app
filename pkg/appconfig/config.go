@@ -137,6 +137,9 @@ const EASIHelpEmailKey = "EASI_HELP_EMAIL"
 // TRBEmailKey is the key for the receiving email to the TRB email
 const TRBEmailKey = "TRB_EMAIL"
 
+// OITFeedbackChannelSlackLink is the key for the OIT feedback slack channel
+const OITFeedbackChannelSlackLink = "OIT_FEEDBACK_CHANNEL_SLACK_LINK"
+
 // ClientHostKey is the key for getting the client's domain name
 const ClientHostKey = "CLIENT_HOSTNAME"
 

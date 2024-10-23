@@ -95,8 +95,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	return retVal, nil
 }
 
-func PurgeSystemCacheByEUA(ctx context.Context, euaID string) error {
-	err := PurgeCacheByPath(ctx, "/system/summary?includeInSurvey=true&state=active&userName="+euaID)
+func (c *Client) PurgeSystemCacheByEUA(ctx context.Context, euaID string) error {
+	err := c.PurgeCacheByPath(ctx, "/system/summary?includeInSurvey=true&state=active&userName="+euaID)
 	if err != nil {
 		return err
 	}
