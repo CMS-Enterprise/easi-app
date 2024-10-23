@@ -95,7 +95,19 @@ const SystemIntakeValidationSchema = {
       .nullable()
       .required(
         'Tell us if your request includes an interface component or changes'
-      )
+      ),
+    usingSoftware: Yup.string()
+      .nullable()
+      .trim()
+      .required('Tell us if you plan to use software products'),
+    acquisitionMethods: Yup.array()
+      .of(Yup.string())
+      .when('usingSoftware', {
+        is: 'YES',
+        then: Yup.array()
+          .nullable()
+          .min(1, 'Select at least one acquisition method')
+      })
   }),
   contractDetails: Yup.object().shape({
     annualSpending: Yup.object().shape({

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 import ReviewRow from 'components/ReviewRow';
 import {
@@ -107,6 +108,53 @@ export const SystemIntakeReview = ({
       return formatDateLocal(submittedAt, 'MMMM d, yyyy');
     }
     return t('review.notSubmitted');
+  };
+
+  /* Component used to conditionally render software acquisition information depending on what is present.
+      Translate acquisition strategy enum values using i18n 
+  */
+
+  const SoftwareAcquisition = () => {
+    const translatedAcqStrategies: string[] = [];
+
+    // Translate raw enumerations to i18n representation from intake
+    if (systemIntake.acquisitionMethods) {
+      Object.values(systemIntake.acquisitionMethods).forEach(acqStrategy => {
+        translatedAcqStrategies.push(
+          i18next.t(
+            `intake:requestDetails.softwareAcquisition.acquistionStrategyLabels.${acqStrategy}`
+          )
+        );
+      });
+    }
+
+    return (
+      <>
+        <ReviewRow>
+          <div>
+            <DescriptionTerm term={t('review.usingSoftware')} />
+            <DescriptionDefinition
+              definition={
+                systemIntake.usingSoftware !== null &&
+                systemIntake.usingSoftware in yesNoMap
+                  ? yesNoMap[systemIntake.usingSoftware]
+                  : 'N/A'
+              }
+            />
+          </div>
+        </ReviewRow>
+        {systemIntake.usingSoftware === 'YES' && (
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.softwareAcquisitionMethods')} />
+              <DescriptionDefinition
+                definition={translatedAcqStrategies.join(', ')}
+              />
+            </div>
+          </ReviewRow>
+        )}
+      </>
+    );
   };
 
   /* Conditionally render cost and annual spending information depending on what info is present.
@@ -306,17 +354,17 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('review.usesAiTech')} />
+            <DescriptionTerm term={t('review.eaSupport')} />
             <DescriptionDefinition
-              definition={convertBoolToYesNo(systemIntake.usesAiTech)}
+              definition={convertBoolToYesNo(systemIntake.needsEaSupport)}
             />
           </div>
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('review.eaSupport')} />
+            <DescriptionTerm term={t('review.usesAiTech')} />
             <DescriptionDefinition
-              definition={convertBoolToYesNo(systemIntake.needsEaSupport)}
+              definition={convertBoolToYesNo(systemIntake.usesAiTech)}
             />
           </div>
         </ReviewRow>
@@ -328,6 +376,8 @@ export const SystemIntakeReview = ({
             />
           </div>
         </ReviewRow>
+        {/* Component that formats and conditionally renders software acquisition information */}
+        <SoftwareAcquisition />
       </DescriptionList>
 
       <hr className="system-intake__hr" />
