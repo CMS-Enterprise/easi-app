@@ -44,10 +44,10 @@ const governanceReviewBoard = {
     },
     possibleOutcomes: {
       title: 'Possible outcomes',
-      body: 'After this discussion, the Governance Review Board will decide whether to approve your request at this time.',
+      body: 'After this discussion, the Governance Review Board will decide whether to accept your proposed Business Case.',
       items: [
-        'If the request is approved, the Board will issue you a Life Cycle ID. You need this ID to request funding and complete contract actions. The Board will also approve the performance measures and have regular reviews with you.',
-        'If two or more Board members voice concerns about the project, a Lifceycle ID won’t be issued. The request will not be approved until all concerns are addressed or withdrawn. '
+        'LCID Issued: If the business proposal is acceptable to the Governance Review Board, a Life Cycle ID will be issued, and future review will occur at regular intervals specific to your project.',
+        'LCID Delayed: If there are two or more objections, a Life Cycle ID will not be issued. The project team will receive next steps to outline which concerns or requirements must be addressed before they can apply for an LCID again '
       ]
     },
     howToBestPrepare: {
