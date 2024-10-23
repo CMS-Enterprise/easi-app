@@ -134,7 +134,12 @@ export const SystemIntakeReview = ({
           <div>
             <DescriptionTerm term={t('review.usingSoftware')} />
             <DescriptionDefinition
-              definition={yesNoMap[String(systemIntake.usingSoftware)]}
+              definition={
+                systemIntake.usingSoftware !== null &&
+                systemIntake.usingSoftware in yesNoMap
+                  ? yesNoMap[systemIntake.usingSoftware]
+                  : 'N/A'
+              }
             />
           </div>
         </ReviewRow>
