@@ -290,7 +290,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 		WITH new_positions AS (
 			SELECT *
 			FROM json_to_recordset(:newPositions)
-			AS new_positions (id uuid, position_in_letter int, category guidance_recommendation_category_type)
+			AS new_positions (id uuid, position_in_letter int, category trb_guidance_recommendation_category_type)
 		)
 		UPDATE trb_guidance_letter_recommendations
 		SET position_in_letter = new_positions.position_in_letter, category = new_positions.category

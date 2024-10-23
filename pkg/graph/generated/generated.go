@@ -963,6 +963,7 @@ type ComplexityRoot struct {
 
 	TRBGuidanceLetterRecommendation struct {
 		Author         func(childComplexity int) int
+		Category       func(childComplexity int) int
 		CreatedAt      func(childComplexity int) int
 		CreatedBy      func(childComplexity int) int
 		DeletedAt      func(childComplexity int) int
@@ -6655,6 +6656,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBGuidanceLetterRecommendation.Author(childComplexity), true
 
+	case "TRBGuidanceLetterRecommendation.category":
+		if e.complexity.TRBGuidanceLetterRecommendation.Category == nil {
+			break
+		}
+
+		return e.complexity.TRBGuidanceLetterRecommendation.Category(childComplexity), true
+
 	case "TRBGuidanceLetterRecommendation.createdAt":
 		if e.complexity.TRBGuidanceLetterRecommendation.CreatedAt == nil {
 			break
@@ -10107,6 +10115,7 @@ type TRBGuidanceLetterRecommendation {
   modifiedBy: String
   modifiedAt: Time
   deletedAt: Time
+  category: TRBGuidanceLetterRecommendationCategory
 }
 
 """
@@ -36248,6 +36257,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBGuidanceLetterRecomme
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
 			case "deletedAt":
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+			case "category":
+				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
 		},
@@ -36354,6 +36365,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecomme
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
 			case "deletedAt":
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+			case "category":
+				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
 		},
@@ -36460,6 +36473,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecomme
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
 			case "deletedAt":
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+			case "category":
+				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
 		},
@@ -36566,6 +36581,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBGuidanceLetterRecomme
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
 			case "deletedAt":
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+			case "category":
+				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
 		},
@@ -49117,6 +49134,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteGuidanceLetterCategoryData_
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
 			case "deletedAt":
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+			case "category":
+				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
 		},
@@ -50072,6 +50091,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetter_recommendations(_ con
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
 			case "deletedAt":
 				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+			case "category":
+				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
 		},
@@ -50731,6 +50752,47 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_deleted
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBGuidanceLetterRecommendation_category(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Category, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(models.TRBGuidanceLetterRecommendationCategory)
+	fc.Result = res
+	return ec.marshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_category(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBGuidanceLetterRecommendation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type TRBGuidanceLetterRecommendationCategory does not have child fields")
 		},
 	}
 	return fc, nil
@@ -70015,6 +70077,8 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation(ctx context.Context
 			out.Values[i] = ec._TRBGuidanceLetterRecommendation_modifiedAt(ctx, field, obj)
 		case "deletedAt":
 			out.Values[i] = ec._TRBGuidanceLetterRecommendation_deletedAt(ctx, field, obj)
+		case "category":
+			out.Values[i] = ec._TRBGuidanceLetterRecommendation_category(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -76998,6 +77062,16 @@ func (ec *executionContext) marshalOTRBGuidanceLetter2ᚖgithubᚗcomᚋcmsᚑen
 		return graphql.Null
 	}
 	return ec._TRBGuidanceLetter(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v interface{}) (models.TRBGuidanceLetterRecommendationCategory, error) {
+	var res models.TRBGuidanceLetterRecommendationCategory
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalOTRBRequest2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequest(ctx context.Context, sel ast.SelectionSet, v *models.TRBRequest) graphql.Marshaler {

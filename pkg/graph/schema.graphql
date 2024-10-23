@@ -2344,6 +2344,7 @@ type TRBGuidanceLetterRecommendation {
   modifiedBy: String
   modifiedAt: Time
   deletedAt: Time
+  category: TRBGuidanceLetterRecommendationCategory
 }
 
 """

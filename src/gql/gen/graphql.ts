@@ -2683,6 +2683,7 @@ export type TRBGuidanceLetter = {
 export type TRBGuidanceLetterRecommendation = {
   __typename: 'TRBGuidanceLetterRecommendation';
   author: UserInfo;
+  category?: Maybe<TRBGuidanceLetterRecommendationCategory>;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
   deletedAt?: Maybe<Scalars['Time']['output']>;
