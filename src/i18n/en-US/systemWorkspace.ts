@@ -31,7 +31,7 @@ const helpLinks: HelpLinkType[] = [
   {
     header: 'Consider Threat Modeling for your system',
     link: 'https://security.cms.gov/learn/threat-modeling',
-    linkText: 'Learn more',
+    linkText: 'Learn more on CyberGeek',
     external: true
   },
   {

@@ -99,6 +99,25 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                   </span>
                 </h1>
                 <div
+                  class="display-flex"
+                >
+                  <p
+                    class="text-bold margin-right-2"
+                  >
+                    TLC phase: 
+                  </p>
+                  <div
+                    class="display-flex flex-align-center flex-justify"
+                  >
+                    <span
+                      class="easi-tag padding-1, bg-success-dark text-white"
+                      data-testid="tlc-status-tag"
+                    >
+                      Operate
+                    </span>
+                  </div>
+                </div>
+                <div
                   class="text-normal font-body-md"
                 >
                   <div
