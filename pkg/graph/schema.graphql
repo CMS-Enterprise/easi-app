@@ -2203,7 +2203,7 @@ The "recommendations" property _will_ return deleted recommendations so that UI 
 type TRBAdminNoteGuidanceLetterCategoryData {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
-  recommendations: [TRBGuidanceLetterRecommendation!]!
+  insights: [TRBGuidanceLetterRecommendation!]!
 }
 
 union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGuidanceLetterCategoryData
@@ -2240,7 +2240,7 @@ type TRBGuidanceLetter {
   """
   List of recommendations in the order specified by users
   """
-  recommendations: [TRBGuidanceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_guidance_letter_recommendation.go `GetTRBGuidanceLetterRecommendationsByTRBRequestID`
+  insights: [TRBGuidanceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_guidance_letter_recommendation.go `GetTRBGuidanceLetterRecommendationsByTRBRequestID`
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2344,6 +2344,7 @@ type TRBGuidanceLetterRecommendation {
   modifiedBy: String
   modifiedAt: Time
   deletedAt: Time
+  category: TRBGuidanceLetterRecommendationCategory
 }
 
 """
@@ -2354,6 +2355,7 @@ input CreateTRBGuidanceLetterRecommendationInput {
   title: String!
   recommendation: HTML!
   links: [String!]!
+  category: TRBGuidanceLetterRecommendationCategory!
 }
 
 """
@@ -2366,6 +2368,12 @@ input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]int
   links: [String!]
 }
 
+enum TRBGuidanceLetterRecommendationCategory {
+  REQUIREMENT
+  RECOMMENDATION
+  CONSIDERATION
+}
+
 """
 """
 input UpdateTRBGuidanceLetterRecommendationOrderInput {
@@ -2374,6 +2382,7 @@ input UpdateTRBGuidanceLetterRecommendationOrderInput {
   List of the recommendation IDs in the new order they should be displayed
   """
   newOrder: [UUID!]!
+  category: TRBGuidanceLetterRecommendationCategory!
 }
 
 """

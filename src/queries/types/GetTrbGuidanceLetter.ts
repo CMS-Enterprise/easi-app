@@ -14,7 +14,7 @@ export interface GetTrbGuidanceLetter_trbRequest_taskStatuses {
   guidanceLetterStatus: TRBGuidanceLetterStatus;
 }
 
-export interface GetTrbGuidanceLetter_trbRequest_guidanceLetter_recommendations {
+export interface GetTrbGuidanceLetter_trbRequest_guidanceLetter_insights {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -39,7 +39,7 @@ export interface GetTrbGuidanceLetter_trbRequest_guidanceLetter {
   /**
    * List of recommendations in the order specified by users
    */
-  recommendations: GetTrbGuidanceLetter_trbRequest_guidanceLetter_recommendations[];
+  insights: GetTrbGuidanceLetter_trbRequest_guidanceLetter_insights[];
   author: GetTrbGuidanceLetter_trbRequest_guidanceLetter_author;
   createdAt: Time;
   modifiedAt: Time | null;

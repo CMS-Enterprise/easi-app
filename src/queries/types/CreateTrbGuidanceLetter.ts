@@ -7,7 +7,7 @@
 // GraphQL mutation operation: CreateTrbGuidanceLetter
 // ====================================================
 
-export interface CreateTrbGuidanceLetter_createTRBGuidanceLetter_recommendations {
+export interface CreateTrbGuidanceLetter_createTRBGuidanceLetter_insights {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -32,7 +32,7 @@ export interface CreateTrbGuidanceLetter_createTRBGuidanceLetter {
   /**
    * List of recommendations in the order specified by users
    */
-  recommendations: CreateTrbGuidanceLetter_createTRBGuidanceLetter_recommendations[];
+  insights: CreateTrbGuidanceLetter_createTRBGuidanceLetter_insights[];
   author: CreateTrbGuidanceLetter_createTRBGuidanceLetter_author;
   createdAt: Time;
   modifiedAt: Time | null;

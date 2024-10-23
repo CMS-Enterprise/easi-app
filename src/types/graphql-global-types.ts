@@ -421,6 +421,12 @@ export enum TRBFormStatus {
   READY_TO_START = "READY_TO_START",
 }
 
+export enum TRBGuidanceLetterRecommendationCategory {
+  CONSIDERATION = "CONSIDERATION",
+  RECOMMENDATION = "RECOMMENDATION",
+  REQUIREMENT = "REQUIREMENT",
+}
+
 /**
  * Represents the status of the TRB guidance letter step
  */
@@ -623,6 +629,7 @@ export interface CreateTRBGuidanceLetterRecommendationInput {
   title: string;
   recommendation: HTML;
   links: string[];
+  category: TRBGuidanceLetterRecommendationCategory;
 }
 
 /**
@@ -1134,6 +1141,7 @@ export interface UpdateTRBGuidanceLetterRecommendationInput {
 export interface UpdateTRBGuidanceLetterRecommendationOrderInput {
   trbRequestId: UUID;
   newOrder: UUID[];
+  category: TRBGuidanceLetterRecommendationCategory;
 }
 
 /**

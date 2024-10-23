@@ -26,6 +26,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Title:          "Restart your computer",
 			Recommendation: "I recommend you restart your computer",
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 
 		created, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &toCreate)
@@ -78,6 +79,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Title:          "Restart your computer",
 			Recommendation: "I recommend you restart your computer",
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 
 		// Create a recommendation
@@ -117,6 +119,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 				Title:          "Restart your computer",
 				Recommendation: "I recommend you restart your computer",
 				Links:          pq.StringArray{"google.com", "askjeeves.com"},
+				Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 			}
 			created, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &toCreate)
 			s.NoError(err)

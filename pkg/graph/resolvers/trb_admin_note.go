@@ -221,7 +221,7 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 		return models.TRBAdminNoteGuidanceLetterCategoryData{
 			AppliesToMeetingSummary: note.AppliesToMeetingSummary.Bool,
 			AppliesToNextSteps:      note.AppliesToNextSteps.Bool,
-			Recommendations:         recommendations,
+			Insights:                recommendations,
 		}, nil
 	}
 

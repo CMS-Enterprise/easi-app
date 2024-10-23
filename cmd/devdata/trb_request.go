@@ -991,6 +991,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Title:          "Restart your computer",
 		Recommendation: "I recommend you restart your computer",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
 	createdRecommendation1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation1ToCreate)
 	if err != nil {
@@ -1002,6 +1003,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Title:          "Unplug it and plug it back in",
 		Recommendation: "I recommend you unplug your computer and plug it back in",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
 	createdRecommendation2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation2ToCreate)
 	if err != nil {
@@ -1013,6 +1015,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Title:          "Get a new computer",
 		Recommendation: "Your computer is broken, you need a new one",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
 	createdRecommendation3, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation3ToCreate)
 	if err != nil {

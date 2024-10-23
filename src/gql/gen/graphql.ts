@@ -625,6 +625,7 @@ export type CreateTRBAdminNoteSupportingDocumentsInput = {
 
 /** The input required to add a recommendation & links to a TRB guidance letter */
 export type CreateTRBGuidanceLetterRecommendationInput = {
+  category: TRBGuidanceLetterRecommendationCategory;
   links: Array<Scalars['String']['input']>;
   recommendation: Scalars['HTML']['input'];
   title: Scalars['String']['input'];
@@ -2568,7 +2569,7 @@ export type TRBAdminNoteGuidanceLetterCategoryData = {
   __typename: 'TRBAdminNoteGuidanceLetterCategoryData';
   appliesToMeetingSummary: Scalars['Boolean']['output'];
   appliesToNextSteps: Scalars['Boolean']['output'];
-  recommendations: Array<TRBGuidanceLetterRecommendation>;
+  insights: Array<TRBGuidanceLetterRecommendation>;
 };
 
 /** Data specific to admin notes in the Initial Request Form category */
@@ -2668,13 +2669,13 @@ export type TRBGuidanceLetter = {
   dateSent?: Maybe<Scalars['Time']['output']>;
   followupPoint?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
+  /** List of recommendations in the order specified by users */
+  insights: Array<TRBGuidanceLetterRecommendation>;
   isFollowupRecommended?: Maybe<Scalars['Boolean']['output']>;
   meetingSummary?: Maybe<Scalars['HTML']['output']>;
   modifiedAt?: Maybe<Scalars['Time']['output']>;
   modifiedBy?: Maybe<Scalars['String']['output']>;
   nextSteps?: Maybe<Scalars['HTML']['output']>;
-  /** List of recommendations in the order specified by users */
-  recommendations: Array<TRBGuidanceLetterRecommendation>;
   trbRequestId: Scalars['UUID']['output'];
 };
 
@@ -2682,6 +2683,7 @@ export type TRBGuidanceLetter = {
 export type TRBGuidanceLetterRecommendation = {
   __typename: 'TRBGuidanceLetterRecommendation';
   author: UserInfo;
+  category?: Maybe<TRBGuidanceLetterRecommendationCategory>;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
   deletedAt?: Maybe<Scalars['Time']['output']>;
@@ -2693,6 +2695,12 @@ export type TRBGuidanceLetterRecommendation = {
   title: Scalars['String']['output'];
   trbRequestId: Scalars['UUID']['output'];
 };
+
+export enum TRBGuidanceLetterRecommendationCategory {
+  CONSIDERATION = 'CONSIDERATION',
+  RECOMMENDATION = 'RECOMMENDATION',
+  REQUIREMENT = 'REQUIREMENT'
+}
 
 /** Represents the status of the TRB guidance letter step */
 export enum TRBGuidanceLetterStatus {
@@ -3041,6 +3049,7 @@ export type UpdateTRBGuidanceLetterRecommendationInput = {
 };
 
 export type UpdateTRBGuidanceLetterRecommendationOrderInput = {
+  category: TRBGuidanceLetterRecommendationCategory;
   /** List of the recommendation IDs in the new order they should be displayed */
   newOrder: Array<Scalars['UUID']['input']>;
   trbRequestId: Scalars['UUID']['input'];

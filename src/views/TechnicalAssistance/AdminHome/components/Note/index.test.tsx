@@ -68,7 +68,7 @@ const noteGuidanceLetter: TRBAdminNoteFragment = {
     __typename: 'TRBAdminNoteGuidanceLetterCategoryData',
     appliesToMeetingSummary: true,
     appliesToNextSteps: false,
-    recommendations: [
+    insights: [
       {
         __typename: 'TRBGuidanceLetterRecommendation',
         title: 'Recommendation One',
@@ -180,7 +180,7 @@ describe('TRB Admin Note', () => {
         __typename: 'TRBAdminNoteGuidanceLetterCategoryData',
         appliesToMeetingSummary: true,
         appliesToNextSteps: false,
-        recommendations: [
+        insights: [
           {
             __typename: 'TRBGuidanceLetterRecommendation',
             title: 'Recommendation One',

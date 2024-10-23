@@ -81,7 +81,7 @@ const adminNotes: TRBAdminNoteFragment[] = [
       __typename: 'TRBAdminNoteGuidanceLetterCategoryData',
       appliesToMeetingSummary: true,
       appliesToNextSteps: false,
-      recommendations: [
+      insights: [
         {
           __typename: 'TRBGuidanceLetterRecommendation',
           title: 'Recommendation One',

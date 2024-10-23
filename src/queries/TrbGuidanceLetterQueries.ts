@@ -19,7 +19,7 @@ export const TRBGuidanceLetter = gql`
     isFollowupRecommended
     dateSent
     followupPoint
-    recommendations {
+    insights {
       ...TRBRecommendation
     }
     author {
@@ -77,7 +77,7 @@ export const GetTrbRecommendationsQuery = gql`
   query GetTrbRecommendations($id: UUID!) {
     trbRequest(id: $id) {
       guidanceLetter {
-        recommendations {
+        insights {
           ...TRBRecommendation
         }
       }

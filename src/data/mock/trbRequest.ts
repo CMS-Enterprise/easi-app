@@ -343,7 +343,7 @@ export const guidanceLetter: NonNullable<
   isFollowupRecommended: true,
   dateSent: null,
   followupPoint: 'Six months from now',
-  recommendations: [
+  insights: [
     {
       __typename: 'TRBGuidanceLetterRecommendation',
       id: '682c9839-ac4c-48f5-8ac3-8693573e4dd8',
