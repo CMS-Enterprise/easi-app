@@ -1,41 +1,43 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`The Terms & Conditions page > matches the snapshot 1`] = `
-<main
-  className="easi-main-content grid-container line-height-body-5"
-  id="main-content"
-  role="main"
-  tabIndex={-1}
->
-  <h1
-    aria-live="polite"
-    className="easi-h1"
-    tabIndex={-1}
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container line-height-body-5"
+    id="main-content"
+    role="main"
+    tabindex="-1"
   >
-    Terms & Conditions
-  </h1>
-  <h2>
-    This system is provided for Government authorized use only.
-  </h2>
-  <p
-    className="margin-y-4"
-  >
-    Unauthorized or improper use of this system is prohibited and may result in disciplinary action and/or civil and criminal penalties.
-  </p>
-  <p
-    className="margin-y-4"
-  >
-    Personal use of social media and networking sites on this system is limited as to not interfere with official work duties and is subject to monitoring.
-  </p>
-  <p
-    className="margin-y-4"
-  >
-    By using this system, you understand and consent to the following: The Government may monitor, record, and audit your system usage, including usage of personal devices and email systems for official reasonable expectation of privacy regarding any communication or data transiting or stored on this system. At any time, and for any lawful Government purpose, the government may monitor, intercept, and search and seize any communication or data transiting or stored on this system.
-  </p>
-  <p
-    className="margin-y-4"
-  >
-    Any communication or data transiting or stored on this system may be disclosed or used for any lawful Government purpose.
-  </p>
-</main>
+    <h1
+      aria-live="polite"
+      class="easi-h1"
+      tabindex="-1"
+    >
+      Terms & Conditions
+    </h1>
+    <h2>
+      This system is provided for Government authorized use only.
+    </h2>
+    <p
+      class="margin-y-4"
+    >
+      Unauthorized or improper use of this system is prohibited and may result in disciplinary action and/or civil and criminal penalties.
+    </p>
+    <p
+      class="margin-y-4"
+    >
+      Personal use of social media and networking sites on this system is limited as to not interfere with official work duties and is subject to monitoring.
+    </p>
+    <p
+      class="margin-y-4"
+    >
+      By using this system, you understand and consent to the following: The Government may monitor, record, and audit your system usage, including usage of personal devices and email systems for official reasonable expectation of privacy regarding any communication or data transiting or stored on this system. At any time, and for any lawful Government purpose, the government may monitor, intercept, and search and seize any communication or data transiting or stored on this system.
+    </p>
+    <p
+      class="margin-y-4"
+    >
+      Any communication or data transiting or stored on this system may be disclosed or used for any lawful Government purpose.
+    </p>
+  </main>
+</DocumentFragment>
 `;

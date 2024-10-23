@@ -1,10 +1,10 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import MandatoryFieldsAlert from './index';
 
 describe('The Mandatory Fields Alert component', () => {
   it('renders without crashing', () => {
-    shallow(<MandatoryFieldsAlert />);
+    render(<MandatoryFieldsAlert />);
   });
 });

@@ -1,11 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Page heading component > matches the snapshot 1`] = `
-<h1
-  aria-live="polite"
-  className="easi-h1"
-  tabIndex={-1}
->
-  Test Heading
-</h1>
+<DocumentFragment>
+  <h1
+    aria-live="polite"
+    class="easi-h1"
+    tabindex="-1"
+  >
+    Test Heading
+  </h1>
+</DocumentFragment>
 `;
