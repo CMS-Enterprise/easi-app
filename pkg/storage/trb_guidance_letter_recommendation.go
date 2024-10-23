@@ -267,7 +267,6 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 			// important to use the same keys as the columns in the SQL table, otherwise sqlx returns "missing destination name position" error
 			"id":                 recommendationID,
 			"position_in_letter": index,
-			"category":           update.Category,
 		}
 		newPositions = append(newPositions, newEntry)
 	}
@@ -290,13 +289,14 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 		WITH new_positions AS (
 			SELECT *
 			FROM json_to_recordset(:newPositions)
-			AS new_positions (id uuid, position_in_letter int, category trb_guidance_recommendation_category_type)
+			AS new_positions (id uuid, position_in_letter int)
 		)
 		UPDATE trb_guidance_letter_recommendations
-		SET position_in_letter = new_positions.position_in_letter, category = new_positions.category
+		SET position_in_letter = new_positions.position_in_letter
 		FROM new_positions
 		WHERE trb_guidance_letter_recommendations.id = new_positions.id
 		AND trb_guidance_letter_recommendations.trb_request_id = :trbRequestID
+		AND trb_guidance_letter_recommendations.category = :category
 		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
