@@ -5,7 +5,10 @@ import { render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 
 import GetTrbPublicGuidanceLetterQuery from 'queries/GetTrbPublicGuidanceLetterQuery';
-import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
+import {
+  TRBGuidanceLetterRecommendationCategory,
+  TRBGuidanceLetterStatus
+} from 'types/graphql-global-types';
 
 import PublicGuidanceLetter from './PublicGuidanceLetter';
 
@@ -36,12 +39,13 @@ describe('Trb Public Guidance Letter', () => {
         isFollowupRecommended: false,
         dateSent: '2023-04-21T14:13:01.59368Z',
         followupPoint: null,
-        recommendations: [
+        insights: [
           {
             id: 'd29b1511-5e07-430a-97f5-c938fa67ebdf',
             title: 'Restart your computer',
             recommendation: 'I recommend you restart your computer',
             links: ['google.com', 'askjeeves.com'],
+            category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
             __typename: 'TRBGuidanceLetterRecommendation'
           }
         ],
