@@ -31,6 +31,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
+import TLCTag from 'components/TLCTag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
 import {
@@ -439,6 +440,16 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                     ({cedarSystem.acronym})
                   </span>
                 </PageHeading>
+
+                {/* Display TLC Phase */}
+                <div className="display-flex">
+                  <p className="text-bold margin-right-2">
+                    {t('singleSystem.summary.tlcPhase')}
+                  </p>
+                  <TLCTag
+                    tlcPhase={data?.cedarAuthorityToOperate[0].tlcPhase}
+                  />
+                </div>
 
                 {flags.systemWorkspace &&
                   systemProfileData.cedarSystemDetails?.isMySystem && (
