@@ -85,7 +85,7 @@ func fillOutInitialIntake(
 		"Some CEDAR System ID",
 		"the current stage",
 		true,
-		"Yes",
+		"YES",
 		acqMethods,
 	)
 	updateSystemIntakeContact(ctx, store,

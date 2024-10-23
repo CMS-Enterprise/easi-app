@@ -42080,9 +42080,9 @@ func (ec *executionContext) _SystemIntake_usingSoftware(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(null.String)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_usingSoftware(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {

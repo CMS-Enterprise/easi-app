@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 	"github.com/samber/lo"
 
@@ -114,7 +115,7 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
 	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
 	intake.UsesAITech = null.BoolFromPtr(input.UsesAiTech)
-	intake.UsingSoftware = null.StringFromPtr(input.UsingSoftware)
+	intake.UsingSoftware = zero.StringFromPtr(input.UsingSoftware)
 
 	// Create string array from SoftwareAcqisitionMethods enum array
 	intake.AcquisitionMethods = lo.Map(input.AcquisitionMethods, func(acqMethod models.SystemIntakeSoftwareAcquisitionMethods, idx int) string {
