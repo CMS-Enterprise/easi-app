@@ -87,7 +87,7 @@ const renderForm = (
   mocks?: MockedResponse[],
   error?: boolean
 ) => {
-  window.HTMLElement.prototype.scrollIntoView = vi.fn;
+  window.HTMLElement.prototype.scrollIntoView = vi.fn();
   return render(
     <MemoryRouter
       initialEntries={[
