@@ -2569,7 +2569,7 @@ export type TRBAdminNoteGuidanceLetterCategoryData = {
   __typename: 'TRBAdminNoteGuidanceLetterCategoryData';
   appliesToMeetingSummary: Scalars['Boolean']['output'];
   appliesToNextSteps: Scalars['Boolean']['output'];
-  recommendations: Array<TRBGuidanceLetterRecommendation>;
+  insights: Array<TRBGuidanceLetterRecommendation>;
 };
 
 /** Data specific to admin notes in the Initial Request Form category */
@@ -2669,13 +2669,13 @@ export type TRBGuidanceLetter = {
   dateSent?: Maybe<Scalars['Time']['output']>;
   followupPoint?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
+  /** List of recommendations in the order specified by users */
+  insights: Array<TRBGuidanceLetterRecommendation>;
   isFollowupRecommended?: Maybe<Scalars['Boolean']['output']>;
   meetingSummary?: Maybe<Scalars['HTML']['output']>;
   modifiedAt?: Maybe<Scalars['Time']['output']>;
   modifiedBy?: Maybe<Scalars['String']['output']>;
   nextSteps?: Maybe<Scalars['HTML']['output']>;
-  /** List of recommendations in the order specified by users */
-  recommendations: Array<TRBGuidanceLetterRecommendation>;
   trbRequestId: Scalars['UUID']['output'];
 };
 

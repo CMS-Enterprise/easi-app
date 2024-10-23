@@ -801,7 +801,7 @@ func (TRBAdminNoteGeneralRequestCategoryData) IsTRBAdminNoteCategorySpecificData
 type TRBAdminNoteGuidanceLetterCategoryData struct {
 	AppliesToMeetingSummary bool                               `json:"appliesToMeetingSummary"`
 	AppliesToNextSteps      bool                               `json:"appliesToNextSteps"`
-	Recommendations         []*TRBGuidanceLetterRecommendation `json:"recommendations"`
+	Insights                []*TRBGuidanceLetterRecommendation `json:"insights"`
 }
 
 func (TRBAdminNoteGuidanceLetterCategoryData) IsTRBAdminNoteCategorySpecificData() {}

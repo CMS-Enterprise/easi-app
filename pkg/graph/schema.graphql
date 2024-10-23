@@ -2203,7 +2203,7 @@ The "recommendations" property _will_ return deleted recommendations so that UI 
 type TRBAdminNoteGuidanceLetterCategoryData {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
-  recommendations: [TRBGuidanceLetterRecommendation!]!
+  insights: [TRBGuidanceLetterRecommendation!]!
 }
 
 union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGuidanceLetterCategoryData
@@ -2240,7 +2240,7 @@ type TRBGuidanceLetter {
   """
   List of recommendations in the order specified by users
   """
-  recommendations: [TRBGuidanceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_guidance_letter_recommendation.go `GetTRBGuidanceLetterRecommendationsByTRBRequestID`
+  insights: [TRBGuidanceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_guidance_letter_recommendation.go `GetTRBGuidanceLetterRecommendationsByTRBRequestID`
   createdBy: String!
   createdAt: Time!
   modifiedBy: String

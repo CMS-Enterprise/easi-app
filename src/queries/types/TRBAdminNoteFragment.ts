@@ -36,7 +36,7 @@ export interface TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteSupportin
   documents: TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents[];
 }
 
-export interface TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData_recommendations {
+export interface TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData_insights {
   __typename: "TRBGuidanceLetterRecommendation";
   title: string;
   deletedAt: Time | null;
@@ -46,7 +46,7 @@ export interface TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceL
   __typename: "TRBAdminNoteGuidanceLetterCategoryData";
   appliesToMeetingSummary: boolean;
   appliesToNextSteps: boolean;
-  recommendations: TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData_recommendations[];
+  insights: TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData_insights[];
 }
 
 export type TRBAdminNoteFragment_categorySpecificData = TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData;

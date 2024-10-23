@@ -511,7 +511,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		s.True(ok) // test that categorySpecificData is of the right type
 
 		// test that resolver returns the right recommendations
-		returnedRecommendations := guidanceLetterData.Recommendations
+		returnedRecommendations := guidanceLetterData.Insights
 		s.Len(returnedRecommendations, 2)
 
 		recommendation0Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {

@@ -49,12 +49,12 @@ const Note = ({ note, className, border = true }: NoteProps) => {
   const guidanceLetterCategory = ({
     appliesToMeetingSummary,
     appliesToNextSteps,
-    recommendations
+    insights
   }: GuidanceLetterCategoryData) =>
     [
       ...(appliesToMeetingSummary ? [t('notes.labels.meetingSummary')] : []),
       ...(appliesToNextSteps ? [t('notes.labels.nextSteps')] : []),
-      ...recommendations.map(rec =>
+      ...insights.map(rec =>
         t(
           `notes.labels.${
             rec.deletedAt ? 'removedRecommendation' : 'recommendation'

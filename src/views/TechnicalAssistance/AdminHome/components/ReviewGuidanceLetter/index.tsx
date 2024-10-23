@@ -52,7 +52,7 @@ const ReviewGuidanceLetter = ({
 }: ReviewGuidanceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { recommendations } = guidanceLetter;
+  const { insights } = guidanceLetter;
 
   return (
     <div className={className}>
@@ -184,11 +184,11 @@ const ReviewGuidanceLetter = ({
 
         {
           // If no recommendations, return text
-          recommendations.length === 0 ? (
+          insights.length === 0 ? (
             <p className="margin-top-4">{t('guidanceLetter.notSpecified')}</p>
           ) : (
             <RecommendationsList
-              recommendations={recommendations}
+              recommendations={insights}
               trbRequestId={trbRequestId}
               className="margin-top-4"
               editable={editable}
