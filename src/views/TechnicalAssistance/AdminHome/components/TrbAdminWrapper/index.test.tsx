@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
 
 import {
-  getTrbAdviceLetterQuery,
+  getTrbGuidanceLetterQuery,
   taskStatuses,
   trbRequestSummary
 } from 'data/mock/trbRequest';
@@ -47,7 +47,7 @@ describe('TRB Admin Wrapper', () => {
   ) =>
     render(
       <Provider store={store}>
-        <VerboseMockedProvider mocks={[getTrbAdviceLetterQuery]}>
+        <VerboseMockedProvider mocks={[getTrbGuidanceLetterQuery]}>
           <MemoryRouter>
             <TrbAdminWrapper
               activePage={activePage}
@@ -88,9 +88,9 @@ describe('TRB Admin Wrapper', () => {
       'assignTrbLead',
       'orCloseRequest'
     ],
-    CONSULT_COMPLETE: ['viewAdviceLetter', 'orCloseRequest'],
-    ADVICE_LETTER_IN_REVIEW: ['viewAdviceLetter', 'orCloseRequest'],
-    ADVICE_LETTER_SENT: ['closeRequest']
+    CONSULT_COMPLETE: ['viewGuidanceLetter', 'orCloseRequest'],
+    GUIDANCE_LETTER_IN_REVIEW: ['viewGuidanceLetter', 'orCloseRequest'],
+    GUIDANCE_LETTER_SENT: ['closeRequest']
   };
   const statusKeys = Object.keys(statuses);
 
@@ -123,7 +123,7 @@ describe('TRB Admin Wrapper', () => {
   it('renders re-open request admin action', () => {
     const { getByRole } = renderWrapper(
       'notes',
-      TRBRequestStatus.ADVICE_LETTER_SENT,
+      TRBRequestStatus.GUIDANCE_LETTER_SENT,
       TRBRequestState.CLOSED
     );
 

@@ -198,7 +198,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
             <h3
               class="margin-0"
             >
-              Advice letter
+              Guidance letter
             </h3>
             <p
               class="text-base margin-0"
@@ -241,7 +241,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
               disabled=""
               type="button"
             >
-              Start advice letter
+              Start guidance letter
             </button>
           </div>
         </div>

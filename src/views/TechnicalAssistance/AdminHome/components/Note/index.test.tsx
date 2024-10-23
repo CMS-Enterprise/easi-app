@@ -54,28 +54,28 @@ const noteSupportingDocuments: TRBAdminNoteFragment = {
   createdAt: '2024-03-27T13:20:37.852099Z'
 };
 
-const noteAdviceLetter: TRBAdminNoteFragment = {
+const noteGuidanceLetter: TRBAdminNoteFragment = {
   __typename: 'TRBAdminNote',
   id: 'badd3c6c-86f2-40fd-af1b-4ab46c4f8c34',
   isArchived: false,
-  category: TRBAdminNoteCategory.ADVICE_LETTER,
-  noteText: 'Advice Letter Note',
+  category: TRBAdminNoteCategory.GUIDANCE_LETTER,
+  noteText: 'Guidance Letter Note',
   author: {
     __typename: 'UserInfo',
     commonName: 'Jerry Seinfeld'
   },
   categorySpecificData: {
-    __typename: 'TRBAdminNoteAdviceLetterCategoryData',
+    __typename: 'TRBAdminNoteGuidanceLetterCategoryData',
     appliesToMeetingSummary: true,
     appliesToNextSteps: false,
     recommendations: [
       {
-        __typename: 'TRBAdviceLetterRecommendation',
+        __typename: 'TRBGuidanceLetterRecommendation',
         title: 'Recommendation One',
         deletedAt: null
       },
       {
-        __typename: 'TRBAdviceLetterRecommendation',
+        __typename: 'TRBGuidanceLetterRecommendation',
         title: 'Recommendation Two',
         deletedAt: null
       }
@@ -139,13 +139,13 @@ describe('TRB Admin Note', () => {
     ).toBeInTheDocument();
   });
 
-  it('Renders category specific data - advice letter', () => {
-    const note = noteAdviceLetter;
+  it('Renders category specific data - guidance letter', () => {
+    const note = noteGuidanceLetter;
     render(<Note note={note} />);
 
     expect(
       screen.getByText(
-        'Advice letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)'
+        'Guidance letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)'
       )
     ).toBeInTheDocument();
   });
@@ -175,14 +175,14 @@ describe('TRB Admin Note', () => {
 
   it('Renders label for removed recommendation', () => {
     const note: TRBAdminNoteFragment = {
-      ...noteAdviceLetter,
+      ...noteGuidanceLetter,
       categorySpecificData: {
-        __typename: 'TRBAdminNoteAdviceLetterCategoryData',
+        __typename: 'TRBAdminNoteGuidanceLetterCategoryData',
         appliesToMeetingSummary: true,
         appliesToNextSteps: false,
         recommendations: [
           {
-            __typename: 'TRBAdviceLetterRecommendation',
+            __typename: 'TRBGuidanceLetterRecommendation',
             title: 'Recommendation One',
             deletedAt: '2023-03-28T13:20:37.852099Z'
           }
@@ -193,7 +193,7 @@ describe('TRB Admin Note', () => {
 
     expect(
       screen.getByText(
-        'Advice letter: Meeting summary, Removed recommendation (Recommendation One)'
+        'Guidance letter: Meeting summary, Removed recommendation (Recommendation One)'
       )
     ).toBeInTheDocument();
   });

@@ -38,7 +38,7 @@ SELECT author_name AS full_name
 FROM notes
 UNION
 
-/* 
+/*
 system_intake_contacts
 system_intake_documents
 system_intake_funding_sources
@@ -100,8 +100,8 @@ test_dates
 trb_admin_notes
 trb_admin_notes_trb_admin_note_recommendations_links
 trb_admin_notes_trb_request_documents_links
-trb_advice_letter_recommendations
-trb_advice_letters
+trb_guidance_letter_recommendations
+trb_guidance_letters
 trb_lead_options
 trb_request
 trb_request_attendees
@@ -114,5 +114,5 @@ user_account
 */
 
 
-) AS full_name 
+) AS full_name
 WHERE full_name IS NOT NULL AND full_name <>'';

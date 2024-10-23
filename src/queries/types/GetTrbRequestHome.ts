@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBFormStatus, TRBAdviceLetterStatus } from "./../../types/graphql-global-types";
+import { TRBFormStatus, TRBGuidanceLetterStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetTrbRequestHome
@@ -12,7 +12,7 @@ import { TRBFormStatus, TRBAdviceLetterStatus } from "./../../types/graphql-glob
 export interface GetTrbRequestHome_trbRequest_taskStatuses {
   __typename: "TRBTaskStatuses";
   formStatus: TRBFormStatus;
-  adviceLetterStatus: TRBAdviceLetterStatus;
+  guidanceLetterStatus: TRBGuidanceLetterStatus;
 }
 
 export interface GetTrbRequestHome_trbRequest_form {
@@ -21,8 +21,8 @@ export interface GetTrbRequestHome_trbRequest_form {
   modifiedAt: Time | null;
 }
 
-export interface GetTrbRequestHome_trbRequest_adviceLetter {
-  __typename: "TRBAdviceLetter";
+export interface GetTrbRequestHome_trbRequest_guidanceLetter {
+  __typename: "TRBGuidanceLetter";
   id: UUID;
   modifiedAt: Time | null;
 }
@@ -49,7 +49,7 @@ export interface GetTrbRequestHome_trbRequest {
   consultMeetingTime: Time | null;
   taskStatuses: GetTrbRequestHome_trbRequest_taskStatuses;
   form: GetTrbRequestHome_trbRequest_form;
-  adviceLetter: GetTrbRequestHome_trbRequest_adviceLetter | null;
+  guidanceLetter: GetTrbRequestHome_trbRequest_guidanceLetter | null;
   trbLeadInfo: GetTrbRequestHome_trbRequest_trbLeadInfo;
   documents: GetTrbRequestHome_trbRequest_documents[];
   adminNotes: GetTrbRequestHome_trbRequest_adminNotes[];

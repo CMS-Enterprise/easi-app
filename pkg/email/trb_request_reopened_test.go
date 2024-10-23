@@ -66,7 +66,7 @@ func (s *EmailTestSuite) TestTRBRequestReopenedEmail() {
 			<div class="no-margin">
 				<p>View this request in EASi:</p>
 				<ul>
-					<li>If you are the initial requester, you may <a href="%s">click here</a> to view the advice letter and your request task list.</li>
+					<li>If you are the initial requester, you may <a href="%s">click here</a> to view the guidance letter and your request task list.</li>
 					<li>TRB team members may <a href="%s">click here</a> to view the request details.</li>
 					<li>Others should contact %s or the TRB for more information about this request.</li>
 				</ul>

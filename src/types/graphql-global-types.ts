@@ -344,31 +344,11 @@ export enum SystemIntakeTRBFollowUp {
  * Represents the category of a single TRB admin note
  */
 export enum TRBAdminNoteCategory {
-  ADVICE_LETTER = "ADVICE_LETTER",
   CONSULT_SESSION = "CONSULT_SESSION",
   GENERAL_REQUEST = "GENERAL_REQUEST",
+  GUIDANCE_LETTER = "GUIDANCE_LETTER",
   INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
   SUPPORTING_DOCUMENTS = "SUPPORTING_DOCUMENTS",
-}
-
-/**
- * Represents the status of the TRB advice letter step
- */
-export enum TRBAdviceLetterStatus {
-  CANNOT_START_YET = "CANNOT_START_YET",
-  COMPLETED = "COMPLETED",
-  IN_PROGRESS = "IN_PROGRESS",
-  READY_FOR_REVIEW = "READY_FOR_REVIEW",
-  READY_TO_START = "READY_TO_START",
-}
-
-/**
- * Represents the status of the TRB advice letter step
- */
-export enum TRBAdviceLetterStatusTaskList {
-  CANNOT_START_YET = "CANNOT_START_YET",
-  COMPLETED = "COMPLETED",
-  IN_REVIEW = "IN_REVIEW",
 }
 
 /**
@@ -442,6 +422,26 @@ export enum TRBFormStatus {
 }
 
 /**
+ * Represents the status of the TRB guidance letter step
+ */
+export enum TRBGuidanceLetterStatus {
+  CANNOT_START_YET = "CANNOT_START_YET",
+  COMPLETED = "COMPLETED",
+  IN_PROGRESS = "IN_PROGRESS",
+  READY_FOR_REVIEW = "READY_FOR_REVIEW",
+  READY_TO_START = "READY_TO_START",
+}
+
+/**
+ * Represents the status of the TRB guidance letter step
+ */
+export enum TRBGuidanceLetterStatusTaskList {
+  CANNOT_START_YET = "CANNOT_START_YET",
+  COMPLETED = "COMPLETED",
+  IN_REVIEW = "IN_REVIEW",
+}
+
+/**
  * Enumeration of the possible statuses of documents uploaded in the TRB workflow
  */
 export enum TRBRequestDocumentStatus {
@@ -456,13 +456,13 @@ export enum TRBRequestState {
 }
 
 export enum TRBRequestStatus {
-  ADVICE_LETTER_IN_REVIEW = "ADVICE_LETTER_IN_REVIEW",
-  ADVICE_LETTER_SENT = "ADVICE_LETTER_SENT",
   CONSULT_COMPLETE = "CONSULT_COMPLETE",
   CONSULT_SCHEDULED = "CONSULT_SCHEDULED",
-  DRAFT_ADVICE_LETTER = "DRAFT_ADVICE_LETTER",
+  DRAFT_GUIDANCE_LETTER = "DRAFT_GUIDANCE_LETTER",
   DRAFT_REQUEST_FORM = "DRAFT_REQUEST_FORM",
   FOLLOW_UP_REQUESTED = "FOLLOW_UP_REQUESTED",
+  GUIDANCE_LETTER_IN_REVIEW = "GUIDANCE_LETTER_IN_REVIEW",
+  GUIDANCE_LETTER_SENT = "GUIDANCE_LETTER_SENT",
   NEW = "NEW",
   READY_FOR_CONSULT = "READY_FOR_CONSULT",
   REQUEST_FORM_COMPLETE = "REQUEST_FORM_COMPLETE",
@@ -569,17 +569,6 @@ export interface CreateSystemIntakeNoteInput {
 }
 
 /**
- * The data needed to create a TRB admin note with the Advice Letter category
- */
-export interface CreateTRBAdminNoteAdviceLetterInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-  appliesToMeetingSummary: boolean;
-  appliesToNextSteps: boolean;
-  recommendationIDs: UUID[];
-}
-
-/**
  * The data needed to create a TRB admin note with the Consult Session category
  */
 export interface CreateTRBAdminNoteConsultSessionInput {
@@ -593,6 +582,17 @@ export interface CreateTRBAdminNoteConsultSessionInput {
 export interface CreateTRBAdminNoteGeneralRequestInput {
   trbRequestId: UUID;
   noteText: HTML;
+}
+
+/**
+ * The data needed to create a TRB admin note with the Guidance Letter category
+ */
+export interface CreateTRBAdminNoteGuidanceLetterInput {
+  trbRequestId: UUID;
+  noteText: HTML;
+  appliesToMeetingSummary: boolean;
+  appliesToNextSteps: boolean;
+  recommendationIDs: UUID[];
 }
 
 /**
@@ -616,9 +616,9 @@ export interface CreateTRBAdminNoteSupportingDocumentsInput {
 }
 
 /**
- * The input required to add a recommendation & links to a TRB advice letter
+ * The input required to add a recommendation & links to a TRB guidance letter
  */
-export interface CreateTRBAdviceLetterRecommendationInput {
+export interface CreateTRBGuidanceLetterRecommendationInput {
   trbRequestId: UUID;
   title: string;
   recommendation: HTML;
@@ -710,9 +710,9 @@ export interface SendReportAProblemEmailInput {
 }
 
 /**
- * The data needed to send a TRB advice letter, including who to notify
+ * The data needed to send a TRB guidance letter, including who to notify
  */
-export interface SendTRBAdviceLetterInput {
+export interface SendTRBGuidanceLetterInput {
   id: UUID;
   copyTrbMailbox: boolean;
   notifyEuaIds: string[];
@@ -1111,9 +1111,9 @@ export interface UpdateSystemIntakeReviewDatesInput {
 }
 
 /**
- * The data needed to update a TRB advice letter
+ * The data needed to update a TRB guidance letter
  */
-export interface UpdateTRBAdviceLetterInput {
+export interface UpdateTRBGuidanceLetterInput {
   trbRequestId: UUID;
   meetingSummary?: HTML | null;
   nextSteps?: HTML | null;
@@ -1122,16 +1122,16 @@ export interface UpdateTRBAdviceLetterInput {
 }
 
 /**
- * The input required to update a recommendation to a TRB advice letter
+ * The input required to update a recommendation to a TRB guidance letter
  */
-export interface UpdateTRBAdviceLetterRecommendationInput {
+export interface UpdateTRBGuidanceLetterRecommendationInput {
   id: UUID;
   title?: string | null;
   recommendation?: HTML | null;
   links?: string[] | null;
 }
 
-export interface UpdateTRBAdviceLetterRecommendationOrderInput {
+export interface UpdateTRBGuidanceLetterRecommendationOrderInput {
   trbRequestId: UUID;
   newOrder: UUID[];
 }
