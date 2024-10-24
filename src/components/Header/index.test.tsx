@@ -2,6 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { render } from '@testing-library/react';
 import { mount, shallow } from 'enzyme';
 
 import easiMockStore from 'utils/testing/easiMockStore';
@@ -28,7 +29,11 @@ describe('The Header component', () => {
   const store = easiMockStore();
 
   it('renders without crashing', () => {
-    shallow(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
   });
 
   describe('When logged in', () => {
