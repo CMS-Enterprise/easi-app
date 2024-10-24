@@ -1,4 +1,5 @@
 import React from 'react';
+import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
@@ -58,10 +59,11 @@ const AddReviewerFromEua = ({
   });
 
   const {
+    control,
     register,
     watch,
-    setValue,
     handleSubmit,
+    resetField,
     formState: { errors, isSubmitted, isDirty }
   } = useEasiForm<GRBReviewerFields>({
     resolver: yupResolver(GRBReviewerSchema),
@@ -81,6 +83,13 @@ const AddReviewerFromEua = ({
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
   const action: GRBReviewFormAction = activeReviewer ? 'edit' : 'add';
+
+  const reviewerIsDuplicate: boolean =
+    action === 'add' &&
+    !!initialGRBReviewers.find(
+      reviewer =>
+        reviewer.userAccount.username === watch('userAccount.username')
+    );
 
   /** Update roles for existing reviewer */
   const updateRoles = ({ userAccount, ...reviewer }: GRBReviewerFields) =>
@@ -130,28 +139,46 @@ const AddReviewerFromEua = ({
           name="userAccount"
           as={<FieldErrorMsg />}
         />
-        <CedarContactSelect
-          {...{ ...register('userAccount'), ref: null }}
-          onChange={contact =>
-            contact?.euaUserId &&
-            setValue(
-              'userAccount',
+        <Controller
+          control={control}
+          name="userAccount"
+          render={({ field: { ref, ...field } }) => (
+            <>
+              <CedarContactSelect
+                {...field}
+                inputRef={ref}
+                onChange={contact =>
+                  contact?.euaUserId
+                    ? field.onChange(
+                        {
+                          username: contact.euaUserId,
+                          commonName: contact.commonName,
+                          email: contact.email || ''
+                        },
+                        { shouldValidate: isSubmitted }
+                      )
+                    : resetField('userAccount')
+                }
+                value={{
+                  euaUserId: field.value.username,
+                  commonName: field.value.commonName,
+                  email: field.value.email
+                }}
+                id="userAccount"
+                ariaDescribedBy="userAccountHelpText"
+                disabled={!!activeReviewer}
+              />
+
               {
-                username: contact.euaUserId,
-                commonName: contact.commonName,
-                email: contact.email || ''
-              },
-              { shouldValidate: isSubmitted }
-            )
-          }
-          value={{
-            euaUserId: watch('userAccount.username'),
-            commonName: watch('userAccount.commonName'),
-            email: watch('userAccount.email')
-          }}
-          id="userAccount"
-          ariaDescribedBy="userAccountHelpText"
-          disabled={!!activeReviewer}
+                // Alert for duplicate reviewer
+                reviewerIsDuplicate && (
+                  <Alert type="warning" slim>
+                    {t('form.duplicateReviewerAlert')}
+                  </Alert>
+                )
+              }
+            </>
+          )}
         />
       </FormGroup>
 
