@@ -104,6 +104,9 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     intake?.updatedAt && formatDateLocal(intake.updatedAt, 'MM/dd/yyyy');
   const archivedAt =
     intake?.archivedAt && formatDateLocal(intake.archivedAt, 'MM/dd/yyyy');
+  const lcidExpiresAt =
+    intake?.lcidExpiresAt &&
+    formatDateLocal(intake.lcidExpiresAt, 'MM/dd/yyyy');
 
   // Translate booleans to yes/no
   const existingFunding = convertBoolToYesNo(intake?.existingFunding);
@@ -130,6 +133,7 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     createdAt,
     submittedAt,
     updatedAt,
-    archivedAt
+    archivedAt,
+    lcidExpiresAt
   });
 };
