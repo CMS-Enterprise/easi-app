@@ -30,7 +30,7 @@ export interface CreateTrbGuidanceLetter_createTRBGuidanceLetter {
   dateSent: Time | null;
   followupPoint: string | null;
   /**
-   * List of recommendations in the order specified by users
+   * List of insights in the order specified by users
    */
   insights: CreateTrbGuidanceLetter_createTRBGuidanceLetter_insights[];
   author: CreateTrbGuidanceLetter_createTRBGuidanceLetter_author;

@@ -30,7 +30,7 @@ export interface TRBGuidanceLetter {
   dateSent: Time | null;
   followupPoint: string | null;
   /**
-   * List of recommendations in the order specified by users
+   * List of insights in the order specified by users
    */
   insights: TRBGuidanceLetter_insights[];
   author: TRBGuidanceLetter_author;

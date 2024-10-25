@@ -37,7 +37,7 @@ export interface GetTrbGuidanceLetter_trbRequest_guidanceLetter {
   dateSent: Time | null;
   followupPoint: string | null;
   /**
-   * List of recommendations in the order specified by users
+   * List of insights in the order specified by users
    */
   insights: GetTrbGuidanceLetter_trbRequest_guidanceLetter_insights[];
   author: GetTrbGuidanceLetter_trbRequest_guidanceLetter_author;

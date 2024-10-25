@@ -9969,7 +9969,7 @@ type TRBAdminNoteConsultSessionCategoryData {
 
 """
 Data specific to admin notes in the Guidance Letter category
-The "insights" property _will_ return deleted insights so that UI can reference the recommendation title
+The "insights" property _will_ return deleted insights so that UI can reference the insight title
 """
 type TRBAdminNoteGuidanceLetterCategoryData {
   appliesToMeetingSummary: Boolean!
@@ -10009,9 +10009,9 @@ type TRBGuidanceLetter {
   dateSent: Time
   followupPoint: String
   """
-  List of recommendations in the order specified by users
+  List of insights in the order specified by users
   """
-  insights: [TRBGuidanceLetterInsight!]! # This query will not return deleted insights -- see pkg/storage/trb_guidance_letter_recommendation.go ` + "`" + `GetTRBGuidanceLetterRecommendationsByTRBRequestID` + "`" + `
+  insights: [TRBGuidanceLetterInsight!]! # This query will not return deleted insights -- see pkg/storage/trb_guidance_letter_insight.go ` + "`" + `GetTRBGuidanceLetterInsightsByTRBRequestID` + "`" + `
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -10101,7 +10101,7 @@ input SendTRBGuidanceLetterInput {
 }
 
 """
-Represents a recommendation and links that have been added to a TRB guidance letter
+Represents an insight and links that have been added to a TRB guidance letter
 """
 type TRBGuidanceLetterInsight {
   id: UUID!

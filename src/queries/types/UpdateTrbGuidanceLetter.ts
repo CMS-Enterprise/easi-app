@@ -32,7 +32,7 @@ export interface UpdateTrbGuidanceLetter_updateTRBGuidanceLetter {
   dateSent: Time | null;
   followupPoint: string | null;
   /**
-   * List of recommendations in the order specified by users
+   * List of insights in the order specified by users
    */
   insights: UpdateTrbGuidanceLetter_updateTRBGuidanceLetter_insights[];
   author: UpdateTrbGuidanceLetter_updateTRBGuidanceLetter_author;

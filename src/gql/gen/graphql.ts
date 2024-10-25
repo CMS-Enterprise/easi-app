@@ -2563,7 +2563,7 @@ export type TRBAdminNoteGeneralRequestCategoryData = {
 
 /**
  * Data specific to admin notes in the Guidance Letter category
- * The "insights" property _will_ return deleted insights so that UI can reference the recommendation title
+ * The "insights" property _will_ return deleted insights so that UI can reference the insight title
  */
 export type TRBAdminNoteGuidanceLetterCategoryData = {
   __typename: 'TRBAdminNoteGuidanceLetterCategoryData';
@@ -2669,7 +2669,7 @@ export type TRBGuidanceLetter = {
   dateSent?: Maybe<Scalars['Time']['output']>;
   followupPoint?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
-  /** List of recommendations in the order specified by users */
+  /** List of insights in the order specified by users */
   insights: Array<TRBGuidanceLetterInsight>;
   isFollowupRecommended?: Maybe<Scalars['Boolean']['output']>;
   meetingSummary?: Maybe<Scalars['HTML']['output']>;
@@ -2679,7 +2679,7 @@ export type TRBGuidanceLetter = {
   trbRequestId: Scalars['UUID']['output'];
 };
 
-/** Represents a recommendation and links that have been added to a TRB guidance letter */
+/** Represents an insight and links that have been added to a TRB guidance letter */
 export type TRBGuidanceLetterInsight = {
   __typename: 'TRBGuidanceLetterInsight';
   author: UserInfo;

@@ -797,7 +797,7 @@ type TRBAdminNoteGeneralRequestCategoryData struct {
 func (TRBAdminNoteGeneralRequestCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data specific to admin notes in the Guidance Letter category
-// The "insights" property _will_ return deleted insights so that UI can reference the recommendation title
+// The "insights" property _will_ return deleted insights so that UI can reference the insight title
 type TRBAdminNoteGuidanceLetterCategoryData struct {
 	AppliesToMeetingSummary bool                        `json:"appliesToMeetingSummary"`
 	AppliesToNextSteps      bool                        `json:"appliesToNextSteps"`

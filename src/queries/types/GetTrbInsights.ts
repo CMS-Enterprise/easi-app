@@ -18,7 +18,7 @@ export interface GetTrbInsights_trbRequest_guidanceLetter_insights {
 export interface GetTrbInsights_trbRequest_guidanceLetter {
   __typename: "TRBGuidanceLetter";
   /**
-   * List of recommendations in the order specified by users
+   * List of insights in the order specified by users
    */
   insights: GetTrbInsights_trbRequest_guidanceLetter_insights[];
 }
