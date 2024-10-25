@@ -117,13 +117,13 @@ const businessCase = {
   confirmRemoveAlternativeB: 'Are you sure you want to remove Alternative B?',
   grtFeedback: {
     header: 'Recommendations',
-    grbSubhead: 'GRT recommendations to the GRB',
+    grbSubhead: 'GRT insights to the GRB',
     dateSRHelpText: 'Feedback from the meeting on {{date}}',
     grbHelpText:
-      'These are the Governance Review Team recommendations for the Governance Review Board.',
-    businessOwnerSubhead: 'GRT recommendations to the Business Owner',
+      'These are the Governance Review Team insights for the Governance Review Board.',
+    businessOwnerSubhead: 'GRT insights to the Business Owner',
     businessOwnerHelpText:
-      'These are the Governance Review Team recommendations for the Business Owner.'
+      'These are the Governance Review Team insights for the Business Owner.'
   },
   lifecycleCost: {
     heading: 'Estimated lifecycle cost',

@@ -421,7 +421,7 @@ export enum TRBFormStatus {
   READY_TO_START = "READY_TO_START",
 }
 
-export enum TRBGuidanceLetterRecommendationCategory {
+export enum TRBGuidanceLetterInsightCategory {
   CONSIDERATION = "CONSIDERATION",
   RECOMMENDATION = "RECOMMENDATION",
   REQUIREMENT = "REQUIREMENT",
@@ -598,7 +598,7 @@ export interface CreateTRBAdminNoteGuidanceLetterInput {
   noteText: HTML;
   appliesToMeetingSummary: boolean;
   appliesToNextSteps: boolean;
-  recommendationIDs: UUID[];
+  insightIDs: UUID[];
 }
 
 /**
@@ -622,14 +622,14 @@ export interface CreateTRBAdminNoteSupportingDocumentsInput {
 }
 
 /**
- * The input required to add a recommendation & links to a TRB guidance letter
+ * The input required to add an insight & links to a TRB guidance letter
  */
-export interface CreateTRBGuidanceLetterRecommendationInput {
+export interface CreateTRBGuidanceLetterInsightInput {
   trbRequestId: UUID;
   title: string;
-  recommendation: HTML;
+  insight: HTML;
   links: string[];
-  category: TRBGuidanceLetterRecommendationCategory;
+  category: TRBGuidanceLetterInsightCategory;
 }
 
 /**
@@ -1129,19 +1129,19 @@ export interface UpdateTRBGuidanceLetterInput {
 }
 
 /**
- * The input required to update a recommendation to a TRB guidance letter
+ * The input required to update an insight to a TRB guidance letter
  */
-export interface UpdateTRBGuidanceLetterRecommendationInput {
+export interface UpdateTRBGuidanceLetterInsightInput {
   id: UUID;
   title?: string | null;
-  recommendation?: HTML | null;
+  insight?: HTML | null;
   links?: string[] | null;
 }
 
-export interface UpdateTRBGuidanceLetterRecommendationOrderInput {
+export interface UpdateTRBGuidanceLetterInsightOrderInput {
   trbRequestId: UUID;
   newOrder: UUID[];
-  category: TRBGuidanceLetterRecommendationCategory;
+  category: TRBGuidanceLetterInsightCategory;
 }
 
 /**

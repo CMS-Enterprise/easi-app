@@ -6,7 +6,7 @@ import i18next from 'i18next';
 
 import GetTrbPublicGuidanceLetterQuery from 'queries/GetTrbPublicGuidanceLetterQuery';
 import {
-  TRBGuidanceLetterRecommendationCategory,
+  TRBGuidanceLetterInsightCategory,
   TRBGuidanceLetterStatus
 } from 'types/graphql-global-types';
 
@@ -45,8 +45,8 @@ describe('Trb Public Guidance Letter', () => {
             title: 'Restart your computer',
             recommendation: 'I recommend you restart your computer',
             links: ['google.com', 'askjeeves.com'],
-            category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
-            __typename: 'TRBGuidanceLetterRecommendation'
+            category: TRBGuidanceLetterInsightCategory.RECOMMENDATION,
+            __typename: 'TRBGuidanceLetterInsight'
           }
         ],
         author: {

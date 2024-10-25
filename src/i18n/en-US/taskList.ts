@@ -52,12 +52,12 @@ const taskList = {
   feedback: {
     heading: 'Recommendations',
     grb: {
-      heading: 'GRT recommendations to the GRB',
-      help: 'These are the Governance Reiew Team recommendations for the Governance Review Board'
+      heading: 'GRT insights to the GRB',
+      help: 'These are the Governance Reiew Team insights for the Governance Review Board'
     },
     businessOwner: {
-      heading: 'GRT recommendations to the Business Owner',
-      help: 'These are the Governance Review Team recommendations for the Business Owner'
+      heading: 'GRT insights to the Business Owner',
+      help: 'These are the Governance Review Team insights for the Business Owner'
     },
     descriptiveDate: 'Feedback given on {{date}}',
     pdfTitle: 'Feedback for {{requestName}}'
@@ -116,7 +116,7 @@ const taskList = {
   attendGRB: {
     heading: 'Attend the GRB meeting',
     description:
-      'The Governance Review Board will discuss and make decisions based on the Business Case and recommendations from the Review Team.'
+      'The Governance Review Board will discuss and make decisions based on the Business Case and insights from the Review Team.'
   },
   decisionNextSteps: {
     heading: 'Decision and next steps',

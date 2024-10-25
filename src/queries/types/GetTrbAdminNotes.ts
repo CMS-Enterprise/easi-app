@@ -37,7 +37,7 @@ export interface GetTrbAdminNotes_trbRequest_adminNotes_categorySpecificData_TRB
 }
 
 export interface GetTrbAdminNotes_trbRequest_adminNotes_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData_insights {
-  __typename: "TRBGuidanceLetterRecommendation";
+  __typename: "TRBGuidanceLetterInsight";
   title: string;
   deletedAt: Time | null;
 }

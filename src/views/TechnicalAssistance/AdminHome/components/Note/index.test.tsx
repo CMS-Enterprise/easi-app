@@ -70,12 +70,12 @@ const noteGuidanceLetter: TRBAdminNoteFragment = {
     appliesToNextSteps: false,
     insights: [
       {
-        __typename: 'TRBGuidanceLetterRecommendation',
+        __typename: 'TRBGuidanceLetterInsight',
         title: 'Recommendation One',
         deletedAt: null
       },
       {
-        __typename: 'TRBGuidanceLetterRecommendation',
+        __typename: 'TRBGuidanceLetterInsight',
         title: 'Recommendation Two',
         deletedAt: null
       }
@@ -182,7 +182,7 @@ describe('TRB Admin Note', () => {
         appliesToNextSteps: false,
         insights: [
           {
-            __typename: 'TRBGuidanceLetterRecommendation',
+            __typename: 'TRBGuidanceLetterInsight',
             title: 'Recommendation One',
             deletedAt: '2023-03-28T13:20:37.852099Z'
           }

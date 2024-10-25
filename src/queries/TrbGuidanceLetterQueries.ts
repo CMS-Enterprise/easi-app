@@ -1,17 +1,17 @@
 import { gql } from '@apollo/client';
 
-const TRBRecommendation = gql`
-  fragment TRBRecommendation on TRBGuidanceLetterRecommendation {
+const TRBInsight = gql`
+  fragment TRBInsight on TRBGuidanceLetterInsight {
     id
     title
-    recommendation
+    insight
     links
   }
 `;
 
 /** Guidance letter fields fragment */
 export const TRBGuidanceLetter = gql`
-  ${TRBRecommendation}
+  ${TRBInsight}
   fragment TRBGuidanceLetter on TRBGuidanceLetter {
     id
     meetingSummary
@@ -20,7 +20,7 @@ export const TRBGuidanceLetter = gql`
     dateSent
     followupPoint
     insights {
-      ...TRBRecommendation
+      ...TRBInsight
     }
     author {
       euaUserId
@@ -71,62 +71,58 @@ export const UpdateTrbGuidanceLetterQuery = gql`
   }
 `;
 
-/** Get guidance letter recommendations */
-export const GetTrbRecommendationsQuery = gql`
-  ${TRBRecommendation}
-  query GetTrbRecommendations($id: UUID!) {
+/** Get guidance letter insights */
+export const GetTrbInsightsQuery = gql`
+  ${TRBInsight}
+  query GetTrbInsights($id: UUID!) {
     trbRequest(id: $id) {
       guidanceLetter {
         insights {
-          ...TRBRecommendation
+          ...TRBInsight
         }
       }
     }
   }
 `;
 
-/** Create guidance letter recommendation */
-export const CreateTrbRecommendationQuery = gql`
-  ${TRBRecommendation}
-  mutation CreateTRBRecommendation(
-    $input: CreateTRBGuidanceLetterRecommendationInput!
-  ) {
-    createTRBGuidanceLetterRecommendation(input: $input) {
-      ...TRBRecommendation
+/** Create guidance letter insight */
+export const CreateTrbInsightQuery = gql`
+  ${TRBInsight}
+  mutation CreateTRBInsight($input: CreateTRBGuidanceLetterInsightInput!) {
+    createTRBGuidanceLetterInsight(input: $input) {
+      ...TRBInsight
     }
   }
 `;
 
-/** Update guidance letter recommendation */
-export const UpdateTrbRecommendationQuery = gql`
-  ${TRBRecommendation}
-  mutation UpdateTRBRecommendation(
-    $input: UpdateTRBGuidanceLetterRecommendationInput!
-  ) {
-    updateTRBGuidanceLetterRecommendation(input: $input) {
-      ...TRBRecommendation
+/** Update guidance letter insight */
+export const UpdateTrbInsightQuery = gql`
+  ${TRBInsight}
+  mutation UpdateTRBInsight($input: UpdateTRBGuidanceLetterInsightInput!) {
+    updateTRBGuidanceLetterInsight(input: $input) {
+      ...TRBInsight
     }
   }
 `;
 
 /** Reorder guidance letters */
-export const UpdateTrbRecommendationOrderQuery = gql`
-  ${TRBRecommendation}
-  mutation UpdateTrbRecommendationOrder(
-    $input: UpdateTRBGuidanceLetterRecommendationOrderInput!
+export const UpdateTrbInsightOrderQuery = gql`
+  ${TRBInsight}
+  mutation UpdateTrbInsightOrder(
+    $input: UpdateTRBGuidanceLetterInsightOrderInput!
   ) {
-    updateTRBGuidanceLetterRecommendationOrder(input: $input) {
-      ...TRBRecommendation
+    updateTRBGuidanceLetterInsightOrder(input: $input) {
+      ...TRBInsight
     }
   }
 `;
 
-/** Delete guidance letter recommendation */
-export const DeleteTrbRecommendationQuery = gql`
-  ${TRBRecommendation}
-  mutation DeleteTRBRecommendation($id: UUID!) {
-    deleteTRBGuidanceLetterRecommendation(id: $id) {
-      ...TRBRecommendation
+/** Delete guidance letter insight */
+export const DeleteTrbInsightQuery = gql`
+  ${TRBInsight}
+  mutation DeleteTRBInsight($id: UUID!) {
+    deleteTRBGuidanceLetterInsight(id: $id) {
+      ...TRBInsight
     }
   }
 `;

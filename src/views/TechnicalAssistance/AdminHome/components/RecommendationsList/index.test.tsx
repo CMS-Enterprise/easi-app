@@ -39,7 +39,7 @@ describe('TRB guidance and insights list', () => {
       })
     );
 
-    expect(recommendation.getByText(insights[0].recommendation));
+    expect(recommendation.getByText(insights[0].insight));
 
     const links = recommendation.getAllByRole('link');
     expect(links.length).toEqual(insights[0].links.length);
@@ -48,7 +48,7 @@ describe('TRB guidance and insights list', () => {
   it('renders editable view', () => {
     const recommendation = renderRecommendation(0);
 
-    // Reorder recommendations info alert
+    // Reorder insights info alert
     expect(
       screen.getByText(
         i18next.t<string>(

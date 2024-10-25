@@ -113,20 +113,20 @@ func CreateTRBAdminNoteConsultSession(ctx context.Context, store *storage.Store,
 }
 
 func CreateTRBAdminNoteGuidanceLetter(ctx context.Context, store *storage.Store, input models.CreateTRBAdminNoteGuidanceLetterInput) (*models.TRBAdminNote, error) {
-	// it's valid for input.RecommendationIDs to be empty; see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
+	// it's valid for input.InsightIDs to be empty; see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
 
-	// check that the recommendations belong to the same TRB request
-	// database constraints will prevent links being created to recommendations on a different request
+	// check that the insights belong to the same TRB request
+	// database constraints will prevent links being created to insights on a different request
 	// but if we don't check, we'll still create an (invalid) admin note record
 
-	allRecommendationsOnRequest, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, input.TrbRequestID)
+	allRecommendationsOnRequest, err := store.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, input.TrbRequestID)
 	if err != nil {
 		return nil, err
 	}
 
-	if !models.ContainsAllIDs(allRecommendationsOnRequest, input.RecommendationIDs) {
+	if !models.ContainsAllIDs(allRecommendationsOnRequest, input.InsightIDs) {
 		return nil, &apperrors.BadRequestError{
-			Err: errors.New("all recommendations referenced in admin note must belong to the same TRB request as the admin note"),
+			Err: errors.New("all insights referenced in admin note must belong to the same TRB request as the admin note"),
 		}
 	}
 
@@ -140,7 +140,7 @@ func CreateTRBAdminNoteGuidanceLetter(ctx context.Context, store *storage.Store,
 	}
 	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
 
-	// ideally, we'd create the admin note and any links to recommendations in a single transaction, but we don't currently have that capability
+	// ideally, we'd create the admin note and any links to insights in a single transaction, but we don't currently have that capability
 	// see Note [Database calls from resolvers aren't atomic]
 
 	// create the admin note itself (and get the result, with the generated ID)
@@ -149,9 +149,9 @@ func CreateTRBAdminNoteGuidanceLetter(ctx context.Context, store *storage.Store,
 		return nil, err
 	}
 
-	// create links to recommendations referenced the by the admin note (if any are present)
-	if len(input.RecommendationIDs) > 0 {
-		_, err = store.CreateTRBAdminNoteTRBRecommendationLinks(ctx, input.TrbRequestID, createdNote.ID, input.RecommendationIDs)
+	// create links to insights referenced the by the admin note (if any are present)
+	if len(input.InsightIDs) > 0 {
+		_, err = store.CreateTRBAdminNoteTRBInsightLinks(ctx, input.TrbRequestID, createdNote.ID, input.InsightIDs)
 		if err != nil {
 			return nil, err
 		}
@@ -214,7 +214,7 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 			PlaceholderField: nil,
 		}, nil
 	case models.TRBAdminNoteCategoryGuidanceLetter:
-		recommendations, err := store.GetTRBRecommendationsByAdminNoteID(ctx, note.ID)
+		recommendations, err := store.GetTRBInsightsByAdminNoteID(ctx, note.ID)
 		if err != nil {
 			return nil, err
 		}

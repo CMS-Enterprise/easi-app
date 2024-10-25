@@ -9,13 +9,13 @@ import { Button } from '@trussworks/react-uswds';
 import { Alert } from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import {
-  DeleteTrbRecommendationQuery,
+  DeleteTrbInsightQuery,
   GetTrbGuidanceLetterQuery
 } from 'queries/TrbGuidanceLetterQueries';
 import {
-  DeleteTRBRecommendation,
-  DeleteTRBRecommendationVariables
-} from 'queries/types/DeleteTRBRecommendation';
+  DeleteTRBInsight,
+  DeleteTRBInsightVariables
+} from 'queries/types/DeleteTRBInsight';
 import {
   GuidanceLetterRecommendationFields,
   StepComponentProps
@@ -46,7 +46,7 @@ const Recommendations = ({
   const { path, url } = useRouteMatch();
   const history = useHistory();
 
-  /** Whether recommendations have been added to the request */
+  /** Whether insights have been added to the request */
   const hasRecommendations: boolean = insights.length > 0;
 
   const formMethods = useForm<GuidanceLetterRecommendationFields>({
@@ -56,9 +56,9 @@ const Recommendations = ({
   const { reset } = formMethods;
 
   const [remove, { loading }] = useMutation<
-    DeleteTRBRecommendation,
-    DeleteTRBRecommendationVariables
-  >(DeleteTrbRecommendationQuery, {
+    DeleteTRBInsight,
+    DeleteTRBInsightVariables
+  >(DeleteTrbInsightQuery, {
     refetchQueries: [
       {
         query: GetTrbGuidanceLetterQuery,
@@ -108,7 +108,7 @@ const Recommendations = ({
           <Divider className="margin-top-2 margin-bottom-4" />
 
           {
-            /* No recommendations message */
+            /* No insights message */
             !hasRecommendations ? (
               <Alert type="info" slim>
                 {t('guidanceLetterForm.noGuidance')}

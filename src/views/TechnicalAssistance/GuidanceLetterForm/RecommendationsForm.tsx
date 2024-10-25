@@ -17,13 +17,13 @@ import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import {
-  CreateTrbRecommendationQuery,
+  CreateTrbInsightQuery,
   GetTrbGuidanceLetterQuery,
-  UpdateTrbRecommendationQuery
+  UpdateTrbInsightQuery
 } from 'queries/TrbGuidanceLetterQueries';
 import {
-  CreateTRBGuidanceLetterRecommendationInput,
-  UpdateTRBGuidanceLetterRecommendationInput
+  CreateTRBGuidanceLetterInsightInput,
+  UpdateTRBGuidanceLetterInsightInput
 } from 'types/graphql-global-types';
 import {
   FormAlertObject,
@@ -62,12 +62,12 @@ const RecommendationsForm = ({
     formState: { isSubmitting, isDirty }
   } = useFormContext<GuidanceLetterRecommendationFields>();
 
-  const [create] = useMutation<CreateTRBGuidanceLetterRecommendationInput>(
-    CreateTrbRecommendationQuery
+  const [create] = useMutation<CreateTRBGuidanceLetterInsightInput>(
+    CreateTrbInsightQuery
   );
 
-  const [update] = useMutation<UpdateTRBGuidanceLetterRecommendationInput>(
-    UpdateTrbRecommendationQuery
+  const [update] = useMutation<UpdateTRBGuidanceLetterInsightInput>(
+    UpdateTrbInsightQuery
   );
 
   const returnLink = useMemo(

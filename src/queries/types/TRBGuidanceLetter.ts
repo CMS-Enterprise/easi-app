@@ -8,10 +8,10 @@
 // ====================================================
 
 export interface TRBGuidanceLetter_insights {
-  __typename: "TRBGuidanceLetterRecommendation";
+  __typename: "TRBGuidanceLetterInsight";
   id: UUID;
   title: string;
-  recommendation: HTML;
+  insight: HTML;
   links: string[];
 }
 

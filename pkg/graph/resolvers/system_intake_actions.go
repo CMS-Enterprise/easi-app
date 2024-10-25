@@ -48,7 +48,7 @@ func ProgressIntake(
 		return nil, err
 	}
 
-	// save intake, action, feedback, recommendations, admin note
+	// save intake, action, feedback, insights, admin note
 	// see Note [Database calls from resolvers aren't atomic]
 
 	errGroup := new(errgroup.Group)
@@ -109,7 +109,7 @@ func ProgressIntake(
 		})
 	}
 
-	// save feedback/recommendations for GRB
+	// save feedback/insights for GRB
 	if input.GrbRecommendations != nil {
 		errGroup.Go(func() error {
 			feedbackForGRB := &models.GovernanceRequestFeedback{

@@ -6,33 +6,33 @@ import classNames from 'classnames';
 
 import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
-import { UpdateTrbRecommendationOrderQuery } from 'queries/TrbGuidanceLetterQueries';
-import { TRBRecommendation } from 'queries/types/TRBRecommendation';
+import { UpdateTrbInsightOrderQuery } from 'queries/TrbGuidanceLetterQueries';
+import { TRBInsight } from 'queries/types/TRBInsight';
 import {
-  UpdateTrbRecommendationOrder,
-  UpdateTrbRecommendationOrderVariables
-} from 'queries/types/UpdateTrbRecommendationOrder';
-import { TRBGuidanceLetterRecommendationCategory } from 'types/graphql-global-types';
+  UpdateTrbInsightOrder,
+  UpdateTrbInsightOrderVariables
+} from 'queries/types/UpdateTrbInsightOrder';
+import { TRBGuidanceLetterInsightCategory } from 'types/graphql-global-types';
 
 import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
 
 import RecommendationLinks from './RecommendationLinks';
 
 type RecommendationsListProps = {
-  recommendations: TRBRecommendation[];
+  recommendations: TRBInsight[];
   trbRequestId: string;
   /** Optional function to set error message if order mutation fails */
   setReorderError?: (error: string | null) => void;
   /** If false, hides edit/remove buttons and reorder controls */
   editable?: boolean;
-  edit?: (recommendation: TRBRecommendation) => void;
-  remove?: (recommendation: TRBRecommendation) => void;
+  edit?: (recommendation: TRBInsight) => void;
+  remove?: (recommendation: TRBInsight) => void;
   className?: string;
 };
 
 /**
- * Displays list of TRB guidance letter recommendations
- * with optional buttons to edit, remove, and order recommendations
+ * Displays list of TRB guidance letter insights
+ * with optional buttons to edit, remove, and order insights
  */
 export default function RecommendationsList({
   recommendations,
@@ -46,18 +46,18 @@ export default function RecommendationsList({
   const { t } = useTranslation('technicalAssistance');
 
   const [recommendationToRemove, setRecommendationToRemove] =
-    useState<TRBRecommendation | null>(null);
+    useState<TRBInsight | null>(null);
 
   const [updateOrder] = useMutation<
-    UpdateTrbRecommendationOrder,
-    UpdateTrbRecommendationOrderVariables
-  >(UpdateTrbRecommendationOrderQuery, {
+    UpdateTrbInsightOrder,
+    UpdateTrbInsightOrderVariables
+  >(UpdateTrbInsightOrderQuery, {
     refetchQueries: ['GetTrbGuidanceLetter']
   });
 
   const enableReorderControls: boolean = editable && recommendations.length > 1;
 
-  /** Sort recommendations and execute updateOrder mutation */
+  /** Sort insights and execute updateOrder mutation */
   const sort = (id: string, newIndex: number) => {
     /** Updated sort order array */
     const newOrder: string[] = recommendations
@@ -74,7 +74,7 @@ export default function RecommendationsList({
         input: {
           trbRequestId,
           newOrder,
-          category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
+          category: TRBGuidanceLetterInsightCategory.RECOMMENDATION
         }
       }
     }).catch(() => setReorderError?.(t('guidanceLetterForm.reorderError')));
@@ -114,12 +114,7 @@ export default function RecommendationsList({
 
       <ul className="usa-list usa-list--unstyled">
         {recommendations.map((recommendation, index) => {
-          const {
-            title,
-            id,
-            links,
-            recommendation: description
-          } = recommendation;
+          const { title, id, links, insight: description } = recommendation;
 
           return (
             <li

@@ -37,7 +37,7 @@ export interface CreateTRBAdminNoteInitialRequestForm_createTRBAdminNoteInitialR
 }
 
 export interface CreateTRBAdminNoteInitialRequestForm_createTRBAdminNoteInitialRequestForm_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData_insights {
-  __typename: "TRBGuidanceLetterRecommendation";
+  __typename: "TRBGuidanceLetterInsight";
   title: string;
   deletedAt: Time | null;
 }

@@ -242,7 +242,7 @@ const action = {
     feedbackLabel: 'This email will be sent to recipients',
     nextStepsLabel: 'Next steps',
     nextStepsHelpText:
-      'Provide the team with recommendations on how best to continue the process and stay on track with their project. For example “start your ATO” or “complete acquisition planning”.',
+      'Provide the team with insights on how best to continue the process and stay on track with their project. For example “start your ATO” or “complete acquisition planning”.',
     scopeLabel: 'Scope of Life Cycle ID',
     scopeHelpText:
       'Tell the requester what is covered by this Life Cycle ID and what work it limits the project team to.',
@@ -363,7 +363,7 @@ const action = {
     scopeHelpText:
       'Tell the Requester what is covered by this Life Cycle ID and what work it limits the project team to. This information will be included in your email to the Requester.',
     nextStepsHelpText:
-      'Provide the Requester with some recommendations on how to continue their process. For example, “Begin your ATO” or “Update your System Profile”. This will help the requester stay on track after they receive their Life Cycle ID. This information will be included in your email to the Requester.',
+      'Provide the Requester with some insights on how to continue their process. For example, “Begin your ATO” or “Update your System Profile”. This will help the requester stay on track after they receive their Life Cycle ID. This information will be included in your email to the Requester.',
     costBaselineHelpText:
       'Enter the current cost baseline for the project for the first two planned fisical years of the project. This information will be included in your email to the Requester.',
     submissionInfo:
@@ -397,7 +397,7 @@ const action = {
       'If there is any extra feedback you would like to give to the requester as they progress to the next step, input that feedback here. This includes any feedback from the GRT for the requester.',
     grbRecommendations: 'Recommendations for the GRB (optional)',
     grbRecommendationsHelpText:
-      'Add any extra context or recommendations that you would like the Governance Review Board (GRB) to consider as a part of their evaluation of this project. The requester will be able to see these recommendations.',
+      'Add any extra context or insights that you would like the Governance Review Board (GRB) to consider as a part of their evaluation of this project. The requester will be able to see these insights.',
     summaryBoxHeading: 'Steps of the IT Governance process'
   },
   notItGovRequest: {
@@ -457,7 +457,7 @@ const action = {
   grbRecommendations: {
     recommendationLabel: 'GRT Recommendations to the GRB',
     recommendationHelpText:
-      'These are the Governance Review Team recommendations for the Governance Review Board.'
+      'These are the Governance Review Team insights for the Governance Review Board.'
   },
   emailRecipients: {
     email: 'Email',

@@ -53,7 +53,7 @@ const governanceOverview = {
     {
       heading: 'Attend the Governance Review Board Meeting',
       content:
-        'Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.',
+        'Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any insights from the Governance Review Team.',
       link: {
         text: 'Prepare for the GRB meeting (opens in new tab)',
         path: '/help/it-governance/prepare-for-grb'

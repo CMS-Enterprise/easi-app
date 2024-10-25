@@ -7,14 +7,14 @@ import { Button } from '@trussworks/react-uswds';
 import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import {
-  DeleteTrbRecommendationQuery,
+  DeleteTrbInsightQuery,
   GetTrbGuidanceLetterQuery,
   RequestReviewForTRBGuidanceLetterQuery
 } from 'queries/TrbGuidanceLetterQueries';
 import {
-  DeleteTRBRecommendation,
-  DeleteTRBRecommendationVariables
-} from 'queries/types/DeleteTRBRecommendation';
+  DeleteTRBInsight,
+  DeleteTRBInsightVariables
+} from 'queries/types/DeleteTRBInsight';
 import {
   RequestReviewForTRBGuidanceLetter,
   RequestReviewForTRBGuidanceLetterVariables
@@ -46,19 +46,19 @@ const InternalReview = ({
     }
   });
 
-  const [remove] = useMutation<
-    DeleteTRBRecommendation,
-    DeleteTRBRecommendationVariables
-  >(DeleteTrbRecommendationQuery, {
-    refetchQueries: [
-      {
-        query: GetTrbGuidanceLetterQuery,
-        variables: {
-          id: trbRequestId
+  const [remove] = useMutation<DeleteTRBInsight, DeleteTRBInsightVariables>(
+    DeleteTrbInsightQuery,
+    {
+      refetchQueries: [
+        {
+          query: GetTrbGuidanceLetterQuery,
+          variables: {
+            id: trbRequestId
+          }
         }
-      }
-    ]
-  });
+      ]
+    }
+  );
 
   useEffect(() => {
     setIsStepSubmitting(isSubmitting);

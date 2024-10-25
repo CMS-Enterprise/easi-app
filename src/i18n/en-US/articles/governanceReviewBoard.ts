@@ -32,7 +32,7 @@ const governanceReviewBoard = {
 
     whatIsIt: {
       title: 'What is the Governance Review Board?',
-      body: 'The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.',
+      body: 'The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding insights to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.',
 
       items: [
         'At the meeting, you will talk through your business case with the board members and how the approval of your project will help benefit CMS Programs.',

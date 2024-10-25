@@ -44,7 +44,7 @@ type TRBAdminNote struct {
 	// Guidance Letter
 	AppliesToMeetingSummary null.Bool `json:"appliesToMeetingSummary" db:"applies_to_meeting_summary"`
 	AppliesToNextSteps      null.Bool `json:"appliesToNextSteps" db:"applies_to_next_steps"`
-	// the list of recommendations in the GQL schema is handled by a many-to-many link table with a separate model
+	// the list of insights in the GQL schema is handled by a many-to-many link table with a separate model
 }
 
 func (n TRBAdminNote) GetMappingKey() uuid.UUID {

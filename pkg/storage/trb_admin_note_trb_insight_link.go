@@ -12,22 +12,22 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// CreateTRBAdminNoteTRBRecommendationLinks creates multiple link records relating a single TRB admin note to all TRB guidance letter recommendations it references
-func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
+// CreateTRBAdminNoteTRBInsightLinks creates multiple link records relating a single TRB admin note to all TRB guidance letter insights it references
+func (s *Store) CreateTRBAdminNoteTRBInsightLinks(
 	ctx context.Context,
 	trbRequestID uuid.UUID,
 	trbAdminNoteID uuid.UUID,
-	trbGuidanceLetterRecommendationIDs []uuid.UUID,
-) ([]*models.TRBAdminNoteTRBGuidanceLetterRecommendationLink, error) {
+	trbGuidanceLetterInsightIDs []uuid.UUID,
+) ([]*models.TRBAdminNoteTRBGuidanceLetterInsightLink, error) {
 	creatingUserEUAID := appcontext.Principal(ctx).ID()
 
-	links := []*models.TRBAdminNoteTRBGuidanceLetterRecommendationLink{}
+	links := []*models.TRBAdminNoteTRBGuidanceLetterInsightLink{}
 
-	for _, recommendationID := range trbGuidanceLetterRecommendationIDs {
-		link := models.TRBAdminNoteTRBGuidanceLetterRecommendationLink{
-			TRBRequestID:                      trbRequestID,
-			TRBAdminNoteID:                    trbAdminNoteID,
-			TRBGuidanceLetterRecommendationID: recommendationID,
+	for _, insightID := range trbGuidanceLetterInsightIDs {
+		link := models.TRBAdminNoteTRBGuidanceLetterInsightLink{
+			TRBRequestID:               trbRequestID,
+			TRBAdminNoteID:             trbAdminNoteID,
+			TRBGuidanceLetterInsightID: insightID,
 		}
 		link.ID = uuid.New()
 		link.CreatedBy = creatingUserEUAID
@@ -35,7 +35,7 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 		links = append(links, &link)
 	}
 
-	const trbAdminNoteRecommendationLinkCreateSQL = `
+	const trbAdminNoteInsightLinkCreateSQL = `
 		INSERT INTO trb_admin_notes_trb_admin_note_recommendations_links (
 			id,
 			trb_request_id,
@@ -53,10 +53,10 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 
 	// insert all links and return the created rows immediately
 	// see Note [Use NamedQuery to insert multiple records]
-	createdLinkRows, err := s.db.NamedQuery(trbAdminNoteRecommendationLinkCreateSQL, links)
+	createdLinkRows, err := s.db.NamedQuery(trbAdminNoteInsightLinkCreateSQL, links)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to create links between TRB admin note and TRB guidance letter recommendations with error %s", err),
+			fmt.Sprintf("Failed to create links between TRB admin note and TRB guidance letter insights with error %s", err),
 			zap.Error(err),
 			zap.String("user", creatingUserEUAID),
 			zap.String("trbAdminNoteID", trbAdminNoteID.String()),
@@ -66,13 +66,13 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 	defer createdLinkRows.Close()
 
 	// loop through the sqlx.Rows value returned from NamedQuery(), scan the results back into structs
-	createdLinks := []*models.TRBAdminNoteTRBGuidanceLetterRecommendationLink{}
+	createdLinks := []*models.TRBAdminNoteTRBGuidanceLetterInsightLink{}
 	for createdLinkRows.Next() {
-		var createdLink models.TRBAdminNoteTRBGuidanceLetterRecommendationLink
+		var createdLink models.TRBAdminNoteTRBGuidanceLetterInsightLink
 		err = createdLinkRows.StructScan(&createdLink)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(
-				fmt.Sprintf("Failed to read results from creating links between TRB admin note and TRB guidance letter recommendations with error %s", err),
+				fmt.Sprintf("Failed to read results from creating links between TRB admin note and TRB guidance letter insights with error %s", err),
 				zap.Error(err),
 				zap.String("user", creatingUserEUAID),
 				zap.String("trbAdminNoteID", trbAdminNoteID.String()),
@@ -86,11 +86,11 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 	return createdLinks, nil
 }
 
-// GetTRBRecommendationsByAdminNoteID fetches all TRB guidance letter documents linked to a TRB admin note
-// This function specifically fetches all recommendations (even deleted ones), as this function is called by the resolver for TRB Admin Notes,
-// which need to display previously deleted recommendation titles
-func (s *Store) GetTRBRecommendationsByAdminNoteID(ctx context.Context, adminNoteID uuid.UUID) ([]*models.TRBGuidanceLetterRecommendation, error) {
-	const trbRequestRecommendationsGetByAdminNoteIDSQL = `
+// GetTRBInsightsByAdminNoteID fetches all TRB guidance letter documents linked to a TRB admin note
+// This function specifically fetches all insights (even deleted ones), as this function is called by the resolver for TRB Admin Notes,
+// which need to display previously deleted insight titles
+func (s *Store) GetTRBInsightsByAdminNoteID(ctx context.Context, adminNoteID uuid.UUID) ([]*models.TRBGuidanceLetterInsight, error) {
+	const trbRequestInsightGetByAdminNoteIDSQL = `
 		SELECT trb_guidance_letter_recommendations.*
 		FROM trb_guidance_letter_recommendations
 		INNER JOIN trb_admin_notes_trb_admin_note_recommendations_links
@@ -98,10 +98,10 @@ func (s *Store) GetTRBRecommendationsByAdminNoteID(ctx context.Context, adminNot
 		WHERE trb_admin_notes_trb_admin_note_recommendations_links.trb_admin_note_id = :admin_note_id
 	`
 
-	stmt, err := s.db.PrepareNamed(trbRequestRecommendationsGetByAdminNoteIDSQL)
+	stmt, err := s.db.PrepareNamed(trbRequestInsightGetByAdminNoteIDSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB guidance letter recommendations by admin note ID with error %s", err),
+			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB guidance letter insights by admin note ID with error %s", err),
 			zap.Error(err),
 			zap.String("adminNoteID", adminNoteID.String()),
 		)
@@ -113,21 +113,21 @@ func (s *Store) GetTRBRecommendationsByAdminNoteID(ctx context.Context, adminNot
 		"admin_note_id": adminNoteID,
 	}
 
-	recommendations := []*models.TRBGuidanceLetterRecommendation{}
-	err = stmt.Select(&recommendations, arg)
+	insights := []*models.TRBGuidanceLetterInsight{}
+	err = stmt.Select(&insights, arg)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch TRB guidance letter recommendations by admin note ID with error %s", err),
+			fmt.Sprintf("Failed to fetch TRB guidance letter insights by admin note ID with error %s", err),
 			zap.Error(err),
 			zap.String("adminNoteID", adminNoteID.String()),
 		)
 
 		return nil, &apperrors.QueryError{
 			Err:       err,
-			Model:     models.TRBGuidanceLetterRecommendation{},
+			Model:     models.TRBGuidanceLetterInsight{},
 			Operation: apperrors.QueryFetch,
 		}
 	}
 
-	return recommendations, nil
+	return insights, nil
 }

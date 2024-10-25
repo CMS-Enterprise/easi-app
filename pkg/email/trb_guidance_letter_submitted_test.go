@@ -67,7 +67,7 @@ func (s *EmailTestSuite) TestTRBGuidanceLetterSubmittedEmail() {
 			`<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
-			<p>The Technical Review Board (TRB) has compiled a guidance letter for %s. Use the link below to view recommendations from the TRB as well as a summary of the initial support request.</p>
+			<p>The Technical Review Board (TRB) has compiled a guidance letter for %s. Use the link below to view insights from the TRB as well as a summary of the initial support request.</p>
 
 			<br>
 			<p class="no-margin-top"><strong><a href="%s">View the Guidance Letter</a></strong></p>

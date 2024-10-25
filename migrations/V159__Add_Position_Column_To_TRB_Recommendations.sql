@@ -1,5 +1,5 @@
 /*
-This migration allows us to track the position/ordering of multiple recommendations attached to a TRB advice letter,
+This migration allows us to track the position/ordering of multiple insights attached to a TRB advice letter,
 using a position_in_letter column added to the trb_advice_letter_recommendations table.
 The column is initially created as nullable so it doesn't cause errors with existing rows.
 We then populate the column for those existing rows, then mark the column non-nullable.
@@ -7,7 +7,7 @@ We then populate the column for those existing rows, then mark the column non-nu
 Unfortunately, we can't add any other constraints on position_in_letter besides non-nullability:
 
 * We can't add a uniqueness constraint on (trb_request_id, position_in_letter),
-which would guarantee that all recommendations on a single request/letter have a distinct position,
+which would guarantee that all insights on a single request/letter have a distinct position,
 due to the DeleteTRBAdviceLetterRecommendation() resolver running UPDATE and DELETE queries concurrently.
 
 * Trying to add a constraint to avoid gaps in the ordering for a single request/letter would be highly complicated, potentially impossible,

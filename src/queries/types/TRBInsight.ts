@@ -4,13 +4,13 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: TRBRecommendation
+// GraphQL fragment: TRBInsight
 // ====================================================
 
-export interface TRBRecommendation {
-  __typename: "TRBGuidanceLetterRecommendation";
+export interface TRBInsight {
+  __typename: "TRBGuidanceLetterInsight";
   id: UUID;
   title: string;
-  recommendation: HTML;
+  insight: HTML;
   links: string[];
 }

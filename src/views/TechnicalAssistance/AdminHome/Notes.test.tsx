@@ -83,12 +83,12 @@ const adminNotes: TRBAdminNoteFragment[] = [
       appliesToNextSteps: false,
       insights: [
         {
-          __typename: 'TRBGuidanceLetterRecommendation',
+          __typename: 'TRBGuidanceLetterInsight',
           title: 'Recommendation One',
           deletedAt: null
         },
         {
-          __typename: 'TRBGuidanceLetterRecommendation',
+          __typename: 'TRBGuidanceLetterInsight',
           title: 'Recommendation Two',
           deletedAt: null
         }

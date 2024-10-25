@@ -15,10 +15,10 @@ export interface GetTrbGuidanceLetter_trbRequest_taskStatuses {
 }
 
 export interface GetTrbGuidanceLetter_trbRequest_guidanceLetter_insights {
-  __typename: "TRBGuidanceLetterRecommendation";
+  __typename: "TRBGuidanceLetterInsight";
   id: UUID;
   title: string;
-  recommendation: HTML;
+  insight: HTML;
   links: string[];
 }
 

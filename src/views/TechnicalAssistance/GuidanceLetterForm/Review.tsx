@@ -12,14 +12,14 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import useCacheQuery from 'hooks/useCacheQuery';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import {
-  DeleteTrbRecommendationQuery,
+  DeleteTrbInsightQuery,
   GetTrbGuidanceLetterQuery,
   SendTRBGuidanceLetterQuery
 } from 'queries/TrbGuidanceLetterQueries';
 import {
-  DeleteTRBRecommendation,
-  DeleteTRBRecommendationVariables
-} from 'queries/types/DeleteTRBRecommendation';
+  DeleteTRBInsight,
+  DeleteTRBInsightVariables
+} from 'queries/types/DeleteTRBInsight';
 import {
   GetTrbAdminNotes,
   GetTrbAdminNotes_trbRequest_adminNotes as AdminNote,
@@ -69,19 +69,19 @@ const Review = ({
     SendTRBGuidanceLetterVariables
   >(SendTRBGuidanceLetterQuery);
 
-  const [remove] = useMutation<
-    DeleteTRBRecommendation,
-    DeleteTRBRecommendationVariables
-  >(DeleteTrbRecommendationQuery, {
-    refetchQueries: [
-      {
-        query: GetTrbGuidanceLetterQuery,
-        variables: {
-          id: trbRequestId
+  const [remove] = useMutation<DeleteTRBInsight, DeleteTRBInsightVariables>(
+    DeleteTrbInsightQuery,
+    {
+      refetchQueries: [
+        {
+          query: GetTrbGuidanceLetterQuery,
+          variables: {
+            id: trbRequestId
+          }
         }
-      }
-    ]
-  });
+      ]
+    }
+  );
 
   const actionForm = useActionForm<TrbRecipientFields>({
     trbRequestId,

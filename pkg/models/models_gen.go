@@ -223,7 +223,7 @@ type CreateTRBAdminNoteGuidanceLetterInput struct {
 	NoteText                HTML        `json:"noteText"`
 	AppliesToMeetingSummary bool        `json:"appliesToMeetingSummary"`
 	AppliesToNextSteps      bool        `json:"appliesToNextSteps"`
-	RecommendationIDs       []uuid.UUID `json:"recommendationIDs"`
+	InsightIDs              []uuid.UUID `json:"insightIDs"`
 }
 
 // The data needed to create a TRB admin note with the Initial Request Form category
@@ -242,13 +242,13 @@ type CreateTRBAdminNoteSupportingDocumentsInput struct {
 	DocumentIDs  []uuid.UUID `json:"documentIDs"`
 }
 
-// The input required to add a recommendation & links to a TRB guidance letter
-type CreateTRBGuidanceLetterRecommendationInput struct {
-	TrbRequestID   uuid.UUID                               `json:"trbRequestId"`
-	Title          string                                  `json:"title"`
-	Recommendation HTML                                    `json:"recommendation"`
-	Links          []string                                `json:"links"`
-	Category       TRBGuidanceLetterRecommendationCategory `json:"category"`
+// The input required to add an insight & links to a TRB guidance letter
+type CreateTRBGuidanceLetterInsightInput struct {
+	TrbRequestID uuid.UUID                        `json:"trbRequestId"`
+	Title        string                           `json:"title"`
+	Insight      HTML                             `json:"insight"`
+	Links        []string                         `json:"links"`
+	Category     TRBGuidanceLetterInsightCategory `json:"category"`
 }
 
 // The data needed add a TRB request attendee to a TRB request
@@ -797,11 +797,11 @@ type TRBAdminNoteGeneralRequestCategoryData struct {
 func (TRBAdminNoteGeneralRequestCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data specific to admin notes in the Guidance Letter category
-// The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
+// The "insights" property _will_ return deleted insights so that UI can reference the recommendation title
 type TRBAdminNoteGuidanceLetterCategoryData struct {
-	AppliesToMeetingSummary bool                               `json:"appliesToMeetingSummary"`
-	AppliesToNextSteps      bool                               `json:"appliesToNextSteps"`
-	Insights                []*TRBGuidanceLetterRecommendation `json:"insights"`
+	AppliesToMeetingSummary bool                        `json:"appliesToMeetingSummary"`
+	AppliesToNextSteps      bool                        `json:"appliesToNextSteps"`
+	Insights                []*TRBGuidanceLetterInsight `json:"insights"`
 }
 
 func (TRBAdminNoteGuidanceLetterCategoryData) IsTRBAdminNoteCategorySpecificData() {}
@@ -911,11 +911,11 @@ type UpdateSystemIntakeReviewDatesInput struct {
 	ID      uuid.UUID  `json:"id"`
 }
 
-type UpdateTRBGuidanceLetterRecommendationOrderInput struct {
+type UpdateTRBGuidanceLetterInsightOrderInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
-	// List of the recommendation IDs in the new order they should be displayed
-	NewOrder []uuid.UUID                             `json:"newOrder"`
-	Category TRBGuidanceLetterRecommendationCategory `json:"category"`
+	// List of the insight IDs in the new order they should be displayed
+	NewOrder []uuid.UUID                      `json:"newOrder"`
+	Category TRBGuidanceLetterInsightCategory `json:"category"`
 }
 
 // Represents an EUA user who is included as an attendee for a TRB request
@@ -1290,45 +1290,45 @@ func (e SystemIntakeStepToProgressTo) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-type TRBGuidanceLetterRecommendationCategory string
+type TRBGuidanceLetterInsightCategory string
 
 const (
-	TRBGuidanceLetterRecommendationCategoryRequirement    TRBGuidanceLetterRecommendationCategory = "REQUIREMENT"
-	TRBGuidanceLetterRecommendationCategoryRecommendation TRBGuidanceLetterRecommendationCategory = "RECOMMENDATION"
-	TRBGuidanceLetterRecommendationCategoryConsideration  TRBGuidanceLetterRecommendationCategory = "CONSIDERATION"
+	TRBGuidanceLetterInsightCategoryRequirement    TRBGuidanceLetterInsightCategory = "REQUIREMENT"
+	TRBGuidanceLetterInsightCategoryRecommendation TRBGuidanceLetterInsightCategory = "RECOMMENDATION"
+	TRBGuidanceLetterInsightCategoryConsideration  TRBGuidanceLetterInsightCategory = "CONSIDERATION"
 )
 
-var AllTRBGuidanceLetterRecommendationCategory = []TRBGuidanceLetterRecommendationCategory{
-	TRBGuidanceLetterRecommendationCategoryRequirement,
-	TRBGuidanceLetterRecommendationCategoryRecommendation,
-	TRBGuidanceLetterRecommendationCategoryConsideration,
+var AllTRBGuidanceLetterInsightCategory = []TRBGuidanceLetterInsightCategory{
+	TRBGuidanceLetterInsightCategoryRequirement,
+	TRBGuidanceLetterInsightCategoryRecommendation,
+	TRBGuidanceLetterInsightCategoryConsideration,
 }
 
-func (e TRBGuidanceLetterRecommendationCategory) IsValid() bool {
+func (e TRBGuidanceLetterInsightCategory) IsValid() bool {
 	switch e {
-	case TRBGuidanceLetterRecommendationCategoryRequirement, TRBGuidanceLetterRecommendationCategoryRecommendation, TRBGuidanceLetterRecommendationCategoryConsideration:
+	case TRBGuidanceLetterInsightCategoryRequirement, TRBGuidanceLetterInsightCategoryRecommendation, TRBGuidanceLetterInsightCategoryConsideration:
 		return true
 	}
 	return false
 }
 
-func (e TRBGuidanceLetterRecommendationCategory) String() string {
+func (e TRBGuidanceLetterInsightCategory) String() string {
 	return string(e)
 }
 
-func (e *TRBGuidanceLetterRecommendationCategory) UnmarshalGQL(v interface{}) error {
+func (e *TRBGuidanceLetterInsightCategory) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = TRBGuidanceLetterRecommendationCategory(str)
+	*e = TRBGuidanceLetterInsightCategory(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid TRBGuidanceLetterRecommendationCategory", str)
+		return fmt.Errorf("%s is not a valid TRBGuidanceLetterInsightCategory", str)
 	}
 	return nil
 }
 
-func (e TRBGuidanceLetterRecommendationCategory) MarshalGQL(w io.Writer) {
+func (e TRBGuidanceLetterInsightCategory) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

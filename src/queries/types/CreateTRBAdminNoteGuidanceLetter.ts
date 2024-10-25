@@ -37,7 +37,7 @@ export interface CreateTRBAdminNoteGuidanceLetter_createTRBAdminNoteGuidanceLett
 }
 
 export interface CreateTRBAdminNoteGuidanceLetter_createTRBAdminNoteGuidanceLetter_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData_insights {
-  __typename: "TRBGuidanceLetterRecommendation";
+  __typename: "TRBGuidanceLetterInsight";
   title: string;
   deletedAt: Time | null;
 }

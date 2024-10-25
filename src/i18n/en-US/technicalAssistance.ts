@@ -71,13 +71,13 @@ const technicalAssistance = {
       CONSULT_COMPLETE: {
         title: 'Draft guidance letter',
         description:
-          'Compile a guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any requirements, recommendations, considerations, and other next steps you include.',
+          'Compile a guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any requirements, insights, considerations, and other next steps you include.',
         list: {
           label: 'What should I include in the guidance letter?',
           text: 'EASi will direct you to complete the following parts of the guidance letter:',
           unorderedItems: [
             '<b>Meeting summary (“What we heard”):</b> Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.',
-            '<b>Requirements, recommendations, and considerations (“Guidance and insights”):</b> Work with SMEs and other TRB members to compile guidance for the requester and project team. Provide a title, description, priority, and any useful resources for each item.',
+            '<b>Requirements, insights, and considerations (“Guidance and insights”):</b> Work with SMEs and other TRB members to compile guidance for the requester and project team. Provide a title, description, priority, and any useful resources for each item.',
             '<b>Next steps:</b> Outline any additional steps that the project team should take, including whether the project team should schedule another consult session with the TRB in the future.'
           ]
         }
@@ -85,13 +85,13 @@ const technicalAssistance = {
       DRAFT_GUIDANCE_LETTER: {
         title: 'Draft guidance letter',
         description:
-          'Compile a guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any requirements, recommendations, considerations, and other next steps you include.',
+          'Compile a guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any requirements, insights, considerations, and other next steps you include.',
         list: {
           label: 'What should I include in the guidance letter?',
           text: 'EASi will direct you to complete the following parts of the guidance letter:',
           unorderedItems: [
             '<b>Meeting summary (“What we heard”):</b> Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.',
-            '<b>Requirements, recommendations, and considerations (“Guidance and insights”):</b> Work with SMEs and other TRB members to compile guidance for the requester and project team. Provide a title, description, priority, and any useful resources for each item.',
+            '<b>Requirements, insights, and considerations (“Guidance and insights”):</b> Work with SMEs and other TRB members to compile guidance for the requester and project team. Provide a title, description, priority, and any useful resources for each item.',
             '<b>Next steps:</b> Outline any additional steps that the project team should take, including whether the project team should schedule another consult session with the TRB in the future.'
           ]
         }
@@ -142,7 +142,7 @@ const technicalAssistance = {
   },
   guidanceLetter: {
     introText:
-      'The guidance letter is sent to the requester after the consult is complete. It outlines any outcomes, requirements, recommendations, considerations, and other next steps that the TRB has for this request.',
+      'The guidance letter is sent to the requester after the consult is complete. It outlines any outcomes, requirements, insights, considerations, and other next steps that the TRB has for this request.',
     alerts: {
       error:
         'There was an error creating this guidance letter. Please try again. If the error persists, please try again at a later date.',
@@ -178,7 +178,7 @@ const technicalAssistance = {
   guidanceLetterForm: {
     heading: 'Guidance letter',
     description:
-      'Document any outcomes, requirements, recommendations, considerations, and other next steps that the TRB has for this request.',
+      'Document any outcomes, requirements, insights, considerations, and other next steps that the TRB has for this request.',
     text: 'After submitting this form, the requester will receive an automatic notification letting them know their guidance letter is available.',
     returnToRequest: 'Save and return to request',
     steps: [
@@ -191,7 +191,7 @@ const technicalAssistance = {
         name: 'Guidance and Insights',
         // TODO EASI-4626: Update step description text
         description:
-          'Add recommendations for the project team. Provide a title, description, and any useful resources for each recommendation.'
+          'Add insights for the project team. Provide a title, description, and any useful resources for each recommendation.'
       },
       {
         name: 'Next steps',
@@ -455,7 +455,7 @@ const technicalAssistance = {
       },
       {
         heading: 'Guidance letter and next steps',
-        text: 'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any outcomes, requirements, recommendations, considerations, and other next steps that the TRB has for this request.'
+        text: 'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any outcomes, requirements, insights, considerations, and other next steps that the TRB has for this request.'
       }
     ]
   },

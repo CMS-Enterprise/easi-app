@@ -23,8 +23,8 @@ CREATE TABLE trb_admin_notes_trb_admin_note_recommendations_links (
         REFERENCES trb_advice_letter_recommendations(id, trb_request_id)
 );
 
-COMMENT ON COLUMN trb_admin_notes_trb_admin_note_recommendations_links.trb_request_id IS 
-    'Having this column allows creating the foreign key constraints that make sure the admin notes and recommendations both belong to the same TRB request';
+COMMENT ON COLUMN trb_admin_notes_trb_admin_note_recommendations_links.trb_request_id IS
+    'Having this column allows creating the foreign key constraints that make sure the admin notes and insights both belong to the same TRB request';
 
 COMMENT ON CONSTRAINT fk_admin_notes_have_same_request_id_as_recommendation_link ON trb_admin_notes_trb_admin_note_recommendations_links IS
     'This checks that the referenced admin note belongs to the same TRB request as this record';
