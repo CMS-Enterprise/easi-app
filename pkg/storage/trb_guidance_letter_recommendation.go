@@ -52,8 +52,7 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 			:links,
 			:created_by,
 			:modified_by,
-			-- add to end of specific category order
-			COALESCE(MAX((SELECT position_in_letter FROM trb_guidance_letter_recommendations WHERE trb_request_id = :trb_request_id AND category = :category)) + 1, 0),
+			COALESCE(MAX(position_in_letter) FILTER ( WHERE category = :category AND trb_request_id = :trb_request_id) + 1, 0),
 			:category
 		FROM trb_guidance_letter_recommendations
 		WHERE trb_request_id = :trb_request_id
@@ -76,6 +75,7 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 			fmt.Sprintf("Failed to create TRB guidance letter recommendation with error %s", err),
 			zap.Error(err),
 			zap.String("user", recommendation.CreatedBy),
+			zap.String("sql_statement", stmt.QueryString),
 		)
 		return nil, err
 	}
@@ -178,7 +178,8 @@ func (s *Store) GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx conte
 }
 
 // UpdateTRBGuidanceLetterRecommendation updates an existing TRB guidance letter recommendation record in the database
-// This purposely does not update the position_in_letter column - to update that, use UpdateTRBGuidanceLetterRecommendationOrder()
+// This purposely does not update the position_in_letter column unless the `category` changes - to update the order through
+// normal reordering operation, use UpdateTRBGuidanceLetterRecommendationOrder()
 func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recommendation *models.TRBGuidanceLetterRecommendation) (*models.TRBGuidanceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_guidance_letter_recommendations
@@ -189,7 +190,15 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recom
 			links = :links,
 			created_by = :created_by,
 			modified_by = :modified_by,
-			category = :category
+			category = :category,
+			-- update position in letter ONLY when category changes
+			position_in_letter = CASE
+				-- when category changes
+				WHEN category <> :category
+					THEN (SELECT COALESCE(MAX(position_in_letter) + 1, 0) FROM trb_guidance_letter_recommendations WHERE category = :category AND trb_request_id = :trb_request_id)
+				-- when category does not change
+				ELSE position_in_letter
+			END
 		WHERE id = :id
 		RETURNING *;`)
 	if err != nil {
