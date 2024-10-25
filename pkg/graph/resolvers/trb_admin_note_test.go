@@ -258,29 +258,29 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 		s.NotNil(createdGuidanceLetter)
 
 		// set up insights
-		recToCreate1 := &models.TRBGuidanceLetterInsight{
+		insightToCreate1 := &models.TRBGuidanceLetterInsight{
 			TRBRequestID: trbRequest.ID,
 			Title:        "Admin Note Test Insight 1",
 			Insight:      "Keep testing rec1",
 			Links:        []string{},
 			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
-		createdRec1, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate1)
+		createdInsight1, err := CreateTRBGuidanceLetterInsight(ctx, store, insightToCreate1)
 		s.NoError(err)
-		s.NotNil(createdRec1)
-		recommendationID1 := createdRec1.ID
+		s.NotNil(createdInsight1)
+		insightID1 := createdInsight1.ID
 
-		recToCreate2 := &models.TRBGuidanceLetterInsight{
+		insightToCreate2 := &models.TRBGuidanceLetterInsight{
 			TRBRequestID: trbRequest.ID,
 			Title:        "Admin Note Test Insight 2",
 			Insight:      "Keep testing rec2",
 			Links:        []string{},
 			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
-		createdRec2, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate2)
+		createdInsight2, err := CreateTRBGuidanceLetterInsight(ctx, store, insightToCreate2)
 		s.NoError(err)
-		s.NotNil(createdRec2)
-		recommendationID2 := createdRec2.ID
+		s.NotNil(createdInsight2)
+		insightID2 := createdInsight2.ID
 
 		// create admin note referencing the insights
 		input := models.CreateTRBAdminNoteGuidanceLetterInput{
@@ -289,8 +289,8 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			AppliesToMeetingSummary: true,
 			AppliesToNextSteps:      false,
 			InsightIDs: []uuid.UUID{
-				recommendationID1,
-				recommendationID2,
+				insightID1,
+				insightID2,
 			},
 		}
 		createdNote, err := CreateTRBAdminNoteGuidanceLetter(ctx, store, input)
@@ -315,20 +315,20 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 		s.Nil(createdNote.AppliesToAttendees.Ptr())
 
 		// check that links to insights were created
-		fetchedRecommendations, err := store.GetTRBInsightsByAdminNoteID(ctx, createdNote.ID)
+		fetchedInsights, err := store.GetTRBInsightsByAdminNoteID(ctx, createdNote.ID)
 		s.NoError(err)
 
-		s.Len(fetchedRecommendations, 2)
+		s.Len(fetchedInsights, 2)
 
-		recommendation1Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBGuidanceLetterInsight) bool {
-			return rec.ID == recommendationID1
+		insight1Fetched := slices.ContainsFunc(fetchedInsights, func(insight *models.TRBGuidanceLetterInsight) bool {
+			return insight.ID == insightID1
 		})
-		s.True(recommendation1Fetched)
+		s.True(insight1Fetched)
 
-		recommendation2Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBGuidanceLetterInsight) bool {
-			return rec.ID == recommendationID2
+		insight2Fetched := slices.ContainsFunc(fetchedInsights, func(insight *models.TRBGuidanceLetterInsight) bool {
+			return insight.ID == insightID2
 		})
-		s.True(recommendation2Fetched)
+		s.True(insight2Fetched)
 	})
 
 	s.Run("Creating Admin Note referencing guidance letter insights attached to a *different* TRB request fails", func() {
@@ -337,38 +337,38 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 		s.NoError(err)
 		s.NotNil(trbRequestForNote)
 
-		// create request 2 - guidance letter and recommendation will be attached to this
-		trbRequestForRecommendation, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		// create request 2 - guidance letter and insight will be attached to this
+		trbRequestForInsight, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
 		s.NoError(err)
-		s.NotNil(trbRequestForRecommendation)
+		s.NotNil(trbRequestForInsight)
 
 		// create guidance letter for request 2
-		createdGuidanceLetter, err := CreateTRBGuidanceLetter(ctx, store, trbRequestForRecommendation.ID)
+		createdGuidanceLetter, err := CreateTRBGuidanceLetter(ctx, store, trbRequestForInsight.ID)
 		s.NoError(err)
 		s.NotNil(createdGuidanceLetter)
 
-		// create recommendation attached to guidance letter for request 2
+		// create insight attached to guidance letter for request 2
 		recToCreate := &models.TRBGuidanceLetterInsight{
-			TRBRequestID: trbRequestForRecommendation.ID,
+			TRBRequestID: trbRequestForInsight.ID,
 			Title:        "Admin Note Test Insight - Different Request",
 			Insight:      "Make sure this fails",
 			Links:        []string{},
 			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
-		createdRec, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate)
+		createdInsight, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate)
 		s.NoError(err)
-		s.NotNil(createdRec)
+		s.NotNil(createdInsight)
 
-		// try to create an admin note referencing the recommendation
-		// should fail due to database constraints, because the referenced recommendation belongs to a different TRB request
-		recommendationID := createdRec.ID
+		// try to create an admin note referencing the insight
+		// should fail due to database constraints, because the referenced insight belongs to a different TRB request
+		insightID := createdInsight.ID
 		input := models.CreateTRBAdminNoteGuidanceLetterInput{
 			TrbRequestID:            trbRequestForNote.ID,
 			NoteText:                "test TRB admin note - guidance letter",
 			AppliesToMeetingSummary: false,
 			AppliesToNextSteps:      false,
 			InsightIDs: []uuid.UUID{
-				recommendationID,
+				insightID,
 			},
 		}
 		_, err = CreateTRBAdminNoteGuidanceLetter(ctx, store, input)
@@ -471,7 +471,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		// set up three insights and attach two to the note
 		// we can test that the resolver returns multiple insights
 		// and test that not all insights on the request are returned
-		recommendationIDs := []uuid.UUID{}
+		insightIDs := []uuid.UUID{}
 		for i := 0; i < 3; i++ {
 			recToCreate := &models.TRBGuidanceLetterInsight{
 				TRBRequestID: trbRequest.ID,
@@ -483,7 +483,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 			createdRec, errCreatingRec := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate)
 			s.NoError(errCreatingRec)
 			s.NotNil(createdRec)
-			recommendationIDs = append(recommendationIDs, createdRec.ID)
+			insightIDs = append(insightIDs, createdRec.ID)
 		}
 
 		// set up admin note referencing two of the insights
@@ -491,8 +491,8 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 			TrbRequestID: trbRequest.ID,
 			NoteText:     "test TRB admin note - guidance letter",
 			InsightIDs: []uuid.UUID{
-				recommendationIDs[0],
-				recommendationIDs[1],
+				insightIDs[0],
+				insightIDs[1],
 			},
 
 			// values don't matter, we're not testing then
@@ -511,23 +511,23 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		s.True(ok) // test that categorySpecificData is of the right type
 
 		// test that resolver returns the right insights
-		returnedRecommendations := guidanceLetterData.Insights
-		s.Len(returnedRecommendations, 2)
+		returnedInsights := guidanceLetterData.Insights
+		s.Len(returnedInsights, 2)
 
-		recommendation0Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterInsight) bool {
-			return rec.ID == recommendationIDs[0]
+		insight0Returned := slices.ContainsFunc(returnedInsights, func(insight *models.TRBGuidanceLetterInsight) bool {
+			return insight.ID == insightIDs[0]
 		})
-		s.True(recommendation0Returned)
+		s.True(insight0Returned)
 
-		recommendation1Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterInsight) bool {
-			return rec.ID == recommendationIDs[1]
+		insight1Returned := slices.ContainsFunc(returnedInsights, func(insight *models.TRBGuidanceLetterInsight) bool {
+			return insight.ID == insightIDs[1]
 		})
-		s.True(recommendation1Returned)
+		s.True(insight1Returned)
 
-		// test that the third recommendation (that wasn't attached to the note) *isn't* returned
-		recommendation2Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterInsight) bool {
-			return rec.ID == recommendationIDs[2]
+		// test that the third insight (that wasn't attached to the note) *isn't* returned
+		insight2Returned := slices.ContainsFunc(returnedInsights, func(insight *models.TRBGuidanceLetterInsight) bool {
+			return insight.ID == insightIDs[2]
 		})
-		s.False(recommendation2Returned)
+		s.False(insight2Returned)
 	})
 }

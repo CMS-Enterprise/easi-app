@@ -128,7 +128,7 @@ func progressIntake(
 	meetingDate *time.Time,
 ) *models.SystemIntake {
 	feedbackText := models.HTML(fmt.Sprintf("feedback for %s progressing to %s", string(intake.Step), string(newStep)))
-	grbRecommendations := models.HTML(fmt.Sprintf("grb insights for %s progressing to %s", string(intake.Step), string(newStep)))
+	grbRecommendations := models.HTML(fmt.Sprintf("grb recommendations for %s progressing to %s", string(intake.Step), string(newStep)))
 	additionalInfo := models.HTML(fmt.Sprintf("additional info for %s progressing to %s", string(intake.Step), string(newStep)))
 	adminNote := models.HTML(fmt.Sprintf("admin note about %s progressing to %s", string(intake.Step), string(newStep)))
 

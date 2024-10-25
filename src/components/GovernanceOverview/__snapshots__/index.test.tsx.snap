@@ -167,7 +167,7 @@ exports[`Governance Overview Content > renders default version without crashing 
           <p
             class="margin-bottom-1"
           >
-            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.
+            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any insights from the Governance Review Team.
           </p>
           <a
             class="usa-link"
@@ -429,7 +429,7 @@ exports[`Governance Overview Content > renders help section version without cras
           <p
             class="margin-bottom-1"
           >
-            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.
+            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any insights from the Governance Review Team.
           </p>
           <a
             class="usa-link"

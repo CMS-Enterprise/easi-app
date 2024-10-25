@@ -33,11 +33,11 @@ func (s *Store) CreateTRBGuidanceLetterInsight(
 	// -	note: if the `category` changes, we must update the `category` field AND add to the end of the order
 	// 		for the new category
 	stmt, err := s.db.PrepareNamed(`
-		INSERT INTO trb_guidance_letter_recommendations (
+		INSERT INTO trb_guidance_letter_insights (
 			id,
 			trb_request_id,
 			title,
-			recommendation,
+			insight,
 			links,
 			created_by,
 			modified_by,
@@ -48,13 +48,13 @@ func (s *Store) CreateTRBGuidanceLetterInsight(
 			:id,
 			:trb_request_id,
 			:title,
-			:recommendation,
+			:insight,
 			:links,
 			:created_by,
 			:modified_by,
 			COALESCE(MAX(position_in_letter) FILTER ( WHERE category = :category AND trb_request_id = :trb_request_id) + 1, 0),
 			:category
-		FROM trb_guidance_letter_recommendations
+		FROM trb_guidance_letter_insights
 		WHERE trb_request_id = :trb_request_id
 		RETURNING *;`)
 	if err != nil {
@@ -87,7 +87,7 @@ func (s *Store) CreateTRBGuidanceLetterInsight(
 // It will not return any entities that have a deleted_at value
 func (s *Store) GetTRBGuidanceLetterInsightByID(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterInsight, error) {
 	insight := models.TRBGuidanceLetterInsight{}
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_guidance_letter_recommendations WHERE id = :id AND deleted_at IS NULL`)
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_guidance_letter_insights WHERE id = :id AND deleted_at IS NULL`)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func (s *Store) GetTRBGuidanceLetterInsightsByTRBRequestID(ctx context.Context, 
 
 	err := s.db.Select(&results, `
 		SELECT *
-		FROM trb_guidance_letter_recommendations
+		FROM trb_guidance_letter_insights
 		WHERE trb_request_id = $1
 		AND deleted_at IS NULL
 		ORDER BY position_in_letter ASC
@@ -140,10 +140,10 @@ func (s *Store) GetTRBGuidanceLetterInsightsByTRBRequestID(ctx context.Context, 
 func (s *Store) GetTRBGuidanceLetterInsightsSharingTRBRequestID(ctx context.Context, insightID uuid.UUID) ([]*models.TRBGuidanceLetterInsight, error) {
 	stmt, err := s.db.PrepareNamed(`
 		SELECT *
-		FROM trb_guidance_letter_recommendations
+		FROM trb_guidance_letter_insights
 		WHERE trb_request_id = (
 			SELECT trb_request_id
-			FROM trb_guidance_letter_recommendations
+			FROM trb_guidance_letter_insights
 			WHERE id = :insightID
 		) AND deleted_at IS NULL`)
 	if err != nil {
@@ -182,11 +182,11 @@ func (s *Store) GetTRBGuidanceLetterInsightsSharingTRBRequestID(ctx context.Cont
 // normal reordering operation, use UpdateTRBGuidanceLetterInsightOrder()
 func (s *Store) UpdateTRBGuidanceLetterInsight(ctx context.Context, insight *models.TRBGuidanceLetterInsight) (*models.TRBGuidanceLetterInsight, error) {
 	stmt, err := s.db.PrepareNamed(`
-		UPDATE trb_guidance_letter_recommendations
+		UPDATE trb_guidance_letter_insights
 		SET
 			trb_request_id = :trb_request_id,
 			title = :title,
-			recommendation = :recommendation,
+			insight = :insight,
 			links = :links,
 			created_by = :created_by,
 			modified_by = :modified_by,
@@ -195,7 +195,7 @@ func (s *Store) UpdateTRBGuidanceLetterInsight(ctx context.Context, insight *mod
 			position_in_letter = CASE
 				-- when category changes
 				WHEN category <> :category
-					THEN (SELECT COALESCE(MAX(position_in_letter) + 1, 0) FROM trb_guidance_letter_recommendations WHERE category = :category AND trb_request_id = :trb_request_id)
+					THEN (SELECT COALESCE(MAX(position_in_letter) + 1, 0) FROM trb_guidance_letter_insights WHERE category = :category AND trb_request_id = :trb_request_id)
 				-- when category does not change
 				ELSE position_in_letter
 			END
@@ -231,7 +231,7 @@ func (s *Store) UpdateTRBGuidanceLetterInsight(ctx context.Context, insight *mod
 // DeleteTRBGuidanceLetterInsight deletes an existing TRB guidance letter insight record in the database
 func (s *Store) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterInsight, error) {
 	stmt, err := s.db.PrepareNamed(`
-		UPDATE trb_guidance_letter_recommendations
+		UPDATE trb_guidance_letter_insights
 		SET deleted_at = CURRENT_TIMESTAMP, position_in_letter = NULL
 		WHERE id = :id
 		RETURNING *;`)
@@ -303,12 +303,12 @@ func (s *Store) UpdateTRBGuidanceLetterInsightOrder(
 			FROM json_to_recordset(:newPositions)
 			AS new_positions (id uuid, position_in_letter int)
 		)
-		UPDATE trb_guidance_letter_recommendations
+		UPDATE trb_guidance_letter_insights
 		SET position_in_letter = new_positions.position_in_letter
 		FROM new_positions
-		WHERE trb_guidance_letter_recommendations.id = new_positions.id
-		AND trb_guidance_letter_recommendations.trb_request_id = :trbRequestID
-		AND trb_guidance_letter_recommendations.category = :category
+		WHERE trb_guidance_letter_insights.id = new_positions.id
+		AND trb_guidance_letter_insights.trb_request_id = :trbRequestID
+		AND trb_guidance_letter_insights.category = :category
 		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(

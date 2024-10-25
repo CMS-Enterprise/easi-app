@@ -83,12 +83,12 @@ FROM (
 
        UNION
 
--- Sub query for trb_guidance_letter_recommendations table
+-- Sub query for trb_guidance_letter_insights table
        SELECT created_by AS username
-       FROM trb_guidance_letter_recommendations
+       FROM trb_guidance_letter_insights
        UNION
        SELECT modified_by AS username
-       FROM trb_guidance_letter_recommendations
+       FROM trb_guidance_letter_insights
 
        UNION
 

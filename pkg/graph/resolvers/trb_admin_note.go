@@ -119,12 +119,12 @@ func CreateTRBAdminNoteGuidanceLetter(ctx context.Context, store *storage.Store,
 	// database constraints will prevent links being created to insights on a different request
 	// but if we don't check, we'll still create an (invalid) admin note record
 
-	allRecommendationsOnRequest, err := store.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, input.TrbRequestID)
+	allInsightsOnRequest, err := store.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, input.TrbRequestID)
 	if err != nil {
 		return nil, err
 	}
 
-	if !models.ContainsAllIDs(allRecommendationsOnRequest, input.InsightIDs) {
+	if !models.ContainsAllIDs(allInsightsOnRequest, input.InsightIDs) {
 		return nil, &apperrors.BadRequestError{
 			Err: errors.New("all insights referenced in admin note must belong to the same TRB request as the admin note"),
 		}
@@ -214,14 +214,14 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 			PlaceholderField: nil,
 		}, nil
 	case models.TRBAdminNoteCategoryGuidanceLetter:
-		recommendations, err := store.GetTRBInsightsByAdminNoteID(ctx, note.ID)
+		insights, err := store.GetTRBInsightsByAdminNoteID(ctx, note.ID)
 		if err != nil {
 			return nil, err
 		}
 		return models.TRBAdminNoteGuidanceLetterCategoryData{
 			AppliesToMeetingSummary: note.AppliesToMeetingSummary.Bool,
 			AppliesToNextSteps:      note.AppliesToNextSteps.Bool,
-			Insights:                recommendations,
+			Insights:                insights,
 		}, nil
 	}
 

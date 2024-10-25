@@ -368,7 +368,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	}
 
 	// create 3 insights we can reference in admin notes
-	recommendations, err := s.addGuidanceLetterInsights(ctx, trb)
+	insights, err := s.addGuidanceLetterInsights(ctx, trb)
 	if err != nil {
 		return err
 	}
@@ -426,8 +426,8 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 		AppliesToMeetingSummary: true,
 		AppliesToNextSteps:      false,
 		InsightIDs: []uuid.UUID{
-			recommendations[0].ID,
-			recommendations[1].ID,
+			insights[0].ID,
+			insights[1].ID,
 		},
 	}
 	_, err = resolvers.CreateTRBAdminNoteGuidanceLetter(ctx, s.store, guidanceLetterNoteInput)
@@ -986,46 +986,46 @@ func (s *seederConfig) addGuidanceLetter(ctx context.Context, trb *models.TRBReq
 
 // creates three insights attached to a TRB request
 func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *models.TRBRequest) ([]*models.TRBGuidanceLetterInsight, error) {
-	recommendation1ToCreate := &models.TRBGuidanceLetterInsight{
+	insight1ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID: trb.ID,
 		Title:        "Restart your computer",
 		Insight:      "I recommend you restart your computer",
 		Links:        pq.StringArray{"google.com", "askjeeves.com"},
 		Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 	}
-	createdRecommendation1, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, recommendation1ToCreate)
+	createdInsight1, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, insight1ToCreate)
 	if err != nil {
 		return nil, err
 	}
 
-	recommendation2ToCreate := &models.TRBGuidanceLetterInsight{
+	insight2ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID: trb.ID,
 		Title:        "Unplug it and plug it back in",
 		Insight:      "I recommend you unplug your computer and plug it back in",
 		Links:        pq.StringArray{"google.com", "askjeeves.com"},
 		Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 	}
-	createdRecommendation2, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, recommendation2ToCreate)
+	createdInsight2, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, insight2ToCreate)
 	if err != nil {
 		return nil, err
 	}
 
-	recommendation3ToCreate := &models.TRBGuidanceLetterInsight{
+	insight3ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID: trb.ID,
 		Title:        "Get a new computer",
 		Insight:      "Your computer is broken, you need a new one",
 		Links:        pq.StringArray{"google.com", "askjeeves.com"},
 		Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 	}
-	createdRecommendation3, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, recommendation3ToCreate)
+	createdInsight3, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, insight3ToCreate)
 	if err != nil {
 		return nil, err
 	}
 
 	return []*models.TRBGuidanceLetterInsight{
-		createdRecommendation1,
-		createdRecommendation2,
-		createdRecommendation3,
+		createdInsight1,
+		createdInsight2,
+		createdInsight3,
 	}, nil
 }
 

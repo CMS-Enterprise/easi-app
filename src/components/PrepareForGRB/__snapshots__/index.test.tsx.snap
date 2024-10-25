@@ -41,7 +41,7 @@ exports[`Prepare for GRB > renders help mode without crashing 1`] = `
       <p
         class="line-height-sans-5"
       >
-        The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.
+        The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding insights to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.
       </p>
       <h3>
         What to expect at the meeting
@@ -191,7 +191,7 @@ exports[`Prepare for GRB > renders without crashing 1`] = `
       <p
         class="line-height-sans-5"
       >
-        The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.
+        The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding insights to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.
       </p>
       <h3>
         What to expect at the meeting

@@ -274,15 +274,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
                         <div
                           class="toastui-editor-contents"
                           style="overflow-wrap: break-word;"
-                        >
-                          <p
-                            data-nodeid="3"
-                          >
-                            I recommend you restart your computer
-                          </p>
-                          
-
-                        </div>
+                        />
                       </div>
                     </div>
                     <p
@@ -540,7 +532,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
                 style="overflow-wrap: break-word;"
               >
                 <p
-                  data-nodeid="5"
+                  data-nodeid="3"
                 >
                   Talked about stuff
                 </p>
@@ -587,15 +579,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
                         <div
                           class="toastui-editor-contents"
                           style="overflow-wrap: break-word;"
-                        >
-                          <p
-                            data-nodeid="7"
-                          >
-                            I recommend you restart your computer
-                          </p>
-                          
-
-                        </div>
+                        />
                       </div>
                     </div>
                     <p

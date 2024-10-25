@@ -1,8 +1,8 @@
-CREATE TYPE trb_guidance_recommendation_category_type AS ENUM (
+CREATE TYPE trb_guidance_insight_category_type AS ENUM (
   'REQUIREMENT',
   'RECOMMENDATION',
   'CONSIDERATION'
   );
 
-ALTER TABLE trb_guidance_letter_recommendations
-  ADD COLUMN category trb_guidance_recommendation_category_type DEFAULT 'RECOMMENDATION';
+ALTER TABLE trb_guidance_letter_insights
+  ADD COLUMN category trb_guidance_insight_category_type DEFAULT 'RECOMMENDATION';

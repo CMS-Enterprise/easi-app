@@ -245,7 +245,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
           <p
             className="margin-bottom-1"
           >
-            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.
+            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any insights from the Governance Review Team.
           </p>
           <a
             className="usa-link"
@@ -564,7 +564,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
           <p
             className="margin-bottom-1"
           >
-            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.
+            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any insights from the Governance Review Team.
           </p>
           <a
             className="usa-link"

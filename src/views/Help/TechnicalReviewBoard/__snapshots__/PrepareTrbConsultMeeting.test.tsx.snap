@@ -186,7 +186,7 @@ exports[`Trb Help Prepare Consult Meeting > renders 1`] = `
       class="easi-list line-height-body-5"
     >
       <li>
-        any requirements, recommendations, considerations, and other next steps for your system or solution.
+        any requirements, insights, considerations, and other next steps for your system or solution.
       </li>
       <li>
         additional teams or points of contact to reach out to who may be able to help you further

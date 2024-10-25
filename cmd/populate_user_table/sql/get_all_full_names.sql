@@ -98,9 +98,9 @@ FROM system_intakes
 
 test_dates
 trb_admin_notes
-trb_admin_notes_trb_admin_note_recommendations_links
+trb_admin_notes_trb_admin_note_insights_links
 trb_admin_notes_trb_request_documents_links
-trb_guidance_letter_recommendations
+trb_guidance_letter_insights
 trb_guidance_letters
 trb_lead_options
 trb_request
