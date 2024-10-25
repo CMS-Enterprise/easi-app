@@ -1,42 +1,32 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import TextAreaField from './index';
 
 describe('The Text Area Field component', () => {
   const requiredProps = {
     id: 'DemoTest',
+    'data-testid': 'DemoTest',
     name: 'Demo TextArea',
     onChange: () => {},
     onBlur: () => {},
     value: ''
   };
 
-  it('renders without crashing', () => {
-    shallow(<TextAreaField {...requiredProps} />);
-  });
-
-  it('renders a label when provided', () => {
-    const fixture = 'Demo Label';
-    const component = shallow(
-      <TextAreaField {...requiredProps} label={fixture} />
+  it('matches snapshot', () => {
+    const { asFragment } = render(
+      <TextAreaField {...requiredProps} label="Demo Label" />
     );
-
-    expect(component.find('label').text()).toEqual(fixture);
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('triggers onChange', () => {
-    const event = {
-      target: {
-        value: 'Hello'
-      }
-    };
     const mock = vi.fn();
-    const component = mount(
-      <TextAreaField {...requiredProps} onChange={mock} />
-    );
+    render(<TextAreaField {...requiredProps} onChange={mock} />);
+    fireEvent.change(screen.getByTestId('DemoTest'), {
+      target: { value: 'Hello' }
+    });
 
-    component.simulate('change', event);
     expect(mock).toHaveBeenCalled();
   });
 });

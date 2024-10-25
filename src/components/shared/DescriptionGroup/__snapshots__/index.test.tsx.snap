@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`The Description Definition component > matches snapshot 1`] = `
+<DocumentFragment>
+  <dd
+    class="description-definition margin-0"
+  >
+    Test Definition
+  </dd>
+</DocumentFragment>
+`;
+
+exports[`The Description List component > matches snapshot 1`] = `
+<DocumentFragment>
+  <dl
+    title="Test Title"
+  >
+    <dt>
+      Name
+    </dt>
+    <dd>
+      EASi
+    </dd>
+  </dl>
+</DocumentFragment>
+`;
+
+exports[`The Description Term component > matches snapshot 1`] = `
+<DocumentFragment>
+  <dt
+    class="text-bold margin-bottom-05"
+  >
+    Test Term
+  </dt>
+</DocumentFragment>
+`;

@@ -1,25 +1,15 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import ReviewRow from './index';
 
 describe('The Review Row component', () => {
-  it('renders without crashing', () => {
-    shallow(<ReviewRow />);
-  });
-
-  it('accepts a class name', () => {
-    const component = shallow(<ReviewRow className="test-class-name" />);
-    expect(component.find('.test-class-name').exists()).toBe(true);
-  });
-
-  it('renders children', () => {
-    const component = shallow(
-      <ReviewRow>
+  it('matches snapshot', () => {
+    const { asFragment } = render(
+      <ReviewRow className="test-class-name">
         <div id="testid" />
       </ReviewRow>
     );
-
-    expect(component.find('#testid').exists()).toBe(true);
+    expect(asFragment()).toMatchSnapshot();
   });
 });

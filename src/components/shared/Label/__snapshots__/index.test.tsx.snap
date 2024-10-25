@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`The Label component > matches snapshot 1`] = `
+<DocumentFragment>
+  <label
+    aria-label="aria test"
+    class="usa-label"
+    for="test"
+  >
+    <div
+      data-testid="label-child"
+    >
+      Hi
+    </div>
+  </label>
+</DocumentFragment>
+`;

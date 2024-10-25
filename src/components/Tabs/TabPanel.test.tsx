@@ -1,11 +1,11 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import TabPanel from './TabPanel';
 
 describe('The TabPanel component', () => {
   it('renders without errors', () => {
-    shallow(
+    render(
       <TabPanel id="test" tabName="Tab 1">
         Hello
       </TabPanel>

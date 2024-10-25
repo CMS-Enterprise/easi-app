@@ -1,0 +1,51 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`The ErrorAlert component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="usa-alert usa-alert--error"
+    role="alert"
+  >
+    <div
+      class="usa-alert__body"
+    >
+      <h3
+        class="usa-alert__heading"
+        tabindex="-1"
+      >
+        test heading
+      </h3>
+      <button
+        class="usa-error-message usa-alert__text easi-error-alert__message"
+        type="button"
+      >
+        Message 1
+      </button>
+      <button
+        class="usa-error-message usa-alert__text easi-error-alert__message"
+        type="button"
+      >
+        Message 2
+      </button>
+      <button
+        class="usa-error-message usa-alert__text easi-error-alert__message"
+        type="button"
+      >
+        Message 3
+      </button>
+      <button
+        class="usa-error-message usa-alert__text easi-error-alert__message"
+        type="button"
+      >
+        Message 4
+      </button>
+      <button
+        class="usa-error-message usa-alert__text easi-error-alert__message"
+        type="button"
+      >
+        Message 5
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;

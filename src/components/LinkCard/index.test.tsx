@@ -1,17 +1,24 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { MemoryRouter } from 'react-router-dom';
+import { render, screen } from '@testing-library/react';
 
 import LinkCard from './index';
 
 describe('LinkCard', () => {
-  const wrapper = shallow(<LinkCard type="trb" />);
   it('renders without crashing', () => {
-    expect(wrapper.length).toEqual(1);
+    render(
+      <MemoryRouter>
+        <LinkCard type="trb" />
+      </MemoryRouter>
+    );
   });
   it('renders heading with link', () => {
-    expect(
-      wrapper.find('h3').children().contains('Technical assistance')
-    ).toEqual(true);
-    expect(wrapper.find('UswdsReactLink').prop('to')).toEqual('/trb');
+    render(
+      <MemoryRouter>
+        <LinkCard type="trb" />
+      </MemoryRouter>
+    );
+    screen.getByRole('heading', { level: 3, name: 'Technical assistance' });
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/trb');
   });
 });

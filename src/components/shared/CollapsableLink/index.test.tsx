@@ -1,39 +1,32 @@
 import React from 'react';
-import { Button } from '@trussworks/react-uswds';
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import CollapsableLink from './index';
 
 describe('The Collapsable Link componnet', () => {
   it('renders without crashing', () => {
-    shallow(
+    const { asFragment } = render(
       <CollapsableLink id="Test" label="testLabel">
         Hello!
       </CollapsableLink>
     );
+    expect(asFragment()).toMatchSnapshot();
   });
 
-  it('hides content by children', () => {
-    const component = shallow(
+  it('renders children content when expanded', async () => {
+    render(
       <CollapsableLink id="Test" label="Test">
         <div data-testid="children" />
       </CollapsableLink>
     );
 
-    expect(component.find('[data-testid="children"]').exists()).toEqual(false);
-    expect(component.find(Button).prop('aria-expanded')).toEqual(false);
-  });
+    userEvent.click(screen.getByTestId('collapsable-link'));
+    await screen.findByTestId('children');
 
-  it('renders children content when expanded', () => {
-    const component = shallow(
-      <CollapsableLink id="Test" label="Test">
-        <div data-testid="children" />
-      </CollapsableLink>
+    expect(screen.getByRole('button', { name: 'Test' })).toHaveAttribute(
+      'aria-expanded',
+      'true'
     );
-
-    component.find(Button).simulate('click');
-
-    expect(component.find('[data-testid="children"]').exists()).toEqual(true);
-    expect(component.find(Button).prop('aria-expanded')).toEqual(true);
   });
 });

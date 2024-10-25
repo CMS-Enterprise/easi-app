@@ -1,11 +1,11 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import { RadioField } from './index';
 
 describe('The Radio Field', () => {
-  it('renders without crashing', () => {
-    shallow(
+  it('matches snapshot', () => {
+    const { asFragment } = render(
       <RadioField
         id="TestRadio"
         label="A"
@@ -15,21 +15,6 @@ describe('The Radio Field', () => {
         value="A"
       />
     );
-  });
-
-  it('has the correct value', () => {
-    const fixture = 'A';
-    const component = shallow(
-      <RadioField
-        id="TestRadio"
-        label="A"
-        name="Question1"
-        onBlur={() => {}}
-        onChange={() => {}}
-        value={fixture}
-      />
-    );
-
-    expect(component.find('input').props().value).toEqual(fixture);
+    expect(asFragment()).toMatchSnapshot();
   });
 });

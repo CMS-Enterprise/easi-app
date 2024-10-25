@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`The Radio Field > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="usa-radio"
+  >
+    <input
+      class="usa-radio__input"
+      id="TestRadio"
+      name="Question1"
+      type="radio"
+      value="A"
+    />
+    <label
+      class="usa-radio__label"
+      for="TestRadio"
+    >
+      A
+    </label>
+  </div>
+</DocumentFragment>
+`;
