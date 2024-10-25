@@ -41,7 +41,7 @@ services:
       - IT_INVESTMENT_EMAIL=success@simulator.amazonses.com
       - EASI_HELP_EMAIL=success@simulator.amazonses.com
       - TRB_EMAIL=success@simulator.amazonses.com
-      - OIT_FEEDBACK_CHANNEL_SLACK_LINK=https://oddball.slack.com/archives/C059N01AYGM
+      - OIT_FEEDBACK_CHANNEL_SLACK_LINK
       - SES_RECIPIENT_ALLOWLIST_REGEX
       - EMAIL_TEMPLATE_DIR=./pkg/email/templates
       - AWS_REGION=us-west-2
