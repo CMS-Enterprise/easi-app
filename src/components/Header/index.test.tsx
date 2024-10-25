@@ -1,9 +1,7 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
-import { mount, shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 
 import easiMockStore from 'utils/testing/easiMockStore';
 
@@ -34,30 +32,29 @@ describe('The Header component', () => {
         <Header />
       </MemoryRouter>
     );
+    screen.getByText('Sign Out');
   });
 
   describe('When logged in', () => {
     it('displays a login button', () => {
-      const component = shallow(<Header />);
-      expect(component.text().includes('Sign Out')).toBe(true);
-      expect(component.text().includes('Sign In')).toBe(false);
+      render(
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      );
+      screen.getByText(/Sign Out/);
+      expect(screen.queryByText(/Sign In/)).not.toBeInTheDocument();
     });
 
     it('displays the users name', async () => {
-      let component: any;
-      await act(async () => {
-        component = mount(
-          <Provider store={store}>
-            <MemoryRouter>
-              <Header />
-            </MemoryRouter>
-          </Provider>
-        );
-      });
-      setImmediate(() => {
-        component.update();
-        expect(component.text().includes('John Doe')).toBe(true);
-      });
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <Header />
+          </MemoryRouter>
+        </Provider>
+      );
+      await screen.findByText('John Doe');
     });
   });
 });
