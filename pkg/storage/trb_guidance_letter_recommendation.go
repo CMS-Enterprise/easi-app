@@ -29,9 +29,11 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 		recommendation.ID = uuid.New()
 	}
 
-	// besides the normal fields, set position_in_letter pased on the existing recommendations for this guidance letter
-	// set position_in_letter to 1 + (the largeting existing position for this guidance letter),
+	// besides the normal fields, set position_in_letter based on the existing recommendations for this guidance letter
+	// set position_in_letter to 1 + (the largest existing position for this guidance letter),
 	// defaulting to 0 if there are no existing recommendations for this guidance letter
+	// -	note: if the `category` changes, we must update the `category` field AND add to the end of the order
+	// 		for the new category
 	stmt, err := s.db.PrepareNamed(`
 		INSERT INTO trb_guidance_letter_recommendations (
 			id,
@@ -52,7 +54,7 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 			:links,
 			:created_by,
 			:modified_by,
-			COALESCE(MAX(position_in_letter) + 1, 0),
+			COALESCE(MAX(position_in_letter) FILTER ( WHERE category = :category AND trb_request_id = :trb_request_id) + 1, 0),
 			:category
 		FROM trb_guidance_letter_recommendations
 		WHERE trb_request_id = :trb_request_id
@@ -75,6 +77,7 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 			fmt.Sprintf("Failed to create TRB guidance letter recommendation with error %s", err),
 			zap.Error(err),
 			zap.String("user", recommendation.CreatedBy),
+			zap.String("sql_statement", stmt.QueryString),
 		)
 		return nil, err
 	}
@@ -177,7 +180,8 @@ func (s *Store) GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx conte
 }
 
 // UpdateTRBGuidanceLetterRecommendation updates an existing TRB guidance letter recommendation record in the database
-// This purposely does not update the position_in_letter column - to update that, use UpdateTRBGuidanceLetterRecommendationOrder()
+// This purposely does not update the position_in_letter column unless the `category` changes - to update the order through
+// normal reordering operation, use UpdateTRBGuidanceLetterRecommendationOrder()
 func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recommendation *models.TRBGuidanceLetterRecommendation) (*models.TRBGuidanceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_guidance_letter_recommendations
@@ -188,7 +192,15 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recom
 			links = :links,
 			created_by = :created_by,
 			modified_by = :modified_by,
-			category = :category
+			category = :category,
+			-- update position in letter ONLY when category changes
+			position_in_letter = CASE
+				-- when category changes
+				WHEN category <> :category
+					THEN (SELECT COALESCE(MAX(position_in_letter) + 1, 0) FROM trb_guidance_letter_recommendations WHERE category = :category AND trb_request_id = :trb_request_id)
+				-- when category does not change
+				ELSE position_in_letter
+			END
 		WHERE id = :id
 		RETURNING *;`)
 	if err != nil {
