@@ -1,15 +1,16 @@
 const governanceOverview = {
   heading: 'Add a new system or service',
   subheading:
-    'To add a new system or service, you need to go through a set of steps and get approved by the Governance Review Board (GRB).',
+    'To add a new system or service, you need to go through a set of steps to get reviewed by the Governance Review Board (GRB).',
   processUse:
     "Use this process only if you'd like to add a new system, service or make major changes and upgrades to an existing one.",
   info: {
     intro: 'Working through this step-by-step process will help you:',
     listItems: [
-      'work with Subject Matter Experts (SMEs) to refine your Business Case',
-      'get a Life Cycle ID',
-      'get approval for your request to then seek funding'
+      'Work with GRT Subject Matter Experts (SMEs) to refine your Business Case',
+      'Justify your Business Case to the GRB',
+      'Complete or initiate any new requirements from the GRT and/or GRB',
+      'Get a Life Cycle ID (LCID) certifying compliance with HHS standards for IT investments to use on your acquisition documentation'
     ],
     timeline:
       'It can take 4 to 6 weeks to go through all the steps and get a decision.'
@@ -27,7 +28,7 @@ const governanceOverview = {
         "The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps."
     },
     {
-      heading: 'Prepare your business case',
+      heading: 'Prepare your Business Case',
       content: 'Draft different solutions and the corresponding costs involved.'
     },
     {
@@ -45,9 +46,9 @@ const governanceOverview = {
         'If the Governance Review Team has any additional comments or feedback, they may ask you to update your Business Case before submitting it to the Governance Review Board.'
     },
     {
-      heading: 'Submit the business case for final approval',
+      heading: 'Submit your final Business Case',
       content:
-        'Update your Business Case based on feedback from the Governance Review Team and submit it to the Governance Review Board.'
+        'Update your Business Case based on feedback and incorporate any requirements from the review meeting or Governance Review Team for submission to the Governance Review Board.'
     },
     {
       heading: 'Attend the Governance Review Board Meeting',
@@ -61,7 +62,7 @@ const governanceOverview = {
     {
       heading: 'Decision and next steps',
       content:
-        'If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.'
+        'If your request is ready to move forward, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.'
     }
   ],
   processExists: {
