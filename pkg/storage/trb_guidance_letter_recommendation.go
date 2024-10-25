@@ -27,9 +27,11 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 		recommendation.ID = uuid.New()
 	}
 
-	// besides the normal fields, set position_in_letter pased on the existing recommendations for this guidance letter
-	// set position_in_letter to 1 + (the largeting existing position for this guidance letter),
+	// besides the normal fields, set position_in_letter based on the existing recommendations for this guidance letter
+	// set position_in_letter to 1 + (the largest existing position for this guidance letter),
 	// defaulting to 0 if there are no existing recommendations for this guidance letter
+	// -	note: if the `category` changes, we must update the `category` field AND add to the end of the order
+	// 		for the new category
 	stmt, err := s.db.PrepareNamed(`
 		INSERT INTO trb_guidance_letter_recommendations (
 			id,
@@ -50,7 +52,8 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 			:links,
 			:created_by,
 			:modified_by,
-			COALESCE(MAX(position_in_letter) + 1, 0),
+			-- add to end of specific category order
+			COALESCE(MAX((SELECT position_in_letter FROM trb_guidance_letter_recommendations WHERE trb_request_id = :trb_request_id AND category = :category)) + 1, 0),
 			:category
 		FROM trb_guidance_letter_recommendations
 		WHERE trb_request_id = :trb_request_id
