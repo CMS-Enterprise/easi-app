@@ -35,6 +35,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(toCreate.Recommendation, created.Recommendation)
 		s.EqualValues(toCreate.Links[0], created.Links[0])
 		s.EqualValues(toCreate.Links[1], created.Links[1])
+		s.EqualValues(toCreate.Category, created.Category)
 		s.EqualValues(toCreate.PositionInLetter.Int64, 0)
 
 		// Test fetch of recommendations list
