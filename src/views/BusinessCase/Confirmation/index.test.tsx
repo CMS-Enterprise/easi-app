@@ -1,7 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import { businessCaseInitialData } from 'data/businessCase';
 
@@ -12,23 +11,13 @@ describe('The Business Case Confirmation page', () => {
     ...businessCaseInitialData,
     systemIntakeId: '12345'
   };
-  it('renders without crashing', () => {
-    shallow(
+
+  it('matches the snapshot', () => {
+    const { asFragment } = render(
       <MemoryRouter>
         <Confirmation businessCase={testBusinessCase} />
       </MemoryRouter>
     );
-  });
-
-  it('matches the snapshot', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Confirmation businessCase={testBusinessCase} />
-        </MemoryRouter>
-      )
-      .toJSON();
-
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
