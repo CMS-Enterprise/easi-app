@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import renderer, { act } from 'react-test-renderer';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import GovernanceOverview from './index';
 
@@ -25,7 +25,7 @@ vi.mock('@okta/okta-react', () => ({
 
 describe('The governance overview page', () => {
   it('renders without crashing', () => {
-    shallow(
+    render(
       <MemoryRouter>
         <GovernanceOverview />
       </MemoryRouter>

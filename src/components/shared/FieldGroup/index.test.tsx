@@ -1,30 +1,22 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 
 import FieldGroup from './index';
 
 describe('The FieldGroup component', () => {
-  it('renders without crashing', () => {
-    shallow(<FieldGroup>Test</FieldGroup>);
-  });
-
-  it('renders children', () => {
-    const component = shallow(
-      <FieldGroup>
-        <div id="test-component" />
-      </FieldGroup>
-    );
-
-    expect(component.find('#test-component').exists()).toBe(true);
+  it('matches snapshot', () => {
+    const { asFragment } = render(<FieldGroup>Test</FieldGroup>);
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('renders the correct classes', () => {
-    const component = shallow(
-      <FieldGroup error>
-        <div id="test-component" />
+    render(
+      <FieldGroup error data-testid="field-group">
+        <div />
       </FieldGroup>
     );
-
-    expect(component.find('.usa-form-group--error').exists()).toBe(true);
+    expect(screen.getByTestId('field-group')).toHaveClass(
+      'usa-form-group--error'
+    );
   });
 });
