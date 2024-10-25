@@ -1,50 +1,51 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`The Not Found Page > matches the snapshot 1`] = `
-<main
-  className="easi-main-content easi-not-found grid-container"
-  id="main-content"
-  role="main"
-  tabIndex={-1}
->
-  <div
-    className="margin-y-7"
+<DocumentFragment>
+  <main
+    class="easi-main-content easi-not-found grid-container"
+    id="main-content"
+    role="main"
+    tabindex="-1"
   >
-    <h1
-      aria-live="polite"
-      className="easi-h1"
-      tabIndex={-1}
+    <div
+      class="margin-y-7"
     >
-      This page cannot be found.
-    </h1>
-    <p>
-      Here is a list of things you could try to check and fix:
-    </p>
-    <ul
-      className="easi-not-found__error_suggestions"
-    >
-      <li>
-        Please check if the address you typed in is correct.
-      </li>
-      <li>
-        If you've typed the address correctly, check the spelling.
-      </li>
-      <li>
-        If you've copied and pasted the address, check that you've copied the entire address.
-      </li>
-    </ul>
-    <p
-      className="margin-bottom-5"
-    >
-      If none of the above have solved the problem, please return to the home page and try again.
-    </p>
-    <a
-      className="usa-button"
-      href="/"
-      onClick={[Function]}
-    >
-      Go back to the home page
-    </a>
-  </div>
-</main>
+      <h1
+        aria-live="polite"
+        class="easi-h1"
+        tabindex="-1"
+      >
+        This page cannot be found.
+      </h1>
+      <p>
+        Here is a list of things you could try to check and fix:
+      </p>
+      <ul
+        class="easi-not-found__error_suggestions"
+      >
+        <li>
+          Please check if the address you typed in is correct.
+        </li>
+        <li>
+          If you've typed the address correctly, check the spelling.
+        </li>
+        <li>
+          If you've copied and pasted the address, check that you've copied the entire address.
+        </li>
+      </ul>
+      <p
+        class="margin-bottom-5"
+      >
+        If none of the above have solved the problem, please return to the home page and try again.
+      </p>
+      <a
+        class="usa-button"
+        href="/"
+      >
+        Go back to the home page
+      </a>
+    </div>
+  </main>
+</DocumentFragment>
 `;
