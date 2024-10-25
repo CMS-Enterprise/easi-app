@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { shallow } from 'enzyme';
 
 import { BusinessCaseModel } from 'types/businessCase';
 
@@ -379,10 +378,6 @@ describe('The Business Case Review Component', () => {
       hasUserInterface: 'YES'
     }
   };
-
-  it('renders without crashing', () => {
-    shallow(<BusinessCaseReview values={businessCase} />);
-  });
 
   it('matches the snapshot', () => {
     const { asFragment } = render(<BusinessCaseReview values={businessCase} />);
