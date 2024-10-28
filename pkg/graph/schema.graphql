@@ -2366,6 +2366,7 @@ input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]int
   title: String
   recommendation: HTML
   links: [String!]
+  category: TRBGuidanceLetterRecommendationCategory!
 }
 
 enum TRBGuidanceLetterRecommendationCategory {

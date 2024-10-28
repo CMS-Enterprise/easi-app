@@ -10137,6 +10137,7 @@ input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]int
   title: String
   recommendation: HTML
   links: [String!]
+  category: TRBGuidanceLetterRecommendationCategory!
 }
 
 enum TRBGuidanceLetterRecommendationCategory {
@@ -61951,7 +61952,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationI
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "title", "recommendation", "links"}
+	fieldsInOrder := [...]string{"id", "title", "recommendation", "links", "category"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -61986,6 +61987,13 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationI
 				return it, err
 			}
 			it["links"] = data
+		case "category":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
+			data, err := ec.unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it["category"] = data
 		}
 	}
 
