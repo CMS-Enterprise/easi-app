@@ -138,4 +138,104 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.NoError(err)
 		s.EqualValues(1, lastRecommendationAfterDelete.PositionInLetter.ValueOrZero())
 	})
+
+	s.Run("when creating a new insight, it gets added to the end of its category's order", func() {
+		trbRequest := models.NewTRBRequest(anonEua)
+		trbRequest.Type = models.TRBTNeedHelp
+		trbRequest.State = models.TRBRequestStateOpen
+		trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
+		s.NoError(err)
+
+		// add 2 insights of each category
+
+		// create insights of recommendation category
+		recommendationToCreate1 := models.TRBGuidanceLetterRecommendation{
+			TRBRequestID:   trbRequest.ID,
+			Title:          "Restart your computer1",
+			Recommendation: "I recommend you restart your computer1",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+		}
+
+		recommendationToCreate2 := models.TRBGuidanceLetterRecommendation{
+			TRBRequestID:   trbRequest.ID,
+			Title:          "Restart your computer2",
+			Recommendation: "I recommend you restart your computer2",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+		}
+
+		createdRecommendation1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &recommendationToCreate1)
+		s.NoError(err)
+		s.EqualValues(createdRecommendation1.PositionInLetter.Int64, int64(0))
+		s.EqualValues(createdRecommendation1.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
+
+		createdRecommendation2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &recommendationToCreate2)
+		s.NoError(err)
+		s.EqualValues(createdRecommendation2.PositionInLetter.Int64, int64(1))
+		s.EqualValues(createdRecommendation2.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
+
+		// create insights of consideration category
+		considerationToCreate1 := models.TRBGuidanceLetterRecommendation{
+			TRBRequestID:   trbRequest.ID,
+			Title:          "Restart your computer3",
+			Recommendation: "I consider you restart your computer1",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+		}
+
+		considerationToCreate2 := models.TRBGuidanceLetterRecommendation{
+			TRBRequestID:   trbRequest.ID,
+			Title:          "Restart your computer4",
+			Recommendation: "I consider you restart your computer2",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+		}
+
+		createdConsideration1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate1)
+		s.NoError(err)
+		s.EqualValues(createdConsideration1.PositionInLetter.Int64, int64(0))
+		s.EqualValues(createdConsideration1.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
+
+		createdConsideration2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate2)
+		s.NoError(err)
+		s.EqualValues(createdConsideration2.PositionInLetter.Int64, int64(1))
+		s.EqualValues(createdConsideration2.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
+
+		// create insights of requirement category
+		requirementToCreate1 := models.TRBGuidanceLetterRecommendation{
+			TRBRequestID:   trbRequest.ID,
+			Title:          "Restart your computer5",
+			Recommendation: "I require you restart your computer1",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
+		}
+
+		requirementToCreate2 := models.TRBGuidanceLetterRecommendation{
+			TRBRequestID:   trbRequest.ID,
+			Title:          "Restart your computer6",
+			Recommendation: "I require you restart your computer2",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
+		}
+
+		createdRequirement1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &requirementToCreate1)
+		s.NoError(err)
+		s.EqualValues(createdRequirement1.PositionInLetter.Int64, int64(0))
+		s.EqualValues(createdRequirement1.Category, models.TRBGuidanceLetterRecommendationCategoryRequirement)
+
+		createdRequirement2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &requirementToCreate2)
+		s.NoError(err)
+		s.EqualValues(createdRequirement2.PositionInLetter.Int64, int64(1))
+		s.EqualValues(createdRequirement2.Category, models.TRBGuidanceLetterRecommendationCategoryRequirement)
+	})
+
+	s.Run("when changing the category of an insight, it gets added to the end of the new category's order", func() {
+		//trbRequest := models.NewTRBRequest(anonEua)
+		//trbRequest.Type = models.TRBTNeedHelp
+		//trbRequest.State = models.TRBRequestStateOpen
+		//trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
+		//s.NoError(err)
+
+	})
 }
