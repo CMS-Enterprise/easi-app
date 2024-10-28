@@ -228,6 +228,24 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.NoError(err)
 		s.EqualValues(createdRequirement2.PositionInLetter.Int64, int64(1))
 		s.EqualValues(createdRequirement2.Category, models.TRBGuidanceLetterRecommendationCategoryRequirement)
+
+		// add a third consideration, confirm index position
+		considerationToCreate3 := models.TRBGuidanceLetterRecommendation{
+			TRBRequestID:   trbRequest.ID,
+			Title:          "Restart your computer7",
+			Recommendation: "I consider you restart your computer2",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+		}
+
+		createdConsideration3, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate3)
+		s.NoError(err)
+		s.EqualValues(createdConsideration3.PositionInLetter.Int64, int64(2))
+		s.EqualValues(createdConsideration3.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
+	})
+
+	s.Run("when changing the order of insights, it updates the order properly with the category in mind", func() {
+
 	})
 
 	s.Run("when changing the category of an insight, it gets added to the end of the new category's order", func() {
