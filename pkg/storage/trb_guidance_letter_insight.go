@@ -241,7 +241,7 @@ func (s *Store) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID
 		RETURNING *;`)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(
-				fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
+				fmt.Sprintf("Failed to delete TRB guidance letter insight %s", err),
 				zap.String("id", id.String()),
 			)
 			return nil, err
@@ -266,7 +266,7 @@ func (s *Store) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID
 		}
 
 		// remove from order
-		if _, err := updateTRBGuidanceLetterRecommendationOrder(ctx, tx, models.UpdateTRBGuidanceLetterInsightOrderInput{
+		if _, err := updateTRBGuidanceLetterInsightOrder(ctx, tx, models.UpdateTRBGuidanceLetterInsightOrderInput{
 			TrbRequestID: deleted.TRBRequestID,
 			NewOrder:     newOrder,
 			Category:     deleted.Category,
@@ -286,11 +286,11 @@ func (s *Store) UpdateTRBGuidanceLetterInsightOrder(
 	update models.UpdateTRBGuidanceLetterInsightOrderInput,
 ) ([]*models.TRBGuidanceLetterInsight, error) {
 	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBGuidanceLetterInsight, error) {
-		return updateTRBGuidanceLetterRecommendationOrder(ctx, tx, update)
+		return updateTRBGuidanceLetterInsightOrder(ctx, tx, update)
 	})
 }
 
-func updateTRBGuidanceLetterRecommendationOrder(
+func updateTRBGuidanceLetterInsightOrder(
 	ctx context.Context,
 	tx *sqlx.Tx,
 	update models.UpdateTRBGuidanceLetterInsightOrderInput,
