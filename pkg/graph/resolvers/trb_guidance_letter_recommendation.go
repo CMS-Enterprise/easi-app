@@ -74,7 +74,7 @@ func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 	// ex: having considerations 1, 2, 3, 4 and moving consideration 2 to a requirement, leaving considerations 1, 3, 4)
 	// while the missing order numbers will not affect the UI as the UI displays the insights in the order received (we
 	// do not send the position int to the UI), it is still better db hygiene to clean up the orders
-	if err := cleanupOGuidanceLetterInsightOrder(ctx, store, recommendation.TRBRequestID); err != nil {
+	if err := cleanupGuidanceLetterInsightOrder(ctx, store, recommendation.TRBRequestID); err != nil {
 		return nil, err
 	}
 
@@ -141,7 +141,7 @@ func DeleteTRBGuidanceLetterRecommendation(
 	return store.DeleteTRBGuidanceLetterRecommendation(ctx, id, newOrder)
 }
 
-func cleanupOGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) error {
+func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) error {
 	// first, get list of all insights for this guidance letter
 	allRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, trbRequestID)
 	if err != nil {
