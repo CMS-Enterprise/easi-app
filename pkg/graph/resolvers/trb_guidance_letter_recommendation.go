@@ -164,11 +164,10 @@ func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store
 		m[insight.Category] = append(m[insight.Category], insight)
 	}
 
-	// reorder
+	// set new order
 	for category, insights := range m {
 		var sorted []uuid.UUID
 
-		// here is where we apply updated index
 		for _, insight := range insights {
 			sorted = append(sorted, insight.ID)
 		}
