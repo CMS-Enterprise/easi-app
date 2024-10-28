@@ -248,7 +248,8 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 	})
 
-	s.Run("when changing the category of an insight, it gets added to the end of the new category's order", func() {
+	s.Run(`when changing the category of an insight, it gets added to the end of the new category's order and reshuffles
+			the old category's order to remove any holes'`, func() {
 		//trbRequest := models.NewTRBRequest(anonEua)
 		//trbRequest.Type = models.TRBTNeedHelp
 		//trbRequest.State = models.TRBRequestStateOpen

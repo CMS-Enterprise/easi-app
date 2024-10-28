@@ -5,8 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"sort"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/trb/recommendations"
@@ -68,7 +70,15 @@ func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 		return nil, err
 	}
 
-	return updated, err
+	// clean up the order to fill any missing order numbers
+	// ex: having considerations 1, 2, 3, 4 and moving consideration 2 to a requirement, leaving considerations 1, 3, 4)
+	// while the missing order numbers will not affect the UI as the UI displays the insights in the order received (we
+	// do not send the position int to the UI), it is still better db hygiene to clean up the orders
+	if err := cleanupOGuidanceLetterInsightOrder(ctx, store, recommendation.TRBRequestID); err != nil {
+		return nil, err
+	}
+
+	return updated, nil
 }
 
 // UpdateTRBGuidanceLetterRecommendationOrder updates the order that TRB guidance letter recommendations are displayed in
@@ -90,8 +100,7 @@ func UpdateTRBGuidanceLetterRecommendationOrder(
 	// due to the low likelihood of multiple users concurrently editing the same guidance letter.
 	// There are issues that could occur in theory, though, such as a recommendation getting deleted between when this function queries and when it updates;
 	// that could lead to a `newOrder` with more elements than there are recommendations being accepted, which would throw off the recs' positions.
-	err = recommendations.IsNewRecommendationOrderValid(currentRecommendations, input.NewOrder)
-	if err != nil {
+	if err := recommendations.IsNewRecommendationOrderValid(currentRecommendations, input.NewOrder); err != nil {
 		return nil, err
 	}
 
@@ -99,6 +108,7 @@ func UpdateTRBGuidanceLetterRecommendationOrder(
 	if err != nil {
 		return nil, err
 	}
+
 	return updated, nil
 }
 
@@ -129,4 +139,50 @@ func DeleteTRBGuidanceLetterRecommendation(
 	}
 
 	return store.DeleteTRBGuidanceLetterRecommendation(ctx, id, newOrder)
+}
+
+func cleanupOGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) error {
+	// first, get list of all insights for this guidance letter
+	allRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, trbRequestID)
+	if err != nil {
+		return err
+	}
+
+	// presort, regardless of category, for ease later
+	sort.Slice(allRecommendations, func(i, j int) bool {
+		return allRecommendations[i].PositionInLetter.Int64 < allRecommendations[j].PositionInLetter.Int64
+	})
+
+	// group by category, shuffle up the order if needed, update db
+	m := map[models.TRBGuidanceLetterRecommendationCategory][]*models.TRBGuidanceLetterRecommendation{
+		models.TRBGuidanceLetterRecommendationCategoryConsideration:  {},
+		models.TRBGuidanceLetterRecommendationCategoryRecommendation: {},
+		models.TRBGuidanceLetterRecommendationCategoryRequirement:    {},
+	}
+
+	// populate map
+	for _, insight := range allRecommendations {
+		m[insight.Category] = append(m[insight.Category], insight)
+	}
+
+	// reorder
+	for k, v := range m {
+		var sorted []uuid.UUID
+
+		// here is where we apply updated index
+		for i := range v {
+			m[k][i].PositionInLetter = null.IntFrom(int64(i))
+		}
+
+		// save new order for each category
+		if _, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
+			TrbRequestID: trbRequestID,
+			NewOrder:     sorted,
+			Category:     k,
+		}); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
