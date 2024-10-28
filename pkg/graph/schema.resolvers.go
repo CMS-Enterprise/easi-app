@@ -1837,6 +1837,12 @@ func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.S
 	return obj.EASupportRequest.Ptr(), nil
 }
 
+// AcquisitionMethods is the resolver for the acquisitionMethods field.
+func (r *systemIntakeResolver) AcquisitionMethods(ctx context.Context, obj *models.SystemIntake) ([]models.SystemIntakeSoftwareAcquisitionMethods, error) {
+	acqMethods := models.ConvertEnums[models.SystemIntakeSoftwareAcquisitionMethods](obj.AcquisitionMethods)
+	return acqMethods, nil
+}
+
 // Notes is the resolver for the notes field.
 func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error) {
 	return resolvers.SystemIntakeNotes(ctx, obj)
