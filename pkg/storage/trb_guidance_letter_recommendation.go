@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"golang.org/x/exp/slices"
 
 	"go.uber.org/zap"
@@ -15,6 +16,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // CreateTRBGuidanceLetterRecommendation creates a new TRB guidance letter recommendation record in the database.
@@ -229,45 +231,68 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recom
 }
 
 // DeleteTRBGuidanceLetterRecommendation deletes an existing TRB guidance letter recommendation record in the database
-func (s *Store) DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
-	stmt, err := s.db.PrepareNamed(`
+func (s *Store) DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uuid.UUID, newOrder []uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
+	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) (*models.TRBGuidanceLetterRecommendation, error) {
+
+		stmt, err := tx.PrepareNamed(`
 		UPDATE trb_guidance_letter_recommendations
 		SET deleted_at = CURRENT_TIMESTAMP, position_in_letter = NULL
 		WHERE id = :id
 		RETURNING *;`)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
-			zap.String("id", id.String()),
-		)
-		return nil, err
-	}
-	defer stmt.Close()
-
-	toDelete := models.TRBGuidanceLetterRecommendation{}
-	toDelete.ID = id
-	deleted := models.TRBGuidanceLetterRecommendation{}
-
-	err = stmt.Get(&deleted, &toDelete)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
-			zap.String("id", id.String()),
-		)
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     toDelete,
-			Operation: apperrors.QueryUpdate,
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
+				zap.String("id", id.String()),
+			)
+			return nil, err
 		}
-	}
+		defer stmt.Close()
 
-	return &deleted, err
+		toDelete := models.TRBGuidanceLetterRecommendation{}
+		toDelete.ID = id
+		deleted := models.TRBGuidanceLetterRecommendation{}
+
+		err = stmt.Get(&deleted, &toDelete)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
+				zap.String("id", id.String()),
+			)
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     toDelete,
+				Operation: apperrors.QueryUpdate,
+			}
+		}
+
+		// remove from order
+		if _, err := updateTRBGuidanceLetterRecommendationOrder(ctx, tx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
+			TrbRequestID: deleted.TRBRequestID,
+			NewOrder:     newOrder,
+			Category:     deleted.Category,
+		}); err != nil {
+			return nil, err
+		}
+
+		return &deleted, err
+
+	})
 }
 
 // UpdateTRBGuidanceLetterRecommendationOrder updates the ordering of recommendations for a given guidance letter,
 // using the order of the recommendation IDs passed in as newOrder. No other recommendation columns/fields are updated.
 func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	ctx context.Context,
+	update models.UpdateTRBGuidanceLetterRecommendationOrderInput,
+) ([]*models.TRBGuidanceLetterRecommendation, error) {
+	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBGuidanceLetterRecommendation, error) {
+		return updateTRBGuidanceLetterRecommendationOrder(ctx, tx, update)
+	})
+}
+
+func updateTRBGuidanceLetterRecommendationOrder(
+	ctx context.Context,
+	tx *sqlx.Tx,
 	update models.UpdateTRBGuidanceLetterRecommendationOrderInput,
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	// convert newOrder into a slice of maps with entries for recommendation ID and new position,
@@ -297,7 +322,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	// json_to_recordset() lets us build a temporary table (new_positions) with the new positions for each recommendation,
 	// which we can use in a CTE (common table expression, denoted by the WITH keyword) to update the recommendations
 	// json_to_recordset() documentation - https://www.postgresql.org/docs/14/functions-json.html
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := tx.PrepareNamed(`
 		WITH new_positions AS (
 			SELECT *
 			FROM json_to_recordset(:newPositions)

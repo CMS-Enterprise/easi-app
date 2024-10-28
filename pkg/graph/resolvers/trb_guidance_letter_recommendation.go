@@ -120,28 +120,13 @@ func DeleteTRBGuidanceLetterRecommendation(
 		return int(recommendationA.PositionInLetter.ValueOrZero()) - int(recommendationB.PositionInLetter.ValueOrZero())
 	})
 
-	var trbRequestID uuid.UUID // will be set once we start looping over allRecommendationsForRequest
-	newOrder := []uuid.UUID{}  // updated positions
+	newOrder := []uuid.UUID{} // updated positions
 
 	for _, recommendation := range allRecommendationsForRequest {
-		trbRequestID = recommendation.TRBRequestID // doesn't matter that we set this on every iteration, all recommendations will have the same request ID
-		if recommendation.ID != id {               // skip over the recommendation we want to delete
+		if recommendation.ID != id { // skip over the recommendation we want to delete
 			newOrder = append(newOrder, recommendation.ID)
 		}
 	}
 
-	deletedRecommendation, err := store.DeleteTRBGuidanceLetterRecommendation(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	if _, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
-		TrbRequestID: trbRequestID,
-		NewOrder:     newOrder,
-		Category:     deletedRecommendation.Category,
-	}); err != nil {
-		return nil, err
-	}
-
-	return deletedRecommendation, nil
+	return store.DeleteTRBGuidanceLetterRecommendation(ctx, id, newOrder)
 }
