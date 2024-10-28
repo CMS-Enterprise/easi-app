@@ -137,6 +137,31 @@ func (s *Store) GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx context.Co
 	return results, nil
 }
 
+// GetTRBGuidanceLetterRecommendationsByTRBRequestIDAndCategory queries the DB for all the TRB guidance letter recommendations,
+// filtering by the given TRB request ID and ordered in the user-specified positions
+func (s *Store) GetTRBGuidanceLetterRecommendationsByTRBRequestIDAndCategory(ctx context.Context, trbRequestID uuid.UUID, category models.TRBGuidanceLetterRecommendationCategory) ([]*models.TRBGuidanceLetterRecommendation, error) {
+	results := []*models.TRBGuidanceLetterRecommendation{}
+
+	err := s.db.Select(&results, `
+		SELECT *
+		FROM trb_guidance_letter_recommendations
+		WHERE trb_request_id = $1
+		AND category = $2
+		AND deleted_at IS NULL
+		ORDER BY position_in_letter ASC
+	`, trbRequestID, category)
+
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		appcontext.ZLogger(ctx).Error("Failed to fetch TRB guidance letter recommendations", zap.Error(err), zap.String("id", trbRequestID.String()))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBGuidanceLetterRecommendation{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return results, nil
+}
+
 // GetTRBGuidanceLetterRecommendationsSharingTRBRequestID queries the DB for all TRB guidance letter recommendations with the same TRB request ID as the given recommendation
 // It will not return any entities that have a deleted_at value
 func (s *Store) GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx context.Context, recommendationID uuid.UUID) ([]*models.TRBGuidanceLetterRecommendation, error) {

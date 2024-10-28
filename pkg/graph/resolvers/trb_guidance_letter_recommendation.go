@@ -79,7 +79,7 @@ func UpdateTRBGuidanceLetterRecommendationOrder(
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	// this extra database query is necessary for validation, so we don't mess up the recommendations' positions with an invalid order,
 	// but requiring an extra database call is unfortunate
-	currentRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, input.TrbRequestID)
+	currentRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestIDAndCategory(ctx, input.TrbRequestID, input.Category)
 	if err != nil {
 		return nil, err
 	}
