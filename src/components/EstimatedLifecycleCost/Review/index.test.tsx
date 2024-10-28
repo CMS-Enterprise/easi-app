@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { render, screen, within } from '@testing-library/react';
 
 import { defaultEstimatedLifecycle } from 'data/businessCase';
 import { LifecycleCosts } from 'types/estimatedLifecycle';
@@ -10,6 +10,14 @@ import EstimatedLifecycleCostReview from './index';
 declare const global: any;
 
 describe('The Estimated Lifecycle Cost review component', () => {
+  beforeEach(() => {
+    global.matchMedia = (media: string) => ({
+      addListener: () => {},
+      removeListener: () => {},
+      matches: media === '(min-width: 769px)'
+    });
+  });
+
   const sampleData: LifecycleCosts = {
     development: {
       label: 'Development',
@@ -110,7 +118,7 @@ describe('The Estimated Lifecycle Cost review component', () => {
   };
 
   it('renders without crashing', () => {
-    shallow(
+    render(
       <EstimatedLifecycleCostReview
         fiscalYear={2021}
         data={defaultEstimatedLifecycle}
@@ -128,29 +136,25 @@ describe('The Estimated Lifecycle Cost review component', () => {
     });
 
     it('renders the desktop view', () => {
-      const component = mount(
+      render(
         <EstimatedLifecycleCostReview
           fiscalYear={2021}
           data={defaultEstimatedLifecycle}
         />
       );
 
+      expect(screen.getByTestId('est-lifecycle--desktop'));
       expect(
-        component.find("[data-testid='est-lifecycle--desktop']").exists()
-      ).toBe(true);
-      expect(
-        component.find("[data-testid='est-lifecycle--mobile']").exists()
-      ).toBe(false);
+        screen.queryByTestId('est-lifecycle--mobile')
+      ).not.toBeInTheDocument();
     });
 
     it('adds up development total correctly', () => {
-      const component = mount(
+      render(
         <EstimatedLifecycleCostReview fiscalYear={2021} data={sampleData} />
       );
-
-      expect(
-        component.find("[data-testid='total-development-costs']").text()
-      ).toEqual('$25,000');
+      const cost = screen.getByTestId('total-development-costs');
+      within(cost).getByText('$25,000');
     });
   });
 
@@ -164,36 +168,16 @@ describe('The Estimated Lifecycle Cost review component', () => {
     });
 
     it('renders the mobile view', () => {
-      const component = mount(
+      render(
         <EstimatedLifecycleCostReview
           fiscalYear={2021}
           data={defaultEstimatedLifecycle}
         />
       );
+      expect(screen.getByTestId('est-lifecycle--mobile'));
       expect(
-        component.find("[data-testid='est-lifecycle--mobile']").exists()
-      ).toBe(true);
-      expect(
-        component.find("[data-testid='est-lifecycle--desktop']").exists()
-      ).toBe(false);
-    });
-
-    it('renders mobile view with development data', () => {
-      mount(
-        <EstimatedLifecycleCostReview fiscalYear={2021} data={sampleData} />
-      );
-    });
-
-    it('renders mobile view with O&M data', () => {
-      mount(
-        <EstimatedLifecycleCostReview fiscalYear={2021} data={sampleData} />
-      );
-    });
-
-    it('renders mobile view with Other data', () => {
-      mount(
-        <EstimatedLifecycleCostReview fiscalYear={2021} data={sampleData} />
-      );
+        screen.queryByTestId('est-lifecycle--desktop')
+      ).not.toBeInTheDocument();
     });
   });
 });
