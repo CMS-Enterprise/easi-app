@@ -120,28 +120,13 @@ func DeleteTRBGuidanceLetterInsight(
 		return int(insightA.PositionInLetter.ValueOrZero()) - int(insightB.PositionInLetter.ValueOrZero())
 	})
 
-	var trbRequestID uuid.UUID // will be set once we start looping over allInsightForRequest
-	newOrder := []uuid.UUID{}  // updated positions
+	newOrder := []uuid.UUID{} // updated positions
 
 	for _, insight := range allInsightForRequest {
-		trbRequestID = insight.TRBRequestID // doesn't matter that we set this on every iteration, all insights will have the same request ID
-		if insight.ID != id {               // skip over the insight we want to delete
+		if insight.ID != id { // skip over the insight we want to delete
 			newOrder = append(newOrder, insight.ID)
 		}
 	}
 
-	deletedInsight, err := store.DeleteTRBGuidanceLetterInsight(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	if _, err := store.UpdateTRBGuidanceLetterInsightOrder(ctx, models.UpdateTRBGuidanceLetterInsightOrderInput{
-		TrbRequestID: trbRequestID,
-		NewOrder:     newOrder,
-		Category:     deletedInsight.Category,
-	}); err != nil {
-		return nil, err
-	}
-
-	return deletedInsight, nil
+	return store.DeleteTRBGuidanceLetterInsight(ctx, id, newOrder)
 }

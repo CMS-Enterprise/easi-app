@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"golang.org/x/exp/slices"
 
 	"go.uber.org/zap"
@@ -15,6 +16,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // CreateTRBGuidanceLetterInsight creates a new TRB guidance letter insight record in the database.
@@ -229,45 +231,68 @@ func (s *Store) UpdateTRBGuidanceLetterInsight(ctx context.Context, insight *mod
 }
 
 // DeleteTRBGuidanceLetterInsight deletes an existing TRB guidance letter insight record in the database
-func (s *Store) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterInsight, error) {
-	stmt, err := s.db.PrepareNamed(`
+func (s *Store) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID, newOrder []uuid.UUID) (*models.TRBGuidanceLetterInsight, error) {
+	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) (*models.TRBGuidanceLetterInsight, error) {
+
+		stmt, err := tx.PrepareNamed(`
 		UPDATE trb_guidance_letter_insights
 		SET deleted_at = CURRENT_TIMESTAMP, position_in_letter = NULL
 		WHERE id = :id
 		RETURNING *;`)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to delete TRB guidance letter insight %s", err),
-			zap.String("id", id.String()),
-		)
-		return nil, err
-	}
-	defer stmt.Close()
-
-	toDelete := models.TRBGuidanceLetterInsight{}
-	toDelete.ID = id
-	deleted := models.TRBGuidanceLetterInsight{}
-
-	err = stmt.Get(&deleted, &toDelete)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to delete TRB guidance letter insight %s", err),
-			zap.String("id", id.String()),
-		)
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     toDelete,
-			Operation: apperrors.QueryUpdate,
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
+				zap.String("id", id.String()),
+			)
+			return nil, err
 		}
-	}
+		defer stmt.Close()
 
-	return &deleted, err
+		toDelete := models.TRBGuidanceLetterInsight{}
+		toDelete.ID = id
+		deleted := models.TRBGuidanceLetterInsight{}
+
+		err = stmt.Get(&deleted, &toDelete)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to delete TRB guidance letter insight %s", err),
+				zap.String("id", id.String()),
+			)
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     toDelete,
+				Operation: apperrors.QueryUpdate,
+			}
+		}
+
+		// remove from order
+		if _, err := updateTRBGuidanceLetterRecommendationOrder(ctx, tx, models.UpdateTRBGuidanceLetterInsightOrderInput{
+			TrbRequestID: deleted.TRBRequestID,
+			NewOrder:     newOrder,
+			Category:     deleted.Category,
+		}); err != nil {
+			return nil, err
+		}
+
+		return &deleted, err
+
+	})
 }
 
 // UpdateTRBGuidanceLetterInsightOrder updates the ordering of insights for a given guidance letter,
 // using the order of the insight IDs passed in as newOrder. No other insight columns/fields are updated.
 func (s *Store) UpdateTRBGuidanceLetterInsightOrder(
 	ctx context.Context,
+	update models.UpdateTRBGuidanceLetterInsightOrderInput,
+) ([]*models.TRBGuidanceLetterInsight, error) {
+	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBGuidanceLetterInsight, error) {
+		return updateTRBGuidanceLetterRecommendationOrder(ctx, tx, update)
+	})
+}
+
+func updateTRBGuidanceLetterRecommendationOrder(
+	ctx context.Context,
+	tx *sqlx.Tx,
 	update models.UpdateTRBGuidanceLetterInsightOrderInput,
 ) ([]*models.TRBGuidanceLetterInsight, error) {
 	// convert newOrder into a slice of maps with entries for insight ID and new position,
@@ -297,7 +322,7 @@ func (s *Store) UpdateTRBGuidanceLetterInsightOrder(
 	// json_to_recordset() lets us build a temporary table (new_positions) with the new positions for each insight,
 	// which we can use in a CTE (common table expression, denoted by the WITH keyword) to update the insights
 	// json_to_recordset() documentation - https://www.postgresql.org/docs/14/functions-json.html
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := tx.PrepareNamed(`
 		WITH new_positions AS (
 			SELECT *
 			FROM json_to_recordset(:newPositions)
