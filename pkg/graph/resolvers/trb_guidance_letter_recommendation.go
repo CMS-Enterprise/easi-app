@@ -8,7 +8,6 @@ import (
 	"sort"
 
 	"github.com/google/uuid"
-	"github.com/guregu/null"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/trb/recommendations"
@@ -166,19 +165,19 @@ func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store
 	}
 
 	// reorder
-	for k, v := range m {
+	for category, insights := range m {
 		var sorted []uuid.UUID
 
 		// here is where we apply updated index
-		for i := range v {
-			m[k][i].PositionInLetter = null.IntFrom(int64(i))
+		for _, insight := range insights {
+			sorted = append(sorted, insight.ID)
 		}
 
 		// save new order for each category
 		if _, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
 			TrbRequestID: trbRequestID,
 			NewOrder:     sorted,
-			Category:     k,
+			Category:     category,
 		}); err != nil {
 			return err
 		}
