@@ -101,6 +101,8 @@ export default gql`
 
       hasUiChanges
       usesAiTech
+      usingSoftware
+      acquisitionMethods
 
       decidedAt
       submittedAt

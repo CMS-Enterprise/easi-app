@@ -1,7 +1,8 @@
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import {
   SystemIntakeDocumentCommonType,
-  SystemIntakeDocumentVersion
+  SystemIntakeDocumentVersion,
+  SystemIntakeSoftwareAcquisitionMethods
 } from 'types/graphql-global-types';
 
 const hasContractLabels: Record<
@@ -41,6 +42,17 @@ export const abbreviatedType: Record<SystemIntakeDocumentCommonType, string> = {
   SOFTWARE_BILL_OF_MATERIALS: 'Software BOM',
   MEETING_MINUTES: 'Meeting Minutes',
   OTHER: 'Other'
+};
+
+export const acquistionStrategyLabels: Record<
+  SystemIntakeSoftwareAcquisitionMethods,
+  string
+> = {
+  CONTRACTOR_FURNISHED: 'Furnished by the contractor',
+  FED_FURNISHED: 'Provided as government furnished software',
+  ELA_OR_INTERNAL: 'Acquired through an ELA or internal source',
+  OTHER: 'Other',
+  NOT_YET_DETERMINED: 'Not yet determined'
 };
 
 const intake = {
@@ -293,6 +305,11 @@ const intake = {
   },
   requestDetails: {
     heading: 'Request details',
+    subsectionHeadings: {
+      projectConcept: 'Project Concept',
+      collaboration: 'Collaboration',
+      projectDetails: 'Project Details'
+    },
     description:
       'Provide a brief explanation of the business need/issue/problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
     contractTitle: 'Contract/Request Title',
@@ -311,6 +328,21 @@ const intake = {
     usesAiTech: 'Does your request involve AI technologies?',
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
+    softwareAcquisition: {
+      usingSoftwareLabel:
+        'Do you plan to use any software products to fulfill your business needs?',
+      usingSoftwareHelp:
+        'This could include COTS products, infrastructure products, or other engineering and development tools. <dvsmEmail>Email the Division of Vendor and Software Management (DVSM)</dvsmEmail> to learn more about options at CMS related to software and Enterprise License Agreements (ELAs). If you mark "I\'m not sure", someone from DVSM may reach out to speak with you about available software and enterprise licenses.',
+      selectedLabel: 'Selected software',
+      whichSoftwareLabel: 'Which software?',
+      whichSoftwareHelp:
+        'If known, please upload a bill of materials (BOM) on the document upload section of this form.',
+      acquisitionStrategyLabel: 'How will the software be acquired?',
+      acquisitionStrategyHelp: 'Select all that apply.',
+      acquistionStrategyLabels,
+      softwareRequirementsAlert:
+        'If software requirements are not yet determined or if the contractor(s) will be requested to provide them as part of the requirement. CMS suggests that you include the need for a proposed software Bill of Materials (BOM) in the solicitation or contract.'
+    },
     needsEaSupport: 'Does your request need Enterprise Architecture support?',
     needsEaSupportHelpText:
       'If you are unsure, mark "Yes" and someone from the EA team will assess your needs.',
@@ -391,10 +423,13 @@ const intake = {
     businessNeed: 'What is your business need?',
     solving: 'How are you thinking of solving it?',
     process: 'Where are you in the process?',
-    usesAiTech: 'Does your request involve AI technologies?',
     eaSupport: 'Do you need Enterprise Architecture (EA) support?',
+    usesAiTech: 'Does your request involve AI technologies?',
     hasUiChanges:
       'Does your project involve any user interface component, or changes to an interface component?',
+    usingSoftware:
+      'Do you plan to use any software products to fulfill your business needs?',
+    softwareAcquisitionMethods: 'How will the software be acquired?',
     contractDetails: 'Contract Details',
     costs:
       'Do the costs for this request exceed what you are currently spending to meet your business need?',
