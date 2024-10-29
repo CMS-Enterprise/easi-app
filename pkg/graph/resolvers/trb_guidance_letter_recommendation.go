@@ -43,7 +43,7 @@ func GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx context.Context, stor
 func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.Store, changes map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error) {
 	idIface, idFound := changes["id"]
 	if !idFound {
-		return nil, errors.New("missing required property trbRequestId")
+		return nil, errors.New("missing required property id")
 	}
 
 	// conv uuid first
