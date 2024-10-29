@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import { UpdateTrbRecommendationOrderQuery } from 'queries/TrbGuidanceLetterQueries';
-import { TRBRecommendation } from 'queries/types/TRBRecommendation';
+import { TRBGuidanceLetterInsight } from 'queries/types/TRBGuidanceLetterInsight';
 import {
   UpdateTrbRecommendationOrder,
   UpdateTrbRecommendationOrderVariables
@@ -19,14 +19,14 @@ import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
 import RecommendationLinks from './RecommendationLinks';
 
 type RecommendationsListProps = {
-  recommendations: TRBRecommendation[];
+  recommendations: TRBGuidanceLetterInsight[];
   trbRequestId: string;
   /** Optional function to set error message if order mutation fails */
   setReorderError?: (error: string | null) => void;
   /** If false, hides edit/remove buttons and reorder controls */
   editable?: boolean;
-  edit?: (recommendation: TRBRecommendation) => void;
-  remove?: (recommendation: TRBRecommendation) => void;
+  edit?: (recommendation: TRBGuidanceLetterInsight) => void;
+  remove?: (recommendation: TRBGuidanceLetterInsight) => void;
   className?: string;
 };
 
@@ -46,7 +46,7 @@ export default function RecommendationsList({
   const { t } = useTranslation('technicalAssistance');
 
   const [recommendationToRemove, setRecommendationToRemove] =
-    useState<TRBRecommendation | null>(null);
+    useState<TRBGuidanceLetterInsight | null>(null);
 
   const [updateOrder] = useMutation<
     UpdateTrbRecommendationOrder,

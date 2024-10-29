@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-const TRBRecommendation = gql`
-  fragment TRBRecommendation on TRBGuidanceLetterRecommendation {
+const TRBGuidanceLetterInsight = gql`
+  fragment TRBGuidanceLetterInsight on TRBGuidanceLetterRecommendation {
     id
     title
     recommendation
@@ -11,7 +11,7 @@ const TRBRecommendation = gql`
 
 /** Guidance letter fields fragment */
 export const TRBGuidanceLetter = gql`
-  ${TRBRecommendation}
+  ${TRBGuidanceLetterInsight}
   fragment TRBGuidanceLetter on TRBGuidanceLetter {
     id
     meetingSummary
@@ -20,7 +20,7 @@ export const TRBGuidanceLetter = gql`
     dateSent
     followupPoint
     insights {
-      ...TRBRecommendation
+      ...TRBGuidanceLetterInsight
     }
     author {
       euaUserId
@@ -73,12 +73,12 @@ export const UpdateTrbGuidanceLetterQuery = gql`
 
 /** Get guidance letter recommendations */
 export const GetTrbRecommendationsQuery = gql`
-  ${TRBRecommendation}
+  ${TRBGuidanceLetterInsight}
   query GetTrbRecommendations($id: UUID!) {
     trbRequest(id: $id) {
       guidanceLetter {
         insights {
-          ...TRBRecommendation
+          ...TRBGuidanceLetterInsight
         }
       }
     }
@@ -87,46 +87,46 @@ export const GetTrbRecommendationsQuery = gql`
 
 /** Create guidance letter recommendation */
 export const CreateTrbRecommendationQuery = gql`
-  ${TRBRecommendation}
+  ${TRBGuidanceLetterInsight}
   mutation CreateTRBRecommendation(
     $input: CreateTRBGuidanceLetterRecommendationInput!
   ) {
     createTRBGuidanceLetterRecommendation(input: $input) {
-      ...TRBRecommendation
+      ...TRBGuidanceLetterInsight
     }
   }
 `;
 
 /** Update guidance letter recommendation */
 export const UpdateTrbRecommendationQuery = gql`
-  ${TRBRecommendation}
+  ${TRBGuidanceLetterInsight}
   mutation UpdateTRBRecommendation(
     $input: UpdateTRBGuidanceLetterRecommendationInput!
   ) {
     updateTRBGuidanceLetterRecommendation(input: $input) {
-      ...TRBRecommendation
+      ...TRBGuidanceLetterInsight
     }
   }
 `;
 
 /** Reorder guidance letters */
 export const UpdateTrbRecommendationOrderQuery = gql`
-  ${TRBRecommendation}
+  ${TRBGuidanceLetterInsight}
   mutation UpdateTrbRecommendationOrder(
     $input: UpdateTRBGuidanceLetterRecommendationOrderInput!
   ) {
     updateTRBGuidanceLetterRecommendationOrder(input: $input) {
-      ...TRBRecommendation
+      ...TRBGuidanceLetterInsight
     }
   }
 `;
 
 /** Delete guidance letter recommendation */
 export const DeleteTrbRecommendationQuery = gql`
-  ${TRBRecommendation}
+  ${TRBGuidanceLetterInsight}
   mutation DeleteTRBRecommendation($id: UUID!) {
     deleteTRBGuidanceLetterRecommendation(id: $id) {
-      ...TRBRecommendation
+      ...TRBGuidanceLetterInsight
     }
   }
 `;

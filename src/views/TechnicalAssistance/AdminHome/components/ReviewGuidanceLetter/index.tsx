@@ -11,7 +11,7 @@ import {
   GetTrbGuidanceLetter_trbRequest as TrbRequest,
   GetTrbGuidanceLetter_trbRequest_guidanceLetter as GuidanceLetter
 } from 'queries/types/GetTrbGuidanceLetter';
-import { TRBRecommendation } from 'queries/types/TRBRecommendation';
+import { TRBGuidanceLetterInsight } from 'queries/types/TRBGuidanceLetterInsight';
 import { formatDateLocal } from 'utils/date';
 
 import RecommendationsList from '../RecommendationsList';
@@ -23,8 +23,8 @@ type ReviewGuidanceLetterProps = {
   requesterString?: string;
   showSectionEditLinks?: boolean;
   recommendationActions?: {
-    edit?: (recommendation: TRBRecommendation) => void;
-    remove?: (recommendation: TRBRecommendation) => void;
+    edit?: (recommendation: TRBGuidanceLetterInsight) => void;
+    remove?: (recommendation: TRBGuidanceLetterInsight) => void;
     setReorderError?: (error: string | null) => void;
   };
   showDateSent?: boolean;

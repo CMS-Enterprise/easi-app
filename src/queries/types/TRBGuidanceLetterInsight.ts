@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: TRBRecommendation
+// GraphQL fragment: TRBGuidanceLetterInsight
 // ====================================================
 
-export interface TRBRecommendation {
+export interface TRBGuidanceLetterInsight {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
