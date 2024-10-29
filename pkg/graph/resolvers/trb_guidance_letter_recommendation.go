@@ -166,16 +166,16 @@ func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store
 
 	// set new order
 	for category, insights := range m {
-		var sorted []uuid.UUID
+		var ordered []uuid.UUID
 
 		for _, insight := range insights {
-			sorted = append(sorted, insight.ID)
+			ordered = append(ordered, insight.ID)
 		}
 
 		// save new order for each category
 		if _, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
 			TrbRequestID: trbRequestID,
-			NewOrder:     sorted,
+			NewOrder:     ordered,
 			Category:     category,
 		}); err != nil {
 			return err
