@@ -113,9 +113,9 @@ export const UpdateTRBGuidanceLetterInsightOrderQuery = gql`
   }
 `;
 
-export const DeleteTrbRecommendationQuery = gql`
+export const DeleteTRBGuidanceLetterInsightQuery = gql`
   ${TRBGuidanceLetterInsight}
-  mutation DeleteTRBRecommendation($id: UUID!) {
+  mutation DeleteTRBGuidanceLetterInsight($id: UUID!) {
     deleteTRBGuidanceLetterRecommendation(id: $id) {
       ...TRBGuidanceLetterInsight
     }

@@ -9,13 +9,13 @@ import { Button } from '@trussworks/react-uswds';
 import { Alert } from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import {
-  DeleteTrbRecommendationQuery,
+  DeleteTRBGuidanceLetterInsightQuery,
   GetTrbGuidanceLetterQuery
 } from 'queries/TrbGuidanceLetterQueries';
 import {
-  DeleteTRBRecommendation,
-  DeleteTRBRecommendationVariables
-} from 'queries/types/DeleteTRBRecommendation';
+  DeleteTRBGuidanceLetterInsight,
+  DeleteTRBGuidanceLetterInsightVariables
+} from 'queries/types/DeleteTRBGuidanceLetterInsight';
 import {
   GuidanceLetterRecommendationFields,
   StepComponentProps
@@ -56,9 +56,9 @@ const Recommendations = ({
   const { reset } = formMethods;
 
   const [remove, { loading }] = useMutation<
-    DeleteTRBRecommendation,
-    DeleteTRBRecommendationVariables
-  >(DeleteTrbRecommendationQuery, {
+    DeleteTRBGuidanceLetterInsight,
+    DeleteTRBGuidanceLetterInsightVariables
+  >(DeleteTRBGuidanceLetterInsightQuery, {
     refetchQueries: [
       {
         query: GetTrbGuidanceLetterQuery,

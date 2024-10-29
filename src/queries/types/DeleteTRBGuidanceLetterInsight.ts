@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: DeleteTRBRecommendation
+// GraphQL mutation operation: DeleteTRBGuidanceLetterInsight
 // ====================================================
 
-export interface DeleteTRBRecommendation_deleteTRBGuidanceLetterRecommendation {
+export interface DeleteTRBGuidanceLetterInsight_deleteTRBGuidanceLetterRecommendation {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -15,10 +15,10 @@ export interface DeleteTRBRecommendation_deleteTRBGuidanceLetterRecommendation {
   links: string[];
 }
 
-export interface DeleteTRBRecommendation {
-  deleteTRBGuidanceLetterRecommendation: DeleteTRBRecommendation_deleteTRBGuidanceLetterRecommendation;
+export interface DeleteTRBGuidanceLetterInsight {
+  deleteTRBGuidanceLetterRecommendation: DeleteTRBGuidanceLetterInsight_deleteTRBGuidanceLetterRecommendation;
 }
 
-export interface DeleteTRBRecommendationVariables {
+export interface DeleteTRBGuidanceLetterInsightVariables {
   id: UUID;
 }
