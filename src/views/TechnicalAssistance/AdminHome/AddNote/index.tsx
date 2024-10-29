@@ -25,11 +25,11 @@ import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
-import { GetTrbRecommendationsQuery } from 'queries/TrbGuidanceLetterQueries';
+import { GetTRBGuidanceLetterInsightsQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
-  GetTrbRecommendations,
-  GetTrbRecommendationsVariables
-} from 'queries/types/GetTrbRecommendations';
+  GetTRBGuidanceLetterInsights,
+  GetTRBGuidanceLetterInsightsVariables
+} from 'queries/types/GetTRBGuidanceLetterInsights';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
@@ -76,9 +76,9 @@ const AddNote = ({
   );
 
   const recommendationsQuery = useCacheQuery<
-    GetTrbRecommendations,
-    GetTrbRecommendationsVariables
-  >(GetTrbRecommendationsQuery, {
+    GetTRBGuidanceLetterInsights,
+    GetTRBGuidanceLetterInsightsVariables
+  >(GetTRBGuidanceLetterInsightsQuery, {
     variables: { id: trbRequestId || id }
   });
 

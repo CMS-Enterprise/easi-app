@@ -21,15 +21,15 @@ import {
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
-import { GetTrbRecommendationsQuery } from 'queries/TrbGuidanceLetterQueries';
+import { GetTRBGuidanceLetterInsightsQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   CreateTRBAdminNoteGeneralRequest,
   CreateTRBAdminNoteGeneralRequestVariables
 } from 'queries/types/CreateTRBAdminNoteGeneralRequest';
 import {
-  GetTrbRecommendations,
-  GetTrbRecommendationsVariables
-} from 'queries/types/GetTrbRecommendations';
+  GetTRBGuidanceLetterInsights,
+  GetTRBGuidanceLetterInsightsVariables
+} from 'queries/types/GetTRBGuidanceLetterInsights';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
@@ -52,11 +52,11 @@ import AddNote from '.';
 const { insights } = guidanceLetter;
 
 const getTrbRecommendationsQuery: MockedQuery<
-  GetTrbRecommendations,
-  GetTrbRecommendationsVariables
+  GetTRBGuidanceLetterInsights,
+  GetTRBGuidanceLetterInsightsVariables
 > = {
   request: {
-    query: GetTrbRecommendationsQuery,
+    query: GetTRBGuidanceLetterInsightsQuery,
     variables: {
       id: mockTrbRequestId
     }
