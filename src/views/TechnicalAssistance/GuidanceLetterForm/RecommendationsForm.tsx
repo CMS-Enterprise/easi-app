@@ -19,16 +19,17 @@ import Label from 'components/shared/Label';
 import {
   CreateTRBGuidanceLetterInsightQuery,
   GetTrbGuidanceLetterQuery,
-  UpdateTrbRecommendationQuery
+  UpdateTRBGuidanceLetterInsightQuery
 } from 'queries/TrbGuidanceLetterQueries';
 import {
   CreateTRBGuidanceLetterInsight,
   CreateTRBGuidanceLetterInsightVariables
 } from 'queries/types/CreateTRBGuidanceLetterInsight';
 import {
-  TRBGuidanceLetterRecommendationCategory,
-  UpdateTRBGuidanceLetterRecommendationInput
-} from 'types/graphql-global-types';
+  UpdateTRBGuidanceLetterInsight,
+  UpdateTRBGuidanceLetterInsightVariables
+} from 'queries/types/UpdateTRBGuidanceLetterInsight';
+import { TRBGuidanceLetterRecommendationCategory } from 'types/graphql-global-types';
 import {
   FormAlertObject,
   GuidanceLetterRecommendationFields
@@ -80,19 +81,19 @@ const RecommendationsForm = ({
     ]
   });
 
-  const [update] = useMutation<UpdateTRBGuidanceLetterRecommendationInput>(
-    UpdateTrbRecommendationQuery,
-    {
-      refetchQueries: [
-        {
-          query: GetTrbGuidanceLetterQuery,
-          variables: {
-            id: trbRequestId
-          }
+  const [update] = useMutation<
+    UpdateTRBGuidanceLetterInsight,
+    UpdateTRBGuidanceLetterInsightVariables
+  >(UpdateTRBGuidanceLetterInsightQuery, {
+    refetchQueries: [
+      {
+        query: GetTrbGuidanceLetterQuery,
+        variables: {
+          id: trbRequestId
         }
-      ]
-    }
-  );
+      }
+    ]
+  });
 
   const returnLink = useMemo(
     () =>
@@ -123,10 +124,10 @@ const RecommendationsForm = ({
             const { id, title, recommendation } = formData;
 
             if (id) {
-              await create({
+              await update({
                 variables: {
                   input: {
-                    trbRequestId,
+                    id,
                     // TODO: Remove hard coded category
                     category:
                       TRBGuidanceLetterRecommendationCategory.REQUIREMENT,
@@ -137,10 +138,10 @@ const RecommendationsForm = ({
                 }
               });
             } else {
-              await update({
+              await create({
                 variables: {
                   input: {
-                    id,
+                    trbRequestId,
                     // TODO: Remove hard coded category
                     category:
                       TRBGuidanceLetterRecommendationCategory.REQUIREMENT,

@@ -91,9 +91,9 @@ export const CreateTRBGuidanceLetterInsightQuery = gql`
   }
 `;
 
-export const UpdateTrbRecommendationQuery = gql`
+export const UpdateTRBGuidanceLetterInsightQuery = gql`
   ${TRBGuidanceLetterInsight}
-  mutation UpdateTRBRecommendation(
+  mutation UpdateTRBGuidanceLetterInsight(
     $input: UpdateTRBGuidanceLetterRecommendationInput!
   ) {
     updateTRBGuidanceLetterRecommendation(input: $input) {
