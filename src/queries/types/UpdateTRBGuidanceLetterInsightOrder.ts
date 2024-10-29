@@ -6,10 +6,10 @@
 import { UpdateTRBGuidanceLetterRecommendationOrderInput } from "./../../types/graphql-global-types";
 
 // ====================================================
-// GraphQL mutation operation: UpdateTrbRecommendationOrder
+// GraphQL mutation operation: UpdateTRBGuidanceLetterInsightOrder
 // ====================================================
 
-export interface UpdateTrbRecommendationOrder_updateTRBGuidanceLetterRecommendationOrder {
+export interface UpdateTRBGuidanceLetterInsightOrder_updateTRBGuidanceLetterRecommendationOrder {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -17,10 +17,10 @@ export interface UpdateTrbRecommendationOrder_updateTRBGuidanceLetterRecommendat
   links: string[];
 }
 
-export interface UpdateTrbRecommendationOrder {
-  updateTRBGuidanceLetterRecommendationOrder: UpdateTrbRecommendationOrder_updateTRBGuidanceLetterRecommendationOrder[];
+export interface UpdateTRBGuidanceLetterInsightOrder {
+  updateTRBGuidanceLetterRecommendationOrder: UpdateTRBGuidanceLetterInsightOrder_updateTRBGuidanceLetterRecommendationOrder[];
 }
 
-export interface UpdateTrbRecommendationOrderVariables {
+export interface UpdateTRBGuidanceLetterInsightOrderVariables {
   input: UpdateTRBGuidanceLetterRecommendationOrderInput;
 }

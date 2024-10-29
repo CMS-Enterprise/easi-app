@@ -6,12 +6,12 @@ import classNames from 'classnames';
 
 import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
-import { UpdateTrbRecommendationOrderQuery } from 'queries/TrbGuidanceLetterQueries';
+import { UpdateTRBGuidanceLetterInsightOrderQuery } from 'queries/TrbGuidanceLetterQueries';
 import { TRBGuidanceLetterInsight } from 'queries/types/TRBGuidanceLetterInsight';
 import {
-  UpdateTrbRecommendationOrder,
-  UpdateTrbRecommendationOrderVariables
-} from 'queries/types/UpdateTrbRecommendationOrder';
+  UpdateTRBGuidanceLetterInsightOrder,
+  UpdateTRBGuidanceLetterInsightOrderVariables
+} from 'queries/types/UpdateTRBGuidanceLetterInsightOrder';
 import { TRBGuidanceLetterRecommendationCategory } from 'types/graphql-global-types';
 
 import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
@@ -49,9 +49,9 @@ export default function RecommendationsList({
     useState<TRBGuidanceLetterInsight | null>(null);
 
   const [updateOrder] = useMutation<
-    UpdateTrbRecommendationOrder,
-    UpdateTrbRecommendationOrderVariables
-  >(UpdateTrbRecommendationOrderQuery, {
+    UpdateTRBGuidanceLetterInsightOrder,
+    UpdateTRBGuidanceLetterInsightOrderVariables
+  >(UpdateTRBGuidanceLetterInsightOrderQuery, {
     refetchQueries: ['GetTrbGuidanceLetter']
   });
 

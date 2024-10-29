@@ -102,9 +102,9 @@ export const UpdateTRBGuidanceLetterInsightQuery = gql`
   }
 `;
 
-export const UpdateTrbRecommendationOrderQuery = gql`
+export const UpdateTRBGuidanceLetterInsightOrderQuery = gql`
   ${TRBGuidanceLetterInsight}
-  mutation UpdateTrbRecommendationOrder(
+  mutation UpdateTRBGuidanceLetterInsightOrder(
     $input: UpdateTRBGuidanceLetterRecommendationOrderInput!
   ) {
     updateTRBGuidanceLetterRecommendationOrder(input: $input) {
