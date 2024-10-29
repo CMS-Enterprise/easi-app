@@ -80,9 +80,9 @@ export const GetTRBGuidanceLetterInsightsQuery = gql`
   }
 `;
 
-export const CreateTrbRecommendationQuery = gql`
+export const CreateTRBGuidanceLetterInsightQuery = gql`
   ${TRBGuidanceLetterInsight}
-  mutation CreateTRBRecommendation(
+  mutation CreateTRBGuidanceLetterInsight(
     $input: CreateTRBGuidanceLetterRecommendationInput!
   ) {
     createTRBGuidanceLetterRecommendation(input: $input) {

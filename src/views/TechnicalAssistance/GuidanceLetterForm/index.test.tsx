@@ -16,11 +16,11 @@ import {
   taskStatuses
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import { CreateTrbRecommendationQuery } from 'queries/TrbGuidanceLetterQueries';
+import { CreateTRBGuidanceLetterInsightQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
-  CreateTRBRecommendation,
-  CreateTRBRecommendationVariables
-} from 'queries/types/CreateTRBRecommendation';
+  CreateTRBGuidanceLetterInsight,
+  CreateTRBGuidanceLetterInsightVariables
+} from 'queries/types/CreateTRBGuidanceLetterInsight';
 import {
   GetTrbGuidanceLetter,
   GetTrbGuidanceLetterVariables
@@ -43,11 +43,11 @@ const mockRecommendation = {
 };
 
 const createTrbRecommendationQuery: MockedQuery<
-  CreateTRBRecommendation,
-  CreateTRBRecommendationVariables
+  CreateTRBGuidanceLetterInsight,
+  CreateTRBGuidanceLetterInsightVariables
 > = {
   request: {
-    query: CreateTrbRecommendationQuery,
+    query: CreateTRBGuidanceLetterInsightQuery,
     variables: {
       input: mockRecommendation
     }

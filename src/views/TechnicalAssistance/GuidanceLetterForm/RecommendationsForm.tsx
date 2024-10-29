@@ -17,12 +17,16 @@ import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import {
-  CreateTrbRecommendationQuery,
+  CreateTRBGuidanceLetterInsightQuery,
   GetTrbGuidanceLetterQuery,
   UpdateTrbRecommendationQuery
 } from 'queries/TrbGuidanceLetterQueries';
 import {
-  CreateTRBGuidanceLetterRecommendationInput,
+  CreateTRBGuidanceLetterInsight,
+  CreateTRBGuidanceLetterInsightVariables
+} from 'queries/types/CreateTRBGuidanceLetterInsight';
+import {
+  TRBGuidanceLetterRecommendationCategory,
   UpdateTRBGuidanceLetterRecommendationInput
 } from 'types/graphql-global-types';
 import {
@@ -62,12 +66,32 @@ const RecommendationsForm = ({
     formState: { isSubmitting, isDirty }
   } = useFormContext<GuidanceLetterRecommendationFields>();
 
-  const [create] = useMutation<CreateTRBGuidanceLetterRecommendationInput>(
-    CreateTrbRecommendationQuery
-  );
+  const [create] = useMutation<
+    CreateTRBGuidanceLetterInsight,
+    CreateTRBGuidanceLetterInsightVariables
+  >(CreateTRBGuidanceLetterInsightQuery, {
+    refetchQueries: [
+      {
+        query: GetTrbGuidanceLetterQuery,
+        variables: {
+          id: trbRequestId
+        }
+      }
+    ]
+  });
 
   const [update] = useMutation<UpdateTRBGuidanceLetterRecommendationInput>(
-    UpdateTrbRecommendationQuery
+    UpdateTrbRecommendationQuery,
+    {
+      refetchQueries: [
+        {
+          query: GetTrbGuidanceLetterQuery,
+          variables: {
+            id: trbRequestId
+          }
+        }
+      ]
+    }
   );
 
   const returnLink = useMemo(
@@ -98,29 +122,38 @@ const RecommendationsForm = ({
 
             const { id, title, recommendation } = formData;
 
-            /** Creates new or updates existing recommendation */
-            const mutate = id ? update : create;
-
-            await mutate({
-              variables: {
-                input: {
-                  ...(!id && { trbRequestId }),
-                  id,
-                  title,
-                  recommendation,
-                  links
-                }
-              },
-              refetchQueries: [
-                {
-                  query: GetTrbGuidanceLetterQuery,
-                  variables: {
-                    id: trbRequestId
+            if (id) {
+              await create({
+                variables: {
+                  input: {
+                    trbRequestId,
+                    // TODO: Remove hard coded category
+                    category:
+                      TRBGuidanceLetterRecommendationCategory.REQUIREMENT,
+                    title,
+                    recommendation,
+                    links
                   }
                 }
-              ]
-            });
+              });
+            } else {
+              await update({
+                variables: {
+                  input: {
+                    id,
+                    // TODO: Remove hard coded category
+                    category:
+                      TRBGuidanceLetterRecommendationCategory.REQUIREMENT,
+                    title,
+                    recommendation,
+                    links
+                  }
+                }
+              });
+            }
+
             setShowFormError(false);
+
             setFormAlert({
               type: 'success',
               message: t(

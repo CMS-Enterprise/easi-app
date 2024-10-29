@@ -6,10 +6,10 @@
 import { CreateTRBGuidanceLetterRecommendationInput } from "./../../types/graphql-global-types";
 
 // ====================================================
-// GraphQL mutation operation: CreateTRBRecommendation
+// GraphQL mutation operation: CreateTRBGuidanceLetterInsight
 // ====================================================
 
-export interface CreateTRBRecommendation_createTRBGuidanceLetterRecommendation {
+export interface CreateTRBGuidanceLetterInsight_createTRBGuidanceLetterRecommendation {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -17,10 +17,10 @@ export interface CreateTRBRecommendation_createTRBGuidanceLetterRecommendation {
   links: string[];
 }
 
-export interface CreateTRBRecommendation {
-  createTRBGuidanceLetterRecommendation: CreateTRBRecommendation_createTRBGuidanceLetterRecommendation;
+export interface CreateTRBGuidanceLetterInsight {
+  createTRBGuidanceLetterRecommendation: CreateTRBGuidanceLetterInsight_createTRBGuidanceLetterRecommendation;
 }
 
-export interface CreateTRBRecommendationVariables {
+export interface CreateTRBGuidanceLetterInsightVariables {
   input: CreateTRBGuidanceLetterRecommendationInput;
 }
