@@ -31,14 +31,15 @@ func noErr(err error) {
 
 func createEmailClient() email.Client {
 	emailConfig := email.Config{
-		GRTEmail:          models.NewEmailAddress("grt_email@cms.gov"),
-		ITInvestmentEmail: models.NewEmailAddress("it_investment_email@cms.gov"),
-		TRBEmail:          models.NewEmailAddress("trb@cms.gov"),
-		EASIHelpEmail:     models.NewEmailAddress(os.Getenv("EASI_HELP_EMAIL")),
-		CEDARTeamEmail:    models.NewEmailAddress("cedar@cedar.gov"),
-		URLHost:           os.Getenv("CLIENT_HOSTNAME"),
-		URLScheme:         os.Getenv("CLIENT_PROTOCOL"),
-		TemplateDirectory: os.Getenv("EMAIL_TEMPLATE_DIR"),
+		GRTEmail:                    models.NewEmailAddress("grt_email@cms.gov"),
+		ITInvestmentEmail:           models.NewEmailAddress("it_investment_email@cms.gov"),
+		TRBEmail:                    models.NewEmailAddress("trb@cms.gov"),
+		EASIHelpEmail:               models.NewEmailAddress(os.Getenv("EASI_HELP_EMAIL")),
+		CEDARTeamEmail:              models.NewEmailAddress("cedar@cedar.gov"),
+		OITFeedbackChannelSlackLink: "https://oddball.slack.com/archives/C059N01AYGM",
+		URLHost:                     os.Getenv("CLIENT_HOSTNAME"),
+		URLScheme:                   os.Getenv("CLIENT_PROTOCOL"),
+		TemplateDirectory:           os.Getenv("EMAIL_TEMPLATE_DIR"),
 	}
 
 	env, _ := appconfig.NewEnvironment("local") // hardcoded as "local" as it's easier than fetching from envs since we only ever use this locally
@@ -53,6 +54,7 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	requestName := "Example Request"
 	requesterName := "Requesting User"
 	requesterEmail := models.NewEmailAddress("TEST@local.fake")
+	cedarSystemID := "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"
 	component := "Test Component"
 	adminEmail := models.NewEmailAddress("admin@local.fake")
 	emailRecipients := []models.EmailAddress{requesterEmail, adminEmail}
@@ -241,6 +243,15 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		[]string{"System API Contact"},
 		"CMSGovNetSystem",
 		time.Now(),
+	)
+	noErr(err)
+
+	err = client.SendCedarYouHaveBeenAddedEmail(
+		ctx,
+		"CMSGovNetSystem",
+		cedarSystemID,
+		[]string{"System API Contact"},
+		requesterEmail,
 	)
 	noErr(err)
 }

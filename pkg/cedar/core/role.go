@@ -174,8 +174,8 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 	return retVal, nil
 }
 
-func PurgeRoleCache(ctx context.Context, cedarSystemID string) error {
-	return PurgeCacheByPath(ctx, "/role?application="+cedarRoleApplication+"&objectId="+url.QueryEscape(cedarSystemID))
+func (c *Client) PurgeRoleCache(ctx context.Context, cedarSystemID string) error {
+	return c.PurgeCacheByPath(ctx, "/role?application="+cedarRoleApplication+"&objectId="+url.QueryEscape(cedarSystemID))
 }
 
 // GetRoleTypes queries CEDAR for the list of supported role types
@@ -242,6 +242,7 @@ type newRole struct {
 type SetRoleResponseMetadata struct {
 	DidAdd              bool
 	DidDelete           bool
+	IsNewUser           bool
 	RoleTypeNamesBefore []string
 	RoleTypeNamesAfter  []string
 	SystemName          string
@@ -250,14 +251,8 @@ type SetRoleResponseMetadata struct {
 // SetRolesForUser sets the desired roles for a user on a given system to *exactly* the requested role types, adding and deleting role assignments in CEDAR as necessary
 func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaUserID string, desiredRoleTypeIDs []string) (*SetRoleResponseMetadata, error) {
 	if c.mockEnabled {
+		// all the client methods this method depends on will return mocked data and not call out to CEDAR if mocking enabled
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return &SetRoleResponseMetadata{
-			DidAdd:              true,
-			DidDelete:           true,
-			RoleTypeNamesBefore: nil,
-			RoleTypeNamesAfter:  []string{"Role 1", "Role 2", "Role 3"},
-			SystemName:          "Test System Name",
-		}, nil
 	}
 
 	roleTypesBefore := []models.CedarRoleType{}
@@ -328,7 +323,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	g.Go(func() error {
 		// length check is necessary because CEDAR will error if we call addRoles() with no role type IDs
 		if len(newRoles) > 0 {
-			err = c.addRoles(ctx, cedarSystemID, newRoles)
+			err := c.addRoles(ctx, cedarSystemID, newRoles)
 			if err != nil {
 				return err
 			}
@@ -340,7 +335,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	g.Go(func() error {
 		// length check is necessary because CEDAR will error if we call deleteRoles() with no role IDs
 		if len(roleIDsToDelete) > 0 {
-			err = c.deleteRoles(ctx, roleIDsToDelete)
+			err := c.deleteRoles(ctx, roleIDsToDelete)
 			if err != nil {
 				return err
 			}
@@ -356,6 +351,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	roleResponse := &SetRoleResponseMetadata{
 		DidAdd:    len(newRoles) > 0,
 		DidDelete: len(roleIDsToDelete) > 0,
+		IsNewUser: len(currentRolesForUser) == 0 && len(newRoles) > 0,
 	}
 
 	roleResponse.RoleTypeNamesBefore = lo.Map(roleTypesBefore, func(roleType models.CedarRoleType, _ int) string {
@@ -365,11 +361,11 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		return roleType.Name.String
 	})
 
-	err = PurgeRoleCache(ctx, cedarSystemID)
+	err = c.PurgeRoleCache(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
 	}
-	err = PurgeSystemCacheByEUA(ctx, euaUserID)
+	err = c.PurgeSystemCacheByEUA(ctx, euaUserID)
 	if err != nil {
 		return nil, err
 	}
@@ -442,7 +438,7 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 		}
 		return fmt.Errorf("unknown error")
 	}
-	err = PurgeRoleCache(ctx, cedarSystemID)
+	err = c.PurgeRoleCache(ctx, cedarSystemID)
 	if err != nil {
 		return err
 	}
