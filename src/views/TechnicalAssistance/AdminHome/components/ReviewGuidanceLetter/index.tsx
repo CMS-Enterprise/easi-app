@@ -22,9 +22,9 @@ type ReviewGuidanceLetterProps = {
   trbRequest?: GetTRBGuidanceLetterQuery['trbRequest'];
   requesterString?: string;
   showSectionEditLinks?: boolean;
-  recommendationActions?: {
-    edit?: (recommendation: TRBGuidanceLetterInsightFragment) => void;
-    remove?: (recommendation: TRBGuidanceLetterInsightFragment) => void;
+  insightActions?: {
+    edit?: (insight: TRBGuidanceLetterInsightFragment) => void;
+    remove?: (insight: TRBGuidanceLetterInsightFragment) => void;
     setReorderError?: (error: string | null) => void;
   };
   showDateSent?: boolean;
@@ -43,7 +43,7 @@ const ReviewGuidanceLetter = ({
   trbRequest,
   requesterString,
   showSectionEditLinks = false,
-  recommendationActions,
+  insightActions,
   showDateSent = true,
   showSectionBorders = true,
   editable = true,
@@ -161,7 +161,7 @@ const ReviewGuidanceLetter = ({
         )}
       </SectionWrapper>
 
-      {/* Recommendations */}
+      {/* Insights */}
       <SectionWrapper
         borderTop={showSectionBorders}
         className={classNames({
@@ -183,16 +183,16 @@ const ReviewGuidanceLetter = ({
         )}
 
         {
-          // If no recommendations, return text
+          // If no insights, return text
           insights.length === 0 ? (
             <p className="margin-top-4">{t('guidanceLetter.notSpecified')}</p>
           ) : (
             <InsightsList
-              recommendations={insights}
+              insights={insights}
               trbRequestId={trbRequestId}
               className="margin-top-4"
               editable={editable}
-              {...recommendationActions}
+              {...insightActions}
             />
           )
         }

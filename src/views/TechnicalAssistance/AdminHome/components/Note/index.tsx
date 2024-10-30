@@ -55,12 +55,12 @@ const Note = ({ note, className, border = true }: NoteProps) => {
     [
       ...(appliesToMeetingSummary ? [t('notes.labels.meetingSummary')] : []),
       ...(appliesToNextSteps ? [t('notes.labels.nextSteps')] : []),
-      ...insights.map(rec =>
+      ...insights.map(insight =>
         t(
           `notes.labels.${
-            rec.deletedAt ? 'removedRecommendation' : 'recommendation'
+            insight.deletedAt ? 'removedRecommendation' : 'recommendation'
           }`,
-          { title: rec.title }
+          { title: insight.title }
         )
       )
     ].join(', ');
@@ -69,7 +69,7 @@ const Note = ({ note, className, border = true }: NoteProps) => {
   const documentsCategory = (documents: Document[]) =>
     documents
       .map(({ fileName, deletedAt }) => {
-        // If recommendation has been removed, return correct label
+        // If insight has been removed, return correct label
         return deletedAt
           ? t('notes.labels.removedDocument', { fileName })
           : fileName;

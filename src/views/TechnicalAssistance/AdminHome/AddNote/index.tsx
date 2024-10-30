@@ -73,13 +73,13 @@ const AddNote = ({
     [documentsQuery.data]
   );
 
-  const recommendationsQuery = useGetTRBGuidanceLetterInsightsQuery({
+  const insightsQuery = useGetTRBGuidanceLetterInsightsQuery({
     variables: { id: trbRequestId || id }
   });
 
-  const recommendations = useMemo(
-    () => recommendationsQuery.data?.trbRequest.guidanceLetter?.insights || [],
-    [recommendationsQuery.data]
+  const insights = useMemo(
+    () => insightsQuery.data?.trbRequest.guidanceLetter?.insights || [],
+    [insightsQuery.data]
   );
 
   const history = useHistory();
@@ -377,7 +377,7 @@ const AddNote = ({
                     <HelpText className="margin-top-1">
                       {t('notes.labels.selectHelpText')}
                     </HelpText>
-                    {recommendationsQuery.loading ? (
+                    {insightsQuery.loading ? (
                       <Spinner />
                     ) : (
                       <MultiSelect
@@ -393,11 +393,11 @@ const AddNote = ({
                             label: t('notes.labels.nextSteps'),
                             value: 'appliesToNextSteps'
                           },
-                          ...recommendations.map(rec => ({
+                          ...insights.map(insight => ({
                             label: t('notes.labels.recommendation', {
-                              title: rec.title
+                              title: insight.title
                             }),
-                            value: rec.id
+                            value: insight.id
                           }))
                         ]}
                       />

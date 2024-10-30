@@ -90,7 +90,7 @@ export type TrbAdminPage = {
   groupEnd?: boolean;
 };
 
-export type GuidanceLetterRecommendationFields = {
+export type GuidanceLetterInsightFields = {
   id?: string;
   title: string;
   recommendation: string;

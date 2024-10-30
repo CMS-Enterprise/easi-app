@@ -150,7 +150,7 @@ export const documentSchema = yup.object({
 
 // Guidance letter form schemas
 
-export const guidanceRecommendationSchema = yup.object({
+export const guidanceInsightSchema = yup.object({
   title: yup.string().required(),
   recommendation: yup.string().required(),
   links: yup.array(

@@ -12,17 +12,17 @@ import {
 import { Alert } from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import {
-  GuidanceLetterRecommendationFields,
+  GuidanceLetterInsightFields,
   StepComponentProps
 } from 'types/technicalAssistance';
-import { guidanceRecommendationSchema } from 'validations/trbRequestSchema';
+import { guidanceInsightSchema } from 'validations/trbRequestSchema';
 
 import InsightsList from '../AdminHome/components/InsightsList';
 import Pager from '../RequestForm/Pager';
 
 import InsightsForm from './InsightsForm';
 
-const defaultValues: GuidanceLetterRecommendationFields = {
+const defaultValues: GuidanceLetterInsightFields = {
   id: undefined,
   title: '',
   recommendation: '',
@@ -41,11 +41,11 @@ const Insights = ({
   const { path, url } = useRouteMatch();
   const history = useHistory();
 
-  /** Whether recommendations have been added to the request */
-  const hasRecommendations: boolean = insights.length > 0;
+  /** Whether insights have been added to the request */
+  const hasInsights: boolean = insights.length > 0;
 
-  const formMethods = useForm<GuidanceLetterRecommendationFields>({
-    resolver: yupResolver(guidanceRecommendationSchema),
+  const formMethods = useForm<GuidanceLetterInsightFields>({
+    resolver: yupResolver(guidanceInsightSchema),
     defaultValues
   });
   const { reset } = formMethods;
@@ -67,9 +67,9 @@ const Insights = ({
 
   return (
     <Switch>
-      {/* Recommendations Form */}
+      {/* Insights Form */}
       <Route exact path={`${path}/form`}>
-        <FormProvider<GuidanceLetterRecommendationFields> {...formMethods}>
+        <FormProvider<GuidanceLetterInsightFields> {...formMethods}>
           <InsightsForm
             trbRequestId={trbRequestId}
             setFormAlert={setFormAlert}
@@ -77,10 +77,10 @@ const Insights = ({
         </FormProvider>
       </Route>
 
-      {/* Recommendations form step */}
+      {/* Insights form step */}
       <Route exact path={`${path}`}>
-        <div id="trbGuidanceRecommendations">
-          {/* Add recommendation button */}
+        <div id="trbGuidanceInsights">
+          {/* Add insight button */}
           <Button
             className="margin-top-5 margin-bottom-1"
             type="button"
@@ -88,10 +88,10 @@ const Insights = ({
               reset(defaultValues);
               history.push(`${url}/form`);
             }}
-            outline={hasRecommendations}
+            outline={hasInsights}
           >
             {t(
-              hasRecommendations
+              hasInsights
                 ? 'guidanceLetterForm.addAdditionalGuidance'
                 : 'guidanceLetterForm.addGuidance'
             )}
@@ -100,30 +100,30 @@ const Insights = ({
           <Divider className="margin-top-2 margin-bottom-4" />
 
           {
-            /* No recommendations message */
-            !hasRecommendations ? (
+            /* No insights message */
+            !hasInsights ? (
               <Alert type="info" slim>
                 {t('guidanceLetterForm.noGuidance')}
               </Alert>
             ) : (
               <InsightsList
-                recommendations={insights}
+                insights={insights}
                 trbRequestId={trbRequestId}
                 setReorderError={error =>
                   setFormAlert(error ? { type: 'error', message: error } : null)
                 }
-                edit={recommendation => {
+                edit={insight => {
                   // Set form field values for editing
                   reset({
-                    ...recommendation,
+                    ...insight,
                     // Revert link strings to object for form array field
-                    links: recommendation.links.map(link => ({ link }))
+                    links: insight.links.map(link => ({ link }))
                   });
 
                   history.push(`/trb/${trbRequestId}/guidance/insights/form`);
                 }}
-                remove={recommendation =>
-                  remove({ variables: { id: recommendation.id } })
+                remove={insight =>
+                  remove({ variables: { id: insight.id } })
                     .then(() => {
                       setFormAlert({
                         type: 'success',
@@ -156,7 +156,7 @@ const Insights = ({
             }}
             next={{
               disabled: !!loading,
-              text: hasRecommendations
+              text: hasInsights
                 ? t('button.next')
                 : t('guidanceLetterForm.continueWithoutAdding'),
               onClick: () => {
@@ -170,7 +170,7 @@ const Insights = ({
                 setFormAlert(null);
                 history.push(`/trb/${trbRequestId}/guidance/next-steps`);
               },
-              outline: !hasRecommendations
+              outline: !hasInsights
             }}
             taskListUrl={`/trb/${trbRequestId}/guidance`}
             submit={async callback => callback?.()}

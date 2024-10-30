@@ -10,10 +10,10 @@ import {
 } from '@trussworks/react-uswds';
 
 import Label from 'components/shared/Label';
-import { GuidanceLetterRecommendationFields } from 'types/technicalAssistance';
+import { GuidanceLetterInsightFields } from 'types/technicalAssistance';
 
 /**
- * TRB Recommendation links field using React Hook Forms useFieldArray hook
+ * TRB insight links field using React Hook Forms useFieldArray hook
  */
 export default function LinkArrayField() {
   const { t } = useTranslation('technicalAssistance');
@@ -22,7 +22,7 @@ export default function LinkArrayField() {
     control,
     watch,
     formState: { errors }
-  } = useFormContext<GuidanceLetterRecommendationFields>();
+  } = useFormContext<GuidanceLetterInsightFields>();
 
   const { fields, append, remove } = useFieldArray({
     name: 'links'

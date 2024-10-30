@@ -49,7 +49,7 @@ import AddNote from '.';
 
 const { insights } = guidanceLetter;
 
-const getTrbRecommendationsQuery: MockedQuery<
+const getTrbInsightsQuery: MockedQuery<
   GetTRBGuidanceLetterInsightsQuery,
   GetTRBGuidanceLetterInsightsQueryVariables
 > = {
@@ -166,7 +166,7 @@ describe('Trb Admin Notes: Add Note', () => {
           watchQuery: { fetchPolicy: 'no-cache' },
           query: { fetchPolicy: 'no-cache' }
         }}
-        mocks={[getTrbRequestDocumentsQuery, getTrbRecommendationsQuery]}
+        mocks={[getTrbRequestDocumentsQuery, getTrbInsightsQuery]}
       >
         <MemoryRouter
           initialEntries={[`/trb/${mockTrbRequestId}/notes/add-note`]}

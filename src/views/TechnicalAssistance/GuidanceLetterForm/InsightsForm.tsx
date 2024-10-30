@@ -24,7 +24,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import {
   FormAlertObject,
-  GuidanceLetterRecommendationFields
+  GuidanceLetterInsightFields
 } from 'types/technicalAssistance';
 import formatUrl from 'utils/formatUrl';
 
@@ -43,7 +43,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
   const { state } = useLocation<{
-    recommendation: GuidanceLetterRecommendationFields;
+    insight: GuidanceLetterInsightFields;
   }>();
 
   const [showFormError, setShowFormError] = useState<boolean>(false);
@@ -54,7 +54,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
     watch,
     reset,
     formState: { isSubmitting, isDirty }
-  } = useFormContext<GuidanceLetterRecommendationFields>();
+  } = useFormContext<GuidanceLetterInsightFields>();
 
   const [create] = useCreateTRBGuidanceLetterInsightMutation({
     refetchQueries: [
@@ -80,20 +80,20 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
 
   const returnLink = useMemo(
     () =>
-      state?.recommendation
+      state?.insight
         ? `/trb/${trbRequestId}/guidance/internal-review`
         : `/trb/${trbRequestId}/guidance/insights`,
-    [state?.recommendation, trbRequestId]
+    [state?.insight, trbRequestId]
   );
 
   // If editing from internal review step, set field values from location state
   useEffect(() => {
-    if (state?.recommendation && !watch('id')) {
-      reset(state?.recommendation);
+    if (state?.insight && !watch('id')) {
+      reset(state?.insight);
     }
-  }, [state?.recommendation, watch, reset]);
+  }, [state?.insight, watch, reset]);
 
-  /** Submits form and executes recommendation mutation */
+  /** Submits form and executes insight mutation */
   const submit = useCallback<StepSubmit>(
     callback =>
       handleSubmit(async formData => {
@@ -277,7 +277,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
         </Button>
       </Form>
 
-      {/* Return without adding recommendation */}
+      {/* Return without adding insight */}
       <Button
         className="margin-top-205 display-flex flex-align-center"
         type="button"

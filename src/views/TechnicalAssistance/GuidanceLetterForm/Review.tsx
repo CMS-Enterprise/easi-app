@@ -114,18 +114,18 @@ const Review = ({
         trbRequestId={trbRequestId}
         guidanceLetter={guidanceLetter}
         className="margin-top-5 margin-bottom-4"
-        recommendationActions={{
+        insightActions={{
           setReorderError: error =>
             setFormAlert(error ? { type: 'error', message: error } : null),
-          edit: recommendation =>
+          edit: insight =>
             history.push(`/trb/${trbRequestId}/guidance/insights/form`, {
-              recommendation: {
-                ...recommendation,
-                links: recommendation.links.map(link => ({ link }))
+              insight: {
+                ...insight,
+                links: insight.links.map(link => ({ link }))
               }
             }),
-          remove: recommendation =>
-            remove({ variables: { id: recommendation.id } }).catch(() =>
+          remove: insight =>
+            remove({ variables: { id: insight.id } }).catch(() =>
               setFormAlert({
                 type: 'error',
                 message: t('guidanceLetterForm.error', {

@@ -183,7 +183,7 @@ describe('TRB Admin Note', () => {
     ).toBeInTheDocument();
   });
 
-  it('Renders label for removed recommendation', () => {
+  it('Renders label for removed insight', () => {
     const note: TRBAdminNoteFragment = {
       ...noteGuidanceLetter,
       categorySpecificData: {

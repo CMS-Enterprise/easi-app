@@ -9,12 +9,12 @@ import InsightsList from '.';
 
 const { insights } = guidanceLetter;
 
-/** Render component for testing within single recommendation list item */
-const renderRecommendation = (index: number, editable: boolean = true) => {
+/** Render component for testing within single insight list item */
+const renderInsight = (index: number, editable: boolean = true) => {
   render(
     <VerboseMockedProvider>
       <InsightsList
-        recommendations={insights}
+        insights={insights}
         trbRequestId={trbRequest.id}
         editable={editable}
         {...(editable ? { edit: () => null, remove: () => null } : {})}
@@ -22,33 +22,33 @@ const renderRecommendation = (index: number, editable: boolean = true) => {
     </VerboseMockedProvider>
   );
 
-  const elements = screen.getAllByTestId('recommendations_list-item');
+  const elements = screen.getAllByTestId('insights_list-item');
   expect(elements.length).toEqual(3);
 
   return within(elements[index]);
 };
 
 describe('TRB guidance and insights list', () => {
-  it('renders the recommendation', () => {
-    const recommendation = renderRecommendation(0);
+  it('renders the insight', () => {
+    const insight = renderInsight(0);
 
     expect(
-      recommendation.getByRole('heading', {
+      insight.getByRole('heading', {
         level: 3,
         name: insights[0].title
       })
     );
 
-    expect(recommendation.getByText(insights[0].recommendation));
+    expect(insight.getByText(insights[0].recommendation));
 
-    const links = recommendation.getAllByRole('link');
+    const links = insight.getAllByRole('link');
     expect(links.length).toEqual(insights[0].links.length);
   });
 
   it('renders editable view', () => {
-    const recommendation = renderRecommendation(0);
+    const insight = renderInsight(0);
 
-    // Reorder recommendations info alert
+    // Reorder insights info alert
     expect(
       screen.getByText(
         i18next.t<string>(
@@ -59,21 +59,19 @@ describe('TRB guidance and insights list', () => {
 
     // Check for edit and remove buttons
     expect(
-      recommendation.getByRole('button', {
+      insight.getByRole('button', {
         name: 'Edit guidance'
       })
     );
 
     expect(
-      recommendation.getByRole('button', {
+      insight.getByRole('button', {
         name: 'Remove guidance'
       })
     );
 
     // Reorder control buttons
-    const reorderControls = within(
-      recommendation.getByTestId('reorder-controls')
-    );
+    const reorderControls = within(insight.getByTestId('reorder-controls'));
 
     expect(
       reorderControls.getByRole('button', {
@@ -92,7 +90,7 @@ describe('TRB guidance and insights list', () => {
   });
 
   it('renders non-editable view', () => {
-    renderRecommendation(0, false);
+    renderInsight(0, false);
 
     expect(screen.queryByRole('button', { name: 'Edit guidance' })).toBeNull();
 

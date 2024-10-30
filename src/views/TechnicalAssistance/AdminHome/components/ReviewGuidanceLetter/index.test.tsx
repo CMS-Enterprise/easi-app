@@ -20,7 +20,7 @@ describe('TRB Guidance Letter review component', () => {
     // Guidance letter renders
     expect(getByText('Meeting summary text')).toBeInTheDocument();
 
-    // Recommendation letter renders
+    // Guidance letter renders
     expect(getByText('Recommendation 1')).toBeInTheDocument();
 
     // Snapshot

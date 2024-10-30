@@ -16,23 +16,23 @@ import RemoveInsightModal from '../RemoveInsightModal/Index';
 import InsightLinks from './InsightLinks';
 
 type InsightsListProps = {
-  recommendations: TRBGuidanceLetterInsightFragment[];
+  insights: TRBGuidanceLetterInsightFragment[];
   trbRequestId: string;
   /** Optional function to set error message if order mutation fails */
   setReorderError?: (error: string | null) => void;
   /** If false, hides edit/remove buttons and reorder controls */
   editable?: boolean;
-  edit?: (recommendation: TRBGuidanceLetterInsightFragment) => void;
-  remove?: (recommendation: TRBGuidanceLetterInsightFragment) => void;
+  edit?: (insight: TRBGuidanceLetterInsightFragment) => void;
+  remove?: (insight: TRBGuidanceLetterInsightFragment) => void;
   className?: string;
 };
 
 /**
- * Displays list of TRB guidance letter recommendations
- * with optional buttons to edit, remove, and order recommendations
+ * Displays list of TRB guidance letter guidance and insights
+ * with optional buttons to edit, remove, and order insights
  */
 export default function InsightsList({
-  recommendations,
+  insights,
   trbRequestId,
   setReorderError,
   editable = true,
@@ -42,25 +42,25 @@ export default function InsightsList({
 }: InsightsListProps) {
   const { t } = useTranslation('technicalAssistance');
 
-  const [recommendationToRemove, setRecommendationToRemove] =
+  const [insightToRemove, setInsightToRemove] =
     useState<TRBGuidanceLetterInsightFragment | null>(null);
 
   const [updateOrder] = useUpdateTRBGuidanceLetterInsightOrderMutation({
     refetchQueries: ['GetTrbGuidanceLetter']
   });
 
-  const enableReorderControls: boolean = editable && recommendations.length > 1;
+  const enableReorderControls: boolean = editable && insights.length > 1;
 
-  /** Sort recommendations and execute updateOrder mutation */
+  /** Sort insights and execute updateOrder mutation */
   const sort = (id: string, newIndex: number) => {
     /** Updated sort order array */
-    const newOrder: string[] = recommendations
-      // Get just rec IDs
-      .map(rec => rec.id)
-      // Filter out rec ID to be sorted
+    const newOrder: string[] = insights
+      // Get just insight IDs
+      .map(insight => insight.id)
+      // Filter out insight ID to be sorted
       .filter(value => value !== id);
 
-    // Insert rec ID at new index
+    // Insert insight ID at new index
     newOrder.splice(newIndex, 0, id);
 
     updateOrder({
@@ -85,39 +85,32 @@ export default function InsightsList({
       {remove && (
         <RemoveInsightModal
           modalProps={{
-            isOpen: !!recommendationToRemove,
-            closeModal: () => setRecommendationToRemove(null)
+            isOpen: !!insightToRemove,
+            closeModal: () => setInsightToRemove(null)
           }}
-          handleDelete={() =>
-            recommendationToRemove && remove(recommendationToRemove)
-          }
+          handleDelete={() => insightToRemove && remove(insightToRemove)}
         >
           <p>
             {t('guidanceLetterForm.modal.removingTitle', {
-              title: recommendationToRemove?.title
+              title: insightToRemove?.title
             })}
           </p>
         </RemoveInsightModal>
       )}
 
-      {recommendations.length > 0 && editable && (
+      {insights.length > 0 && editable && (
         <Alert type="info" slim className="margin-bottom-4">
           {t('guidanceLetterForm.reorderGuidance')}
         </Alert>
       )}
 
       <ul className="usa-list usa-list--unstyled">
-        {recommendations.map((recommendation, index) => {
-          const {
-            title,
-            id,
-            links,
-            recommendation: description
-          } = recommendation;
+        {insights.map((insight, index) => {
+          const { title, id, links, recommendation: description } = insight;
 
           return (
             <li
-              data-testid="recommendations_list-item"
+              data-testid="insights_list-item"
               key={id}
               className="margin-bottom-3"
             >
@@ -161,7 +154,7 @@ export default function InsightsList({
                   )
                 }
 
-                {/* Recommendation content */}
+                {/* Insight content */}
                 <div
                   className={classNames(
                     'width-full padding-bottom-2',
@@ -196,7 +189,7 @@ export default function InsightsList({
                     {edit && (
                       <Button
                         type="button"
-                        onClick={() => edit(recommendation)}
+                        onClick={() => edit(insight)}
                         unstyled
                       >
                         {t('guidanceLetterForm.editGuidance')}
@@ -206,9 +199,7 @@ export default function InsightsList({
                       <Button
                         type="button"
                         className="text-secondary margin-left-1"
-                        onClick={() =>
-                          setRecommendationToRemove(recommendation)
-                        }
+                        onClick={() => setInsightToRemove(insight)}
                         unstyled
                       >
                         {t('guidanceLetterForm.removeGuidance')}
