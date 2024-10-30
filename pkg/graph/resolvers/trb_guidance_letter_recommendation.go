@@ -43,7 +43,7 @@ func GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx context.Context, stor
 func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.Store, changes map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error) {
 	idIface, idFound := changes["id"]
 	if !idFound {
-		return nil, errors.New("missing required property trbRequestId")
+		return nil, errors.New("missing required property id")
 	}
 
 	// conv uuid first
@@ -140,6 +140,11 @@ func DeleteTRBGuidanceLetterRecommendation(
 	return store.DeleteTRBGuidanceLetterRecommendation(ctx, id, newOrder)
 }
 
+// cleanupGuidanceLetterInsightOrder sets re-ordered lists of insights for each category
+// ex: we have Considerations 1, 2, 3, 4, and Consideration 2 is moved to Requirements
+// now, we have Considerations 1, 3, 4. While this will not impact the UI, as we will still return the list in position-ascending order
+// (so, still 1, 3, 4 in order), it is better DB hygiene to clean up that order to shuffle the 3, 4 back to 2, 3, leaving us
+// with 1, 2, 3
 func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) error {
 	// first, get list of all insights for this guidance letter
 	allRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, trbRequestID)
@@ -166,16 +171,17 @@ func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store
 
 	// set new order
 	for category, insights := range m {
-		var sorted []uuid.UUID
+		var ordered []uuid.UUID
 
+		// here is where we set the order. by simply appending to the list `ordered`, we fill in any index gaps
 		for _, insight := range insights {
-			sorted = append(sorted, insight.ID)
+			ordered = append(ordered, insight.ID)
 		}
 
 		// save new order for each category
 		if _, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
 			TrbRequestID: trbRequestID,
-			NewOrder:     sorted,
+			NewOrder:     ordered,
 			Category:     category,
 		}); err != nil {
 			return err
