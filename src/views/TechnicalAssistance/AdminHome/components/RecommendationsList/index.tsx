@@ -13,7 +13,7 @@ import Alert from 'components/shared/Alert';
 
 import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
 
-import RecommendationLinks from './RecommendationLinks';
+import InsightLinks from './InsightLinks';
 
 type RecommendationsListProps = {
   recommendations: TRBGuidanceLetterInsightFragment[];
@@ -180,7 +180,7 @@ export default function RecommendationsList({
                       <p className="text-bold margin-bottom-0 margin-top-2">
                         {t('guidanceLetter.resources')}
                       </p>
-                      <RecommendationLinks
+                      <InsightLinks
                         links={links}
                         className="margin-bottom-05"
                       />

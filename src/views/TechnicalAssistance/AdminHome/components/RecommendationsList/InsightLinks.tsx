@@ -4,15 +4,12 @@ import classNames from 'classnames';
 
 import formatUrl from 'utils/formatUrl';
 
-type RecommendationLinksProps = {
+type InsightLinksProps = {
   links: string[];
   className?: string;
 };
 
-export default function RecommendationLinks({
-  links,
-  className
-}: RecommendationLinksProps) {
+export default function InsightLinks({ links, className }: InsightLinksProps) {
   return (
     <ul className={classNames('usa-list', 'usa-list--unstyled', className)}>
       {links.map((link, index) => {
