@@ -23,9 +23,9 @@ import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 import { StepSubmit } from '../RequestForm';
 
 import Done from './Done';
+import Insights from './Insights';
 import InternalReview from './InternalReview';
 import NextSteps from './NextSteps';
-import Recommendations from './Recommendations';
 import Review from './Review';
 import Summary from './Summary';
 
@@ -40,7 +40,7 @@ const guidanceFormSteps = [
   },
   {
     slug: 'insights',
-    component: Recommendations
+    component: Insights
   },
   {
     slug: 'next-steps',

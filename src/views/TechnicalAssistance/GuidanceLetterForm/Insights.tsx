@@ -29,7 +29,7 @@ const defaultValues: GuidanceLetterRecommendationFields = {
   links: []
 };
 
-const Recommendations = ({
+const Insights = ({
   trbRequestId,
   guidanceLetter: { insights },
   setIsStepSubmitting,
@@ -183,4 +183,4 @@ const Recommendations = ({
   );
 };
 
-export default Recommendations;
+export default Insights;
