@@ -499,4 +499,33 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(considerations[0].PositionInLetter.Int64, int64(0))
 		s.EqualValues(considerations[1].PositionInLetter.Int64, int64(1))
 	})
+
+	s.Run("does not allow setting a category to `uncategorized`", func() {
+		trbRequest := models.NewTRBRequest(anonEua)
+		trbRequest.Type = models.TRBTNeedHelp
+		trbRequest.State = models.TRBRequestStateOpen
+		trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
+		s.NoError(err)
+
+		// create insights of recommendation category
+		recommendationToCreate1 := models.TRBGuidanceLetterRecommendation{
+			TRBRequestID:   trbRequest.ID,
+			Title:          "Restart your computer1",
+			Recommendation: "I recommend you restart your computer1",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+		}
+
+		createdRecommendation1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &recommendationToCreate1)
+		s.NoError(err)
+		s.EqualValues(createdRecommendation1.PositionInLetter.Int64, int64(0))
+		s.EqualValues(createdRecommendation1.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
+
+		// try to update the category to `uncategorized`
+		_, err = UpdateTRBGuidanceLetterRecommendation(ctx, store, map[string]interface{}{
+			"id":       createdRecommendation1.ID,
+			"category": models.TRBGuidanceLetterRecommendationCategoryUncategorized.String(),
+		})
+		s.Error(err)
+	})
 }
