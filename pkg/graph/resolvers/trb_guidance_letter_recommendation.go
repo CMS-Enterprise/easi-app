@@ -158,10 +158,11 @@ func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store
 	})
 
 	// group by category, shuffle up the order if needed, update db
-	m := map[models.TRBGuidanceLetterRecommendationCategory][]*models.TRBGuidanceLetterRecommendation{
-		models.TRBGuidanceLetterRecommendationCategoryConsideration:  {},
-		models.TRBGuidanceLetterRecommendationCategoryRecommendation: {},
-		models.TRBGuidanceLetterRecommendationCategoryRequirement:    {},
+	m := map[models.TRBGuidanceLetterRecommendationCategory][]*models.TRBGuidanceLetterRecommendation{}
+
+	// prefill with all available categories
+	for _, category := range models.AllTRBGuidanceLetterRecommendationCategory {
+		m[category] = []*models.TRBGuidanceLetterRecommendation{}
 	}
 
 	// populate map

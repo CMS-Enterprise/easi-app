@@ -10177,6 +10177,7 @@ enum TRBGuidanceLetterRecommendationCategory {
   REQUIREMENT
   RECOMMENDATION
   CONSIDERATION
+  UNCATEGORIZED
 }
 
 """
