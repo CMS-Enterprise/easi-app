@@ -15,7 +15,7 @@ import RemoveInsightModal from '../RemoveInsightModal/Index';
 
 import InsightLinks from './InsightLinks';
 
-type RecommendationsListProps = {
+type InsightsListProps = {
   recommendations: TRBGuidanceLetterInsightFragment[];
   trbRequestId: string;
   /** Optional function to set error message if order mutation fails */
@@ -31,7 +31,7 @@ type RecommendationsListProps = {
  * Displays list of TRB guidance letter recommendations
  * with optional buttons to edit, remove, and order recommendations
  */
-export default function RecommendationsList({
+export default function InsightsList({
   recommendations,
   trbRequestId,
   setReorderError,
@@ -39,7 +39,7 @@ export default function RecommendationsList({
   edit,
   remove,
   className
-}: RecommendationsListProps) {
+}: InsightsListProps) {
   const { t } = useTranslation('technicalAssistance');
 
   const [recommendationToRemove, setRecommendationToRemove] =

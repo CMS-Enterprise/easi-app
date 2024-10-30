@@ -17,7 +17,7 @@ import {
 } from 'types/technicalAssistance';
 import { guidanceRecommendationSchema } from 'validations/trbRequestSchema';
 
-import RecommendationsList from '../AdminHome/components/RecommendationsList';
+import InsightsList from '../AdminHome/components/InsightsList';
 import Pager from '../RequestForm/Pager';
 
 import InsightsForm from './InsightsForm';
@@ -106,7 +106,7 @@ const Insights = ({
                 {t('guidanceLetterForm.noGuidance')}
               </Alert>
             ) : (
-              <RecommendationsList
+              <InsightsList
                 recommendations={insights}
                 trbRequestId={trbRequestId}
                 setReorderError={error =>

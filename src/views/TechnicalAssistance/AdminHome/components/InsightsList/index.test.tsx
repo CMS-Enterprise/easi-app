@@ -5,7 +5,7 @@ import i18next from 'i18next';
 import { guidanceLetter, trbRequest } from 'data/mock/trbRequest';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
-import RecommendationsList from '.';
+import InsightsList from '.';
 
 const { insights } = guidanceLetter;
 
@@ -13,7 +13,7 @@ const { insights } = guidanceLetter;
 const renderRecommendation = (index: number, editable: boolean = true) => {
   render(
     <VerboseMockedProvider>
-      <RecommendationsList
+      <InsightsList
         recommendations={insights}
         trbRequestId={trbRequest.id}
         editable={editable}

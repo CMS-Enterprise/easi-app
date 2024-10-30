@@ -14,7 +14,7 @@ import { RichTextViewer } from 'components/RichTextEditor';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import { formatDateLocal } from 'utils/date';
 
-import RecommendationsList from '../RecommendationsList';
+import InsightsList from '../InsightsList';
 
 type ReviewGuidanceLetterProps = {
   guidanceLetter: TRBGuidanceLetterFragment;
@@ -187,7 +187,7 @@ const ReviewGuidanceLetter = ({
           insights.length === 0 ? (
             <p className="margin-top-4">{t('guidanceLetter.notSpecified')}</p>
           ) : (
-            <RecommendationsList
+            <InsightsList
               recommendations={insights}
               trbRequestId={trbRequestId}
               className="margin-top-4"
