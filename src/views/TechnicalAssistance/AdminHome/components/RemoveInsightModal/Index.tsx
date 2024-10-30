@@ -6,20 +6,20 @@ import Modal, { ModalProps } from 'components/Modal';
 
 import './index.scss';
 
-type RemoveRecommendationModalProps = {
+type RemoveInsightModalProps = {
   modalProps: Omit<ModalProps, 'children'>;
   handleDelete: () => void;
   children?: React.ReactNode;
 };
 
 /**
- * Modal to warn user before removing TRB guidance letter recommendation
+ * Modal to warn user before removing TRB guidance letter insight
  */
-const RemoveRecommendationModal = ({
+const RemoveInsightModal = ({
   modalProps,
   handleDelete,
   children
-}: RemoveRecommendationModalProps) => {
+}: RemoveInsightModalProps) => {
   const { t } = useTranslation('technicalAssistance');
   const { closeModal } = modalProps;
 
@@ -57,4 +57,4 @@ const RemoveRecommendationModal = ({
   );
 };
 
-export default RemoveRecommendationModal;
+export default RemoveInsightModal;

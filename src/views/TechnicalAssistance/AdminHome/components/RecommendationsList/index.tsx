@@ -11,7 +11,7 @@ import {
 import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 
-import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
+import RemoveInsightModal from '../RemoveInsightModal/Index';
 
 import InsightLinks from './InsightLinks';
 
@@ -83,7 +83,7 @@ export default function RecommendationsList({
   return (
     <div className={className}>
       {remove && (
-        <RemoveRecommendationModal
+        <RemoveInsightModal
           modalProps={{
             isOpen: !!recommendationToRemove,
             closeModal: () => setRecommendationToRemove(null)
@@ -97,7 +97,7 @@ export default function RecommendationsList({
               title: recommendationToRemove?.title
             })}
           </p>
-        </RemoveRecommendationModal>
+        </RemoveInsightModal>
       )}
 
       {recommendations.length > 0 && editable && (
