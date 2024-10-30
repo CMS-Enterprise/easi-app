@@ -352,17 +352,6 @@ export enum SystemIntakeTRBFollowUp {
 }
 
 /**
- * Represents the category of a single TRB admin note
- */
-export enum TRBAdminNoteCategory {
-  CONSULT_SESSION = "CONSULT_SESSION",
-  GENERAL_REQUEST = "GENERAL_REQUEST",
-  GUIDANCE_LETTER = "GUIDANCE_LETTER",
-  INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
-  SUPPORTING_DOCUMENTS = "SUPPORTING_DOCUMENTS",
-}
-
-/**
  * Represents the status of the TRB consult attendance step
  */
 export enum TRBAttendConsultStatus {
@@ -577,53 +566,6 @@ export interface CreateSystemIntakeNoteInput {
   content: HTML;
   authorName: string;
   intakeId: UUID;
-}
-
-/**
- * The data needed to create a TRB admin note with the Consult Session category
- */
-export interface CreateTRBAdminNoteConsultSessionInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-}
-
-/**
- * The data needed to create a TRB admin note with the General Request category
- */
-export interface CreateTRBAdminNoteGeneralRequestInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-}
-
-/**
- * The data needed to create a TRB admin note with the Guidance Letter category
- */
-export interface CreateTRBAdminNoteGuidanceLetterInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-  appliesToMeetingSummary: boolean;
-  appliesToNextSteps: boolean;
-  recommendationIDs: UUID[];
-}
-
-/**
- * The data needed to create a TRB admin note with the Initial Request Form category
- */
-export interface CreateTRBAdminNoteInitialRequestFormInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-  appliesToBasicRequestDetails: boolean;
-  appliesToSubjectAreas: boolean;
-  appliesToAttendees: boolean;
-}
-
-/**
- * The data needed to create a TRB admin note with the Supporting Documents category
- */
-export interface CreateTRBAdminNoteSupportingDocumentsInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-  documentIDs: UUID[];
 }
 
 /**

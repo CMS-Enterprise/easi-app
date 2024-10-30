@@ -6,8 +6,8 @@ Can open modal initiated with <AddNote /> or <Notes />
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Grid } from '@trussworks/react-uswds';
+import { TRBAdminNoteCategory } from 'gql/gen/graphql';
 
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import { TrbAdminPath } from 'types/technicalAssistance';
 
 import NotesModal from '../NoteModal';

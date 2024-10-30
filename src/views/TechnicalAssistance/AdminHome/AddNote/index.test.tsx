@@ -11,9 +11,13 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  CreateTRBAdminNoteGeneralRequestDocument,
+  CreateTRBAdminNoteGeneralRequestMutation,
+  CreateTRBAdminNoteGeneralRequestMutationVariables,
   GetTRBGuidanceLetterInsightsDocument,
   GetTRBGuidanceLetterInsightsQuery,
-  GetTRBGuidanceLetterInsightsQueryVariables
+  GetTRBGuidanceLetterInsightsQueryVariables,
+  TRBAdminNoteCategory
 } from 'gql/gen/graphql';
 import i18next from 'i18next';
 
@@ -25,17 +29,11 @@ import {
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
-import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
-import {
-  CreateTRBAdminNoteGeneralRequest,
-  CreateTRBAdminNoteGeneralRequestVariables
-} from 'queries/types/CreateTRBAdminNoteGeneralRequest';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
 import {
-  TRBAdminNoteCategory,
   TRBDocumentCommonType,
   TRBRequestDocumentStatus
 } from 'types/graphql-global-types';
@@ -76,11 +74,11 @@ const getTrbRecommendationsQuery: MockedQuery<
 };
 
 const createTrbAdminNoteQuery: MockedQuery<
-  CreateTRBAdminNoteGeneralRequest,
-  CreateTRBAdminNoteGeneralRequestVariables
+  CreateTRBAdminNoteGeneralRequestMutation,
+  CreateTRBAdminNoteGeneralRequestMutationVariables
 > = {
   request: {
-    query: CreateTrbAdminNoteGeneralRequestQuery,
+    query: CreateTRBAdminNoteGeneralRequestDocument,
     variables: {
       input: {
         trbRequestId: mockTrbRequestId,
@@ -90,6 +88,7 @@ const createTrbAdminNoteQuery: MockedQuery<
   },
   result: {
     data: {
+      __typename: 'Mutation',
       createTRBAdminNoteGeneralRequest: {
         __typename: 'TRBAdminNote',
         createdAt: '2023-02-16T15:21:34.156885Z',

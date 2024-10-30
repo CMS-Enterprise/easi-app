@@ -10,11 +10,15 @@ import {
   Grid
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { useGetTRBGuidanceLetterInsightsQuery } from 'gql/gen/graphql';
+import {
+  TRBAdminNoteCategory,
+  useGetTRBGuidanceLetterInsightsQuery
+} from 'gql/gen/graphql';
 
 import PageHeading from 'components/PageHeading';
 import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -30,10 +34,8 @@ import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
-import Breadcrumbs from '../../../../components/shared/Breadcrumbs';
 import { ModalViewType } from '../components/NoteModal';
 import { TRBRequestContext } from '../RequestContext';
 

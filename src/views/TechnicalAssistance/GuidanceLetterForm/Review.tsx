@@ -6,20 +6,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Accordion, Form } from '@trussworks/react-uswds';
 import {
   GetTRBGuidanceLetterDocument,
+  TRBAdminNoteFragment,
   useDeleteTRBGuidanceLetterInsightMutation,
+  useGetTRBAdminNotesQuery,
   useSendTRBGuidanceLetterMutation
 } from 'gql/gen/graphql';
 
 import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import useCacheQuery from 'hooks/useCacheQuery';
-import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
-import {
-  GetTrbAdminNotes,
-  GetTrbAdminNotes_trbRequest_adminNotes as AdminNote,
-  GetTrbAdminNotesVariables
-} from 'queries/types/GetTrbAdminNotes';
 import {
   StepComponentProps,
   TrbRecipientFields
@@ -44,16 +39,13 @@ const Review = ({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const { data } = useCacheQuery<GetTrbAdminNotes, GetTrbAdminNotesVariables>(
-    GetTrbAdminNotesQuery,
-    {
-      variables: {
-        id: trbRequestId
-      }
+  const { data } = useGetTRBAdminNotesQuery({
+    variables: {
+      id: trbRequestId
     }
-  );
+  });
 
-  const notes: AdminNote[] = data?.trbRequest?.adminNotes || [];
+  const notes: TRBAdminNoteFragment[] = data?.trbRequest?.adminNotes || [];
 
   const [mutate, guidanceLetterResult] = useSendTRBGuidanceLetterMutation();
 

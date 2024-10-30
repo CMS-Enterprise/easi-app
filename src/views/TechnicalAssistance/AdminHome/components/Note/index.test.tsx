@@ -1,8 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { TRBAdminNoteCategory, TRBAdminNoteFragment } from 'gql/gen/graphql';
 
-import { TRBAdminNoteFragment } from 'queries/types/TRBAdminNoteFragment';
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
 import Note from '.';
@@ -41,11 +40,13 @@ const noteSupportingDocuments: TRBAdminNoteFragment = {
     documents: [
       {
         __typename: 'TRBRequestDocument',
+        id: 'fcf17154-1d3b-46ac-a45c-33a29aaf9ec0',
         fileName: 'documentOne.pdf',
         deletedAt: null
       },
       {
         __typename: 'TRBRequestDocument',
+        id: '27b0d48b-817a-4ed6-be9a-6a83c25280e1',
         fileName: 'documentTwo.pdf',
         deletedAt: null
       }
@@ -71,11 +72,13 @@ const noteGuidanceLetter: TRBAdminNoteFragment = {
     insights: [
       {
         __typename: 'TRBGuidanceLetterRecommendation',
+        id: 'bcbd8b3e-75e7-456e-8574-c5ab0b47e0bd',
         title: 'Recommendation One',
         deletedAt: null
       },
       {
         __typename: 'TRBGuidanceLetterRecommendation',
+        id: '2481f229-b7e9-4056-96a6-2857c8f29af1',
         title: 'Recommendation Two',
         deletedAt: null
       }
@@ -158,6 +161,7 @@ describe('TRB Admin Note', () => {
         documents: [
           {
             __typename: 'TRBRequestDocument',
+            id: '8f41533f-6cfa-4e18-aa54-9ccbafafcb88',
             fileName: 'documentOne.pdf',
             deletedAt: '2023-03-28T13:20:37.852099Z'
           }
@@ -183,6 +187,7 @@ describe('TRB Admin Note', () => {
         insights: [
           {
             __typename: 'TRBGuidanceLetterRecommendation',
+            id: 'b97d4633-42d6-4817-9e88-919928e149e5',
             title: 'Recommendation One',
             deletedAt: '2023-03-28T13:20:37.852099Z'
           }

@@ -4,20 +4,21 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import {
+  TRBAdminNoteFragment,
+  TRBAdminNoteGuidanceLetterCategoryDataFragment,
+  TRBAdminNoteInitialRequestFormCategoryDataFragment,
+  TRBAdminNoteSupportingDocumentsCategoryDataFragment
+} from 'gql/gen/graphql';
 
 import { RichTextViewer } from 'components/RichTextEditor';
-import {
-  GetTrbAdminNotes_trbRequest_adminNotes as NoteType,
-  GetTrbAdminNotes_trbRequest_adminNotes_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents as Document
-} from 'queries/types/GetTrbAdminNotes';
-import {
-  TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteGuidanceLetterCategoryData as GuidanceLetterCategoryData,
-  TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteInitialRequestFormCategoryData as InitialRequestFormCategoryData
-} from 'queries/types/TRBAdminNoteFragment';
 import { formatDateLocal } from 'utils/date';
 
+type Document =
+  TRBAdminNoteSupportingDocumentsCategoryDataFragment['documents'][number];
+
 type NoteProps = {
-  note: NoteType;
+  note: TRBAdminNoteFragment;
   className?: string;
   border?: boolean;
 };
@@ -34,7 +35,7 @@ const Note = ({ note, className, border = true }: NoteProps) => {
     appliesToBasicRequestDetails,
     appliesToSubjectAreas,
     appliesToAttendees
-  }: InitialRequestFormCategoryData) =>
+  }: TRBAdminNoteInitialRequestFormCategoryDataFragment) =>
     [
       ...(appliesToBasicRequestDetails
         ? [t('notes.labels.appliesToBasicRequestDetails')]
@@ -50,7 +51,7 @@ const Note = ({ note, className, border = true }: NoteProps) => {
     appliesToMeetingSummary,
     appliesToNextSteps,
     insights
-  }: GuidanceLetterCategoryData) =>
+  }: TRBAdminNoteGuidanceLetterCategoryDataFragment) =>
     [
       ...(appliesToMeetingSummary ? [t('notes.labels.meetingSummary')] : []),
       ...(appliesToNextSteps ? [t('notes.labels.nextSteps')] : []),

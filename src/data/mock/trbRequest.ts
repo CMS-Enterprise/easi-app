@@ -1,14 +1,18 @@
 import {
+  GetTRBAdminNotesDocument,
+  GetTRBAdminNotesQuery,
+  GetTRBAdminNotesQueryVariables,
   GetTRBGuidanceLetterDocument,
   GetTRBGuidanceLetterQuery,
   GetTRBGuidanceLetterQueryVariables,
   GetTrbLeadOptionsDocument,
   GetTrbLeadOptionsQuery,
+  TRBAdminNoteCategory,
+  TRBAdminNoteFragment,
   TRBGuidanceLetterFragment
 } from 'gql/gen/graphql';
 
 import GetRequestsQuery from 'queries/GetRequestsQuery';
-import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
@@ -18,10 +22,6 @@ import {
   GetRequests,
   GetRequests_myTrbRequests as MyTrbRequests
 } from 'queries/types/GetRequests';
-import {
-  GetTrbAdminNotes,
-  GetTrbAdminNotesVariables
-} from 'queries/types/GetTrbAdminNotes';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
 import {
   GetTrbRequest,
@@ -48,7 +48,6 @@ import {
 import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
 import {
   PersonRole,
-  TRBAdminNoteCategory,
   TRBAttendConsultStatus,
   TRBCollabGroupOption,
   TRBConsultPrepStatus,
@@ -101,7 +100,7 @@ export const taskStatuses: TaskStatuses = {
   guidanceLetterStatus: TRBGuidanceLetterStatus.CANNOT_START_YET
 };
 
-const adminNotes: GetTrbAdminNotes['trbRequest']['adminNotes'] = [
+const adminNotes: TRBAdminNoteFragment[] = [
   {
     __typename: 'TRBAdminNote',
     id: '861fa6c5-c9af-4cda-a559-0995b7b76855',
@@ -403,16 +402,17 @@ export const getTrbGuidanceLetterQuery: MockedQuery<
 };
 
 export const getTrbAdminNotesQuery = (
-  notes: GetTrbAdminNotes['trbRequest']['adminNotes'] = adminNotes
-): MockedQuery<GetTrbAdminNotes, GetTrbAdminNotesVariables> => ({
+  notes: TRBAdminNoteFragment[] = adminNotes
+): MockedQuery<GetTRBAdminNotesQuery, GetTRBAdminNotesQueryVariables> => ({
   request: {
-    query: GetTrbAdminNotesQuery,
+    query: GetTRBAdminNotesDocument,
     variables: {
       id: trbRequestId
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         __typename: 'TRBRequest',
         id: trbRequestId,
