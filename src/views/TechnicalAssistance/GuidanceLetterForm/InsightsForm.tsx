@@ -33,16 +33,13 @@ import { StepSubmit } from '../RequestForm';
 
 import LinksArrayField from './LinksArrayField/Index';
 
-type RecommendationsFormProps = {
+type InsightsFormProps = {
   trbRequestId: string;
   /** Set a form level alert message from within step components */
   setFormAlert: React.Dispatch<React.SetStateAction<FormAlertObject | null>>;
 };
 
-const RecommendationsForm = ({
-  trbRequestId,
-  setFormAlert
-}: RecommendationsFormProps) => {
+const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
   const { state } = useLocation<{
@@ -300,4 +297,4 @@ const RecommendationsForm = ({
   );
 };
 
-export default RecommendationsForm;
+export default InsightsForm;

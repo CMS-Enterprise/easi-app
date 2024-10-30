@@ -20,7 +20,7 @@ import { guidanceRecommendationSchema } from 'validations/trbRequestSchema';
 import RecommendationsList from '../AdminHome/components/RecommendationsList';
 import Pager from '../RequestForm/Pager';
 
-import RecommendationsForm from './RecommendationsForm';
+import InsightsForm from './InsightsForm';
 
 const defaultValues: GuidanceLetterRecommendationFields = {
   id: undefined,
@@ -70,7 +70,7 @@ const Insights = ({
       {/* Recommendations Form */}
       <Route exact path={`${path}/form`}>
         <FormProvider<GuidanceLetterRecommendationFields> {...formMethods}>
-          <RecommendationsForm
+          <InsightsForm
             trbRequestId={trbRequestId}
             setFormAlert={setFormAlert}
           />
