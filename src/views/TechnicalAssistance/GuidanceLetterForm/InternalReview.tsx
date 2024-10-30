@@ -1,24 +1,16 @@
 import React, { useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ApolloError, useMutation } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
+import {
+  GetTRBGuidanceLetterDocument,
+  useDeleteTRBGuidanceLetterInsightMutation,
+  useRequestReviewForTRBGuidanceLetterMutation
+} from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
-import {
-  DeleteTRBGuidanceLetterInsightQuery,
-  GetTrbGuidanceLetterQuery,
-  RequestReviewForTRBGuidanceLetterQuery
-} from 'queries/TrbGuidanceLetterQueries';
-import {
-  DeleteTRBGuidanceLetterInsight,
-  DeleteTRBGuidanceLetterInsightVariables
-} from 'queries/types/DeleteTRBGuidanceLetterInsight';
-import {
-  RequestReviewForTRBGuidanceLetter,
-  RequestReviewForTRBGuidanceLetterVariables
-} from 'queries/types/RequestReviewForTRBGuidanceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { StepComponentProps } from 'types/technicalAssistance';
 
@@ -37,22 +29,17 @@ const InternalReview = ({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const [requestReview, { loading: isSubmitting }] = useMutation<
-    RequestReviewForTRBGuidanceLetter,
-    RequestReviewForTRBGuidanceLetterVariables
-  >(RequestReviewForTRBGuidanceLetterQuery, {
-    variables: {
-      id: guidanceLetter.id
-    }
-  });
+  const [requestReview, { loading: isSubmitting }] =
+    useRequestReviewForTRBGuidanceLetterMutation({
+      variables: {
+        id: guidanceLetter.id
+      }
+    });
 
-  const [remove] = useMutation<
-    DeleteTRBGuidanceLetterInsight,
-    DeleteTRBGuidanceLetterInsightVariables
-  >(DeleteTRBGuidanceLetterInsightQuery, {
+  const [remove] = useDeleteTRBGuidanceLetterInsightMutation({
     refetchQueries: [
       {
-        query: GetTrbGuidanceLetterQuery,
+        query: GetTRBGuidanceLetterDocument,
         variables: {
           id: trbRequestId
         }

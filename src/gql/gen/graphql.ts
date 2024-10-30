@@ -3257,6 +3257,87 @@ export type GetTrbRequestRelationQueryVariables = Exact<{
 
 export type GetTrbRequestRelationQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', id: UUID, relationType?: RequestRelationType | null, contractName?: string | null, contractNumbers: Array<{ __typename: 'TRBRequestContractNumber', contractNumber: string }>, systems: Array<{ __typename: 'CedarSystem', id: string, name: string, acronym?: string | null }> }, cedarSystems: Array<{ __typename: 'CedarSystem', id: string, name: string, acronym?: string | null }> };
 
+export type CreateTRBGuidanceLetterMutationVariables = Exact<{
+  trbRequestId: Scalars['UUID']['input'];
+}>;
+
+
+export type CreateTRBGuidanceLetterMutation = { __typename: 'Mutation', createTRBGuidanceLetter: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } };
+
+export type CreateTRBGuidanceLetterInsightMutationVariables = Exact<{
+  input: CreateTRBGuidanceLetterRecommendationInput;
+}>;
+
+
+export type CreateTRBGuidanceLetterInsightMutation = { __typename: 'Mutation', createTRBGuidanceLetterRecommendation: { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, title: string, recommendation: HTML, links: Array<string> } };
+
+export type DeleteTRBGuidanceLetterInsightMutationVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type DeleteTRBGuidanceLetterInsightMutation = { __typename: 'Mutation', deleteTRBGuidanceLetterRecommendation: { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, title: string, recommendation: HTML, links: Array<string> } };
+
+export type GetTRBGuidanceLetterQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type GetTRBGuidanceLetterQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', id: UUID, name?: string | null, type: TRBRequestType, createdAt: Time, consultMeetingTime?: Time | null, taskStatuses: { __typename: 'TRBTaskStatuses', guidanceLetterStatus: TRBGuidanceLetterStatus }, guidanceLetter?: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } | null } };
+
+export type GetTRBGuidanceLetterInsightsQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type GetTRBGuidanceLetterInsightsQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', guidanceLetter?: { __typename: 'TRBGuidanceLetter', insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, title: string, recommendation: HTML, links: Array<string> }> } | null } };
+
+export type GetTRBPublicGuidanceLetterQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type GetTRBPublicGuidanceLetterQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', id: UUID, name?: string | null, requesterComponent?: string | null, type: TRBRequestType, consultMeetingTime?: Time | null, requesterInfo: { __typename: 'UserInfo', commonName: string }, form: { __typename: 'TRBRequestForm', id: UUID, submittedAt?: Time | null, component?: string | null, needsAssistanceWith?: string | null }, guidanceLetter?: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } | null, taskStatuses: { __typename: 'TRBTaskStatuses', guidanceLetterStatus: TRBGuidanceLetterStatus } } };
+
+export type RequestReviewForTRBGuidanceLetterMutationVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type RequestReviewForTRBGuidanceLetterMutation = { __typename: 'Mutation', requestReviewForTRBGuidanceLetter: { __typename: 'TRBGuidanceLetter', id: UUID } };
+
+export type SendTRBGuidanceLetterMutationVariables = Exact<{
+  input: SendTRBGuidanceLetterInput;
+}>;
+
+
+export type SendTRBGuidanceLetterMutation = { __typename: 'Mutation', sendTRBGuidanceLetter: { __typename: 'TRBGuidanceLetter', id: UUID } };
+
+export type TRBGuidanceLetterFragment = { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } };
+
+export type TRBGuidanceLetterInsightFragment = { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, title: string, recommendation: HTML, links: Array<string> };
+
+export type UpdateTRBGuidanceLetterMutationVariables = Exact<{
+  input: UpdateTRBGuidanceLetterInput;
+}>;
+
+
+export type UpdateTRBGuidanceLetterMutation = { __typename: 'Mutation', updateTRBGuidanceLetter: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } };
+
+export type UpdateTRBGuidanceLetterInsightMutationVariables = Exact<{
+  input: UpdateTRBGuidanceLetterRecommendationInput;
+}>;
+
+
+export type UpdateTRBGuidanceLetterInsightMutation = { __typename: 'Mutation', updateTRBGuidanceLetterRecommendation: { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, title: string, recommendation: HTML, links: Array<string> } };
+
+export type UpdateTRBGuidanceLetterInsightOrderMutationVariables = Exact<{
+  input: UpdateTRBGuidanceLetterRecommendationOrderInput;
+}>;
+
+
+export type UpdateTRBGuidanceLetterInsightOrderMutation = { __typename: 'Mutation', updateTRBGuidanceLetterRecommendationOrder: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, title: string, recommendation: HTML, links: Array<string> }> };
+
 export type UpdateTrbRequestFormStatusMutationVariables = Exact<{
   isSubmitted: Scalars['Boolean']['input'];
   trbRequestId: Scalars['UUID']['input'];
@@ -3294,6 +3375,33 @@ export const SystemIntakeGRBReviewerFragmentDoc = gql`
   }
 }
     `;
+export const TRBGuidanceLetterInsightFragmentDoc = gql`
+    fragment TRBGuidanceLetterInsight on TRBGuidanceLetterRecommendation {
+  id
+  title
+  recommendation
+  links
+}
+    `;
+export const TRBGuidanceLetterFragmentDoc = gql`
+    fragment TRBGuidanceLetter on TRBGuidanceLetter {
+  id
+  meetingSummary
+  nextSteps
+  isFollowupRecommended
+  dateSent
+  followupPoint
+  insights {
+    ...TRBGuidanceLetterInsight
+  }
+  author {
+    euaUserId
+    commonName
+  }
+  createdAt
+  modifiedAt
+}
+    ${TRBGuidanceLetterInsightFragmentDoc}`;
 export const CreateSystemIntakeGRBReviewersDocument = gql`
     mutation CreateSystemIntakeGRBReviewers($input: CreateSystemIntakeGRBReviewersInput!) {
   createSystemIntakeGRBReviewers(input: $input) {
@@ -3864,6 +3972,437 @@ export type GetTrbRequestRelationQueryHookResult = ReturnType<typeof useGetTrbRe
 export type GetTrbRequestRelationLazyQueryHookResult = ReturnType<typeof useGetTrbRequestRelationLazyQuery>;
 export type GetTrbRequestRelationSuspenseQueryHookResult = ReturnType<typeof useGetTrbRequestRelationSuspenseQuery>;
 export type GetTrbRequestRelationQueryResult = Apollo.QueryResult<GetTrbRequestRelationQuery, GetTrbRequestRelationQueryVariables>;
+export const CreateTRBGuidanceLetterDocument = gql`
+    mutation CreateTRBGuidanceLetter($trbRequestId: UUID!) {
+  createTRBGuidanceLetter(trbRequestId: $trbRequestId) {
+    ...TRBGuidanceLetter
+  }
+}
+    ${TRBGuidanceLetterFragmentDoc}`;
+export type CreateTRBGuidanceLetterMutationFn = Apollo.MutationFunction<CreateTRBGuidanceLetterMutation, CreateTRBGuidanceLetterMutationVariables>;
+
+/**
+ * __useCreateTRBGuidanceLetterMutation__
+ *
+ * To run a mutation, you first call `useCreateTRBGuidanceLetterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTRBGuidanceLetterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTrbGuidanceLetterMutation, { data, loading, error }] = useCreateTRBGuidanceLetterMutation({
+ *   variables: {
+ *      trbRequestId: // value for 'trbRequestId'
+ *   },
+ * });
+ */
+export function useCreateTRBGuidanceLetterMutation(baseOptions?: Apollo.MutationHookOptions<CreateTRBGuidanceLetterMutation, CreateTRBGuidanceLetterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTRBGuidanceLetterMutation, CreateTRBGuidanceLetterMutationVariables>(CreateTRBGuidanceLetterDocument, options);
+      }
+export type CreateTRBGuidanceLetterMutationHookResult = ReturnType<typeof useCreateTRBGuidanceLetterMutation>;
+export type CreateTRBGuidanceLetterMutationResult = Apollo.MutationResult<CreateTRBGuidanceLetterMutation>;
+export type CreateTRBGuidanceLetterMutationOptions = Apollo.BaseMutationOptions<CreateTRBGuidanceLetterMutation, CreateTRBGuidanceLetterMutationVariables>;
+export const CreateTRBGuidanceLetterInsightDocument = gql`
+    mutation CreateTRBGuidanceLetterInsight($input: CreateTRBGuidanceLetterRecommendationInput!) {
+  createTRBGuidanceLetterRecommendation(input: $input) {
+    ...TRBGuidanceLetterInsight
+  }
+}
+    ${TRBGuidanceLetterInsightFragmentDoc}`;
+export type CreateTRBGuidanceLetterInsightMutationFn = Apollo.MutationFunction<CreateTRBGuidanceLetterInsightMutation, CreateTRBGuidanceLetterInsightMutationVariables>;
+
+/**
+ * __useCreateTRBGuidanceLetterInsightMutation__
+ *
+ * To run a mutation, you first call `useCreateTRBGuidanceLetterInsightMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTRBGuidanceLetterInsightMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTrbGuidanceLetterInsightMutation, { data, loading, error }] = useCreateTRBGuidanceLetterInsightMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateTRBGuidanceLetterInsightMutation(baseOptions?: Apollo.MutationHookOptions<CreateTRBGuidanceLetterInsightMutation, CreateTRBGuidanceLetterInsightMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTRBGuidanceLetterInsightMutation, CreateTRBGuidanceLetterInsightMutationVariables>(CreateTRBGuidanceLetterInsightDocument, options);
+      }
+export type CreateTRBGuidanceLetterInsightMutationHookResult = ReturnType<typeof useCreateTRBGuidanceLetterInsightMutation>;
+export type CreateTRBGuidanceLetterInsightMutationResult = Apollo.MutationResult<CreateTRBGuidanceLetterInsightMutation>;
+export type CreateTRBGuidanceLetterInsightMutationOptions = Apollo.BaseMutationOptions<CreateTRBGuidanceLetterInsightMutation, CreateTRBGuidanceLetterInsightMutationVariables>;
+export const DeleteTRBGuidanceLetterInsightDocument = gql`
+    mutation DeleteTRBGuidanceLetterInsight($id: UUID!) {
+  deleteTRBGuidanceLetterRecommendation(id: $id) {
+    ...TRBGuidanceLetterInsight
+  }
+}
+    ${TRBGuidanceLetterInsightFragmentDoc}`;
+export type DeleteTRBGuidanceLetterInsightMutationFn = Apollo.MutationFunction<DeleteTRBGuidanceLetterInsightMutation, DeleteTRBGuidanceLetterInsightMutationVariables>;
+
+/**
+ * __useDeleteTRBGuidanceLetterInsightMutation__
+ *
+ * To run a mutation, you first call `useDeleteTRBGuidanceLetterInsightMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTRBGuidanceLetterInsightMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTrbGuidanceLetterInsightMutation, { data, loading, error }] = useDeleteTRBGuidanceLetterInsightMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTRBGuidanceLetterInsightMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTRBGuidanceLetterInsightMutation, DeleteTRBGuidanceLetterInsightMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTRBGuidanceLetterInsightMutation, DeleteTRBGuidanceLetterInsightMutationVariables>(DeleteTRBGuidanceLetterInsightDocument, options);
+      }
+export type DeleteTRBGuidanceLetterInsightMutationHookResult = ReturnType<typeof useDeleteTRBGuidanceLetterInsightMutation>;
+export type DeleteTRBGuidanceLetterInsightMutationResult = Apollo.MutationResult<DeleteTRBGuidanceLetterInsightMutation>;
+export type DeleteTRBGuidanceLetterInsightMutationOptions = Apollo.BaseMutationOptions<DeleteTRBGuidanceLetterInsightMutation, DeleteTRBGuidanceLetterInsightMutationVariables>;
+export const GetTRBGuidanceLetterDocument = gql`
+    query GetTRBGuidanceLetter($id: UUID!) {
+  trbRequest(id: $id) {
+    id
+    name
+    type
+    createdAt
+    consultMeetingTime
+    taskStatuses {
+      guidanceLetterStatus
+    }
+    guidanceLetter {
+      ...TRBGuidanceLetter
+    }
+  }
+}
+    ${TRBGuidanceLetterFragmentDoc}`;
+
+/**
+ * __useGetTRBGuidanceLetterQuery__
+ *
+ * To run a query within a React component, call `useGetTRBGuidanceLetterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTRBGuidanceLetterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTRBGuidanceLetterQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetTRBGuidanceLetterQuery(baseOptions: Apollo.QueryHookOptions<GetTRBGuidanceLetterQuery, GetTRBGuidanceLetterQueryVariables> & ({ variables: GetTRBGuidanceLetterQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTRBGuidanceLetterQuery, GetTRBGuidanceLetterQueryVariables>(GetTRBGuidanceLetterDocument, options);
+      }
+export function useGetTRBGuidanceLetterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTRBGuidanceLetterQuery, GetTRBGuidanceLetterQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTRBGuidanceLetterQuery, GetTRBGuidanceLetterQueryVariables>(GetTRBGuidanceLetterDocument, options);
+        }
+export function useGetTRBGuidanceLetterSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTRBGuidanceLetterQuery, GetTRBGuidanceLetterQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTRBGuidanceLetterQuery, GetTRBGuidanceLetterQueryVariables>(GetTRBGuidanceLetterDocument, options);
+        }
+export type GetTRBGuidanceLetterQueryHookResult = ReturnType<typeof useGetTRBGuidanceLetterQuery>;
+export type GetTRBGuidanceLetterLazyQueryHookResult = ReturnType<typeof useGetTRBGuidanceLetterLazyQuery>;
+export type GetTRBGuidanceLetterSuspenseQueryHookResult = ReturnType<typeof useGetTRBGuidanceLetterSuspenseQuery>;
+export type GetTRBGuidanceLetterQueryResult = Apollo.QueryResult<GetTRBGuidanceLetterQuery, GetTRBGuidanceLetterQueryVariables>;
+export const GetTRBGuidanceLetterInsightsDocument = gql`
+    query GetTRBGuidanceLetterInsights($id: UUID!) {
+  trbRequest(id: $id) {
+    guidanceLetter {
+      insights {
+        ...TRBGuidanceLetterInsight
+      }
+    }
+  }
+}
+    ${TRBGuidanceLetterInsightFragmentDoc}`;
+
+/**
+ * __useGetTRBGuidanceLetterInsightsQuery__
+ *
+ * To run a query within a React component, call `useGetTRBGuidanceLetterInsightsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTRBGuidanceLetterInsightsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTRBGuidanceLetterInsightsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetTRBGuidanceLetterInsightsQuery(baseOptions: Apollo.QueryHookOptions<GetTRBGuidanceLetterInsightsQuery, GetTRBGuidanceLetterInsightsQueryVariables> & ({ variables: GetTRBGuidanceLetterInsightsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTRBGuidanceLetterInsightsQuery, GetTRBGuidanceLetterInsightsQueryVariables>(GetTRBGuidanceLetterInsightsDocument, options);
+      }
+export function useGetTRBGuidanceLetterInsightsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTRBGuidanceLetterInsightsQuery, GetTRBGuidanceLetterInsightsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTRBGuidanceLetterInsightsQuery, GetTRBGuidanceLetterInsightsQueryVariables>(GetTRBGuidanceLetterInsightsDocument, options);
+        }
+export function useGetTRBGuidanceLetterInsightsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTRBGuidanceLetterInsightsQuery, GetTRBGuidanceLetterInsightsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTRBGuidanceLetterInsightsQuery, GetTRBGuidanceLetterInsightsQueryVariables>(GetTRBGuidanceLetterInsightsDocument, options);
+        }
+export type GetTRBGuidanceLetterInsightsQueryHookResult = ReturnType<typeof useGetTRBGuidanceLetterInsightsQuery>;
+export type GetTRBGuidanceLetterInsightsLazyQueryHookResult = ReturnType<typeof useGetTRBGuidanceLetterInsightsLazyQuery>;
+export type GetTRBGuidanceLetterInsightsSuspenseQueryHookResult = ReturnType<typeof useGetTRBGuidanceLetterInsightsSuspenseQuery>;
+export type GetTRBGuidanceLetterInsightsQueryResult = Apollo.QueryResult<GetTRBGuidanceLetterInsightsQuery, GetTRBGuidanceLetterInsightsQueryVariables>;
+export const GetTRBPublicGuidanceLetterDocument = gql`
+    query GetTRBPublicGuidanceLetter($id: UUID!) {
+  trbRequest(id: $id) {
+    id
+    name
+    requesterInfo {
+      commonName
+    }
+    requesterComponent
+    form {
+      id
+      submittedAt
+      component
+      needsAssistanceWith
+    }
+    type
+    consultMeetingTime
+    guidanceLetter {
+      id
+      meetingSummary
+      nextSteps
+      isFollowupRecommended
+      dateSent
+      followupPoint
+      insights {
+        ...TRBGuidanceLetterInsight
+      }
+      author {
+        euaUserId
+        commonName
+      }
+      createdAt
+      modifiedAt
+    }
+    taskStatuses {
+      guidanceLetterStatus
+    }
+  }
+}
+    ${TRBGuidanceLetterInsightFragmentDoc}`;
+
+/**
+ * __useGetTRBPublicGuidanceLetterQuery__
+ *
+ * To run a query within a React component, call `useGetTRBPublicGuidanceLetterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTRBPublicGuidanceLetterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTRBPublicGuidanceLetterQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetTRBPublicGuidanceLetterQuery(baseOptions: Apollo.QueryHookOptions<GetTRBPublicGuidanceLetterQuery, GetTRBPublicGuidanceLetterQueryVariables> & ({ variables: GetTRBPublicGuidanceLetterQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTRBPublicGuidanceLetterQuery, GetTRBPublicGuidanceLetterQueryVariables>(GetTRBPublicGuidanceLetterDocument, options);
+      }
+export function useGetTRBPublicGuidanceLetterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTRBPublicGuidanceLetterQuery, GetTRBPublicGuidanceLetterQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTRBPublicGuidanceLetterQuery, GetTRBPublicGuidanceLetterQueryVariables>(GetTRBPublicGuidanceLetterDocument, options);
+        }
+export function useGetTRBPublicGuidanceLetterSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTRBPublicGuidanceLetterQuery, GetTRBPublicGuidanceLetterQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTRBPublicGuidanceLetterQuery, GetTRBPublicGuidanceLetterQueryVariables>(GetTRBPublicGuidanceLetterDocument, options);
+        }
+export type GetTRBPublicGuidanceLetterQueryHookResult = ReturnType<typeof useGetTRBPublicGuidanceLetterQuery>;
+export type GetTRBPublicGuidanceLetterLazyQueryHookResult = ReturnType<typeof useGetTRBPublicGuidanceLetterLazyQuery>;
+export type GetTRBPublicGuidanceLetterSuspenseQueryHookResult = ReturnType<typeof useGetTRBPublicGuidanceLetterSuspenseQuery>;
+export type GetTRBPublicGuidanceLetterQueryResult = Apollo.QueryResult<GetTRBPublicGuidanceLetterQuery, GetTRBPublicGuidanceLetterQueryVariables>;
+export const RequestReviewForTRBGuidanceLetterDocument = gql`
+    mutation RequestReviewForTRBGuidanceLetter($id: UUID!) {
+  requestReviewForTRBGuidanceLetter(id: $id) {
+    id
+  }
+}
+    `;
+export type RequestReviewForTRBGuidanceLetterMutationFn = Apollo.MutationFunction<RequestReviewForTRBGuidanceLetterMutation, RequestReviewForTRBGuidanceLetterMutationVariables>;
+
+/**
+ * __useRequestReviewForTRBGuidanceLetterMutation__
+ *
+ * To run a mutation, you first call `useRequestReviewForTRBGuidanceLetterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRequestReviewForTRBGuidanceLetterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [requestReviewForTrbGuidanceLetterMutation, { data, loading, error }] = useRequestReviewForTRBGuidanceLetterMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRequestReviewForTRBGuidanceLetterMutation(baseOptions?: Apollo.MutationHookOptions<RequestReviewForTRBGuidanceLetterMutation, RequestReviewForTRBGuidanceLetterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RequestReviewForTRBGuidanceLetterMutation, RequestReviewForTRBGuidanceLetterMutationVariables>(RequestReviewForTRBGuidanceLetterDocument, options);
+      }
+export type RequestReviewForTRBGuidanceLetterMutationHookResult = ReturnType<typeof useRequestReviewForTRBGuidanceLetterMutation>;
+export type RequestReviewForTRBGuidanceLetterMutationResult = Apollo.MutationResult<RequestReviewForTRBGuidanceLetterMutation>;
+export type RequestReviewForTRBGuidanceLetterMutationOptions = Apollo.BaseMutationOptions<RequestReviewForTRBGuidanceLetterMutation, RequestReviewForTRBGuidanceLetterMutationVariables>;
+export const SendTRBGuidanceLetterDocument = gql`
+    mutation SendTRBGuidanceLetter($input: SendTRBGuidanceLetterInput!) {
+  sendTRBGuidanceLetter(input: $input) {
+    id
+  }
+}
+    `;
+export type SendTRBGuidanceLetterMutationFn = Apollo.MutationFunction<SendTRBGuidanceLetterMutation, SendTRBGuidanceLetterMutationVariables>;
+
+/**
+ * __useSendTRBGuidanceLetterMutation__
+ *
+ * To run a mutation, you first call `useSendTRBGuidanceLetterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendTRBGuidanceLetterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendTrbGuidanceLetterMutation, { data, loading, error }] = useSendTRBGuidanceLetterMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendTRBGuidanceLetterMutation(baseOptions?: Apollo.MutationHookOptions<SendTRBGuidanceLetterMutation, SendTRBGuidanceLetterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendTRBGuidanceLetterMutation, SendTRBGuidanceLetterMutationVariables>(SendTRBGuidanceLetterDocument, options);
+      }
+export type SendTRBGuidanceLetterMutationHookResult = ReturnType<typeof useSendTRBGuidanceLetterMutation>;
+export type SendTRBGuidanceLetterMutationResult = Apollo.MutationResult<SendTRBGuidanceLetterMutation>;
+export type SendTRBGuidanceLetterMutationOptions = Apollo.BaseMutationOptions<SendTRBGuidanceLetterMutation, SendTRBGuidanceLetterMutationVariables>;
+export const UpdateTRBGuidanceLetterDocument = gql`
+    mutation UpdateTRBGuidanceLetter($input: UpdateTRBGuidanceLetterInput!) {
+  updateTRBGuidanceLetter(input: $input) {
+    ...TRBGuidanceLetter
+  }
+}
+    ${TRBGuidanceLetterFragmentDoc}`;
+export type UpdateTRBGuidanceLetterMutationFn = Apollo.MutationFunction<UpdateTRBGuidanceLetterMutation, UpdateTRBGuidanceLetterMutationVariables>;
+
+/**
+ * __useUpdateTRBGuidanceLetterMutation__
+ *
+ * To run a mutation, you first call `useUpdateTRBGuidanceLetterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTRBGuidanceLetterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTrbGuidanceLetterMutation, { data, loading, error }] = useUpdateTRBGuidanceLetterMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateTRBGuidanceLetterMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTRBGuidanceLetterMutation, UpdateTRBGuidanceLetterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTRBGuidanceLetterMutation, UpdateTRBGuidanceLetterMutationVariables>(UpdateTRBGuidanceLetterDocument, options);
+      }
+export type UpdateTRBGuidanceLetterMutationHookResult = ReturnType<typeof useUpdateTRBGuidanceLetterMutation>;
+export type UpdateTRBGuidanceLetterMutationResult = Apollo.MutationResult<UpdateTRBGuidanceLetterMutation>;
+export type UpdateTRBGuidanceLetterMutationOptions = Apollo.BaseMutationOptions<UpdateTRBGuidanceLetterMutation, UpdateTRBGuidanceLetterMutationVariables>;
+export const UpdateTRBGuidanceLetterInsightDocument = gql`
+    mutation UpdateTRBGuidanceLetterInsight($input: UpdateTRBGuidanceLetterRecommendationInput!) {
+  updateTRBGuidanceLetterRecommendation(input: $input) {
+    ...TRBGuidanceLetterInsight
+  }
+}
+    ${TRBGuidanceLetterInsightFragmentDoc}`;
+export type UpdateTRBGuidanceLetterInsightMutationFn = Apollo.MutationFunction<UpdateTRBGuidanceLetterInsightMutation, UpdateTRBGuidanceLetterInsightMutationVariables>;
+
+/**
+ * __useUpdateTRBGuidanceLetterInsightMutation__
+ *
+ * To run a mutation, you first call `useUpdateTRBGuidanceLetterInsightMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTRBGuidanceLetterInsightMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTrbGuidanceLetterInsightMutation, { data, loading, error }] = useUpdateTRBGuidanceLetterInsightMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateTRBGuidanceLetterInsightMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTRBGuidanceLetterInsightMutation, UpdateTRBGuidanceLetterInsightMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTRBGuidanceLetterInsightMutation, UpdateTRBGuidanceLetterInsightMutationVariables>(UpdateTRBGuidanceLetterInsightDocument, options);
+      }
+export type UpdateTRBGuidanceLetterInsightMutationHookResult = ReturnType<typeof useUpdateTRBGuidanceLetterInsightMutation>;
+export type UpdateTRBGuidanceLetterInsightMutationResult = Apollo.MutationResult<UpdateTRBGuidanceLetterInsightMutation>;
+export type UpdateTRBGuidanceLetterInsightMutationOptions = Apollo.BaseMutationOptions<UpdateTRBGuidanceLetterInsightMutation, UpdateTRBGuidanceLetterInsightMutationVariables>;
+export const UpdateTRBGuidanceLetterInsightOrderDocument = gql`
+    mutation UpdateTRBGuidanceLetterInsightOrder($input: UpdateTRBGuidanceLetterRecommendationOrderInput!) {
+  updateTRBGuidanceLetterRecommendationOrder(input: $input) {
+    ...TRBGuidanceLetterInsight
+  }
+}
+    ${TRBGuidanceLetterInsightFragmentDoc}`;
+export type UpdateTRBGuidanceLetterInsightOrderMutationFn = Apollo.MutationFunction<UpdateTRBGuidanceLetterInsightOrderMutation, UpdateTRBGuidanceLetterInsightOrderMutationVariables>;
+
+/**
+ * __useUpdateTRBGuidanceLetterInsightOrderMutation__
+ *
+ * To run a mutation, you first call `useUpdateTRBGuidanceLetterInsightOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTRBGuidanceLetterInsightOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTrbGuidanceLetterInsightOrderMutation, { data, loading, error }] = useUpdateTRBGuidanceLetterInsightOrderMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateTRBGuidanceLetterInsightOrderMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTRBGuidanceLetterInsightOrderMutation, UpdateTRBGuidanceLetterInsightOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTRBGuidanceLetterInsightOrderMutation, UpdateTRBGuidanceLetterInsightOrderMutationVariables>(UpdateTRBGuidanceLetterInsightOrderDocument, options);
+      }
+export type UpdateTRBGuidanceLetterInsightOrderMutationHookResult = ReturnType<typeof useUpdateTRBGuidanceLetterInsightOrderMutation>;
+export type UpdateTRBGuidanceLetterInsightOrderMutationResult = Apollo.MutationResult<UpdateTRBGuidanceLetterInsightOrderMutation>;
+export type UpdateTRBGuidanceLetterInsightOrderMutationOptions = Apollo.BaseMutationOptions<UpdateTRBGuidanceLetterInsightOrderMutation, UpdateTRBGuidanceLetterInsightOrderMutationVariables>;
 export const UpdateTrbRequestFormStatusDocument = gql`
     mutation UpdateTrbRequestFormStatus($isSubmitted: Boolean!, $trbRequestId: UUID!) {
   updateTRBRequestForm(
@@ -3941,6 +4480,8 @@ export type UpdateTrbRequestLeadMutationResult = Apollo.MutationResult<UpdateTrb
 export type UpdateTrbRequestLeadMutationOptions = Apollo.BaseMutationOptions<UpdateTrbRequestLeadMutation, UpdateTrbRequestLeadMutationVariables>;
 export const TypedSystemIntakeWithReviewRequestedFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeWithReviewRequested"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntake"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}}]}}]} as unknown as DocumentNode<SystemIntakeWithReviewRequestedFragment, unknown>;
 export const TypedSystemIntakeGRBReviewerFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<SystemIntakeGRBReviewerFragment, unknown>;
+export const TypedTRBGuidanceLetterInsightFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<TRBGuidanceLetterInsightFragment, unknown>;
+export const TypedTRBGuidanceLetterFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetter"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetter"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"nextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"isFollowupRecommended"}},{"kind":"Field","name":{"kind":"Name","value":"dateSent"}},{"kind":"Field","name":{"kind":"Name","value":"followupPoint"}},{"kind":"Field","name":{"kind":"Name","value":"insights"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<TRBGuidanceLetterFragment, unknown>;
 export const TypedCreateSystemIntakeGRBReviewersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewersInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeGRBReviewers"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"reviewers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeGRBReviewersMutation, CreateSystemIntakeGRBReviewersMutationVariables>;
 export const TypedDeleteSystemIntakeGRBReviewerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteSystemIntakeGRBReviewer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteSystemIntakeGRBReviewerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteSystemIntakeGRBReviewer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<DeleteSystemIntakeGRBReviewerMutation, DeleteSystemIntakeGRBReviewerMutationVariables>;
 export const TypedgetGRBReviewersComparisonsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getGRBReviewersComparisons"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"compareGRBReviewersByIntakeID"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"reviewers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isCurrentReviewer"}}]}}]}}]}}]} as unknown as DocumentNode<GetGRBReviewersComparisonsQuery, GetGRBReviewersComparisonsQueryVariables>;
@@ -3954,5 +4495,16 @@ export const TypedGetSystemIntakeRelationDocument = {"kind":"Document","definiti
 export const TypedGetTrbLeadOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTrbLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}}]}}]} as unknown as DocumentNode<GetTrbLeadOptionsQuery, GetTrbLeadOptionsQueryVariables>;
 export const TypedGetTRBRequestRelatedRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBRequestRelatedRequests"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"statusAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"statusRequester"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<GetTRBRequestRelatedRequestsQuery, GetTRBRequestRelatedRequestsQueryVariables>;
 export const TypedGetTrbRequestRelationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTrbRequestRelation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"relationType"}},{"kind":"Field","name":{"kind":"Name","value":"contractName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}}]}}]}}]} as unknown as DocumentNode<GetTrbRequestRelationQuery, GetTrbRequestRelationQueryVariables>;
+export const TypedCreateTRBGuidanceLetterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTRBGuidanceLetter"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTRBGuidanceLetter"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"trbRequestId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetter"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetter"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetter"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"nextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"isFollowupRecommended"}},{"kind":"Field","name":{"kind":"Name","value":"dateSent"}},{"kind":"Field","name":{"kind":"Name","value":"followupPoint"}},{"kind":"Field","name":{"kind":"Name","value":"insights"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}}]}}]} as unknown as DocumentNode<CreateTRBGuidanceLetterMutation, CreateTRBGuidanceLetterMutationVariables>;
+export const TypedCreateTRBGuidanceLetterInsightDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTRBGuidanceLetterInsight"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateTRBGuidanceLetterRecommendationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTRBGuidanceLetterRecommendation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<CreateTRBGuidanceLetterInsightMutation, CreateTRBGuidanceLetterInsightMutationVariables>;
+export const TypedDeleteTRBGuidanceLetterInsightDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteTRBGuidanceLetterInsight"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteTRBGuidanceLetterRecommendation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<DeleteTRBGuidanceLetterInsightMutation, DeleteTRBGuidanceLetterInsightMutationVariables>;
+export const TypedGetTRBGuidanceLetterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBGuidanceLetter"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"consultMeetingTime"}},{"kind":"Field","name":{"kind":"Name","value":"taskStatuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"guidanceLetterStatus"}}]}},{"kind":"Field","name":{"kind":"Name","value":"guidanceLetter"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetter"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetter"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetter"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"nextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"isFollowupRecommended"}},{"kind":"Field","name":{"kind":"Name","value":"dateSent"}},{"kind":"Field","name":{"kind":"Name","value":"followupPoint"}},{"kind":"Field","name":{"kind":"Name","value":"insights"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}}]}}]} as unknown as DocumentNode<GetTRBGuidanceLetterQuery, GetTRBGuidanceLetterQueryVariables>;
+export const TypedGetTRBGuidanceLetterInsightsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBGuidanceLetterInsights"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"guidanceLetter"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insights"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<GetTRBGuidanceLetterInsightsQuery, GetTRBGuidanceLetterInsightsQueryVariables>;
+export const TypedGetTRBPublicGuidanceLetterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBPublicGuidanceLetter"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"requesterInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"form"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"needsAssistanceWith"}}]}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"consultMeetingTime"}},{"kind":"Field","name":{"kind":"Name","value":"guidanceLetter"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"nextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"isFollowupRecommended"}},{"kind":"Field","name":{"kind":"Name","value":"dateSent"}},{"kind":"Field","name":{"kind":"Name","value":"followupPoint"}},{"kind":"Field","name":{"kind":"Name","value":"insights"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"taskStatuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"guidanceLetterStatus"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<GetTRBPublicGuidanceLetterQuery, GetTRBPublicGuidanceLetterQueryVariables>;
+export const TypedRequestReviewForTRBGuidanceLetterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RequestReviewForTRBGuidanceLetter"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"requestReviewForTRBGuidanceLetter"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<RequestReviewForTRBGuidanceLetterMutation, RequestReviewForTRBGuidanceLetterMutationVariables>;
+export const TypedSendTRBGuidanceLetterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SendTRBGuidanceLetter"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SendTRBGuidanceLetterInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sendTRBGuidanceLetter"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SendTRBGuidanceLetterMutation, SendTRBGuidanceLetterMutationVariables>;
+export const TypedUpdateTRBGuidanceLetterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTRBGuidanceLetter"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBGuidanceLetter"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetter"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetter"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetter"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"nextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"isFollowupRecommended"}},{"kind":"Field","name":{"kind":"Name","value":"dateSent"}},{"kind":"Field","name":{"kind":"Name","value":"followupPoint"}},{"kind":"Field","name":{"kind":"Name","value":"insights"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}}]}}]} as unknown as DocumentNode<UpdateTRBGuidanceLetterMutation, UpdateTRBGuidanceLetterMutationVariables>;
+export const TypedUpdateTRBGuidanceLetterInsightDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterInsight"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterRecommendationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBGuidanceLetterRecommendation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<UpdateTRBGuidanceLetterInsightMutation, UpdateTRBGuidanceLetterInsightMutationVariables>;
+export const TypedUpdateTRBGuidanceLetterInsightOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterInsightOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterRecommendationOrderInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBGuidanceLetterRecommendationOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<UpdateTRBGuidanceLetterInsightOrderMutation, UpdateTRBGuidanceLetterInsightOrderMutationVariables>;
 export const TypedUpdateTrbRequestFormStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTrbRequestFormStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"isSubmitted"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBRequestForm"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"isSubmitted"},"value":{"kind":"Variable","name":{"kind":"Name","value":"isSubmitted"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"trbRequestId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<UpdateTrbRequestFormStatusMutation, UpdateTrbRequestFormStatusMutationVariables>;
 export const TypedUpdateTrbRequestLeadDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTrbRequestLead"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBRequestTRBLeadInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBRequestTRBLead"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"trbLead"}},{"kind":"Field","name":{"kind":"Name","value":"trbLeadInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateTrbRequestLeadMutation, UpdateTrbRequestLeadMutationVariables>;

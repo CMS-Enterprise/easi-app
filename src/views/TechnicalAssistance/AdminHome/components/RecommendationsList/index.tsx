@@ -1,32 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import {
+  TRBGuidanceLetterInsightFragment,
+  TRBGuidanceLetterRecommendationCategory,
+  useUpdateTRBGuidanceLetterInsightOrderMutation
+} from 'gql/gen/graphql';
 
 import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
-import { UpdateTRBGuidanceLetterInsightOrderQuery } from 'queries/TrbGuidanceLetterQueries';
-import { TRBGuidanceLetterInsight } from 'queries/types/TRBGuidanceLetterInsight';
-import {
-  UpdateTRBGuidanceLetterInsightOrder,
-  UpdateTRBGuidanceLetterInsightOrderVariables
-} from 'queries/types/UpdateTRBGuidanceLetterInsightOrder';
-import { TRBGuidanceLetterRecommendationCategory } from 'types/graphql-global-types';
 
 import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
 
 import RecommendationLinks from './RecommendationLinks';
 
 type RecommendationsListProps = {
-  recommendations: TRBGuidanceLetterInsight[];
+  recommendations: TRBGuidanceLetterInsightFragment[];
   trbRequestId: string;
   /** Optional function to set error message if order mutation fails */
   setReorderError?: (error: string | null) => void;
   /** If false, hides edit/remove buttons and reorder controls */
   editable?: boolean;
-  edit?: (recommendation: TRBGuidanceLetterInsight) => void;
-  remove?: (recommendation: TRBGuidanceLetterInsight) => void;
+  edit?: (recommendation: TRBGuidanceLetterInsightFragment) => void;
+  remove?: (recommendation: TRBGuidanceLetterInsightFragment) => void;
   className?: string;
 };
 
@@ -46,12 +43,9 @@ export default function RecommendationsList({
   const { t } = useTranslation('technicalAssistance');
 
   const [recommendationToRemove, setRecommendationToRemove] =
-    useState<TRBGuidanceLetterInsight | null>(null);
+    useState<TRBGuidanceLetterInsightFragment | null>(null);
 
-  const [updateOrder] = useMutation<
-    UpdateTRBGuidanceLetterInsightOrder,
-    UpdateTRBGuidanceLetterInsightOrderVariables
-  >(UpdateTRBGuidanceLetterInsightOrderQuery, {
+  const [updateOrder] = useUpdateTRBGuidanceLetterInsightOrderMutation({
     refetchQueries: ['GetTrbGuidanceLetter']
   });
 

@@ -432,12 +432,6 @@ export enum TRBFormStatus {
   READY_TO_START = "READY_TO_START",
 }
 
-export enum TRBGuidanceLetterRecommendationCategory {
-  CONSIDERATION = "CONSIDERATION",
-  RECOMMENDATION = "RECOMMENDATION",
-  REQUIREMENT = "REQUIREMENT",
-}
-
 /**
  * Represents the status of the TRB guidance letter step
  */
@@ -633,17 +627,6 @@ export interface CreateTRBAdminNoteSupportingDocumentsInput {
 }
 
 /**
- * The input required to add a recommendation & links to a TRB guidance letter
- */
-export interface CreateTRBGuidanceLetterRecommendationInput {
-  trbRequestId: UUID;
-  title: string;
-  recommendation: HTML;
-  links: string[];
-  category: TRBGuidanceLetterRecommendationCategory;
-}
-
-/**
  * The data needed add a TRB request attendee to a TRB request
  */
 export interface CreateTRBRequestAttendeeInput {
@@ -725,15 +708,6 @@ export interface SendReportAProblemEmailInput {
   whatWereYouDoing: string;
   whatWentWrong: string;
   howSevereWasTheProblem: string;
-}
-
-/**
- * The data needed to send a TRB guidance letter, including who to notify
- */
-export interface SendTRBGuidanceLetterInput {
-  id: UUID;
-  copyTrbMailbox: boolean;
-  notifyEuaIds: string[];
 }
 
 export interface SetRolesForUserOnSystemInput {
@@ -1128,34 +1102,6 @@ export interface UpdateSystemIntakeReviewDatesInput {
   grbDate?: Time | null;
   grtDate?: Time | null;
   id: UUID;
-}
-
-/**
- * The data needed to update a TRB guidance letter
- */
-export interface UpdateTRBGuidanceLetterInput {
-  trbRequestId: UUID;
-  meetingSummary?: HTML | null;
-  nextSteps?: HTML | null;
-  isFollowupRecommended?: boolean | null;
-  followupPoint?: string | null;
-}
-
-/**
- * The input required to update a recommendation to a TRB guidance letter
- */
-export interface UpdateTRBGuidanceLetterRecommendationInput {
-  id: UUID;
-  title?: string | null;
-  recommendation?: HTML | null;
-  links?: string[] | null;
-  category: TRBGuidanceLetterRecommendationCategory;
-}
-
-export interface UpdateTRBGuidanceLetterRecommendationOrderInput {
-  trbRequestId: UUID;
-  newOrder: UUID[];
-  category: TRBGuidanceLetterRecommendationCategory;
 }
 
 /**

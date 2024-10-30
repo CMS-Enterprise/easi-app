@@ -2,29 +2,29 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import {
+  GetTRBGuidanceLetterQuery,
+  TRBGuidanceLetterFragment,
+  TRBGuidanceLetterInsightFragment
+} from 'gql/gen/graphql';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { RichTextViewer } from 'components/RichTextEditor';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import {
-  GetTrbGuidanceLetter_trbRequest as TrbRequest,
-  GetTrbGuidanceLetter_trbRequest_guidanceLetter as GuidanceLetter
-} from 'queries/types/GetTrbGuidanceLetter';
-import { TRBGuidanceLetterInsight } from 'queries/types/TRBGuidanceLetterInsight';
 import { formatDateLocal } from 'utils/date';
 
 import RecommendationsList from '../RecommendationsList';
 
 type ReviewGuidanceLetterProps = {
-  guidanceLetter: GuidanceLetter;
+  guidanceLetter: TRBGuidanceLetterFragment;
   trbRequestId: string;
-  trbRequest?: TrbRequest;
+  trbRequest?: GetTRBGuidanceLetterQuery['trbRequest'];
   requesterString?: string;
   showSectionEditLinks?: boolean;
   recommendationActions?: {
-    edit?: (recommendation: TRBGuidanceLetterInsight) => void;
-    remove?: (recommendation: TRBGuidanceLetterInsight) => void;
+    edit?: (recommendation: TRBGuidanceLetterInsightFragment) => void;
+    remove?: (recommendation: TRBGuidanceLetterInsightFragment) => void;
     setReorderError?: (error: string | null) => void;
   };
   showDateSent?: boolean;

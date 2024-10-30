@@ -1,14 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useGetTRBGuidanceLetterQuery } from 'gql/gen/graphql';
 
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
-import useCacheQuery from 'hooks/useCacheQuery';
-import { GetTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
-import {
-  GetTrbGuidanceLetter,
-  GetTrbGuidanceLetterVariables
-} from 'queries/types/GetTrbGuidanceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
@@ -26,10 +21,7 @@ const GuidanceLetter = ({
   const { id } = trbRequest;
 
   // TRB request query
-  const { data, loading } = useCacheQuery<
-    GetTrbGuidanceLetter,
-    GetTrbGuidanceLetterVariables
-  >(GetTrbGuidanceLetterQuery, {
+  const { data, loading } = useGetTRBGuidanceLetterQuery({
     variables: { id }
   });
 

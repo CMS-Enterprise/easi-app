@@ -2,13 +2,13 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
+import {
+  GetTRBPublicGuidanceLetterDocument,
+  TRBGuidanceLetterRecommendationCategory
+} from 'gql/gen/graphql';
 import i18next from 'i18next';
 
-import GetTrbPublicGuidanceLetterQuery from 'queries/GetTrbPublicGuidanceLetterQuery';
-import {
-  TRBGuidanceLetterRecommendationCategory,
-  TRBGuidanceLetterStatus
-} from 'types/graphql-global-types';
+import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 
 import PublicGuidanceLetter from './PublicGuidanceLetter';
 
@@ -76,7 +76,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicGuidanceLetterQuery,
+              query: GetTRBPublicGuidanceLetterDocument,
               variables: {
                 id
               }
@@ -120,7 +120,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicGuidanceLetterQuery,
+              query: GetTRBPublicGuidanceLetterDocument,
               variables: {
                 id
               }
@@ -153,7 +153,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicGuidanceLetterQuery,
+              query: GetTRBPublicGuidanceLetterDocument,
               variables: {
                 id
               }
@@ -197,7 +197,7 @@ describe('Trb Public Guidance Letter', () => {
         mocks={[
           {
             request: {
-              query: GetTrbPublicGuidanceLetterQuery,
+              query: GetTRBPublicGuidanceLetterDocument,
               variables: {
                 id
               }

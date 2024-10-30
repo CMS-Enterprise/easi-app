@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
-import { ApolloError, useMutation } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 import {
   Button,
   ErrorMessage,
@@ -11,25 +11,17 @@ import {
   Icon,
   TextInput
 } from '@trussworks/react-uswds';
+import {
+  GetTRBGuidanceLetterDocument,
+  TRBGuidanceLetterRecommendationCategory,
+  useCreateTRBGuidanceLetterInsightMutation,
+  useUpdateTRBGuidanceLetterInsightMutation
+} from 'gql/gen/graphql';
 
 import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import {
-  CreateTRBGuidanceLetterInsightQuery,
-  GetTrbGuidanceLetterQuery,
-  UpdateTRBGuidanceLetterInsightQuery
-} from 'queries/TrbGuidanceLetterQueries';
-import {
-  CreateTRBGuidanceLetterInsight,
-  CreateTRBGuidanceLetterInsightVariables
-} from 'queries/types/CreateTRBGuidanceLetterInsight';
-import {
-  UpdateTRBGuidanceLetterInsight,
-  UpdateTRBGuidanceLetterInsightVariables
-} from 'queries/types/UpdateTRBGuidanceLetterInsight';
-import { TRBGuidanceLetterRecommendationCategory } from 'types/graphql-global-types';
 import {
   FormAlertObject,
   GuidanceLetterRecommendationFields
@@ -67,13 +59,10 @@ const RecommendationsForm = ({
     formState: { isSubmitting, isDirty }
   } = useFormContext<GuidanceLetterRecommendationFields>();
 
-  const [create] = useMutation<
-    CreateTRBGuidanceLetterInsight,
-    CreateTRBGuidanceLetterInsightVariables
-  >(CreateTRBGuidanceLetterInsightQuery, {
+  const [create] = useCreateTRBGuidanceLetterInsightMutation({
     refetchQueries: [
       {
-        query: GetTrbGuidanceLetterQuery,
+        query: GetTRBGuidanceLetterDocument,
         variables: {
           id: trbRequestId
         }
@@ -81,13 +70,10 @@ const RecommendationsForm = ({
     ]
   });
 
-  const [update] = useMutation<
-    UpdateTRBGuidanceLetterInsight,
-    UpdateTRBGuidanceLetterInsightVariables
-  >(UpdateTRBGuidanceLetterInsightQuery, {
+  const [update] = useUpdateTRBGuidanceLetterInsightMutation({
     refetchQueries: [
       {
-        query: GetTrbGuidanceLetterQuery,
+        query: GetTRBGuidanceLetterDocument,
         variables: {
           id: trbRequestId
         }

@@ -10,6 +10,11 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {
+  GetTRBGuidanceLetterInsightsDocument,
+  GetTRBGuidanceLetterInsightsQuery,
+  GetTRBGuidanceLetterInsightsQueryVariables
+} from 'gql/gen/graphql';
 import i18next from 'i18next';
 
 import {
@@ -21,15 +26,10 @@ import {
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
-import { GetTRBGuidanceLetterInsightsQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   CreateTRBAdminNoteGeneralRequest,
   CreateTRBAdminNoteGeneralRequestVariables
 } from 'queries/types/CreateTRBAdminNoteGeneralRequest';
-import {
-  GetTRBGuidanceLetterInsights,
-  GetTRBGuidanceLetterInsightsVariables
-} from 'queries/types/GetTRBGuidanceLetterInsights';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
@@ -52,17 +52,18 @@ import AddNote from '.';
 const { insights } = guidanceLetter;
 
 const getTrbRecommendationsQuery: MockedQuery<
-  GetTRBGuidanceLetterInsights,
-  GetTRBGuidanceLetterInsightsVariables
+  GetTRBGuidanceLetterInsightsQuery,
+  GetTRBGuidanceLetterInsightsQueryVariables
 > = {
   request: {
-    query: GetTRBGuidanceLetterInsightsQuery,
+    query: GetTRBGuidanceLetterInsightsDocument,
     variables: {
       id: mockTrbRequestId
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         __typename: 'TRBRequest',
         guidanceLetter: {

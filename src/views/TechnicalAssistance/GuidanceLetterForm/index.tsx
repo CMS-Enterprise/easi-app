@@ -2,17 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Button, Grid, GridContainer, Icon } from '@trussworks/react-uswds';
+import { useGetTRBGuidanceLetterQuery } from 'gql/gen/graphql';
 import { isEqual } from 'lodash';
 
 import PageLoading from 'components/PageLoading';
 import { Alert } from 'components/shared/Alert';
 import StepHeader from 'components/StepHeader';
-import useCacheQuery from 'hooks/useCacheQuery';
-import { GetTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
-import {
-  GetTrbGuidanceLetter,
-  GetTrbGuidanceLetterVariables
-} from 'queries/types/GetTrbGuidanceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import {
   FormAlertObject,
@@ -85,10 +80,7 @@ const GuidanceLetterForm = () => {
   }>();
 
   // TRB request query
-  const { data, loading } = useCacheQuery<
-    GetTrbGuidanceLetter,
-    GetTrbGuidanceLetterVariables
-  >(GetTrbGuidanceLetterQuery, {
+  const { data, loading } = useGetTRBGuidanceLetterQuery({
     variables: { id }
   });
 

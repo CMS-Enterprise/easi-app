@@ -1,6 +1,10 @@
 import {
+  GetTRBGuidanceLetterDocument,
+  GetTRBGuidanceLetterQuery,
+  GetTRBGuidanceLetterQueryVariables,
   GetTrbLeadOptionsDocument,
-  GetTrbLeadOptionsQuery
+  GetTrbLeadOptionsQuery,
+  TRBGuidanceLetterFragment
 } from 'gql/gen/graphql';
 
 import GetRequestsQuery from 'queries/GetRequestsQuery';
@@ -10,7 +14,6 @@ import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
-import { GetTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   GetRequests,
   GetRequests_myTrbRequests as MyTrbRequests
@@ -20,10 +23,6 @@ import {
   GetTrbAdminNotesVariables
 } from 'queries/types/GetTrbAdminNotes';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
-import {
-  GetTrbGuidanceLetter,
-  GetTrbGuidanceLetterVariables
-} from 'queries/types/GetTrbGuidanceLetter';
 import {
   GetTrbRequest,
   GetTrbRequestVariables
@@ -333,9 +332,7 @@ export const updateTrbRequestConsultMeetingQuery: MockedQuery<
   }
 };
 
-export const guidanceLetter: NonNullable<
-  GetTrbGuidanceLetter['trbRequest']['guidanceLetter']
-> = {
+export const guidanceLetter: NonNullable<TRBGuidanceLetterFragment> = {
   __typename: 'TRBGuidanceLetter',
   id: '1b68aeca-f0d4-42e8-90ef-70ed2de1a34b',
   meetingSummary: 'Meeting summary text',
@@ -376,17 +373,18 @@ export const guidanceLetter: NonNullable<
 };
 
 export const getTrbGuidanceLetterQuery: MockedQuery<
-  GetTrbGuidanceLetter,
-  GetTrbGuidanceLetterVariables
+  GetTRBGuidanceLetterQuery,
+  GetTRBGuidanceLetterQueryVariables
 > = {
   request: {
-    query: GetTrbGuidanceLetterQuery,
+    query: GetTRBGuidanceLetterDocument,
     variables: {
       id: trbRequestId
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         __typename: 'TRBRequest',
         id: trbRequestId,

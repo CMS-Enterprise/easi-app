@@ -1,15 +1,10 @@
 import React, { Dispatch, SetStateAction, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { ModalRef } from '@trussworks/react-uswds';
+import { useCreateTRBGuidanceLetterMutation } from 'gql/gen/graphql';
 
 import { AdminActionButton } from 'components/shared/AdminAction';
-import { CreateTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
-import {
-  CreateTrbGuidanceLetter,
-  CreateTrbGuidanceLetterVariables
-} from 'queries/types/CreateTrbGuidanceLetter';
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 
@@ -61,10 +56,7 @@ const useTrbAdminActionButtons = ({
   const leadAssigned =
     !!trbContextData.data?.trbRequest?.trbLeadInfo?.commonName;
 
-  const [createGuidanceLetter] = useMutation<
-    CreateTrbGuidanceLetter,
-    CreateTrbGuidanceLetterVariables
-  >(CreateTrbGuidanceLetterQuery, {
+  const [createGuidanceLetter] = useCreateTRBGuidanceLetterMutation({
     variables: {
       trbRequestId
     }

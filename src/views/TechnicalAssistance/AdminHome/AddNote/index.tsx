@@ -10,6 +10,7 @@ import {
   Grid
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { useGetTRBGuidanceLetterInsightsQuery } from 'gql/gen/graphql';
 
 import PageHeading from 'components/PageHeading';
 import RichTextEditor from 'components/RichTextEditor';
@@ -25,11 +26,6 @@ import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
-import { GetTRBGuidanceLetterInsightsQuery } from 'queries/TrbGuidanceLetterQueries';
-import {
-  GetTRBGuidanceLetterInsights,
-  GetTRBGuidanceLetterInsightsVariables
-} from 'queries/types/GetTRBGuidanceLetterInsights';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
@@ -75,10 +71,7 @@ const AddNote = ({
     [documentsQuery.data]
   );
 
-  const recommendationsQuery = useCacheQuery<
-    GetTRBGuidanceLetterInsights,
-    GetTRBGuidanceLetterInsightsVariables
-  >(GetTRBGuidanceLetterInsightsQuery, {
+  const recommendationsQuery = useGetTRBGuidanceLetterInsightsQuery({
     variables: { id: trbRequestId || id }
   });
 

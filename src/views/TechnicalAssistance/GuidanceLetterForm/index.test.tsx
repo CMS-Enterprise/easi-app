@@ -8,6 +8,14 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {
+  CreateTRBGuidanceLetterInsightDocument,
+  CreateTRBGuidanceLetterInsightMutation,
+  CreateTRBGuidanceLetterInsightMutationVariables,
+  GetTRBGuidanceLetterQuery,
+  GetTRBGuidanceLetterQueryVariables,
+  TRBGuidanceLetterRecommendationCategory
+} from 'gql/gen/graphql';
 import i18next from 'i18next';
 
 import {
@@ -16,16 +24,6 @@ import {
   taskStatuses
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import { CreateTRBGuidanceLetterInsightQuery } from 'queries/TrbGuidanceLetterQueries';
-import {
-  CreateTRBGuidanceLetterInsight,
-  CreateTRBGuidanceLetterInsightVariables
-} from 'queries/types/CreateTRBGuidanceLetterInsight';
-import {
-  GetTrbGuidanceLetter,
-  GetTrbGuidanceLetterVariables
-} from 'queries/types/GetTrbGuidanceLetter';
-import { TRBGuidanceLetterRecommendationCategory } from 'types/graphql-global-types';
 import { GuidanceFormStepKey } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
@@ -43,17 +41,18 @@ const mockRecommendation = {
 };
 
 const createTrbRecommendationQuery: MockedQuery<
-  CreateTRBGuidanceLetterInsight,
-  CreateTRBGuidanceLetterInsightVariables
+  CreateTRBGuidanceLetterInsightMutation,
+  CreateTRBGuidanceLetterInsightMutationVariables
 > = {
   request: {
-    query: CreateTRBGuidanceLetterInsightQuery,
+    query: CreateTRBGuidanceLetterInsightDocument,
     variables: {
       input: mockRecommendation
     }
   },
   result: {
     data: {
+      __typename: 'Mutation',
       createTRBGuidanceLetterRecommendation: {
         __typename: 'TRBGuidanceLetterRecommendation',
         id: '670fdf6d-761b-415f-a108-2ebc814288c3',
@@ -69,12 +68,13 @@ const defaultStore = easiMockStore({
 });
 
 const getGuidanceLetterCannotStart: MockedQuery<
-  GetTrbGuidanceLetter,
-  GetTrbGuidanceLetterVariables
+  GetTRBGuidanceLetterQuery,
+  GetTRBGuidanceLetterQueryVariables
 > = {
   ...getTrbGuidanceLetterQuery,
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         ...getTrbGuidanceLetterQuery.result.data?.trbRequest!,
         guidanceLetter: null,

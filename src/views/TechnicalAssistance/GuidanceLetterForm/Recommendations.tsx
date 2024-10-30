@@ -2,20 +2,15 @@ import React, { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@trussworks/react-uswds';
+import {
+  GetTRBGuidanceLetterDocument,
+  useDeleteTRBGuidanceLetterInsightMutation
+} from 'gql/gen/graphql';
 
 import { Alert } from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
-import {
-  DeleteTRBGuidanceLetterInsightQuery,
-  GetTrbGuidanceLetterQuery
-} from 'queries/TrbGuidanceLetterQueries';
-import {
-  DeleteTRBGuidanceLetterInsight,
-  DeleteTRBGuidanceLetterInsightVariables
-} from 'queries/types/DeleteTRBGuidanceLetterInsight';
 import {
   GuidanceLetterRecommendationFields,
   StepComponentProps
@@ -55,13 +50,10 @@ const Recommendations = ({
   });
   const { reset } = formMethods;
 
-  const [remove, { loading }] = useMutation<
-    DeleteTRBGuidanceLetterInsight,
-    DeleteTRBGuidanceLetterInsightVariables
-  >(DeleteTRBGuidanceLetterInsightQuery, {
+  const [remove, { loading }] = useDeleteTRBGuidanceLetterInsightMutation({
     refetchQueries: [
       {
-        query: GetTrbGuidanceLetterQuery,
+        query: GetTRBGuidanceLetterDocument,
         variables: {
           id: trbRequestId
         }

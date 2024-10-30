@@ -2,19 +2,15 @@ import React, { useCallback, useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ApolloError, useMutation } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage, Form, FormGroup } from '@trussworks/react-uswds';
+import { useUpdateTRBGuidanceLetterMutation } from 'gql/gen/graphql';
 
 import useEasiForm from 'components/EasiForm/useEasiForm';
 import RichTextEditor from 'components/RichTextEditor';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import { UpdateTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
-import {
-  UpdateTrbGuidanceLetter,
-  UpdateTrbGuidanceLetterVariables
-} from 'queries/types/UpdateTrbGuidanceLetter';
 import {
   GuidanceLetterSummary,
   StepComponentProps
@@ -36,10 +32,7 @@ const Summary = ({
 
   const { meetingSummary } = guidanceLetter;
 
-  const [update] = useMutation<
-    UpdateTrbGuidanceLetter,
-    UpdateTrbGuidanceLetterVariables
-  >(UpdateTrbGuidanceLetterQuery);
+  const [update] = useUpdateTRBGuidanceLetterMutation();
 
   const {
     handleSubmit,
