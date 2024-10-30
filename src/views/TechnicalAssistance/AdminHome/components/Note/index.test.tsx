@@ -1,6 +1,10 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { TRBAdminNoteCategory, TRBAdminNoteFragment } from 'gql/gen/graphql';
+import {
+  TRBAdminNoteCategory,
+  TRBAdminNoteFragment,
+  TRBGuidanceLetterRecommendationCategory
+} from 'gql/gen/graphql';
 
 import { formatDateLocal } from 'utils/date';
 
@@ -72,12 +76,14 @@ const noteGuidanceLetter: TRBAdminNoteFragment = {
     insights: [
       {
         __typename: 'TRBGuidanceLetterRecommendation',
+        category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
         id: 'bcbd8b3e-75e7-456e-8574-c5ab0b47e0bd',
         title: 'Recommendation One',
         deletedAt: null
       },
       {
         __typename: 'TRBGuidanceLetterRecommendation',
+        category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
         id: '2481f229-b7e9-4056-96a6-2857c8f29af1',
         title: 'Recommendation Two',
         deletedAt: null

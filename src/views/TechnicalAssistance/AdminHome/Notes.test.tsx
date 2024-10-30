@@ -3,7 +3,11 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TRBAdminNoteCategory, TRBAdminNoteFragment } from 'gql/gen/graphql';
+import {
+  TRBAdminNoteCategory,
+  TRBAdminNoteFragment,
+  TRBGuidanceLetterRecommendationCategory
+} from 'gql/gen/graphql';
 import i18next from 'i18next';
 
 import {
@@ -86,12 +90,14 @@ const adminNotes: TRBAdminNoteFragment[] = [
         {
           __typename: 'TRBGuidanceLetterRecommendation',
           id: 'c5a60133-51a0-415c-bdc0-920636f5e3aa',
+          category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
           title: 'Recommendation One',
           deletedAt: null
         },
         {
           __typename: 'TRBGuidanceLetterRecommendation',
           id: 'c1847e30-91c0-419c-93f9-b9d87b90520a',
+          category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
           title: 'Recommendation Two',
           deletedAt: null
         }
