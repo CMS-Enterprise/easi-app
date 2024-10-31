@@ -51,8 +51,6 @@ func SetRolesForUserOnCEDARSystem(
 				appcontext.ZLogger(ctx).Error("failed to send email to user who was added to CEDAR system", zap.Error(err))
 				return nil, err
 			}
-		}
-		if rs.DidAdd {
 			if err := emailClient.SendCedarNewTeamMemberEmail(ctx, targetUserInfo.DisplayName, targetUserInfo.Email.String(), rs.SystemName, input.CedarSystemID, rs.RoleTypeNamesAfter, preExistingRoles); err != nil {
 				appcontext.ZLogger(ctx).Error("failed to send CEDAR email for new team member added", zap.Error(err))
 				return nil, err
