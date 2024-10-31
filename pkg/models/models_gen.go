@@ -1346,17 +1346,19 @@ const (
 	TRBGuidanceLetterRecommendationCategoryRequirement    TRBGuidanceLetterRecommendationCategory = "REQUIREMENT"
 	TRBGuidanceLetterRecommendationCategoryRecommendation TRBGuidanceLetterRecommendationCategory = "RECOMMENDATION"
 	TRBGuidanceLetterRecommendationCategoryConsideration  TRBGuidanceLetterRecommendationCategory = "CONSIDERATION"
+	TRBGuidanceLetterRecommendationCategoryUncategorized  TRBGuidanceLetterRecommendationCategory = "UNCATEGORIZED"
 )
 
 var AllTRBGuidanceLetterRecommendationCategory = []TRBGuidanceLetterRecommendationCategory{
 	TRBGuidanceLetterRecommendationCategoryRequirement,
 	TRBGuidanceLetterRecommendationCategoryRecommendation,
 	TRBGuidanceLetterRecommendationCategoryConsideration,
+	TRBGuidanceLetterRecommendationCategoryUncategorized,
 }
 
 func (e TRBGuidanceLetterRecommendationCategory) IsValid() bool {
 	switch e {
-	case TRBGuidanceLetterRecommendationCategoryRequirement, TRBGuidanceLetterRecommendationCategoryRecommendation, TRBGuidanceLetterRecommendationCategoryConsideration:
+	case TRBGuidanceLetterRecommendationCategoryRequirement, TRBGuidanceLetterRecommendationCategoryRecommendation, TRBGuidanceLetterRecommendationCategoryConsideration, TRBGuidanceLetterRecommendationCategoryUncategorized:
 		return true
 	}
 	return false

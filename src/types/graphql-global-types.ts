@@ -421,6 +421,13 @@ export enum TRBFormStatus {
   READY_TO_START = "READY_TO_START",
 }
 
+export enum TRBGuidanceLetterRecommendationCategory {
+  CONSIDERATION = "CONSIDERATION",
+  RECOMMENDATION = "RECOMMENDATION",
+  REQUIREMENT = "REQUIREMENT",
+  UNCATEGORIZED = "UNCATEGORIZED",
+}
+
 /**
  * Represents the status of the TRB guidance letter step
  */

@@ -64,6 +64,11 @@ func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 		return nil, err
 	}
 
+	// do not allow users to set category to `uncategorized`
+	if recommendation.Category == models.TRBGuidanceLetterRecommendationCategoryUncategorized {
+		return nil, errors.New("cannot set category to `uncategorized` on an insight")
+	}
+
 	updated, err := store.UpdateTRBGuidanceLetterRecommendation(ctx, recommendation)
 	if err != nil {
 		return nil, err
@@ -158,10 +163,11 @@ func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store
 	})
 
 	// group by category, shuffle up the order if needed, update db
-	m := map[models.TRBGuidanceLetterRecommendationCategory][]*models.TRBGuidanceLetterRecommendation{
-		models.TRBGuidanceLetterRecommendationCategoryConsideration:  {},
-		models.TRBGuidanceLetterRecommendationCategoryRecommendation: {},
-		models.TRBGuidanceLetterRecommendationCategoryRequirement:    {},
+	m := map[models.TRBGuidanceLetterRecommendationCategory][]*models.TRBGuidanceLetterRecommendation{}
+
+	// prefill with all available categories
+	for _, category := range models.AllTRBGuidanceLetterRecommendationCategory {
+		m[category] = []*models.TRBGuidanceLetterRecommendation{}
 	}
 
 	// populate map

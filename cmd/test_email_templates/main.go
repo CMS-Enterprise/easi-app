@@ -15,6 +15,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 
 	"github.com/google/uuid"
@@ -243,6 +244,17 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		[]string{"System API Contact"},
 		"CMSGovNetSystem",
 		time.Now(),
+	)
+	noErr(err)
+
+	err = client.SendCedarNewTeamMemberEmail(
+		ctx,
+		"Oliver Queen",
+		"green.arrow@queencityquivers.org",
+		"CMSGovNetSystem",
+		cedarSystemID,
+		[]string{"System API Contact"},
+		cedarcoremock.GetSystemRoles(cedarSystemID, nil),
 	)
 	noErr(err)
 

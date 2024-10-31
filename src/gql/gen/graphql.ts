@@ -2710,7 +2710,8 @@ export type TRBGuidanceLetterRecommendation = {
 export enum TRBGuidanceLetterRecommendationCategory {
   CONSIDERATION = 'CONSIDERATION',
   RECOMMENDATION = 'RECOMMENDATION',
-  REQUIREMENT = 'REQUIREMENT'
+  REQUIREMENT = 'REQUIREMENT',
+  UNCATEGORIZED = 'UNCATEGORIZED'
 }
 
 /** Represents the status of the TRB guidance letter step */
