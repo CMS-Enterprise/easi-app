@@ -29,7 +29,6 @@ func (s *EmailTestSuite) TestSendCedarYouHaveBeenAddedEmail() {
 		s.config.URLScheme,
 		s.config.URLHost,
 	)
-	feedbackChannelLink := s.config.OITFeedbackChannelSlackLink
 
 	expectedBody := fmt.Sprintf(`<h1 class="header-title">EASi</h1>
 <p class="header-subtitle">Easy Access to System Information</p>
@@ -38,20 +37,21 @@ func (s *EmailTestSuite) TestSendCedarYouHaveBeenAddedEmail() {
 <p>You are now listed as %[1]s for %[2]s in EASi. You can use EASi to access and manage information about
   team members, governance requests, and other information about your system.</p>
 
-<a href="%[3]s">Visit your system's workspace in EASi</a>
+<p><a href="%[3]s">Visit your system's workspace in EASi</a></p>
 
 <p>If you believe this was an error, you may remove yourself from the <a href="%[4]s">Team space</a> of this
   system's workspace.</p>
 
-<br>
 <hr>
+<br>
+
 <p>You may receive additional email notifications from EASi about this system. If you have questions, please send us feedback using the <a href="%[5]s">EASi feedback form</a>or contact us in the<a href="%[6]s">#oit-easi-feedback</a>channel on CMS Slack.</p>`,
 		roles,
 		systemName,
 		workspaceLink,
 		teamLink,
 		feedbackFormLink,
-		feedbackChannelLink,
+		s.config.OITFeedbackChannelSlackLink,
 	)
 
 	s.Run("successful You Have Been Added email has the right content", func() {
