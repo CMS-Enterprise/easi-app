@@ -25,10 +25,15 @@ func (s *EmailTestSuite) TestSendCedarNewTeamMemberEmail() {
 		s.config.URLHost,
 		systemID.String(),
 	)
-	teamLink := fmt.Sprintf("%[1]s://%[2]s/systems/%[3]s/team/edit/team-member",
+	teamLink := fmt.Sprintf("%[1]s://%[2]s/systems/%[3]s/team/edit?workspace",
 		s.config.URLScheme,
 		s.config.URLHost,
 		systemID.String(),
+	)
+
+	feedbackFormLink := fmt.Sprintf("%[1]s://%[2]s/help/send-feedback",
+		s.config.URLScheme,
+		s.config.URLHost,
 	)
 
 	existingTeamMembers := []*models.CedarRole{
@@ -43,14 +48,22 @@ func (s *EmailTestSuite) TestSendCedarNewTeamMemberEmail() {
 
 <p>%[1]s is now listed as %[2]s for %[3]s in EASi. They can use EASi to access and manage information about team members, governance requests, and other information about the system.</p>
 
-	<p>If you believe this was an error, you may remove them from the <a href="%[4]s">Team space</a> of this system's workspace.</p>
+<p>If you believe this was an error, you may remove them from the <a href="%[4]s">Team space</a> of this system's workspace.</p>
 
-	<a href="%[5]s">Visit this system's workspace in EASi</a>`,
+<p><a href="%[5]s">Visit this system's workspace in EASi</a></p>
+
+<hr>
+<br>
+
+<p>You may receive additional email notifications from EASi about this system. If you have questions, please send us feedback using the <a href="%[6]s">EASi feedback form</a> or contact us in the <a href="%[7]s">#oit-easi-feedback</a> channel on CMS Slack.</p>
+		`,
 		memberName,
 		roles,
 		systemName,
 		teamLink,
 		workspaceLink,
+		feedbackFormLink,
+		s.config.OITFeedbackChannelSlackLink,
 	)
 
 	s.Run("successful New team Member email has the right content", func() {
