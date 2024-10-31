@@ -214,6 +214,8 @@ const technicalAssistance = {
     addAdditionalGuidance: 'Add additional guidance',
     noGuidance:
       'Nothing has been added yet. Use the button above to add guidance, or click next if you have no guidance to add.',
+    noInsights:
+      'This guidance letter does not have any guidance categorized as a {{category}}.',
     reorderGuidance:
       'If you have two or more items per category, you can use arrows on the left side of each to reorder them within the category. Edit the guidance to change the category.',
     increaseOrderAriaLabel: 'Increase guidance sort order',

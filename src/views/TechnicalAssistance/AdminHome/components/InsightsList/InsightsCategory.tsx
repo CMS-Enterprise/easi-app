@@ -10,11 +10,13 @@ import {
 import { toLower } from 'lodash';
 
 import { RichTextViewer } from 'components/RichTextEditor';
+import Alert from 'components/shared/Alert';
 
 import InsightLinks from './InsightLinks';
 
 type InsightsCategoryProps = {
   trbRequestId: string;
+  category: TRBGuidanceLetterRecommendationCategory;
   insights: TRBGuidanceLetterInsightFragment[];
   editable?: boolean;
   edit?: (insight: TRBGuidanceLetterInsightFragment) => void;
@@ -27,6 +29,7 @@ type InsightsCategoryProps = {
 
 const InsightsCategory = ({
   trbRequestId,
+  category,
   insights,
   editable,
   edit,
@@ -38,11 +41,6 @@ const InsightsCategory = ({
   const [updateOrder] = useUpdateTRBGuidanceLetterInsightOrderMutation({
     refetchQueries: ['GetTrbGuidanceLetter']
   });
-
-  // TODO: Fix hard coded category
-  const category =
-    insights[0].category ||
-    TRBGuidanceLetterRecommendationCategory.RECOMMENDATION;
 
   const categoryString = toLower(category);
 
@@ -76,115 +74,126 @@ const InsightsCategory = ({
       <h3 className="margin-bottom-05">
         {t(`guidanceLetterForm.${categoryString}`)}
       </h3>
-      <p className="margin-top-05 margin-bottom-4 line-height-body-5">
+      <p className="margin-top-05 margin-bottom-3 line-height-body-5">
         {t(`guidanceLetterForm.${categoryString}Description`)}
       </p>
 
-      <ul className="usa-list usa-list--unstyled">
-        {insights.map((insight, index) => {
-          const { title, id, links, recommendation: description } = insight;
-          return (
-            <li
-              data-testid="insights_list-item"
-              key={id}
-              className="margin-bottom-3"
-            >
-              <div
-                className={classNames(
-                  'bg-base-lightest padding-top-2 padding-bottom-105 padding-left-105 padding-right-3 display-flex',
-                  { 'padding-x-5': !enableReorderControls }
-                )}
+      {insights.length === 0 ? (
+        <Alert type="info" slim className="margin-top-neg-1 margin-bottom-2">
+          {t('guidanceLetterForm.noInsights', { category: categoryString })}
+        </Alert>
+      ) : (
+        <ul className="usa-list usa-list--unstyled">
+          {insights.map((insight, index) => {
+            const { title, id, links, recommendation: description } = insight;
+            return (
+              <li
+                data-testid="insights_list-item"
+                key={id}
+                className="margin-bottom-3"
               >
-                {
-                  /* Reorder control buttons */
-                  enableReorderControls && (
-                    <div
-                      data-testid="reorder-controls"
-                      className="margin-right-2 display-flex flex-column flex-align-center line-height-body-1"
-                    >
-                      <Button
-                        type="button"
-                        onClick={() => sort(id, index - 1)}
-                        className="height-3"
-                        aria-label={t(
-                          'guidanceLetterForm.increaseOrderAriaLabel'
-                        )}
-                        unstyled
-                      >
-                        <Icon.ArrowDropUp size={3} className="text-primary" />
-                      </Button>
-                      <span data-testid="order-index">{index + 1}</span>
-                      <Button
-                        type="button"
-                        onClick={() => sort(id, index + 1)}
-                        className="height-3"
-                        aria-label={t(
-                          'guidanceLetterForm.decreaseOrderAriaLabel'
-                        )}
-                        unstyled
-                      >
-                        <Icon.ArrowDropDown size={3} className="text-primary" />
-                      </Button>
-                    </div>
-                  )
-                }
-                {/* Insight content */}
                 <div
                   className={classNames(
-                    'width-full padding-bottom-2',
-                    enableReorderControls ? 'padding-top-105' : 'padding-top-1'
+                    'bg-base-lightest padding-top-2 padding-bottom-105 padding-left-105 padding-right-3 display-flex',
+                    { 'padding-x-5': !enableReorderControls }
                   )}
                 >
-                  <h4 className="margin-top-0 margin-bottom-2">{title}</h4>
+                  {
+                    /* Reorder control buttons */
+                    enableReorderControls && (
+                      <div
+                        data-testid="reorder-controls"
+                        className="margin-right-2 display-flex flex-column flex-align-center line-height-body-1"
+                      >
+                        <Button
+                          type="button"
+                          onClick={() => sort(id, index - 1)}
+                          className="height-3"
+                          aria-label={t(
+                            'guidanceLetterForm.increaseOrderAriaLabel'
+                          )}
+                          unstyled
+                        >
+                          <Icon.ArrowDropUp size={3} className="text-primary" />
+                        </Button>
+                        <span data-testid="order-index">{index + 1}</span>
+                        <Button
+                          type="button"
+                          onClick={() => sort(id, index + 1)}
+                          className="height-3"
+                          aria-label={t(
+                            'guidanceLetterForm.decreaseOrderAriaLabel'
+                          )}
+                          unstyled
+                        >
+                          <Icon.ArrowDropDown
+                            size={3}
+                            className="text-primary"
+                          />
+                        </Button>
+                      </div>
+                    )
+                  }
+                  {/* Insight content */}
+                  <div
+                    className={classNames(
+                      'width-full padding-bottom-2',
+                      enableReorderControls
+                        ? 'padding-top-105'
+                        : 'padding-top-1'
+                    )}
+                  >
+                    <h4 className="margin-top-0 margin-bottom-2">{title}</h4>
 
-                  <RichTextViewer
-                    className="margin-top-1 font-body-md text-light line-height-body-4"
-                    value={description}
-                  />
+                    <RichTextViewer
+                      className="margin-top-1 font-body-md text-light line-height-body-4"
+                      value={description}
+                    />
 
-                  {links.length > 0 && (
-                    <>
-                      <p className="margin-bottom-0 margin-top-2 font-body-xs">
-                        {t('guidanceLetter.resources')}
-                      </p>
-                      <InsightLinks
-                        links={links}
-                        className="margin-bottom-05"
-                      />
-                    </>
-                  )}
+                    {links.length > 0 && (
+                      <>
+                        <p className="margin-bottom-0 margin-top-2 font-body-xs">
+                          {t('guidanceLetter.resources')}
+                        </p>
+                        <InsightLinks
+                          links={links}
+                          className="margin-bottom-05"
+                        />
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-              {
-                /* Action buttons if `editable` is true and edit or remove onClick props are provided */
-                (edit || !!setInsightToRemove) && editable && (
-                  <ButtonGroup>
-                    {edit && (
-                      <Button
-                        type="button"
-                        onClick={() => edit(insight)}
-                        unstyled
-                      >
-                        {t('guidanceLetterForm.editGuidance')}
-                      </Button>
-                    )}
-                    {setInsightToRemove && (
-                      <Button
-                        type="button"
-                        className="text-secondary margin-left-1"
-                        onClick={() => setInsightToRemove(insight)}
-                        unstyled
-                      >
-                        {t('guidanceLetterForm.removeGuidance')}
-                      </Button>
-                    )}
-                  </ButtonGroup>
-                )
-              }
-            </li>
-          );
-        })}
-      </ul>
+                {
+                  /* Action buttons if `editable` is true and edit or remove onClick props are provided */
+                  (edit || !!setInsightToRemove) && editable && (
+                    <ButtonGroup>
+                      {edit && (
+                        <Button
+                          type="button"
+                          onClick={() => edit(insight)}
+                          unstyled
+                        >
+                          {t('guidanceLetterForm.editGuidance')}
+                        </Button>
+                      )}
+                      {setInsightToRemove && (
+                        <Button
+                          type="button"
+                          className="text-secondary margin-left-1"
+                          onClick={() => setInsightToRemove(insight)}
+                          unstyled
+                        >
+                          {t('guidanceLetterForm.removeGuidance')}
+                        </Button>
+                      )}
+                    </ButtonGroup>
+                  )
+                }
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 };

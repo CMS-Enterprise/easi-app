@@ -105,6 +105,7 @@ const Insights = ({
               </Alert>
             ) : (
               <InsightsList
+                className="margin-bottom-7"
                 insights={insights}
                 trbRequestId={trbRequestId}
                 setReorderError={error =>
