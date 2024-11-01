@@ -74,14 +74,6 @@ func (e *TRBGuidanceLetterRecommendationCategory) UnmarshalGQL(v interface{}) er
 
 		return nil
 
-	case string:
-		*e = TRBGuidanceLetterRecommendationCategory(t)
-		if !e.IsValid() {
-			return fmt.Errorf("%s is not a valid TRBGuidanceLetterRecommendationCategory", t)
-		}
-
-		return nil
-
 	case *string:
 		if t == nil {
 			return errors.New("unexpected nil string when unmarshalling TRBGuidanceLetterRecommendationCategory")
@@ -93,6 +85,15 @@ func (e *TRBGuidanceLetterRecommendationCategory) UnmarshalGQL(v interface{}) er
 		}
 
 		return nil
+
+	case string:
+		*e = TRBGuidanceLetterRecommendationCategory(t)
+		if !e.IsValid() {
+			return fmt.Errorf("%s is not a valid TRBGuidanceLetterRecommendationCategory", t)
+		}
+
+		return nil
+
 	}
 
 	return fmt.Errorf("could not parse %v as a TRBGuidanceLetterRecommendationCategory", v)
