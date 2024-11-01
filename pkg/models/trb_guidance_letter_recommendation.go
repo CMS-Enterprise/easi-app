@@ -1,9 +1,8 @@
 package models
 
 import (
+	"errors"
 	"fmt"
-	"io"
-	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -52,9 +51,21 @@ func (e TRBGuidanceLetterRecommendationCategory) String() string {
 }
 
 // UnmarshalGQL is a custom implementation of what gqlgen would normally generate
+// this allows for both required (TRBGuidanceLetterRecommendationCategory!) and optional (TRBGuidanceLetterRecommendationCategory) values
 // see Note [gql enums]
 func (e *TRBGuidanceLetterRecommendationCategory) UnmarshalGQL(v interface{}) error {
 	switch t := v.(type) {
+	case *TRBGuidanceLetterRecommendationCategory:
+		if t == nil {
+			return errors.New("unexpected nil TRBGuidanceLetterRecommendationCategory when unmarshalling")
+		}
+
+		*e = *t
+		if !e.IsValid() {
+			return fmt.Errorf("%s is not a valid TRBGuidanceLetterRecommendationCategory", t.String())
+		}
+
+		return nil
 	case TRBGuidanceLetterRecommendationCategory:
 		*e = t
 		if !e.IsValid() {
@@ -70,13 +81,21 @@ func (e *TRBGuidanceLetterRecommendationCategory) UnmarshalGQL(v interface{}) er
 		}
 
 		return nil
+
+	case *string:
+		if t == nil {
+			return errors.New("unexpected nil string when unmarshalling TRBGuidanceLetterRecommendationCategory")
+		}
+
+		*e = TRBGuidanceLetterRecommendationCategory(*t)
+		if !e.IsValid() {
+			return fmt.Errorf("%s is not a valid TRBGuidanceLetterRecommendationCategory", *t)
+		}
+
+		return nil
 	}
 
 	return fmt.Errorf("could not parse %v as a TRBGuidanceLetterRecommendationCategory", v)
-}
-
-func (e TRBGuidanceLetterRecommendationCategory) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 // Note [gql enums]
