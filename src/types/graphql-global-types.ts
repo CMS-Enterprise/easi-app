@@ -1150,7 +1150,7 @@ export interface UpdateTRBGuidanceLetterRecommendationInput {
   title?: string | null;
   recommendation?: HTML | null;
   links?: string[] | null;
-  category: TRBGuidanceLetterRecommendationCategory;
+  category?: TRBGuidanceLetterRecommendationCategory | null;
 }
 
 export interface UpdateTRBGuidanceLetterRecommendationOrderInput {

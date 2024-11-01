@@ -10170,7 +10170,7 @@ input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]int
   title: String
   recommendation: HTML
   links: [String!]
-  category: TRBGuidanceLetterRecommendationCategory!
+  category: TRBGuidanceLetterRecommendationCategory
 }
 
 enum TRBGuidanceLetterRecommendationCategory {
@@ -62182,7 +62182,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationI
 			it["links"] = data
 		case "category":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			data, err := ec.unmarshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -77381,6 +77381,22 @@ func (ec *executionContext) unmarshalOTRBGuidanceLetterRecommendationCategory2gi
 }
 
 func (ec *executionContext) marshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v interface{}) (*models.TRBGuidanceLetterRecommendationCategory, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.TRBGuidanceLetterRecommendationCategory)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v *models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
 	return v
 }
 
