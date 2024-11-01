@@ -1,8 +1,6 @@
 package models
 
 import (
-	"errors"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -22,6 +20,8 @@ type TRBGuidanceLetterRecommendation struct {
 	Category         TRBGuidanceLetterRecommendationCategory `json:"category" db:"category"`
 }
 
+// TRBGuidanceLetterRecommendationCategory implemented here instead of in gen files
+// see Note [gql enums]
 type TRBGuidanceLetterRecommendationCategory string
 
 const (
@@ -38,62 +38,8 @@ var AllTRBGuidanceLetterRecommendationCategory = []TRBGuidanceLetterRecommendati
 	TRBGuidanceLetterRecommendationCategoryUncategorized,
 }
 
-func (e TRBGuidanceLetterRecommendationCategory) IsValid() bool {
-	switch e {
-	case TRBGuidanceLetterRecommendationCategoryRequirement, TRBGuidanceLetterRecommendationCategoryRecommendation, TRBGuidanceLetterRecommendationCategoryConsideration, TRBGuidanceLetterRecommendationCategoryUncategorized:
-		return true
-	}
-	return false
-}
-
-func (e TRBGuidanceLetterRecommendationCategory) String() string {
-	return string(e)
-}
-
-// UnmarshalGQL is a custom implementation of what gqlgen would normally generate
-// this allows for both required (TRBGuidanceLetterRecommendationCategory!) and optional (TRBGuidanceLetterRecommendationCategory) values
-// see Note [gql enums]
-func (e *TRBGuidanceLetterRecommendationCategory) UnmarshalGQL(v interface{}) error {
-	switch t := v.(type) {
-	case *TRBGuidanceLetterRecommendationCategory:
-		if t == nil {
-			return errors.New("unexpected nil TRBGuidanceLetterRecommendationCategory when unmarshalling")
-		}
-
-		*e = *t
-		if !e.IsValid() {
-			return fmt.Errorf("%s is not a valid TRBGuidanceLetterRecommendationCategory", t.String())
-		}
-
-		return nil
-	case TRBGuidanceLetterRecommendationCategory:
-		*e = t
-		if !e.IsValid() {
-			return fmt.Errorf("%s is not a valid TRBGuidanceLetterRecommendationCategory", t.String())
-		}
-
-		return nil
-	case *string:
-		if t == nil {
-			return errors.New("unexpected nil string when unmarshalling TRBGuidanceLetterRecommendationCategory")
-		}
-
-		*e = TRBGuidanceLetterRecommendationCategory(*t)
-		if !e.IsValid() {
-			return fmt.Errorf("%s is not a valid TRBGuidanceLetterRecommendationCategory", *t)
-		}
-
-		return nil
-	case string:
-		*e = TRBGuidanceLetterRecommendationCategory(t)
-		if !e.IsValid() {
-			return fmt.Errorf("%s is not a valid TRBGuidanceLetterRecommendationCategory", t)
-		}
-
-		return nil
-	}
-
-	return fmt.Errorf("could not parse %v as a TRBGuidanceLetterRecommendationCategory", v)
+func (t TRBGuidanceLetterRecommendationCategory) String() string {
+	return string(t)
 }
 
 // Note [gql enums]
