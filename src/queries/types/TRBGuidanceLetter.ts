@@ -7,7 +7,7 @@
 // GraphQL fragment: TRBGuidanceLetter
 // ====================================================
 
-export interface TRBGuidanceLetter_recommendations {
+export interface TRBGuidanceLetter_insights {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -32,7 +32,7 @@ export interface TRBGuidanceLetter {
   /**
    * List of recommendations in the order specified by users
    */
-  recommendations: TRBGuidanceLetter_recommendations[];
+  insights: TRBGuidanceLetter_insights[];
   author: TRBGuidanceLetter_author;
   createdAt: Time;
   modifiedAt: Time | null;

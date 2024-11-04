@@ -984,13 +984,52 @@ func (s *seederConfig) addGuidanceLetter(ctx context.Context, trb *models.TRBReq
 	return letter, nil
 }
 
-// creates three recommendations attached to a TRB request
+// creates insights attached to a TRB request
 func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb *models.TRBRequest) ([]*models.TRBGuidanceLetterRecommendation, error) {
+	// create insights of consideration category
+	consideration1ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Try again",
+		Recommendation: "I'd consider all options at this point",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+	}
+	createdConsideration1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, consideration1ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	consideration2ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Turn it off and on",
+		Recommendation: "I'd consider a new computer",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+	}
+	createdConsideration2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, consideration2ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	consideration3ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Throw it out",
+		Recommendation: "Consider the garbage can as a solution",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+	}
+	createdConsideration3, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, consideration3ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	// create insights of recommendation category
 	recommendation1ToCreate := &models.TRBGuidanceLetterRecommendation{
 		TRBRequestID:   trb.ID,
 		Title:          "Restart your computer",
 		Recommendation: "I recommend you restart your computer",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
 	createdRecommendation1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation1ToCreate)
 	if err != nil {
@@ -1002,6 +1041,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Title:          "Unplug it and plug it back in",
 		Recommendation: "I recommend you unplug your computer and plug it back in",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
 	createdRecommendation2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation2ToCreate)
 	if err != nil {
@@ -1013,16 +1053,90 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Title:          "Get a new computer",
 		Recommendation: "Your computer is broken, you need a new one",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
 	createdRecommendation3, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation3ToCreate)
 	if err != nil {
 		return nil, err
 	}
 
+	// create insights of requirement category
+	requirement1ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Buy a new one",
+		Recommendation: "You are required to buy a new computer",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
+	}
+	createdRequirement1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, requirement1ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	requirement2ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Click more times",
+		Recommendation: "You are required to click more times for the computer to unfreeze",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
+	}
+	createdRequirement2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, requirement2ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	requirement3ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Remove all files",
+		Recommendation: "You are required to delete everything",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
+	}
+	createdRequirement3, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, requirement3ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create some uncategorized
+	uncategorized1ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Come up with some categories",
+		Recommendation: "You'll really need to come up with some categories, or at least move this insight to a category!",
+		Links:          pq.StringArray{"categories.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryUncategorized,
+	}
+	createdUncategorized1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, uncategorized1ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	uncategorized2ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Organize your insights",
+		Recommendation: "Try moving these insights around to give them a category!",
+		Links:          pq.StringArray{},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryUncategorized,
+	}
+	createdUncategorized2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, uncategorized2ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
 	return []*models.TRBGuidanceLetterRecommendation{
+		createdConsideration1,
+		createdConsideration2,
+		createdConsideration3,
+
 		createdRecommendation1,
 		createdRecommendation2,
 		createdRecommendation3,
+
+		createdRequirement1,
+		createdRequirement2,
+		createdRequirement3,
+
+		createdUncategorized1,
+		createdUncategorized2,
 	}, nil
 }
 

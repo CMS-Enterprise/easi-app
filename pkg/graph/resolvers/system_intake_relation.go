@@ -161,8 +161,6 @@ func UnlinkSystemIntakeRelation(
 	})
 }
 
-/*
-	Note [EASI-4160 Disable Contract Number Linking]
-	We have temporarily disabled contract number linking from the UI Linking page as it allows for submitted System Intakes to be edited. These
-	submitted System Intakes should be immutable, and the new linking functionality does not adhere to that.
-*/
+// Note [EASI-4160 Disable Contract Number Linking]
+// We have temporarily disabled contract number linking from the UI Linking page as it allows for submitted System Intakes to be edited. These
+// submitted System Intakes should be immutable, and the new linking functionality does not adhere to that.

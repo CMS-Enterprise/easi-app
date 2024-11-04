@@ -1074,6 +1074,7 @@ func (r *mutationResolver) CreateTRBGuidanceLetterRecommendation(ctx context.Con
 			Title:          input.Title,
 			Recommendation: input.Recommendation,
 			Links:          links,
+			Category:       input.Category,
 		})
 }
 
@@ -1084,7 +1085,7 @@ func (r *mutationResolver) UpdateTRBGuidanceLetterRecommendation(ctx context.Con
 
 // UpdateTRBGuidanceLetterRecommendationOrder is the resolver for the updateTRBGuidanceLetterRecommendationOrder field.
 func (r *mutationResolver) UpdateTRBGuidanceLetterRecommendationOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) ([]*models.TRBGuidanceLetterRecommendation, error) {
-	return resolvers.UpdateTRBGuidanceLetterRecommendationOrder(ctx, r.store, input.TrbRequestID, input.NewOrder)
+	return resolvers.UpdateTRBGuidanceLetterRecommendationOrder(ctx, r.store, input)
 }
 
 // DeleteTRBGuidanceLetterRecommendation is the resolver for the deleteTRBGuidanceLetterRecommendation field.
@@ -1978,8 +1979,8 @@ func (r *tRBGuidanceLetterResolver) Author(ctx context.Context, obj *models.TRBG
 	return authorInfo, nil
 }
 
-// Recommendations is the resolver for the recommendations field.
-func (r *tRBGuidanceLetterResolver) Recommendations(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterRecommendation, error) {
+// Insights is the resolver for the insights field.
+func (r *tRBGuidanceLetterResolver) Insights(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	return resolvers.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
 }
 

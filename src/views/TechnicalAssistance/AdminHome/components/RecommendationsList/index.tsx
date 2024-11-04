@@ -12,6 +12,7 @@ import {
   UpdateTrbRecommendationOrder,
   UpdateTrbRecommendationOrderVariables
 } from 'queries/types/UpdateTrbRecommendationOrder';
+import { TRBGuidanceLetterRecommendationCategory } from 'types/graphql-global-types';
 
 import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
 
@@ -72,7 +73,8 @@ export default function RecommendationsList({
       variables: {
         input: {
           trbRequestId,
-          newOrder
+          newOrder,
+          category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
         }
       }
     }).catch(() => setReorderError?.(t('guidanceLetterForm.reorderError')));

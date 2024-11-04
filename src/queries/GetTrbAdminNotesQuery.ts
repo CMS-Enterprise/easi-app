@@ -29,7 +29,7 @@ export const TRBAdminNoteFragment = gql`
       ... on TRBAdminNoteGuidanceLetterCategoryData {
         appliesToMeetingSummary
         appliesToNextSteps
-        recommendations {
+        insights {
           title
           deletedAt
         }

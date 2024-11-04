@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"sort"
 
 	"github.com/google/uuid"
-	"golang.org/x/sync/errgroup"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/trb/recommendations"
@@ -43,7 +43,7 @@ func GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx context.Context, stor
 func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.Store, changes map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error) {
 	idIface, idFound := changes["id"]
 	if !idFound {
-		return nil, errors.New("missing required property trbRequestId")
+		return nil, errors.New("missing required property id")
 	}
 
 	// conv uuid first
@@ -64,24 +64,36 @@ func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 		return nil, err
 	}
 
+	// do not allow users to set category to `uncategorized`
+	if recommendation.Category == models.TRBGuidanceLetterRecommendationCategoryUncategorized {
+		return nil, errors.New("cannot set category to `uncategorized` on an insight")
+	}
+
 	updated, err := store.UpdateTRBGuidanceLetterRecommendation(ctx, recommendation)
 	if err != nil {
 		return nil, err
 	}
 
-	return updated, err
+	// clean up the order to fill any missing order numbers
+	// ex: having considerations 1, 2, 3, 4 and moving consideration 2 to a requirement, leaving considerations 1, 3, 4)
+	// while the missing order numbers will not affect the UI as the UI displays the insights in the order received (we
+	// do not send the position int to the UI), it is still better db hygiene to clean up the orders
+	if err := cleanupGuidanceLetterInsightOrder(ctx, store, recommendation.TRBRequestID); err != nil {
+		return nil, err
+	}
+
+	return updated, nil
 }
 
 // UpdateTRBGuidanceLetterRecommendationOrder updates the order that TRB guidance letter recommendations are displayed in
 func UpdateTRBGuidanceLetterRecommendationOrder(
 	ctx context.Context,
 	store *storage.Store,
-	trbRequestID uuid.UUID,
-	newOrder []uuid.UUID,
+	input models.UpdateTRBGuidanceLetterRecommendationOrderInput,
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	// this extra database query is necessary for validation, so we don't mess up the recommendations' positions with an invalid order,
 	// but requiring an extra database call is unfortunate
-	currentRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, trbRequestID)
+	currentRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestIDAndCategory(ctx, input.TrbRequestID, input.Category)
 	if err != nil {
 		return nil, err
 	}
@@ -92,20 +104,24 @@ func UpdateTRBGuidanceLetterRecommendationOrder(
 	// due to the low likelihood of multiple users concurrently editing the same guidance letter.
 	// There are issues that could occur in theory, though, such as a recommendation getting deleted between when this function queries and when it updates;
 	// that could lead to a `newOrder` with more elements than there are recommendations being accepted, which would throw off the recs' positions.
-	err = recommendations.IsNewRecommendationOrderValid(currentRecommendations, newOrder)
+	if err := recommendations.IsNewRecommendationOrderValid(currentRecommendations, input.NewOrder); err != nil {
+		return nil, err
+	}
+
+	updated, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, input)
 	if err != nil {
 		return nil, err
 	}
 
-	updated, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, trbRequestID, newOrder)
-	if err != nil {
-		return nil, err
-	}
 	return updated, nil
 }
 
 // DeleteTRBGuidanceLetterRecommendation deletes a TRBGuidanceLetterRecommendation record from the database
-func DeleteTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
+func DeleteTRBGuidanceLetterRecommendation(
+	ctx context.Context,
+	store *storage.Store,
+	id uuid.UUID,
+) (*models.TRBGuidanceLetterRecommendation, error) {
 	// as well as deleting the recommendation, we need to update the position of the remaining recommendations for that TRB request, so there aren't any gaps in the ordering
 
 	allRecommendationsForRequest, err := store.GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx, id)
@@ -118,40 +134,65 @@ func DeleteTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 		return int(recommendationA.PositionInLetter.ValueOrZero()) - int(recommendationB.PositionInLetter.ValueOrZero())
 	})
 
-	var trbRequestID uuid.UUID // will be set once we start looping over allRecommendationsForRequest
-	newOrder := []uuid.UUID{}  // updated positions
+	newOrder := []uuid.UUID{} // updated positions
 
 	for _, recommendation := range allRecommendationsForRequest {
-		trbRequestID = recommendation.TRBRequestID // doesn't matter that we set this on every iteration, all recommendations will have the same request ID
-		if recommendation.ID != id {               // skip over the recommendation we want to delete
+		if recommendation.ID != id { // skip over the recommendation we want to delete
 			newOrder = append(newOrder, recommendation.ID)
 		}
 	}
 
-	// deleting the given recommendation and updating the other recommendations can be done concurrently
-	// ideally, we'd do this in a single transaction, but our code doesn't support that at this time - see Note [Database calls from resolvers aren't atomic]
-	errGroup := new(errgroup.Group)
-	var deletedRecommendation *models.TRBGuidanceLetterRecommendation // declare this outside the function we pass to errGroup.Go() so we can return it
+	return store.DeleteTRBGuidanceLetterRecommendation(ctx, id, newOrder)
+}
 
-	errGroup.Go(func() error {
-		deletedRecommendation, err = store.DeleteTRBGuidanceLetterRecommendation(ctx, id)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-
-	errGroup.Go(func() error {
-		_, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, trbRequestID, newOrder)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-
-	if err := errGroup.Wait(); err != nil {
-		return nil, err
+// cleanupGuidanceLetterInsightOrder sets re-ordered lists of insights for each category
+// ex: we have Considerations 1, 2, 3, 4, and Consideration 2 is moved to Requirements
+// now, we have Considerations 1, 3, 4. While this will not impact the UI, as we will still return the list in position-ascending order
+// (so, still 1, 3, 4 in order), it is better DB hygiene to clean up that order to shuffle the 3, 4 back to 2, 3, leaving us
+// with 1, 2, 3
+func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) error {
+	// first, get list of all insights for this guidance letter
+	allRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, trbRequestID)
+	if err != nil {
+		return err
 	}
 
-	return deletedRecommendation, nil
+	// presort, regardless of category, for ease later
+	sort.Slice(allRecommendations, func(i, j int) bool {
+		return allRecommendations[i].PositionInLetter.Int64 < allRecommendations[j].PositionInLetter.Int64
+	})
+
+	// group by category, shuffle up the order if needed, update db
+	m := map[models.TRBGuidanceLetterRecommendationCategory][]*models.TRBGuidanceLetterRecommendation{}
+
+	// prefill with all available categories
+	for _, category := range models.AllTRBGuidanceLetterRecommendationCategory {
+		m[category] = []*models.TRBGuidanceLetterRecommendation{}
+	}
+
+	// populate map
+	for _, insight := range allRecommendations {
+		m[insight.Category] = append(m[insight.Category], insight)
+	}
+
+	// set new order
+	for category, insights := range m {
+		var ordered []uuid.UUID
+
+		// here is where we set the order. by simply appending to the list `ordered`, we fill in any index gaps
+		for _, insight := range insights {
+			ordered = append(ordered, insight.ID)
+		}
+
+		// save new order for each category
+		if _, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
+			TrbRequestID: trbRequestID,
+			NewOrder:     ordered,
+			Category:     category,
+		}); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

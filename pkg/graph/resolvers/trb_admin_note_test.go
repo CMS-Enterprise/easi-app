@@ -263,6 +263,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			Title:          "Admin Note Test Recommendation 1",
 			Recommendation: "Keep testing rec1",
 			Links:          []string{},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 		createdRec1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate1)
 		s.NoError(err)
@@ -274,6 +275,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			Title:          "Admin Note Test Recommendation 2",
 			Recommendation: "Keep testing rec2",
 			Links:          []string{},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 		createdRec2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate2)
 		s.NoError(err)
@@ -351,6 +353,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			Title:          "Admin Note Test Recommendation - Different Request",
 			Recommendation: "Make sure this fails",
 			Links:          []string{},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 		createdRec, err := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate)
 		s.NoError(err)
@@ -475,6 +478,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 				Title:          fmt.Sprintf("Admin Note Test Recommendation %v", i),
 				Recommendation: "Testing category-specific data query resolver",
 				Links:          []string{},
+				Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 			}
 			createdRec, errCreatingRec := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate)
 			s.NoError(errCreatingRec)
@@ -507,7 +511,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		s.True(ok) // test that categorySpecificData is of the right type
 
 		// test that resolver returns the right recommendations
-		returnedRecommendations := guidanceLetterData.Recommendations
+		returnedRecommendations := guidanceLetterData.Insights
 		s.Len(returnedRecommendations, 2)
 
 		recommendation0Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {

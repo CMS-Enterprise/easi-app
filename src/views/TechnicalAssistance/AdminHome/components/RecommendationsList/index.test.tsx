@@ -7,14 +7,14 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import RecommendationsList from '.';
 
-const { recommendations } = guidanceLetter;
+const { insights } = guidanceLetter;
 
 /** Render component for testing within single recommendation list item */
 const renderRecommendation = (index: number, editable: boolean = true) => {
   render(
     <VerboseMockedProvider>
       <RecommendationsList
-        recommendations={recommendations}
+        recommendations={insights}
         trbRequestId={trbRequest.id}
         editable={editable}
         {...(editable ? { edit: () => null, remove: () => null } : {})}
@@ -35,14 +35,14 @@ describe('TRB guidance and insights list', () => {
     expect(
       recommendation.getByRole('heading', {
         level: 3,
-        name: recommendations[0].title
+        name: insights[0].title
       })
     );
 
-    expect(recommendation.getByText(recommendations[0].recommendation));
+    expect(recommendation.getByText(insights[0].recommendation));
 
     const links = recommendation.getAllByRole('link');
-    expect(links.length).toEqual(recommendations[0].links.length);
+    expect(links.length).toEqual(insights[0].links.length);
   });
 
   it('renders editable view', () => {

@@ -36,7 +36,7 @@ const defaultValues: GuidanceLetterRecommendationFields = {
 
 const Recommendations = ({
   trbRequestId,
-  guidanceLetter: { recommendations },
+  guidanceLetter: { insights },
   setIsStepSubmitting,
   setFormAlert,
   stepsCompleted,
@@ -47,7 +47,7 @@ const Recommendations = ({
   const history = useHistory();
 
   /** Whether recommendations have been added to the request */
-  const hasRecommendations: boolean = recommendations.length > 0;
+  const hasRecommendations: boolean = insights.length > 0;
 
   const formMethods = useForm<GuidanceLetterRecommendationFields>({
     resolver: yupResolver(guidanceRecommendationSchema),
@@ -115,7 +115,7 @@ const Recommendations = ({
               </Alert>
             ) : (
               <RecommendationsList
-                recommendations={recommendations}
+                recommendations={insights}
                 trbRequestId={trbRequestId}
                 setReorderError={error =>
                   setFormAlert(error ? { type: 'error', message: error } : null)

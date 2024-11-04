@@ -25,6 +25,7 @@ import {
   GetTrbGuidanceLetter,
   GetTrbGuidanceLetterVariables
 } from 'queries/types/GetTrbGuidanceLetter';
+import { TRBGuidanceLetterRecommendationCategory } from 'types/graphql-global-types';
 import { GuidanceFormStepKey } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
@@ -37,7 +38,8 @@ const mockRecommendation = {
   trbRequestId: mockTrbRequestId,
   title: 'Recommendation 3',
   recommendation: 'Recommendation description text',
-  links: ['google.com', 'easi.cms.gov']
+  links: ['google.com', 'easi.cms.gov'],
+  category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
 };
 
 const createTrbRecommendationQuery: MockedQuery<

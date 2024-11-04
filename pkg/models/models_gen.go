@@ -244,10 +244,11 @@ type CreateTRBAdminNoteSupportingDocumentsInput struct {
 
 // The input required to add a recommendation & links to a TRB guidance letter
 type CreateTRBGuidanceLetterRecommendationInput struct {
-	TrbRequestID   uuid.UUID `json:"trbRequestId"`
-	Title          string    `json:"title"`
-	Recommendation HTML      `json:"recommendation"`
-	Links          []string  `json:"links"`
+	TrbRequestID   uuid.UUID                               `json:"trbRequestId"`
+	Title          string                                  `json:"title"`
+	Recommendation HTML                                    `json:"recommendation"`
+	Links          []string                                `json:"links"`
+	Category       TRBGuidanceLetterRecommendationCategory `json:"category"`
 }
 
 // The data needed add a TRB request attendee to a TRB request
@@ -800,7 +801,7 @@ func (TRBAdminNoteGeneralRequestCategoryData) IsTRBAdminNoteCategorySpecificData
 type TRBAdminNoteGuidanceLetterCategoryData struct {
 	AppliesToMeetingSummary bool                               `json:"appliesToMeetingSummary"`
 	AppliesToNextSteps      bool                               `json:"appliesToNextSteps"`
-	Recommendations         []*TRBGuidanceLetterRecommendation `json:"recommendations"`
+	Insights                []*TRBGuidanceLetterRecommendation `json:"insights"`
 }
 
 func (TRBAdminNoteGuidanceLetterCategoryData) IsTRBAdminNoteCategorySpecificData() {}
@@ -915,7 +916,8 @@ type UpdateSystemIntakeReviewDatesInput struct {
 type UpdateTRBGuidanceLetterRecommendationOrderInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
 	// List of the recommendation IDs in the new order they should be displayed
-	NewOrder []uuid.UUID `json:"newOrder"`
+	NewOrder []uuid.UUID                             `json:"newOrder"`
+	Category TRBGuidanceLetterRecommendationCategory `json:"category"`
 }
 
 // Represents an EUA user who is included as an attendee for a TRB request

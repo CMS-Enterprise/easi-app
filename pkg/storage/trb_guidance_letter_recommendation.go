@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"golang.org/x/exp/slices"
 
 	"go.uber.org/zap"
@@ -15,6 +16,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // CreateTRBGuidanceLetterRecommendation creates a new TRB guidance letter recommendation record in the database.
@@ -27,9 +29,11 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 		recommendation.ID = uuid.New()
 	}
 
-	// besides the normal fields, set position_in_letter pased on the existing recommendations for this guidance letter
-	// set position_in_letter to 1 + (the largeting existing position for this guidance letter),
+	// besides the normal fields, set position_in_letter based on the existing recommendations for this guidance letter
+	// set position_in_letter to 1 + (the largest existing position for this guidance letter),
 	// defaulting to 0 if there are no existing recommendations for this guidance letter
+	// -	note: if the `category` changes, we must update the `category` field AND add to the end of the order
+	// 		for the new category
 	stmt, err := s.db.PrepareNamed(`
 		INSERT INTO trb_guidance_letter_recommendations (
 			id,
@@ -39,7 +43,8 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 			links,
 			created_by,
 			modified_by,
-			position_in_letter
+			position_in_letter,
+			category
 		)
 		SELECT
 			:id,
@@ -49,7 +54,8 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 			:links,
 			:created_by,
 			:modified_by,
-			COALESCE(MAX(position_in_letter) + 1, 0)
+			COALESCE(MAX(position_in_letter) FILTER ( WHERE category = :category AND trb_request_id = :trb_request_id) + 1, 0),
+			:category
 		FROM trb_guidance_letter_recommendations
 		WHERE trb_request_id = :trb_request_id
 		RETURNING *;`)
@@ -71,6 +77,7 @@ func (s *Store) CreateTRBGuidanceLetterRecommendation(
 			fmt.Sprintf("Failed to create TRB guidance letter recommendation with error %s", err),
 			zap.Error(err),
 			zap.String("user", recommendation.CreatedBy),
+			zap.String("sql_statement", stmt.QueryString),
 		)
 		return nil, err
 	}
@@ -130,6 +137,31 @@ func (s *Store) GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx context.Co
 	return results, nil
 }
 
+// GetTRBGuidanceLetterRecommendationsByTRBRequestIDAndCategory queries the DB for all the TRB guidance letter recommendations,
+// filtering by the given TRB request ID and ordered in the user-specified positions
+func (s *Store) GetTRBGuidanceLetterRecommendationsByTRBRequestIDAndCategory(ctx context.Context, trbRequestID uuid.UUID, category models.TRBGuidanceLetterRecommendationCategory) ([]*models.TRBGuidanceLetterRecommendation, error) {
+	results := []*models.TRBGuidanceLetterRecommendation{}
+
+	err := s.db.Select(&results, `
+		SELECT *
+		FROM trb_guidance_letter_recommendations
+		WHERE trb_request_id = $1
+		AND category = $2
+		AND deleted_at IS NULL
+		ORDER BY position_in_letter ASC
+	`, trbRequestID, category)
+
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		appcontext.ZLogger(ctx).Error("Failed to fetch TRB guidance letter recommendations", zap.Error(err), zap.String("id", trbRequestID.String()))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBGuidanceLetterRecommendation{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return results, nil
+}
+
 // GetTRBGuidanceLetterRecommendationsSharingTRBRequestID queries the DB for all TRB guidance letter recommendations with the same TRB request ID as the given recommendation
 // It will not return any entities that have a deleted_at value
 func (s *Store) GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx context.Context, recommendationID uuid.UUID) ([]*models.TRBGuidanceLetterRecommendation, error) {
@@ -173,7 +205,8 @@ func (s *Store) GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx conte
 }
 
 // UpdateTRBGuidanceLetterRecommendation updates an existing TRB guidance letter recommendation record in the database
-// This purposely does not update the position_in_letter column - to update that, use UpdateTRBGuidanceLetterRecommendationOrder()
+// This purposely does not update the position_in_letter column unless the `category` changes - to update the order through
+// normal reordering operation, use UpdateTRBGuidanceLetterRecommendationOrder()
 func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recommendation *models.TRBGuidanceLetterRecommendation) (*models.TRBGuidanceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_guidance_letter_recommendations
@@ -183,7 +216,16 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recom
 			recommendation = :recommendation,
 			links = :links,
 			created_by = :created_by,
-			modified_by = :modified_by
+			modified_by = :modified_by,
+			category = :category,
+			-- update position in letter ONLY when category changes
+			position_in_letter = CASE
+				-- when category changes
+				WHEN category <> :category
+					THEN (SELECT COALESCE(MAX(position_in_letter) + 1, 0) FROM trb_guidance_letter_recommendations WHERE category = :category AND trb_request_id = :trb_request_id)
+				-- when category does not change
+				ELSE position_in_letter
+			END
 		WHERE id = :id
 		RETURNING *;`)
 	if err != nil {
@@ -214,53 +256,75 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, recom
 }
 
 // DeleteTRBGuidanceLetterRecommendation deletes an existing TRB guidance letter recommendation record in the database
-func (s *Store) DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
-	stmt, err := s.db.PrepareNamed(`
+func (s *Store) DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uuid.UUID, newOrder []uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
+	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) (*models.TRBGuidanceLetterRecommendation, error) {
+
+		stmt, err := tx.PrepareNamed(`
 		UPDATE trb_guidance_letter_recommendations
 		SET deleted_at = CURRENT_TIMESTAMP, position_in_letter = NULL
 		WHERE id = :id
 		RETURNING *;`)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
-			zap.String("id", id.String()),
-		)
-		return nil, err
-	}
-	defer stmt.Close()
-
-	toDelete := models.TRBGuidanceLetterRecommendation{}
-	toDelete.ID = id
-	deleted := models.TRBGuidanceLetterRecommendation{}
-
-	err = stmt.Get(&deleted, &toDelete)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
-			zap.String("id", id.String()),
-		)
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     toDelete,
-			Operation: apperrors.QueryUpdate,
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
+				zap.String("id", id.String()),
+			)
+			return nil, err
 		}
-	}
+		defer stmt.Close()
 
-	return &deleted, err
+		toDelete := models.TRBGuidanceLetterRecommendation{}
+		toDelete.ID = id
+		deleted := models.TRBGuidanceLetterRecommendation{}
+
+		err = stmt.Get(&deleted, &toDelete)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to delete TRB guidance letter recommendation %s", err),
+				zap.String("id", id.String()),
+			)
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     toDelete,
+				Operation: apperrors.QueryUpdate,
+			}
+		}
+
+		// remove from order
+		if _, err := updateTRBGuidanceLetterRecommendationOrder(ctx, tx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
+			TrbRequestID: deleted.TRBRequestID,
+			NewOrder:     newOrder,
+			Category:     deleted.Category,
+		}); err != nil {
+			return nil, err
+		}
+
+		return &deleted, err
+
+	})
 }
 
 // UpdateTRBGuidanceLetterRecommendationOrder updates the ordering of recommendations for a given guidance letter,
 // using the order of the recommendation IDs passed in as newOrder. No other recommendation columns/fields are updated.
 func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	ctx context.Context,
-	trbRequestID uuid.UUID,
-	newOrder []uuid.UUID,
+	update models.UpdateTRBGuidanceLetterRecommendationOrderInput,
+) ([]*models.TRBGuidanceLetterRecommendation, error) {
+	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBGuidanceLetterRecommendation, error) {
+		return updateTRBGuidanceLetterRecommendationOrder(ctx, tx, update)
+	})
+}
+
+func updateTRBGuidanceLetterRecommendationOrder(
+	ctx context.Context,
+	tx *sqlx.Tx,
+	update models.UpdateTRBGuidanceLetterRecommendationOrderInput,
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	// convert newOrder into a slice of maps with entries for recommendation ID and new position,
 	// which can then be passed to SQL as JSON, then used in the query via json_to_recordset()
 	newPositions := []map[string]any{}
 
-	for index, recommendationID := range newOrder {
+	for index, recommendationID := range update.NewOrder {
 		newEntry := map[string]any{
 			// important to use the same keys as the columns in the SQL table, otherwise sqlx returns "missing destination name position" error
 			"id":                 recommendationID,
@@ -274,7 +338,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to marshal the JSON for updating TRB recommendation guidance letters with error %s", err),
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
+			zap.String("trbRequestID", update.TrbRequestID.String()),
 		)
 
 		return nil, err
@@ -283,7 +347,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	// json_to_recordset() lets us build a temporary table (new_positions) with the new positions for each recommendation,
 	// which we can use in a CTE (common table expression, denoted by the WITH keyword) to update the recommendations
 	// json_to_recordset() documentation - https://www.postgresql.org/docs/14/functions-json.html
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := tx.PrepareNamed(`
 		WITH new_positions AS (
 			SELECT *
 			FROM json_to_recordset(:newPositions)
@@ -294,12 +358,13 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 		FROM new_positions
 		WHERE trb_guidance_letter_recommendations.id = new_positions.id
 		AND trb_guidance_letter_recommendations.trb_request_id = :trbRequestID
+		AND trb_guidance_letter_recommendations.category = :category
 		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for UpdateTRBGuidanceLetterRecommendationOrder() with error %s", err),
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
+			zap.String("trbRequestID", update.TrbRequestID.String()),
 		)
 		return nil, err
 	}
@@ -308,7 +373,8 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 	updatedRecommendations := []*models.TRBGuidanceLetterRecommendation{}
 	arg := map[string]interface{}{
 		"newPositions": string(newPositionsSerialized),
-		"trbRequestID": trbRequestID.String(),
+		"trbRequestID": update.TrbRequestID.String(),
+		"category":     update.Category,
 	}
 
 	err = stmt.Select(&updatedRecommendations, arg)
@@ -316,7 +382,7 @@ func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update the order of TRB recommendation guidance letters with error %s", err),
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
+			zap.String("trbRequestID", update.TrbRequestID.String()),
 		)
 		return nil, err
 	}

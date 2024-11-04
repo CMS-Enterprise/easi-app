@@ -49,7 +49,7 @@ import AdminHome from '..';
 
 import AddNote from '.';
 
-const { recommendations } = guidanceLetter;
+const { insights } = guidanceLetter;
 
 const getTrbRecommendationsQuery: MockedQuery<
   GetTrbRecommendations,
@@ -67,7 +67,7 @@ const getTrbRecommendationsQuery: MockedQuery<
         __typename: 'TRBRequest',
         guidanceLetter: {
           __typename: 'TRBGuidanceLetter',
-          recommendations
+          insights
         }
       }
     }
@@ -218,12 +218,12 @@ describe('Trb Admin Notes: Add Note', () => {
     selectEvent.openMenu(guidanceLetterSectionSelect);
     expect(
       screen.getByRole('checkbox', {
-        name: `Recommendation (${recommendations[0].title})`
+        name: `Recommendation (${insights[0].title})`
       })
     );
     expect(
       screen.getByRole('checkbox', {
-        name: `Recommendation (${recommendations[1].title})`
+        name: `Recommendation (${insights[1].title})`
       })
     );
   });

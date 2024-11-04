@@ -22,7 +22,7 @@ export interface GetTrbPublicGuidanceLetter_trbRequest_form {
   needsAssistanceWith: string | null;
 }
 
-export interface GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter_recommendations {
+export interface GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter_insights {
   __typename: "TRBGuidanceLetterRecommendation";
   id: UUID;
   title: string;
@@ -47,7 +47,7 @@ export interface GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter {
   /**
    * List of recommendations in the order specified by users
    */
-  recommendations: GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter_recommendations[];
+  insights: GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter_insights[];
   author: GetTrbPublicGuidanceLetter_trbRequest_guidanceLetter_author;
   createdAt: Time;
   modifiedAt: Time | null;
