@@ -1097,6 +1097,31 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		return nil, err
 	}
 
+	// Create some uncategorized
+	uncategorized1ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Come up with some categories",
+		Recommendation: "You'll really need to come up with some categories, or at least move this insight to a category!",
+		Links:          pq.StringArray{"categories.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryUncategorized,
+	}
+	createdUncategorized1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, uncategorized1ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	uncategorized2ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Organize your insights",
+		Recommendation: "Try moving these insights around to give them a category!",
+		Links:          pq.StringArray{},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryUncategorized,
+	}
+	createdUncategorized2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, uncategorized2ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
 	return []*models.TRBGuidanceLetterRecommendation{
 		createdConsideration1,
 		createdConsideration2,
@@ -1109,6 +1134,9 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		createdRequirement1,
 		createdRequirement2,
 		createdRequirement3,
+
+		createdUncategorized1,
+		createdUncategorized2,
 	}, nil
 }
 
