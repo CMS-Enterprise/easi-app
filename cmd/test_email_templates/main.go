@@ -616,6 +616,23 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
+	err = client.SystemIntake.SendGRBReviewDiscussionReplyEmail(
+		ctx,
+		email.SendGRBReviewDiscussionReplyEmailInput{
+			SystemIntakeID:           intakeID,
+			UserName:                 "Discussion Tester #1",
+			RequestName:              "GRB Review Discussion Test",
+			DiscussionBoardType:      "Internal GRB Discussion Board",
+			GRBReviewLink:            "google.com",
+			Role:                     "Voting Member",
+			DiscussionContent:        "Blah",
+			DiscussionLink:           "google.com",
+			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
+			Recipients:               emailNotificationRecipients.RegularRecipientEmails,
+		},
+	)
+	noErr(err)
+
 	err = client.SystemIntake.SendSystemIntakeAdminUploadDocEmail(
 		ctx,
 		email.SendSystemIntakeAdminUploadDocEmailInput{
