@@ -75,6 +75,9 @@ type templates struct {
 	systemIntakeUpdateLCID                          templateCaller
 	systemIntakeChangeLCIDRetirementDate            templateCaller
 	systemIntakeCreateGRBReviewer                   templateCaller
+	grbReviewDiscussionReply                        templateCaller
+	grbReviewDiscussionIndividualTagged             templateCaller
+	grbReviewDiscussionGroupTagged                  templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -396,6 +399,27 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(systemIntakeCreateGRBReviewerTemplateName)
 	}
 	appTemplates.systemIntakeCreateGRBReviewer = systemIntakeCreateGRBReviewer
+
+	grbReviewDiscussionReplyTemplateName := "grb_review_discussion_reply.gohtml"
+	grbReviewDiscussionReply := rawTemplates.Lookup(grbReviewDiscussionReplyTemplateName)
+	if grbReviewDiscussionReply == nil {
+		return Client{}, templateError(grbReviewDiscussionReplyTemplateName)
+	}
+	appTemplates.grbReviewDiscussionReply = grbReviewDiscussionReply
+
+	grbReviewDiscussionIndividualTaggedTemplateName := "grb_review_discussion_individual_tagged.gohtml"
+	grbReviewDiscussionIndividualTagged := rawTemplates.Lookup(grbReviewDiscussionIndividualTaggedTemplateName)
+	if grbReviewDiscussionIndividualTagged == nil {
+		return Client{}, templateError(grbReviewDiscussionIndividualTaggedTemplateName)
+	}
+	appTemplates.grbReviewDiscussionIndividualTagged = grbReviewDiscussionIndividualTagged
+
+	grbReviewDiscussionGroupTaggedTemplateName := "grb_review_discussion_group_tagged.gohtml"
+	grbReviewDiscussionGroupTagged := rawTemplates.Lookup(grbReviewDiscussionGroupTaggedTemplateName)
+	if grbReviewDiscussionGroupTagged == nil {
+		return Client{}, templateError(grbReviewDiscussionGroupTaggedTemplateName)
+	}
+	appTemplates.grbReviewDiscussionGroupTagged = grbReviewDiscussionGroupTagged
 
 	client := Client{
 		config:    config,
