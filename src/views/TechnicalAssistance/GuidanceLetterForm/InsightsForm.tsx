@@ -110,16 +110,14 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
               formatUrl(link)
             );
 
-            const { id, title, recommendation } = formData;
+            const { id, title, recommendation, category } = formData;
 
             if (id) {
               await update({
                 variables: {
                   input: {
                     id,
-                    // TODO: Remove hard coded category
-                    category:
-                      TRBGuidanceLetterRecommendationCategory.REQUIREMENT,
+                    category,
                     title,
                     recommendation,
                     links
@@ -131,9 +129,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                 variables: {
                   input: {
                     trbRequestId,
-                    // TODO: Remove hard coded category
-                    category:
-                      TRBGuidanceLetterRecommendationCategory.REQUIREMENT,
+                    category,
                     title,
                     recommendation,
                     links
