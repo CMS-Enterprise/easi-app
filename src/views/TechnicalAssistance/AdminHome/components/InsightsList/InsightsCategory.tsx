@@ -74,9 +74,16 @@ const InsightsCategory = ({
       <h3 className="margin-bottom-05">
         {t(`guidanceLetterForm.${categoryString}`)}
       </h3>
-      <p className="margin-top-05 margin-bottom-3 line-height-body-5">
-        {t(`guidanceLetterForm.${categoryString}Description`)}
-      </p>
+
+      {category === TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED ? (
+        <Alert type="info" slim className="margin-top-1 margin-bottom-4">
+          {t('guidanceLetterForm.uncategorizedAlert')}
+        </Alert>
+      ) : (
+        <p className="margin-top-05 margin-bottom-3 line-height-body-5">
+          {t(`guidanceLetterForm.${categoryString}Description`)}
+        </p>
+      )}
 
       {insights.length === 0 ? (
         <Alert type="info" slim className="margin-top-neg-1 margin-bottom-2">

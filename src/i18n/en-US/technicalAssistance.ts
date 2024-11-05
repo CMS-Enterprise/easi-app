@@ -216,6 +216,8 @@ const technicalAssistance = {
       'Nothing has been added yet. Use the button above to add guidance, or click next if you have no guidance to add.',
     noInsights:
       'This guidance letter does not have any guidance categorized as a {{category}}.',
+    uncategorizedAlert:
+      'Past advice letters (now guidance letters) will not have categorized advice. You may edit each existing item to add it to a category.',
     reorderGuidance:
       'If you have two or more items per category, you can use arrows on the left side of each to reorder them within the category. Edit the guidance to change the category.',
     increaseOrderAriaLabel: 'Increase guidance sort order',
@@ -233,6 +235,7 @@ const technicalAssistance = {
     consideration: 'Consideration',
     considerationDescription:
       'A consideration suggests that the project team should evaluate this option, but it will not significantly impact their system or CMS.',
+    uncategorized: 'Uncategorized',
     addResourceLink: 'Add a resource link',
     addAnotherResourceLink: 'Add another resource link',
     returnToGuidanceLetter: 'Don’t {{formType}} and return to guidance letter',

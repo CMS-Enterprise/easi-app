@@ -71,6 +71,16 @@ export default function InsightsList({
     [insights]
   );
 
+  const uncategorized = useMemo(
+    () =>
+      insights.filter(
+        insight =>
+          insight.category ===
+          TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED
+      ),
+    [insights]
+  );
+
   // Clear error on initial render
   useEffect(() => {
     setReorderError?.(null);
@@ -130,6 +140,18 @@ export default function InsightsList({
         setInsightToRemove={remove && setInsightToRemove}
         setReorderError={setReorderError}
       />
+
+      {uncategorized.length > 0 && (
+        <InsightsCategory
+          insights={uncategorized}
+          category={TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED}
+          trbRequestId={trbRequestId}
+          editable={editable}
+          edit={edit}
+          setInsightToRemove={remove && setInsightToRemove}
+          setReorderError={setReorderError}
+        />
+      )}
     </div>
   );
 }
