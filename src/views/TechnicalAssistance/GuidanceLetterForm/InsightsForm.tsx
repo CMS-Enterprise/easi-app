@@ -244,6 +244,10 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                     'guidanceLetterForm.requirementDescription'
                   )}
                   value={TRBGuidanceLetterRecommendationCategory.REQUIREMENT}
+                  checked={
+                    field.value ===
+                    TRBGuidanceLetterRecommendationCategory.REQUIREMENT
+                  }
                 />
                 <Radio
                   {...field}
@@ -254,6 +258,10 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                     'guidanceLetterForm.recommendationDescription'
                   )}
                   value={TRBGuidanceLetterRecommendationCategory.RECOMMENDATION}
+                  checked={
+                    field.value ===
+                    TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
+                  }
                 />
                 <Radio
                   {...field}
@@ -264,6 +272,10 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                     'guidanceLetterForm.considerationDescription'
                   )}
                   value={TRBGuidanceLetterRecommendationCategory.CONSIDERATION}
+                  checked={
+                    field.value ===
+                    TRBGuidanceLetterRecommendationCategory.CONSIDERATION
+                  }
                 />
               </Fieldset>
             )}
