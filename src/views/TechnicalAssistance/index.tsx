@@ -37,6 +37,7 @@ function TechnicalAssistance() {
         way old emails, bookmarks, and browser history isn't messed up)
         */}
         <Redirect from="*advice*" to="*guidance*" />
+        <Redirect from="*recommendations*" to="*insights*" />
 
         <Route exact path={path}>
           <Homepage />
