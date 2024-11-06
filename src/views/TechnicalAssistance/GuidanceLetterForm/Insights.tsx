@@ -113,14 +113,17 @@ const Insights = ({
                 }
                 edit={insight => {
                   // Set form field values for editing
-                  reset({
-                    ...insight,
-                    category:
-                      insight?.category ||
-                      TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED,
-                    // Revert link strings to object for form array field
-                    links: insight.links.map(link => ({ link }))
-                  });
+                  reset(
+                    {
+                      ...insight,
+                      category:
+                        insight?.category ||
+                        TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED,
+                      // Revert link strings to object for form array field
+                      links: insight.links.map(link => ({ link }))
+                    },
+                    { keepDefaultValues: true }
+                  );
 
                   history.push(`/trb/${trbRequestId}/guidance/insights/form`);
                 }}
