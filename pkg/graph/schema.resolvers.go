@@ -353,6 +353,21 @@ func (r *mutationResolver) CreateSystemIntakeActionRetireLcid(ctx context.Contex
 	}, err
 }
 
+// CreateSystemIntakeActionUnretireLcid is the resolver for the createSystemIntakeActionUnretireLCID field.
+func (r *mutationResolver) CreateSystemIntakeActionUnretireLcid(ctx context.Context, input models.SystemIntakeUnretireLCIDInput) (*models.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.UnretireLCID(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		input,
+	)
+
+	return &models.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 // CreateSystemIntakeActionChangeLCIDRetirementDate is the resolver for the createSystemIntakeActionChangeLCIDRetirementDate field.
 func (r *mutationResolver) CreateSystemIntakeActionChangeLCIDRetirementDate(ctx context.Context, input models.SystemIntakeChangeLCIDRetirementDateInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.ChangeLCIDRetirementDate(
