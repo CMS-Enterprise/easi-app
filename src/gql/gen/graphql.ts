@@ -3056,7 +3056,7 @@ export type UpdateTRBGuidanceLetterInput = {
 
 /** The input required to update a recommendation to a TRB guidance letter */
 export type UpdateTRBGuidanceLetterRecommendationInput = {
-  category: TRBGuidanceLetterRecommendationCategory;
+  category?: InputMaybe<TRBGuidanceLetterRecommendationCategory>;
   id: Scalars['UUID']['input'];
   links?: InputMaybe<Array<Scalars['String']['input']>>;
   recommendation?: InputMaybe<Scalars['HTML']['input']>;
