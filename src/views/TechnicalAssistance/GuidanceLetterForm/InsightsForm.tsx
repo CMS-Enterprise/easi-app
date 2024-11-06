@@ -42,6 +42,9 @@ type InsightsFormProps = {
   setFormAlert: React.Dispatch<React.SetStateAction<FormAlertObject | null>>;
 };
 
+/**
+ * Insights form for TRB Guidance Letter
+ */
 const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();

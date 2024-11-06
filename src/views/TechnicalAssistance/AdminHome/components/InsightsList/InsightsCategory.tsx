@@ -27,6 +27,9 @@ type InsightsCategoryProps = {
   setReorderError?: (error: string | null) => void;
 };
 
+/**
+ * Displays list of TRB guidance letter guidance and insights by category
+ */
 const InsightsCategory = ({
   trbRequestId,
   category,
