@@ -71,6 +71,7 @@ type templates struct {
 	systemIntakeIssueLCID                           templateCaller
 	systemIntakeConfirmLCID                         templateCaller
 	systemIntakeRetireLCID                          templateCaller
+	systemIntakeUnretireLCID                        templateCaller
 	systemIntakeExpireLCID                          templateCaller
 	systemIntakeUpdateLCID                          templateCaller
 	systemIntakeChangeLCIDRetirementDate            templateCaller
@@ -366,6 +367,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 	systemIntakeRetireLCID := rawTemplates.Lookup(systemIntakeRetireLCIDTemplateName)
 	if systemIntakeRetireLCID == nil {
 		return Client{}, templateError(systemIntakeRetireLCIDTemplateName)
+	}
+	appTemplates.systemIntakeRetireLCID = systemIntakeRetireLCID
+
+	systemIntakeUnretireLCIDTemplateName := "system_intake_unretire_lcid.gohtml"
+	systemIntakeUnretireLCID := rawTemplates.Lookup(systemIntakeUnretireLCIDTemplateName)
+	if systemIntakeUnretireLCID == nil {
+		return Client{}, templateError(systemIntakeUnretireLCIDTemplateName)
 	}
 	appTemplates.systemIntakeRetireLCID = systemIntakeRetireLCID
 
