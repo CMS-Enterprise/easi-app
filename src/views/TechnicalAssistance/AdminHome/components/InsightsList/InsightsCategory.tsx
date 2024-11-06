@@ -44,8 +44,6 @@ const InsightsCategory = ({
 
   const categoryString = toLower(category);
 
-  const enableReorderControls: boolean = !!editable && insights.length > 1;
-
   /** Sort insights and execute updateOrder mutation */
   const sort = (id: string, newIndex: number) => {
     /** Updated sort order array */
@@ -86,7 +84,7 @@ const InsightsCategory = ({
       )}
 
       {insights.length === 0 ? (
-        <Alert type="info" slim className="margin-top-neg-1 margin-bottom-2">
+        <Alert type="info" slim className="margin-top-neg-1 margin-bottom-4">
           {t('guidanceLetterForm.noInsights', { category: categoryString })}
         </Alert>
       ) : (
@@ -102,12 +100,12 @@ const InsightsCategory = ({
                 <div
                   className={classNames(
                     'bg-base-lightest padding-top-2 padding-bottom-105 padding-left-105 padding-right-3 display-flex',
-                    { 'padding-x-5': !enableReorderControls }
+                    { 'padding-x-5': !editable }
                   )}
                 >
                   {
                     /* Reorder control buttons */
-                    enableReorderControls && (
+                    editable && (
                       <div
                         data-testid="reorder-controls"
                         className="margin-right-2 display-flex flex-column flex-align-center line-height-body-1"
@@ -145,9 +143,7 @@ const InsightsCategory = ({
                   <div
                     className={classNames(
                       'width-full padding-bottom-2',
-                      enableReorderControls
-                        ? 'padding-top-105'
-                        : 'padding-top-1'
+                      editable ? 'padding-top-105' : 'padding-top-1'
                     )}
                   >
                     <h4 className="margin-top-0 margin-bottom-2">{title}</h4>
