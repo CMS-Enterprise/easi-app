@@ -28890,9 +28890,9 @@ func (ec *executionContext) _GRBDiscussion_content(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.TaggedHTML)
 	fc.Result = res
-	return ec.marshalNTaggedHTML2string(ctx, field.Selections, res)
+	return ec.marshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GRBDiscussion_content(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -29074,9 +29074,9 @@ func (ec *executionContext) _GRBReply_content(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.TaggedHTML)
 	fc.Result = res
-	return ec.marshalNTaggedHTML2string(ctx, field.Selections, res)
+	return ec.marshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GRBReply_content(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -76633,13 +76633,14 @@ func (ec *executionContext) marshalNTRBTaskStatuses2ᚖgithubᚗcomᚋcmsᚑente
 	return ec._TRBTaskStatuses(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNTaggedHTML2string(ctx context.Context, v interface{}) (string, error) {
-	res, err := graphql.UnmarshalString(v)
+func (ec *executionContext) unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx context.Context, v interface{}) (models.TaggedHTML, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.TaggedHTML(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNTaggedHTML2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	res := graphql.MarshalString(v)
+func (ec *executionContext) marshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx context.Context, sel ast.SelectionSet, v models.TaggedHTML) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")

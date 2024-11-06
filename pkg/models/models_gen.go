@@ -325,15 +325,15 @@ type DeleteTRBRequestFundingSourcesInput struct {
 type GRBDiscussion struct {
 	ID             uuid.UUID   `json:"id"`
 	SystemIntakeID uuid.UUID   `json:"systemIntakeId"`
-	Content        string      `json:"content"`
+	Content        TaggedHTML  `json:"content"`
 	Replies        []*GRBReply `json:"replies"`
 }
 
 // GRBReply is a reply to a GRBDiscussion
 type GRBReply struct {
-	ParentDiscussionID uuid.UUID `json:"parentDiscussionId"`
-	SystemIntakeID     uuid.UUID `json:"systemIntakeId"`
-	Content            string    `json:"content"`
+	ParentDiscussionID uuid.UUID  `json:"parentDiscussionId"`
+	SystemIntakeID     uuid.UUID  `json:"systemIntakeId"`
+	Content            TaggedHTML `json:"content"`
 }
 
 // GRBReviewerComparison represents an individual GRB Reviewer within the context of a
