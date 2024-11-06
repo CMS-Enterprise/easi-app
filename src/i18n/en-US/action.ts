@@ -90,6 +90,7 @@ const action = {
       'Update the status or details of a Life Cycle ID that is marked for retirement by changing the retirement date or updating the LCID (changing the expiration date, scope, next steps, or project cost baseline).',
     retire: 'Retire a Life Cycle ID',
     retire_RETIRED: 'Change retirement date',
+    unretire: 'Remove retirement date',
     update: 'Update a Life Cycle ID',
     expire: 'Expire a Life Cycle ID',
     retireDateWarning:
@@ -101,6 +102,10 @@ const action = {
       retire: 'Retire',
       retireDescription:
         'LCIDs should be retired if they are no longer in use for a planned reason, such as the issuance of a new LCID, the decommissioning of a system, or other known reason. Retired LCIDs do not need to be added to the Capital Planning Investment Control (CPIC) risk register. This project team will no longer receive automatic notifications about their Life Cycle ID.',
+      retire_RETIRED: 'Change',
+      unretire: 'Remove',
+      unretireDescription:
+        'LCIDs may be "un-retired" which will simply remove the currently set retirement date',
       update: 'Update',
       updateDescription:
         'LCIDs may be updated if there is an approved change to the details, such as an extension of the expiration date, a change to the scope, or similar.',
@@ -311,7 +316,9 @@ const action = {
     reason: 'Why are you retiring this Life Cycle ID? (optional)',
     reasonHelpText:
       'Provide any additional details as to why you are retiring this LCID.',
-    success: 'Life Cycle ID {{lcid}} is now retired.'
+    success: 'Life Cycle ID {{lcid}} is now retired.',
+    remove:
+      'Completing this action will remove the set retirement date, but will not alter any previously set expiration dates or other details abou thtis Life Cycle ID (LCID). You may also choose to add an admin note as a part of this action.'
   },
   expireLcid: {
     reason: 'Why are you expiring this Life Cycle ID?',

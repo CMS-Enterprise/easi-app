@@ -960,6 +960,7 @@ export type Mutation = {
   createSystemIntakeActionReopenRequest?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeActionRequestEdits?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeActionRetireLCID?: Maybe<UpdateSystemIntakePayload>;
+  createSystemIntakeActionUnretireLCID?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeActionUpdateLCID?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   createSystemIntakeDocument?: Maybe<CreateSystemIntakeDocumentPayload>;
@@ -1113,6 +1114,12 @@ export type MutationCreateSystemIntakeActionRequestEditsArgs = {
 /** Defines the mutations for the schema */
 export type MutationCreateSystemIntakeActionRetireLCIDArgs = {
   input: SystemIntakeRetireLCIDInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationCreateSystemIntakeActionUnretireLCIDArgs = {
+  input: SystemIntakeUnretireLCIDInput;
 };
 
 
@@ -1943,6 +1950,7 @@ export enum SystemIntakeActionType {
   SUBMIT_BIZ_CASE = 'SUBMIT_BIZ_CASE',
   SUBMIT_FINAL_BIZ_CASE = 'SUBMIT_FINAL_BIZ_CASE',
   SUBMIT_INTAKE = 'SUBMIT_INTAKE',
+  UNRETIRE_LCID = 'UNRETIRE_LCID',
   UPDATE_LCID = 'UPDATE_LCID'
 }
 
@@ -2510,6 +2518,14 @@ export enum SystemIntakeTRBFollowUp {
   RECOMMENDED_BUT_NOT_CRITICAL = 'RECOMMENDED_BUT_NOT_CRITICAL',
   STRONGLY_RECOMMENDED = 'STRONGLY_RECOMMENDED'
 }
+
+/** Input for "unretiring" (i.e. removing retirement date) an LCID in IT Gov v2 */
+export type SystemIntakeUnretireLCIDInput = {
+  additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
+  adminNote?: InputMaybe<Scalars['HTML']['input']>;
+  notificationRecipients?: InputMaybe<EmailNotificationRecipients>;
+  systemIntakeID: Scalars['UUID']['input'];
+};
 
 /** Input for updating an intake's LCID in IT Gov v2 */
 export type SystemIntakeUpdateLCIDInput = {
