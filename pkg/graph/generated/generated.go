@@ -1119,6 +1119,16 @@ type ComplexityRoot struct {
 		FormStatus                 func(childComplexity int) int
 	}
 
+	Tag struct {
+		Content func(childComplexity int) int
+		ID      func(childComplexity int) int
+	}
+
+	TaggedContent struct {
+		RawContent func(childComplexity int) int
+		Tags       func(childComplexity int) int
+	}
+
 	UpdateSystemIntakePayload struct {
 		SystemIntake func(childComplexity int) int
 		UserErrors   func(childComplexity int) int
@@ -7547,6 +7557,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBTaskStatuses.FormStatus(childComplexity), true
 
+	case "Tag.content":
+		if e.complexity.Tag.Content == nil {
+			break
+		}
+
+		return e.complexity.Tag.Content(childComplexity), true
+
+	case "Tag.id":
+		if e.complexity.Tag.ID == nil {
+			break
+		}
+
+		return e.complexity.Tag.ID(childComplexity), true
+
+	case "TaggedContent.rawContent":
+		if e.complexity.TaggedContent.RawContent == nil {
+			break
+		}
+
+		return e.complexity.TaggedContent.RawContent(childComplexity), true
+
+	case "TaggedContent.tags":
+		if e.complexity.TaggedContent.Tags == nil {
+			break
+		}
+
+		return e.complexity.TaggedContent.Tags(childComplexity), true
+
 	case "UpdateSystemIntakePayload.systemIntake":
 		if e.complexity.UpdateSystemIntakePayload.SystemIntake == nil {
 			break
@@ -9541,6 +9579,16 @@ type TRBRequestAttendee {
   modifiedAt: Time
 }
 
+type TaggedContent {
+  rawContent: String!
+  tags: [Tag!]!
+}
+
+type Tag {
+  id: UUID!
+  content: String!
+}
+
 """
 GRBDiscussion is a top-level discussion on a System Intake and can contain a list of replies.
 As of this writing, replies can NOT be nested to more than one level (e.g., replies to a Slack thread,
@@ -9549,7 +9597,7 @@ not nested Reddit replies)
 type GRBDiscussion {
   id: UUID!
   systemIntakeId: UUID!
-  content: TaggedHTML!
+  content: TaggedContent!
   replies: [GRBReply!]!
 }
 
@@ -9559,7 +9607,7 @@ GRBReply is a reply to a GRBDiscussion
 type GRBReply {
   parentDiscussionId: UUID!
   systemIntakeId: UUID!
-  content: TaggedHTML!
+  content: TaggedContent!
 }
 
 """
@@ -10295,7 +10343,7 @@ The data needed to start a new discussion
 """
 input SaveGRBDiscussionInput {
   systemIntakeId: UUID!
-  content: HTML!
+  content: TaggedHTML!
 }
 
 """
@@ -28890,9 +28938,9 @@ func (ec *executionContext) _GRBDiscussion_content(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.TaggedHTML)
+	res := resTmp.(*models.TaggedContent)
 	fc.Result = res
-	return ec.marshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, field.Selections, res)
+	return ec.marshalNTaggedContent2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedContent(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GRBDiscussion_content(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -28902,7 +28950,13 @@ func (ec *executionContext) fieldContext_GRBDiscussion_content(_ context.Context
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type TaggedHTML does not have child fields")
+			switch field.Name {
+			case "rawContent":
+				return ec.fieldContext_TaggedContent_rawContent(ctx, field)
+			case "tags":
+				return ec.fieldContext_TaggedContent_tags(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TaggedContent", field.Name)
 		},
 	}
 	return fc, nil
@@ -29074,9 +29128,9 @@ func (ec *executionContext) _GRBReply_content(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.TaggedHTML)
+	res := resTmp.(*models.TaggedContent)
 	fc.Result = res
-	return ec.marshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, field.Selections, res)
+	return ec.marshalNTaggedContent2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedContent(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GRBReply_content(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -29086,7 +29140,13 @@ func (ec *executionContext) fieldContext_GRBReply_content(_ context.Context, fie
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type TaggedHTML does not have child fields")
+			switch field.Name {
+			case "rawContent":
+				return ec.fieldContext_TaggedContent_rawContent(ctx, field)
+			case "tags":
+				return ec.fieldContext_TaggedContent_tags(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TaggedContent", field.Name)
 		},
 	}
 	return fc, nil
@@ -56581,6 +56641,188 @@ func (ec *executionContext) fieldContext_TRBTaskStatuses_adviceLetterStatusTaskL
 	return fc, nil
 }
 
+func (ec *executionContext) _Tag_id(ctx context.Context, field graphql.CollectedField, obj *models.Tag) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Tag_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Tag_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Tag",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Tag_content(ctx context.Context, field graphql.CollectedField, obj *models.Tag) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Tag_content(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Content, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Tag_content(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Tag",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TaggedContent_rawContent(ctx context.Context, field graphql.CollectedField, obj *models.TaggedContent) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TaggedContent_rawContent(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RawContent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TaggedContent_rawContent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TaggedContent",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TaggedContent_tags(ctx context.Context, field graphql.CollectedField, obj *models.TaggedContent) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TaggedContent_tags(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Tags, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.Tag)
+	fc.Result = res
+	return ec.marshalNTag2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTagᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TaggedContent_tags(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TaggedContent",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Tag_id(ctx, field)
+			case "content":
+				return ec.fieldContext_Tag_content(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Tag", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _UpdateSystemIntakePayload_systemIntake(ctx context.Context, field graphql.CollectedField, obj *models.UpdateSystemIntakePayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
 	if err != nil {
@@ -60254,7 +60496,7 @@ func (ec *executionContext) unmarshalInputSaveGRBDiscussionInput(ctx context.Con
 			it.SystemIntakeID = data
 		case "content":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
-			data, err := ec.unmarshalNHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			data, err := ec.unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -72502,6 +72744,94 @@ func (ec *executionContext) _TRBTaskStatuses(ctx context.Context, sel ast.Select
 	return out
 }
 
+var tagImplementors = []string{"Tag"}
+
+func (ec *executionContext) _Tag(ctx context.Context, sel ast.SelectionSet, obj *models.Tag) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tagImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Tag")
+		case "id":
+			out.Values[i] = ec._Tag_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "content":
+			out.Values[i] = ec._Tag_content(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var taggedContentImplementors = []string{"TaggedContent"}
+
+func (ec *executionContext) _TaggedContent(ctx context.Context, sel ast.SelectionSet, obj *models.TaggedContent) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, taggedContentImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TaggedContent")
+		case "rawContent":
+			out.Values[i] = ec._TaggedContent_rawContent(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "tags":
+			out.Values[i] = ec._TaggedContent_tags(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var updateSystemIntakePayloadImplementors = []string{"UpdateSystemIntakePayload"}
 
 func (ec *executionContext) _UpdateSystemIntakePayload(ctx context.Context, sel ast.SelectionSet, obj *models.UpdateSystemIntakePayload) graphql.Marshaler {
@@ -76633,20 +76963,78 @@ func (ec *executionContext) marshalNTRBTaskStatuses2ᚖgithubᚗcomᚋcmsᚑente
 	return ec._TRBTaskStatuses(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNTag2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTagᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Tag) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTag2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTag(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNTag2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTag(ctx context.Context, sel ast.SelectionSet, v *models.Tag) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Tag(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNTaggedContent2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedContent(ctx context.Context, sel ast.SelectionSet, v *models.TaggedContent) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._TaggedContent(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx context.Context, v interface{}) (models.TaggedHTML, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TaggedHTML(tmp)
+	var res models.TaggedHTML
+	err := res.UnmarshalGQLContext(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx context.Context, sel ast.SelectionSet, v models.TaggedHTML) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return graphql.WrapContextMarshaler(ctx, v)
 }
 
 func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {

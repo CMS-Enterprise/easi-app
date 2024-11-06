@@ -740,7 +740,7 @@ export enum ExchangeDirection {
  */
 export type GRBDiscussion = {
   __typename: 'GRBDiscussion';
-  content: Scalars['TaggedHTML']['output'];
+  content: TaggedContent;
   id: Scalars['UUID']['output'];
   replies: Array<GRBReply>;
   systemIntakeId: Scalars['UUID']['output'];
@@ -749,7 +749,7 @@ export type GRBDiscussion = {
 /** GRBReply is a reply to a GRBDiscussion */
 export type GRBReply = {
   __typename: 'GRBReply';
-  content: Scalars['TaggedHTML']['output'];
+  content: TaggedContent;
   parentDiscussionId: Scalars['UUID']['output'];
   systemIntakeId: Scalars['UUID']['output'];
 };
@@ -1749,7 +1749,7 @@ export enum Role {
 
 /** The data needed to start a new discussion */
 export type SaveGRBDiscussionInput = {
-  content: Scalars['HTML']['input'];
+  content: Scalars['TaggedHTML']['input'];
   systemIntakeId: Scalars['UUID']['input'];
 };
 
@@ -2983,6 +2983,18 @@ export enum TRBWhereInProcessOption {
   OTHER = 'OTHER',
   THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE = 'THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE'
 }
+
+export type Tag = {
+  __typename: 'Tag';
+  content: Scalars['String']['output'];
+  id: Scalars['UUID']['output'];
+};
+
+export type TaggedContent = {
+  __typename: 'TaggedContent';
+  rawContent: Scalars['String']['output'];
+  tags: Array<Tag>;
+};
 
 /**
  * Input data used to update the admin lead assigned to a system IT governance

@@ -323,17 +323,17 @@ type DeleteTRBRequestFundingSourcesInput struct {
 // As of this writing, replies can NOT be nested to more than one level (e.g., replies to a Slack thread,
 // not nested Reddit replies)
 type GRBDiscussion struct {
-	ID             uuid.UUID   `json:"id"`
-	SystemIntakeID uuid.UUID   `json:"systemIntakeId"`
-	Content        TaggedHTML  `json:"content"`
-	Replies        []*GRBReply `json:"replies"`
+	ID             uuid.UUID      `json:"id"`
+	SystemIntakeID uuid.UUID      `json:"systemIntakeId"`
+	Content        *TaggedContent `json:"content"`
+	Replies        []*GRBReply    `json:"replies"`
 }
 
 // GRBReply is a reply to a GRBDiscussion
 type GRBReply struct {
-	ParentDiscussionID uuid.UUID  `json:"parentDiscussionId"`
-	SystemIntakeID     uuid.UUID  `json:"systemIntakeId"`
-	Content            TaggedHTML `json:"content"`
+	ParentDiscussionID uuid.UUID      `json:"parentDiscussionId"`
+	SystemIntakeID     uuid.UUID      `json:"systemIntakeId"`
+	Content            *TaggedContent `json:"content"`
 }
 
 // GRBReviewerComparison represents an individual GRB Reviewer within the context of a
@@ -387,8 +387,8 @@ type ReopenTRBRequestInput struct {
 
 // The data needed to start a new discussion
 type SaveGRBDiscussionInput struct {
-	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
-	Content        HTML      `json:"content"`
+	SystemIntakeID uuid.UUID  `json:"systemIntakeId"`
+	Content        TaggedHTML `json:"content"`
 }
 
 type SendCantFindSomethingEmailInput struct {
@@ -850,6 +850,16 @@ func (TRBAdminNoteSupportingDocumentsCategoryData) IsTRBAdminNoteCategorySpecifi
 type TRBRequestDocumentType struct {
 	CommonType           TRBDocumentCommonType `json:"commonType"`
 	OtherTypeDescription *string               `json:"otherTypeDescription,omitempty"`
+}
+
+type Tag struct {
+	ID      uuid.UUID `json:"id"`
+	Content string    `json:"content"`
+}
+
+type TaggedContent struct {
+	RawContent string `json:"rawContent"`
+	Tags       []*Tag `json:"tags"`
 }
 
 // Input data used to update the admin lead assigned to a system IT governance
