@@ -188,7 +188,6 @@ const ReviewGuidanceLetter = ({
             <p className="margin-top-4">{t('guidanceLetter.notSpecified')}</p>
           ) : (
             <InsightsList
-              insights={insights}
               trbRequestId={trbRequestId}
               className="margin-top-4"
               editable={editable}

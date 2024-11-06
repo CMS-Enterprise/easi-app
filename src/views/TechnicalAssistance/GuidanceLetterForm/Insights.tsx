@@ -107,7 +107,6 @@ const Insights = ({
             ) : (
               <InsightsList
                 className="margin-bottom-7"
-                insights={insights}
                 trbRequestId={trbRequestId}
                 setReorderError={error =>
                   setFormAlert(error ? { type: 'error', message: error } : null)

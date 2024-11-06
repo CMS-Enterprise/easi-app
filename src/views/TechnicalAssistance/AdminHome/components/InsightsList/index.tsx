@@ -1,10 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   TRBGuidanceLetterInsightFragment,
-  TRBGuidanceLetterRecommendationCategory
+  TRBGuidanceLetterRecommendationCategory,
+  useGetTRBGuidanceLetterInsightsQuery
 } from 'gql/gen/graphql';
 
+import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
 
 import RemoveInsightModal from '../RemoveInsightModal/Index';
@@ -12,7 +14,6 @@ import RemoveInsightModal from '../RemoveInsightModal/Index';
 import InsightsCategory from './InsightsCategory';
 
 type InsightsListProps = {
-  insights: TRBGuidanceLetterInsightFragment[];
   trbRequestId: string;
   /** Optional function to set error message if order mutation fails */
   setReorderError?: (error: string | null) => void;
@@ -28,7 +29,6 @@ type InsightsListProps = {
  * with optional buttons to edit, remove, and order insights
  */
 export default function InsightsList({
-  insights,
   trbRequestId,
   setReorderError,
   editable = true,
@@ -41,51 +41,44 @@ export default function InsightsList({
   const [insightToRemove, setInsightToRemove] =
     useState<TRBGuidanceLetterInsightFragment | null>(null);
 
-  const requirements = useMemo(
-    () =>
-      insights.filter(
-        insight =>
-          insight.category ===
-          TRBGuidanceLetterRecommendationCategory.REQUIREMENT
-      ),
-    [insights]
-  );
+  const { data, loading } = useGetTRBGuidanceLetterInsightsQuery({
+    variables: {
+      id: trbRequestId
+    }
+  });
 
-  const recommendations = useMemo(
-    () =>
-      insights.filter(
-        insight =>
-          insight.category ===
-          TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
-      ),
-    [insights]
-  );
-
-  const considerations = useMemo(
-    () =>
-      insights.filter(
-        insight =>
-          insight.category ===
-          TRBGuidanceLetterRecommendationCategory.CONSIDERATION
-      ),
-    [insights]
-  );
-
-  const uncategorized = useMemo(
-    () =>
-      insights.filter(
-        insight =>
-          insight.category ===
-          TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED
-      ),
-    [insights]
-  );
+  const insights = data?.trbRequest?.guidanceLetter?.insights;
 
   // Clear error on initial render
   useEffect(() => {
     setReorderError?.(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if ((loading && !insights) || !insights) {
+    return <PageLoading />;
+  }
+
+  const requirements = insights.filter(
+    insight =>
+      insight.category === TRBGuidanceLetterRecommendationCategory.REQUIREMENT
+  );
+
+  const recommendations = insights.filter(
+    insight =>
+      insight.category ===
+      TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
+  );
+
+  const considerations = insights.filter(
+    insight =>
+      insight.category === TRBGuidanceLetterRecommendationCategory.CONSIDERATION
+  );
+
+  const uncategorized = insights.filter(
+    insight =>
+      insight.category === TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED
+  );
 
   return (
     <div className={className}>

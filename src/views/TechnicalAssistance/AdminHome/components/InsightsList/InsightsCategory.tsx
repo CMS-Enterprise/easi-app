@@ -39,7 +39,7 @@ const InsightsCategory = ({
   const { t } = useTranslation('technicalAssistance');
 
   const [updateOrder] = useUpdateTRBGuidanceLetterInsightOrderMutation({
-    refetchQueries: ['GetTrbGuidanceLetter']
+    refetchQueries: ['GetTRBGuidanceLetterInsights']
   });
 
   const categoryString = toLower(category);

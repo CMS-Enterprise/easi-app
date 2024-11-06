@@ -14,7 +14,6 @@ const renderInsight = (index: number, editable: boolean = true) => {
   render(
     <VerboseMockedProvider>
       <InsightsList
-        insights={insights}
         trbRequestId={trbRequest.id}
         editable={editable}
         {...(editable ? { edit: () => null, remove: () => null } : {})}
