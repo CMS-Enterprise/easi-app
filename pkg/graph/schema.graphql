@@ -1684,6 +1684,27 @@ type TRBRequestAttendee {
 }
 
 """
+GRBDiscussion is a top-level discussion on a System Intake and can contain a list of replies.
+As of this writing, replies can NOT be nested to more than one level (e.g., replies to a Slack thread,
+not nested Reddit replies)
+"""
+type GRBDiscussion {
+  id: UUID!
+  systemIntakeId: UUID!
+  content: TaggedHTML!
+  replies: [GRBReply!]!
+}
+
+"""
+GRBReply is a reply to a GRBDiscussion
+"""
+type GRBReply {
+  parentDiscussionId: UUID!
+  systemIntakeId: UUID!
+  content: TaggedHTML!
+}
+
+"""
 The data needed add a TRB request attendee to a TRB request
 """
 input CreateTRBRequestAttendeeInput {
@@ -2412,6 +2433,14 @@ input ReopenTRBRequestInput {
 }
 
 """
+The data needed to start a new discussion
+"""
+input SaveGRBDiscussionInput {
+  systemIntakeId: UUID!
+  content: HTML!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -2563,6 +2592,8 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
+
+  saveGRBDiscussion(input: SaveGRBDiscussionInput!): GRBDiscussion!
 }
 
 """
@@ -2644,6 +2675,10 @@ HTML are represented using as strings,  <p><strong>Notification email</strong></
 """
 scalar HTML
 
+"""
+TaggedHTML is represented using strings but can contain Tags (ex: @User) and possibly other richer elements than HTML
+"""
+scalar TaggedHTML
 
 """
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z

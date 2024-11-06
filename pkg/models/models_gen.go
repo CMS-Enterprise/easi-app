@@ -319,6 +319,23 @@ type DeleteTRBRequestFundingSourcesInput struct {
 	FundingNumber string    `json:"fundingNumber"`
 }
 
+// GRBDiscussion is a top-level discussion on a System Intake and can contain a list of replies.
+// As of this writing, replies can NOT be nested to more than one level (e.g., replies to a Slack thread,
+// not nested Reddit replies)
+type GRBDiscussion struct {
+	ID             uuid.UUID   `json:"id"`
+	SystemIntakeID uuid.UUID   `json:"systemIntakeId"`
+	Content        string      `json:"content"`
+	Replies        []*GRBReply `json:"replies"`
+}
+
+// GRBReply is a reply to a GRBDiscussion
+type GRBReply struct {
+	ParentDiscussionID uuid.UUID `json:"parentDiscussionId"`
+	SystemIntakeID     uuid.UUID `json:"systemIntakeId"`
+	Content            string    `json:"content"`
+}
+
 // GRBReviewerComparison represents an individual GRB Reviewer within the context of a
 // comparison operation between two system intakes.
 //
@@ -366,6 +383,12 @@ type ReopenTRBRequestInput struct {
 	ReasonReopened HTML      `json:"reasonReopened"`
 	CopyTrbMailbox bool      `json:"copyTrbMailbox"`
 	NotifyEuaIds   []string  `json:"notifyEuaIds"`
+}
+
+// The data needed to start a new discussion
+type SaveGRBDiscussionInput struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
+	Content        HTML      `json:"content"`
 }
 
 type SendCantFindSomethingEmailInput struct {

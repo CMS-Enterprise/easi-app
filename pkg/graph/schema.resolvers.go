@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1130,6 +1131,11 @@ func (r *mutationResolver) CreateTrbLeadOption(ctx context.Context, eua string) 
 // DeleteTrbLeadOption is the resolver for the deleteTrbLeadOption field.
 func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error) {
 	return resolvers.DeleteTRBLeadOption(ctx, r.store, eua)
+}
+
+// SaveGRBDiscussion is the resolver for the saveGRBDiscussion field.
+func (r *mutationResolver) SaveGRBDiscussion(ctx context.Context, input models.SaveGRBDiscussionInput) (*models.GRBDiscussion, error) {
+	panic(fmt.Errorf("not implemented: SaveGRBDiscussion - saveGRBDiscussion"))
 }
 
 // SystemIntake is the resolver for the systemIntake field.

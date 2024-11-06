@@ -20,6 +20,8 @@ export type Scalars = {
   EmailAddress: { input: EmailAddress; output: EmailAddress; }
   /** HTML are represented using as strings,  <p><strong>Notification email</strong></p> */
   HTML: { input: HTML; output: HTML; }
+  /** TaggedHTML is represented using strings but can contain Tags (ex: @User) and possibly other richer elements than HTML */
+  TaggedHTML: { input: any; output: any; }
   /** Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z */
   Time: { input: Time; output: Time; }
   /** UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A */
@@ -732,6 +734,27 @@ export enum ExchangeDirection {
 }
 
 /**
+ * GRBDiscussion is a top-level discussion on a System Intake and can contain a list of replies.
+ * As of this writing, replies can NOT be nested to more than one level (e.g., replies to a Slack thread,
+ * not nested Reddit replies)
+ */
+export type GRBDiscussion = {
+  __typename: 'GRBDiscussion';
+  content: Scalars['TaggedHTML']['output'];
+  id: Scalars['UUID']['output'];
+  replies: Array<GRBReply>;
+  systemIntakeId: Scalars['UUID']['output'];
+};
+
+/** GRBReply is a reply to a GRBDiscussion */
+export type GRBReply = {
+  __typename: 'GRBReply';
+  content: Scalars['TaggedHTML']['output'];
+  parentDiscussionId: Scalars['UUID']['output'];
+  systemIntakeId: Scalars['UUID']['output'];
+};
+
+/**
  * GRBReviewerComparison represents an individual GRB Reviewer within the context of a
  * comparison operation between two system intakes.
  *
@@ -988,6 +1011,7 @@ export type Mutation = {
   deleteTrbLeadOption: Scalars['Boolean']['output'];
   reopenTrbRequest: TRBRequest;
   requestReviewForTRBAdviceLetter: TRBAdviceLetter;
+  saveGRBDiscussion: GRBDiscussion;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
@@ -1281,6 +1305,12 @@ export type MutationReopenTrbRequestArgs = {
 /** Defines the mutations for the schema */
 export type MutationRequestReviewForTRBAdviceLetterArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationSaveGRBDiscussionArgs = {
+  input: SaveGRBDiscussionInput;
 };
 
 
@@ -1716,6 +1746,12 @@ export enum Role {
   /** A generic EASi user */
   EASI_USER = 'EASI_USER'
 }
+
+/** The data needed to start a new discussion */
+export type SaveGRBDiscussionInput = {
+  content: Scalars['HTML']['input'];
+  systemIntakeId: Scalars['UUID']['input'];
+};
 
 export type SendCantFindSomethingEmailInput = {
   body: Scalars['String']['input'];
