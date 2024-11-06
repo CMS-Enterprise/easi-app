@@ -1,11 +1,47 @@
+import i18next from 'i18next';
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
-import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-import { SystemIntakeDocumentCommonType } from 'types/graphql-global-types';
+import { FormattedFundingSource } from 'components/FundingSources';
+import {
+  SystemIntakeDocumentCommonType,
+  SystemIntakeDocumentVersion
+} from 'types/graphql-global-types';
 
-const governanceTeamNames = cmsGovernanceTeams.map(team => team.value);
-const SystemIntakeValidationSchema: any = {
+const govTeam = (name: string) =>
+  Yup.object().shape({
+    isPresent: Yup.boolean(),
+    collaborator: Yup.string().when('isPresent', {
+      is: true,
+      then: Yup.string().required(
+        `Tell us the name of the person you've been working with from the ${name}`
+      )
+    })
+  });
+
+const governanceTeams = Yup.object().shape({
+  isPresent: Yup.boolean()
+    .nullable()
+    .required('Select if you are working with any teams'),
+  teams: Yup.object()
+    .shape({
+      technicalReviewBoard: govTeam('Technical Review Board'),
+      securityPrivacy: govTeam("OIT's Security and Privacy Group"),
+      enterpriseArchitecture: govTeam('Enterprise Architecture')
+    })
+    .test(
+      'min',
+      'Mark all teams you are currently collaborating with',
+      (teams, context) => {
+        const { isPresent } = context.parent;
+        return isPresent
+          ? Object.values(teams).some(team => team.isPresent)
+          : true;
+      }
+    )
+});
+
+const SystemIntakeValidationSchema = {
   contactDetails: Yup.object().shape({
     requester: Yup.object().shape({
       commonName: Yup.string().trim().required('Enter a name for this request'),
@@ -22,7 +58,7 @@ const SystemIntakeValidationSchema: any = {
         .trim()
         .required('Enter the CMS Project/Product Manager or Lead name'),
       component: Yup.string().required(
-        'Select a project/ product manager, or Lead Component'
+        'Select a Project/Product Manager or Lead Component'
       )
     }),
     isso: Yup.object().shape({
@@ -38,46 +74,7 @@ const SystemIntakeValidationSchema: any = {
         then: Yup.string().required('Select an ISSO component')
       })
     }),
-    governanceTeams: Yup.object().shape({
-      isPresent: Yup.boolean()
-        .nullable()
-        .required('Select if you are working with any teams'),
-      teams: Yup.array().when('isPresent', {
-        is: true,
-        then: Yup.array()
-          .min(1, 'Mark all teams you are currently collaborating with')
-          .of(
-            Yup.object().shape({
-              name: Yup.string().oneOf(governanceTeamNames),
-              collaborator: Yup.string()
-                .when('name', {
-                  is: 'Technical Review Board',
-                  then: Yup.string()
-                    .trim()
-                    .required(
-                      "Tell us the name of the person you've been working with from the Technical Review Board"
-                    )
-                })
-                .when('name', {
-                  is: "OIT's Security and Privacy Group",
-                  then: Yup.string()
-                    .trim()
-                    .required(
-                      "Tell us the name of the person you've been working with from OIT's Security and Privacy Group"
-                    )
-                })
-                .when('name', {
-                  is: 'Enterprise Architecture',
-                  then: Yup.string()
-                    .trim()
-                    .required(
-                      "Tell us the name of the person you've been working with from Enterprise Architecture"
-                    )
-                })
-            })
-          )
-      })
-    })
+    governanceTeams
   }),
   requestDetails: Yup.object().shape({
     requestName: Yup.string()
@@ -88,6 +85,9 @@ const SystemIntakeValidationSchema: any = {
       .trim()
       .required('Tell us how you think of solving your business need'),
     currentStage: Yup.string().required('Tell us where you are in the process'),
+    usesAiTech: Yup.boolean()
+      .nullable()
+      .required('Tell us if your request involves AI technologies'),
     needsEaSupport: Yup.boolean()
       .nullable()
       .required('Tell us if you need Enterprise Architecture (EA) support'),
@@ -95,28 +95,46 @@ const SystemIntakeValidationSchema: any = {
       .nullable()
       .required(
         'Tell us if your request includes an interface component or changes'
-      )
+      ),
+    usingSoftware: Yup.string()
+      .nullable()
+      .trim()
+      .required('Tell us if you plan to use software products'),
+    acquisitionMethods: Yup.array()
+      .of(Yup.string())
+      .when('usingSoftware', {
+        is: 'YES',
+        then: Yup.array()
+          .nullable()
+          .min(1, 'Select at least one acquisition method')
+      })
   }),
   contractDetails: Yup.object().shape({
     annualSpending: Yup.object().shape({
       currentAnnualSpending: Yup.string().required(
         'Tell us what the current annual spending for the contract'
       ),
+      currentAnnualSpendingITPortion: Yup.string().required(
+        'Tell us what portion (% of amount) of the current annual spending is IT'
+      ),
       plannedYearOneSpending: Yup.string().required(
         'Tell us the planned annual spending of the first year of the new contract?'
+      ),
+      plannedYearOneSpendingITPortion: Yup.string().required(
+        'Tell us what portion (% of amount) planned annual spending of the first year of the new contract is IT?'
       )
     }),
     contract: Yup.object().shape({
-      hasContract: Yup.string().required(
-        'Tell us whether you have a contract to support this effort'
-      ),
+      hasContract: Yup.string()
+        .nullable()
+        .required('Tell us whether you have a contract to support this effort'),
       contractor: Yup.string().when('hasContract', {
         is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.string()
           .trim()
           .required('Tell us whether you have selected a contractor(s)')
       }),
-      number: Yup.string().when('hasContract', {
+      numbers: Yup.string().when('hasContract', {
         is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.string().trim().required('Tell us about the contract number')
       }),
@@ -202,6 +220,34 @@ const SystemIntakeValidationSchema: any = {
 };
 
 export default SystemIntakeValidationSchema;
+
+export const FundingSourcesValidationSchema = Yup.object().shape({
+  fundingSources: Yup.array().of(
+    Yup.object({
+      id: Yup.string(),
+      fundingNumber: Yup.string()
+        .trim()
+        .required('Funding number must be exactly 6 digits')
+        .length(6, 'Funding number must be exactly 6 digits')
+        .matches(/^\d+$/, 'Funding number can only contain digits'),
+      sources: Yup.array().of(Yup.string()).min(1, 'Select a funding source')
+    }).test('is-unique', 'Must be unique', (value, context) => {
+      const fundingNumbers: string[] = context.parent
+        .filter((source: FormattedFundingSource) => source.id !== value.id)
+        .map((source: FormattedFundingSource) => source.fundingNumber);
+
+      const isUnique = !fundingNumbers.includes(value?.fundingNumber!);
+
+      return (
+        isUnique ||
+        context.createError({
+          path: `${context.path}.fundingNumber`,
+          message: 'Funding number must be unique'
+        })
+      );
+    })
+  )
+});
 
 export const DateValidationSchema: any = Yup.object().shape(
   {
@@ -316,5 +362,18 @@ export const documentSchema = Yup.object({
   otherTypeDescription: Yup.string().when('documentType', {
     is: 'OTHER',
     then: schema => schema.required()
-  })
+  }),
+  version: Yup.mixed<SystemIntakeDocumentVersion>().required(),
+  sendNotification: Yup.boolean().when(
+    '$type',
+    (type: 'admin' | 'requester', schema: Yup.BooleanSchema) => {
+      if (type === 'admin') {
+        return schema.required(
+          i18next.t('technicalAssistance:errors.makeSelection')
+        );
+      }
+
+      return schema;
+    }
+  )
 });

@@ -3,7 +3,7 @@ package usersearch
 import (
 	"context"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // Client is a generic interface for userSearch API

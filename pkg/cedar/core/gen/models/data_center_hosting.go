@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -21,6 +22,7 @@ type DataCenterHosting struct {
 
 	// moving to cloud
 	// Example: Yes
+	// Enum: [Yes No Plans]
 	MovingToCloud string `json:"movingToCloud,omitempty"`
 
 	// moving to cloud date
@@ -33,6 +35,10 @@ type DataCenterHosting struct {
 func (m *DataCenterHosting) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateMovingToCloud(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateMovingToCloudDate(formats); err != nil {
 		res = append(res, err)
 	}
@@ -40,6 +46,51 @@ func (m *DataCenterHosting) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+var dataCenterHostingTypeMovingToCloudPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["Yes","No","Plans"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		dataCenterHostingTypeMovingToCloudPropEnum = append(dataCenterHostingTypeMovingToCloudPropEnum, v)
+	}
+}
+
+const (
+
+	// DataCenterHostingMovingToCloudYes captures enum value "Yes"
+	DataCenterHostingMovingToCloudYes string = "Yes"
+
+	// DataCenterHostingMovingToCloudNo captures enum value "No"
+	DataCenterHostingMovingToCloudNo string = "No"
+
+	// DataCenterHostingMovingToCloudPlans captures enum value "Plans"
+	DataCenterHostingMovingToCloudPlans string = "Plans"
+)
+
+// prop value enum
+func (m *DataCenterHosting) validateMovingToCloudEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, dataCenterHostingTypeMovingToCloudPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DataCenterHosting) validateMovingToCloud(formats strfmt.Registry) error {
+	if swag.IsZero(m.MovingToCloud) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateMovingToCloudEnum("movingToCloud", "body", m.MovingToCloud); err != nil {
+		return err
+	}
+
 	return nil
 }
 

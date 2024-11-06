@@ -8,11 +8,13 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
 
 // CreateTRBAdviceLetter creates an advice letter for a TRB request, in the "In Progress" status
@@ -34,7 +36,7 @@ func (s *Store) CreateTRBAdviceLetter(ctx context.Context, createdBy string, trb
 			:id,
 			:trb_request_id,
 			:created_by,
-			:status 
+			:status
 		) RETURNING *;
 	`
 	stmt, err := s.db.PrepareNamed(trbAdviceLetterCreateSQL)
@@ -46,6 +48,7 @@ func (s *Store) CreateTRBAdviceLetter(ctx context.Context, createdBy string, trb
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	retLetter := models.TRBAdviceLetter{}
 
@@ -86,6 +89,7 @@ func (s *Store) UpdateTRBAdviceLetterStatus(ctx context.Context, id uuid.UUID, s
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	updated := models.TRBAdviceLetter{}
 	arg := map[string]interface{}{
@@ -145,6 +149,7 @@ func (s *Store) UpdateTRBAdviceLetter(ctx context.Context, letter *models.TRBAdv
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	updated := models.TRBAdviceLetter{}
 
@@ -168,19 +173,10 @@ func (s *Store) UpdateTRBAdviceLetter(ctx context.Context, letter *models.TRBAdv
 func (s *Store) GetTRBAdviceLetterByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
 	letter := models.TRBAdviceLetter{}
 
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_advice_letters WHERE trb_request_id = :trb_request_id`)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB advice letter with error %s", err),
-			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
-		)
-		return nil, err
-	}
+	err := namedGet(ctx, s.db, &letter, sqlqueries.TRBRequestAdviceLetter.GetByTRBID, args{
+		"trb_request_id": trbRequestID,
+	})
 
-	arg := map[string]interface{}{"trb_request_id": trbRequestID}
-
-	err = stmt.Get(&letter, arg)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
@@ -200,4 +196,28 @@ func (s *Store) GetTRBAdviceLetterByTRBRequestID(ctx context.Context, trbRequest
 	}
 
 	return &letter, nil
+}
+
+// GetTRBAdviceLettersByTRBRequestIDs fetches a TRB advice letter records by associated request IDs
+func (s *Store) GetTRBAdviceLettersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBAdviceLetter, error) {
+	letters := []*models.TRBAdviceLetter{}
+
+	err := namedSelect(ctx, s.db, &letters, sqlqueries.TRBRequestAdviceLetter.GetByTRBIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB advice letters",
+			zap.Error(err),
+		)
+
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     letters,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return letters, nil
 }

@@ -10,7 +10,6 @@ import {
   Grid
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageHeading from 'components/PageHeading';
 import RichTextEditor from 'components/RichTextEditor';
@@ -38,8 +37,7 @@ import {
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
-import Breadcrumbs from '../../Breadcrumbs';
-import AddNoteV1 from '../AddNoteV1';
+import Breadcrumbs from '../../../../components/shared/Breadcrumbs';
 import { ModalViewType } from '../components/NoteModal';
 import { TRBRequestContext } from '../RequestContext';
 
@@ -469,17 +467,4 @@ const AddNote = ({
   );
 };
 
-/**
- * TODO EASI-3467: update export when `trbAdminNoteUpdates` feature flag is removed
- */
-export default (props: AddNoteProps) => {
-  const flags = useFlags();
-
-  if (flags.trbAdminNoteUpdates) {
-    return <AddNote {...props} />;
-  }
-
-  return <AddNoteV1 {...props} />;
-};
-
-// export default AddNote;
+export default AddNote;

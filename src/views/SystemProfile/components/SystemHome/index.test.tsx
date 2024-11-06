@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import { getMockSystemProfileData } from 'data/mock/systemProfile';
 
@@ -15,8 +15,6 @@ describe('SystemHome subpage for System Profile', () => {
         <SystemHome system={systemProfileData} />
       </MemoryRouter>
     );
-    await waitFor(() => {
-      expect(asFragment()).toMatchSnapshot();
-    });
+    expect(asFragment()).toMatchSnapshot();
   });
 });

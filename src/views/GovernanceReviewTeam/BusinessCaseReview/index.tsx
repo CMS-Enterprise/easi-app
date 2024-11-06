@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
 
@@ -13,6 +13,8 @@ import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedba
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
 
+import ITGovAdminContext from '../ITGovAdminContext';
+
 type BusinessCaseReviewProps = {
   businessCase: BusinessCaseModel;
   grtFeedbacks?: GovernanceRequestFeedback[] | null;
@@ -24,6 +26,8 @@ const BusinessCaseReview = ({
 }: BusinessCaseReviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const filename = `Business case for ${businessCase.requestName}.pdf`;
+
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   if (!businessCase.id) {
     return (
@@ -94,13 +98,15 @@ const BusinessCaseReview = ({
         }
       </PDFExport>
 
-      <UswdsReactLink
-        className="usa-button margin-top-5"
-        variant="unstyled"
-        to={`/governance-review-team/${businessCase.systemIntakeId}/actions`}
-      >
-        Take an action
-      </UswdsReactLink>
+      {isITGovAdmin && (
+        <UswdsReactLink
+          className="usa-button margin-top-5"
+          variant="unstyled"
+          to={`/it-governance/${businessCase.systemIntakeId}/actions`}
+        >
+          {t('action:takeAnAction')}
+        </UswdsReactLink>
+      )}
     </div>
   );
 };

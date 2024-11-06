@@ -24,26 +24,31 @@ vi.mock('react-i18next', () => ({
 const fundingSources: TableSystemIntake['fundingSources'] = [
   {
     __typename: 'SystemIntakeFundingSource',
+    id: '3ebf0743-b501-4c06-aa7e-b11510dfe99e',
     source: 'Research',
     fundingNumber: '123456'
   },
   {
     __typename: 'SystemIntakeFundingSource',
+    id: 'ed798141-108d-4fc2-bb69-e5327a820ba3',
     source: 'HITECH Medicaid',
     fundingNumber: '123456'
   },
   {
     __typename: 'SystemIntakeFundingSource',
+    id: 'f6b43b35-a183-4490-bdd6-70e96ddd333a',
     source: 'DARPA',
     fundingNumber: '789012'
   },
   {
     __typename: 'SystemIntakeFundingSource',
+    id: '19c3e377-961d-447d-a47a-329f3ba944e7',
     source: 'Recovery Audit Contractors',
     fundingNumber: '789012'
   },
   {
     __typename: 'SystemIntakeFundingSource',
+    id: '6122cd59-b030-4605-8254-d9240ab76d43',
     source: 'Prog Ops',
     fundingNumber: '654321'
   }

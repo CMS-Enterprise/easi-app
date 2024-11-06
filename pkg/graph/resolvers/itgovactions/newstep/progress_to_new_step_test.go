@@ -7,9 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func TestUpdateIntake(t *testing.T) {
@@ -24,11 +23,11 @@ func TestUpdateIntake(t *testing.T) {
 			models.SystemIntakeStepGRBMEETING,
 			models.SystemIntakeStepDECISION,
 		}
-		allValidNewSteps := []model.SystemIntakeStepToProgressTo{
-			model.SystemIntakeStepToProgressToDraftBusinessCase,
-			model.SystemIntakeStepToProgressToGrtMeeting,
-			model.SystemIntakeStepToProgressToFinalBusinessCase,
-			model.SystemIntakeStepToProgressToGrbMeeting,
+		allValidNewSteps := []models.SystemIntakeStepToProgressTo{
+			models.SystemIntakeStepToProgressToDraftBusinessCase,
+			models.SystemIntakeStepToProgressToGrtMeeting,
+			models.SystemIntakeStepToProgressToFinalBusinessCase,
+			models.SystemIntakeStepToProgressToGrbMeeting,
 		}
 		for _, startingStep := range allStartingSteps {
 			for _, newStep := range allValidNewSteps {
@@ -61,7 +60,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRTDate: nil,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrtMeeting, nil, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrtMeeting, nil, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.Nil(t, intake.GRTDate)
@@ -75,7 +74,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRTDate: nil,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRTDate)
@@ -88,7 +87,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRTDate: nil,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRTDate)
@@ -103,7 +102,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRTDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrtMeeting, nil, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrtMeeting, nil, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.Nil(t, intake.GRTDate)
@@ -118,7 +117,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRTDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRTDate)
@@ -132,7 +131,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRTDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRTDate)
@@ -147,7 +146,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRTDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrtMeeting, nil, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrtMeeting, nil, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, previousDate, intake.GRTDate)
@@ -162,7 +161,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRTDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRTDate)
@@ -176,7 +175,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRTDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrtMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRTDate)
@@ -192,7 +191,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRBDate: nil,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrbMeeting, nil, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrbMeeting, nil, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.Nil(t, intake.GRBDate)
@@ -206,7 +205,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRBDate: nil,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRBDate)
@@ -219,7 +218,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRBDate: nil,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRBDate)
@@ -234,7 +233,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRBDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrbMeeting, nil, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrbMeeting, nil, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.Nil(t, intake.GRBDate)
@@ -249,7 +248,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRBDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRBDate)
@@ -263,7 +262,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRBDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRBDate)
@@ -278,7 +277,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRBDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrbMeeting, nil, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrbMeeting, nil, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, previousDate, intake.GRBDate)
@@ -293,7 +292,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRBDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRBDate)
@@ -307,7 +306,7 @@ func TestUpdateIntake(t *testing.T) {
 						GRBDate: previousDate,
 					}
 
-					err := UpdateIntake(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+					err := UpdateIntake(intake, models.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, newDate, intake.GRBDate)
@@ -321,7 +320,7 @@ func TestUpdateIntake(t *testing.T) {
 		intake := &models.SystemIntake{
 			Step: models.SystemIntakeStepINITIALFORM,
 		}
-		invalidNewStep := model.SystemIntakeStepToProgressTo("")
+		invalidNewStep := models.SystemIntakeStepToProgressTo("")
 
 		err := UpdateIntake(intake, invalidNewStep, nil, mockCurrentTime)
 
@@ -338,9 +337,9 @@ func TestIsIntakeValid(t *testing.T) {
 	t.Run("Closed intakes are invalid to progress", func(t *testing.T) {
 		intake := &models.SystemIntake{
 			Step:  models.SystemIntakeStepINITIALFORM,
-			State: models.SystemIntakeStateCLOSED,
+			State: models.SystemIntakeStateClosed,
 		}
-		newStep := model.SystemIntakeStepToProgressToDraftBusinessCase
+		newStep := models.SystemIntakeStepToProgressToDraftBusinessCase
 
 		err := IsIntakeValid(intake, newStep)
 		assert.Error(t, err)
@@ -356,7 +355,7 @@ func TestIsIntakeValid(t *testing.T) {
 			Step:             models.SystemIntakeStepINITIALFORM,
 			RequestFormState: models.SIRFSNotStarted,
 		}
-		newStep := model.SystemIntakeStepToProgressToDraftBusinessCase
+		newStep := models.SystemIntakeStepToProgressToDraftBusinessCase
 
 		err := IsIntakeValid(intake, newStep)
 		assert.Error(t, err)
@@ -368,7 +367,7 @@ func TestIsIntakeValid(t *testing.T) {
 	})
 
 	t.Run("Trying to progress to the intake's current step is invalid", func(t *testing.T) {
-		for _, step := range model.AllSystemIntakeStepToProgressTo {
+		for _, step := range models.AllSystemIntakeStepToProgressTo {
 			t.Run(fmt.Sprintf("Checking step %v", step), func(t *testing.T) {
 				intake := &models.SystemIntake{
 					Step: models.SystemIntakeStep(step),
@@ -389,9 +388,9 @@ func TestIsIntakeValid(t *testing.T) {
 		intake := &models.SystemIntake{
 			Step:             models.SystemIntakeStepINITIALFORM,
 			RequestFormState: models.SIRFSSubmitted,
-			State:            models.SystemIntakeStateOPEN,
+			State:            models.SystemIntakeStateOpen,
 		}
-		newStep := model.SystemIntakeStepToProgressToDraftBusinessCase
+		newStep := models.SystemIntakeStepToProgressToDraftBusinessCase
 
 		err := IsIntakeValid(intake, newStep)
 		assert.NoError(t, err)

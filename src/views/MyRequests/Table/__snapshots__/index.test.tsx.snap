@@ -3,62 +3,12 @@
 exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="accessibility-requests-table"
+    class="requests-table margin-bottom-6"
   >
-    <form
-      class="usa-form usa-search margin-bottom-4"
-      data-testid="table-client-filter"
-      role="search"
-    >
-      <label
-        class="usa-sr-only"
-        data-testid="label"
-        for="request-table-search"
-      >
-        Search Table
-      </label>
-      <input
-        class="usa-input"
-        data-testid="textInput"
-        id="request-table-search"
-        name="Request Table Search"
-        role="searchbox"
-        type="search"
-        value=""
-      />
-      <button
-        class="usa-button grid-row flex-justify-center flex-align-center no-pointer"
-        data-testid="button"
-        type="submit"
-      >
-        <svg
-          class="usa-icon usa-icon--size-3"
-          focusable="false"
-          height="1em"
-          role="img"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-          />
-        </svg>
-      </button>
-    </form>
-    <div
-      class="margin-bottom-4 display-flex flex-align-center"
-      data-testid="page-results"
-    >
-      Showing 1-5 of 5 results 
-    </div>
     <div
       class="usa-table-container--scrollable"
       data-testid="scrollable-table-container"
+      tabindex="0"
     >
       <table
         class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
@@ -87,7 +37,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
                 title="Toggle SortBy"
                 type="button"
               >
-                Project title
+                Submission date
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
                   data-testid="caret--sort"
@@ -122,7 +72,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
                 title="Toggle SortBy"
                 type="button"
               >
-                Governance
+                Request name
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
                   data-testid="caret--sort"
@@ -144,7 +94,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               </button>
             </th>
             <th
-              aria-sort="descending"
+              aria-sort="none"
               class="table-header"
               colspan="1"
               role="columnheader"
@@ -157,10 +107,10 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
                 title="Toggle SortBy"
                 type="button"
               >
-                Submission date
+                Governance
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
-                  data-testid="caret--down"
+                  data-testid="caret--sort"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -173,7 +123,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
                     fill="none"
                   />
                   <path
-                    d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
                   />
                 </svg>
               </button>
@@ -248,6 +198,41 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
                 </svg>
               </button>
             </th>
+            <th
+              aria-sort="none"
+              class="table-header"
+              colspan="1"
+              role="columnheader"
+              scope="col"
+              style="min-width: 140px; width: 140px; padding-left: 0px; position: relative;"
+            >
+              <button
+                class="usa-button usa-button--unstyled"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+                type="button"
+              >
+                Related systems
+                <svg
+                  class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody
@@ -261,24 +246,24 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               scope="row"
               style="padding-left: 0px;"
             >
+              03/07/2023
+            </th>
+            <td
+              role="cell"
+              style="width: 220px; padding-left: 0px;"
+            >
               <a
                 class="usa-link"
                 href="/trb/task-list/1afc9242-f244-47a3-9f91-4d6fedd8eb91"
               >
                 My excellent question
               </a>
-            </th>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              TRB
             </td>
             <td
               role="cell"
               style="width: 150px; padding-left: 0px;"
             >
-              03/07/2023
+              TRB
             </td>
             <td
               role="cell"
@@ -292,180 +277,10 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
             >
               None
             </td>
-          </tr>
-          <tr
-            role="row"
-          >
-            <th
-              role="cell"
-              scope="row"
-              style="padding-left: 0px;"
-            >
-              <a
-                class="usa-link"
-                href="/508/requests/123"
-              >
-                508 Test 1
-              </a>
-            </th>
             <td
               role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              Section 508
-            </td>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              05/25/2021
-            </td>
-            <td
-              role="cell"
-              style="width: 200px; padding-left: 0px;"
-            >
-              <span>
-                Open
-                <span
-                  class="text-base-dark font-body-3xs"
-                >
-                   - Changed on 05/25/2021
-                </span>
-              </span>
-            </td>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              None
-            </td>
-          </tr>
-          <tr
-            role="row"
-          >
-            <th
-              role="cell"
-              scope="row"
-              style="padding-left: 0px;"
-            >
-              <a
-                class="usa-link"
-                href="/508/requests/909"
-              >
-                508 Test 2
-              </a>
-            </th>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              Section 508
-            </td>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              05/25/2021
-            </td>
-            <td
-              role="cell"
-              style="width: 200px; padding-left: 0px;"
-            >
-              <span>
-                In remediation
-                <span
-                  class="text-base-dark font-body-3xs"
-                >
-                   - Changed on 05/26/2021
-                </span>
-              </span>
-            </td>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              None
-            </td>
-          </tr>
-          <tr
-            role="row"
-          >
-            <th
-              role="cell"
-              scope="row"
-              style="padding-left: 0px;"
-            >
-              <a
-                class="usa-link"
-                href="/governance-task-list/456"
-              >
-                Intake 1
-              </a>
-            </th>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              IT Governance
-            </td>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              05/22/2021
-            </td>
-            <td
-              role="cell"
-              style="width: 200px; padding-left: 0px;"
-            >
-              Intake draft
-            </td>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              None
-            </td>
-          </tr>
-          <tr
-            role="row"
-          >
-            <th
-              role="cell"
-              scope="row"
-              style="padding-left: 0px;"
-            >
-              <a
-                class="usa-link"
-                href="/governance-task-list/789"
-              >
-                Intake 2
-              </a>
-            </th>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              IT Governance
-            </td>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              05/20/2021
-            </td>
-            <td
-              role="cell"
-              style="width: 200px; padding-left: 0px;"
-            >
-              Life Cycle ID issued: A123456: A123456
-            </td>
-            <td
-              role="cell"
-              style="width: 150px; padding-left: 0px;"
-            >
-              None
-            </td>
+              style="width: 250px; padding-left: 0px;"
+            />
           </tr>
         </tbody>
       </table>
@@ -477,7 +292,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
       aria-live="polite"
       class="usa-sr-only usa-table__announcement-region"
     >
-      Requests table sorted by Submission date descending
+      Requests table reset to default sort order
     </div>
   </div>
 </DocumentFragment>

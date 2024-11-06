@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -8,6 +10,9 @@ import (
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
+
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // Store performs database operations for EASi
@@ -28,6 +33,24 @@ type DBConfig struct {
 	SSLMode        string
 	UseIAM         bool
 	MaxConnections int
+}
+
+// PrepareNamed implements the NamedPreparer interface
+// Implementing the  sqlutils.NamedPreparer interface allows us to use a sqlx.Tx or a storage.Store as a parameter in our DB calls
+// (the former for when we want to implement transactions, the latter for when we don't)
+func (s *Store) PrepareNamed(query string) (*sqlx.NamedStmt, error) {
+	return s.db.PrepareNamed(query)
+}
+
+// NamedExecContext implements the NamedPreparer interface
+func (s *Store) NamedExecContext(ctx context.Context, sqlStatement string, arguments any) (sql.Result, error) {
+	return s.db.NamedExecContext(ctx, sqlStatement, arguments)
+}
+
+// Beginx implements the TransactionPreparer interface
+// Implementing the sqlutils.TransactionPreparer interfaces allows us to use a sqlx.DB or a storage.Store to create a transaction
+func (s *Store) Beginx() (*sqlx.Tx, error) {
+	return s.db.Beginx()
 }
 
 // NewStore creates a new Store struct
@@ -82,4 +105,70 @@ func NewStore(
 		easternTZ: tz,
 		ldClient:  ldClient,
 	}, nil
+}
+
+// args is a shortcut for passing an args map to a named statement
+/* ex: instead of
+
+map[string]interface{}{
+  "system_id": 1,
+  "state": OPEN
+}
+
+you can do
+
+args{
+  "system_id": 1,
+  "state": OPEN
+}
+*/
+type args map[string]any
+
+// namedSelect is a shortcut for using `sqlx` Select (SelectContext) with named arguments to prevent writing out the prepare step each time
+func namedSelect(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlStatement string, arguments any) error {
+	if ctx == nil {
+		ctx = context.TODO()
+		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedSelect")
+	}
+
+	stmt, err := np.PrepareNamed(sqlStatement)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	return stmt.SelectContext(ctx, dest, arguments)
+}
+
+// namedGet is a shortcut for using `sqlx` Get (GetContext) with named arguments to prevent writing out the prepare step each time
+func namedGet(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlStatement string, arguments any) error {
+	if ctx == nil {
+		ctx = context.TODO()
+		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedGet")
+	}
+
+	stmt, err := np.PrepareNamed(sqlStatement)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	return stmt.GetContext(ctx, dest, arguments)
+}
+
+// namedExec is a shortcut for using `sqlx` Exec (ExecContext) with named arguments to prevent writing out the prepare step each time
+func namedExec(ctx context.Context, np sqlutils.NamedPreparer, sqlStatement string, arguments any) (sql.Result, error) {
+	if ctx == nil {
+		ctx = context.TODO()
+		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedExec")
+	}
+
+	return np.NamedExecContext(ctx, sqlStatement, arguments)
+	// stmt, err := np.PrepareNamed(sqlStatement)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// defer stmt.Close()
+	//
+	// return stmt.ExecContext(ctx, arguments)
 }

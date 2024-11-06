@@ -9,20 +9,20 @@ import (
 	"path"
 	"strings"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // Config holds EASi application specific configs for SES
 type Config struct {
-	GRTEmail               models.EmailAddress
-	ITInvestmentEmail      models.EmailAddress
-	AccessibilityTeamEmail models.EmailAddress
-	EASIHelpEmail          models.EmailAddress
-	TRBEmail               models.EmailAddress
-	CEDARTeamEmail         models.EmailAddress
-	URLHost                string
-	URLScheme              string
-	TemplateDirectory      string
+	GRTEmail                    models.EmailAddress
+	ITInvestmentEmail           models.EmailAddress
+	EASIHelpEmail               models.EmailAddress
+	TRBEmail                    models.EmailAddress
+	CEDARTeamEmail              models.EmailAddress
+	OITFeedbackChannelSlackLink string
+	URLHost                     string
+	URLScheme                   string
+	TemplateDirectory           string
 }
 
 // templateCaller is an interface to helping with testing template dependencies
@@ -36,16 +36,9 @@ type templates struct {
 	intakeReviewTemplate                            templateCaller
 	namedRequestWithdrawTemplate                    templateCaller
 	unnamedRequestWithdrawTemplate                  templateCaller
-	issueLCIDTemplate                               templateCaller
-	extendLCIDTemplate                              templateCaller
 	lcidExpirationAlertTemplate                     templateCaller
 	rejectRequestTemplate                           templateCaller
-	newAccessibilityRequestTemplate                 templateCaller
-	newAccessibilityRequestToRequesterTemplate      templateCaller
-	removedAccessibilityRequestTemplate             templateCaller
 	newDocumentTemplate                             templateCaller
-	changeAccessibilityRequestStatus                templateCaller
-	newAccessibilityRequestNote                     templateCaller
 	helpSendFeedback                                templateCaller
 	helpCantFindSomething                           templateCaller
 	helpReportAProblem                              templateCaller
@@ -62,6 +55,9 @@ type templates struct {
 	trbAdviceLetterSubmitted                        templateCaller
 	trbRequestClosed                                templateCaller
 	cedarRolesChanged                               templateCaller
+	cedarYouHaveBeenAdded                           templateCaller
+	cedarNewTeamMember                              templateCaller
+	systemIntakeAdminUploadDocTemplate              templateCaller
 	systemIntakeSubmitInitialFormRequesterTemplate  templateCaller
 	systemIntakeSubmitInitialFormReviewerTemplate   templateCaller
 	systemIntakeSubmitBusinessCaseRequesterTemplate templateCaller
@@ -78,11 +74,12 @@ type templates struct {
 	systemIntakeExpireLCID                          templateCaller
 	systemIntakeUpdateLCID                          templateCaller
 	systemIntakeChangeLCIDRetirementDate            templateCaller
+	systemIntakeCreateGRBReviewer                   templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
 type sender interface {
-	Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error
+	Send(ctx context.Context, email Email) error
 }
 
 // Client is an EASi SES client wrapper
@@ -127,20 +124,6 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.unnamedRequestWithdrawTemplate = unnamedRequestWithdrawTemplate
 
-	issueLCIDTemplateName := "issue_lcid.gohtml"
-	issueLCIDTemplate := rawTemplates.Lookup(issueLCIDTemplateName)
-	if issueLCIDTemplate == nil {
-		return Client{}, templateError(issueLCIDTemplateName)
-	}
-	appTemplates.issueLCIDTemplate = issueLCIDTemplate
-
-	extendLCIDTemplateName := "extend_lcid.gohtml"
-	extendLCIDTemplate := rawTemplates.Lookup(extendLCIDTemplateName)
-	if extendLCIDTemplate == nil {
-		return Client{}, templateError(extendLCIDTemplateName)
-	}
-	appTemplates.extendLCIDTemplate = extendLCIDTemplate
-
 	lcidExpirationAlertTemplateName := "system_intake_lcid_expiration_alert.gohtml"
 	lcidExpirationAlertTemplate := rawTemplates.Lookup(lcidExpirationAlertTemplateName)
 	if lcidExpirationAlertTemplate == nil {
@@ -155,47 +138,12 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.rejectRequestTemplate = rejectRequestTemplate
 
-	newAccessibilityRequestTemplateName := "new_508_request.gohtml"
-	newAccessibilityRequestTemplate := rawTemplates.Lookup(newAccessibilityRequestTemplateName)
-	if newAccessibilityRequestTemplate == nil {
-		return Client{}, templateError(newAccessibilityRequestTemplateName)
-	}
-	appTemplates.newAccessibilityRequestTemplate = newAccessibilityRequestTemplate
-
-	newAccessibilityRequestToRequesterTemplateName := "new_508_request_to_requester.gohtml"
-	newAccessibilityRequestToRequesterTemplate := rawTemplates.Lookup(newAccessibilityRequestToRequesterTemplateName)
-	if newAccessibilityRequestToRequesterTemplate == nil {
-		return Client{}, templateError(newAccessibilityRequestToRequesterTemplateName)
-	}
-	appTemplates.newAccessibilityRequestToRequesterTemplate = newAccessibilityRequestToRequesterTemplate
-
-	removedAccessibilityRequestTemplateName := "removed_508_request.gohtml"
-	removedAccessibilityRequestTemplate := rawTemplates.Lookup(removedAccessibilityRequestTemplateName)
-	if removedAccessibilityRequestTemplate == nil {
-		return Client{}, templateError(removedAccessibilityRequestTemplateName)
-	}
-	appTemplates.removedAccessibilityRequestTemplate = removedAccessibilityRequestTemplate
-
 	newDocumentTemplateName := "new_document.gohtml"
 	newDocumentTemplate := rawTemplates.Lookup(newDocumentTemplateName)
 	if newDocumentTemplate == nil {
 		return Client{}, templateError(newDocumentTemplateName)
 	}
 	appTemplates.newDocumentTemplate = newDocumentTemplate
-
-	changeAccessibilityRequestStatusTemplateName := "change_508_status.gohtml"
-	changeAccessibilityRequestStatusTemplate := rawTemplates.Lookup(changeAccessibilityRequestStatusTemplateName)
-	if changeAccessibilityRequestStatusTemplate == nil {
-		return Client{}, templateError(changeAccessibilityRequestStatusTemplateName)
-	}
-	appTemplates.changeAccessibilityRequestStatus = changeAccessibilityRequestStatusTemplate
-
-	newAccessibilityRequestNoteTemplateName := "new_508_note.gohtml"
-	newAccessibilityRequestNoteTemplate := rawTemplates.Lookup(newAccessibilityRequestNoteTemplateName)
-	if newAccessibilityRequestNoteTemplate == nil {
-		return Client{}, templateError(newAccessibilityRequestNoteTemplateName)
-	}
-	appTemplates.newAccessibilityRequestNote = newAccessibilityRequestNoteTemplate
 
 	helpSendFeedbackTemplateName := "help_send_feedback.gohtml"
 	helpSendFeedbackTemplate := rawTemplates.Lookup(helpSendFeedbackTemplateName)
@@ -309,6 +257,27 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.cedarRolesChanged = cedarRolesChanged
 
+	cedarYouHaveBeenAddedTemplateName := "cedar_you_have_been_added.gohtml"
+	cedarYouHaveBeenAdded := rawTemplates.Lookup(cedarYouHaveBeenAddedTemplateName)
+	if cedarYouHaveBeenAdded == nil {
+		return Client{}, templateError(cedarYouHaveBeenAddedTemplateName)
+	}
+	appTemplates.cedarYouHaveBeenAdded = cedarYouHaveBeenAdded
+
+	cedarNewTeamMemberTemplateName := "cedar_new_team_member.gohtml"
+	cedarNewTeamMember := rawTemplates.Lookup(cedarNewTeamMemberTemplateName)
+	if cedarNewTeamMember == nil {
+		return Client{}, templateError(cedarNewTeamMemberTemplateName)
+	}
+	appTemplates.cedarNewTeamMember = cedarNewTeamMember
+
+	sisAdminUploadDocTemplateName := "system_intake_admin_upload_doc.gohtml"
+	sisAdminUploadDocTemplate := rawTemplates.Lookup(sisAdminUploadDocTemplateName)
+	if sisAdminUploadDocTemplate == nil {
+		return Client{}, templateError(sisAdminUploadDocTemplateName)
+	}
+	appTemplates.systemIntakeAdminUploadDocTemplate = sisAdminUploadDocTemplate
+
 	sisInitialFormRequesterTemplateName := "system_intake_submit_initial_form_requester.gohtml"
 	sisInitialFormRequesterTemplate := rawTemplates.Lookup(sisInitialFormRequesterTemplateName)
 	if sisInitialFormRequesterTemplate == nil {
@@ -421,6 +390,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.systemIntakeChangeLCIDRetirementDate = systemIntakeChangeLCIDRetirementDate
 
+	systemIntakeCreateGRBReviewerTemplateName := "system_intake_create_grb_reviewer.gohtml"
+	systemIntakeCreateGRBReviewer := rawTemplates.Lookup(systemIntakeCreateGRBReviewerTemplateName)
+	if systemIntakeCreateGRBReviewer == nil {
+		return Client{}, templateError(systemIntakeCreateGRBReviewerTemplateName)
+	}
+	appTemplates.systemIntakeCreateGRBReviewer = systemIntakeCreateGRBReviewer
+
 	client := Client{
 		config:    config,
 		templates: appTemplates,
@@ -446,7 +422,13 @@ func (c Client) urlFromPath(path string) string {
 // SendTestEmail sends an email to a no-reply address
 func (c Client) SendTestEmail(ctx context.Context) error {
 	testToAddress := models.NewEmailAddress("success@simulator.amazonses.com")
-	return c.sender.Send(ctx, []models.EmailAddress{testToAddress}, nil, "test", "test")
+	return c.sender.Send(
+		ctx,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{testToAddress}).
+			WithSubject("test").
+			WithBody("test"),
+	)
 }
 
 // helper method to get a list of all addresses from a models.EmailNotificationRecipients value
@@ -477,4 +459,41 @@ func HumanizeSnakeCase(s string) string {
 		wordSlice = append(wordSlice, capitalizedWord)
 	}
 	return strings.Join(wordSlice, " ")
+}
+
+type Email struct {
+	ToAddresses  []models.EmailAddress
+	CcAddresses  []models.EmailAddress
+	BccAddresses []models.EmailAddress
+	Subject      string
+	Body         string
+}
+
+func NewEmail() Email {
+	return Email{}
+}
+
+func (e Email) WithToAddresses(toAddresses []models.EmailAddress) Email {
+	e.ToAddresses = toAddresses
+	return e
+}
+
+func (e Email) WithCCAddresses(ccAddresses []models.EmailAddress) Email {
+	e.CcAddresses = ccAddresses
+	return e
+}
+
+func (e Email) WithBCCAddresses(bccAddresses []models.EmailAddress) Email {
+	e.BccAddresses = bccAddresses
+	return e
+}
+
+func (e Email) WithSubject(subject string) Email {
+	e.Subject = subject
+	return e
+}
+
+func (e Email) WithBody(body string) Email {
+	e.Body = body
+	return e
 }

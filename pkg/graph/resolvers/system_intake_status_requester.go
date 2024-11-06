@@ -1,10 +1,11 @@
 package resolvers
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 const noDecisionInvalidStateErrMsg = "issue calculating the requester intake status, intake is in an invalid state - step is DECISION, but decisionState is NO_DECISION"
@@ -13,10 +14,17 @@ const noDecisionInvalidStateErrMsg = "issue calculating the requester intake sta
 // based on the intake's current step, the state of that step, and the overall intake state (open/closed)
 func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTime time.Time) (models.SystemIntakeStatusRequester, error) {
 	if intake.Step == models.SystemIntakeStepDECISION && intake.DecisionState == models.SIDSNoDecision {
-		return "", fmt.Errorf(noDecisionInvalidStateErrMsg)
+		return "", errors.New(noDecisionInvalidStateErrMsg)
 	}
 
-	if intake.State == models.SystemIntakeStateCLOSED && intake.DecisionState == models.SIDSNoDecision {
+	if intake.State == models.SystemIntakeStateClosed && intake.DecisionState == models.SIDSNoDecision {
+		return models.SISRClosed, nil
+	}
+	if intake.State == models.SystemIntakeStateClosed &&
+		intake.DecisionState != models.SIDSNoDecision &&
+		intake.Step != models.SystemIntakeStepDECISION {
+		// If an intake has a decision but is re-opened, progressed to an earlier step,
+		// and then closed without a decision, show closed.
 		return models.SISRClosed, nil
 	}
 
@@ -34,7 +42,7 @@ func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTi
 		// this calc function doesn't use a switch statement and can't possibly return an error
 		return calcSystemIntakeGRBMeetingStatusRequester(intake.GRBDate, currentTime), nil
 	case models.SystemIntakeStepDECISION:
-		return calcSystemIntakeDecisionStatusRequester(intake.DecisionState)
+		return calcSystemIntakeDecisionStatusRequester(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
 		return "", fmt.Errorf("issue calculating the requester intake status, no valid step")
 	}
@@ -97,10 +105,10 @@ func calcSystemIntakeGRBMeetingStatusRequester(grbDate *time.Time, currentTime t
 	return models.SISRGrbMeetingAwaitingDecision
 }
 
-func calcSystemIntakeDecisionStatusRequester(decisionState models.SystemIntakeDecisionState) (models.SystemIntakeStatusRequester, error) {
+func calcSystemIntakeDecisionStatusRequester(decisionState models.SystemIntakeDecisionState, lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusRequester, error) {
 	switch decisionState {
 	case models.SIDSLcidIssued:
-		return models.SISRLcidIssued, nil
+		return calcLCIDIssuedDecisionStatusRequester(lcidStatus)
 	case models.SIDSNotApproved:
 		return models.SISRNotApproved, nil
 	case models.SIDSNotGovernance:
@@ -108,8 +116,26 @@ func calcSystemIntakeDecisionStatusRequester(decisionState models.SystemIntakeDe
 	case models.SIDSNoDecision:
 		// we shouldn't hit this case, it should be caught by the check at the start of CalculateSystemIntakeRequesterStatus(),
 		// but it's repeated here for clarity and to make sure we handle all possible values of decisionState in this function
-		return "", fmt.Errorf(noDecisionInvalidStateErrMsg)
+		return "", errors.New(noDecisionInvalidStateErrMsg)
 	}
 
 	return "", fmt.Errorf("issue calculating the requester intake status, no valid decisionState")
+}
+
+// calcLCIDIssuedDecisionStatusRequester checks an LCID status and appropriately converts it to a SystemIntakeStatusRequester
+func calcLCIDIssuedDecisionStatusRequester(lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusRequester, error) {
+	if lcidStatus == nil {
+		return models.SISRLcidIssued, nil
+	}
+	if *lcidStatus == models.SystemIntakeLCIDStatusIssued {
+		return models.SISRLcidIssued, nil
+	}
+	if *lcidStatus == models.SystemIntakeLCIDStatusExpired {
+		return models.SISRLcidExpired, nil
+	}
+	if *lcidStatus == models.SystemIntakeLCIDStatusRetired {
+		return models.SISRLcidRetired, nil
+	}
+	return "", fmt.Errorf("invalid lcid status provided: %v", lcidStatus)
+
 }

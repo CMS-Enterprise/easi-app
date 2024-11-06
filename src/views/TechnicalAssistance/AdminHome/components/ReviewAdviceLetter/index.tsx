@@ -1,11 +1,16 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { RichTextViewer } from 'components/RichTextEditor';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
+import {
+  GetTrbAdviceLetter_trbRequest as TrbRequest,
+  GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter
+} from 'queries/types/GetTrbAdviceLetter';
 import { TRBRecommendation } from 'queries/types/TRBRecommendation';
 import { formatDateLocal } from 'utils/date';
 
@@ -14,6 +19,8 @@ import RecommendationsList from '../RecommendationsList';
 type ReviewAdviceLetterProps = {
   adviceLetter: AdviceLetter;
   trbRequestId: string;
+  trbRequest?: TrbRequest;
+  requesterString?: string;
   showSectionEditLinks?: boolean;
   recommendationActions?: {
     edit?: (recommendation: TRBRecommendation) => void;
@@ -33,6 +40,8 @@ type ReviewAdviceLetterProps = {
 const ReviewAdviceLetter = ({
   adviceLetter,
   trbRequestId,
+  trbRequest,
+  requesterString,
   showSectionEditLinks = false,
   recommendationActions,
   showDateSent = true,
@@ -50,19 +59,73 @@ const ReviewAdviceLetter = ({
       {/* Thank you text for PDF version */}
       <p className="easi-only-print">{t('adviceLetter.thankYou')}</p>
 
-      {/* Date sent */}
-      {showDateSent && (
-        <>
-          <p className="text-bold margin-bottom-0 easi-no-print">
-            {t('adviceLetter.sendDate')}
+      {!publicView && trbRequest && (
+        <div className="easi-only-print">
+          {/* Project title */}
+          <p className="text-bold margin-bottom-0">{t('basic.labels.name')}</p>
+          <p className="margin-top-1">{trbRequest.name}</p>
+
+          {/* Request Type */}
+          <p className="text-bold margin-bottom-0">
+            {t('adminHome.requestType')}
+          </p>
+          <p className="margin-top-1">
+            {t(`requestType.type.${trbRequest.type}.heading`)}
           </p>
 
-          <p className="margin-top-1 easi-no-print">
-            {adviceLetter.dateSent
-              ? formatDateLocal(adviceLetter.dateSent, 'MMMM d, yyyy')
-              : t('adviceLetter.notYetSent')}
+          {/* Requester */}
+          <p className="text-bold margin-bottom-0">
+            {t('adminHome.requester')}
           </p>
-        </>
+          <p className="margin-top-1">{requesterString}</p>
+
+          {/* Submission date */}
+          <p className="text-bold margin-bottom-0">
+            {t('adminHome.submissionDate')}
+          </p>
+          <p className="margin-top-1">
+            {formatDateLocal(trbRequest.createdAt, 'MMMM d, yyyy')}
+          </p>
+        </div>
+      )}
+
+      {!publicView && (
+        <Grid row gap className="margin-bottom-neg-2">
+          {/* Date sent */}
+          {showDateSent && (
+            <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+              <p className="text-bold margin-y-0 easi-no-print">
+                {t('adviceLetter.sendDate')}
+              </p>
+
+              <p className="margin-top-1 easi-no-print">
+                {adviceLetter.dateSent
+                  ? formatDateLocal(adviceLetter.dateSent, 'MMMM d, yyyy')
+                  : t('adviceLetter.notYetSent')}
+              </p>
+            </Grid>
+          )}
+
+          {/* Consult session date */}
+          {trbRequest && trbRequest.consultMeetingTime && (
+            <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+              <p className="text-bold margin-y-0">
+                {t('adviceLetter.consultSessionDate')}
+              </p>
+              <p className="margin-top-1">
+                {t('adminHome.consultDate', {
+                  date: formatDateLocal(
+                    trbRequest.consultMeetingTime,
+                    'MM/dd/yyyy'
+                  ),
+                  time: DateTime.fromISO(
+                    trbRequest.consultMeetingTime
+                  ).toLocaleString(DateTime.TIME_SIMPLE)
+                })}
+              </p>
+            </Grid>
+          )}
+        </Grid>
       )}
 
       {/* What we heard / meeting summary */}

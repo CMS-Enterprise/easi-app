@@ -15,8 +15,8 @@ const DevLogin = () => {
   const checkboxChange: ReactEventHandler<HTMLInputElement> = event => {
     setJobCodes({
       ...jobCodes,
-      [event.currentTarget.value as keyof typeof jobCodes]: event.currentTarget
-        .checked
+      [event.currentTarget.value as keyof typeof jobCodes]:
+        event.currentTarget.checked
     });
   };
 
@@ -48,7 +48,7 @@ const DevLogin = () => {
       <p>
         <label>
           Enter a four-character EUA (this should from the mock user list in
-          pkg/local/cedar_ldap.go)
+          pkg/local/okta_api.go)
           <br />
           <input
             type="text"

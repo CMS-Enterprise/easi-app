@@ -96,7 +96,6 @@ export const defaultProposedSolution = {
 export const businessCaseInitialData: BusinessCaseModel = {
   status: 'OPEN',
   systemIntakeId: '',
-  systemIntakeStatus: '',
   requestName: '',
   requester: {
     name: '',
@@ -113,7 +112,8 @@ export const businessCaseInitialData: BusinessCaseModel = {
   preferredSolution: cloneDeep(defaultProposedSolution),
   alternativeA: cloneDeep(defaultProposedSolution),
   alternativeB: cloneDeep(defaultProposedSolution),
-  createdAt: ''
+  createdAt: '',
+  updatedAt: ''
 };
 
 type lifecycleCostLinesType = Record<LifecycleSolution, LifecycleCosts>;
@@ -219,7 +219,6 @@ export const prepareBusinessCaseForApp = (
     euaUserId: businessCase.euaUserId,
     status: businessCase.status,
     systemIntakeId: businessCase.systemIntakeId,
-    systemIntakeStatus: businessCase.systemIntakeStatus,
     requestName: businessCase.projectName || '',
     requester: {
       name: businessCase.requester || '',
@@ -290,7 +289,8 @@ export const prepareBusinessCaseForApp = (
       },
       hasUserInterface: businessCase.alternativeBHasUI || ''
     },
-    createdAt: businessCase.createdAt
+    createdAt: businessCase.createdAt,
+    updatedAt: businessCase.updatedAt
   };
 };
 
@@ -317,14 +317,13 @@ const formatLifecycleCostsForApi = (
     const currentPhaseCosts: string[] = Object.values(years);
 
     /** Current phase costs reformatted for API */
-    const formattedLifecycleCosts: ApiLifecycleCostLine[] = currentPhaseCosts.map(
-      (cost, index) => ({
+    const formattedLifecycleCosts: ApiLifecycleCostLine[] =
+      currentPhaseCosts.map((cost, index) => ({
         solution,
         phase,
         year: (index + 1).toString(),
         cost: cost ? parseFloat(cost) : null
-      })
-    );
+      }));
 
     return [...acc, ...formattedLifecycleCosts];
   }, [] as ApiLifecycleCostLine[]);
@@ -358,7 +357,7 @@ export const prepareBusinessCaseForApi = (
     ...(alternativeBExists
       ? formatLifecycleCostsForApi(
           businessCase.alternativeB.estimatedLifecycleCost,
-          'A'
+          'B'
         )
       : [])
   ];

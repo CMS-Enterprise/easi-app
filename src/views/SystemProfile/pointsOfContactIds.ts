@@ -17,6 +17,7 @@ const pointsOfContactIds: Record<SubpageKey, RoleTypeName[]> = {
     RoleTypeName.COR,
     RoleTypeName.SYSTEM_BUSINESS_QUESTION_CONTACT
   ],
+  contracts: [],
   'funding-and-budget': [
     RoleTypeName.COR,
     RoleTypeName.SYSTEM_BUSINESS_QUESTION_CONTACT,
@@ -27,7 +28,7 @@ const pointsOfContactIds: Record<SubpageKey, RoleTypeName[]> = {
     RoleTypeName.SYSTEM_ISSUES_CONTACT,
     RoleTypeName.PROJECT_LEAD
   ],
-  ato: [
+  'ato-and-security': [
     RoleTypeName.ISSO,
     RoleTypeName.SYSTEM_ISSUES_CONTACT,
     RoleTypeName.PROJECT_LEAD
@@ -36,11 +37,6 @@ const pointsOfContactIds: Record<SubpageKey, RoleTypeName[]> = {
     RoleTypeName.PROJECT_LEAD,
     RoleTypeName.COR,
     RoleTypeName.SYSTEM_BUSINESS_QUESTION_CONTACT
-  ],
-  'section-508': [
-    RoleTypeName.PROJECT_LEAD,
-    RoleTypeName.SYSTEM_MAINTAINER,
-    RoleTypeName.SYSTEM_ISSUES_CONTACT
   ],
   'sub-systems': [
     RoleTypeName.PROJECT_LEAD,

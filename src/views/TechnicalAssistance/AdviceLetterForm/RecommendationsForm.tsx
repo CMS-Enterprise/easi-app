@@ -8,7 +8,7 @@ import {
   ErrorMessage,
   Form,
   FormGroup,
-  IconArrowBack,
+  Icon,
   TextInput
 } from '@trussworks/react-uswds';
 
@@ -16,7 +16,6 @@ import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-// import TextAreaField from 'components/shared/TextAreaField';
 import {
   CreateTrbRecommendationQuery,
   GetTrbAdviceLetterQuery,
@@ -32,7 +31,7 @@ import {
 } from 'types/technicalAssistance';
 import formatUrl from 'utils/formatUrl';
 
-import Breadcrumbs from '../Breadcrumbs';
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 import { StepSubmit } from '../RequestForm';
 
 import LinksArrayField from './LinksArrayField/Index';
@@ -270,7 +269,7 @@ const RecommendationsForm = ({
         unstyled
         onClick={() => history.push(returnLink)}
       >
-        <IconArrowBack className="margin-right-05" />
+        <Icon.ArrowBack className="margin-right-05" />
         {t(
           `adviceLetterForm.${
             watch('id') ? 'editReturnToAdviceLetter' : 'returnToAdviceLetter'

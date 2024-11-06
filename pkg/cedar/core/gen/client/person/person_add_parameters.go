@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewPersonAddParams creates a new PersonAddParams object,
@@ -63,7 +63,10 @@ PersonAddParams contains all the parameters to send to the API endpoint
 */
 type PersonAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Person information to be added to Alfabet.
+	*/
 	Body *models.Person
 
 	timeout    time.Duration

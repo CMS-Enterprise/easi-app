@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 )
 
 func (s *ServerTestSuite) TestTraceMiddleware() {
@@ -22,7 +22,7 @@ func (s *ServerTestSuite) TestTraceMiddleware() {
 
 	req := httptest.NewRequest("GET", "/systems/", nil)
 	rr := httptest.NewRecorder()
-	middleware := NewTraceMiddleware()
+	middleware := newTraceMiddleware()
 
 	middleware(testHandler).ServeHTTP(rr, req)
 

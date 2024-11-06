@@ -5,7 +5,7 @@ import (
 
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
@@ -131,37 +131,6 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		s.NotEqualValues(fetchedNote1.CreatedBy, fetchedNote2.CreatedBy)
 		s.NotEqualValues(fetchedNote1.Category, fetchedNote2.Category)
 		s.NotEqualValues(fetchedNote1.NoteText, fetchedNote2.NoteText)
-	})
-
-	s.Run("Updating a note returns a note with updated data and sets ModifiedBy, ModifiedAt", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEUA)
-		initialCategory := models.TRBAdminNoteCategoryGeneralRequest
-		initialNoteText := models.HTML("Update note test (initial)")
-		noteToCreate := models.TRBAdminNote{
-			Category: initialCategory,
-			NoteText: initialNoteText,
-		}
-		noteToCreate.TRBRequestID = trbRequestID
-		noteToCreate.CreatedBy = anonEUA
-
-		noteToUpdate, err := s.store.CreateTRBAdminNote(ctx, &noteToCreate)
-		s.NoError(err)
-
-		updatedCategory := models.TRBAdminNoteCategoryConsultSession
-		updatedNoteText := models.HTML("Update note test (updated)")
-		updatingUser := "USR1"
-
-		noteToUpdate.Category = updatedCategory
-		noteToUpdate.NoteText = updatedNoteText
-		noteToUpdate.ModifiedBy = &updatingUser
-
-		updatedNote, err := s.store.UpdateTRBAdminNote(ctx, noteToUpdate)
-		s.NoError(err)
-
-		s.EqualValues(updatedCategory, updatedNote.Category)
-		s.EqualValues(updatedNoteText, updatedNote.NoteText)
-		s.EqualValues(updatingUser, *updatedNote.ModifiedBy)
-		s.NotNil(updatedNote.ModifiedAt) // don't care about exact value, just that it was set to *something*
 	})
 
 	s.Run("Setting a note to be archived sets IsArchived to true and sets ModifiedBy, ModifiedAt", func() {

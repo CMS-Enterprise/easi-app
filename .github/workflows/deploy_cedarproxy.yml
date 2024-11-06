@@ -1,0 +1,59 @@
+name: Deploy Cedarproxy to Environment
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        required: true
+        type: string
+      force_cedarproxy:
+        required: true
+        type: boolean
+        default: true # Per EASI-4374, we want to force cedarproxy deployments in the event pipeline deployment is skipped/cancelled
+
+env:
+  GIT_HASH: ${{ github.sha }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  ENV: ${{ inputs.env }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy_cedarproxy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.env }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+          aws-region: us-west-2
+      - name: Check for changes to cedarproxy folder
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            cedarproxy:
+              - 'pkg/cedar/core/gen/**'
+              - 'cedarproxy/**'
+      - name: Update ECS task definition and deploy Cedarproxy
+        if: ${{ steps.changes.outputs.cedarproxy == 'true' || inputs.force_cedarproxy == true }}
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-cedarproxy
+          NEW_IMAGE_TAG: ${{ env.GIT_HASH }}
+          TASK_FAMILY: "easi-cedarproxy-${{ inputs.env }}"
+          ECS_CLUSTER: "${{ inputs.env }}-easi-app"
+          SERVICE_NAME: easi-cedarproxy
+          SECURITY_GROUP_NAME: "ecs-easi-cedarproxy-${{ inputs.env }}"
+        run: |
+          export TASK_REVISION=$(./scripts/update_ecs_task_definition.sh)
+          ./scripts/deploy_ecs_service.sh
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch

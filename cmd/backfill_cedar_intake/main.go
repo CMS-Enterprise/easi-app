@@ -11,11 +11,11 @@ import (
 	"gopkg.in/launchdarkly/go-server-sdk.v5/ldcomponents"
 	"gopkg.in/launchdarkly/go-server-sdk.v5/testhelpers/ldtestdata"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/cedar/intake"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/intake"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func noErr(err error) {
@@ -29,7 +29,7 @@ func makeCedarIntakeClient(ldClient *ld.LDClient) *intake.Client {
 	cedarAPIHost := os.Getenv(appconfig.CEDARAPIURL)
 	cedarAPIKey := os.Getenv(appconfig.CEDARAPIKey)
 
-	client := intake.NewClient(cedarAPIHost, cedarAPIKey, ldClient)
+	client := intake.NewClient(cedarAPIHost, cedarAPIKey, true)
 	return client
 }
 
@@ -94,7 +94,7 @@ func submitToCEDAR() {
 		fmt.Println("=======================================")
 
 		fmt.Println("Fetching business case for intake", intake.ID.String())
-		businessCase, err := store.FetchBusinessCaseBySystemIntakeID(ctx, intake.ID)
+		businessCase, err := store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
 		noErr(err)
 		if businessCase == nil {
 			fmt.Println("No business case found for intake", intake.ID.String(), ". Skipping")

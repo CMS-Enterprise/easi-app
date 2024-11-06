@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestIntakeExpireLCIDNotification() {
 	ctx := context.Background()
 	lifecycleID := "123456"
-	lifecycleScope := models.HTMLPointer("<em>things</em>")
+	lifecycleScope := models.HTMLPointer("<p><em>things</em></p>")
 	lifecycleCostBaseline := "100bux"
 	expiresAt := time.Now().AddDate(1, 0, 0)
 	issuedAt := time.Now()
 	ITGovInboxAddress := s.config.GRTEmail.String()
-	reason := models.HTMLPointer("<strong>This LCID is TERRIBLE anyway</strong>")
-	additionalInfo := models.HTMLPointer("An apple a day keeps the doctor away.")
+	reason := models.HTML("<p><strong>This LCID is TERRIBLE anyway</strong></p>")
+	additionalInfo := models.HTMLPointer("<p>An apple a day keeps the doctor away.</p>")
 
 	decisionNextSteps := models.HTMLPointer("<p>Decision: Make lunch</p><p>Steps:</p><ol><li>Decide what to eat</li><li>Eat</li></ol>")
 
@@ -30,58 +30,116 @@ func (s *EmailTestSuite) TestIntakeExpireLCIDNotification() {
 	}
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
+
+	getExpectedEmail := func(
+		nextSteps *models.HTML,
+		issuedAt *time.Time,
+		scope *models.HTML,
+		costBaseline string,
+		additionalInfo *models.HTML,
+	) string {
+		var nextStepsStr string
+		var additionalInfoStr string
+		var issuedAtStr string
+		if nextSteps != nil {
+			nextStepsStr = fmt.Sprintf(`
+				<br>
+				<p><strong>Next steps:</strong></p>%s`,
+				*nextSteps.StringPointer(),
+			)
+		}
+		if issuedAt != nil {
+			issuedAtStr = fmt.Sprintf(
+				`<p><strong>Original date issued:</strong> %s</p>`,
+				issuedAt.Format("01/02/2006"),
+			)
+		}
+		if additionalInfo != nil {
+			additionalInfoStr = fmt.Sprintf(
+				`<br>
+					<hr>
+					<br>
+					<p class="no-margin"><strong>Additional information from the Governance Team:</strong></p>
+					<br>
+					<div class="no-margin">%s</div>`,
+				*additionalInfo.StringPointer(),
+			)
+		}
+
+		return fmt.Sprintf(`
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
+
+			<p>A previously-issued Life Cycle ID (LCID) has expired.</p>
+
+			<br>
+			<div class="no-margin">
+				<p><strong>Reason:</strong></p>%s
+				%s
+			</div>
+
+			<br>
+			<p>If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
+
+			<br>
+			<div class="no-margin">
+				<p><u>Summary of expired Life Cycle ID</u></p>
+				<p><strong>Life Cycle ID:</strong> %s</p>
+				%s
+				<p><strong>Expiration date:</strong> %s</p>
+				<p><strong>Scope:</strong></p>%s
+				<p><strong>Project Cost Baseline:</strong> %s</p>
+			</div>
+
+			%s
+			<br>
+			<hr>
+
+			<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
+			`,
+			*reason.StringPointer(),
+			nextStepsStr,
+			ITGovInboxAddress,
+			ITGovInboxAddress,
+			lifecycleID,
+			issuedAtStr,
+			expiresAt.Format("01/02/2006"),
+			scope.ToTemplate(),
+			costBaseline,
+			additionalInfoStr,
+		)
+
+	}
+
 	err = client.SystemIntake.SendExpireLCIDNotification(
 		ctx,
 		recipients,
 		lifecycleID,
 		&expiresAt,
 		&issuedAt,
-		*lifecycleScope,
+		lifecycleScope,
 		lifecycleCostBaseline,
-		*reason,
+		reason,
 		decisionNextSteps,
 		additionalInfo,
 	)
 	s.NoError(err)
-	expectedSubject := fmt.Sprintf("A Life Cycle ID (%s) has expired", lifecycleID)
-	s.Equal(expectedSubject, sender.subject)
 
-	expectedEmail := fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+	s.Run("Subject is correct", func() {
+		expectedSubject := fmt.Sprintf("A Life Cycle ID (%s) has expired", lifecycleID)
+		s.Equal(expectedSubject, sender.subject)
+	})
 
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>A previously-issued Life Cycle ID (LCID) has expired.</p>
-
-<p>Reason: %s<br>
-Next steps: %s</p>
-
-If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-<p><u>Summary of expired Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> %s<br>
-<strong>Original date issued:</strong> %s<br>
-<strong>Expiration date:</strong> %s<br>
-<strong>Scope:</strong> %s<br>
-<strong>Project Cost Baseline:</strong> %s</p>
-
-<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
-<hr>
-
-<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
-
-`,
-		*reason.StringPointer(),
-		*decisionNextSteps.StringPointer(),
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		lifecycleID,
-		issuedAt.Format("01/02/2006"),
-		expiresAt.Format("01/02/2006"),
-		*lifecycleScope.StringPointer(),
-		lifecycleCostBaseline,
-		*additionalInfo.StringPointer(),
-	)
-	s.Equal(expectedEmail, sender.body)
+	s.Run("included info is correct", func() {
+		expectedEmail := getExpectedEmail(
+			decisionNextSteps,
+			&issuedAt,
+			lifecycleScope,
+			lifecycleCostBaseline,
+			additionalInfo,
+		)
+		s.EqualHTML(expectedEmail, sender.body)
+	})
 	s.Run("Recipient is correct", func() {
 		allRecipients := []models.EmailAddress{
 			recipient,
@@ -89,104 +147,77 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		s.ElementsMatch(sender.toAddresses, allRecipients)
 	})
 
-	err = client.SystemIntake.SendExpireLCIDNotification(
-		ctx,
-		recipients,
-		lifecycleID,
-		&expiresAt,
-		&issuedAt,
-		*lifecycleScope,
-		lifecycleCostBaseline,
-		*reason,
-		decisionNextSteps,
-		nil,
-	)
-	s.NoError(err)
-	expectedEmail = fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
-
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>A previously-issued Life Cycle ID (LCID) has expired.</p>
-
-<p>Reason: %s<br>
-Next steps: %s</p>
-
-If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-<p><u>Summary of expired Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> %s<br>
-<strong>Original date issued:</strong> %s<br>
-<strong>Expiration date:</strong> %s<br>
-<strong>Scope:</strong> %s<br>
-<strong>Project Cost Baseline:</strong> %s</p>
-
-
-<hr>
-
-<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
-
-`,
-		*reason.StringPointer(),
-		*decisionNextSteps.StringPointer(),
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		lifecycleID,
-		issuedAt.Format("01/02/2006"),
-		expiresAt.Format("01/02/2006"),
-		*lifecycleScope.StringPointer(),
-		lifecycleCostBaseline,
-	)
-
 	s.Run("Should omit additional info if absent", func() {
-		s.Equal(expectedEmail, sender.body)
+		err = client.SystemIntake.SendExpireLCIDNotification(
+			ctx,
+			recipients,
+			lifecycleID,
+			&expiresAt,
+			&issuedAt,
+			lifecycleScope,
+			lifecycleCostBaseline,
+			reason,
+			decisionNextSteps,
+			nil,
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			decisionNextSteps,
+			&issuedAt,
+			lifecycleScope,
+			lifecycleCostBaseline,
+			nil,
+		)
+
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
-	err = client.SystemIntake.SendExpireLCIDNotification(
-		ctx,
-		recipients,
-		lifecycleID,
-		&expiresAt,
-		nil,
-		*lifecycleScope,
-		lifecycleCostBaseline,
-		*reason,
-		nil,
-		nil,
-	)
-	s.NoError(err)
-	expectedEmail = fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
-
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>A previously-issued Life Cycle ID (LCID) has expired.</p>
-
-<p>Reason: %s<br>
-</p>
-
-If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-<p><u>Summary of expired Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> %s<br>
-<strong>Expiration date:</strong> %s<br>
-<strong>Scope:</strong> %s<br>
-<strong>Project Cost Baseline:</strong> %s</p>
-
-
-<hr>
-
-<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
-
-`,
-		*reason.StringPointer(),
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		lifecycleID,
-		expiresAt.Format("01/02/2006"),
-		*lifecycleScope.StringPointer(),
-		lifecycleCostBaseline,
-	)
-
 	s.Run("Should omit next steps and issuedAt if absent", func() {
-		s.Equal(expectedEmail, sender.body)
+		err = client.SystemIntake.SendExpireLCIDNotification(
+			ctx,
+			recipients,
+			lifecycleID,
+			&expiresAt,
+			nil,
+			lifecycleScope,
+			lifecycleCostBaseline,
+			reason,
+			nil,
+			nil,
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			nil,
+			nil,
+			lifecycleScope,
+			lifecycleCostBaseline,
+			nil,
+		)
+
+		s.EqualHTML(expectedEmail, sender.body)
+	})
+	s.Run("Should omit scope and cost baseline if absent", func() {
+		err = client.SystemIntake.SendExpireLCIDNotification(
+			ctx,
+			recipients,
+			lifecycleID,
+			&expiresAt,
+			nil, // issuedAt
+			nil, // scope
+			"",  // cost baseline
+			reason,
+			nil, // next steps
+			nil, // add'l info
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			nil, // next steps
+			nil, // issued at
+			nil, // scope
+			"",  // cost baseline
+			nil, // add'l info
+		)
+
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 }

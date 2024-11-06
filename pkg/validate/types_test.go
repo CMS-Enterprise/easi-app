@@ -1,22 +1,11 @@
 package validate
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
-
-func (s *ValidateTestSuite) TestRequireNullBool() {
-	s.Run("nullBool is invalid", func() {
-		s.True(RequireNullBool(null.Bool{}))
-	})
-	s.Run("nullBool is valid", func() {
-		s.False(RequireNullBool(null.BoolFrom(true)))
-	})
-}
 
 func (s *ValidateTestSuite) TestRequireNullString() {
 	s.Run("nullString is invalid", func() {
@@ -33,15 +22,6 @@ func (s *ValidateTestSuite) TestRequireString() {
 	})
 	s.Run("string is valid", func() {
 		s.False(RequireString("string"))
-	})
-}
-
-func (s *ValidateTestSuite) TestRequireTime() {
-	s.Run("time is a zero time", func() {
-		s.True(RequireTime(time.Time{}))
-	})
-	s.Run("time is valid", func() {
-		s.False(RequireTime(time.Now().UTC()))
 	})
 }
 
@@ -62,21 +42,6 @@ func (s *ValidateTestSuite) TestRequireInt() {
 	s.Run("int pointer is not nil", func() {
 		x := 5
 		s.False(RequireInt(&x))
-	})
-}
-
-func (s *ValidateTestSuite) TestFundingNumberInvalid() {
-	s.Run("funding number has letters", func() {
-		s.True(FundingNumberInvalid("AAAAAA"))
-	})
-	s.Run("funding number is greater than 6 digits", func() {
-		s.True(FundingNumberInvalid("999999999"))
-	})
-	s.Run("funding number is fewer than 6 digits", func() {
-		s.True(FundingNumberInvalid("1"))
-	})
-	s.Run("funding number is valid", func() {
-		s.False(FundingNumberInvalid("123456"))
 	})
 }
 

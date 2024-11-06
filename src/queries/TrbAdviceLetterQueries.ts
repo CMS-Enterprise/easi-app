@@ -38,6 +38,9 @@ export const GetTrbAdviceLetterQuery = gql`
     trbRequest(id: $id) {
       id
       name
+      type
+      createdAt
+      consultMeetingTime
       taskStatuses {
         adviceLetterStatus
       }

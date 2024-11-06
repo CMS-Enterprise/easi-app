@@ -10,9 +10,9 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // CreateTRBLeadOption creates a new TRB lead option record in the database
@@ -32,7 +32,6 @@ func (s *Store) CreateTRBLeadOption(ctx context.Context, leadOption *models.TRBL
 			:modified_by
 		)
 		RETURNING *;`)
-
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create TRB lead option with error %s", err),
@@ -40,6 +39,7 @@ func (s *Store) CreateTRBLeadOption(ctx context.Context, leadOption *models.TRBL
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	created := models.TRBLeadOption{}
 	err = stmt.Get(&created, leadOption)
@@ -64,6 +64,8 @@ func (s *Store) DeleteTRBLeadOption(ctx context.Context, euaID string) (*models.
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	toDelete := models.TRBLeadOption{}
 	toDelete.EUAUserID = euaID
 	deleted := models.TRBLeadOption{}

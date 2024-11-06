@@ -7,6 +7,16 @@
 // GraphQL query operation: GetCedarSystems
 // ====================================================
 
+export interface GetCedarSystems_cedarSystems_linkedTrbRequests {
+  __typename: "TRBRequest";
+  id: UUID;
+}
+
+export interface GetCedarSystems_cedarSystems_linkedSystemIntakes {
+  __typename: "SystemIntake";
+  id: UUID;
+}
+
 export interface GetCedarSystems_cedarSystems {
   __typename: "CedarSystem";
   id: string;
@@ -18,6 +28,10 @@ export interface GetCedarSystems_cedarSystems {
   businessOwnerOrgComp: string | null;
   systemMaintainerOrg: string | null;
   systemMaintainerOrgComp: string | null;
+  isBookmarked: boolean;
+  atoExpirationDate: Time | null;
+  linkedTrbRequests: GetCedarSystems_cedarSystems_linkedTrbRequests[];
+  linkedSystemIntakes: GetCedarSystems_cedarSystems_linkedSystemIntakes[];
 }
 
 export interface GetCedarSystems {

@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // NewSystemIntake generates a system intake to use in tests
@@ -15,8 +15,7 @@ func NewSystemIntake() models.SystemIntake {
 	return models.SystemIntake{
 		ID:                      uuid.New(),
 		EUAUserID:               null.StringFrom(RandomEUAID()),
-		Status:                  models.SystemIntakeStatusINTAKEDRAFT,
-		State:                   models.SystemIntakeStateOPEN,
+		State:                   models.SystemIntakeStateOpen,
 		Step:                    models.SystemIntakeStepINITIALFORM,
 		RequestType:             models.SystemIntakeRequestTypeNEW,
 		Requester:               "Test Requester",
@@ -49,10 +48,10 @@ func NewSystemIntake() models.SystemIntake {
 		CostIncreaseAmount: null.StringFrom(""),
 		Contractor:         null.StringFrom(""),
 		ContractVehicle:    null.StringFrom(""),
-		ContractNumber:     null.StringFrom(""),
 		LifecycleID:        null.StringFrom("123456"),
 		ContractStartDate:  &now,
 		ContractEndDate:    &now,
 		HasUIChanges:       null.BoolFrom(false),
+		UsesAITech:         null.BoolFrom(true),
 	}
 }

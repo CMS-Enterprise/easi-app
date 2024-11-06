@@ -21,6 +21,7 @@ import { NonNullableProps } from 'types/util';
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 import { EditsRequestedContext } from '..';
 
+import refetchQueries from './refetchQueries';
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
 
@@ -50,7 +51,7 @@ const CloseRequest = ({
     CreateSystemIntakeActionCloseRequest,
     CreateSystemIntakeActionCloseRequestVariables
   >(CreateSystemIntakeActionCloseRequestQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries
   });
 
   const form = useForm<CloseRequestFields>();

@@ -1,58 +1,46 @@
 package resolvers
 
 import (
-	"context"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 // TestCreateTRBRequestForm tests the creation a new TRB request form
 func (s *ResolverSuite) TestCreateTRBRequestForm() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
+	okta := local.NewOktaAPIClient()
 
 	config := testhelpers.NewConfig()
 
 	// set up Email Client
 	emailConfig := email.Config{
-		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
-		ITInvestmentEmail:      models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
-		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
-		TRBEmail:               models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
-		EASIHelpEmail:          models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
-		URLHost:                config.GetString(appconfig.ClientHostKey),
-		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail: models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		TRBEmail:          models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:     models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
-	localSender := local.NewSender()
+
+	env, _ := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+
+	localSender := local.NewSender(env)
 	emailClient, err := email.NewClient(emailConfig, localSender)
 	if err != nil {
 		s.FailNow("Unable to construct email client with local sender")
 	}
 
-	anonEua := "ANON"
-
-	stubFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
-		return &models.UserInfo{
-			EuaUserID:  anonEua,
-			CommonName: "Anonymous",
-			Email:      models.NewEmailAddress("anon@local.fake"),
-		}, nil
-	}
-
-	trbRequest := models.NewTRBRequest(anonEua)
-	trbRequest.Type = models.TRBTNeedHelp
-	trbRequest.State = models.TRBRequestStateOpen
-	trbRequest, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
-	s.NoError(err)
+	trbRequest := s.createNewTRBRequest()
 
 	s.Run("create/update/fetch TRB request forms", func() {
 		// fetch the form
-		fetched, err := GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		fetched, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.NotNil(fetched)
 
@@ -74,7 +62,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 
 		formChanges := map[string]interface{}{
 			"isSubmitted":                      false,
-			"trbRequestId":                     trbRequest.ID.String(),
+			"trbRequestId":                     trbRequest.ID,
 			"component":                        "Taco Cart",
 			"needsAssistanceWith":              "Some of the things",
 			"hasSolutionInMind":                true,
@@ -95,9 +83,9 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			"subjectAreaOptions":               subjectAreaOptions,
 			"subjectAreaOptionOther":           "Some other technical topic",
 		}
-		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, stubFetchUserInfo, formChanges)
+		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, okta.FetchUserInfo, formChanges)
 		s.NoError(err)
-		s.EqualValues(&anonEua, updatedForm.ModifiedBy)
+		s.EqualValues(s.testConfigs.Principal.EUAID, *updatedForm.ModifiedBy)
 		s.EqualValues(formChanges["needsAssistanceWith"], *updatedForm.NeedsAssistanceWith)
 		s.EqualValues(formChanges["hasSolutionInMind"], *updatedForm.HasSolutionInMind)
 		s.EqualValues(formChanges["proposedSolution"], *updatedForm.ProposedSolution)
@@ -133,10 +121,10 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.Nil(updatedForm.SubmittedAt)
 
 		submitChanges := map[string]interface{}{
-			"trbRequestId": trbRequest.ID.String(),
+			"trbRequestId": trbRequest.ID,
 			"isSubmitted":  true,
 		}
-		submittedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, stubFetchUserInfo, submitChanges)
+		submittedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, okta.FetchUserInfo, submitChanges)
 		s.NoError(err)
 		s.EqualValues(submittedForm.Status, models.TRBFormStatusCompleted)
 		s.NotNil(submittedForm.SubmittedAt) // we submitted, so this should be populated

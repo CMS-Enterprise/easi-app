@@ -1,6 +1,11 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link, SummaryBox } from '@trussworks/react-uswds';
+import {
+  Link,
+  SummaryBox,
+  SummaryBoxContent,
+  SummaryBoxHeading
+} from '@trussworks/react-uswds';
 
 import HelpBreadcrumb from 'components/HelpBreadcrumb';
 import HelpPageIntro from 'components/HelpPageIntro';
@@ -19,7 +24,7 @@ function PrepareTrbConsultMeeting() {
   return (
     <>
       <MainContent className="grid-container margin-bottom-7">
-        <HelpBreadcrumb type="Close tab" />
+        <HelpBreadcrumb type="close" />
         <HelpPageIntro
           type="Technical Review Board"
           heading={t('title')}
@@ -63,24 +68,26 @@ function PrepareTrbConsultMeeting() {
         </ul>
 
         <div id="download-presentation-templates" />
-        <SummaryBox
-          heading={t('downloadTemplates.title')}
-          className="desktop:grid-col-6 margin-top-4"
-        >
-          <p>
-            <Trans
-              i18nKey="prepareTrbConsultMeeting:downloadTemplates.description"
-              components={{
-                a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
-                email: CMS_TRB_EMAIL
-              }}
-            />
-          </p>
-          <div>
-            <Link href={TRB_DECK_TEMPLATES} variant="external">
-              {t('downloadTemplates.link')}
-            </Link>
-          </div>
+        <SummaryBox className="desktop:grid-col-6 margin-top-4">
+          <SummaryBoxHeading headingLevel="h3">
+            {t('downloadTemplates.title')}
+          </SummaryBoxHeading>
+          <SummaryBoxContent>
+            <p>
+              <Trans
+                i18nKey="prepareTrbConsultMeeting:downloadTemplates.description"
+                components={{
+                  a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
+                  email: CMS_TRB_EMAIL
+                }}
+              />
+            </p>
+            <div>
+              <Link href={TRB_DECK_TEMPLATES} variant="external">
+                {t('downloadTemplates.link')}
+              </Link>
+            </div>
+          </SummaryBoxContent>
         </SummaryBox>
 
         <h2 className="margin-top-6 margin-bottom-2">{t('outcomes.title')}</h2>
@@ -101,10 +108,7 @@ function PrepareTrbConsultMeeting() {
         />
       </MainContent>
 
-      <RelatedArticles
-        type="Technical Review Board"
-        currentArticle="prepareTrbConsultMeeting"
-      />
+      <RelatedArticles articles={['stepsInTRBProcess']} />
     </>
   );
 }

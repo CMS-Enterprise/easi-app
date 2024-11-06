@@ -1,5 +1,5 @@
 import { DocumentNode, FetchResult, GraphQLRequest } from '@apollo/client';
-import { MockedResponse } from '@apollo/react-testing';
+import { MockedResponse } from '@apollo/client/testing';
 
 export type NonNullableProps<T> = {
   [P in keyof T]: NonNullable<T[P]>;
@@ -23,3 +23,10 @@ export interface MockedQuery<
   request: MockedRequest<TVariables>;
   result: FetchResult<TData>;
 }
+
+/** i18Next translation object */
+export type Translation<T extends string> = Record<
+  // Key allows for use of i18next context or plurals
+  T | `${T}_${string}`,
+  string
+>;

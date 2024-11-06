@@ -5,49 +5,88 @@ import (
 	"net/http"
 	"time"
 
-	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
-
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	cache "github.com/patrickmn/go-cache"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	apiclient "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client"
-	"github.com/cmsgov/easi-app/pkg/flags"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	apiclient "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client"
 )
 
-const (
-	cedarCoreEnabledKey           = "cedarCoreEnabled"
-	cedarCoreEnabledDefault       = false
-	cedarCoreCacheDurationDefault = time.Hour * 6
-)
+type loggingTransport struct {
+	logger *zap.Logger
+}
 
-// NewClient builds the type that holds a connection to the CEDAR Core API
-func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, cacheRefreshTime time.Duration, ldClient *ld.LDClient) *Client {
-	fnEmit := func(ctx context.Context) bool {
-		lduser := flags.Principal(ctx)
-		result, err := ldClient.BoolVariation(cedarCoreEnabledKey, lduser, cedarCoreEnabledDefault)
-		if err != nil {
-			appcontext.ZLogger(ctx).Info(
-				"problem evaluating feature flag",
-				zap.Error(err),
-				zap.String("flagName", cedarCoreEnabledKey),
-				zap.Bool("flagDefault", cedarCoreEnabledDefault),
-				zap.Bool("flagResult", result),
-			)
-		}
-		return result
+func (t *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	start := time.Now()
+	resp, err := http.DefaultTransport.RoundTrip(r)
+
+	// Start a status code of 0, in case the request fails (and we get a nil resp)
+	status := 0
+	if resp != nil {
+		status = resp.StatusCode
 	}
 
-	c := cache.New(cache.NoExpiration, cache.NoExpiration) // Don't expire data _or_ clean it up
+	t.logger.Info(
+		"Call to CEDAR core",
+		zap.String("service", "cedarcore"),
+		zap.String("method", r.Method),
+		zap.Int("status", status),
+		zap.String("path", r.URL.Path),
+		zap.String("query-params", r.URL.RawQuery),
+		zap.Int64("cedar-response-time-ms", time.Since(start).Milliseconds()),
+	)
 
-	hc := http.DefaultClient
+	return resp, err
+}
+
+var (
+	cedarPath string
+	client    *Client
+)
+
+// PurgeCacheByPath purges the Proxy Cache by URL using a given path
+func (c *Client) PurgeCacheByPath(ctx context.Context, path string) error {
+	if c.skipPurge {
+		return nil
+	}
+	req, err := http.NewRequest("PURGE", cedarPath+path, nil)
+	logger := appcontext.ZLogger(ctx)
+	if err != nil {
+		return err
+	}
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	var cacheIsPurged bool
+	if res.StatusCode == 200 {
+		cacheIsPurged = true
+	}
+	logger.Info(
+		"Cache Purge",
+		zap.String("pathArg", path),
+		zap.String("path", req.URL.Path),
+		zap.String("queryParams", req.URL.RawQuery),
+		zap.Int("status", res.StatusCode),
+		zap.Bool("success", cacheIsPurged),
+	)
+	return nil
+}
+
+// NewClient builds the type that holds a connection to the CEDAR Core API
+func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, skipProxy bool, mockEnabled bool) *Client {
+	hc := http.Client{
+		Transport: &loggingTransport{
+			logger: appcontext.ZLogger(ctx),
+		},
+	}
 
 	basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
-	client := &Client{
-		cedarCoreEnabled: fnEmit,
+	cedarPath = "http://" + cedarHost + basePath
+	client = &Client{
+		mockEnabled: mockEnabled,
 		auth: httptransport.APIKeyAuth(
 			"x-Gateway-APIKey",
 			"header",
@@ -57,50 +96,24 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 			httptransport.New(
 				cedarHost,
 				basePath,
-				apiclient.DefaultSchemes,
+				[]string{"http"},
+				// apiclient.DefaultSchemes,
 			),
 			strfmt.Default,
 		),
-		hc:    hc,
-		cache: c,
+		hc: &hc,
 	}
-
-	if cacheRefreshTime <= 0 {
-		appcontext.ZLogger(ctx).Error(
-			"CEDAR cacheRefreshTime is not a valid value, falling back to default",
-			zap.Duration("cacheRefreshTime", cacheRefreshTime),
-			zap.Duration("defaultDuration", cedarCoreCacheDurationDefault),
-		)
-		cacheRefreshTime = cedarCoreCacheDurationDefault
+	if skipProxy {
+		client.skipPurge = true
 	}
-	client.startCacheRefresh(ctx, cacheRefreshTime, client.populateSystemSummaryCache)
-
 	return client
 }
 
 // Client represents a connection to the CEDAR Core API
 type Client struct {
-	cedarCoreEnabled func(context.Context) bool
-	auth             runtime.ClientAuthInfoWriter
-	sdk              *apiclient.CEDARCoreAPI
-	hc               *http.Client
-	cache            *cache.Cache
-}
-
-// startCacheRefresh starts a goroutine that will run `populateCache` based on cacheRefreshTime.
-// startCacheRefresh returns no errors, and only logs when something goes wrong.
-// Upon being called, startCacheRefresh will populate the cache once immediately, then again at an interval specificed by cacheRefreshTime.
-func (c *Client) startCacheRefresh(ctx context.Context, cacheRefreshTime time.Duration, populateCache func(context.Context) error) {
-	ticker := time.NewTicker(cacheRefreshTime)
-	go func(ctx context.Context) {
-		for {
-			err := populateCache(ctx)
-			if err != nil {
-				// This is a Warn() instead of Error() as it happens somewhat frequently, and doesn't necessarily warrant immediate attention
-				appcontext.ZLogger(ctx).Warn("Failed to refresh cache", zap.Error(err))
-			}
-			// Wait for the ticker. This will block the current goroutine until the ticker sends a message over the channel
-			<-ticker.C
-		}
-	}(ctx)
+	mockEnabled bool
+	auth        runtime.ClientAuthInfoWriter
+	sdk         *apiclient.CEDARCoreAPI
+	hc          *http.Client
+	skipPurge   bool
 }

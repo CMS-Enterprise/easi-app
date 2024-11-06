@@ -7,9 +7,13 @@ package models
 
 import (
 	"context"
+	"encoding/json"
+	"strconv"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // SoftwareProductDetails software product details
@@ -18,21 +22,25 @@ import (
 type SoftwareProductDetails struct {
 
 	// ai plan
+	// Enum: [Yes - This system has developed AI capabilities. Yes - This system uses a SaaS AI tool like Remesh... No – And this system currently has no plans to utilize AI capabilities No – But there currently are plans to use AI capabilities in the next two years]
 	AiPlan string `json:"aiPlan,omitempty"`
 
 	// api data area
 	APIDataArea []string `json:"apiDataArea"`
 
 	// api f h i r use
+	// Enum: [No FHIR HL7 Other Standard]
 	APIFHIRUse string `json:"apiFHIRUse,omitempty"`
 
 	// api f h i r use other
 	APIFHIRUseOther string `json:"apiFHIRUseOther,omitempty"`
 
 	// apis accessibility
+	// Enum: [Both External Access Internal Access]
 	ApisAccessibility string `json:"apisAccessibility,omitempty"`
 
 	// apis developed
+	// Enum: [No Yes API In development but not yet launched.]
 	ApisDeveloped string `json:"apisDeveloped,omitempty"`
 
 	// system ai type
@@ -47,6 +55,253 @@ type SoftwareProductDetails struct {
 
 // Validate validates this software product details
 func (m *SoftwareProductDetails) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateAiPlan(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAPIDataArea(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAPIFHIRUse(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateApisAccessibility(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateApisDeveloped(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var softwareProductDetailsTypeAiPlanPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["Yes - This system has developed AI capabilities.","Yes - This system uses a SaaS AI tool like Remesh...","No – And this system currently has no plans to utilize AI capabilities","No – But there currently are plans to use AI capabilities in the next two years"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		softwareProductDetailsTypeAiPlanPropEnum = append(softwareProductDetailsTypeAiPlanPropEnum, v)
+	}
+}
+
+const (
+
+	// SoftwareProductDetailsAiPlanYesDashThisSystemHasDevelopedAICapabilitiesDot captures enum value "Yes - This system has developed AI capabilities."
+	SoftwareProductDetailsAiPlanYesDashThisSystemHasDevelopedAICapabilitiesDot string = "Yes - This system has developed AI capabilities."
+
+	// SoftwareProductDetailsAiPlanYesDashThisSystemUsesaSaaSAIToolLikeRemeshDotDotDot captures enum value "Yes - This system uses a SaaS AI tool like Remesh..."
+	SoftwareProductDetailsAiPlanYesDashThisSystemUsesaSaaSAIToolLikeRemeshDotDotDot string = "Yes - This system uses a SaaS AI tool like Remesh..."
+
+	// SoftwareProductDetailsAiPlanNoAndThisSystemCurrentlyHasNoPlansToUtilizeAICapabilities captures enum value "No – And this system currently has no plans to utilize AI capabilities"
+	SoftwareProductDetailsAiPlanNoAndThisSystemCurrentlyHasNoPlansToUtilizeAICapabilities string = "No – And this system currently has no plans to utilize AI capabilities"
+
+	// SoftwareProductDetailsAiPlanNoButThereCurrentlyArePlansToUseAICapabilitiesInTheNextTwoYears captures enum value "No – But there currently are plans to use AI capabilities in the next two years"
+	SoftwareProductDetailsAiPlanNoButThereCurrentlyArePlansToUseAICapabilitiesInTheNextTwoYears string = "No – But there currently are plans to use AI capabilities in the next two years"
+)
+
+// prop value enum
+func (m *SoftwareProductDetails) validateAiPlanEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, softwareProductDetailsTypeAiPlanPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *SoftwareProductDetails) validateAiPlan(formats strfmt.Registry) error {
+	if swag.IsZero(m.AiPlan) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAiPlanEnum("aiPlan", "body", m.AiPlan); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var softwareProductDetailsAPIDataAreaItemsEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["Beneficiary and Consumer","Health Insurance Program","Healthcare Payment","Healthcare Quality","Healthcare Service","Organization","Provider","Supporting Resource"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		softwareProductDetailsAPIDataAreaItemsEnum = append(softwareProductDetailsAPIDataAreaItemsEnum, v)
+	}
+}
+
+func (m *SoftwareProductDetails) validateAPIDataAreaItemsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, softwareProductDetailsAPIDataAreaItemsEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *SoftwareProductDetails) validateAPIDataArea(formats strfmt.Registry) error {
+	if swag.IsZero(m.APIDataArea) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.APIDataArea); i++ {
+
+		// value enum
+		if err := m.validateAPIDataAreaItemsEnum("apiDataArea"+"."+strconv.Itoa(i), "body", m.APIDataArea[i]); err != nil {
+			return err
+		}
+
+	}
+
+	return nil
+}
+
+var softwareProductDetailsTypeAPIFHIRUsePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["No","FHIR","HL7","Other Standard"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		softwareProductDetailsTypeAPIFHIRUsePropEnum = append(softwareProductDetailsTypeAPIFHIRUsePropEnum, v)
+	}
+}
+
+const (
+
+	// SoftwareProductDetailsAPIFHIRUseNo captures enum value "No"
+	SoftwareProductDetailsAPIFHIRUseNo string = "No"
+
+	// SoftwareProductDetailsAPIFHIRUseFHIR captures enum value "FHIR"
+	SoftwareProductDetailsAPIFHIRUseFHIR string = "FHIR"
+
+	// SoftwareProductDetailsAPIFHIRUseHL7 captures enum value "HL7"
+	SoftwareProductDetailsAPIFHIRUseHL7 string = "HL7"
+
+	// SoftwareProductDetailsAPIFHIRUseOtherStandard captures enum value "Other Standard"
+	SoftwareProductDetailsAPIFHIRUseOtherStandard string = "Other Standard"
+)
+
+// prop value enum
+func (m *SoftwareProductDetails) validateAPIFHIRUseEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, softwareProductDetailsTypeAPIFHIRUsePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *SoftwareProductDetails) validateAPIFHIRUse(formats strfmt.Registry) error {
+	if swag.IsZero(m.APIFHIRUse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAPIFHIRUseEnum("apiFHIRUse", "body", m.APIFHIRUse); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var softwareProductDetailsTypeApisAccessibilityPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["Both","External Access","Internal Access"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		softwareProductDetailsTypeApisAccessibilityPropEnum = append(softwareProductDetailsTypeApisAccessibilityPropEnum, v)
+	}
+}
+
+const (
+
+	// SoftwareProductDetailsApisAccessibilityBoth captures enum value "Both"
+	SoftwareProductDetailsApisAccessibilityBoth string = "Both"
+
+	// SoftwareProductDetailsApisAccessibilityExternalAccess captures enum value "External Access"
+	SoftwareProductDetailsApisAccessibilityExternalAccess string = "External Access"
+
+	// SoftwareProductDetailsApisAccessibilityInternalAccess captures enum value "Internal Access"
+	SoftwareProductDetailsApisAccessibilityInternalAccess string = "Internal Access"
+)
+
+// prop value enum
+func (m *SoftwareProductDetails) validateApisAccessibilityEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, softwareProductDetailsTypeApisAccessibilityPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *SoftwareProductDetails) validateApisAccessibility(formats strfmt.Registry) error {
+	if swag.IsZero(m.ApisAccessibility) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateApisAccessibilityEnum("apisAccessibility", "body", m.ApisAccessibility); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var softwareProductDetailsTypeApisDevelopedPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["No","Yes","API In development but not yet launched."]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		softwareProductDetailsTypeApisDevelopedPropEnum = append(softwareProductDetailsTypeApisDevelopedPropEnum, v)
+	}
+}
+
+const (
+
+	// SoftwareProductDetailsApisDevelopedNo captures enum value "No"
+	SoftwareProductDetailsApisDevelopedNo string = "No"
+
+	// SoftwareProductDetailsApisDevelopedYes captures enum value "Yes"
+	SoftwareProductDetailsApisDevelopedYes string = "Yes"
+
+	// SoftwareProductDetailsApisDevelopedAPIInDevelopmentButNotYetLaunchedDot captures enum value "API In development but not yet launched."
+	SoftwareProductDetailsApisDevelopedAPIInDevelopmentButNotYetLaunchedDot string = "API In development but not yet launched."
+)
+
+// prop value enum
+func (m *SoftwareProductDetails) validateApisDevelopedEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, softwareProductDetailsTypeApisDevelopedPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *SoftwareProductDetails) validateApisDeveloped(formats strfmt.Registry) error {
+	if swag.IsZero(m.ApisDeveloped) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateApisDevelopedEnum("apisDeveloped", "body", m.ApisDeveloped); err != nil {
+		return err
+	}
+
 	return nil
 }
 

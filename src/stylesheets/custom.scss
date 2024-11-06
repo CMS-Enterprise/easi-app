@@ -1,4 +1,5 @@
 @use 'uswds-core' as *;
+@use 'colors' as *;
 @forward "usa-list";
 
 // Custom USWDS Button
@@ -88,6 +89,96 @@
   width: 100%;
 }
 
+// Easi form defaults
+// Use this style adjacent to `.usa-form`
+// Copied from TechnicalAssistance/index .technical-assistance .usa-form
+.easi-form.usa-form {
+  /* These input types and containers expand to their container width */
+  .usa-input,
+  .usa-textarea,
+  .usa-combo-box,
+  .usa-file-input,
+  .usa-legend {
+    max-width: 100%;
+  }
+
+  /* Labels and legends */
+  legend {
+    font-weight: 700;
+  }
+  .usa-legend {
+    margin-bottom: 0;
+  }
+  .usa-label {
+    max-width: none;
+    margin-bottom: .5rem;
+    .usa-hint {
+      display: block; /* line break between label and hint */
+      font-weight: normal;
+      margin-top: .25rem;
+    }
+  }
+
+  /* Radio & checkbox label spacing */
+  .usa-radio__label,
+  .usa-checkbox__label {
+    margin-top: .75rem;
+    letter-spacing: -.01em;
+
+  }
+  .easi-multiselect .usa-checkbox__label {
+    margin-top: 0;
+  }
+
+  /* Textarea max height */
+  .usa-textarea {
+    max-height: 155px;
+  }
+
+  /* Datepicker has extra margin space to remove */
+  .usa-date-picker {
+    .usa-date-picker__external-input,
+    .usa-date-picker__button {
+      margin-top: 0;
+    }
+  }
+
+  /* Timepicker has an extra form-group wrapper with space to remove */
+  > .usa-form-group:has(> .usa-time-picker) {
+    margin-top: 0;
+  }
+  /* The Timepicker component generates its own label; remove it */
+  > .usa-form-group > .usa-label:has(+ .usa-time-picker) {
+    display: none;
+  }
+
+  /* Top margin for 1st level form groups */
+  > .usa-form-group {
+    margin-top: 2rem;
+  }
+  .usa-form-group {
+    /* Smaller top margin for nested form groups */
+    .usa-fieldset .usa-form-group {
+      margin-top: .5rem;
+    }
+
+    /* Errors messages under group field labels */
+    .usa-error-message {
+      padding-bottom: 0;
+    }
+  }
+
+  /* Nested form groups within field sets */
+  .usa-fieldset {
+    .usa-form-group {
+      margin-top: .5rem;
+    }
+    .usa-form-group + .usa-form-group {
+      margin-top: 1rem;
+    }
+  }
+}
+
 // The default font for this project should be Public Sans
 [class*='font-heading-'],
 .usa-accordion,
@@ -146,4 +237,29 @@
   &:disabled, &[aria-disabled=true] {
     color: color('gray-50') !important;
   }
+}
+
+.box-shadow-2 {
+  box-shadow: 0 .25rem .5rem 0 rgba(0,0,0,.1)!important;
+}
+
+.text-body-lg {
+  font-size: 1.375rem !important;
+}
+
+// Avatar background colors
+.bg-red-cool-10 {
+  background-color: $red-cool-10;
+}
+.bg-blue-10 {
+  background-color: $blue-10;
+}
+.bg-orange-warm-10 {
+  background-color: $orange-warm-10;
+}
+.bg-yellow-5 {
+  background-color: $yellow-5;
+}
+.bg-green-5 {
+  background-color: $green-5;
 }

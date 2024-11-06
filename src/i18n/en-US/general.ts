@@ -10,7 +10,9 @@ const general = {
   edit: 'Edit',
   remove: 'Remove',
   pageLoading: 'Loading the page',
-  loadingResults: 'Loading results'
+  loadingResults: 'Loading results',
+  noInfoToDisplay: 'No information to display',
+  noDataAvailable: 'No data available'
 };
 
 export default general;

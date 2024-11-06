@@ -1,8 +1,6 @@
----
-version: '3.7'
 services:
   db:
-    image: postgres:14.7
+    image: postgres:14.11
     command: ['postgres', '-c', 'log_statement=all', '-c', 'max_connections=25']
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
@@ -17,10 +15,13 @@ services:
       - db
   easi:
     environment:
+      - CEDAR_CORE_MOCK
+      - CEDAR_INTAKE_ENABLED
       - CEDAR_API_KEY
       - CEDAR_API_URL
+      - CEDAR_PROXY_URL=cedarproxy:8001
+      - CEDAR_CORE_SKIP_PROXY
       - CEDAR_CORE_API_VERSION
-      - CEDAR_CACHE_INTERVAL
       - CEDAR_EMAIL_ADDRESS
       - HTTP_PROXY
       - HTTPS_PROXY
@@ -38,9 +39,10 @@ services:
       - OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
       - GRT_EMAIL=success@simulator.amazonses.com
       - IT_INVESTMENT_EMAIL=success@simulator.amazonses.com
-      - ACCESSIBILITY_TEAM_EMAIL=success@simulator.amazonses.com
       - EASI_HELP_EMAIL=success@simulator.amazonses.com
       - TRB_EMAIL=success@simulator.amazonses.com
+      - OIT_FEEDBACK_CHANNEL_SLACK_LINK=https://oddball.slack.com/archives/C059N01AYGM
+      - SES_RECIPIENT_ALLOWLIST_REGEX
       - EMAIL_TEMPLATE_DIR=./pkg/email/templates
       - AWS_REGION=us-west-2
       - AWS_SES_SOURCE=no-reply-$APP_ENV@info.easi.cms.gov
@@ -69,18 +71,26 @@ services:
       - ALT_JOB_CODES
       - OKTA_API_URL
       - OKTA_API_TOKEN
-      - USE_OKTA_API
+      - USE_OKTA_LOCAL
     depends_on:
       db_migrate:
         condition: service_completed_successfully # Only start if migrations completed successfully
+  cedarproxy:
+    image: cedarproxy:latest
+    environment:
+      - CEDAR_API_URL
+      - CEDAR_CACHE_EXPIRE_TIME
+    build:
+      dockerfile: Dockerfile.cedarproxy
+      context: ./cedarproxy/
   easi_client:
     image: easi_client:latest
   minio:
     restart: always
     image: minio/minio:latest
-    entrypoint: minio server /data
+    entrypoint: minio server --address :9004 /data
     ports:
-    - '9000:9000'
+    - '9004:9004'
   minio_mc:
     image: minio/mc:latest
     depends_on:

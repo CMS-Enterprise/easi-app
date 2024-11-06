@@ -6,52 +6,73 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/easiencoding"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func (suite *ResolverSuite) TestSystemIntakeDocumentResolvers() {
-	ctx := suite.testConfigs.Context
-	store := suite.testConfigs.Store
-	s3Client := suite.testConfigs.S3Client
+func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
 
 	// Create a system intake
 	intake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
-		Status:      models.SystemIntakeStatusLCIDISSUED,
 		RequestType: models.SystemIntakeRequestTypeMAJORCHANGES,
 	})
-	suite.NoError(err)
-	suite.NotNil(intake)
+	s.NoError(err)
+	s.NotNil(intake)
 
 	// Check that there are no docs by default
-	docs, err := GetSystemIntakeDocumentsByRequestID(ctx, store, s3Client, intake.ID)
-	suite.NoError(err)
-	suite.Len(docs, 0)
+	docs, err := GetSystemIntakeDocumentsByRequestID(s.ctxWithNewDataloaders(), intake.ID)
+	s.NoError(err)
+	s.Len(docs, 0)
 
 	// Create a document
 	documentToCreate := &models.SystemIntakeDocument{
-		SystemIntakeRequestID: intake.ID,
-		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftICGE,
-		FileName:              "create_and_get.pdf",
-		Bucket:                "bukkit",
-		S3Key:                 uuid.NewString(),
+		SystemIntakeID:     intake.ID,
+		CommonDocumentType: models.SystemIntakeDocumentCommonTypeDraftIGCE,
+		Version:            models.SystemIntakeDocumentVersionHISTORICAL,
+		FileName:           "create_and_get.pdf",
+		Bucket:             "bukkit",
+		S3Key:              uuid.NewString(),
+		UploaderRole:       models.RequesterUploaderRole,
 	}
 	// documentToCreate.CreatedBy will be set based on principal in test config
 
-	createdDocument := createSystemIntakeDocumentSubtest(suite, intake.ID, documentToCreate)
-	getSystemIntakeDocumentsByRequestIDSubtest(suite, intake.ID, createdDocument)
-	deleteSystemIntakeDocumentSubtest(suite, createdDocument)
+	createdDocument := createSystemIntakeDocumentSubtest(s, intake.ID, documentToCreate)
+	getSystemIntakeDocumentsByRequestIDSubtest(s, intake.ID, createdDocument)
+	deleteSystemIntakeDocumentSubtest(s, createdDocument)
+}
+
+func (s *ResolverSuite) TestShouldSend() {
+	// only admins can send, and only if admin selected "Yes" for sending notification
+	s.True(shouldSend(models.AdminUploaderRole, helpers.PointerTo(true)))
+
+	// admin has selected "No"
+	s.False(shouldSend(models.AdminUploaderRole, helpers.PointerTo(false)))
+
+	// admin did not make a selection (currently not a possible path via UI, but just in case that changes)
+	s.False(shouldSend(models.AdminUploaderRole, nil))
+
+	// a requester has selected to send (currently not a possible path via UI - only admins can make this choice)
+	s.False(shouldSend(models.RequesterUploaderRole, helpers.PointerTo(true)))
+
+	// a requester has selected not to send (currently not a possible path via UI, but will still result in no-send)
+	s.False(shouldSend(models.RequesterUploaderRole, helpers.PointerTo(false)))
+
+	// normal path for a requester, no selection would be made (only allowed path via UI)
+	s.False(shouldSend(models.RequesterUploaderRole, nil))
 }
 
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially
-func createSystemIntakeDocumentSubtest(suite *ResolverSuite, systemIntakeID uuid.UUID, documentToCreate *models.SystemIntakeDocument) *models.SystemIntakeDocument {
+func createSystemIntakeDocumentSubtest(s *ResolverSuite, systemIntakeID uuid.UUID, documentToCreate *models.SystemIntakeDocument) *models.SystemIntakeDocument {
 	testContents := "Test file content"
 	encodedFileContent := easiencoding.EncodeBase64String(testContents)
 	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
-	gqlInput := model.CreateSystemIntakeDocumentInput{
-		RequestID:            documentToCreate.SystemIntakeRequestID,
+	gqlInput := models.CreateSystemIntakeDocumentInput{
+		RequestID:            documentToCreate.SystemIntakeID,
 		DocumentType:         documentToCreate.CommonDocumentType,
+		Version:              documentToCreate.Version,
 		OtherTypeDescription: &documentToCreate.OtherType,
 		FileData: graphql.Upload{
 			File:        fileToUpload,
@@ -62,50 +83,41 @@ func createSystemIntakeDocumentSubtest(suite *ResolverSuite, systemIntakeID uuid
 	}
 
 	createdDocument, err := CreateSystemIntakeDocument(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
-		suite.testConfigs.S3Client,
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
+		s.testConfigs.EmailClient,
 		gqlInput,
 	)
-	suite.NoError(err)
-	suite.NotNil(createdDocument)
+	s.NoError(err)
+	s.NotNil(createdDocument)
 
-	checkSystemIntakeDocumentEquality(suite, documentToCreate, suite.testConfigs.Principal.ID(), systemIntakeID, createdDocument)
-	suite.EqualValues(suite.testConfigs.S3Client.GetBucket(), createdDocument.Bucket)
+	checkSystemIntakeDocumentEquality(s, documentToCreate, s.testConfigs.Principal.ID(), systemIntakeID, createdDocument)
+	s.EqualValues(s.testConfigs.S3Client.GetBucket(), createdDocument.Bucket)
 
 	return createdDocument // used by other tests
 }
 
-func getSystemIntakeDocumentsByRequestIDSubtest(suite *ResolverSuite, systemIntakeID uuid.UUID, createdDocument *models.SystemIntakeDocument) {
-	documents, err := GetSystemIntakeDocumentsByRequestID(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
-		suite.testConfigs.S3Client,
-		systemIntakeID,
-	)
-	suite.NoError(err)
-	suite.Equal(1, len(documents))
+func getSystemIntakeDocumentsByRequestIDSubtest(s *ResolverSuite, systemIntakeID uuid.UUID, createdDocument *models.SystemIntakeDocument) {
+	documents, err := GetSystemIntakeDocumentsByRequestID(s.ctxWithNewDataloaders(), systemIntakeID)
+	s.NoError(err)
+	s.Equal(1, len(documents))
 
 	fetchedDocument := documents[0]
-	suite.NotNil(fetchedDocument)
+	s.NotNil(fetchedDocument)
 
-	checkSystemIntakeDocumentEquality(suite, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeRequestID, fetchedDocument)
+	checkSystemIntakeDocumentEquality(s, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeID, fetchedDocument)
 	// TODO - try downloading fetchedDocument.URL? compare content to fileToUpload from create subtest?
 }
 
-func deleteSystemIntakeDocumentSubtest(suite *ResolverSuite, createdDocument *models.SystemIntakeDocument) {
-	deletedDocument, err := DeleteSystemIntakeDocument(suite.testConfigs.Context, suite.testConfigs.Store, createdDocument.ID)
-	suite.NoError(err)
-	checkSystemIntakeDocumentEquality(suite, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeRequestID, deletedDocument)
+func deleteSystemIntakeDocumentSubtest(s *ResolverSuite, createdDocument *models.SystemIntakeDocument) {
+	deletedDocument, err := DeleteSystemIntakeDocument(s.testConfigs.Context, s.testConfigs.Store, createdDocument.ID)
+	s.NoError(err)
+	checkSystemIntakeDocumentEquality(s, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeID, deletedDocument)
 
-	remainingDocuments, err := GetSystemIntakeDocumentsByRequestID(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
-		suite.testConfigs.S3Client,
-		createdDocument.SystemIntakeRequestID,
-	)
-	suite.NoError(err)
-	suite.Equal(0, len(remainingDocuments))
+	remainingDocuments, err := GetSystemIntakeDocumentsByRequestID(s.ctxWithNewDataloaders(), createdDocument.SystemIntakeID)
+	s.NoError(err)
+	s.Equal(0, len(remainingDocuments))
 }
 
 func checkSystemIntakeDocumentEquality(
@@ -123,7 +135,7 @@ func checkSystemIntakeDocumentEquality(
 	suite.Nil(actualDocument.ModifiedAt)
 
 	// SystemIntakeDocument-specific fields
-	suite.EqualValues(expectedSystemIntakeID, actualDocument.SystemIntakeRequestID)
+	suite.EqualValues(expectedSystemIntakeID, actualDocument.SystemIntakeID)
 	suite.EqualValues(expectedDocument.CommonDocumentType, actualDocument.CommonDocumentType)
 	suite.EqualValues(expectedDocument.OtherType, actualDocument.OtherType)
 	suite.EqualValues(expectedDocument.FileName, actualDocument.FileName)

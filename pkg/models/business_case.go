@@ -72,6 +72,14 @@ type EstimatedLifecycleCost struct {
 	Cost           *int                  `json:"cost"`
 }
 
+func (e EstimatedLifecycleCost) GetMappingKey() uuid.UUID {
+	return e.BusinessCaseID
+}
+
+func (e EstimatedLifecycleCost) GetMappingVal() *EstimatedLifecycleCost {
+	return &e
+}
+
 // EstimatedLifecycleCosts models a list of EstimatedLifecycleCost line items
 type EstimatedLifecycleCosts []EstimatedLifecycleCost
 
@@ -82,68 +90,79 @@ func (e *EstimatedLifecycleCosts) Scan(src interface{}) error {
 
 // BusinessCase is the model for the business case form.
 type BusinessCase struct {
-	ID                                  uuid.UUID               `json:"id"`
-	EUAUserID                           string                  `json:"euaUserId" db:"eua_user_id"`
-	SystemIntakeID                      uuid.UUID               `json:"systemIntakeId" db:"system_intake"`
-	SystemIntakeStatus                  SystemIntakeStatus      `json:"systemIntakeStatus" db:"system_intake_status"`
-	Status                              BusinessCaseStatus      `json:"status"`
-	ProjectName                         null.String             `json:"projectName" db:"project_name"`
-	Requester                           null.String             `json:"requester"`
-	RequesterPhoneNumber                null.String             `json:"requesterPhoneNumber" db:"requester_phone_number"`
-	BusinessOwner                       null.String             `json:"businessOwner" db:"business_owner"`
-	BusinessNeed                        null.String             `json:"businessNeed" db:"business_need"`
-	CurrentSolutionSummary              null.String             `json:"currentSolutionSummary" db:"current_solution_summary"`
-	CMSBenefit                          null.String             `json:"cmsBenefit" db:"cms_benefit"`
-	PriorityAlignment                   null.String             `json:"priorityAlignment" db:"priority_alignment"`
-	SuccessIndicators                   null.String             `json:"successIndicators" db:"success_indicators"`
-	PreferredTitle                      null.String             `json:"preferredTitle" db:"preferred_title"`
-	PreferredSummary                    null.String             `json:"preferredSummary" db:"preferred_summary"`
-	PreferredAcquisitionApproach        null.String             `json:"preferredAcquisitionApproach" db:"preferred_acquisition_approach"`
-	PreferredSecurityIsApproved         null.Bool               `json:"preferredSecurityIsApproved" db:"preferred_security_is_approved"`
-	PreferredSecurityIsBeingReviewed    null.String             `json:"preferredSecurityIsBeingReviewed" db:"preferred_security_is_being_reviewed"`
-	PreferredHostingType                null.String             `json:"preferredHostingType" db:"preferred_hosting_type"`
-	PreferredHostingLocation            null.String             `json:"preferredHostingLocation" db:"preferred_hosting_location"`
-	PreferredHostingCloudServiceType    null.String             `json:"preferredHostingCloudServiceType" db:"preferred_hosting_cloud_service_type"`
-	PreferredHasUI                      null.String             `json:"preferredHasUI" db:"preferred_has_ui"`
-	PreferredPros                       null.String             `json:"preferredPros" db:"preferred_pros"`
-	PreferredCons                       null.String             `json:"preferredCons" db:"preferred_cons"`
-	PreferredCostSavings                null.String             `json:"preferredCostSavings" db:"preferred_cost_savings"`
-	AlternativeATitle                   null.String             `json:"alternativeATitle" db:"alternative_a_title"`
-	AlternativeASummary                 null.String             `json:"alternativeASummary" db:"alternative_a_summary"`
-	AlternativeAAcquisitionApproach     null.String             `json:"alternativeAAcquisitionApproach" db:"alternative_a_acquisition_approach"`
-	AlternativeASecurityIsApproved      null.Bool               `json:"alternativeASecurityIsApproved" db:"alternative_a_security_is_approved"`
-	AlternativeASecurityIsBeingReviewed null.String             `json:"alternativeASecurityIsBeingReviewed" db:"alternative_a_security_is_being_reviewed"`
-	AlternativeAHostingType             null.String             `json:"alternativeAHostingType" db:"alternative_a_hosting_type"`
-	AlternativeAHostingLocation         null.String             `json:"alternativeAHostingLocation" db:"alternative_a_hosting_location"`
-	AlternativeAHostingCloudServiceType null.String             `json:"alternativeAHostingCloudServiceType" db:"alternative_a_hosting_cloud_service_type"`
-	AlternativeAHasUI                   null.String             `json:"alternativeAHasUI" db:"alternative_a_has_ui"`
-	AlternativeAPros                    null.String             `json:"alternativeAPros" db:"alternative_a_pros"`
-	AlternativeACons                    null.String             `json:"alternativeACons" db:"alternative_a_cons"`
-	AlternativeACostSavings             null.String             `json:"alternativeACostSavings" db:"alternative_a_cost_savings"`
-	AlternativeBTitle                   null.String             `json:"alternativeBTitle" db:"alternative_b_title"`
-	AlternativeBSummary                 null.String             `json:"alternativeBSummary" db:"alternative_b_summary"`
-	AlternativeBAcquisitionApproach     null.String             `json:"alternativeBAcquisitionApproach" db:"alternative_b_acquisition_approach"`
-	AlternativeBSecurityIsApproved      null.Bool               `json:"alternativeBSecurityIsApproved" db:"alternative_b_security_is_approved"`
-	AlternativeBSecurityIsBeingReviewed null.String             `json:"alternativeBSecurityIsBeingReviewed" db:"alternative_b_security_is_being_reviewed"`
-	AlternativeBHostingType             null.String             `json:"alternativeBHostingType" db:"alternative_b_hosting_type"`
-	AlternativeBHostingLocation         null.String             `json:"alternativeBHostingLocation" db:"alternative_b_hosting_location"`
-	AlternativeBHostingCloudServiceType null.String             `json:"alternativeBHostingCloudServiceType" db:"alternative_b_hosting_cloud_service_type"`
-	AlternativeBHasUI                   null.String             `json:"alternativeBHasUI" db:"alternative_b_has_ui"`
-	AlternativeBPros                    null.String             `json:"alternativeBPros" db:"alternative_b_pros"`
-	AlternativeBCons                    null.String             `json:"alternativeBCons" db:"alternative_b_cons"`
-	AlternativeBCostSavings             null.String             `json:"alternativeBCostSavings" db:"alternative_b_cost_savings"`
-	LifecycleCostLines                  EstimatedLifecycleCosts `json:"lifecycleCostLines" db:"lifecycle_cost_lines"`
-	CreatedAt                           *time.Time              `json:"createdAt" db:"created_at"`
-	UpdatedAt                           *time.Time              `json:"updatedAt" db:"updated_at"`
-	ArchivedAt                          *time.Time              `db:"archived_at"`
+	ID                                  uuid.UUID          `json:"id"`
+	EUAUserID                           string             `json:"euaUserId" db:"eua_user_id"`
+	SystemIntakeID                      uuid.UUID          `json:"systemIntakeId" db:"system_intake"`
+	Status                              BusinessCaseStatus `json:"status"`
+	ProjectName                         null.String        `json:"projectName" db:"project_name"`
+	Requester                           null.String        `json:"requester"`
+	RequesterPhoneNumber                null.String        `json:"requesterPhoneNumber" db:"requester_phone_number"`
+	BusinessOwner                       null.String        `json:"businessOwner" db:"business_owner"`
+	BusinessNeed                        null.String        `json:"businessNeed" db:"business_need"`
+	CurrentSolutionSummary              null.String        `json:"currentSolutionSummary" db:"current_solution_summary"`
+	CMSBenefit                          null.String        `json:"cmsBenefit" db:"cms_benefit"`
+	PriorityAlignment                   null.String        `json:"priorityAlignment" db:"priority_alignment"`
+	SuccessIndicators                   null.String        `json:"successIndicators" db:"success_indicators"`
+	PreferredTitle                      null.String        `json:"preferredTitle" db:"preferred_title"`
+	PreferredSummary                    null.String        `json:"preferredSummary" db:"preferred_summary"`
+	PreferredAcquisitionApproach        null.String        `json:"preferredAcquisitionApproach" db:"preferred_acquisition_approach"`
+	PreferredSecurityIsApproved         null.Bool          `json:"preferredSecurityIsApproved" db:"preferred_security_is_approved"`
+	PreferredSecurityIsBeingReviewed    null.String        `json:"preferredSecurityIsBeingReviewed" db:"preferred_security_is_being_reviewed"`
+	PreferredHostingType                null.String        `json:"preferredHostingType" db:"preferred_hosting_type"`
+	PreferredHostingLocation            null.String        `json:"preferredHostingLocation" db:"preferred_hosting_location"`
+	PreferredHostingCloudServiceType    null.String        `json:"preferredHostingCloudServiceType" db:"preferred_hosting_cloud_service_type"`
+	PreferredHasUI                      null.String        `json:"preferredHasUI" db:"preferred_has_ui"`
+	PreferredPros                       null.String        `json:"preferredPros" db:"preferred_pros"`
+	PreferredCons                       null.String        `json:"preferredCons" db:"preferred_cons"`
+	PreferredCostSavings                null.String        `json:"preferredCostSavings" db:"preferred_cost_savings"`
+	AlternativeATitle                   null.String        `json:"alternativeATitle" db:"alternative_a_title"`
+	AlternativeASummary                 null.String        `json:"alternativeASummary" db:"alternative_a_summary"`
+	AlternativeAAcquisitionApproach     null.String        `json:"alternativeAAcquisitionApproach" db:"alternative_a_acquisition_approach"`
+	AlternativeASecurityIsApproved      null.Bool          `json:"alternativeASecurityIsApproved" db:"alternative_a_security_is_approved"`
+	AlternativeASecurityIsBeingReviewed null.String        `json:"alternativeASecurityIsBeingReviewed" db:"alternative_a_security_is_being_reviewed"`
+	AlternativeAHostingType             null.String        `json:"alternativeAHostingType" db:"alternative_a_hosting_type"`
+	AlternativeAHostingLocation         null.String        `json:"alternativeAHostingLocation" db:"alternative_a_hosting_location"`
+	AlternativeAHostingCloudServiceType null.String        `json:"alternativeAHostingCloudServiceType" db:"alternative_a_hosting_cloud_service_type"`
+	AlternativeAHasUI                   null.String        `json:"alternativeAHasUI" db:"alternative_a_has_ui"`
+	AlternativeAPros                    null.String        `json:"alternativeAPros" db:"alternative_a_pros"`
+	AlternativeACons                    null.String        `json:"alternativeACons" db:"alternative_a_cons"`
+	AlternativeACostSavings             null.String        `json:"alternativeACostSavings" db:"alternative_a_cost_savings"`
+	AlternativeBTitle                   null.String        `json:"alternativeBTitle" db:"alternative_b_title"`
+	AlternativeBSummary                 null.String        `json:"alternativeBSummary" db:"alternative_b_summary"`
+	AlternativeBAcquisitionApproach     null.String        `json:"alternativeBAcquisitionApproach" db:"alternative_b_acquisition_approach"`
+	AlternativeBSecurityIsApproved      null.Bool          `json:"alternativeBSecurityIsApproved" db:"alternative_b_security_is_approved"`
+	AlternativeBSecurityIsBeingReviewed null.String        `json:"alternativeBSecurityIsBeingReviewed" db:"alternative_b_security_is_being_reviewed"`
+	AlternativeBHostingType             null.String        `json:"alternativeBHostingType" db:"alternative_b_hosting_type"`
+	AlternativeBHostingLocation         null.String        `json:"alternativeBHostingLocation" db:"alternative_b_hosting_location"`
+	AlternativeBHostingCloudServiceType null.String        `json:"alternativeBHostingCloudServiceType" db:"alternative_b_hosting_cloud_service_type"`
+	AlternativeBHasUI                   null.String        `json:"alternativeBHasUI" db:"alternative_b_has_ui"`
+	AlternativeBPros                    null.String        `json:"alternativeBPros" db:"alternative_b_pros"`
+	AlternativeBCons                    null.String        `json:"alternativeBCons" db:"alternative_b_cons"`
+	AlternativeBCostSavings             null.String        `json:"alternativeBCostSavings" db:"alternative_b_cost_savings"`
+	CreatedAt                           *time.Time         `json:"createdAt" db:"created_at"`
+	UpdatedAt                           *time.Time         `json:"updatedAt" db:"updated_at"`
+	ArchivedAt                          *time.Time         `db:"archived_at"`
 
-	// these fields were removed from this model/the GQL schema as part of https://jiraent.cms.gov/browse/EASI-1693
-	// currently, they still exist in the database schema, in order to preserve any existing data in Prod
-	// to future maintainers: if you're removing these fields for good, also remove the db.Unsafe() calls in pkg/storage/business_case.go
+	// TODO: these fields are unused in GQL Schema but still exist as DB columns.
+	// Write a migration to drop these columns
+	// See https://jiraent.cms.gov/browse/EASI-1693
+	InitialSubmittedAt *time.Time `json:"initialSubmittedAt" db:"initial_submitted_at"`
+	LastSubmittedAt    *time.Time `json:"lastSubmittedAt" db:"last_submitted_at"`
+}
 
-	// InitialSubmittedAt                  *time.Time              `json:"initialSubmittedAt" db:"initial_submitted_at"`
-	// LastSubmittedAt                     *time.Time              `json:"lastSubmittedAt" db:"last_submitted_at"`
+// BusinessCaseWithCosts is a helper to allow for legacy REST code
+// to function that combines lifecycle costs with the business case model
+type BusinessCaseWithCosts struct {
+	BusinessCase
+	LifecycleCostLines EstimatedLifecycleCosts `json:"lifecycleCostLines" db:"lifecycle_cost_lines"`
 }
 
 // BusinessCases is the model for a list of business cases
 type BusinessCases []BusinessCase
+
+func (b BusinessCase) GetMappingKey() uuid.UUID {
+	return b.SystemIntakeID
+}
+func (b BusinessCase) GetMappingVal() *BusinessCase {
+	return &b
+}

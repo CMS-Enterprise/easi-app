@@ -1,10 +1,6 @@
 export const BASIC_USER_PROD = 'EASI_P_USER';
 export const GOVTEAM_DEV = 'EASI_D_GOVTEAM';
 export const GOVTEAM_PROD = 'EASI_P_GOVTEAM';
-export const ACCESSIBILITY_TESTER_DEV = 'EASI_D_508_TESTER';
-export const ACCESSIBILITY_TESTER_PROD = 'EASI_P_508_TESTER';
-export const ACCESSIBILITY_ADMIN_DEV = 'EASI_D_508_USER';
-export const ACCESSIBILITY_ADMIN_PROD = 'EASI_P_508_USER';
 export const TRB_ADMIN_DEV = 'EASI_TRB_ADMIN_D';
 export const TRB_ADMIN_PROD = 'EASI_TRB_ADMIN_P';
 
@@ -12,14 +8,10 @@ export const JOB_CODES = [
   BASIC_USER_PROD,
   GOVTEAM_DEV,
   GOVTEAM_PROD,
-  ACCESSIBILITY_TESTER_DEV,
-  ACCESSIBILITY_TESTER_PROD,
-  ACCESSIBILITY_ADMIN_DEV,
-  ACCESSIBILITY_ADMIN_PROD,
   TRB_ADMIN_DEV,
   TRB_ADMIN_PROD
 ] as const;
 
-export type JobCode = typeof JOB_CODES[number];
+export type JobCode = (typeof JOB_CODES)[number];
 
 export default JOB_CODES;

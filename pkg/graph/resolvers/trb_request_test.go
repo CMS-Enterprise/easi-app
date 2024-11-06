@@ -7,9 +7,9 @@ import (
 
 	"github.com/guregu/null/zero"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TestCreateTRBRequest makes a new TRB request
@@ -58,7 +58,7 @@ func (s *ResolverSuite) TestGetTRBRequestByID() {
 	s.NoError(err)
 	s.NotNil(trb)
 
-	ret, err := GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+	ret, err := GetTRBRequestByID(s.testConfigs.Context, s.testConfigs.Store, trb.ID)
 	s.NoError(err)
 	s.NotNil(ret)
 }
@@ -67,12 +67,10 @@ func (s *ResolverSuite) TestGetTRBRequestByID() {
 func (s *ResolverSuite) TestGetTRBRequests() {
 	// Create a context to use for requests from another user
 	principalABCD := &authentication.EUAPrincipal{
-		EUAID:            "ABCD",
-		JobCodeEASi:      true,
-		JobCodeGRT:       true,
-		JobCode508User:   true,
-		JobCode508Tester: true,
-		JobCodeTRBAdmin:  true,
+		EUAID:           "ABCD",
+		JobCodeEASi:     true,
+		JobCodeGRT:      true,
+		JobCodeTRBAdmin: true,
 	}
 	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
 	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
@@ -83,7 +81,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 	s.NotNil(trb)
 
 	// Check TEST sees 1 request
-	col, err := GetTRBRequests(s.testConfigs.Context, false, s.testConfigs.Store)
+	col, err := GetTRBRequests(s.testConfigs.Context, s.testConfigs.Store, false)
 	s.NoError(err)
 	s.Len(col, 1)
 	s.EqualValues(trb, col[0])
@@ -93,7 +91,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 	s.NoError(err)
 	s.NotNil(trb2)
 	//Check for 2 request
-	col, err = GetTRBRequests(s.testConfigs.Context, false, s.testConfigs.Store)
+	col, err = GetTRBRequests(s.testConfigs.Context, s.testConfigs.Store, false)
 	s.NoError(err)
 	s.Len(col, 2)
 
@@ -107,7 +105,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 	s.NoError(err)
 
 	// GET archived collection from ABCD's perspective
-	col, err = GetTRBRequests(ctxABCD, true, s.testConfigs.Store)
+	col, err = GetTRBRequests(ctxABCD, s.testConfigs.Store, true)
 	s.NoError(err)
 	s.Len(col, 1)
 	s.EqualValues(trbUpdate, col[0])
@@ -117,12 +115,10 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 func (s *ResolverSuite) TestGetMyTRBRequests() {
 	// Create a context to use for requests from another user
 	principalABCD := &authentication.EUAPrincipal{
-		EUAID:            "ABCD",
-		JobCodeEASi:      true,
-		JobCodeGRT:       true,
-		JobCode508User:   true,
-		JobCode508Tester: true,
-		JobCodeTRBAdmin:  true,
+		EUAID:           "ABCD",
+		JobCodeEASi:     true,
+		JobCodeGRT:      true,
+		JobCodeTRBAdmin: true,
 	}
 	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
 	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
@@ -133,13 +129,13 @@ func (s *ResolverSuite) TestGetMyTRBRequests() {
 	s.NotNil(trb)
 
 	// Check TEST sees 1 request
-	col, err := GetMyTRBRequests(s.testConfigs.Context, false, s.testConfigs.Store)
+	col, err := GetMyTRBRequests(s.testConfigs.Context, s.testConfigs.Store, false)
 	s.NoError(err)
 	s.Len(col, 1)
 	s.EqualValues(trb, col[0])
 
 	// Check ABCD sees 0 requests
-	col, err = GetMyTRBRequests(ctxABCD, false, s.testConfigs.Store)
+	col, err = GetMyTRBRequests(ctxABCD, s.testConfigs.Store, false)
 	s.NoError(err)
 	s.Len(col, 0)
 
@@ -149,13 +145,13 @@ func (s *ResolverSuite) TestGetMyTRBRequests() {
 	s.NotNil(trb2)
 
 	// TEST should see 1 request (their already created one)
-	col, err = GetMyTRBRequests(s.testConfigs.Context, false, s.testConfigs.Store)
+	col, err = GetMyTRBRequests(s.testConfigs.Context, s.testConfigs.Store, false)
 	s.NoError(err)
 	s.Len(col, 1)
 	s.EqualValues(trb, col[0])
 
 	// ABCD should see 1 request (the one we just created)
-	col, err = GetMyTRBRequests(ctxABCD, false, s.testConfigs.Store)
+	col, err = GetMyTRBRequests(ctxABCD, s.testConfigs.Store, false)
 	s.NoError(err)
 	s.Len(col, 1)
 	s.EqualValues(trb2, col[0])
@@ -170,12 +166,12 @@ func (s *ResolverSuite) TestGetMyTRBRequests() {
 	s.NoError(err)
 
 	// GET collection from ABCD's perspective and expect to not see any
-	col, err = GetMyTRBRequests(ctxABCD, false, s.testConfigs.Store)
+	col, err = GetMyTRBRequests(ctxABCD, s.testConfigs.Store, false)
 	s.NoError(err)
 	s.Len(col, 0)
 
 	// GET collection from ABCD's perspective (with archived true) and expect to see one
-	col, err = GetMyTRBRequests(ctxABCD, true, s.testConfigs.Store)
+	col, err = GetMyTRBRequests(ctxABCD, s.testConfigs.Store, true)
 	s.NoError(err)
 	s.Len(col, 1)
 	s.EqualValues(trbUpdate, col[0])
@@ -189,9 +185,9 @@ func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 
 	fetchUserInfo := func(ctx context.Context, eua string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			EuaUserID:  eua,
-			CommonName: "Mc Lovin",
-			Email:      "mclovin@example.com",
+			Username:    eua,
+			DisplayName: "Mc Lovin",
+			Email:       "mclovin@example.com",
 		}, nil
 	}
 
@@ -199,9 +195,9 @@ func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 		userInfos := make([]*models.UserInfo, len(euas))
 		for _, eua := range euas {
 			userInfos = append(userInfos, &models.UserInfo{
-				EuaUserID:  eua,
-				CommonName: "Mc Lovin",
-				Email:      "mclovin@example.com",
+				Username:    eua,
+				DisplayName: "Mc Lovin",
+				Email:       "mclovin@example.com",
 			})
 		}
 		return userInfos, nil
@@ -235,9 +231,9 @@ func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
 
 	fetchUserInfo := func(ctx context.Context, eua string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			EuaUserID:  eua,
-			CommonName: "Mc Lovin",
-			Email:      "mclovin@example.com",
+			Username:    eua,
+			DisplayName: "Mc Lovin",
+			Email:       "mclovin@example.com",
 		}, nil
 	}
 

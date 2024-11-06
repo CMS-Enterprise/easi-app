@@ -7,15 +7,23 @@ package models
 
 import (
 	"context"
+	"encoding/json"
+	"strconv"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // BusinessOwnerInformation business owner information
 //
 // swagger:model BusinessOwnerInformation
 type BusinessOwnerInformation struct {
+
+	// 508 user interface
+	// Enum: [Yes, UI accessible by external users. Yes, UI accessible by internal Federal Employees. Yes, UI accessible by both internal Federal Employees and external users. No, this system doesn't have a UI.]
+	Nr508UserInterface string `json:"508UserInterface,omitempty"`
 
 	// beneficiary address purpose
 	BeneficiaryAddressPurpose []string `json:"beneficiaryAddressPurpose"`
@@ -31,9 +39,15 @@ type BusinessOwnerInformation struct {
 	// Example: Medicaid Address (State)
 	BeneficiaryAddressSourceOther string `json:"beneficiaryAddressSourceOther,omitempty"`
 
+	// beneficiary information
+	BeneficiaryInformation []string `json:"beneficiaryInformation"`
+
 	// cost per year
 	// Example: 13759255.66
 	CostPerYear string `json:"costPerYear,omitempty"`
+
+	// edit beneficiary information
+	EditBeneficiaryInformation bool `json:"editBeneficiaryInformation,omitempty"`
 
 	// is cms owned
 	// Example: true
@@ -62,6 +76,143 @@ type BusinessOwnerInformation struct {
 
 // Validate validates this business owner information
 func (m *BusinessOwnerInformation) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateNr508UserInterface(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateBeneficiaryAddressPurpose(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateBeneficiaryInformation(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var businessOwnerInformationTypeNr508UserInterfacePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["Yes, UI accessible by external users.","Yes, UI accessible by internal Federal Employees.","Yes, UI accessible by both internal Federal Employees and external users.","No, this system doesn't have a UI."]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		businessOwnerInformationTypeNr508UserInterfacePropEnum = append(businessOwnerInformationTypeNr508UserInterfacePropEnum, v)
+	}
+}
+
+const (
+
+	// BusinessOwnerInformationNr508UserInterfaceYesUIAccessibleByExternalUsersDot captures enum value "Yes, UI accessible by external users."
+	BusinessOwnerInformationNr508UserInterfaceYesUIAccessibleByExternalUsersDot string = "Yes, UI accessible by external users."
+
+	// BusinessOwnerInformationNr508UserInterfaceYesUIAccessibleByInternalFederalEmployeesDot captures enum value "Yes, UI accessible by internal Federal Employees."
+	BusinessOwnerInformationNr508UserInterfaceYesUIAccessibleByInternalFederalEmployeesDot string = "Yes, UI accessible by internal Federal Employees."
+
+	// BusinessOwnerInformationNr508UserInterfaceYesUIAccessibleByBothInternalFederalEmployeesAndExternalUsersDot captures enum value "Yes, UI accessible by both internal Federal Employees and external users."
+	BusinessOwnerInformationNr508UserInterfaceYesUIAccessibleByBothInternalFederalEmployeesAndExternalUsersDot string = "Yes, UI accessible by both internal Federal Employees and external users."
+
+	// BusinessOwnerInformationNr508UserInterfaceNoThisSystemDoesntHaveaUIDot captures enum value "No, this system doesn't have a UI."
+	BusinessOwnerInformationNr508UserInterfaceNoThisSystemDoesntHaveaUIDot string = "No, this system doesn't have a UI."
+)
+
+// prop value enum
+func (m *BusinessOwnerInformation) validateNr508UserInterfaceEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, businessOwnerInformationTypeNr508UserInterfacePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BusinessOwnerInformation) validateNr508UserInterface(formats strfmt.Registry) error {
+	if swag.IsZero(m.Nr508UserInterface) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNr508UserInterfaceEnum("508UserInterface", "body", m.Nr508UserInterface); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var businessOwnerInformationBeneficiaryAddressPurposeItemsEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["Mailing","Payment Calculation","Coordination of Benefits","Subsidy Calculation","Premium Calculation","Risk Adjustment","Coordination of Care","Eligibility and Enrollment","Customer Service","Education and Outreach","Innovation","Research and Demonstrations","Healthcare Quality Improvement","Program Oversight","Actuarial Services","Regulatory and Policy Development","Audit Support","Patient Care Reporting","Beneficiary Data Access"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		businessOwnerInformationBeneficiaryAddressPurposeItemsEnum = append(businessOwnerInformationBeneficiaryAddressPurposeItemsEnum, v)
+	}
+}
+
+func (m *BusinessOwnerInformation) validateBeneficiaryAddressPurposeItemsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, businessOwnerInformationBeneficiaryAddressPurposeItemsEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BusinessOwnerInformation) validateBeneficiaryAddressPurpose(formats strfmt.Registry) error {
+	if swag.IsZero(m.BeneficiaryAddressPurpose) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.BeneficiaryAddressPurpose); i++ {
+
+		// value enum
+		if err := m.validateBeneficiaryAddressPurposeItemsEnum("beneficiaryAddressPurpose"+"."+strconv.Itoa(i), "body", m.BeneficiaryAddressPurpose[i]); err != nil {
+			return err
+		}
+
+	}
+
+	return nil
+}
+
+var businessOwnerInformationBeneficiaryInformationItemsEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["Beneficiary Address","Beneficiary email","Beneficiary Mobile Number","None of the Above"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		businessOwnerInformationBeneficiaryInformationItemsEnum = append(businessOwnerInformationBeneficiaryInformationItemsEnum, v)
+	}
+}
+
+func (m *BusinessOwnerInformation) validateBeneficiaryInformationItemsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, businessOwnerInformationBeneficiaryInformationItemsEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BusinessOwnerInformation) validateBeneficiaryInformation(formats strfmt.Registry) error {
+	if swag.IsZero(m.BeneficiaryInformation) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.BeneficiaryInformation); i++ {
+
+		// value enum
+		if err := m.validateBeneficiaryInformationItemsEnum("beneficiaryInformation"+"."+strconv.Itoa(i), "body", m.BeneficiaryInformation[i]); err != nil {
+			return err
+		}
+
+	}
+
 	return nil
 }
 

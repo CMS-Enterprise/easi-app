@@ -2,15 +2,18 @@ package server
 
 import (
 	"fmt"
+	"regexp"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appses"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/flags"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/upload"
+	"go.uber.org/zap"
+
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appses"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/flags"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
 const configMissingMessage = "Must set config: %v"
@@ -52,24 +55,24 @@ func (s Server) NewDBConfig() storage.DBConfig {
 func (s Server) NewEmailConfig() email.Config {
 	s.checkRequiredConfig(appconfig.GRTEmailKey)
 	s.checkRequiredConfig(appconfig.ITInvestmentEmailKey)
-	s.checkRequiredConfig(appconfig.AccessibilityTeamEmailKey)
 	s.checkRequiredConfig(appconfig.EASIHelpEmailKey)
 	s.checkRequiredConfig(appconfig.TRBEmailKey)
 	s.checkRequiredConfig(appconfig.ClientHostKey)
 	s.checkRequiredConfig(appconfig.ClientProtocolKey)
 	s.checkRequiredConfig(appconfig.EmailTemplateDirectoryKey)
 	s.checkRequiredConfig(appconfig.CEDAREmailAddress)
+	s.checkRequiredConfig(appconfig.OITFeedbackChannelSlackLink)
 
 	return email.Config{
-		GRTEmail:               models.NewEmailAddress(s.Config.GetString(appconfig.GRTEmailKey)),
-		ITInvestmentEmail:      models.NewEmailAddress(s.Config.GetString(appconfig.ITInvestmentEmailKey)),
-		AccessibilityTeamEmail: models.NewEmailAddress(s.Config.GetString(appconfig.AccessibilityTeamEmailKey)),
-		EASIHelpEmail:          models.NewEmailAddress(s.Config.GetString(appconfig.EASIHelpEmailKey)),
-		TRBEmail:               models.NewEmailAddress(s.Config.GetString(appconfig.TRBEmailKey)),
-		CEDARTeamEmail:         models.NewEmailAddress(s.Config.GetString(appconfig.CEDAREmailAddress)),
-		URLHost:                s.Config.GetString(appconfig.ClientHostKey),
-		URLScheme:              s.Config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory:      s.Config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:                    models.NewEmailAddress(s.Config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail:           models.NewEmailAddress(s.Config.GetString(appconfig.ITInvestmentEmailKey)),
+		EASIHelpEmail:               models.NewEmailAddress(s.Config.GetString(appconfig.EASIHelpEmailKey)),
+		TRBEmail:                    models.NewEmailAddress(s.Config.GetString(appconfig.TRBEmailKey)),
+		CEDARTeamEmail:              models.NewEmailAddress(s.Config.GetString(appconfig.CEDAREmailAddress)),
+		OITFeedbackChannelSlackLink: s.Config.GetString(appconfig.OITFeedbackChannelSlackLink),
+		URLHost:                     s.Config.GetString(appconfig.ClientHostKey),
+		URLScheme:                   s.Config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory:           s.Config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 }
 
@@ -78,9 +81,16 @@ func (s Server) NewSESConfig() appses.Config {
 	s.checkRequiredConfig(appconfig.AWSSESSourceARNKey)
 	s.checkRequiredConfig(appconfig.AWSSESSourceKey)
 
+	// Fetch regex from env var
+	// GetString() will return "" if the variable's not set, which _is_ a valid regex (and WILL match everything)
+	sesRegexString := s.Config.GetString(appconfig.SESRecipientAllowListRegexKey)
+	sesRegex := regexp.MustCompile(sesRegexString)
+	s.logger.Debug("successfully parsed ses regex:", zap.String("parsedRegex", sesRegex.String()))
+
 	return appses.Config{
-		SourceARN: s.Config.GetString(appconfig.AWSSESSourceARNKey),
-		Source:    s.Config.GetString(appconfig.AWSSESSourceKey),
+		SourceARN:               s.Config.GetString(appconfig.AWSSESSourceARNKey),
+		Source:                  s.Config.GetString(appconfig.AWSSESSourceKey),
+		RecipientAllowListRegex: sesRegex,
 	}
 }
 
@@ -98,9 +108,9 @@ func (s Server) NewS3Config() upload.Config {
 // NewCEDARClientCheck checks if CEDAR clients are not connectable
 func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARAPIURL)
+	s.checkRequiredConfig(appconfig.CEDARPROXYURL)
 	s.checkRequiredConfig(appconfig.CEDARAPIKey)
 	s.checkRequiredConfig(appconfig.CEDARCoreAPIVersion)
-	s.checkRequiredConfig(appconfig.CEDARCacheIntervalKey)
 }
 
 // NewOktaAPIClientCheck checks if the Okta API client is configured

@@ -16,7 +16,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewContractUpdateParams creates a new ContractUpdateParams object,
@@ -64,7 +64,10 @@ ContractUpdateParams contains all the parameters to send to the API endpoint
 */
 type ContractUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   An array of contracts to be updated in Alfabet.
+	*/
 	Body *models.ContractUpdateRequest
 
 	/* BudgetsOnly.

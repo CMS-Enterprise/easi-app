@@ -19,6 +19,17 @@ export default gql`
         id
       }
       consultMeetingTime
+
+      relationType
+      contractName
+      contractNumbers {
+        contractNumber
+      }
+      systems {
+        id
+        name
+        acronym
+      }
     }
   }
 `;

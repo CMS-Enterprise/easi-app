@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/url"
 	"testing"
-	"time"
 
 	"github.com/99designs/gqlgen/client"
 	"github.com/99designs/gqlgen/graphql"
@@ -15,25 +14,24 @@ import (
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/graph/generated"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/services"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
-	"github.com/cmsgov/easi-app/pkg/upload"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
 type GraphQLTestSuite struct {
@@ -43,6 +41,7 @@ type GraphQLTestSuite struct {
 	client   *client.Client
 	s3Client *mockS3Client
 	resolver *Resolver
+	context  context.Context
 }
 
 func (s *GraphQLTestSuite) BeforeTest() {
@@ -135,32 +134,26 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	// set up Email Client
 	emailConfig := email.Config{
-		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
-		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
-		URLHost:                config.GetString(appconfig.ClientHostKey),
-		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
-	localSender := local.NewSender()
+
+	env, _ := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+
+	localSender := local.NewSender(env)
 	emailClient, err := email.NewClient(emailConfig, localSender)
 	if err != nil {
 		t.FailNow()
 	}
 
-	cedarLdapClient := local.NewCedarLdapClient(logger)
+	oktaAPIClient := local.NewOktaAPIClient()
+	cedarCoreClient := cedarcore.NewClient(appcontext.WithLogger(context.Background(), logger), "fake", "fake", "1.0.0", false, true)
 
-	cedarCoreClient := cedarcore.NewClient(appcontext.WithLogger(context.Background(), logger), "fake", "fake", "1.0.0", time.Minute, ldClient)
-
-	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
+	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role models.Role) (res interface{}, err error) {
 		return next(ctx)
 	}}
-
-	issueLifecycleID := func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
-		if intake.LifecycleID.ValueOrZero() == "" {
-			intake.LifecycleID = null.StringFrom("654321B")
-		}
-		return intake, nil
-	}
 
 	submitIntake := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		_, err := store.CreateAction(ctx, action)
@@ -168,7 +161,6 @@ func TestGraphQLTestSuite(t *testing.T) {
 			return err
 		}
 
-		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		_, err = store.UpdateSystemIntake(ctx, intake)
 		if err != nil {
 			return err
@@ -176,29 +168,29 @@ func TestGraphQLTestSuite(t *testing.T) {
 		return nil
 	}
 
-	saveAction := services.NewSaveAction(
-		store.CreateAction,
-		cedarLdapClient.FetchUserInfo,
-	)
-
-	serviceConfig := services.NewConfig(logger, ldClient)
-
 	var resolverService ResolverService
-	resolverService.IssueLifecycleID = issueLifecycleID
 	resolverService.SubmitIntake = submitIntake
-	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
-	resolverService.SearchCommonNameContains = cedarLdapClient.SearchCommonNameContains
-	resolverService.CreateActionExtendLifecycleID = services.NewCreateActionExtendLifecycleID(
-		serviceConfig,
-		saveAction,
-		store.FetchSystemIntakeByID,
-		store.UpdateSystemIntake,
-		emailClient.SendExtendLCIDEmails,
-	)
+	resolverService.FetchUserInfo = oktaAPIClient.FetchUserInfo
+	resolverService.SearchCommonNameContains = oktaAPIClient.SearchCommonNameContains
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})
-	graphQLClient := client.New(handler.NewDefaultServer(schema))
+
+	buildDataloaders := func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(
+			store,
+			oktaAPIClient.FetchUserInfos,
+			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
+		)
+	}
+
+	graphQLClient := client.New(
+		handler.NewDefaultServer(schema),
+		addDataloadersToGraphQLClientTest(buildDataloaders),
+	)
+
+	ctx := context.Background()
+	ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
 
 	storeTestSuite := &GraphQLTestSuite{
 		Suite:    suite.Suite{},
@@ -207,7 +199,30 @@ func TestGraphQLTestSuite(t *testing.T) {
 		client:   graphQLClient,
 		s3Client: &mockClient,
 		resolver: resolver,
+		context:  ctx,
 	}
 
 	suite.Run(t, storeTestSuite)
+}
+
+// addDataloadersToGraphQLClientTest adds all dataloaders into the test context for use in tests
+func addDataloadersToGraphQLClientTest(buildDataloaders dataloaders.BuildDataloaders) func(*client.Request) {
+	return func(request *client.Request) {
+		ctx := request.HTTP.Context()
+		ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
+		request.HTTP = request.HTTP.WithContext(ctx)
+	}
+}
+
+// addAuthWithAllJobCodesToGraphQLClientTest adds authentication for all job codes
+func addAuthWithAllJobCodesToGraphQLClientTest(euaID string) func(*client.Request) {
+	return func(request *client.Request) {
+		ctx := appcontext.WithPrincipal(request.HTTP.Context(), &authentication.EUAPrincipal{
+			EUAID:       euaID,
+			JobCodeEASi: true,
+			JobCodeGRT:  true,
+		})
+
+		request.HTTP = request.HTTP.WithContext(ctx)
+	}
 }

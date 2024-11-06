@@ -1,6 +1,9 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import {
+  Column,
+  Row,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -12,24 +15,36 @@ import { Table as UswdsTable } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import Alert from 'components/shared/Alert';
 import Spinner from 'components/Spinner';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
-import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
-import { RequestType } from 'types/graphql-global-types';
-import { formatDateLocal, formatDateUtc } from 'utils/date';
+import {
+  GetRequests,
+  GetRequests_mySystemIntakes as GetSystemIntakesType,
+  GetRequests_myTrbRequests as GetTRBRequestsType
+} from 'queries/types/GetRequests';
+import { AppState } from 'reducers/rootReducer';
+import { SystemIntakeStatusRequester } from 'types/graphql-global-types';
+import { RequestType } from 'types/requestType';
+import { formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
+import {
+  SystemIntakeStatusRequesterIndex,
+  trbRequestStatusSortType
+} from 'utils/tableRequestStatusIndex';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
+import user from 'utils/user';
 
-import tableMap, { isTRBRequestType } from './tableMap';
+import { MergedRequestsForTable } from './mergedRequestForTable';
 
 import '../index.scss';
 
@@ -47,56 +62,39 @@ const Table = ({
   const { t } = useTranslation([
     'home',
     'intake',
-    'accessibility',
     'technicalAssistance',
     'governanceReviewTeam'
   ]);
 
-  const { loading, error, data: tableData } = useQuery<
-    GetRequests,
-    GetRequestsVariables
-  >(GetRequestsQuery, {
-    variables: { first: 20 },
-    fetchPolicy: 'cache-and-network'
-  });
+  const { groups } = useSelector((state: AppState) => state.auth);
 
   const flags = useFlags();
 
-  const columns: any = useMemo(() => {
+  const {
+    loading,
+    error,
+    data: tableData
+  } = useQuery<GetRequests>(GetRequestsQuery, {
+    fetchPolicy: 'cache-and-network'
+  });
+
+  const isITGovAdmin: boolean = useMemo(
+    () => user.isITGovAdmin(groups, flags),
+    [flags, groups]
+  );
+
+  const isTRBAdmin: boolean = useMemo(
+    () => user.isTrbAdmin(groups, flags),
+    [flags, groups]
+  );
+
+  const columns: Column<MergedRequestsForTable>[] = useMemo<
+    Column<MergedRequestsForTable>[]
+  >(() => {
     return [
       {
-        Header: t('requestsTable.headers.name'),
-        accessor: 'name',
-        Cell: ({ row, value }: any) => {
-          let link: string;
-
-          if (isTRBRequestType(row.original)) {
-            link = `/trb/task-list/${row.original.id}`;
-          } else {
-            switch (row.original.type) {
-              case t('requestsTable.types.ACCESSIBILITY_REQUEST'):
-                link = `/508/requests/${row.original.id}`;
-                break;
-              case t('requestsTable.types.GOVERNANCE_REQUEST'):
-                link = `/governance-task-list/${row.original.id}`;
-                break;
-              default:
-                link = '/';
-            }
-          }
-
-          return <UswdsReactLink to={link}>{value}</UswdsReactLink>;
-        },
-        width: '220px',
-        maxWidth: 350
-      },
-      {
-        Header: t('requestsTable.headers.type'),
-        accessor: 'type'
-      },
-      {
-        Header: t('requestsTable.headers.submittedAt'),
-        accessor: 'submittedAt',
+        Header: t<string>('requestsTable.headers.submittedAt'),
+        accessor: 'submissionDate',
         Cell: ({ value }: any) => {
           if (value) {
             return formatDateUtc(value, 'MM/dd/yyyy');
@@ -105,65 +103,185 @@ const Table = ({
         }
       },
       {
-        Header: t('requestsTable.headers.status'),
-        accessor: 'status',
-        Cell: ({ row, value }: any) => {
-          switch (row.original.type) {
-            case t(`requestsTable.types.ACCESSIBILITY_REQUEST`):
-              // Status hasn't changed if the status record created at is the same
-              // as the 508 request's submitted at
-              if (row.original.submittedAt === row.original.createdAt) {
-                return <span>{value}</span>;
-              }
-              return (
-                <span>
-                  {value}
-                  <span className="text-base-dark font-body-3xs">{` - Changed on ${formatDateLocal(
-                    row.original.statusCreatedAt,
-                    'MM/dd/yyyy'
-                  )}`}</span>
-                </span>
-              );
-            case t(`requestsTable.types.GOVERNANCE_REQUEST`):
-              if (flags.itGovV2Enabled) {
-                return t(
-                  `governanceReviewTeam:systemIntakeStatusRequester.${row.original.statusRequester}`,
-                  { lcid: row.original.lcid }
+        Header: t<string>('requestsTable.headers.name'),
+        accessor: 'name',
+        Cell: ({
+          row,
+          value
+        }: {
+          row: Row<MergedRequestsForTable>;
+          value: MergedRequestsForTable['name'];
+        }) => {
+          let link: string;
+
+          switch (row.original.process) {
+            case 'TRB':
+              link = `/trb/task-list/${row.original.id}`;
+              break;
+            case 'IT Governance':
+              link = `/governance-task-list/${row.original.id}`;
+              break;
+            default:
+              link = '/';
+          }
+
+          return <UswdsReactLink to={link}>{value}</UswdsReactLink>;
+        },
+        width: '220px',
+        maxWidth: 350
+      },
+      {
+        Header: t<string>('requestsTable.headers.type'),
+        accessor: 'process'
+      },
+      {
+        Header: t<string>('requestsTable.headers.status'),
+        // The status property is just a generic property available on all request types
+        // See cases below for details on how statuses are determined by type
+        id: 'status',
+        accessor: (request: MergedRequestsForTable) => {
+          switch (request.process) {
+            case 'IT Governance':
+              // return admin status for admins
+              if (isITGovAdmin || isTRBAdmin) {
+                return t<string>(
+                  `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`,
+                  { lcid: request.lcid }
                 );
               }
-              if (row.original.lcid) {
-                return `${value}: ${row.original.lcid}`;
-              }
-              return value;
-            case t(`requestsTable.types.TRB`):
-              return value;
+
+              // return requester status for non-admins
+              return t<string>(
+                `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`,
+                { lcid: request.lcid }
+              );
+
+            case 'TRB':
+              return t<string>(`table.requestStatus.${request.status}`, {
+                ns: 'technicalAssistance'
+              });
             default:
               return '';
           }
         },
+        sortType: (a: any, b: any) => {
+          // Check for the 2 status types: trb requester and itgov requester
+          // Put IT Gov requests before TRB
+          if (
+            a.original.type === 'IT Governance' &&
+            b.original.type === 'TRB'
+          ) {
+            return -1;
+          }
+          if (
+            a.original.type === 'TRB' &&
+            b.original.type === 'IT Governance'
+          ) {
+            return 1;
+          }
+
+          // Compare IT Gov Requests
+          if (
+            a.original.type === 'IT Governance' &&
+            b.original.type === 'IT Governance'
+          ) {
+            const astatus = a.original.statusRequester;
+            const bstatus = b.original.statusRequester;
+
+            // Check some matching statuses to further sort by lcid value
+            if (
+              (astatus === SystemIntakeStatusRequester.LCID_ISSUED &&
+                bstatus === SystemIntakeStatusRequester.LCID_ISSUED) ||
+              (astatus === SystemIntakeStatusRequester.LCID_EXPIRED &&
+                bstatus === SystemIntakeStatusRequester.LCID_EXPIRED) ||
+              (astatus === SystemIntakeStatusRequester.LCID_RETIRED &&
+                bstatus === SystemIntakeStatusRequester.LCID_RETIRED)
+            ) {
+              return a.original.lcid > b.original.lcid ? 1 : -1;
+            }
+
+            const ai = SystemIntakeStatusRequesterIndex()[astatus];
+            const bi = SystemIntakeStatusRequesterIndex()[bstatus];
+            return ai > bi ? 1 : -1;
+          }
+
+          // Compare TRB Requests
+          if (a.original.type === 'TRB' && b.original.type === 'TRB') {
+            return trbRequestStatusSortType(a, b);
+          }
+
+          return 0;
+        },
         width: '200px'
       },
       {
-        Header: t('requestsTable.headers.nextMeetingDate'),
+        Header: t<string>('requestsTable.headers.nextMeetingDate'),
         accessor: 'nextMeetingDate',
-        Cell: ({ value }: any) => {
+        Cell: ({ value }: { value: string | null }) => {
           if (value) {
             return formatDateUtc(value, 'MM/dd/yyyy');
           }
           return 'None';
         }
+      },
+      {
+        Header: t<string>('requestsTable.headers.relatedSystems'),
+        accessor: 'systems',
+        Cell: ({ value }: { value: string[] }) => {
+          return value.join(', ');
+        },
+        width: '250px'
       }
     ];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isITGovAdmin, isTRBAdmin, t]);
 
   // Modifying data for table sorting and prepping for Cell configuration
-  const data = useMemo(() => {
-    if (tableData) {
-      return tableMap(tableData, t, type);
+  const data: MergedRequestsForTable[] = useMemo<
+    MergedRequestsForTable[]
+  >(() => {
+    if (!tableData) {
+      return [];
     }
-    return [];
-  }, [tableData, t, type]);
+
+    const merged: MergedRequestsForTable[] = [];
+
+    if (!type || type === 'itgov') {
+      tableData.mySystemIntakes.forEach(
+        (systemIntake: GetSystemIntakesType) => {
+          merged.push({
+            id: systemIntake.id,
+            name: systemIntake.requestName || 'Draft',
+            nextMeetingDate: systemIntake.nextMeetingDate,
+            process: 'IT Governance',
+            status:
+              isITGovAdmin || isTRBAdmin
+                ? systemIntake.statusAdmin
+                : systemIntake.statusRequester,
+            submissionDate: systemIntake.submittedAt,
+            systems: systemIntake.systems.map(system => system.name),
+            lcid: systemIntake.lcid
+          });
+        }
+      );
+    }
+
+    if (!type || type === 'trb') {
+      tableData.myTrbRequests.forEach((trbRequest: GetTRBRequestsType) => {
+        merged.push({
+          id: trbRequest.id,
+          name: trbRequest.name || 'Draft',
+          nextMeetingDate: trbRequest.nextMeetingDate,
+          process: 'TRB',
+          status: trbRequest.status,
+          submissionDate: trbRequest.submittedAt,
+          systems: trbRequest.systems.map(system => system.name),
+          lcid: null
+        });
+      });
+    }
+
+    return merged;
+  }, [isITGovAdmin, isTRBAdmin, tableData, type]);
 
   const {
     getTableProps,
@@ -223,29 +341,31 @@ const Table = ({
     return <div>{JSON.stringify(error)}</div>;
   }
 
-  if (data.length === 0) {
-    return <p>{t('requestsTable.empty')}</p>;
-  }
-
   return (
-    <div className="accessibility-requests-table">
-      <GlobalClientFilter
-        setGlobalFilter={setGlobalFilter}
-        tableID={t('requestsTable.id')}
-        tableName={t('requestsTable.title')}
-        className="margin-bottom-4"
-      />
+    <div className="requests-table margin-bottom-6">
+      {data.length > state.pageSize && (
+        <>
+          <GlobalClientFilter
+            setGlobalFilter={setGlobalFilter}
+            tableID={t<string>('requestsTable.id')}
+            tableName={t<string>('requestsTable.title')}
+            className="margin-bottom-4"
+          />
 
-      <TableResults
-        globalFilter={state.globalFilter}
-        pageIndex={state.pageIndex}
-        pageSize={state.pageSize}
-        filteredRowLength={page.length}
-        rowLength={data.length}
-        className="margin-bottom-4"
-      />
+          <TableResults
+            globalFilter={state.globalFilter}
+            pageIndex={state.pageIndex}
+            pageSize={state.pageSize}
+            filteredRowLength={rows.length}
+            rowLength={data.length}
+            className="margin-bottom-4"
+          />
+        </>
+      )}
       <UswdsTable bordered={false} {...getTableProps()} fullWidth scrollable>
-        <caption className="usa-sr-only">{t('requestsTable.caption')}</caption>
+        <caption className="usa-sr-only">
+          {t<string>('requestsTable.caption')}
+        </caption>
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -315,7 +435,7 @@ const Table = ({
       </UswdsTable>
 
       <div className="grid-row grid-gap grid-gap-lg">
-        {data.length > 10 && (
+        {data.length > state.pageSize && (
           <TablePagination
             gotoPage={gotoPage}
             previousPage={previousPage}
@@ -340,6 +460,12 @@ const Table = ({
           />
         )}
       </div>
+
+      {data.length === 0 && (
+        <Alert type="info" slim>
+          {t<string>('requestsTable.empty')}
+        </Alert>
+      )}
 
       <div
         className="usa-sr-only usa-table__announcement-region"

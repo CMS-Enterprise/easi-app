@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "The CMS Enterprise Data and Analytics Repository (CEDAR) Core API provides the CRUD (where applicable) operations for Budget, Component, Contract, Data Center, Deployment, Exchange, Person, Role Stake Holder, System Detail, System Summary and User objects.\n\n# Specification\n\nThis API is published in Swagger JSON 2.0 format and can be exported for consumption. For each of the resource, API provides **GET**, **POST**, **DELETE** operations. And to invoke, any of these methods, you can request for an `access-token`. In addition, POST & DELETE methods are not permitted in Production.\n",
+    "description": "The CMS Enterprise Data and Analytics Repository (CEDAR) Core API's. \n These interfaces contain CRUD (where applicable) operations for Budget, Component, Contract, Data Center, Deployment, Exchange, Person, Role Stake Holder, System Detail, System Summary and User.\n",
     "version": "2.0.0",
     "title": "CEDAR Core API",
     "termsOfService": "https://www.cedardev.cms.gov/",
@@ -9,15 +9,11 @@
       "email": "EnterpriseArchitecture@cms.hhs.gov"
     }
   },
-  "host": "webmethods-apigw.cedarimpl.cms.gov",
+  "host": "webmethods-apigw.cedar.cms.gov",
   "basePath": "/gateway/CEDAR Core API/2.0.0",
   "tags": [
     {
       "name": "softwareProducts",
-      "description": ""
-    },
-    {
-      "name": "url",
       "description": ""
     },
     {
@@ -91,6 +87,10 @@
     {
       "name": "user",
       "description": "CEDAR system users"
+    },
+    {
+      "name": "url",
+      "description": "CMS URLs"
     }
   ],
   "schemes": [
@@ -110,7 +110,6 @@
         "summary": "Retrieve a list of enumerations based on a list of enumeration names passed in.",
         "description": "Retrieve a list of enumerations based on a list of enumeration names passed in.",
         "operationId": "enumerationFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -174,7 +173,6 @@
         "summary": "Retrieve an existing user in a CEDAR system based on the user name. This interface takes username.",
         "description": "Retrieve an existing user in a CEDAR system based on the user name. This interface takes username.",
         "operationId": "userFindByUsername",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -238,7 +236,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "User information to be updated in CEDAR.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/UserUpdateRequest"
             }
@@ -280,7 +279,6 @@
         "summary": "Retrieve a list of contracts based on query criteria. If a SystemId is passed, the contract(s) for that system are returned. If no query data is passed in, all contracts for the current year are returned.",
         "description": "Retrieve a list of contracts based on query criteria. If a SystemId is passed, the contract(s) for that system are returned. If no query data is passed in, all contracts for the current year are returned.",
         "operationId": "contractFind",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -296,6 +294,24 @@
             "name": "keyword",
             "in": "query",
             "description": "A keyword to be used in the query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "POPStartDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "POPEndDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "contractName",
+            "in": "query",
             "required": false,
             "type": "string"
           }
@@ -344,7 +360,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "An array of Contracts to be added to CEDAR Alfabet.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/ContractAddRequest"
             }
@@ -401,7 +418,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "An array of contracts to be updated in Alfabet.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/ContractUpdateRequest"
             }
@@ -441,7 +459,6 @@
         "summary": "Delete a list of contracts based on an array of contarct ids.",
         "description": "Delete a list of contracts based on an array of contarct ids.",
         "operationId": "contractDeleteList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -500,7 +517,6 @@
         "summary": "Retrieve a system summary based on the provided id.",
         "description": "Retrieve a system summary based on the provided id.",
         "operationId": "systemSummaryFindById",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -605,7 +621,6 @@
         "summary": "Retrieve all versions of a system based on the ICT Object ID.",
         "description": "Retrieve all versions of a system based on the ICT Object ID.",
         "operationId": "systemVersionFindById",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -656,6 +671,54 @@
         }
       }
     },
+    "/budgetSystemCost": {
+      "get": {
+        "tags": [
+          "budgetSystemCost"
+        ],
+        "summary": "",
+        "description": "",
+        "operationId": "budgetSystemCostFind",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "query",
+            "description": "ID of the system that the budget is associated with. Adding this parameter will instruct the interface to only return the system matching the systemId.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BudgetActualSystemCostResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
     "/person/{id}": {
       "get": {
         "tags": [
@@ -664,7 +727,6 @@
         "summary": "Retrieve an existing person or a sigle person record based on the users EUA id.",
         "description": "Retrieve an existing person or a sigle person record based on the users EUA id.",
         "operationId": "personFindById",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -711,6 +773,46 @@
         }
       }
     },
+    "/domainModelName": {
+      "get": {
+        "tags": [
+          "domain model"
+        ],
+        "summary": "Retrieves a list of available domain reference models",
+        "description": "Retrieves a list of available domain reference models",
+        "operationId": "domainModelNameFindList",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DomainModelNameFindResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
     "/domainModelLevel": {
       "get": {
         "tags": [
@@ -719,7 +821,6 @@
         "summary": "Retrieves the model levels associated with a specific domain reference models",
         "description": "Retrieves the hierarchy levels associated with a specific domain reference models",
         "operationId": "domainModelLevelFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -760,47 +861,6 @@
         }
       }
     },
-    "/domainModelName": {
-      "get": {
-        "tags": [
-          "domain model"
-        ],
-        "summary": "Retrieves a list of available domain reference models",
-        "description": "Retrieves a list of available domain reference models",
-        "operationId": "domainModelNameFindList",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/DomainModelNameFindResponse"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          },
-          "401": {
-            "description": "Access Denied",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          }
-        }
-      }
-    },
     "/costType": {
       "get": {
         "tags": [
@@ -809,7 +869,6 @@
         "summary": "Retrieve a list of cost types",
         "description": "Retrieve a list of cost types",
         "operationId": "costTypeFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -875,7 +934,6 @@
         "summary": "Retrieve a list of softwareProducts. This interface takes in id and version.",
         "description": "Retrieve a list of softwareProducts. This interface takes in id and version.",
         "operationId": "softwareProductsFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -885,13 +943,6 @@
             "in": "query",
             "description": "Application ID.",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "version",
-            "in": "query",
-            "description": "Stakeholder version.",
-            "required": false,
             "type": "string"
           }
         ],
@@ -927,6 +978,57 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "softwareProducts"
+        ],
+        "summary": "Add a software product that is used by the system",
+        "description": "Add the software product and version details that is used by the system. Software produt can be operating sytems, database, middleware etc. that are needed to perform business function",
+        "operationId": "softwareProductsAdd",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Page detail information to be added to CEDAR",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PageSoftwareProductsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
       }
     },
     "/system/detail/{id}": {
@@ -937,7 +1039,6 @@
         "summary": "Retrieve an existing system based on the provided id.",
         "description": "Retrieve an existing system based on the provided id.",
         "operationId": "systemDetailFindById",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -992,7 +1093,6 @@
         "summary": "Retrieve a list of supportContacts based on the inputs passed in.",
         "description": "Retrieve a list of supportContact records to Alfabet. This interface takes in id, application id, name, title, url, phone and email.",
         "operationId": "supportContactFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -1049,7 +1149,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "supportContact information to be added to Alfabet.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/SupportContactAddRequest"
             }
@@ -1089,7 +1190,6 @@
         "summary": "Delete a list of supportContacts by ID.",
         "description": "Delete a list of supportContacts record to Alfabet. This interface takes an array of supportContact id's.",
         "operationId": "supportContactDeleteList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -1148,7 +1248,6 @@
         "summary": "Retrieve a list of ATO's based on query criteria",
         "description": "An Authority to Operate (ATO) is official documentation that an IT asset within a defined boundary has met FISMA security requirements for a limited period of time. ATO security boundaries can encompass business systems, data centers, cloud service provider enclaves, or other IT assets.",
         "operationId": "authorityToOperateFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -1254,7 +1353,6 @@
         "summary": "Retrieve a list of stakeholders. This interface takes in id, name, version, state, status and idsOnly.",
         "description": "Retrieve a list of stakeholders. This interface takes in id, name, version, state, status and idsOnly.",
         "operationId": "stakeholderFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -1353,7 +1451,6 @@
         "summary": "Retrieves reference model information about Enterprise Architecture assets",
         "description": "The Federal Enterprise Architecture Framework (FEAF) v2 describes a suite of tools to help government planners implement the Common Approach. At its core is the Consolidated Reference Model (CRM), which equips OMB and Federal agencies with a common language and framework to describe and analyze investments. It consists of a set of interrelated “reference models” that describe the six subarchitecture domains in the framework: Strategy, Business, Data, Applications, Infrastructure, Security: https://obamawhitehouse.archives.gov/sites/default/files/omb/assets/egov_docs/fea_v2.pdf",
         "operationId": "domainModelFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -1416,7 +1513,6 @@
         "summary": "Retrieve a list of deployments based on query criteria (systemId, state, status and deploymentType).",
         "description": "Retrieve a list of deployments based on query criteria (systemId, state, status and deploymentType).",
         "operationId": "deploymentFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -1514,7 +1610,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "Deployment list to be added to CEDAR",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/DeploymentAddRequest"
             }
@@ -1564,7 +1661,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "Deployment list to be updated in Alfabet.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/DeploymentUpdateRequest"
             }
@@ -1604,7 +1702,6 @@
         "summary": "Delete a list of deployments based on the ids passed in. This interface takes an array of deploymentIds.",
         "description": "Delete a list of deployments based on the ids passed in. This interface takes an array of deploymentIds.",
         "operationId": "deploymentDeleteList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -1663,7 +1760,6 @@
         "summary": "Retrieve a component",
         "description": "Retrieve a component record based on the id parameter that is passed in.",
         "operationId": "componentFind",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -1720,7 +1816,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "Component record to be added to Alfabet.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/ComponentAddRequest"
             }
@@ -1760,7 +1857,6 @@
         "summary": "Deletes a component within Alfabet based on the ID that is passed in.",
         "description": "Deletes a component within Alfabet based on the ID that is passed in.",
         "operationId": "componentDelete",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -1815,7 +1911,6 @@
         "summary": "Retrieve a list of budgets based on query criteria listed in the parameters section. Passing a SystemId will cause the interface to return the budget(s) for just that system. Setting onlyIds to true will only return the id's, whereas if not set, the response will also include projectId, systemId, fundingId and funding. This interface has a limit of 5000 records.",
         "description": "Retrieve a list of budgets based on query criteria listed in the parameters section. Passing a SystemId will cause the interface to return the budget(s) for just that system. Setting onlyIds to true will only return the id's, whereas if not set, the response will also include projectId, systemId, fundingId and funding. This interface has a limit of 5000 records.",
         "operationId": "budgetFind",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -1900,7 +1995,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "Budget(s) to be added to CEDAR.  This required input in a list of Budget documents.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/BudgetAddRequest"
             }
@@ -1950,7 +2046,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "Budgets to be updated in CEDAR. This required input in a list of Budget documents (id, projectId, systemId, fundingId and funding).",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/BudgetUpdateRequest"
             }
@@ -1990,7 +2087,6 @@
         "summary": "Deletes a list of budgets based on an array of budget ids.",
         "description": "Deletes a list of budgets based on an array of budget ids.",
         "operationId": "budgetDeleteList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -2049,7 +2145,6 @@
         "summary": "Retrieve a list of persons based on the inputs passed in.",
         "description": "Retrieve a list of persons based on the inputs passed in.",
         "operationId": "personFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -2141,7 +2236,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "Person information to be added to Alfabet.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/Person"
             }
@@ -2191,7 +2287,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "Person information to be updated in Alfabet.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/Person"
             }
@@ -2233,7 +2330,6 @@
         "summary": "Retrieve a list of threats based on a comma delimited list of object IDs.",
         "description": "Retrieve a list of threats (like a Plan of Actions and Milestones POA&M), for a specific object (like an ATO) using the object's unique ID.",
         "operationId": "threatFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -2286,7 +2382,6 @@
         "summary": "Retrieve a list of URLs associated with an object in CEDAR",
         "description": "Retrieve a list of URLs associated with an object in CEDAR. An object could include a System, ATO, etc",
         "operationId": "urlFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -2335,7 +2430,6 @@
         "summary": "Finds a list of role assignments based on an object's ID and/or role type.",
         "description": "Finds a list of role assignments based on an object's ID. If objectId and roleTypeId are both provided, a list of role assignments for only those specific role type IDs are returned. If roleId is provided, then objectId and roleTypeId should not be provided and a specific role assignment is returned.",
         "operationId": "roleFindById",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -2423,7 +2517,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "Role assignment information to be added to a CEDAR application.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/RoleAddRequest"
             }
@@ -2463,7 +2558,6 @@
         "summary": "Deletes a list of role assignments by ID. This interface takes an application name and an array of roleIds.",
         "description": "Deletes a list of role assignments by ID. This interface takes an application name and an array of roleIds.",
         "operationId": "roleDeleteList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -2532,7 +2626,6 @@
         "summary": "Finds a list of role types available within an application. This interface takes in application.",
         "description": "Finds a list of role types available within an application. This interface takes in application.",
         "operationId": "roleTypeFind",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -2591,7 +2684,6 @@
         "summary": "Retrieve an existing user from a CEDAR application. This interface takes an id.",
         "description": "Retrieve an existing user from a CEDAR application. This interface takes an id.",
         "operationId": "userFindById",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -2655,7 +2747,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "User information to be updated in CEDAR.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/UserUpdateRequest"
             }
@@ -2697,7 +2790,6 @@
         "summary": "Retrieves information about the official CMS organizational hierarchy",
         "description": "Retrieves information about the official CMS organizational hierarchy as maintained and published by the Division of Performance and Organizational Programs (DPOP)",
         "operationId": "organizationFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -2760,7 +2852,6 @@
         "summary": "Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.",
         "description": "Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.",
         "operationId": "exchangeFindById",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -2809,7 +2900,6 @@
         "summary": "Retrieve a system summary list. This interface takes in state, status, version, includeInSurvey, idsOnly and belongsTo.",
         "description": "Retrieve a system summary list. This interface takes in state, status, version, includeInSurvey, idsOnly and belongsTo.",
         "operationId": "systemSummaryFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -2879,6 +2969,20 @@
             "required": false,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "name": "userName",
+            "in": "query",
+            "description": "EUA of Person that has a Role associated with any System.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "roleType",
+            "in": "query",
+            "description": "Role Type of Person that is associated with any System.",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -2923,7 +3027,6 @@
         "summary": "Retrieve a list of users from a CEDAR application. This interface takes in application, id, userName, firstName, lastName, phone and email.",
         "description": "Retrieve a list of users from a CEDAR application. This interface takes in application, id, userName, firstName, lastName, phone and email.",
         "operationId": "userFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -3026,7 +3129,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "User information to be added to a CEDAR application.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/UserAddRequest"
             }
@@ -3068,7 +3172,6 @@
         "summary": "Retrieve a list of data centers based on query criteria (id, name, version, state, status and idsOnly). If idsOnlys is true, only the id and name will be returned.",
         "description": "Retrieve a list of data centers based on query criteria (id, name, version, state, status and idsOnly). If idsOnlys is true, only the id and name will be returned.",
         "operationId": "dataCenterFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -3167,7 +3270,6 @@
         "summary": "Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.",
         "description": "Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.",
         "operationId": "exchangeFindList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -3243,7 +3345,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "Data exchange array to be added to Alfabet.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/ExchangeAddRequest"
             }
@@ -3293,7 +3396,8 @@
           {
             "in": "body",
             "name": "body",
-            "required": false,
+            "description": "Data exchange array to be updated in Alfabet.",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/ExchangeUpdateRequest"
             }
@@ -3333,7 +3437,6 @@
         "summary": "Delete a list of data exchanges by ID. This interface takes an array of exchange ids.",
         "description": "Delete a list of data exchanges by ID. This interface takes an array of exchange ids.",
         "operationId": "exchangeDeleteList",
-        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -3400,105 +3503,40 @@
         "uuid"
       ],
       "properties": {
-        "actualDispositionDate": {
-          "type": "string",
-          "format": "date",
-          "example": "2021-10-13T00:00:00.000Z"
+        "countOfTotalPrivilegedUserPopulation": {
+          "type": "integer",
+          "format": "int32"
         },
-        "cedarId": {
-          "type": "string",
-          "example": "157-3632-0"
-        },
-        "containsPersonallyIdentifiableInformation": {
+        "isAccessedByNonOrganizationalUsers": {
           "type": "boolean"
+        },
+        "recoveryPointObjective": {
+          "type": "number",
+          "format": "float"
         },
         "countOfOpenPoams": {
           "type": "integer",
           "format": "int32"
         },
-        "countOfTotalNonPrivilegedUserPopulation": {
-          "type": "integer",
-          "format": "int32"
+        "recoveryTimeObjective": {
+          "type": "number",
+          "format": "float"
         },
-        "countOfTotalPrivilegedUserPopulation": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "dateAuthorizationMemoExpires": {
+        "uuid": {
           "type": "string",
-          "format": "date",
-          "example": "2021-10-13T00:00:00.000Z"
-        },
-        "dateAuthorizationMemoSigned": {
-          "type": "string",
-          "format": "date",
-          "example": "2021-10-13T00:00:00.000Z"
-        },
-        "eAuthenticationLevel": {
-          "type": "string",
-          "example": "3"
-        },
-        "fips199OverallImpactRating": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "fismaSystemAcronym": {
-          "type": "string",
-          "example": "CEDAR"
-        },
-        "fismaSystemName": {
-          "type": "string",
-          "example": "Acumen Web Portals"
-        },
-        "isAccessedByNonOrganizationalUsers": {
-          "type": "boolean"
-        },
-        "isPiiLimitedToUserNameAndPass": {
-          "type": "boolean"
-        },
-        "isProtectedHealthInformation": {
-          "type": "boolean"
-        },
-        "lastActScaDate": {
-          "type": "string",
-          "format": "date",
-          "example": "2021-10-13T00:00:00.000Z"
-        },
-        "lastAssessmentDate": {
-          "type": "string",
-          "format": "date",
-          "example": "2021-10-13T00:00:00.000Z"
+          "example": "806F9F07-C3A5-4EE6-9C6A-C8D50585B7EA"
         },
         "lastContingencyPlanCompletionDate": {
           "type": "string",
           "format": "date",
           "example": "2021-10-13T00:00:00.000Z"
         },
-        "lastPenTestDate": {
-          "type": "string",
-          "format": "date",
-          "example": "2021-10-13T00:00:00.000Z"
-        },
-        "piaCompletionDate": {
-          "type": "string",
-          "format": "date",
-          "example": "2021-10-13T00:00:00.000Z"
-        },
-        "primaryCyberRiskAdvisor": {
-          "type": "string",
-          "example": "ABCD"
-        },
         "privacySubjectMatterExpert": {
           "type": "string",
           "example": "ABCD"
         },
-        "recoveryPointObjective": {
-          "type": "number",
-          "format": "float"
-        },
-        "recoveryTimeObjective": {
-          "type": "number",
-          "format": "float"
+        "isProtectedHealthInformation": {
+          "type": "boolean"
         },
         "systemOfRecordsNotice": {
           "type": "array",
@@ -3507,17 +3545,82 @@
             "example": "03-39-9932"
           }
         },
+        "containsPersonallyIdentifiableInformation": {
+          "type": "boolean"
+        },
+        "dateAuthorizationMemoSigned": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
+        },
+        "dateAuthorizationMemoExpires": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
+        },
+        "eAuthenticationLevel": {
+          "type": "string",
+          "example": "3"
+        },
         "tlcPhase": {
           "type": "string",
           "example": "Initiate"
         },
-        "uuid": {
+        "lastPenTestDate": {
           "type": "string",
-          "example": "806F9F07-C3A5-4EE6-9C6A-C8D50585B7EA"
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
+        },
+        "fips199OverallImpactRating": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isPiiLimitedToUserNameAndPass": {
+          "type": "boolean"
+        },
+        "primaryCyberRiskAdvisor": {
+          "type": "string",
+          "example": "ABCD"
+        },
+        "fismaSystemAcronym": {
+          "type": "string",
+          "example": "CEDAR"
+        },
+        "piaCompletionDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
+        },
+        "countOfTotalNonPrivilegedUserPopulation": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fismaSystemName": {
+          "type": "string",
+          "example": "Acumen Web Portals"
+        },
+        "lastActScaDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
+        },
+        "actualDispositionDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
         },
         "xlcPhase": {
           "type": "string",
           "example": "Operate"
+        },
+        "lastAssessmentDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
+        },
+        "cedarId": {
+          "type": "string",
+          "example": "157-3632-0"
         }
       }
     },
@@ -3528,18 +3631,18 @@
         "application"
       ],
       "properties": {
-        "Roles": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Role"
-          }
-        },
         "application": {
           "type": "string",
           "enum": [
             "all",
             "alfabet"
           ]
+        },
+        "Roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Role"
+          }
         }
       }
     },
@@ -3549,16 +3652,34 @@
         "technopedia_id"
       ],
       "properties": {
+        "softwareProductId": {
+          "type": "string"
+        },
+        "technopedia_id": {
+          "type": "string"
+        },
         "api_gateway_use": {
           "type": "boolean"
         },
-        "local_component_refstr": {
+        "systemSoftwareConnectionGuid": {
+          "type": "string"
+        },
+        "ela_organization": {
+          "type": "string"
+        },
+        "ela_purchase": {
+          "type": "string"
+        },
+        "software_cost": {
           "type": "string"
         },
         "provides_ai_capability": {
           "type": "boolean"
         },
-        "technopedia_id": {
+        "softwareCatagoryConnectionGuid": {
+          "type": "string"
+        },
+        "softwareVendorConnectionGuid": {
           "type": "string"
         }
       }
@@ -3569,15 +3690,15 @@
         "count"
       ],
       "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
         "Budgets": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Budget"
           }
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -3590,37 +3711,29 @@
         "version"
       ],
       "properties": {
+        "ictObjectId": {
+          "type": "string",
+          "example": "326-3-0"
+        },
         "acronym": {
           "type": "string",
           "example": "CMSS"
         },
-        "belongsTo": {
+        "systemMaintainerOrg": {
           "type": "string",
-          "example": "326-10-0"
-        },
-        "businessOwnerOrg": {
-          "type": "string",
-          "example": "Center for Medicare Management"
-        },
-        "businessOwnerOrgComp": {
-          "type": "string",
-          "example": "CM-(FFS)"
+          "example": "OIT"
         },
         "description": {
           "type": "string",
           "example": "This is a CMS System decription"
         },
-        "ictObjectId": {
+        "uuid": {
           "type": "string",
-          "example": "326-3-0"
+          "example": "12FFF52E-195B-4E48-9A38-669A8BD71234"
         },
-        "id": {
+        "version": {
           "type": "string",
-          "example": "326-2-0"
-        },
-        "name": {
-          "type": "string",
-          "example": "CMS System"
+          "example": "1.0"
         },
         "nextVersionId": {
           "type": "string",
@@ -3630,29 +3743,47 @@
           "type": "string",
           "example": "326-3-0"
         },
+        "businessOwnerOrg": {
+          "type": "string",
+          "example": "Center for Medicare Management"
+        },
+        "name": {
+          "type": "string",
+          "example": "CMS System"
+        },
+        "businessOwnerOrgComp": {
+          "type": "string",
+          "example": "CM-(FFS)"
+        },
+        "id": {
+          "type": "string",
+          "example": "326-2-0"
+        },
         "state": {
           "type": "string",
           "example": "Active"
-        },
-        "status": {
-          "type": "string",
-          "example": "Approved"
-        },
-        "systemMaintainerOrg": {
-          "type": "string",
-          "example": "OIT"
         },
         "systemMaintainerOrgComp": {
           "type": "string",
           "example": "Enterprise Architecture and Data Group"
         },
-        "uuid": {
+        "atoExpirationDate": {
           "type": "string",
-          "example": "12FFF52E-195B-4E48-9A38-669A8BD71234"
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
         },
-        "version": {
+        "belongsTo": {
           "type": "string",
-          "example": "1.0"
+          "example": "326-10-0"
+        },
+        "status": {
+          "type": "string",
+          "example": "Approved"
+        },
+        "atoEffectiveDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
         }
       }
     },
@@ -3689,13 +3820,13 @@
             "alfabet"
           ]
         },
+        "name": {
+          "type": "string"
+        },
         "description": {
           "type": "string"
         },
         "id": {
-          "type": "string"
-        },
-        "name": {
           "type": "string"
         }
       }
@@ -3708,16 +3839,76 @@
         "systemId"
       ],
       "properties": {
-        "DataCenter": {
-          "$ref": "#/definitions/DataCenter"
+        "movingToCloudDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-01"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "isHotSite": {
+          "type": "string",
+          "example": "yes"
+        },
+        "description": {
+          "type": "string"
         },
         "contractorName": {
           "type": "string",
           "example": "Acumen"
         },
+        "systemVersion": {
+          "type": "string",
+          "example": "1"
+        },
+        "hasProductionData": {
+          "type": "string",
+          "example": "yes"
+        },
+        "replicatedSystemElements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "System Server Software"
+          }
+        },
+        "awsEnclaveOther": {
+          "type": "string",
+          "example": "AWS Pacific"
+        },
+        "systemName": {
+          "type": "string",
+          "example": "Health Insurance and Oversight System"
+        },
         "deploymentElementId": {
           "type": "string",
           "example": "69-1-0"
+        },
+        "id": {
+          "type": "string",
+          "example": "351-1-0"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "active",
+            "planned",
+            "retired"
+          ]
+        },
+        "systemId": {
+          "type": "string",
+          "example": "326-1-0"
+        },
+        "otherSpecialUsers": {
+          "type": "string",
+          "example": "end users"
+        },
+        "networkEncryption": {
+          "type": "string",
+          "example": "We do not encrypt network traffic leaving our system,We encrypt network traffic leaving our system to other systems on the CMS-internal network"
         },
         "deploymentType": {
           "type": "string",
@@ -3733,47 +3924,24 @@
             "Other"
           ]
         },
-        "description": {
-          "type": "string"
-        },
-        "endDate": {
+        "awsEnclave": {
           "type": "string",
-          "format": "date"
+          "example": "AWS East"
         },
-        "hasProductionData": {
-          "type": "string",
-          "example": "yes"
+        "DataCenter": {
+          "$ref": "#/definitions/DataCenter"
         },
-        "id": {
+        "usersRequiringMFA": {
           "type": "string",
-          "example": "351-1-0"
-        },
-        "isHotSite": {
-          "type": "string",
-          "example": "yes"
+          "example": "End-users,Developers,System Administrators,Other Special Users"
         },
         "name": {
           "type": "string",
           "example": "Accountable Care Organization Management System v.1.0 (COOP DR)"
         },
-        "replicatedSystemElements": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "example": "System Server Software"
-          }
-        },
         "startDate": {
           "type": "string",
           "format": "date"
-        },
-        "state": {
-          "type": "string",
-          "enum": [
-            "active",
-            "planned",
-            "retired"
-          ]
         },
         "status": {
           "type": "string",
@@ -3782,21 +3950,13 @@
             "draft"
           ]
         },
-        "systemId": {
-          "type": "string",
-          "example": "326-1-0"
-        },
-        "systemName": {
-          "type": "string",
-          "example": "Health Insurance and Oversight System"
-        },
-        "systemVersion": {
-          "type": "string",
-          "example": "1"
-        },
         "wanType": {
           "type": "string",
           "example": "Internet - Contractor"
+        },
+        "movingToCloud": {
+          "type": "string",
+          "example": "Yes"
         }
       }
     },
@@ -3806,6 +3966,11 @@
         "ictObjectId"
       ],
       "properties": {
+        "ictObjectId": {
+          "type": "string",
+          "example": "408-3-0",
+          "description": "ICT Object ID for a given system"
+        },
         "Systems": {
           "type": "array",
           "items": {
@@ -3819,11 +3984,6 @@
               }
             }
           }
-        },
-        "ictObjectId": {
-          "type": "string",
-          "example": "408-3-0",
-          "description": "ICT Object ID for a given system"
         }
       }
     },
@@ -3844,15 +4004,15 @@
     "RoleFindResponse": {
       "type": "object",
       "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
         "Roles": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Role"
           }
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -3862,16 +4022,16 @@
         "id"
       ],
       "properties": {
+        "name": {
+          "type": "string",
+          "example": "Food and Drug Administration (FDA)"
+        },
         "description": {
           "type": "string"
         },
         "id": {
           "type": "string",
           "example": "152-3-0"
-        },
-        "name": {
-          "type": "string",
-          "example": "Food and Drug Administration (FDA)"
         },
         "state": {
           "type": "string",
@@ -3881,16 +4041,16 @@
             "retired"
           ]
         },
+        "version": {
+          "type": "string",
+          "example": "1"
+        },
         "status": {
           "type": "string",
           "enum": [
             "approved",
             "draft"
           ]
-        },
-        "version": {
-          "type": "string",
-          "example": "1"
         }
       }
     },
@@ -3900,15 +4060,29 @@
         "count"
       ],
       "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
         "DomainModelNames": {
           "type": "array",
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "BudgetActualSystemCost": {
+      "type": "object",
+      "properties": {
+        "ActualSystemCost": {
+          "type": "string"
         },
-        "count": {
-          "type": "integer",
-          "format": "int32"
+        "systemId": {
+          "type": "string"
+        },
+        "FiscalYear": {
+          "type": "string"
         }
       }
     },
@@ -3937,19 +4111,13 @@
     "ComponentAddRequest": {
       "type": "object",
       "properties": {
+        "responsibleUser": {
+          "type": "string"
+        },
+        "endDate": {
+          "type": "string"
+        },
         "catalog": {
-          "type": "string"
-        },
-        "category": {
-          "type": "string"
-        },
-        "cms_end_of_support_date": {
-          "type": "string"
-        },
-        "cms_technopedia_build_version": {
-          "type": "string"
-        },
-        "cms_technopedia_component": {
           "type": "string"
         },
         "cms_technopedia_edition": {
@@ -3958,49 +4126,55 @@
         "cms_technopedia_licensable": {
           "type": "string"
         },
+        "description": {
+          "type": "string"
+        },
         "cms_technopedia_release": {
-          "type": "string"
-        },
-        "cms_technopedia_release_id": {
-          "type": "string"
-        },
-        "cms_technopedia_servicepack": {
-          "type": "string"
-        },
-        "cms_technopedia_version": {
           "type": "string"
         },
         "cms_technopedia_versiongroup": {
           "type": "string"
         },
-        "description": {
-          "type": "string"
-        },
-        "endDate": {
-          "type": "string"
-        },
-        "name": {
+        "version": {
           "type": "string"
         },
         "platform": {
           "type": "string"
         },
-        "responsibleUser": {
+        "cms_technopedia_version": {
+          "type": "string"
+        },
+        "vendorProduct": {
+          "type": "string"
+        },
+        "cms_technopedia_servicepack": {
+          "type": "string"
+        },
+        "vendor": {
+          "type": "string"
+        },
+        "cms_technopedia_component": {
+          "type": "string"
+        },
+        "cms_technopedia_release_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "cms_technopedia_build_version": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "cms_end_of_support_date": {
           "type": "string"
         },
         "startDate": {
           "type": "string"
         },
         "status": {
-          "type": "string"
-        },
-        "vendor": {
-          "type": "string"
-        },
-        "vendorProduct": {
-          "type": "string"
-        },
-        "version": {
           "type": "string"
         }
       }
@@ -4011,15 +4185,15 @@
         "count"
       ],
       "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
         "Enumerations": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Enumeration"
           }
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -4043,15 +4217,15 @@
         "count"
       ],
       "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
         "UrlList": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Url"
           }
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -4061,22 +4235,22 @@
         "application": {
           "type": "string"
         },
-        "email": {
-          "type": "string"
-        },
-        "id": {
+        "phone": {
           "type": "string"
         },
         "name": {
           "type": "string"
         },
-        "phone": {
+        "id": {
           "type": "string"
         },
         "title": {
           "type": "string"
         },
         "url": {
+          "type": "string"
+        },
+        "email": {
           "type": "string"
         }
       }
@@ -4088,12 +4262,60 @@
           "type": "array",
           "items": {
             "type": "string",
-            "example": "Customer Service"
+            "enum": [
+              "Mailing",
+              "Payment Calculation",
+              "Coordination of Benefits",
+              "Subsidy Calculation",
+              "Premium Calculation",
+              "Risk Adjustment",
+              "Coordination of Care",
+              "Eligibility and Enrollment",
+              "Customer Service",
+              "Education and Outreach",
+              "Innovation",
+              "Research and Demonstrations",
+              "Healthcare Quality Improvement",
+              "Program Oversight",
+              "Actuarial Services",
+              "Regulatory and Policy Development",
+              "Audit Support",
+              "Patient Care Reporting",
+              "Beneficiary Data Access"
+            ]
           }
+        },
+        "costPerYear": {
+          "type": "string",
+          "example": "13759255.66"
+        },
+        "isCmsOwned": {
+          "type": "boolean",
+          "example": true
+        },
+        "editBeneficiaryInformation": {
+          "type": "boolean"
         },
         "beneficiaryAddressPurposeOther": {
           "type": "string",
           "example": "Customer Service"
+        },
+        "508UserInterface": {
+          "type": "string",
+          "enum": [
+            "Yes, UI accessible by external users.",
+            "Yes, UI accessible by internal Federal Employees.",
+            "Yes, UI accessible by both internal Federal Employees and external users.",
+            "No, this system doesn't have a UI."
+          ]
+        },
+        "numberOfSupportedUsersPerMonth": {
+          "type": "string",
+          "example": "314"
+        },
+        "storesBeneficiaryAddress": {
+          "type": "boolean",
+          "example": true
         },
         "beneficiaryAddressSource": {
           "type": "array",
@@ -4106,13 +4328,9 @@
           "type": "string",
           "example": "Medicaid Address (State)"
         },
-        "costPerYear": {
-          "type": "string",
-          "example": "13759255.66"
-        },
-        "isCmsOwned": {
+        "storesBankingData": {
           "type": "boolean",
-          "example": true
+          "example": false
         },
         "numberOfContractorFte": {
           "type": "string",
@@ -4122,34 +4340,23 @@
           "type": "string",
           "example": "25"
         },
-        "numberOfSupportedUsersPerMonth": {
-          "type": "string",
-          "example": "314"
-        },
-        "storesBankingData": {
-          "type": "boolean",
-          "example": false
-        },
-        "storesBeneficiaryAddress": {
-          "type": "boolean",
-          "example": true
+        "beneficiaryInformation": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Beneficiary Address",
+              "Beneficiary email",
+              "Beneficiary Mobile Number",
+              "None of the Above"
+            ]
+          }
         }
       }
     },
     "Exchange": {
       "type": "object",
       "properties": {
-        "apiOwnership": {
-          "type": "string",
-          "example": ""
-        },
-        "businessPurposeOfAddress": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "example": "Customer Service"
-          }
-        },
         "connectionFrequency": {
           "type": "array",
           "items": {
@@ -4157,51 +4364,35 @@
             "example": ""
           }
         },
-        "containsBankingData": {
-          "type": "boolean"
-        },
-        "containsBeneficiaryAddress": {
-          "type": "boolean"
-        },
         "containsHealthDisparityData": {
           "type": "boolean"
         },
-        "containsPhi": {
+        "isAddressEditable": {
           "type": "boolean"
+        },
+        "toOwnerId": {
+          "type": "string",
+          "example": "326-762-0"
+        },
+        "sharedViaApi": {
+          "type": "boolean"
+        },
+        "exchangeNetworkProtocolOther": {
+          "type": "string"
+        },
+        "exchangeVersion": {
+          "type": "string",
+          "example": "1"
+        },
+        "exchangeCUIDescription": {
+          "type": "string"
+        },
+        "toOwnerName": {
+          "type": "string",
+          "example": "Account Management"
         },
         "containsPii": {
           "type": "boolean"
-        },
-        "dataExchangeAgreement": {
-          "type": "string",
-          "example": ""
-        },
-        "dataFormat": {
-          "type": "string",
-          "example": ""
-        },
-        "dataFormatOther": {
-          "type": "string"
-        },
-        "exchangeDescription": {
-          "type": "string",
-          "example": "Reference data on vendors acting on behalf of insurance issuers"
-        },
-        "exchangeEndDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "exchangeId": {
-          "type": "string",
-          "example": "139-1178-0"
-        },
-        "exchangeName": {
-          "type": "string",
-          "example": "Acumen Web Portals 1.0 >> Drug Data Processing System 1.0"
-        },
-        "exchangeRetiredDate": {
-          "type": "string",
-          "format": "date"
         },
         "exchangeStartDate": {
           "type": "string",
@@ -4211,47 +4402,85 @@
           "type": "string",
           "example": "Active"
         },
-        "exchangeVersion": {
+        "exchangeEndDate": {
           "type": "string",
-          "example": "1"
+          "format": "date"
         },
         "fromOwnerId": {
           "type": "string",
           "example": "326-762-0"
         },
-        "fromOwnerName": {
+        "dataExchangeAgreement": {
           "type": "string",
-          "example": "Account Management"
+          "example": ""
         },
-        "fromOwnerType": {
+        "isBeneficiaryMailingFile": {
+          "type": "boolean"
+        },
+        "dataFormat": {
+          "type": "string",
+          "example": ""
+        },
+        "dataFormatOther": {
+          "type": "string"
+        },
+        "toOwnerType": {
           "type": "string",
           "enum": [
             "application",
             "organization"
           ]
         },
-        "isAddressEditable": {
+        "containsBeneficiaryAddress": {
           "type": "boolean"
         },
-        "isBeneficiaryMailingFile": {
+        "exchangeConnectionAuthenticated": {
           "type": "boolean"
+        },
+        "fromOwnerName": {
+          "type": "string",
+          "example": "Account Management"
+        },
+        "exchangeContainsCUI": {
+          "type": "boolean"
+        },
+        "exchangeId": {
+          "type": "string",
+          "example": "139-1178-0"
         },
         "numOfRecords": {
           "type": "string",
           "example": "100,000 – 1 Million"
         },
-        "sharedViaApi": {
+        "exchangeRetiredDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "exchangeDescription": {
+          "type": "string",
+          "example": "Reference data on vendors acting on behalf of insurance issuers"
+        },
+        "containsPhi": {
           "type": "boolean"
         },
-        "toOwnerId": {
-          "type": "string",
-          "example": "326-762-0"
+        "exchangeNetworkProtocol": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
-        "toOwnerName": {
+        "exchangeName": {
           "type": "string",
-          "example": "Account Management"
+          "example": "Acumen Web Portals 1.0 >> Drug Data Processing System 1.0"
         },
-        "toOwnerType": {
+        "businessPurposeOfAddress": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "Customer Service"
+          }
+        },
+        "fromOwnerType": {
           "type": "string",
           "enum": [
             "application",
@@ -4273,6 +4502,13 @@
               }
             }
           }
+        },
+        "containsBankingData": {
+          "type": "boolean"
+        },
+        "apiOwnership": {
+          "type": "string",
+          "example": ""
         }
       }
     },
@@ -4284,39 +4520,63 @@
         "roleTypeId"
       ],
       "properties": {
-        "application": {
-          "type": "string",
-          "description": "Application where the role assignment exists"
-        },
-        "assigneeDesc": {
+        "assigneePhone": {
           "type": "string"
+        },
+        "roleTypeId": {
+          "type": "string",
+          "description": "ID of the role type"
+        },
+        "roleTypeDesc": {
+          "type": "string",
+          "description": "Description of the role type"
+        },
+        "assigneeOrgId": {
+          "type": "string",
+          "description": "ID of the role assignee, if an organization"
+        },
+        "roleId": {
+          "type": "string",
+          "description": "ID of the role assignment"
+        },
+        "assigneeFirstName": {
+          "type": "string"
+        },
+        "assigneeUserName": {
+          "type": "string",
+          "description": "Username of the role assignee, if a person"
         },
         "assigneeEmail": {
           "type": "string"
         },
-        "assigneeFirstName": {
+        "assigneeOrgName": {
+          "type": "string"
+        },
+        "assigneeDesc": {
           "type": "string"
         },
         "assigneeId": {
           "type": "string",
           "description": "ID of the role assignee, if a person"
         },
-        "assigneeIsDeleted": {
+        "objectType": {
           "type": "string",
-          "description": "Indicated the person assigned the role is marked for deletion"
+          "description": "The type of object the role is assigned to"
+        },
+        "roleTypeName": {
+          "type": "string",
+          "description": "Name of the role type"
+        },
+        "application": {
+          "type": "string",
+          "description": "Application where the role assignment exists"
         },
         "assigneeLastName": {
           "type": "string"
         },
-        "assigneeOrgId": {
+        "assigneeIsDeleted": {
           "type": "string",
-          "description": "ID of the role assignee, if an organization"
-        },
-        "assigneeOrgName": {
-          "type": "string"
-        },
-        "assigneePhone": {
-          "type": "string"
+          "description": "Indicated the person assigned the role is marked for deletion"
         },
         "assigneeType": {
           "type": "string",
@@ -4325,33 +4585,9 @@
             "person"
           ]
         },
-        "assigneeUserName": {
-          "type": "string",
-          "description": "Username of the role assignee, if a person"
-        },
         "objectId": {
           "type": "string",
           "description": "ID of the object the role is assiged to"
-        },
-        "objectType": {
-          "type": "string",
-          "description": "The type of object the role is assigned to"
-        },
-        "roleId": {
-          "type": "string",
-          "description": "ID of the role assignment"
-        },
-        "roleTypeDesc": {
-          "type": "string",
-          "description": "Description of the role type"
-        },
-        "roleTypeId": {
-          "type": "string",
-          "description": "ID of the role type"
-        },
-        "roleTypeName": {
-          "type": "string",
-          "description": "Name of the role type"
         }
       }
     },
@@ -4361,15 +4597,15 @@
         "count"
       ],
       "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
         "Users": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/User"
           }
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -4380,18 +4616,18 @@
         "application"
       ],
       "properties": {
-        "Users": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/User"
-          }
-        },
         "application": {
           "type": "string",
           "enum": [
             "all",
             "alfabet"
           ]
+        },
+        "Users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
         }
       }
     },
@@ -4401,15 +4637,15 @@
         "count"
       ],
       "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
         "Deployments": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Deployment"
           }
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -4437,15 +4673,15 @@
         "count"
       ],
       "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
         "Contracts": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Contract"
           }
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -4484,14 +4720,19 @@
     "DataCenterHosting": {
       "type": "object",
       "properties": {
-        "movingToCloud": {
-          "type": "string",
-          "example": "Yes"
-        },
         "movingToCloudDate": {
           "type": "string",
           "format": "date",
           "example": "2021-10-13T00:00:00.000Z"
+        },
+        "movingToCloud": {
+          "type": "string",
+          "example": "Yes",
+          "enum": [
+            "Yes",
+            "No",
+            "Plans"
+          ]
         }
       }
     },
@@ -4526,25 +4767,51 @@
           "example": "HHSM500201600052I",
           "description": "Contract number"
         },
-        "budgetIds": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BudgetIds"
-          }
+        "ContractNumber": {
+          "type": "string"
+        },
+        "systemId": {
+          "type": "string",
+          "example": "123-45-678",
+          "description": "System which this budget funds"
+        },
+        "contractDeliverableId": {
+          "type": "string",
+          "example": "11-22-333"
+        },
+        "ServiceProvided": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "example": "Strategic partners acquisition readiness",
+          "description": "Contract description"
+        },
+        "OrderNumber": {
+          "type": "string"
+        },
+        "POPEndDate": {
+          "type": "string"
+        },
+        "ProductServiceDescription": {
+          "type": "string"
+        },
+        "IsDeliveryOrg": {
+          "type": "string"
+        },
+        "ProjectTitle": {
+          "type": "string"
         },
         "contractADO": {
           "type": "string",
           "example": "yes",
           "description": "Is ADO Parent Contract, Yes/No"
         },
-        "contractDeliverableId": {
-          "type": "string",
-          "example": "11-22-333"
+        "POPStartDate": {
+          "type": "string"
         },
-        "description": {
-          "type": "string",
-          "example": "Strategic partners acquisition readiness",
-          "description": "Contract description"
+        "contractName": {
+          "type": "string"
         },
         "id": {
           "type": "string",
@@ -4554,56 +4821,13 @@
           "type": "string",
           "example": "HHSM500201600052I",
           "description": "Parent contract number"
-        },
-        "systemId": {
-          "type": "string",
-          "example": "123-45-678",
-          "description": "System which this budget funds"
-        },
-        "tbmCostPool": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "example": ""
-              },
-              "id": {
-                "type": "string",
-                "example": ""
-              }
-            }
-          }
-        },
-        "tbmItTowerCategory": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "example": ""
-              },
-              "id": {
-                "type": "string",
-                "example": ""
-              }
-            }
-          }
         }
       }
     },
     "Person": {
       "type": "object",
       "properties": {
-        "email": {
-          "type": "string"
-        },
         "firstName": {
-          "type": "string"
-        },
-        "id": {
           "type": "string"
         },
         "lastName": {
@@ -4612,7 +4836,13 @@
         "phone": {
           "type": "string"
         },
+        "id": {
+          "type": "string"
+        },
         "userName": {
+          "type": "string"
+        },
+        "email": {
           "type": "string"
         }
       }
@@ -4620,15 +4850,15 @@
     "SystemVersionResponse": {
       "type": "object",
       "properties": {
-        "count": {
-          "type": "integer",
-          "format": "int32"
-        },
         "ictObjects": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/IctObject"
           }
+        },
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -4653,34 +4883,19 @@
         "name"
       ],
       "properties": {
-        "Organization": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Organization"
-          }
-        },
-        "acronymn": {
+        "fullPath": {
           "type": "string",
-          "example": "CMS"
+          "example": "CMS/OA/OFM/Accounting Management Group"
         },
         "component": {
           "type": "string",
           "example": "OFM"
         },
-        "description": {
-          "type": "string",
-          "example": "Formerly - Business Applications Management Group"
-        },
-        "fullPath": {
-          "type": "string",
-          "example": "CMS/OA/OFM/Accounting Management Group"
-        },
-        "id": {
-          "type": "string",
-          "example": "261-631-0"
-        },
-        "isComponent": {
-          "type": "boolean"
+        "Organization": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Organization"
+          }
         },
         "level": {
           "type": "integer",
@@ -4690,9 +4905,24 @@
           "type": "string",
           "example": "Centers for Medicare and Medicaid Services"
         },
+        "acronymn": {
+          "type": "string",
+          "example": "CMS"
+        },
+        "description": {
+          "type": "string",
+          "example": "Formerly - Business Applications Management Group"
+        },
+        "id": {
+          "type": "string",
+          "example": "261-631-0"
+        },
         "parentId": {
           "type": "string",
           "example": "261-631-0"
+        },
+        "isComponent": {
+          "type": "boolean"
         }
       }
     },
@@ -4703,28 +4933,28 @@
         "id"
       ],
       "properties": {
-        "application": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
         "firstName": {
           "type": "string"
         },
-        "id": {
+        "lastName": {
+          "type": "string"
+        },
+        "application": {
           "type": "string"
         },
         "isDeleted": {
           "type": "boolean"
         },
-        "lastName": {
-          "type": "string"
-        },
         "phone": {
           "type": "string"
         },
+        "id": {
+          "type": "string"
+        },
         "userName": {
+          "type": "string"
+        },
+        "email": {
           "type": "string"
         }
       }
@@ -4732,6 +4962,14 @@
     "CostTypeFindResponse": {
       "type": "object",
       "properties": {
+        "name": {
+          "type": "string",
+          "example": "TBM Towers"
+        },
+        "id": {
+          "type": "string",
+          "example": "143-16-0"
+        },
         "CostTypes": {
           "type": "array",
           "items": {
@@ -4747,75 +4985,67 @@
               }
             }
           }
-        },
-        "id": {
-          "type": "string",
-          "example": "143-16-0"
-        },
-        "name": {
-          "type": "string",
-          "example": "TBM Towers"
         }
       }
     },
     "ComponentFindResponse": {
       "type": "object",
       "properties": {
+        "responsibleUser": {
+          "type": "string"
+        },
         "catalog": {
-          "type": "string"
-        },
-        "cms_end_of_support_date": {
-          "type": "string"
-        },
-        "cms_technopedia_build_version": {
-          "type": "string"
-        },
-        "cms_technopedia_component": {
           "type": "string"
         },
         "cms_technopedia_edition": {
           "type": "string"
         },
+        "ictObject": {
+          "type": "string"
+        },
         "cms_technopedia_licensable": {
-          "type": "string"
-        },
-        "cms_technopedia_release": {
-          "type": "string"
-        },
-        "cms_technopedia_release_id": {
-          "type": "string"
-        },
-        "cms_technopedia_servicepack": {
-          "type": "string"
-        },
-        "cms_technopedia_version": {
-          "type": "string"
-        },
-        "cms_technopedia_versiongroup": {
           "type": "string"
         },
         "description": {
           "type": "string"
         },
-        "ictObject": {
+        "cms_technopedia_release": {
           "type": "string"
         },
-        "name": {
+        "cms_technopedia_versiongroup": {
           "type": "string"
         },
         "platform": {
           "type": "string"
         },
-        "responsibleUser": {
+        "cms_technopedia_version": {
           "type": "string"
         },
-        "status": {
+        "vendorProduct": {
+          "type": "string"
+        },
+        "cms_technopedia_servicepack": {
           "type": "string"
         },
         "vendor": {
           "type": "string"
         },
-        "vendorProduct": {
+        "cms_technopedia_component": {
+          "type": "string"
+        },
+        "cms_technopedia_release_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "cms_technopedia_build_version": {
+          "type": "string"
+        },
+        "cms_end_of_support_date": {
+          "type": "string"
+        },
+        "status": {
           "type": "string"
         }
       }
@@ -4824,7 +5054,153 @@
       "type": "object",
       "properties": {
         "aiPlan": {
+          "type": "string",
+          "enum": [
+            "Yes - This system has developed AI capabilities.",
+            "Yes - This system uses a SaaS AI tool like Remesh...",
+            "No – And this system currently has no plans to utilize AI capabilities",
+            "No – But there currently are plans to use AI capabilities in the next two years"
+          ]
+        },
+        "systemAiTypeOther": {
           "type": "string"
+        },
+        "apisDeveloped": {
+          "type": "string",
+          "enum": [
+            "No",
+            "Yes",
+            "API In development but not yet launched."
+          ]
+        },
+        "apiFHIRUseOther": {
+          "type": "string"
+        },
+        "systemHasApiGateway": {
+          "type": "boolean"
+        },
+        "apisAccessibility": {
+          "type": "string",
+          "enum": [
+            "Both",
+            "External Access",
+            "Internal Access"
+          ]
+        },
+        "apiDataArea": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Beneficiary and Consumer",
+              "Health Insurance Program",
+              "Healthcare Payment",
+              "Healthcare Quality",
+              "Healthcare Service",
+              "Organization",
+              "Provider",
+              "Supporting Resource"
+            ]
+          }
+        },
+        "apiFHIRUse": {
+          "type": "string",
+          "enum": [
+            "No",
+            "FHIR",
+            "HL7",
+            "Other Standard"
+          ]
+        },
+        "systemAiType": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Url": {
+      "type": "object",
+      "required": [
+        "urlId"
+      ],
+      "properties": {
+        "isVersionCodeRepository": {
+          "type": "boolean",
+          "description": "A boolean flag to indicate if this URL provides access to a versioned code repository?"
+        },
+        "address": {
+          "type": "string",
+          "description": "A valid and full URL"
+        },
+        "urlHostingEnv": {
+          "type": "string",
+          "example": "Production",
+          "description": "The hosting environment associated with a specific URL"
+        },
+        "isApiEndpoint": {
+          "type": "boolean",
+          "description": "A boolean flag to indicate whether URL is an API Endpoint"
+        },
+        "urlId": {
+          "type": "string",
+          "example": "218-10-0",
+          "description": "Unique key that uniquely identified the URL in database"
+        },
+        "isBehindWebApplicationFirewall": {
+          "type": "boolean",
+          "description": "A boolean flag to indicate whether the application is behind a Web Application Firewall (WAF)"
+        }
+      }
+    },
+    "PageSoftwareProductsRequest": {
+      "type": "object",
+      "required": [
+        "applicationId"
+      ],
+      "properties": {
+        "aiSolnCatg": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "usesAiTech": {
+          "type": "string"
+        },
+        "apisDeveloped": {
+          "type": "string"
+        },
+        "apiFHIRUseOther": {
+          "type": "string"
+        },
+        "SoftwareProducts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SoftwareProducts"
+          }
+        },
+        "apisAccessibility": {
+          "type": "string"
+        },
+        "apiDescPubLocation": {
+          "type": "string"
+        },
+        "ai_life_cycle_stage": {
+          "type": "string"
+        },
+        "apiDescPublished": {
+          "type": "string"
+        },
+        "systemHasApiGateway": {
+          "type": "boolean"
+        },
+        "applicationId": {
+          "type": "string"
+        },
+        "apiHasPortal": {
+          "type": "boolean"
         },
         "apiDataArea": {
           "type": "array",
@@ -4835,60 +5211,55 @@
         "apiFHIRUse": {
           "type": "string"
         },
-        "apiFHIRUseOther": {
+        "aiSolnCatgOther": {
           "type": "string"
-        },
-        "apisAccessibility": {
-          "type": "string"
-        },
-        "apisDeveloped": {
-          "type": "string"
-        },
-        "systemAiType": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "systemAiTypeOther": {
-          "type": "string"
-        },
-        "systemHasApiGateway": {
-          "type": "boolean"
         }
       }
     },
-    "Url": {
+    "SoftwareProductsSearchItem": {
       "type": "object",
-      "required": [
-        "urlId"
-      ],
       "properties": {
-        "address": {
-          "type": "string",
-          "description": "A valid and full URL"
+        "api_gateway_use": {
+          "type": "boolean"
         },
-        "isApiEndpoint": {
-          "type": "boolean",
-          "description": "A boolean flag to indicate whether URL is an API Endpoint"
+        "systemSoftwareConnectionGuid": {
+          "type": "string"
         },
-        "isBehindWebApplicationFirewall": {
-          "type": "boolean",
-          "description": "A boolean flag to indicate whether the application is behind a Web Application Firewall (WAF)"
+        "vendor_name": {
+          "type": "string"
         },
-        "isVersionCodeRepository": {
-          "type": "boolean",
-          "description": "A boolean flag to indicate if this URL provides access to a versioned code repository?"
+        "softwareCatagoryConnectionGuid": {
+          "type": "string"
         },
-        "urlHostingEnv": {
-          "type": "string",
-          "example": "Production",
-          "description": "The hosting environment associated with a specific URL"
+        "softwareVendorConnectionGuid": {
+          "type": "string"
         },
-        "urlId": {
-          "type": "string",
-          "example": "218-10-0",
-          "description": "Unique key that uniquely identified the URL in database"
+        "technopedia_id": {
+          "type": "string"
+        },
+        "ela_purchase": {
+          "type": "string"
+        },
+        "software_cost": {
+          "type": "string"
+        },
+        "provides_ai_capability": {
+          "type": "boolean"
+        },
+        "refstr": {
+          "type": "string"
+        },
+        "software_ela_organization": {
+          "type": "string"
+        },
+        "software_name": {
+          "type": "string"
+        },
+        "ela_vendor_id": {
+          "type": "string"
+        },
+        "technopedia_category": {
+          "type": "string"
         }
       }
     },
@@ -4926,15 +5297,26 @@
         "projectId"
       ],
       "properties": {
+        "systemId": {
+          "type": "string",
+          "example": "123-45-678",
+          "description": "System which this budget funds"
+        },
         "funding": {
           "type": "string",
           "example": "Most of this funding is directly and only for this system (over 80%)",
           "description": "Description of the allocation of this budget to the system in question"
         },
+        "FiscalYear": {
+          "type": "string"
+        },
         "fundingId": {
           "type": "string",
           "example": "123-45-678",
           "description": "Cross-reference ID for relationship between budget project and application in system of record"
+        },
+        "FundingSource": {
+          "type": "string"
         },
         "id": {
           "type": "string",
@@ -4946,15 +5328,13 @@
           "example": "000010",
           "description": "OFM budget project ID in system of record"
         },
+        "Name": {
+          "type": "string"
+        },
         "projectTitle": {
           "type": "string",
           "example": "CMS Accountable Care Organizations",
           "description": "Title of this project"
-        },
-        "systemId": {
-          "type": "string",
-          "example": "123-45-678",
-          "description": "System which this budget funds"
         }
       }
     },
@@ -4967,49 +5347,38 @@
         "version"
       ],
       "properties": {
-        "BusinessOwnerInformation": {
-          "$ref": "#/definitions/BusinessOwnerInformation"
-        },
-        "DataCenterHosting": {
-          "$ref": "#/definitions/DataCenterHosting"
-        },
-        "SoftwareProductDetails": {
-          "$ref": "#/definitions/SoftwareProductDetails"
-        },
         "SystemMaintainerInformation": {
           "$ref": "#/definitions/SystemMaintainerInformation"
-        },
-        "acronym": {
-          "type": "string",
-          "example": "CMSS"
-        },
-        "belongsTo": {
-          "type": "string",
-          "example": "326-10-0"
-        },
-        "businessOwnerOrg": {
-          "type": "string",
-          "example": "Center for Medicare Management"
-        },
-        "businessOwnerOrgComp": {
-          "type": "string",
-          "example": "CM-(FFS)"
-        },
-        "description": {
-          "type": "string",
-          "example": "This is a CMS System decription"
         },
         "ictObjectId": {
           "type": "string",
           "example": "326-3-0"
         },
-        "id": {
+        "acronym": {
           "type": "string",
-          "example": "326-2-0"
+          "example": "CMSS"
         },
-        "name": {
+        "systemMaintainerOrg": {
           "type": "string",
-          "example": "CMS System"
+          "example": "OIT"
+        },
+        "description": {
+          "type": "string",
+          "example": "This is a CMS System decription"
+        },
+        "SoftwareProductDetails": {
+          "$ref": "#/definitions/SoftwareProductDetails"
+        },
+        "uuid": {
+          "type": "string",
+          "example": "12FFF52E-195B-4E48-9A38-669A8BD71234"
+        },
+        "version": {
+          "type": "string",
+          "example": "1.0"
+        },
+        "BusinessOwnerInformation": {
+          "$ref": "#/definitions/BusinessOwnerInformation"
         },
         "nextVersionId": {
           "type": "string",
@@ -5019,29 +5388,50 @@
           "type": "string",
           "example": "326-3-0"
         },
+        "businessOwnerOrg": {
+          "type": "string",
+          "example": "Center for Medicare Management"
+        },
+        "name": {
+          "type": "string",
+          "example": "CMS System"
+        },
+        "businessOwnerOrgComp": {
+          "type": "string",
+          "example": "CM-(FFS)"
+        },
+        "DataCenterHosting": {
+          "$ref": "#/definitions/DataCenterHosting"
+        },
+        "id": {
+          "type": "string",
+          "example": "326-2-0"
+        },
         "state": {
           "type": "string",
           "example": "Active"
-        },
-        "status": {
-          "type": "string",
-          "example": "Approved"
-        },
-        "systemMaintainerOrg": {
-          "type": "string",
-          "example": "OIT"
         },
         "systemMaintainerOrgComp": {
           "type": "string",
           "example": "Enterprise Architecture and Data Group"
         },
-        "uuid": {
+        "atoExpirationDate": {
           "type": "string",
-          "example": "12FFF52E-195B-4E48-9A38-669A8BD71234"
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
         },
-        "version": {
+        "belongsTo": {
           "type": "string",
-          "example": "1.0"
+          "example": "326-10-0"
+        },
+        "status": {
+          "type": "string",
+          "example": "Approved"
+        },
+        "atoEffectiveDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
         }
       }
     },
@@ -5052,18 +5442,18 @@
         "application"
       ],
       "properties": {
-        "Users": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/User"
-          }
-        },
         "application": {
           "type": "string",
           "enum": [
             "all",
             "alfabet"
           ]
+        },
+        "Users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
         }
       }
     },
@@ -5088,103 +5478,68 @@
     "SystemMaintainerInformation": {
       "type": "object",
       "properties": {
-        "agileUsed": {
-          "type": "boolean",
-          "example": true
-        },
-        "businessArtifactsOnDemand": {
-          "type": "boolean",
-          "example": true
-        },
-        "deploymentFrequency": {
-          "type": "string",
-          "example": "Monthly"
-        },
-        "devCompletionPercent": {
-          "type": "string",
-          "example": "10-14%"
-        },
-        "devWorkDescription": {
-          "type": "string",
-          "example": "The type of development work underway..."
-        },
-        "ecapParticipation": {
-          "type": "boolean",
-          "example": true
-        },
-        "frontendAccessType": {
-          "type": "string",
-          "example": "IPv4 and IPv6"
-        },
-        "hardCodedIpAddress": {
-          "type": "boolean",
-          "example": true
-        },
-        "ip6EnabledAssetPercent": {
-          "type": "string",
-          "example": "Between 20% and 49%"
-        },
-        "ip6TransitionPlan": {
-          "type": "string",
-          "example": "Yes, transition to IPv6"
-        },
-        "ipEnabledAssetCount": {
-          "type": "integer",
-          "format": "int32",
-          "example": 1
-        },
         "majorRefreshDate": {
           "type": "string",
           "format": "date"
         },
-        "netAccessibility": {
+        "yearToRetireReplace": {
           "type": "string",
-          "example": "Accessible to a CMS-internal network only"
-        },
-        "omDocumentationOnDemand": {
-          "type": "boolean",
-          "example": true
-        },
-        "plansToRetireReplace": {
-          "type": "string",
-          "example": "Yes - Retire and Replace"
-        },
-        "quarterToRetireReplace": {
-          "type": "string",
-          "example": "3"
-        },
-        "recordsManagementBucket": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "example": "Administrative Management"
-          }
-        },
-        "sourceCodeOnDemand": {
-          "type": "boolean",
-          "example": true
-        },
-        "systemCustomization": {
-          "type": "string",
-          "example": "Less Than 20% Customization"
-        },
-        "systemDesignOnDemand": {
-          "type": "boolean",
-          "example": true
+          "example": "2023"
         },
         "systemProductionDate": {
           "type": "string",
           "format": "date"
         },
+        "sourceCodeOnDemand": {
+          "type": "boolean",
+          "example": true
+        },
+        "networkTrafficEncryptionKeyManagement": {
+          "type": "string",
+          "enum": [
+            "We do not encrypt any network traffic.",
+            "We perform ad hoc management of encryption keys.",
+            "We have a process for managing encryption keys.",
+            "We have a process for managing encryption keys and it is automated."
+          ]
+        },
+        "noPlannedMajorRefresh": {
+          "type": "boolean"
+        },
+        "systemDataLocation": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Integrated Data Repository (IDR)",
+              "Chronic Condition Warehouse (CCW)",
+              "This system",
+              "Another CMS system - Describe in Notes"
+            ]
+          }
+        },
+        "recordsManagementDisposalPlan": {
+          "type": "string"
+        },
+        "hardCodedIpAddress": {
+          "type": "boolean",
+          "example": true
+        },
+        "noPersistentRecordsFlag": {
+          "type": "boolean"
+        },
+        "ecapParticipation": {
+          "type": "boolean",
+          "example": true
+        },
         "systemRequirementsOnDemand": {
           "type": "boolean",
           "example": true
         },
-        "testPlanOnDemand": {
-          "type": "boolean",
-          "example": true
+        "recordsManagementDisposalLocation": {
+          "type": "string"
         },
-        "testReportsOnDemand": {
+        "businessArtifactsOnDemand": {
           "type": "boolean",
           "example": true
         },
@@ -5192,9 +5547,230 @@
           "type": "boolean",
           "example": true
         },
-        "yearToRetireReplace": {
+        "legalHoldCaseName": {
+          "type": "string"
+        },
+        "frontendAccessType": {
           "type": "string",
-          "example": "2023"
+          "example": "IPv4 and IPv6",
+          "enum": [
+            "IPv4 Only",
+            "IPv4 and IPv6",
+            "IPv6 Only"
+          ]
+        },
+        "devCompletionPercent": {
+          "type": "string",
+          "example": "10-14%"
+        },
+        "netAccessibility": {
+          "type": "string",
+          "example": "Accessible to a CMS-internal network only",
+          "enum": [
+            "Accessible to the Public Internet (non-restricted access)",
+            "Accessible to a CMS-internal network only",
+            "Accessible to both public internet and to CMS-internal network"
+          ]
+        },
+        "systemDataLocationNotes": {
+          "type": "string"
+        },
+        "dataAtRestEncryptionKeyManagement": {
+          "type": "string",
+          "enum": [
+            "We do not encrypt data at rest.",
+            "We perform ad hoc management of encryption keys.",
+            "We have a process for managing encryption keys.",
+            "We have a process for managing encryption keys and it is automated."
+          ]
+        },
+        "testPlanOnDemand": {
+          "type": "boolean",
+          "example": true
+        },
+        "quarterToRetireReplace": {
+          "type": "string",
+          "example": "3"
+        },
+        "agileUsed": {
+          "type": "boolean",
+          "example": true
+        },
+        "authoritativeDatasource": {
+          "type": "string"
+        },
+        "systemDesignOnDemand": {
+          "type": "boolean",
+          "example": true
+        },
+        "locallyStoredUserInformation": {
+          "type": "boolean"
+        },
+        "plansToRetireReplace": {
+          "type": "string",
+          "example": "Yes - Retire and Replace",
+          "enum": [
+            "No",
+            "Yes - Retire and Replace",
+            "Yes - Retire but NOT Replace"
+          ]
+        },
+        "ipEnabledAssetCount": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1
+        },
+        "devWorkDescription": {
+          "type": "string",
+          "example": "The type of development work underway..."
+        },
+        "testReportsOnDemand": {
+          "type": "boolean",
+          "example": true
+        },
+        "ip6TransitionPlan": {
+          "type": "string",
+          "example": "Yes, transition to IPv6",
+          "enum": [
+            "Yes",
+            "transition to IPv6",
+            "No",
+            "decommission/replace before 2026"
+          ]
+        },
+        "multifactorAuthenticationMethodOther": {
+          "type": "string"
+        },
+        "ip6EnabledAssetPercent": {
+          "type": "string",
+          "example": "Between 20% and 49%",
+          "enum": [
+            "Less than 20%",
+            "Between 20% and 49%",
+            "Between 50% and 79%",
+            "80% or above"
+          ]
+        },
+        "recordsUnderLegalHold": {
+          "type": "boolean"
+        },
+        "deploymentFrequency": {
+          "type": "string",
+          "example": "Monthly",
+          "enum": [
+            "Annually",
+            "Semi-Annually",
+            "Quarterly",
+            "Monthly",
+            "Every Two Weeks",
+            "Weekly",
+            "Twice a Week",
+            "Daily",
+            "Hourly",
+            "Ad Hoc/As Needed",
+            "Not Applicable",
+            "Other"
+          ]
+        },
+        "multifactorAuthenticationMethod": {
+          "type": "array",
+          "example": "\"\"",
+          "items": {
+            "type": "string",
+            "enum": [
+              "One Time Password sent via Email",
+              "One Time Password sent via SMS",
+              "One Time Password or Push from an authenticator app e.g. Google Authenticator DUO",
+              "One time Password from a hardware token e.g. RSA SecurID",
+              "FIDO U2F (e.g. YubiKey as a second factor)",
+              "PIV/certificate",
+              "FIDO2/WebAuthn (passwordless authentication includes Windows Hello)",
+              "None",
+              "Other"
+            ]
+          }
+        },
+        "recordsManagementBucket": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "Administrative Management",
+            "enum": [
+              "Leadership and Operations (Hint=1)",
+              "Policy and Regulations (Hint=2)",
+              "Senior Leadership Records (Administrator) (Hint=2)",
+              "Formal Reports and Studies (Hint=2)",
+              "Committee Files (non FACA) (Hint=2)",
+              "Other Leadership and Operations Records (Hint=2)",
+              "Administrative Management (Hint=1)",
+              "Routine Administrative Records (Hint=2)",
+              "Other Administrative Management Records (Hint=2)",
+              "Financial Records (Hint=1)",
+              "Claims Records (Hint=2)",
+              "Financial Reporting Records (Hint=2)",
+              "Non-perm HCPCS codes (Hint=2)",
+              "Other Financial Records (Hint=2)",
+              "Enrollment Records (Hint=1)",
+              "Beneficiary Records (Hint=1)",
+              "Provider and Health Plan Records (Hint=1)",
+              "Provider Applications and Certifications (Hint=2)",
+              "Records Related to Health Plans (Hint=2)",
+              "Program Review and Audit Records (Hint=2)",
+              "Hearings Files (Hint=2)",
+              "Administrative Records (Hint=2)",
+              "Other Provider and Health Plan Records (Hint=2)",
+              "Research and Program Analysis (Hint=1)",
+              "Public Use Statistical and Summary Files (Hint=2)",
+              "Supporting Records (Hint=2)",
+              "Other Research and Program Analysis",
+              "Public Outreach and Engagement (Hint=1)",
+              "Significant Public Outreach and Engagement Records (Hint=2)",
+              "Photographs and Videos (Hint=2)",
+              "Other Public Outreach and Engagement Records (Hint=2)",
+              "Compliance and Integrity (Hint=1)",
+              "Plans and Agreements (Hint=2)",
+              "Administrative Records (Hint= 2)",
+              "Review / Audit Records (Hint=2)",
+              "Reports (Hint=2)",
+              "Legal Records (Hint=2)",
+              "Clinical Laboratory Improvement Amendments (CLIA) records (Hint=2)",
+              "Other Compliance and Integrity Records (Hint=2)"
+            ]
+          }
+        },
+        "noMajorRefresh": {
+          "type": "boolean"
+        },
+        "omDocumentationOnDemand": {
+          "type": "boolean",
+          "example": true
+        },
+        "systemCustomization": {
+          "type": "string",
+          "example": "Less Than 20% Customization",
+          "enum": [
+            "COTS - Less than 20% custom coding",
+            "GOTS – less than 20% custom coding",
+            "Mixed – Uses COTS or GOTS and has more than 20% custom coding",
+            "Custom developed"
+          ]
+        },
+        "adHocAgileDeploymentFrequency": {
+          "type": "string",
+          "enum": [
+            "Annually",
+            "Semi-Annually",
+            "Quarterly",
+            "Monthly",
+            "Every Two Weeks",
+            "Weekly",
+            "Twice a Week",
+            "Daily",
+            "Hourly",
+            "Ad Hoc/As Needed",
+            "Not Applicable",
+            "Other"
+          ]
         }
       }
     },
@@ -5222,15 +5798,15 @@
         "count"
       ],
       "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
         "Exchanges": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Exchange"
           }
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -5240,15 +5816,6 @@
     "Enumeration": {
       "type": "object",
       "properties": {
-        "caption": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
         "values": {
           "type": "array",
           "items": {
@@ -5262,6 +5829,15 @@
               }
             }
           }
+        },
+        "name": {
+          "type": "string"
+        },
+        "caption": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
         }
       }
     },
@@ -5336,54 +5912,76 @@
     "Response": {
       "type": "object",
       "properties": {
+        "result": {
+          "type": "string"
+        },
         "message": {
           "type": "array",
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "BudgetActualSystemCostResponse": {
+      "type": "object",
+      "required": [
+        "count"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         },
-        "result": {
-          "type": "string"
+        "BudgetActualCost": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BudgetActualSystemCost"
+          }
         }
       }
     },
     "DataCenter": {
       "type": "object",
       "properties": {
-        "address1": {
+        "zip": {
           "type": "string",
-          "example": "123 main street"
-        },
-        "address2": {
-          "type": "string",
-          "example": "suite 100"
-        },
-        "addressState": {
-          "type": "string",
-          "example": "NY"
-        },
-        "city": {
-          "type": "string",
-          "example": "New York"
-        },
-        "description": {
-          "type": "string"
+          "example": "10002"
         },
         "endDate": {
           "type": "string",
           "format": "date"
         },
-        "id": {
+        "address2": {
           "type": "string",
-          "example": "55-1-0"
+          "example": "suite 100"
+        },
+        "city": {
+          "type": "string",
+          "example": "New York"
+        },
+        "address1": {
+          "type": "string",
+          "example": "123 main street"
+        },
+        "description": {
+          "type": "string"
+        },
+        "addressState": {
+          "type": "string",
+          "example": "NY"
+        },
+        "version": {
+          "type": "string",
+          "example": "1"
         },
         "name": {
           "type": "string",
           "example": "CMS Baltimore Data Center - EDC4"
         },
-        "startDate": {
+        "id": {
           "type": "string",
-          "format": "date"
+          "example": "55-1-0"
         },
         "state": {
           "type": "string",
@@ -5393,20 +5991,16 @@
             "retired"
           ]
         },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
         "status": {
           "type": "string",
           "enum": [
             "approved",
             "draft"
           ]
-        },
-        "version": {
-          "type": "string",
-          "example": "1"
-        },
-        "zip": {
-          "type": "string",
-          "example": "10002"
         }
       }
     },
@@ -5463,11 +6057,56 @@
     "SoftwareProductsFindResponse": {
       "type": "object",
       "properties": {
-        "SoftwareProducts": {
+        "aiSolnCatg": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SoftwareProducts"
+            "type": "string"
           }
+        },
+        "usesAiTech": {
+          "type": "string"
+        },
+        "apisDeveloped": {
+          "type": "string"
+        },
+        "apiFHIRUseOther": {
+          "type": "string"
+        },
+        "apisAccessibility": {
+          "type": "string"
+        },
+        "apiDescPubLocation": {
+          "type": "string"
+        },
+        "developmentStage": {
+          "type": "string"
+        },
+        "softwareProducts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SoftwareProductsSearchItem"
+          }
+        },
+        "apiDescPublished": {
+          "type": "string"
+        },
+        "systemHasApiGateway": {
+          "type": "boolean"
+        },
+        "apiHasPortal": {
+          "type": "boolean"
+        },
+        "apiDataArea": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "apiFHIRUse": {
+          "type": "string"
+        },
+        "aiSolnCatgOther": {
+          "type": "string"
         }
       }
     },
@@ -5477,15 +6116,15 @@
         "count"
       ],
       "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
         "Stakeholders": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Stakeholder"
           }
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -5496,26 +6135,26 @@
           "type": "string",
           "description": "ID assigned by a source system. For example, POA&M ID from CFACTS"
         },
-        "controlFamily": {
-          "type": "string"
-        },
         "daysOpen": {
           "type": "integer",
           "format": "int32"
+        },
+        "controlFamily": {
+          "type": "string"
+        },
+        "weaknessRiskLevel": {
+          "type": "string"
         },
         "id": {
           "type": "string",
           "description": "ID assigned by CEDAR"
         },
-        "parentId": {
-          "type": "string",
-          "description": "ID of the object the threat is assigned to"
-        },
         "type": {
           "type": "string"
         },
-        "weaknessRiskLevel": {
-          "type": "string"
+        "parentId": {
+          "type": "string",
+          "description": "ID of the object the threat is assigned to"
         }
       }
     }

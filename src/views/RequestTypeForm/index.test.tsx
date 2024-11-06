@@ -5,18 +5,10 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
-import { systemIntake } from 'data/mock/systemIntake';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
-import {
-  SystemIntakeDecisionState,
-  SystemIntakeState
-} from 'types/graphql-global-types';
 import GovernanceOverview from 'views/GovernanceOverview';
-import GovernanceTaskList from 'views/GovernanceTaskListV1';
-import SystemIntake from 'views/SystemIntake';
 
 import RequestTypeForm from './index';
 
@@ -41,103 +33,6 @@ vi.mock('@okta/okta-react', () => ({
 
 window.scrollTo = vi.fn;
 const INTAKE_ID = '6aa61a37-d3b4-47ed-ad61-0b8f73151d74';
-const intakeQuery = (intakeData: any) => {
-  return {
-    request: {
-      query: GetSystemIntakeQuery,
-      variables: {
-        id: INTAKE_ID
-      }
-    },
-    result: {
-      data: {
-        systemIntake: {
-          ...systemIntake,
-          id: INTAKE_ID,
-          adminLead: '',
-          businessNeed: '',
-          businessSolution: '',
-          businessOwner: {
-            component: '',
-            name: ''
-          },
-          contract: {
-            contractor: null,
-            endDate: {
-              day: null,
-              month: null,
-              year: null
-            },
-            hasContract: '',
-            startDate: {
-              day: null,
-              month: null,
-              year: null
-            },
-            vehicle: null,
-            number: null
-          },
-          costs: {
-            isExpectingIncrease: null,
-            expectedIncreaseAmount: null
-          },
-          annualSpending: {
-            currentAnnualSpending: 'Test Current Annual Spending',
-            plannedYearOneSpending: 'Test Planned Year One Spending'
-          },
-          currentStage: null,
-          decisionNextSteps: null,
-          grbDate: null,
-          grtDate: null,
-          grtFeedbacks: [],
-          governanceTeams: {
-            isPresent: null,
-            teams: null
-          },
-          isso: {
-            isPresent: null,
-            name: null
-          },
-          existingFunding: null,
-          fundingSources: [],
-          lcid: null,
-          lcidExpiresAt: null,
-          lcidScope: null,
-          lcidCostBaseline: null,
-          needsEaSupport: null,
-          productManager: {
-            component: null,
-            name: null
-          },
-          rejectionReason: null,
-          requester: {
-            component: null,
-            email: null,
-            name: null
-          },
-          requestName: null,
-          requestType: 'NEW',
-          status: 'INTAKE_DRAFT',
-          grtReviewEmailBody: null,
-          decidedAt: null,
-          businessCaseId: null,
-          submittedAt: null,
-          updatedAt: '2021-09-22T18:25:59Z',
-          createdAt: '2021-09-21T20:06:29Z',
-          archivedAt: null,
-          euaUserId: 'ASDF',
-          hasUiChanges: null,
-          documents: [],
-          state: SystemIntakeState.OPEN,
-          decisionState: SystemIntakeDecisionState.NO_DECISION,
-          lcidStatus: null,
-          trbFollowUpRecommendation: null,
-          ...intakeData
-        }
-      }
-    }
-  };
-};
 
 describe('The request type form page', () => {
   const mockStore = configureMockStore();
@@ -159,11 +54,8 @@ describe('The request type form page', () => {
                 <Route path="/governance-overview/:systemId?">
                   <GovernanceOverview />
                 </Route>
-                <Route path="/governance-task-list/:systemId?">
-                  <GovernanceTaskList />
-                </Route>
-                <Route path="/system/:systemId/:formPage">
-                  <SystemIntake />
+                <Route path="/system/link/:id?">
+                  <div data-testid="link-form" />
                 </Route>
               </Switch>
             </MockedProvider>
@@ -242,14 +134,12 @@ describe('The request type form page', () => {
       }
     };
 
-    renderPage([intakeMutation, intakeQuery({ requestType: 'MAJOR_CHANGES' })]);
+    renderPage([intakeMutation]);
 
     screen.getByRole('radio', { name: /major changes/i }).click();
     screen.getByRole('button', { name: /continue/i }).click();
 
-    expect(
-      await screen.findByTestId('governance-task-list')
-    ).toBeInTheDocument();
+    await screen.findByTestId('link-form');
   });
 
   it('creates a recompete intake', async () => {
@@ -279,14 +169,12 @@ describe('The request type form page', () => {
       }
     };
 
-    renderPage([intakeMutation, intakeQuery({ requestType: 'RECOMPETE' })]);
+    renderPage([intakeMutation]);
 
     screen.getByRole('radio', { name: /re-compete/i }).click();
     screen.getByRole('button', { name: /continue/i }).click();
 
-    expect(
-      await screen.findByTestId('governance-task-list')
-    ).toBeInTheDocument();
+    await screen.findByTestId('link-form');
   });
 
   it('executes request type validations', async () => {

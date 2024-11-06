@@ -55,6 +55,7 @@ type TRBSubjectAreaOption string
 const (
 	TRBSubjectAreaOptionAccessControlAndIdentityMgmt   TRBSubjectAreaOption = "ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT"
 	TRBSubjectAreaOptionAccessibilityCompliance        TRBSubjectAreaOption = "ACCESSIBILITY_COMPLIANCE"
+	TRBSubjectAreaOptionArtificialIntelligence         TRBSubjectAreaOption = "ARTIFICIAL_INTELLIGENCE"
 	TRBSubjectAreaOptionAssistanceWithSystemConceptDev TRBSubjectAreaOption = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
 	TRBSubjectAreaOptionBusinessIntelligence           TRBSubjectAreaOption = "BUSINESS_INTELLIGENCE"
 	TRBSubjectAreaOptionCloudMigration                 TRBSubjectAreaOption = "CLOUD_MIGRATION"
@@ -71,6 +72,17 @@ const (
 	TRBSubjectAreaOptionWebServicesAndAPIs             TRBSubjectAreaOption = "WEB_SERVICES_AND_APIS"
 	TRBSubjectAreaOptionWebBasedUIService              TRBSubjectAreaOption = "WEB_BASED_UI_SERVICE"
 )
+
+// NewTRBRequestForm instantiates a TRB request form with default field values
+func NewTRBRequestForm(createdBy string) *TRBRequestForm {
+	return &TRBRequestForm{
+		BaseStruct:   NewBaseStruct(createdBy),
+		Status:       TRBFormStatusReadyToStart, // This should could be handled by SQL default values
+		CollabGroups: pq.StringArray{},          // This also might be more appropriate not initialized, and handled as null in SQL
+
+	}
+
+}
 
 // TRBRequestForm represents the data entered into the TRB request form
 type TRBRequestForm struct {
@@ -99,4 +111,11 @@ type TRBRequestForm struct {
 	SubjectAreaOptions               pq.StringArray `json:"subjectAreaOptions" db:"subject_area_options"`
 	SubjectAreaOptionOther           *string        `json:"subjectAreaOptionOther" db:"subject_area_option_other"`
 	SubmittedAt                      *time.Time     `json:"submittedAt" db:"submitted_at"`
+}
+
+func (f TRBRequestForm) GetMappingKey() uuid.UUID {
+	return f.TRBRequestID
+}
+func (f TRBRequestForm) GetMappingVal() *TRBRequestForm {
+	return &f
 }

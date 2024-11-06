@@ -8,53 +8,16 @@
 //==============================================================
 
 /**
- * Denotes the reason a 508/accessibility request was deleted
- */
-export enum AccessibilityRequestDeletionReason {
-  INCORRECT_APPLICATION_AND_LIFECYCLE_ID = "INCORRECT_APPLICATION_AND_LIFECYCLE_ID",
-  NO_TESTING_NEEDED = "NO_TESTING_NEEDED",
-  OTHER = "OTHER",
-}
-
-/**
- * Represents the common options for document type that is attached to a
- * 508/accessibility request
- */
-export enum AccessibilityRequestDocumentCommonType {
-  AWARDED_VPAT = "AWARDED_VPAT",
-  OTHER = "OTHER",
-  REMEDIATION_PLAN = "REMEDIATION_PLAN",
-  TESTING_VPAT = "TESTING_VPAT",
-  TEST_PLAN = "TEST_PLAN",
-  TEST_RESULTS = "TEST_RESULTS",
-}
-
-/**
- * Indicates the status of a document that has been attached to 508/accessibility
- * request, which will be scanned for viruses before it is made available
- */
-export enum AccessibilityRequestDocumentStatus {
-  AVAILABLE = "AVAILABLE",
-  PENDING = "PENDING",
-  UNAVAILABLE = "UNAVAILABLE",
-}
-
-/**
- * Indicates the status of a 508/accessibility request
- */
-export enum AccessibilityRequestStatus {
-  CLOSED = "CLOSED",
-  DELETED = "DELETED",
-  IN_REMEDIATION = "IN_REMEDIATION",
-  OPEN = "OPEN",
-}
-
-/**
  * The possible types of assignees for CedarRoles
  */
 export enum CedarAssigneeType {
   ORGANIZATION = "ORGANIZATION",
   PERSON = "PERSON",
+}
+
+export enum ExchangeDirection {
+  RECEIVER = "RECEIVER",
+  SENDER = "SENDER",
 }
 
 /**
@@ -157,9 +120,11 @@ export enum ITGovIntakeFormStatus {
  * PersonRole is an enumeration of values for a person's role
  */
 export enum PersonRole {
+  BUSINESS_OWNER = "BUSINESS_OWNER",
   CLOUD_NAVIGATOR = "CLOUD_NAVIGATOR",
   CONTRACT_OFFICE_RSREPRESENTATIVE = "CONTRACT_OFFICE_RSREPRESENTATIVE",
   CRA = "CRA",
+  INFORMATION_SYSTEM_SECURITY_ADVISOR = "INFORMATION_SYSTEM_SECURITY_ADVISOR",
   OTHER = "OTHER",
   PRIVACY_ADVISOR = "PRIVACY_ADVISOR",
   PRODUCT_OWNER = "PRODUCT_OWNER",
@@ -167,12 +132,10 @@ export enum PersonRole {
   SYSTEM_OWNER = "SYSTEM_OWNER",
 }
 
-/**
- * Indicates the type of a request being made with the EASi system
- */
-export enum RequestType {
-  ACCESSIBILITY_REQUEST = "ACCESSIBILITY_REQUEST",
-  GOVERNANCE_REQUEST = "GOVERNANCE_REQUEST",
+export enum RequestRelationType {
+  EXISTING_SERVICE = "EXISTING_SERVICE",
+  EXISTING_SYSTEM = "EXISTING_SYSTEM",
+  NEW_SYSTEM = "NEW_SYSTEM",
 }
 
 /**
@@ -225,8 +188,12 @@ export enum SystemIntakeDecisionState {
  * System Intake document
  */
 export enum SystemIntakeDocumentCommonType {
-  DRAFT_ICGE = "DRAFT_ICGE",
+  ACQUISITION_PLAN_OR_STRATEGY = "ACQUISITION_PLAN_OR_STRATEGY",
+  DRAFT_IGCE = "DRAFT_IGCE",
+  MEETING_MINUTES = "MEETING_MINUTES",
   OTHER = "OTHER",
+  REQUEST_FOR_ADDITIONAL_FUNDING = "REQUEST_FOR_ADDITIONAL_FUNDING",
+  SOFTWARE_BILL_OF_MATERIALS = "SOFTWARE_BILL_OF_MATERIALS",
   SOO_SOW = "SOO_SOW",
 }
 
@@ -237,6 +204,15 @@ export enum SystemIntakeDocumentStatus {
   AVAILABLE = "AVAILABLE",
   PENDING = "PENDING",
   UNAVAILABLE = "UNAVAILABLE",
+}
+
+/**
+ * Represents the version options for a document that is attached to a
+ * System Intake document
+ */
+export enum SystemIntakeDocumentVersion {
+  CURRENT = "CURRENT",
+  HISTORICAL = "HISTORICAL",
 }
 
 /**
@@ -278,6 +254,17 @@ export enum SystemIntakeRequestType {
 }
 
 /**
+ * SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
+ */
+export enum SystemIntakeSoftwareAcquisitionMethods {
+  CONTRACTOR_FURNISHED = "CONTRACTOR_FURNISHED",
+  ELA_OR_INTERNAL = "ELA_OR_INTERNAL",
+  FED_FURNISHED = "FED_FURNISHED",
+  NOT_YET_DETERMINED = "NOT_YET_DETERMINED",
+  OTHER = "OTHER",
+}
+
+/**
  * SystemIntakeState represents whether the intake is open or closed
  */
 export enum SystemIntakeState {
@@ -286,31 +273,7 @@ export enum SystemIntakeState {
 }
 
 /**
- * The status of a system's IT governence request
- * Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeStatusRequester/SystemIntakeStatusAdmin
- */
-export enum SystemIntakeStatus {
-  BIZ_CASE_CHANGES_NEEDED = "BIZ_CASE_CHANGES_NEEDED",
-  BIZ_CASE_DRAFT = "BIZ_CASE_DRAFT",
-  BIZ_CASE_DRAFT_SUBMITTED = "BIZ_CASE_DRAFT_SUBMITTED",
-  BIZ_CASE_FINAL_NEEDED = "BIZ_CASE_FINAL_NEEDED",
-  BIZ_CASE_FINAL_SUBMITTED = "BIZ_CASE_FINAL_SUBMITTED",
-  INTAKE_DRAFT = "INTAKE_DRAFT",
-  INTAKE_SUBMITTED = "INTAKE_SUBMITTED",
-  LCID_ISSUED = "LCID_ISSUED",
-  NEED_BIZ_CASE = "NEED_BIZ_CASE",
-  NOT_APPROVED = "NOT_APPROVED",
-  NOT_IT_REQUEST = "NOT_IT_REQUEST",
-  NO_GOVERNANCE = "NO_GOVERNANCE",
-  READY_FOR_GRB = "READY_FOR_GRB",
-  READY_FOR_GRT = "READY_FOR_GRT",
-  SHUTDOWN_COMPLETE = "SHUTDOWN_COMPLETE",
-  SHUTDOWN_IN_PROGRESS = "SHUTDOWN_IN_PROGRESS",
-  WITHDRAWN = "WITHDRAWN",
-}
-
-/**
- * This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
+ * This represents the statuses that an admin would see as a representation of a system intake. Note, there is no status for a brand new request, because an Admin doesn't see the request until it is in progress.
  */
 export enum SystemIntakeStatusAdmin {
   CLOSED = "CLOSED",
@@ -324,7 +287,9 @@ export enum SystemIntakeStatusAdmin {
   GRT_MEETING_READY = "GRT_MEETING_READY",
   INITIAL_REQUEST_FORM_IN_PROGRESS = "INITIAL_REQUEST_FORM_IN_PROGRESS",
   INITIAL_REQUEST_FORM_SUBMITTED = "INITIAL_REQUEST_FORM_SUBMITTED",
+  LCID_EXPIRED = "LCID_EXPIRED",
   LCID_ISSUED = "LCID_ISSUED",
+  LCID_RETIRED = "LCID_RETIRED",
   NOT_APPROVED = "NOT_APPROVED",
   NOT_GOVERNANCE = "NOT_GOVERNANCE",
 }
@@ -348,7 +313,9 @@ export enum SystemIntakeStatusRequester {
   INITIAL_REQUEST_FORM_IN_PROGRESS = "INITIAL_REQUEST_FORM_IN_PROGRESS",
   INITIAL_REQUEST_FORM_NEW = "INITIAL_REQUEST_FORM_NEW",
   INITIAL_REQUEST_FORM_SUBMITTED = "INITIAL_REQUEST_FORM_SUBMITTED",
+  LCID_EXPIRED = "LCID_EXPIRED",
   LCID_ISSUED = "LCID_ISSUED",
+  LCID_RETIRED = "LCID_RETIRED",
   NOT_APPROVED = "NOT_APPROVED",
   NOT_GOVERNANCE = "NOT_GOVERNANCE",
 }
@@ -448,7 +415,7 @@ export enum TRBConsultPrepStatus {
 
 /**
  * Represents the common options for document type that is attached to a
- * 508/accessibility request
+ * TRB Request
  */
 export enum TRBDocumentCommonType {
   ARCHITECTURE_DIAGRAM = "ARCHITECTURE_DIAGRAM",
@@ -526,6 +493,7 @@ export enum TRBRequestType {
 export enum TRBSubjectAreaOption {
   ACCESSIBILITY_COMPLIANCE = "ACCESSIBILITY_COMPLIANCE",
   ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT = "ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT",
+  ARTIFICIAL_INTELLIGENCE = "ARTIFICIAL_INTELLIGENCE",
   ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT",
   BUSINESS_INTELLIGENCE = "BUSINESS_INTELLIGENCE",
   CLOUD_MIGRATION = "CLOUD_MIGRATION",
@@ -556,34 +524,6 @@ export enum TRBWhereInProcessOption {
 }
 
 /**
- * The type of test added to a 508/accessibility request
- */
-export enum TestDateTestType {
-  INITIAL = "INITIAL",
-  REMEDIATION = "REMEDIATION",
-}
-
-/**
- * Feedback intended for a business owner before they proceed to writing a
- * business case for a system request
- */
-export interface AddGRTFeedbackInput {
-  emailBody: HTML;
-  feedback: HTML;
-  intakeID: UUID;
-  notificationRecipients?: EmailNotificationRecipients | null;
-}
-
-/**
- * Input to add feedback to a system request
- */
-export interface BasicActionInput {
-  feedback: HTML;
-  intakeId: UUID;
-  notificationRecipients?: EmailNotificationRecipients | null;
-}
-
-/**
  * The input needed to close a TRB request
  */
 export interface CloseTRBRequestInput {
@@ -594,53 +534,10 @@ export interface CloseTRBRequestInput {
 }
 
 /**
- * The input data used for adding a document to a 508/accessibility request
- */
-export interface CreateAccessibilityRequestDocumentInput {
-  commonDocumentType: AccessibilityRequestDocumentCommonType;
-  mimeType: string;
-  name: string;
-  otherDocumentTypeDescription?: string | null;
-  requestID: UUID;
-  size: number;
-  url: string;
-}
-
-/**
- * The data needed to initialize a 508/accessibility request
- */
-export interface CreateAccessibilityRequestInput {
-  intakeID?: UUID | null;
-  name: string;
-  cedarSystemId?: string | null;
-}
-
-/**
- * The data used when adding a note to a 508/accessibility request
- */
-export interface CreateAccessibilityRequestNoteInput {
-  requestID: UUID;
-  note: string;
-  shouldSendEmail: boolean;
-}
-
-/**
  * The data needed to bookmark a cedar system
  */
 export interface CreateCedarSystemBookmarkInput {
   cedarSystemId: string;
-}
-
-/**
- * Input data for extending a system request's lifecycle ID
- */
-export interface CreateSystemIntakeActionExtendLifecycleIdInput {
-  id: UUID;
-  expirationDate?: Time | null;
-  nextSteps?: HTML | null;
-  scope: HTML;
-  costBaseline?: string | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**
@@ -660,7 +557,9 @@ export interface CreateSystemIntakeDocumentInput {
   requestID: UUID;
   fileData: Upload;
   documentType: SystemIntakeDocumentCommonType;
+  version: SystemIntakeDocumentVersion;
   otherTypeDescription?: string | null;
+  sendNotification?: boolean | null;
 }
 
 /**
@@ -719,16 +618,6 @@ export interface CreateTRBAdminNoteInitialRequestFormInput {
 }
 
 /**
- * The data needed to create any category of TRB admin note, without any category-specific data
- * TODO - EASI-3458 - remove
- */
-export interface CreateTRBAdminNoteInput {
-  trbRequestId: UUID;
-  category: TRBAdminNoteCategory;
-  noteText: HTML;
-}
-
-/**
  * The data needed to create a TRB admin note with the Supporting Documents category
  */
 export interface CreateTRBAdminNoteSupportingDocumentsInput {
@@ -779,31 +668,6 @@ export interface CreateTRBRequestFeedbackInput {
 }
 
 /**
- * The input required to add a test date/score to a 508/accessibility request
- */
-export interface CreateTestDateInput {
-  date: Time;
-  requestID: UUID;
-  score?: number | null;
-  testType: TestDateTestType;
-}
-
-/**
- * The input used to delete a document from a 508/accessibility request
- */
-export interface DeleteAccessibilityRequestDocumentInput {
-  id: UUID;
-}
-
-/**
- * The input data needed to delete a 508/accessibility request
- */
-export interface DeleteAccessibilityRequestInput {
-  id: UUID;
-  reason: AccessibilityRequestDeletionReason;
-}
-
-/**
  * The data needed to delete a system intake contact
  */
 export interface DeleteSystemIntakeContactInput {
@@ -815,52 +679,10 @@ export interface DeleteTRBRequestFundingSourcesInput {
   fundingNumber: string;
 }
 
-/**
- * The input required to delete a test date/score
- */
-export interface DeleteTestDateInput {
-  id: UUID;
-}
-
 export interface EmailNotificationRecipients {
   regularRecipientEmails: EmailAddress[];
   shouldNotifyITGovernance: boolean;
   shouldNotifyITInvestment: boolean;
-}
-
-/**
- * Input associated with a document to be uploaded to a 508/accessibility request
- */
-export interface GeneratePresignedUploadURLInput {
-  fileName: string;
-  mimeType: string;
-  size: number;
-}
-
-/**
- * The input data required to issue a lifecycle ID for a system's IT governance
- * request
- */
-export interface IssueLifecycleIdInput {
-  expiresAt: Time;
-  feedback: HTML;
-  intakeId: UUID;
-  lcid?: string | null;
-  nextSteps?: HTML | null;
-  scope: HTML;
-  costBaseline?: string | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
-}
-
-/**
- * Input data for rejection of a system's IT governance request
- */
-export interface RejectIntakeInput {
-  feedback: HTML;
-  intakeId: UUID;
-  nextSteps?: HTML | null;
-  reason: HTML;
-  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**
@@ -913,6 +735,40 @@ export interface SetRolesForUserOnSystemInput {
   desiredRoleTypeIDs: string[];
 }
 
+export interface SetSystemIntakeRelationExistingServiceInput {
+  systemIntakeID: UUID;
+  contractName: string;
+  contractNumbers: string[];
+}
+
+export interface SetSystemIntakeRelationExistingSystemInput {
+  systemIntakeID: UUID;
+  cedarSystemIDs: string[];
+  contractNumbers: string[];
+}
+
+export interface SetSystemIntakeRelationNewSystemInput {
+  systemIntakeID: UUID;
+  contractNumbers: string[];
+}
+
+export interface SetTRBRequestRelationExistingServiceInput {
+  trbRequestID: UUID;
+  contractName: string;
+  contractNumbers: string[];
+}
+
+export interface SetTRBRequestRelationExistingSystemInput {
+  trbRequestID: UUID;
+  cedarSystemIDs: string[];
+  contractNumbers: string[];
+}
+
+export interface SetTRBRequestRelationNewSystemInput {
+  trbRequestID: UUID;
+  contractNumbers: string[];
+}
+
 /**
  * Input to submit an intake for review
  */
@@ -925,7 +781,9 @@ export interface SubmitIntakeInput {
  */
 export interface SystemIntakeAnnualSpendingInput {
   currentAnnualSpending?: string | null;
+  currentAnnualSpendingITPortion?: string | null;
   plannedYearOneSpending?: string | null;
+  plannedYearOneSpendingITPortion?: string | null;
 }
 
 /**
@@ -990,7 +848,7 @@ export interface SystemIntakeContractInput {
   endDate?: Time | null;
   hasContract?: string | null;
   startDate?: Time | null;
-  number?: string | null;
+  numbers: string[];
 }
 
 /**
@@ -1187,22 +1045,6 @@ export interface TRBRequestChanges {
 }
 
 /**
- * Parameters for updating a 508/accessibility request's associated CEDAR system
- */
-export interface UpdateAccessibilityRequestCedarSystemInput {
-  id: UUID;
-  cedarSystemId: string;
-}
-
-/**
- * Parameters for updating a 508/accessibility request's status
- */
-export interface UpdateAccessibilityRequestStatus {
-  requestID: UUID;
-  status: AccessibilityRequestStatus;
-}
-
-/**
  * Input data used to update the admin lead assigned to a system IT governance
  * request
  */
@@ -1263,10 +1105,13 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   requestName?: string | null;
   businessNeed?: string | null;
   businessSolution?: string | null;
-  needsEaSupport?: boolean | null;
   currentStage?: string | null;
-  cedarSystemId?: string | null;
+  needsEaSupport?: boolean | null;
   hasUiChanges?: boolean | null;
+  usesAiTech?: boolean | null;
+  usingSoftware?: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
+  cedarSystemId?: string | null;
 }
 
 /**
@@ -1357,24 +1202,6 @@ export interface UpdateTRBRequestFundingSourcesInput {
   trbRequestId: UUID;
   fundingNumber: string;
   sources: string[];
-}
-
-/**
- * The data needed assign a TRB lead to a TRB request
- */
-export interface UpdateTRBRequestTRBLeadInput {
-  trbRequestId: UUID;
-  trbLead: string;
-}
-
-/**
- * The input required to update a test date/score
- */
-export interface UpdateTestDateInput {
-  date: Time;
-  id: UUID;
-  score?: number | null;
-  testType: TestDateTestType;
 }
 
 //==============================================================

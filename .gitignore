@@ -48,3 +48,6 @@ __debug_bin*
 
 # devlocal cert, keys
 devlocal-https.*
+
+# local data outputs
+cmd/populate_user_table/output

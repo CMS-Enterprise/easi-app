@@ -5,7 +5,7 @@ import (
 
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // getBaseLCIDAction returns an action with basic entries related to LCID operations set. Action type is handled by the calling action
@@ -23,9 +23,9 @@ func getBaseLCIDAction(
 	// this follows the existing paradigm for the legacy extend LCID action
 	action := models.Action{
 		IntakeID:       &intake.ID,
-		ActorName:      userInfo.CommonName,
+		ActorName:      userInfo.DisplayName,
 		ActorEmail:     userInfo.Email,
-		ActorEUAUserID: userInfo.EuaUserID,
+		ActorEUAUserID: userInfo.Username,
 		Step:           &intake.Step,
 
 		LCIDExpirationChangeNewDate:      intake.LifecycleExpiresAt,

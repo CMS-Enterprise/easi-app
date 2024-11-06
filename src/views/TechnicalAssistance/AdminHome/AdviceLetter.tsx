@@ -19,6 +19,7 @@ import './AdviceLetter.scss';
 
 const AdviceLetter = ({
   trbRequest,
+  requesterString,
   assignLeadModalTrbRequestIdRef,
   assignLeadModalRef
 }: TrbAdminPageProps) => {
@@ -85,10 +86,12 @@ const AdviceLetter = ({
           </Alert>
         ) : (
           <>
-            {adviceLetter && (
+            {data && adviceLetter && (
               <ReviewAdviceLetter
                 adviceLetter={adviceLetter}
                 trbRequestId={trbRequest.id}
+                trbRequest={data.trbRequest}
+                requesterString={requesterString || ''}
                 editable={false}
                 className="margin-top-6"
               />

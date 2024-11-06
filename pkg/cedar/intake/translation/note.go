@@ -1,11 +1,12 @@
 package translation
 
 import (
+	"context"
 	"encoding/json"
 
-	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
-	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
-	"github.com/cmsgov/easi-app/pkg/models"
+	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
+	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TranslatableNote is a wrapper around our Note model for translating into the CEDAR Intake API schema
@@ -22,7 +23,7 @@ func (note *TranslatableNote) ObjectType() string {
 }
 
 // CreateIntakeModel translates a Note into an IntakeInput
-func (note *TranslatableNote) CreateIntakeModel() (*wire.IntakeInput, error) {
+func (note *TranslatableNote) CreateIntakeModel(ctx context.Context) (*wire.IntakeInput, error) {
 	obj := intakemodels.EASINote{
 		IntakeID:  note.SystemIntakeID.String(),
 		AuthorEUA: note.AuthorEUAID,

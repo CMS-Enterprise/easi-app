@@ -10,14 +10,14 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-type fetchBusinessCaseByID func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error)
-type createBusinessCase func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error)
-type updateBusinessCase func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error)
+type fetchBusinessCaseByID func(ctx context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error)
+type createBusinessCase func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error)
+type updateBusinessCase func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error)
 
 // NewBusinessCaseHandler is a constructor for BusinessCaseHandler
 func NewBusinessCaseHandler(
@@ -102,7 +102,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			}
 			defer r.Body.Close()
 			decoder := json.NewDecoder(r.Body)
-			businessCaseToCreate := models.BusinessCase{}
+			businessCaseToCreate := models.BusinessCaseWithCosts{}
 			err := decoder.Decode(&businessCaseToCreate)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
@@ -152,7 +152,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			}
 			defer r.Body.Close()
 			decoder := json.NewDecoder(r.Body)
-			businessCaseToUpdate := models.BusinessCase{}
+			businessCaseToUpdate := models.BusinessCaseWithCosts{}
 			err := decoder.Decode(&businessCaseToUpdate)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})

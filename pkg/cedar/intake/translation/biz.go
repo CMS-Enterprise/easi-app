@@ -1,17 +1,18 @@
 package translation
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 	"time"
 
-	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
-	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
-	"github.com/cmsgov/easi-app/pkg/models"
+	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
+	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TranslatableBusinessCase is a wrapper around our BusinessCase model for translating into the CEDAR Intake API schema
-type TranslatableBusinessCase models.BusinessCase
+type TranslatableBusinessCase models.BusinessCaseWithCosts
 
 // ObjectID is a unique identifier for a TranslatableAction
 func (bc *TranslatableBusinessCase) ObjectID() string {
@@ -24,7 +25,7 @@ func (bc *TranslatableBusinessCase) ObjectType() string {
 }
 
 // CreateIntakeModel translates a BusinessCase into an IntakeInput
-func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, error) {
+func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wire.IntakeInput, error) {
 	obj := intakemodels.EASIBizCase{
 		UserEUA:                bc.EUAUserID,
 		BusinessCaseID:         bc.ID.String(),

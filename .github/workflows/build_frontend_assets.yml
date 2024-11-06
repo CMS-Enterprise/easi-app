@@ -9,8 +9,8 @@ on:
         description: Environment to build frontend assets for
 
 env:
-  EASI_APP_NODE_VERSION: "16.14.0"
-  GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
+  EASI_APP_NODE_VERSION: "18.20.4"
+  GIT_HASH: ${{ github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 permissions:
@@ -26,8 +26,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ env.GIT_HASH }}
       - name: Set up node
         uses: actions/setup-node@v4
         with:

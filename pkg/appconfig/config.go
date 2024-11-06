@@ -57,32 +57,32 @@ func (e Environment) String() string {
 	}
 }
 
-// Local returns true if the environment is local
+// Local returns true if the environment is local (local development)
 func (e Environment) Local() bool {
 	return e == localEnv
 }
 
-// Test returns true if the environment is local
+// Test returns true if the environment is test (used for local or CI/CD testing)
 func (e Environment) Test() bool {
 	return e == testEnv
 }
 
-// Dev returns true if the environment is local
+// Dev returns true if the environment is dev (dev.easi.cms.gov)
 func (e Environment) Dev() bool {
 	return e == devEnv
 }
 
-// Impl returns true if the environment is local
+// Impl returns true if the environment is Impl (impl.easi.cms.gov)
 func (e Environment) Impl() bool {
 	return e == implEnv
 }
 
-// Prod returns true if the environment is local
+// Prod returns true if the environment is Production (easi.cms.gov)
 func (e Environment) Prod() bool {
 	return e == prodEnv
 }
 
-// Deployed returns true if in a deployed environment
+// Deployed returns true if in a deployed environment (anything in AWS)
 func (e Environment) Deployed() bool {
 	switch e {
 	case devEnv:
@@ -131,14 +131,14 @@ const GRTEmailKey = "GRT_EMAIL"
 // ITInvestmentEmailKey is the key for the receiving email for IT investment
 const ITInvestmentEmailKey = "IT_INVESTMENT_EMAIL"
 
-// AccessibilityTeamEmailKey is the key for the receiving email for the 508 team
-const AccessibilityTeamEmailKey = "ACCESSIBILITY_TEAM_EMAIL"
-
 // EASIHelpEmailKey is the key for the receiving email for EASI help requests
 const EASIHelpEmailKey = "EASI_HELP_EMAIL"
 
 // TRBEmailKey is the key for the receiving email to the TRB email
 const TRBEmailKey = "TRB_EMAIL"
+
+// OITFeedbackChannelSlackLink is the key for the OIT feedback slack channel
+const OITFeedbackChannelSlackLink = "OIT_FEEDBACK_CHANNEL_SLACK_LINK"
 
 // ClientHostKey is the key for getting the client's domain name
 const ClientHostKey = "CLIENT_HOSTNAME"
@@ -148,6 +148,9 @@ const ClientProtocolKey = "CLIENT_PROTOCOL"
 
 // EmailTemplateDirectoryKey is the key for getting the email template directory
 const EmailTemplateDirectoryKey = "EMAIL_TEMPLATE_DIR"
+
+// SESRecipientAllowListRegexKey is the key for getting the regex that Email recipients (SES specifically) must match
+const SESRecipientAllowListRegexKey = "SES_RECIPIENT_ALLOWLIST_REGEX"
 
 // AWSS3FileUploadBucket is the key for the bucket we upload files to
 const AWSS3FileUploadBucket = "AWS_S3_FILE_UPLOAD_BUCKET"
@@ -164,11 +167,17 @@ const LocalMinioS3SecretKey = "MINIO_SECRET_KEY"
 // AWSRegion is the key for the region we establish a session to for AWS services
 const AWSRegion = "AWS_REGION"
 
+// CEDARPROXYURL is the key for the CEDAR proxy url
+const CEDARPROXYURL = "CEDAR_PROXY_URL"
+
 // CEDARAPIURL is the key for the CEDAR base url
 const CEDARAPIURL = "CEDAR_API_URL"
 
 // CEDARAPIKey is the key for accessing CEDAR
 const CEDARAPIKey = "CEDAR_API_KEY" // #nosec
+
+// CEDARCoreSkipProxy is the key for whether to make calls directly to CEDAR Core
+const CEDARCoreSkipProxy = "CEDAR_CORE_SKIP_PROXY"
 
 // CEDAREmailAddress is the key for the env var that holds the email address that we use when notifying CEDAR of changes
 const CEDAREmailAddress = "CEDAR_EMAIL_ADDRESS"
@@ -176,9 +185,15 @@ const CEDAREmailAddress = "CEDAR_EMAIL_ADDRESS"
 // CEDARCoreAPIVersion is the version of the CEDAR core API to use
 const CEDARCoreAPIVersion = "CEDAR_CORE_API_VERSION"
 
-// CEDARCacheIntervalKey is the key for the environment variable tracking how often to refresh the CEDAR System cache (i.e. "5m", "6h")
-// https://pkg.go.dev/time#ParseDuration
-const CEDARCacheIntervalKey = "CEDAR_CACHE_INTERVAL"
+// CEDARCoreMock is the key for the environment variable that determines if the CEDAR Core API should be mocked
+// If set to true, mock data will be used
+// If set to false, real calls to the CEDAR Core API will be made
+const CEDARCoreMock = "CEDAR_CORE_MOCK"
+
+// CEDARIntakeEnabled is the key for the environment variable that determines if the CEDAR Intake API should enabled
+// If set to true, real calls to the CEDAR Intake API will be made
+// If set to false, the Intake API Client methods will do nothing
+const CEDARIntakeEnabled = "CEDAR_INTAKE_ENABLED"
 
 // LDKey is the key for accessing LaunchDarkly
 const LDKey = "LD_SDK_KEY"
@@ -222,7 +237,8 @@ const (
 const OKTAAPIURL = "OKTA_API_URL"
 
 // OKTAAPIToken is the key for the Okta API token
-const OKTAAPIToken = "OKTA_API_TOKEN" // #nosec G101 false positive - not the actual API key itself
+// #nosec G101 false positive - not the actual API key itself
+const OKTAAPIToken = "OKTA_API_TOKEN"
 
-// USEOKTAAPI is a flag to determine if we should use the okta API or the CEDAR core api for user search
-const USEOKTAAPI = "USE_OKTA_API"
+// OktaLocalEnabled is the key for enabling OKTA on local dev
+const OktaLocalEnabled = "USE_OKTA_LOCAL"

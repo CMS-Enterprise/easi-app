@@ -7,15 +7,6 @@ import { formatDateLocal } from 'utils/date';
 
 import Note from '.';
 
-/** TODO EASI-3467: Remove with `trbAdminNoteUpdates` flag */
-vi.mock('launchdarkly-react-client-sdk', () => ({
-  useFlags: () => {
-    return {
-      trbAdminNoteUpdates: true
-    };
-  }
-}));
-
 const noteInitialRequestForm: TRBAdminNoteFragment = {
   __typename: 'TRBAdminNote',
   id: '727cd90e-216f-4037-9160-b674f0a97eb5',

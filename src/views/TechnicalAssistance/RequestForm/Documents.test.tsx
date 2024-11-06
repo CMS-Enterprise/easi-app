@@ -58,6 +58,8 @@ const mockTrbRequestData: TrbRequest = {
   state: TRBRequestState.OPEN,
   taskStatuses: {} as any,
   feedback: [],
+  relatedTRBRequests: [],
+  relatedIntakes: [],
   __typename: 'TRBRequest'
 };
 
@@ -102,6 +104,8 @@ const documents = (
       state: TRBRequestState.OPEN,
       taskStatuses: {} as any,
       feedback: [],
+      relatedTRBRequests: [],
+      relatedIntakes: [],
       __typename: 'TRBRequest'
     }}
     stepUrl={{ current: '', next: '', back: '' }}
@@ -161,76 +165,71 @@ describe('Trb Request form: Supporting documents', () => {
   });
 
   it('renders states with documents loaded', async () => {
-    const {
-      asFragment,
-      findByRole,
-      getByText,
-      getByRole,
-      getAllByText
-    } = render(
-      <MemoryRouter
-        initialEntries={[
-          '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents'
-        ]}
-      >
-        <Route exact path="/trb/requests/:id/:step?/:view?">
-          <MockedProvider
-            mocks={[
-              {
-                request: {
-                  query: GetTrbRequestDocumentsQuery,
-                  variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
-                },
-                result: {
-                  data: {
-                    trbRequest: {
-                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
-                      documents: [
-                        {
-                          id: '21517ecf-a671-46f3-afec-35eebde49630',
-                          fileName: 'foo.pdf',
-                          documentType: {
-                            commonType: 'ARCHITECTURE_DIAGRAM',
-                            otherTypeDescription: ''
+    const { asFragment, findByRole, getByText, getByRole, getAllByText } =
+      render(
+        <MemoryRouter
+          initialEntries={[
+            '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents'
+          ]}
+        >
+          <Route exact path="/trb/requests/:id/:step?/:view?">
+            <MockedProvider
+              mocks={[
+                {
+                  request: {
+                    query: GetTrbRequestDocumentsQuery,
+                    variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
+                  },
+                  result: {
+                    data: {
+                      trbRequest: {
+                        id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
+                        documents: [
+                          {
+                            id: '21517ecf-a671-46f3-afec-35eebde49630',
+                            fileName: 'foo.pdf',
+                            documentType: {
+                              commonType: 'ARCHITECTURE_DIAGRAM',
+                              otherTypeDescription: ''
+                            },
+                            status: 'UNAVAILABLE',
+                            uploadedAt: '2022-12-20T16:25:42.414064Z',
+                            url: '' // Links are not used in test
                           },
-                          status: 'UNAVAILABLE',
-                          uploadedAt: '2022-12-20T16:25:42.414064Z',
-                          url: '' // Links are not used in test
-                        },
-                        {
-                          id: 'd7efd8a7-4ad9-4ed3-80e4-c4b70f3498ae',
-                          fileName: 'bar.pdf',
-                          documentType: {
-                            commonType: 'OTHER',
-                            otherTypeDescription: 'test other'
+                          {
+                            id: 'd7efd8a7-4ad9-4ed3-80e4-c4b70f3498ae',
+                            fileName: 'bar.pdf',
+                            documentType: {
+                              commonType: 'OTHER',
+                              otherTypeDescription: 'test other'
+                            },
+                            status: 'AVAILABLE',
+                            uploadedAt: '2022-12-20T19:04:12.50116Z',
+                            url: ''
                           },
-                          status: 'AVAILABLE',
-                          uploadedAt: '2022-12-20T19:04:12.50116Z',
-                          url: ''
-                        },
-                        {
-                          id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
-                          fileName: 'baz.pdf',
-                          documentType: {
-                            commonType: 'PRESENTATION_SLIDE_DECK',
-                            otherTypeDescription: ''
-                          },
-                          status: 'PENDING',
-                          uploadedAt: '2022-12-20T19:04:36.518916Z',
-                          url: ''
-                        }
-                      ]
+                          {
+                            id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
+                            fileName: 'baz.pdf',
+                            documentType: {
+                              commonType: 'PRESENTATION_SLIDE_DECK',
+                              otherTypeDescription: ''
+                            },
+                            status: 'PENDING',
+                            uploadedAt: '2022-12-20T19:04:36.518916Z',
+                            url: ''
+                          }
+                        ]
+                      }
                     }
                   }
                 }
-              }
-            ]}
-          >
-            <MessageProvider>{documents}</MessageProvider>
-          </MockedProvider>
-        </Route>
-      </MemoryRouter>
-    );
+              ]}
+            >
+              <MessageProvider>{documents}</MessageProvider>
+            </MockedProvider>
+          </Route>
+        </MemoryRouter>
+      );
 
     // Check some render states
     // Submit button is "Next" when there are documents

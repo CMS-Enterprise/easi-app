@@ -12,7 +12,7 @@ import {
   Form,
   FormGroup,
   Grid,
-  IconArrowBack,
+  Icon,
   Label,
   Radio,
   TextInput
@@ -35,7 +35,7 @@ import {
   TrbRequestInputDocument
 } from 'validations/trbRequestSchema';
 
-import Breadcrumbs from '../Breadcrumbs';
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 
 import { TrbFormAlert } from '.';
 
@@ -192,7 +192,7 @@ const DocumentUpload = ({
             <Controller
               name="fileData"
               control={control}
-              // eslint-disable-next-line no-shadow
+              // eslint-disable-next-line @typescript-eslint/no-shadow
               render={({ field, fieldState: { error } }) => {
                 return (
                   <FormGroup error={!!error} className="margin-top-5">
@@ -212,7 +212,7 @@ const DocumentUpload = ({
                       onChange={e => {
                         field.onChange(e.currentTarget?.files?.[0]);
                       }}
-                      accept=".pdf,.doc,.docx,.xls,.xlsx"
+                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.ppt,.pptx,.xls,.xlsx"
                     />
                   </FormGroup>
                 );
@@ -221,7 +221,7 @@ const DocumentUpload = ({
             <Controller
               name="documentType"
               control={control}
-              // eslint-disable-next-line no-shadow
+              // eslint-disable-next-line @typescript-eslint/no-shadow
               render={({ field, fieldState: { error } }) => (
                 <FormGroup error={!!error}>
                   <Fieldset legend={t('documents.upload.whatType')}>
@@ -254,7 +254,7 @@ const DocumentUpload = ({
                 <Controller
                   name="otherTypeDescription"
                   control={control}
-                  // eslint-disable-next-line no-shadow
+                  // eslint-disable-next-line @typescript-eslint/no-shadow
                   render={({ field, fieldState: { error } }) => (
                     <FormGroup className="margin-top-1" error={!!error}>
                       <Label htmlFor={field.name} error={!!error}>
@@ -297,7 +297,7 @@ const DocumentUpload = ({
           variant="unstyled"
           to={`/trb/${prevRoute}/${requestID}/documents`}
         >
-          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+          <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
           {t('documents.upload.dontUploadAndReturn')}
         </UswdsReactLink>
       </div>

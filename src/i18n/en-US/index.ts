@@ -6,11 +6,9 @@ import newSystem from './articles/newSystem';
 import prepareTrbConsultMeeting from './articles/prepareTrbConsultMeeting';
 import sampleBusinessCase from './articles/sampleBusinessCase';
 import stepsInTRBProcess from './articles/stepsInTRBProcess';
-import stepsInvolved508 from './articles/stepsInvolved508';
-import templatesFor508Testing from './articles/templatesFor508Testing';
-import accessibility from './accessibility';
 import accessibilityStatement from './accessibilityStatement';
 import action from './action';
+import admin from './admin';
 import auth from './auth';
 import businessCase from './businessCase';
 import cookies from './cookies';
@@ -20,6 +18,7 @@ import footer from './footer';
 import form from './form';
 import general from './general';
 import governanceOverview from './governanceOverview';
+import grbReview from './grbReview';
 import header from './header';
 import help from './help';
 import home from './home';
@@ -28,14 +27,15 @@ import itGov from './itGov';
 import makingARequest from './makingARequest';
 import privacyPolicy from './privacyPolicy';
 import systemProfile from './systemProfile';
+import systemWorkspace from './systemWorkspace';
 import tableAndPagination from './tableAndPagination';
 import technicalAssistance from './technicalAssistance';
 import termsAndConditions from './termsAndConditions';
 
 const enUS = {
-  accessibility,
   accessibilityStatement,
   action,
+  admin,
   auth,
   businessCase,
   cookies,
@@ -46,9 +46,8 @@ const enUS = {
   general,
   governanceReviewBoard,
   governanceReviewTeam,
+  grbReview,
   sampleBusinessCase,
-  stepsInvolved508,
-  templatesFor508Testing,
   governanceOverview,
   header,
   help,
@@ -61,6 +60,7 @@ const enUS = {
   privacyPolicy,
   stepsInTRBProcess,
   systemProfile,
+  systemWorkspace,
   tableAndPagination,
   taskList,
   technicalAssistance,

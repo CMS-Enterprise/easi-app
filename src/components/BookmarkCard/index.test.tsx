@@ -3,35 +3,19 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 
-import GetCedarSystemsAndBookmarksQuery from 'queries/GetCedarSystemsAndBookmarksQuery';
 import { mapCedarStatusToIcon } from 'types/iconStatus';
-import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
+import { mockSystemInfo } from 'views/SystemProfile/mockSystemData';
 
 import BookmarkCard from './index';
 
 describe('BookmarkCard', () => {
-  const mocks = [
-    {
-      request: {
-        query: GetCedarSystemsAndBookmarksQuery
-      },
-      result: {
-        data: {
-          cedarSystems: [],
-          cedarSystemBookmarks: []
-        }
-      }
-    }
-  ];
-
   it('matches the snapshot', () => {
     const { asFragment } = render(
       <MemoryRouter>
-        <MockedProvider mocks={mocks}>
+        <MockedProvider>
           <BookmarkCard
             type="systemProfile"
             statusIcon={mapCedarStatusToIcon(mockSystemInfo[0].status)}
-            refetch={() => {}}
             {...mockSystemInfo[0]}
           />
         </MockedProvider>
@@ -43,11 +27,10 @@ describe('BookmarkCard', () => {
   it('renders translated headings', () => {
     const { getByText } = render(
       <MemoryRouter>
-        <MockedProvider mocks={mocks}>
+        <MockedProvider>
           <BookmarkCard
             type="systemProfile"
             statusIcon={mapCedarStatusToIcon(mockSystemInfo[0].status)}
-            refetch={() => {}}
             {...mockSystemInfo[0]}
           />
         </MockedProvider>
@@ -67,11 +50,10 @@ describe('BookmarkCard', () => {
   it.skip('renders corresponding success health icon for status', () => {
     const { getByTestId } = render(
       <MemoryRouter>
-        <MockedProvider mocks={mocks}>
+        <MockedProvider>
           <BookmarkCard
             type="systemProfile"
             statusIcon={mapCedarStatusToIcon(mockSystemInfo[0].status)}
-            refetch={() => {}}
             {...mockSystemInfo[0]}
           />
         </MockedProvider>
@@ -86,11 +68,10 @@ describe('BookmarkCard', () => {
   it.skip('renders corresponding warning health icon for status', () => {
     const { getByTestId } = render(
       <MemoryRouter>
-        <MockedProvider mocks={mocks}>
+        <MockedProvider>
           <BookmarkCard
             type="systemProfile"
             statusIcon={mapCedarStatusToIcon(mockSystemInfo[1].status)}
-            refetch={() => {}}
             {...mockSystemInfo[1]}
           />
         </MockedProvider>
@@ -105,11 +86,10 @@ describe('BookmarkCard', () => {
   it.skip('renders corresponding fail health icon for status', () => {
     const { getByTestId } = render(
       <MemoryRouter>
-        <MockedProvider mocks={mocks}>
+        <MockedProvider>
           <BookmarkCard
             type="systemProfile"
             statusIcon={mapCedarStatusToIcon(mockSystemInfo[2].status)}
-            refetch={() => {}}
             {...mockSystemInfo[2]}
           />
         </MockedProvider>

@@ -5,15 +5,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"path"
 
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
@@ -25,7 +25,6 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	businessCaseURL.Path = path.Join(businessCaseURL.Path, "/business_case")
 
 	intake := testhelpers.NewSystemIntake()
-	intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 	intake.RequestFormState = models.SIRFSSubmitted
 	intake.EUAUserID = null.StringFrom(s.user.euaID)
 
@@ -45,7 +44,6 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 
 	client := &http.Client{}
 
-	// POST tests were removed since they access CEDAR LDAP indirectly (in creating action)
 	s.Run("GET will fail with no Authorization", func() {
 		getURL.Path = path.Join(getURL.Path, createdBizCase.ID.String())
 		req, err := http.NewRequest(http.MethodPost, getURL.String(), nil)
@@ -62,14 +60,13 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		req, err := http.NewRequest(http.MethodGet, getURL.String(), nil)
 		s.NoError(err)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
-
 		resp, err := client.Do(req)
 
 		s.NoError(err)
 		defer resp.Body.Close()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
-		actualBody, err := ioutil.ReadAll(resp.Body)
+		actualBody, err := io.ReadAll(resp.Body)
 		s.NoError(err)
 		var actualBusinessCase models.BusinessCase
 		err = json.Unmarshal(actualBody, &actualBusinessCase)
@@ -116,7 +113,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		defer resp.Body.Close()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
-		actualBody, err := ioutil.ReadAll(resp.Body)
+		actualBody, err := io.ReadAll(resp.Body)
 		s.NoError(err)
 		var actualBusinessCase models.BusinessCase
 		err = json.Unmarshal(actualBody, &actualBusinessCase)

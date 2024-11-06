@@ -53,33 +53,35 @@ const systemIntakeStatusAdmin: Record<SystemIntakeStatusAdmin, string> = {
   INITIAL_REQUEST_FORM_IN_PROGRESS: 'Intake Request in progress',
   INITIAL_REQUEST_FORM_SUBMITTED: 'Intake Request submitted',
   LCID_ISSUED: 'LCID issued: {{lcid}}',
+  LCID_EXPIRED: 'Expired LCID: {{lcid}}',
+  LCID_RETIRED: 'Retired LCID: {{lcid}}',
   NOT_APPROVED: 'Project not approved by the GRB',
   NOT_GOVERNANCE: 'Not an IT Governance request'
 };
 
-const systemIntakeStatusRequester: Record<
-  SystemIntakeStatusRequester,
-  string
-> = {
-  CLOSED: 'Closed',
-  DRAFT_BUSINESS_CASE_EDITS_REQUESTED: 'Edits requested',
-  DRAFT_BUSINESS_CASE_IN_PROGRESS: 'Draft Business Case in progress',
-  DRAFT_BUSINESS_CASE_SUBMITTED: 'Draft Business Case submitted',
-  FINAL_BUSINESS_CASE_EDITS_REQUESTED: 'Edits requested',
-  FINAL_BUSINESS_CASE_IN_PROGRESS: 'Final Business Case in progress',
-  FINAL_BUSINESS_CASE_SUBMITTED: 'Final Business Case submitted',
-  GRB_MEETING_AWAITING_DECISION: 'Awaiting GRB decision',
-  GRB_MEETING_READY: 'Ready for GRB meeting',
-  GRT_MEETING_AWAITING_DECISION: 'Awaiting GRT decision',
-  GRT_MEETING_READY: 'Ready for GRT meeting',
-  INITIAL_REQUEST_FORM_EDITS_REQUESTED: 'Edits requested',
-  INITIAL_REQUEST_FORM_IN_PROGRESS: 'Intake Request in progress',
-  INITIAL_REQUEST_FORM_NEW: 'New',
-  INITIAL_REQUEST_FORM_SUBMITTED: 'Intake Request submitted',
-  LCID_ISSUED: 'LCID issued: {{lcid}}',
-  NOT_APPROVED: 'Project not approved by the GRB',
-  NOT_GOVERNANCE: 'Not an IT Governance request'
-};
+const systemIntakeStatusRequester: Record<SystemIntakeStatusRequester, string> =
+  {
+    CLOSED: 'Closed',
+    DRAFT_BUSINESS_CASE_EDITS_REQUESTED: 'Edits requested',
+    DRAFT_BUSINESS_CASE_IN_PROGRESS: 'Draft Business Case in progress',
+    DRAFT_BUSINESS_CASE_SUBMITTED: 'Draft Business Case submitted',
+    FINAL_BUSINESS_CASE_EDITS_REQUESTED: 'Edits requested',
+    FINAL_BUSINESS_CASE_IN_PROGRESS: 'Final Business Case in progress',
+    FINAL_BUSINESS_CASE_SUBMITTED: 'Final Business Case submitted',
+    GRB_MEETING_AWAITING_DECISION: 'Awaiting GRB decision',
+    GRB_MEETING_READY: 'Ready for GRB meeting',
+    GRT_MEETING_AWAITING_DECISION: 'Awaiting GRT decision',
+    GRT_MEETING_READY: 'Ready for GRT meeting',
+    INITIAL_REQUEST_FORM_EDITS_REQUESTED: 'Edits requested',
+    INITIAL_REQUEST_FORM_IN_PROGRESS: 'Intake Request in progress',
+    INITIAL_REQUEST_FORM_NEW: 'New',
+    INITIAL_REQUEST_FORM_SUBMITTED: 'Intake Request submitted',
+    LCID_ISSUED: 'LCID issued: {{lcid}}',
+    LCID_EXPIRED: 'Expired LCID: {{lcid}}',
+    LCID_RETIRED: 'Retired LCID: {{lcid}}',
+    NOT_APPROVED: 'Project not approved by the GRB',
+    NOT_GOVERNANCE: 'Not an IT Governance request'
+  };
 
 const governanceReviewTeam = {
   title: 'Prepare for the Governance Review Team meeting',
@@ -99,8 +101,7 @@ const governanceReviewTeam = {
 
     howToBestPrepare: {
       title: 'Possible questions',
-      body:
-        'The GRT SMEs may ask you a series of questions after you walk them through your Business Case. The best way to prepare for this conversation is to review and be able to respond to example questions as they pertain to your Business Case. Example questions are included in the sections below.'
+      body: 'The GRT SMEs may ask you a series of questions after you walk them through your Business Case. The best way to prepare for this conversation is to review and be able to respond to example questions as they pertain to your Business Case. Example questions are included in the sections below.'
     },
 
     capitalPlanning: {
@@ -252,6 +253,7 @@ const governanceReviewTeam = {
     openBusiness: 'Open business case',
     openNotes: 'Open admin team notes',
     openDecision: 'Open decision',
+    openAdditionalInformation: 'Open additional information',
     openLcid: 'Open LCID',
     openFeedback: 'Open feedback'
   },
@@ -280,6 +282,9 @@ const governanceReviewTeam = {
     noRejectionReasons: 'No reasons specified',
     decisionSectionTitle: 'Decision Details'
   },
+  additionalInformation: {
+    title: 'Additional information'
+  },
   feedback: {
     title: 'Feedback',
     description:
@@ -289,8 +294,13 @@ const governanceReviewTeam = {
       'Feedback and recommendations have moved! Use the Feedback tab in the navigation to the left to view feedback and recommendations that have been sent to the requester and project team.'
   },
   governanceRequestDetails: 'Governance request details',
+  itGovernanceRequestDetails: 'IT Governance request details',
+  systemServiceContractName: 'System, service, or contract name',
+  noneSpecified: 'None specified',
   actions: 'Actions',
+  submittedOn: 'Submitted on {{date}}',
   requestType: 'Request type',
+  systemNamePlural: '{{name}}, +{{count}} more',
   status: {
     label: 'Status',
     open: 'Open',

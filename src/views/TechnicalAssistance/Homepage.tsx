@@ -43,6 +43,7 @@ import { AppState } from 'reducers/rootReducer';
 import { TRBRequestState } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
+import { trbRequestStatusSortType } from 'utils/tableRequestStatusIndex';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -60,9 +61,8 @@ function Homepage() {
   // Current user info from redux
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
-  const { loading, error, data } = useQuery<GetTrbRequests>(
-    GetTrbRequestsQuery
-  );
+  const { loading, error, data } =
+    useQuery<GetTrbRequests>(GetTrbRequestsQuery);
 
   const infoBoxText = t<Record<string, string[]>>('infoBox', {
     returnObjects: true
@@ -97,7 +97,8 @@ function Homepage() {
         accessor: ({ status, state }) =>
           state === TRBRequestState.CLOSED
             ? t(`table.requestState.${state}`)
-            : t(`table.requestStatus.${status}`)
+            : t(`table.requestStatus.${status}`),
+        sortType: trbRequestStatusSortType
       },
       {
         Header: t<string>('table.header.submissionDate'),

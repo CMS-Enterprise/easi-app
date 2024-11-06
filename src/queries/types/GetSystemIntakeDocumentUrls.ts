@@ -10,7 +10,7 @@
 export interface GetSystemIntakeDocumentUrls_systemIntake_documents {
   __typename: "SystemIntakeDocument";
   id: UUID;
-  url: string;
+  url: string | null;
   fileName: string;
 }
 
@@ -21,6 +21,10 @@ export interface GetSystemIntakeDocumentUrls_systemIntake {
 }
 
 export interface GetSystemIntakeDocumentUrls {
+  /**
+   * Requests fetches a requester's own intake requests
+   * first is currently non-functional and can be removed later
+   */
   systemIntake: GetSystemIntakeDocumentUrls_systemIntake | null;
 }
 

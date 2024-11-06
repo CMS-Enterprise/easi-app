@@ -27,7 +27,7 @@ describe('Help / Send Feedback schema validation', () => {
     canBeContacted: true,
     cmsRole: 'Mascot #2',
     didntNeedHelpAnswering: 'Agree',
-    easiServicesUsed: ['Systems', 'IT Governance', 'Section 508'],
+    easiServicesUsed: ['Systems', 'IT Governance'],
     hadAccessToInformation: 'I didn’t fill out a form in EASi',
     howCanWeImprove:
       'The solution is to add an alternative that allows for the uncovered situation.',

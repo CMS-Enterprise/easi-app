@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewComponentAddParams creates a new ComponentAddParams object,
@@ -63,7 +63,10 @@ ComponentAddParams contains all the parameters to send to the API endpoint
 */
 type ComponentAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Component record to be added to Alfabet.
+	*/
 	Body *models.ComponentAddRequest
 
 	timeout    time.Duration

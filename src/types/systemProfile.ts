@@ -8,6 +8,9 @@ import {
   GetSystemProfile,
   /* eslint-disable camelcase */
   GetSystemProfile_cedarAuthorityToOperate,
+  GetSystemProfile_cedarBudget,
+  GetSystemProfile_cedarBudgetSystemCost,
+  GetSystemProfile_cedarSoftwareProducts,
   GetSystemProfile_cedarSystemDetails_cedarSystem,
   GetSystemProfile_cedarSystemDetails_deployments_dataCenter,
   GetSystemProfile_cedarSystemDetails_roles,
@@ -16,11 +19,9 @@ import {
 } from 'queries/types/GetSystemProfile';
 import {
   tempATOProp,
-  tempBudgetProp,
-  tempProductsProp,
   tempSubSystemProp,
   tempSystemDataProp
-} from 'views/Sandbox/mockSystemData';
+} from 'views/SystemProfile/mockSystemData';
 
 import { CedarAssigneeType } from './graphql-global-types';
 
@@ -28,7 +29,7 @@ import { CedarAssigneeType } from './graphql-global-types';
 
 // Team
 
-export type TeamSectionKey = typeof teamSectionKeys[number];
+export type TeamSectionKey = (typeof teamSectionKeys)[number];
 
 export interface CedarRoleAssigneePerson extends CedarRole {
   assigneeType: CedarAssigneeType.PERSON;
@@ -41,17 +42,12 @@ export interface UsernameWithRoles {
 
 // ATO
 
-export type AtoStatus =
-  | 'Active'
-  | 'Due Soon'
-  | 'In progress'
-  | 'Expired'
-  | 'No ATO';
+export type AtoStatus = 'Active' | 'Due Soon' | 'Expired' | 'No ATO';
 
-export type ThreatLevel = typeof threatLevelGrades[number];
+export type ThreatLevel = (typeof threatLevelGrades)[number];
 
 export type SecurityFindings = Record<
-  typeof securityFindingKeys[number],
+  (typeof securityFindingKeys)[number],
   number
 >;
 
@@ -61,11 +57,11 @@ export type SubpageKey =
   | 'home'
   | 'details'
   | 'team'
+  | 'contracts'
   | 'funding-and-budget'
   | 'tools-and-software'
-  | 'ato'
+  | 'ato-and-security'
   | 'lifecycle-id'
-  | 'section-508'
   | 'sub-systems'
   | 'system-data'
   | 'documents';
@@ -75,7 +71,6 @@ export type SubpageKey =
  * So far it is certain team members and points of contact.
  * This is a borrowed set from `API/role/type/alfabet`.
  */
-// eslint-disable-next-line no-shadow
 export enum RoleTypeName {
   API_CONTACT = 'API Contact',
   BUSINESS_OWNER = 'Business Owner',
@@ -93,7 +88,6 @@ export enum RoleTypeName {
  * So far it is certain team members and points of contact.
  * This is a borrowed set from `API/role/type/alfabet`.
  */
-// eslint-disable-next-line no-shadow
 // export enum RoleTypeIdSparx {
 //   API_CONTACT = '{1FD4F238-56A1-46d2-8CB1-8A7C87F63A01}',
 //   BUSINESS_OWNER = '{C95EA2F9-1A08-4b1a-AEE7-A83011D06113}',
@@ -105,6 +99,26 @@ export enum RoleTypeName {
 //   SYSTEM_ISSUES_CONTACT = '{ED77C4FD-3078-4f65-8FD4-7350DBAE7283}',
 //   SYSTEM_MAINTAINER = '{36335B21-40F4-48de-8D16-8F85277C54B8}'
 // }
+
+/**
+ * A pick of Cedar Role Type Names.
+ * These are known names that are also referenced from UX.
+ */
+export type TeamMemberRoleTypeName =
+  | 'Business Owner'
+  | 'System Maintainer'
+  | "Contracting Officer's Representative (COR)"
+  | 'Government Task Lead (GTL)'
+  | 'Project Lead'
+  | 'ISSO' // ISSO is what we get from cedar. Intended display is: 'Information System Security Officer (ISSO)'
+  | 'Subject Matter Expert (SME)'
+  | 'Budget Analyst'
+  | 'Support Staff'
+  | 'Business Question Contact'
+  | 'Technical System Issues Contact'
+  | 'Data Center Contact'
+  | 'API Contact'
+  | 'AI Contact';
 
 // Development Tags
 
@@ -127,28 +141,29 @@ export interface UrlLocation extends GetSystemProfile_cedarSystemDetails_urls {
 export interface SystemProfileData extends GetSystemProfile {
   // The original id type can be null, in which case this object is not created
   id: string;
-  // eslint-disable-next-line camelcase
+  /* eslint-disable camelcase */
   ato?: GetSystemProfile_cedarAuthorityToOperate;
   atoStatus?: AtoStatus;
-  locations?: UrlLocation[];
-  // eslint-disable-next-line camelcase
+  budgets?: GetSystemProfile_cedarBudget[];
+  budgetSystemCosts?: GetSystemProfile_cedarBudgetSystemCost;
   businessOwners: GetSystemProfile_cedarSystemDetails_roles[];
   developmentTags?: DevelopmentTag[];
+  locations?: UrlLocation[];
   numberOfContractorFte?: number;
   numberOfFederalFte?: number;
   numberOfFte?: number;
   personRoles: CedarRoleAssigneePerson[];
+  plannedRetirement: string | null;
   productionLocation?: UrlLocation;
-  // eslint-disable-next-line camelcase
   status: GetSystemProfile_cedarSystemDetails_cedarSystem['status'];
   usernamesWithRoles: UsernameWithRoles[];
 
   // Remaining mock data stubs
   activities?: tempATOProp[];
-  budgets?: tempBudgetProp[];
-  products?: tempProductsProp[];
+  toolsAndSoftware?: GetSystemProfile_cedarSoftwareProducts;
   subSystems?: tempSubSystemProp[];
   systemData?: tempSystemDataProp[];
+  /* eslint-enable camelcase */
 }
 
 export interface SystemProfileSubviewProps {

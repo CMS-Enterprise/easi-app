@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestTRBRequestClosedEmail() {
@@ -29,105 +29,102 @@ func (s *EmailTestSuite) TestTRBRequestClosedEmail() {
 		path.Join("trb", trbID.String(), "request"),
 	)
 
+	trbInbox := s.config.TRBEmail.String()
+
 	recipients := []models.EmailAddress{
 		models.NewEmailAddress("abcd@local.fake"),
 		models.NewEmailAddress("efgh@local.fake"),
 	}
 
-	input := SendTRBRequestClosedEmailInput{
-		TRBRequestID:   trbID,
-		TRBRequestName: "Test TRB Request",
-		RequesterName:  "Mc Lovin",
-		Recipients:     recipients,
-		ReasonClosed:   "Just felt like it",
-		CopyTRBMailbox: true,
-	}
 	allRecipients := append(recipients, s.config.TRBEmail)
 
+	getExpectedEmail := func(
+		requestName string,
+		requesterName string,
+		reason models.HTML,
+	) string {
+		var reasonStr string
+		if reason.ToTemplate() != "" {
+			reasonStr = fmt.Sprintf(
+				`<br>
+				<div class="no-margin">
+				  <p><strong>Reason for closing:</strong></p>
+				  %s
+				</div>`,
+				*reason.StringPointer(),
+			)
+		}
+		return fmt.Sprintf(
+			`<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
+
+			<p>The Technical Review Board (TRB) has closed %s.</p>
+
+			%s
+
+			<br>
+			<div class="no-margin">
+				<p>View this request in EASi:</p>
+				<ul>
+					<li>If you are the initial requester, you may <a href="%s">click here</a> to view the advice letter and your request task list.</li>
+					<li>TRB team members may <a href="%s">click here</a> to view the request details.</li>
+					<li>Others should contact %s or the TRB for more information about this request.</li>
+				</ul>
+			</div>
+
+			<br>
+			<p>If you have questions or need to request a reschedule, please email the TRB at <a href="mailto:%s">%s</a>.</p>`,
+			requestName,
+			reasonStr,
+			trbLink,
+			trbAdminLink,
+			requesterName,
+			trbInbox,
+			trbInbox,
+		)
+	}
+
 	s.Run("successful call has the right content", func() {
+		input := SendTRBRequestClosedEmailInput{
+			TRBRequestID:   trbID,
+			TRBRequestName: "Test TRB Request",
+			RequesterName:  "Mc Lovin",
+			Recipients:     recipients,
+			ReasonClosed:   models.HTML("<p>Just felt like closing it.</p>"),
+			CopyTRBMailbox: true,
+		}
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-		expectedBody := `<h1 style="margin-bottom: 0.5rem;">EASi</h1>
-
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>The Technical Review Board (TRB) has closed ` + input.TRBRequestName + `.</p>
-
-<p>Reason for closing: ` + string(input.ReasonClosed) + `</p>
-
-<p>View this request in EASi:</p>
-<ul>
-<li>If you are the initial requester, you may <a href="` + trbLink + `">click here</a> to view the advice letter and your request task list.</li>
-<li>TRB team members may <a href="` + trbAdminLink + `">click here</a> to view the request details.</li>
-<li>Others should contact Mc Lovin or the TRB for more information about this request.</li>
-</ul>
-
-<p>If you have questions or need to request a reschedule, please email the TRB at <a href="mailto:` + s.config.TRBEmail.String() + `">` + s.config.TRBEmail.String() + `</a>.</p>
-`
+		expectedBody := getExpectedEmail(
+			input.TRBRequestName,
+			input.RequesterName,
+			input.ReasonClosed,
+		)
 		err = client.SendTRBRequestClosedEmail(ctx, input)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, allRecipients)
-		s.Equal(expectedBody, sender.body)
+		s.EqualHTML(expectedBody, sender.body)
 	})
-}
 
-func (s *EmailTestSuite) TestTRBRequestClosedEmailNoReason() {
-	sender := mockSender{}
-	ctx := context.Background()
-
-	trbID := uuid.New()
-	trbLink := fmt.Sprintf(
-		"%s://%s/%s",
-		s.config.URLScheme,
-		s.config.URLHost,
-		path.Join("trb", "task-list", trbID.String()),
-	)
-
-	trbAdminLink := fmt.Sprintf(
-		"%s://%s/%s",
-		s.config.URLScheme,
-		s.config.URLHost,
-		path.Join("trb", trbID.String(), "request"),
-	)
-
-	recipients := []models.EmailAddress{
-		models.NewEmailAddress("abcd@local.fake"),
-		models.NewEmailAddress("efgh@local.fake"),
-	}
-
-	input := SendTRBRequestClosedEmailInput{
-		TRBRequestID:   trbID,
-		TRBRequestName: "Test TRB Request",
-		RequesterName:  "Mc Lovin",
-		Recipients:     recipients,
-		// ReasonClosed not provided!
-		CopyTRBMailbox: true,
-	}
-	allRecipients := append(recipients, s.config.TRBEmail)
-
-	s.Run("successful call has the right content", func() {
+	s.Run("omits reason if blank", func() {
+		input := SendTRBRequestClosedEmailInput{
+			TRBRequestID:   trbID,
+			TRBRequestName: "Test TRB Request",
+			RequesterName:  "Mc Lovin",
+			Recipients:     recipients,
+			ReasonClosed:   models.HTML(""),
+			CopyTRBMailbox: true,
+		}
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-		expectedBody := `<h1 style="margin-bottom: 0.5rem;">EASi</h1>
-
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>The Technical Review Board (TRB) has closed ` + input.TRBRequestName + `.</p>
-
-
-
-<p>View this request in EASi:</p>
-<ul>
-<li>If you are the initial requester, you may <a href="` + trbLink + `">click here</a> to view the advice letter and your request task list.</li>
-<li>TRB team members may <a href="` + trbAdminLink + `">click here</a> to view the request details.</li>
-<li>Others should contact Mc Lovin or the TRB for more information about this request.</li>
-</ul>
-
-<p>If you have questions or need to request a reschedule, please email the TRB at <a href="mailto:` + s.config.TRBEmail.String() + `">` + s.config.TRBEmail.String() + `</a>.</p>
-`
+		expectedBody := getExpectedEmail(
+			input.TRBRequestName,
+			input.RequesterName,
+			input.ReasonClosed,
+		)
 		err = client.SendTRBRequestClosedEmail(ctx, input)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, allRecipients)
-		s.Equal(expectedBody, sender.body)
+		s.EqualHTML(expectedBody, sender.body)
 	})
 }

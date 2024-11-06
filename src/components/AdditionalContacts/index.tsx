@@ -12,7 +12,7 @@ import Spinner from 'components/Spinner';
 import contactRoles from 'constants/enums/contactRoles';
 import { initialContactDetails } from 'constants/systemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
+import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 import {
   DeleteContactType,
   SystemIntakeContactProps
@@ -62,6 +62,7 @@ const Contact = ({
         <Button
           type="button"
           unstyled
+          className="margin-top-0"
           onClick={() => {
             setActiveContact(contact);
           }}
@@ -71,7 +72,7 @@ const Contact = ({
         <Button
           type="button"
           unstyled
-          className="text-error margin-left-2"
+          className="text-error margin-left-2 margin-top-0"
           onClick={() => {
             // Hide contact in UI
             setHideContact(true);
@@ -294,11 +295,8 @@ export default function AdditionalContacts({
   const { t } = useTranslation('intake');
 
   // Contact mutations from custom hook
-  const {
-    createContact,
-    updateContact,
-    deleteContact
-  } = useSystemIntakeContacts(systemIntakeId);
+  const { createContact, updateContact, deleteContact } =
+    useSystemIntakeContacts(systemIntakeId);
 
   // Separate loading state to enable more control of loading spinner rendering
   const [

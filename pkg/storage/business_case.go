@@ -8,18 +8,21 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // IntakeExistsMsg is the error we see when there is no valid system intake
-const IntakeExistsMsg = "Could not query model *models.BusinessCase with operation Create, received error: pq: insert or update on table \"business_cases\" violates foreign key constraint \"business_case_system_intake_fkey\""
+const IntakeExistsMsg = "Could not query model *models.BusinessCaseWithCosts with operation Create, received error: pq: insert or update on table \"business_cases\" violates foreign key constraint \"business_case_system_intake_fkey\""
 
 // EuaIDMsg is the error we see when EUA doesn't meet EUA ID constraints
-const EuaIDMsg = "Could not query model *models.BusinessCase with operation Create, received error: pq: new row for relation \"business_cases\" violates check constraint \"eua_id_check\""
+const EuaIDMsg = "Could not query model *models.BusinessCaseWithCosts with operation Create, received error: pq: new row for relation \"business_cases\" violates check constraint \"eua_id_check\""
 
 // ValidStatusMsg is a match for an error we see when there is no valid status
 const ValidStatusMsg = "pq: invalid input value for enum business_case_status: "
@@ -28,13 +31,13 @@ const ValidStatusMsg = "pq: invalid input value for enum business_case_status: "
 const UniqueIntakeMsg = "pq: duplicate key value violates unique constraint \"unique_intake_per_biz_case\""
 
 // FetchBusinessCaseByID queries the DB for a business case matching the given ID
-func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.UUID) (*models.BusinessCase, error) {
-	businessCase := models.BusinessCase{}
+// This is legacy code used in REST endpoints
+func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.UUID) (*models.BusinessCaseWithCosts, error) {
+	businessCase := models.BusinessCaseWithCosts{}
 	const fetchBusinessCaseSQL = `
 		SELECT
 			business_cases.*,
-			coalesce(json_agg(estimated_lifecycle_costs) filter (where estimated_lifecycle_costs.* IS NOT NULL), '[]') as lifecycle_cost_lines,
-			system_intakes.status as system_intake_status
+			coalesce(json_agg(estimated_lifecycle_costs) filter (where estimated_lifecycle_costs.* IS NOT NULL), '[]') as lifecycle_cost_lines
 		FROM
 			business_cases
 			LEFT JOIN estimated_lifecycle_costs ON business_cases.id = estimated_lifecycle_costs.business_case
@@ -52,32 +55,19 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.U
 			zap.String("id", businessCaseID.String()),
 		)
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCaseWithCosts{}}
 		}
 		return nil, err
 	}
 	return &businessCase, nil
 }
 
-// FetchBusinessCaseBySystemIntakeID queries the DB for a business case matching the given ID of the System Intake
-func (s *Store) FetchBusinessCaseBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.BusinessCase, error) {
+// GetBusinessCaseBySystemIntakeID queries the DB for a business case matching the given ID of the System Intake
+func (s *Store) GetBusinessCaseBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.BusinessCase, error) {
 	businessCase := models.BusinessCase{}
-	const fetchBusinessCaseSQL = `
-		SELECT
-			business_cases.*,
-			coalesce(json_agg(estimated_lifecycle_costs) filter (where estimated_lifecycle_costs.* is NOT NULL), '[]') as lifecycle_cost_lines,
-			system_intakes.status as system_intake_status
-		FROM
-			business_cases
-			LEFT JOIN estimated_lifecycle_costs ON business_cases.id = estimated_lifecycle_costs.business_case
-			JOIN system_intakes ON business_cases.system_intake = system_intakes.id
-		WHERE
-			business_cases.system_intake = $1
-		GROUP BY estimated_lifecycle_costs.business_case, business_cases.id, system_intakes.id`
-
-	// Unsafe() is used to avoid errors from the initial_submitted_at and last_submitted_at columns that are in the database, but not in the Go model
-	// see https://jiraent.cms.gov/browse/EASI-1693
-	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, systemIntakeID)
+	err := namedGet(ctx, s.db, &businessCase, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeID, args{
+		"system_intake_id": systemIntakeID,
+	})
 	if err != nil {
 		// This function, unlike a few others in this file, does NOT error out if there is no business case, since it's
 		// totally valid to have a system intake without a business case, so we check the error type BEFORE logging
@@ -93,9 +83,56 @@ func (s *Store) FetchBusinessCaseBySystemIntakeID(ctx context.Context, systemInt
 	return &businessCase, nil
 }
 
+// GetBusinessCaseBySystemIntakeIDs queries the DB for a business case matching the given ID of the System Intake
+func (s *Store) GetBusinessCaseBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.BusinessCase, error) {
+	businessCases := []*models.BusinessCase{}
+	err := namedSelect(ctx, s.db, &businessCases, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeIDs, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to fetch business case by SystemIntakeIDs %s", err),
+		)
+		return nil, err
+	}
+	return businessCases, nil
+}
+
+// GetLifecycleCostsByBizCaseID queries the DB for a lifecycle costs by biz case ID
+func (s *Store) GetLifecycleCostsByBizCaseID(ctx context.Context, businessCaseID uuid.UUID) ([]*models.EstimatedLifecycleCost, error) {
+	estimatedLifecycleCosts := []*models.EstimatedLifecycleCost{}
+	err := namedSelect(ctx, s.db, &estimatedLifecycleCosts, sqlqueries.SystemIntakeBusinessCase.GetEstimatedLifecycleCostLinesByBizCaseID, args{
+		"business_case_id": businessCaseID,
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to fetch business case lifecycle costs by business case ID %s", err),
+			zap.String("businessCaseID", businessCaseID.String()),
+		)
+		return nil, err
+	}
+	return estimatedLifecycleCosts, nil
+}
+
+// GetLifecycleCostsByBizCaseIDs queries the DB for a lifecycle costs by biz case ID
+func (s *Store) GetLifecycleCostsByBizCaseIDs(ctx context.Context, businessCaseIDs []uuid.UUID) ([]*models.EstimatedLifecycleCost, error) {
+	estimatedLifecycleCosts := []*models.EstimatedLifecycleCost{}
+	err := namedSelect(ctx, s.db, &estimatedLifecycleCosts, sqlqueries.SystemIntakeBusinessCase.GetEstimatedLifecycleCostLinesByBizCaseIDs, args{
+		"business_case_ids": pq.Array(businessCaseIDs),
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to fetch business case lifecycle costs by business case ID %s", err),
+		)
+		return nil, err
+	}
+	return estimatedLifecycleCosts, nil
+}
+
 // FetchOpenBusinessCaseByIntakeID queries the DB for an open business case matching the given intake ID
-func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uuid.UUID) (*models.BusinessCase, error) {
-	businessCase := models.BusinessCase{}
+// This is legacy code used in REST endpoints
+func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uuid.UUID) (*models.BusinessCaseWithCosts, error) {
+	businessCase := models.BusinessCaseWithCosts{}
 	const fetchBusinessCaseSQL = `
 		SELECT
 			business_cases.*,
@@ -116,7 +153,7 @@ func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uu
 			zap.String("id", intakeID.String()),
 		)
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCaseWithCosts{}}
 		}
 		return nil, err
 	}
@@ -124,7 +161,7 @@ func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uu
 	return &businessCase, nil
 }
 
-func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCase *models.BusinessCase) error {
+func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCaseID uuid.UUID, estimatedLifecycleCosts []models.EstimatedLifecycleCost) error {
 	const createEstimatedLifecycleCostSQL = `
 		INSERT INTO estimated_lifecycle_costs (
 			id,
@@ -143,8 +180,7 @@ func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCas
 			:cost
 		)
 	`
-	for i := range businessCase.LifecycleCostLines {
-		costLine := businessCase.LifecycleCostLines[i]
+	for _, costLine := range estimatedLifecycleCosts {
 
 		// if cost is `nil`, we don't want to attempt to insert that into the DB
 		// this is a known behavior -- the frontend will try and send `null` values in the array of costs,
@@ -154,7 +190,7 @@ func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCas
 		}
 
 		costLine.ID = uuid.New()
-		costLine.BusinessCaseID = businessCase.ID
+		costLine.BusinessCaseID = businessCaseID
 		_, err := tx.NamedExec(createEstimatedLifecycleCostSQL, &costLine)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(
@@ -164,8 +200,6 @@ func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCas
 					costLine.Year,
 					err,
 				),
-				zap.String("EUAUserID", businessCase.EUAUserID),
-				zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
 			)
 			return err
 		}
@@ -174,10 +208,11 @@ func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCas
 }
 
 // CreateBusinessCase creates a business case
-func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-	id := uuid.New()
-	businessCase.ID = id
-	const createBusinessCaseSQL = `
+func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) (*models.BusinessCaseWithCosts, error) {
+		id := uuid.New()
+		businessCase.ID = id
+		const createBusinessCaseSQL = `
 		INSERT INTO business_cases (
 			id,
 			eua_user_id,
@@ -284,65 +319,52 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 		    :created_at,
 		    :updated_at
 		)`
-	logger := appcontext.ZLogger(ctx)
-	tx := s.db.MustBegin()
-	//Rollback only happens if transaction isn't committed
-	defer tx.Rollback()
-	_, err := tx.NamedExec(createBusinessCaseSQL, &businessCase)
-	if err != nil {
-		logger.Error(
-			fmt.Sprintf("Failed to create business case with error %s", err),
-			zap.String("EUAUserID", businessCase.EUAUserID),
-			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
-		)
-		if err.Error() == "pq: duplicate key value violates unique constraint \"unique_intake_per_biz_case\"" {
-			return nil,
-				&apperrors.ResourceConflictError{
-					Err:        err,
-					Resource:   models.BusinessCase{},
-					ResourceID: businessCase.SystemIntakeID.String(),
-				}
-		}
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     businessCase,
-			Operation: apperrors.QueryPost,
-		}
-	}
-	err = createEstimatedLifecycleCosts(ctx, tx, businessCase)
-	if err != nil {
-		logger.Error(
-			fmt.Sprintf("Failed to create business case with lifecycle costs with error %s", err),
-			zap.String("EUAUserID", businessCase.EUAUserID),
-			zap.String("BusinessCaseID", businessCase.ID.String()),
-		)
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     businessCase,
-			Operation: apperrors.QueryPost,
-		}
-	}
-	err = tx.Commit()
-	if err != nil {
-		logger.Error(
-			fmt.Sprintf("Failed to create business case %s", err),
-			zap.String("EUAUserID", businessCase.EUAUserID),
-			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
-		)
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     businessCase,
-			Operation: apperrors.QueryPost,
-		}
-	}
+		logger := appcontext.ZLogger(ctx)
 
-	return businessCase, nil
+		_, err := tx.NamedExec(createBusinessCaseSQL, &businessCase)
+		if err != nil {
+			logger.Error(
+				fmt.Sprintf("Failed to create business case with error %s", err),
+				zap.String("EUAUserID", businessCase.EUAUserID),
+				zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
+			)
+			if err.Error() == "pq: duplicate key value violates unique constraint \"unique_intake_per_biz_case\"" {
+				return nil,
+					&apperrors.ResourceConflictError{
+						Err:        err,
+						Resource:   models.BusinessCase{},
+						ResourceID: businessCase.SystemIntakeID.String(),
+					}
+			}
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     businessCase,
+				Operation: apperrors.QueryPost,
+			}
+		}
+		err = createEstimatedLifecycleCosts(ctx, tx, businessCase.ID, businessCase.LifecycleCostLines)
+		if err != nil {
+			logger.Error(
+				fmt.Sprintf("Failed to create business case with lifecycle costs with error %s", err),
+				zap.String("EUAUserID", businessCase.EUAUserID),
+				zap.String("BusinessCaseID", businessCase.ID.String()),
+			)
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     businessCase,
+				Operation: apperrors.QueryPost,
+			}
+		}
+
+		return businessCase, nil
+	})
 }
 
 // UpdateBusinessCase creates a business case
-func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
-	const updateBusinessCaseSQL = `
+func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
+	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) (*models.BusinessCaseWithCosts, error) {
+		// We are explicitly not updating ID, EUAUserID and SystemIntakeID
+		const updateBusinessCaseSQL = `
 		UPDATE business_cases
 		SET
 			project_name = :project_name,
@@ -395,55 +417,43 @@ func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.Bus
 		  status = :status
 		WHERE business_cases.id = :id
 	`
-	const deleteLifecycleCostsSQL = `
+		const deleteLifecycleCostsSQL = `
 		DELETE FROM estimated_lifecycle_costs
 		WHERE business_case = :id
 	`
 
-	logger := appcontext.ZLogger(ctx)
-	tx := s.db.MustBegin()
-	//Rollback only happens if transaction isn't committed
-	defer tx.Rollback()
-	result, err := tx.NamedExec(updateBusinessCaseSQL, &businessCase)
-	if err != nil {
-		logger.Error(
-			fmt.Sprintf("Failed to update business case %s", err),
-			zap.String("id", businessCase.ID.String()),
-		)
-		return businessCase, err
-	}
-	affectedRows, rowsAffectedErr := result.RowsAffected()
-	if affectedRows == 0 || rowsAffectedErr != nil {
-		logger.Error(
-			fmt.Sprintf("Failed to update business case %s", err),
-			zap.String("id", businessCase.ID.String()),
-		)
-		return businessCase, errors.New("business case not found")
-	}
+		logger := appcontext.ZLogger(ctx)
+		result, err := tx.NamedExec(updateBusinessCaseSQL, &businessCase)
+		if err != nil {
+			logger.Error(
+				fmt.Sprintf("Failed to update business case %s", err),
+				zap.String("id", businessCase.ID.String()),
+			)
+			return businessCase, err
+		}
+		affectedRows, rowsAffectedErr := result.RowsAffected()
+		if affectedRows == 0 || rowsAffectedErr != nil {
+			logger.Error(
+				fmt.Sprintf("Failed to update business case %s", err),
+				zap.String("id", businessCase.ID.String()),
+			)
+			return businessCase, errors.New("business case not found")
+		}
 
-	_, err = tx.NamedExec(deleteLifecycleCostsSQL, &businessCase)
-	if err != nil {
-		logger.Error(
-			fmt.Sprintf("Failed to update pre-existing business case costs %s", err),
-			zap.String("id", businessCase.ID.String()),
-		)
-		return businessCase, err
-	}
+		_, err = tx.NamedExec(deleteLifecycleCostsSQL, &businessCase)
+		if err != nil {
+			logger.Error(
+				fmt.Sprintf("Failed to update pre-existing business case costs %s", err),
+				zap.String("id", businessCase.ID.String()),
+			)
+			return businessCase, err
+		}
 
-	err = createEstimatedLifecycleCosts(ctx, tx, businessCase)
-	if err != nil {
-		return businessCase, err
-	}
+		err = createEstimatedLifecycleCosts(ctx, tx, businessCase.ID, businessCase.LifecycleCostLines)
+		if err != nil {
+			return businessCase, err
+		}
 
-	err = tx.Commit()
-	if err != nil {
-		logger.Error(
-			fmt.Sprintf("Failed to update business case %s", err),
-			zap.String("id", businessCase.ID.String()),
-		)
-		return businessCase, err
-	}
-
-	// createEstimatedLifecycleCostSQL
-	return businessCase, nil
+		return businessCase, nil
+	})
 }

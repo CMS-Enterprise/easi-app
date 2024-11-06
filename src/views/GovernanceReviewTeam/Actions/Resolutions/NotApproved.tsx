@@ -25,6 +25,7 @@ import { notApprovedSchema } from 'validations/actionSchema';
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 import { EditsRequestedContext } from '..';
 
+import refetchQueries from './refetchQueries';
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
 
@@ -54,7 +55,7 @@ const NotApproved = ({
     CreateSystemIntakeActionRejectIntake,
     CreateSystemIntakeActionRejectIntakeVariables
   >(CreateSystemIntakeActionRejectIntakeQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries
   });
 
   /** Set default values if confirming decision */
@@ -72,10 +73,7 @@ const NotApproved = ({
     defaultValues
   });
 
-  const {
-    control,
-    formState: { isValid }
-  } = form;
+  const { control } = form;
 
   /**
    * Reject intake on form submit
@@ -99,7 +97,6 @@ const NotApproved = ({
         successMessage={t('notApproved.success')}
         onSubmit={onSubmit}
         errorKeyContext="notApproved"
-        disableSubmit={!isValid}
         title={
           <ResolutionTitleBox
             title={t('resolutions.summary.notApproved')}

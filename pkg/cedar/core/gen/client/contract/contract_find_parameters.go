@@ -61,6 +61,15 @@ ContractFindParams contains all the parameters to send to the API endpoint
 */
 type ContractFindParams struct {
 
+	// POPEndDate.
+	POPEndDate *string
+
+	// POPStartDate.
+	POPStartDate *string
+
+	// ContractName.
+	ContractName *string
+
 	/* Keyword.
 
 	   A keyword to be used in the query
@@ -126,6 +135,39 @@ func (o *ContractFindParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithPOPEndDate adds the pOPEndDate to the contract find params
+func (o *ContractFindParams) WithPOPEndDate(pOPEndDate *string) *ContractFindParams {
+	o.SetPOPEndDate(pOPEndDate)
+	return o
+}
+
+// SetPOPEndDate adds the pOPEndDate to the contract find params
+func (o *ContractFindParams) SetPOPEndDate(pOPEndDate *string) {
+	o.POPEndDate = pOPEndDate
+}
+
+// WithPOPStartDate adds the pOPStartDate to the contract find params
+func (o *ContractFindParams) WithPOPStartDate(pOPStartDate *string) *ContractFindParams {
+	o.SetPOPStartDate(pOPStartDate)
+	return o
+}
+
+// SetPOPStartDate adds the pOPStartDate to the contract find params
+func (o *ContractFindParams) SetPOPStartDate(pOPStartDate *string) {
+	o.POPStartDate = pOPStartDate
+}
+
+// WithContractName adds the contractName to the contract find params
+func (o *ContractFindParams) WithContractName(contractName *string) *ContractFindParams {
+	o.SetContractName(contractName)
+	return o
+}
+
+// SetContractName adds the contractName to the contract find params
+func (o *ContractFindParams) SetContractName(contractName *string) {
+	o.ContractName = contractName
+}
+
 // WithKeyword adds the keyword to the contract find params
 func (o *ContractFindParams) WithKeyword(keyword *string) *ContractFindParams {
 	o.SetKeyword(keyword)
@@ -155,6 +197,57 @@ func (o *ContractFindParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		return err
 	}
 	var res []error
+
+	if o.POPEndDate != nil {
+
+		// query param POPEndDate
+		var qrPOPEndDate string
+
+		if o.POPEndDate != nil {
+			qrPOPEndDate = *o.POPEndDate
+		}
+		qPOPEndDate := qrPOPEndDate
+		if qPOPEndDate != "" {
+
+			if err := r.SetQueryParam("POPEndDate", qPOPEndDate); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.POPStartDate != nil {
+
+		// query param POPStartDate
+		var qrPOPStartDate string
+
+		if o.POPStartDate != nil {
+			qrPOPStartDate = *o.POPStartDate
+		}
+		qPOPStartDate := qrPOPStartDate
+		if qPOPStartDate != "" {
+
+			if err := r.SetQueryParam("POPStartDate", qPOPStartDate); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.ContractName != nil {
+
+		// query param contractName
+		var qrContractName string
+
+		if o.ContractName != nil {
+			qrContractName = *o.ContractName
+		}
+		qContractName := qrContractName
+		if qContractName != "" {
+
+			if err := r.SetQueryParam("contractName", qContractName); err != nil {
+				return err
+			}
+		}
+	}
 
 	if o.Keyword != nil {
 

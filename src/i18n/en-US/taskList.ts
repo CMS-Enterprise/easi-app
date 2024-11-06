@@ -1,12 +1,20 @@
 const taskList = {
-  pageHeading: 'Get governance approval',
   withdraw_modal: {
     header: 'Confirm you want to remove {{-requestName}}.',
     warning: 'You will lose any information you have filled in.',
     confirm: 'Remove request',
     cancel: 'Cancel',
     confirmationText_name: 'The request for {{-requestName}} has been removed',
-    confirmationText_noName: 'The request has been removed'
+    confirmationText_noName: 'The request has been removed',
+    error_name:
+      'The request for {{-requestName}} could not be removed. Please try again later.',
+    error_noName: 'The request could not be removed. Please try again later.'
+  },
+  trbWithdrawModal: {
+    header: 'Are you sure you want to remove this request?',
+    warning:
+      'This action cannot be undone. You will have to create a new technical assistance request if you change your mind.',
+    cancel: 'Go back'
   },
   decision: {
     bizCaseApproved: 'Your business case has been approved.',
@@ -45,13 +53,11 @@ const taskList = {
     heading: 'Recommendations',
     grb: {
       heading: 'GRT recommendations to the GRB',
-      help:
-        'These are the Governance Reiew Team recommendations for the Governance Review Board'
+      help: 'These are the Governance Reiew Team recommendations for the Governance Review Board'
     },
     businessOwner: {
       heading: 'GRT recommendations to the Business Owner',
-      help:
-        'These are the Governance Review Team recommendations for the Business Owner'
+      help: 'These are the Governance Review Team recommendations for the Business Owner'
     },
     descriptiveDate: 'Feedback given on {{date}}',
     pdfTitle: 'Feedback for {{requestName}}'

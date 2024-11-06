@@ -19,8 +19,47 @@ import (
 // swagger:model SoftwareProductsFindResponse
 type SoftwareProductsFindResponse struct {
 
+	// ai soln catg
+	AiSolnCatg []string `json:"aiSolnCatg"`
+
+	// ai soln catg other
+	AiSolnCatgOther string `json:"aiSolnCatgOther,omitempty"`
+
+	// api data area
+	APIDataArea []string `json:"apiDataArea"`
+
+	// api desc pub location
+	APIDescPubLocation string `json:"apiDescPubLocation,omitempty"`
+
+	// api desc published
+	APIDescPublished string `json:"apiDescPublished,omitempty"`
+
+	// api f h i r use
+	APIFHIRUse string `json:"apiFHIRUse,omitempty"`
+
+	// api f h i r use other
+	APIFHIRUseOther string `json:"apiFHIRUseOther,omitempty"`
+
+	// api has portal
+	APIHasPortal bool `json:"apiHasPortal,omitempty"`
+
+	// apis accessibility
+	ApisAccessibility string `json:"apisAccessibility,omitempty"`
+
+	// apis developed
+	ApisDeveloped string `json:"apisDeveloped,omitempty"`
+
+	// development stage
+	DevelopmentStage string `json:"developmentStage,omitempty"`
+
 	// software products
-	SoftwareProducts []*SoftwareProducts `json:"SoftwareProducts"`
+	SoftwareProducts []*SoftwareProductsSearchItem `json:"softwareProducts"`
+
+	// system has Api gateway
+	SystemHasAPIGateway bool `json:"systemHasApiGateway,omitempty"`
+
+	// uses ai tech
+	UsesAiTech string `json:"usesAiTech,omitempty"`
 }
 
 // Validate validates this software products find response
@@ -50,9 +89,9 @@ func (m *SoftwareProductsFindResponse) validateSoftwareProducts(formats strfmt.R
 		if m.SoftwareProducts[i] != nil {
 			if err := m.SoftwareProducts[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("SoftwareProducts" + "." + strconv.Itoa(i))
+					return ve.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("SoftwareProducts" + "." + strconv.Itoa(i))
+					return ce.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -89,9 +128,9 @@ func (m *SoftwareProductsFindResponse) contextValidateSoftwareProducts(ctx conte
 
 			if err := m.SoftwareProducts[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("SoftwareProducts" + "." + strconv.Itoa(i))
+					return ve.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("SoftwareProducts" + "." + strconv.Itoa(i))
+					return ce.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

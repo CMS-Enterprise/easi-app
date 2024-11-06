@@ -28,7 +28,8 @@ const help = {
     content: 'Contact the Governance team:',
     email: 'IT_Governance@cms.hhs.gov'
   },
-  back: 'Back',
+  back: 'Back to help center',
+  close: 'Close tab',
   allHelpArticles: 'All help articles',
   itGovernance: {
     heading: 'IT Governance',

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Button, ButtonGroup, IconArrowBack } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
 import PageNumber from 'components/PageNumber';
@@ -26,12 +26,14 @@ type AlternativeSolutionBProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 
 const AlternativeSolutionB = ({
   businessCase,
   formikRef,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: AlternativeSolutionBProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -62,15 +64,18 @@ const AlternativeSolutionB = ({
             title={t('alternatives')}
             description={
               <>
+                <p>{t('alternativesDescription.text.0')}</p>
                 <p className="margin-bottom-0">
-                  {t('alternativesDescription.examples')}
+                  {t('alternativesDescription.text.1')}
                 </p>
                 <ul className="padding-left-205 margin-top-0">
-                  <li>{t('alternativesDescription.buy')}</li>
-                  <li>{t('alternativesDescription.commercial')}</li>
-                  <li>{t('alternativesDescription.mainframe')}</li>
+                  <li>{t('alternativesDescription.list.0')}</li>
+                  <li>{t('alternativesDescription.list.1')}</li>
+                  <li>{t('alternativesDescription.list.2')}</li>
+                  <li>{t('alternativesDescription.list.3')}</li>
+                  <li>{t('alternativesDescription.list.4')}</li>
                 </ul>
-                <p>{t('alternativesDescription.include')}</p>
+                <p>{t('alternativesDescription.text.2')}</p>
               </>
             }
             errors={flatErrors}
@@ -140,8 +145,7 @@ const AlternativeSolutionB = ({
                   dispatchSave();
                   // If final business case OR any field is filled
                   if (
-                    businessCase.systemIntakeStatus ===
-                      'BIZ_CASE_FINAL_NEEDED' &&
+                    isFinal &&
                     alternativeSolutionHasFilledFields(
                       formikRef?.current?.values?.alternativeB
                     )
@@ -164,7 +168,7 @@ const AlternativeSolutionB = ({
 
             <IconButton
               type="button"
-              icon={<IconArrowBack />}
+              icon={<Icon.ArrowBack />}
               className="margin-top-2 margin-bottom-3"
               onClick={() => {
                 dispatchSave();

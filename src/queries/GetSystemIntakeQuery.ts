@@ -3,9 +3,18 @@ import { gql } from '@apollo/client';
 import { GovernanceRequestFeedback } from './GetGovernanceRequestFeedbackQuery';
 import { SystemIntakeDocument } from './SystemIntakeDocumentQueries';
 
+export const FundingSource = gql`
+  fragment FundingSource on SystemIntakeFundingSource {
+    id
+    fundingNumber
+    source
+  }
+`;
+
 export const SystemIntake = gql`
   ${SystemIntakeDocument}
   ${GovernanceRequestFeedback}
+  ${FundingSource}
   fragment SystemIntake on SystemIntake {
     id
     adminLead
@@ -29,7 +38,10 @@ export const SystemIntake = gql`
         year
       }
       vehicle
-      number
+    }
+    contractNumbers {
+      id
+      contractNumber
     }
     costs {
       isExpectingIncrease
@@ -37,7 +49,9 @@ export const SystemIntake = gql`
     }
     annualSpending {
       currentAnnualSpending
+      currentAnnualSpendingITPortion
       plannedYearOneSpending
+      plannedYearOneSpendingITPortion
     }
     currentStage
     decisionNextSteps
@@ -62,8 +76,7 @@ export const SystemIntake = gql`
     }
     existingFunding
     fundingSources {
-      source
-      fundingNumber
+      ...FundingSource
     }
     lcid
     lcidIssuedAt
@@ -85,7 +98,6 @@ export const SystemIntake = gql`
     }
     requestName
     requestType
-    status
     statusAdmin
     statusRequester
     grtReviewEmailBody
@@ -97,6 +109,9 @@ export const SystemIntake = gql`
     archivedAt
     euaUserId
     hasUiChanges
+    usesAiTech
+    usingSoftware
+    acquisitionMethods
     documents {
       ...SystemIntakeDocument
     }
@@ -104,6 +119,42 @@ export const SystemIntake = gql`
     decisionState
     trbFollowUpRecommendation
     requestFormState
+    relationType
+    contractName
+    contractNumbers {
+      id
+      contractNumber
+    }
+    systems {
+      id
+      name
+      description
+      acronym
+      businessOwnerOrg
+      businessOwnerRoles {
+        objectID
+        assigneeFirstName
+        assigneeLastName
+      }
+    }
+    relatedTRBRequests {
+      id
+      name
+      contractNumbers {
+        contractNumber
+      }
+      status
+      createdAt
+    }
+    relatedIntakes {
+      id
+      requestName
+      contractNumbers {
+        contractNumber
+      }
+      decisionState
+      submittedAt
+    }
   }
 `;
 

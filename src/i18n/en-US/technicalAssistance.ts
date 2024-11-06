@@ -23,8 +23,7 @@ const technicalAssistance = {
   nextStep: 'Start a new request',
   adminInfoBox: {
     heading: 'Looking for the TRB Team page?',
-    text:
-      'Go to <1>Admin Home</1> to review, assign, and manage incoming and existing technical assistance requests.'
+    text: 'Go to <1>Admin Home</1> to review, assign, and manage incoming and existing technical assistance requests.'
   },
   editsRequested: {
     alert:
@@ -61,8 +60,7 @@ const technicalAssistance = {
             'Confirm availability with the requester and make sure their additional attendees are also available for that date and time.',
             'Find subject matter experts (SMEs) for the identified subject areas that have the bandwidth to join the consult session.'
           ],
-          note:
-            'Note: EASi does not currently integrate with calendar scheduling, so you should still send a calendar invite before or after adding the date and time in EASi.'
+          note: 'Note: EASi does not currently integrate with calendar scheduling, so you should still send a calendar invite before or after adding the date and time in EASi.'
         }
       },
       CONSULT_SCHEDULED: {
@@ -76,8 +74,7 @@ const technicalAssistance = {
           'Compile an advice letter for the requester and project team. Once you send the advice letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.',
         list: {
           label: 'What should I include in the advice letter?',
-          text:
-            'EASi will direct you to complete the following parts of the advice letter:',
+          text: 'EASi will direct you to complete the following parts of the advice letter:',
           unorderedItems: [
             '<b>Meeting summary (“What we heard”):</b> Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.',
             '<b>Recommendations and feedback (“What we recommend”):</b> Work with SMEs and other TRB members to compile recommendations for the requester and project team. Provide a title, description, and any useful resources for each recommendation.',
@@ -91,8 +88,7 @@ const technicalAssistance = {
           'Compile an advice letter for the requester and project team. Once you send the advice letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.',
         list: {
           label: 'What should I include in the advice letter?',
-          text:
-            'EASi will direct you to complete the following parts of the advice letter:',
+          text: 'EASi will direct you to complete the following parts of the advice letter:',
           unorderedItems: [
             '<b>Meeting summary (“What we heard”):</b> Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.',
             '<b>Recommendations and feedback (“What we recommend”):</b> Work with SMEs and other TRB members to compile recommendations for the requester and project team. Provide a title, description, and any useful resources for each recommendation.',
@@ -150,11 +146,11 @@ const technicalAssistance = {
     alerts: {
       error:
         'There was an error creating this advice letter. Please try again. If the error persists, please try again at a later date.',
-      info:
-        'There is no advice letter for this request yet. Once the consult date has passed, you may create an advice letter for this request.'
+      info: 'There is no advice letter for this request yet. Once the consult date has passed, you may create an advice letter for this request.'
     },
     downloadAsPdf: 'Download advice letter as PDF',
     sendDate: 'Send date',
+    consultSessionDate: 'Consult session date',
     notYetSent: 'Not yet sent',
     whatWeHeard: 'What we heard',
     meetingSummary: 'Meeting summary',
@@ -183,8 +179,7 @@ const technicalAssistance = {
     heading: 'Advice letter',
     description:
       'Document any outcomes, advice, findings, recommendations, or next steps that the TRB has for this request.',
-    text:
-      'After submitting this form, the requester will recieve an automatic notification letting them know their advice letter is available.',
+    text: 'After submitting this form, the requester will receive an automatic notification letting them know their advice letter is available.',
     returnToRequest: 'Save and return to request',
     steps: [
       {
@@ -245,14 +240,12 @@ const technicalAssistance = {
     editRecommendationSuccess: 'Your recommendation was edited',
     modal: {
       title: 'Confirm you want to remove this recommendation.',
-      text:
-        'This action cannot be undone. If you remove this recommendation, all content related to it will be removed and will not be sent as a part of the advice letter.',
+      text: 'This action cannot be undone. If you remove this recommendation, all content related to it will be removed and will not be sent as a part of the advice letter.',
       removingTitle: 'Removing: {{title}}'
     },
     internalReviewNeeded: {
       heading: 'Internal TRB review needed',
-      text:
-        'You should not send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
+      text: 'You should not send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
     },
     requestInternalReview: 'Request internal review',
     requestAnotherInternalReview: 'Request another internal review',
@@ -263,7 +256,7 @@ const technicalAssistance = {
       '<bold>{{count}}</bold> note{{plural}} about this advice letter',
     done: {
       success:
-        'Your advice letter for has been sent. Selected email notification recipients will receive a confirmation email with a link to the advice letter. Additionally, the original requester can view this letter from their request task list.',
+        'Your advice letter has been sent. Selected email notification recipients will receive a confirmation email with a link to the advice letter. Additionally, the original requester can view this letter from their request task list.',
       error:
         'Your advice letter was not sent. Please either return to the previous page and try again, or try again at a later date. The requester will not be able to view the advice letter until it is successfully sent.',
       returnToRequestHome: 'Return to request home',
@@ -344,7 +337,7 @@ const technicalAssistance = {
   },
   // Higher level errors
   errors: {
-    // Some of these genrealized translation keys are copied to error.ts file
+    // Some of these generalized translation keys are copied to error.ts file
     // todo remove this and use form.ts
     checkFix: 'Please check and fix the following',
     fillBlank: 'Please fill in the blank',
@@ -363,8 +356,7 @@ const technicalAssistance = {
     type: {
       NEED_HELP: {
         heading: 'I’m having a problem with my system',
-        text:
-          'The TRB can help you work through technical roadblocks that you are having with your system. Choose this option if:',
+        text: 'The TRB can help you work through technical roadblocks that you are having with your system. Choose this option if:',
         list: [
           'you received a security finding, had an incident, or have a POA&M that you need help addressing',
           'you are having implementation difficulties and want guidance on how to proceed',
@@ -373,8 +365,7 @@ const technicalAssistance = {
       },
       BRAINSTORM: {
         heading: 'I have an idea and would like feedback',
-        text:
-          'The TRB now offers more casual conversations about specific topics, solutions, or ideas. Choose this option if:',
+        text: 'The TRB now offers more casual conversations about specific topics, solutions, or ideas. Choose this option if:',
         list: [
           'your team is considering a new technical direction for future work',
           'you have a completely new idea for a system or service and would like to get feedback about it',
@@ -383,8 +374,7 @@ const technicalAssistance = {
       },
       FOLLOWUP: {
         heading: 'Follow-up or cadence consult',
-        text:
-          'Select this option if you have previously attended an IT Lounge or consultation with the TRB, and the TRB recommended a follow-up session as part of your next steps. Choose this option if:',
+        text: 'Select this option if you have previously attended an IT Lounge or consultation with the TRB, and the TRB recommended a follow-up session as part of your next steps. Choose this option if:',
         list: [
           'the TRB recommended a follow-up session',
           'you have a regular cadence of engagements with the TRB and need to schedule the next one'
@@ -392,11 +382,10 @@ const technicalAssistance = {
       },
       FORMAL_REVIEW: {
         heading: 'Formal design review',
-        text:
-          'Though the TRB has shifted to become more of a consultation and advice service, you can still request a more formal design review or readiness review. Choose this option if:',
+        text: 'Though the TRB has shifted to become more of a consultation and advice service, you can still request a more formal design review or readiness review. Choose this option if:',
         list: [
           'you have a architecture solution in mind and would like a review',
-          'you are ready to go live and would like one final review with the TRB to make sure your team didn’t miss anything',
+          "you are ready to go live and would like one final review with the TRB to make sure your team didn't miss anything",
           'you would like a formal review of how your solution aligns with CMS’s Technical Reference Architecture (TRA)'
         ]
       },
@@ -445,13 +434,11 @@ const technicalAssistance = {
     taskList: [
       {
         heading: 'Fill out the initial request form',
-        text:
-          'Tell the Technical Review Board (TRB) about your question, problem, and/or solution. This helps TRB team members better understand what type of help you’re looking for and how best to assist you. It also lets the TRB prepare ahead of time so that you get more value from your consult session.'
+        text: 'Tell the Technical Review Board (TRB) about your question, problem, and/or solution. This helps TRB team members better understand what type of help you’re looking for and how best to assist you. It also lets the TRB prepare ahead of time so that you get more value from your consult session.'
       },
       {
         heading: 'Feedback from initial review',
-        text:
-          'The TRB will review your request form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps.'
+        text: 'The TRB will review your request form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps.'
       },
       {
         heading: 'Prepare for the TRB consult session',
@@ -464,13 +451,11 @@ const technicalAssistance = {
       },
       {
         heading: 'Attend the TRB consult session',
-        text:
-          'A TRB team member will schedule a consult session for your project. Attendees could include Subject Matter Experts (SMEs) to provide additional advice and insight, any additional attendees you’ve specified from your team, and 1 or more TRB team members. Consult sessions are usually 1-hour sessions on Tuesday or Thursday.'
+        text: 'A TRB team member will schedule a consult session for your project. Attendees could include Subject Matter Experts (SMEs) to provide additional advice and insight, any additional attendees you’ve specified from your team, and 1 or more TRB team members. Consult sessions are usually 1-hour sessions on Tuesday or Thursday.'
       },
       {
         heading: 'Advice letter and next steps',
-        text:
-          'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any advice for your project team as well as any recommended next steps.'
+        text: 'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any advice for your project team as well as any recommended next steps.'
       }
     ]
   },
@@ -597,6 +582,7 @@ const technicalAssistance = {
     labels: {
       ACCESSIBILITY_COMPLIANCE: 'Access Control and Identity Management',
       ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT: 'Accessibility Compliance',
+      ARTIFICIAL_INTELLIGENCE: 'Artificial Intelligence',
       ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT:
         'Assistance with System Concept Development',
       BUSINESS_INTELLIGENCE: 'Business Intelligence',
@@ -680,14 +666,17 @@ const technicalAssistance = {
       }
     },
     contactRoles: {
+      BUSINESS_OWNER: 'Business owner',
       PRODUCT_OWNER: 'Product Owner',
       SYSTEM_OWNER: 'System Owner',
       SYSTEM_MAINTAINER: 'System Maintainer',
       CONTRACT_OFFICE_RSREPRESENTATIVE:
         'Contracting Officer’s Representative (COR)',
       CLOUD_NAVIGATOR: 'Cloud Navigator',
+      INFORMATION_SYSTEM_SECURITY_ADVISOR:
+        'Information System Security Advisor (ISSO)',
       PRIVACY_ADVISOR: 'Privacy Advisor',
-      CRA: 'CRA',
+      CRA: 'Cyber Risk Advisor (CRA)',
       OTHER: 'Other'
     }
   },
@@ -714,7 +703,8 @@ const technicalAssistance = {
       subtitle:
         'Choose a document to upload, such as a presentation slide deck, concept paper, or other system information document.',
       documentUpload: 'Document upload',
-      docType: 'Select a PDF, DOC, DOCX, XLS, or XLSX',
+      docType:
+        'Supported file types: DOC, DOCX, JPG, JPEG, PDF, PNG, PPT, PPTX, XLS, and XLSX',
       dragFile: 'Drag file here or choose from folder',
       selectedFile: 'Selected file',
       changeFile: 'Change file',
@@ -732,13 +722,16 @@ const technicalAssistance = {
       dontUploadAndReturn: 'Don’t upload and return to previous page',
       error:
         'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
-      success: 'Your document has been uploaded and is being scanned.'
+      success: 'Your document has been uploaded and is being scanned.',
+      sendNotificationToGRBReviewers: {
+        header: 'Would you like to send a notification email to GRB reviewers?',
+        info: 'If you choose “Yes”, EASi will automatically send a notification email to all GRB reviewers added to this request. Sending a notification while a GRB review is still in progress will help GRB reviewers stay up to date with all relevant project materials.'
+      }
     },
     continueWithoutAdding: 'Continue without adding documents',
     supportingDocuments: {
       heading: 'Supporting documents',
-      info:
-        'Upload any documents relevant to your request. This could include documents such as presentation slide decks, concept papers, architecture diagrams, or other system information documents.',
+      info: 'Upload any documents relevant to your request. This could include documents such as presentation slide decks, concept papers, architecture diagrams, or other system information documents.',
       addAnother: 'Add another document',
       adminInfo:
         'The requester has uploaded these documents as a part of this request. If the TRB needs additional documentation, contact the requester.',
@@ -783,13 +776,11 @@ const technicalAssistance = {
   done: {
     success: {
       heading: 'Success!',
-      info:
-        'Your TRB Request has been submitted. You will receive an automatic email, and a TRB team member will reach out shortly after regarding next steps.'
+      info: 'Your TRB Request has been submitted. You will receive an automatic email, and a TRB team member will reach out shortly after regarding next steps.'
     },
     error: {
       heading: 'Something went wrong.',
-      info:
-        'Your TRB Request was not submitted. Please either return to the previous page and try again or try again at a later date.'
+      info: 'Your TRB Request was not submitted. Please either return to the previous page and try again or try again at a later date.'
     },
     referenceNumber: 'Reference number',
     returnToTaskList: 'Return to task list',
@@ -811,7 +802,7 @@ const technicalAssistance = {
   },
   adminHome: {
     home: 'Home',
-    breadcrumb: 'Request details',
+    breadcrumb: 'TRB request details',
     requestType: 'Request type',
     requester: 'Requester',
     submissionDate: 'Submission Date',
@@ -902,6 +893,7 @@ const technicalAssistance = {
     supportingDocuments: 'Supporting documents',
     feedback: 'Feedback',
     adviceLetter: 'Advice letter',
+    additionalInformation: 'Additional information',
     notes: 'Notes',
     byNameOnDate: 'by {{name}} on {{date}}'
   },
@@ -910,7 +902,7 @@ const technicalAssistance = {
       'From EASi’s TRB home, you can review, assign, and manage incoming and existing TRB support requests.',
     jumpToExistingRequests: 'Jump to existing requests',
     downloadAllTrbRequests: 'Download all TRB requests (csv)',
-    switchToDifferentAdminView: 'Swich to a different admin view',
+    switchToDifferentAdminView: 'Switch to a different admin view',
     submitYourOwnRequest: 'Submit your own technical assistance request',
     newRequests: {
       heading: 'New requests',
@@ -935,8 +927,7 @@ const technicalAssistance = {
         }
       },
       noRequests: {
-        open:
-          'There are currently no open requests that are in progress. Review any new requests above and assign a TRB lead.',
+        open: 'There are currently no open requests that are in progress. Review any new requests above and assign a TRB lead.',
         closed:
           'There are currently no closed requests. Continue to work on open requests. When they are closed, they will appear here.'
       }
@@ -960,8 +951,7 @@ const technicalAssistance = {
     heading: 'Action: request edits',
     description:
       'Use this action if the TRB needs additional information about the request in order to proceed with scheduling a consult session. Specify the edits or additional information needed from the requester.',
-    hint:
-      'Provide feedback to the requester about the content of their initial request form or supporting documents. The requester will see this feedback in their task list and in the email you send.',
+    hint: 'Provide feedback to the requester about the content of their initial request form or supporting documents. The requester will see this feedback in their task list and in the email you send.',
     label:
       'What type of edits are needed prior to scheduling the consult session?',
     notificationTitle: 'Notification email',
@@ -1067,8 +1057,7 @@ const technicalAssistance = {
       'Use this action if work on this request is complete, or if it is not a TRB request.',
     breadcrumb: 'Close request',
     label: 'Why are you closing this request?',
-    hint:
-      'Give a brief explanation, especially if you are closing this request without sending an advice letter.',
+    hint: 'Give a brief explanation, especially if you are closing this request without sending an advice letter.',
     submit: 'Complete action and close request',
     success: 'Action complete. This request is now closed.',
     error:
@@ -1106,7 +1095,26 @@ const technicalAssistance = {
     error:
       'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.'
   },
-  closeTab: 'Close tab'
+  closeTab: 'Close tab',
+  // technicalAssistance.link here provides overrides to itGov.link
+  link: {
+    description:
+      'If you are requesting technical assistance for a project that is a part of an existing system, service or other contract, please include additional details below.',
+    form: {
+      field: {
+        systemOrService: {
+          label:
+            'Is this technical assistance request part of an existing system, service, or contract?',
+          hint: 'With any of the selections below, you may add contract number(s) if there are any in place to support this effort.'
+        }
+      }
+    },
+    skipConfirm: {
+      list: [
+        'The Technical Review Board (TRB) can assist you in a more streamlined and comprehensive manner if they have information about your system, service, or contract.'
+      ]
+    }
+  }
 };
 
 export default technicalAssistance;

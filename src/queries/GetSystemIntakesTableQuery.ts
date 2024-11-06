@@ -1,17 +1,19 @@
 import { gql } from '@apollo/client';
 
+import { FundingSource } from './GetSystemIntakeQuery';
+
 /**
  * For use on requests table
  *
  * Returns all system intakes that have a submitted intake request form
  */
 export default gql`
+  ${FundingSource}
   query GetSystemIntakesTable($openRequests: Boolean!) {
     systemIntakes(openRequests: $openRequests) {
       id
       euaUserId
       requestName
-      status
       statusAdmin
       state
 
@@ -38,19 +40,19 @@ export default gql`
 
       existingFunding
       fundingSources {
-        source
-        fundingNumber
+        ...FundingSource
       }
 
       annualSpending {
         currentAnnualSpending
+        currentAnnualSpendingITPortion
         plannedYearOneSpending
+        plannedYearOneSpendingITPortion
       }
 
       contract {
         hasContract
         contractor
-        number
         vehicle
         startDate {
           day
@@ -62,6 +64,15 @@ export default gql`
           month
           year
         }
+      }
+
+      contractName
+      contractNumbers {
+        contractNumber
+      }
+      systems {
+        id
+        name
       }
 
       businessNeed
@@ -89,6 +100,9 @@ export default gql`
       }
 
       hasUiChanges
+      usesAiTech
+      usingSoftware
+      acquisitionMethods
 
       decidedAt
       submittedAt

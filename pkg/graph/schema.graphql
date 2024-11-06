@@ -8,48 +8,19 @@ type UserError {
 }
 
 """
-Indicates the type of a request being made with the EASi system
-"""
-enum RequestType {
-  ACCESSIBILITY_REQUEST
-  GOVERNANCE_REQUEST
-}
-
-"""
 PersonRole is an enumeration of values for a person's role
 """
 enum PersonRole {
+  BUSINESS_OWNER
   PRODUCT_OWNER
   SYSTEM_OWNER
   SYSTEM_MAINTAINER
   CONTRACT_OFFICE_RSREPRESENTATIVE
   CLOUD_NAVIGATOR
+  INFORMATION_SYSTEM_SECURITY_ADVISOR
   PRIVACY_ADVISOR
   CRA
   OTHER
-}
-
-"""
-Represents a requester's system intake request
-"""
-type Request {
-  id: UUID!
-  name: String
-  submittedAt: Time
-  type: RequestType!
-  status: String!
-  statusRequester: SystemIntakeStatusRequester
-  statusCreatedAt: Time
-  lcid: String
-  nextMeetingDate: Time
-}
-
-type RequestsConnection {
-  edges: [RequestEdge!]!
-}
-
-type RequestEdge {
-  node: Request!
 }
 
 """
@@ -87,6 +58,82 @@ type CedarAuthorityToOperate {
 }
 
 """
+CedarBudget represents info about the budget associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarBudget {
+  fiscalYear: String
+  funding: String
+  fundingId: String
+  fundingSource: String
+  id: String
+  name: String
+  projectId: String!
+  projectTitle: String
+  systemId: String
+}
+
+"""
+CedarBudgetActualCost represents an individual budget actual cost item; this information is returned from the CEDAR Core API
+as a part of the CedarBudgetSystemCost object
+"""
+type CedarBudgetActualCost {
+  actualSystemCost: String
+  fiscalYear: String
+  systemId: String
+}
+
+"""
+CedarBudgetSystemCost represents info about the actual cost associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarBudgetSystemCost {
+  budgetActualCost: [CedarBudgetActualCost!]!
+}
+
+"""
+CedarSoftwareProductItem represents an individual software product; this information is returned from the CEDAR Core API
+as a part of the CedarSoftwareProducts object
+"""
+type CedarSoftwareProductItem {
+  apiGatewayUse: Boolean
+  elaPurchase: String
+  elaVendorId: String
+  providesAiCapability: Boolean
+  refstr: String
+  softwareCatagoryConnectionGuid: String
+  softwareVendorConnectionGuid: String
+  softwareCost: String
+  softwareElaOrganization: String
+  softwareName: String
+  systemSoftwareConnectionGuid: String
+  technopediaCategory: String
+  technopediaID: String
+  vendorName: String
+}
+
+"""
+CedarSoftwareProducts represents the response from the /softwareProducts endpoint from the CEDAR Core API.
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarSoftwareProducts {
+  aiSolnCatg: [String]!
+  aiSolnCatgOther: String
+  apiDataArea: [String]!
+  apiDescPubLocation: String
+  apiDescPublished: String
+  apiFHIRUse: String
+  apiFHIRUseOther: String
+  apiHasPortal: Boolean
+  apisAccessibility: String
+  apisDeveloped: String
+  developmentStage: String
+  softwareProducts: [CedarSoftwareProductItem!]!
+  systemHasAPIGateway: Boolean
+  usesAiTech: String
+}
+
+"""
 CedarSystem represents the response from the /system/detail endpoint from the CEDAR Core API.
 Right now, this does not tie in with any other types defined here, and is a root node until that changes.
 """
@@ -94,13 +141,30 @@ type CedarSystem {
   id: String!
   name: String!
   description: String
-	acronym: String
-	status: String
-	businessOwnerOrg: String
-	businessOwnerOrgComp: String
-	systemMaintainerOrg: String
-	systemMaintainerOrgComp: String
+  acronym: String
+  atoEffectiveDate: Time
+  atoExpirationDate: Time
+  status: String
+  businessOwnerOrg: String
+  businessOwnerOrgComp: String
+  businessOwnerRoles: [CedarRole!]!
+  systemMaintainerOrg: String
+  systemMaintainerOrgComp: String
   versionId: String
+  isBookmarked: Boolean!
+  linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
+  linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
+  uuid: String
+}
+
+"""
+CedarSubSystem represents the response from the /system/detail
+"""
+type CedarSubSystem {
+  id: String!
+  name: String!
+  acronym: String
+  description: String
 }
 
 """
@@ -120,62 +184,84 @@ type CedarThreat {
 BusinessOwnerInformation contains information about the business owner for a CEDAR system
 """
 type CedarBusinessOwnerInformation {
-	beneficiaryAddressPurpose: [String!]!
-	beneficiaryAddressPurposeOther: String
-	beneficiaryAddressSource: [String!]!
-	beneficiaryAddressSourceOther: String
-	costPerYear: String
-	isCmsOwned: Boolean
-	numberOfContractorFte: String
-	numberOfFederalFte: String
-	numberOfSupportedUsersPerMonth: String
-	storesBankingData: Boolean
-	storesBeneficiaryAddress: Boolean
+  beneficiaryAddressPurpose: [String!]!
+  beneficiaryAddressPurposeOther: String
+  beneficiaryAddressSource: [String!]!
+  beneficiaryAddressSourceOther: String
+  beneficiaryInformation: [String!]!
+  costPerYear: String
+  editBeneficiaryInformation: Boolean
+  isCmsOwned: Boolean
+  nr508UserInterface: String
+  numberOfContractorFte: String
+  numberOfFederalFte: String
+  numberOfSupportedUsersPerMonth: String
+  storesBankingData: Boolean
+  storesBeneficiaryAddress: Boolean
 }
 
 """
 SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
 """
 type CedarSystemMaintainerInformation {
-	agileUsed: Boolean
-	businessArtifactsOnDemand: Boolean
-	deploymentFrequency: String
-	devCompletionPercent: String
-	devWorkDescription: String
-	ecapParticipation: Boolean
-	frontendAccessType: String
-	hardCodedIPAddress: Boolean
-	ip6EnabledAssetPercent: String
-	ip6TransitionPlan: String
-	ipEnabledAssetCount: Int
-	majorRefreshDate: String
-	netAccessibility: String
-	omDocumentationOnDemand: Boolean
-	plansToRetireReplace: String
-	quarterToRetireReplace: String
-	recordsManagementBucket: [String!]!
-	sourceCodeOnDemand: Boolean
-	systemCustomization: String
-	systemDesignOnDemand: Boolean
-	systemProductionDate: String
-	systemRequirementsOnDemand: Boolean
-	testPlanOnDemand: Boolean
-	testReportsOnDemand: Boolean
-	testScriptsOnDemand: Boolean
-	yearToRetireReplace: String
+  agileUsed: Boolean
+  adHocAgileDeploymentFrequency: String
+  authoritativeDatasource: String
+  businessArtifactsOnDemand: Boolean
+  dataAtRestEncryptionKeyManagement: String
+  deploymentFrequency: String
+  devCompletionPercent: String
+  devWorkDescription: String
+  ecapParticipation: Boolean
+  frontendAccessType: String
+  hardCodedIPAddress: Boolean
+  ip6EnabledAssetPercent: String
+  ip6TransitionPlan: String
+  ipEnabledAssetCount: Int
+  legalHoldCaseName: String
+  locallyStoredUserInformation: Boolean
+  majorRefreshDate: Time
+  multifactorAuthenticationMethod: [String!]!
+  multifactorAuthenticationMethodOther: String
+  netAccessibility: String
+  networkTrafficEncryptionKeyManagement: String
+  noMajorRefresh: Boolean
+  noPersistentRecordsFlag: Boolean
+  noPlannedMajorRefresh: Boolean
+  omDocumentationOnDemand: Boolean
+  plansToRetireReplace: String
+  quarterToRetireReplace: String
+  recordsManagementBucket: [String!]!
+  recordsManagementDisposalLocation: String
+  recordsManagementDisposalPlan: String
+  recordsUnderLegalHold: Boolean
+  sourceCodeOnDemand: Boolean
+  systemCustomization: String
+  systemDataLocation: [String!]!
+  systemDataLocationNotes: String
+  systemDesignOnDemand: Boolean
+  systemProductionDate: Time
+  systemRequirementsOnDemand: Boolean
+  testPlanOnDemand: Boolean
+  testReportsOnDemand: Boolean
+  testScriptsOnDemand: Boolean
+  yearToRetireReplace: String
 }
 
 """
 This is the Representation of Cedar system with additional related information
 """
 type CedarSystemDetails {
- cedarSystem: CedarSystem!
- systemMaintainerInformation: CedarSystemMaintainerInformation!
- businessOwnerInformation: CedarBusinessOwnerInformation!
- roles: [CedarRole!]!
- deployments: [CedarDeployment!]!
- threats: [CedarThreat!]!
- urls: [CedarURL!]!
+  cedarSystem: CedarSystem!
+  systemMaintainerInformation: CedarSystemMaintainerInformation!
+  businessOwnerInformation: CedarBusinessOwnerInformation!
+  roles: [CedarRole!]!
+  deployments: [CedarDeployment!]!
+  threats: [CedarThreat!]!
+  urls: [CedarURL!]!
+  isMySystem: Boolean
+  atoEffectiveDate: Time
+  atoExpirationDate: Time
 }
 
 """
@@ -186,10 +272,24 @@ type CedarSystemBookmark {
   cedarSystemId: String!
 }
 
+type CedarContract {
+  startDate: Time
+  endDate: Time
+  contractNumber: String
+  contractName: String
+  description: String
+  orderNumber: String
+  serviceProvided: String
+  isDeliveryOrg: Boolean
+  systemID: String
+}
+
 """
-Represents a person response from CEDAR LDAP
+Represents a person response from Okta
 """
 type UserInfo {
+  firstName: String!
+  lastName: String!
   commonName: String!
   email: EmailAddress!
   euaUserId: String!
@@ -335,382 +435,34 @@ enum ExchangeDirection {
 CedarExchange represents info about how data is exchanged between a CEDAR system and another system
 """
 type CedarExchange {
-	connectionFrequency: [String!]!
-	containsBankingData: Boolean
-	containsBeneficiaryAddress: Boolean
-	containsPhi: Boolean
-	containsPii: Boolean
-	dataExchangeAgreement: String
-	dataFormat: String
-	dataFormatOther: String
-	exchangeDescription: String
-	exchangeEndDate: Time
-	exchangeId: String
-	exchangeName: String
-	exchangeRetiredDate: Time
-	exchangeStartDate: Time
-	exchangeState: String
-	exchangeVersion: String
+  connectionFrequency: [String!]!
+  containsBankingData: Boolean
+  containsBeneficiaryAddress: Boolean
+  containsPhi: Boolean
+  containsPii: Boolean
+  containsHealthDisparityData: Boolean
+  dataExchangeAgreement: String
+  dataFormat: String
+  dataFormatOther: String
+  exchangeDescription: String
+  exchangeEndDate: Time
+  exchangeId: String
+  exchangeName: String
+  exchangeRetiredDate: Time
+  exchangeStartDate: Time
+  exchangeState: String
+  exchangeVersion: String
   exchangeDirection: ExchangeDirection
-	fromOwnerId: String
-	fromOwnerName: String
-	fromOwnerType: String
-	isBeneficiaryMailingFile: Boolean
-	numOfRecords: String
-	sharedViaApi: Boolean
-	toOwnerId: String
-	toOwnerName: String
-	toOwnerType: String
-	typeOfData: [CedarExchangeTypeOfDataItem!]!
-}
-
-"""
-An accessibility request represents a system that needs to go through
-the 508 process
-"""
-type AccessibilityRequest {
-  documents: [AccessibilityRequestDocument!]!
-  id: UUID!
-  name: String!
-  relevantTestDate: TestDate
-  submittedAt: Time!
-  system: System
-  testDates: [TestDate!]!
-  euaUserId: String!
-  statusRecord: AccessibilityRequestStatusRecord!
-  notes: [AccessibilityRequestNote!]! @hasRole(role: EASI_508_TESTER_OR_USER)
-  cedarSystemId: String
-}
-
-"""
-Indicates the status of a 508/accessibility request
-"""
-enum AccessibilityRequestStatus {
-  OPEN
-  IN_REMEDIATION
-  CLOSED
-  DELETED
-}
-
-"""
-An accessibility request status record is the data related to a status action
-"""
-type AccessibilityRequestStatusRecord {
-  id: UUID!
-  requestID: UUID!
-  status: AccessibilityRequestStatus!
-  euaUserId: String!
-  createdAt: Time!
-}
-
-"""
-Parameters for updating a 508/accessibility request's status
-"""
-input UpdateAccessibilityRequestStatus {
-  requestID: UUID!
-  status: AccessibilityRequestStatus!
-}
-
-"""
-Result of updating a 508/accessibility request's status
-"""
-type UpdateAccessibilityRequestStatusPayload {
-  id: UUID!
-  requestID: UUID!
-  status: AccessibilityRequestStatus!
-  euaUserId: String!
-  userErrors: [UserError!]
-}
-
-"""
-Parameters for updating a 508/accessibility request's associated CEDAR system
-"""
-input UpdateAccessibilityRequestCedarSystemInput {
-  id: UUID!
-  cedarSystemId: String!
-}
-
-"""
-Result of updating a 508/accessibility request's associated CEDAR system
-"""
-type UpdateAccessibilityRequestCedarSystemPayload {
-  id: UUID!
-  accessibilityRequest: AccessibilityRequest
-}
-
-"""
-The data used when adding a note to a 508/accessibility request
-"""
-input CreateAccessibilityRequestNoteInput {
-  requestID: UUID!
-  note: String!
-  shouldSendEmail: Boolean!
-}
-
-"""
-Represents a note added to a 508/accessibility request by a user
-"""
-type AccessibilityRequestNote {
-  id: UUID!
-  requestID: UUID!
-  createdAt: Time!
-  note: String!
-  authorName: String!
-}
-
-"""
-The payload for adding a note to a 508/accessibility request
-"""
-type CreateAccessibilityRequestNotePayload {
-  accessibilityRequestNote: AccessibilityRequestNote!
-  userErrors: [UserError!]
-}
-
-"""
-A business owner is the person at CMS responsible for a system
-"""
-type BusinessOwner {
-  component: String!
-  name: String!
-}
-
-"""
-A System is derived from a system intake and represents a computer system
-managed by CMS
-"""
-type System {
-  businessOwner: BusinessOwner!
-  id: UUID!
-  lcid: String!
-  name: String!
-}
-
-"""
-Indicates the status of a document that has been attached to 508/accessibility
-request, which will be scanned for viruses before it is made available
-"""
-enum AccessibilityRequestDocumentStatus {
-  AVAILABLE
-  PENDING
-  UNAVAILABLE
-}
-
-"""
-Represents the common options for document type that is attached to a
-508/accessibility request
-"""
-enum AccessibilityRequestDocumentCommonType {
-  AWARDED_VPAT
-  OTHER
-  REMEDIATION_PLAN
-  TESTING_VPAT
-  TEST_PLAN
-  TEST_RESULTS
-}
-
-"""
-Denotes type of a document that is attached to a 508/accessibility request,
-which can be one of a number of common types, or another user-specified type
-"""
-type AccessibilityRequestDocumentType {
-  commonType: AccessibilityRequestDocumentCommonType!
-  otherTypeDescription: String
-}
-
-"""
-Represents a document attached to a 508/accessibility request
-"""
-type AccessibilityRequestDocument {
-  documentType: AccessibilityRequestDocumentType!
-  id: UUID!
-  mimeType: String!
-  name: String!
-  requestID: UUID!
-  size: Int!
-  status: AccessibilityRequestDocumentStatus!
-  uploadedAt: Time!
-  url: String!
-}
-
-type SystemConnection {
-  edges: [SystemEdge!]!
-}
-
-type SystemEdge {
-  node: System!
-}
-
-"""
-The data needed to initialize a 508/accessibility request
-"""
-input CreateAccessibilityRequestInput {
-  intakeID: UUID
-  name: String!
-  cedarSystemId: String
-}
-
-"""
-The payload containing the data needed to initialize an AccessibilityRequest
-"""
-type CreateAccessibilityRequestPayload {
-  accessibilityRequest: AccessibilityRequest
-  userErrors: [UserError!]
-}
-
-"""
-Denotes the reason a 508/accessibility request was deleted
-"""
-enum AccessibilityRequestDeletionReason {
-  INCORRECT_APPLICATION_AND_LIFECYCLE_ID
-  NO_TESTING_NEEDED
-  OTHER
-}
-
-"""
-The input data needed to delete a 508/accessibility request
-"""
-input DeleteAccessibilityRequestInput {
-  id: UUID!
-  reason: AccessibilityRequestDeletionReason!
-}
-
-"""
-The payload data sent when deleting a 508/accessibility request
-"""
-type DeleteAccessibilityRequestPayload {
-  id: UUID
-  userErrors: [UserError!]
-}
-
-"""
-Input associated with a document to be uploaded to a 508/accessibility request
-"""
-input GeneratePresignedUploadURLInput {
-  fileName: String!
-  mimeType: String!
-  size: Int!
-}
-
-"""
-URL generated for a document to be uploaded to a 508/accessibility request
-"""
-type GeneratePresignedUploadURLPayload {
-  url: String
-  userErrors: [UserError!]
-}
-
-type AccessibilityRequestsConnection {
-  edges: [AccessibilityRequestEdge!]!
-}
-
-type AccessibilityRequestEdge {
-  node: AccessibilityRequest!
-}
-
-"""
-A 508 test instance
-"""
-type TestDate {
-  date: Time!
-  id: UUID!
-  score: Int
-  testType: TestDateTestType!
-}
-
-"""
-The type of test added to a 508/accessibility request
-"""
-enum TestDateTestType {
-  INITIAL
-  REMEDIATION
-}
-
-"""
-The input required to add a test date/score to a 508/accessibility request
-"""
-input CreateTestDateInput {
-  date: Time!
-  requestID: UUID!
-  score: Int
-  testType: TestDateTestType!
-}
-
-"""
-The payload for the input required to add a test date/score to a
-508/accessibility request
-"""
-type CreateTestDatePayload {
-  testDate: TestDate
-  userErrors: [UserError!]
-}
-
-"""
-The input required to update a test date/score
-"""
-input UpdateTestDateInput {
-  date: Time!
-  id: UUID!
-  score: Int
-  testType: TestDateTestType!
-}
-
-"""
-The payload for the input required to update a test date/score
-"""
-type UpdateTestDatePayload {
-  testDate: TestDate
-  userErrors: [UserError!]
-}
-
-"""
-The input required to delete a test date/score
-"""
-input DeleteTestDateInput {
-  id: UUID!
-}
-
-"""
-The payload for the input required to delete a test date/score
-"""
-type DeleteTestDatePayload {
-  testDate: TestDate
-  userErrors: [UserError!]
-}
-
-"""
-The input data used for adding a document to a 508/accessibility request
-"""
-input CreateAccessibilityRequestDocumentInput {
-  commonDocumentType: AccessibilityRequestDocumentCommonType!
-  mimeType: String!
-  name: String!
-  otherDocumentTypeDescription: String
-  requestID: UUID!
-  size: Int!
-  url: String!
-}
-
-"""
-The payload containing the input data used for adding a document to a
-508/accessibility request
-"""
-type CreateAccessibilityRequestDocumentPayload {
-  accessibilityRequestDocument: AccessibilityRequestDocument
-  userErrors: [UserError!]
-}
-
-"""
-The input used to delete a document from a 508/accessibility request
-"""
-input DeleteAccessibilityRequestDocumentInput {
-  id: UUID!
-}
-
-"""
-The payload used to delete a document from a 508/accessibility request
-"""
-type DeleteAccessibilityRequestDocumentPayload {
-  id: UUID
+  fromOwnerId: String
+  fromOwnerName: String
+  fromOwnerType: String
+  isBeneficiaryMailingFile: Boolean
+  numOfRecords: String
+  sharedViaApi: Boolean
+  toOwnerId: String
+  toOwnerName: String
+  toOwnerType: String
+  typeOfData: [CedarExchangeTypeOfDataItem!]!
 }
 
 """
@@ -808,48 +560,6 @@ type BusinessCase {
 }
 
 """
-The status of a system's IT governence request
-Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeStatusRequester/SystemIntakeStatusAdmin
-"""
-enum SystemIntakeStatus {
-  BIZ_CASE_CHANGES_NEEDED
-  BIZ_CASE_DRAFT
-  BIZ_CASE_DRAFT_SUBMITTED
-  BIZ_CASE_FINAL_NEEDED
-  BIZ_CASE_FINAL_SUBMITTED
-  INTAKE_DRAFT
-  INTAKE_SUBMITTED
-  LCID_ISSUED
-  NEED_BIZ_CASE
-  NOT_APPROVED
-  """
-  Request is not an IT request
-  """
-  NOT_IT_REQUEST
-  """
-  Request requires no further governance
-  """
-  NO_GOVERNANCE
-  """
-  Request is ready for Governance Review Board meeting
-  """
-  READY_FOR_GRB
-  """
-  Request is ready for Governance Review Team meeting
-  """
-  READY_FOR_GRT
-  """
-  Request for shutdown of existing system is complete
-  """
-  SHUTDOWN_COMPLETE
-  """
-  Request for shutdown of existing system is in progress
-  """
-  SHUTDOWN_IN_PROGRESS
-  WITHDRAWN
-}
-
-"""
 The type of an IT governance (system) request
 """
 enum SystemIntakeRequestType {
@@ -885,7 +595,6 @@ type SystemIntakeContract {
   hasContract: String
   startDate: ContractDate!
   vehicle: String
-  number: String
 }
 
 """
@@ -901,7 +610,9 @@ Represents current and planned annual costs for a system
 """
 type SystemIntakeAnnualSpending {
   currentAnnualSpending: String
+  currentAnnualSpendingITPortion: String
   plannedYearOneSpending: String
+  plannedYearOneSpendingITPortion: String
 }
 
 """
@@ -991,13 +702,17 @@ type SystemIntake {
   decisionNextSteps: HTML
   eaCollaborator: String
   eaCollaboratorName: String
-  euaUserId: String!
+  euaUserId: String
   existingFunding: Boolean
   fundingSources: [SystemIntakeFundingSource!]!
   governanceRequestFeedbacks: [GovernanceRequestFeedback!]!
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
   grtDate: Time
+  lastMeetingDate: Time
+  nextMeetingDate: Time
+  grbReviewStartedAt: Time
+  grbReviewers: [SystemIntakeGRBReviewer!]!
   id: UUID!
   isso: SystemIntakeISSO!
   lcid: String
@@ -1007,6 +722,8 @@ type SystemIntake {
   lcidCostBaseline: String
   lcidRetiresAt: Time
   needsEaSupport: Boolean
+  usingSoftware: String
+  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
@@ -1021,7 +738,6 @@ type SystemIntake {
   # TODO Remove them when email is not always fetched on the `requester` type
   requesterName: String
   requesterComponent: String
-  status: SystemIntakeStatus!
   state: SystemIntakeState!
   step: SystemIntakeStep!
   submittedAt: Time
@@ -1034,6 +750,7 @@ type SystemIntake {
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
+  usesAiTech: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
   requestFormState: SystemIntakeFormState!
   draftBusinessCaseState: SystemIntakeFormState!
@@ -1054,6 +771,44 @@ type SystemIntake {
   """
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
+  contractName: String
+  relationType: RequestRelationType
+
+  """
+  Linked systems
+  """
+  systems: [CedarSystem!]!
+
+  """
+  Linked contract numbers
+  """
+  contractNumbers: [SystemIntakeContractNumber!]!
+  """
+  Other System Intakes that share a CEDAR System or Contract Number
+  """
+  relatedIntakes: [SystemIntake!]!
+  """
+  TRB Requests that share a CEDAR System or Contract Number
+  """
+  relatedTRBRequests: [TRBRequest!]!
+}
+
+type SystemIntakeContractNumber {
+  id: UUID!
+  systemIntakeID: UUID!
+  contractNumber: String!
+  createdBy: UUID!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
+}
+
+# TODO Figure out if there's any better way to name this.
+# The name currently feels a bit abstract, but it's the best I could come up with.
+enum RequestRelationType {
+  NEW_SYSTEM
+  EXISTING_SYSTEM
+  EXISTING_SERVICE
 }
 
 """
@@ -1074,6 +829,17 @@ enum SystemIntakeStep {
   GRB_MEETING
   FINAL_BUSINESS_CASE
   DECISION_AND_NEXT_STEPS
+}
+
+"""
+SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
+"""
+enum SystemIntakeSoftwareAcquisitionMethods {
+  CONTRACTOR_FURNISHED
+  FED_FURNISHED
+  ELA_OR_INTERNAL
+  NOT_YET_DETERMINED
+  OTHER
 }
 
 """
@@ -1175,10 +941,13 @@ input UpdateSystemIntakeRequestDetailsInput {
   requestName: String
   businessNeed: String
   businessSolution: String
-  needsEaSupport: Boolean
   currentStage: String
-  cedarSystemId: String
+  needsEaSupport: Boolean
   hasUiChanges: Boolean
+  usesAiTech: Boolean
+  usingSoftware: String
+  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
+  cedarSystemId: String
 }
 
 """
@@ -1222,7 +991,9 @@ Input data for current and planned year one annual costs associated with a syste
 """
 input SystemIntakeAnnualSpendingInput {
   currentAnnualSpending: String
+  currentAnnualSpendingITPortion: String
   plannedYearOneSpending: String
+  plannedYearOneSpendingITPortion: String
 }
 
 """
@@ -1233,7 +1004,7 @@ input SystemIntakeContractInput {
   endDate: Time
   hasContract: String
   startDate: Time
-  number: String
+  numbers: [String!]!
 }
 
 """
@@ -1255,32 +1026,24 @@ input UpdateSystemIntakeLinkedCedarSystemInput {
   cedarSystemId: String
 }
 
-"""
-Input data for updating a system intake's relationship to a contract
-"""
-input UpdateSystemIntakeLinkedContractInput {
-  id: UUID!
-  contractNumber: String
+# RequestRelationType.NEW_SYSTEM
+input SetSystemIntakeRelationNewSystemInput {
+  systemIntakeID: UUID!
+  contractNumbers: [String!]!
 }
 
-"""
-Input data for extending a system request's lifecycle ID
-"""
-input CreateSystemIntakeActionExtendLifecycleIdInput {
-  id: UUID!
-  expirationDate: Time
-  nextSteps: HTML
-  scope: HTML!
-  costBaseline: String
-  notificationRecipients: EmailNotificationRecipients
+# RequestRelationType.EXISTING_SYSTEM
+input SetSystemIntakeRelationExistingSystemInput {
+  systemIntakeID: UUID!
+  cedarSystemIDs: [String!]!
+  contractNumbers: [String!]!
 }
 
-"""
-Payload data for extending a system request's lifecycle ID
-"""
-type CreateSystemIntakeActionExtendLifecycleIdPayload {
-  systemIntake: SystemIntake
-  userErrors: [UserError!]
+# RequestRelationType.EXISTING_SERVICE
+input SetSystemIntakeRelationExistingServiceInput {
+  systemIntakeID: UUID!
+  contractName: String!
+  contractNumbers: [String!]!
 }
 
 """
@@ -1353,7 +1116,7 @@ type SystemIntakeLCIDExpirationChange {
   newNextSteps: HTML
   previousCostBaseline: String
   newCostBaseline: String
- }
+}
 
 """
 The contact who is associated with an action being done to a system request
@@ -1364,48 +1127,102 @@ type SystemIntakeActionActor {
 }
 
 """
-Feedback intended for a business owner before they proceed to writing a
-business case for a system request
+Input for starting a GRB Review, which notifies reviewers by email
 """
-input AddGRTFeedbackInput {
-  emailBody: HTML!
-  feedback: HTML!
-  intakeID: UUID!
-  notificationRecipients: EmailNotificationRecipients
+input StartGRBReviewInput {
+  systemIntakeID: UUID!
 }
 
 """
-Payload for adding GRT feedback to a system request (contains the system
-request ID)
+GRB Reviewers for a system intake request
 """
-type AddGRTFeedbackPayload {
-  id: UUID
+type SystemIntakeGRBReviewer {
+  id: UUID!
+  userAccount: UserAccount!
+  systemIntakeID: UUID!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+  createdBy: UUID!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
 }
 
 """
-The input data required to issue a lifecycle ID for a system's IT governance
-request
+GRBReviewerComparisonIntake represents a response when searching for System Intakes
+that have GRB reviewers as compared to another Intake.
+
+It's effectively a smaller subset of some of the fields on the entire Intake, plus a special
+"reviewers" field specific to the comparison operation.
 """
-input IssueLifecycleIdInput {
-  expiresAt: Time!
-  feedback: HTML!
-  intakeId: UUID!
-  lcid: String
-  nextSteps: HTML
-  scope: HTML!
-  costBaseline: String
-  notificationRecipients: EmailNotificationRecipients
+type GRBReviewerComparisonIntake {
+  id: UUID!
+  requestName: String!
+  reviewers: [GRBReviewerComparison!]!
+  intakeCreatedAt: Time
 }
 
 """
-Input data for rejection of a system's IT governance request
+GRBReviewerComparison represents an individual GRB Reviewer within the context of a
+comparison operation between two system intakes.
+
+For this reason, it is similar to a regular "type GRBReviewer", but has an extra
+field for "isCurrentReviewer", representing whether or not the specific GRB Reviewer
+is already on the intake being compared against or not.
 """
-input RejectIntakeInput {
-  feedback: HTML!
-  intakeId: UUID!
-  nextSteps: HTML
-  reason: HTML!
-  notificationRecipients: EmailNotificationRecipients
+type GRBReviewerComparison {
+  id: UUID!
+  userAccount: UserAccount!
+  euaUserId: String!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+  isCurrentReviewer: Boolean!
+}
+
+input CreateGRBReviewerInput {
+  euaUserId: String!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+}
+
+input CreateSystemIntakeGRBReviewersInput {
+  systemIntakeID: UUID!
+  reviewers: [CreateGRBReviewerInput!]!
+}
+
+type CreateSystemIntakeGRBReviewersPayload {
+  reviewers: [SystemIntakeGRBReviewer!]!
+}
+
+input UpdateSystemIntakeGRBReviewerInput {
+  reviewerID: UUID!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+}
+
+input DeleteSystemIntakeGRBReviewerInput {
+  reviewerID: UUID!
+}
+
+enum SystemIntakeGRBReviewerRole {
+  CO_CHAIR_CIO
+  CO_CHAIR_CFO
+  CO_CHAIR_HCA
+  ACA_3021_REP
+  CCIIO_REP
+  PROGRAM_OPERATIONS_BDG_CHAIR
+  CMCS_REP
+  FED_ADMIN_BDG_CHAIR
+  PROGRAM_INTEGRITY_BDG_CHAIR
+  QIO_REP
+  SUBJECT_MATTER_EXPERT
+  OTHER
+}
+
+enum SystemIntakeGRBReviewerVotingRole {
+  VOTING
+  ALTERNATE
+  NON_VOTING
 }
 
 """
@@ -1451,7 +1268,6 @@ type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
-
 
 """
 Steps in the system intake process that a Progress to New Step action can progress to
@@ -1636,15 +1452,6 @@ input SystemIntakeReopenRequestInput {
 }
 
 """
-Input to add feedback to a system request
-"""
-input BasicActionInput {
-  feedback: HTML!
-  intakeId: UUID!
-  notificationRecipients: EmailNotificationRecipients
-}
-
-"""
 Input to submit an intake for review
 """
 input SubmitIntakeInput {
@@ -1792,6 +1599,8 @@ type TRBRequest {
   adviceLetter: TRBAdviceLetter
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
+  lastMeetingDate: Time
+  nextMeetingDate: Time
   trbLead: String
   trbLeadInfo: UserInfo!
   requesterInfo: UserInfo!
@@ -1801,6 +1610,37 @@ type TRBRequest {
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
+  modifiedAt: Time
+  contractName: String
+  relationType: RequestRelationType # TODO: NOT IMPLEMENTED
+
+  """
+  Linked contract numbers
+  """
+  contractNumbers: [TRBRequestContractNumber!]!
+
+  """
+  Linked systems
+  """
+  systems: [CedarSystem!]!
+
+  """
+  System Intakes that share a CEDAR System or Contract Number
+  """
+  relatedIntakes: [SystemIntake!]!
+  """
+  Other TRB Requests that share a CEDAR System or Contract Number
+  """
+  relatedTRBRequests: [TRBRequest!]!
+}
+
+type TRBRequestContractNumber {
+  id: UUID!
+  trbRequestID: UUID!
+  contractNumber: String!
+  createdBy: UUID!
+  createdAt: Time!
+  modifiedBy: UUID
   modifiedAt: Time
 }
 
@@ -1822,9 +1662,9 @@ Fields explicitly set with NULL will be unset, and omitted fields will be left u
 https://gqlgen.com/reference/changesets/
 """
 input TRBRequestChanges @goModel(model: "map[string]interface{}") {
-    name: String
-    archived: Boolean
-    type: TRBRequestType
+  name: String
+  archived: Boolean
+  type: TRBRequestType
 }
 
 """
@@ -1882,7 +1722,7 @@ enum SystemIntakeDocumentStatus {
 
 """
 Represents the common options for document type that is attached to a
-508/accessibility request
+TRB Request
 """
 enum TRBDocumentCommonType {
   ARCHITECTURE_DIAGRAM
@@ -1897,8 +1737,21 @@ System Intake document
 """
 enum SystemIntakeDocumentCommonType {
   SOO_SOW
-  DRAFT_ICGE
+  DRAFT_IGCE
+  ACQUISITION_PLAN_OR_STRATEGY
+  REQUEST_FOR_ADDITIONAL_FUNDING
+  SOFTWARE_BILL_OF_MATERIALS
+  MEETING_MINUTES
   OTHER
+}
+
+"""
+Represents the version options for a document that is attached to a
+System Intake document
+"""
+enum SystemIntakeDocumentVersion {
+  CURRENT
+  HISTORICAL
 }
 
 """
@@ -1940,7 +1793,9 @@ input CreateSystemIntakeDocumentInput {
   requestID: UUID!
   fileData: Upload!
   documentType: SystemIntakeDocumentCommonType!
+  version: SystemIntakeDocumentVersion!
   otherTypeDescription: String
+  sendNotification: Boolean
 }
 
 """
@@ -1963,8 +1818,12 @@ type SystemIntakeDocument {
   id: UUID!
   fileName: String!
   status: SystemIntakeDocumentStatus!
+  version: SystemIntakeDocumentVersion!
   uploadedAt: Time!
-  url: String!
+  url: String
+  canDelete: Boolean!
+  canView: Boolean!
+  systemIntakeId: UUID!
 }
 
 """
@@ -2118,6 +1977,7 @@ The possible options on the TRB "Subject Areas" page
 enum TRBSubjectAreaOption {
   ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT
   ACCESSIBILITY_COMPLIANCE
+  ARTIFICIAL_INTELLIGENCE
   ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT
   BUSINESS_INTELLIGENCE
   CLOUD_MIGRATION
@@ -2160,6 +2020,9 @@ type TRBRequestForm {
   collabDateOther: String
   collabGroupOther: String
   collabGRBConsultRequested: Boolean
+  """
+  TODO: Make Funding sources non-nullable
+  """
   fundingSources: [TRBFundingSource!]
   systemIntakes: [SystemIntake!]!
   subjectAreaOptions: [TRBSubjectAreaOption!]
@@ -2278,6 +2141,26 @@ input UpdateTRBRequestTRBLeadInput {
   trbLead: String!
 }
 
+# RequestRelationType.NEW_SYSTEM
+input SetTRBRequestRelationNewSystemInput {
+  trbRequestID: UUID!
+  contractNumbers: [String!]!
+}
+
+# RequestRelationType.EXISTING_SYSTEM
+input SetTRBRequestRelationExistingSystemInput {
+  trbRequestID: UUID!
+  cedarSystemIDs: [String!]!
+  contractNumbers: [String!]!
+}
+
+# RequestRelationType.EXISTING_SERVICE
+input SetTRBRequestRelationExistingServiceInput {
+  trbRequestID: UUID!
+  contractName: String!
+  contractNumbers: [String!]!
+}
+
 """
 Represents the category of a single TRB admin note
 """
@@ -2380,16 +2263,6 @@ type TRBAdviceLetter {
 }
 
 """
-The data needed to create any category of TRB admin note, without any category-specific data
-TODO - EASI-3458 - remove
-"""
-input CreateTRBAdminNoteInput {
-  trbRequestId: UUID!
-  category: TRBAdminNoteCategory!
-  noteText: HTML!
-}
-
-"""
 The data needed to create a TRB admin note with the General Request category
 """
 input CreateTRBAdminNoteGeneralRequestInput {
@@ -2449,20 +2322,6 @@ input CreateTRBAdminNoteAdviceLetterInput {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
   recommendationIDs: [UUID!]!
-}
-
-"""
-The data needed for updating a TRB admin note, not including any category-specific data
-As of 10/17/2023, this mutation isn't being used anywhere within EASi
-Creating and reading admin notes with category-specific data was added in https://jiraent.cms.gov/browse/EASI-3277
-
-If updating admin notes needs to handle category-specific data, break it up into five separate mutations with their own input types,
-similar to the different CreateTRBAdminNote* inputs.
-"""
-input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
-  id: UUID!
-  category: TRBAdminNoteCategory
-  noteText: HTML
 }
 
 """
@@ -2556,51 +2415,6 @@ input ReopenTRBRequestInput {
 Defines the mutations for the schema
 """
 type Mutation {
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  addGRTFeedbackAndKeepBusinessCaseInDraft(
-    input: AddGRTFeedbackInput!
-  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  addGRTFeedbackAndProgressToFinalBusinessCase(
-    input: AddGRTFeedbackInput!
-  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  addGRTFeedbackAndRequestBusinessCase(
-    input: AddGRTFeedbackInput!
-  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
-
-  createAccessibilityRequest(
-    input: CreateAccessibilityRequestInput!
-  ): CreateAccessibilityRequestPayload
-  deleteAccessibilityRequest(
-    input: DeleteAccessibilityRequestInput!
-  ): DeleteAccessibilityRequestPayload
-  createAccessibilityRequestDocument(
-    input: CreateAccessibilityRequestDocumentInput!
-  ): CreateAccessibilityRequestDocumentPayload
-  createAccessibilityRequestNote(
-    input: CreateAccessibilityRequestNoteInput!
-  ): CreateAccessibilityRequestNotePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  deleteAccessibilityRequestDocument(
-    input: DeleteAccessibilityRequestDocumentInput!
-  ): DeleteAccessibilityRequestDocumentPayload
-  updateAccessibilityRequestStatus(
-    input: UpdateAccessibilityRequestStatus
-  ): UpdateAccessibilityRequestStatusPayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  updateAccessibilityRequestCedarSystem(
-    input: UpdateAccessibilityRequestCedarSystemInput
-  ): UpdateAccessibilityRequestCedarSystemPayload
-
   # Mutations for IT Gov v2 workflow
   createSystemIntakeActionProgressToNewStep(
     input: SystemIntakeProgressToNewStepsInput!
@@ -2629,7 +2443,7 @@ type Mutation {
   createSystemIntakeActionRejectIntake(
     input: SystemIntakeRejectIntakeInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-   createSystemIntakeActionReopenRequest(
+  createSystemIntakeActionReopenRequest(
     input: SystemIntakeReopenRequestInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionCloseRequest(
@@ -2639,93 +2453,22 @@ type Mutation {
     input: SystemIntakeNotITGovReqInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  createSystemIntakeActionBusinessCaseNeeded(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  createSystemIntakeActionBusinessCaseNeedsChanges(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-
-  createSystemIntakeActionGuideReceievedClose(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNoGovernanceNeeded(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNotItRequest(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNotRespondingClose(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  createSystemIntakeActionReadyForGRT(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-
-  createSystemIntakeActionSendEmail(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-   Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionUpdateLCID
-  """
-  createSystemIntakeActionExtendLifecycleId(
-    input: CreateSystemIntakeActionExtendLifecycleIdInput!
-  ): CreateSystemIntakeActionExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
-
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
-    @hasRole(role: EASI_GOVTEAM)
+  @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeNote(input: UpdateSystemIntakeNoteInput!): SystemIntakeNote!
-    @hasRole(role: EASI_GOVTEAM)
+  @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
-    @hasRole(role: EASI_USER)
-  createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  generatePresignedUploadURL(
-    input: GeneratePresignedUploadURLInput!
-  ): GeneratePresignedUploadURLPayload
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionIssueLCID
-  """
-  issueLifecycleId(input: IssueLifecycleIdInput!): UpdateSystemIntakePayload
-    @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  markSystemIntakeReadyForGRB(
-    input: AddGRTFeedbackInput!
-  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionRejectIntake
-  """
-  rejectIntake(input: RejectIntakeInput!): UpdateSystemIntakePayload
-    @hasRole(role: EASI_GOVTEAM)
+  @hasRole(role: EASI_USER)
+  updateSystemIntakeRequestType(id: UUID!, newType: SystemIntakeRequestType!): SystemIntake!
+  @hasRole(role: EASI_USER)
 
   submitIntake(
     input: SubmitIntakeInput!
   ): UpdateSystemIntakePayload
   updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
-    @hasRole(role: EASI_GOVTEAM)
+  @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
-    @hasRole(role: EASI_GOVTEAM)
+  @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
@@ -2735,11 +2478,26 @@ type Mutation {
   deleteCedarSystemBookmark(
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
+
+  setSystemIntakeRelationNewSystem(input: SetSystemIntakeRelationNewSystemInput): UpdateSystemIntakePayload
+  setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
+  setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
+  unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
+
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
+
+  startGRBReview(input: StartGRBReviewInput!): String
+
+  createSystemIntakeGRBReviewers(input: CreateSystemIntakeGRBReviewersInput!): CreateSystemIntakeGRBReviewersPayload
+  updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
+  deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
+
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
-  updateSystemIntakeLinkedContract(input: UpdateSystemIntakeLinkedContractInput!): UpdateSystemIntakePayload
+
+  archiveSystemIntake(id: UUID!): SystemIntake!
+
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
@@ -2757,82 +2515,81 @@ type Mutation {
   deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
 
-  # Retained to support existing queries while support for category-specific notes is added
-  # TODO - EASI-3458 - remove
-  createTRBAdminNote(input: CreateTRBAdminNoteInput!): TRBAdminNote!
+  setTRBRequestRelationNewSystem(input: SetTRBRequestRelationNewSystemInput!): TRBRequest
+  setTRBRequestRelationExistingSystem(input: SetTRBRequestRelationExistingSystemInput!): TRBRequest
+  setTRBRequestRelationExistingService(input: SetTRBRequestRelationExistingServiceInput!): TRBRequest
+  unlinkTRBRequestRelation(trbRequestID: UUID!): TRBRequest
 
   # separate mutations for each category of admin note
   createTRBAdminNoteGeneralRequest(input: CreateTRBAdminNoteGeneralRequestInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteInitialRequestForm(input: CreateTRBAdminNoteInitialRequestFormInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteSupportingDocuments(input: CreateTRBAdminNoteSupportingDocumentsInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteConsultSession(input: CreateTRBAdminNoteConsultSessionInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteAdviceLetter(input: CreateTRBAdminNoteAdviceLetterInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
-
-  updateTRBAdminNote(input: UpdateTRBAdminNoteInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdviceLetter(trbRequestId: UUID!): TRBAdviceLetter!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetter(input: UpdateTRBAdviceLetterInput!): TRBAdviceLetter!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   requestReviewForTRBAdviceLetter(id: UUID!): TRBAdviceLetter!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   sendTRBAdviceLetter(input: SendTRBAdviceLetterInput!): TRBAdviceLetter!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdviceLetterRecommendation(input: CreateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetterRecommendationOrder(input: UpdateTRBAdviceLetterRecommendationOrderInput!): [TRBAdviceLetterRecommendation!]!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTrbLeadOption(eua: String!): UserInfo!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
 }
 
 """
 Query definition for the schema
 """
 type Query {
-  accessibilityRequest(id: UUID!): AccessibilityRequest
-  accessibilityRequests(
-    after: String
-    first: Int!
-  ): AccessibilityRequestsConnection
   """
   Requests fetches a requester's own intake requests
   first is currently non-functional and can be removed later
   """
-  requests(first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
-  @hasRole(role: EASI_GOVTEAM)
-  systems(after: String, first: Int!): SystemConnection
+  mySystemIntakes:[SystemIntake!]!
+  systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
+  compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
+  cedarBudget(cedarSystemID: String!): [CedarBudget!]
+  cedarBudgetSystemCost(cedarSystemID: String!): CedarBudgetSystemCost
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
+  cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!
+  cedarSubSystems(cedarSystemId: String!): [CedarSubSystem!]!
+  cedarContractsBySystem(cedarSystemId: String!): [CedarContract!]!
+  myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
@@ -2842,13 +2599,13 @@ type Query {
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
-  relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
+  userAccount(username: String!): UserAccount
 }
 
 enum TRBRequestType {
@@ -2918,22 +2675,7 @@ A user role associated with a job code
 """
 enum Role {
   """
-  A 508 Tester
-  """
-  EASI_508_TESTER
-
-  """
-  A 508 request program team member
-  """
-  EASI_508_USER
-
-  """
-  A 508 request program team member or tester
-  """
-  EASI_508_TESTER_OR_USER
-
-  """
-  A member of the GRT
+  An admin on the GRT
   """
   EASI_GOVTEAM
 
@@ -3173,7 +2915,7 @@ enum SystemIntakeMeetingState {
 }
 
 """
-This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
+This represents the statuses that an admin would see as a representation of a system intake. Note, there is no status for a brand new request, because an Admin doesn't see the request until it is in progress.
 """
 enum SystemIntakeStatusAdmin {
   INITIAL_REQUEST_FORM_IN_PROGRESS
@@ -3187,6 +2929,8 @@ enum SystemIntakeStatusAdmin {
   FINAL_BUSINESS_CASE_IN_PROGRESS
   FINAL_BUSINESS_CASE_SUBMITTED
   LCID_ISSUED
+  LCID_EXPIRED
+  LCID_RETIRED
   NOT_GOVERNANCE
   NOT_APPROVED
   CLOSED
@@ -3211,6 +2955,8 @@ enum SystemIntakeStatusRequester {
   GRB_MEETING_READY
   GRB_MEETING_AWAITING_DECISION
   LCID_ISSUED
+  LCID_EXPIRED
+  LCID_RETIRED
   NOT_GOVERNANCE
   NOT_APPROVED
   CLOSED
@@ -3223,4 +2969,43 @@ enum SystemIntakeLCIDStatus {
   ISSUED
   EXPIRED
   RETIRED
+}
+
+"""
+The representation of a User account in the EASI application
+"""
+type UserAccount {
+  id: UUID!
+  """
+  The unique username of this user account
+  """
+  username: String!
+  """
+  The Common Name of a user. Typically this is a combination of Given and Family name
+  """
+  commonName: String!
+  """
+  The language localization of a user.
+  """
+  locale: String!
+  """
+  The email address associated to this user account
+  """
+  email: String!
+  """
+  A users given name
+  """
+  givenName: String!
+  """
+  A users family name
+  """
+  familyName: String!
+  """
+  The zone information connected with a user account
+  """
+  zoneInfo: String!
+  """
+  Represents if a user has logged in. If the user was added as a result of another action, this will show FALSE. When the user logs in, their account will be updated
+  """
+  hasLoggedIn: Boolean
 }

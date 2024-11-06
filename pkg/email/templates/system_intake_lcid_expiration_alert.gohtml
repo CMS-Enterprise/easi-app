@@ -1,9 +1,11 @@
 {{template "easi_header.gohtml"}}
 
-<p>The Life Cycle ID that was issued for {{.ProjectName}}{{if .LCIDIssuedAt}} on {{.LCIDIssuedAt}}{{end}} is set to expire on {{.ExpiresAt}}. If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>
+<p>The Life Cycle ID that was issued for {{.ProjectName}}{{if .LCIDIssuedAt}} on {{.LCIDIssuedAt}}{{end}} is set to expire on {{.ExpiresAt}}. If your Life Cycle ID expires, your project will be operating under an expired Life Cycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>
 <p>To avoid this, please email the Governance Team at <a href="mailto:{{.GRTEmail}}">{{.GRTEmail}}</a> within one week to update them with the current status of your project.</p>
-<p>
-  For new IT development projects, please include (if applicable):
+
+<br>
+<div class="no-margin">
+  <p>For new IT development projects, please include (if applicable):</p>
   <ul>
     <li>if the project is in production and if so, the date it was released into production</li>
     <li>if development of the project is still underway and if so, the target production release date</li>
@@ -12,9 +14,11 @@
     <li>if the project has been cancelled</li>
     <li>if the project is on hold</li>
   </ul>
-</p>
-<p>
-  For O&M projects or services contracts, please include (if applicable):
+</div>
+
+<br>
+<div class="no-margin">
+  <p>For O&M projects or services contracts, please include (if applicable):</p>
   <ul>
     <li>if the current contract is not being extended, include the end date of the period of performance</li>
     <li>if a new contract or re-compete is being planned, include the target date for release of solicitation and the target award date</li>
@@ -23,24 +27,42 @@
     <li>if you anticipate a cost increase, please indicate how much of an increase you anticipate over what you are currently spending</li>
     <li>if contract support is no longer needed</li>
   </ul>
-</p>
-<p>
-  View this request in EASi:
+</div>
+
+<br>
+<div class="no-margin">
+  <p>View this request in EASi:</p>
   <ul>
-    <li>The person who initially submitted this request, {{.RequesterName}}, may <a href="{{.RequesterLink}}" style="font-weight: bold">click here</a> to view the request task list.</li>
-    <li>Governance Team members may <a href="{{.GRTLink}}" style="font-weight: bold">click here</a> to view the decision and LCID information.</li>
+    <li>The person who initially submitted this request, {{.RequesterName}}, may <a href="{{.RequesterLink}}">click here</a> to view the request task list.</li>
+    <li>Governance Team members may <a href="{{.GRTLink}}">click here</a> to view the decision and LCID information.</li>
     <li>Others should contact {{.RequesterName}} or the Governance Team for more information on the request.</li>
   </ul>
-</p>
+</div>
+
+<br>
 <p>If you have questions please contact the Governance Team at <a href="mailto:{{.GRTEmail}}">{{.GRTEmail}}</a>.</p>
-<p>
-  <u>Current Life Cycle ID Summary</u><br>
-  <strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>{{if .LCIDIssuedAt}}
-  <strong>Date issued:</strong> {{.LCIDIssuedAt}}<br>{{end}}
-  <strong>Expiration Date:</strong> {{.ExpiresAt}}
-  {{if .Scope}}<br><strong>Scope:</strong> {{.Scope}}{{end}}
-  {{if .CostBaseline}}<br><strong>Project Cost Baseline:</strong> {{.CostBaseline}}{{end}}
-  {{if .NextSteps}}<br><strong>Next Steps:</strong> {{.NextSteps}}{{end}}
-</p>
+
+<br>
+<div class="no-margin">
+  <p><u>Current Life Cycle ID Summary</u></p>
+  <p><strong>Life Cycle ID:</strong> {{.LifecycleID}}</p>
+  {{ if .LCIDIssuedAt -}}
+    <p><strong>Date issued:</strong> {{.LCIDIssuedAt}}</p>
+  {{ end -}}
+    <p><strong>Expiration Date:</strong> {{.ExpiresAt}}</p>
+  {{ if .Scope -}}
+    <p><strong>Scope:</strong></p>
+    {{.Scope}}
+  {{ end -}}
+  {{ if .CostBaseline -}}
+    <p><strong>Project Cost Baseline:</strong> {{.CostBaseline}}</p>
+  {{ end -}}
+  {{ if .NextSteps -}}
+    <p><strong>Next Steps:</strong></p>
+    {{.NextSteps}}
+  {{ end -}}
+</div>
+<br>
+<br>
 <hr>
 <p>Depending on the project, the Governance Team may continue to follow up with you about this Life Cycle ID.</p>

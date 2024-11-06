@@ -3,15 +3,14 @@ package services
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // ActionExecuter is a function that can execute an action
@@ -53,17 +52,17 @@ func NewSaveAction(
 		if err != nil {
 			return err
 		}
-		if actorInfo == nil || actorInfo.Email == "" || actorInfo.CommonName == "" || actorInfo.EuaUserID == "" {
+		if actorInfo == nil || actorInfo.Email == "" || actorInfo.DisplayName == "" || actorInfo.Username == "" {
 			return &apperrors.ExternalAPIError{
 				Err:       errors.New("user info fetch was not successful"),
 				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
+				Source:    "Okta",
 			}
 		}
 
-		action.ActorName = actorInfo.CommonName
+		action.ActorName = actorInfo.DisplayName
 		action.ActorEmail = actorInfo.Email
-		action.ActorEUAUserID = actorInfo.EuaUserID
+		action.ActorEUAUserID = actorInfo.Username
 		_, err = createAction(ctx, action)
 		if err != nil {
 			return &apperrors.QueryError{
@@ -81,7 +80,7 @@ func NewSaveAction(
 // executes submit of a system intake
 func NewSubmitSystemIntake(
 	config Config,
-	authorize func(context.Context, *models.SystemIntake) (bool, error),
+	authorized func(context.Context, *models.SystemIntake) bool,
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	submitToCEDAR func(context.Context, *models.SystemIntake) (string, error),
 	saveAction func(context.Context, *models.Action) error,
@@ -104,12 +103,8 @@ func NewSubmitSystemIntake(
 	) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
-		ok, err := authorize(ctx, intake)
-		if err != nil {
-			return err
-		}
-		if !ok {
-			return &apperrors.UnauthorizedError{Err: err}
+		if !authorized(ctx, intake) {
+			return &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to submit system intake")}
 		}
 
 		isResubmitted := false
@@ -119,8 +114,6 @@ func NewSubmitSystemIntake(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		// TODO: Remove when Admin Actions v2 is live
-		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		// Set intake state based on v2 logic
 		intake.RequestFormState = models.SIRFSSubmitted
 		intake.SubmittedAt = &updatedTime
@@ -142,8 +135,7 @@ func NewSubmitSystemIntake(
 		}
 
 		// Store in the `actions` table
-		err = saveAction(ctx, action)
-		if err != nil {
+		if err := saveAction(ctx, action); err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
 				Model:     action,
@@ -152,7 +144,7 @@ func NewSubmitSystemIntake(
 		}
 
 		// Update the SystemIntake in the DB
-		intake, err = update(ctx, intake)
+		intake, err := update(ctx, intake)
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
@@ -194,12 +186,12 @@ func NewSubmitSystemIntake(
 // executes submit of a business case
 func NewSubmitBusinessCase(
 	config Config,
-	authorize func(context.Context, *models.SystemIntake) (bool, error),
-	fetchOpenBusinessCase func(context.Context, uuid.UUID) (*models.BusinessCase, error),
-	validateForSubmit func(businessCase *models.BusinessCase) error,
+	authorized func(context.Context, *models.SystemIntake) bool,
+	fetchOpenBusinessCase func(context.Context, uuid.UUID) (*models.BusinessCaseWithCosts, error),
+	validateForSubmit func(businessCase *models.BusinessCaseWithCosts) error,
 	saveAction func(context.Context, *models.Action) error,
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
+	updateBusinessCase func(context.Context, *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error),
 	emailRequester func(
 		ctx context.Context,
 		requesterEmail models.EmailAddress,
@@ -216,16 +208,11 @@ func NewSubmitBusinessCase(
 		isResubmitted bool,
 		isDraft bool,
 	) error,
-	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
-	newIntakeStatus models.SystemIntakeStatus,
+	submitToCEDAR func(ctx context.Context, bc models.BusinessCaseWithCosts) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
-		ok, err := authorize(ctx, intake)
-		if err != nil {
-			return err
-		}
-		if !ok {
-			return &apperrors.UnauthorizedError{Err: err}
+		if !authorized(ctx, intake) {
+			return &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to submit business case")}
 		}
 
 		businessCase, err := fetchOpenBusinessCase(ctx, intake.ID)
@@ -245,8 +232,7 @@ func NewSubmitBusinessCase(
 		updatedAt := config.clock.Now()
 		businessCase.UpdatedAt = &updatedAt
 
-		if businessCase.SystemIntakeStatus == models.SystemIntakeStatusBIZCASEFINALNEEDED ||
-			intake.Step == models.SystemIntakeStepFINALBIZCASE {
+		if intake.Step == models.SystemIntakeStepFINALBIZCASE {
 			err = validateForSubmit(businessCase)
 			if err != nil {
 				return err
@@ -280,9 +266,6 @@ func NewSubmitBusinessCase(
 		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 			isDraft = true
 		}
-
-		// TODO: Remove when Admin Actions v2 is live
-		intake.Status = newIntakeStatus
 
 		// Set intake state based on v2 logic
 		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
@@ -325,9 +308,7 @@ func NewSubmitBusinessCase(
 		}
 
 		// TODO - EASI-2363 - rework conditional to also trigger on publishing finalized system intakes
-		// need to check intake.Status, *not* businessCase.SystemIntakeStatus - intake is what gets returned from calling updateIntake()
-		if intake.Status == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED ||
-			intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 			err = submitToCEDAR(ctx, *businessCase)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(err))
@@ -335,217 +316,5 @@ func NewSubmitBusinessCase(
 		}
 
 		return nil
-	}
-}
-
-// NewTakeActionUpdateStatus returns a function that
-// updates the status of a request
-func NewTakeActionUpdateStatus(
-	config Config,
-	newStatus models.SystemIntakeStatus,
-	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
-	authorize func(context.Context) (bool, error),
-	saveAction func(context.Context, *models.Action) error,
-	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, emailText models.HTML, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
-	shouldCloseBusinessCase bool,
-	closeBusinessCase func(context.Context, uuid.UUID) error,
-) ActionExecuter {
-	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
-		ok, err := authorize(ctx)
-		if err != nil {
-			return err
-		}
-		if !ok {
-			return &apperrors.UnauthorizedError{}
-		}
-
-		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-		if err != nil {
-			return err
-		}
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			return &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
-			}
-		}
-
-		err = saveAction(ctx, action)
-		if err != nil {
-			return err
-		}
-
-		updatedTime := config.clock.Now()
-		intake.UpdatedAt = &updatedTime
-		intake.Status = newStatus
-
-		intake, err = update(ctx, intake)
-		if err != nil {
-			return &apperrors.QueryError{
-				Err:       err,
-				Model:     intake,
-				Operation: apperrors.QuerySave,
-			}
-		}
-
-		if shouldCloseBusinessCase && intake.BusinessCaseID != nil {
-			if err = closeBusinessCase(ctx, *intake.BusinessCaseID); err != nil {
-				return err
-			}
-		}
-
-		err = sendReviewEmail(ctx, action.Feedback.ValueOrEmptyHTML(), requesterInfo.Email, intake.ID)
-		if err != nil {
-			return err
-		}
-
-		return nil
-	}
-}
-
-// NewCreateActionUpdateStatus returns a function that
-// persists an action and updates a request
-func NewCreateActionUpdateStatus(
-	config Config,
-	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
-	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error), saveAction func(context.Context, *models.Action) error,
-	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText models.HTML) error,
-	closeBusinessCase func(context.Context, uuid.UUID) error,
-) func(
-	ctx context.Context,
-	newAction *models.Action,
-	intakeID uuid.UUID,
-	newStatus models.SystemIntakeStatus,
-	shouldCloseBusinessCase bool,
-	recipients *models.EmailNotificationRecipients,
-) (*models.SystemIntake, error) {
-	return func(
-		ctx context.Context,
-		action *models.Action,
-		id uuid.UUID,
-		newStatus models.SystemIntakeStatus,
-		shouldCloseBusinessCase bool,
-		recipients *models.EmailNotificationRecipients,
-	) (*models.SystemIntake, error) {
-		intake, err := fetch(ctx, id)
-		if err != nil {
-			return nil, err
-		}
-
-		err = saveAction(ctx, action)
-		if err != nil {
-			return nil, err
-		}
-
-		// Update IT Gov V2 fields based on `newStatus`
-		intake.Status = newStatus
-		intake.SetV2FieldsBasedOnV1Status(newStatus)
-		updatedIntake, err := update(ctx, intake)
-		if err != nil {
-			return nil, err
-		}
-
-		if shouldCloseBusinessCase && updatedIntake.BusinessCaseID != nil {
-			if err = closeBusinessCase(ctx, *updatedIntake.BusinessCaseID); err != nil {
-				return nil, err
-			}
-		}
-
-		if recipients != nil {
-			err = sendReviewEmails(
-				ctx,
-				*recipients,
-				updatedIntake.ID,
-				updatedIntake.ProjectName.String,
-				updatedIntake.Requester,
-				action.Feedback.ValueOrEmptyHTML(),
-			)
-			if err != nil {
-				return nil, err
-			}
-		}
-
-		return updatedIntake, err
-	}
-}
-
-// NewCreateActionExtendLifecycleID returns a function that
-// persists an action and updates an intake's LCID
-func NewCreateActionExtendLifecycleID(
-	config Config,
-	saveAction func(context.Context, *models.Action) error,
-	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
-	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	sendExtendLCIDEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope models.HTML, newNextSteps models.HTML, newCostBaseline string) error,
-) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *models.HTML, scope models.HTML, costBaseline *string, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
-	return func(
-		ctx context.Context,
-		action *models.Action,
-		id uuid.UUID,
-		expirationDate *time.Time,
-		nextSteps *models.HTML,
-		scope models.HTML,
-		costBaseline *string,
-		recipients *models.EmailNotificationRecipients,
-	) (*models.SystemIntake, error) {
-		intake, err := fetchSystemIntake(ctx, id)
-		if err != nil {
-			return nil, err
-		}
-
-		action.LCIDExpirationChangeNewDate = expirationDate
-		action.LCIDExpirationChangePreviousDate = intake.LifecycleExpiresAt
-
-		action.LCIDExpirationChangeNewScope = &scope
-		action.LCIDExpirationChangePreviousScope = intake.LifecycleScope
-
-		action.LCIDExpirationChangeNewNextSteps = nextSteps
-		action.LCIDExpirationChangePreviousNextSteps = intake.DecisionNextSteps
-
-		action.LCIDExpirationChangeNewCostBaseline = null.StringFromPtr(costBaseline)
-		action.LCIDExpirationChangePreviousCostBaseline = null.StringFrom(intake.LifecycleCostBaseline.String)
-
-		actionErr := saveAction(ctx, action)
-		if actionErr != nil {
-			return nil, actionErr
-		}
-
-		intake.LifecycleExpiresAt = expirationDate
-		intake.Status = models.SystemIntakeStatusLCIDISSUED
-		intake.LifecycleScope = &scope
-		intake.DecisionNextSteps = nextSteps
-		intake.LifecycleCostBaseline = null.StringFromPtr(costBaseline)
-
-		intake.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusLCIDISSUED)
-
-		_, updateErr := updateSystemIntake(ctx, intake)
-		if updateErr != nil {
-			return nil, updateErr
-		}
-
-		if recipients != nil {
-			err = sendExtendLCIDEmails(
-				ctx,
-				*recipients,
-				id,
-				intake.ProjectName.ValueOrZero(),
-				intake.Requester,
-				expirationDate,
-				intake.LifecycleScope.ValueOrEmptyHTML(),
-				intake.DecisionNextSteps.ValueOrEmptyHTML(),
-				intake.LifecycleCostBaseline.ValueOrZero(),
-			)
-			if err != nil {
-				return nil, err
-			}
-
-			return intake, nil
-		}
-
-		return intake, nil
 	}
 }

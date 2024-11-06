@@ -12,9 +12,11 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // CreateSystemIntake creates a system intake, though without saving values for LCID-related fields
@@ -33,7 +35,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		intake.Step = models.SystemIntakeStepINITIALFORM
 	}
 	if intake.State == "" {
-		intake.State = models.SystemIntakeStateOPEN
+		intake.State = models.SystemIntakeStateOpen
 	}
 	if intake.RequestFormState == "" {
 		intake.RequestFormState = models.SIRFSNotStarted
@@ -51,7 +53,6 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		INSERT INTO system_intakes (
 			id,
 			eua_user_id,
-			status,
 			state,
 			step,
 			request_form_state,
@@ -86,10 +87,11 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			cost_increase,
 			cost_increase_amount,
 			current_annual_spending,
+			current_annual_spending_it_portion,
 			planned_year_one_spending,
+			planned_year_one_spending_it_portion,
 			contractor,
 			contract_vehicle,
-			contract_number,
 			contract_start_month,
 			contract_start_year,
 			contract_end_month,
@@ -99,14 +101,17 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			grt_date,
 			grb_date,
 			has_ui_changes,
+			uses_ai_tech,
+			using_software,
+			acquisition_methods,
 			trb_follow_up_recommendation,
+			contract_name,
 			created_at,
 			updated_at
 		)
 		VALUES (
 			:id,
 			:eua_user_id,
-			:status,
 			:state,
 			:step,
 			:request_form_state,
@@ -141,10 +146,11 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:cost_increase,
 			:cost_increase_amount,
 			:current_annual_spending,
+			:current_annual_spending_it_portion,
 			:planned_year_one_spending,
+			:planned_year_one_spending_it_portion,
 			:contractor,
 			:contract_vehicle,
-			:contract_number,
 			:contract_start_month,
 			:contract_start_year,
 			:contract_end_month,
@@ -154,7 +160,11 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:grt_date,
 			:grb_date,
 			:has_ui_changes,
+			:uses_ai_tech,
+			:using_software,
+			:acquisition_methods,
 			:trb_follow_up_recommendation,
+			:contract_name,
 			:created_at,
 			:updated_at
 		)`
@@ -172,15 +182,28 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
-// UpdateSystemIntake does an upsert for a system intake
-// caller is responsible for setting intake.UpdatedAt if they want to update that field
+// UpdateSystemIntake serves as a wrapper for UpdateSystemIntakeNP, which is the actual implementation
+// for updating System Intakes.
+//
+// This method only exists to provide a transactional wrapper around the actual implementation, as a vast majority of the codebase
+// was written before the introduction of transactions in the storage layer. This method should eventually be removed in favor of
+// using UpdateSystemIntakeNP directly (and that function renamed).
 func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
+	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+		return s.UpdateSystemIntakeNP(ctx, tx, intake)
+	})
+}
 
+// UpdateSystemIntakeNP does an upsert for a system intake
+// The caller is responsible for setting intake.UpdatedAt if they want to update that field
+//
+// The "NP" suffix stands for "NamedPreparer", as this function was written to avoid the need to update all
+// of the existing code that uses UpdateSystemIntake to use a transactional wrapper.
+func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPreparer, intake *models.SystemIntake) (*models.SystemIntake, error) {
+	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 	const updateSystemIntakeSQL = `
 		UPDATE system_intakes
 		SET
-			status = :status,
 			step = :step,
 			state = :state,
 			request_form_state = :request_form_state,
@@ -217,10 +240,11 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			cost_increase = :cost_increase,
 			cost_increase_amount = :cost_increase_amount,
 			current_annual_spending = :current_annual_spending,
+			current_annual_spending_it_portion = :current_annual_spending_it_portion,
 			planned_year_one_spending = :planned_year_one_spending,
+			planned_year_one_spending_it_portion = :planned_year_one_spending_it_portion,
 			contractor = :contractor,
 			contract_vehicle = :contract_vehicle,
-			contract_number = :contract_number,
 			contract_start_date = :contract_start_date,
 			contract_end_date = :contract_end_date,
 			updated_at = :updated_at,
@@ -229,6 +253,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			archived_at = :archived_at,
 			grt_date = :grt_date,
 			grb_date = :grb_date,
+			grb_review_started_at = :grb_review_started_at,
 			alfabet_id = :alfabet_id,
 			lcid = :lcid,
 			lcid_expires_at = :lcid_expires_at,
@@ -242,14 +267,21 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			admin_lead = :admin_lead,
 			cedar_system_id = :cedar_system_id,
 			has_ui_changes = :has_ui_changes,
-			trb_follow_up_recommendation = :trb_follow_up_recommendation
+			uses_ai_tech = :uses_ai_tech,
+			using_software = :using_software,
+			acquisition_methods = :acquisition_methods,
+			trb_follow_up_recommendation = :trb_follow_up_recommendation,
+			contract_name = :contract_name,
+			system_relation_type = :system_relation_type
 		WHERE system_intakes.id = :id
 	`
-	_, err := s.db.NamedExec(
-		updateSystemIntakeSQL,
-		intake,
-	)
+	updateStmt, err := np.PrepareNamed(updateSystemIntakeSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer updateStmt.Close()
 
+	_, err = updateStmt.Exec(intake)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update system intake %s", err),
@@ -264,7 +296,9 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 	}
 	// the SystemIntake may have been updated to Archived, so we want to use
 	// the un-filtered fetch to return the saved object
-	return s.FetchSystemIntakeByID(ctx, intake.ID)
+	//
+	// Using the "NP" version of the fetch method to allow the update and fetch to be part of a transaction
+	return s.FetchSystemIntakeByIDNP(ctx, np, intake.ID)
 }
 
 const fetchSystemIntakeSQL = `
@@ -276,14 +310,38 @@ const fetchSystemIntakeSQL = `
 		    LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
 `
 
-// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
+// FetchSystemIntakeByID serves as a wrapper for FetchSystemIntakeByIDNP, which is the actual implementation
+// for fetching System Intakes by ID.
+//
+// This method only exists to provide a transactional wrapper around the actual implementation, as a vast majority of the codebase
+// was written before the introduction of transactions in the storage layer. This method should eventually be removed in favor of
+// using FetchSystemIntakeByIDNP directly (and that function renamed).
 func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	intake := models.SystemIntake{}
+	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+		return s.FetchSystemIntakeByIDNP(ctx, tx, id)
+	})
+}
+
+// FetchSystemIntakeByIDNP queries the DB for a system intake matching the given ID
+//
+// The "NP" suffix stands for "NamedPreparer", as this function was written to avoid the need to update all
+// of the existing code that uses FetchSystemIntakeByID to use a transactional wrapper.
+func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id uuid.UUID) (*models.SystemIntake, error) {
+	// we do not filter for archived because the update method relies on this method to return the archived intake
 	const whereClause = `
-		WHERE system_intakes.id=$1
+		WHERE system_intakes.id = :id
 	`
-	// should not filter for archived because the update method relies on this method to return the archived intake
-	err := s.db.Get(&intake, fetchSystemIntakeSQL+whereClause, id)
+	intakeStmt, err := np.PrepareNamed(fetchSystemIntakeSQL + whereClause)
+	if err != nil {
+		return nil, err
+	}
+	defer intakeStmt.Close()
+
+	intake := models.SystemIntake{}
+	err = intakeStmt.Get(&intake, map[string]interface{}{
+		"id": id.String(),
+	})
+
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			appcontext.ZLogger(ctx).Info(
@@ -305,8 +363,6 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 		}
 	}
 
-	sources := []*models.SystemIntakeFundingSource{}
-
 	// TODO: Rather than two separate queries/round-trips to the database, the funding sources should be
 	// queried via a single query that includes a left join on system_intake_funding_sources. This code
 	// works and can unblock frontend work that relies on this function, but should be revisited. I was
@@ -315,82 +371,34 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 	// required explicitly specifying all of the system intake columns, which seemed less than ideal
 	// given that any changes made to the models.SystemIntake struct would require also code changes to
 	// the code that would handle the joined query result.
-	err = s.db.Select(&sources, `
+	fundingSourcesSQL := `
 		SELECT *
 		FROM system_intake_funding_sources
-		WHERE system_intake_id=$1
-	`, id)
-
+		WHERE system_intake_id= :id;
+	`
+	fundingSourcesStmt, err := np.PrepareNamed(fundingSourcesSQL)
 	if err != nil {
 		return nil, err
+	}
+	defer fundingSourcesStmt.Close()
+
+	sources := []*models.SystemIntakeFundingSource{}
+	err = fundingSourcesStmt.Select(&sources, map[string]interface{}{
+		"id": id.String(),
+	})
+
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		appcontext.ZLogger(ctx).Error("Failed to fetch system intake funding sources", zap.Error(err), zap.String("id", id.String()))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.SystemIntakeFundingSource{},
+			Operation: apperrors.QueryFetch,
+		}
 	}
 
 	intake.FundingSources = sources
 
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts", zap.Error(err), zap.String("id", id.String()))
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     models.SystemIntakeContact{},
-			Operation: apperrors.QueryFetch,
-		}
-	}
-
 	return &intake, nil
-}
-
-// FetchSystemIntakeByLifecycleID fetches a system intake by lifecycle ID
-// It returns an error if more than one system matches the provided LCID. This is possible
-// since there isn't a uniqueness constraint in the database.
-func (s *Store) FetchSystemIntakeByLifecycleID(ctx context.Context, lifecycleID string) (*models.SystemIntake, error) {
-	intakes := []models.SystemIntake{}
-	const matchClause = `
-		WHERE system_intakes.lcid=$1
-			AND system_intakes.archived_at IS NULL AND system_intakes.status != 'WITHDRAWN'
-	`
-	err := s.db.Select(&intakes, fetchSystemIntakeSQL+matchClause, lifecycleID)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch system intake %s", err),
-			zap.String("lcid", lifecycleID),
-		)
-		return nil, err
-	}
-
-	if len(intakes) > 1 {
-		return nil, &apperrors.QueryError{
-			Model:     models.SystemIntake{},
-			Operation: apperrors.QueryFetch,
-			Err:       errors.New("more than one system intake matched lcid"),
-		}
-	}
-
-	if len(intakes) == 0 {
-		return nil, nil
-	}
-
-	result := intakes[0]
-	return &result, nil
-}
-
-// FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
-func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
-	intakes := []models.SystemIntake{}
-	const whereClause = `
-		WHERE system_intakes.eua_user_id=$1
-			AND system_intakes.status != 'WITHDRAWN'
-			AND system_intakes.archived_at IS NULL
-		ORDER BY created_at DESC
-	`
-	err := s.db.Select(&intakes, fetchSystemIntakeSQL+whereClause, euaID)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch system intakes %s", err),
-			zap.String("euaID", euaID),
-		)
-		return models.SystemIntakes{}, err
-	}
-	return intakes, nil
 }
 
 // FetchSystemIntakes queries the DB for all system intakes
@@ -404,54 +412,15 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 	return intakes, nil
 }
 
-// FetchIntakesForAdmins queries the DB for all system intakes not in the INTAKE_DRAFT, APPROVED, or CLOSED statuses.
-// This is useful for the admin home page which intends to show admins all intakes that requesters have submitted.
-// This is a bit of a hold-over, and should be simplified when we start to filter based on IT Gov v2 states, which should be
-// much simpler to use
-// TODO: Modify with https://jiraent.cms.gov/browse/EASI-3440
-// TODO: This method is not currently in use.
-func (s *Store) FetchIntakesForAdmins(ctx context.Context) ([]*models.SystemIntake, error) {
+// FetchSystemIntakesWithReviewRequested queries the DB for all open system intakes where user is requested
+func (s *Store) FetchSystemIntakesWithReviewRequested(ctx context.Context, userID uuid.UUID) ([]*models.SystemIntake, error) {
 	intakes := []*models.SystemIntake{}
-	err := s.db.Select(&intakes, `
-		SELECT * FROM system_intakes WHERE status NOT IN ('INTAKE_DRAFT','APPROVED','CLOSED')
-		AND archived_at IS NULL AND status != 'WITHDRAWN'
-	`)
+	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntakeGRBReviewer.GetIntakesWhereReviewRequested, args{
+		"user_id": userID,
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
 		return []*models.SystemIntake{}, err
-	}
-	return intakes, nil
-}
-
-// FetchSystemIntakesByStatuses queries the DB for all system intakes matching a status filter
-// Is this in use? It should be removed post admin actions v2 launch or modified
-func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
-	var intakes models.SystemIntakes
-	query := `
-		SELECT
-			system_intakes.*,
-			business_cases.id as business_case_id
-		FROM
-			(	SELECT
-					distinct ON (system_intakes.id) system_intakes.id, notes.content, notes.created_at
-				FROM system_intakes
-					LEFT JOIN notes on notes.system_intake = system_intakes.id AND notes.is_archived = false
-				WHERE system_intakes.status IN (?)
-				ORDER BY system_intakes.id, notes.created_at DESC
-			) AS intakes_and_notes
-		LEFT JOIN system_intakes ON system_intakes.id = intakes_and_notes.id
-		LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
-	`
-	query, args, err := sqlx.In(query, allowedStatuses)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
-		return nil, err
-	}
-	query = s.db.Rebind(query)
-	err = s.db.Select(&intakes, query, args...)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
-		return nil, err
 	}
 	return intakes, nil
 }
@@ -464,7 +433,7 @@ func (s *Store) FetchSystemIntakesByStateForAdmins(ctx context.Context, state mo
 		SELECT *
 		FROM system_intakes
 		WHERE state=$1
-		AND (status != 'WITHDRAWN' AND archived_at IS NULL)
+		AND archived_at IS NULL
 		AND submitted_at IS NOT NULL
 	`, state)
 
@@ -503,76 +472,6 @@ func (s *Store) GenerateLifecycleID(ctx context.Context) (string, error) {
 		return "", err
 	}
 	return fmt.Sprintf("%s%d", prefix, count), nil
-}
-
-// FetchSystemIntakeMetrics gets a metrics digest for system intake
-func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
-	type startedQueryResponse struct {
-		StartedCount   int `db:"started_count"`
-		CompletedCount int `db:"completed_count"`
-	}
-	const startedCountSQL = `
-		WITH "started" AS (
-		    SELECT *
-		    FROM system_intakes
-		    WHERE created_at >=  $1
-		      AND created_at < $2
-		)
-		SELECT count(*) AS started_count,
-		       coalesce(
-		           sum(
-		               CASE WHEN submitted_at >=  $1
-		                             AND submitted_at < $2
-		                   THEN 1 ELSE 0 END
-		               ),
-		           0) AS completed_count
-		FROM started;
-	`
-	type fundedQueryResponse struct {
-		CompletedCount int `db:"completed_count"`
-		FundedCount    int `db:"funded_count"`
-	}
-	const fundedCountSQL = `
-		WITH "completed" AS (
-		    SELECT existing_funding
-		    FROM system_intakes
-		    WHERE submitted_at >=  $1
-		      AND submitted_at < $2
-		)
-		SELECT count(*) AS completed_count,
-		       coalesce(sum(CASE WHEN existing_funding IS true THEN 1 ELSE 0 END),0) AS funded_count
-		FROM completed
-	`
-
-	metrics := models.SystemIntakeMetrics{}
-
-	var startedResponse startedQueryResponse
-	err := s.db.Get(
-		&startedResponse,
-		startedCountSQL,
-		&startTime,
-		&endTime,
-	)
-	if err != nil {
-		return metrics, err
-	}
-	metrics.Started = startedResponse.StartedCount
-	metrics.CompletedOfStarted = startedResponse.CompletedCount
-
-	var fundedResponse fundedQueryResponse
-	err = s.db.Get(
-		&fundedResponse,
-		fundedCountSQL,
-		&startTime,
-		&endTime,
-	)
-	if err != nil {
-		return metrics, err
-	}
-	metrics.Completed = fundedResponse.CompletedCount
-	metrics.Funded = fundedResponse.FundedCount
-
-	return metrics, nil
 }
 
 // UpdateAdminLead updates the admin lead for an intake
@@ -640,72 +539,6 @@ func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *ti
 	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
-// UpdateSystemIntakeStatus updates the status for an intake
-func (s *Store) UpdateSystemIntakeStatus(ctx context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
-	var intake models.SystemIntake
-	now := time.Now()
-	intake.Status = newStatus
-	intake.ID = id
-	intake.UpdatedAt = &now
-	intake.SetV2FieldsBasedOnV1Status(newStatus) // ensure all V2 fields are calculated and set
-
-	const updateSystemIntakeSQL = `
-		UPDATE system_intakes
-		SET
-			updated_at = :updated_at,
-			status = :status,
-			step = :step,
-			state = :state,
-			decision_state = :decision_state,
-			request_form_state = :request_form_state,
-			draft_business_case_state = :draft_business_case_state,
-			final_business_case_state = :final_business_case_state
-		WHERE system_intakes.id = :id
-	`
-	_, err := s.db.NamedExec(
-		updateSystemIntakeSQL,
-		intake,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return s.FetchSystemIntakeByID(ctx, intake.ID)
-}
-
-// UpdateSystemIntakeLinkedContract updates the contract number that is linked to a system intake
-func (s *Store) UpdateSystemIntakeLinkedContract(ctx context.Context, id uuid.UUID, contractNumber null.String) (*models.SystemIntake, error) {
-	intake := struct {
-		ID             uuid.UUID
-		ContractNumber null.String `db:"contract_number"`
-		UpdatedAt      time.Time   `db:"updated_at"`
-	}{
-		ID:             id,
-		ContractNumber: contractNumber,
-		UpdatedAt:      time.Now(),
-	}
-
-	const updateSystemIntakeSQL = `
-		UPDATE system_intakes
-		SET
-			updated_at = :updated_at,
-			contract_number = :contract_number
-		WHERE system_intakes.id = :id
-	`
-
-	_, err := s.db.NamedExec(
-		updateSystemIntakeSQL,
-		intake,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return s.FetchSystemIntakeByID(ctx, id)
-}
-
 // UpdateSystemIntakeLinkedCedarSystem updates the CEDAR system ID that is linked to a system intake
 func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid.UUID, cedarSystemID null.String) (*models.SystemIntake, error) {
 	intake := struct {
@@ -738,29 +571,6 @@ func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid
 	return s.FetchSystemIntakeByID(ctx, id)
 }
 
-// FetchRelatedSystemIntakes retrieves System Intakes that share a CEDAR system ID and/or a contract
-// number with a given System Intake
-func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]*models.SystemIntake, error) {
-	intakes := []*models.SystemIntake{}
-
-	query := `
-		SELECT intakes_b.*
-		FROM system_intakes as intakes_a
-		JOIN system_intakes as intakes_b
-		ON
-			(intakes_a.cedar_system_id = intakes_b.cedar_system_id
-			OR intakes_a.contract_number = intakes_b.contract_number)
-		WHERE
-			intakes_a.id = $1 AND intakes_b.id != $1;
-	`
-
-	err := s.db.Select(&intakes, query, id)
-	if err != nil {
-		return nil, err
-	}
-	return intakes, nil
-}
-
 // GetSystemIntakesWithLCIDs retrieves all LCIDs that are in use
 func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.SystemIntake, error) {
 	intakes := []*models.SystemIntake{}
@@ -772,4 +582,14 @@ func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.System
 		return nil, err
 	}
 	return intakes, nil
+}
+
+func (s *Store) GetMySystemIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
+	var intakes []*models.SystemIntake
+
+	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntake.GetByUser, args{
+		"eua_user_id": appcontext.Principal(ctx).Account().Username,
+	})
+
+	return intakes, err
 }

@@ -201,6 +201,28 @@ Sprague
 Shoup
 TinyMCE
 Vite
+Rollout
+EUAIDs
+Kubernetes
+k8s_dev.sh
+Kustomize
+namespace
+create-local-development-k8s-manifests
+subtask
+subtasks
+bugfix
+nginx
+Elasticache
+analyze
+POC
+DB
+TBD
+bandaid
+uncached
+programmatically
+performant
+natively
+formik
 
 # Jira ticket numbers
 # The underlying spellchecking package doesn't currently support patterns; see https://github.com/lukeapage/node-markdown-spellcheck/issues/49
@@ -214,3 +236,6 @@ EASI-3224
 EASI-2888
 EASI-3019
 EASI-3082
+EASI-3341
+EASI-3483
+EASI-4129

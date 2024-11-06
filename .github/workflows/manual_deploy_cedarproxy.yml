@@ -1,0 +1,62 @@
+name: Manual Cedarproxy Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        required: true
+        default: "dev"
+        type: choice
+        description: Environment to deploy to
+        options:
+          - dev
+          - impl
+          - prod
+      force_cedarproxy:
+        required: true
+        default: true
+        type: boolean
+        description: Rebuild and redeploy Cedarproxy
+      confirm_production_deploy:
+        required: true
+        default: false
+        type: boolean
+        description: Confirm that you want to deploy to production
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  Build_Cedarproxy_Image:
+    uses: ./.github/workflows/build_cedarproxy_image.yml
+    secrets: inherit
+    with:
+      force_cedarproxy: true
+
+  deploy_dev_cedarproxy:
+    needs: [Build_Cedarproxy_Image]
+    if: ${{ inputs.env == 'dev' }}
+    uses: ./.github/workflows/deploy_cedarproxy.yml
+    with:
+      env: dev
+      force_cedarproxy: true
+    secrets: inherit
+
+  deploy_impl_cedarproxy:
+    needs: [Build_Cedarproxy_Image]
+    if: ${{ inputs.env == 'impl' }}
+    uses: ./.github/workflows/deploy_cedarproxy.yml
+    with:
+      env: impl
+      force_cedarproxy: true
+    secrets: inherit
+
+  deploy_prod_cedarproxy:
+    needs: [Build_Cedarproxy_Image]
+    if: ${{ inputs.env == 'prod' && inputs.confirm_production_deploy == true }}
+    uses: ./.github/workflows/deploy_cedarproxy.yml
+    with:
+      env: prod
+      force_cedarproxy: true
+    secrets: inherit

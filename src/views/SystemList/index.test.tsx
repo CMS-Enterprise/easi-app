@@ -4,11 +4,11 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
-import { mockBookmarkInfo, mockSystemInfo } from 'views/Sandbox/mockSystemData';
+import { mockSystemInfo } from 'views/SystemProfile/mockSystemData';
 
 import SystemList from './index';
+import Table from './Table';
 
 // TODO:  Mock Bookmark GQL query once connected to BE
 // Currently component is baked with mocked data from file
@@ -24,16 +24,6 @@ describe('System List View', () => {
           result: {
             data: {
               cedarSystems: []
-            }
-          }
-        },
-        {
-          request: {
-            query: GetCedarSystemBookmarksQuery
-          },
-          result: {
-            data: {
-              cedarSystemBookmarks: []
             }
           }
         }
@@ -64,16 +54,6 @@ describe('System List View', () => {
             cedarSystems: mockSystemInfo
           }
         }
-      },
-      {
-        request: {
-          query: GetCedarSystemBookmarksQuery
-        },
-        result: {
-          data: {
-            cedarSystemBookmarks: mockBookmarkInfo
-          }
-        }
       }
     ];
 
@@ -93,7 +73,7 @@ describe('System List View', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getAllByText('CMS Component')[0]).toBeInTheDocument();
+        expect(screen.getAllByText('CMS component')[0]).toBeInTheDocument();
       });
     });
 
@@ -101,7 +81,7 @@ describe('System List View', () => {
       render(
         <MemoryRouter>
           <MockedProvider mocks={mocks} addTypename={false}>
-            <SystemList />
+            <Table defaultPageSize={3} systems={mockSystemInfo} />
           </MockedProvider>
         </MemoryRouter>
       );
@@ -118,7 +98,7 @@ describe('System List View', () => {
       await waitFor(() => new Promise(res => setTimeout(res, 200)));
 
       // ZXC is a mocked table row text item that should not be included in filtered results
-      expect(await screen.queryByText('ZXC')).toBeNull();
+      expect(screen.queryByText('ASD')).toBeNull();
     });
 
     it('matches snapshot', async () => {

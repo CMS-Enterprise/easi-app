@@ -129,8 +129,9 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
   );
 
   // Get initial first recipient as requester
-  const requester: TrbRecipient | undefined = useRef(watch('recipients')[0])
-    .current;
+  const requester: TrbRecipient | undefined = useRef(
+    watch('recipients')[0]
+  ).current;
 
   const recipientsCount = (watch('recipients') || []).filter(
     ({ id, userInfo }) =>
@@ -373,7 +374,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                                   className="margin-top-2"
                                 >
                                   <Label
-                                    htmlFor={field.name}
+                                    htmlFor={`react-select-${field.name}-input`}
                                     className="text-normal"
                                     required
                                   >

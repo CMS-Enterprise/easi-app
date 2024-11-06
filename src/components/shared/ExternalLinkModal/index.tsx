@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  IconExpandMore,
-  IconNavigateNext
-} from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -59,7 +55,7 @@ const ExternalLinkModal = ({
               showFullUrl ? 'text-bold' : ''
             }`}
           >
-            {showFullUrl ? <IconExpandMore /> : <IconNavigateNext />}
+            {showFullUrl ? <Icon.ExpandMore /> : <Icon.NavigateNext />}
             {externalT('viewFullURL')}
           </span>
         </Button>

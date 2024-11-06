@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewBudgetAddParams creates a new BudgetAddParams object,
@@ -63,7 +63,10 @@ BudgetAddParams contains all the parameters to send to the API endpoint
 */
 type BudgetAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Budget(s) to be added to CEDAR.  This required input in a list of Budget documents.
+	*/
 	Body *models.BudgetAddRequest
 
 	timeout    time.Duration

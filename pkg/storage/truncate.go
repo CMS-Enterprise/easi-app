@@ -6,6 +6,8 @@ import (
 
 // TruncateAllTablesDANGEROUS is a function to reset all tables in the DB. It should only be called within test code.
 // this list of tables should match the list of tables in scripts/dev's db:clean task
+//
+// NOTE: we DO NOT truncate the `user_account` table - it would remove the default users, which is behavior we do not want
 func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	tables := `
 	cedar_system_bookmarks,
@@ -20,8 +22,11 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	business_cases,
 	governance_request_feedback,
 	system_intake_contacts,
-	system_intake_funding_sources,
+	system_intake_contract_numbers,
 	system_intake_documents,
+	system_intake_funding_sources,
+	system_intake_grb_reviewers,
+	system_intake_systems,
 	system_intakes,
 	trb_admin_notes_trb_request_documents_links,
 	trb_admin_notes_trb_admin_note_recommendations_links,
@@ -35,6 +40,8 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	trb_admin_notes,
 	trb_advice_letters,
 	trb_request_system_intakes,
+	trb_request_contract_numbers,
+	trb_request_systems,
 	trb_request
 	`
 
@@ -44,4 +51,11 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	}
 
 	return nil
+}
+
+// DeleteUserAccountDANGEROUS deletes a given user account from the DB
+// only to be used in test code as we do not truncate `user_account` table
+func (s *Store) DeleteUserAccountDANGEROUS(username string) error {
+	_, err := s.db.Exec("DELETE FROM user_account WHERE username = $1", username)
+	return err
 }

@@ -3,58 +3,51 @@ package cedarcore
 import (
 	"context"
 	"fmt"
+	"time"
 
-	"github.com/guregu/null"
+	"github.com/guregu/null/zero"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	apisystems "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/system"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
-
-const (
-	systemSummaryCacheKey = "system-summary-all"
-)
-
-func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.CedarSystem {
-	cachedStruct, found := c.cache.Get(systemSummaryCacheKey)
-	if found {
-		cachedSystemMap := cachedStruct.(map[string]*models.CedarSystem)
-		return cachedSystemMap
-	}
-	return nil
-}
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
-// If tryCache is true, it will try and retrieve the data from the cache first and make an API call if the cache is empty
-func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models.CedarSystem, error) {
-	if !c.cedarCoreEnabled(ctx) {
-		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarSystem{}, nil
-	}
+// If `tryCache` is true and `euaUserID` is nil, we will try to hit the cache. Otherwise, we will make an API call as we cannot filter on EUA on our end
+func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryParamFilterOpt) ([]*models.CedarSystem, error) {
+	// Construct the parameters
+	params := apisystems.NewSystemSummaryFindListParams()
 
-	// Check and use cache before making API call
-	if tryCache {
-		cachedSystemMap := c.getCachedSystemMap(ctx)
-		if cachedSystemMap != nil {
-			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
+	// default filters
+	params.SetState(helpers.PointerTo("active"))
+	params.SetIncludeInSurvey(helpers.PointerTo(true))
 
-			i := 0
-			for _, sys := range cachedSystemMap {
-				cachedSystems[i] = sys
-				i++
-			}
-
-			return cachedSystems, nil
+	// set additinoal param filters
+	for _, opt := range opts {
+		if opt != nil {
+			opt(params)
 		}
 	}
 
-	// No item in the cache - make the API call as usual
+	if c.mockEnabled {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 
-	// Construct the parameters
-	params := apisystems.NewSystemSummaryFindListParams()
-	params.SetState(null.StringFrom("active").Ptr())
-	params.SetIncludeInSurvey(null.BoolFrom(true).Ptr())
+		// Simulate a filter by only returning a subset of the mock systems
+		if params.UserName != nil || params.BelongsTo != nil {
+			return cedarcoremock.GetFilteredSystems(), nil
+		}
+		// nil State should return all systems including inactive/deactivated
+		if params.State == nil {
+			return cedarcoremock.GetAllSystems(), nil
+		}
+
+		// Else return entire set of active systems
+		return cedarcoremock.GetActiveSystems(), nil
+	}
+
 	params.HTTPClient = c.hc
 
 	// Make the API call
@@ -68,9 +61,9 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 	}
 
 	// This may look like an odd block of code, but should never expect an empty response from CEDAR with the
-	// hard-coded parameters we have set.
+	// hard-coded parameters we have set when we are not filtering.
 	// This is defensive programming against this case.
-	if len(resp.Payload.SystemSummary) == 0 {
+	if len(resp.Payload.SystemSummary) == 0 && len(opts) < 1 {
 		return []*models.CedarSystem{}, fmt.Errorf("empty response array received")
 	}
 
@@ -80,16 +73,20 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 	for _, sys := range resp.Payload.SystemSummary {
 		if sys.IctObjectID != nil {
 			cedarSys := &models.CedarSystem{
-				VersionID:               *sys.ID,
-				Name:                    *sys.Name,
-				Description:             sys.Description,
-				Acronym:                 sys.Acronym,
-				Status:                  sys.Status,
-				BusinessOwnerOrg:        sys.BusinessOwnerOrg,
-				BusinessOwnerOrgComp:    sys.BusinessOwnerOrgComp,
-				SystemMaintainerOrg:     sys.SystemMaintainerOrg,
-				SystemMaintainerOrgComp: sys.SystemMaintainerOrgComp,
-				ID:                      *sys.IctObjectID,
+				VersionID:               zero.StringFromPtr(sys.ID),
+				Name:                    zero.StringFromPtr(sys.Name),
+				Description:             zero.StringFrom(sys.Description),
+				Acronym:                 zero.StringFrom(sys.Acronym),
+				ATOEffectiveDate:        zero.TimeFrom(time.Time(sys.AtoEffectiveDate)),
+				ATOExpirationDate:       zero.TimeFrom(time.Time(sys.AtoExpirationDate)),
+				State:                   zero.StringFrom(sys.State),
+				Status:                  zero.StringFrom(sys.Status),
+				BusinessOwnerOrg:        zero.StringFrom(sys.BusinessOwnerOrg),
+				BusinessOwnerOrgComp:    zero.StringFrom(sys.BusinessOwnerOrgComp),
+				SystemMaintainerOrg:     zero.StringFrom(sys.SystemMaintainerOrg),
+				SystemMaintainerOrgComp: zero.StringFrom(sys.SystemMaintainerOrgComp),
+				ID:                      zero.StringFromPtr(sys.IctObjectID),
+				UUID:                    zero.StringFrom(sys.UUID),
 			}
 			retVal = append(retVal, cedarSys)
 		}
@@ -98,74 +95,68 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 	return retVal, nil
 }
 
-// populateSystemSummaryCache is a method used internally by the CEDAR Core client
-// to populate the in-memory cache with the results of a call to the /system/summary endpoint
-//
-// It does not return anything from the cache, nor does it return anything at all (unless an error occurs)
-func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
-	if !c.cedarCoreEnabled(ctx) {
-		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return nil
-	}
-
-	appcontext.ZLogger(ctx).Info("Refreshing System Summary cache")
-
-	// Get data from API - don't use cache to populate cache!
-	systemSummary, err := c.GetSystemSummary(ctx, false)
+func (c *Client) PurgeSystemCacheByEUA(ctx context.Context, euaID string) error {
+	err := c.PurgeCacheByPath(ctx, "/system/summary?includeInSurvey=true&state=active&userName="+euaID)
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+// GetSystem retrieves a CEDAR system by ID (IctObjectID)
+func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+	if c.mockEnabled {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return cedarcoremock.GetSystem(systemID), nil
+	}
+
+	systemSummary, err := c.GetSystemSummary(ctx, SystemSummaryOpts.WithDeactivatedSystems())
+	if err != nil {
+		return nil, err
 	}
 
 	systemSummaryMap := make(map[string]*models.CedarSystem)
 	for _, sys := range systemSummary {
 		if sys != nil {
-			systemSummaryMap[sys.ID] = sys
+			systemSummaryMap[sys.ID.String] = sys
 		}
 	}
-
-	// Set in cache
-	c.cache.SetDefault(systemSummaryCacheKey, systemSummaryMap)
-
-	appcontext.ZLogger(ctx).Info("Refreshed System Summary cache")
-
-	return nil
-}
-
-func (c *Client) getSystemFromCache(ctx context.Context, systemID string) *models.CedarSystem {
-	// Check if the system ID is cached in the map
-	cachedSystemMap := c.getCachedSystemMap(ctx)
-	if sys, found := cachedSystemMap[systemID]; found && sys != nil {
-		return sys
-	}
-	return nil
-}
-
-// GetSystem retrieves a CEDAR system by ID (IctObjectID), by first checking the cache, then
-// if it is not found, repopulating the cache and checking one more time.
-func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarSystem, error) {
-	if !c.cedarCoreEnabled(ctx) {
-		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return &models.CedarSystem{}, nil
+	if sys, found := systemSummaryMap[systemID]; found && sys != nil {
+		return sys, nil
 	}
 
-	// Try the cache first
-	cachedSystem := c.getSystemFromCache(ctx, systemID)
-	if cachedSystem != nil {
-		return cachedSystem, nil
-	}
-
-	// If it's not cached, populate the cache, and try the cache again
-	err := c.populateSystemSummaryCache(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// Try the cache again now that we know it is fresh
-	cachedSystem = c.getSystemFromCache(ctx, systemID)
-	if cachedSystem != nil {
-		return cachedSystem, nil
-	}
-
-	// If we still haven't found it after repopulating the cache, then it doesn't exist in CEDAR
 	return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
+}
+
+type systemSummaryParamFilterOpt func(*apisystems.SystemSummaryFindListParams)
+
+type systemSummaryOpts struct{}
+
+// SystemSummaryOpts contains methods for options to pass to system summary calls
+var SystemSummaryOpts = systemSummaryOpts{}
+
+// WithDeactivatedSystems returns all systems
+func (systemSummaryOpts) WithDeactivatedSystems() systemSummaryParamFilterOpt {
+	return func(params *apisystems.SystemSummaryFindListParams) {
+		params.SetState(nil)
+		params.SetIncludeInSurvey(nil)
+	}
+}
+
+// WithEuaIDFilter sets given EUA onto the params
+func (systemSummaryOpts) WithEuaIDFilter(euaUserID string) systemSummaryParamFilterOpt {
+	return func(params *apisystems.SystemSummaryFindListParams) {
+		params.SetUserName(&euaUserID)
+	}
+}
+
+// WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
+func (systemSummaryOpts) WithSubSystems(cedarSystemID string) systemSummaryParamFilterOpt {
+	return func(params *apisystems.SystemSummaryFindListParams) {
+		params.SetBelongsTo(&cedarSystemID)
+
+		// we want all sub systems, not just ones included in the survey
+		// TODO: some systems come back only when `nil` is set and do not come back when `true` or `false` is set - why?
+		params.SetIncludeInSurvey(nil)
+	}
 }

@@ -20,6 +20,16 @@ const GovTaskDecisionAndNextSteps = ({
   const stepKey = 'decisionAndNextSteps';
   const { t } = useTranslation('itGov');
 
+  const linkClass =
+    decisionAndNextStepsStatus === ITGovDecisionStatus.COMPLETED
+      ? 'usa-button'
+      : 'usa-link';
+
+  const linkTextKey =
+    decisionAndNextStepsStatus === ITGovDecisionStatus.COMPLETED
+      ? 'button'
+      : 'viewPreviousDecision';
+
   return (
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
@@ -45,16 +55,10 @@ const GovTaskDecisionAndNextSteps = ({
           <div className="margin-top-2">
             <UswdsReactLink
               variant="unstyled"
-              className={
-                decisionAndNextStepsStatus === ITGovDecisionStatus.COMPLETED
-                  ? 'usa-button'
-                  : 'usa-link'
-              }
+              className={linkClass}
               to={`/governance-task-list/${id}/request-decision`}
             >
-              {decisionAndNextStepsStatus === ITGovDecisionStatus.COMPLETED
-                ? t(`taskList.step.${stepKey}.button`)
-                : t(`taskList.step.${stepKey}.viewExistingDecision`)}
+              {t(`taskList.step.${stepKey}.${linkTextKey}`)}
             </UswdsReactLink>
           </div>
         )}

@@ -7,18 +7,22 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // CreateTRBRequestAttendee creates a new TRB request attendee record in the database
-func (s *Store) CreateTRBRequestAttendee(ctx context.Context, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
+// Note this will be refactored to not use the store, but is left now for organization
+func (s *Store) CreateTRBRequestAttendee(ctx context.Context, np sqlutils.NamedPreparer, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
 	attendee.ID = uuid.New()
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := np.PrepareNamed(`
 		INSERT INTO trb_request_attendees (
 			id,
 			eua_user_id,
@@ -46,6 +50,7 @@ func (s *Store) CreateTRBRequestAttendee(ctx context.Context, attendee *models.T
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	created := models.TRBRequestAttendee{}
 	err = stmt.Get(&created, attendee)
@@ -59,7 +64,6 @@ func (s *Store) CreateTRBRequestAttendee(ctx context.Context, attendee *models.T
 
 // UpdateTRBRequestAttendee updates a TRB request attendee record in the database
 func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
-	// return attendee, nil
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_request_attendees
 		SET role = :role,
@@ -75,6 +79,8 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	updated := models.TRBRequestAttendee{}
 
 	err = stmt.Get(&updated, attendee)
@@ -98,10 +104,32 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 func (s *Store) GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestAttendee, error) {
 	results := []*models.TRBRequestAttendee{}
 
-	err := s.db.Select(&results, `SELECT * FROM trb_request_attendees WHERE trb_request_id=$1`, trbRequestID)
+	err := namedSelect(ctx, s.db, &results, sqlqueries.TRBRequestAttendees.GetByTRBID, args{
+		"trb_request_id": trbRequestID,
+	})
 
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request attendees", zap.Error(err), zap.String("id", trbRequestID.String()))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBRequestAttendee{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return results, nil
+}
+
+// GetTRBRequestAttendeesByTRBRequestIDs queries the DB for all the TRB request attendee records
+// matching the given TRB request IDs
+func (s *Store) GetTRBRequestAttendeesByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestAttendee, error) {
+	results := []*models.TRBRequestAttendee{}
+
+	err := namedSelect(ctx, s.db, &results, sqlqueries.TRBRequestAttendees.GetByTRBIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request attendees", zap.Error(err))
 		return nil, &apperrors.QueryError{
 			Err:       err,
 			Model:     models.TRBRequestAttendee{},
@@ -124,6 +152,8 @@ func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*mo
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	toDelete := models.TRBRequestAttendee{}
 	toDelete.ID = id
 	deleted := models.TRBRequestAttendee{}
@@ -144,29 +174,13 @@ func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*mo
 	return &deleted, err
 }
 
-// GetAttendeeComponentByEUA attempts to retrieve the component of a given EUA user ID and TRB Request ID
-func (s *Store) GetAttendeeComponentByEUA(ctx context.Context, euaID string, trbRequestID uuid.UUID) (*string, error) {
+// GetAttendeeByEUAIDAndTRBID attempts to retrieve an attendee of a given EUA user ID and TRB Request ID
+func (s *Store) GetAttendeeByEUAIDAndTRBID(ctx context.Context, euaID string, trbRequestID uuid.UUID) (*models.TRBRequestAttendee, error) {
 	attendee := models.TRBRequestAttendee{}
-	stmt, err := s.db.PrepareNamed(`
-		SELECT *
-		FROM trb_request_attendees
-		WHERE eua_user_id = :eua_user_id
-		AND trb_request_id = :trb_request_id;
-	`)
-
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			"Failed to fetch TRB attendee",
-			zap.Error(err),
-			zap.String("euaID", euaID),
-		)
-		return nil, err
-	}
-	arg := map[string]interface{}{
-		"eua_user_id":    euaID,
+	err := namedGet(ctx, s.db, &attendee, sqlqueries.GetAttendeeByEUAIDAndTRBIDSQL, args{
 		"trb_request_id": trbRequestID,
-	}
-	err = stmt.Get(&attendee, arg)
+		"eua_user_id":    euaID,
+	})
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -174,9 +188,10 @@ func (s *Store) GetAttendeeComponentByEUA(ctx context.Context, euaID string, trb
 		}
 
 		appcontext.ZLogger(ctx).Error(
-			"Failed to fetch TRB attendee",
+			"Failed to fetch TRB attendee by EUA and TRB ID",
 			zap.Error(err),
 			zap.String("euaID", euaID),
+			zap.String("trbRequestID", trbRequestID.String()),
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
@@ -184,5 +199,27 @@ func (s *Store) GetAttendeeComponentByEUA(ctx context.Context, euaID string, trb
 			Operation: apperrors.QueryFetch,
 		}
 	}
-	return attendee.Component, nil
+	return &attendee, nil
+}
+
+// GetAttendeesByEUAIDsAndTRBIDs attempts to retrieve a list of attendees given EUA user IDs and TRB Request IDs
+func (s *Store) GetAttendeesByEUAIDsAndTRBIDs(ctx context.Context, euaIDs []string, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestAttendee, error) {
+	attendees := []*models.TRBRequestAttendee{}
+	err := namedSelect(ctx, s.db, &attendees, sqlqueries.GetAttendeesByEUAIDsAndTRBIDsSQL, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+		"eua_user_ids":    pq.Array(euaIDs),
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB attendees by EUA and TRB IDs",
+			zap.Error(err),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBRequestAttendee{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return attendees, nil
 }

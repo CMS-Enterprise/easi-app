@@ -1,11 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  ButtonGroup,
-  IconWarning,
-  Label
-} from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Icon, Label } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import AdditionalContacts from 'components/AdditionalContacts';
@@ -18,10 +13,12 @@ import HelpText from 'components/shared/HelpText';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import { IT_GOV_EMAIL, IT_INVESTMENT_EMAIL } from 'constants/externalUrls';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
-import { EmailRecipientsFieldsProps } from 'types/action';
+import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
-import { SystemIntakeContactProps } from 'types/systemIntake';
+import {
+  FormattedContacts,
+  SystemIntakeContactProps
+} from 'types/systemIntake';
 import isExternalEmail from 'utils/externalEmail';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import {
@@ -90,7 +87,7 @@ const Recipient = ({
       {!id && !isActive && (
         <div className="margin-left-4 margin-top-1 margin-bottom-2">
           <p className="text-base display-flex flex-align-center margin-y-1">
-            <IconWarning className="text-warning margin-right-1" />
+            <Icon.Warning className="text-warning margin-right-1" />
             {t('emailRecipients.unverifiedRecipient')}
           </p>
           {/* Button to open form to verify recipient */}
@@ -178,10 +175,24 @@ const Recipient = ({
   );
 };
 
+type EmailRecipientsFieldsProps = {
+  optional?: boolean;
+  className?: string;
+  headerClassName?: string;
+  alertClassName?: string;
+  systemIntakeId: string;
+  activeContact: SystemIntakeContactProps | null;
+  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  contacts: FormattedContacts;
+  recipients: EmailNotificationRecipients;
+  setRecipients: (recipients: EmailNotificationRecipients) => void;
+  error: string;
+};
+
 /**
  * Email recipient fields with functionality to verify and add recipients
  */
-export default ({
+const EmailRecipientsFields = ({
   /** Whether email is optional */
   optional = true,
   /** Container className */
@@ -241,8 +252,8 @@ export default ({
   >(contactsArray.filter(contact => !contact.id));
 
   /** Initial default recipients */
-  const defaultRecipients: EmailNotificationRecipients = useRef(recipients)
-    .current;
+  const defaultRecipients: EmailNotificationRecipients =
+    useRef(recipients).current;
 
   /** Number of selected recipients */
   const selectedCount = Object.values(recipients)
@@ -560,3 +571,5 @@ export default ({
     </div>
   );
 };
+
+export default EmailRecipientsFields;

@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: easi-client-configmap
+  namespace: easi
+data:
+  VITE_APP_ENV: local
+  VITE_API_ADDRESS: http://easi-backend.localdev.me/api/v1
+  VITE_GRAPHQL_ADDRESS: http://easi-backend.localdev.me/api/graph/query
+  VITE_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+  VITE_OKTA_DOMAIN: https://test.idp.idm.cms.gov
+  VITE_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+  VITE_OKTA_REDIRECT_URI: http://easi-client:3000/implicit/callback
+  VITE_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
+  VITE_LD_ENV_USER: ''
+  VITE_LD_USER_HASH: ''
+  VITE_LD_CLIENT_ID: 63231d448bd05a111f06195b
+  VITE_LOCAL_AUTH_ENABLED: 'true'
+  CHOKIDAR_USEPOLLING: 'true'
+  ESLINT_NO_DEV_ERRORS: 'true'
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: easi-client
+  name: easi-client
+  namespace: easi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: easi-client
+  template:
+    metadata:
+      labels:
+        app: easi-client
+    spec:
+      containers:
+        - name: easi-client
+          image: easi-client:latest
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: easi-client-configmap
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: easi
+  name: easi-client
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: easi-client
+
+--- 
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: easi-client-ingress
+  namespace: easi
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: easi.localdev.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: easi-client
+                port:
+                  number: 3000

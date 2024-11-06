@@ -7,23 +7,24 @@ import (
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func (s *GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	s.NoError(intakeErr)
 
-	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
-		SystemIntakeID: intake.ID,
-		Status:         models.BusinessCaseStatusOPEN,
-		EUAUserID:      "TEST",
+	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCaseWithCosts{
+		BusinessCase: models.BusinessCase{
+			SystemIntakeID: intake.ID,
+			Status:         models.BusinessCaseStatusOPEN,
+			EUAUserID:      "TEST",
+		},
 	})
 	s.NoError(businessCaseErr)
 
@@ -58,7 +59,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -72,27 +73,28 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuer
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	s.NoError(intakeErr)
 
-	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
-		SystemIntakeID:                      intake.ID,
-		Status:                              models.BusinessCaseStatusOPEN,
-		EUAUserID:                           "TEST",
-		AlternativeAAcquisitionApproach:     null.StringFrom("Aquisition Approach"),
-		AlternativeACons:                    null.StringFrom("Cons"),
-		AlternativeACostSavings:             null.StringFrom("Savings"),
-		AlternativeAHasUI:                   null.StringFrom("Has UI"),
-		AlternativeAHostingCloudServiceType: null.StringFrom("Cloud Type"),
-		AlternativeAHostingLocation:         null.StringFrom("Hosting Location"),
-		AlternativeAHostingType:             null.StringFrom("Hosting Type"),
-		AlternativeAPros:                    null.StringFrom("Pros"),
-		AlternativeASecurityIsApproved:      null.BoolFrom(true),
-		AlternativeASecurityIsBeingReviewed: null.StringFrom("Being Reviewed"),
-		AlternativeASummary:                 null.StringFrom("Summary"),
-		AlternativeATitle:                   null.StringFrom("Title"),
+	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCaseWithCosts{
+		BusinessCase: models.BusinessCase{
+			SystemIntakeID:                      intake.ID,
+			Status:                              models.BusinessCaseStatusOPEN,
+			EUAUserID:                           "TEST",
+			AlternativeAAcquisitionApproach:     null.StringFrom("Aquisition Approach"),
+			AlternativeACons:                    null.StringFrom("Cons"),
+			AlternativeACostSavings:             null.StringFrom("Savings"),
+			AlternativeAHasUI:                   null.StringFrom("Has UI"),
+			AlternativeAHostingCloudServiceType: null.StringFrom("Cloud Type"),
+			AlternativeAHostingLocation:         null.StringFrom("Hosting Location"),
+			AlternativeAHostingType:             null.StringFrom("Hosting Type"),
+			AlternativeAPros:                    null.StringFrom("Pros"),
+			AlternativeASecurityIsApproved:      null.BoolFrom(true),
+			AlternativeASecurityIsBeingReviewed: null.StringFrom("Being Reviewed"),
+			AlternativeASummary:                 null.StringFrom("Summary"),
+			AlternativeATitle:                   null.StringFrom("Title"),
+		},
 	})
 	s.NoError(businessCaseErr)
 
@@ -143,7 +145,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuer
 					}
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -169,7 +171,6 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuer
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	s.NoError(intakeErr)
@@ -198,10 +199,12 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuer
 			Cost:     &cost,
 		},
 	}
-	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
-		SystemIntakeID:     intake.ID,
-		Status:             models.BusinessCaseStatusOPEN,
-		EUAUserID:          "TEST",
+	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCaseWithCosts{
+		BusinessCase: models.BusinessCase{
+			SystemIntakeID: intake.ID,
+			Status:         models.BusinessCaseStatusOPEN,
+			EUAUserID:      "TEST",
+		},
 		LifecycleCostLines: lifecycleCostLines,
 	})
 	s.NoError(businessCaseErr)
@@ -239,7 +242,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuer
 					}
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 

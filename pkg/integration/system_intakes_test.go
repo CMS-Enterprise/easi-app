@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"path"
@@ -13,7 +13,7 @@ import (
 
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
@@ -31,7 +31,6 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 	systemIntake := models.SystemIntake{
 		Requester:   "TEST REQUESTER",
-		Status:      models.SystemIntakeStatusINTAKEDRAFT,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		EUAUserID:   null.StringFrom(s.user.euaID),
 	}
@@ -66,7 +65,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		defer resp.Body.Close()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
-		actualBody, err := ioutil.ReadAll(resp.Body)
+		actualBody, err := io.ReadAll(resp.Body)
 		s.NoError(err)
 		var actualIntake models.SystemIntake
 		err = json.Unmarshal(actualBody, &actualIntake)
@@ -118,8 +117,8 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		intakeToUpdate.EASupportRequest = null.BoolFrom(true)
 		intakeToUpdate.ExistingContract = null.StringFrom("Test Requester")
 		*intakeToUpdate.UpdatedAt = time.Now().UTC()
-		intakeToUpdate.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		intakeToUpdate.HasUIChanges = null.BoolFrom(false)
+		intakeToUpdate.UsesAITech = null.BoolFrom(true)
 		body, err := json.Marshal(intakeToUpdate)
 		s.NoError(err)
 		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
@@ -140,7 +139,6 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		intakeToUpdate, err := s.store.FetchSystemIntakeByID(context.Background(), id)
 		s.NoError(err)
 		intakeToUpdate.Requester = "Test Requester"
-		intakeToUpdate.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		body, err := json.Marshal(intakeToUpdate)
 		s.NoError(err)
 		var intakeWithWrongInfo map[string]interface{}
@@ -170,7 +168,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		defer resp.Body.Close()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
-		actualBody, err := ioutil.ReadAll(resp.Body)
+		actualBody, err := io.ReadAll(resp.Body)
 		s.NoError(err)
 		var actualIntake models.SystemIntake
 		err = json.Unmarshal(actualBody, &actualIntake)

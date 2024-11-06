@@ -10,8 +10,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type systemIntakeRequestEditsEmailParameters struct {
@@ -28,17 +27,28 @@ type systemIntakeRequestEditsEmailParameters struct {
 func (sie systemIntakeEmails) requestEditsBody(
 	systemIntakeID uuid.UUID,
 	requestName string,
-	formName string,
+	formName models.GovernanceRequestFeedbackTargetForm,
 	requesterName string,
 	feedback models.HTML,
 	additionalInfo *models.HTML,
 ) (string, error) {
 	requesterPath := path.Join("governance-task-list", systemIntakeID.String())
-	adminPath := path.Join("governance-review-team", systemIntakeID.String(), "intake-request")
+	var adminFormPath string
+	switch formName {
+	case models.GRFTFIntakeRequest:
+		adminFormPath = "intake-request"
+	case models.GRFTFDraftBusinessCase:
+		fallthrough
+	case models.GRFTFinalBusinessCase:
+		adminFormPath = "business-case"
+	case models.GRFTFNoTargetProvided:
+		return "", errors.New("no target form provided")
+	}
+	adminPath := path.Join("it-governance", systemIntakeID.String(), adminFormPath)
 
 	data := systemIntakeRequestEditsEmailParameters{
 		RequestName:              requestName,
-		FormName:                 formName,
+		FormName:                 formName.Humanize(),
 		RequesterName:            requesterName,
 		Feedback:                 feedback.ToTemplate(),
 		SystemIntakeRequestLink:  sie.client.urlFromPath(requesterPath),
@@ -63,7 +73,7 @@ func (sie systemIntakeEmails) SendRequestEditsNotification(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
-	formName string,
+	formName models.GovernanceRequestFeedbackTargetForm,
 	requestName string,
 	requesterName string,
 	feedback models.HTML,
@@ -73,21 +83,17 @@ func (sie systemIntakeEmails) SendRequestEditsNotification(
 	if requestName == "" {
 		requestName = "Draft System Intake"
 	}
-	subject := fmt.Sprintf("Updates requested for the %s for %s", formName, requestName)
+	subject := fmt.Sprintf("Updates requested for the %s for %s", formName.Humanize(), requestName)
 	body, err := sie.requestEditsBody(systemIntakeID, requestName, formName, requesterName, feedback, additionalInfo)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = sie.client.sender.Send(
+	return sie.client.sender.Send(
 		ctx,
-		sie.client.listAllRecipients(recipients),
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(sie.client.listAllRecipients(recipients)).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }

@@ -6,10 +6,11 @@ import (
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // CreateTRBRequestFeedback creates a TRBRequestFeedback in the database
@@ -101,7 +102,7 @@ func CreateTRBRequestFeedback(
 				feedback.CopyTRBMailbox,
 				feedback.TRBRequestID,
 				request.GetName(),
-				requester.CommonName,
+				requester.DisplayName,
 				feedback.FeedbackMessage,
 			)
 			if err != nil {
@@ -114,7 +115,7 @@ func CreateTRBRequestFeedback(
 				feedback.CopyTRBMailbox,
 				feedback.TRBRequestID,
 				request.GetName(),
-				requester.CommonName,
+				requester.DisplayName,
 				feedback.FeedbackMessage,
 			)
 			if err != nil {
@@ -127,8 +128,8 @@ func CreateTRBRequestFeedback(
 }
 
 // GetTRBRequestFeedbackByTRBRequestID retrieves TRB request feedback records for a given TRB request ID
-func GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBRequestFeedback, error) {
-	results, err := store.GetTRBRequestFeedbackByTRBRequestID(ctx, id)
+func GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, id uuid.UUID) ([]*models.TRBRequestFeedback, error) {
+	results, err := dataloaders.GetTRBRequestFeedbackByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

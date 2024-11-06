@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestReopenIntakeRequestNotification() {
@@ -23,7 +23,7 @@ func (s *EmailTestSuite) TestReopenIntakeRequestNotification() {
 		intakeID.String(),
 	)
 	adminLink := fmt.Sprintf(
-		"%s://%s/governance-review-team/%s/intake-request",
+		"%s://%s/it-governance/%s/intake-request",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),
@@ -42,129 +42,172 @@ func (s *EmailTestSuite) TestReopenIntakeRequestNotification() {
 	}
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
-	err = client.SystemIntake.SendReopenRequestNotification(ctx, recipients, intakeID, requestName, requester, reason, &submittedAt, additionalInfo)
-	s.NoError(err)
-	expectedSubject := fmt.Sprintf("The Governance Team has re-opened %s in EASi", requestName)
-	s.Equal(expectedSubject, sender.subject)
 
-	expectedEmail := fmt.Sprintf(
-		`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+	getExpectedEmail := func(
+		reason *models.HTML,
+		submittedAt *time.Time,
+		additionalInfo *models.HTML,
+	) string {
+		var reasonStr string
+		if reason != nil {
+			reasonStr = fmt.Sprintf(
+				`<br>
+				<div class="no-margin">
+				  <p><strong>Reason:</strong></p>
+				  %s
+				</div>`,
+				*reason.StringPointer(),
+			)
+		}
+		var submittedAtStr string
+		if submittedAt != nil {
+			submittedAtStr = fmt.Sprintf(
+				`, submitted on %s,`,
+				submittedAt.Format("01/02/2006"),
+			)
+		}
+		var additionalInfoStr string
+		if additionalInfo != nil {
+			additionalInfoStr = fmt.Sprintf(
+				`<hr>
+				<br>
+				<p><strong>Additional information from the Governance Team:</strong></p>
+				<div class="no-margin">%s</div>`,
+				*additionalInfo.StringPointer(),
+			)
+		}
+		return fmt.Sprintf(`
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
 
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+			<p>The IT Governance Request titled %s%s has been re-opened in EASi.</p>
 
-<p>The IT Governance Request titled %s, submitted on %s, has been re-opened in EASi.</p>
+			%s
 
-<p>Reason: %s</p>
+			<br>
+			<div class="no-margin">
+				<p>View this request in EASi:</p>
+				<ul>
+					<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
+					<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
+					<li>Others should contact %s or the Governance Team for more information about this request.</li>
+				</ul>
+			</div>
 
-<p>View this request in EASi:
-<ul>
-<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
-<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
-<li>Others should contact %s or the Governance Team for more information about this request.</li>
-</ul></p>
+			<br>
+			<p>If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
 
-If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
+			%s
+			<br>
+			<br>
+			<hr>
 
-<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
-<hr>
+			<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
+			`,
+			requestName,
+			submittedAtStr,
+			reasonStr,
+			requester,
+			requestLink,
+			adminLink,
+			requester,
+			ITGovInboxAddress,
+			ITGovInboxAddress,
+			additionalInfoStr,
+		)
+	}
 
-<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
-`,
+	err = client.SystemIntake.SendReopenRequestNotification(
+		ctx,
+		recipients,
+		intakeID,
 		requestName,
-		submittedAt.Format("01/02/2006"),
-		*reason.StringPointer(),
 		requester,
-		requestLink,
-		adminLink,
-		requester,
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		*additionalInfo.StringPointer(),
+		reason,
+		&submittedAt,
+		additionalInfo,
 	)
-	s.Equal(expectedEmail, sender.body)
+	s.NoError(err)
+
+	s.Run("Subject is correct", func() {
+		expectedSubject := fmt.Sprintf("The Governance Team has re-opened %s in EASi", requestName)
+		s.Equal(expectedSubject, sender.subject)
+	})
+
+	s.Run("Included info is correct", func() {
+		expectedEmail := getExpectedEmail(
+			reason,
+			&submittedAt,
+			additionalInfo,
+		)
+		s.EqualHTML(expectedEmail, sender.body)
+	})
+
 	s.Run("Recipient is correct", func() {
 		allRecipients := []models.EmailAddress{
 			recipient,
 		}
 		s.ElementsMatch(sender.toAddresses, allRecipients)
 	})
-	err = client.SystemIntake.SendReopenRequestNotification(ctx, recipients, intakeID, requestName, requester, nil, &submittedAt, additionalInfo)
-	s.NoError(err)
-	expectedEmail = fmt.Sprintf(
-		`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
-
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>The IT Governance Request titled %s, submitted on %s, has been re-opened in EASi.</p>
-
-
-
-<p>View this request in EASi:
-<ul>
-<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
-<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
-<li>Others should contact %s or the Governance Team for more information about this request.</li>
-</ul></p>
-
-If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
-<hr>
-
-<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
-`,
-		requestName,
-		submittedAt.Format("01/02/2006"),
-		requester,
-		requestLink,
-		adminLink,
-		requester,
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		*additionalInfo.StringPointer(),
-	)
 
 	s.Run("Should omit reason if absent", func() {
-		s.Equal(expectedEmail, sender.body)
+		err = client.SystemIntake.SendReopenRequestNotification(
+			ctx,
+			recipients,
+			intakeID,
+			requestName,
+			requester,
+			nil, //reason
+			&submittedAt,
+			additionalInfo,
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			nil, //reason
+			&submittedAt,
+			additionalInfo,
+		)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
-	err = client.SystemIntake.SendReopenRequestNotification(ctx, recipients, intakeID, requestName, requester, reason, &submittedAt, nil)
-	s.NoError(err)
-	expectedEmail = fmt.Sprintf(
-		`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
 
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>The IT Governance Request titled %s, submitted on %s, has been re-opened in EASi.</p>
-
-<p>Reason: %s</p>
-
-<p>View this request in EASi:
-<ul>
-<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
-<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
-<li>Others should contact %s or the Governance Team for more information about this request.</li>
-</ul></p>
-
-If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-
-<hr>
-
-<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
-`,
-		requestName,
-		submittedAt.Format("01/02/2006"),
-		*reason.StringPointer(),
-		requester,
-		requestLink,
-		adminLink,
-		requester,
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-	)
+	s.Run("Should omit submitted time if absent", func() {
+		err = client.SystemIntake.SendReopenRequestNotification(
+			ctx,
+			recipients,
+			intakeID,
+			requestName,
+			requester,
+			reason,
+			nil, //submittedAt
+			additionalInfo,
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			reason,
+			nil, //submittedAt
+			additionalInfo,
+		)
+		s.EqualHTML(expectedEmail, sender.body)
+	})
 
 	s.Run("Should omit additional info if absent", func() {
-		s.Equal(expectedEmail, sender.body)
+		err = client.SystemIntake.SendReopenRequestNotification(
+			ctx,
+			recipients,
+			intakeID,
+			requestName,
+			requester,
+			reason,
+			&submittedAt,
+			nil, //additionalInfo
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			reason,
+			&submittedAt,
+			nil, //additionalInfo
+		)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 }

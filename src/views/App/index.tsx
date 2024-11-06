@@ -15,7 +15,6 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import PageWrapper from 'components/PageWrapper';
 import { MessageProvider } from 'hooks/useMessage';
-import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
@@ -25,9 +24,8 @@ import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GovernanceFeedback from 'views/GovernanceTaskList/Feedback';
-import GovernanceTaskListV1 from 'views/GovernanceTaskListV1';
-import LcidInfo from 'views/GovernanceTaskListV1/LcidInfo';
-import RequestDecision from 'views/GovernanceTaskListV1/RequestDecision';
+import LcidInfo from 'views/GovernanceTaskList/LcidInfo';
+import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
 import Help from 'views/Help';
 import Home from 'views/Home';
 import Login from 'views/Login';
@@ -38,19 +36,19 @@ import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
+import RequestLinkForm from 'views/RequestLinkForm';
 import RequestTypeForm from 'views/RequestTypeForm';
-import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import SystemList from 'views/SystemList';
 import SystemProfile from 'views/SystemProfile';
+import SystemWorkspace from 'views/SystemWorkspace';
+import SystemWorkspaceRequests from 'views/SystemWorkspace/SystemWorkspaceRequests';
 import TableStateWrapper from 'views/TableStateWrapper';
 import TechnicalAssistance from 'views/TechnicalAssistance';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
 import UserInfoWrapper from 'views/UserInfoWrapper';
-
-import { NavContextProvider } from '../../components/Header/navContext';
 
 import shouldScroll from './scrollConfig';
 
@@ -83,48 +81,29 @@ const AppRoutes = () => {
       <SecureRoute path="/user-diagnostics" component={UserInfo} />
       <SecureRoute path="/my-requests" component={MyRequests} />
 
-      {/* 508 / Accessibility Team Routes */}
-      {!flags.hide508Workflow && (
-        <Redirect exact from="/508" to="/508/making-a-request" />
-      )}
-      {!flags.hide508Workflow && (
-        <SecureRoute path="/508" component={Accessibility} />
-      )}
-
       {/* GRT/GRB Routes */}
-      <SecureRoute
-        path="/governance-review-team"
-        component={GovernanceReviewTeam}
-      />
+      <Redirect from="/governance-review-team/*" to="/it-governance/*" />
+      <SecureRoute path="/it-governance/:id" component={GovernanceReviewTeam} />
 
       {/* Requester / Business Owner Routes */}
       <SecureRoute path="/system/making-a-request" component={MakingARequest} />
       <SecureRoute
         exact
-        path="/system/request-type"
+        path="/system/request-type/:systemId?"
         component={RequestTypeForm}
       />
+      <SecureRoute exact path="/system/link/:id?">
+        <RequestLinkForm requestType="itgov" />
+      </SecureRoute>
       <SecureRoute
         path="/governance-overview/:systemId?"
         component={GovernanceOverview}
       />
-
-      {flags.itGovV2Enabled ? (
-        // IT Gov V2
-        <SecureRoute
-          path="/governance-task-list/:systemId"
-          exact
-          component={GovernanceTaskList}
-        />
-      ) : (
-        // IT Gov V1
-        <SecureRoute
-          path="/governance-task-list/:systemId"
-          exact
-          component={GovernanceTaskListV1}
-        />
-      )}
-
+      <SecureRoute
+        path="/governance-task-list/:systemId"
+        exact
+        component={GovernanceTaskList}
+      />
       <SecureRoute
         path="/governance-task-list/:systemId/feedback"
         exact
@@ -150,7 +129,7 @@ const AppRoutes = () => {
         path="/governance-task-list/:systemId/lcid-info"
         component={LcidInfo}
       />
-      <Redirect exact from="/system/new" to="/system/request-type" />
+
       <Redirect
         exact
         from="/system/:systemId"
@@ -160,23 +139,40 @@ const AppRoutes = () => {
         path="/system/:systemId/:formPage/:subPage?"
         component={SystemIntake}
       />
-      {flags.systemProfile && (
-        <SecureRoute exact path="/systems" component={SystemList} />
-      )}
-      {flags.systemProfile && (
-        <SecureRoute
-          path="/systems/:systemId"
+
+      <SecureRoute exact path="/systems" component={SystemList} />
+
+      {flags.systemWorkspace ? (
+        [
+          <SecureRoute
+            key="workspace"
+            exact
+            path="/systems/:systemId/workspace"
+            component={SystemWorkspace}
+          />,
+          <SecureRoute
+            key="workspace-requests"
+            exact
+            path="/systems/:systemId/workspace/requests"
+            component={SystemWorkspaceRequests}
+          />
+        ]
+      ) : (
+        <Redirect
           exact
-          component={SystemProfile}
+          from="/systems/:systemId/workspace"
+          to="/systems/:systemId"
         />
       )}
-      {flags.systemProfile && (
-        <SecureRoute
-          path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
-          exact
-          component={SystemProfile}
-        />
-      )}
+
+      <SecureRoute path="/systems/:systemId" exact component={SystemProfile} />
+
+      <SecureRoute
+        path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
+        exact
+        component={SystemProfile}
+      />
+
       <Redirect
         exact
         from="/business/:businessCaseId"
@@ -187,9 +183,7 @@ const AppRoutes = () => {
         component={BusinessCase}
       />
 
-      {flags.technicalAssistance && (
-        <SecureRoute path="/trb" component={TechnicalAssistance} />
-      )}
+      <SecureRoute path="/trb" component={TechnicalAssistance} />
 
       <SecureRoute path="/help" component={Help} />
 
@@ -206,18 +200,6 @@ const AppRoutes = () => {
         path="/terms-and-conditions"
         component={TermsAndConditions}
       />
-
-      {/* Misc Routes */}
-      {flags.sandbox && (
-        <SecureRoute path="/sandbox" exact component={Sandbox} />
-      )}
-      {flags.sandbox && (
-        <SecureRoute
-          path="/sandbox/:systemId"
-          exact
-          component={SystemProfile}
-        />
-      )}
 
       <Route path="/implicit/callback" component={LoginCallback} />
 
@@ -247,18 +229,16 @@ const App = () => {
             <FlagsWrapper>
               <UserInfoWrapper>
                 <TimeOutWrapper>
-                  <NavContextProvider>
-                    <TableStateWrapper>
-                      <PageWrapper>
-                        <GovBanner />
-                        <Header />
-                        <Navigation>
-                          <AppRoutes />
-                        </Navigation>
-                        <Footer />
-                      </PageWrapper>
-                    </TableStateWrapper>
-                  </NavContextProvider>
+                  <TableStateWrapper>
+                    <PageWrapper>
+                      <GovBanner />
+                      <Header />
+                      <Navigation>
+                        <AppRoutes />
+                      </Navigation>
+                      <Footer />
+                    </PageWrapper>
+                  </TableStateWrapper>
                 </TimeOutWrapper>
               </UserInfoWrapper>
             </FlagsWrapper>

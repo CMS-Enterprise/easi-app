@@ -11,8 +11,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type systemIntakeConfirmLCIDEmailParameters struct {
@@ -45,7 +44,7 @@ func (sie systemIntakeEmails) SystemIntakeConfirmLCIDBody(
 	additionalInfo *models.HTML,
 ) (string, error) {
 	requesterPath := path.Join("governance-task-list", systemIntakeID.String())
-	adminPath := path.Join("governance-review-team", systemIntakeID.String(), "intake-request")
+	adminPath := path.Join("it-governance", systemIntakeID.String(), "intake-request")
 
 	var expiresAt string
 	if lifecycleExpiresAt != nil {
@@ -111,7 +110,6 @@ func (sie systemIntakeEmails) SendConfirmLCIDNotification(
 	requesterName string,
 	additionalInfo *models.HTML,
 ) error {
-
 	if requestName == "" {
 		requestName = "Draft System Intake"
 	}
@@ -130,18 +128,14 @@ func (sie systemIntakeEmails) SendConfirmLCIDNotification(
 		additionalInfo,
 	)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = sie.client.sender.Send(
+	return sie.client.sender.Send(
 		ctx,
-		sie.client.listAllRecipients(recipients),
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(sie.client.listAllRecipients(recipients)).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }

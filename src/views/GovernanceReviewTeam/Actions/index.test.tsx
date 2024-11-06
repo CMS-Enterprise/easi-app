@@ -11,7 +11,7 @@ import {
   requester,
   systemIntake
 } from 'data/mock/systemIntake';
-import useMessage, { MessageProvider } from 'hooks/useMessage';
+import { MessageProvider } from 'hooks/useMessage';
 import CreateSystemIntakeActionRequestEditsQuery from 'queries/CreateSystemIntakeActionRequestEditsQuery';
 import {
   CreateSystemIntakeActionRequestEdits,
@@ -22,15 +22,11 @@ import {
   SystemIntakeStep
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
+import MockMessage from 'utils/testing/MockMessage';
 import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Actions from '.';
-
-const MockMessage = () => {
-  const { Message } = useMessage();
-  return <Message />;
-};
 
 const renderActionPage = ({
   mocks,
@@ -40,13 +36,11 @@ const renderActionPage = ({
   action?: string;
 }) => {
   return render(
-    <VerboseMockedProvider mocks={mocks}>
+    <VerboseMockedProvider mocks={mocks} addTypename>
       <MemoryRouter
-        initialEntries={[
-          `/governance-review-team/${systemIntake.id}/actions/${action}`
-        ]}
+        initialEntries={[`/it-governance/${systemIntake.id}/actions/${action}`]}
       >
-        <Route path={[`/governance-review-team/:systemId/actions/:subPage?`]}>
+        <Route path={[`/it-governance/:systemId/actions/:subPage?`]}>
           <MessageProvider>
             <MockMessage />
             <Actions systemIntake={systemIntake} />
@@ -62,11 +56,9 @@ describe('IT Gov Actions', () => {
     render(
       <VerboseMockedProvider mocks={[getGovernanceTaskListQuery()]}>
         <MemoryRouter
-          initialEntries={[
-            `/governance-review-team/${systemIntake.id}/actions`
-          ]}
+          initialEntries={[`/it-governance/${systemIntake.id}/actions`]}
         >
-          <Route path={[`/governance-review-team/:systemId/actions/:action?`]}>
+          <Route path={[`/it-governance/:systemId/actions/:action?`]}>
             <MessageProvider>
               <Actions systemIntake={systemIntake} />
             </MessageProvider>

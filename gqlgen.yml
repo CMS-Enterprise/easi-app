@@ -14,8 +14,8 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: pkg/graph/model/models_gen.go
-  package: model
+  filename: pkg/models/models_gen.go
+  package: models
 
 # Where should the resolver implementations go?
 resolver:
@@ -35,7 +35,7 @@ struct_tag: gqlgen
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-  - 'github.com/cmsgov/easi-app/pkg/models'
+  - 'github.com/cms-enterprise/easi-app/pkg/models'
 
 # Optional: turn on to exclude the gqlgen version in the generated file notice. No effect if `omit_gqlgen_file_notice` is true.
 omit_gqlgen_version_in_file_notice: true
@@ -57,15 +57,39 @@ models:
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
+      - github.com/cms-enterprise/easi-app/pkg/models.ZeroInt
+      - github.com/cms-enterprise/easi-app/pkg/models.NullInt
+  String:
+    model:
+      - github.com/99designs/gqlgen/graphql.String
+      - github.com/cms-enterprise/easi-app/pkg/models.NullString
+      - github.com/cms-enterprise/easi-app/pkg/models.ZeroString
+  Time:
+    model:
+      - github.com/99designs/gqlgen/graphql.Time
+      - github.com/cms-enterprise/easi-app/pkg/models.ZeroTime
+  Boolean:
+    model:
+      - github.com/99designs/gqlgen/graphql.Boolean
+      - github.com/cms-enterprise/easi-app/pkg/models.ZeroBool
+      - github.com/cms-enterprise/easi-app/pkg/models.NullBool
+  Float:
+    model:
+      - github.com/99designs/gqlgen/graphql.Float
+      - github.com/cms-enterprise/easi-app/pkg/models.ZeroFloat
+      - github.com/cms-enterprise/easi-app/pkg/models.NullFloat
   UUID:
     model:
-      - github.com/cmsgov/easi-app/pkg/models.UUID
+      - github.com/cms-enterprise/easi-app/pkg/models.UUID
   HTML:
     model:
-      - github.com/cmsgov/easi-app/pkg/models.HTML
+      - github.com/cms-enterprise/easi-app/pkg/models.HTML
   EmailAddress:
     model:
-      - github.com/cmsgov/easi-app/pkg/models.EmailAddress
+      - github.com/cms-enterprise/easi-app/pkg/models.EmailAddress
+  UserAccount:
+    model:
+      - github.com/cms-enterprise/easi-app/pkg/authentication.UserAccount
   SystemIntake:
     fields:
       fundingSources:

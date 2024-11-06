@@ -1,6 +1,3 @@
-import { EmailNotificationRecipients } from './graphql-global-types';
-import { FormattedContacts, SystemIntakeContactProps } from './systemIntake';
-
 // When adding a new ActionType, please add its description in i18n/governanceReviewTeam/notes
 export type ActionType =
   | 'SUBMIT_INTAKE'
@@ -50,72 +47,4 @@ export type ActionState = {
   isPosting: boolean;
   error?: any;
   actions: Action[];
-};
-
-export type ActionForm = {
-  feedback: string;
-  notificationRecipients: EmailNotificationRecipients;
-  shouldSendEmail: boolean;
-};
-
-export interface SubmitLifecycleIdForm extends ActionForm {
-  newLifecycleId?: boolean;
-  lifecycleId?: string;
-  expirationDateMonth?: string;
-  expirationDateDay?: string;
-  expirationDateYear?: string;
-  scope?: string;
-  nextSteps?: string;
-  costBaseline?: string;
-}
-
-// TODO: look into combining the submit and extend LCID?
-export type ExtendLifecycleIdForm = {
-  expirationDateMonth?: string;
-  expirationDateDay?: string;
-  expirationDateYear?: string;
-  scope?: string;
-  nextSteps?: string;
-  costBaseline?: string;
-  feedback: string;
-};
-
-export interface RejectIntakeForm extends ActionForm {
-  nextSteps: string;
-  reason: string;
-}
-
-export type ProvideGRTFeedbackForm = {
-  grtFeedback: string;
-  emailBody: string;
-  notificationRecipients: EmailNotificationRecipients;
-  shouldSendEmail: boolean;
-};
-
-export type EmailRecipientsFieldsProps = {
-  optional?: boolean;
-  className?: string;
-  headerClassName?: string;
-  alertClassName?: string;
-  systemIntakeId: string;
-  activeContact: SystemIntakeContactProps | null;
-  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
-  contacts: FormattedContacts;
-  recipients: EmailNotificationRecipients;
-  setRecipients: (recipients: EmailNotificationRecipients) => void;
-  error: string;
-};
-
-/** Formatted contact for display as notification recipient */
-export type RecipientObject = {
-  label: string;
-  value: string;
-  checked: boolean;
-};
-
-export type FormatRecipientProps = {
-  commonName: string;
-  component: string;
-  email: string;
-  role: string;
 };

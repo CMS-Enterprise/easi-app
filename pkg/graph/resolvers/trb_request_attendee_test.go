@@ -1,56 +1,43 @@
 package resolvers
 
 import (
-	"context"
-
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 // TestCreateTRBRequestAttendee makes a new TRB request
-func (s *ResolverSuite) TestCreateTRBRequestAttendee() {
-	ctx := context.Background()
+func (s *ResolverSuite) TestTRBRequestAttendee() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+	okta := local.NewOktaAPIClient()
 
 	config := testhelpers.NewConfig()
 
 	// set up Email Client
 	emailConfig := email.Config{
-		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
-		ITInvestmentEmail:      models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
-		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
-		TRBEmail:               models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
-		EASIHelpEmail:          models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
-		URLHost:                config.GetString(appconfig.ClientHostKey),
-		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail: models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		TRBEmail:          models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:     models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
-	localSender := local.NewSender()
+
+	env, _ := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+
+	localSender := local.NewSender(env)
 	emailClient, err := email.NewClient(emailConfig, localSender)
-	if err != nil {
-		s.FailNow("Unable to construct email client with local sender")
-	}
+	s.NoError(err)
 
-	anonEua := "ANON"
-
-	stubFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
-		return &models.UserInfo{
-			EuaUserID:  anonEua,
-			CommonName: "Anonymous",
-			Email:      models.NewEmailAddress("anon@local.fake"),
-		}, nil
-	}
-
-	trbRequest := models.NewTRBRequest(anonEua)
-	trbRequest.Type = models.TRBTNeedHelp
-	trbRequest.State = models.TRBRequestStateOpen
-	trbRequest, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trbRequest := s.createNewTRBRequest()
 	s.NoError(err)
 
 	s.Run("fetches TRB request attendees (default attendee should exist)", func() {
-		fetched, err := GetTRBRequestAttendeesByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		fetched, err := GetTRBRequestAttendeesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.True(len(fetched) == 1)
 	})
@@ -59,39 +46,57 @@ func (s *ResolverSuite) TestCreateTRBRequestAttendee() {
 		paRole := models.PersonRolePrivacyAdvisor
 		cnRole := models.PersonRoleCloudNavigator
 		attendee := models.TRBRequestAttendee{
-			EUAUserID:    "ABCD", // not ANON, since that's created by default from s.fetchUserInfoStub
+			EUAUserID:    "ABCD",
 			TRBRequestID: trbRequest.ID,
 			Role:         &paRole,
 		}
-		attendee.CreatedBy = anonEua
 		createdAttendee, err := CreateTRBRequestAttendee(
 			ctx,
-			s.testConfigs.Store,
-			&emailClient,
-			stubFetchUserInfo,
+			store,
+			emailClient.SendTRBAttendeeAddedNotification,
+			okta.FetchUserInfo,
 			&attendee,
 		)
 		s.NoError(err)
+		s.EqualValues(s.testConfigs.Principal.EUAID, createdAttendee.CreatedBy)
 
 		createdAttendee.Role = &cnRole
-		createdAttendee.ModifiedBy = &anonEua
-		updatedAttendee, err := UpdateTRBRequestAttendee(ctx, s.testConfigs.Store, createdAttendee)
+		updatedAttendee, err := UpdateTRBRequestAttendee(ctx, store, createdAttendee)
 		s.NoError(err)
-		s.EqualValues(*updatedAttendee.Role, models.PersonRoleCloudNavigator)
-		s.EqualValues(updatedAttendee.ModifiedBy, &anonEua)
+		s.EqualValues(cnRole, *updatedAttendee.Role)
+		s.EqualValues(s.testConfigs.Principal.EUAID, *updatedAttendee.ModifiedBy)
 
 		component := "The Citadel of Ricks"
 		createdAttendee.Component = &component
-		createdAttendee.ModifiedBy = &anonEua
-		updatedAttendee, err = UpdateTRBRequestAttendee(ctx, s.testConfigs.Store, createdAttendee)
+		updatedAttendee, err = UpdateTRBRequestAttendee(ctx, store, createdAttendee)
 		s.NoError(err)
-		s.EqualValues(*updatedAttendee.Component, "The Citadel of Ricks")
-		s.EqualValues(updatedAttendee.ModifiedBy, &anonEua)
+		s.EqualValues(component, *updatedAttendee.Component)
+		s.EqualValues(s.testConfigs.Principal.EUAID, *updatedAttendee.ModifiedBy)
 	})
 
 	s.Run("fetches TRB request attendees", func() {
-		fetched, err := GetTRBRequestAttendeesByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		fetched, err := GetTRBRequestAttendeesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.True(len(fetched) == 2) // Default attendee, plus the one we created in the previous test!
+	})
+	s.Run("Get requester component", func() {
+		trbRequest := s.createNewTRBRequest()
+		component := "Jedi Council"
+		role := models.PersonRoleProductOwner
+		requesterAttendee, err := store.GetAttendeeByEUAIDAndTRBID(ctx, s.testConfigs.Principal.EUAID, trbRequest.ID)
+		s.NoError(err)
+		requesterAttendee.Component = &component
+		requesterAttendee.Role = &role
+		updatedAttendee, err := UpdateTRBRequestAttendee(ctx, store, requesterAttendee)
+		s.NoError(err)
+		s.NotNil(updatedAttendee)
+		s.NotNil(updatedAttendee.Component)
+		s.Equal(component, *updatedAttendee.Component)
+		s.NotNil(updatedAttendee.Role)
+		s.Equal(role, *updatedAttendee.Role)
+		fetchedRequesterComponent, err := GetTRBAttendeeComponent(s.ctxWithNewDataloaders(), &s.testConfigs.Principal.EUAID, trbRequest.ID)
+		s.NoError(err)
+		s.NotNil(fetchedRequesterComponent)
+		s.Equal(component, *fetchedRequesterComponent)
 	})
 }

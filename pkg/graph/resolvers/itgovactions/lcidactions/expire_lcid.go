@@ -3,8 +3,8 @@ package lcidactions
 import (
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // IsIntakeValidToExpireLCID checks if an intake is valid to have its LCID manually expired

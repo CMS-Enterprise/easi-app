@@ -1,7 +1,5 @@
 {
   "flags": {},
   "flagValues": {
-    "cedarCoreEnabled": false,
-    "emit-to-cedar": false
   }
 }

@@ -14,3 +14,5 @@ aws ecs update-service --cluster "${ECS_CLUSTER}" \
                        --service "${SERVICE_NAME}" \
                        --task-definition "${TASK_FAMILY}:${TASK_REVISION}" \
                        --no-cli-pager
+
+aws ecs wait services-stable --cluster "${ECS_CLUSTER}" --service "${SERVICE_NAME}"

@@ -94,10 +94,10 @@ Now you will need to start the Docker service: run Spotlight and type in
 ## Go
 
 **MacOS:**
-Install the version of Go that matches what's in our [Dockerfile](../Dockerfile) (currently go 1.21) with `brew install go@1.21`.
+Install the version of Go that matches what's in our [Dockerfile](../Dockerfile) (currently go 1.22.7) with `brew install go@1.22.7`.
 
 **Windows+WSL:**
-- Download the `.tar.gz` file for the correct version of Go (matches what's in our [Dockerfile](../Dockerfile) - currently go 1.21) for Linux from [the official Go site](https://golang.org/doc/install), making sure to save it to the Ubuntu filesystem. The easiest way to do this is to copy the download link, then use `wget` to download it on the command line, i.e. `wget https://go.dev/dl/go1.21.1.linux-amd64.tar.gz`. This will download the `.tar.gz` to the current directory.
+- Download the `.tar.gz` file for the correct version of Go (matches what's in our [Dockerfile](../Dockerfile) - currently go 1.22.7) for Linux from [the official Go site](https://golang.org/doc/install), making sure to save it to the Ubuntu filesystem. The easiest way to do this is to copy the download link, then use `wget` to download it on the command line, i.e. `wget https://go.dev/dl/go1.22.7.linux-amd64.tar.gz`. This will download the `.tar.gz` to the current directory.
 - From the directory containing the `.tar.gz` file, extract it to `/usr/local/go`, i.e. with `sudo tar -C /usr/local -xzf go1.17.3.linux-amd64.tar.gz`.
 - Add `/usr/local/go/bin` to your `PATH`. The easiest way to do this is to add the following to your `~/.bashrc` file:
 

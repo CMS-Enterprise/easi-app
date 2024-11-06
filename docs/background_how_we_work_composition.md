@@ -43,7 +43,7 @@ The objective of the EASi contract is to modernize and standardize IT governance
 ## Data Sources
 Our application sources data from:
 -	user-submitted data from our own RDS Database
--	user data (names, emails, EUA IDs) from CEDAR’s LDAP API
+-	user data (names, emails, EUA IDs) from the Okta User API
 -	system/service data from CEDAR’s “Core” API
 
 ## Technical Flexibility and Scalability

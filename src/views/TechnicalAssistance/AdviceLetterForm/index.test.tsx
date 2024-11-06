@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider, MockedResponse } from '@apollo/react-testing';
+import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import {
   render,
   screen,
@@ -85,7 +85,7 @@ const renderForm = (
   mocks?: MockedResponse[],
   error?: boolean
 ) => {
-  window.HTMLElement.prototype.scrollIntoView = vi.fn;
+  window.HTMLElement.prototype.scrollIntoView = vi.fn();
   return render(
     <MemoryRouter
       initialEntries={[

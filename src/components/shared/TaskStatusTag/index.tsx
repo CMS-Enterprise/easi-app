@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { TagEnum } from 'data/taskList';
 import {
   ITGovDecisionStatus,
   ITGovDraftBusinessCaseStatus,
@@ -36,9 +35,7 @@ export type TaskStatus =
   | keyof typeof ITGovDraftBusinessCaseStatus
   | keyof typeof ITGovGRTStatus
   | keyof typeof ITGovFinalBusinessCaseStatus
-  | keyof typeof ITGovGRBStatus
-  // IT Gov v1
-  | TagEnum;
+  | keyof typeof ITGovGRBStatus;
 
 /** Statuses that reflect a step is in progress */
 const activeStatuses = {

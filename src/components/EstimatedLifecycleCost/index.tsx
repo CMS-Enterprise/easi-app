@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   Button,
-  IconAdd,
+  Icon,
   Label,
   Link as UswdsLink
 } from '@trussworks/react-uswds';
@@ -161,10 +161,8 @@ const AddRelatedCostField = ({
 }: AddRelatedCostFieldProps) => {
   const { t } = useTranslation('businessCase');
 
-  const [
-    activeRelatedCost,
-    setActiveRelatedCost
-  ] = useState<LifecyclePhaseKey | null>(null);
+  const [activeRelatedCost, setActiveRelatedCost] =
+    useState<LifecyclePhaseKey | null>(null);
 
   if (relatedCosts.length > 2) return null;
 
@@ -174,7 +172,7 @@ const AddRelatedCostField = ({
         // Add related cost button
         activeRelatedCost === null ? (
           <IconButton
-            icon={<IconAdd />}
+            icon={<Icon.Add />}
             type="button"
             unstyled
             onClick={() => setActiveRelatedCost('' as LifecyclePhaseKey)}

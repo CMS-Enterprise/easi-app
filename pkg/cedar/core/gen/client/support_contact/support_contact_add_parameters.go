@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewSupportContactAddParams creates a new SupportContactAddParams object,
@@ -63,7 +63,10 @@ SupportContactAddParams contains all the parameters to send to the API endpoint
 */
 type SupportContactAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   supportContact information to be added to Alfabet.
+	*/
 	Body *models.SupportContactAddRequest
 
 	timeout    time.Duration

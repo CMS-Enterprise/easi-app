@@ -6,7 +6,7 @@ As we try to have logs for user actions, we need to better understand where
 they live and what extent of logging we will be doing.
 
 The decision to use AWS logging tools is addressed in a previous
-[ADR](https://github.com/CMSgov/easi-app/blob/main/docs/adr/0009-logging-platform.md).
+[ADR](https://github.com/cms-enterprise/easi-app/blob/main/docs/adr/0009-logging-platform.md).
 We decided to use CMS Cloud Splunk because it best facilitated the requirement
 of forwarding logs to the CCIC and integrating with the CMS Cloud team.
 

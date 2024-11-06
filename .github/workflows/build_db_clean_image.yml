@@ -7,7 +7,7 @@ on:
 env:
   AWS_DEFAULT_REGION: us-west-2
   DOCKER_BUILDKIT: 1
-  GIT_REF_NAME: ${{ github.event.pull_request.head.ref || github.ref }}
+  GIT_REF_NAME: ${{ github.ref }}
 
 jobs:
   build_db_clean_image:
@@ -23,7 +23,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4.0.1
+        uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -32,7 +32,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
       - name: Build, tag, and push image to Amazon ECR
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: Dockerfile.db_clean

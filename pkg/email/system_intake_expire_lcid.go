@@ -8,8 +8,7 @@ import (
 	"html/template"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type systemIntakeExpireLCIDEmailParameters struct {
@@ -28,7 +27,7 @@ func (sie systemIntakeEmails) SystemIntakeExpireLCIDBody(
 	lifecycleID string,
 	lifecycleExpiresAt *time.Time,
 	lifecycleIssuedAt *time.Time,
-	lifecycleScope models.HTML,
+	lifecycleScope *models.HTML,
 	lifecycleCostBaseline string,
 	reason models.HTML,
 	decisionNextSteps *models.HTML,
@@ -72,13 +71,12 @@ func (sie systemIntakeEmails) SendExpireLCIDNotification(
 	lifecycleID string,
 	lifecycleExpiresAt *time.Time,
 	lifecycleIssuedAt *time.Time,
-	lifecycleScope models.HTML,
+	lifecycleScope *models.HTML,
 	lifecycleCostBaseline string,
 	reason models.HTML,
 	decisionNextSteps *models.HTML,
 	additionalInfo *models.HTML,
 ) error {
-
 	subject := fmt.Sprintf("A Life Cycle ID (%s) has expired", lifecycleID)
 	body, err := sie.SystemIntakeExpireLCIDBody(
 		lifecycleID,
@@ -91,18 +89,14 @@ func (sie systemIntakeEmails) SendExpireLCIDNotification(
 		additionalInfo,
 	)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = sie.client.sender.Send(
+	return sie.client.sender.Send(
 		ctx,
-		sie.client.listAllRecipients(recipients),
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(sie.client.listAllRecipients(recipients)).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }

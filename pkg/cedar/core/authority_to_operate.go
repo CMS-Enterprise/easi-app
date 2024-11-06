@@ -7,10 +7,11 @@ import (
 
 	"github.com/guregu/null/zero"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 
-	apiauthority "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/authority_to_operate"
+	apiauthority "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/authority_to_operate"
 )
 
 // NOTE: This CEDAR endpoint in webMethods is called with a set of optional parameters (including a system ID) with the caveat that if
@@ -20,9 +21,12 @@ import (
 
 // GetAuthorityToOperate makes a GET call to the /authority_to_operate endpoint
 func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarAuthorityToOperate{}, nil
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return cedarcoremock.GetATOs(), nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
@@ -32,7 +36,7 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 
 	// Construct the parameters
 	params := apiauthority.NewAuthorityToOperateFindListParams()
-	params.SetSystemID(&cedarSystem.VersionID)
+	params.SetSystemID(cedarSystem.VersionID.Ptr())
 	params.HTTPClient = c.hc
 
 	// Make the API call
@@ -51,21 +55,23 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 	// Populate the ATO fields by converting each item in resp.Payload.AuthorityToOperate
 	for _, ato := range resp.Payload.AuthorityToOperateList {
 		retVal = append(retVal, &models.CedarAuthorityToOperate{
-			ActualDispositionDate: zero.TimeFrom(time.Time(ato.ActualDispositionDate)),
-			CedarID:               *ato.CedarID, // required
-			ContainsPersonallyIdentifiableInformation: zero.BoolFrom(ato.ContainsPersonallyIdentifiableInformation),
-			CountOfTotalNonPrivilegedUserPopulation:   zero.IntFrom(int64(ato.CountOfTotalNonPrivilegedUserPopulation)),
-			CountOfOpenPoams:                          zero.IntFrom(int64(ato.CountOfOpenPoams)),
-			CountOfTotalPrivilegedUserPopulation:      zero.IntFrom(int64(ato.CountOfTotalPrivilegedUserPopulation)),
+			UUID:    zero.StringFromPtr(ato.UUID),    // required
+			CedarID: zero.StringFromPtr(ato.CedarID), // required
+
+			ActualDispositionDate:                     zero.TimeFrom(time.Time(ato.ActualDispositionDate)),
+			ContainsPersonallyIdentifiableInformation: ato.ContainsPersonallyIdentifiableInformation,
+			CountOfTotalNonPrivilegedUserPopulation:   int(ato.CountOfTotalNonPrivilegedUserPopulation),
+			CountOfOpenPoams:                          int(ato.CountOfOpenPoams),
+			CountOfTotalPrivilegedUserPopulation:      int(ato.CountOfTotalPrivilegedUserPopulation),
 			DateAuthorizationMemoExpires:              zero.TimeFrom(time.Time(ato.DateAuthorizationMemoExpires)),
 			DateAuthorizationMemoSigned:               zero.TimeFrom(time.Time(ato.DateAuthorizationMemoSigned)),
 			EAuthenticationLevel:                      zero.StringFrom(ato.EAuthenticationLevel),
-			Fips199OverallImpactRating:                zero.IntFrom(int64(ato.Fips199OverallImpactRating)),
+			Fips199OverallImpactRating:                int(ato.Fips199OverallImpactRating),
 			FismaSystemAcronym:                        zero.StringFrom(ato.FismaSystemAcronym),
 			FismaSystemName:                           zero.StringFrom(ato.FismaSystemName),
-			IsAccessedByNonOrganizationalUsers:        zero.BoolFrom(ato.IsAccessedByNonOrganizationalUsers),
-			IsPiiLimitedToUserNameAndPass:             zero.BoolFrom(ato.IsPiiLimitedToUserNameAndPass),
-			IsProtectedHealthInformation:              zero.BoolFrom(ato.IsProtectedHealthInformation),
+			IsAccessedByNonOrganizationalUsers:        ato.IsAccessedByNonOrganizationalUsers,
+			IsPiiLimitedToUserNameAndPass:             ato.IsPiiLimitedToUserNameAndPass,
+			IsProtectedHealthInformation:              ato.IsProtectedHealthInformation,
 			LastActScaDate:                            zero.TimeFrom(time.Time(ato.LastActScaDate)),
 			LastAssessmentDate:                        zero.TimeFrom(time.Time(ato.LastAssessmentDate)),
 			LastContingencyPlanCompletionDate:         zero.TimeFrom(time.Time(ato.LastContingencyPlanCompletionDate)),
@@ -73,12 +79,11 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 			PiaCompletionDate:                         zero.TimeFrom(time.Time(ato.PiaCompletionDate)),
 			PrimaryCyberRiskAdvisor:                   zero.StringFrom(ato.PrimaryCyberRiskAdvisor),
 			PrivacySubjectMatterExpert:                zero.StringFrom(ato.PrivacySubjectMatterExpert),
-			RecoveryPointObjective:                    zero.FloatFrom(float64(ato.RecoveryPointObjective)),
-			RecoveryTimeObjective:                     zero.FloatFrom(float64(ato.RecoveryTimeObjective)),
-			SystemOfRecordsNotice:                     ato.SystemOfRecordsNotice,
+			RecoveryPointObjective:                    float64(ato.RecoveryPointObjective),
+			RecoveryTimeObjective:                     float64(ato.RecoveryTimeObjective),
+			SystemOfRecordsNotice:                     models.ZeroStringsFrom(ato.SystemOfRecordsNotice),
 			TLCPhase:                                  zero.StringFrom(ato.TlcPhase),
 			XLCPhase:                                  zero.StringFrom(ato.XlcPhase),
-			UUID:                                      *ato.UUID, // required
 		})
 	}
 

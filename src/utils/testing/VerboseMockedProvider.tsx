@@ -11,9 +11,9 @@ import { onError } from '@apollo/client/link/error';
 import {
   MockedProvider,
   MockedProviderProps,
-  MockedResponse
+  MockedResponse,
+  MockLink
 } from '@apollo/client/testing';
-import { MockLink } from '@apollo/react-testing';
 
 interface Props extends MockedProviderProps {
   mocks?: ReadonlyArray<MockedResponse>;
@@ -46,8 +46,8 @@ const VerboseMockedProvider = (props: Props) => {
 
   return (
     <MockedProvider
-      {...otherProps}
       addTypename={false}
+      {...otherProps}
       mocks={mocks}
       link={link}
     />

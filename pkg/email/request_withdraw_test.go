@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
@@ -55,10 +54,7 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 		err = client.SendWithdrawRequestEmail(ctx, requestName)
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("withdraw named request template is nil", e.Err.Error())
+		s.Equal("withdraw named request template is nil", err.Error())
 	})
 
 	s.Run("if the unnamed request template is nil, we get the error from it", func() {
@@ -69,10 +65,7 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 		err = client.SendWithdrawRequestEmail(ctx, "")
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("withdraw unnamed request template is nil", e.Err.Error())
+		s.Equal("withdraw unnamed request template is nil", err.Error())
 	})
 
 	s.Run("if the template fails to execute, we get the error from it", func() {
@@ -83,10 +76,7 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 		err = client.SendWithdrawRequestEmail(ctx, requestName)
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("template caller had an error", e.Err.Error())
+		s.Equal("template caller had an error", err.Error())
 	})
 
 	s.Run("if the sender fails, we get the error from it", func() {
@@ -98,9 +88,6 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 		err = client.SendWithdrawRequestEmail(ctx, requestName)
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("sender had an error", e.Err.Error())
+		s.Equal("sender had an error", err.Error())
 	})
 }

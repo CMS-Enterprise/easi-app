@@ -7,12 +7,12 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// Creates multiple link records relating a single TRB admin note to all TRB documents it references
+// CreateTRBAdminNoteTRBDocumentLinks creates multiple link records relating a single TRB admin note to all TRB documents it references
 func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 	ctx context.Context,
 	trbRequestID uuid.UUID,
@@ -63,6 +63,7 @@ func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 		)
 		return nil, err
 	}
+	defer createdLinkRows.Close()
 
 	// loop through the sqlx.Rows value returned from NamedQuery(), scan the results back into structs
 	createdLinks := []*models.TRBAdminNoteTRBRequestDocumentLink{}
@@ -106,6 +107,7 @@ func (s *Store) GetTRBRequestDocumentsByAdminNoteID(ctx context.Context, adminNo
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	arg := map[string]interface{}{
 		"admin_note_id": adminNoteID,

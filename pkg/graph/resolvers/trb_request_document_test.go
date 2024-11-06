@@ -6,16 +6,15 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/easiencoding"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func (suite *ResolverSuite) TestTRBRequestDocumentResolvers() {
+func (s *ResolverSuite) TestTRBRequestDocumentResolvers() {
 	// general setup
-	trbRequest, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTFormalReview, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(trbRequest)
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTFormalReview, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trbRequest)
 	trbRequestID := trbRequest.ID
 
 	documentToCreate := &models.TRBRequestDocument{
@@ -27,9 +26,9 @@ func (suite *ResolverSuite) TestTRBRequestDocumentResolvers() {
 	}
 	// docToBeCreated.CreatedBy will be set based on principal in test config
 
-	createdDocument := createTRBRequestDocumentSubtest(suite, trbRequestID, documentToCreate)
-	getTRBRequestDocumentsByRequestIDSubtest(suite, trbRequestID, createdDocument)
-	deleteTRBRequestDocumentSubtest(suite, createdDocument)
+	createdDocument := createTRBRequestDocumentSubtest(s, trbRequestID, documentToCreate)
+	getTRBRequestDocumentsByRequestIDSubtest(s, trbRequestID, createdDocument)
+	deleteTRBRequestDocumentSubtest(s, createdDocument)
 }
 
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially
@@ -38,7 +37,7 @@ func createTRBRequestDocumentSubtest(suite *ResolverSuite, trbRequestID uuid.UUI
 	testContents := "Test file content"
 	encodedFileContent := easiencoding.EncodeBase64String(testContents)
 	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
-	gqlInput := model.CreateTRBRequestDocumentInput{
+	gqlInput := models.CreateTRBRequestDocumentInput{
 		RequestID:            documentToCreate.TRBRequestID,
 		DocumentType:         documentToCreate.CommonDocumentType,
 		OtherTypeDescription: &documentToCreate.OtherType,
@@ -67,9 +66,7 @@ func createTRBRequestDocumentSubtest(suite *ResolverSuite, trbRequestID uuid.UUI
 
 func getTRBRequestDocumentsByRequestIDSubtest(suite *ResolverSuite, trbRequestID uuid.UUID, createdDocument *models.TRBRequestDocument) {
 	documents, err := GetTRBRequestDocumentsByRequestID(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
-		suite.testConfigs.S3Client,
+		suite.ctxWithNewDataloaders(),
 		trbRequestID,
 	)
 	suite.NoError(err)
@@ -88,9 +85,7 @@ func deleteTRBRequestDocumentSubtest(suite *ResolverSuite, createdDocument *mode
 	checkDocumentEquality(suite, createdDocument, createdDocument.CreatedBy, createdDocument.TRBRequestID, deletedDocument)
 
 	remainingDocuments, err := GetTRBRequestDocumentsByRequestID(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
-		suite.testConfigs.S3Client,
+		suite.ctxWithNewDataloaders(),
 		createdDocument.TRBRequestID,
 	)
 	suite.NoError(err)

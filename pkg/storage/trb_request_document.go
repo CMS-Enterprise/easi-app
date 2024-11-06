@@ -5,56 +5,53 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
 
 // GetTRBRequestDocumentsByRequestID queries the DB for all documents attached to the TRB request with the given ID
 // It will NOT return any items that have been soft-deleted (deleted_at NOT NULL)
 func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
-	const trbRequestDocumentsGetByRequestIDSQL = `
-		SELECT id,
-			trb_request_id,
-			file_name,
-			document_type,
-			other_type,
-			bucket,
-			s3_key,
-			created_by,
-			modified_by,
-			created_at,
-			modified_at,
-			deleted_at
-		FROM trb_request_documents
-		WHERE trb_request_id = :trb_request_id
-		AND deleted_at IS NULL
-	`
-
 	documents := []*models.TRBRequestDocument{}
 
-	stmt, err := s.db.PrepareNamed(trbRequestDocumentsGetByRequestIDSQL)
+	err := namedSelect(ctx, s.db, &documents, sqlqueries.TRBRequestDocuments.GetByTRBID, args{
+		"trb_request_id": trbRequestID,
+	})
+
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch TRB request documents for request ID %s", trbRequestID.String()),
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),
 		)
-		return nil, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBRequestDocument{},
+			Operation: apperrors.QueryFetch,
+		}
 	}
 
-	arg := map[string]interface{}{
-		"trb_request_id": trbRequestID,
-	}
+	return documents, nil
+}
 
-	err = stmt.Select(&documents, arg)
+// GetTRBRequestDocumentsByRequestIDs queries the DB for all documents attached to a list of TRB requests
+// It will NOT return any items that have been soft-deleted (deleted_at NOT NULL)
+func (s *Store) GetTRBRequestDocumentsByRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestDocument, error) {
+	documents := []*models.TRBRequestDocument{}
+
+	err := namedSelect(ctx, s.db, &documents, sqlqueries.TRBRequestDocuments.GetByTRBIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
+
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch TRB request documents for request ID %s", trbRequestID.String()),
+			"Failed to fetch TRB request documents by request IDs",
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
@@ -119,6 +116,7 @@ func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.T
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	retDoc := models.TRBRequestDocument{}
 	err = stmt.Get(&retDoc, document)
@@ -167,6 +165,7 @@ func (s *Store) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*mo
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	arg := map[string]interface{}{
 		"id": id,

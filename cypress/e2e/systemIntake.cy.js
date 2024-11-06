@@ -1,8 +1,11 @@
 import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
+import SystemIntakeSoftwareAcquisitionMethods from '../../src/constants/enums/SystemIntakeSoftwareAcquisitionMethods';
+import { BASIC_USER_PROD } from '../../src/constants/jobCodes';
+import testSystemIntakeName from '../support/systemIntake';
 
 describe('The System Intake Form', () => {
   beforeEach(() => {
-    cy.localLogin({ name: 'E2E1' });
+    cy.localLogin({ name: 'E2E1', role: BASIC_USER_PROD });
 
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {
@@ -31,7 +34,14 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Continue').click();
     cy.contains('a', 'Get started').click();
     cy.wait(1000);
-    cy.contains('a', 'Start').click();
+
+    cy.get('#relationType-newSystem').check({ force: true });
+    cy.contains('button', 'Continue to task list').click();
+
+    cy.get('li[data-testid="fill-out-the-intake-request-form"]')
+      .contains('button', 'Start')
+      .click();
+
     cy.location().should(loc => {
       expect(loc.pathname).to.match(/\/system\/.{36}\/contact-details/);
     });
@@ -49,33 +59,31 @@ describe('The System Intake Form', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
     // Test "Business owner same as requester" checkbox
-    cy.get('#IntakeForm-IsBusinessOwnerSameAsRequester')
+    cy.get('#businessOwnerSameAsRequester')
       .check({ force: true })
       .should('be.checked');
 
     // Business Owner name should be disabled when checkbox is checked
-    cy.get('#react-select-IntakeForm-BusinessOwnerName-input').should(
-      'be.disabled'
-    );
+    cy.get('#react-select-businessOwnerCommonName-input').should('be.disabled');
 
     // Check that business owner fields updated to display requester values
-    cy.get('#react-select-IntakeForm-BusinessOwnerName-input').should(
+    cy.get('#react-select-businessOwnerCommonName-input').should(
       'have.value',
       // Requester name shows as User E2E1 instead of "EndToEnd One" (their actual name) during testing
       'User E2E1, E2E1 (endtoend.one@local.fake)'
     );
-    cy.get('#IntakeForm-BusinessOwnerEmail').should(
+    cy.get('#businessOwnerEmail').should(
       'have.value',
       'endtoend.one@local.fake'
     );
-    cy.get('#IntakeForm-BusinessOwnerComponent').should(
+    cy.get('#businessOwnerComponent').should(
       'have.value',
       'Center for Medicare'
     );
 
-    cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
+    cy.get('#issoIsPresentFalse').check({ force: true }).should('be.checked');
 
-    cy.get('#IntakeForm-NoGovernanceTeam')
+    cy.get('#governanceTeamsIsPresentFalse')
       .check({ force: true })
       .should('be.checked');
 
@@ -86,28 +94,32 @@ describe('The System Intake Form', () => {
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
-    cy.get('#IntakeForm-CurrentStage')
+    cy.get('#currentStage')
       .select('Just an idea')
       .should('have.value', 'Just an idea');
 
     cy.contains('button', 'Next').click();
 
     // Contract Details
-    cy.get('#IntakeForm-CurrentAnnualSpending')
+    cy.get('#currentAnnualSpending')
       .type('Mock Current Annual Spend')
       .should('have.value', 'Mock Current Annual Spend');
 
-    cy.get('#IntakeForm-PlannedYearOneAnnualSpending')
+    cy.get('#currentAnnualSpendingITPortion')
+      .type('Mock Current Annual Spend IT Portion')
+      .should('have.value', 'Mock Current Annual Spend IT Portion');
+
+    cy.get('#plannedYearOneSpending')
       .type('Mock Planned First Year Annual Spend')
       .should('have.value', 'Mock Planned First Year Annual Spend');
 
-    cy.get('#IntakeForm-ContractNotNeeded')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#plannedYearOneSpendingITPortion')
+      .type('Mock Planned First Year Annual Spend IT Portion')
+      .should('have.value', 'Mock Planned First Year Annual Spend IT Portion');
+
+    cy.get('#contractNotNeeded').check({ force: true }).should('be.checked');
 
     cy.contains('button', 'Next').click();
-
-    // Skip documents step
 
     cy.contains('button', 'Continue without documents').click();
 
@@ -126,17 +138,15 @@ describe('The System Intake Form', () => {
     // Test "same as requester" checkbox
 
     // ISSO
-    cy.get('#IntakeForm-HasIssoYes')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#issoIsPresentTrue').check({ force: true }).should('be.checked');
 
-    cy.get('#react-select-IntakeForm-IssoName-input')
+    cy.get('#react-select-issoCommonName-input')
       .type('Rudolph')
-      .wait(1000)
+      .wait(2000)
       .type('{downArrow}{enter}')
       .should('have.value', 'Rudolph Pagac, POJG (rudolph.pagac@local.fake)');
 
-    cy.get('#IntakeForm-IssoComponent')
+    cy.get('#issoComponent')
       .select('Center for Program Integrity')
       .should('have.value', 'Center for Program Integrity');
 
@@ -145,7 +155,7 @@ describe('The System Intake Form', () => {
 
     cy.get('#react-select-IntakeForm-ContactCommonName-input')
       .type('Annetta Lockman')
-      .wait(1000)
+      .wait(2000)
       .type('{downArrow}{enter}')
       .should(
         'have.value',
@@ -165,7 +175,7 @@ describe('The System Intake Form', () => {
     cy.contains('p', 'Annetta Lockman, Other');
 
     // Governance teams
-    cy.get('#IntakeForm-YesGovernanceTeams')
+    cy.get('#governanceTeamsIsPresentTrue')
       .check({ force: true })
       .should('be.checked');
 
@@ -174,9 +184,9 @@ describe('The System Intake Form', () => {
         .check({ force: true })
         .should('be.checked');
 
-      cy.get(`#IntakeForm-${team.key}-Collaborator`)
-        .type(`${team.value} Collaborator`)
-        .should('have.value', `${team.value} Collaborator`);
+      cy.get(`#governanceTeam-${team.key}-collaborator`)
+        .type(`${team.name} Collaborator`)
+        .should('have.value', `${team.name} Collaborator`);
     });
 
     cy.contains('button', 'Next').click();
@@ -186,9 +196,17 @@ describe('The System Intake Form', () => {
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
-    cy.get('#IntakeForm-CurrentStage')
+    cy.get('#currentStage')
       .select('Just an idea')
       .should('have.value', 'Just an idea');
+
+    cy.get('#usingSoftwareYes').check({ force: true }).should('be.checked');
+
+    Object.values(SystemIntakeSoftwareAcquisitionMethods).forEach(acqMethod => {
+      cy.get(`#software-acquisition-${acqMethod}`)
+        .check({ force: true })
+        .should('be.checked');
+    });
 
     cy.contains('button', 'Next').click();
 
@@ -200,47 +218,45 @@ describe('The System Intake Form', () => {
       sources: ['Fed Admin', 'Research'],
       restart: true
     });
-    cy.get(`#fundingNumber-${fundingNumber}`);
+    cy.get(`#fundingSource${fundingNumber}`);
 
-    cy.get('#IntakeForm-CurrentAnnualSpending')
+    cy.get('#currentAnnualSpending')
       .type('Mock Current Annual Spend')
       .should('have.value', 'Mock Current Annual Spend');
 
-    cy.get('#IntakeForm-PlannedYearOneAnnualSpending')
+    cy.get('#currentAnnualSpendingITPortion')
+      .type('Mock Current Annual Spend IT Portion')
+      .should('have.value', 'Mock Current Annual Spend IT Portion');
+
+    cy.get('#plannedYearOneSpending')
       .type('Mock Planned First Year Annual Spend')
       .should('have.value', 'Mock Planned First Year Annual Spend');
 
-    cy.get('#IntakeForm-ContractHaveContract')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#plannedYearOneSpendingITPortion')
+      .type('Mock Planned First Year Annual Spend IT Portion')
+      .should('have.value', 'Mock Planned First Year Annual Spend IT Portion');
 
-    cy.get('#IntakeForm-Contractor')
+    cy.get('#contractHaveContract').check({ force: true }).should('be.checked');
+
+    cy.get('#contractor')
       .type('TrussWorks, Inc.')
       .should('have.value', 'TrussWorks, Inc.');
 
-    cy.get('#IntakeForm-Number')
+    cy.get('#contractNumbers')
       .type('123456-7890')
       .should('have.value', '123456-7890');
 
-    cy.get('#IntakeForm-ContractStartMonth')
-      .type('1')
-      .should('have.value', '1');
+    cy.get('#contractStartMonth').type('1').should('have.value', '1');
 
-    cy.get('#IntakeForm-ContractStartDay').type('2').should('have.value', '2');
+    cy.get('#contractStartDay').type('2').should('have.value', '2');
 
-    cy.get('#IntakeForm-ContractStartYear')
-      .type('2020')
-      .should('have.value', '2020');
+    cy.get('#contractStartYear').type('2020').should('have.value', '2020');
 
-    cy.get('#IntakeForm-ContractEndMonth')
-      .type('12')
-      .should('have.value', '12');
+    cy.get('#contractEndMonth').type('12').should('have.value', '12');
 
-    cy.get('#IntakeForm-ContractEndDay').type('29').should('have.value', '29');
+    cy.get('#contractEndDay').type('29').should('have.value', '29');
 
-    cy.get('#IntakeForm-ContractEndYear')
-      .type('2021')
-      .should('have.value', '2021');
+    cy.get('#contractEndYear').type('2021').should('have.value', '2021');
 
     cy.contains('button', 'Next').click();
 
@@ -255,6 +271,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Upload a document');
     cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
     cy.get('#documentType-SOO_SOW').check({ force: true });
+    cy.get('#version-HISTORICAL').check({ force: true });
     cy.contains('button', 'Upload document').click();
 
     cy.contains(
@@ -270,6 +287,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Upload a document');
     cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
     cy.get('#documentType-OTHER').check({ force: true });
+    cy.get('#version-CURRENT').check({ force: true });
     cy.get('#otherTypeDescription')
       .type('Test document')
       .should('have.value', 'Test document');
@@ -290,7 +308,7 @@ describe('The System Intake Form', () => {
 
     // Delete first document
     cy.contains('button', 'Remove').click();
-    cy.contains('h3', 'Confirm you want to remove test.pdf.');
+    cy.contains('h3', 'Remove test.pdf?');
     cy.contains('button', 'Remove document').click();
 
     cy.contains(
@@ -363,7 +381,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', 'Project Name')
       .siblings('dd')
-      .contains('Test Request Name');
+      .contains(testSystemIntakeName);
 
     cy.contains('dt', 'What is your business need?')
       .siblings('dd')
@@ -382,10 +400,24 @@ describe('The System Intake Form', () => {
 
     cy.contains(
       '.easi-review-row dt',
+      'Does your request involve AI technologies?'
+    )
+      .siblings('dd')
+      .contains('Yes');
+
+    cy.contains(
+      '.easi-review-row dt',
       'Does your project involve any user interface component, or changes to an interface component?'
     )
       .siblings('dd')
       .contains('No');
+
+    cy.contains(
+      '.easi-review-row dt',
+      'Do you plan to use any software products to fulfill your business needs?'
+    )
+      .siblings('dd')
+      .contains('Yes');
 
     cy.contains('.easi-review-row dt', 'Where are you in the process?')
       .siblings('dd')
@@ -396,80 +428,16 @@ describe('The System Intake Form', () => {
       'Which existing funding sources will fund this project?'
     )
       .siblings('dd')
-      .get(`li#fundingNumber-${fundingNumber}`);
+      .get(`li#fundingSource${fundingNumber}`);
 
     cy.get('#systemIntakeDocuments').contains('td', 'test.pdf');
   });
 
-  /**
-   * Test contact details section error messages
-   */
-  it('displays contact details error messages', () => {
-    // Click next button without filling in any values
-    cy.contains('button', 'Next').click();
-
-    // Check for error messages
-    cy.get('[data-testid="contact-details-errors"]');
-  });
-
-  it('displays request details error messages', () => {
-    cy.systemIntake.contactDetails.fillNonBranchingFields();
-
-    cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
-
-    cy.get('#IntakeForm-NoGovernanceTeam')
-      .check({ force: true })
-      .should('be.checked');
-
-    cy.contains('button', 'Next').click();
-
-    cy.contains('h1', 'Request details');
-
-    cy.contains('button', 'Next').click();
-
-    cy.get('[data-testid="request-details-errors"]');
-  });
-
-  it('displays funding source error messages', () => {
-    cy.systemIntake.contactDetails.fillNonBranchingFields();
-    cy.contains('button', 'Next').click();
-    cy.systemIntake.requestDetails.fillNonBranchingFields();
-    cy.get('#IntakeForm-CurrentStage')
-      .select('Just an idea')
-      .should('have.value', 'Just an idea');
-    cy.contains('button', 'Next').click();
-
-    // Check empty funding number and funding sources
-    cy.systemIntake.contractDetails.addFundingSource({ restart: true });
-    cy.contains('span', 'Funding number must be exactly 6 digits');
-    cy.contains('span', 'Select a funding source');
-
-    // Check funding source is numeric
-    cy.systemIntake.contractDetails.addFundingSource({
-      fundingNumber: 'abcdef',
-      sources: ['Fed Admin', 'Research']
-    });
-    cy.contains('span', 'Funding number can only contain digits');
-
-    // Add valid funding source
-    cy.systemIntake.contractDetails.addFundingSource({
-      fundingNumber: '123456'
-    });
-
-    // Check funding number is unique
-    cy.systemIntake.contractDetails.addFundingSource({
-      fundingNumber: '123456',
-      sources: ['Fed Admin', 'Research'],
-      restart: true
-    });
-    cy.contains('span', 'Funding number must be unique');
-  });
-
   it('saves on back click', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
-    cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
+    cy.get('#issoIsPresentFalse').check({ force: true }).should('be.checked');
 
-    cy.get('#IntakeForm-NoGovernanceTeam')
+    cy.get('#governanceTeamsIsPresentFalse')
       .check({ force: true })
       .should('be.checked');
 
@@ -478,21 +446,33 @@ describe('The System Intake Form', () => {
 
     cy.contains('h1', 'Request details');
 
-    cy.get('#IntakeForm-ContractName')
-      .type('Test Request Name')
-      .should('have.value', 'Test Request Name');
+    cy.get('#requestName')
+      .type(testSystemIntakeName)
+      .should('have.value', testSystemIntakeName);
 
     cy.contains('button', 'Back').click();
     cy.wait('@updateRequestDetails');
   });
-});
 
-describe('users who got lost', () => {
-  it('redirects to the system type page if somebody managed to skip it', () => {
-    cy.localLogin({ name: 'E2E1' });
-    cy.visit('/system/new');
-    cy.location().should(loc => {
-      expect(loc.pathname).to.equal('/system/request-type');
-    });
+  it('archives a system intake', () => {
+    cy.visit('/system/making-a-request');
+
+    cy.contains('a', 'Start a new request').click();
+
+    cy.contains('label', 'Add a new system or service').click();
+
+    cy.contains('button', 'Continue').click();
+
+    cy.contains('a', 'Get started').click();
+
+    cy.visit('/');
+
+    cy.contains('a', 'Draft').click();
+
+    cy.contains('button', 'Remove your request').click();
+
+    cy.contains('button', 'Remove request').click();
+
+    cy.url().should('eq', 'http://localhost:3000/');
   });
 });

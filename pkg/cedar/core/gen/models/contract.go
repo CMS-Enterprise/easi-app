@@ -7,7 +7,6 @@ package models
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -20,13 +19,34 @@ import (
 // swagger:model Contract
 type Contract struct {
 
+	// contract number
+	ContractNumber string `json:"ContractNumber,omitempty"`
+
+	// is delivery org
+	IsDeliveryOrg string `json:"IsDeliveryOrg,omitempty"`
+
+	// order number
+	OrderNumber string `json:"OrderNumber,omitempty"`
+
+	// p o p end date
+	POPEndDate string `json:"POPEndDate,omitempty"`
+
+	// p o p start date
+	POPStartDate string `json:"POPStartDate,omitempty"`
+
+	// product service description
+	ProductServiceDescription string `json:"ProductServiceDescription,omitempty"`
+
+	// project title
+	ProjectTitle string `json:"ProjectTitle,omitempty"`
+
+	// service provided
+	ServiceProvided string `json:"ServiceProvided,omitempty"`
+
 	// Contract number
 	// Example: HHSM500201600052I
 	// Required: true
 	AwardID *string `json:"awardId"`
-
-	// budget ids
-	BudgetIds []*BudgetIds `json:"budgetIds"`
 
 	// Is ADO Parent Contract, Yes/No
 	// Example: yes
@@ -35,6 +55,9 @@ type Contract struct {
 	// contract deliverable Id
 	// Example: 11-22-333
 	ContractDeliverableID string `json:"contractDeliverableId,omitempty"`
+
+	// contract name
+	ContractName string `json:"contractName,omitempty"`
 
 	// Contract description
 	// Example: Strategic partners acquisition readiness
@@ -53,12 +76,6 @@ type Contract struct {
 	// System which this budget funds
 	// Example: 123-45-678
 	SystemID string `json:"systemId,omitempty"`
-
-	// tbm cost pool
-	TbmCostPool []*ContractTbmCostPoolItems0 `json:"tbmCostPool"`
-
-	// tbm it tower category
-	TbmItTowerCategory []*ContractTbmItTowerCategoryItems0 `json:"tbmItTowerCategory"`
 }
 
 // Validate validates this contract
@@ -69,23 +86,11 @@ func (m *Contract) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateBudgetIds(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateID(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateParentAwardID(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTbmCostPool(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTbmItTowerCategory(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -99,32 +104,6 @@ func (m *Contract) validateAwardID(formats strfmt.Registry) error {
 
 	if err := validate.Required("awardId", "body", m.AwardID); err != nil {
 		return err
-	}
-
-	return nil
-}
-
-func (m *Contract) validateBudgetIds(formats strfmt.Registry) error {
-	if swag.IsZero(m.BudgetIds) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.BudgetIds); i++ {
-		if swag.IsZero(m.BudgetIds[i]) { // not required
-			continue
-		}
-
-		if m.BudgetIds[i] != nil {
-			if err := m.BudgetIds[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("budgetIds" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("budgetIds" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
 	}
 
 	return nil
@@ -148,152 +127,8 @@ func (m *Contract) validateParentAwardID(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Contract) validateTbmCostPool(formats strfmt.Registry) error {
-	if swag.IsZero(m.TbmCostPool) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.TbmCostPool); i++ {
-		if swag.IsZero(m.TbmCostPool[i]) { // not required
-			continue
-		}
-
-		if m.TbmCostPool[i] != nil {
-			if err := m.TbmCostPool[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("tbmCostPool" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("tbmCostPool" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *Contract) validateTbmItTowerCategory(formats strfmt.Registry) error {
-	if swag.IsZero(m.TbmItTowerCategory) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.TbmItTowerCategory); i++ {
-		if swag.IsZero(m.TbmItTowerCategory[i]) { // not required
-			continue
-		}
-
-		if m.TbmItTowerCategory[i] != nil {
-			if err := m.TbmItTowerCategory[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("tbmItTowerCategory" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("tbmItTowerCategory" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-// ContextValidate validate this contract based on the context it is used
+// ContextValidate validates this contract based on context it is used
 func (m *Contract) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.contextValidateBudgetIds(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateTbmCostPool(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateTbmItTowerCategory(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *Contract) contextValidateBudgetIds(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.BudgetIds); i++ {
-
-		if m.BudgetIds[i] != nil {
-
-			if swag.IsZero(m.BudgetIds[i]) { // not required
-				return nil
-			}
-
-			if err := m.BudgetIds[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("budgetIds" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("budgetIds" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *Contract) contextValidateTbmCostPool(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.TbmCostPool); i++ {
-
-		if m.TbmCostPool[i] != nil {
-
-			if swag.IsZero(m.TbmCostPool[i]) { // not required
-				return nil
-			}
-
-			if err := m.TbmCostPool[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("tbmCostPool" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("tbmCostPool" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *Contract) contextValidateTbmItTowerCategory(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.TbmItTowerCategory); i++ {
-
-		if m.TbmItTowerCategory[i] != nil {
-
-			if swag.IsZero(m.TbmItTowerCategory[i]) { // not required
-				return nil
-			}
-
-			if err := m.TbmItTowerCategory[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("tbmItTowerCategory" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("tbmItTowerCategory" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
 	return nil
 }
 
@@ -308,86 +143,6 @@ func (m *Contract) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Contract) UnmarshalBinary(b []byte) error {
 	var res Contract
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// ContractTbmCostPoolItems0 contract tbm cost pool items0
-//
-// swagger:model ContractTbmCostPoolItems0
-type ContractTbmCostPoolItems0 struct {
-
-	// id
-	ID string `json:"id,omitempty"`
-
-	// name
-	Name string `json:"name,omitempty"`
-}
-
-// Validate validates this contract tbm cost pool items0
-func (m *ContractTbmCostPoolItems0) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// ContextValidate validates this contract tbm cost pool items0 based on context it is used
-func (m *ContractTbmCostPoolItems0) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *ContractTbmCostPoolItems0) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *ContractTbmCostPoolItems0) UnmarshalBinary(b []byte) error {
-	var res ContractTbmCostPoolItems0
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// ContractTbmItTowerCategoryItems0 contract tbm it tower category items0
-//
-// swagger:model ContractTbmItTowerCategoryItems0
-type ContractTbmItTowerCategoryItems0 struct {
-
-	// id
-	ID string `json:"id,omitempty"`
-
-	// name
-	Name string `json:"name,omitempty"`
-}
-
-// Validate validates this contract tbm it tower category items0
-func (m *ContractTbmItTowerCategoryItems0) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// ContextValidate validates this contract tbm it tower category items0 based on context it is used
-func (m *ContractTbmItTowerCategoryItems0) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *ContractTbmItTowerCategoryItems0) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *ContractTbmItTowerCategoryItems0) UnmarshalBinary(b []byte) error {
-	var res ContractTbmItTowerCategoryItems0
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

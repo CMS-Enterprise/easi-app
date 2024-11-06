@@ -1,3 +1,4 @@
+import { SystemIntakeWithReviewRequestedFragment } from 'gql/gen/graphql';
 import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
@@ -15,9 +16,9 @@ import {
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import {
-  GetSystemIntakeContacts,
-  GetSystemIntakeContactsVariables
-} from 'queries/types/GetSystemIntakeContacts';
+  GetSystemIntakeContactsQuery as GetSystemIntakeContactsType,
+  GetSystemIntakeContactsQueryVariables
+} from 'queries/types/GetSystemIntakeContactsQuery';
 import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'queries/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
@@ -37,14 +38,15 @@ import {
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentStatus,
+  SystemIntakeDocumentVersion,
   SystemIntakeFormState,
   SystemIntakeRequestType,
   SystemIntakeState,
-  SystemIntakeStatus,
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester,
   SystemIntakeStep,
-  SystemIntakeTRBFollowUp
+  SystemIntakeTRBFollowUp,
+  TRBRequestStatus
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 
@@ -110,14 +112,17 @@ export const documents: SystemIntakeDocument[] = [
     id: '3b23fcf9-85d3-4211-a7d8-d2d08148f196',
     fileName: 'sample1.pdf',
     documentType: {
-      commonType: SystemIntakeDocumentCommonType.DRAFT_ICGE,
+      commonType: SystemIntakeDocumentCommonType.DRAFT_IGCE,
       otherTypeDescription: null,
       __typename: 'SystemIntakeDocumentType'
     },
+    version: SystemIntakeDocumentVersion.CURRENT,
     status: SystemIntakeDocumentStatus.AVAILABLE,
     uploadedAt: '2023-06-14T18:24:46.310929Z',
-    url:
-      'http://host.docker.internal:9000/easi-app-file-uploads/ead3f487-8aaa-47d2-aa26-335e9b560a92.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=f71d5d63d68958a2bd8526c2b2cdd5abe78b21eb69d10739fe8f8e6fd5d010ec',
+    url: 'http://localhost:9004/easi-app-file-uploads/ead3f487-8aaa-47d2-aa26-335e9b560a92.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=f71d5d63d68958a2bd8526c2b2cdd5abe78b21eb69d10739fe8f8e6fd5d010ec',
+    canView: true,
+    canDelete: true,
+    systemIntakeId,
     __typename: 'SystemIntakeDocument'
   },
   {
@@ -128,10 +133,13 @@ export const documents: SystemIntakeDocument[] = [
       otherTypeDescription: null,
       __typename: 'SystemIntakeDocumentType'
     },
+    version: SystemIntakeDocumentVersion.CURRENT,
     status: SystemIntakeDocumentStatus.PENDING,
     uploadedAt: '2023-06-14T18:24:46.32661Z',
-    url:
-      'http://host.docker.internal:9000/easi-app-file-uploads/7e047111-6228-4943-9c4b-0961f27858f4.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=0e3f337697c616b01533accd95a316cbeabeb6990961b9881911c757837cbf95',
+    url: 'http://localhost:9004/easi-app-file-uploads/7e047111-6228-4943-9c4b-0961f27858f4.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=0e3f337697c616b01533accd95a316cbeabeb6990961b9881911c757837cbf95',
+    canView: true,
+    canDelete: true,
+    systemIntakeId,
     __typename: 'SystemIntakeDocument'
   },
   {
@@ -142,13 +150,146 @@ export const documents: SystemIntakeDocument[] = [
       otherTypeDescription: 'Some other type of doc',
       __typename: 'SystemIntakeDocumentType'
     },
+    version: SystemIntakeDocumentVersion.HISTORICAL,
     status: SystemIntakeDocumentStatus.UNAVAILABLE,
     uploadedAt: '2023-06-14T18:24:46.342866Z',
-    url:
-      'http://host.docker.internal:9000/easi-app-file-uploads/f779e8e4-9c78-4b14-bbab-37618447f3f9.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=7e6755645a1f163d41d2fa7c19776d0ceb4cfd3ff8e1c2918c428a551fe44764',
+    url: 'http://localhost:9004/easi-app-file-uploads/f779e8e4-9c78-4b14-bbab-37618447f3f9.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20230614%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230614T184943Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=7e6755645a1f163d41d2fa7c19776d0ceb4cfd3ff8e1c2918c428a551fe44764',
+    canView: true,
+    canDelete: true,
+    systemIntakeId,
     __typename: 'SystemIntakeDocument'
   }
 ];
+
+export const emptySystemIntake: SystemIntake = {
+  __typename: 'SystemIntake',
+  requestName: null,
+  id: systemIntakeId,
+  euaUserId: requester.euaUserId,
+  adminLead: '',
+  statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
+  statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
+  requester: {
+    __typename: 'SystemIntakeRequester',
+    name: requester.commonName!,
+    component: null,
+    email: null
+  },
+  requestType: SystemIntakeRequestType.NEW,
+  businessOwner: {
+    __typename: 'SystemIntakeBusinessOwner',
+    name: null,
+    component: null
+  },
+  productManager: {
+    __typename: 'SystemIntakeProductManager',
+    name: null,
+    component: null
+  },
+  isso: {
+    __typename: 'SystemIntakeISSO',
+    isPresent: false,
+    name: null
+  },
+  governanceTeams: {
+    __typename: 'SystemIntakeGovernanceTeam',
+    isPresent: false,
+    teams: null
+  },
+  existingFunding: null,
+  fundingSources: [],
+  costs: {
+    __typename: 'SystemIntakeCosts',
+    expectedIncreaseAmount: null,
+    isExpectingIncrease: null
+  },
+  annualSpending: {
+    __typename: 'SystemIntakeAnnualSpending',
+    currentAnnualSpending: null,
+    currentAnnualSpendingITPortion: null,
+    plannedYearOneSpending: null,
+    plannedYearOneSpendingITPortion: null
+  },
+  contract: {
+    __typename: 'SystemIntakeContract',
+    hasContract: null,
+    contractor: null,
+    vehicle: null,
+    startDate: {
+      __typename: 'ContractDate',
+      month: null,
+      day: null,
+      year: null
+    },
+    endDate: {
+      __typename: 'ContractDate',
+      month: null,
+      day: null,
+      year: null
+    }
+  },
+  decisionNextSteps: null,
+  businessNeed: null,
+  businessSolution: null,
+  currentStage: null,
+  needsEaSupport: null,
+  usesAiTech: null,
+  usingSoftware: null,
+  acquisitionMethods: [],
+  grtReviewEmailBody: null,
+  decidedAt: null,
+  submittedAt: null,
+  grbDate: null,
+  grtDate: null,
+  governanceRequestFeedbacks: [],
+  lcid: null,
+  lcidIssuedAt: null,
+  lcidExpiresAt: null,
+  lcidRetiresAt: null,
+  lcidScope: null,
+  lcidCostBaseline: null,
+  lcidStatus: null,
+  rejectionReason: null,
+  updatedAt: null,
+  createdAt: '2024-01-02T19:36:50.127999Z',
+  businessCaseId: null,
+  archivedAt: null,
+  hasUiChanges: null,
+  documents: [],
+  state: SystemIntakeState.OPEN,
+  decisionState: SystemIntakeDecisionState.NO_DECISION,
+  trbFollowUpRecommendation: null,
+  requestFormState: SystemIntakeFormState.IN_PROGRESS,
+  relationType: null,
+  contractName: 'My contract',
+  contractNumbers: [
+    {
+      __typename: 'SystemIntakeContractNumber',
+      id: '34t53432',
+      contractNumber: '123456-7890'
+    }
+  ],
+  systems: [
+    {
+      __typename: 'CedarSystem',
+      id: '123',
+      name: 'My system',
+      description: 'A fun system',
+      acronym: 'MS',
+      businessOwnerOrg: 'Oddball',
+      businessOwnerRoles: [
+        {
+          __typename: 'CedarRole',
+          objectID: '9787620',
+          assigneeFirstName: 'John',
+          assigneeLastName: 'Doe'
+        }
+      ]
+    }
+  ],
+  relatedIntakes: [],
+  relatedTRBRequests: []
+};
 
 export const systemIntake: SystemIntake = {
   __typename: 'SystemIntake',
@@ -156,7 +297,6 @@ export const systemIntake: SystemIntake = {
   id: systemIntakeId,
   euaUserId: requester.euaUserId,
   adminLead: '',
-  status: SystemIntakeStatus.INTAKE_SUBMITTED,
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_SUBMITTED,
   requester: {
@@ -196,14 +336,15 @@ export const systemIntake: SystemIntake = {
   annualSpending: {
     __typename: 'SystemIntakeAnnualSpending',
     currentAnnualSpending: '',
-    plannedYearOneSpending: ''
+    currentAnnualSpendingITPortion: '',
+    plannedYearOneSpending: '',
+    plannedYearOneSpendingITPortion: ''
   },
   contract: {
     __typename: 'SystemIntakeContract',
     hasContract: 'IN_PROGRESS',
     contractor: 'TrussWorks, Inc.',
     vehicle: 'Sole Source',
-    number: '123456-7890',
     startDate: {
       __typename: 'ContractDate',
       month: '1',
@@ -222,6 +363,9 @@ export const systemIntake: SystemIntake = {
   businessSolution: 'The quick brown fox jumps over the lazy dog.',
   currentStage: 'The quick brown fox jumps over the lazy dog.',
   needsEaSupport: false,
+  usesAiTech: true,
+  usingSoftware: 'NO',
+  acquisitionMethods: [],
   grtReviewEmailBody: 'The quick brown fox jumps over the lazy dog.',
   decidedAt: null,
   submittedAt: '2022-10-20T14:55:47.88283Z',
@@ -245,55 +389,66 @@ export const systemIntake: SystemIntake = {
   state: SystemIntakeState.OPEN,
   decisionState: SystemIntakeDecisionState.NO_DECISION,
   trbFollowUpRecommendation: null,
-  requestFormState: SystemIntakeFormState.SUBMITTED
-};
-
-/** System intake form that has NOT been started */
-export const initialSystemIntakeForm: SystemIntake = {
-  ...systemIntake,
-  requestName: '',
-  status: SystemIntakeStatus.INTAKE_DRAFT,
-  requester: {
-    ...systemIntake.requester,
-    component: ''
-  },
-  businessOwner: {
-    __typename: 'SystemIntakeBusinessOwner',
-    name: '',
-    component: ''
-  },
-  productManager: {
-    __typename: 'SystemIntakeProductManager',
-    name: '',
-    component: ''
-  },
-  isso: {
-    __typename: 'SystemIntakeISSO',
-    isPresent: null,
-    name: ''
-  },
-  contract: {
-    __typename: 'SystemIntakeContract',
-    hasContract: '',
-    contractor: '',
-    number: '',
-    vehicle: '',
-    startDate: {
-      __typename: 'ContractDate',
-      month: '',
-      day: '',
-      year: ''
-    },
-    endDate: {
-      __typename: 'ContractDate',
-      month: '',
-      day: '',
-      year: ''
+  requestFormState: SystemIntakeFormState.SUBMITTED,
+  relationType: null,
+  contractName: 'My contract',
+  contractNumbers: [
+    {
+      __typename: 'SystemIntakeContractNumber',
+      id: '34t53432',
+      contractNumber: '123456-7890'
     }
-  },
-  businessNeed: '',
-  businessSolution: '',
-  currentStage: ''
+  ],
+  systems: [
+    {
+      __typename: 'CedarSystem',
+      id: '123',
+      name: 'My system',
+      description: 'A fun system',
+      acronym: 'MS',
+      businessOwnerOrg: 'Oddball',
+      businessOwnerRoles: [
+        {
+          __typename: 'CedarRole',
+          objectID: '9787620',
+          assigneeFirstName: 'John',
+          assigneeLastName: 'Doe'
+        }
+      ]
+    }
+  ],
+  relatedIntakes: [
+    {
+      __typename: 'SystemIntake',
+      id: '1',
+      requestName: 'related intake 1',
+      contractNumbers: [
+        { __typename: 'SystemIntakeContractNumber', contractNumber: '1' },
+        { __typename: 'SystemIntakeContractNumber', contractNumber: '2' }
+      ],
+      decisionState: SystemIntakeDecisionState.NO_DECISION,
+      submittedAt: new Date().toString()
+    }
+  ],
+  relatedTRBRequests: [
+    {
+      __typename: 'TRBRequest',
+      id: '2',
+      name: 'related trb 1',
+      contractNumbers: [
+        {
+          __typename: 'TRBRequestContractNumber',
+          contractNumber: '1'
+        },
+        {
+          __typename: 'TRBRequestContractNumber',
+          contractNumber: '2'
+        }
+      ],
+      status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
+      createdAt: new Date().toString()
+    }
+  ]
 };
 
 export const systemIntakeForTable: TableSystemIntake = {
@@ -301,7 +456,6 @@ export const systemIntakeForTable: TableSystemIntake = {
   id: '1',
   euaUserId: '',
   requestName: '',
-  status: SystemIntakeStatus.INTAKE_SUBMITTED,
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
   state: SystemIntakeState.OPEN,
   requesterName: systemIntake.requester.name,
@@ -317,13 +471,21 @@ export const systemIntakeForTable: TableSystemIntake = {
   annualSpending: {
     __typename: 'SystemIntakeAnnualSpending',
     currentAnnualSpending: 'Current annual spending',
-    plannedYearOneSpending: 'Planned year one spending'
+    currentAnnualSpendingITPortion: 'Current annual spending IT portion',
+    plannedYearOneSpending: 'Planned year one spending',
+    plannedYearOneSpendingITPortion: 'Planned year one spending IT portion'
   },
   contract: systemIntake.contract,
+  contractName: '',
+  contractNumbers: [],
+  systems: [],
   businessNeed: systemIntake.businessNeed,
   businessSolution: systemIntake.businessSolution,
   currentStage: systemIntake.currentStage,
   needsEaSupport: systemIntake.needsEaSupport,
+  usesAiTech: systemIntake.usesAiTech,
+  usingSoftware: systemIntake.usingSoftware,
+  acquisitionMethods: systemIntake.acquisitionMethods,
   grtDate: systemIntake.grtDate,
   grbDate: systemIntake.grbDate,
   lcid: null,
@@ -373,34 +535,35 @@ export const systemIntakeWithLcid: SystemIntakeWithLcid = {
   lcidCostBaseline: 'Text cost baseline'
 };
 
-export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSType> = {
-  request: {
-    query: GetSystemIntakesWithLCIDS,
-    variables: {}
-  },
-  result: {
-    data: {
-      systemIntakesWithLcids: [
-        systemIntakeWithLcid,
-        {
-          __typename: 'SystemIntake',
-          id: '8be3f86d-a4d6-446b-8a56-dc9da77ed326',
-          lcid: '654321',
-          requestName: 'Test request name 2',
-          lcidExpiresAt: null,
-          lcidScope: null,
-          decisionNextSteps: null,
-          trbFollowUpRecommendation: null,
-          lcidCostBaseline: null
-        }
-      ]
+export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSType> =
+  {
+    request: {
+      query: GetSystemIntakesWithLCIDS,
+      variables: {}
+    },
+    result: {
+      data: {
+        systemIntakesWithLcids: [
+          systemIntakeWithLcid,
+          {
+            __typename: 'SystemIntake',
+            id: '8be3f86d-a4d6-446b-8a56-dc9da77ed326',
+            lcid: '654321',
+            requestName: 'Test request name 2',
+            lcidExpiresAt: null,
+            lcidScope: null,
+            decisionNextSteps: null,
+            trbFollowUpRecommendation: null,
+            lcidCostBaseline: null
+          }
+        ]
+      }
     }
-  }
-};
+  };
 
 export const getSystemIntakeContactsQuery: MockedQuery<
-  GetSystemIntakeContacts,
-  GetSystemIntakeContactsVariables
+  GetSystemIntakeContactsType,
+  GetSystemIntakeContactsQueryVariables
 > = {
   request: {
     query: GetSystemIntakeContactsQuery,
@@ -440,7 +603,11 @@ export const taskListSystemIntake: TaskListSystemIntake = {
   updatedAt: null,
   grtDate: null,
   grbDate: null,
-  businessCase: null
+  businessCase: null,
+  relationType: null,
+  contractName: null,
+  contractNumbers: [],
+  systems: []
 };
 
 export const getGovernanceTaskListQuery = (
@@ -461,3 +628,65 @@ export const getGovernanceTaskListQuery = (
     }
   }
 });
+
+const currentYear = DateTime.local().year;
+export const systemIntakesWithReviewRequested: SystemIntakeWithReviewRequestedFragment[] =
+  [
+    {
+      id: 'a5689bec-e4cf-4f2b-a7de-72020e8d65be',
+      requestName: 'With GRB scheduled',
+      requesterName: users[3].commonName,
+      requesterComponent: 'Office of Enterprise Data and Analytics',
+      grbDate: `${currentYear + 2}-10-02T03:11:24.478056Z`,
+      __typename: 'SystemIntake'
+    },
+    {
+      id: '5af245bc-fc54-4677-bab1-1b3e798bb43c',
+      requestName: 'System Intake with GRB Reviewers',
+      requesterName: 'User One',
+      requesterComponent: 'Office of the Actuary',
+      grbDate: '2020-10-08T03:11:24.478056Z',
+      __typename: 'SystemIntake'
+    },
+    {
+      id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+      requestName: 'Edits requested on initial request form',
+      requesterName: users[0].commonName,
+      requesterComponent: 'Federal Coordinated Health Care Office',
+      grbDate: null,
+      __typename: 'SystemIntake'
+    },
+    {
+      id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+      requestName: 'Mock System Intake 1',
+      requesterName: users[1].commonName,
+      requesterComponent: 'Office of Communications',
+      grbDate: '2024-03-29T03:11:24.478056Z',
+      __typename: 'SystemIntake'
+    },
+    {
+      id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+      requestName: 'Mock System Intake 2',
+      requesterName: users[2].commonName,
+      requesterComponent: 'Office of the Actuary',
+      grbDate: `${currentYear + 1}-06-09T03:11:24.478056Z`,
+      __typename: 'SystemIntake'
+    },
+
+    {
+      id: '20cbcfbf-6459-4c96-943b-e76b83122dbf',
+      requestName: 'Closable Request',
+      requesterName: users[3].commonName,
+      requesterComponent: 'Office of Information Technology',
+      grbDate: '2023-01-18T03:11:24.478056Z',
+      __typename: 'SystemIntake'
+    },
+    {
+      id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
+      requestName: 'Mock System Intake 3',
+      requesterName: users[2].commonName,
+      requesterComponent: 'Office of Information Technology',
+      grbDate: null,
+      __typename: 'SystemIntake'
+    }
+  ];

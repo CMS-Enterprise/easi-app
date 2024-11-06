@@ -5,17 +5,27 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
-// UpdateSystemIntakeFundingSources clears and updates the funding sources of a system intake
+// UpdateSystemIntakeFundingSources clears and updates the funding sources of a system intake using an automatically created transaction
 func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemIntakeID uuid.UUID, fundingSources []*models.SystemIntakeFundingSource) ([]*models.SystemIntakeFundingSource, error) {
+	return sqlutils.WithTransactionRet[[]*models.SystemIntakeFundingSource](ctx, s, func(tx *sqlx.Tx) ([]*models.SystemIntakeFundingSource, error) {
+		return s.UpdateSystemIntakeFundingSourcesNP(ctx, tx, systemIntakeID, fundingSources)
+
+	})
+}
+
+// UpdateSystemIntakeFundingSourcesNP clears and updates the funding sources of a system intake
+func (s *Store) UpdateSystemIntakeFundingSourcesNP(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, fundingSources []*models.SystemIntakeFundingSource) ([]*models.SystemIntakeFundingSource, error) {
 	now := s.clock.Now()
 
-	tx := s.db.MustBegin()
-	defer tx.Rollback()
 	deleteFundingSourcesSQL := `
 		DELETE FROM system_intake_funding_sources
 		WHERE system_intake_id = $1;
@@ -65,23 +75,30 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 		}
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to commit funding sources transaction, error %s", err))
-		return nil, err
-	}
-
 	return fundingSources, nil
 }
 
 // FetchSystemIntakeFundingSourcesByIntakeID fetches all funding sources for a system intake
 func (s *Store) FetchSystemIntakeFundingSourcesByIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeFundingSource, error) {
 	sources := []*models.SystemIntakeFundingSource{}
-	err := s.db.Select(&sources, `
-		SELECT *
-		FROM system_intake_funding_sources
-		WHERE system_intake_id=$1
-	`, systemIntakeID)
+	err := namedSelect(ctx, s.db, &sources, sqlqueries.SystemIntakeFundingSources.GetAllBySystemIntakeID, args{
+		"system_intake_id": systemIntakeID,
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch funding sources, error %s", err))
+		return sources, err
+	}
+
+	return sources, nil
+}
+
+// FetchSystemIntakeFundingSourcesByIntakeIDs fetches all funding sources for a slice of system intake IDs
+func (s *Store) FetchSystemIntakeFundingSourcesByIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeFundingSource, error) {
+	sources := []*models.SystemIntakeFundingSource{}
+	err := namedSelect(ctx, s.db, &sources, sqlqueries.SystemIntakeFundingSources.GetAllBySystemIntakeIDs, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
+	})
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch funding sources, error %s", err))

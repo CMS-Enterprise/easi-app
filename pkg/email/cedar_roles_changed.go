@@ -8,8 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type cedarRolesChangedEmailParameters struct {
@@ -63,19 +62,14 @@ func (c Client) SendCedarRolesChangedEmail(
 	subject := fmt.Sprintf("CEDAR Roles modified for (%v)", targetFullName)
 	body, err := c.cedarRolesChangedEmailBody(requesterFullName, targetFullName, didAdd, didDelete, roleTypeNamesBefore, roleTypeNamesAfter, systemName, timestamp)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = c.sender.Send(
+	return c.sender.Send(
 		ctx,
-		[]models.EmailAddress{c.config.CEDARTeamEmail},
-		[]models.EmailAddress{},
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{c.config.CEDARTeamEmail}).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
 }

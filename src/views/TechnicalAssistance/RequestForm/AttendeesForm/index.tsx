@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, FetchResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Form, IconArrowBack } from '@trussworks/react-uswds';
+import { Form, Icon } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -18,7 +18,7 @@ import {
 } from 'types/technicalAssistance';
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
-import Breadcrumbs from '../../Breadcrumbs';
+import Breadcrumbs from '../../../../components/shared/Breadcrumbs';
 import { initialAttendee } from '../Attendees';
 import Pager from '../Pager';
 import { TrbFormAlert } from '..';
@@ -140,7 +140,7 @@ function AttendeesForm({
     // If no ID is present, create new attendee
     return createAttendee({
       trbRequestId,
-      euaUserId,
+      euaUserId: euaUserId || '',
       component: component || '',
       role: role as PersonRole
     });
@@ -268,7 +268,7 @@ function AttendeesForm({
                 setActiveAttendee({ ...initialAttendee, trbRequestId })
               }
             >
-              <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+              <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
               {t(
                 activeAttendee.id
                   ? 'attendees.dontEditAndReturn'

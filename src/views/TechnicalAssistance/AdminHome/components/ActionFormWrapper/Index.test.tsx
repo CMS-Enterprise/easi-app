@@ -129,7 +129,10 @@ describe('Email recipient fields component', () => {
     const submitButton = getByRole('button', { name: 'Add recipient' });
     expect(submitButton).toBeDisabled();
 
-    userEvent.type(getByRole('combobox', { name: 'Cedar-Users' }), 'Av');
+    userEvent.type(
+      getByRole('combobox', { name: 'New recipient name *' }),
+      'Av'
+    );
 
     await waitForElementToBeRemoved(() => getByRole('progressbar'));
 

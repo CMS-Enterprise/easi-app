@@ -5,11 +5,11 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// GetTRBRequestSystemIntakesByTRBRequestID retrieves all SystemIntakes that have been associated with a TRB request
-func GetTRBRequestSystemIntakesByTRBRequestID(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) ([]*models.SystemIntake, error) {
-	return store.GetTRBRequestSystemIntakesByTRBRequestID(ctx, trbRequestID)
+// GetTRBRequestFormSystemIntakesByTRBRequestID retrieves all SystemIntakes that have been associated with a TRB request
+func GetTRBRequestFormSystemIntakesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.SystemIntake, error) {
+	return dataloaders.GetTRBRequestFormSystemIntakesByTRBRequestID(ctx, trbRequestID)
 }

@@ -1,30 +1,21 @@
 package resolvers
 
 import (
-	"context"
-
 	"github.com/samber/lo"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TestCreateTRBRequestForm makes a new TRB request
 func (s *ResolverSuite) TestModifyTRBFundingSources() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 
-	anonEua := "ANON"
-
-	trbRequest := models.NewTRBRequest(anonEua)
-	trbRequest.Type = models.TRBTNeedHelp
-	trbRequest.State = models.TRBRequestStateOpen
-	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
-	s.NoError(err)
+	trbRequest := s.createNewTRBRequest()
 
 	s.Run("create/fetch/update/delete TRB request form funding sources", func() {
-
-		fetched, err := GetFundingSourcesByRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		fetched, err := GetTRBFundingSourcesByRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
-		s.NotNil(fetched)
+		s.Empty(fetched)
 		// should have no sources initially
 		s.Len(fetched, 0)
 		// add first funding sources
@@ -57,7 +48,7 @@ func (s *ResolverSuite) TestModifyTRBFundingSources() {
 			newFundingSources2,
 		)
 		s.NoError(err)
-		updatedSources, err = GetFundingSourcesByRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		updatedSources, err = GetTRBFundingSourcesByRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(updatedSources, 6)
 		// should have all funding sources
@@ -82,7 +73,7 @@ func (s *ResolverSuite) TestModifyTRBFundingSources() {
 			newFundingSources2,
 		)
 		s.NoError(err)
-		updatedSources, err = GetFundingSourcesByRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		updatedSources, err = GetTRBFundingSourcesByRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(updatedSources, 5)
 		// ensure other funding sources are unaffected
@@ -103,7 +94,7 @@ func (s *ResolverSuite) TestModifyTRBFundingSources() {
 		// delete a funding source by number
 		_, err = DeleteTRBRequestFundingSources(ctx, s.testConfigs.Store, trbRequest.ID, newFundingNumber2)
 		s.NoError(err)
-		updatedSources, err = GetFundingSourcesByRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		updatedSources, err = GetTRBFundingSourcesByRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(updatedSources, 3)
 		// original funding sources should exist

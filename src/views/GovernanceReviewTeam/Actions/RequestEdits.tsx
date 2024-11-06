@@ -60,11 +60,7 @@ const RequestEdits = ({
     }
   });
 
-  const {
-    watch,
-    control,
-    formState: { isValid }
-  } = form;
+  const { watch, control } = form;
 
   const submit = async (formData: RequestEditsFields) => {
     await mutate({
@@ -84,7 +80,6 @@ const RequestEdits = ({
           title={t('requestEdits.title')}
           description={t('requestEdits.description')}
           breadcrumb={t('requestEdits.breadcrumb')}
-          disableSubmit={!isValid}
           successMessage={t('requestEdits.success', {
             formName: intakeFormStepName
           })}

@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBAdviceLetterStatus } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBAdviceLetterStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetTrbAdviceLetter
@@ -49,6 +49,9 @@ export interface GetTrbAdviceLetter_trbRequest {
   __typename: "TRBRequest";
   id: UUID;
   name: string | null;
+  type: TRBRequestType;
+  createdAt: Time;
+  consultMeetingTime: Time | null;
   taskStatuses: GetTrbAdviceLetter_trbRequest_taskStatuses;
   adviceLetter: GetTrbAdviceLetter_trbRequest_adviceLetter | null;
 }

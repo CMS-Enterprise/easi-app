@@ -1,17 +1,15 @@
 package resolvers
 
 import (
-	"context"
-
 	"github.com/lib/pq"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TestTRBAdviceLetterRecommendationCRUD tests CRUD for TRB advice letter recommendations
 func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	anonEua := "ANON"
 	store := s.testConfigs.Store
 
@@ -44,7 +42,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 
 		linksChanges := []string{"bing.com", "yahoo.com", "pets.com"}
 		changes := map[string]interface{}{
-			"id":             created.ID.String(),
+			"id":             created.ID,
 			"trbRequestId":   trbRequest.ID.String(),
 			"title":          "Restart your PC",
 			"recommendation": "I recommend you restart your PC",
@@ -93,7 +91,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		// Attempt to update the recommendation
 		linksChanges := []string{"bing.com", "yahoo.com", "pets.com"}
 		changes := map[string]interface{}{
-			"id":             created.ID.String(),
+			"id":             created.ID,
 			"trbRequestId":   trbRequest.ID.String(),
 			"title":          "Restart your PC",
 			"recommendation": "I recommend you restart your PC",

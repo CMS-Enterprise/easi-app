@@ -42,6 +42,7 @@ import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 import { actionDateInPast } from '../ManageLcid/RetireLcid';
 import { EditsRequestedContext } from '..';
 
+import refetchQueries from './refetchQueries';
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
 
@@ -83,14 +84,14 @@ const IssueLcid = ({
     CreateSystemIntakeActionIssueLcid,
     CreateSystemIntakeActionIssueLcidVariables
   >(CreateSystemIntakeActionIssueLcidQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries
   });
 
   const [mutateConfirmLcid] = useMutation<
     CreateSystemIntakeActionConfirmLcid,
     CreateSystemIntakeActionConfirmLcidVariables
   >(CreateSystemIntakeActionConfirmLcidQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries
   });
 
   const { data, loading } = useCacheQuery<GetSystemIntakesWithLCIDSType>(
@@ -131,13 +132,7 @@ const IssueLcid = ({
     defaultValues
   });
 
-  const {
-    control,
-    setValue,
-    watch,
-    resetField,
-    formState: { isValid }
-  } = form;
+  const { control, setValue, watch, resetField } = form;
 
   const { showMessageOnNextPage } = useMessage();
 
@@ -236,7 +231,6 @@ const IssueLcid = ({
       <ActionForm
         systemIntakeId={systemIntakeId}
         onSubmit={onSubmit}
-        disableSubmit={!isValid}
         title={
           <ResolutionTitleBox
             title={t('resolutions.summary.issueLcid')}

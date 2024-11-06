@@ -4,7 +4,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { RichTextViewer } from 'components/RichTextEditor';
 import {
@@ -25,7 +24,6 @@ type NoteProps = {
 
 const Note = ({ note, className, border = true }: NoteProps) => {
   const { t } = useTranslation('technicalAssistance');
-  const flags = useFlags();
 
   const { categorySpecificData, category } = note;
 
@@ -84,9 +82,8 @@ const Note = ({ note, className, border = true }: NoteProps) => {
 
     switch (categorySpecificData.__typename) {
       case 'TRBAdminNoteInitialRequestFormCategoryData':
-        categorySpecificDataString = initialRequestFormCategory(
-          categorySpecificData
-        );
+        categorySpecificDataString =
+          initialRequestFormCategory(categorySpecificData);
         break;
       case 'TRBAdminNoteSupportingDocumentsCategoryData':
         categorySpecificDataString = documentsCategory(
@@ -132,12 +129,7 @@ const Note = ({ note, className, border = true }: NoteProps) => {
         className="bg-base-lightest padding-x-3 padding-y-205"
       >
         <dt className="text-bold">{t('notes.about')}</dt>
-        <dd className="margin-left-0">
-          {
-            // TODO EASI-3467: Remove conditional logic with `trbAdminNoteUpdates` flag
-            flags.trbAdminNoteUpdates ? categoryString() : categoryLabel
-          }
-        </dd>
+        <dd className="margin-left-0">{categoryString()}</dd>
 
         <dd className="margin-left-0 margin-top-2">
           <RichTextViewer value={note.noteText} />

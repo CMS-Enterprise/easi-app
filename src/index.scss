@@ -63,6 +63,9 @@ h5 {
 .pointer {
   cursor: pointer !important;
 }
+.no-pointer {
+  pointer-events: none !important;
+}
 
 .skipnav {
   top: 0;
@@ -123,4 +126,8 @@ ul.list-style-middot-inner {
   li::before {
     content: '• ';
   }
+}
+
+.display-list-item {
+  display: list-item
 }

@@ -249,24 +249,19 @@ function DocumentsTable({
     ];
   }, [t, getDocumentUrls, showMessage, documentUrlsLoading, canEdit]);
 
-  const {
-    getTableBodyProps,
-    getTableProps,
-    headerGroups,
-    prepareRow,
-    rows
-  } = useTable(
-    {
-      columns,
-      data: documents,
-      autoResetSortBy: false,
-      autoResetPage: true,
-      initialState: {
-        sortBy: useMemo(() => [{ id: 'uploadedAt', desc: true }], [])
-      }
-    },
-    useSortBy
-  );
+  const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
+    useTable(
+      {
+        columns,
+        data: documents,
+        autoResetSortBy: false,
+        autoResetPage: true,
+        initialState: {
+          sortBy: useMemo(() => [{ id: 'uploadedAt', desc: true }], [])
+        }
+      },
+      useSortBy
+    );
 
   if (loading) {
     return (
@@ -358,7 +353,7 @@ function DocumentsTable({
           </tbody>
         </Table>
       ) : (
-        <Alert type="info" slim>
+        <Alert headingLevel="h4" type="info" slim>
           {t('documents.table.noDocuments')}
         </Alert>
       )}

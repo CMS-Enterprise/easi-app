@@ -59,7 +59,11 @@ function Consult() {
   const feedbackStatus: TRBFeedbackStatus | undefined =
     formContext?.data?.trbRequest?.taskStatuses?.feedbackStatus;
 
-  const { loading, data, error: pageError } = useQuery<
+  const {
+    loading,
+    data,
+    error: pageError
+  } = useQuery<
     GetTrbRequestConsultMeeting,
     GetTrbRequestConsultMeetingVariables
   >(GetTrbRequestConsultMeetingQuery, {
@@ -102,12 +106,13 @@ function Consult() {
 
   const submitForm = (formData: ConsultFields) => {
     // Format the time as utc iso from the components' default local format
-    const consultMeetingTime = DateTime.fromFormat(
-      `${formData.meetingDate} ${formData.meetingTime}`,
-      'MM/dd/yyyy HH:mm'
-    )
-      .toUTC()
-      .toISO();
+    const consultMeetingTime =
+      DateTime.fromFormat(
+        `${formData.meetingDate} ${formData.meetingTime}`,
+        'MM/dd/yyyy HH:mm'
+      )
+        .toUTC()
+        .toISO() || '';
 
     mutate({
       variables: {

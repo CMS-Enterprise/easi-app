@@ -35,8 +35,10 @@ import {
 } from 'types/technicalAssistance';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';
+import formatContractNumbers from 'utils/formatContractNumbers';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import globalFilterCellText from 'utils/globalFilterCellText';
+import { trbRequestStatusSortType } from 'utils/tableRequestStatusIndex';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -55,7 +57,10 @@ export const trbRequestsCsvHeader = [
   i18next.t<string>('technicalAssistance:adminHome.requestType'),
   i18next.t<string>('technicalAssistance:adminHome.trbLead'),
   i18next.t<string>('technicalAssistance:adminHome.status'),
-  i18next.t<string>('technicalAssistance:table.header.trbConsultDate')
+  i18next.t<string>('technicalAssistance:table.header.trbConsultDate'),
+  i18next.t<string>('intake:csvHeadings.contractName'),
+  i18next.t<string>('intake:csvHeadings.contractNumber'),
+  i18next.t<string>('intake:csvHeadings.cmsSystem')
 ] as const;
 
 export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
@@ -74,6 +79,8 @@ export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
       r.trbLeadInfo.commonName,
       'TRB'
     );
+    const contractNumber = formatContractNumbers(r.contractNumbers);
+    const cmsSystem = r.systems.map(v => v.name).join(', ');
 
     return [
       submissionDate,
@@ -82,7 +89,10 @@ export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
       i18next.t<string>(`technicalAssistance:table.requestTypes.${r.type}`),
       trbLead,
       i18next.t<string>(`technicalAssistance:table.requestStatus.${r.status}`),
-      trbConsultDate
+      trbConsultDate,
+      r.contractName || '',
+      contractNumber,
+      cmsSystem
     ];
   });
 
@@ -370,7 +380,8 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
         accessor: ({ status, state }) =>
           state === TRBRequestState.CLOSED
             ? t(`table.requestState.${state}`)
-            : t(`table.requestStatus.${status}`)
+            : t(`table.requestStatus.${status}`),
+        sortType: trbRequestStatusSortType
       },
       {
         Header: t<string>('table.header.trbConsultDate'),
@@ -390,7 +401,26 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
             >
               {t('adminTeamHome.actions.addDate')}
             </UswdsReactLink>
-          )
+          ),
+        sortType: (a, b) => {
+          // The consult date property can be null if not set
+          // Allow actual null types to be compared against so that they move towards the end of a sort
+
+          if (a.values.consultMeetingTime === null) {
+            // Fallback sort on submitted date if consult is not set
+            if (b.values.consultMeetingTime === null) {
+              return a.values['form.submittedAt'] > b.values['form.submittedAt']
+                ? 1
+                : -1;
+            }
+            // Move null consult dates ahead of defined
+            return 1;
+          }
+
+          return a.values.consultMeetingTime > b.values.consultMeetingTime
+            ? 1
+            : -1;
+        }
       }
     ];
   }, [t]);
@@ -425,7 +455,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'form.submittedAt', desc: true }], []),
+        sortBy: useMemo(() => [{ id: 'consultMeetingTime', desc: true }], []),
         pageIndex: 0,
         pageSize: 10
       }

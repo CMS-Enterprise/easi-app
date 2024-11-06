@@ -1,4 +1,4 @@
-FROM golang:1.21 AS base
+FROM golang:1.22.7 AS base
 
 WORKDIR /easi/
 
@@ -12,16 +12,17 @@ FROM modules AS build
 COPY cmd ./cmd
 COPY pkg ./pkg
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/seed ./cmd/seed
-
-FROM cypress/base:16.18.1
+# Notably, at time of implementation, cypress/base:18.20.4 doesn't exist, even though we're on Node 18.20.4
+# This small difference is incredibly unlikely to cause an issue, but is worth noting that the version used here
+# and the version in our .nvmrc doesn't quite match!
+FROM cypress/base:18.20.3
 
 # mc - minio client, used for tagging uploaded files
 RUN apt-get update && apt-get install --no-install-recommends -y wget && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
 
 COPY package.json yarn.lock /
-RUN npm install -g yarn
+# RUN npm install -g yarn
 RUN yarn install --immutable
 
 COPY cypress /cypress
@@ -29,8 +30,6 @@ COPY cypress.config.ts /
 COPY tsconfig.json /
 COPY src /src
 COPY scripts/tag_minio_file /scripts/tag_minio_file
-COPY scripts/seed_database /scripts/seed_database
-COPY --from=build /easi/bin/seed /build/seed
 
 ENTRYPOINT ["/node_modules/.bin/cypress"]
 CMD ["run"]

@@ -22,11 +22,29 @@ type Products struct {
 	// api gateway use
 	APIGatewayUse bool `json:"api_gateway_use,omitempty"`
 
-	// local component refstr
-	LocalComponentRefstr string `json:"local_component_refstr,omitempty"`
+	// ela organization
+	ElaOrganization string `json:"ela_organization,omitempty"`
+
+	// ela purchase
+	ElaPurchase string `json:"ela_purchase,omitempty"`
 
 	// provides ai capability
 	ProvidesAiCapability bool `json:"provides_ai_capability,omitempty"`
+
+	// software catagory connection Guid
+	SoftwareCatagoryConnectionGUID string `json:"softwareCatagoryConnectionGuid,omitempty"`
+
+	// software product Id
+	SoftwareProductID string `json:"softwareProductId,omitempty"`
+
+	// software vendor connection Guid
+	SoftwareVendorConnectionGUID string `json:"softwareVendorConnectionGuid,omitempty"`
+
+	// software cost
+	SoftwareCost string `json:"software_cost,omitempty"`
+
+	// system software connection Guid
+	SystemSoftwareConnectionGUID string `json:"systemSoftwareConnectionGuid,omitempty"`
 
 	// technopedia id
 	// Required: true

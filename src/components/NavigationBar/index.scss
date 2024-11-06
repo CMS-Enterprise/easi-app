@@ -2,14 +2,32 @@
 @use 'colors' as *;
 @use 'viewports' as *;
 
-.usa-nav {
-    margin-left: -1em
+.usa-header--extended .usa-nav {
+    border-top: none !important;
+}
+
+.usa-header--basic .usa-nav {
+    justify-content: flex-start !important;
+}
+
+.nav-container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 75rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    @media (max-width: $desktop) {
+        padding: 0;
+
+        .usa-navbar {
+            justify-content: end;
+        }
+    }
 }
 
 .usa-nav__primary-item {
     .easi-nav {
-        display: flex;
-
         &__item {
             display: flex;
         }
@@ -20,7 +38,18 @@
 
         &__link {
             color: color('base-dark');
-            padding: 1em;            
+            padding: 1em;
+        }
+
+        &__sublink {
+
+            padding-left: 1rem !important;
+            &:hover {
+                text-decoration: none !important;
+            }
+            @media (min-width: $desktop) {
+                color: white !important;
+            }
         }
 
         &__current {
@@ -34,10 +63,10 @@
             margin-top: 2em
         };
 
-        a {   
+        a {
             &:visited {
                 color: color('base-dark')
-            }             
+            }
         }
 
         .usa-current {
@@ -47,6 +76,40 @@
                 color: $easi-blue;
             }
         }
+    }
 
+    @media (min-width: $desktop) {
+        .easi-nav {
+            display: flex;
+        }
+    }
+
+    .usa-accordion__button.usa-current[aria-expanded="false"] {
+        color: $easi-blue;
+    }
+}
+
+.usa-header--basic .usa-nav__link:not(.system-dropdown):hover::after {
+    bottom: 0rem !important;
+}
+
+.usa-nav__submenu {
+    @media (min-width: $desktop) {
+        padding-top: .5rem !important;
+        padding-bottom: .5rem !important;
+
+        .usa-nav__submenu-item a {
+            padding-bottom: 0.25rem !important;
+        }
+    }
+}
+
+.system-dropdown:hover {
+    @media (min-width: $desktop) {
+        color: color('base-dark') !important;
+    }
+
+    &::after {
+        bottom: 0 !important;
     }
 }

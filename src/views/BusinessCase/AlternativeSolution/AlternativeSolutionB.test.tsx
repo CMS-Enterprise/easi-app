@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import {
   render,
   screen,
@@ -14,6 +14,8 @@ import {
   businessCaseInitialData,
   defaultProposedSolution
 } from 'data/businessCase';
+import { getGovernanceTaskListQuery } from 'data/mock/systemIntake';
+import { SystemIntakeStep } from 'types/graphql-global-types';
 import BusinessCase from 'views/BusinessCase';
 
 window.matchMedia = (): any => ({
@@ -23,7 +25,7 @@ window.matchMedia = (): any => ({
 
 window.scrollTo = vi.fn;
 
-const renderPage = async (store: any) => {
+const renderPage = async (store: any, mocks?: MockedResponse[]) => {
   render(
     <MemoryRouter
       initialEntries={[
@@ -31,7 +33,7 @@ const renderPage = async (store: any) => {
       ]}
     >
       <Provider store={store}>
-        <MockedProvider>
+        <MockedProvider mocks={mocks}>
           <Route
             path="/business/:businessCaseId/:formPage"
             component={BusinessCase}
@@ -54,6 +56,7 @@ describe('Business case alternative b solution', () => {
       form: {
         ...businessCaseInitialData,
         id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
+        systemIntakeId: '34ded286-02fa-4457-b1a5-0fc6ec00ecf5',
         alternativeB: {
           ...defaultProposedSolution,
           title: 'Alt B'
@@ -110,7 +113,7 @@ describe('Business case alternative b solution', () => {
         form: {
           ...businessCaseInitialData,
           id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-          systemIntakeStatus: 'BIZ_CASE_FINAL_NEEDED',
+          systemIntakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
           alternativeB: defaultProposedSolution
         },
         isLoading: false,
@@ -125,7 +128,11 @@ describe('Business case alternative b solution', () => {
     });
 
     it('renders validation errors', async () => {
-      await renderPage(bizCaseFinalStore);
+      await renderPage(bizCaseFinalStore, [
+        getGovernanceTaskListQuery({
+          step: SystemIntakeStep.FINAL_BUSINESS_CASE
+        })
+      ]);
 
       // Fill one field so we can trigger validation errors
       const titleField = screen.getByRole('textbox', {

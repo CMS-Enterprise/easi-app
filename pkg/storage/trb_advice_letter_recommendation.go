@@ -12,9 +12,9 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // CreateTRBAdviceLetterRecommendation creates a new TRB advice letter recommendation record in the database.
@@ -52,9 +52,7 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 			COALESCE(MAX(position_in_letter) + 1, 0)
 		FROM trb_advice_letter_recommendations
 		WHERE trb_request_id = :trb_request_id
-		RETURNING *;
-	`)
-
+		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for creating TRB advice letter recommendation with error %s", err),
@@ -63,6 +61,7 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	created := models.TRBAdviceLetterRecommendation{}
 
@@ -87,6 +86,8 @@ func (s *Store) GetTRBAdviceLetterRecommendationByID(ctx context.Context, id uui
 	if err != nil {
 		return nil, err
 	}
+	defer stmt.Close()
+
 	arg := map[string]interface{}{"id": id}
 	err = stmt.Get(&recommendation, arg)
 
@@ -139,8 +140,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx context
 			SELECT trb_request_id
 			FROM trb_advice_letter_recommendations
 			WHERE id = :recommendationID
-		) AND deleted_at IS NULL
-	`)
+		) AND deleted_at IS NULL`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for GetTRBAdviceLetterRecommendationsSharingTRBRequestID() with error %s", err),
@@ -149,6 +149,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx context
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	results := []*models.TRBAdviceLetterRecommendation{}
 	arg := map[string]interface{}{
@@ -176,7 +177,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx context
 func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recommendation *models.TRBAdviceLetterRecommendation) (*models.TRBAdviceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_advice_letter_recommendations
-		SET 
+		SET
 			trb_request_id = :trb_request_id,
 			title = :title,
 			recommendation = :recommendation,
@@ -184,9 +185,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recomme
 			created_by = :created_by,
 			modified_by = :modified_by
 		WHERE id = :id
-		RETURNING *;
-	`)
-
+		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update TRB advice letter recommendation %s", err),
@@ -194,6 +193,8 @@ func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recomme
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	updated := models.TRBAdviceLetterRecommendation{}
 
 	err = stmt.Get(&updated, recommendation)
@@ -219,7 +220,6 @@ func (s *Store) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid
 		SET deleted_at = CURRENT_TIMESTAMP, position_in_letter = NULL
 		WHERE id = :id
 		RETURNING *;`)
-
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to delete TRB advice letter recommendation %s", err),
@@ -227,6 +227,8 @@ func (s *Store) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	toDelete := models.TRBAdviceLetterRecommendation{}
 	toDelete.ID = id
 	deleted := models.TRBAdviceLetterRecommendation{}
@@ -292,8 +294,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 		FROM new_positions
 		WHERE trb_advice_letter_recommendations.id = new_positions.id
 		AND trb_advice_letter_recommendations.trb_request_id = :trbRequestID
-		RETURNING *;
-	`)
+		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for UpdateTRBAdviceLetterRecommendationOrder() with error %s", err),
@@ -302,6 +303,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	updatedRecommendations := []*models.TRBAdviceLetterRecommendation{}
 	arg := map[string]interface{}{

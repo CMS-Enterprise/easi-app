@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
@@ -20,6 +20,9 @@ import TrbAdminTeamHome, {
   trbRequestsCsvHeader
 } from './TrbAdminTeamHome';
 
+// This test file was originally set up to target values based on the default sort of submission dates
+// As requirements change, tests are updated to target values based on new row positions while leaving the original mock data
+
 describe('Trb Admin Team Home', () => {
   const store = easiMockStore({ euaUserId: 'SF13' });
 
@@ -34,7 +37,10 @@ describe('Trb Admin Team Home', () => {
         'System problem',
         '',
         i18next.t<string>('technicalAssistance:table.requestStatus.NEW'),
-        ''
+        '',
+        'Word',
+        '24, 13',
+        'Quality team, Management service'
       ],
       [
         '03/02/2023',
@@ -43,6 +49,9 @@ describe('Trb Admin Team Home', () => {
         'Idea feedback',
         '',
         i18next.t<string>('technicalAssistance:table.requestStatus.NEW'),
+        '',
+        '',
+        '',
         ''
       ],
       [
@@ -54,6 +63,9 @@ describe('Trb Admin Team Home', () => {
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.DRAFT_REQUEST_FORM'
         ),
+        '',
+        '',
+        '',
         ''
       ],
       [
@@ -65,7 +77,10 @@ describe('Trb Admin Team Home', () => {
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.REQUEST_FORM_COMPLETE'
         ),
-        '04/01/2023'
+        '04/01/2023',
+        '',
+        '',
+        ''
       ],
       [
         '03/05/2023',
@@ -76,7 +91,10 @@ describe('Trb Admin Team Home', () => {
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.READY_FOR_CONSULT'
         ),
-        '04/02/2023'
+        '04/02/2023',
+        '',
+        '',
+        ''
       ],
       [
         '03/06/2023',
@@ -87,7 +105,10 @@ describe('Trb Admin Team Home', () => {
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.CONSULT_SCHEDULED'
         ),
-        '04/02/2023'
+        '04/02/2023',
+        '',
+        '',
+        ''
       ]
     ]);
   });
@@ -193,14 +214,32 @@ describe('Trb Admin Team Home', () => {
     expect(await findByTestId('trb-new-cell-1-0')).toHaveTextContent(
       '03/01/2023'
     );
+
+    // Default sort order on Consult Dates
     expect(await findByTestId('trb-existing-cell-0-0')).toHaveTextContent(
-      '03/06/2023'
+      '03/03/2023'
     );
-    expect(await findByTestId('trb-existing-cell-1-0')).toHaveTextContent(
-      '03/04/2023'
+    expect(await findByTestId('trb-existing-cell-0-5')).toHaveTextContent(
+      'Add date'
     );
     expect(await findByTestId('trb-existing-cell-2-0')).toHaveTextContent(
-      '03/03/2023'
+      '03/01/2023'
+    );
+    expect(await findByTestId('trb-existing-cell-2-5')).toHaveTextContent(
+      'Add date'
+    );
+
+    expect(await findByTestId('trb-existing-cell-3-0')).toHaveTextContent(
+      '03/06/2023'
+    );
+    expect(await findByTestId('trb-existing-cell-3-5')).toHaveTextContent(
+      '04/02/2023'
+    );
+    expect(await findByTestId('trb-existing-cell-4-0')).toHaveTextContent(
+      '03/04/2023'
+    );
+    expect(await findByTestId('trb-existing-cell-4-5')).toHaveTextContent(
+      '04/01/2023'
     );
 
     // New Requests table
@@ -229,11 +268,11 @@ describe('Trb Admin Team Home', () => {
 
     // Existing requests
     // TRB Lead with Component
-    expect(await findByTestId('trb-existing-cell-0-3')).toHaveTextContent(
+    expect(await findByTestId('trb-existing-cell-3-3')).toHaveTextContent(
       `${trbAdminTeamHomeRequests[5].trbLeadInfo.commonName}, TRB`
     );
     // TRB consult date
-    expect(await findByTestId('trb-existing-cell-0-5')).toHaveTextContent(
+    expect(await findByTestId('trb-existing-cell-3-5')).toHaveTextContent(
       '04/02/2023'
     );
     // Add consult date
@@ -243,7 +282,7 @@ describe('Trb Admin Team Home', () => {
       )
     });
     // Request status text
-    expect(await findByTestId('trb-existing-cell-0-4')).toHaveTextContent(
+    expect(await findByTestId('trb-existing-cell-3-4')).toHaveTextContent(
       i18next.t<string>(
         'technicalAssistance:table.requestStatus.CONSULT_SCHEDULED'
       )
@@ -286,7 +325,7 @@ describe('Trb Admin Team Home', () => {
 
     // Check open table contents
     expect(await findByTestId('trb-existing-cell-2-1')).toHaveTextContent(
-      'Third open'
+      'First help'
     );
 
     // Switch to closed
@@ -307,7 +346,7 @@ describe('Trb Admin Team Home', () => {
     // Back to open
     userEvent.click(open);
     expect(await findByTestId('trb-existing-cell-1-1')).toHaveTextContent(
-      'Fourth open with date'
+      'Second brainstorm'
     );
   });
 });

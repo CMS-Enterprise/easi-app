@@ -1,0 +1,135 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: easi-backend-configmap
+  namespace: easi
+data:
+  CEDAR_CORE_MOCK: 'true'
+  CEDAR_INTAKE_ENABLED: 'false'
+  CEDAR_API_KEY: ""
+  CEDAR_PROXY_URL: ""
+  CEDAR_CORE_SKIP_PROXY: "false"
+  CEDAR_API_URL: "webmethods-apigw.cedarimpl.cms.gov"
+  CEDAR_CORE_API_VERSION: "2.0.0"
+  CEDAR_EMAIL_ADDRESS: "EnterpriseArchitecture@notCMS.gov"
+  APP_ENV: local
+  CLIENT_PROTOCOL: http
+  CLIENT_DOMAIN: easi.localdev.me
+  CLIENT_PORT: '80'
+  CLIENT_HOSTNAME: easi.localdev.me:80
+  CLIENT_ADDRESS: http://easi.localdev.me
+  API_PORT: '8080'
+  OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+  OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+  GRT_EMAIL: success@simulator.amazonses.com
+  IT_INVESTMENT_EMAIL: success@simulator.amazonses.com
+  EASI_HELP_EMAIL: success@simulator.amazonses.com
+  TRB_EMAIL: success@simulator.amazonses.com
+  OIT_FEEDBACK_CHANNEL_SLACK_LINK: ""
+  SES_RECIPIENT_ALLOWLIST_REGEX: ''
+  EMAIL_TEMPLATE_DIR: /easi/pkg/email/templates
+  AWS_REGION: us-west-2
+  AWS_SES_SOURCE: '\"EASi Local\" <no-reply-local@info.easi.cms.gov>'
+  AWS_SES_SOURCE_ARN: ses-arn
+  AWS_S3_FILE_UPLOAD_BUCKET: easi-app-file-uploads
+  AWS_ACCESS_KEY_ID: '1'
+  AWS_SECRET_ACCESS_KEY: '1'
+  PGHOST: db
+  PGPORT: '5432'
+  PGDATABASE: postgres
+  PGUSER: postgres
+  PGPASS: mysecretpassword
+  PGSSLMODE: disable
+  DB_MAX_CONNECTIONS: '20'
+  FLAG_SOURCE: LOCAL
+  FLAGDATA_FILE: "./cypress/fixtures/flagdata.json"
+  LD_SDK_KEY: ''
+  LD_TIMEOUT_SECONDS: '30'
+  LD_ENV_USER: ''
+  MINIO_ACCESS_KEY: minioadmin
+  MINIO_SECRET_KEY: minioadmin
+  MINIO_ADDRESS: http://minio:9004
+  SERVER_CERT: ''
+  SERVER_KEY: ''
+  USE_TLS: 'false'
+  ALT_JOB_CODES: 'true'
+  OKTA_API_URL: https://test.idp.idm.cms.gov
+  OKTA_API_TOKEN: ''
+  LOCAL_AUTH_ENABLED: 'true'
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: easi-backend
+  namespace: easi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: easi-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: easi-backend
+    spec:
+      containers:
+        - name: easi-backend
+          image: easi-backend:latest
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: easi-backend-configmap
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources: {}
+          command:
+             - ./bin/easi
+             - serve
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: easi-backend
+  namespace: easi
+spec:
+  ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
+    - name: "2345"
+      port: 2345
+      targetPort: 2345
+  selector:
+    app: easi-backend
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: easi-backend-ingress
+  namespace: easi
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: easi-backend.localdev.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: easi-backend
+                port:
+                  number: 8080

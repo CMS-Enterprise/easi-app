@@ -9,14 +9,14 @@ import {
 } from 'react-router-dom';
 import { ApolloError, ApolloQueryResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Form, IconArrowBack } from '@trussworks/react-uswds';
+import { Form, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import useEasiForm from 'components/EasiForm/useEasiForm';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
-import useEasiForm from 'hooks/useEasiForm';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import {
   GetTrbRequest,
@@ -283,7 +283,7 @@ function Attendees({
                   to={`/trb/task-list/${trbID}`}
                   className="display-block margin-bottom-5"
                 >
-                  <IconArrowBack className="margin-right-1 text-middle" />
+                  <Icon.ArrowBack className="margin-right-1 text-middle" />
                   <span className="line-height-body-5">
                     {t('requestFeedback.returnToTaskList')}
                   </span>

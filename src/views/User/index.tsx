@@ -27,18 +27,7 @@ const UserInfo = () => {
           ))}
         </ul>
         <p>User is basic user: {`${user.isBasicUser(userGroups, flags)}`}</p>
-        <p>User is GRT user: {`${user.isGrtReviewer(userGroups, flags)}`}</p>
-        <p>
-          User is 508 user: {`${user.isAccessibilityTeam(userGroups, flags)}`}
-        </p>
-        <p>
-          User is 508 admin: {`${user.isAccessibilityAdmin(userGroups, flags)}`}
-        </p>
-        <p>
-          User is 508 tester:{' '}
-          {`${user.isAccessibilityTester(userGroups, flags)}`}
-        </p>
-
+        <p>User is GRT user: {`${user.isITGovAdmin(userGroups, flags)}`}</p>
         <p>User is TRB Admin: {`${user.isTrbAdmin(userGroups, flags)}`}</p>
 
         <h2>Raw Access Token Claims</h2>

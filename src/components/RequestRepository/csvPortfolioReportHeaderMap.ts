@@ -36,6 +36,10 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.currentStage')
   },
   {
+    key: 'usesAiTech',
+    label: t('intake:csvHeadings.usesAiTech')
+  },
+  {
     key: 'fundingSources',
     label: t('intake:csvHeadings.fundingSource')
   },
@@ -44,8 +48,16 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.currentAnnualSpend')
   },
   {
+    key: 'annualSpending.currentAnnualSpendingITPortion',
+    label: t('intake:csvHeadings.currentAnnualSpendITPortion')
+  },
+  {
     key: 'annualSpending.plannedYearOneSpending',
     label: t('intake:csvHeadings.plannedAnnualSpend')
+  },
+  {
+    key: 'annualSpending.plannedYearOneSpendingITPortion',
+    label: t('intake:csvHeadings.plannedAnnualSpendITPortion')
   },
   {
     key: 'contract.contractor',
@@ -68,8 +80,16 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.status')
   },
   {
+    key: 'lcid',
+    label: t('intake:csvHeadings.lcid')
+  },
+  {
     key: 'lcidScope',
     label: t('intake:csvHeadings.lcidScope')
+  },
+  {
+    key: 'lcidExpiresAt',
+    label: t('intake:csvHeadings.lcidExpiresAt')
   },
   {
     key: 'adminLead',

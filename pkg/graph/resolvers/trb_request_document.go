@@ -7,17 +7,17 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/easiencoding"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/upload"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
 // GetTRBRequestDocumentsByRequestID fetches all documents attached to the TRB request with the given ID.
-func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, id uuid.UUID) ([]*models.TRBRequestDocument, error) {
-	return store.GetTRBRequestDocumentsByRequestID(ctx, id)
+func GetTRBRequestDocumentsByRequestID(ctx context.Context, id uuid.UUID) ([]*models.TRBRequestDocument, error) {
+	return dataloaders.GetTRBRequestDocumentsByRequestID(ctx, id)
 }
 
 // GetURLForTRBRequestDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key
@@ -38,7 +38,6 @@ func GetStatusForTRBRequestDocument(s3Client *upload.S3Client, s3Key string) (mo
 	}
 
 	// possible tag values come from virus scanning lambda
-	// this is the same logic as in schema.resolvers.go's Documents() method for 508 documents
 	if avStatus == "CLEAN" {
 		return models.TRBRequestDocumentStatusAvailable, nil
 	} else if avStatus == "INFECTED" {
@@ -49,7 +48,7 @@ func GetStatusForTRBRequestDocument(s3Client *upload.S3Client, s3Key string) (mo
 }
 
 // CreateTRBRequestDocument uploads a document to S3, then saves its metadata to our database.
-func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input model.CreateTRBRequestDocumentInput) (*models.TRBRequestDocument, error) {
+func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.CreateTRBRequestDocumentInput) (*models.TRBRequestDocument, error) {
 	s3Key := uuid.New().String()
 
 	existingExtension := filepath.Ext(input.FileData.Filename)
@@ -88,7 +87,7 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 
 // DeleteTRBRequestDocument deletes an existing TRBRequestDocument, given its ID.
 //
-// Does *not* delete the uploaded file from S3, following the example of 508/accessibility request documents.
+// Does *not* delete the uploaded file from S3.
 func DeleteTRBRequestDocument(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestDocument, error) {
 	return store.DeleteTRBRequestDocument(ctx, id)
 }

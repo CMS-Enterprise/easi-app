@@ -215,9 +215,11 @@ export const BusinessCaseFinalValidationSchema = {
             )
         })
       }),
-      hasUserInterface: Yup.string().required(
-        'Tell us whether the Alternative A solution will have user interface'
-      ),
+      hasUserInterface: Yup.string()
+        .nullable()
+        .required(
+          'Tell us whether the Alternative A solution will have user interface'
+        ),
       pros: Yup.string()
         .trim()
         .required('Tell us about the pros of Alternative A solution'),

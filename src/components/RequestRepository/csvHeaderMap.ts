@@ -62,6 +62,10 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.currentStage')
   },
   {
+    key: 'usesAiTech',
+    label: t('intake:csvHeadings.usesAiTech')
+  },
+  {
     key: 'needsEaSupport',
     label: t('intake:csvHeadings.eaSupport')
   },
@@ -74,8 +78,16 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.currentAnnualSpend')
   },
   {
+    key: 'annualSpending.currentAnnualSpendingITPortion',
+    label: t('intake:csvHeadings.currentAnnualSpendITPortion')
+  },
+  {
     key: 'annualSpending.plannedYearOneSpending',
     label: t('intake:csvHeadings.plannedAnnualSpend')
+  },
+  {
+    key: 'annualSpending.plannedYearOneSpendingITPortion',
+    label: t('intake:csvHeadings.plannedAnnualSpendITPortion')
   },
   {
     key: 'contract.hasContract',
@@ -96,6 +108,18 @@ const csvHeaderMap = (t: any) => [
   {
     key: 'contract.endDate',
     label: t('intake:csvHeadings.contractEnd')
+  },
+  {
+    key: 'contractName',
+    label: t('intake:csvHeadings.contractName')
+  },
+  {
+    key: 'contractNumber',
+    label: t('intake:csvHeadings.contractNumber')
+  },
+  {
+    key: 'cmsSystem',
+    label: t('intake:csvHeadings.cmsSystem')
   },
   {
     key: 'status',

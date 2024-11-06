@@ -1,21 +1,30 @@
 {{template "easi_header.gohtml"}}
 
-<p>The Technical Review Board (TRB) has scheduled a consult session for {{.TRBRequestName}} on {{.ConsultMeetingTimeFormatted}}. You should receive a calendar invite shortly if you have not already.
+<p>The Technical Review Board (TRB) has scheduled a consult session for {{.TRBRequestName}} on {{.ConsultMeetingTimeFormatted}}. You should receive a calendar invite shortly if you have not already.</p>
 
-{{if .Notes}}<p>Additional notes about this consult session: {{.Notes}}</p>{{end}}
+{{ if .Notes -}}
+<br>
+<p class="no-margin-top">Additional notes about this consult session: {{.Notes}}</p>
+{{ end -}}
 
-<p>Next steps:</p>
-<ul>
-<li>{{.RequesterName}} and the project team should make sure to upload any documentation to EASi that should be reviewed as a part of this request.</li>
-<li>Attendees may also review guidance about <a href="{{.TRBHelpLink}}" style="font-weight: bold">preparing for the TRB consult session</a>.</li>
-<li>TRB members may continue to review the initial request form and supporting documents in EASi.</li>
-<li>If a calendar invite has not already been sent, the TRB lead will send one with a remote video conferencing meeting link.</li>
-</ul>
+<br>
+<div class="no-margin">
+  <p>Next steps:</p>
+  <ul>
+    <li>{{.RequesterName}} and the project team should make sure to upload any documentation to EASi that should be reviewed as a part of this request.</li>
+    <li>Attendees may also review guidance about <a href="{{.TRBHelpLink}}">preparing for the TRB consult session</a>.</li>
+    <li>TRB members may continue to review the initial request form and supporting documents in EASi.</li>
+    <li>If a calendar invite has not already been sent, the TRB lead will send one with a remote video conferencing meeting link.</li>
+  </ul>
+</div>
 
-<p><a href="{{.TRBRequestLink}}" style="font-weight: bold">View the request in EASi</a></p>
+<br>
+<p><strong><a href="{{.TRBRequestLink}}">View the request in EASi</a></strong></p>
 
+<br>
 <p>If you have questions or need to request a reschedule, please email the TRB at <a href="mailto:{{.TRBEmail}}">{{.TRBEmail}}</a>.</p>
 
+<br>
 <hr>
 
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>

@@ -1,12 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import {
-  Button,
-  Grid,
-  GridContainer,
-  IconArrowBack
-} from '@trussworks/react-uswds';
+import { Button, Grid, GridContainer, Icon } from '@trussworks/react-uswds';
 import { isEqual } from 'lodash';
 
 import PageLoading from 'components/PageLoading';
@@ -26,7 +21,7 @@ import {
 } from 'validations/trbRequestSchema';
 import NotFound from 'views/NotFound';
 
-import Breadcrumbs from '../Breadcrumbs';
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 import { StepSubmit } from '../RequestForm';
 
 import Done from './Done';
@@ -70,7 +65,7 @@ const adviceFormSteps = [
   }
 ] as const;
 
-type AdviceFormStep = typeof adviceFormSteps[number];
+type AdviceFormStep = (typeof adviceFormSteps)[number];
 
 /**
  * TRB request admin advice letter form
@@ -189,11 +184,8 @@ const AdviceLetterForm = () => {
 
       // Check the Next Steps step
       if (!completed.includes('next-steps')) {
-        const {
-          nextSteps,
-          isFollowupRecommended,
-          followupPoint
-        } = adviceLetter;
+        const { nextSteps, isFollowupRecommended, followupPoint } =
+          adviceLetter;
 
         stepValidators.push(
           nextStepsSchema
@@ -350,7 +342,7 @@ const AdviceLetterForm = () => {
                   }
                 }}
               >
-                <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+                <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
                 {t('adviceLetterForm.returnToRequest')}
               </Button>
             )

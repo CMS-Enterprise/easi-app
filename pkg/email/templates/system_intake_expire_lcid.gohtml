@@ -2,22 +2,39 @@
 
 <p>A previously-issued Life Cycle ID (LCID) has expired.</p>
 
-<p>Reason: {{.Reason}}<br>
-{{if .DecisionNextSteps}}Next steps: {{.DecisionNextSteps}}{{end}}</p>
+<br>
+<div class="no-margin">
+  <p><strong>Reason:</strong></p>{{.Reason}}
+  {{if .DecisionNextSteps -}}
+  <br>
+  <p><strong>Next steps:</strong></p>{{.DecisionNextSteps}}
+  {{ end -}}
+</div>
 
-If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.
+<br>
+<p>If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
 
-<p><u>Summary of expired Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>
-{{ if .LifecycleIssuedAt -}}
-<strong>Original date issued:</strong> {{.LifecycleIssuedAt}}<br>
+<br>
+<div class="no-margin">
+  <p><u>Summary of expired Life Cycle ID</u></p>
+  <p><strong>Life Cycle ID:</strong> {{.LifecycleID}}</p>
+  {{ if .LifecycleIssuedAt -}}
+  <p><strong>Original date issued:</strong> {{.LifecycleIssuedAt}}</p>
+  {{ end -}}
+  <p><strong>Expiration date:</strong> {{.LifecycleExpiresAt}}</p>
+  <p><strong>Scope:</strong></p>{{.LifecycleScope}}
+  <p><strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}</p>
+</div>
+
+{{if .AdditionalInfo -}}
+<br>
+<hr>
+<br>
+<p class="no-margin"><strong>Additional information from the Governance Team:</strong></p>
+<br>
+<div class="no-margin">{{.AdditionalInfo}}</div>
 {{ end -}}
-<strong>Expiration date:</strong> {{.LifecycleExpiresAt}}<br>
-<strong>Scope:</strong> {{.LifecycleScope}}<br>
-<strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}</p>
-
-{{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong></p><p>{{.AdditionalInfo}}</p>{{end}}
+<br>
 <hr>
 
 <p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
-

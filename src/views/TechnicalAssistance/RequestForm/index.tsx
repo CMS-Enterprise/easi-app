@@ -2,12 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ApolloQueryResult, useQuery } from '@apollo/client';
-import {
-  Button,
-  GridContainer,
-  IconArrowBack,
-  IconWarning
-} from '@trussworks/react-uswds';
+import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
 import { isEqual } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -28,8 +23,8 @@ import {
 } from 'validations/trbRequestSchema';
 import { NotFoundPartial } from 'views/NotFound';
 
+import Breadcrumbs from '../../../components/shared/Breadcrumbs';
 import StepHeader from '../../../components/StepHeader';
-import Breadcrumbs from '../Breadcrumbs';
 
 import Attendees from './Attendees';
 import Basic, { basicBlankValues } from './Basic';
@@ -49,12 +44,12 @@ const formStepSlugs = [
   'check'
 ] as const;
 
-type FormStepSlug = typeof formStepSlugs[number];
+type FormStepSlug = (typeof formStepSlugs)[number];
 
 /** All slugs under the Trb request form */
 const viewSlugs = [...formStepSlugs, 'done', 'view', 'feedback'] as const;
 
-type ViewSlug = typeof viewSlugs[number];
+type ViewSlug = (typeof viewSlugs)[number];
 
 /**
  * A promise wrapper for form step submit handlers.
@@ -222,7 +217,7 @@ function Header({
             }, false);
           }}
         >
-          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+          <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
           {t('button.saveAndExit')}
         </Button>
       )}
@@ -242,7 +237,7 @@ function EditsRequestedWarning({
     <div className="bg-error-lighter padding-y-2">
       <GridContainer className="width-full">
         <div>
-          <IconWarning
+          <Icon.Warning
             className="text-error-dark text-middle margin-right-1"
             size={3}
           />

@@ -11,8 +11,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type lcidExperationAlert struct {
@@ -42,7 +41,7 @@ func (c Client) lcidExpirationBody(
 	nextSteps models.HTML,
 ) (string, error) {
 	requesterPath := path.Join("governance-task-list", systemIntakeID.String())
-	grtPath := path.Join("governance-review-team", systemIntakeID.String(), "lcid")
+	grtPath := path.Join("it-governance", systemIntakeID.String(), "lcid")
 	var issuedAt string
 	if lcidIssuedAt != nil {
 		issuedAt = lcidIssuedAt.Format("01/02/2006")
@@ -92,7 +91,7 @@ func (c Client) SendLCIDExpirationAlertEmail(
 	lifecycleCostBaseline string,
 	nextSteps models.HTML,
 ) error {
-	subject := fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName)
+	subject := fmt.Sprintf("Warning: Your Life Cycle ID (%s) for %s is about to expire", lcid, projectName)
 	body, err := c.lcidExpirationBody(
 		ctx,
 		systemIntakeID,
@@ -107,21 +106,16 @@ func (c Client) SendLCIDExpirationAlertEmail(
 	)
 
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = c.sender.Send(
+	// TODO: No CC b/c we set the ShouldNotifyITGovernance bool as true in recipients.
+	//       This however doesn't cc the governance mailbox but sends directly to it, we should maybe allow for specification between cc'ing and sending directly?
+	return c.sender.Send(
 		ctx,
-		c.listAllRecipients(recipients),
-		nil, // TODO: This is nil b/c we set the ShouldNotifyITGovernance bool as true in recipients.
-		//       This however doesn't cc the governance mailbox but sends directly to it, we should maybe allow for specification between cc'ing and sending directly?
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(c.listAllRecipients(recipients)).
+			WithSubject(subject).
+			WithBody(body),
 	)
-
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
 }

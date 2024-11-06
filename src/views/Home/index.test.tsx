@@ -11,7 +11,6 @@ import {
   getTrbAdminTeamHomeQuery
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import GetSystemIntakesTableQuery from 'queries/GetSystemIntakesTableQuery';
 import {
@@ -73,7 +72,7 @@ const getClosedSystemIntakesTable: MockedQuery<
 };
 
 const mocks = [
-  getRequestsQuery([], []),
+  getRequestsQuery([]),
   getOpenSystemIntakesTable,
   getClosedSystemIntakesTable,
   {
@@ -83,16 +82,6 @@ const mocks = [
     result: {
       data: {
         cedarSystems: []
-      }
-    }
-  },
-  {
-    request: {
-      query: GetCedarSystemBookmarksQuery
-    },
-    result: {
-      data: {
-        cedarSystemBookmarks: []
       }
     }
   }
@@ -114,10 +103,8 @@ describe('The home page', () => {
       );
 
       expect(screen.getByRole('heading', { name: 'IT Governance' }));
-      expect(screen.getByRole('heading', { name: 'Section 508' }));
-
-      expect(screen.getByRole('heading', { name: 'My requests' }));
-      expect(screen.getByRole('heading', { name: 'All systems' }));
+      expect(screen.getByRole('heading', { name: 'My open requests' }));
+      expect(screen.getByRole('heading', { name: 'My systems' }));
     });
   });
 
@@ -163,7 +150,7 @@ describe('The home page', () => {
           <Provider store={adminStore}>
             <VerboseMockedProvider mocks={[...mocks, getTrbAdminTeamHomeQuery]}>
               <MessageProvider>
-                <AdminHome isGrtReviewer isTrbAdmin />
+                <AdminHome isITGovAdmin isTrbAdmin />
               </MessageProvider>
             </VerboseMockedProvider>
           </Provider>

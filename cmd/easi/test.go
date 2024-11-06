@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/cmsgov/easi-app/cmd/easi/test"
+	"github.com/cms-enterprise/easi-app/cmd/easi/test"
 )
 
 var testCmd = &cobra.Command{

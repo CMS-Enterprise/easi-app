@@ -15,7 +15,7 @@ export type { GetTrbRequestFeedback_trbRequest_feedback as TrbRequestFeedback } 
 
 /** TRB attendee fields allows null role in form */
 export type TRBAttendeeFields = {
-  euaUserId: string;
+  euaUserId: string | null;
   component: string | null;
   role: PersonRole | null;
 };
@@ -31,7 +31,7 @@ export type AttendeeFieldLabels = {
 /** TRB Attendee user info */
 export type TRBAttendeeUserInfo = {
   commonName: string;
-  euaUserId: string;
+  euaUserId: string | null;
   email?: string;
 } | null;
 
@@ -67,6 +67,7 @@ export type TrbAdminPath =
   | 'documents'
   | 'feedback'
   | 'advice'
+  | 'additional-information'
   | 'notes';
 
 export type TrbAdminPage = {
@@ -146,3 +147,41 @@ export interface TrbRecipientFields {
   notifyEuaIds: string[];
   copyTrbMailbox: boolean;
 }
+
+// Funding sources types
+
+/** Funding sources formatted for form */
+export type MultiFundingSource = {
+  fundingNumber: string;
+  sources: string[];
+};
+
+/** Funding sources formatted for form */
+export interface ExistingFundingSource extends MultiFundingSource {
+  initialFundingNumber: string;
+}
+
+/** Add, edit, or delete funding source */
+export type UpdateFundingSources =
+  | {
+      action: 'Add' | 'Delete';
+      data: MultiFundingSource;
+    }
+  | {
+      action: 'Edit';
+      data: ExistingFundingSource;
+    };
+
+/** Update active funding source in form */
+export type UpdateActiveFundingSource = {
+  action: 'Add' | 'Edit' | null;
+  data?: MultiFundingSource;
+};
+
+/** Funding sources object formatted for display */
+export type FormattedFundingSourcesObject = {
+  [number: string]: {
+    fundingNumber: string;
+    sources: string[];
+  };
+};

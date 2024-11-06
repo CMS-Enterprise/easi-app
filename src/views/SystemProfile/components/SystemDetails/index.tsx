@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Button,
   Card,
   CardBody,
   CardFooter,
   CardGroup,
   CardHeader,
   Grid,
-  IconCheckCircle,
-  IconVerifiedUser,
+  Icon,
   Link
 } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -24,7 +24,7 @@ import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import formatNumber from 'utils/formatNumber';
-import { showVal } from 'views/SystemProfile';
+import showVal, { showSystemVal } from 'utils/showVal';
 
 import 'index.scss';
 
@@ -33,10 +33,17 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
   const { locations, developmentTags, cedarSystemDetails } = system;
+
+  const locationsCountCap = 5;
+  const [isLocationsExpanded, setLocationsExpanded] = useState<boolean>(false);
+  const showMoreLocationsToggle = locations
+    ? locations.length - locationsCountCap > 0
+    : false;
+
   return (
     <>
       <SectionWrapper borderBottom className="padding-bottom-4">
-        <h2 className="margin-top-0 margin-bottom-4">
+        <h2 id="basic" className="margin-top-0 margin-bottom-4">
           {t('singleSystem.systemDetails.header')}
         </h2>
 
@@ -45,12 +52,16 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             <DescriptionTerm term={t('singleSystem.systemDetails.ownership')} />
             <DescriptionDefinition
               className="font-body-md line-height-body-3"
-              definition={t(
-                `singleSystem.systemDetails.ownershipValues.${
-                  cedarSystemDetails?.businessOwnerInformation.isCmsOwned
-                    ? 'cmsOwned'
-                    : 'contractorOwned'
-                }`
+              definition={showSystemVal(
+                cedarSystemDetails?.businessOwnerInformation.isCmsOwned,
+                {
+                  format: v =>
+                    t(
+                      `singleSystem.systemDetails.ownershipValues.${
+                        v ? 'cmsOwned' : 'contractorOwned'
+                      }`
+                    )
+                }
               )}
             />
           </Grid>
@@ -60,7 +71,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 font-body-md"
-              definition={showVal(
+              definition={showSystemVal(
                 cedarSystemDetails?.businessOwnerInformation
                   .numberOfSupportedUsersPerMonth,
                 { format: formatNumber }
@@ -71,7 +82,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             <DescriptionTerm term={t('singleSystem.systemDetails.access')} />
             <DescriptionDefinition
               className="line-height-body-3"
-              definition={showVal(
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation.netAccessibility
               )}
             />
@@ -115,7 +126,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
       </SectionWrapper>
 
       <SectionWrapper borderBottom className="padding-bottom-3 margin-bottom-3">
-        <h2 className="margin-top-3">
+        <h2 id="urls" className="margin-top-3">
           {t('singleSystem.systemDetails.urlsAndLocations')}
         </h2>
 
@@ -126,94 +137,127 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={
-                'December 12, 2017' ||
-                t('singleSystem.systemDetails.noMigrationDate')
-              }
+              definition="December 12, 2017"
+              // definition={t('singleSystem.systemDetails.noMigrationDate')}
             />
           </>
         )}
 
         {locations?.length ? (
-          <CardGroup className="margin-0">
-            {locations.map(location => (
-              <Card
-                key={location.id}
-                data-testid="system-card"
-                className="grid-col-12"
-              >
-                <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-                  <dt>
-                    {location.urlHostingEnv &&
-                      `${location.urlHostingEnv} ${t(
-                        'singleSystem.systemDetails.environment'
-                      )}`}
-                  </dt>
-                  {location.isBehindWebApplicationFirewall && (
-                    <div>
-                      <dd className="text-right text-base-dark system-profile__icon-container">
-                        <IconVerifiedUser
-                          width="1rem"
-                          color="#00a91c"
-                          height="1rem"
-                          className="margin-right-1"
-                          aria-label="verified"
-                        />
-                        <span className="text-tbottom line-height-body-3">
-                          {t(
-                            'singleSystem.systemDetails.webApplicationFirewall'
-                          )}
-                        </span>
-                      </dd>
-                    </div>
-                  )}
-                </CardHeader>
-                <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
-                  <h3 className="link-header margin-top-0 margin-bottom-2">
-                    {location.address ? (
-                      <Link
-                        className="link-header url-card-link"
-                        variant="external"
-                        target="_blank"
-                        href={location.address}
-                      >
-                        {location.address}
-                      </Link>
-                    ) : (
-                      <dd className="margin-left-0">
-                        {t('singleSystem.systemDetails.noEnvironmentURL')}
-                      </dd>
+          <>
+            <CardGroup className="margin-0">
+              {locations
+                .slice(0, isLocationsExpanded ? undefined : locationsCountCap)
+                .map(location => (
+                  <Card
+                    key={location.id}
+                    data-testid="system-card"
+                    className="grid-col-12"
+                  >
+                    <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
+                      {showVal(
+                        location.urlHostingEnv
+                          ? t<string>(
+                              'singleSystem.systemDetails.environment',
+                              { environment: location.urlHostingEnv }
+                            )
+                          : undefined,
+                        {
+                          defaultVal: t<string>(
+                            'singleSystem.systemDetails.noEnvironmentListed'
+                          )
+                        }
+                      )}
+                    </CardHeader>
+                    <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
+                      <h3 className="link-header margin-y-0">
+                        {location.address ? (
+                          <Link
+                            className="link-header url-card-link"
+                            variant="external"
+                            target="_blank"
+                            href={location.address}
+                          >
+                            {location.address}
+                          </Link>
+                        ) : (
+                          <span className="text-italic text-normal text-base margin-left-0">
+                            {t('singleSystem.systemDetails.noUrlListed')}
+                          </span>
+                        )}
+                      </h3>
+                      {location.isBehindWebApplicationFirewall && (
+                        <div className="margin-top-1">
+                          <Icon.VerifiedUser
+                            width="1rem"
+                            color="#00a91c"
+                            height="1rem"
+                            className="margin-right-1"
+                            aria-label="verified"
+                          />
+                          <span className="text-tbottom text-base-dark line-height-body-3">
+                            {t(
+                              'singleSystem.systemDetails.webApplicationFirewall'
+                            )}
+                          </span>
+                        </div>
+                      )}
+                      <div className="margin-top-2">
+                        {location.tags.map((tag: string) => (
+                          <Tag
+                            key={tag}
+                            className="system-profile__tag margin-bottom-2 text-base-darker bg-base-lighter"
+                          >
+                            {tag}
+                          </Tag>
+                        ))}
+                      </div>
+                      <div />
+                    </CardBody>
+                    {location.deploymentDataCenterName && (
+                      <CardFooter className="padding-0">
+                        <Grid row>
+                          <Divider className="margin-x-2" />
+                          <Grid desktop={{ col: 12 }} className="padding-2">
+                            <DescriptionTerm
+                              term={t('singleSystem.systemDetails.provider')}
+                            />
+                            <DescriptionDefinition
+                              className="line-height-body-3"
+                              definition={showSystemVal(
+                                location.deploymentDataCenterName
+                              )}
+                            />
+                          </Grid>
+                        </Grid>
+                      </CardFooter>
                     )}
-                  </h3>
-                  {location.tags.map((tag: string) => (
-                    <Tag
-                      key={tag}
-                      className="system-profile__tag margin-bottom-2 text-base-darker bg-base-lighter"
-                    >
-                      {tag}
-                    </Tag>
-                  ))}
-                  <div />
-                </CardBody>
-                {location.deploymentDataCenterName && (
-                  <CardFooter className="padding-0">
-                    <Grid row>
-                      <Divider className="margin-x-2" />
-                      <Grid desktop={{ col: 12 }} className="padding-2">
-                        <DescriptionTerm
-                          term={t('singleSystem.systemDetails.provider')}
-                        />
-                        <DescriptionDefinition
-                          className="line-height-body-3"
-                          definition={location.deploymentDataCenterName}
-                        />
-                      </Grid>
-                    </Grid>
-                  </CardFooter>
+                  </Card>
+                ))}
+            </CardGroup>
+            {showMoreLocationsToggle && (
+              <Button
+                unstyled
+                type="button"
+                className="line-height-body-5"
+                onClick={() => {
+                  setLocationsExpanded(!isLocationsExpanded);
+                }}
+              >
+                {t(
+                  `singleSystem.systemDetails.showUrls.${
+                    isLocationsExpanded ? 'less' : 'more'
+                  }`
                 )}
-              </Card>
-            ))}
-          </CardGroup>
+                <Icon.ExpandMore
+                  className="margin-left-05 margin-bottom-2px text-tbottom"
+                  style={{
+                    transform: isLocationsExpanded ? 'rotate(180deg)' : ''
+                  }}
+                />
+              </Button>
+            )}
+          </>
         ) : (
           <Alert type="info" className="margin-bottom-2">
             {t('singleSystem.systemDetails.noURL')}
@@ -222,14 +266,14 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
       </SectionWrapper>
 
       <SectionWrapper
-        borderBottom={flags.systemProfileHiddenFields || isMobile}
+        borderBottom
         className={
           flags.systemProfileHiddenFields
             ? 'padding-bottom-5 margin-bottom-4'
             : 'margin-bottom-5'
         }
       >
-        <h2 className="margin-top-4 margin-bottom-1">
+        <h2 id="development" className="margin-top-4 margin-bottom-1">
           {t('singleSystem.systemDetails.development')}
         </h2>
 
@@ -238,57 +282,52 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             key={tag}
             className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
           >
-            <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
+            <Icon.CheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
             {tag}
           </Tag>
         ))}
 
         <Grid row className="margin-top-3">
           <Grid desktop={{ col: 6 }}>
-            {flags.systemProfileHiddenFields && (
-              <>
-                <DescriptionTerm
-                  term={t('singleSystem.systemDetails.customDevelopment')}
-                />
-                <DescriptionDefinition
-                  className="line-height-body-3 margin-bottom-4"
-                  definition="85%"
-                />
-              </>
-            )}
             <DescriptionTerm
-              term={t('singleSystem.systemDetails.workCompleted')}
+              term={t('singleSystem.systemDetails.customDevelopment')}
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={showVal(
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation
-                  .devCompletionPercent
+                  .systemCustomization
               )}
             />
-          </Grid>
-          <Grid desktop={{ col: 6 }}>
             <DescriptionTerm
               term={t('singleSystem.systemDetails.releaseFrequency')}
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={showVal(
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation
                   .deploymentFrequency
               )}
             />
-            {flags.systemProfileHiddenFields && (
-              <>
-                <DescriptionTerm
-                  term={t('singleSystem.systemDetails.retirement')}
-                />
-                <DescriptionDefinition
-                  className="line-height-body-3 margin-bottom-4"
-                  definition="No planned retirement or replacement"
-                />
-              </>
-            )}
+          </Grid>
+          <Grid desktop={{ col: 6 }}>
+            <DescriptionTerm
+              term={t('singleSystem.systemDetails.workCompleted')}
+            />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition={showSystemVal(
+                cedarSystemDetails?.systemMaintainerInformation
+                  .devCompletionPercent
+              )}
+            />
+            <DescriptionTerm
+              term={t('singleSystem.systemDetails.retirement')}
+            />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition={system.plannedRetirement}
+            />
           </Grid>
           <Grid desktop={{ col: 12 }}>
             <DescriptionTerm
@@ -330,64 +369,77 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
         </Grid>
       </SectionWrapper>
 
-      {flags.systemProfileHiddenFields && (
-        <SectionWrapper borderBottom={isMobile} className="margin-bottom-5">
-          <h2 className="margin-top-3 margin-bottom-1">
-            {t('singleSystem.systemDetails.ipInfo')}
-          </h2>
+      <SectionWrapper borderBottom={isMobile} className="margin-bottom-5">
+        <h2 id="ip" className="margin-top-3 margin-bottom-1">
+          {t('singleSystem.systemDetails.ipInfo')}
+        </h2>
 
-          {/* TODO: Map defined CEDAR variable once availabe */}
+        {cedarSystemDetails?.systemMaintainerInformation.ecapParticipation && (
           <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
-            <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
-            E-CAP Initiative
+            <Icon.CheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
+            {t('singleSystem.systemDetails.eCapInitiative')}
           </Tag>
+        )}
 
-          {/* TODO: Map and populate tags with CEDAR */}
-          <Grid row className="margin-top-2">
-            <Grid desktop={{ col: 6 }} className="padding-right-2">
-              <DescriptionTerm
-                term={t('singleSystem.systemDetails.currentIP')}
-              />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="IPv4 only"
-              />
-              <DescriptionTerm
-                term={t('singleSystem.systemDetails.ipAssets')}
-              />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="This system will be transitioned to IPv6"
-              />
-            </Grid>
-            <Grid desktop={{ col: 6 }} className="padding-right-2">
-              <DescriptionTerm
-                term={t('singleSystem.systemDetails.ipv6Transition')}
-              />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="21"
-              />
-              <DescriptionTerm
-                term={t('singleSystem.systemDetails.percentTransitioned')}
-              />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="25%"
-              />
-            </Grid>
-            <Grid desktop={{ col: 6 }} className="padding-right-2">
-              <DescriptionTerm
-                term={t('singleSystem.systemDetails.hardCodedIP')}
-              />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="This system has hard-coded IP addresses"
-              />
-            </Grid>
+        <Grid row className="margin-top-2">
+          <Grid desktop={{ col: 6 }} className="padding-right-2">
+            <DescriptionTerm term={t('singleSystem.systemDetails.currentIP')} />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition={showSystemVal(
+                cedarSystemDetails?.systemMaintainerInformation
+                  .frontendAccessType
+              )}
+            />
+            <DescriptionTerm
+              term={t('singleSystem.systemDetails.ipv6Transition')}
+            />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition={showSystemVal(
+                cedarSystemDetails?.systemMaintainerInformation
+                  .ip6TransitionPlan
+              )}
+            />
           </Grid>
-        </SectionWrapper>
-      )}
+          <Grid desktop={{ col: 6 }} className="padding-right-2">
+            <DescriptionTerm term={t('singleSystem.systemDetails.ipAssets')} />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition={showSystemVal(
+                cedarSystemDetails?.systemMaintainerInformation
+                  .ipEnabledAssetCount
+              )}
+            />
+            <DescriptionTerm
+              term={t('singleSystem.systemDetails.percentTransitioned')}
+            />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition={showSystemVal(
+                cedarSystemDetails?.systemMaintainerInformation
+                  .ip6EnabledAssetPercent
+              )}
+            />
+          </Grid>
+          <Grid desktop={{ col: 6 }} className="padding-right-2">
+            <DescriptionTerm
+              term={t('singleSystem.systemDetails.hardCodedIP')}
+            />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition={showSystemVal(
+                cedarSystemDetails?.systemMaintainerInformation
+                  .hardCodedIPAddress,
+                {
+                  format: v =>
+                    v ? 'This system has hard-coded IP addresses' : 'None'
+                }
+              )}
+            />
+          </Grid>
+        </Grid>
+      </SectionWrapper>
     </>
   );
 };

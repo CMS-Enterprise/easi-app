@@ -1,26 +1,26 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
+  Button,
   Card,
   CardBody,
   CardGroup,
   CardHeader,
   Grid,
-  IconCheck,
-  IconClose,
-  IconEdit,
-  IconGroups,
-  IconNotificationsActive
+  Icon
 } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { IconList, IconListItem } from 'components/shared/IconList';
+import useOktaSession from 'hooks/useOktaSession';
 
 import './welcome.scss';
 
 const WelcomeText = () => {
   const { t } = useTranslation('home');
+
+  const { hasSession, oktaAuth } = useOktaSession();
 
   return (
     <>
@@ -63,7 +63,7 @@ const WelcomeText = () => {
                     return (
                       <IconListItem
                         key={item}
-                        icon={<IconCheck className="text-green" />}
+                        icon={<Icon.Check className="text-green" />}
                       >
                         {item}
                       </IconListItem>
@@ -85,7 +85,7 @@ const WelcomeText = () => {
                       <IconListItem
                         key={item}
                         icon={
-                          <IconClose
+                          <Icon.Close
                             className="text-red margin-right-1"
                             size={3}
                           />
@@ -99,9 +99,21 @@ const WelcomeText = () => {
               </CardBody>
             </Card>
           </CardGroup>
-          <UswdsReactLink className="usa-button width-auto" to="/signin">
-            {t('signIn')}
-          </UswdsReactLink>
+
+          {/* If a user has an active okta session, replace router link with a button that automicatally authenticates the user for EASI.  Bypasses /signin */}
+          {hasSession ? (
+            <Button
+              type="button"
+              className="usa-button width-auto"
+              onClick={() => oktaAuth.signInWithRedirect()}
+            >
+              {t('signIn')}
+            </Button>
+          ) : (
+            <UswdsReactLink className="usa-button width-auto" to="/signin">
+              {t('signIn')}
+            </UswdsReactLink>
+          )}
         </Grid>
       </section>
 
@@ -115,7 +127,7 @@ const WelcomeText = () => {
           <CardGroup>
             <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
-                <IconNotificationsActive
+                <Icon.NotificationsActive
                   size={5}
                   className="text-primary-vivid"
                 />
@@ -129,7 +141,7 @@ const WelcomeText = () => {
             </Card>
             <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
-                <IconGroups size={5} className="text-primary-vivid" />
+                <Icon.Groups size={5} className="text-primary-vivid" />
                 <h3 className="line-height-body-2">
                   {t('welcome.collaboration')}
                 </h3>
@@ -140,7 +152,7 @@ const WelcomeText = () => {
             </Card>
             <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
-                <IconEdit size={5} className="text-primary-vivid" />
+                <Icon.Edit size={5} className="text-primary-vivid" />
                 <h3 className="line-height-body-2">{t('welcome.editing')}</h3>
               </CardHeader>
               <CardBody>

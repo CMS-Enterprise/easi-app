@@ -12,9 +12,12 @@ import {
   CreateTrbRequestVariables
 } from 'queries/types/CreateTrbRequest';
 import { TRBRequestType } from 'types/graphql-global-types';
+import linkCedarSystemIdQueryString, {
+  useLinkCedarSystemIdQueryParam
+} from 'utils/linkCedarSystemIdQueryString';
 import { StepsInProcessContent } from 'views/Help/TechnicalReviewBoard/StepsInProcess';
 
-import Breadcrumbs from './Breadcrumbs';
+import Breadcrumbs from '../../components/shared/Breadcrumbs';
 
 /**
  * Process flow info where the user proceeds to create a new Trb Request.
@@ -26,6 +29,9 @@ function ProcessFlow() {
 
   const requestType = state?.requestType;
 
+  const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+  const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
+
   const [create, createResult] = useMutation<
     CreateTrbRequest,
     CreateTrbRequestVariables
@@ -34,9 +40,14 @@ function ProcessFlow() {
   // Redirect to task list on sucessful trb request creation
   useEffect(() => {
     if (createResult.data) {
-      history.push(`/trb/task-list/${createResult.data.createTRBRequest.id}`);
+      history.push(
+        `/trb/link/${createResult.data.createTRBRequest.id}?${linkCedarSystemIdQs}`,
+        {
+          isNew: true
+        }
+      );
     }
-  }, [createResult, history]);
+  }, [createResult, history, linkCedarSystemIdQs]);
 
   // Redirect to start if `requestType` isn't set
   if (!requestType) return <Redirect to="/trb/start" />;
@@ -64,7 +75,12 @@ function ProcessFlow() {
           {requestTypeText[requestType].heading}
         </span>
         <span>
-          <UswdsReactLink to="/trb/start">
+          <UswdsReactLink
+            to={{
+              pathname: '/trb/start',
+              search: linkCedarSystemIdQs
+            }}
+          >
             {t('steps.changeRequestType')}
           </UswdsReactLink>
         </span>
@@ -74,7 +90,10 @@ function ProcessFlow() {
 
       <div className="margin-top-1">
         <UswdsReactLink
-          to="/trb/start"
+          to={{
+            pathname: '/trb/start',
+            search: linkCedarSystemIdQs
+          }}
           className="usa-button usa-button--outline margin-bottom-1 tablet:margin-bottom-0"
           variant="unstyled"
         >

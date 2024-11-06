@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import {
   DescriptionDefinition,
@@ -8,54 +8,29 @@ import {
 } from './index';
 
 describe('The Description List component', () => {
-  const component = shallow(
-    <DescriptionList title="Test Title">
-      <dt>Name</dt>
-      <dd>EASi</dd>
-    </DescriptionList>
-  );
-
-  it('renders without crashing', () => {
-    shallow(
-      <DescriptionList title="">
+  it('matches snapshot', () => {
+    const { asFragment } = render(
+      <DescriptionList title="Test Title">
         <dt>Name</dt>
         <dd>EASi</dd>
       </DescriptionList>
     );
-  });
-
-  it('has the correct title for the list', () => {
-    expect(component.find('dl').props().title).toEqual('Test Title');
-  });
-
-  it('renders children', () => {
-    expect(component.find('dt').exists()).toEqual(true);
-    expect(component.find('dd').exists()).toEqual(true);
+    expect(asFragment()).toMatchSnapshot();
   });
 });
 
 describe('The Description Term component', () => {
-  it('renders without crashing', () => {
-    shallow(<DescriptionTerm term="" />);
-  });
-
-  it('renders the term', () => {
-    const component = shallow(<DescriptionTerm term="Test Term" />);
-
-    expect(component.find('dt').text()).toEqual('Test Term');
+  it('matches snapshot', () => {
+    const { asFragment } = render(<DescriptionTerm term="Test Term" />);
+    expect(asFragment()).toMatchSnapshot();
   });
 });
 
 describe('The Description Definition component', () => {
-  it('renders without crashing', () => {
-    shallow(<DescriptionDefinition definition="" />);
-  });
-
-  it('renders the definition', () => {
-    const component = shallow(
+  it('matches snapshot', () => {
+    const { asFragment } = render(
       <DescriptionDefinition definition="Test Definition" />
     );
-
-    expect(component.find('dd').text()).toEqual('Test Definition');
+    expect(asFragment()).toMatchSnapshot();
   });
 });

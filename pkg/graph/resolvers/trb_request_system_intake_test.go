@@ -1,17 +1,15 @@
 package resolvers
 
 import (
-	"context"
-
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TestTRBRequestLCIDCrud tests creation/deletion of TRB request LCIDs
 func (s *ResolverSuite) TestTRBRequestLCID() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	anonEua := "ANON"
 	store := s.testConfigs.Store
 
@@ -25,7 +23,6 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 	intakes := make([]*models.SystemIntake, 3)
 	for i, lcid := range lcids {
 		intake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusLCIDISSUED,
 			RequestType: models.SystemIntakeRequestTypeMAJORCHANGES,
 		})
 		s.NoError(err)
@@ -36,7 +33,7 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 	}
 
 	s.Run("create/read/update TRB request system intakes", func() {
-		trbIntakes, err := GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		trbIntakes, err := GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(trbIntakes, 0)
 
@@ -48,7 +45,7 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 		})
 		s.NoError(err)
 
-		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		trbIntakes, err = GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(trbIntakes, 2)
 
@@ -68,7 +65,7 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 		})
 		s.NoError(err)
 
-		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		trbIntakes, err = GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(trbIntakes, 3)
 
@@ -89,7 +86,7 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 		})
 		s.NoError(err)
 
-		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		trbIntakes, err = GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(trbIntakes, 1)
 
@@ -108,7 +105,7 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 		})
 		s.NoError(err)
 
-		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		trbIntakes, err = GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.Len(trbIntakes, 0)
 	})

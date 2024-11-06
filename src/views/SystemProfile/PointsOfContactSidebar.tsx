@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { IconMailOutline, Link } from '@trussworks/react-uswds';
+import { Icon, Link } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
@@ -10,8 +10,8 @@ import {
   UsernameWithRoles
 } from 'types/systemProfile';
 
+import { getPersonFullName } from './helpers';
 import pointsOfContactIds from './pointsOfContactIds';
-import { getPersonFullName } from '.';
 
 /**
  * Get a list of subpage contacts defined by `pointsOfContactIds`.
@@ -49,6 +49,7 @@ const PointsOfContactSidebar = ({
   systemId
 }: PointsOfContactSidebarProps) => {
   const { t } = useTranslation('systemProfile');
+
   const contactsWithRoles = getPointsOfContact(
     subpageKey,
     system.usernamesWithRoles
@@ -85,7 +86,7 @@ const PointsOfContactSidebar = ({
                     target="_blank"
                   >
                     {t('singleSystem.sendEmail')}
-                    <IconMailOutline className="margin-left-05 margin-bottom-2px text-tbottom" />
+                    <Icon.MailOutline className="margin-left-05 margin-bottom-2px text-tbottom" />
                   </Link>
                 </p>
               )}

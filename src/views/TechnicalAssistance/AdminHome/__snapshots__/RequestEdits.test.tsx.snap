@@ -18,7 +18,7 @@ exports[`Trb Admin: Action: Request Edits > submits a feedback message 1`] = `
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb"
           >
             <span>
@@ -30,11 +30,11 @@ exports[`Trb Admin: Action: Request Edits > submits a feedback message 1`] = `
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/initial-request-form"
           >
             <span>
-              Request details
+              TRB request details
             </span>
           </a>
         </li>

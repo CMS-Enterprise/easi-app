@@ -7,7 +7,7 @@ import (
 	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func TestIsLCIDValidToChangeRetirementDate(t *testing.T) {
@@ -61,9 +61,9 @@ func TestGetChangeLCIDRetirementDateAction(t *testing.T) {
 
 	mockNewRetirementDate := mockCurrentTime.Add(time.Hour * 24 * 2)
 	userInfo := models.UserInfo{
-		CommonName: "tester",
-		Email:      "test@email.email",
-		EuaUserID:  "TEST",
+		DisplayName: "tester",
+		Email:       "test@email.email",
+		Username:    "TEST",
 	}
 
 	action := GetChangeLCIDRetirementDateAction(intake, mockNewRetirementDate, userInfo)

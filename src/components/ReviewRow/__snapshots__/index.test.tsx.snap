@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`The Review Row component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="easi-review-row test-class-name"
+  >
+    <div
+      id="testid"
+    />
+  </div>
+</DocumentFragment>
+`;

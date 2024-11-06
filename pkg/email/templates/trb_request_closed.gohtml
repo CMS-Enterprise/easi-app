@@ -2,13 +2,23 @@
 
 <p>The Technical Review Board (TRB) has closed {{.TRBRequestName}}.</p>
 
-{{if .ReasonClosed}}<p>Reason for closing: {{.ReasonClosed}}</p>{{end}}
+{{ if .ReasonClosed -}}
+<br>
+<div class="no-margin">
+  <p><strong>Reason for closing:</strong></p>
+  {{.ReasonClosed}}
+</div>
+{{ end -}}
 
-<p>View this request in EASi:</p>
-<ul>
-<li>If you are the initial requester, you may <a href="{{.TRBRequestLink}}">click here</a> to view the advice letter and your request task list.</li>
-<li>TRB team members may <a href="{{.TRBAdminRequestLink}}">click here</a> to view the request details.</li>
-<li>Others should contact {{.RequesterName}} or the TRB for more information about this request.</li>
-</ul>
+<br>
+<div class="no-margin">
+  <p>View this request in EASi:</p>
+  <ul>
+    <li>If you are the initial requester, you may <a href="{{.TRBRequestLink}}">click here</a> to view the advice letter and your request task list.</li>
+    <li>TRB team members may <a href="{{.TRBAdminRequestLink}}">click here</a> to view the request details.</li>
+    <li>Others should contact {{.RequesterName}} or the TRB for more information about this request.</li>
+  </ul>
+</div>
 
+<br>
 <p>If you have questions or need to request a reschedule, please email the TRB at <a href="mailto:{{.TRBEmail}}">{{.TRBEmail}}</a>.</p>

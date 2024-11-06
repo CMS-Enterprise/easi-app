@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewContractAddParams creates a new ContractAddParams object,
@@ -63,7 +63,10 @@ ContractAddParams contains all the parameters to send to the API endpoint
 */
 type ContractAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   An array of Contracts to be added to CEDAR Alfabet.
+	*/
 	Body *models.ContractAddRequest
 
 	timeout    time.Duration

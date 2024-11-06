@@ -1,20 +1,17 @@
 package resolvers
 
 import (
-	"context"
 	"fmt"
-
 	"time"
 
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	initialSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,
@@ -23,12 +20,12 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		models.SystemIntakeStepGRTMEETING,
 		models.SystemIntakeStepDECISION,
 	}
-	formStepMap := map[model.SystemIntakeFormStep]models.SystemIntakeStep{
-		model.SystemIntakeFormStepInitialRequestForm: models.SystemIntakeStepINITIALFORM,
-		model.SystemIntakeFormStepDraftBusinessCase:  models.SystemIntakeStepDRAFTBIZCASE,
-		model.SystemIntakeFormStepFinalBusinessCase:  models.SystemIntakeStepFINALBIZCASE,
+	formStepMap := map[models.SystemIntakeFormStep]models.SystemIntakeStep{
+		models.SystemIntakeFormStepInitialRequestForm: models.SystemIntakeStepINITIALFORM,
+		models.SystemIntakeFormStepDraftBusinessCase:  models.SystemIntakeStepDRAFTBIZCASE,
+		models.SystemIntakeFormStepFinalBusinessCase:  models.SystemIntakeStepFINALBIZCASE,
 	}
-	invalidFormSteps := []model.SystemIntakeFormStep{
+	invalidFormSteps := []models.SystemIntakeFormStep{
 		"GRT_MEETING",
 		"GRB_MEETING",
 		"DECISION_AND_NEXT_STEPS",
@@ -37,7 +34,6 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 	for _, invalidStep := range invalidFormSteps {
 		s.Run(fmt.Sprintf("Should error targetting %s step", invalidStep), func() {
 			intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        models.SystemIntakeStepINITIALFORM,
 			})
@@ -49,7 +45,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeRequestEditsInput{
+				models.SystemIntakeRequestEditsInput{
 					SystemIntakeID: intake.ID,
 					IntakeFormStep: invalidStep,
 					NotificationRecipients: &models.EmailNotificationRecipients{
@@ -66,10 +62,9 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		})
 	}
 	for _, initialStep := range initialSteps {
-		for _, step := range model.AllSystemIntakeFormStep {
+		for _, step := range models.AllSystemIntakeFormStep {
 			s.Run(fmt.Sprintf("Should set state and %s step as active when in %s step", step, initialStep), func() {
 				intakeToCreate := &models.SystemIntake{
-					Status:      models.SystemIntakeStatusINTAKEDRAFT,
 					RequestType: models.SystemIntakeRequestTypeNEW,
 					Step:        initialStep,
 				}
@@ -85,7 +80,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 					s.testConfigs.Store,
 					s.testConfigs.EmailClient,
 					s.fetchUserInfoStub,
-					model.SystemIntakeRequestEditsInput{
+					models.SystemIntakeRequestEditsInput{
 						SystemIntakeID: intake.ID,
 						IntakeFormStep: step,
 						NotificationRecipients: &models.EmailNotificationRecipients{
@@ -104,11 +99,11 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				// test that edits requested state was set
 				var stepState models.SystemIntakeFormState
 				switch step {
-				case model.SystemIntakeFormStepInitialRequestForm:
+				case models.SystemIntakeFormStepInitialRequestForm:
 					stepState = actionedIntake.RequestFormState
-				case model.SystemIntakeFormStepDraftBusinessCase:
+				case models.SystemIntakeFormStepDraftBusinessCase:
 					stepState = actionedIntake.DraftBusinessCaseState
-				case model.SystemIntakeFormStepFinalBusinessCase:
+				case models.SystemIntakeFormStepFinalBusinessCase:
 					stepState = actionedIntake.FinalBusinessCaseState
 				default:
 					stepState = ""
@@ -122,7 +117,6 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 	// test that feedback is created
 	s.Run("Should create feedback", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
@@ -134,9 +128,9 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeRequestEditsInput{
+			models.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,
-				IntakeFormStep: model.SystemIntakeFormStepInitialRequestForm,
+				IntakeFormStep: models.SystemIntakeFormStepInitialRequestForm,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
 					ShouldNotifyITGovernance: false,
@@ -156,7 +150,6 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 	})
 	s.Run("Should create action", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
@@ -168,9 +161,9 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeRequestEditsInput{
+			models.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,
-				IntakeFormStep: model.SystemIntakeFormStepInitialRequestForm,
+				IntakeFormStep: models.SystemIntakeFormStepInitialRequestForm,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
 					ShouldNotifyITGovernance: false,
@@ -183,7 +176,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		)
 		s.NoError(err)
 		s.Equal(intake.ID, actionedIntake.ID)
-		allActions, err := s.testConfigs.Store.GetActionsByRequestID(ctx, actionedIntake.ID)
+		allActions, err := s.testConfigs.Store.GetActionsBySystemIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
@@ -191,7 +184,6 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 	})
 	s.Run("Should create admin note given input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
@@ -203,9 +195,9 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeRequestEditsInput{
+			models.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,
-				IntakeFormStep: model.SystemIntakeFormStepInitialRequestForm,
+				IntakeFormStep: models.SystemIntakeFormStepInitialRequestForm,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
 					ShouldNotifyITGovernance: false,
@@ -225,7 +217,6 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 	})
 	s.Run("Should NOT create admin note without input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
@@ -236,9 +227,9 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeRequestEditsInput{
+			models.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,
-				IntakeFormStep: model.SystemIntakeFormStepInitialRequestForm,
+				IntakeFormStep: models.SystemIntakeFormStepInitialRequestForm,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
 					ShouldNotifyITGovernance: false,
@@ -293,7 +284,7 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 
 	adminNote := models.HTML("test admin note for rejecting")
 	additionalInfo := models.HTML("test additional info for rejecting")
-	input := model.SystemIntakeRejectIntakeInput{
+	input := models.SystemIntakeRejectIntakeInput{
 		// required fields
 		SystemIntakeID: newIntake.ID,
 		Reason:         "test rejection reason",
@@ -316,7 +307,7 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 
 	// check workflow state
 	s.EqualValues(models.SystemIntakeStepDECISION, updatedIntake.Step)
-	s.EqualValues(models.SystemIntakeStateCLOSED, updatedIntake.State)
+	s.EqualValues(models.SystemIntakeStateClosed, updatedIntake.State)
 	s.EqualValues(models.SIDSNotApproved, updatedIntake.DecisionState)
 
 	// check fields from input
@@ -325,7 +316,7 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 	s.EqualValues(input.TrbFollowUp, *updatedIntake.TRBFollowUpRecommendation)
 
 	// should create action
-	allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntake.ID)
+	allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
 	s.NoError(err)
 	s.NotEmpty(allActionsForIntake)
 	action := allActionsForIntake[0]
@@ -358,7 +349,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 
 		providedLCID := "123456"
 
-		input := model.SystemIntakeIssueLCIDInput{
+		input := models.SystemIntakeIssueLCIDInput{
 			Lcid: &providedLCID,
 
 			// required fields
@@ -384,7 +375,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 	s.Run("When LCID is *not* provided, a new LCID is generated", func() {
 		newIntake := s.createNewIntake()
 
-		input := model.SystemIntakeIssueLCIDInput{
+		input := models.SystemIntakeIssueLCIDInput{
 			Lcid: nil,
 
 			// required fields
@@ -413,7 +404,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 		costBaseline := "test cost baseline"
 		adminNote := models.HTML("test admin note for issuing LCID")
 		additionalInfo := models.HTML("test additional info for issuing LCID")
-		input := model.SystemIntakeIssueLCIDInput{
+		input := models.SystemIntakeIssueLCIDInput{
 			// required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      time.Now().AddDate(2, 0, 0),
@@ -438,7 +429,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 
 		// check workflow state
 		s.EqualValues(models.SystemIntakeStepDECISION, updatedIntake.Step)
-		s.EqualValues(models.SystemIntakeStateCLOSED, updatedIntake.State)
+		s.EqualValues(models.SystemIntakeStateClosed, updatedIntake.State)
 		s.EqualValues(models.SIDSLcidIssued, updatedIntake.DecisionState)
 
 		// check fields from input
@@ -460,7 +451,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.EqualValues(time.Now().UTC().Day(), updatedIntake.LifecycleIssuedAt.Day())
 
 		// should create action
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntake.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0]
@@ -489,7 +480,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 }
 
 func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	formSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,
@@ -501,10 +492,9 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 	for _, formStep := range formSteps {
 		s.Run(fmt.Sprintf("Should close request when in %s step", formStep), func() {
 			intakeToCreate := &models.SystemIntake{
-				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateOPEN,
+				State:       models.SystemIntakeStateOpen,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -519,7 +509,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeCloseRequestInput{
+				models.SystemIntakeCloseRequestInput{
 					SystemIntakeID: intake.ID,
 					NotificationRecipients: &models.EmailNotificationRecipients{
 						RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -535,7 +525,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			// ensure correct intake was edited
 			s.Equal(intake.ID, actionedIntake.ID)
 			// Intake should now be closed
-			s.Equal(models.SystemIntakeStateCLOSED, actionedIntake.State)
+			s.Equal(models.SystemIntakeStateClosed, actionedIntake.State)
 			// Step and Decision State should be unaffected
 			s.Equal(intake.Step, actionedIntake.Step)
 			s.Equal(intake.DecisionState, actionedIntake.DecisionState)
@@ -544,10 +534,9 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 	for _, formStep := range formSteps {
 		s.Run(fmt.Sprintf("Should error on closed request when in %s step", formStep), func() {
 			intakeToCreate := &models.SystemIntake{
-				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateCLOSED,
+				State:       models.SystemIntakeStateClosed,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -562,7 +551,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeCloseRequestInput{
+				models.SystemIntakeCloseRequestInput{
 					SystemIntakeID: intake.ID,
 					NotificationRecipients: &models.EmailNotificationRecipients{
 						RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -578,15 +567,14 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			// ensure intake is still closed and unaffected
 			fetchedIntake, err := s.testConfigs.Store.FetchSystemIntakeByID(ctx, intake.ID)
 			s.NoError(err)
-			s.Equal(fetchedIntake.State, models.SystemIntakeStateCLOSED)
+			s.Equal(fetchedIntake.State, models.SystemIntakeStateClosed)
 		})
 	}
 	s.Run("Should create action", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateOPEN,
+			State:       models.SystemIntakeStateOpen,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -596,7 +584,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeCloseRequestInput{
+			models.SystemIntakeCloseRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -610,7 +598,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 		)
 		s.NoError(err)
 		s.Equal(intake.ID, actionedIntake.ID)
-		allActions, err := s.testConfigs.Store.GetActionsByRequestID(ctx, actionedIntake.ID)
+		allActions, err := s.testConfigs.Store.GetActionsBySystemIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
@@ -618,7 +606,6 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 	})
 	s.Run("Should create admin note given input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
@@ -630,7 +617,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeCloseRequestInput{
+			models.SystemIntakeCloseRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -651,7 +638,6 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 	})
 	s.Run("Should NOT create admin note without input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
@@ -662,7 +648,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeCloseRequestInput{
+			models.SystemIntakeCloseRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -683,7 +669,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 }
 
 func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	formSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,
@@ -695,10 +681,9 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 	for _, formStep := range formSteps {
 		s.Run(fmt.Sprintf("Should reopen request when in %s step", formStep), func() {
 			intakeToCreate := &models.SystemIntake{
-				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateCLOSED,
+				State:       models.SystemIntakeStateClosed,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -713,7 +698,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeReopenRequestInput{
+				models.SystemIntakeReopenRequestInput{
 					SystemIntakeID: intake.ID,
 					NotificationRecipients: &models.EmailNotificationRecipients{
 						RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -729,7 +714,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			// ensure correct intake was edited
 			s.Equal(intake.ID, actionedIntake.ID)
 			// Intake should now be open
-			s.Equal(actionedIntake.State, models.SystemIntakeStateOPEN)
+			s.Equal(actionedIntake.State, models.SystemIntakeStateOpen)
 			// Step and Decision State should be unaffected
 			s.Equal(intake.Step, actionedIntake.Step)
 			s.Equal(intake.DecisionState, actionedIntake.DecisionState)
@@ -738,10 +723,9 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 	for _, formStep := range formSteps {
 		s.Run(fmt.Sprintf("Should error on open request when in %s step", formStep), func() {
 			intakeToCreate := &models.SystemIntake{
-				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateOPEN,
+				State:       models.SystemIntakeStateOpen,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -756,7 +740,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeReopenRequestInput{
+				models.SystemIntakeReopenRequestInput{
 					SystemIntakeID: intake.ID,
 					NotificationRecipients: &models.EmailNotificationRecipients{
 						RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -772,15 +756,14 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			// ensure intake is still closed and unaffected
 			fetchedIntake, err := s.testConfigs.Store.FetchSystemIntakeByID(ctx, intake.ID)
 			s.NoError(err)
-			s.Equal(models.SystemIntakeStateOPEN, fetchedIntake.State)
+			s.Equal(models.SystemIntakeStateOpen, fetchedIntake.State)
 		})
 	}
 	s.Run("Should create action", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -790,7 +773,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeReopenRequestInput{
+			models.SystemIntakeReopenRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -804,7 +787,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		)
 		s.NoError(err)
 		s.Equal(intake.ID, actionedIntake.ID)
-		allActions, err := s.testConfigs.Store.GetActionsByRequestID(ctx, actionedIntake.ID)
+		allActions, err := s.testConfigs.Store.GetActionsBySystemIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
@@ -812,10 +795,9 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 	})
 	s.Run("Should create admin note given input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -825,7 +807,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeReopenRequestInput{
+			models.SystemIntakeReopenRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -846,10 +828,9 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 	})
 	s.Run("Should NOT create admin note without input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -858,7 +839,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeReopenRequestInput{
+			models.SystemIntakeReopenRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -879,7 +860,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 }
 
 func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	formSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,
@@ -889,14 +870,13 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		models.SystemIntakeStepDECISION,
 	}
 	formStates := []models.SystemIntakeState{
-		models.SystemIntakeStateCLOSED,
-		models.SystemIntakeStateOPEN,
+		models.SystemIntakeStateClosed,
+		models.SystemIntakeStateOpen,
 	}
 	for _, formStep := range formSteps {
 		for _, formState := range formStates {
 			s.Run(fmt.Sprintf("Should issue decision on %s request in %s step", formState, formStep), func() {
 				intakeToCreate := &models.SystemIntake{
-					Status:      models.SystemIntakeStatusINTAKEDRAFT,
 					RequestType: models.SystemIntakeRequestTypeNEW,
 					Step:        formStep,
 					State:       formState,
@@ -915,7 +895,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 					s.testConfigs.Store,
 					s.testConfigs.EmailClient,
 					s.fetchUserInfoStub,
-					model.SystemIntakeNotITGovReqInput{
+					models.SystemIntakeNotITGovReqInput{
 						SystemIntakeID: intake.ID,
 						NotificationRecipients: &models.EmailNotificationRecipients{
 							RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -931,7 +911,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				// ensure correct intake was edited
 				s.Equal(intake.ID, actionedIntake.ID)
 				// Intake should now be closed
-				s.Equal(actionedIntake.State, models.SystemIntakeStateCLOSED)
+				s.Equal(actionedIntake.State, models.SystemIntakeStateClosed)
 				// Step should be decision
 				s.Equal(models.SystemIntakeStepDECISION, actionedIntake.Step)
 				// Decision state should be NOT_GOVERNANCE
@@ -943,10 +923,9 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 	}
 	s.Run("Should create action", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -956,7 +935,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeNotITGovReqInput{
+			models.SystemIntakeNotITGovReqInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -970,7 +949,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		)
 		s.NoError(err)
 		s.Equal(intake.ID, actionedIntake.ID)
-		allActions, err := s.testConfigs.Store.GetActionsByRequestID(ctx, actionedIntake.ID)
+		allActions, err := s.testConfigs.Store.GetActionsBySystemIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
@@ -978,10 +957,9 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 	})
 	s.Run("Should create admin note given input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -991,7 +969,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeNotITGovReqInput{
+			models.SystemIntakeNotITGovReqInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -1012,10 +990,9 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 	})
 	s.Run("Should NOT create admin note without input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -1024,7 +1001,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeNotITGovReqInput{
+			models.SystemIntakeNotITGovReqInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -1048,7 +1025,6 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 
 	s.Run("Can't update an LCID that wasn't issued", func() {
 		intakeNoLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
@@ -1058,7 +1034,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeUpdateLCIDInput{
+			models.SystemIntakeUpdateLCIDInput{
 				SystemIntakeID: intakeNoLCID.ID,
 			})
 		s.Error(err2)
@@ -1067,7 +1043,6 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 
 	s.Run("Can update an LCID that was issued", func() {
 		intakeWLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
@@ -1084,7 +1059,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeUpdateLCIDInput{
+			models.SystemIntakeUpdateLCIDInput{
 				SystemIntakeID: intakeWLCID.ID,
 				Scope:          scope,
 				AdditionalInfo: additionalInfo,
@@ -1095,7 +1070,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		s.EqualValues(null.StringFrom(costBaseline), updatedIntakeLCID.LifecycleCostBaseline)
 
 		// assert acion is created
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntakeLCID.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, updatedIntakeLCID.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0]
@@ -1118,7 +1093,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeUpdateLCIDInput{
+				models.SystemIntakeUpdateLCIDInput{
 					SystemIntakeID: updatedIntakeLCID.ID,
 					Scope:          updatedScope,
 					AdditionalInfo: additionalInfoUpdate,
@@ -1128,7 +1103,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 			s.EqualValues(updatedScope, secondUpdateIntake.LifecycleScope)
 			s.EqualValues(null.StringFrom(costBaseline), secondUpdateIntake.LifecycleCostBaseline) // This should not be updated since it wasn't included
 
-			allActionsForIntake2, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, secondUpdateIntake.ID)
+			allActionsForIntake2, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, secondUpdateIntake.ID)
 			s.NoError(err)
 			s.NotEmpty(allActionsForIntake2)
 			action := allActionsForIntake2[0] //The first action is the most recent
@@ -1152,7 +1127,6 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 
 	s.Run("Can't confirm an LCID that wasn't issued", func() {
 		intakeNoLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
@@ -1162,7 +1136,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeConfirmLCIDInput{
+			models.SystemIntakeConfirmLCIDInput{
 				SystemIntakeID: intakeNoLCID.ID,
 			})
 		s.Error(err2)
@@ -1171,12 +1145,13 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 
 	s.Run("Can confirm an LCID that was issued", func() {
 		intakeWLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
 		s.NoError(err)
 		intakeWLCID.LifecycleID = null.StringFrom("123456")
+		alertTS := time.Now()
+		intakeWLCID.LifecycleExpirationAlertTS = &alertTS // set an alert timestamp that we expect to be cleared later
 		_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intakeWLCID)
 		s.NoError(err)
 		scope := models.HTML("A really great new scope")
@@ -1191,7 +1166,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeConfirmLCIDInput{
+			models.SystemIntakeConfirmLCIDInput{
 				SystemIntakeID: intakeWLCID.ID,
 				ExpiresAt:      expiresAt,
 				Scope:          scope,
@@ -1203,9 +1178,10 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		s.NoError(err)
 		s.EqualValues(&scope, confirmedIntakeLCID.LifecycleScope)
 		s.EqualValues(null.StringFrom(costBaseline), confirmedIntakeLCID.LifecycleCostBaseline)
+		s.Nil(confirmedIntakeLCID.LifecycleExpirationAlertTS)
 
 		// assert action is created
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, confirmedIntakeLCID.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, confirmedIntakeLCID.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0]
@@ -1221,6 +1197,11 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		s.Run("Can confirm an already confirmd LCID", func() {
 			adminNote := models.HTML("test admin note for updating LCID")
 
+			// Set an alert timestamp that we expect to NOT be cleared later (since we're confirming with the same date as the original confirmation)
+			alertTS := time.Now()
+			confirmedIntakeLCID.LifecycleExpirationAlertTS = &alertTS // set an alert timestamp that we expect to be cleared later
+			_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, confirmedIntakeLCID)
+
 			confirmedScope := models.HTML("A really great new scope")
 			additionalInfoconfirm := models.HTMLPointer("My feedback for second confirm")
 			expiresAt := time.Now()
@@ -1232,7 +1213,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeConfirmLCIDInput{
+				models.SystemIntakeConfirmLCIDInput{
 					SystemIntakeID: confirmedIntakeLCID.ID,
 					ExpiresAt:      expiresAt,
 					Scope:          confirmedScope,
@@ -1244,8 +1225,9 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			s.NoError(err)
 			s.EqualValues(&confirmedScope, secondconfirmIntake.LifecycleScope)
 			s.EqualValues(null.StringFrom(costBaseline), secondconfirmIntake.LifecycleCostBaseline) // This should not be confirmd since it wasn't included
+			s.NotNil(secondconfirmIntake)                                                           // Shouldn't be reset since we passed the same date as before
 
-			allActionsForIntake2, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, secondconfirmIntake.ID)
+			allActionsForIntake2, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, secondconfirmIntake.ID)
 			s.NoError(err)
 			s.NotEmpty(allActionsForIntake2)
 			action := allActionsForIntake2[0] //The first action is the most recent
@@ -1269,7 +1251,7 @@ func (s *ResolverSuite) TestExpireLCID() {
 
 		// create an intake, issue an LCID for it with an expiration date in the future
 		newIntake := s.createNewIntake()
-		issueLCIDInput := model.SystemIntakeIssueLCIDInput{
+		issueLCIDInput := models.SystemIntakeIssueLCIDInput{
 			// required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      currentTime.AddDate(2, 0, 0),
@@ -1287,7 +1269,7 @@ func (s *ResolverSuite) TestExpireLCID() {
 		s.NoError(err)
 
 		// expire the LCID
-		expireLCIDInput := model.SystemIntakeExpireLCIDInput{
+		expireLCIDInput := models.SystemIntakeExpireLCIDInput{
 			// required fields
 			SystemIntakeID: updatedIntake.ID,
 			Reason:         "test reason for expiring LCID",
@@ -1321,7 +1303,7 @@ func (s *ResolverSuite) TestExpireLCID() {
 		s.EqualValues(expectedExpirationDate, expiredIntake.LifecycleExpiresAt.UTC())
 
 		// should create action
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, expiredIntake.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, expiredIntake.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0] // GetActionsByRequestID() orders actions by .CreatedAt in descending order, so most recent action is first in the slice
@@ -1346,7 +1328,7 @@ func (s *ResolverSuite) TestRetireLCID() {
 
 		// create an intake, issue an LCID for it
 		newIntake := s.createNewIntake()
-		issueLCIDInput := model.SystemIntakeIssueLCIDInput{
+		issueLCIDInput := models.SystemIntakeIssueLCIDInput{
 			// required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      currentTime.AddDate(2, 0, 0),
@@ -1365,7 +1347,7 @@ func (s *ResolverSuite) TestRetireLCID() {
 
 		// retire the LCID
 		retirementDate := time.Unix(0, 0) // in the past, so LCID should be retired
-		retireLCIDInput := model.SystemIntakeRetireLCIDInput{
+		retireLCIDInput := models.SystemIntakeRetireLCIDInput{
 			// required fields
 			SystemIntakeID: updatedIntake.ID,
 			RetiresAt:      retirementDate,
@@ -1393,7 +1375,7 @@ func (s *ResolverSuite) TestRetireLCID() {
 		s.EqualValues(retirementDate.UTC(), retiredIntake.LifecycleRetiresAt.UTC())
 
 		// should create action
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, retiredIntake.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, retiredIntake.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0] // GetActionsByRequestID() orders actions by .CreatedAt in descending order, so most recent action is first in the slice
@@ -1419,7 +1401,7 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 
 		// create an intake, issue an LCID for it, retire the LCID
 		newIntake := s.createNewIntake()
-		issueLCIDInput := model.SystemIntakeIssueLCIDInput{
+		issueLCIDInput := models.SystemIntakeIssueLCIDInput{
 			// required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      expirationDate,
@@ -1437,7 +1419,7 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 		s.NoError(err)
 
 		// retire the LCID
-		retireLCIDInput := model.SystemIntakeRetireLCIDInput{
+		retireLCIDInput := models.SystemIntakeRetireLCIDInput{
 			// required fields
 			SystemIntakeID: intakeWithLCID.ID,
 			RetiresAt:      originalRetirementDate,
@@ -1452,7 +1434,7 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 		s.NoError(err)
 
 		// change the LCID's retirement date
-		changeRetirementDateInput := model.SystemIntakeChangeLCIDRetirementDateInput{
+		changeRetirementDateInput := models.SystemIntakeChangeLCIDRetirementDateInput{
 			// required fields
 			SystemIntakeID: retiredIntake.ID,
 			RetiresAt:      newRetirementDate,
@@ -1479,7 +1461,7 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 		s.WithinDuration(newRetirementDate, *lcidWithUpdatedRetirementDate.LifecycleRetiresAt, 1*time.Microsecond)
 
 		// should create action
-		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, lcidWithUpdatedRetirementDate.ID)
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, lcidWithUpdatedRetirementDate.ID)
 		s.NoError(err)
 		s.NotEmpty(allActionsForIntake)
 		action := allActionsForIntake[0] // GetActionsByRequestID() orders actions by .CreatedAt in descending order, so most recent action is first in the slice

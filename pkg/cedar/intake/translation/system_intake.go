@@ -1,12 +1,16 @@
 package translation
 
 import (
+	"context"
 	"encoding/json"
+	"strings"
 	"time"
 
-	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
-	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
-	"github.com/cmsgov/easi-app/pkg/models"
+	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
+	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TranslatableSystemIntake is a wrapper around our SystemIntake model for translating into the CEDAR Intake API schema
@@ -23,7 +27,7 @@ func (si *TranslatableSystemIntake) ObjectType() string {
 }
 
 // CreateIntakeModel translates a SystemIntake into an IntakeInput
-func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, error) {
+func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wire.IntakeInput, error) {
 	fundingSources := make([]*intakemodels.EASIFundingSource, 0, len(si.FundingSources))
 	for _, fundingSource := range si.FundingSources {
 		fundingSources = append(fundingSources, &intakemodels.EASIFundingSource{
@@ -33,10 +37,25 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		})
 	}
 
+	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(helpers.PointerTo(models.SystemIntake(*si)))
+	if err != nil {
+		return nil, err
+	}
+
+	contracts, err := resolvers.SystemIntakeContractNumbers(ctx, si.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	numbers := make([]string, len(contracts))
+	for i := range contracts {
+		numbers[i] = contracts[i].ContractNumber
+	}
+
 	obj := &intakemodels.EASIIntake{
 		IntakeID:                    si.ID.String(),
 		UserEUA:                     si.EUAUserID.ValueOrZero(),
-		Status:                      string(si.Status),
+		Status:                      string(clientStatus),
 		RequestType:                 string(si.RequestType),
 		Requester:                   si.Requester,
 		Component:                   si.Component.ValueOrZero(),
@@ -61,7 +80,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		CostIncreaseAmount:          si.CostIncreaseAmount.Ptr(),
 		Contractor:                  si.Contractor.Ptr(),
 		ContractVehicle:             si.ContractVehicle.Ptr(),
-		ContractNumber:              si.ContractNumber.Ptr(),
+		ContractNumber:              helpers.PointerTo(strings.Join(numbers, ", ")),
 		RequesterEmailAddress:       si.RequesterEmailAddress.Ptr(),
 		LifecycleID:                 si.LifecycleID.Ptr(),
 		LifecycleScope:              si.LifecycleScope.StringPointer(),
@@ -91,7 +110,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 	result := wire.IntakeInput{
 		ClientID:     pStr(si.ID.String()),
 		Body:         pStr(string(blob)),
-		ClientStatus: pStr(string(si.Status)),
+		ClientStatus: pStr(string(clientStatus)),
 
 		// invariants for this type
 		Type:       typeStr(intakeInputSystemIntake),

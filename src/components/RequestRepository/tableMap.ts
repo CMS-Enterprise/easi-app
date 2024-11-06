@@ -1,14 +1,12 @@
-import { TFunction } from 'i18next';
+import i18next, { TFunction } from 'i18next';
 import { sortBy } from 'lodash';
 
-import contractStatus from 'constants/enums/contractStatus';
 import {
   GetSystemIntakesTable_systemIntakes as SystemIntake,
   GetSystemIntakesTable_systemIntakes_notes as AdminNote
 } from 'queries/types/GetSystemIntakesTable';
 import { formatContractDate } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
-import { translateStatus } from 'utils/systemIntake';
 
 // Here is where the data can be modified and used appropriately for sorting.
 // Modifed data can then be configured with JSX components in column cell configuration
@@ -26,7 +24,6 @@ export interface SystemIntakeForTable
   contract: {
     hasContract: string | null;
     contractor: string | null;
-    number: string | null;
     vehicle: string | null;
     /** Contract start date converted to string */
     startDate: string;
@@ -99,9 +96,9 @@ const tableMap = (
 
     // Translate `hasContract` value
     if (hasContract) {
-      hasContract = contractStatus[hasContract]
-        ? t(contractStatus[hasContract])
-        : hasContract;
+      hasContract = t('intake:contractDetails.hasContract', {
+        context: hasContract
+      });
     }
 
     const lastAdminNote = getLastAdminNote(intake.notes);
@@ -128,7 +125,12 @@ const tableMap = (
         startDate: contractStartDate,
         endDate: contractEndDate
       },
-      status: translateStatus(intake.status, intake.lcid),
+      status: i18next.t(
+        `governanceReviewTeam:systemIntakeStatusAdmin.${intake.statusAdmin}`,
+        {
+          lcid: intake.lcid
+        }
+      ),
       lastAdminNote,
       filterDate
     };

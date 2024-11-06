@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewUserAddParams creates a new UserAddParams object,
@@ -63,7 +63,10 @@ UserAddParams contains all the parameters to send to the API endpoint
 */
 type UserAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   User information to be added to a CEDAR application.
+	*/
 	Body *models.UserAddRequest
 
 	timeout    time.Duration

@@ -8,8 +8,9 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
   >
     <h2
       class="margin-top-0 margin-bottom-4"
+      id="basic"
     >
-      System Details
+      Basic details
     </h2>
     <div
       class="grid-row margin-top-3"
@@ -68,8 +69,9 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
   >
     <h2
       class="margin-top-3"
+      id="urls"
     >
-      URLs and Locations
+      URLs and locations
     </h2>
     <ul
       class="usa-card-group margin-0"
@@ -86,46 +88,14 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
             class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
             data-testid="CardHeader"
           >
-            <dt>
-              Production environment
-            </dt>
-            <div>
-              <dd
-                class="text-right text-base-dark system-profile__icon-container"
-              >
-                <svg
-                  aria-label="verified"
-                  class="usa-icon margin-right-1"
-                  color="#00a91c"
-                  focusable="false"
-                  height="1rem"
-                  role="img"
-                  viewBox="0 0 24 24"
-                  width="1rem"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
-                  />
-                  <path
-                    d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"
-                  />
-                </svg>
-                <span
-                  class="text-tbottom line-height-body-3"
-                >
-                  Web Application Firewall
-                </span>
-              </dd>
-            </div>
+            Production environment
           </header>
           <div
             class="usa-card__body padding-left-2 padding-right-2 padding-top-0 padding-bottom-0"
             data-testid="CardBody"
           >
             <h3
-              class="link-header margin-top-0 margin-bottom-2"
+              class="link-header margin-y-0"
             >
               <a
                 class="usa-link usa-link--external link-header url-card-link"
@@ -135,6 +105,37 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
                 https://cms.gov
               </a>
             </h3>
+            <div
+              class="margin-top-1"
+            >
+              <svg
+                aria-label="verified"
+                class="usa-icon margin-right-1"
+                color="#00a91c"
+                focusable="false"
+                height="1rem"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1rem"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"
+                />
+              </svg>
+              <span
+                class="text-tbottom text-base-dark line-height-body-3"
+              >
+                Web Application Firewall
+              </span>
+            </div>
+            <div
+              class="margin-top-2"
+            />
             <div />
           </div>
           <div
@@ -155,7 +156,7 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Data Center/Cloud Service Provider name
+                  Location or cloud service provider name
                 </dt>
                 <dd
                   class="description-definition margin-0 line-height-body-3"
@@ -170,11 +171,12 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
     </ul>
   </div>
   <div
-    class="easi-section margin-bottom-5"
+    class="easi-section easi-section__border-bottom margin-bottom-5"
     data-testid="section-wrapper"
   >
     <h2
       class="margin-top-4 margin-bottom-1"
+      id="development"
     >
       Development
     </h2>
@@ -212,18 +214,13 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
         <dt
           class="text-bold margin-bottom-05"
         >
-          Development work completed
+          Custom Development
         </dt>
         <dd
           class="description-definition margin-0 line-height-body-3 margin-bottom-4"
         >
-          75% - 99%
+          50% customization
         </dd>
-      </div>
-      <div
-        class="desktop:grid-col-6"
-        data-testid="grid"
-      >
         <dt
           class="text-bold margin-bottom-05"
         >
@@ -233,6 +230,31 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
           class="description-definition margin-0 line-height-body-3 margin-bottom-4"
         >
           Bi-weekly
+        </dd>
+      </div>
+      <div
+        class="desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Development work completed
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          75% - 99%
+        </dd>
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Planned retirement
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          Yes - Retire and Replace (Q1 2030)
         </dd>
       </div>
       <div
@@ -248,6 +270,110 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
           class="description-definition margin-0 line-height-body-3 margin-bottom-4"
         >
           Continued enhancements and improvements and alignment with legislative changes.  Also, working on an upcoming redesign effort for the website.
+        </dd>
+      </div>
+    </div>
+  </div>
+  <div
+    class="easi-section margin-bottom-5"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-3 margin-bottom-1"
+      id="ip"
+    >
+      IP Information
+    </h2>
+    <span
+      class="easi-tag system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
+      data-testid="tag"
+    >
+      <svg
+        class="usa-icon system-profile__icon text-primary-dark margin-right-1"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+        />
+      </svg>
+      E-Cap Initiative
+    </span>
+    <div
+      class="grid-row margin-top-2"
+      data-testid="grid"
+    >
+      <div
+        class="desktop:grid-col-6 padding-right-2"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Current front end access type
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          IPv4 only
+        </dd>
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          IPv6 transition
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          This system will be transitioned to IPv6
+        </dd>
+      </div>
+      <div
+        class="desktop:grid-col-6 padding-right-2"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Number of IP-enabled assets
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          21
+        </dd>
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Percent transitioned to IPv6
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          25%
+        </dd>
+      </div>
+      <div
+        class="desktop:grid-col-6 padding-right-2"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Hard-coded IP addresses
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          This system has hard-coded IP addresses
         </dd>
       </div>
     </div>

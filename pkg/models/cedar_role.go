@@ -13,12 +13,38 @@ const (
 	OrganizationAssignee CedarAssigneeType = "ORGANIZATION"
 )
 
+type CedarRoleNameType string
+
+const (
+	AIContactRole                     CedarRoleNameType = "AI Contact"
+	APIContactRole                    CedarRoleNameType = "API Contact"
+	BudgetAnalystRole                 CedarRoleNameType = "Budget Analyst"
+	BusinessOwnerRole                 CedarRoleNameType = "Business Owner"
+	CORRole                           CedarRoleNameType = "Contracting Officer's Representative (COR)"
+	DataCenterContactRole             CedarRoleNameType = "Data Center Contact"
+	ISSORole                          CedarRoleNameType = "ISSO"
+	GovernmentTaskLeadRole            CedarRoleNameType = "Government Task Lead (GTL)"
+	ProjectLeadRole                   CedarRoleNameType = "Project Lead"
+	SubjectMatterExpertRole           CedarRoleNameType = "Subject Matter Expert (SME)"
+	SupportStaffRole                  CedarRoleNameType = "Support Staff"
+	SurveyPointOfContactRole          CedarRoleNameType = "Survey Point of Contact"
+	SystemBusinessQuestionContactRole CedarRoleNameType = "Business Question Contact"
+	SystemDataCenterContactRole       CedarRoleNameType = "Data Center Contact"
+	SystemIssuesContactRole           CedarRoleNameType = "System Issues Contact"
+	SystemMaintainerRole              CedarRoleNameType = "System Maintainer"
+	TechnicalSystemIssuesContactRole  CedarRoleNameType = "Technical System Issues Contact"
+)
+
+func (c CedarRoleNameType) String() string {
+	return string(c)
+}
+
 // CedarRole is the model for the role that a user holds for some system
 type CedarRole struct {
 	// always-present fields
-	Application string // should always be "alfabet"
-	ObjectID    string // ID of the system that the role is assigned to
-	RoleTypeID  string
+	Application zero.String // should always be "alfabet"
+	ObjectID    zero.String // ID of the system that the role is assigned to
+	RoleTypeID  zero.String
 
 	// possibly-null fields
 	AssigneeType      *CedarAssigneeType
@@ -40,9 +66,9 @@ type CedarRole struct {
 // CedarRoleType is the model for a type of role that a user or organization can hold for some system, i.e. "Business Owner" or "Project Lead"
 type CedarRoleType struct {
 	// always-present fields
-	ID          string
-	Application string // should always be "alfabet"
-	Name        string
+	ID          zero.String
+	Application zero.String // should always be "alfabet"
+	Name        zero.String
 
 	// possibly-null fields
 	Description zero.String

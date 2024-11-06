@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestIntakeConfirmLCIDNotification() {
@@ -27,7 +27,7 @@ func (s *EmailTestSuite) TestIntakeConfirmLCIDNotification() {
 		intakeID.String(),
 	)
 	adminLink := fmt.Sprintf(
-		"%s://%s/governance-review-team/%s/intake-request",
+		"%s://%s/it-governance/%s/intake-request",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),
@@ -58,45 +58,60 @@ func (s *EmailTestSuite) TestIntakeConfirmLCIDNotification() {
 		var additionalInfoStr string
 		var issuedAtStr string
 		if issuedAt != nil {
-			issuedAtStr = fmt.Sprintf("\n<strong>Original date issued:</strong> %s<br>", issuedAt.Format("01/02/2006"))
+			issuedAtStr = fmt.Sprintf(`<p><strong>Original date issued:</strong> %s</p>`, issuedAt.Format("01/02/2006"))
 		}
 		if lifecycleCostBaseline != nil {
-			lifecycleCostBaselineStr = fmt.Sprintf("\n<strong>Project Cost Baseline:</strong> %s<br>", *lifecycleCostBaseline)
+			lifecycleCostBaselineStr = fmt.Sprintf(`<p><strong>Project Cost Baseline:</strong> %s</p>`, *lifecycleCostBaseline)
 		}
 		if additionalInfo != nil {
 			additionalInfoStr = fmt.Sprintf(
-				"<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>",
+				`<br>
+				<hr>
+				<br>
+				<p><strong>Additional information from the Governance Team:</strong></p><div class="no-margin">%s</div>`,
 				additionalInfo.ToTemplate(),
 			)
 		}
-		return fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+		return fmt.Sprintf(`
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
 
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+			<p>The Governance Team has confirmed a Life Cycle ID (LCID) for %s.</p>
 
-<p>The Governance Team has confirmed a Life Cycle ID (LCID) for %s</p>
+			<br>
+			<div class="no-margin">
+				<p><strong>Life Cycle ID:</strong> %s</p>%s
+				<p><strong>Expiration date:</strong> %s</p>
+				<p><strong>Scope:</strong></p>%s%s
+				<p><strong>Next steps:</strong></p>%s
+			</div>
 
-<p><strong>Lifecycle ID:</strong> %s<br>%s
-<strong>Expiration date:</strong> %s<br>
-<strong>Scope:</strong> %s<br>%s
-<strong>Next steps:</strong> %s</p>
+			<br>
+			<p><strong>Technical Review Board (TRB) Consultation:</strong><br>
+			As a part of your next steps, the Governance Team %s.</p>
 
-<p>Technical Review Board (TRB) Consultation:<br>
-As a part of your next steps, the Governance Team %s.</p>
+			<br>
+			<div class="no-margin">
+				<p>View this closed request in EASi:</p>
+				<ul>
+					<li>
+						The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.
+					</li>
+					<li>
+						Governance Team members may <a href="%s">click here</a> to view the request details.
+					</li>
+					<li>Others should contact %s or the Governance Team for more information about this request.</li>
+				</ul>
+			</div>
 
-<p>View this closed request in EASi:
-<ul>
-<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
-<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
-<li>Others should contact %s or the Governance Team for more information about this request.</li>
-</ul></p>
+			<br>
+			<p>If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
+			%s
+			<br>
+			<hr>
+			<br>
 
-If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-%s
-<hr>
-
-<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
-`,
+			<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>`,
 			requestName,
 			lifecycleID,
 			issuedAtStr,
@@ -134,11 +149,16 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 	)
 	s.NoError(err)
 	expectedSubject := fmt.Sprintf("A Life Cycle ID (%s) has been confirmed for %s", lifecycleID, requestName)
-	s.Equal(expectedSubject, sender.subject)
+	s.Run("subject is correct", func() {
+		s.Equal(expectedSubject, sender.subject)
+	})
 
 	expectedEmail := getExpectedEmail(&lifecycleCostBaseline, &issuedAt, models.TRBFRNotRecommended, additionalInfo)
 
-	s.Equal(expectedEmail, sender.body)
+	s.Run("All info is included", func() {
+		s.EqualHTML(expectedEmail, sender.body)
+	})
+
 	s.Run("Recipient is correct", func() {
 		allRecipients := []models.EmailAddress{
 			recipient,
@@ -165,7 +185,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 	expectedEmail = getExpectedEmail(&lifecycleCostBaseline, nil, models.TRBFRNotRecommended, nil)
 
 	s.Run("Should omit additional info and issuedAt if absent", func() {
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	for modelEnum, emailText := range trbRecommendationMap {
@@ -187,7 +207,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		s.NoError(err)
 		expectedEmail := getExpectedEmail(&lifecycleCostBaseline, &issuedAt, modelEnum, additionalInfo)
 		s.Run(fmt.Sprintf("%s should become %s in email body", modelEnum, emailText), func() {
-			s.Equal(expectedEmail, sender.body)
+			s.EqualHTML(expectedEmail, sender.body)
 		})
 
 	}

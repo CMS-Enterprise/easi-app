@@ -9,11 +9,11 @@ on:
         default: false
 
 env:
-  EASI_APP_NODE_VERSION: "16.14.0"
-  GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
+  EASI_APP_NODE_VERSION: "18.20.4"
+  GIT_HASH: ${{ github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   DOCKER_BUILDKIT: 1
-  GIT_REF_NAME: ${{ github.event.pull_request.head.ref || github.ref }}
+  GIT_REF_NAME: ${{ github.ref }}
 
 jobs:
   skip_tests:
@@ -29,8 +29,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ env.GIT_HASH }}
       - name: Set up go
         uses: actions/setup-go@v5
         with:
@@ -41,7 +39,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4.0.1
+        uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -56,6 +54,8 @@ jobs:
           AWS_SES_SOURCE: '"EASi Test" <no-reply-test@info.easi.cms.gov>'
           AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
           AWS_S3_FILE_UPLOAD_BUCKET: easi-app-file-uploads
+          CEDAR_CORE_MOCK: true # Don't want real calls to CEDAR in our CI env
+          CEDAR_INTAKE_ENABLED: false # Don't want real calls to CEDAR in our CI env
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
@@ -64,9 +64,10 @@ jobs:
           ECR_REPOSITORY: easi-db-migrate
           GRT_EMAIL: success@simulator.amazonses.com
           IT_INVESTMENT_EMAIL: success@simulator.amazonses.com
-          ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
           EASI_HELP_EMAIL: success@simulator.amazonses.com
           TRB_EMAIL: success@simulator.amazonses.com
+          OIT_FEEDBACK_CHANNEL_SLACK_LINK: ''
+          SES_RECIPIENT_ALLOWLIST_REGEX: ''
           OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
           OKTA_DOMAIN: https://test.idp.idm.cms.gov
           OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
@@ -84,15 +85,15 @@ jobs:
           FLAG_SOURCE: LOCAL
           MINIO_ACCESS_KEY: minioadmin
           MINIO_SECRET_KEY: minioadmin
-          MINIO_ADDRESS: http://localhost:9000 # Server tests run outside of container, so use exposed port on localhost for MinIO
+          MINIO_ADDRESS: http://localhost:9004
         run: |
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d db
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from db_migrate db_migrate
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d minio
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from minio_mc minio_mc
+          docker compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d db
+          docker compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from db_migrate db_migrate
+          docker compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d minio
+          docker compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from minio_mc minio_mc
           ./scripts/build_app
           ./scripts/testsuite
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
+          docker compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
       - name: Upload backend test artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -110,15 +111,13 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ env.GIT_HASH }}
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4.0.1
+        uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -134,7 +133,7 @@ jobs:
           name: test-frontend-assets
           path: build/
       - name: Buildx Bake testing images
-        uses: docker/bake-action@v4
+        uses: docker/bake-action@v5
         with:
           files: docker-compose.cypress_ci.yml
           load: true
@@ -154,6 +153,8 @@ jobs:
           OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
           OKTA_TEST_SECRET: ${{ secrets.OKTA_TEST_SECRET }}
           OKTA_TEST_USERNAME: ${{ secrets.OKTA_TEST_USERNAME }}
+          CEDAR_CORE_MOCK: true # Don't want real calls to CEDAR in our CI env
+          CEDAR_INTAKE_ENABLED: false # Don't want real calls to CEDAR in our CI env
         run: |
           ./scripts/run-cypress-test-docker
       - name: Upload cypress videos
@@ -182,8 +183,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ env.GIT_HASH }}
       - name: Set up node
         uses: actions/setup-node@v4
         with:
@@ -202,8 +201,14 @@ jobs:
           cd /usr/local/bin
           wget -O swagger https://github.com/go-swagger/go-swagger/releases/download/v0.30.5/swagger_linux_amd64
           chmod +x swagger
+      - uses: actions/setup-python@v5 # Python is required for pre-commit/action
+        with:
+          python-version: '3.9'
       - name: Pre-commit checks
-        uses: pre-commit/action@v3.0.0
+        uses: pre-commit/action@v3.0.1
+        env:
+          CEDAR_CACHE_EXPIRE_TIME: "7d"
+          CEDAR_API_URL: "google.com"
         with:
           extra_args: --all-files
       - name: Announce failure
@@ -217,8 +222,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ env.GIT_HASH }}
       - name: Set up node
         uses: actions/setup-node@v4
         with:
@@ -226,7 +229,7 @@ jobs:
           cache: 'yarn'
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
-      - run: yarn test:coverage
+      - run: yarn test:ci
       - name: Announce failure
         if: ${{ failure() }}
         run: |
@@ -238,8 +241,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ env.GIT_HASH }}
       - name: Set up node
         uses: actions/setup-node@v4
         with:
@@ -258,4 +259,3 @@ jobs:
           cat test.log >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           exit $result_code
-        continue-on-error: true

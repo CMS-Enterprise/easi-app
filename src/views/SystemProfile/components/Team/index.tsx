@@ -10,8 +10,7 @@ import {
   CardHeader,
   Grid,
   GridContainer,
-  IconExpandMore,
-  IconMailOutline,
+  Icon,
   Link
 } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -35,8 +34,9 @@ import {
   UsernameWithRoles
 } from 'types/systemProfile';
 import formatNumber from 'utils/formatNumber';
-import { mockVendors } from 'views/Sandbox/mockSystemData';
-import { getPersonFullName, showVal } from 'views/SystemProfile';
+import showVal from 'utils/showVal';
+import { getPersonFullName } from 'views/SystemProfile/helpers';
+import { mockVendors } from 'views/SystemProfile/mockSystemData';
 
 import './index.scss';
 
@@ -133,7 +133,7 @@ export const TeamContactCard = ({
             target="_blank"
           >
             {person.assigneeEmail}
-            <IconMailOutline className="margin-left-1" />
+            <Icon.MailOutline className="margin-left-1" />
           </Link>
         )}
       </CardHeader>
@@ -197,7 +197,9 @@ export const TeamSection = ({
 
   return (
     <SectionWrapper borderTop>
-      <h2 className="margin-y-4">{t(`singleSystem.team.header.${section}`)}</h2>
+      <h2 className="margin-y-4" id={section}>
+        {t(`singleSystem.team.header.${section}`)}
+      </h2>
       {usernamesWithRoles.length ? (
         <div>
           <CardGroup className="margin-x-0">
@@ -215,10 +217,8 @@ export const TeamSection = ({
                 setIsExpanded(!isExpanded);
               }}
             >
-              {t(`singleSystem.team.view${isExpanded ? 'Less' : 'More'}`, {
-                count: membersLeft
-              })}
-              <IconExpandMore
+              {t(`singleSystem.team.show${isExpanded ? 'Less' : 'More'}`)}
+              <Icon.ExpandMore
                 className="margin-left-05 margin-bottom-2px text-tbottom"
                 style={{
                   transform: isExpanded ? 'rotate(180deg)' : ''
@@ -241,33 +241,32 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const flags = useFlags();
   const team = useMemo(() => getTeam(system.usernamesWithRoles), [system]);
+
   return (
     <>
       <SectionWrapper className="padding-bottom-4">
-        <h2 className="margin-top-0 margin-bottom-4">
-          {t('singleSystem.team.header.team')}
+        <h2 className="margin-top-0 margin-bottom-4" id="fte">
+          {t('singleSystem.team.header.fte')}
         </h2>
         <GridContainer className="padding-x-0">
           <Grid row>
             <Grid tablet={{ col: true }}>
-              <DescriptionTerm
-                term={t('singleSystem.team.federalFullTimeEmployees')}
-              />
+              <DescriptionTerm term={t('singleSystem.team.federalFte')} />
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
                 definition={showVal(system.numberOfFederalFte, {
-                  format: formatNumber
+                  format: formatNumber,
+                  defaultVal: t('general:noDataAvailable')
                 })}
               />
             </Grid>
             <Grid tablet={{ col: true }}>
-              <DescriptionTerm
-                term={t('singleSystem.team.contractorFullTimeEmployees')}
-              />
+              <DescriptionTerm term={t('singleSystem.team.contractorFte')} />
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
                 definition={showVal(system.numberOfContractorFte, {
-                  format: formatNumber
+                  format: formatNumber,
+                  defaultVal: t('general:noDataAvailable')
                 })}
               />
             </Grid>
@@ -283,14 +282,17 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
           <CardGroup className="margin-0">
             {mockVendors.map(vendor => {
               return (
-                <Card className="grid-col-12 margin-bottom-2">
+                <Card
+                  className="grid-col-12 margin-bottom-2"
+                  key={vendor.contractNumber}
+                >
                   <CardHeader className="padding-2 padding-bottom-0">
                     <h5 className="margin-y-0 font-sans-2xs text-normal">
                       {t('singleSystem.team.vendors')}
                     </h5>
                     <h3 className="margin-y-0 line-height-body-3">
                       {vendor.vendors.map(name => (
-                        <div>{name}</div>
+                        <div key={name}>{name}</div>
                       ))}
                     </h3>
                     <DescriptionTerm

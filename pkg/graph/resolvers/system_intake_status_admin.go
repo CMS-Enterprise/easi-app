@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // CalculateSystemIntakeAdminStatus calculates the status to display in the admin view for a System Intake request, based on the current step, and the state of that step and the overall state
@@ -13,9 +13,17 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 		return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
 	}
 
-	if intake.State == models.SystemIntakeStateCLOSED && intake.DecisionState == models.SIDSNoDecision {
+	if intake.State == models.SystemIntakeStateClosed && intake.DecisionState == models.SIDSNoDecision {
 		// If the decision is closed and a decision wasn't issued, show closed
 		// An intake that is closed without a decision doesn't progress to the SystemIntakeStepDECISION step, but remains on it's current step. This allows it to stay on that step if re-opened.
+		return models.SISAClosed, nil
+	}
+
+	if intake.State == models.SystemIntakeStateClosed &&
+		intake.DecisionState != models.SIDSNoDecision &&
+		intake.Step != models.SystemIntakeStepDECISION {
+		// If an intake has a decision but is re-opened, progressed to an earlier step,
+		// and then closed without a decision, show closed.
 		return models.SISAClosed, nil
 	}
 
@@ -33,9 +41,9 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 	case models.SystemIntakeStepGRBMEETING:
 		retStatus = calcSystemIntakeGRBMeetingStatusAdmin(intake.GRBDate)
 	case models.SystemIntakeStepDECISION:
-		retStatus, err = calcSystemIntakeDecisionStatusAdmin(intake.DecisionState)
+		retStatus, err = calcSystemIntakeDecisionStatusAdmin(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
-		return retStatus, fmt.Errorf("issue calculating the admin state status, no valid step")
+		return retStatus, fmt.Errorf("issue calculating the admin state status, no valid step: %s", intake.Step)
 
 	}
 	return retStatus, err
@@ -86,16 +94,36 @@ func calcSystemIntakeGRBMeetingStatusAdmin(grbDate *time.Time) models.SystemInta
 	return models.SISAGrbMeetingComplete
 }
 
-func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisionState) (models.SystemIntakeStatusAdmin, error) {
-	if decisionState == models.SIDSLcidIssued {
-		return models.SISALcidIssued, nil
-	}
-	if decisionState == models.SIDSNotGovernance {
+func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisionState, lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusAdmin, error) {
+	switch decisionState {
+	case models.SIDSLcidIssued:
+		return calcLCIDIssuedDecisionStatus(lcidStatus)
+	case models.SIDSNotGovernance:
 		return models.SISANotGovernance, nil
-	}
-	if decisionState == models.SIDSNotApproved {
+	case models.SIDSNotApproved:
 		return models.SISANotApproved, nil
+	case models.SIDSNoDecision:
+		fallthrough
+	default:
+		return "", fmt.Errorf("invalid decision state: %s", decisionState) // This status should not be returned in normal use of the application
 	}
 
-	return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
+}
+
+// calcLCIDIssuedDecisionStatus checks an LCID status and appropriately converts it to a SystemIntakeStatusAdmin
+func calcLCIDIssuedDecisionStatus(lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusAdmin, error) {
+	if lcidStatus == nil {
+		return models.SISALcidIssued, nil
+	}
+
+	switch *lcidStatus {
+	case models.SystemIntakeLCIDStatusIssued:
+		return models.SISALcidIssued, nil
+	case models.SystemIntakeLCIDStatusExpired:
+		return models.SISALcidExpired, nil
+	case models.SystemIntakeLCIDStatusRetired:
+		return models.SISALcidRetired, nil
+	default:
+		return "", fmt.Errorf("invalid lcid status provided: %s", *lcidStatus)
+	}
 }

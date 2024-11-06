@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
-import { GridContainer, IconWarning } from '@trussworks/react-uswds';
+import { GridContainer, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import './index.scss';
@@ -33,7 +33,7 @@ const FeedbackBanner = ({ type, id, className }: FeedbackBannerProps) => {
         className="padding-x-2"
       >
         <p className="margin-top-0 margin-bottom-2 display-flex line-height-body-5">
-          <IconWarning className="text-error-dark margin-right-1" size={3} />
+          <Icon.Warning className="text-error-dark margin-right-1" size={3} />
           {t('feedback', { type })}
         </p>
         <Link

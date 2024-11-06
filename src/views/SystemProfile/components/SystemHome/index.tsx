@@ -7,9 +7,7 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  IconBookmark,
-  IconCheckCircleOutline,
-  IconFileDownload,
+  Icon,
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -25,9 +23,8 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
-import { showAtoExpirationDate, showVal } from 'views/SystemProfile';
-import RequestCardTestScore from 'views/SystemProfile/RequestCardTestScore';
-import RequestStatusTag from 'views/SystemProfile/RequestStatusTag';
+import showVal from 'utils/showVal';
+import { showAtoExpirationDate } from 'views/SystemProfile/helpers';
 
 const SystemHome = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
@@ -70,8 +67,9 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
               <Grid row>
                 <Grid desktop={{ col: 12 }} className="padding-0">
                   <dt>
-                    {urlLocationCard.urlHostingEnv}{' '}
-                    {t('singleSystem.systemDetails.environment')}
+                    {t('singleSystem.systemDetails.environment', {
+                      environment: urlLocationCard.urlHostingEnv
+                    })}
                   </dt>
                 </Grid>
               </Grid>
@@ -125,9 +123,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
               <Tag
                 className={classnames('grid-col-12', {
                   'bg-success-dark': system.atoStatus === 'Active',
-                  'bg-warning':
-                    system.atoStatus === 'Due Soon' ||
-                    system.atoStatus === 'In progress',
+                  'bg-warning': system.atoStatus === 'Due Soon', // || system.atoStatus === 'In progress',
                   'bg-error-dark': system.atoStatus === 'Expired',
                   'bg-base-lighter': system.atoStatus === 'No ATO',
                   'text-white':
@@ -144,12 +140,12 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
             <Grid row>
               <Grid desktop={{ col: 12 }} className="padding-0">
                 <h3 className="link-header margin-top-0 margin-bottom-2">
-                  {showAtoExpirationDate(ato)}
+                  {showAtoExpirationDate(ato?.dateAuthorizationMemoExpires)}
                 </h3>
                 <div className="margin-bottom-2">
                   <UswdsReactLink
                     className="link-header"
-                    to={`/systems/${system.id}/ato`}
+                    to={`/systems/${system.id}/ato-and-security`}
                   >
                     {t('singleSystem.ato.viewATOInfo')}
                     <span aria-hidden>&nbsp;</span>
@@ -172,46 +168,6 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
             </Grid>
           </CardFooter>
         </Card>
-        {flags.systemProfileHiddenFields && (
-          <Card className="grid-col-12">
-            <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-              <dt>{t('singleSystem.section508.section508RequestName')}</dt>
-              <div className="text-right margin-bottom-0">
-                <RequestStatusTag status="Open" className="margin-right-0" />
-              </div>
-            </CardHeader>
-            <CardBody className="padding-x-2 padding-y-0">
-              <Grid row>
-                <Grid desktop={{ col: 12 }} className="padding-0">
-                  <h3 className="link-header margin-top-0 margin-bottom-2">
-                    My Test for HAM
-                  </h3>
-                  <div className="margin-bottom-2">
-                    <UswdsReactLink
-                      className="link-header"
-                      to={`/systems/${system.id}/section-508`}
-                    >
-                      {t('singleSystem.section508.viewMoreRequestInformation')}
-                      <span aria-hidden>&nbsp;</span>
-                      <span aria-hidden>&rarr; </span>
-                    </UswdsReactLink>
-                  </div>
-                </Grid>
-              </Grid>
-              <Divider />
-            </CardBody>
-            <CardFooter className="padding-0">
-              <Grid row>
-                <Grid className="padding-2">
-                  <div className="margin-bottom-1">
-                    <strong>{t('singleSystem.section508.latestTest')}</strong>
-                  </div>
-                  <RequestCardTestScore scorePct={98} date="mm/dd/yyyy" />
-                </Grid>
-              </Grid>
-            </CardFooter>
-          </Card>
-        )}
         {flags.systemProfileHiddenFields && (
           <Card className="grid-col-12">
             <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
@@ -320,11 +276,11 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                             className="margin-bottom-1 text-bold"
                             key={data.id}
                           >
-                            <IconCheckCircleOutline className="text-success" />{' '}
+                            <Icon.CheckCircleOutline className="text-success" />{' '}
                             <span className="text-tbottom line-height-body-3">
                               {data.title}{' '}
                             </span>
-                            <IconFileDownload className="text-base" />
+                            <Icon.FileDownload className="text-base" />
                           </div>
                         )
                     )}
@@ -378,7 +334,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                       (subSystem, index) =>
                         (index < 2 || toggleSubSystems) && (
                           <div className="margin-bottom-1" key={subSystem.id}>
-                            <IconBookmark className="text-base-lighter margin-right-1" />
+                            <Icon.Bookmark className="text-base-lighter margin-right-1" />
                             <UswdsReactLink
                               className="link-header margin-bottom-1 text-bold"
                               to={`/systems/${system.id}/sub-systems`}

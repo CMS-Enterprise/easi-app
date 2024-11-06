@@ -8,8 +8,7 @@ import (
 	"html/template"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type systemIntakeRetireLCIDEmailParameters struct {
@@ -25,15 +24,15 @@ type systemIntakeRetireLCIDEmailParameters struct {
 	AdditionalInfo           template.HTML
 }
 
-func (sie systemIntakeEmails) SystemIntakeRetireLCIDBody(
+func (sie systemIntakeEmails) systemIntakeRetireLCIDBody(
 	lifecycleID string,
 	lifecycleRetiresAt *time.Time,
 	lifecycleExpiresAt *time.Time,
 	lifecycleIssuedAt *time.Time,
-	lifecycleScope models.HTML,
+	lifecycleScope *models.HTML,
 	lifecycleCostBaseline string,
 	reason *models.HTML,
-	decisionNextSteps models.HTML,
+	decisionNextSteps *models.HTML,
 	additionalInfo *models.HTML,
 ) (string, error) {
 	var retiresAt string
@@ -80,15 +79,15 @@ func (sie systemIntakeEmails) SendRetireLCIDNotification(
 	lifecycleRetiresAt *time.Time,
 	lifecycleExpiresAt *time.Time,
 	lifecycleIssuedAt *time.Time,
-	lifecycleScope models.HTML,
+	lifecycleScope *models.HTML,
 	lifecycleCostBaseline string,
 	reason *models.HTML,
-	decisionNextSteps models.HTML,
+	decisionNextSteps *models.HTML,
 	additionalInfo *models.HTML,
 ) error {
 
 	subject := fmt.Sprintf("A Life Cycle ID (%s) has been retired", lifecycleID)
-	body, err := sie.SystemIntakeRetireLCIDBody(
+	body, err := sie.systemIntakeRetireLCIDBody(
 		lifecycleID,
 		lifecycleRetiresAt,
 		lifecycleExpiresAt,
@@ -100,18 +99,14 @@ func (sie systemIntakeEmails) SendRetireLCIDNotification(
 		additionalInfo,
 	)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = sie.client.sender.Send(
+	return sie.client.sender.Send(
 		ctx,
-		sie.client.listAllRecipients(recipients),
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(sie.client.listAllRecipients(recipients)).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }

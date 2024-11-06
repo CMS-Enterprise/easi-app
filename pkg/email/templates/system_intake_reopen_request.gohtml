@@ -2,18 +2,35 @@
 
 <p>The IT Governance Request titled {{.RequestName}}{{if .SubmittedAt}}, submitted on {{.SubmittedAt}},{{end}} has been re-opened in EASi.</p>
 
-{{if .Reason}}<p>Reason: {{.Reason}}</p>{{end}}
+{{if .Reason -}}
+<br>
+<div class="no-margin">
+  <p><strong>Reason:</strong></p>
+  {{.Reason}}
+</div>
+{{ end -}}
 
-<p>View this request in EASi:
-<ul>
-<li>The person who initially submitted this request, {{.RequesterName}}, may <a href="{{.SystemIntakeRequestLink}}">click here</a> to view the request task list.</li>
-<li>Governance Team members may <a href="{{.SystemIntakeAdminLink}}">click here</a> to view the request details.</li>
-<li>Others should contact {{.RequesterName}} or the Governance Team for more information about this request.</li>
-</ul></p>
+<br>
+<div class="no-margin">
+  <p>View this request in EASi:</p>
+  <ul>
+    <li>The person who initially submitted this request, {{.RequesterName}}, may <a href="{{.SystemIntakeRequestLink}}">click here</a> to view the request task list.</li>
+    <li>Governance Team members may <a href="{{.SystemIntakeAdminLink}}">click here</a> to view the request details.</li>
+    <li>Others should contact {{.RequesterName}} or the Governance Team for more information about this request.</li>
+  </ul>
+</div>
 
-If you have questions about your request, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.
+<br>
+<p>If you have questions about your request, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
 
-{{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong></p><p>{{.AdditionalInfo}}</p>{{end}}
+{{if .AdditionalInfo -}}
+<hr>
+<br>
+<p><strong>Additional information from the Governance Team:</strong></p>
+<div class="no-margin">{{.AdditionalInfo}}</div>
+{{end}}
+<br>
+<br>
 <hr>
 
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>

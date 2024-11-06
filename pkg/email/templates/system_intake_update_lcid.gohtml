@@ -2,41 +2,108 @@
 
 <p>The Governance Team has updated a previously-issued a Life Cycle ID (LCID).</p>
 
-<p><u>Changes to this LCID</u><br>
-{{if .LifecycleExpiresAtNew}}
-<strong>New Expiration Date:</strong> {{.LifecycleExpiresAtNew}}<br>
-<strong>Previous Expiration Date:</strong> {{.LifecycleExpiresAtPrev}}<br><br>
-{{end}}
-{{if .LifecycleScopeNew}}
-<strong>New Scope:</strong> {{.LifecycleScopeNew}}<br>
-<strong>Previous Scope:</strong> {{.LifecycleScopePrev}}<br><br>
-{{end}}
-{{if .LifecycleCostBaselineNew}}
-<strong>New Project Cost Baseline:</strong> {{.LifecycleCostBaselineNew}}<br>
-<strong>Previous Project Cost Baseline:</strong> {{.LifecycleCostBaselinePrev}}<br><br>
-{{end}}
-{{if .DecisionNextStepsNew}}
-<strong>New Next steps:</strong> {{.DecisionNextStepsNew}}<br>
-<strong>Previous Next steps:</strong> {{.DecisionNextStepsPrev}}<br><br>
-{{end}}</p>
+<br>
+<div class="no-margin">
+  <p><u>Changes to this LCID</u></p>
+  {{if .LifecycleExpiresAtNew}}
+    <p>
+      <strong>New Expiration Date:</strong> {{.LifecycleExpiresAtNew}}
+    </p>
+    <p>
+      <strong>Previous Expiration Date:</strong> {{.LifecycleExpiresAtPrev}}
+    </p>
+    <br>
+  {{end}}
+  {{if .LifecycleScopeNew -}}
+    <p class="inline-this-and-next"><strong>New Scope:</strong></p>
+    {{.LifecycleScopeNew}}
+    <p class="inline-this-and-next"><strong>Previous Scope:</strong></p>
+    {{.LifecycleScopePrev}}
+    <br>
+  {{end}}
+  {{if .LifecycleCostBaselineNew -}}
+    <p>
+      <strong>New Project Cost Baseline:</strong>
+      {{.LifecycleCostBaselineNew}}
+    </p>
+    <p>
+      <strong>Previous Project Cost Baseline:</strong>
+      {{.LifecycleCostBaselinePrev}}
+    </p>
+    <br>
+  {{end}}
+  {{if .DecisionNextStepsNew -}}
+    <p class="inline-this-and-next"><strong>New Next steps:</strong></p>
+    {{.DecisionNextStepsNew}}
+    <p class="inline-this-and-next"><strong>Previous Next steps:</strong></p>
+    {{.DecisionNextStepsPrev}}
+    <br>
+  {{end}}
 
-{{if .Reason}}<p>Reason: {{.Reason}}</p>{{end}}
+  {{ if .Reason -}}
+    <p class="inline-this-and-next"><strong>Reason:</strong></p>
+    {{.Reason}}
+  {{ end -}}
+</div>
 
-If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.
+<br>
+<p>If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
 
-<p><u>Summary of updated Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>
-{{ if .LifecycleIssuedAt -}}
-<strong>Original date issued:</strong> {{.LifecycleIssuedAt}}<br>
+<br>
+<div class="no-margin">
+  <p><u>Summary of updated Life Cycle ID</u></p>
+  <p><strong>Life Cycle ID:</strong> {{.LifecycleID}}</p>
+
+  {{ if .LifecycleIssuedAt -}}
+    <p>
+      <strong>Original date issued:</strong> {{.LifecycleIssuedAt}}
+    </p>
+  {{ end -}}
+
+  <p><strong>Amendment date:</strong> {{.AmendmentDate}}</p>
+
+  {{ if .LifecycleExpiresAtNew -}}
+    <p><strong>Expiration date:</strong> {{.LifecycleExpiresAtNew}}</p>
+  {{ else if .LifecycleExpiresAtPrev -}}
+    <p><strong>Expiration date:</strong> {{.LifecycleExpiresAtPrev}}</p>
+  {{ end -}}
+
+  {{ if .LifecycleScopeNew -}}
+    <p class="inline-this-and-next"><strong>Scope:</strong></p>
+    {{.LifecycleScopeNew}}
+  {{ else if .LifecycleScopePrev -}}
+    <p class="inline-this-and-next"><strong>Scope:</strong></p>
+    {{.LifecycleScopePrev}}
+  {{ end -}}
+
+  {{ if .LifecycleCostBaselineNew -}}
+    <p><strong>Project Cost Baseline:</strong> {{.LifecycleCostBaselineNew}}</p>
+  {{ else if .LifecycleCostBaselinePrev -}}
+    <p><strong>Project Cost Baseline:</strong> {{.LifecycleCostBaselinePrev}}</p>
+  {{ end -}}
+
+  {{ if .DecisionNextStepsNew -}}
+    <p class="inline-this-and-next"><strong>Next Steps:</strong></p>
+    {{.DecisionNextStepsNew}}
+  {{ else if .DecisionNextStepsPrev -}}
+    <p class="inline-this-and-next"><strong>Next Steps:</strong></p>
+    {{.DecisionNextStepsPrev}}
+  {{ end -}}
+
+</div>
+
+{{ if .AdditionalInfo -}}
+<br>
+<br>
+<hr>
+<br>
+<p class="no-margin-top">
+  <strong>Additional information from the Governance Team:</strong>
+</p>
+<div class="no-margin">{{.AdditionalInfo}}</div>
 {{ end -}}
-<strong>Amendment date:</strong> {{.AmendmentDate}}<br>
-<strong>Expiration date:</strong> {{if .LifecycleExpiresAtNew}}{{.LifecycleExpiresAtNew}}{{else}}{{.LifecycleExpiresAtPrev}}{{end}}<br>
-<strong>Scope:</strong> {{if .LifecycleScopeNew}}{{.LifecycleScopeNew}}{{else}}{{.LifecycleScopePrev}}{{end}}<br>
-<strong>Project Cost Baseline:</strong> {{if .LifecycleCostBaselineNew}}{{.LifecycleCostBaselineNew}}{{else}}{{.LifecycleCostBaselinePrev}}{{end}}<br>
-<strong>Next Steps:</strong> {{if .DecisionNextStepsNew}}{{.DecisionNextStepsNew}}{{else}}{{.DecisionNextStepsPrev}}{{end}}</p>
-
-{{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong></p><p>{{.AdditionalInfo}}</p>{{end}}
+<br>
+<br>
 <hr>
 
 <p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
-

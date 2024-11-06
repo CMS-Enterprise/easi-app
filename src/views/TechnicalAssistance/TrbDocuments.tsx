@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
+import { Grid, GridContainer, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 
+import Breadcrumbs from '../../components/shared/Breadcrumbs';
+
 import DocumentsTable from './RequestForm/DocumentsTable';
-import Breadcrumbs from './Breadcrumbs';
 
 export type DocumentStatusType = 'success' | 'error';
 
@@ -24,9 +25,8 @@ const DocumentsTaskList = () => {
 
   const [documentsCount, setDocumentsCount] = useState(0);
   const [documentMessage, setDocumentMessage] = useState('');
-  const [documentStatus, setDocumentStatus] = useState<DocumentStatusType>(
-    'success'
-  );
+  const [documentStatus, setDocumentStatus] =
+    useState<DocumentStatusType>('success');
 
   return (
     <GridContainer>
@@ -63,7 +63,7 @@ const DocumentsTaskList = () => {
         </p>
 
         <UswdsReactLink to={`/trb/task-list/${requestID}`}>
-          <IconArrowBack className="margin-right-1 text-middle" />
+          <Icon.ArrowBack className="margin-right-1 text-middle" />
           <span className="line-height-body-5">
             {t('requestFeedback.returnToTaskList')}
           </span>
@@ -92,7 +92,7 @@ const DocumentsTaskList = () => {
 
         <div className="margin-top-5">
           <UswdsReactLink to={`/trb/task-list/${requestID}`}>
-            <IconArrowBack className="margin-right-1 text-middle" />
+            <Icon.ArrowBack className="margin-right-1 text-middle" />
             <span className="line-height-body-5">
               {t('requestFeedback.returnToTaskList')}
             </span>

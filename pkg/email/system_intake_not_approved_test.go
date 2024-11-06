@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendNotApprovedNotification() {
@@ -23,7 +23,7 @@ func (s *EmailTestSuite) TestSendNotApprovedNotification() {
 		intakeID.String(),
 	)
 	adminLink := fmt.Sprintf(
-		"%s://%s/governance-review-team/%s/intake-request",
+		"%s://%s/it-governance/%s/intake-request",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),
@@ -42,93 +42,111 @@ func (s *EmailTestSuite) TestSendNotApprovedNotification() {
 	}
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
-	err = client.SystemIntake.SendNotApprovedNotification(ctx, recipients, intakeID, requestName, requester, reason, nextSteps, additionalInfo)
-	s.NoError(err)
-	expectedSubject := fmt.Sprintf("%s was not approved by the GRB", requestName)
-	s.Equal(expectedSubject, sender.subject)
 
-	expectedEmail := fmt.Sprintf(
-		`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+	getExpectedEmail := func(
+		additionalInfo *models.HTML,
+	) string {
+		var additionalInfoStr string
+		if additionalInfo != nil {
+			additionalInfoStr = fmt.Sprintf(
+				`<br>
+				<br>
+				<hr>
+				<p><strong>Additional information from the Governance Team:</strong></p><div class="no-margin">%s</div>`,
+				*additionalInfo.StringPointer(),
+			)
+		}
+		return fmt.Sprintf(`
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
 
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+			<p>The Governance Review Board (GRB) did not approve %s.</p>
 
-<p>The Governance Review Board (GRB) did not approve %s.</p>
+			<br>
+			<div class="no-margin">
+				<p><strong>Reason:</strong></p>
+				%s
+			</div>
+			<br>
+			<div class="no-margin">
+				<p><strong>Next Steps:</strong></p>
+				%s
+			</div>
 
-<p><strong>Reason: </strong>%s</p>
+			<br>
+			<div class="no-margin">
+				<p>View this closed request in EASi:</p>
+				<ul>
+					<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
+					<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
+					<li>Others should contact %s or the Governance Team for more information about this request.</li>
+				</ul>
+			</div>
 
-<p><strong>Next Steps: </strong>%s</p>
+			<br>
+			<p>If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
 
-<p>View this closed request in EASi:
-<ul>
-<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
-<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
-<li>Others should contact %s or the Governance Team for more information about this request.</li>
-</ul></p>
+			%s
+			<br>
+			<br>
+			<hr>
 
-If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
+			<p>Depending on the request, the Governance Team may follow up with this project at a later date.</p>`,
+			requestName,
+			reason,
+			nextSteps,
+			requester,
+			requestLink,
+			adminLink,
+			requester,
+			ITGovInboxAddress,
+			ITGovInboxAddress,
+			additionalInfoStr,
+		)
+	}
 
-<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
-<hr>
-
-<p>Depending on the request, the Governance Team may follow up with this project at a later date.</p>
-`,
+	err = client.SystemIntake.SendNotApprovedNotification(
+		ctx,
+		recipients,
+		intakeID,
 		requestName,
+		requester,
 		reason,
 		nextSteps,
-		requester,
-		requestLink,
-		adminLink,
-		requester,
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		*additionalInfo.StringPointer(),
+		additionalInfo,
 	)
-	s.Equal(expectedEmail, sender.body)
+	s.NoError(err)
+
+	s.Run("Subject is correct", func() {
+		expectedSubject := fmt.Sprintf("%s was not approved by the GRB", requestName)
+		s.Equal(expectedSubject, sender.subject)
+	})
+
+	s.Run("Included info is correct", func() {
+		expectedEmail := getExpectedEmail(additionalInfo)
+		s.EqualHTML(expectedEmail, sender.body)
+	})
+
 	s.Run("Recipient is correct", func() {
 		allRecipients := []models.EmailAddress{
 			recipient,
 		}
 		s.ElementsMatch(sender.toAddresses, allRecipients)
 	})
-	err = client.SystemIntake.SendNotApprovedNotification(ctx, recipients, intakeID, requestName, requester, reason, nextSteps, nil)
-	s.NoError(err)
-	expectedEmail = fmt.Sprintf(
-		`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
-
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>The Governance Review Board (GRB) did not approve %s.</p>
-
-<p><strong>Reason: </strong>%s</p>
-
-<p><strong>Next Steps: </strong>%s</p>
-
-<p>View this closed request in EASi:
-<ul>
-<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
-<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
-<li>Others should contact %s or the Governance Team for more information about this request.</li>
-</ul></p>
-
-If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-
-<hr>
-
-<p>Depending on the request, the Governance Team may follow up with this project at a later date.</p>
-`,
-		requestName,
-		*reason.StringPointer(),
-		*nextSteps.StringPointer(),
-		requester,
-		requestLink,
-		adminLink,
-		requester,
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-	)
 
 	s.Run("Should omit additional info if absent", func() {
-		s.Equal(expectedEmail, sender.body)
+		err = client.SystemIntake.SendNotApprovedNotification(
+			ctx,
+			recipients,
+			intakeID,
+			requestName,
+			requester,
+			reason,
+			nextSteps,
+			nil, // additionalInfo
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(nil)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 }

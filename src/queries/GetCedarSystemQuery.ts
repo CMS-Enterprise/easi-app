@@ -12,6 +12,7 @@ export default gql`
       businessOwnerOrgComp
       systemMaintainerOrg
       systemMaintainerOrgComp
+      isBookmarked
     }
   }
 `;

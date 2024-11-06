@@ -18,6 +18,10 @@
         }
     }
 
+  h2 {
+    scroll-margin-top: 4rem;
+  }
+
   .description-truncated {
     .description-definition {
       display: -webkit-box;
@@ -98,4 +102,11 @@
   @media screen and (max-width: $desktop) {
       border-left: .25rem solid color($theme-color-primary-lighter);
   }
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

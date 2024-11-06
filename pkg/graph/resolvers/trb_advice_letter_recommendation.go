@@ -3,15 +3,16 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/trb/recommendations"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/trb/recommendations"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // CreateTRBAdviceLetterRecommendation creates a TRBAdviceLetterRecommendation in the database
@@ -40,14 +41,15 @@ func GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Context, store 
 
 // UpdateTRBAdviceLetterRecommendation updates a TRBAdviceLetterRecommendation record in the database
 func UpdateTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Store, changes map[string]interface{}) (*models.TRBAdviceLetterRecommendation, error) {
-	idStr, idFound := changes["id"]
+	idIface, idFound := changes["id"]
 	if !idFound {
 		return nil, errors.New("missing required property trbRequestId")
 	}
 
-	id, err := uuid.Parse(idStr.(string))
-	if err != nil {
-		return nil, err
+	// conv uuid first
+	id, ok := idIface.(uuid.UUID)
+	if !ok {
+		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB advice letter recommendation: %v", idIface)
 	}
 
 	// This will fail to fetch an existing recommendation if the recommendation is deleted, which is sufficient protection

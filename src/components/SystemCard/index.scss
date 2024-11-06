@@ -1,0 +1,43 @@
+@use 'uswds-core' as *;
+
+.system-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .usa-card__container {
+        margin: 0;
+        box-shadow: 0rem .25rem .5rem 0rem rgba(0, 0, 0, 0.1);
+        max-width: 100%;
+    }
+
+    &__container {        
+        padding: 1.5rem;
+        height: 350px;
+        border: 2px solid color('disabled-light');
+        border-radius: 4px;
+    }
+
+    &__header {
+        width: 100%;
+    }
+
+    &__title {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 90%;
+    }
+
+    &__body-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 4.5em;
+    }
+}
+
+#main-content .usa-card {
+    margin-bottom: 1em;
+}

@@ -5,7 +5,7 @@ import HelpBreadcrumb from './index';
 
 describe('HelpBreadcrumb', () => {
   it('matches the snapshot', () => {
-    const { asFragment } = render(<HelpBreadcrumb type="Back" />);
+    const { asFragment } = render(<HelpBreadcrumb />);
     expect(asFragment()).toMatchSnapshot();
   });
 });

@@ -7,11 +7,12 @@ import i18next from 'i18next';
 
 import { getTrbAdminNotesQuery } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
+import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
+// import { CreateTrbAdminNoteGeneralVariables } from 'queries/types/CreateTrbAdminNote';
 import {
-  CreateTrbAdminNote as CreateTrbAdminNoteType,
-  CreateTrbAdminNoteVariables
-} from 'queries/types/CreateTrbAdminNote';
+  CreateTRBAdminNoteGeneralRequest,
+  CreateTRBAdminNoteGeneralRequestVariables
+} from 'queries/types/CreateTRBAdminNoteGeneralRequest';
 import { TRBAdminNoteFragment } from 'queries/types/TRBAdminNoteFragment';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
@@ -54,22 +55,21 @@ const adminNotes: TRBAdminNoteFragment[] = [
 ];
 
 const createAdminNoteQuery: MockedQuery<
-  CreateTrbAdminNoteType,
-  CreateTrbAdminNoteVariables
+  CreateTRBAdminNoteGeneralRequest,
+  CreateTRBAdminNoteGeneralRequestVariables
 > = {
   request: {
-    query: CreateTrbAdminNote,
+    query: CreateTrbAdminNoteGeneralRequestQuery,
     variables: {
       input: {
         trbRequestId: mockTrbRequestId,
-        category: adminNotes[1].category,
         noteText: adminNotes[1].noteText
       }
     }
   },
   result: {
     data: {
-      createTRBAdminNote: adminNotes[1]
+      createTRBAdminNoteGeneralRequest: adminNotes[1]
     }
   }
 };

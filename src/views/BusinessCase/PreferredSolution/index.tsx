@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
-  IconArrowBack,
+  Icon,
   Label,
   Radio,
   TextInput
@@ -57,13 +57,8 @@ const PreferredSolution = ({
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<PreferredSolutionForm>) => {
-        const {
-          values,
-          errors,
-          setErrors,
-          setFieldValue,
-          validateForm
-        } = formikProps;
+        const { values, errors, setErrors, setFieldValue, validateForm } =
+          formikProps;
 
         const flatErrors = flattenErrors(errors);
 
@@ -72,15 +67,18 @@ const PreferredSolution = ({
             title={t('alternatives')}
             description={
               <>
+                <p>{t('alternativesDescription.text.0')}</p>
                 <p className="margin-bottom-0">
-                  {t('alternativesDescription.examples')}
+                  {t('alternativesDescription.text.1')}
                 </p>
                 <ul className="padding-left-205 margin-top-0">
-                  <li>{t('alternativesDescription.buy')}</li>
-                  <li>{t('alternativesDescription.commercial')}</li>
-                  <li>{t('alternativesDescription.mainframe')}</li>
+                  <li>{t('alternativesDescription.list.0')}</li>
+                  <li>{t('alternativesDescription.list.1')}</li>
+                  <li>{t('alternativesDescription.list.2')}</li>
+                  <li>{t('alternativesDescription.list.3')}</li>
+                  <li>{t('alternativesDescription.list.4')}</li>
                 </ul>
-                <p>{t('alternativesDescription.include')}</p>
+                <p>{t('alternativesDescription.text.2')}</p>
               </>
             }
             systemIntakeId={businessCase.systemIntakeId}
@@ -610,7 +608,7 @@ const PreferredSolution = ({
 
             <IconButton
               type="button"
-              icon={<IconArrowBack />}
+              icon={<Icon.ArrowBack />}
               className="margin-bottom-3 margin-top-2"
               onClick={() => {
                 dispatchSave();

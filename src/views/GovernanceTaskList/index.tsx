@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
@@ -18,6 +17,7 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import { TaskListContainer } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
@@ -29,12 +29,14 @@ import {
 import {
   ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
-  SystemIntakeState
+  SystemIntakeState,
+  SystemIntakeStep
 } from 'types/graphql-global-types';
-import { archiveSystemIntake } from 'types/routines';
 import NotFound from 'views/NotFound';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
+import { useArchiveSystemIntakeMutation } from '../../gql/gen/graphql';
+
+import AdditionalRequestInfo from './AdditionalRequestInfo';
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
 import GovTaskBizCaseFinal from './GovTaskBizCaseFinal';
 import GovTaskDecisionAndNextSteps from './GovTaskDecisionAndNextSteps';
@@ -47,9 +49,8 @@ function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('itGov');
   const history = useHistory();
-  const dispatch = useDispatch();
 
-  const { showMessageOnNextPage } = useMessage();
+  const { showMessageOnNextPage, showMessage, Message } = useMessage();
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -62,19 +63,35 @@ function GovernanceTaskList() {
     }
   });
 
+  const [archive] = useArchiveSystemIntakeMutation({
+    variables: {
+      id: systemId
+    }
+  });
+
   const systemIntake = data?.systemIntake;
   const requestName = systemIntake?.requestName;
 
-  const archiveIntake = () => {
-    const redirect = () => {
-      const message = t('taskList:withdraw_modal.confirmationText', {
-        context: requestName ? 'name' : 'noName',
-        requestName
+  const archiveIntake = async () => {
+    archive()
+      .then(() => {
+        const message = t<string>('taskList:withdraw_modal.confirmationText', {
+          context: requestName ? 'name' : 'noName',
+          requestName
+        });
+
+        showMessageOnNextPage(message, { type: 'success' });
+        history.push('/');
+      })
+      .catch(() => {
+        const message = t<string>('taskList:withdraw_modal.error', {
+          context: requestName ? 'name' : 'noName',
+          requestName
+        });
+
+        showMessage(message, { type: 'error' });
+        setModalOpen(false);
       });
-      showMessageOnNextPage(message, { type: 'success' });
-      history.push('/');
-    };
-    dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
   };
 
   const isClosed = systemIntake?.state === SystemIntakeState.CLOSED;
@@ -82,13 +99,24 @@ function GovernanceTaskList() {
   const hasDecision =
     systemIntake?.decisionState !== SystemIntakeDecisionState.NO_DECISION;
 
+  /** Returns true if request has decision and is either closed OR in the decision step */
+  const showDecisionAlert =
+    hasDecision &&
+    (isClosed ||
+      systemIntake?.step === SystemIntakeStep.DECISION_AND_NEXT_STEPS);
+
   if (error) {
     return <NotFound />;
   }
 
   return (
-    <MainContent className="margin-bottom-5 desktop:margin-bottom-10">
+    <MainContent
+      className="margin-bottom-5 desktop:margin-bottom-10"
+      data-testid="governance-task-list"
+    >
       <GridContainer className="width-full">
+        <Message className="margin-top-5 margin-bottom-3" />
+
         <Breadcrumbs
           items={[
             { text: t('itGovernance'), url: '/system/making-a-request' },
@@ -135,7 +163,7 @@ function GovernanceTaskList() {
 
                 {
                   // Decision issued alert
-                  hasDecision && (
+                  showDecisionAlert && (
                     <Alert
                       type="info"
                       heading={t('taskList.decisionAlert.heading')}
@@ -219,6 +247,8 @@ function GovernanceTaskList() {
                     </Button>
                   </div>
                 )}
+
+                <AdditionalRequestInfo {...systemIntake} requestType="itgov" />
 
                 <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
                   {t('taskList.help')}

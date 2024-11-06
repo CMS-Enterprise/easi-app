@@ -8,32 +8,34 @@ import (
 
 	"github.com/lib/pq"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 // TestTRBRequestStatus tests the overall status of a TRB request
 func (s *ResolverSuite) TestTRBRequestStatus() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	store := s.testConfigs.Store
 
 	config := testhelpers.NewConfig()
 
 	// set up Email Client
 	emailConfig := email.Config{
-		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
-		ITInvestmentEmail:      models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
-		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
-		TRBEmail:               models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
-		EASIHelpEmail:          models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
-		URLHost:                config.GetString(appconfig.ClientHostKey),
-		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail: models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		TRBEmail:          models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:     models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
-	localSender := local.NewSender()
+
+	env, _ := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+
+	localSender := local.NewSender(env)
 	emailClient, err := email.NewClient(emailConfig, localSender)
 	if err != nil {
 		s.FailNow("Unable to construct email client with local sender")
@@ -43,9 +45,9 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 	stubFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			EuaUserID:  anonEua,
-			CommonName: "Anonymous",
-			Email:      models.NewEmailAddress("anon@local.fake"),
+			Username:    anonEua,
+			DisplayName: "Anonymous",
+			Email:       models.NewEmailAddress("anon@local.fake"),
 		}, nil
 	}
 
@@ -54,9 +56,9 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 		for i, euaID := range euaIDs {
 			userInfo := &models.UserInfo{
-				EuaUserID:  euaID,
-				CommonName: strconv.Itoa(i),
-				Email:      models.NewEmailAddress(fmt.Sprintf("%v@local.fake", i)),
+				Username:    euaID,
+				DisplayName: strconv.Itoa(i),
+				Email:       models.NewEmailAddress(fmt.Sprintf("%v@local.fake", i)),
 			}
 			userInfos = append(userInfos, userInfo)
 		}
@@ -72,12 +74,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 	s.Run("status is correctly calculated as TRB tasks are performed", func() {
 		// Test the "NEW" TRB status
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err := GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err := GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusNew, trbStatus)
-		taskStatuses, err := GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err := GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusReadyToStart,
@@ -90,23 +92,23 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 		// Test the "DRAFT_REQUEST_FORM" status by making a random update to the form but not
 		// submitting it
-		form, err := GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trb.ID)
+		form, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trb.ID)
 		s.NoError(err)
 		s.NotNil(form)
 		formChanges := map[string]interface{}{
 			"isSubmitted":  false,
-			"trbRequestId": trb.ID.String(),
+			"trbRequestId": trb.ID,
 			"component":    "Taco Cart",
 		}
 		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusDraftRequestForm, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusInProgress,
@@ -118,23 +120,23 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		}, *taskStatuses)
 
 		// Test the "REQUEST_FORM_COMPLETE" status by submitting it
-		form, err = GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trb.ID)
+		form, err = GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trb.ID)
 		s.NoError(err)
 		s.NotNil(form)
 		formChanges = map[string]interface{}{
 			"isSubmitted":  true,
-			"trbRequestId": trb.ID.String(),
+			"trbRequestId": trb.ID,
 			"component":    "Taco Cart",
 		}
 		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusRequestFormComplete, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -164,12 +166,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusReadyForConsult, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -197,12 +199,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusConsultScheduled, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -230,12 +232,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusConsultComplete, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -251,18 +253,18 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		s.NoError(err)
 		s.NotNil(adviceLetter)
 		adviceLetterChanges := map[string]interface{}{
-			"trbRequestId":   trb.ID.String(),
+			"trbRequestId":   trb.ID,
 			"meetingSummary": "Talked about stuff",
 		}
 		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusDraftAdviceLetter, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -277,12 +279,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = RequestReviewForTRBAdviceLetter(ctx, store, &emailClient, stubFetchUserInfo, adviceLetter.ID)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusAdviceLetterInReview, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -297,12 +299,12 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		_, err = SendTRBAdviceLetter(ctx, store, adviceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos, false, nil)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusAdviceLetterSent, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
@@ -315,18 +317,18 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 		// Test the "FOLLOW_UP_REQUESTED" status by updating the advice letter to recommend follow up
 		adviceLetterChanges = map[string]interface{}{
-			"trbRequestId":          trb.ID.String(),
+			"trbRequestId":          trb.ID,
 			"isFollowupRecommended": true,
 		}
 		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
 		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)
 		s.NoError(err)
-		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
+		trbStatus, err = GetTRBRequestStatus(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBRequestStatusFollowUpRequested, trbStatus)
-		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
+		taskStatuses, err = GetTRBTaskStatuses(s.ctxWithNewDataloaders(), *trb)
 		s.NoError(err)
 		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,

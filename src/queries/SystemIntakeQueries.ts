@@ -1,11 +1,12 @@
 import { gql } from '@apollo/client';
 
+import { FundingSource } from './GetSystemIntakeQuery';
+
 // eslint-disable-next-line import/prefer-default-export
 export const CreateSystemIntake = gql`
   mutation CreateSystemIntake($input: CreateSystemIntakeInput!) {
     createSystemIntake(input: $input) {
       id
-      status
       requestType
       requester {
         name
@@ -15,6 +16,7 @@ export const CreateSystemIntake = gql`
 `;
 
 export const UpdateSystemIntakeContractDetails = gql`
+  ${FundingSource}
   mutation UpdateSystemIntakeContractDetails(
     $input: UpdateSystemIntakeContractDetailsInput!
   ) {
@@ -23,15 +25,16 @@ export const UpdateSystemIntakeContractDetails = gql`
         id
         currentStage
         fundingSources {
-          source
-          fundingNumber
+          ...FundingSource
         }
         costs {
           expectedIncreaseAmount
         }
         annualSpending {
           currentAnnualSpending
+          currentAnnualSpendingITPortion
           plannedYearOneSpending
+          plannedYearOneSpendingITPortion
         }
         contract {
           contractor
@@ -46,7 +49,11 @@ export const UpdateSystemIntakeContractDetails = gql`
             month
             year
           }
-          number
+        }
+        contractNumbers {
+          id
+          systemIntakeID
+          contractNumber
         }
       }
     }
@@ -64,6 +71,9 @@ export const UpdateSystemIntakeRequestDetails = gql`
         businessSolution
         needsEaSupport
         hasUiChanges
+        usesAiTech
+        usingSoftware
+        acquisitionMethods
       }
     }
   }
@@ -107,11 +117,21 @@ export const UpdateSystemIntakeContactDetails = gql`
   }
 `;
 
+export const UpdateSystemIntakeRequestType = gql`
+  mutation UpdateSystemIntakeRequestType(
+    $id: UUID!
+    $requestType: SystemIntakeRequestType!
+  ) {
+    updateSystemIntakeRequestType(id: $id, newType: $requestType) {
+      id
+    }
+  }
+`;
+
 export const SubmitIntake = gql`
   mutation SubmitIntake($input: SubmitIntakeInput!) {
     submitIntake(input: $input) {
       systemIntake {
-        status
         id
       }
     }

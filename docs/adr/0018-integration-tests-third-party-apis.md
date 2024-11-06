@@ -10,7 +10,7 @@ in CI. Okta tests are out of scope.
 
 In this context, "integration test" refers to either: (1) a Cypress test
 (frontend/backend integration/end-to-end test); or (2) the backend [integration
-tests](https://github.com/CMSgov/easi-app/tree/main/pkg/integration) that run
+tests](https://github.com/cms-enterprise/easi-app/tree/main/pkg/integration) that run
 when invoking `easi test`. "CI environment" means the network in which our
 CircleCI containers run. "Deployed environment" means one of our AWS
 environments (development, implementation, production). The term "mock" is being
@@ -28,7 +28,7 @@ stub, fake, spy, etc.
   reduce operational and networking overhead from the CI environment.  Since a
   successful deployment to the development AWS environment is required before
   merging code, we can use the [health
-  check](https://github.com/CMSgov/easi-app/blob/main/pkg/server/health_check.go)
+  check](https://github.com/cms-enterprise/easi-app/blob/main/pkg/server/health_check.go)
   that runs on server start in a deployed environment as a test to prevent
   breaking changes to the CEDAR API client from being merged.
 

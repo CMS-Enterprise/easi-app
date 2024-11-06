@@ -18,7 +18,7 @@ exports[`TRB Subview snapshots > matches Process Flow 1`] = `
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb"
           >
             <span>
@@ -246,7 +246,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
           class="usa-breadcrumb__list-item"
         >
           <a
-            class="usa-breadcrumb__link"
+            class="text-primary usa-breadcrumb__link"
             href="/trb"
           >
             <span>
@@ -597,7 +597,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
             data-testid="label"
             for="systemTable.id-search"
           >
-            Search Table
+            Search table
           </label>
           <input
             class="usa-input"
@@ -635,6 +635,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
         <div
           class="usa-table-container--scrollable"
           data-testid="scrollable-table-container"
+          tabindex="0"
         >
           <table
             class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
@@ -882,6 +883,11 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
               id="table-page-size"
               name="tablePageSize"
             >
+              <option
+                value="5"
+              >
+                Show 5
+              </option>
               <option
                 value="10"
               >

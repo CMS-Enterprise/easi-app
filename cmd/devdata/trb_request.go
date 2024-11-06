@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"time"
@@ -11,12 +12,14 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/lib/pq"
+	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/easiencoding"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
+	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *seederConfig) seedTRBRequests(ctx context.Context) error {
@@ -34,6 +37,16 @@ func (s *seederConfig) seedTRBRequests(ctx context.Context) error {
 		s.seedTRBCase9,
 		s.seedTRBCase10,
 		s.seedTRBCase11,
+		s.seedTRBCase12,
+		s.seedTRBCase13,
+		s.seedTRBCase14,
+		s.seedTRBCase15,
+		s.seedTRBCase16,
+		s.seedTRBCase17,
+		s.seedTRBCase18,
+		s.seedTRBCase19,
+		s.seedTRBCase20,
+		s.seedTRBCase21, //closed requests loop
 	}
 
 	for _, seedFunc := range cases {
@@ -225,6 +238,22 @@ func (s *seederConfig) seedTRBCase9(ctx context.Context) error {
 		return err
 	}
 
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is the earlier feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, -7)
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is the earliest feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, -14)
+	})
+	if err != nil {
+		return err
+	}
+
 	_, err = s.addTRBConsultMeeting(ctx, trb, true)
 	if err != nil {
 		return err
@@ -250,6 +279,14 @@ func (s *seederConfig) seedTRBCase10(ctx context.Context) error {
 	}
 
 	_, err = s.addTRBFeedback(ctx, trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is the earlier feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, -14)
+	})
 	if err != nil {
 		return err
 	}
@@ -280,6 +317,29 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	}
 
 	_, err = s.addTRBFeedback(ctx, trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is the newest feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, 7)
+	})
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is the earlier feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, -7)
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is more feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, -1)
+	})
 	if err != nil {
 		return err
 	}
@@ -315,7 +375,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 
 	// create admin notes of all five categories
 
-	generalRequestNoteInput := model.CreateTRBAdminNoteGeneralRequestInput{
+	generalRequestNoteInput := models.CreateTRBAdminNoteGeneralRequestInput{
 		TrbRequestID: trb.ID,
 		NoteText:     "This is a general request admin note from seed data",
 	}
@@ -324,7 +384,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 		return err
 	}
 
-	initialRequestFormNoteInput := model.CreateTRBAdminNoteInitialRequestFormInput{
+	initialRequestFormNoteInput := models.CreateTRBAdminNoteInitialRequestFormInput{
 		TrbRequestID:                 trb.ID,
 		NoteText:                     "This is an initial request form admin note from seed data",
 		AppliesToBasicRequestDetails: true,
@@ -337,7 +397,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	}
 
 	// link to 2 of the documents so we can check that it links to multiple docs *and* that it doesn't link to all the docs on the request
-	supportingDocumentsNoteInput := model.CreateTRBAdminNoteSupportingDocumentsInput{
+	supportingDocumentsNoteInput := models.CreateTRBAdminNoteSupportingDocumentsInput{
 		TrbRequestID: trb.ID,
 		NoteText:     "This is a supporting documents admin note from seed data",
 		DocumentIDs: []uuid.UUID{
@@ -350,7 +410,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 		return err
 	}
 
-	consultSessionNoteInput := model.CreateTRBAdminNoteConsultSessionInput{
+	consultSessionNoteInput := models.CreateTRBAdminNoteConsultSessionInput{
 		TrbRequestID: trb.ID,
 		NoteText:     "This is a consult session admin note from seed data",
 	}
@@ -360,7 +420,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	}
 
 	// link to 2 of the recommendations so we can check that it links to multiple recs *and* that it doesn't link to all the recs on the request
-	adviceLetterNoteInput := model.CreateTRBAdminNoteAdviceLetterInput{
+	adviceLetterNoteInput := models.CreateTRBAdminNoteAdviceLetterInput{
 		TrbRequestID:            trb.ID,
 		NoteText:                "This is an advice letter admin note from seed data",
 		AppliesToMeetingSummary: true,
@@ -378,27 +438,285 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	return nil
 }
 
+func (s *seederConfig) seedTRBCase12(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 12 - Completed request form with New System Relation").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBNewSystemRelation(ctx, trbRequest.ID, []string{"12345", "67890"})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase13(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 13 - Completed request form with Existing Service Relation").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"12345", "67890"})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase14(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 14 - Completed request form with Existing System Relation").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingSystemRelation(
+		ctx,
+		trbRequest.ID,
+		[]string{"00001", "00002"}, // contract numbers
+		[]string{ // cedar system IDs, these mock IDs are from the client helper
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+		},
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase15(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 15 - Completed request form with Attendees").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	err = s.seedTRBWithAttendees(ctx, trbRequest.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase16(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 16 - Completed request form with Existing Inactive System Relation").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingSystemRelation(
+		ctx,
+		trbRequest.ID,
+		[]string{"ABC", "DEF"}, // contract numbers
+		[]string{ // cedar system IDs, these mock IDs are from the client helper
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
+		},
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase17(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 17 - Completed request with related system (0A)").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingSystemRelation(
+		ctx,
+		trbRequest.ID,
+		[]string{"00002", "00003"}, // contract numbers
+		[]string{ // cedar system IDs, these mock IDs are from the client helper
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}",
+		},
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase18(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 18 - Completed request with related system (1B)").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingSystemRelation(
+		ctx,
+		trbRequest.ID,
+		[]string{"00004", "00005"}, // contract numbers
+		[]string{ // cedar system IDs, these mock IDs are from the client helper
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}",
+		},
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase19(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 19 - Completed request form with related contract (12345)").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"12345", "00006"})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase20(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 20 - Completed request form with related contract (67890)").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"00007", "67890"})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
+	g, ctx := errgroup.WithContext(ctx)
+	for i := range closedRequestCount {
+		caseNum := i + 20 + 1
+		g.Go(func() error {
+			trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom(fmt.Sprintf("Case %d - Closed request", caseNum)).Ptr(), true)
+			if err != nil {
+				return err
+			}
+
+			_, err = s.addTRBFeedback(ctx, trbRequest)
+			if err != nil {
+				return err
+			}
+			_, err = s.addTRBFeedback(ctx, trbRequest, func(fb *models.TRBRequestFeedback) {
+				fb.FeedbackMessage = "This is more feedback"
+				fb.CreatedAt = time.Now().AddDate(0, 0, -1)
+			})
+			if err != nil {
+				return err
+			}
+
+			err = s.seedTRBWithAttendees(ctx, trbRequest.ID)
+			if err != nil {
+				return err
+			}
+
+			_, err = s.addTRBConsultMeeting(ctx, trbRequest, true)
+			if err != nil {
+				return err
+			}
+
+			// draft advice letter, not sent
+			_, err = s.addAdviceLetter(ctx, trbRequest, true, false, false)
+			if err != nil {
+				return err
+			}
+
+			// create 3 documents we can reference in admin notes
+			documentIDs := []uuid.UUID{}
+			scanStatus := "CLEAN"
+			for i := 0; i < 3; i++ {
+				// new error variable to avoid issues with shadowing err from outer scope
+				doc, errAddDocument := s.addDocument(ctx, trbRequest, &scanStatus)
+				if errAddDocument != nil {
+					return err
+				}
+				documentIDs = append(documentIDs, doc.ID)
+			}
+
+			recommendations, err := s.addAdviceLetterRecommendations(ctx, trbRequest)
+			if err != nil {
+				return err
+			}
+
+			adviceLetterNoteInput := models.CreateTRBAdminNoteAdviceLetterInput{
+				TrbRequestID:            trbRequest.ID,
+				NoteText:                "This is an advice letter admin note from seed data",
+				AppliesToMeetingSummary: true,
+				AppliesToNextSteps:      false,
+				RecommendationIDs: []uuid.UUID{
+					recommendations[0].ID,
+					recommendations[1].ID,
+				},
+			}
+
+			_, err = resolvers.CreateTRBAdminNoteAdviceLetter(ctx, s.store, adviceLetterNoteInput)
+			if err != nil {
+				return err
+			}
+
+			supportingDocumentsNoteInput := models.CreateTRBAdminNoteSupportingDocumentsInput{
+				TrbRequestID: trbRequest.ID,
+				NoteText:     "This is a supporting documents admin note from seed data",
+				DocumentIDs: []uuid.UUID{
+					documentIDs[0],
+					documentIDs[1],
+				},
+			}
+			_, err = resolvers.CreateTRBAdminNoteSupportingDocuments(ctx, s.store, supportingDocumentsNoteInput)
+			if err != nil {
+				return err
+			}
+
+			_, err = s.addTRBExistingSystemRelation(
+				ctx,
+				trbRequest.ID,
+				[]string{"11111", "11112"}, // contract numbers
+				[]string{ // cedar system IDs, these mock IDs are from the client helper
+					"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
+				},
+			)
+			if err != nil {
+				return err
+			}
+			_, err = resolvers.CloseTRBRequest(
+				ctx,
+				s.store,
+				nil,
+				s.UserSearchClient.FetchUserInfo,
+				s.UserSearchClient.FetchUserInfos,
+				trbRequest.ID,
+				models.HTML("Because it's done!"),
+				false,
+				[]string{},
+			)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+	}
+	if err := g.Wait(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *seederConfig) seedTRBLeadOptions(ctx context.Context) ([]*models.UserInfo, error) {
 	leadUsers := map[string]*models.UserInfo{
 		"ABCD": {
-			CommonName: "Adeline Aarons",
-			Email:      "adeline.aarons@local.fake",
-			EuaUserID:  "ABCD",
+			DisplayName: "Adeline Aarons",
+			Email:       "adeline.aarons@local.fake",
+			Username:    "ABCD",
 		},
 		"TEST": {
-			CommonName: "Terry Thompson",
-			Email:      "terry.thompson@local.fake",
-			EuaUserID:  "TEST",
+			DisplayName: "Terry Thompson",
+			Email:       "terry.thompson@local.fake",
+			Username:    "TEST",
 		},
 		"A11Y": {
-			CommonName: "Ally Anderson",
-			Email:      "ally.anderson@local.fake",
-			EuaUserID:  "A11Y",
+			DisplayName: "Ally Anderson",
+			Email:       "ally.anderson@local.fake",
+			Username:    "A11Y",
 		},
 		"GRTB": {
-			CommonName: "Gary Gordon",
-			Email:      "gary.gordon@local.fake",
-			EuaUserID:  "GRTB",
+			DisplayName: "Gary Gordon",
+			Email:       "gary.gordon@local.fake",
+			Username:    "GRTB",
 		},
 	}
 
@@ -428,7 +746,7 @@ func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName *string, isS
 	}
 
 	_, err = s.updateTRBRequestForm(ctx, map[string]interface{}{
-		"trbRequestId":             trb.ID.String(),
+		"trbRequestId":             trb.ID,
 		"isSubmitted":              isSubmitted,
 		"component":                "Center for Medicare",
 		"needsAssistanceWith":      "Something is wrong with my system",
@@ -448,6 +766,7 @@ func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName *string, isS
 		"collabDateOther":                  "Last week",
 		"collabGRBConsultRequested":        true,
 		"subjectAreaOptions": []models.TRBSubjectAreaOption{
+			models.TRBSubjectAreaOptionArtificialIntelligence,
 			models.TRBSubjectAreaOptionAssistanceWithSystemConceptDev,
 			models.TRBSubjectAreaOptionCloudMigration,
 		},
@@ -478,15 +797,56 @@ func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName *string, isS
 	if err != nil {
 		return nil, err
 	}
-	return resolvers.GetTRBRequestByID(ctx, trb.ID, s.store)
+	return resolvers.GetTRBRequestByID(ctx, s.store, trb.ID)
 }
 
+func (s *seederConfig) seedTRBWithAttendees(ctx context.Context, trbRequestID uuid.UUID) error {
+	_, err := s.addAttendee(
+		ctx,
+		trbRequestID,
+		mock.Batman,
+		models.PersonRoleInformationSystemSecurityAdvisor,
+		"Security Component",
+	)
+	if err != nil {
+		return err
+	}
+	_, err = s.addAttendee(
+		ctx,
+		trbRequestID,
+		mock.TestUser,
+		models.PersonRoleBusinessOwner,
+		"Business Component",
+	)
+	if err != nil {
+		return err
+	}
+	_, err = s.addAttendee(
+		ctx,
+		trbRequestID,
+		mock.AccessibilityUser,
+		models.PersonRoleCRA,
+		"Cyber Component",
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func (s *seederConfig) addTRBRequest(ctx context.Context, rType models.TRBRequestType, name *string) (*models.TRBRequest, error) {
 	trb, err := resolvers.CreateTRBRequest(ctx, rType, s.store)
 	if err != nil {
 		return nil, err
 	}
-
+	attendee, err := s.store.GetAttendeeByEUAIDAndTRBID(ctx, trb.CreatedBy, trb.ID)
+	if err != nil {
+		return nil, err
+	}
+	attendee.Component = helpers.PointerTo("Center for Medicare (CM)")
+	_, err = resolvers.UpdateTRBRequestAttendee(ctx, s.store, attendee)
+	if err != nil {
+		return nil, err
+	}
 	trb.Name = name
 	trb, err = s.store.UpdateTRBRequest(ctx, trb)
 	if err != nil {
@@ -519,13 +879,17 @@ func (s *seederConfig) updateTRBRequestFundingSources(ctx context.Context, trbID
 	return sources, nil
 }
 
-func (s *seederConfig) addTRBFeedback(ctx context.Context, trb *models.TRBRequest) (*models.TRBRequestFeedback, error) {
+func (s *seederConfig) addTRBFeedback(ctx context.Context, trb *models.TRBRequest, ops ...func(fb *models.TRBRequestFeedback)) (*models.TRBRequestFeedback, error) {
 	feedback := &models.TRBRequestFeedback{
 		TRBRequestID:    trb.ID,
 		FeedbackMessage: "This is the most excellent TRB request ever created",
 		CopyTRBMailbox:  false,
 		NotifyEUAIDs:    []string{},
 		Action:          models.TRBFeedbackActionReadyForConsult,
+	}
+
+	for _, op := range ops {
+		op(feedback)
 	}
 
 	feedback, err := resolvers.CreateTRBRequestFeedback(ctx, s.store, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock, feedback)
@@ -582,7 +946,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 	}
 
 	adviceLetterChanges := map[string]interface{}{
-		"trbRequestId":          trb.ID.String(),
+		"trbRequestId":          trb.ID,
 		"meetingSummary":        "Talked about stuff",
 		"isFollowupRecommended": isFollowUpRequested,
 	}
@@ -612,7 +976,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 		}
 	}
 
-	letter, outsideErr = resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, s.store, trb.ID)
+	letter, outsideErr = resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, trb.ID)
 	if outsideErr != nil {
 		return nil, outsideErr
 	}
@@ -685,7 +1049,7 @@ func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, 
 	fileToUpload := bytes.NewReader([]byte(encodedContents))
 
 	otherDesc := "Some other type of doc"
-	input := model.CreateTRBRequestDocumentInput{
+	input := models.CreateTRBRequestDocumentInput{
 		RequestID: trb.ID,
 		FileData: graphql.Upload{
 			File:        fileToUpload,
@@ -709,4 +1073,78 @@ func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, 
 	}
 
 	return document, nil
+}
+
+func (s *seederConfig) addAttendee(
+	ctx context.Context,
+	trbRequestID uuid.UUID,
+	euaID string,
+	role models.PersonRole,
+	component string,
+) (*models.TRBRequestAttendee, error) {
+	attendee := models.TRBRequestAttendee{
+		TRBRequestID: trbRequestID,
+		EUAUserID:    euaID,
+		Role:         &role,
+		Component:    &component,
+	}
+	attendee.CreatedBy = mock.PrincipalUser
+	return resolvers.CreateTRBRequestAttendee(
+		ctx,
+		s.store,
+		func(
+			ctx context.Context,
+			attendeeEmail models.EmailAddress,
+			requestName string,
+			requesterName string,
+		) error {
+			return nil
+		},
+		mock.FetchUserInfoMock,
+		&attendee,
+	)
+}
+
+func (s *seederConfig) addTRBNewSystemRelation(
+	ctx context.Context,
+	trbRequestID uuid.UUID,
+	contractNumbers []string,
+) (*models.TRBRequest, error) {
+	return resolvers.SetTRBRequestRelationNewSystem(ctx, s.store, models.SetTRBRequestRelationNewSystemInput{
+		TrbRequestID:    trbRequestID,
+		ContractNumbers: contractNumbers,
+	})
+}
+
+func (s *seederConfig) addTRBExistingServiceRelation(
+	ctx context.Context,
+	trbRequestID uuid.UUID,
+	contractName string,
+	contractNumbers []string,
+) (*models.TRBRequest, error) {
+	return resolvers.SetTRBRequestRelationExistingService(ctx, s.store, models.SetTRBRequestRelationExistingServiceInput{
+		TrbRequestID:    trbRequestID,
+		ContractName:    contractName,
+		ContractNumbers: contractNumbers,
+	})
+}
+
+func (s *seederConfig) addTRBExistingSystemRelation(
+	ctx context.Context,
+	trbRequestID uuid.UUID,
+	contractNumbers []string,
+	cedarSystemIDs []string,
+) (*models.TRBRequest, error) {
+	return resolvers.SetTRBRequestRelationExistingSystem(
+		ctx,
+		s.store,
+		func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+			return cedarcoremock.GetSystem(systemID), nil
+		},
+		models.SetTRBRequestRelationExistingSystemInput{
+			TrbRequestID:    trbRequestID,
+			ContractNumbers: contractNumbers,
+			CedarSystemIDs:  cedarSystemIDs,
+		},
+	)
 }

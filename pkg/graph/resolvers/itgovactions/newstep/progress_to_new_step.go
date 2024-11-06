@@ -4,15 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // IsIntakeValid checks if in an intake and a new step from a Progress to New Step action are valid
 // the frontend shouldn't allow users to take any invalid actions, but we validate server-side to make sure
-func IsIntakeValid(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo) error {
-	if intake.State == models.SystemIntakeStateCLOSED {
+func IsIntakeValid(intake *models.SystemIntake, newStep models.SystemIntakeStepToProgressTo) error {
+	if intake.State == models.SystemIntakeStateClosed {
 		return &apperrors.BadRequestError{
 			Err: &apperrors.InvalidActionError{
 				ActionType: models.ActionTypePROGRESSTONEWSTEP,
@@ -43,15 +42,15 @@ func IsIntakeValid(intake *models.SystemIntake, newStep model.SystemIntakeStepTo
 }
 
 // UpdateIntake updates an intake based on a previously validated Progress to New Step action
-func UpdateIntake(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo, newMeetingDate *time.Time, currentTime time.Time) error {
+func UpdateIntake(intake *models.SystemIntake, newStep models.SystemIntakeStepToProgressTo, newMeetingDate *time.Time, currentTime time.Time) error {
 	intake.UpdatedAt = &currentTime
 
 	switch newStep {
-	case model.SystemIntakeStepToProgressToDraftBusinessCase:
+	case models.SystemIntakeStepToProgressToDraftBusinessCase:
 		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
 		return nil
 
-	case model.SystemIntakeStepToProgressToGrtMeeting:
+	case models.SystemIntakeStepToProgressToGrtMeeting:
 		intake.Step = models.SystemIntakeStepGRTMEETING
 
 		if newMeetingDate != nil {
@@ -62,12 +61,11 @@ func UpdateIntake(intake *models.SystemIntake, newStep model.SystemIntakeStepToP
 
 		return nil
 
-	case model.SystemIntakeStepToProgressToFinalBusinessCase:
-		intake.Status = models.SystemIntakeStatusBIZCASEFINALNEEDED // TODO Remove this when we're on IT Gov v2 - after https://jiraent.cms.gov/browse/EASI-2887 is run in all envs
+	case models.SystemIntakeStepToProgressToFinalBusinessCase:
 		intake.Step = models.SystemIntakeStepFINALBIZCASE
 		return nil
 
-	case model.SystemIntakeStepToProgressToGrbMeeting:
+	case models.SystemIntakeStepToProgressToGrbMeeting:
 		intake.Step = models.SystemIntakeStepGRBMEETING
 
 		if newMeetingDate != nil {

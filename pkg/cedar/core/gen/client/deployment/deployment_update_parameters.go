@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewDeploymentUpdateParams creates a new DeploymentUpdateParams object,
@@ -63,7 +63,10 @@ DeploymentUpdateParams contains all the parameters to send to the API endpoint
 */
 type DeploymentUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   Deployment list to be updated in Alfabet.
+	*/
 	Body *models.DeploymentUpdateRequest
 
 	timeout    time.Duration

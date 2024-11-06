@@ -58,53 +58,25 @@ describe('The System Intake page', () => {
     expect(screen.getByTestId('system-intake')).toBeInTheDocument();
   });
 
-  it('renders request details', async () => {
-    render(
-      <MemoryRouter
-        initialEntries={[`/system/${systemIntake.id}/request-details`]}
-      >
-        <MockedProvider mocks={[getSystemIntakeQuery()]}>
-          <Route path="/system/:systemId/:formPage">
-            <SystemIntake />
-          </Route>
-        </MockedProvider>
-      </MemoryRouter>
-    );
-    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
-
-    expect(
-      screen.getByRole('heading', { name: /request details/i, level: 1 })
-    ).toBeInTheDocument();
-  });
-
-  it('renders contract details', async () => {
-    render(
-      <MemoryRouter
-        initialEntries={[`/system/${systemIntake.id}/contract-details`]}
-      >
-        <MockedProvider mocks={[getSystemIntakeQuery()]}>
-          <Route path="/system/:systemId/:formPage">
-            <SystemIntake />
-          </Route>
-        </MockedProvider>
-      </MemoryRouter>
-    );
-    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
-
-    expect(
-      screen.getByRole('heading', { name: /contract details/i, level: 1 })
-    ).toBeInTheDocument();
-  });
-
   it('renders document upload', async () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({
+      auth: {
+        euaId: 'ABCD'
+      },
+      systemIntake: { systemIntake: {} },
+      action: {}
+    });
     render(
       <MemoryRouter initialEntries={[`/system/${systemIntake.id}/documents`]}>
         <MockedProvider mocks={[getSystemIntakeQuery({ documents })]}>
-          <MessageProvider>
-            <Route path="/system/:systemId/:formPage">
-              <SystemIntake />
-            </Route>
-          </MessageProvider>
+          <Provider store={store}>
+            <MessageProvider>
+              <Route path="/system/:systemId/:formPage">
+                <SystemIntake />
+              </Route>
+            </MessageProvider>
+          </Provider>
         </MockedProvider>
       </MemoryRouter>
     );

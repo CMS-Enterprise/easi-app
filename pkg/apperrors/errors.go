@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // UnauthorizedError is a typed error for when authorization fails
@@ -172,25 +172,6 @@ func (e *ContextError) Error() string {
 	return fmt.Sprintf("Could not %s %s on context", e.Operation, e.Object)
 }
 
-// NotificationDestinationType is a type of destination for a notification
-type NotificationDestinationType string
-
-const (
-	// DestinationTypeEmail is for an error with an email notification
-	DestinationTypeEmail NotificationDestinationType = "Email"
-)
-
-// NotificationError is a typed error for when a notification fails
-type NotificationError struct {
-	Err             error
-	DestinationType NotificationDestinationType
-}
-
-// Error is the error message for a notification error
-func (e *NotificationError) Error() string {
-	return fmt.Sprintf("Email error '%s' on destination %s", e.Err, e.DestinationType)
-}
-
 // MethodNotAllowedError is a typed error for an unsupported method
 type MethodNotAllowedError struct {
 	Method string
@@ -264,7 +245,7 @@ func (e *InvalidParametersError) Error() string {
 	return fmt.Sprint("Unable to run ", e.FunctionName, " due to invalid parameters")
 }
 
-// InvalidEUAIDError indicates that the CEDAR LDAP API didn't find a matching user for the given EUAID
+// InvalidEUAIDError indicates that the Okta API didn't find a matching user for the given EUAID
 type InvalidEUAIDError struct {
 	EUAID string
 }

@@ -10,26 +10,27 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/authority_to_operate"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/budget"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/component"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/contract"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/cost_type"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/data_center"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/deployment"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/domain_model"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/enumeration"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/exchange"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/organization"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/person"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/software_products"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/stakeholder"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/support_contact"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/threat"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/url"
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/user"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/authority_to_operate"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/budget"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/budget_system_cost"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/component"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/contract"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/cost_type"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/data_center"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/deployment"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/domain_model"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/enumeration"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/exchange"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/organization"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/person"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/role"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/software_products"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/stakeholder"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/support_contact"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/system"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/threat"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/url"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/user"
 )
 
 // Default c e d a r core API HTTP client.
@@ -38,7 +39,7 @@ var Default = NewHTTPClient(nil)
 const (
 	// DefaultHost is the default Host
 	// found in Meta (info) section of spec file
-	DefaultHost string = "webmethods-apigw.cedarimpl.cms.gov"
+	DefaultHost string = "webmethods-apigw.cedar.cms.gov"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
 	DefaultBasePath string = "/gateway/CEDAR Core API/2.0.0"
@@ -76,6 +77,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *CEDARCoreA
 	cli.Transport = transport
 	cli.AuthorityToOperate = authority_to_operate.New(transport, formats)
 	cli.Budget = budget.New(transport, formats)
+	cli.BudgetSystemCost = budget_system_cost.New(transport, formats)
 	cli.Component = component.New(transport, formats)
 	cli.Contract = contract.New(transport, formats)
 	cli.CostType = cost_type.New(transport, formats)
@@ -142,6 +144,8 @@ type CEDARCoreAPI struct {
 
 	Budget budget.ClientService
 
+	BudgetSystemCost budget_system_cost.ClientService
+
 	Component component.ClientService
 
 	Contract contract.ClientService
@@ -186,6 +190,7 @@ func (c *CEDARCoreAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 	c.AuthorityToOperate.SetTransport(transport)
 	c.Budget.SetTransport(transport)
+	c.BudgetSystemCost.SetTransport(transport)
 	c.Component.SetTransport(transport)
 	c.Contract.SetTransport(transport)
 	c.CostType.SetTransport(transport)

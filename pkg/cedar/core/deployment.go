@@ -5,27 +5,30 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	apideployments "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/deployment"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	apideployments "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/deployment"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // GetDeploymentsOptionalParams represents the optional parameters that can be used to filter deployments when searching through the CEDAR API
 type GetDeploymentsOptionalParams struct {
-	DeploymentType null.String
-	State          null.String
-	Status         null.String
+	DeploymentType *string
+	State          *string
+	Status         *string
 }
 
 // GetDeployments makes a GET call to the /deployment endpoint
 func (c *Client) GetDeployments(ctx context.Context, cedarSystemID string, optionalParams *GetDeploymentsOptionalParams) ([]*models.CedarDeployment, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarDeployment{}, nil
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return cedarcoremock.GetDeployments(), nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
@@ -35,20 +38,20 @@ func (c *Client) GetDeployments(ctx context.Context, cedarSystemID string, optio
 
 	// Construct the parameters
 	params := apideployments.NewDeploymentFindListParams()
-	params.SetSystemID(cedarSystem.VersionID)
+	params.SetSystemID(cedarSystem.VersionID.String)
 	params.HTTPClient = c.hc
 
 	if optionalParams != nil {
-		if optionalParams.DeploymentType.Ptr() != nil {
-			params.SetDeploymentType(optionalParams.DeploymentType.Ptr())
+		if optionalParams.DeploymentType != nil {
+			params.SetDeploymentType(optionalParams.DeploymentType)
 		}
 
-		if optionalParams.State.Ptr() != nil {
-			params.SetState(optionalParams.State.Ptr())
+		if optionalParams.State != nil {
+			params.SetState(optionalParams.State)
 		}
 
-		if optionalParams.Status.Ptr() != nil {
-			params.SetStatus(optionalParams.Status.Ptr())
+		if optionalParams.Status != nil {
+			params.SetStatus(optionalParams.Status)
 		}
 	}
 
@@ -84,9 +87,9 @@ func (c *Client) GetDeployments(ctx context.Context, cedarSystemID string, optio
 		}
 
 		retDeployment := &models.CedarDeployment{
-			ID:                *deployment.ID,
-			Name:              *deployment.Name,
-			SystemID:          *deployment.SystemID,
+			ID:                zero.StringFromPtr(deployment.ID),
+			Name:              zero.StringFromPtr(deployment.Name),
+			SystemID:          zero.StringFromPtr(deployment.SystemID),
 			StartDate:         zero.TimeFrom(time.Time(deployment.StartDate)),
 			EndDate:           zero.TimeFrom(time.Time(deployment.EndDate)),
 			IsHotSite:         zero.StringFrom(deployment.IsHotSite),

@@ -7,13 +7,15 @@ import { DateTime } from 'luxon';
 import users from 'data/mock/users';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import {
+  RequestRelationType,
   SystemIntakeRequestType,
   SystemIntakeState,
-  SystemIntakeStatus,
   SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
 
-import Summary from '.';
+import ITGovAdminContext from '../ITGovAdminContext';
+
+import Summary, { RequestSummaryProps } from '.';
 
 vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
@@ -39,17 +41,20 @@ const requester: Requester = {
   component: 'Office of Information Technology'
 };
 
-const summaryProps = {
+const summaryProps: RequestSummaryProps = {
   id: 'ccdfdcf5-5085-4521-9f77-fa1ea324502b',
   requestName: 'Request Name',
   requestType: SystemIntakeRequestType.NEW,
-  status: SystemIntakeStatus.INTAKE_SUBMITTED,
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
   adminLead: null,
   submittedAt: DateTime.local().toString(),
   lcid: null,
   requester,
-  contractNumber: '123456'
+  contractNumbers: ['123456'],
+  state: SystemIntakeState.OPEN,
+  relationType: RequestRelationType.NEW_SYSTEM,
+  contractName: null,
+  systems: []
 };
 
 describe('The GRT Review page', () => {
@@ -57,7 +62,7 @@ describe('The GRT Review page', () => {
     render(
       <MemoryRouter>
         <MockedProvider>
-          <Summary {...summaryProps} state={SystemIntakeState.OPEN} />
+          <Summary {...summaryProps} />
         </MockedProvider>
       </MemoryRouter>
     );
@@ -73,7 +78,7 @@ describe('The GRT Review page', () => {
         <MockedProvider>
           <Summary
             {...summaryProps}
-            status={SystemIntakeStatus.LCID_ISSUED}
+            statusAdmin={SystemIntakeStatusAdmin.LCID_ISSUED}
             state={SystemIntakeState.CLOSED}
           />
         </MockedProvider>
@@ -93,7 +98,7 @@ describe('The GRT Review page', () => {
         <MockedProvider>
           <Summary
             {...summaryProps}
-            status={SystemIntakeStatus.LCID_ISSUED}
+            statusAdmin={SystemIntakeStatusAdmin.LCID_ISSUED}
             state={SystemIntakeState.CLOSED}
             lcid={lcid}
           />
@@ -103,8 +108,23 @@ describe('The GRT Review page', () => {
 
     expect(
       within(screen.getByTestId('grt-current-status')).getByText(
-        `Life Cycle ID issued: ${lcid}`
+        `LCID issued: ${lcid}`
       )
     ).toBeInTheDocument();
+  });
+
+  it('hides action buttons for GRB view', async () => {
+    render(
+      <MemoryRouter>
+        <MockedProvider>
+          <ITGovAdminContext.Provider value={false}>
+            <Summary {...summaryProps} />
+          </ITGovAdminContext.Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByRole('button', { name: 'Assign' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Take an action' })).toBeNull();
   });
 });

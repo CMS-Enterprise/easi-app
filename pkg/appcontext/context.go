@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 )
 
 type contextKey int
@@ -17,18 +17,13 @@ const (
 	loggerKey contextKey = iota
 	traceKey
 	principalKey
+	jwtKey
+	userAccountServiceKey
 )
 
 // WithLogger returns a context with the given logger
 func WithLogger(ctx context.Context, logger *zap.Logger) context.Context {
 	return context.WithValue(ctx, loggerKey, logger)
-}
-
-// Logger returns the context's logger
-// DEPRECATED - prefer ZLogger going forward
-func Logger(ctx context.Context) (*zap.Logger, bool) {
-	logger, ok := ctx.Value(loggerKey).(*zap.Logger)
-	return logger, ok
 }
 
 // ZLogger will always return something that functions
@@ -66,4 +61,36 @@ func Principal(c context.Context) authentication.Principal {
 		return p
 	}
 	return authentication.ANON
+}
+
+// WithEnhancedJWT returns the context decorated with the enhanced jwt
+func WithEnhancedJWT(c context.Context, jwt authentication.EnhancedJwt) context.Context {
+	return context.WithValue(c, jwtKey, jwt)
+}
+
+// EnhancedJWT returns the enhanced EnhancedJWT defaulting to nil if not present.
+func EnhancedJWT(c context.Context) *authentication.EnhancedJwt {
+	if jwt, ok := c.Value(jwtKey).(authentication.EnhancedJwt); ok {
+		return &jwt
+	}
+	return nil
+}
+
+// UserAccountService returns a GetUserAccountFromDBFunc that is decorating the context
+func UserAccountService(ctx context.Context) (authentication.GetUserAccountFromDBFunc, error) {
+	userAccountServiceInterface := ctx.Value(userAccountServiceKey)
+	if userAccountServiceInterface == nil {
+		return nil, fmt.Errorf("the user account service was not found on the provided ctx")
+	}
+	userAccountService, ok := userAccountServiceInterface.(authentication.GetUserAccountFromDBFunc)
+	if !ok {
+		return nil, fmt.Errorf("a value was found for the user account service on the ctx, but it is not the correct type. It is type %T", userAccountServiceInterface)
+	}
+
+	return userAccountService, nil
+}
+
+// WithUserAccountService decorates the context with a GetUserAccountFromDBFunc
+func WithUserAccountService(ctx context.Context, accountFunction authentication.GetUserAccountFromDBFunc) context.Context {
+	return context.WithValue(ctx, userAccountServiceKey, accountFunction)
 }

@@ -31,40 +31,14 @@ exports[`System Sub-systems subpage > matches snapshot 1`] = `
               <h3
                 class="margin-y-0 line-height-body-2"
               >
-                <a
-                  class="usa-link"
-                  href="/"
-                >
-                  Test Ocular Fiction Utensil
-                </a>
+                Centers for Management Services
               </h3>
-            </div>
-            <div
-              class="flex-auto"
-            >
-              <svg
-                class="usa-icon usa-icon--size-4 bookmark__icon"
-                focusable="false"
-                height="1em"
-                role="img"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
-                />
-              </svg>
             </div>
           </div>
           <div
             class="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1"
           >
-            TOFU
+            CMS
           </div>
         </header>
         <div
@@ -72,20 +46,24 @@ exports[`System Sub-systems subpage > matches snapshot 1`] = `
           data-testid="CardBody"
         >
           <div>
-            Lorem ipsum description
+            Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
           </div>
           <div
             class="easi-divider margin-y-2"
           />
           <dt
-            class="text-bold margin-bottom-05 margin-bottom-05 font-body-xs line-height-body-1 text-normal"
+            class="text-bold margin-bottom-05 margin-bottom-05 line-height-body-1 text-normal"
           >
             Retirement date
           </dt>
           <dd
-            class="description-definition margin-0 font-body-md line-height-body-4 text-bold"
+            class="description-definition margin-0 font-body-md line-height-body-4"
           >
-            No planned retirement or replacement
+            <span
+              class="text-italic text-base"
+            >
+              No data available
+            </span>
           </dd>
         </div>
       </div>
@@ -110,40 +88,14 @@ exports[`System Sub-systems subpage > matches snapshot 1`] = `
               <h3
                 class="margin-y-0 line-height-body-2"
               >
-                <a
-                  class="usa-link"
-                  href="/"
-                >
-                  Bio-Energy Engagement File
-                </a>
+                Office of Funny Walks
               </h3>
-            </div>
-            <div
-              class="flex-auto"
-            >
-              <svg
-                class="usa-icon usa-icon--size-4 bookmark__icon"
-                focusable="false"
-                height="1em"
-                role="img"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
-                />
-              </svg>
             </div>
           </div>
           <div
             class="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1"
           >
-            BEEF
+            OFW
           </div>
         </header>
         <div
@@ -151,99 +103,24 @@ exports[`System Sub-systems subpage > matches snapshot 1`] = `
           data-testid="CardBody"
         >
           <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.
+            Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
           </div>
           <div
             class="easi-divider margin-y-2"
           />
           <dt
-            class="text-bold margin-bottom-05 margin-bottom-05 font-body-xs line-height-body-1 text-normal"
+            class="text-bold margin-bottom-05 margin-bottom-05 line-height-body-1 text-normal"
           >
             Retirement date
           </dt>
           <dd
-            class="description-definition margin-0 font-body-md line-height-body-4 text-bold"
+            class="description-definition margin-0 font-body-md line-height-body-4"
           >
-            Planned retirement: Q4 2022
-          </dd>
-        </div>
-      </div>
-    </li>
-    <li
-      class="usa-card grid-col-12 margin-bottom-2"
-      data-testid="Card"
-    >
-      <div
-        class="usa-card__container"
-      >
-        <header
-          class="usa-card__header padding-2 padding-bottom-0"
-          data-testid="CardHeader"
-        >
-          <div
-            class="display-flex margin-bottom-105"
-          >
-            <div
-              class="flex-fill"
+            <span
+              class="text-italic text-base"
             >
-              <h3
-                class="margin-y-0 line-height-body-2"
-              >
-                <a
-                  class="usa-link"
-                  href="/"
-                >
-                  Beneficiary Information in the Cloud
-                </a>
-              </h3>
-            </div>
-            <div
-              class="flex-auto"
-            >
-              <svg
-                class="usa-icon usa-icon--size-4 bookmark__icon"
-                focusable="false"
-                height="1em"
-                role="img"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
-                />
-              </svg>
-            </div>
-          </div>
-          <div
-            class="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1"
-          >
-            BIC
-          </div>
-        </header>
-        <div
-          class="usa-card__body padding-2"
-          data-testid="CardBody"
-        >
-          <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.
-          </div>
-          <div
-            class="easi-divider margin-y-2"
-          />
-          <dt
-            class="text-bold margin-bottom-05 margin-bottom-05 font-body-xs line-height-body-1 text-normal"
-          >
-            Retirement date
-          </dt>
-          <dd
-            class="description-definition margin-0 font-body-md line-height-body-4 text-bold"
-          >
-            Planned retirement: Q2 2023
+              No data available
+            </span>
           </dd>
         </div>
       </div>

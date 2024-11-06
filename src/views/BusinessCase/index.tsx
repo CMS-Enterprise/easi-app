@@ -86,7 +86,8 @@ export const BusinessCase = () => {
   >(GetGovernanceTaskListQuery, {
     variables: {
       id: businessCase.systemIntakeId
-    }
+    },
+    skip: !businessCase?.systemIntakeId
   });
 
   const isFinal: boolean =
@@ -195,6 +196,7 @@ export const BusinessCase = () => {
                 formikRef={formikRef}
                 dispatchSave={dispatchSave}
                 businessCase={businessCase}
+                isFinal={isFinal}
               />
             )}
           />
@@ -205,6 +207,7 @@ export const BusinessCase = () => {
                 formikRef={formikRef}
                 dispatchSave={dispatchSave}
                 businessCase={businessCase}
+                isFinal={isFinal}
               />
             )}
           />

@@ -2,12 +2,13 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { CellProps, Column, Row } from 'react-table';
-import { IconError } from '@trussworks/react-uswds';
-import { useFlags } from 'launchdarkly-react-client-sdk';
+import { Icon } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import TruncatedText from 'components/shared/TruncatedText';
+import { SystemIntakeStatusAdmin } from 'types/graphql-global-types';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
+import { SystemIntakeStatusAdminIndex } from 'utils/tableRequestStatusIndex';
 
 import { SystemIntakeForTable } from './tableMap';
 
@@ -20,7 +21,6 @@ const useRequestTableColumns = (
   activeTable: 'open' | 'closed'
 ): Array<Column<SystemIntakeForTable>> => {
   const { t } = useTranslation('governanceReviewTeam');
-  const flags = useFlags();
 
   // Character limit for length of free text (Admin Note, LCID Scope, etc.), any
   // text longer then this limit will be displayed with a button to allow users
@@ -50,7 +50,10 @@ const useRequestTableColumns = (
       SystemIntakeForTable['requestName']
     >) => {
       return (
-        <Link to={`/governance-review-team/${row.original.id}/intake-request`}>
+        <Link
+          className="usa-link"
+          to={`/it-governance/${row.original.id}/intake-request`}
+        >
           {value}
         </Link>
       );
@@ -74,7 +77,7 @@ const useRequestTableColumns = (
           <div className="display-flex flex-align-center">
             {/* TODO: should probably make this a button that opens up the assign admin
                 lead automatically. Similar to the Dates functionality */}
-            <IconError className="text-secondary margin-right-05" />
+            <Icon.Error className="text-secondary margin-right-05" />
             {adminLead}
           </div>
         );
@@ -94,7 +97,7 @@ const useRequestTableColumns = (
         return (
           <UswdsReactLink
             data-testid="add-grt-date-cta"
-            to={`/governance-review-team/${row.original.id}/dates`}
+            to={`/it-governance/${row.original.id}/dates`}
           >
             {t('requestRepository.table.addDate')}
           </UswdsReactLink>
@@ -115,7 +118,7 @@ const useRequestTableColumns = (
         return (
           <UswdsReactLink
             data-testid="add-grb-date-cta"
-            to={`/governance-review-team/${row.original.id}/dates`}
+            to={`/it-governance/${row.original.id}/dates`}
           >
             {t('requestRepository.table.addDate')}
           </UswdsReactLink>
@@ -125,46 +128,36 @@ const useRequestTableColumns = (
     }
   };
 
-  const statusV1Column: Column<SystemIntakeForTable> = {
-    Header: t<string>('intake:fields.status'),
-    accessor: 'status',
-    Cell: ({
-      row,
-      value
-    }: CellProps<SystemIntakeForTable, SystemIntakeForTable['status']>) => {
-      // If LCID_ISSUED append LCID Scope to status
-      if (value === `LCID: ${row.original.lcid}`) {
-        return (
-          <>
-            {value}
-            <br />
-            <TruncatedText
-              id="lcid-scope"
-              label="less"
-              closeLabel="more"
-              text={`Scope: ${row.original.lcidScope}`}
-              charLimit={freeFormTextCharLimit}
-              className="margin-top-2"
-            />
-          </>
-        );
-      }
-
-      // If any other value just display status
-      return value;
-    }
-  };
-
   const statusColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.status'),
-    accessor: 'statusAdmin',
-    Cell: ({
-      row,
-      value
-    }: CellProps<SystemIntakeForTable, SystemIntakeForTable['statusAdmin']>) =>
-      t(`governanceReviewTeam:systemIntakeStatusAdmin.${value}`, {
-        lcid: row.original.lcid
-      })
+    id: 'statusAdmin',
+    accessor: obj => {
+      return t(
+        `governanceReviewTeam:systemIntakeStatusAdmin.${obj.statusAdmin}`,
+        {
+          lcid: obj.lcid
+        }
+      );
+    },
+    sortType: (a: Row<SystemIntakeForTable>, b: Row<SystemIntakeForTable>) => {
+      const astatus = a.original.statusAdmin;
+      const bstatus = b.original.statusAdmin;
+
+      if (
+        (astatus === SystemIntakeStatusAdmin.LCID_ISSUED &&
+          bstatus === SystemIntakeStatusAdmin.LCID_ISSUED) ||
+        (astatus === SystemIntakeStatusAdmin.LCID_EXPIRED &&
+          bstatus === SystemIntakeStatusAdmin.LCID_EXPIRED) ||
+        (astatus === SystemIntakeStatusAdmin.LCID_RETIRED &&
+          bstatus === SystemIntakeStatusAdmin.LCID_RETIRED)
+      ) {
+        return (a.original.lcid || '') > (b.original.lcid || '') ? 1 : -1;
+      }
+
+      const ai = SystemIntakeStatusAdminIndex()[astatus];
+      const bi = SystemIntakeStatusAdminIndex()[bstatus];
+      return ai > bi ? 1 : -1;
+    }
   };
 
   const lcidExpirationDateColumn: Column<SystemIntakeForTable> = {
@@ -221,7 +214,7 @@ const useRequestTableColumns = (
         requestNameColumn,
         requesterColumn,
         adminLeadColumn,
-        flags.itGovV2Enabled ? statusColumn : statusV1Column,
+        statusColumn,
         grtDateColumn,
         grbDateColumn
       ];
@@ -232,7 +225,7 @@ const useRequestTableColumns = (
         requestNameColumn,
         requesterColumn,
         lcidExpirationDateColumn,
-        flags.itGovV2Enabled ? statusColumn : statusV1Column,
+        statusColumn,
         lastAdminNoteColumn
       ];
     }

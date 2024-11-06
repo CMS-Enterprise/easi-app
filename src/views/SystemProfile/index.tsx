@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink, NavLink, useParams } from 'react-router-dom';
+import { NavHashLink } from 'react-router-hash-link';
 import { useQuery } from '@apollo/client';
 import {
   Alert,
@@ -10,58 +11,56 @@ import {
   Button,
   Grid,
   GridContainer,
-  IconBookmark,
-  IconExpandMore,
+  Icon,
   Link,
   SideNav,
-  SummaryBox
+  SummaryBox,
+  SummaryBoxContent
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
-import { startCase } from 'lodash';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import { getAtoStatus } from 'components/shared/AtoStatus';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import {
   DescriptionDefinition,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
 import {
   GetSystemProfile,
   /* eslint-disable camelcase */
-  GetSystemProfile_cedarAuthorityToOperate,
   GetSystemProfile_cedarSystemDetails,
-  GetSystemProfile_cedarSystemDetails_roles,
   /* eslint-enable camelcase */
   GetSystemProfileVariables
 } from 'queries/types/GetSystemProfile';
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import {
-  AtoStatus,
   CedarRoleAssigneePerson,
   DevelopmentTag,
   RoleTypeName,
   SubpageKey,
   SystemProfileData,
   UrlLocation,
-  UrlLocationTag,
-  UsernameWithRoles
+  UrlLocationTag
 } from 'types/systemProfile';
-import { formatDateUtc, parseAsUTC } from 'utils/date';
-import NotFound from 'views/NotFound';
+import { formatHttpsUrl } from 'utils/formatUrl';
+import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
+import { showSystemVal } from 'utils/showVal';
+import NotFound, { NotFoundPartial } from 'views/NotFound';
 import {
   activities as mockActivies,
-  budgetsInfo as mockBudgets,
-  products as mockProducts,
   subSystems as mockSubSystems,
   systemData as mockSystemData
-} from 'views/Sandbox/mockSystemData';
+} from 'views/SystemProfile/mockSystemData';
+
+import BookmarkButton from '../../components/BookmarkButton';
 
 import EditPageCallout from './components/EditPageCallout';
 // components/index contains all the sideNavItems components, routes, labels and translations
@@ -69,48 +68,10 @@ import EditPageCallout from './components/EditPageCallout';
 import sideNavItems from './components/index';
 import SystemSubNav from './components/SystemSubNav/index';
 import EditTeam from './components/Team/Edit';
+import { getPersonFullName } from './helpers';
 import PointsOfContactSidebar from './PointsOfContactSidebar';
 
 import './index.scss';
-
-function httpsUrl(url: string): string {
-  if (/^https?/.test(url)) {
-    return url;
-  }
-  return `https://${url}`;
-}
-
-/**
- * Get the ATO Status from certain date properties and flags.
- */
-export function getAtoStatus(
-  // eslint-disable-next-line camelcase
-  cedarAuthorityToOperate?: GetSystemProfile_cedarAuthorityToOperate
-): AtoStatus {
-  // `ato.dateAuthorizationMemoExpires` will be null if tlcPhase is Initiate|Develop
-
-  // No ato if it doesn't exist
-  if (!cedarAuthorityToOperate) return 'No ATO';
-
-  // return 'In progress'; // tbd
-
-  const { dateAuthorizationMemoExpires } = cedarAuthorityToOperate;
-
-  if (!dateAuthorizationMemoExpires) return 'No ATO';
-
-  const expiry = parseAsUTC(dateAuthorizationMemoExpires).toString();
-
-  const date = new Date().toISOString();
-
-  if (date >= expiry) return 'Expired';
-
-  const soon = parseAsUTC(expiry)
-    .minus({ days: ATO_STATUS_DUE_SOON_DAYS })
-    .toString();
-  if (date >= soon) return 'Due Soon';
-
-  return 'Active';
-}
 
 /**
  * Get Development Tags which are derived from various other properties.
@@ -149,7 +110,7 @@ function getLocations(
 
     // Fix address urls without a protocol
     // and reassign it to the original address property
-    const address = url.address && httpsUrl(url.address);
+    const address = url.address && formatHttpsUrl(url.address);
 
     return {
       ...url,
@@ -160,46 +121,28 @@ function getLocations(
   });
 }
 
-/**
- * Get a person's full name from a Cedar Role.
- * Format the name in title case if the full name is in all caps.
- */
-export function getPersonFullName(
+function getPlannedRetirement(
   // eslint-disable-next-line camelcase
-  role: GetSystemProfile_cedarSystemDetails_roles
-): string {
-  const fullname = `${role.assigneeFirstName} ${role.assigneeLastName}`;
-  return fullname === fullname.toUpperCase()
-    ? startCase(fullname.toLowerCase())
-    : fullname;
-}
+  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+): string | null {
+  const { plansToRetireReplace, quarterToRetireReplace, yearToRetireReplace } =
+    cedarSystemDetails.systemMaintainerInformation;
 
-/**
- * Get a list of people by their usernames with of a nested list of their Cedar Roles.
- * Assignees appear to be listed in order. The returned list keeps that order.
- */
-export function getUsernamesWithRoles(
-  personRoles: CedarRoleAssigneePerson[]
-): UsernameWithRoles[] {
-  const people: UsernameWithRoles[] = [];
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const role of personRoles) {
-    const { assigneeUsername } = role;
-    if (assigneeUsername) {
-      let person = people.find(
-        p => p.assigneeUsername === role.assigneeUsername
-      );
-      if (!person) {
-        person = { assigneeUsername, roles: [] };
-        people.push(person);
-      }
-
-      person.roles.push(role);
-    }
+  // Return null if none of the original properties are truthy
+  if (
+    !(plansToRetireReplace || quarterToRetireReplace || yearToRetireReplace)
+  ) {
+    return null;
   }
 
-  return people;
+  // Return a string where all falsy values are empty
+  return `${plansToRetireReplace || ''} ${
+    quarterToRetireReplace || yearToRetireReplace
+      ? `(${`Q${quarterToRetireReplace || ''} ${
+          yearToRetireReplace || ''
+        }`.trim()})`
+      : ''
+  }`;
 }
 
 /**
@@ -213,10 +156,22 @@ export function getSystemProfileData(
   // System profile data is generally unavailable if `data.cedarSystemDetails` is empty
   if (!data) return undefined;
 
-  const { cedarSystemDetails } = data;
+  const {
+    cedarSystemDetails,
+    cedarSoftwareProducts,
+    cedarBudget,
+    cedarBudgetSystemCost
+  } = data;
   const cedarSystem = cedarSystemDetails?.cedarSystem;
 
-  if (!cedarSystemDetails || !cedarSystem) return undefined;
+  if (
+    !cedarSystemDetails ||
+    !cedarSystem ||
+    !cedarSoftwareProducts ||
+    !cedarBudget ||
+    !cedarBudgetSystemCost
+  )
+    return undefined;
 
   // Save CedarAssigneeType.PERSON roles for convenience
   const personRoles = cedarSystemDetails.roles.filter(
@@ -253,7 +208,11 @@ export function getSystemProfileData(
     ...data,
     id: cedarSystem.id,
     ato: cedarAuthorityToOperate,
-    atoStatus: getAtoStatus(cedarAuthorityToOperate),
+    atoStatus: getAtoStatus(
+      cedarAuthorityToOperate?.dateAuthorizationMemoExpires
+    ),
+    budgetSystemCosts: cedarBudgetSystemCost,
+    budgets: cedarBudget,
     businessOwners,
     developmentTags: getDevelopmentTags(cedarSystemDetails),
     locations,
@@ -261,54 +220,17 @@ export function getSystemProfileData(
     numberOfFederalFte,
     numberOfFte,
     personRoles,
+    plannedRetirement: getPlannedRetirement(cedarSystemDetails),
     productionLocation,
     status: cedarSystem.status,
+    toolsAndSoftware: cedarSoftwareProducts || undefined,
     usernamesWithRoles,
 
     // Remaining mock data stubs
     activities: mockActivies,
-    budgets: mockBudgets,
-    products: mockProducts,
     subSystems: mockSubSystems,
     systemData: mockSystemData
   };
-}
-
-export function showAtoExpirationDate(
-  // eslint-disable-next-line camelcase
-  systemProfileAto?: GetSystemProfile_cedarAuthorityToOperate
-): React.ReactNode {
-  return showVal(
-    systemProfileAto?.dateAuthorizationMemoExpires &&
-      formatDateUtc(
-        systemProfileAto.dateAuthorizationMemoExpires,
-        'MMMM d, yyyy'
-      )
-  );
-}
-
-/**
- * Show the value if it's not `null`, `undefined`, or `''`,
- * otherwise render `defaultVal`.
- * Use a `format` function on the value if provided.
- */
-export function showVal(
-  val: string | number | null | undefined,
-  {
-    defaultVal = 'No information to display',
-    format
-  }: {
-    defaultVal?: string;
-    format?: (v: any) => string;
-  } = {}
-): React.ReactNode {
-  if (val === null || val === undefined || val === '') {
-    return <span className="text-italic">{defaultVal}</span>;
-  }
-
-  if (format) return format(val);
-
-  return val;
 }
 
 /**
@@ -364,13 +286,10 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
 
   // Header description expand toggle
   const descriptionRef = React.createRef<HTMLElement>();
-  const [
-    isDescriptionExpandable,
-    setIsDescriptionExpandable
-  ] = useState<boolean>(false);
-  const [descriptionExpanded, setDescriptionExpanded] = useState<boolean>(
-    false
-  );
+  const [isDescriptionExpandable, setIsDescriptionExpandable] =
+    useState<boolean>(false);
+  const [descriptionExpanded, setDescriptionExpanded] =
+    useState<boolean>(false);
 
   // Enable the description toggle if it overflows
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -416,9 +335,12 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     flags.systemProfileHiddenFields
   );
 
+  const subpageKey: SubpageKey = subinfo || modalSubpage || 'home';
+
   // Mapping of all sub navigation links
   const subNavigationLinks: React.ReactNode[] = Object.keys(subComponents).map(
     (key: string) => {
+      const comp = subComponents[key];
       if (modal)
         return (
           <Button
@@ -435,21 +357,35 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
           </Button>
         );
       return (
-        <NavLink
-          to={subComponents[key].route}
-          key={key}
-          activeClassName="usa-current"
-          className={classnames({
-            'nav-group-border': subComponents[key].groupEnd
-          })}
-        >
-          {t(`navigation.${key}`)}
-        </NavLink>
+        <>
+          <NavLink
+            to={subComponents[key].route}
+            key={key}
+            activeClassName="usa-current"
+            className={classnames({
+              'nav-group-border': subComponents[key].groupEnd
+            })}
+          >
+            {t(`navigation.${key}`)}
+          </NavLink>
+          {comp.hashLinks &&
+            key === subpageKey &&
+            comp.hashLinks.map((sub, subidx) => {
+              return (
+                <NavHashLink
+                  to={sub.hash}
+                  key={key + sub.name}
+                  className="margin-left-4"
+                  activeClassName="text-bold text-primary"
+                >
+                  {sub.name}
+                </NavHashLink>
+              );
+            })}
+        </>
       );
     }
   );
-
-  const subpageKey: SubpageKey = subinfo || modalSubpage || 'home';
 
   const subComponent = subComponents[subpageKey];
 
@@ -467,36 +403,59 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
   return (
     <MainContent>
       <div id="system-profile">
-        <SummaryBox
-          heading=""
-          className="padding-0 border-0 radius-0 bg-primary-lighter"
-        >
-          <div className="padding-top-3 padding-bottom-3 margin-top-neg-1 height-full">
-            <Grid
-              className={classnames('grid-container', {
-                'maxw-none': modal
-              })}
-            >
-              {!modal && (
-                <BreadcrumbBar
-                  variant="wrap"
-                  className="bg-transparent padding-0"
-                >
-                  <Breadcrumb>
-                    <span>&larr; </span>
-                    <BreadcrumbLink asCustom={RouterLink} to="/systems">
-                      <span>{t('singleSystem.summary.back')}</span>
-                    </BreadcrumbLink>
-                  </Breadcrumb>
-                </BreadcrumbBar>
-              )}
+        <SummaryBox className="padding-0 border-0 radius-0 bg-primary-lighter">
+          <SummaryBoxContent>
+            <div className="padding-top-3 padding-bottom-3 margin-top-neg-1 height-full">
+              <Grid
+                className={classnames('grid-container', {
+                  'maxw-none': modal
+                })}
+              >
+                <div className="display-flex flex-align-center margin-top-neg-05">
+                  {!modal && (
+                    <BreadcrumbBar
+                      variant="wrap"
+                      className="bg-transparent padding-0"
+                    >
+                      <Breadcrumb>
+                        <span>&larr; </span>
+                        <BreadcrumbLink asCustom={RouterLink} to="/systems">
+                          <span>{t('singleSystem.summary.back')}</span>
+                        </BreadcrumbLink>
+                      </Breadcrumb>
+                    </BreadcrumbBar>
+                  )}
+                  <div className="margin-left-auto" style={{ flexShrink: 0 }}>
+                    <BookmarkButton
+                      id={cedarSystem.id}
+                      isBookmarked={cedarSystem.isBookmarked}
+                    />
+                  </div>
+                </div>
 
-              <PageHeading className="margin-top-2">
-                <IconBookmark size={4} className="text-primary" />{' '}
-                <span>{cedarSystem.name} </span>
-                <span className="text-normal font-body-sm">
-                  ({cedarSystem.acronym})
-                </span>
+                <PageHeading className="margin-top-1 margin-bottom-0 line-height-heading-2">
+                  {cedarSystem.name}
+                  <span className="margin-left-05 text-normal font-body-lg">
+                    ({cedarSystem.acronym})
+                  </span>
+                </PageHeading>
+
+                {flags.systemWorkspace &&
+                  systemProfileData.cedarSystemDetails?.isMySystem && (
+                    <div className="margin-top-2 margin-bottom-05">
+                      <UswdsReactLink
+                        className="text-no-underline"
+                        to={`/systems/${systemId}/workspace`}
+                      >
+                        <span className="text-underline">
+                          {t('singleSystem.summary.goToWorkspace')}
+                        </span>
+                        <span aria-hidden>&nbsp;</span>
+                        <span aria-hidden>&rarr; </span>
+                      </UswdsReactLink>
+                    </div>
+                  )}
+
                 <div className="text-normal font-body-md">
                   <CollapsableLink
                     className="margin-top-3"
@@ -507,6 +466,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                     styleLeftBar={false}
                     id={t('singleSystem.id')}
                     label={t('singleSystem.summary.expand')}
+                    bold={false}
                   >
                     <div
                       className={classnames(
@@ -517,28 +477,36 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                         }
                       )}
                     >
-                      <DescriptionDefinition
-                        definition={cedarSystem.description}
-                        ref={descriptionRef}
-                        className="font-body-lg line-height-body-5 text-light"
-                      />
-                      {isDescriptionExpandable && (
-                        <div>
-                          <Button
-                            unstyled
-                            type="button"
-                            className="margin-top-1"
-                            onClick={() => {
-                              setDescriptionExpanded(!descriptionExpanded);
-                            }}
-                          >
-                            {t(
-                              descriptionExpanded
-                                ? 'singleSystem.description.less'
-                                : 'singleSystem.description.more'
-                            )}
-                            <IconExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
-                          </Button>
+                      {cedarSystem.description ? (
+                        <>
+                          <DescriptionDefinition
+                            definition={cedarSystem.description}
+                            ref={descriptionRef}
+                            className="font-body-lg line-height-body-5 text-light"
+                          />
+                          {isDescriptionExpandable && (
+                            <div>
+                              <Button
+                                unstyled
+                                type="button"
+                                className="margin-top-1"
+                                onClick={() => {
+                                  setDescriptionExpanded(!descriptionExpanded);
+                                }}
+                              >
+                                {t(
+                                  descriptionExpanded
+                                    ? 'singleSystem.description.less'
+                                    : 'singleSystem.description.more'
+                                )}
+                                <Icon.ExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
+                              </Button>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="font-heading-lg line-height-heading-2 text-italic text-base-dark">
+                          {t('singleSystem.noDescription')}
                         </div>
                       )}
                     </div>
@@ -554,69 +522,77 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                         <span aria-hidden>&nbsp;</span>
                       </Link>
                     )}
-                    <Grid row className="margin-top-3">
-                      {cmsComponent && (
-                        <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                          <DescriptionDefinition
-                            definition={t('singleSystem.summary.subheader1')}
-                          />
-                          <DescriptionTerm
-                            className="font-body-md"
-                            term={cmsComponent}
-                          />
-                        </Grid>
-                      )}
-                      {businessOwners.length && (
-                        <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                          <DescriptionDefinition
-                            definition={t('singleSystem.summary.subheader2', {
-                              count: businessOwners.length
-                            })}
-                          />
-                          <DescriptionTerm
-                            className="font-body-md"
-                            term={businessOwners
-                              .map(bo => getPersonFullName(bo))
-                              .join(', ')}
-                          />
-                        </Grid>
-                      )}
-                      {flags.systemProfileHiddenFields && (
-                        <>
-                          {/* Go live date */}
-                          <Grid
-                            desktop={{ col: 6 }}
-                            className="margin-bottom-2"
-                          >
-                            <DescriptionDefinition
-                              definition={t('singleSystem.summary.subheader3')}
-                            />
-                            <DescriptionTerm
-                              className="font-body-md"
-                              term="July 27, 2015"
-                            />
-                          </Grid>
-                          {/* Most recent major change */}
-                          <Grid
-                            desktop={{ col: 6 }}
-                            className="margin-bottom-2"
-                          >
-                            <DescriptionDefinition
-                              definition={t('singleSystem.summary.subheader4')}
-                            />
-                            <DescriptionTerm
-                              className="font-body-md"
-                              term="December 4, 2021"
-                            />
-                          </Grid>
-                        </>
-                      )}
+                    <Grid row className="margin-top-4">
+                      {/* CMS component owner */}
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          className="font-body-xs line-height-body-2"
+                          definition={t('singleSystem.summary.subheader1')}
+                        />
+                        <DescriptionTerm
+                          className="font-heading-lg line-height-heading-2"
+                          term={showSystemVal(cmsComponent, {
+                            defaultClassName:
+                              'text-normal text-italic text-base-dark'
+                          })}
+                        />
+                      </Grid>
+                      {/* Business Owner */}
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          className="font-body-xs line-height-body-2"
+                          definition={t('singleSystem.summary.subheader2', {
+                            count: businessOwners.length
+                          })}
+                        />
+                        <DescriptionTerm
+                          className="font-heading-lg line-height-heading-2"
+                          term={
+                            businessOwners.length
+                              ? businessOwners
+                                  .map(bo => getPersonFullName(bo))
+                                  .join(', ')
+                              : showSystemVal(null, {
+                                  defaultClassName:
+                                    'text-normal text-italic text-base-dark'
+                                })
+                          }
+                        />
+                      </Grid>
+                      {/* Go live date */}
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          className="font-body-xs line-height-body-2"
+                          definition={t('singleSystem.summary.subheader3')}
+                        />
+                        <DescriptionTerm
+                          className="font-heading-lg line-height-heading-2"
+                          term={showSystemVal(null, {
+                            defaultClassName:
+                              'text-normal text-italic text-base-dark'
+                          })}
+                        />
+                      </Grid>
+                      {/* Most recent major change */}
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          className="font-body-xs line-height-body-2"
+                          definition={t('singleSystem.summary.subheader4')}
+                        />
+                        <DescriptionTerm
+                          className="font-heading-lg line-height-heading-2"
+                          term={showSystemVal(null, {
+                            defaultClassName:
+                              'text-normal text-italic text-base-dark'
+                          })}
+                        />
+                      </Grid>
                     </Grid>
                   </CollapsableLink>
                 </div>
-              </PageHeading>
-            </Grid>
-          </div>
+              </Grid>
+            </div>
+          </SummaryBoxContent>
         </SummaryBox>
 
         {/* Only display temporary edit system profile banner if sub page does not have full edit functionality */}
@@ -624,6 +600,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
           <GridContainer className="margin-bottom-3 margin-top-2 desktop:margin-bottom-3">
             <Alert
               type="info"
+              headingLevel="h4"
               heading={t('singleSystem.editPage.tempEditBanner.heading')}
             >
               <Trans i18nKey="systemProfile:singleSystem.editPage.tempEditBanner.content">
@@ -679,47 +656,51 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
               )}
 
               <Grid desktop={{ col: 9 }}>
-                <div id={subComponent.componentId ?? ''}>
-                  <GridContainer className="padding-left-0 padding-right-0">
-                    <Grid row gap>
-                      {/* Central component */}
-                      <Grid
-                        desktop={{ col: modal ? 12 : 8 }}
-                        className="padding-top-3"
-                      >
-                        {subComponent.component}
-                      </Grid>
-
-                      {/* Contact info sidebar */}
-                      {!modal && (
+                {subComponent ? (
+                  <div id={subComponent.componentId ?? ''}>
+                    <GridContainer className="padding-left-0 padding-right-0">
+                      <Grid row gap>
+                        {/* Central component */}
                         <Grid
-                          desktop={{ col: 4 }}
-                          className={classnames({
-                            'sticky side-nav padding-top-7': !isMobile,
-                            'margin-top-3': isMobile
-                          })}
+                          desktop={{ col: modal ? 12 : 8 }}
+                          className="padding-top-3"
                         >
-                          {/* Setting a ref here to reference the grid width for the fixed side nav */}
-                          <div className="side-divider">
-                            <div className="top-divider" />
-                            <PointsOfContactSidebar
-                              subpageKey={subpageKey}
-                              system={systemProfileData}
-                              systemId={systemId}
-                            />
-                          </div>
-                          {subinfo === 'team' && isMobile && (
-                            <EditPageCallout
-                              className="margin-top-4"
-                              // TODO: Get system modifiedAt value and add to props
-                              // modifiedAt={}
-                            />
-                          )}
+                          {subComponent.component}
                         </Grid>
-                      )}
-                    </Grid>
-                  </GridContainer>
-                </div>
+
+                        {/* Contact info sidebar */}
+                        {!modal && (
+                          <Grid
+                            desktop={{ col: 4 }}
+                            className={classnames({
+                              'sticky side-nav padding-top-7': !isMobile,
+                              'margin-top-3': isMobile
+                            })}
+                          >
+                            {/* Setting a ref here to reference the grid width for the fixed side nav */}
+                            <div className="side-divider">
+                              <div className="top-divider" />
+                              <PointsOfContactSidebar
+                                subpageKey={subpageKey}
+                                system={systemProfileData}
+                                systemId={systemId}
+                              />
+                            </div>
+                            {subinfo === 'team' && isMobile && (
+                              <EditPageCallout
+                                className="margin-top-4"
+                                // TODO: Get system modifiedAt value and add to props
+                                // modifiedAt={}
+                              />
+                            )}
+                          </Grid>
+                        )}
+                      </Grid>
+                    </GridContainer>
+                  </div>
+                ) : (
+                  <NotFoundPartial />
+                )}
               </Grid>
             </Grid>
           </GridContainer>

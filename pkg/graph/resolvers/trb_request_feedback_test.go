@@ -7,32 +7,34 @@ import (
 
 	"github.com/lib/pq"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 // TestCreateTRBRequestFeedback makes a new TRB request feedback
 func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 
 	config := testhelpers.NewConfig()
 
 	// set up Email Client
 	emailConfig := email.Config{
-		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
-		ITInvestmentEmail:      models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
-		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
-		TRBEmail:               models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
-		EASIHelpEmail:          models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
-		URLHost:                config.GetString(appconfig.ClientHostKey),
-		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail: models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		TRBEmail:          models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:     models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
-	localSender := local.NewSender()
+
+	env, _ := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+
+	localSender := local.NewSender(env)
 	emailClient, err := email.NewClient(emailConfig, localSender)
 	if err != nil {
 		s.FailNow("Unable to construct email client with local sender")
@@ -42,9 +44,9 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 
 	stubFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			EuaUserID:  anonEua,
-			CommonName: "Anonymous",
-			Email:      models.NewEmailAddress("anon@local.fake"),
+			Username:    anonEua,
+			DisplayName: "Anonymous",
+			Email:       models.NewEmailAddress("anon@local.fake"),
 		}, nil
 	}
 
@@ -53,9 +55,9 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 
 		for i, euaID := range euaIDs {
 			userInfo := &models.UserInfo{
-				EuaUserID:  euaID,
-				CommonName: strconv.Itoa(i),
-				Email:      models.NewEmailAddress(fmt.Sprintf("%v@local.fake", i)),
+				Username:    euaID,
+				DisplayName: strconv.Itoa(i),
+				Email:       models.NewEmailAddress(fmt.Sprintf("%v@local.fake", i)),
 			}
 			userInfos = append(userInfos, userInfo)
 		}
@@ -70,7 +72,19 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 	trbRequest, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
 	s.NoError(err)
 
-	form, err := GetTRBRequestFormByTRBRequestID(ctx, store, trbRequest.ID)
+	initFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), trbRequest.ID)
+	s.NoError(err)
+	s.EqualValues(models.TRBFeedbackStatusCannotStartYet, *initFeedbackStatus)
+
+	feedback, err := store.GetTRBRequestFeedbackByTRBRequestID(ctx, trbRequest.ID)
+	s.NoError(err)
+	s.Empty(feedback)
+
+	latestFeedback, err := store.GetNewestTRBRequestFeedbackByTRBRequestID(ctx, trbRequest.ID)
+	s.NoError(err)
+	s.Nil(latestFeedback)
+
+	form, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 	s.NoError(err)
 
 	s.Run("create/update/fetch TRB request feedback", func() {
@@ -83,6 +97,10 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		form, err = store.UpdateTRBRequestForm(ctx, form)
 		s.NoError(err)
 		s.EqualValues(models.TRBFormStatusCompleted, form.Status)
+
+		reviewFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), trbRequest.ID)
+		s.NoError(err)
+		s.EqualValues(models.TRBFeedbackStatusInReview, *reviewFeedbackStatus)
 
 		notifyEUAIDs := pq.StringArray{"WUTT", "NOPE", "YEET"}
 		toCreate := &models.TRBRequestFeedback{
@@ -109,10 +127,10 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		s.EqualValues(toCreate.NotifyEUAIDs[1], created.NotifyEUAIDs[1])
 		s.EqualValues(toCreate.NotifyEUAIDs[2], created.NotifyEUAIDs[2])
 		// Verify that the TRB request feedback status is now "edits requested"
-		updatedFeedbackStatus, err := getTRBFeedbackStatus(ctx, store, trbRequest.ID)
+		updatedFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.EqualValues(models.TRBFeedbackStatusEditsRequested, *updatedFeedbackStatus)
-		form, err := GetTRBRequestFormByTRBRequestID(ctx, store, trbRequest.ID)
+		form, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.EqualValues(form.Status, models.TRBFormStatusInProgress)
 		s.EqualValues(models.TRBFormStatusInProgress, form.Status)
@@ -152,7 +170,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		s.EqualValues(toCreate2.NotifyEUAIDs[2], created2.NotifyEUAIDs[2])
 
 		// Verify that the TRB request feedback status is now "completed"
-		finalFeedbackStatus, err := getTRBFeedbackStatus(ctx, store, trbRequest.ID)
+		finalFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.EqualValues(models.TRBFeedbackStatusCompleted, *finalFeedbackStatus)
 	})

@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewExchangeUpdateParams creates a new ExchangeUpdateParams object,
@@ -63,7 +63,10 @@ ExchangeUpdateParams contains all the parameters to send to the API endpoint
 */
 type ExchangeUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   Data exchange array to be updated in Alfabet.
+	*/
 	Body *models.ExchangeUpdateRequest
 
 	timeout    time.Duration

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 import ReviewRow from 'components/ReviewRow';
 import {
@@ -7,14 +8,12 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { SystemIntake } from 'queries/types/SystemIntake';
-import { SystemIntakeStatus } from 'types/graphql-global-types';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
-import { FundingSourcesListItem } from 'views/SystemIntake/ContractDetails/FundingSources';
+import formatContractNumbers from 'utils/formatContractNumbers';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
 import './index.scss';
@@ -33,7 +32,8 @@ type FundingSourcesObject = {
 export const SystemIntakeReview = ({
   systemIntake
 }: SystemIntakeReviewProps) => {
-  const { contract, status, submittedAt } = systemIntake;
+  const { annualSpending, costs, contract, submittedAt, contractNumbers } =
+    systemIntake;
   const {
     contacts: {
       data: { requester, businessOwner, productManager, isso }
@@ -70,12 +70,25 @@ export const SystemIntakeReview = ({
         {Object.values(fundingSourcesObject).map(
           ({ fundingNumber, sources }) => {
             return (
-              <FundingSourcesListItem
-                className="margin-top-205"
+              <li
                 key={fundingNumber}
-                fundingNumber={fundingNumber!}
-                sources={sources}
-              />
+                className="margin-top-205"
+                id={`fundingSource${fundingNumber}`}
+              >
+                <p className="text-bold font-body-sm margin-bottom-0">
+                  {t('contractDetails.fundingSources.fundingSource')}
+                </p>
+                <p className="margin-y-05">
+                  {t('contractDetails.fundingSources.fundingNumberLabel', {
+                    fundingNumber
+                  })}
+                </p>
+                <p className="margin-y-05">
+                  {t('contractDetails.fundingSources.fundingSourcesLabel', {
+                    sources: sources.join(', ')
+                  })}
+                </p>
+              </li>
             );
           }
         )}
@@ -91,15 +104,152 @@ export const SystemIntakeReview = ({
   };
 
   const getSubmissionDate = () => {
-    if (status === SystemIntakeStatus.INTAKE_DRAFT) {
-      return t('review.notSubmitted');
-    }
-
     if (submittedAt) {
       return formatDateLocal(submittedAt, 'MMMM d, yyyy');
     }
+    return t('review.notSubmitted');
+  };
 
-    return 'N/A';
+  /* Component used to conditionally render software acquisition information depending on what is present.
+      Translate acquisition strategy enum values using i18n 
+  */
+
+  const SoftwareAcquisition = () => {
+    const translatedAcqStrategies: string[] = [];
+
+    // Translate raw enumerations to i18n representation from intake
+    if (systemIntake.acquisitionMethods) {
+      Object.values(systemIntake.acquisitionMethods).forEach(acqStrategy => {
+        translatedAcqStrategies.push(
+          i18next.t(
+            `intake:requestDetails.softwareAcquisition.acquistionStrategyLabels.${acqStrategy}`
+          )
+        );
+      });
+    }
+
+    return (
+      <>
+        <ReviewRow>
+          <div>
+            <DescriptionTerm term={t('review.usingSoftware')} />
+            <DescriptionDefinition
+              definition={
+                systemIntake.usingSoftware !== null &&
+                systemIntake.usingSoftware in yesNoMap
+                  ? yesNoMap[systemIntake.usingSoftware]
+                  : 'N/A'
+              }
+            />
+          </div>
+        </ReviewRow>
+        {systemIntake.usingSoftware === 'YES' && (
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.softwareAcquisitionMethods')} />
+              <DescriptionDefinition
+                definition={translatedAcqStrategies.join(', ')}
+              />
+            </div>
+          </ReviewRow>
+        )}
+      </>
+    );
+  };
+
+  /* Conditionally render cost and annual spending information depending on what info is present.
+      Original: Display only "costs" info
+      Intermediate: Display annual spending info
+      Current: Display annual spending and IT portion info
+  */
+  const formatCostAndSpendingInfo = () => {
+    // If IT portion field is present, display annual spending and IT portion info
+    if (annualSpending?.currentAnnualSpendingITPortion) {
+      return (
+        <>
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.currentAnnualSpending')} />
+              <DescriptionDefinition
+                definition={annualSpending.currentAnnualSpending}
+              />
+            </div>
+            <div>
+              <DescriptionTerm
+                term={t('review.currentAnnualSpendingITPortion')}
+              />
+              <DescriptionDefinition
+                definition={annualSpending.currentAnnualSpendingITPortion}
+              />
+            </div>
+          </ReviewRow>
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.plannedYearOneSpending')} />
+              <DescriptionDefinition
+                definition={annualSpending.plannedYearOneSpending}
+              />
+            </div>
+            <div>
+              <DescriptionTerm
+                term={t('review.plannedYearOneSpendingITPortion')}
+              />
+              <DescriptionDefinition
+                definition={annualSpending.plannedYearOneSpendingITPortion}
+              />
+            </div>
+          </ReviewRow>
+        </>
+      );
+    }
+
+    // If IT portion field is NOT present but annual spending is - display only annual spending info
+    if (annualSpending?.currentAnnualSpending) {
+      return (
+        <>
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.currentAnnualSpending')} />
+              <DescriptionDefinition
+                definition={annualSpending.currentAnnualSpending}
+              />
+            </div>
+            <div>
+              <DescriptionTerm term={t('review.plannedYearOneSpending')} />
+              <DescriptionDefinition
+                definition={annualSpending.plannedYearOneSpending}
+              />
+            </div>
+          </ReviewRow>
+        </>
+      );
+    }
+
+    // If IT portion AND annual spending fields are not present - it is an old intake so display legacy cost info
+    // TODO: add logic for checking that costs isnt empty here to be safe? diplay error message?
+    return (
+      <>
+        <ReviewRow>
+          <div>
+            <DescriptionTerm term={t('review.costs')} />
+            <DescriptionDefinition
+              definition={
+                systemIntake.costs?.isExpectingIncrease &&
+                yesNoMap[systemIntake.costs.isExpectingIncrease]
+              }
+            />
+          </div>
+          {costs?.isExpectingIncrease === 'YES' && (
+            <div>
+              <DescriptionTerm term={t('review.increase')} />
+              <DescriptionDefinition
+                definition={costs.expectedIncreaseAmount}
+              />
+            </div>
+          )}
+        </ReviewRow>
+      </>
+    );
   };
 
   return (
@@ -212,12 +362,22 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
+            <DescriptionTerm term={t('review.usesAiTech')} />
+            <DescriptionDefinition
+              definition={convertBoolToYesNo(systemIntake.usesAiTech)}
+            />
+          </div>
+        </ReviewRow>
+        <ReviewRow>
+          <div>
             <DescriptionTerm term={t('review.hasUiChanges')} />
             <DescriptionDefinition
               definition={convertBoolToYesNo(systemIntake.hasUiChanges)}
             />
           </div>
         </ReviewRow>
+        {/* Component that formats and conditionally renders software acquisition information */}
+        <SoftwareAcquisition />
       </DescriptionList>
 
       <hr className="system-intake__hr" />
@@ -231,49 +391,14 @@ export const SystemIntakeReview = ({
           </div>
         </ReviewRow>
         {/* Conditionally render annual spending (current) or cost (legacy) questions and answers */}
-        {systemIntake.annualSpending?.currentAnnualSpending ? (
-          <ReviewRow>
-            <div>
-              <DescriptionTerm term={t('review.currentAnnualSpending')} />
-              <DescriptionDefinition
-                definition={systemIntake.annualSpending.currentAnnualSpending}
-              />
-            </div>
-            <div>
-              <DescriptionTerm term={t('review.plannedYearOneSpending')} />
-              <DescriptionDefinition
-                definition={systemIntake.annualSpending.plannedYearOneSpending}
-              />
-            </div>
-          </ReviewRow>
-        ) : (
-          <ReviewRow>
-            <div>
-              <DescriptionTerm term={t('review.costs')} />
-              <DescriptionDefinition
-                definition={
-                  systemIntake.costs?.isExpectingIncrease &&
-                  yesNoMap[systemIntake.costs.isExpectingIncrease]
-                }
-              />
-            </div>
-            {systemIntake.costs?.isExpectingIncrease === 'YES' && (
-              <div>
-                <DescriptionTerm term={t('review.increase')} />
-                <DescriptionDefinition
-                  definition={systemIntake.costs.expectedIncreaseAmount}
-                />
-              </div>
-            )}
-          </ReviewRow>
-        )}
+        {formatCostAndSpendingInfo()}
         <ReviewRow>
           <div>
             <DescriptionTerm term={t('review.contract')} />
             <DescriptionDefinition
-              definition={
-                contractStatus[`${systemIntake.contract.hasContract}`]
-              }
+              definition={t('intake:contractDetails.hasContract', {
+                context: systemIntake.contract.hasContract
+              })}
             />
           </div>
         </ReviewRow>
@@ -291,10 +416,12 @@ export const SystemIntakeReview = ({
                 If the intake has a "contract vehicle", render it and "Not Entered" for "contract number"
                   (since this intake was before we introduced contract numbers)
               */}
-              {contract.number !== null ? (
+              {contractNumbers && contractNumbers.length > 0 ? (
                 <div>
                   <DescriptionTerm term={t('review.contractNumber')} />
-                  <DescriptionDefinition definition={contract.number} />
+                  <DescriptionDefinition
+                    definition={formatContractNumbers(contractNumbers)}
+                  />
                 </div>
               ) : (
                 contract.vehicle !== null && (
@@ -329,7 +456,10 @@ export const SystemIntakeReview = ({
 
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">{t('review.documents')}</h2>
-      <DocumentsTable systemIntake={systemIntake} />
+      <DocumentsTable
+        systemIntakeId={systemIntake.id}
+        documents={systemIntake.documents}
+      />
     </div>
   );
 };

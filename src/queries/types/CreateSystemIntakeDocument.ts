@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CreateSystemIntakeDocumentInput, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus } from "./../../types/graphql-global-types";
+import { CreateSystemIntakeDocumentInput, SystemIntakeDocumentCommonType, SystemIntakeDocumentVersion, SystemIntakeDocumentStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: CreateSystemIntakeDocument
@@ -20,9 +20,13 @@ export interface CreateSystemIntakeDocument_createSystemIntakeDocument_document 
   documentType: CreateSystemIntakeDocument_createSystemIntakeDocument_document_documentType;
   id: UUID;
   fileName: string;
+  version: SystemIntakeDocumentVersion;
   status: SystemIntakeDocumentStatus;
   uploadedAt: Time;
-  url: string;
+  url: string | null;
+  canView: boolean;
+  canDelete: boolean;
+  systemIntakeId: UUID;
 }
 
 export interface CreateSystemIntakeDocument_createSystemIntakeDocument {

@@ -26,9 +26,9 @@ type CedarDataCenter struct {
 // CedarDeployment represents a single Deployment object returned from the CEDAR API
 type CedarDeployment struct {
 	// always-present fields
-	ID       string
-	Name     string
-	SystemID string
+	ID       zero.String
+	Name     zero.String
+	SystemID zero.String
 
 	// possibly-null fields
 	StartDate                zero.Time

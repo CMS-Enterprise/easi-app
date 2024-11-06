@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type testSystemIntakeFormStatusType struct {
@@ -156,7 +156,8 @@ func TestIntakeFormStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range intakeFormTests {
+	for i := range intakeFormTests {
+		test := intakeFormTests[i]
 		t.Run(test.testCase, func(t *testing.T) {
 			status, err := IntakeFormStatus(&test.intake)
 			assert.EqualValues(t, test.expectedStatus, status)
@@ -271,7 +272,8 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range intakeFormFeedbackTests {
+	for i := range intakeFormFeedbackTests {
+		test := intakeFormFeedbackTests[i]
 		t.Run(test.testCase, func(t *testing.T) {
 			status, err := FeedbackFromInitialReviewStatus(&test.intake)
 			assert.EqualValues(t, test.expectedStatus, status)
@@ -388,7 +390,8 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range decisionStateTests {
+	for i := range decisionStateTests {
+		test := decisionStateTests[i]
 		t.Run(test.testCase, func(t *testing.T) {
 			status, err := DecisionAndNextStepsStatus(&test.intake)
 			assert.EqualValues(t, test.expectedStatus, status)
@@ -652,7 +655,8 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range draftBusinessCaseTests {
+	for i := range draftBusinessCaseTests {
+		test := draftBusinessCaseTests[i]
 		t.Run(test.testCase, func(t *testing.T) {
 			status, err := BizCaseDraftStatus(&test.intake)
 			assert.EqualValues(t, test.expectedStatus, status)
@@ -863,7 +867,8 @@ func TestGrtMeetingStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range decisionStateTests {
+	for i := range decisionStateTests {
+		test := decisionStateTests[i]
 		t.Run(test.testCase, func(t *testing.T) {
 			status, err := GrtMeetingStatus(&test.intake)
 			assert.EqualValues(t, test.expectedStatus, status)
@@ -1126,7 +1131,8 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range finalBusinessCaseTests {
+	for i := range finalBusinessCaseTests {
+		test := finalBusinessCaseTests[i]
 		t.Run(test.testCase, func(t *testing.T) {
 			status, err := BizCaseFinalStatus(&test.intake)
 			assert.EqualValues(t, test.expectedStatus, status)
@@ -1338,7 +1344,8 @@ func TestGrbMeetingStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range grbTests {
+	for i := range grbTests {
+		test := grbTests[i]
 		t.Run(test.testCase, func(t *testing.T) {
 			status, err := GrbMeetingStatus(&test.intake)
 			assert.EqualValues(t, test.expectedStatus, status)

@@ -7,12 +7,12 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// Uses CEDAR LDAP functions to get and build out recipient list for alert
+// Uses Okta API functions to get and build out recipient list for alert
 // This should behave as follows:
 // -- Send to requester and Governance Mailbox in case of no errors
 // -- Send only to the Governance Mailbox in cases of "expected" errors (InvalidParameters and InvalidEUAID)
@@ -22,6 +22,15 @@ func getAlertRecipients(
 	intake models.SystemIntake,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 ) (*models.EmailNotificationRecipients, error) {
+	// don't fetch recipients if there is no EUA
+	if intake.EUAUserID.ValueOrZero() == "" {
+		return &models.EmailNotificationRecipients{
+			RegularRecipientEmails:   []models.EmailAddress{},
+			ShouldNotifyITGovernance: true,
+			ShouldNotifyITInvestment: false,
+		}, nil
+	}
+
 	requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
 	var emailsToNotify []models.EmailAddress
 
@@ -62,6 +71,61 @@ func getAlertRecipients(
 	return &recipients, nil
 }
 
+var day = time.Duration(time.Hour * 24)
+
+// alertsInAdvance is the variable used to determine how many days
+// before each LCID expiration date an alert should be sent
+//
+// NOTE: It's best to keep the values in descending order to keep the logic simple
+// in shouldSendAlertForIntake(). Keep this in mind when adding new values.
+var alertsInAdvance = []time.Duration{
+	time.Duration(day * 120), // 120 days
+	time.Duration(day * 60),  // 60 days
+	time.Duration(day * 46),  // 46 days
+}
+
+// shouldSendAlertForIntake determines if it's valid to send an LCID expiration alert for a given System Intake
+// It does this by first comparing the current date to the LCID expiration date to see if it's within the range of a specific alert
+// Then, in order to ensure we don't send an alert for the same alert period twice, we check to see if the last alert's timestamp is _also_ before the date period
+// If both of these are true, we're good to fire an alert off
+func shouldSendAlertForIntake(intake models.SystemIntake, now time.Time) bool {
+	// skip intake if it has an LCID retirement date set, regardless of whether that date's been reached or not
+	if intake.LifecycleRetiresAt != nil {
+		return false
+	}
+
+	// Skip intake if it doesn't have an LCID
+	if intake.LifecycleExpiresAt == nil {
+		return false
+	}
+	lcidExpiration := *intake.LifecycleExpiresAt // deref now that we're sure it's not nil
+
+	// If the LCID has already expired, don't send an alert
+	if now.After(lcidExpiration) {
+		return false
+	}
+
+	// Iterate over each alert period to see if we should send an alert
+	for _, daysInAdvance := range alertsInAdvance {
+		// Calculate the target alert date by subtracting daysInAdvance from the expiration date
+		targetAlertDate := intake.LifecycleExpiresAt.Add(-daysInAdvance)
+
+		// If we haven't reached the target alert date yet, continue to checking the next target date
+		if now.Before(targetAlertDate) {
+			continue
+		}
+
+		// Make another check to see if EITHER of the following 2 statements are true:
+		// 1. An alert HAS NOT BEEN sent before
+		// 2. An alert HAS BEEN sent before, but it was sent for a prior target alert date
+		if intake.LifecycleExpirationAlertTS == nil || intake.LifecycleExpirationAlertTS.Before(targetAlertDate) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Iterates through all intakes to check if LCID is expiring with the next 60 days
 // If LCID is expiring with 60 days, an alert should be sent once and then again if LCID gets with 46 days (two weeks later) of expiration
 func checkForLCIDExpiration(
@@ -92,158 +156,53 @@ func checkForLCIDExpiration(
 	}
 
 	for _, currIntake := range allIntakes {
-		// Skip intake if it doesn't have an LCID or if it has a status of "NO GOVERNANCE"
-		if currIntake.LifecycleExpiresAt == nil || currIntake.Status == models.SystemIntakeStatusNOGOVERNANCE {
+		if !shouldSendAlertForIntake(currIntake, currentDate) {
 			continue
 		}
 
-		// skip intake if it doesn't have an EUA User ID set (and thus we can't find recipients to send to)
-		if currIntake.EUAUserID.IsZero() {
+		recipients, err := getAlertRecipients(ctx, currIntake, fetchUserInfo)
+		// getAlertRecipients handles "expected" errors (InvalidParametersError and InvalidEUAIDError) w/o returning the error by logging the error and only adding the
+		// Governance Mailbox to the recipient list. This is to handle intakes that have bad requester information. It will return an error in all other error cases
+		if err != nil {
 			continue
 		}
 
-		// skip intake if it has an LCID retirement date set, regardless of whether that date's been reached or not
-		if currIntake.LifecycleRetiresAt != nil {
+		if err = sendLCIDExpirationEmail(
+			ctx,
+			*recipients,
+			currIntake.ID,
+			currIntake.ProjectName.String,
+			currIntake.Requester,
+			currIntake.LifecycleID.String,
+			currIntake.LifecycleIssuedAt,
+			currIntake.LifecycleExpiresAt,
+			currIntake.LifecycleScope.ValueOrEmptyHTML(),
+			currIntake.LifecycleCostBaseline.String,
+			currIntake.DecisionNextSteps.ValueOrEmptyHTML(),
+		); err != nil {
+			appcontext.ZLogger(ctx).Error(
+				"Failed to send LCID Expiration Alert email",
+				zap.String("SystemIntakeID", currIntake.ID.String()),
+				zap.Error(err),
+			)
 			continue
 		}
 
-		hoursUntilLCIDExpiration := currIntake.LifecycleExpiresAt.Sub(currentDate).Hours()
+		// Set LifecycleExpirationAlertTS to current date
+		updatedIntake := currIntake
+		updatedIntake.LifecycleExpirationAlertTS = &currentDate
 
-		var hoursSinceFirstAlert float64
-		if currIntake.LifecycleExpirationAlertTS != nil {
-			hoursSinceFirstAlert = currentDate.Sub(*currIntake.LifecycleExpirationAlertTS).Hours()
-		}
-
-		// Check if intake's LCID will expire within 60 days (1440 hours) AND hasn't expired
-		if hoursUntilLCIDExpiration < 1440 && hoursUntilLCIDExpiration > 0 {
-			// Check if an alert has ever been sent
-			if currIntake.LifecycleExpirationAlertTS == nil {
-				// Alert has never been sent, send alert and set alert timestamp to now
-
-				// declare this separately because if we use := on next line, compiler thinks we're declaring a new err variable as well;
-				// this causes govet to flag it for shadowing the earlier declaration of err
-				var recipients *models.EmailNotificationRecipients
-				recipients, err = getAlertRecipients(ctx, currIntake, fetchUserInfo)
-
-				// getAlertRecipients handles "expected" errors (InvalidParametersError and InvalidEUAIDError) w/o returning the error by logging the error and only adding the
-				// Governance Mailbox to the recipient list. This is to handle intakes that have bad requester information. It will return an error in all other error cases
-				if err != nil {
-					continue
-				}
-
-				err = sendLCIDExpirationEmail(
-					ctx,
-					*recipients,
-					currIntake.ID,
-					currIntake.ProjectName.String,
-					currIntake.Requester,
-					currIntake.LifecycleID.String,
-					currIntake.LifecycleIssuedAt,
-					currIntake.LifecycleExpiresAt,
-					currIntake.LifecycleScope.ValueOrEmptyHTML(),
-					currIntake.LifecycleCostBaseline.String,
-					currIntake.DecisionNextSteps.ValueOrEmptyHTML(),
-				)
-
-				if err != nil {
-					appcontext.ZLogger(ctx).Error(
-						"Failed to send LCID Expiration Alert email",
-						zap.String("SystemIntakeID", currIntake.ID.String()),
-						zap.Error(err),
-					)
-					continue
-				}
-
-				// Set LifecycleExpirationAlertTS to current date
-				updatedIntake := currIntake
-				updatedIntake.LifecycleExpirationAlertTS = &currentDate
-
-				_, err = updateSystemIntake(ctx, &updatedIntake)
-				if err != nil {
-					appcontext.ZLogger(ctx).Error(
-						"Failed to update systemIntake while checking for LCID Expiration",
-						zap.String("SystemIntakeID", currIntake.ID.String()),
-						zap.Error(err),
-					)
-					return &apperrors.QueryError{
-						Err:       err,
-						Model:     updatedIntake,
-						Operation: apperrors.QuerySave,
-					}
-				}
-
-				// Check if first alert was sent more then 14 days (336 hours) ago
-			} else if hoursSinceFirstAlert > 336 {
-				// Alert was sent more then 14 days ago, send a follow up alert and set alert timestamp to LCID expiration date
-
-				// declare this separately because if we use := on next line, compiler thinks we're declaring a new err variable as well;
-				// this causes govet to flag it for shadowing the earlier declaration of err
-				var recipients *models.EmailNotificationRecipients
-				recipients, err = getAlertRecipients(ctx, currIntake, fetchUserInfo)
-
-				// getAlertRecipients handles "expected" errors (InvalidParametersError and InvalidEUAIDError) w/o returning the error by logging the error and only adding the
-				// Governance Mailbox to the recipient list. This is to handle intakes that have bad requester information. It will return an error in all other error cases
-				if err != nil {
-					continue
-				}
-
-				err = sendLCIDExpirationEmail(
-					ctx,
-					*recipients,
-					currIntake.ID,
-					currIntake.ProjectName.String,
-					currIntake.Requester,
-					currIntake.LifecycleID.String,
-					currIntake.LifecycleIssuedAt,
-					currIntake.LifecycleExpiresAt,
-					currIntake.LifecycleScope.ValueOrEmptyHTML(),
-					currIntake.LifecycleCostBaseline.String,
-					currIntake.DecisionNextSteps.ValueOrEmptyHTML(),
-				)
-
-				if err != nil {
-					appcontext.ZLogger(ctx).Error(
-						"Failed to send LCID Expiration Alert email",
-						zap.String("SystemIntakeID", currIntake.ID.String()),
-						zap.Error(err),
-					)
-					continue
-				}
-
-				// Set LifecycleExpirationAlertTS to LCID expiration date
-				// this ensures that alert will not be sent again (because hoursSinceFirstAlert will be negative until the LCID expires)
-				updatedIntake := currIntake
-				updatedIntake.LifecycleExpirationAlertTS = currIntake.LifecycleExpiresAt
-
-				_, err = updateSystemIntake(ctx, &updatedIntake)
-				if err != nil {
-					appcontext.ZLogger(ctx).Error(
-						"Failed to update systemIntake while checking for LCID Expiration",
-						zap.String("SystemIntakeID", currIntake.ID.String()),
-						zap.Error(err),
-					)
-					return &apperrors.QueryError{
-						Err:       err,
-						Model:     updatedIntake,
-						Operation: apperrors.QuerySave,
-					}
-				}
-			}
-
-			// If intake's LCID doesn't expire in the 60 day window and its alert has been set, reset alert timestamp to nil
-			// NOTE: this is to handle the case where an alert is sent, then the LCID expiration is extended more than 60 days into the future
-			// NOTE: by clearing the alert timestamp, we make sure it will be re-checked and have an alert sent when the LCID re-enters the 60 day window
-		} else if currIntake.LifecycleExpirationAlertTS != nil {
-			updatedIntake := currIntake
-			updatedIntake.LifecycleExpirationAlertTS = nil
-
-			_, err = updateSystemIntake(ctx, &updatedIntake)
-			if err != nil {
-				return &apperrors.QueryError{
-					Err:       err,
-					Model:     updatedIntake,
-					Operation: apperrors.QuerySave,
-				}
+		_, err = updateSystemIntake(ctx, &updatedIntake)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				"Failed to update systemIntake while checking for LCID Expiration",
+				zap.String("SystemIntakeID", currIntake.ID.String()),
+				zap.Error(err),
+			)
+			return &apperrors.QueryError{
+				Err:       err,
+				Model:     updatedIntake,
+				Operation: apperrors.QuerySave,
 			}
 		}
 	}

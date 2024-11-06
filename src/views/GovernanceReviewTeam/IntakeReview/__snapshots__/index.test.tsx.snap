@@ -265,7 +265,39 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
+                Does your request involve AI technologies?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Yes
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
                 Does your project involve any user interface component, or changes to an interface component?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                No
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Do you plan to use any software products to fulfill your business needs?
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -393,6 +425,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
           <div
             class="usa-table-container--scrollable"
             data-testid="scrollable-table-container"
+            tabindex="0"
           >
             <table
               class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
@@ -511,7 +544,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                       <div
                         class="flex-fill text-no-wrap"
                       >
-                        Upload date
+                        Date added
                       </div>
                       <div
                         class="position-relative width-205 margin-left-05"
@@ -623,12 +656,6 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
         Download System Intake as PDF
       </button>
     </div>
-    <a
-      class="usa-button margin-top-5"
-      href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
-    >
-      Take an action
-    </a>
   </div>
 </DocumentFragment>
 `;

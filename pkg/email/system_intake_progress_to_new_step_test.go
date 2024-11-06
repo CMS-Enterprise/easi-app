@@ -6,8 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendProgressToNewStepNotification() {
@@ -16,8 +15,7 @@ func (s *EmailTestSuite) TestSendProgressToNewStepNotification() {
 	intakeID := uuid.MustParse("27883155-46ad-4c30-b3b0-30e8d093756e")
 	requestName := "Test Request"
 	requester := "Sir Requester"
-	readableStepName := "Grb Meeting"
-	newStep := model.SystemIntakeStepToProgressToGrbMeeting
+	newStep := models.SystemIntakeStepToProgressToGrbMeeting
 	additionalInfo := models.HTMLPointer("additional info") // empty info is left out
 	requestLink := fmt.Sprintf(
 		"%s://%s/governance-task-list/%s",
@@ -26,7 +24,7 @@ func (s *EmailTestSuite) TestSendProgressToNewStepNotification() {
 		intakeID.String(),
 	)
 	adminLink := fmt.Sprintf(
-		"%s://%s/governance-review-team/%s/intake-request",
+		"%s://%s/it-governance/%s/intake-request",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),
@@ -44,48 +42,106 @@ func (s *EmailTestSuite) TestSendProgressToNewStepNotification() {
 	}
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
-	err = client.SystemIntake.SendProgressToNewStepNotification(ctx, recipients, intakeID, newStep, requestName, requester, &feedback, additionalInfo)
-	s.NoError(err)
-	expectedSubject := fmt.Sprintf("%s is ready for a %s", requestName, readableStepName)
-	s.Equal(expectedSubject, sender.subject)
 
-	expectedEmail := fmt.Sprintf(
-		`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+	getExpectedEmail := func(
+		nextStep models.SystemIntakeStepToProgressTo,
+		feedback *models.HTML,
+		additionalInfo *models.HTML,
+	) string {
+		var feedbackStr string
+		if feedback != nil {
+			feedbackStr = fmt.Sprintf(
+				`<br>
+				<div class="no-margin">
+				  <p><strong>Feedback about your request:</strong></p>
+				  %s
+				</div>`,
+				*feedback.StringPointer(),
+			)
+		}
+		var additionalInfoStr string
+		if additionalInfo != nil {
+			additionalInfoStr = fmt.Sprintf(
+				`<br>
+				<br>
+				<hr>
+				<p><strong>Additional information from the Governance Team:</strong></p><div class="no-margin">%s</div>`,
+				*additionalInfo.StringPointer(),
+			)
+		}
+		return fmt.Sprintf(`
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
 
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+			<p>The Governance Team has decided that %s is ready to move to the next step in the IT Governance process.</p>
 
-<p>The Governance Team has decided that %s is ready to move to the next step in the IT Governance process.</p>
+			<br>
+			<p class="no-margin-top"><strong>Next step:</strong> %s</p>
 
-<p>Next step: %s</p>
+			%s
 
-<p>Feedback about your request: %s</p>
+			<br>
+			<br>
+			<div class="no-margin">
+			  <p>View this request in EASi:</p>
+			  <ul>
+				<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
+				<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
+				<li>Others should contact %s or the Governance Team for more information about this request.</li>
+			  </ul>
+			</div>
 
-<p>View this request in EASi:
-<ul>
-<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
-<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
-<li>Others should contact %s or the Governance Team for more information about this request.</li>
-</ul></p>
+			<br>
+			<p>If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
 
-If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
+			%s
+			<br>
+			<br>
+			<hr>
 
-<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
-<hr>
+			<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
+			`,
+			requestName,
+			HumanizeSnakeCase(string(nextStep)),
+			feedbackStr,
+			requester,
+			requestLink,
+			adminLink,
+			requester,
+			ITGovInboxAddress,
+			ITGovInboxAddress,
+			additionalInfoStr,
+		)
+	}
 
-<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
-`,
-		requestName,
-		readableStepName,
-		feedback,
-		requester,
-		requestLink,
-		adminLink,
-		requester,
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		*additionalInfo.StringPointer(),
-	)
-	s.Equal(expectedEmail, sender.body)
+	for _, step := range models.AllSystemIntakeStepToProgressTo {
+		err = client.SystemIntake.SendProgressToNewStepNotification(
+			ctx,
+			recipients,
+			intakeID,
+			step,
+			requestName,
+			requester,
+			&feedback,
+			additionalInfo,
+		)
+		s.NoError(err)
+
+		s.Run("Subject is correct", func() {
+			expectedSubject := fmt.Sprintf("%s is ready for a %s", requestName, HumanizeSnakeCase(string(step)))
+			s.Equal(expectedSubject, sender.subject)
+		})
+
+		s.Run("Included info is correct", func() {
+			expectedEmail := getExpectedEmail(
+				step,
+				&feedback,
+				additionalInfo,
+			)
+			s.EqualHTML(expectedEmail, sender.body)
+		})
+	}
+
 	s.Run("Recipient is correct", func() {
 		allRecipients := []models.EmailAddress{
 			recipient,
@@ -93,87 +149,43 @@ If you have questions about your request, please contact the Governance Team at 
 		s.ElementsMatch(sender.toAddresses, allRecipients)
 	})
 
-	err = client.SystemIntake.SendProgressToNewStepNotification(ctx, recipients, intakeID, newStep, requestName, requester, nil, additionalInfo)
-	s.NoError(err)
-	expectedEmail = fmt.Sprintf(
-		`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
-
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>The Governance Team has decided that %s is ready to move to the next step in the IT Governance process.</p>
-
-<p>Next step: %s</p>
-
-
-
-<p>View this request in EASi:
-<ul>
-<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
-<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
-<li>Others should contact %s or the Governance Team for more information about this request.</li>
-</ul></p>
-
-If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
-<hr>
-
-<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
-`,
-		requestName,
-		readableStepName,
-		requester,
-		requestLink,
-		adminLink,
-		requester,
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		*additionalInfo.StringPointer(),
-	)
-
 	s.Run("Should omit feedback if absent", func() {
-		s.Equal(expectedEmail, sender.body)
+		err = client.SystemIntake.SendProgressToNewStepNotification(ctx,
+			recipients,
+			intakeID,
+			newStep,
+			requestName,
+			requester,
+			nil,
+			additionalInfo,
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			newStep,
+			nil, //feedback
+			additionalInfo,
+		)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
-	err = client.SystemIntake.SendProgressToNewStepNotification(ctx, recipients, intakeID, newStep, requestName, requester, &feedback, nil)
-	s.NoError(err)
-	expectedEmail = fmt.Sprintf(
-		`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
-
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>The Governance Team has decided that %s is ready to move to the next step in the IT Governance process.</p>
-
-<p>Next step: %s</p>
-
-<p>Feedback about your request: %s</p>
-
-<p>View this request in EASi:
-<ul>
-<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
-<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
-<li>Others should contact %s or the Governance Team for more information about this request.</li>
-</ul></p>
-
-If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-
-<hr>
-
-<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
-`,
-		requestName,
-		readableStepName,
-		*feedback.StringPointer(),
-		requester,
-		requestLink,
-		adminLink,
-		requester,
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-	)
 
 	s.Run("Should omit additional info if absent", func() {
-		s.Equal(expectedEmail, sender.body)
+		err = client.SystemIntake.SendProgressToNewStepNotification(ctx,
+			recipients,
+			intakeID,
+			newStep,
+			requestName,
+			requester,
+			&feedback,
+			nil,
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			newStep,
+			&feedback,
+			nil, //additionalInfo
+		)
+
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 }

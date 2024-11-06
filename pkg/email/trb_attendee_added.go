@@ -6,8 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type attendeeAddedEmailParameters struct {
@@ -46,19 +45,14 @@ func (c Client) SendTRBAttendeeAddedNotification(
 	subject := fmt.Sprintf("You are invited to the TRB consult for (%v)", requestName)
 	body, err := c.trbAttendeeAddedEmailBody(requestName, requesterName)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = c.sender.Send(
+	return c.sender.Send(
 		ctx,
-		[]models.EmailAddress{attendeeEmail},
-		[]models.EmailAddress{},
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{attendeeEmail}).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
 }

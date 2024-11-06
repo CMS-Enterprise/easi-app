@@ -17,7 +17,7 @@ type TableResultsProps = {
 
 const displayResult = (searchTerm: FilterValue) =>
   searchTerm ? (
-    <span>
+    <span className="margin-left-05">
       <Trans i18nKey="tableAndPagination:results.searchInput" />{' '}
       <strong>&quot;{searchTerm}&quot;</strong>{' '}
     </span>

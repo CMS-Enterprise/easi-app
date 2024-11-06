@@ -5,6 +5,7 @@ package integration
 // and simulate production application use
 
 import (
+	"context"
 	"fmt"
 	"net/http/httptest"
 	"testing"
@@ -16,11 +17,12 @@ import (
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/handlers"
-	"github.com/cmsgov/easi-app/pkg/server"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/handlers"
+	"github.com/cms-enterprise/easi-app/pkg/server"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 // test user for authorization
@@ -41,6 +43,10 @@ type IntegrationTestSuite struct {
 }
 
 func TestIntegrationTestSuite(t *testing.T) {
+	// TODO: Address this
+	// Since, on 01/25/2024, the Okta API disabled the implicit auth flow, we need to identify another way to
+	// fetch an access token for testing. For now, we need to skip these tests.
+	t.Skip("integration tests are skipped")
 	if testing.Short() {
 		t.Skip("skipping integration tests in `-short` mode")
 	}
@@ -108,6 +114,33 @@ func TestIntegrationTestSuite(t *testing.T) {
 		store:       store,
 		base:        handlers.NewHandlerBase(),
 	}
+	createTestPrincipal(store, testSuite.user.euaID)
 
 	suite.Run(t, testSuite)
+}
+
+// createTestPrincipal creates a test principal in the database. It bypasses a call to OKTA, and just creates mock data
+func createTestPrincipal(store *storage.Store, userName string) *authentication.EUAPrincipal {
+
+	// userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+	tAccount := authentication.UserAccount{
+		Username:    userName,
+		CommonName:  userName + "Doe",
+		Locale:      "en_US",
+		Email:       userName + "@local.cms.gov",
+		GivenName:   userName,
+		FamilyName:  "Doe",
+		ZoneInfo:    "America/Los_Angeles",
+		HasLoggedIn: true,
+	}
+
+	userAccount, _ := store.UserAccountCreate(context.Background(), store, &tAccount) //swallow error
+	princ := &authentication.EUAPrincipal{
+		EUAID:       userName,
+		JobCodeEASi: true,
+		JobCodeGRT:  true,
+		UserAccount: userAccount,
+	}
+	return princ
+
 }

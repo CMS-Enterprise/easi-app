@@ -7,7 +7,7 @@ import (
 	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func TestGetUpdateLCIDAction(t *testing.T) {
@@ -18,9 +18,9 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 	nextSteps := models.HTML("<strong> My Next Steps! </strong>")
 	newScope := models.HTML("Scope Scope Scope")
 	userInfo := models.UserInfo{
-		CommonName: "tester",
-		Email:      "test@email.email",
-		EuaUserID:  "TEST",
+		DisplayName: "tester",
+		Email:       "test@email.email",
+		Username:    "TEST",
 	}
 	intake := models.SystemIntake{
 		LifecycleID:           lcid,

@@ -22,51 +22,99 @@ exports[`Help Footer > renders 1`] = `
           </h4>
         </div>
         <div
-          class="display-flex margin-top-2 desktop:margin-top-0"
+          class="grid-row grid-gap margin-top-2 desktop:margin-top-0"
         >
-          <div
-            class="margin-right-6"
+          <a
+            class="usa-link display-flex flex-align-center font-body-3xs text-white text-no-underline"
+            href="/help/report-a-problem"
+            target="_blank"
           >
-            <a
-              class="usa-link usa-link--external font-body-3xs text-white text-no-underline"
-              href="/help/report-a-problem"
-              target="_blank"
+            Report a problem
+            <svg
+              class="usa-icon margin-left-1"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              Report a problem
-            </a>
-          </div>
-          <div>
-            <a
-              class="usa-link usa-link--external font-body-3xs text-white text-no-underline"
-              href="/help/send-feedback"
-              target="_blank"
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+              />
+            </svg>
+          </a>
+          <a
+            class="usa-link display-flex flex-align-center font-body-3xs text-white text-no-underline"
+            href="/help/send-feedback"
+            target="_blank"
+          >
+            Send feedback
+            <svg
+              class="usa-icon margin-left-1"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              Send feedback
-            </a>
-          </div>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+              />
+            </svg>
+          </a>
+          <a
+            class="usa-link font-body-3xs text-white text-no-underline display-flex flex-align-center"
+            href="https://cmsgov.slack.com/archives/C038D4UJ6KC"
+            target="_blank"
+          >
+            Chat with us on Slack
+            <svg
+              class="usa-icon margin-left-1"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+              />
+            </svg>
+          </a>
         </div>
       </div>
-      <div
-        class="flex-auto"
+      <svg
+        class="usa-icon usa-icon--size-3 text-primary-light"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <svg
-          class="usa-icon usa-icon--size-3 text-primary-light"
-          focusable="false"
-          height="1em"
-          role="img"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2 11.7V16h-4v-2.3C8.48 12.63 7 11.53 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.49-1.51 3.65-3 4.7z"
-          />
-        </svg>
-      </div>
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2 11.7V16h-4v-2.3C8.48 12.63 7 11.53 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.49-1.51 3.65-3 4.7z"
+        />
+      </svg>
     </div>
   </div>
 </DocumentFragment>

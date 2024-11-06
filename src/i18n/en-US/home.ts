@@ -1,7 +1,7 @@
 const home = {
-  title: 'Welcome to EASi',
+  title: 'Welcome, {{user}}.',
   subtitle:
-    'The place to find CMS IT Governance, assistance with technical issues, Section 508 services, as well as comprehensive information about CMS systems.',
+    'Use EASi to manage your systems, go through governance processes, ask for help, and much more.',
   startNow: 'Start now',
   welcome: {
     title:
@@ -50,61 +50,46 @@ const home = {
       'Consult with SMEs and request help or feedback for your system, or ask the TRB for other technical assistance. '
   },
   signIn: 'Sign in to get started',
-  accessibility: {
-    heading: '508 Requests',
-    newRequest: 'Add a new request'
-  },
   actionTitle: 'Available services',
   actions: {
-    ITGov: {
+    itgov: {
       heading: 'IT Governance',
-      body:
-        'Includes processes for applying for a Life Cycle ID and decomissioning a system.',
-      learnMore: 'Learn more about IT Governance',
+      body: 'Get approval for a new IT project, apply for a new Life Cycle ID (LCID), and amend an existing LCID.',
+      learnMore: 'Learn more about the IT Governance process',
       link: '/system/making-a-request',
-      button: 'Start an IT Governance request',
+      button: 'Start a new IT Governance request',
       buttonLink: '/system/request-type'
     },
-    '508': {
-      heading: 'Section 508',
-      body:
-        'Request 508 testing for your application or system and learn about the process.',
-      learnMore: 'Learn more about 508 testing',
-      link: '/508/making-a-request',
-      button: 'Start a 508 testing request',
-      buttonLink: '/508/testing-overview?continue=true'
-    },
-    TRB: {
-      heading: 'Technical Assistance',
-      body:
-        'Get help, feedback, and guidance from the Technical Review Board (TRB).',
-      learnMore: 'Learn more about the TRB',
+    trb: {
+      heading: 'Technical assistance',
+      body: 'Get help, feedback, and guidance for your IT project, courtesy of the Technical Review Board (TRB).',
+      learnMore: 'Learn more about the technical assistance process',
       link: '/trb',
-      button: 'Start a TRB request',
+      button: 'Start a new TRB request',
       buttonLink: '/trb/start'
     }
   },
   requestsTable: {
-    empty: 'Requests will display in a table once you add them',
+    empty:
+      'You do not have any open requests in EASi. To start a new IT Governance request or technical assistance request, use the buttons above.',
     id: 'request-table',
-    title: 'Request Table',
+    title: 'My open requests',
+    subtitle:
+      'You have access to edit and manage all of the requests below. You may have created them, or they may have been created by another team member.',
     breadcrumb: {
       home: 'Home',
       table: 'My requests'
     },
-    heading: 'My requests',
+    heading: 'Governance processes and other services',
     headers: {
-      name: 'Project title',
+      name: 'Request name',
       type: 'Governance',
       submittedAt: 'Submission date',
       status: 'Status',
-      nextMeetingDate: 'Upcoming meeting date'
+      nextMeetingDate: 'Upcoming meeting date',
+      relatedSystems: 'Related systems'
     },
-    types: {
-      ACCESSIBILITY_REQUEST: 'Section 508',
-      GOVERNANCE_REQUEST: 'IT Governance',
-      TRB: 'TRB'
-    },
+    types: { GOVERNANCE_REQUEST: 'IT Governance', TRB: 'TRB' },
     defaultName: 'Draft',
     defaultSubmittedAt: 'Not submitted',
     caption:

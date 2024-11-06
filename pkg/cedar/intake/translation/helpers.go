@@ -1,18 +1,19 @@
 package translation
 
 import (
+	"context"
 	"time"
 
 	"github.com/go-openapi/strfmt"
 
-	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
 )
 
 // IntakeObject represents a type that can be submitted to the CEDAR Intake API
 type IntakeObject interface {
 	ObjectID() string
 	ObjectType() string
-	CreateIntakeModel() (*wire.IntakeInput, error)
+	CreateIntakeModel(context.Context) (*wire.IntakeInput, error)
 }
 
 func strDate(t *time.Time) string {

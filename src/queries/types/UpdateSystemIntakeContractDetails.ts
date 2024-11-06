@@ -11,8 +11,9 @@ import { UpdateSystemIntakeContractDetailsInput } from "./../../types/graphql-gl
 
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_fundingSources {
   __typename: "SystemIntakeFundingSource";
-  source: string | null;
+  id: UUID;
   fundingNumber: string | null;
+  source: string | null;
 }
 
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_costs {
@@ -23,7 +24,9 @@ export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDet
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_annualSpending {
   __typename: "SystemIntakeAnnualSpending";
   currentAnnualSpending: string | null;
+  currentAnnualSpendingITPortion: string | null;
   plannedYearOneSpending: string | null;
+  plannedYearOneSpendingITPortion: string | null;
 }
 
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_endDate {
@@ -46,7 +49,13 @@ export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDet
   endDate: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_endDate;
   hasContract: string | null;
   startDate: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_startDate;
-  number: string | null;
+}
+
+export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contractNumbers {
+  __typename: "SystemIntakeContractNumber";
+  id: UUID;
+  systemIntakeID: UUID;
+  contractNumber: string;
 }
 
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake {
@@ -57,6 +66,10 @@ export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDet
   costs: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_costs | null;
   annualSpending: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_annualSpending | null;
   contract: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contractNumbers[];
 }
 
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails {

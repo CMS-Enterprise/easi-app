@@ -1,50 +1,21 @@
 package dataloaders
 
 import (
-	"context"
 	"net/http"
 
-	"github.com/graph-gophers/dataloader"
-
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/gorilla/mux"
 )
 
-// Loaders wrap your data loaders to inject via middleware
-type Loaders struct {
-	UserInfoLoader *dataloader.Loader
-}
-
-type ctxKey string
-
-const (
-	loadersKey = ctxKey("dataloaders")
-)
-
-// NewLoaders instantiates data loaders for the middleware
-func NewLoaders(fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error)) *Loaders {
-	userInfoLoader := UserInfoLoader{
-		FetchUserInfos: fetchUserInfos,
+func dataloaderMiddleware(buildDataloaders BuildDataloaders, next http.Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := CTXWithLoaders(r.Context(), buildDataloaders)
+		r = r.WithContext(ctx)
+		next.ServeHTTP(w, r)
 	}
-	loaders := &Loaders{
-		UserInfoLoader: dataloader.NewBatchedLoader(userInfoLoader.BatchUserInfos),
-	}
-	return loaders
 }
 
-// For returns the dataloader for a given context
-func For(ctx context.Context) *Loaders {
-	return ctx.Value(loadersKey).(*Loaders)
-}
-
-// Middleware stores Loaders as a request-scoped context value.
-func Middleware(fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error)) func(http.Handler) http.Handler {
+func NewDataloaderMiddleware(buildDataloaders BuildDataloaders) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			ctx := r.Context()
-			loaders := NewLoaders(fetchUserInfos)
-			augmentedCtx := context.WithValue(ctx, loadersKey, loaders)
-			r = r.WithContext(augmentedCtx)
-			next.ServeHTTP(w, r)
-		})
+		return dataloaderMiddleware(buildDataloaders, next)
 	}
 }

@@ -5,13 +5,46 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+
+	_ "embed"
 )
+
+// CreateTRBRequestForm creates a new TRBRequestForm record
+// Note this will be refactored to not use the store, but is left now for organization
+func (s *Store) CreateTRBRequestForm(ctx context.Context, np sqlutils.NamedPreparer, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
+	if form.ID == uuid.Nil {
+		form.ID = uuid.New()
+	}
+
+	stmt, err := np.PrepareNamed(sqlqueries.TRBRequestForm.Create)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to update TRB create form %s", err),
+			zap.String("id", form.ID.String()),
+		)
+		return nil, err
+	}
+	defer stmt.Close()
+
+	created := models.TRBRequestForm{}
+	err = stmt.Get(&created, form)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to create TRB request form with error %s", zap.Error(err))
+		return nil, err
+	}
+	return &created, err
+
+}
 
 // UpdateTRBRequestForm updates a TRB request form record in the database
 func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
@@ -51,6 +84,8 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	updated := models.TRBRequestForm{}
 
 	err = stmt.Get(&updated, form)
@@ -69,11 +104,12 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 	return &updated, err
 }
 
-// GetTRBRequestFormByTRBRequestID queries the DB for all the TRB request form records
-// matching the given TRB request ID
+// GetTRBRequestFormByTRBRequestID queries the DB for the TRB request form record matching the given TRB request ID
 func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestForm, error) {
-	form := models.TRBRequestForm{}
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_request_forms WHERE trb_request_id=:trb_request_id`)
+	var form models.TRBRequestForm
+	err := namedGet(ctx, s.db, &form, sqlqueries.TRBRequestForm.GetByID, args{
+		"trb_request_id": trbRequestID,
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request form",
@@ -82,45 +118,60 @@ func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestI
 		)
 		return nil, err
 	}
-	arg := map[string]interface{}{"trb_request_id": trbRequestID}
-	err = stmt.Get(&form, arg)
+	return &form, nil
+}
 
+// GetTRBRequestFormsByTRBRequestIDs queries the DB for TRB request form records matching the given TRB request IDs
+func (s *Store) GetTRBRequestFormsByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestForm, error) {
+	var forms []*models.TRBRequestForm
+	err := namedSelect(ctx, s.db, &forms, sqlqueries.TRBRequestForm.GetByIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request form",
+			zap.Error(err),
+		)
+		return nil, err
+	}
+	return forms, nil
+}
+
+// GetTRBFundingSourcesByRequestID queries the DB for all the TRB request form funding sources
+// matching the given TRB request ID
+func (s *Store) GetTRBFundingSourcesByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBFundingSource, error) {
+	fundingSources := []*models.TRBFundingSource{}
+	err := namedSelect(ctx, s.db, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqID, args{
+		"trb_request_id": trbRequestID,
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB request funding sources",
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
-			Model:     form,
+			Model:     fundingSources,
 			Operation: apperrors.QueryFetch,
 		}
 	}
-	return &form, err
+	return fundingSources, err
 }
 
-// GetFundingSourcesByRequestID queries the DB for all the TRB request form funding sources
-// matching the given TRB request ID
-func (s *Store) GetFundingSourcesByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBFundingSource, error) {
+// GetTRBFundingSourcesByRequestIDs queries the DB for all the TRB request form funding sources
+// matching the given TRB request IDs
+func (s *Store) GetTRBFundingSourcesByRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBFundingSource, error) {
 	fundingSources := []*models.TRBFundingSource{}
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_request_funding_sources WHERE trb_request_id=:trb_request_id`)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			"Failed to fetch TRB request funding sources",
-			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
-		)
-		return nil, err
-	}
-	arg := map[string]interface{}{"trb_request_id": trbRequestID}
-	err = stmt.Select(&fundingSources, arg)
+	err := namedSelect(ctx, s.db, &fundingSources, sqlqueries.TRBRequestFundingSources.GetByTRBReqIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request funding sources",
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
@@ -144,6 +195,8 @@ func (s *Store) DeleteTRBRequestForm(ctx context.Context, trbRequestID uuid.UUID
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	toDelete := models.TRBRequestForm{}
 	toDelete.ID = trbRequestID
 	deleted := models.TRBRequestForm{}

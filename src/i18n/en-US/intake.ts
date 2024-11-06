@@ -1,7 +1,65 @@
+import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
+import {
+  SystemIntakeDocumentCommonType,
+  SystemIntakeDocumentVersion,
+  SystemIntakeSoftwareAcquisitionMethods
+} from 'types/graphql-global-types';
+
+const hasContractLabels: Record<
+  `hasContract_${SystemIntakeContractStatus}`,
+  string
+> = {
+  hasContract_HAVE_CONTRACT:
+    'I am planning project changes during my existing contract/InterAgency Agreement (IAA) period of performance',
+  hasContract_IN_PROGRESS:
+    'I am currently working on my OAGM Acquisition Plan/IAA documents',
+  hasContract_NOT_STARTED: "I haven't started acquisition planning yet",
+  hasContract_NOT_NEEDED: "I don't anticipate needing contractor support"
+};
+
+const version: Record<SystemIntakeDocumentVersion, string> = {
+  CURRENT: 'Current',
+  HISTORICAL: 'Historical'
+};
+
+const type: Record<SystemIntakeDocumentCommonType, string> = {
+  SOO_SOW:
+    'Statement of Objectives (SOO), Statement of Work (SOW), Performance Work Statement (PWS), or other contracting document',
+  DRAFT_IGCE: 'Draft Independent Government Cost Estimate (IGCE)',
+  ACQUISITION_PLAN_OR_STRATEGY:
+    'Acquisition Plan (AP) or Acquisition Strategy (AS)',
+  REQUEST_FOR_ADDITIONAL_FUNDING: 'Request for Additional Funding (RAF)',
+  SOFTWARE_BILL_OF_MATERIALS: 'Software Bill of Materials (BOM)',
+  MEETING_MINUTES: 'Meeting Minutes',
+  OTHER: 'Other'
+};
+
+export const abbreviatedType: Record<SystemIntakeDocumentCommonType, string> = {
+  SOO_SOW: 'SOO, SOW, PWS, or other contracting document',
+  DRAFT_IGCE: 'Draft IGCE',
+  ACQUISITION_PLAN_OR_STRATEGY: 'AP or AS',
+  REQUEST_FOR_ADDITIONAL_FUNDING: 'RAF',
+  SOFTWARE_BILL_OF_MATERIALS: 'Software BOM',
+  MEETING_MINUTES: 'Meeting Minutes',
+  OTHER: 'Other'
+};
+
+export const acquistionStrategyLabels: Record<
+  SystemIntakeSoftwareAcquisitionMethods,
+  string
+> = {
+  CONTRACTOR_FURNISHED: 'Furnished by the contractor',
+  FED_FURNISHED: 'Provided as government furnished software',
+  ELA_OR_INTERNAL: 'Acquired through an ELA or internal source',
+  OTHER: 'Other',
+  NOT_YET_DETERMINED: 'Not yet determined'
+};
+
 const intake = {
   navigation: {
     itGovernance: 'IT Governance',
-    startRequest: 'Start a request',
+    startRequest: 'Start an IT Governance request',
+    editLinkRelation: 'Edit linked system, service, or contract',
     changeRequestType: 'Change request type'
   },
   feedback:
@@ -31,18 +89,41 @@ const intake = {
     continueWithoutDocuments: 'Continue without documents',
     noDocuments: 'No documents uploaded',
     formDescription:
-      'Choose a document to upload, such as a draft IGCE, contracting document, or another document related to your Intake Request.',
-    returnToIntake: "Don't upload and return to Intake Request",
+      'Choose a document to upload such as a draft IGCE, contracting document, RAF or other document related to this project and Intake Request.',
+    dontUpload_requester: "Don't upload and return to Intake Request",
+    dontUpload_admin: "Don't upload and return to request details",
     selectDocument: 'Select your document',
     supportingDocuments: 'Supporting documents',
     adminDescription:
       'The requester has uploaded these documents as a part of this request. If the Governance Team needs additional documentation to process this request, contact the requester.',
     noDocumentsAlert:
       'The original requester did not upload any additional documentation to this request. If the Governance Team needs any supporting documentation in order to fully process this request, contact the requester.',
-    type: {
-      SOO_SOW: 'SOO or SOW',
-      DRAFT_ICGE: 'Draft ICGE',
-      OTHER: 'Other'
+    versionLabel: 'What is the version of this document?',
+    versionHelpText_HISTORICAL:
+      'Choose this option if you are uploading a document from the past that should be used for reference purposes only.',
+    versionHelpText_CURRENT:
+      'Choose this option if this is the most recent document version that the Governance Team should reference.',
+    supportedFileTypes: 'Select a PDF, DOC, DOCX, XLS, or XLSX',
+    type,
+    abbreviatedType,
+    version,
+    table: {
+      fileName: 'File name',
+      docType: 'Document type',
+      dateAdded: 'Date added',
+      actions: 'Actions',
+      downloadBtn: 'Download',
+      removeBtn: 'Remove',
+      removeModal: {
+        heading: 'Remove {{documentName}}?',
+        explanation:
+          'You will not be able to access this document after it is removed, and GRB reviewers will not be able to view it.',
+        confirm: 'Remove document',
+        cancel: 'Cancel',
+        success: 'You have successfully removed {{documentName}}.',
+        error:
+          'There was an issue removing your document. Please try again, and if the problem persists, try again later.'
+      }
     }
   },
   submission: {
@@ -54,25 +135,6 @@ const intake = {
     }
   },
   lifecycleId: 'Life Cycle ID',
-  statusMap: {
-    INTAKE_DRAFT: 'Intake draft',
-    INTAKE_SUBMITTED: 'Intake request received',
-    NEED_BIZ_CASE: 'Waiting for draft business case',
-    BIZ_CASE_DRAFT: 'Waiting for draft business case',
-    BIZ_CASE_DRAFT_SUBMITTED: 'Draft business case received',
-    BIZ_CASE_CHANGES_NEEDED: 'Waiting for draft business case',
-    BIZ_CASE_FINAL_NEEDED: 'Waiting for final business case',
-    BIZ_CASE_FINAL_SUBMITTED: 'Final business case received',
-    READY_FOR_GRT: 'Ready for GRT meeting',
-    READY_FOR_GRB: 'Ready for GRB meeting',
-    LCID_ISSUED: 'Life Cycle ID issued',
-    WITHDRAWN: 'Withdrawn',
-    NOT_IT_REQUEST: 'Closed',
-    NOT_APPROVED: 'Business case not approved',
-    NO_GOVERNANCE: 'Closed',
-    SHUTDOWN_IN_PROGRESS: 'Decomission in progress',
-    SHUTDOWN_COMPLETE: 'Decommissioned'
-  },
   banner: {
     title: {
       intakeIncomplete: 'Intake request incomplete',
@@ -126,19 +188,27 @@ const intake = {
     businessNeed: 'Business Need',
     businessSolution: 'Business Solution',
     currentStage: 'Process Status',
+    usesAiTech: 'AI Tech Involved',
     eaSupport: 'EA Support Requested',
     hasUiChanges: 'Interface Component/Changes',
     isExpectingCostIncrease: 'Expecting Cost Increase',
     expectedIncreaseAmount: 'Expected Increase Amount',
     currentAnnualSpend: 'Current Annual Spend',
+    currentAnnualSpendITPortion: 'Current Annual Spend IT Portion',
     plannedAnnualSpend: 'Planned Annual Spend',
+    plannedAnnualSpendITPortion: 'Planned Annual Spend IT Portion',
     existingContract: 'Existing Contract',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract Vehicle',
     contractStart: 'Period of Performance Start',
     contractEnd: 'Period of Performance End',
+    contractName: 'Contract Name',
+    contractNumber: 'Contract number',
+    cmsSystem: 'CMS System',
     status: 'Status',
+    lcid: 'LCID',
     lcidScope: 'LCID Scope',
+    lcidExpiresAt: 'LCID Expiration Date',
     lastAdminNote: 'Last Admin Team Note',
     updatedAt: 'Updated At',
     submittedAt: 'Submitted At',
@@ -177,6 +247,7 @@ const intake = {
     requester: 'Requester',
     requesterComponent: 'Requester Component',
     businessOwner: {
+      sameAsRequester: 'CMS Business Owner is same as requester',
       name: 'CMS Business Owner',
       helpText:
         'This person owns a line of business related to this request and will champion the request moving forward',
@@ -185,6 +256,7 @@ const intake = {
       email: 'CMS Business Owner email'
     },
     productManager: {
+      sameAsRequester: 'CMS Product Manager is same as requester',
       name: 'CMS Project/Product Manager, or lead',
       helpText:
         'This person may be contacted for follow ups and to understand the state of the contract',
@@ -235,6 +307,11 @@ const intake = {
   },
   requestDetails: {
     heading: 'Request details',
+    subsectionHeadings: {
+      projectConcept: 'Project Concept',
+      collaboration: 'Collaboration',
+      projectDetails: 'Project Details'
+    },
     description:
       'Provide a brief explanation of the business need/issue/problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
     contractTitle: 'Contract/Request Title',
@@ -250,6 +327,24 @@ const intake = {
     currentStage: 'Where are you in the process?',
     currentStageHelpText:
       'This helps the governance team provide the right type of guidance for your request',
+    usesAiTech: 'Does your request involve AI technologies?',
+    usesAiTechHelpText:
+      'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
+    softwareAcquisition: {
+      usingSoftwareLabel:
+        'Do you plan to use any software products to fulfill your business needs?',
+      usingSoftwareHelp:
+        'This could include COTS products, infrastructure products, or other engineering and development tools. <dvsmEmail>Email the Division of Vendor and Software Management (DVSM)</dvsmEmail> to learn more about options at CMS related to software and Enterprise License Agreements (ELAs). If you mark "I\'m not sure", someone from DVSM may reach out to speak with you about available software and enterprise licenses.',
+      selectedLabel: 'Selected software',
+      whichSoftwareLabel: 'Which software?',
+      whichSoftwareHelp:
+        'If known, please upload a bill of materials (BOM) on the document upload section of this form.',
+      acquisitionStrategyLabel: 'How will the software be acquired?',
+      acquisitionStrategyHelp: 'Select all that apply.',
+      acquistionStrategyLabels,
+      softwareRequirementsAlert:
+        'If software requirements are not yet determined or if the contractor(s) will be requested to provide them as part of the requirement. CMS suggests that you include the need for a proposed software Bill of Materials (BOM) in the solicitation or contract.'
+    },
     needsEaSupport: 'Does your request need Enterprise Architecture support?',
     needsEaSupportHelpText:
       'If you are unsure, mark "Yes" and someone from the EA team will assess your needs.',
@@ -260,8 +355,7 @@ const intake = {
       explore:
         'Explore business solutions that might exist elsewhere within CMS',
       discuss: 'Discuss lessons learned from similar projects',
-      give:
-        'Give you and your team an enterprise-level view of the agency to avoid duplication of projects',
+      give: 'Give you and your team an enterprise-level view of the agency to avoid duplication of projects',
       help: 'Help you explore alternatives you might not have thought of',
       model: 'Model your business processes and document workflows'
     },
@@ -282,6 +376,9 @@ const intake = {
         'You can find your funding number in the CMS Operating Plan page',
       fundingSource: 'Funding source',
       fundingSources: 'Funding sources',
+      fundingNumberLabel: 'Funding number: {{fundingNumber}}',
+      fundingSourcesLabel: 'Funding sources: {{sources}}',
+      formLegend: '{{action}} funding source',
       errors: {
         fundingNumberMinDigits: 'Funding number must be exactly 6 digits',
         fundingNumberDigits: 'Funding number can only contain digits',
@@ -290,24 +387,25 @@ const intake = {
       }
     },
     currentAnnualSpending: 'What is the current annual spending?',
+    currentAnnualSpendingITPortion:
+      'What portion (% or amount) of the current annual spending is IT?',
     plannedYearOneSpending:
       'What is the planned annual spending of the first year of the new contract?',
+    plannedYearOneSpendingITPortion:
+      'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
     hasContract:
       'Do you already have a contract in place to support this effort?',
     hasContractHelpText:
       'This information helps the Office of Acquisition and Grants Management (OAGM) track work',
-    hasContractRadio_HAVE_CONTRACT:
-      'I am planning project changes during my existing contract/InterAgency Agreement (IAA) period of performance',
     contractors: 'Contractor(s)',
     periodOfPerformance:
       'Period of Performance dates (include all option years)',
     newPeriodOfPerformance:
       'New Period of Performance dates (include all option years)',
     periodOfPerformanceHelpText: 'For example: 4/10/2020 - 4/9/2025',
-    hasContractRadio_IN_PROGRESS:
-      'I am currently working on my OAGM Acquisition Plan/IAA documents',
-    hasContractRadio_NOT_STARTED: "I haven't started acquisition planning yet",
-    hasContractRadio_NOT_NEEDED: "I don't anticipate needing contractor support"
+    hasContractRadioHint:
+      'Choosing this option will remove previously-entered contract number(s).',
+    ...hasContractLabels
   },
   review: {
     heading: 'Check your answers before sending',
@@ -320,8 +418,7 @@ const intake = {
     cmsBusinessOwnerComponent: 'CMS Business Owner Component',
     cmsProjectManagerName: 'CMS Project/Product Manager or lead',
     cmsProjectManagerComponent: 'CMS Project/Product manager or lead Component',
-    isso:
-      'Does your project have an Information System Security Officer (ISSO)?',
+    isso: 'Does your project have an Information System Security Officer (ISSO)?',
     collaborating: 'I have started collaborating with',
     requestDetails: 'Request Details',
     projectName: 'Project Name',
@@ -329,15 +426,23 @@ const intake = {
     solving: 'How are you thinking of solving it?',
     process: 'Where are you in the process?',
     eaSupport: 'Do you need Enterprise Architecture (EA) support?',
+    usesAiTech: 'Does your request involve AI technologies?',
     hasUiChanges:
       'Does your project involve any user interface component, or changes to an interface component?',
+    usingSoftware:
+      'Do you plan to use any software products to fulfill your business needs?',
+    softwareAcquisitionMethods: 'How will the software be acquired?',
     contractDetails: 'Contract Details',
     costs:
       'Do the costs for this request exceed what you are currently spending to meet your business need?',
     increase: 'Approximately how much do you expect the cost to increase?',
     currentAnnualSpending: 'What is the current annual spending?',
+    currentAnnualSpendingITPortion:
+      'What portion (% or amount) of the current annual spending is IT?',
     plannedYearOneSpending:
       'What is the planned annual spending of the first year of the new contract?',
+    plannedYearOneSpendingITPortion:
+      'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
     contract: 'Do you already have a contract in place to support this effort?',
     contractors: 'Contractors',
     contractVehicle: 'Contract vehicle',

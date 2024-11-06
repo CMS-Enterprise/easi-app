@@ -7,34 +7,23 @@
 // GraphQL query operation: GetSystems
 // ====================================================
 
-export interface GetSystems_systems_edges_node_businessOwner {
-  __typename: "BusinessOwner";
-  name: string;
-  component: string;
+export interface GetSystems_systemIntakes_businessOwner {
+  __typename: "SystemIntakeBusinessOwner";
+  name: string | null;
+  component: string | null;
 }
 
-export interface GetSystems_systems_edges_node {
-  __typename: "System";
+export interface GetSystems_systemIntakes {
+  __typename: "SystemIntake";
   id: UUID;
-  lcid: string;
-  name: string;
-  businessOwner: GetSystems_systems_edges_node_businessOwner;
-}
-
-export interface GetSystems_systems_edges {
-  __typename: "SystemEdge";
-  node: GetSystems_systems_edges_node;
-}
-
-export interface GetSystems_systems {
-  __typename: "SystemConnection";
-  edges: GetSystems_systems_edges[];
+  lcid: string | null;
+  businessOwner: GetSystems_systemIntakes_businessOwner;
 }
 
 export interface GetSystems {
-  systems: GetSystems_systems | null;
+  systemIntakes: GetSystems_systemIntakes[];
 }
 
 export interface GetSystemsVariables {
-  first: number;
+  openRequests: boolean;
 }

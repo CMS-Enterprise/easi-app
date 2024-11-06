@@ -6,8 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSubmitInitialIntakeFormRequester() {
@@ -45,26 +44,29 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormRequester() {
 			outcomesSubmittedText2 = `, or</li>
     <li>decide that the IT Governance process is not applicable and close your request.</li>`
 		}
-		return fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+		return fmt.Sprintf(`
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
 
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+			<p>You have %s the Intake Request form for your IT Governance request (%s). The Governance Review Team (GRT) will review %s and get back to you within two business days.</p>
 
-<p>You have %s the Intake Request form for your IT Governance request (%s). The Governance Review Team (GRT) will review %s and get back to you within two business days.</p>
+			<br>
+			<div class="no-margin">
+				<p>The Governance Team will inform you if any next steps need to be taken with your request when they communicate one of the following possible outcomes. They will either:</p>
+				<ul>
+					<li>process your request and issue a Life Cycle ID without any additional work on your part%s</li>
+					<li>direct you to go through additional steps in the Governance Review process such as drafting a Business Case, meeting with the full GRT, or meeting with the Governance Review Board (GRB)%s
+				</ul>
+			</div>
 
-<p>
-  The Governance Team will inform you if any next steps need to be taken with your request when they communicate one of the following possible outcomes. They will either:
-  <ul>
-    <li>process your request and issue a Life Cycle ID without any additional work on your part%s</li>
-    <li>direct you to go through additional steps in the Governance Review process such as drafting a Business Case, meeting with the full GRT, or meeting with the Governance Review Board (GRB)%s
-  </ul>
-</p>
+			<br>
+			<p><strong><a href="%s">View your request in EASi</a></strong></p>
 
-<p><a href="%s">View your request in EASi</a></p>
-
-<p>If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
-<hr>
-<p>You will continue to receive email notifications about your request until it is closed.</p>
-`,
+			<br>
+			<p>If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
+			<br>
+			<hr>
+			<p>You will continue to receive email notifications about your request until it is closed.</p>`,
 			openingResubmittedText1,
 			requestName,
 			openingResubmittedText2,
@@ -94,7 +96,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormRequester() {
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("Your Intake Request form has been submitted (%s)", requestName), sender.subject)
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	s.Run("successful resubmit call has the right content", func() {
@@ -115,7 +117,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormRequester() {
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("Your Intake Request form has been resubmitted with changes (%s)", requestName), sender.subject)
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	s.Run("if the template is nil, we get the error from it", func() {
@@ -132,10 +134,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormRequester() {
 		)
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("system intake submission requester template is nil", e.Err.Error())
+		s.Equal("system intake submission requester template is nil", err.Error())
 	})
 
 	s.Run("if the template fails to execute, we get the error from it", func() {
@@ -152,10 +151,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormRequester() {
 		)
 
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("template caller had an error", e.Err.Error())
+		s.Equal("template caller had an error", err.Error())
 	})
 
 	s.Run("if the sender fails, we get the error from it", func() {
@@ -173,9 +169,6 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormRequester() {
 		)
 
 		s.Error(err)
-		s.IsType(&apperrors.NotificationError{}, err)
-		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
-		s.Equal("sender had an error", e.Err.Error())
+		s.Equal("sender had an error", err.Error())
 	})
 }

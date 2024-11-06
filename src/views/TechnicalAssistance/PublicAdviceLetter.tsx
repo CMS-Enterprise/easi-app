@@ -6,9 +6,11 @@ import { useQuery } from '@apollo/client';
 import {
   Grid,
   GridContainer,
-  IconArrowBack,
+  Icon,
   Link,
-  SummaryBox
+  SummaryBox,
+  SummaryBoxContent,
+  SummaryBoxHeading
 } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -28,8 +30,11 @@ import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import NotFound from 'views/NotFound';
 
+import Breadcrumbs, {
+  BreadcrumbsProps
+} from '../../components/shared/Breadcrumbs';
+
 import ReviewAdviceLetter from './AdminHome/components/ReviewAdviceLetter';
-import Breadcrumbs, { BreadcrumbsProps } from './Breadcrumbs';
 
 /**
  * The public view of a TRB Request Advice Letter.
@@ -116,7 +121,7 @@ function PublicAdviceLetter() {
         {fromTaskList ? (
           <>
             <UswdsReactLink to={`/trb/task-list/${id}`}>
-              <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+              <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
               {t('requestFeedback.returnToTaskList')}
             </UswdsReactLink>
 
@@ -218,17 +223,19 @@ function PublicAdviceLetter() {
       <GridContainer className="full-width">
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <SummaryBox
-              heading={t('adviceLetter.haveQuestions')}
-              className="margin-top-6"
-            >
-              <Trans
-                i18nKey="technicalAssistance:adviceLetter.haveQuestionsContact"
-                components={{
-                  a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
-                  email: CMS_TRB_EMAIL
-                }}
-              />
+            <SummaryBox className="margin-top-6">
+              <SummaryBoxHeading headingLevel="h3">
+                {t('adviceLetter.haveQuestions')}
+              </SummaryBoxHeading>
+              <SummaryBoxContent>
+                <Trans
+                  i18nKey="technicalAssistance:adviceLetter.haveQuestionsContact"
+                  components={{
+                    a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
+                    email: CMS_TRB_EMAIL
+                  }}
+                />
+              </SummaryBoxContent>
             </SummaryBox>
           </Grid>
         </Grid>
@@ -238,7 +245,7 @@ function PublicAdviceLetter() {
             className="display-inline-block margin-top-5"
             to={`/trb/task-list/${id}`}
           >
-            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+            <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
             {t('requestFeedback.returnToTaskList')}
           </UswdsReactLink>
         )}

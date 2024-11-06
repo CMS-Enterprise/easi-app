@@ -4,6 +4,7 @@ import { GridContainer } from '@trussworks/react-uswds';
 
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
+import RequestLinkForm from 'views/RequestLinkForm';
 
 import AddNote from './AdminHome/AddNote';
 import CloseRequest from './AdminHome/CloseRequest';
@@ -47,6 +48,10 @@ function TechnicalAssistance() {
           <ProcessFlow />
         </Route>
 
+        <Route exact path={`${path}/link/:id?`}>
+          <RequestLinkForm requestType="trb" />
+        </Route>
+
         {/* Task list after request steps are completed */}
         <Route exact path={`${path}/task-list/:id`}>
           <TaskList />
@@ -82,6 +87,11 @@ function TechnicalAssistance() {
 
         {/* Admin view */}
         <TRBRequestInfoWrapper>
+          {/* Defining outside parent route to trigger parent rerender/refetch after mutation */}
+          <Route path="/trb/:id/additional-information/link">
+            <RequestLinkForm requestType="trb" fromAdmin />
+          </Route>
+
           <Route exact path={`${path}/:id/:activePage`}>
             <AdminHome />
           </Route>

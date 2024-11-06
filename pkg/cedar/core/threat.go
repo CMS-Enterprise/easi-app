@@ -6,17 +6,20 @@ import (
 
 	"github.com/guregu/null/zero"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-
-	apithreat "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/threat"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	apithreat "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/threat"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // GetThreat makes a GET call to the /threat endpoint
 func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarThreat{}, nil
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return cedarcoremock.GetThreats(), nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
 	// NOTE: We do not need to use the GetSystem call or check the cache here b/c
@@ -39,7 +42,7 @@ func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models
 
 	// Run through all ATO objects and append ATO ID(s) to id list
 	for _, ato := range cedarATOs {
-		atoIDs = append(atoIDs, ato.CedarID)
+		atoIDs = append(atoIDs, ato.CedarID.String)
 	}
 
 	// Construct the parameters
@@ -64,7 +67,7 @@ func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models
 		retVal = append(retVal, &models.CedarThreat{
 			AlternativeID:     zero.StringFrom(threat.AlternativeID),
 			ControlFamily:     zero.StringFrom(threat.ControlFamily),
-			DaysOpen:          zero.IntFrom(int64(threat.DaysOpen)),
+			DaysOpen:          int(threat.DaysOpen),
 			ID:                zero.StringFrom(threat.ID),
 			ParentID:          zero.StringFrom(threat.ParentID),
 			Type:              zero.StringFrom(threat.Type),

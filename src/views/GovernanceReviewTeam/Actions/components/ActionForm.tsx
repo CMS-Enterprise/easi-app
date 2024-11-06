@@ -19,6 +19,7 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
@@ -27,7 +28,6 @@ import useMessage from 'hooks/useMessage';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary, { ActionsSummaryProps } from './ActionsSummary';
@@ -115,10 +115,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   const [isLoading, setIsLoading] = useState(true);
 
   // Active contact for adding/verifying recipients
-  const [
-    activeContact,
-    setActiveContact
-  ] = useState<SystemIntakeContactProps | null>(null);
+  const [activeContact, setActiveContact] =
+    useState<SystemIntakeContactProps | null>(null);
 
   const {
     control,
@@ -143,7 +141,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           showMessageOnNextPage(t(successMessage), { type: 'success' });
         }
 
-        history.push(`/governance-review-team/${systemIntakeId}/actions`);
+        history.push(`/it-governance/${systemIntakeId}/actions`);
       })
       .catch(e => {
         setModalIsOpen(false);
@@ -181,7 +179,11 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   // Set default form values
   useEffect(() => {
-    if (!!requester.euaUserId && isLoading) {
+    if (
+      // Check that formatted contacts have been loaded before updating default values
+      !!requester?.systemIntakeId &&
+      isLoading
+    ) {
       reset(
         {
           adminNote: '',
@@ -227,7 +229,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
             { text: t('Home'), url: '/' },
             {
               text: t('governanceReviewTeam:governanceRequestDetails'),
-              url: `/governance-review-team/${systemIntakeId}/intake-request`
+              url: `/it-governance/${systemIntakeId}/intake-request`
             },
             { text: breadcrumb }
           ]}
@@ -437,7 +439,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
               disabled: disableSubmit || isSubmitting || modalIsOpen,
               onClick: () => setSendEmail(false)
             }}
-            taskListUrl={`/governance-review-team/${systemIntakeId}/actions`}
+            taskListUrl={`/it-governance/${systemIntakeId}/actions`}
             saveExitText={t('cancelAction')}
             border={false}
             className="margin-top-6"

@@ -53,22 +53,23 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 aria-live="polite"
                 aria-relevant="additions text"
                 class="css-1f43avz-a11yText-A11yText"
+                role="log"
               />
               <div
-                class="cedar-contact-select__control css-1b5q38d-control"
+                class="cedar-contact-select__control css-79rxjr-control"
               >
                 <div
-                  class="cedar-contact-select__value-container cedar-contact-select__value-container--has-value css-319lph-ValueContainer"
+                  class="cedar-contact-select__value-container cedar-contact-select__value-container--has-value css-1fdsijx-ValueContainer"
                 >
                   <div
-                    class="cedar-contact-select__input-container css-1pndypt-Input"
+                    class="cedar-contact-select__input-container css-166bipr-Input"
                     data-value="Jerry Seinfeld, SF13 (jerry.seinfeld@local.fake)"
                   >
                     <input
+                      aria-activedescendant=""
                       aria-autocomplete="list"
                       aria-expanded="false"
                       aria-haspopup="true"
-                      aria-label="Cedar-Users"
                       autocapitalize="none"
                       autocomplete="off"
                       autocorrect="off"
@@ -89,7 +90,7 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 >
                   <div
                     aria-hidden="true"
-                    class="cedar-contact-select__indicator cedar-contact-select__clear-indicator css-1e245h0-indicatorContainer"
+                    class="cedar-contact-select__indicator cedar-contact-select__clear-indicator css-1h8bgg-indicatorContainer"
                   >
                     <svg
                       aria-hidden="true"
@@ -105,11 +106,11 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                     </svg>
                   </div>
                   <span
-                    class="cedar-contact-select__indicator-separator css-1okebmr-indicatorSeparator"
+                    class="cedar-contact-select__indicator-separator css-1u9des2-indicatorSeparator"
                   />
                   <div
                     aria-hidden="true"
-                    class="cedar-contact-select__indicator cedar-contact-select__dropdown-indicator css-1e245h0-indicatorContainer"
+                    class="cedar-contact-select__indicator cedar-contact-select__dropdown-indicator css-1h8bgg-indicatorContainer"
                   >
                     <svg
                       aria-hidden="true"
@@ -310,6 +311,11 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 Select an option
               </option>
               <option
+                value="Business owner"
+              >
+                Business owner
+              </option>
+              <option
                 value="Product Owner"
               >
                 Product Owner
@@ -335,14 +341,19 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 Cloud Navigator
               </option>
               <option
+                value="Information System Security Advisor (ISSO)"
+              >
+                Information System Security Advisor (ISSO)
+              </option>
+              <option
                 value="Privacy Advisor"
               >
                 Privacy Advisor
               </option>
               <option
-                value="CRA"
+                value="Cyber Risk Advisor (CRA)"
               >
-                CRA
+                Cyber Risk Advisor (CRA)
               </option>
               <option
                 value="Other"
@@ -411,14 +422,14 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
           class="system-intake-contacts__contact-actions"
         >
           <button
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled margin-top-0"
             data-testid="button"
             type="button"
           >
             Edit
           </button>
           <button
-            class="usa-button usa-button--unstyled text-error margin-left-2"
+            class="usa-button usa-button--unstyled text-error margin-left-2 margin-top-0"
             data-testid="button"
             type="button"
           >
@@ -470,14 +481,14 @@ exports[`Additional contacts component > renders without crashing 1`] = `
           class="system-intake-contacts__contact-actions"
         >
           <button
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled margin-top-0"
             data-testid="button"
             type="button"
           >
             Edit
           </button>
           <button
-            class="usa-button usa-button--unstyled text-error margin-left-2"
+            class="usa-button usa-button--unstyled text-error margin-left-2 margin-top-0"
             data-testid="button"
             type="button"
           >
@@ -504,14 +515,14 @@ exports[`Additional contacts component > renders without crashing 1`] = `
           class="system-intake-contacts__contact-actions"
         >
           <button
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled margin-top-0"
             data-testid="button"
             type="button"
           >
             Edit
           </button>
           <button
-            class="usa-button usa-button--unstyled text-error margin-left-2"
+            class="usa-button usa-button--unstyled text-error margin-left-2 margin-top-0"
             data-testid="button"
             type="button"
           >

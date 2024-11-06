@@ -12,7 +12,7 @@ exports[`Table Filter Componenet > matches snapshot 1`] = `
       data-testid="label"
       for="table-id-search"
     >
-      Search Table
+      Search table
     </label>
     <input
       class="usa-input"

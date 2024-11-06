@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewUserIDUpdateParams creates a new UserIDUpdateParams object,
@@ -63,7 +63,10 @@ UserIDUpdateParams contains all the parameters to send to the API endpoint
 */
 type UserIDUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   User information to be updated in CEDAR.
+	*/
 	Body *models.UserUpdateRequest
 
 	/* ID.

@@ -1,19 +1,27 @@
 {{template "easi_header.gohtml"}}
 
 <p>The Governance Team has updated the retirement date for a previously-issued Life Cycle ID (LCID).</p>
+<br>
+<p class="no-margin"><strong>New retirement date:</strong> {{.LifecycleRetiresAt}}</p>
+<br>
 
-<p>New retirement date: {{.LifecycleRetiresAt}}</p>
+<p>If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
 
-If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.
+<br>
+<div class="no-margin">
+  <p><u>Summary of retired Life Cycle ID</u></p>
+  <p><strong>Life Cycle ID:</strong> {{.LifecycleID}}</p>
+  {{ if .LifecycleIssuedAt -}}
+  <p><strong>Original date issued:</strong> {{.LifecycleIssuedAt}}</p>
+  {{ end -}}
+  <p><strong>Expiration date:</strong> {{.LifecycleExpiresAt}}</p>
+  <p><strong>Scope:</strong></p>{{.LifecycleScope}}
+  <p><strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}</p>
+  <p><strong>Next steps:</strong></p>{{.DecisionNextSteps}}
+</div>
 
-<p><u>Summary of retired Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>
-{{ if .LifecycleIssuedAt -}}
-<strong>Original date issued:</strong> {{.LifecycleIssuedAt}}<br>
+{{ if .AdditionalInfo -}}
+<br>
+<hr>
+<p><strong>Additional information from the Governance Team:</strong></p><div class="no-margin">{{.AdditionalInfo}}</div>
 {{ end -}}
-<strong>Expiration date:</strong> {{.LifecycleExpiresAt}}<br>
-<strong>Scope:</strong> {{.LifecycleScope}}<br>
-<strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}<br>
-<strong>Next steps:</strong> {{.DecisionNextSteps}}</p>
-
-{{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong></p><p>{{.AdditionalInfo}}</p>{{end}}

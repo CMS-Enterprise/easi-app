@@ -7,7 +7,7 @@ import (
 	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func TestIsIntakeValidToExpireLCID(t *testing.T) {
@@ -72,9 +72,9 @@ func TestGetExpireLCIDAction(t *testing.T) {
 
 	newNextSteps := models.HTML("new next steps")
 	userInfo := models.UserInfo{
-		CommonName: "tester",
-		Email:      "test@email.email",
-		EuaUserID:  "TEST",
+		DisplayName: "tester",
+		Email:       "test@email.email",
+		Username:    "TEST",
 	}
 
 	action := GetExpireLCIDAction(intake, mockCurrentTime, &newNextSteps, userInfo)

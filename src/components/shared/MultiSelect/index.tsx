@@ -1,11 +1,12 @@
 import React, { CSSProperties, useEffect, useState } from 'react';
+import { RefCallBack } from 'react-hook-form';
 import Select, {
   ClearIndicatorProps,
   components,
   MultiValue,
   OptionProps
 } from 'react-select';
-import { IconClose, Tag } from '@trussworks/react-uswds';
+import { Icon, Tag } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import color from 'utils/uswdsColor';
@@ -92,7 +93,7 @@ const MultiSelectTag = ({
     >
       {label}{' '}
       {handleRemove && (
-        <IconClose
+        <Icon.Close
           onClick={() => handleRemove(label)}
           onKeyDown={e => {
             if (e.key === 'Enter') {
@@ -100,9 +101,11 @@ const MultiSelectTag = ({
               // Handler to focus on the first tag after one has been removed
               if (parentId) {
                 setTimeout(() => {
-                  (document?.querySelector(
-                    `#${parentId} .easi-multiselect--tag .usa-icon`
-                  ) as HTMLElement)?.focus();
+                  (
+                    document?.querySelector(
+                      `#${parentId} .easi-multiselect--tag .usa-icon`
+                    ) as HTMLElement
+                  )?.focus();
                 }, 0);
               }
             }
@@ -132,7 +135,8 @@ const MultiSelect = ({
   onChange,
   initialValues,
   disabled,
-  className
+  className,
+  inputRef
 }: {
   id?: string;
   inputId?: string;
@@ -143,15 +147,14 @@ const MultiSelect = ({
   initialValues?: string[];
   disabled?: boolean;
   className?: string;
+  inputRef?: RefCallBack;
 }) => {
-  const [
-    selected,
-    setSelected
-  ] = useState<MultiValue<MultiSelectOptionProps> | null>(
-    initialValues && options.length
-      ? [...options].filter(option => initialValues.includes(option.value))
-      : null
-  );
+  const [selected, setSelected] =
+    useState<MultiValue<MultiSelectOptionProps> | null>(
+      initialValues && options.length
+        ? [...options].filter(option => initialValues.includes(option.value))
+        : null
+    );
 
   useEffect(() => {
     if (!selected && initialValues && options.length) {
@@ -244,6 +247,7 @@ const MultiSelect = ({
         placeholder={!disabled && `${selected?.length || 0} selected`}
         styles={customStyles}
         isDisabled={disabled}
+        ref={inputRef}
       />
       {selected && selected.length > 0 && (
         <div className="easi-multiselect--selected">

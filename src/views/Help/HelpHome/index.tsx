@@ -17,7 +17,7 @@ import './index.scss';
 const HelpHome = () => {
   const { t } = useTranslation('help');
 
-  const allArticles = itGovernanceArticles.concat(trbArticles);
+  const allArticles = [...itGovernanceArticles, ...trbArticles];
   const totalArticles = allArticles.length;
 
   const showTopThreeArticles = allArticles.slice(0, 3);

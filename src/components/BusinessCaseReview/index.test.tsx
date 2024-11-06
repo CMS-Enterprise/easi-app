@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { shallow } from 'enzyme';
 
 import { BusinessCaseModel } from 'types/businessCase';
 
@@ -15,8 +14,8 @@ describe('The Business Case Review Component', () => {
   const businessCase: BusinessCaseModel = {
     status: 'OPEN',
     createdAt: '2021-06-10T19:22:40Z',
+    updatedAt: '2021-06-11T19:22:40Z',
     systemIntakeId: '048c26ea-07be-4f40-b29e-761fc17bf414',
-    systemIntakeStatus: 'BIZ_CASE_DRAFT',
     requestName: 'EASi Test',
     requester: {
       name: 'Jane Smith',
@@ -379,10 +378,6 @@ describe('The Business Case Review Component', () => {
       hasUserInterface: 'YES'
     }
   };
-
-  it('renders without crashing', () => {
-    shallow(<BusinessCaseReview values={businessCase} />);
-  });
 
   it('matches the snapshot', () => {
     const { asFragment } = render(<BusinessCaseReview values={businessCase} />);

@@ -2,22 +2,36 @@
 
 <p>The Technical Review Board (TRB) has reviewed the initial request form for {{.RequestName}} and has requested edits.</p>
 
-<p>Edits requested: {{.Feedback}}</p>
+<br>
+<div class="no-margin">
+  <p><strong>Edits requested:</strong></p>
+  {{.Feedback}}
+</div>
 
-Next steps:
-<ul>
-<li>{{.RequesterName}} and their project team should review the feedback provided by the TRB and make any required changes to the initial request form.</li>
-</ul>
+<br>
+<br>
+<div class="no-margin">
+  <p>Next steps:</p>
+  <ul>
+    <li>{{.RequesterName}} and their project team should review the feedback provided by the TRB and make any required changes to the initial request form.</li>
+  </ul>
+</div>
 
-View this request in EASi:
-<ul>
-<li>If you are the initial requester, you may <a href="{{.TRBRequestLink}}">click here</a> to view your request task list.</li>
-<li>TRB team members may <a href="{{.TRBAdminRequestLink}}">click here</a> to view the request details.</li>
-<li>Others should contact {{.RequesterName}} or the TRB for more information about this request.</li>
-</ul>
+<br>
+<br>
+<div class="no-margin">
+  <p>View this request in EASi:</p>
+  <ul>
+    <li>If you are the initial requester, you may <a href="{{.TRBRequestLink}}">click here</a> to view your request task list.</li>
+    <li>TRB team members may <a href="{{.TRBAdminRequestLink}}">click here</a> to view the request details.</li>
+    <li>Others should contact {{.RequesterName}} or the TRB for more information about this request.</li>
+  </ul>
+</div>
 
+<br>
 <p>If you have questions, please email the TRB at <a href="mailto:{{.TRBInboxAddress}}">{{.TRBInboxAddress}}</a>.</p>
 
+<br>
 <hr>
 
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>

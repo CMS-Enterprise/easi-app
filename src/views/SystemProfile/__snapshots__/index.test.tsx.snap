@@ -18,9 +18,6 @@ exports[`System Profile parent request > matches snapshot 1`] = `
         <div
           class="usa-summary-box__body"
         >
-          <h3
-            class="usa-summary-box__heading"
-          />
           <div
             class="usa-summary-box__text"
           >
@@ -31,158 +28,210 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                 class="grid-container"
                 data-testid="grid"
               >
-                <nav
-                  aria-label="Breadcrumbs"
-                  class="usa-breadcrumb usa-breadcrumb--wrap bg-transparent padding-0"
+                <div
+                  class="display-flex flex-align-center margin-top-neg-05"
                 >
-                  <ol
-                    class="usa-breadcrumb__list"
+                  <nav
+                    aria-label="Breadcrumbs"
+                    class="usa-breadcrumb usa-breadcrumb--wrap bg-transparent padding-0"
                   >
-                    <li
-                      class="usa-breadcrumb__list-item"
+                    <ol
+                      class="usa-breadcrumb__list"
                     >
-                      <span>
-                        ← 
-                      </span>
-                      <a
-                        class="usa-breadcrumb__link"
-                        href="/systems"
+                      <li
+                        class="usa-breadcrumb__list-item"
                       >
                         <span>
-                          Back to All systems
+                          ← 
                         </span>
-                      </a>
-                    </li>
-                  </ol>
-                </nav>
+                        <a
+                          class="usa-breadcrumb__link"
+                          href="/systems"
+                        >
+                          <span>
+                            Back to All systems
+                          </span>
+                        </a>
+                      </li>
+                    </ol>
+                  </nav>
+                  <div
+                    class="margin-left-auto"
+                    style="flex-shrink: 0;"
+                  >
+                    <button
+                      class="usa-button usa-button display-flex flex-align-center margin-right-0 padding-y-105 padding-left-105 padding-right-2 radius-0 bg-white text-primary"
+                      data-testid="button"
+                      type="button"
+                    >
+                      <svg
+                        class="usa-icon margin-right-1 outline text-base"
+                        data-testid="is-not-bookmarked"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                        />
+                      </svg>
+                      Bookmark
+                    </button>
+                  </div>
+                </div>
                 <h1
                   aria-live="polite"
-                  class="easi-h1 margin-top-2"
+                  class="easi-h1 margin-top-1 margin-bottom-0 line-height-heading-2"
                   tabindex="-1"
                 >
-                  <svg
-                    class="usa-icon usa-icon--size-4 text-primary"
-                    focusable="false"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
-                    />
-                  </svg>
-                   
-                  <span>
-                    CMS.gov 
-                  </span>
+                  CMS.gov
                   <span
-                    class="text-normal font-body-sm"
+                    class="margin-left-05 text-normal font-body-lg"
                   >
                     (cms.hhs.gov)
                   </span>
+                </h1>
+                <div
+                  class="text-normal font-body-md"
+                >
                   <div
-                    class="text-normal font-body-md"
+                    class="easi-collapsable-link"
                   >
                     <div
-                      class="easi-collapsable-link"
+                      class="easi-collapsable-link__content-no-bar"
+                      id="single-system-profile"
                     >
                       <div
-                        class="easi-collapsable-link__content-no-bar"
-                        id="single-system-profile"
+                        class="description-truncated margin-bottom-2"
+                      >
+                        <dd
+                          class="description-definition margin-0 font-body-lg line-height-body-5 text-light"
+                        >
+                          CMS.gov provides the public and professionals the ability to access information regarding the CMS programs. CMS.gov website mission is to provide clear, accurate, and timely information about CMS programs to the entire health care community to improve quality and efficiency in an evolving health care system. CMS.gov website is a combination of static content and general content applications.  Core Function: * Information dissemination
+                        </dd>
+                      </div>
+                      <a
+                        aria-label="Open system external link"
+                        class="usa-link usa-link--external line-height-body-5"
+                        href="https://cms.gov"
+                        target="_blank"
+                      >
+                        View CMS.gov
+                        <span
+                          aria-hidden="true"
+                        >
+                           
+                        </span>
+                      </a>
+                      <div
+                        class="grid-row margin-top-4"
+                        data-testid="grid"
                       >
                         <div
-                          class="description-truncated margin-bottom-2"
-                        >
-                          <dd
-                            class="description-definition margin-0 font-body-lg line-height-body-5 text-light"
-                          >
-                            CMS.gov provides the public and professionals the ability to access information regarding the CMS programs. CMS.gov website mission is to provide clear, accurate, and timely information about CMS programs to the entire health care community to improve quality and efficiency in an evolving health care system. CMS.gov website is a combination of static content and general content applications.  Core Function: * Information dissemination
-                          </dd>
-                        </div>
-                        <a
-                          aria-label="Open system external link"
-                          class="usa-link usa-link--external line-height-body-5"
-                          href="https://cms.gov"
-                          target="_blank"
-                        >
-                          View CMS.gov
-                          <span
-                            aria-hidden="true"
-                          >
-                             
-                          </span>
-                        </a>
-                        <div
-                          class="grid-row margin-top-3"
+                          class="desktop:grid-col-6 margin-bottom-2"
                           data-testid="grid"
                         >
-                          <div
-                            class="desktop:grid-col-6 margin-bottom-2"
-                            data-testid="grid"
+                          <dd
+                            class="description-definition margin-0 font-body-xs line-height-body-2"
                           >
-                            <dd
-                              class="description-definition margin-0"
-                            >
-                              CMS Component
-                            </dd>
-                            <dt
-                              class="text-bold margin-bottom-05 font-body-md"
-                            >
-                              Web and Emerging Technologies Group
-                            </dt>
-                          </div>
-                          <div
-                            class="desktop:grid-col-6 margin-bottom-2"
-                            data-testid="grid"
+                            CMS component owner
+                          </dd>
+                          <dt
+                            class="text-bold margin-bottom-05 font-heading-lg line-height-heading-2"
                           >
-                            <dd
-                              class="description-definition margin-0"
+                            Web and Emerging Technologies Group
+                          </dt>
+                        </div>
+                        <div
+                          class="desktop:grid-col-6 margin-bottom-2"
+                          data-testid="grid"
+                        >
+                          <dd
+                            class="description-definition margin-0 font-body-xs line-height-body-2"
+                          >
+                            Business Owner
+                          </dd>
+                          <dt
+                            class="text-bold margin-bottom-05 font-heading-lg line-height-heading-2"
+                          >
+                            Audrey Abrams
+                          </dt>
+                        </div>
+                        <div
+                          class="desktop:grid-col-6 margin-bottom-2"
+                          data-testid="grid"
+                        >
+                          <dd
+                            class="description-definition margin-0 font-body-xs line-height-body-2"
+                          >
+                            Go live date
+                          </dd>
+                          <dt
+                            class="text-bold margin-bottom-05 font-heading-lg line-height-heading-2"
+                          >
+                            <span
+                              class="text-normal text-italic text-base-dark"
                             >
-                              Business Owner
-                            </dd>
-                            <dt
-                              class="text-bold margin-bottom-05 font-body-md"
+                              No data available
+                            </span>
+                          </dt>
+                        </div>
+                        <div
+                          class="desktop:grid-col-6 margin-bottom-2"
+                          data-testid="grid"
+                        >
+                          <dd
+                            class="description-definition margin-0 font-body-xs line-height-body-2"
+                          >
+                            Most recent major change release
+                          </dd>
+                          <dt
+                            class="text-bold margin-bottom-05 font-heading-lg line-height-heading-2"
+                          >
+                            <span
+                              class="text-normal text-italic text-base-dark"
                             >
-                              Audrey Abrams
-                            </dt>
-                          </div>
+                              No data available
+                            </span>
+                          </dt>
                         </div>
                       </div>
-                      <button
-                        aria-controls="single-system-profile"
-                        aria-expanded="true"
-                        class="usa-button usa-button--unstyled display-flex flex-align-center text-bold margin-top-3"
-                        data-testid="collapsable-link"
-                        type="button"
-                      >
-                        <svg
-                          class="usa-icon easi-collapsable-link__eye-icon"
-                          focusable="false"
-                          height="1em"
-                          role="img"
-                          viewBox="0 0 24 24"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0 0h24v24H0zm0 0h24v24H0zm0 0h24v24H0zm0 0h24v24H0z"
-                            fill="none"
-                          />
-                          <path
-                            d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.804 11.804 0 0 0 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78 3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"
-                          />
-                        </svg>
-                        Hide system summary
-                      </button>
                     </div>
+                    <button
+                      aria-controls="single-system-profile"
+                      aria-expanded="true"
+                      class="usa-button usa-button--unstyled display-flex flex-align-center margin-top-3"
+                      data-testid="collapsable-link"
+                      type="button"
+                    >
+                      <svg
+                        class="usa-icon easi-collapsable-link__eye-icon"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0zm0 0h24v24H0zm0 0h24v24H0zm0 0h24v24H0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.804 11.804 0 0 0 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78 3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"
+                        />
+                      </svg>
+                      Hide system summary
+                    </button>
                   </div>
-                </h1>
+                </div>
               </div>
             </div>
           </div>
@@ -259,7 +308,27 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                     class=""
                     href="/systems/000-100-0/details"
                   >
-                    System Details
+                    Implementation details
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/systems/000-100-0/system-data"
+                  >
+                    Data
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/systems/000-100-0/tools-and-software"
+                  >
+                    Tools and Software
                   </a>
                 </li>
                 <li
@@ -267,6 +336,16 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                 >
                   <a
                     class="nav-group-border"
+                    href="/systems/000-100-0/sub-systems"
+                  >
+                    Sub-systems
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
                     href="/systems/000-100-0/team"
                   >
                     Team
@@ -277,9 +356,29 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                 >
                   <a
                     class=""
-                    href="/systems/000-100-0/ato"
+                    href="/systems/000-100-0/contracts"
                   >
-                    ATO
+                    Contracts
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class="nav-group-border"
+                    href="/systems/000-100-0/funding-and-budget"
+                  >
+                    Funding and Budget
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/systems/000-100-0/ato-and-security"
+                  >
+                    ATO and Security
                   </a>
                 </li>
               </ul>
@@ -400,7 +499,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     <dt
                                       class="text-bold margin-bottom-05"
                                     >
-                                      Data Center/Cloud Service Provider name
+                                      Location or cloud service provider name
                                     </dt>
                                     <dd
                                       class="description-definition margin-0 line-height-body-3"
@@ -459,7 +558,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     >
                                       <a
                                         class="usa-link link-header"
-                                        href="/systems/000-100-0/ato"
+                                        href="/systems/000-100-0/ato-and-security"
                                       >
                                         View ATO information
                                         <span
@@ -495,7 +594,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     <dt
                                       class="text-bold margin-bottom-05"
                                     >
-                                      Total POAMs
+                                      Total Open POA&Ms
                                     </dt>
                                     <dd
                                       class="description-definition margin-0 line-height-body-3"

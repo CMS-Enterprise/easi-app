@@ -8,14 +8,14 @@ import (
 	"github.com/guregu/null"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/itgovactions/newstep"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // ProgressIntake handles a Progress to New Step action on an intake as part of Admin Actions v2
@@ -24,7 +24,7 @@ func ProgressIntake(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeProgressToNewStepsInput,
+	input models.SystemIntakeProgressToNewStepsInput,
 ) (*models.SystemIntake, error) {
 	adminEUAID := appcontext.Principal(ctx).ID()
 
@@ -71,7 +71,7 @@ func ProgressIntake(
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
 			ActionType:     models.ActionTypePROGRESSTONEWSTEP,
-			ActorName:      adminUserInfo.CommonName,
+			ActorName:      adminUserInfo.DisplayName,
 			ActorEmail:     adminUserInfo.Email,
 			ActorEUAUserID: adminEUAID,
 			Step:           &stepForAction,
@@ -136,7 +136,7 @@ func ProgressIntake(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -179,7 +179,7 @@ func CreateSystemIntakeActionRequestEdits(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeRequestEditsInput,
+	input models.SystemIntakeRequestEditsInput,
 ) (*models.SystemIntake, error) {
 	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 	if err != nil {
@@ -193,15 +193,15 @@ func CreateSystemIntakeActionRequestEdits(
 	var targetForm models.GovernanceRequestFeedbackTargetForm
 	// Set the state of the requested form step and set the targeted feedback step
 	switch input.IntakeFormStep {
-	case model.SystemIntakeFormStepInitialRequestForm:
+	case models.SystemIntakeFormStepInitialRequestForm:
 		intake.RequestFormState = models.SIRFSEditsRequested
 		intake.Step = models.SystemIntakeStepINITIALFORM
 		targetForm = models.GRFTFIntakeRequest
-	case model.SystemIntakeFormStepDraftBusinessCase:
+	case models.SystemIntakeFormStepDraftBusinessCase:
 		intake.DraftBusinessCaseState = models.SIRFSEditsRequested
 		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
 		targetForm = models.GRFTFDraftBusinessCase
-	case model.SystemIntakeFormStepFinalBusinessCase:
+	case models.SystemIntakeFormStepFinalBusinessCase:
 		intake.FinalBusinessCaseState = models.SIRFSEditsRequested
 		intake.Step = models.SystemIntakeStepFINALBIZCASE
 		targetForm = models.GRFTFinalBusinessCase
@@ -223,8 +223,8 @@ func CreateSystemIntakeActionRequestEdits(
 	}
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeREQUESTEDITS,
-		ActorName:      adminTakingAction.CommonName,
-		ActorEUAUserID: adminTakingAction.EuaUserID,
+		ActorName:      adminTakingAction.DisplayName,
+		ActorEUAUserID: adminTakingAction.Username,
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
@@ -237,7 +237,7 @@ func CreateSystemIntakeActionRequestEdits(
 
 	govReqFeedback := &models.GovernanceRequestFeedback{}
 	govReqFeedback.IntakeID = intake.ID
-	govReqFeedback.CreatedBy = &adminTakingAction.EuaUserID
+	govReqFeedback.CreatedBy = &adminTakingAction.Username
 	govReqFeedback.SourceAction = models.GRFSARequestEdits
 	govReqFeedback.TargetForm = targetForm
 	govReqFeedback.Feedback = input.EmailFeedback
@@ -249,8 +249,8 @@ func CreateSystemIntakeActionRequestEdits(
 	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
-			AuthorEUAID:    adminTakingAction.EuaUserID,
-			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
+			AuthorEUAID:    adminTakingAction.Username,
+			AuthorName:     null.StringFrom(adminTakingAction.DisplayName),
 			Content:        input.AdminNote,
 		})
 		if err != nil {
@@ -261,7 +261,7 @@ func CreateSystemIntakeActionRequestEdits(
 		err = emailClient.SystemIntake.SendRequestEditsNotification(ctx,
 			*input.NotificationRecipients,
 			intake.ID,
-			targetForm.Humanize(),
+			targetForm,
 			intake.ProjectName.ValueOrZero(),
 			intake.Requester,
 			input.EmailFeedback,
@@ -280,7 +280,7 @@ func RejectIntakeAsNotApproved(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeRejectIntakeInput,
+	input models.SystemIntakeRejectIntakeInput,
 ) (*models.SystemIntake, error) {
 	adminEUAID := appcontext.Principal(ctx).ID()
 
@@ -301,7 +301,7 @@ func RejectIntakeAsNotApproved(
 
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSNotApproved
 
 	// update other fields
@@ -334,7 +334,7 @@ func RejectIntakeAsNotApproved(
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
 			ActionType:     models.ActionTypeREJECT,
-			ActorName:      adminUserInfo.CommonName,
+			ActorName:      adminUserInfo.DisplayName,
 			ActorEmail:     adminUserInfo.Email,
 			ActorEUAUserID: adminEUAID,
 			Step:           &intake.Step,
@@ -357,7 +357,7 @@ func RejectIntakeAsNotApproved(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -401,7 +401,7 @@ func IssueLCID(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeIssueLCIDInput,
+	input models.SystemIntakeIssueLCIDInput,
 ) (*models.SystemIntake, error) {
 	adminEUAID := appcontext.Principal(ctx).ID()
 
@@ -431,12 +431,13 @@ func IssueLCID(
 
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSLcidIssued
 
 	// update LCID-related fields
 	intake.LifecycleID = null.StringFrom(newLCID)
 	intake.LifecycleExpiresAt = &input.ExpiresAt
+	intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
 	intake.LifecycleIssuedAt = &currTime
 	intake.LifecycleScope = &input.Scope
 	intake.DecisionNextSteps = &input.NextSteps
@@ -468,7 +469,7 @@ func IssueLCID(
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
 			ActionType:     models.ActionTypeISSUELCID,
-			ActorName:      adminUserInfo.CommonName,
+			ActorName:      adminUserInfo.DisplayName,
 			ActorEmail:     adminUserInfo.Email,
 			ActorEUAUserID: adminEUAID,
 			Step:           &intake.Step,
@@ -491,7 +492,7 @@ func IssueLCID(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -540,7 +541,7 @@ func CreateSystemIntakeActionReopenRequest(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeReopenRequestInput,
+	input models.SystemIntakeReopenRequestInput,
 ) (*models.SystemIntake, error) {
 	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 	if err != nil {
@@ -551,12 +552,12 @@ func CreateSystemIntakeActionReopenRequest(
 		return nil, err
 	}
 
-	if intake.State == models.SystemIntakeStateOPEN {
+	if intake.State == models.SystemIntakeStateOpen {
 		return nil, &apperrors.BadRequestError{
 			Err: fmt.Errorf("intake is already open"),
 		}
 	}
-	intake.State = models.SystemIntakeStateOPEN
+	intake.State = models.SystemIntakeStateOpen
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -573,8 +574,8 @@ func CreateSystemIntakeActionReopenRequest(
 
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeREOPENREQUEST,
-		ActorName:      adminTakingAction.CommonName,
-		ActorEUAUserID: adminTakingAction.EuaUserID,
+		ActorName:      adminTakingAction.DisplayName,
+		ActorEUAUserID: adminTakingAction.Username,
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
@@ -587,8 +588,8 @@ func CreateSystemIntakeActionReopenRequest(
 	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
-			AuthorEUAID:    adminTakingAction.EuaUserID,
-			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
+			AuthorEUAID:    adminTakingAction.Username,
+			AuthorName:     null.StringFrom(adminTakingAction.DisplayName),
 			Content:        input.AdminNote,
 		})
 		if err != nil {
@@ -618,7 +619,7 @@ func CreateSystemIntakeActionCloseRequest(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeCloseRequestInput,
+	input models.SystemIntakeCloseRequestInput,
 ) (*models.SystemIntake, error) {
 	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 	if err != nil {
@@ -628,12 +629,12 @@ func CreateSystemIntakeActionCloseRequest(
 	if err != nil {
 		return nil, err
 	}
-	if intake.State == models.SystemIntakeStateCLOSED {
+	if intake.State == models.SystemIntakeStateClosed {
 		return nil, &apperrors.BadRequestError{
 			Err: fmt.Errorf("intake is already closed"),
 		}
 	}
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -650,8 +651,8 @@ func CreateSystemIntakeActionCloseRequest(
 
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeCLOSEREQUEST,
-		ActorName:      adminTakingAction.CommonName,
-		ActorEUAUserID: adminTakingAction.EuaUserID,
+		ActorName:      adminTakingAction.DisplayName,
+		ActorEUAUserID: adminTakingAction.Username,
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
@@ -664,8 +665,8 @@ func CreateSystemIntakeActionCloseRequest(
 	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
-			AuthorEUAID:    adminTakingAction.EuaUserID,
-			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
+			AuthorEUAID:    adminTakingAction.Username,
+			AuthorName:     null.StringFrom(adminTakingAction.DisplayName),
 			Content:        input.AdminNote,
 		})
 		if err != nil {
@@ -695,7 +696,7 @@ func CreateSystemIntakeActionNotITGovRequest(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeNotITGovReqInput,
+	input models.SystemIntakeNotITGovReqInput,
 ) (*models.SystemIntake, error) {
 	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 	if err != nil {
@@ -705,7 +706,7 @@ func CreateSystemIntakeActionNotITGovRequest(
 	if err != nil {
 		return nil, err
 	}
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 	intake.Step = models.SystemIntakeStepDECISION
 	intake.RejectionReason = input.Reason
 	intake.DecisionState = models.SIDSNotGovernance
@@ -723,8 +724,8 @@ func CreateSystemIntakeActionNotITGovRequest(
 
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeNOTITGOVREQUEST,
-		ActorName:      adminTakingAction.CommonName,
-		ActorEUAUserID: adminTakingAction.EuaUserID,
+		ActorName:      adminTakingAction.DisplayName,
+		ActorEUAUserID: adminTakingAction.Username,
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
@@ -737,8 +738,8 @@ func CreateSystemIntakeActionNotITGovRequest(
 	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
-			AuthorEUAID:    adminTakingAction.EuaUserID,
-			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
+			AuthorEUAID:    adminTakingAction.Username,
+			AuthorName:     null.StringFrom(adminTakingAction.DisplayName),
 			Content:        input.AdminNote,
 		})
 		if err != nil {
@@ -767,7 +768,7 @@ func UpdateLCID(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeUpdateLCIDInput,
+	input models.SystemIntakeUpdateLCIDInput,
 ) (*models.SystemIntake, error) {
 	adminEUAID := appcontext.Principal(ctx).ID()
 
@@ -794,7 +795,7 @@ func UpdateLCID(
 
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSLcidIssued
 
 	// Capture current LCID data for email notification
@@ -818,8 +819,9 @@ func UpdateLCID(
 	prevCostBaseline = intake.LifecycleCostBaseline.ValueOrZero()
 
 	// update LCID-related fields when they are set
-	if input.ExpiresAt != nil {
+	if input.ExpiresAt != nil && !helpers.DatesEqual(intake.LifecycleExpiresAt, input.ExpiresAt) { // if the expiration date has changed, update the expiration date and alert TS accordingly
 		intake.LifecycleExpiresAt = input.ExpiresAt
+		intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
 	}
 	if input.Scope != nil {
 		intake.LifecycleScope = input.Scope
@@ -862,14 +864,14 @@ func UpdateLCID(
 
 		return nil
 	})
-	// TODO: EASI-3109 will send an email from this mutation
+
 	// save admin note
 	if input.AdminNote != nil {
 		errGroup.Go(func() error {
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -919,7 +921,7 @@ func ConfirmLCID(ctx context.Context,
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeConfirmLCIDInput,
+	input models.SystemIntakeConfirmLCIDInput,
 ) (*models.SystemIntake, error) {
 
 	adminEUAID := appcontext.Principal(ctx).ID()
@@ -945,12 +947,15 @@ func ConfirmLCID(ctx context.Context,
 
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSLcidIssued
 
 	// update LCID-related fields
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
-	intake.LifecycleExpiresAt = &input.ExpiresAt
+	if !helpers.DatesEqual(intake.LifecycleExpiresAt, &input.ExpiresAt) { // if the expiration date has changed, update the expiration date and alert TS accordingly
+		intake.LifecycleExpiresAt = &input.ExpiresAt
+		intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
+	}
 	intake.LifecycleScope = &input.Scope
 	intake.DecisionNextSteps = &input.NextSteps
 	if input.CostBaseline != nil {
@@ -996,7 +1001,7 @@ func ConfirmLCID(ctx context.Context,
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -1045,7 +1050,7 @@ func ExpireLCID(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeExpireLCIDInput,
+	input models.SystemIntakeExpireLCIDInput,
 ) (*models.SystemIntake, error) {
 	adminEUAID := appcontext.Principal(ctx).ID()
 
@@ -1070,7 +1075,6 @@ func ExpireLCID(
 
 	// set the expiration date's year/month/day based on current values, but leave the time as 00:00:00 (in UTC)
 	// matches the (v1) frontend logic for setting the expiration date:
-	// see src/views/GovernanceReviewTeam/ActionsV1/IssueLifecycleId.tsx, the definition of expiresAt
 	currentTimeUTC := currentTime.UTC()
 	expirationDate := time.Date(
 		currentTimeUTC.Year(),
@@ -1086,7 +1090,10 @@ func ExpireLCID(
 	// create action record before updating intake, while we still have access to intake's previous expiration date/next step
 	action := lcidactions.GetExpireLCIDAction(*intake, expirationDate, input.NextSteps, *adminUserInfo)
 
+	// Update LCID Expiry info
+	// NOTE: In most other places we need to update intake.LifecycleExpirationAlertTS = nil, but not here, since we don't alert on already-expired LCIDs
 	intake.LifecycleExpiresAt = &expirationDate
+
 	intake.DecisionNextSteps = input.NextSteps
 	// not currently persisting input.Reason
 	intake.UpdatedAt = &currentTime
@@ -1128,7 +1135,7 @@ func ExpireLCID(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -1148,7 +1155,7 @@ func ExpireLCID(
 				intake.LifecycleID.ValueOrZero(),
 				intake.LifecycleExpiresAt,
 				intake.LifecycleIssuedAt,
-				*intake.LifecycleScope,
+				intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
 				input.Reason,
 				input.NextSteps,
@@ -1174,7 +1181,7 @@ func RetireLCID(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeRetireLCIDInput,
+	input models.SystemIntakeRetireLCIDInput,
 ) (*models.SystemIntake, error) {
 	adminEUAID := appcontext.Principal(ctx).ID()
 
@@ -1199,8 +1206,6 @@ func RetireLCID(
 	// update intake
 	// not currently persisting input.Reason
 	intake.LifecycleRetiresAt = &input.RetiresAt
-
-	// TODO: EASI-3109 will send an email from this mutation
 
 	// save intake, action, admin note
 	// See Note [Database calls from resolvers aren't atomic]
@@ -1239,7 +1244,7 @@ func RetireLCID(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -1260,10 +1265,10 @@ func RetireLCID(
 				&input.RetiresAt,
 				intake.LifecycleExpiresAt,
 				intake.LifecycleIssuedAt,
-				*intake.LifecycleScope,
+				intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
 				input.Reason,
-				*intake.DecisionNextSteps,
+				intake.DecisionNextSteps,
 				input.AdditionalInfo,
 			)
 			if err != nil {
@@ -1286,7 +1291,7 @@ func ChangeLCIDRetirementDate(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeChangeLCIDRetirementDateInput,
+	input models.SystemIntakeChangeLCIDRetirementDateInput,
 ) (*models.SystemIntake, error) {
 	adminEUAID := appcontext.Principal(ctx).ID()
 
@@ -1350,7 +1355,7 @@ func ChangeLCIDRetirementDate(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -1371,9 +1376,9 @@ func ChangeLCIDRetirementDate(
 				&input.RetiresAt,
 				intake.LifecycleExpiresAt,
 				intake.LifecycleIssuedAt,
-				*intake.LifecycleScope,
+				intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
-				*intake.DecisionNextSteps,
+				intake.DecisionNextSteps,
 				input.AdditionalInfo,
 			)
 			if err != nil {

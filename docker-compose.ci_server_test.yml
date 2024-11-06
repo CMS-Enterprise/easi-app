@@ -1,8 +1,6 @@
----
-version: '3.7'
 services:
   db:
-    image: postgres:14.7
+    image: postgres:14.11
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
     ports:
@@ -20,8 +18,8 @@ services:
     restart: always
     image: minio/minio:latest
     ports:
-      - '9000:9000'
-    entrypoint: minio server /data
+      - '9004:9004'
+    entrypoint: minio server --address :9004 /data
   minio_mc:
     image: minio/mc:latest
     depends_on:

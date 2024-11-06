@@ -4,9 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	apiurl "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/url"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/guregu/null/zero"
+
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	apiurl "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/url"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // GetURLsForSystem queries CEDAR for URLs associated with a particular system, taking the version-independent ID of a system
@@ -15,9 +18,12 @@ import (
 // however, this method assumes that the parameter is a version-independent system ID.
 // If we need to look up URLs based on something other than systems, we will need to create another method.
 func (c *Client) GetURLsForSystem(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarURL{}, nil
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return cedarcoremock.GetURLs(), nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
@@ -27,7 +33,7 @@ func (c *Client) GetURLsForSystem(ctx context.Context, cedarSystemID string) ([]
 
 	// Construct the parameters
 	params := apiurl.NewURLFindListParams()
-	params.SetID(cedarSystem.VersionID)
+	params.SetID(cedarSystem.VersionID.String)
 	params.HTTPClient = c.hc
 
 	// Make the API call
@@ -46,12 +52,12 @@ func (c *Client) GetURLsForSystem(ctx context.Context, cedarSystemID string) ([]
 	// convert items in response payload to our models
 	for _, url := range resp.Payload.URLList {
 		retVal = append(retVal, &models.CedarURL{
-			ID:                             *url.URLID,
-			Address:                        url.Address,
+			ID:                             zero.StringFromPtr(url.URLID),
+			Address:                        zero.StringFrom(url.Address),
 			IsBehindWebApplicationFirewall: url.IsBehindWebApplicationFirewall,
 			IsAPIEndpoint:                  url.IsAPIEndpoint,
 			IsVersionCodeRepository:        url.IsVersionCodeRepository,
-			URLHostingEnv:                  url.URLHostingEnv,
+			URLHostingEnv:                  zero.StringFrom(url.URLHostingEnv),
 		})
 	}
 

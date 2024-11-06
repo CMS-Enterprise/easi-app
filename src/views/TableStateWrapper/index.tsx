@@ -46,9 +46,8 @@ const initialTableStates: Record<string, TableStates> = {
   }
 };
 
-export const TableStateContext = createContext<Record<string, TableStates>>(
-  initialTableStates
-);
+export const TableStateContext =
+  createContext<Record<string, TableStates>>(initialTableStates);
 
 const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   // Checks to see if the current route is a part of IT Gov or home
@@ -57,7 +56,7 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   const routeParams: string[] = pathname.split('/');
 
   const isGovTeamRoute: boolean =
-    routeParams[1] === 'governance-review-team' || pathname === '/';
+    routeParams[1] === 'it-governance' || pathname === '/';
 
   const itGovAdmin = useRef<ITGovTableState>({
     ...initialTableStates.itGovAdmin.current

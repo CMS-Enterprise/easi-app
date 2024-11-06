@@ -34,12 +34,14 @@ type ActionRadioOptionProps = {
   label: string;
   description: string;
   accordionText: string;
+  id?: string;
 } & Omit<ControllerRenderProps, 'ref'>;
 
 const ActionRadioOption = ({
   label,
   description,
   accordionText,
+  id,
   ...field
 }: ActionRadioOptionProps) => {
   const { t } = useTranslation('action');
@@ -48,7 +50,7 @@ const ActionRadioOption = ({
     <Radio
       {...field}
       className="grt-action-radio__option margin-bottom-2 tablet:grid-col-5"
-      id={`grt-action__${field.value}`}
+      id={`grt-action__${id || field.value}`}
       label={t('chooseAction.selectAction')}
       title={label}
       labelDescription={
@@ -88,9 +90,8 @@ export type EditsRequestedKey =
  *
  * Used in form confirmation modal
  */
-export const EditsRequestedContext = createContext<EditsRequestedKey>(
-  undefined
-);
+export const EditsRequestedContext =
+  createContext<EditsRequestedKey>(undefined);
 
 const Actions = ({ systemIntake }: ActionsProps) => {
   const history = useHistory();
@@ -144,19 +145,19 @@ const Actions = ({ systemIntake }: ActionsProps) => {
         <Switch>
           {/* Select resolution page */}
           <Route
-            path="/governance-review-team/:systemId/resolutions/:subPage?"
+            path="/it-governance/:systemId/resolutions/:subPage?"
             render={() => <Resolutions systemIntake={systemIntake} />}
           />
 
           {/* Manage LCID page */}
           <Route
-            path="/governance-review-team/:systemId/manage-lcid/:subPage?"
+            path="/it-governance/:systemId/manage-lcid/:subPage?"
             render={() => <ManageLcid systemIntake={systemIntake} />}
           />
 
           {/* Request edits */}
           <Route
-            path="/governance-review-team/:systemId/actions/request-edits"
+            path="/it-governance/:systemId/actions/request-edits"
             render={() => (
               <RequestEdits
                 currentStep={step}
@@ -167,14 +168,14 @@ const Actions = ({ systemIntake }: ActionsProps) => {
 
           {/* Progress to a new step */}
           <Route
-            path="/governance-review-team/:systemId/actions/new-step"
+            path="/it-governance/:systemId/actions/new-step"
             render={() => (
               <ProgressToNewStep systemIntakeId={systemIntake.id} step={step} />
             )}
           />
 
           {/* Select action main page */}
-          <Route path="/governance-review-team/:systemId/actions" exact>
+          <Route path="/it-governance/:systemId/actions" exact>
             <PageHeading
               data-testid="grt-actions-view"
               className="margin-top-0 margin-bottom-5"
@@ -200,6 +201,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
                           <ActionRadioOption
                             {...fieldProps}
                             value="actions/request-edits"
+                            id="request-edits"
                             label={t('chooseAction.requestEdits.title')}
                             description={t(
                               'chooseAction.requestEdits.description'
@@ -212,6 +214,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
                           <ActionRadioOption
                             {...fieldProps}
                             value="actions/new-step"
+                            id="new-step"
                             label={t('chooseAction.progressToNewStep.title')}
                             description={t(
                               'chooseAction.progressToNewStep.description'

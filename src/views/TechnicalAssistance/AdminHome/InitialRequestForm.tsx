@@ -66,11 +66,12 @@ const InitialRequestForm = ({
       {error && <NotFoundPartial />}
 
       {/* Alert for  initial request form still in draft */}
-      {request && request.taskStatuses.formStatus !== TRBFormStatus.COMPLETED && (
-        <Alert type="info" slim>
-          {t('adminHome.requestInDraftAlt')}
-        </Alert>
-      )}
+      {request &&
+        request.taskStatuses.formStatus !== TRBFormStatus.COMPLETED && (
+          <Alert type="info" slim>
+            {t('adminHome.requestInDraftAlt')}
+          </Alert>
+        )}
 
       {request && (
         <>

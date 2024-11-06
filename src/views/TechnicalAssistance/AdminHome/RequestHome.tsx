@@ -1,13 +1,13 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { CardGroup, IconArrowForward, Link } from '@trussworks/react-uswds';
+import { CardGroup, Icon, Link } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
+import { AvatarCircle } from 'components/shared/Avatar/Avatar';
 import Divider from 'components/shared/Divider';
-import InitialsIcon from 'components/shared/InitialsIcon';
 import useCacheQuery from 'hooks/useCacheQuery';
 import GetTrbRequestHomeQuery from 'queries/GetTrbRequestHomeQuery';
 import {
@@ -112,9 +112,8 @@ const RequestHome = ({
           {trbLeadInfo?.commonName ? (
             <>
               <div className="display-flex flex-align-center">
-                <InitialsIcon
-                  name={trbLeadInfo.commonName}
-                  index={0}
+                <AvatarCircle
+                  user={trbLeadInfo.commonName}
                   className="margin-right-1"
                 />
                 <p className="text-bold margin-0">
@@ -182,7 +181,7 @@ const RequestHome = ({
             className="display-flex flex-align-center margin-top-2"
           >
             {t('adminHome.viewDocs')}
-            <IconArrowForward className="margin-left-1" />
+            <Icon.ArrowForward className="margin-left-1" />
           </UswdsReactLink>
         </>
       )}

@@ -11,7 +11,7 @@ const NewSystem = () => {
   return (
     <>
       <div className="grid-container">
-        <HelpBreadcrumb type="Close tab" />
+        <HelpBreadcrumb type="close" />
         <HelpPageIntro
           heading={t('newSystem:title')}
           subheading={t('newSystem:description')}
@@ -19,7 +19,13 @@ const NewSystem = () => {
         />
         <GovernanceOverviewContent helpArticle className="padding-bottom-3" />
       </div>
-      <RelatedArticles type="IT Governance" currentArticle="newSystem" />
+      <RelatedArticles
+        articles={[
+          'sampleBusinessCase',
+          'governanceReviewTeam',
+          'governanceReviewBoard'
+        ]}
+      />
     </>
   );
 };

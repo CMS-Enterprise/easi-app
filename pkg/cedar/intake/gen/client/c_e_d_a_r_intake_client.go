@@ -10,8 +10,8 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/health_check"
-	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/intake"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/client/health_check"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/client/intake"
 )
 
 // Default c e d a r intake HTTP client.

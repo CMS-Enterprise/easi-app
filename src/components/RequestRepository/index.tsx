@@ -23,7 +23,6 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 import { startCase } from 'lodash';
 
 import Modal from 'components/Modal';
@@ -71,8 +70,6 @@ const RequestRepository = () => {
   const isMobile = useCheckResponsiveScreen('tablet');
   const { t } = useTranslation('governanceReviewTeam');
 
-  const flags = useFlags();
-
   const { itGovAdmin } = useContext(TableStateContext);
   const [activeTable, setActiveTable] = useState<ActiveStateType>(
     itGovAdmin.current.activeTableState
@@ -81,9 +78,8 @@ const RequestRepository = () => {
   /* Controls Portfolio Update Report info modal */
   const [infoModalOpen, setInfoModalOpen] = useState<boolean>(false);
   /* Controls Configure Portfolio Update Report modal */
-  const [configReportModalOpen, setConfigReportModalOpen] = useState<boolean>(
-    false
-  );
+  const [configReportModalOpen, setConfigReportModalOpen] =
+    useState<boolean>(false);
 
   /* Date range for Portfolio Update Report */
   const { control, handleSubmit, watch } = useForm<{
@@ -242,35 +238,20 @@ const RequestRepository = () => {
   return (
     <>
       <GridContainer className="margin-top-1 margin-bottom-2">
-        {flags.portfolioUpdateReport ? (
-          <ButtonGroup className="trb-admin-team-home-actions">
-            {/* Configure Portfolio Update Report button */}
-            <Button
-              type="button"
-              onClick={() => setConfigReportModalOpen(true)}
-              className="margin-right-1"
-            >
-              {t('home:adminHome.GRT.configureReport.button')}
-            </Button>
-            {/* Portfolio Update Report info modal trigger button */}
-            <Button
-              type="button"
-              onClick={() => setInfoModalOpen(true)}
-              unstyled
-            >
-              {t('home:adminHome.GRT.infoModal.link')}
-            </Button>
-          </ButtonGroup>
-        ) : (
-          <CsvDownloadLink
-            data={convertIntakesToCSV(data)}
-            filename="request-repository.csv"
-            headers={csvHeaders}
-            className="line-height-body-5"
+        <ButtonGroup className="trb-admin-team-home-actions">
+          {/* Configure Portfolio Update Report button */}
+          <Button
+            type="button"
+            onClick={() => setConfigReportModalOpen(true)}
+            className="margin-right-1"
           >
-            {t('home:adminHome.GRT.csvDownloadLabel')}
-          </CsvDownloadLink>
-        )}
+            {t('home:adminHome.GRT.configureReport.button')}
+          </Button>
+          {/* Portfolio Update Report info modal trigger button */}
+          <Button type="button" onClick={() => setInfoModalOpen(true)} unstyled>
+            {t('home:adminHome.GRT.infoModal.link')}
+          </Button>
+        </ButtonGroup>
       </GridContainer>
       <GridContainer className="margin-bottom-5 maxw-none">
         {/* Configure Portfolio Update Report modal */}
@@ -445,15 +426,13 @@ const RequestRepository = () => {
             className="maxw-tablet margin-bottom-4 desktop:margin-bottom-0 desktop:grid-col-5 tablet:padding-right-6"
           />
 
-          {flags.portfolioUpdateReport && (
-            <CsvDownloadLink
-              data={convertIntakesToCSV(data)}
-              filename={`EASi-${startCase(activeTable)}-ITGO-Requests.csv`}
-              headers={csvHeaders}
-            >
-              {t('home:adminHome.GRT.downloadLabel', { status: activeTable })}
-            </CsvDownloadLink>
-          )}
+          <CsvDownloadLink
+            data={convertIntakesToCSV(data)}
+            filename={`EASi-${startCase(activeTable)}-ITGO-Requests.csv`}
+            headers={csvHeaders}
+          >
+            {t('home:adminHome.GRT.downloadLabel', { status: activeTable })}
+          </CsvDownloadLink>
         </div>
 
         <TableResults
@@ -501,7 +480,10 @@ const RequestRepository = () => {
               </tr>
             ))}
           </thead>
-          <tbody {...getTableBodyProps()}>
+          <tbody
+            {...getTableBodyProps()}
+            id={`system-intakes-table__${activeTable}`}
+          >
             {page.map((row: Row) => {
               return (
                 <tr

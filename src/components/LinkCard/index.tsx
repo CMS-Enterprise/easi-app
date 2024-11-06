@@ -1,16 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button, IconArrowForward } from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
-
-export type LinkRequestType = 'ITGov' | 'TRB' | '508';
+import { RequestType } from 'types/requestType';
 
 type LinkCardProps = {
   className?: string;
-  type: LinkRequestType;
+  type: RequestType;
 } & JSX.IntrinsicElements['div'];
 
 const LinkCard = ({ className, type }: LinkCardProps) => {
@@ -37,7 +36,7 @@ const LinkCard = ({ className, type }: LinkCardProps) => {
         className="display-flex flex-align-center margin-top-1 margin-bottom-3"
       >
         {t(`actions.${type}.learnMore`)}
-        <IconArrowForward className="margin-left-1" />
+        <Icon.ArrowForward className="margin-left-1" />
       </UswdsReactLink>
 
       <Button

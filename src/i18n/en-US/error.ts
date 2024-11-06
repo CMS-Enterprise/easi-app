@@ -10,7 +10,9 @@ const error = {
     tryAgain:
       'If none of the above have solved the problem, please return to the home page and try again.',
     goHome: 'Go back to the home page'
-  }
+  },
+  encounteredIssueTryAgain:
+    'EASi encountered an issue. Please try again, and if the problem persists, try again later.'
 };
 
 export default error;

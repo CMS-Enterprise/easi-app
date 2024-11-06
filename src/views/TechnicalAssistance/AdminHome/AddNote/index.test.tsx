@@ -19,13 +19,13 @@ import {
   requester
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
+import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
 import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
 import {
-  CreateTrbAdminNote as CreateTrbAdminNoteType,
-  CreateTrbAdminNoteVariables
-} from 'queries/types/CreateTrbAdminNote';
+  CreateTRBAdminNoteGeneralRequest,
+  CreateTRBAdminNoteGeneralRequestVariables
+} from 'queries/types/CreateTRBAdminNoteGeneralRequest';
 import {
   GetTrbRecommendations,
   GetTrbRecommendationsVariables
@@ -51,15 +51,6 @@ import AddNote from '.';
 
 const { recommendations } = adviceLetter;
 
-/** TODO EASI-3467: Remove with `trbAdminNoteUpdates` flag */
-vi.mock('launchdarkly-react-client-sdk', () => ({
-  useFlags: () => {
-    return {
-      trbAdminNoteUpdates: true
-    };
-  }
-}));
-
 const getTrbRecommendationsQuery: MockedQuery<
   GetTrbRecommendations,
   GetTrbRecommendationsVariables
@@ -84,22 +75,21 @@ const getTrbRecommendationsQuery: MockedQuery<
 };
 
 const createTrbAdminNoteQuery: MockedQuery<
-  CreateTrbAdminNoteType,
-  CreateTrbAdminNoteVariables
+  CreateTRBAdminNoteGeneralRequest,
+  CreateTRBAdminNoteGeneralRequestVariables
 > = {
   request: {
-    query: CreateTrbAdminNote,
+    query: CreateTrbAdminNoteGeneralRequestQuery,
     variables: {
       input: {
         trbRequestId: mockTrbRequestId,
-        category: TRBAdminNoteCategory.GENERAL_REQUEST,
         noteText: 'Note text'
       }
     }
   },
   result: {
     data: {
-      createTRBAdminNote: {
+      createTRBAdminNoteGeneralRequest: {
         __typename: 'TRBAdminNote',
         createdAt: '2023-02-16T15:21:34.156885Z',
         id: 'd35a1f08-e04e-48f9-8d58-7f2409bae8fe',

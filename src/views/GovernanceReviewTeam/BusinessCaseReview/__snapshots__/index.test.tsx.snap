@@ -472,12 +472,6 @@ exports[`The GRT business case review > matches the snapshot 1`] = `
         Download Business Case as PDF
       </button>
     </div>
-    <a
-      class="usa-button margin-top-5"
-      href="/governance-review-team//actions"
-    >
-      Take an action
-    </a>
   </div>
 </DocumentFragment>
 `;

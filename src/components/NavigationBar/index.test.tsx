@@ -45,12 +45,7 @@ describe('The NavigationBar component', () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/']}>
-          <NavigationBar
-            mobile
-            toggle={() => !null}
-            signout={() => null}
-            userName="A11Y"
-          />
+          <NavigationBar signout={() => null} userName="A11Y" />
         </MemoryRouter>
       </Provider>
     );
@@ -62,12 +57,7 @@ describe('The NavigationBar component', () => {
     const { getByText } = render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/system/making-a-request']}>
-          <NavigationBar
-            mobile
-            toggle={() => !null}
-            signout={() => null}
-            userName="A11Y"
-          />
+          <NavigationBar signout={() => null} userName="A11Y" />
         </MemoryRouter>
       </Provider>
     );

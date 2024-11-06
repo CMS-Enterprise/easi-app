@@ -3,15 +3,17 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 const missingComponentFallbackText = "an unspecified component"
@@ -24,22 +26,29 @@ func UpdateTRBRequestForm(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input map[string]interface{},
 ) (*models.TRBRequestForm, error) {
-	idStr, idFound := input["trbRequestId"]
+	idIface, idFound := input["trbRequestId"]
 	if !idFound {
 		return nil, errors.New("missing required property trbRequestId")
 	}
 
-	id, err := uuid.Parse(idStr.(string))
-	if err != nil {
-		return nil, err
+	id, ok := idIface.(uuid.UUID)
+	if !ok {
+		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB request form: %v", idIface)
 	}
 
 	isSubmitted := false
 	if isSubmittedVal, isSubmittedFound := input["isSubmitted"]; isSubmittedFound {
-		if isSubmittedBool, isSubmittedOk := isSubmittedVal.(bool); isSubmittedOk {
-			isSubmitted = isSubmittedBool
-			delete(input, "isSubmitted")
+
+		switch v := isSubmittedVal.(type) {
+		case *bool:
+			isSubmitted = *v
+		case bool:
+			isSubmitted = v
+		default:
+			return nil, fmt.Errorf("expected bool or *bool value for isSubmitted, got: %T", v)
 		}
+
+		delete(input, "isSubmitted")
 	}
 
 	form, err := store.GetTRBRequestFormByTRBRequestID(ctx, id)
@@ -83,17 +92,7 @@ func UpdateTRBRequestForm(
 	if systemIntakes, systemIntakesProvided := input["systemIntakes"]; systemIntakesProvided {
 		delete(input, "systemIntakes")
 
-		systemIntakeUUIDs := []uuid.UUID{}
-		if systemIntakeIFCs, ok := systemIntakes.([]interface{}); ok {
-			for _, systemIntakeIFC := range systemIntakeIFCs {
-				if systemIntakeStr, ok := systemIntakeIFC.(string); ok {
-					systemIntakeUUID, parseErr := uuid.Parse(systemIntakeStr)
-					if parseErr != nil {
-						return nil, parseErr
-					}
-					systemIntakeUUIDs = append(systemIntakeUUIDs, systemIntakeUUID)
-				}
-			}
+		if systemIntakeUUIDs, ok := systemIntakes.([]uuid.UUID); ok {
 			_, err = store.CreateTRBRequestSystemIntakes(ctx, id, systemIntakeUUIDs)
 			if err != nil {
 				return nil, err
@@ -139,7 +138,7 @@ func UpdateTRBRequestForm(
 				ctx,
 				id,
 				request.GetName(),
-				requesterInfo.CommonName,
+				requesterInfo.DisplayName,
 				componentText,
 			)
 		})
@@ -150,7 +149,7 @@ func UpdateTRBRequestForm(
 				request.ID,
 				request.GetName(),
 				requesterInfo.Email,
-				requesterInfo.CommonName,
+				requesterInfo.DisplayName,
 			)
 		})
 
@@ -163,8 +162,8 @@ func UpdateTRBRequestForm(
 }
 
 // GetTRBRequestFormByTRBRequestID retrieves a TRB request form record for a given TRB request ID
-func GetTRBRequestFormByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestForm, error) {
-	form, err := store.GetTRBRequestFormByTRBRequestID(ctx, id)
+func GetTRBRequestFormByTRBRequestID(ctx context.Context, id uuid.UUID) (*models.TRBRequestForm, error) {
+	form, err := dataloaders.GetTRBRequestFormByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

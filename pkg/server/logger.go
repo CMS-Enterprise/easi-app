@@ -2,11 +2,12 @@ package server
 
 import (
 	"net/http"
+	"time"
 
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 )
 
 const traceField string = "traceID"
@@ -28,6 +29,11 @@ func loggerMiddleware(logger *zap.Logger, environment appconfig.Environment, nex
 		)
 		ctx = appcontext.WithLogger(ctx, logger)
 
+		start := time.Now()
+		next.ServeHTTP(w, r.WithContext(ctx))
+		durationMS := time.Since(start).Milliseconds()
+
+		// Log these fields after each HTTP request
 		fields := []zap.Field{
 			zap.String("accepted-language", r.Header.Get("accepted-language")),
 			zap.Int64("content-length", r.ContentLength),
@@ -35,18 +41,17 @@ func loggerMiddleware(logger *zap.Logger, environment appconfig.Environment, nex
 			zap.String("method", r.Method),
 			zap.String("protocol-version", r.Proto),
 			zap.String("referer", r.Header.Get("referer")),
+			zap.Int64("response-time-ms", durationMS),
 			zap.String("request-source", r.RemoteAddr),
 			zap.String("url", r.URL.String()),
 			zap.String("user-agent", r.UserAgent()),
 		}
 		logger.Info("Request", fields...)
-
-		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
-// NewLoggerMiddleware returns a handler with a request based logger
-func NewLoggerMiddleware(logger *zap.Logger, environment appconfig.Environment) func(http.Handler) http.Handler {
+// newLoggerMiddleware returns a handler with a request based logger
+func newLoggerMiddleware(logger *zap.Logger, environment appconfig.Environment) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return loggerMiddleware(logger, environment, next)
 	}

@@ -4,14 +4,16 @@ import (
 	"context"
 	"errors"
 	"io"
+	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 type EmailTestSuite struct {
@@ -21,24 +23,50 @@ type EmailTestSuite struct {
 	multipleRecipientsTestCases []multipleRecipientsTestCase
 }
 
-type mockSender struct {
-	toAddresses []models.EmailAddress
-	ccAddresses []models.EmailAddress
-	subject     string
-	body        string
+// EqualHTML removes extra whitespace and linebreaks from HTML strings before comparing
+func (s *EmailTestSuite) EqualHTML(expected string, actual string) bool {
+	clean := func(str string) string {
+		// remove linebreaks and tabs
+		breaksAndTabs := regexp.MustCompile(`[\n\r\t]`)
+		str = breaksAndTabs.ReplaceAllString(str, "")
+		// don't test the CSS
+		removeHeadTag := regexp.MustCompile(`<head>[\s\S]*</head>`)
+		str = removeHeadTag.ReplaceAllString(str, "")
+		// remove leading/trailing spaces
+		str = strings.Trim(str, " ")
+		// normalize multiple spaces to be 1 space
+		multipleSpaces := regexp.MustCompile(`[\s]{2,}`)
+		str = multipleSpaces.ReplaceAllString(str, " ")
+		// trim strings inside and before/after tags
+		spacesBeforeTags := regexp.MustCompile(`[\s]+<`)
+		str = spacesBeforeTags.ReplaceAllString(str, "<")
+		spacesAfterTags := regexp.MustCompile(`>[\s]+`)
+		str = spacesAfterTags.ReplaceAllString(str, ">")
+		return str
+	}
+	return s.Equal(clean(expected), clean(actual))
 }
 
-func (s *mockSender) Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error {
-	s.toAddresses = toAddresses
-	s.ccAddresses = ccAddresses
-	s.subject = subject
-	s.body = body
+type mockSender struct {
+	toAddresses  []models.EmailAddress
+	ccAddresses  []models.EmailAddress
+	bccAddresses []models.EmailAddress
+	subject      string
+	body         string
+}
+
+func (s *mockSender) Send(ctx context.Context, emailData Email) error {
+	s.toAddresses = emailData.ToAddresses
+	s.ccAddresses = emailData.CcAddresses
+	s.bccAddresses = emailData.BccAddresses
+	s.subject = emailData.Subject
+	s.body = emailData.Body
 	return nil
 }
 
 type mockFailedSender struct{}
 
-func (s *mockFailedSender) Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error {
+func (s *mockFailedSender) Send(ctx context.Context, email Email) error {
 	return errors.New("sender had an error")
 }
 
@@ -99,29 +127,4 @@ func TestEmailTestSuite(t *testing.T) {
 	}
 
 	suite.Run(t, sesTestSuite)
-}
-
-// helper method - call this from test cases for individual email methods
-func (s *EmailTestSuite) runMultipleRecipientsTestAgainstAllTestCases(methodUnderTest func(client Client, recipients models.EmailNotificationRecipients) error) {
-	for _, testCase := range s.multipleRecipientsTestCases {
-		s.Run("Each email is only sent to the specified recipients", func() {
-			sender := mockSender{}
-			client, err := NewClient(s.config, &sender)
-			s.NoError(err)
-
-			expectedRecipients := []models.EmailAddress{}
-			expectedRecipients = append(expectedRecipients, testCase.recipients.RegularRecipientEmails...)
-			if testCase.recipients.ShouldNotifyITGovernance {
-				expectedRecipients = append(expectedRecipients, s.config.GRTEmail)
-			}
-			if testCase.recipients.ShouldNotifyITInvestment {
-				expectedRecipients = append(expectedRecipients, s.config.ITInvestmentEmail)
-			}
-
-			err = methodUnderTest(client, testCase.recipients)
-			s.NoError(err)
-
-			s.ElementsMatch(expectedRecipients, sender.toAddresses)
-		})
-	}
 }

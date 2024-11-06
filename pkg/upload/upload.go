@@ -2,7 +2,6 @@ package upload
 
 import (
 	"io"
-	"mime"
 	"net/url"
 	"os"
 	"strings"
@@ -14,10 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 
-	"github.com/google/uuid"
-
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 )
 
 // AVStatusTagName is the name of the tag that stores virus scan results for uploaded files
@@ -75,49 +71,26 @@ func (c S3Client) GetBucket() string {
 	return c.config.Bucket
 }
 
-// NewPutPresignedURL returns a pre-signed URL used for PUT-ing objects
-func (c S3Client) NewPutPresignedURL(fileType string) (*models.PreSignedURL, error) {
-	// generate a uuid for file name storage on s3
-	key := uuid.New().String()
-
-	// get the file extension from the mime type
-	extensions, err := mime.ExtensionsByType(fileType)
-	if err != nil {
-		return &models.PreSignedURL{}, err
-	}
-	if len(extensions) > 0 {
-		key = key + extensions[0]
-	}
-	req, _ := c.client.PutObjectRequest(&s3.PutObjectInput{
-		Bucket:      aws.String(c.config.Bucket),
-		Key:         aws.String(key),
-		ContentType: aws.String(fileType),
-	})
-
-	url, err := req.Presign(15 * time.Minute)
-	if err != nil {
-		return &models.PreSignedURL{}, err
-	}
-
-	result := models.PreSignedURL{URL: url, Filename: key}
-
-	return &result, nil
+// PreSignedURL is the model to return S3 pre-signed URLs
+type PreSignedURL struct {
+	URL      string `json:"URL"`
+	Filename string `json:"filename"`
 }
 
 // NewGetPresignedURL returns a pre-signed URL used for GET-ing objects
-func (c S3Client) NewGetPresignedURL(key string) (*models.PreSignedURL, error) {
+func (c S3Client) NewGetPresignedURL(key string) (*PreSignedURL, error) {
 	objectInput := &s3.GetObjectInput{
 		Bucket: aws.String(c.config.Bucket),
 		Key:    aws.String(key),
 	}
 	req, _ := c.client.GetObjectRequest(objectInput)
 
-	url, err := req.Presign(15 * time.Minute)
+	url, err := req.Presign(90 * time.Minute) // to match FE timeout in src/views/TimeOutWrapper/index.tsx
 	if err != nil {
-		return &models.PreSignedURL{}, err
+		return &PreSignedURL{}, err
 	}
 
-	result := models.PreSignedURL{URL: url, Filename: key}
+	result := PreSignedURL{URL: url, Filename: key}
 
 	return &result, nil
 

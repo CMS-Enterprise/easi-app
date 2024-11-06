@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SubmitIntakeInput, SystemIntakeStatus } from "./../../types/graphql-global-types";
+import { SubmitIntakeInput } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: SubmitIntake
@@ -11,7 +11,6 @@ import { SubmitIntakeInput, SystemIntakeStatus } from "./../../types/graphql-glo
 
 export interface SubmitIntake_submitIntake_systemIntake {
   __typename: "SystemIntake";
-  status: SystemIntakeStatus;
   id: UUID;
 }
 

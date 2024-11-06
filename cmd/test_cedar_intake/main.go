@@ -13,14 +13,15 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
-	"gopkg.in/launchdarkly/go-server-sdk.v5/ldcomponents"
-	"gopkg.in/launchdarkly/go-server-sdk.v5/testhelpers/ldtestdata"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/cedar/intake"
-	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/intake"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/translation"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func noErr(err error) {
@@ -33,7 +34,7 @@ func noErr(err error) {
 
 type testData struct {
 	action       *models.Action
-	businessCase *models.BusinessCase
+	businessCase *models.BusinessCaseWithCosts
 	// feedback     *models.GRTFeedback
 	note         *models.SystemIntakeNote
 	systemIntake *models.SystemIntake
@@ -69,7 +70,6 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		ArchivedAt:  nil,
 
 		EUAUserID: null.StringFrom("SWKJ"),
-		Status:    models.SystemIntakeStatusBIZCASEFINALNEEDED,
 
 		RequestType: models.SystemIntakeRequestTypeNEW,
 
@@ -117,7 +117,6 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		ContractStartDate:  date(2021, 1, 1),
 		ContractEndDate:    date(2023, 12, 31),
 		ContractVehicle:    null.StringFrom("Sole source"),
-		ContractNumber:     null.StringFrom("22288144"),
 		Contractor:         null.StringFrom("ACME Co."),
 		AdminLead:          null.StringFrom("Valerie Hartz"),
 		GRTDate:            &times.oneHourInTheFuture,
@@ -127,6 +126,10 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		LifecycleScope:        models.HTMLPointer("This LCID covers stuff for 3 years"),
 		LifecycleCostBaseline: null.StringFrom("about 10,000,000"),
 		LifecycleExpiresAt:    &times.threeYearsInTheFuture,
+
+		Step:          models.SystemIntakeStepDECISION,
+		State:         models.SystemIntakeStateOpen,
+		DecisionState: models.SIDSNotApproved,
 	}
 
 	return systemIntake
@@ -159,11 +162,10 @@ func makeTestNote(systemIntake models.SystemIntake) *models.SystemIntakeNote {
 	return note
 }
 
-func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *models.BusinessCase {
-	businessCase := &models.BusinessCase{
-		ID:                 uuid.New(),
-		SystemIntakeID:     systemIntake.ID,
-		SystemIntakeStatus: systemIntake.Status,
+func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *models.BusinessCaseWithCosts {
+	bc := models.BusinessCase{
+		ID:             uuid.New(),
+		SystemIntakeID: systemIntake.ID,
 
 		CreatedAt:  &times.fiveMinutesAgo,
 		UpdatedAt:  &times.now,
@@ -223,8 +225,10 @@ func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *
 		AlternativeBSecurityIsApproved:      null.BoolFromPtr(nil),
 		AlternativeBSecurityIsBeingReviewed: null.StringFromPtr(nil),
 		AlternativeBHostingCloudServiceType: null.StringFromPtr(nil),
-
-		LifecycleCostLines: models.EstimatedLifecycleCosts{},
+	}
+	businessCase := &models.BusinessCaseWithCosts{
+		BusinessCase:       bc,
+		LifecycleCostLines: []models.EstimatedLifecycleCost{},
 	}
 
 	// lifecycle cost items
@@ -324,28 +328,15 @@ func makeCedarIntakeClient() *intake.Client {
 	cedarAPIHost := os.Getenv(appconfig.CEDARAPIURL)
 	cedarAPIKey := os.Getenv(appconfig.CEDARAPIKey)
 
-	td := ldtestdata.DataSource()
-	td.Update(td.Flag("emit-to-cedar").BooleanFlag().VariationForAll(true))
-	config := ld.Config{
-		DataSource: td,
-		Events:     ldcomponents.NoEvents(),
-	}
-
-	ldClient, err := ld.MakeCustomClient("fake", config, 0)
-	if err != nil {
-		fmt.Println(err)
-		panic("Error initializing ldClient")
-	}
-
-	client := intake.NewClient(cedarAPIHost, cedarAPIKey, ldClient)
+	client := intake.NewClient(cedarAPIHost, cedarAPIKey, false)
 	return client
 }
 
-func submitToCEDAR() {
+func submitToCEDAR(ctx context.Context) {
 	zapLogger, err := zap.NewDevelopment()
 	noErr(err)
 
-	ctx := appcontext.WithLogger(context.Background(), zapLogger)
+	ctx = appcontext.WithLogger(ctx, zapLogger)
 
 	client := makeCedarIntakeClient()
 
@@ -381,17 +372,18 @@ func submitToCEDAR() {
 	fmt.Println("Successfully sent system intake")
 }
 
-func dumpIntakeObject(obj translation.IntakeObject, directory string) {
+func dumpIntakeObject(ctx context.Context, obj translation.IntakeObject, directory string) {
+
 	filename := filepath.Join(directory, obj.ObjectType()+".json")
 
-	intakeModel, err := obj.CreateIntakeModel()
+	intakeModel, err := obj.CreateIntakeModel(ctx)
 	noErr(err)
 
 	err = os.WriteFile(filename, []byte(*intakeModel.Body), 0600)
 	noErr(err)
 }
 
-func dumpPayload() {
+func dumpPayload(ctx context.Context) {
 	// os.Executable() doesn't work properly with "go run", so use runtime.Caller() instead
 	// see https://stackoverflow.com/a/70491592
 	_, sourceFilename, _, _ := runtime.Caller(0)
@@ -401,7 +393,7 @@ func dumpPayload() {
 
 	fmt.Println("Dumping business case data")
 	businessCaseIntakeObject := translation.TranslatableBusinessCase(*testData.businessCase)
-	dumpIntakeObject(&businessCaseIntakeObject, execDir)
+	dumpIntakeObject(ctx, &businessCaseIntakeObject, execDir)
 	fmt.Println("Business case data dumped inside " + execDir + string(filepath.Separator))
 
 	// fmt.Println("Dumping GRT feedback data")
@@ -411,26 +403,30 @@ func dumpPayload() {
 
 	fmt.Println("Dumping system intake data")
 	systemIntakeIntakeObject := translation.TranslatableSystemIntake(*testData.systemIntake)
-	dumpIntakeObject(&systemIntakeIntakeObject, execDir)
+	dumpIntakeObject(ctx, &systemIntakeIntakeObject, execDir)
 	fmt.Println("System intake data dumped inside " + execDir + string(filepath.Separator))
 }
 
-var submitCmd = &cobra.Command{
-	Use:   "submit",
-	Short: "Submit test data to CEDAR Intake",
-	Long:  "Submit test data to CEDAR Intake",
-	Run: func(cmd *cobra.Command, args []string) {
-		submitToCEDAR()
-	},
+func submitCmd(ctx context.Context) *cobra.Command {
+	return &cobra.Command{
+		Use:   "submit",
+		Short: "Submit test data to CEDAR Intake",
+		Long:  "Submit test data to CEDAR Intake",
+		Run: func(cmd *cobra.Command, args []string) {
+			submitToCEDAR(ctx)
+		},
+	}
 }
 
-var dumpCmd = &cobra.Command{
-	Use:   "dump",
-	Short: "Dump test data payloads to local files",
-	Long:  "Dump test data payloads to local files",
-	Run: func(cmd *cobra.Command, args []string) {
-		dumpPayload()
-	},
+func dumpCmd(ctx context.Context) *cobra.Command {
+	return &cobra.Command{
+		Use:   "dump",
+		Short: "Dump test data payloads to local files",
+		Long:  "Dump test data payloads to local files",
+		Run: func(cmd *cobra.Command, args []string) {
+			dumpPayload(ctx)
+		},
+	}
 }
 
 var rootCmd = &cobra.Command{
@@ -439,12 +435,51 @@ var rootCmd = &cobra.Command{
 	Long:  `Utility for either submitting test data to the CEDAR Intake API or dumping the JSON payload that would be submitted to a local file`,
 }
 
-func init() {
-	rootCmd.AddCommand(submitCmd)
-	rootCmd.AddCommand(dumpCmd)
-}
-
 func execute() {
+	ctx := context.Background()
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(fmt.Errorf("problem initializing dev logger in test_cedar_intake: %w", err))
+	}
+
+	ctx = appcontext.WithLogger(ctx, logger)
+
+	config := testhelpers.NewConfig()
+	dbConfig := storage.DBConfig{
+		Host:           config.GetString(appconfig.DBHostConfigKey),
+		Port:           config.GetString(appconfig.DBPortConfigKey),
+		Database:       config.GetString(appconfig.DBNameConfigKey),
+		Username:       config.GetString(appconfig.DBUsernameConfigKey),
+		Password:       config.GetString(appconfig.DBPasswordConfigKey),
+		SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
+		MaxConnections: config.GetInt(appconfig.DBMaxConnections),
+	}
+
+	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	if err != nil {
+		panic(fmt.Errorf("problem creating custom launchDarkly client in test_cedar_intake: %w", err))
+	}
+
+	store, err := storage.NewStore(dbConfig, ldClient)
+	if err != nil {
+		panic(fmt.Errorf("problem intializing store in test_cedar_intake: %w", err))
+	}
+
+	buildDataloaders := func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(
+			store,
+			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
+			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
+		)
+	}
+
+	ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
+
+	rootCmd.AddCommand(
+		submitCmd(ctx),
+		dumpCmd(ctx),
+	)
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

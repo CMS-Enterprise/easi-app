@@ -88,7 +88,7 @@ exports[`RelatedArticle > matches the snapshot 1`] = `
               <h3
                 class="line-height-body-4 margin-bottom-1"
               >
-                Prepare for the Review Board meeting
+                Prepare for the Governance Review Board meeting
               </h3>
               <a
                 class="usa-link display-inline-block margin-bottom-1"
@@ -137,7 +137,7 @@ exports[`RelatedArticle > matches the snapshot 1`] = `
               <h3
                 class="line-height-body-4 margin-bottom-1"
               >
-                Sample Business Case
+                Steps involved in adding a new system or service
               </h3>
               <a
                 class="usa-link display-inline-block margin-bottom-1"
@@ -156,7 +156,7 @@ exports[`RelatedArticle > matches the snapshot 1`] = `
               data-testid="CardBody"
             >
               <p>
-                This sample Business Case can help you as you fill out your own Business Case. The content here is an example of how complete and precise to be when completing your Business Case.
+                To add a new system or service and receive a CMS Life Cycle ID, you need to go through a set of steps and get approved by the Governance Review Board (GRB). This article will provide an overview of the steps involved.
               </p>
             </div>
             <div

@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Button,
-  IconExpandMore,
-  IconNavigateNext,
-  IconVisibilityOff,
-  IconVisiblity
-} from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -20,6 +14,7 @@ type CollapsableLinkProps = {
   eyeIcon?: boolean;
   startOpen?: boolean;
   labelPosition?: 'top' | 'bottom';
+  bold?: boolean;
 };
 
 const CollapsableLink = ({
@@ -31,7 +26,8 @@ const CollapsableLink = ({
   styleLeftBar = true,
   eyeIcon,
   startOpen = false,
-  labelPosition = 'top'
+  labelPosition = 'top',
+  bold = true
 }: CollapsableLinkProps) => {
   // TODO: should this state instead be held in the parent and passed in as prop?
   // Followup: if the state should remain here, how do we test the component when it's open?
@@ -40,17 +36,17 @@ const CollapsableLink = ({
 
   const renderEyeIcon = () => {
     return isOpen ? (
-      <IconVisibilityOff className="easi-collapsable-link__eye-icon" />
+      <Icon.VisibilityOff className="easi-collapsable-link__eye-icon" />
     ) : (
-      <IconVisiblity className="easi-collapsable-link__eye-icon" />
+      <Icon.Visibility className="easi-collapsable-link__eye-icon" />
     );
   };
 
   const renderCaret = () => {
     return isOpen ? (
-      <IconExpandMore className="margin-right-05" />
+      <Icon.ExpandMore className="margin-right-05" />
     ) : (
-      <IconNavigateNext className="margin-right-05" />
+      <Icon.NavigateNext className="margin-right-05" />
     );
   };
 
@@ -62,7 +58,7 @@ const CollapsableLink = ({
       aria-controls={id}
       className={classnames(
         'display-flex flex-align-center',
-        { 'text-bold': isOpen },
+        { 'text-bold': isOpen && bold },
         className
       )}
       unstyled

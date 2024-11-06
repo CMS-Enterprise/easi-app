@@ -3,15 +3,18 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // CreateTRBRequest makes a new TRB request
@@ -20,33 +23,41 @@ func CreateTRBRequest(
 	requestType models.TRBRequestType,
 	store *storage.Store,
 ) (*models.TRBRequest, error) {
-	princ := appcontext.Principal(ctx)
+	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+		princ := appcontext.Principal(ctx)
 
-	trb := models.NewTRBRequest(princ.ID())
-	trb.Type = requestType
-	trb.State = models.TRBRequestStateOpen
+		trb := models.NewTRBRequest(princ.ID())
+		trb.Type = requestType
+		trb.State = models.TRBRequestStateOpen
+		createdTRB, err := store.CreateTRBRequest(ctx, tx, trb)
+		if err != nil {
+			return nil, err
+		}
+		form := models.NewTRBRequestForm(princ.ID())
+		form.TRBRequestID = createdTRB.ID
 
-	createdTRB, err := store.CreateTRBRequest(ctx, trb)
-	if err != nil {
-		return nil, err
-	}
+		// Create request form
+		_, err = store.CreateTRBRequestForm(ctx, tx, form)
+		if err != nil {
+			return nil, fmt.Errorf(" unable to create  to create TRB request err :%w", err)
+		}
 
-	// This should probably be a part of a transaction...
-	initialAttendee := &models.TRBRequestAttendee{
-		TRBRequestID: createdTRB.ID,
-		EUAUserID:    princ.ID(),
-		Component:    nil,
-		Role:         nil,
-	}
-	initialAttendee.CreatedBy = princ.ID()
-	_, err = store.CreateTRBRequestAttendee(ctx, initialAttendee)
-	if err != nil {
-		return nil, err
-	}
+		// Add requester as an attendee
+		initialAttendee := &models.TRBRequestAttendee{
+			TRBRequestID: createdTRB.ID,
+			EUAUserID:    princ.ID(),
+			Component:    nil,
+			Role:         nil,
+		}
+		initialAttendee.CreatedBy = princ.ID()
+		_, err = store.CreateTRBRequestAttendee(ctx, tx, initialAttendee)
+		if err != nil {
+			return nil, err
+		}
 
-	//TODO create place holders for the rest of the related sections with calls to their stores
+		return createdTRB, err
 
-	return createdTRB, err
+	})
 }
 
 // UpdateTRBRequest updates a TRB request
@@ -73,31 +84,18 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 }
 
 // GetTRBRequestByID returns a TRB request by it's ID
-func GetTRBRequestByID(ctx context.Context, id uuid.UUID, store *storage.Store) (*models.TRBRequest, error) {
-	trb, err := store.GetTRBRequestByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	return trb, err
+func GetTRBRequestByID(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequest, error) {
+	return store.GetTRBRequestByID(ctx, id)
 }
 
 // GetTRBRequests returns all TRB Requests
-func GetTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
-	TRBRequests, err := store.GetTRBRequests(ctx, archived)
-	if err != nil {
-		return nil, err
-	}
-	return TRBRequests, err
+func GetTRBRequests(ctx context.Context, store *storage.Store, archived bool) ([]*models.TRBRequest, error) {
+	return store.GetTRBRequests(ctx, archived)
 }
 
 // GetMyTRBRequests returns all TRB Requests that belong to the principal in the context
-func GetMyTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
-	TRBRequests, err := store.GetMyTRBRequests(ctx, archived)
-	if err != nil {
-		return nil, err
-	}
-	return TRBRequests, err
+func GetMyTRBRequests(ctx context.Context, store *storage.Store, archived bool) ([]*models.TRBRequest, error) {
+	return store.GetMyTRBRequests(ctx, archived)
 }
 
 // UpdateTRBRequestConsultMeetingTime sets the TRB consult meeting time and sends the related emails
@@ -154,7 +152,7 @@ func UpdateTRBRequestConsultMeetingTime(
 		CopyTRBMailbox:     copyTRBMailbox,
 		NotifyEmails:       notifyEmails,
 		Notes:              notes,
-		RequesterName:      requesterInfo.CommonName,
+		RequesterName:      requesterInfo.DisplayName,
 	}
 
 	// Email client can be nil when this is called from tests - the email client itself tests this
@@ -220,8 +218,8 @@ func UpdateTRBRequestTRBLead(
 	emailInput := email.SendTRBRequestTRBLeadEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
-		TRBLeadName:    leadInfo.CommonName,
-		RequesterName:  requesterInfo.CommonName,
+		TRBLeadName:    leadInfo.DisplayName,
+		RequesterName:  requesterInfo.DisplayName,
 		Component:      component,
 		TRBLeadEmail:   leadInfo.Email,
 	}
@@ -292,7 +290,7 @@ func CloseTRBRequest(
 	emailInput := email.SendTRBRequestClosedEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
-		RequesterName:  requester.CommonName,
+		RequesterName:  requester.DisplayName,
 		Recipients:     recipientEmails,
 		CopyTRBMailbox: copyTRBMailbox,
 		ReasonClosed:   reasonClosed,
@@ -365,7 +363,7 @@ func ReopenTRBRequest(
 	emailInput := email.SendTRBRequestReopenedEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
-		RequesterName:  requester.CommonName,
+		RequesterName:  requester.DisplayName,
 		Recipients:     recipientEmails,
 		ReasonReopened: reasonReopened,
 		CopyTRBMailbox: copyTRBMailbox,
@@ -400,7 +398,7 @@ func IsRecentTRBRequest(ctx context.Context, obj *models.TRBRequest, now time.Ti
 func GetTRBLeadInfo(ctx context.Context, trbLead *string) (*models.UserInfo, error) {
 	var trbLeadInfo *models.UserInfo
 	if trbLead != nil {
-		info, err := dataloaders.GetUserInfo(ctx, *trbLead)
+		info, err := dataloaders.FetchUserInfoByEUAUserID(ctx, *trbLead)
 		if err != nil {
 			return nil, err
 		}
@@ -416,7 +414,7 @@ func GetTRBLeadInfo(ctx context.Context, trbLead *string) (*models.UserInfo, err
 
 // GetTRBRequesterInfo retrieves the user info of a TRB request's requester
 func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.UserInfo, error) {
-	requesterInfo, err := dataloaders.GetUserInfo(ctx, requesterEUA)
+	requesterInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, requesterEUA)
 	if err != nil {
 		return nil, err
 	}
@@ -426,19 +424,4 @@ func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.User
 	}
 
 	return requesterInfo, nil
-}
-
-// GetTRBUserComponent retrieves the component of a TRB user from the TRB attendees table
-func GetTRBUserComponent(ctx context.Context, store *storage.Store, euaID *string, trbRequestID uuid.UUID) (*string, error) {
-	// TODO/tech debt: This results in an N+1 problem and could be moved to a dataloader if
-	// performance ever becomes an issue
-	var component *string
-	if euaID != nil {
-		attendeeComponent, err := store.GetAttendeeComponentByEUA(ctx, *euaID, trbRequestID)
-		if err != nil {
-			return nil, err
-		}
-		component = attendeeComponent
-	}
-	return component, nil
 }

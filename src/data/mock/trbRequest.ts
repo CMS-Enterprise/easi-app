@@ -1,7 +1,11 @@
+import {
+  GetTrbLeadOptionsDocument,
+  GetTrbLeadOptionsQuery
+} from 'gql/gen/graphql';
+
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
-import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
@@ -9,9 +13,7 @@ import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import {
   GetRequests,
-  GetRequests_myTrbRequests as MyTrbRequests,
-  GetRequests_requests as Requests,
-  GetRequestsVariables
+  GetRequests_myTrbRequests as MyTrbRequests
 } from 'queries/types/GetRequests';
 import {
   GetTrbAdminNotes,
@@ -22,7 +24,6 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
-import { GetTrbLeadOptions } from 'queries/types/GetTrbLeadOptions';
 import {
   GetTrbRequest,
   GetTrbRequestVariables
@@ -48,8 +49,6 @@ import {
 import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
 import {
   PersonRole,
-  RequestType,
-  SystemIntakeStatusRequester,
   TRBAdminNoteCategory,
   TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
@@ -156,7 +155,9 @@ export const trbRequest: GetTrbRequest['trbRequest'] = {
     fundingSources: null,
     submittedAt: null,
     __typename: 'TRBRequestForm'
-  }
+  },
+  relatedTRBRequests: [],
+  relatedIntakes: []
 };
 
 export const getTrbRequestQuery: MockedQuery<
@@ -189,7 +190,34 @@ export const trbRequestSummary: Summary = {
   },
   createdAt: '2023-01-05T07:26:16.036618Z',
   taskStatuses,
-  adminNotes
+  adminNotes,
+  relationType: null,
+  contractName: 'A great service',
+  contractNumbers: [
+    {
+      __typename: 'TRBRequestContractNumber',
+      id: '789',
+      contractNumber: '123124455432'
+    }
+  ],
+  systems: [
+    {
+      __typename: 'CedarSystem',
+      id: '123',
+      name: 'My system',
+      description: 'A fun system',
+      acronym: 'MS',
+      businessOwnerOrg: 'Oddball',
+      businessOwnerRoles: [
+        {
+          __typename: 'CedarRole',
+          objectID: '9787620',
+          assigneeFirstName: 'John',
+          assigneeLastName: 'Doe'
+        }
+      ]
+    }
+  ]
 };
 
 export const getTrbRequestSummary = (
@@ -226,72 +254,8 @@ export const getTrbRequestSummaryQuery: MockedQuery<
 };
 
 const getRequestsData: {
-  edges: Requests['edges'];
   myTrbRequests: MyTrbRequests[];
 } = {
-  edges: [
-    {
-      __typename: 'RequestEdge',
-      node: {
-        __typename: 'Request',
-        id: '123',
-        name: '508 Test 1',
-        submittedAt: '2021-05-25T19:22:40Z',
-        type: RequestType.ACCESSIBILITY_REQUEST,
-        status: 'OPEN',
-        statusRequester: null,
-        statusCreatedAt: '2021-05-25T19:22:40Z',
-        lcid: null,
-        nextMeetingDate: null
-      }
-    },
-    {
-      __typename: 'RequestEdge',
-      node: {
-        __typename: 'Request',
-        id: '909',
-        name: '508 Test 2',
-        submittedAt: '2021-05-25T19:22:40Z',
-        type: RequestType.ACCESSIBILITY_REQUEST,
-        status: 'IN_REMEDIATION',
-        statusRequester: null,
-        statusCreatedAt: '2021-05-26T19:22:40Z',
-        lcid: null,
-        nextMeetingDate: null
-      }
-    },
-    {
-      __typename: 'RequestEdge',
-      node: {
-        __typename: 'Request',
-        id: '456',
-        name: 'Intake 1',
-        submittedAt: '2021-05-22T19:22:40Z',
-        type: RequestType.GOVERNANCE_REQUEST,
-        status: 'INTAKE_DRAFT',
-        statusRequester:
-          SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
-        statusCreatedAt: null,
-        lcid: null,
-        nextMeetingDate: null
-      }
-    },
-    {
-      __typename: 'RequestEdge',
-      node: {
-        __typename: 'Request',
-        id: '789',
-        name: 'Intake 2',
-        submittedAt: '2021-05-20T19:22:40Z',
-        type: RequestType.GOVERNANCE_REQUEST,
-        status: 'LCID_ISSUED',
-        statusRequester: SystemIntakeStatusRequester.LCID_ISSUED,
-        statusCreatedAt: null,
-        lcid: 'A123456',
-        nextMeetingDate: null
-      }
-    }
-  ],
   myTrbRequests: [
     {
       id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
@@ -299,26 +263,24 @@ const getRequestsData: {
       nextMeetingDate: null,
       status: TRBRequestStatus.CONSULT_COMPLETE,
       submittedAt: '2023-03-07T15:09:17.694681Z',
-      __typename: 'TRBRequest'
+      __typename: 'TRBRequest',
+      systems: [],
+      lastMeetingDate: null
     }
   ]
 };
 
 export const getRequestsQuery = (
-  edges: Requests['edges'] = getRequestsData.edges,
   myTrbRequests: MyTrbRequests[] = getRequestsData.myTrbRequests
-): MockedQuery<GetRequests, GetRequestsVariables> => ({
+): MockedQuery<GetRequests> => ({
   request: {
     query: GetRequestsQuery,
-    variables: { first: 20 }
+    variables: {}
   },
   result: {
     data: {
-      requests: {
-        __typename: 'RequestsConnection',
-        edges
-      },
-      myTrbRequests
+      myTrbRequests,
+      mySystemIntakes: []
     }
   }
 });
@@ -429,6 +391,9 @@ export const getTrbAdviceLetterQuery: MockedQuery<
         __typename: 'TRBRequest',
         id: trbRequestId,
         name: trbRequest.name,
+        type: TRBRequestType.NEED_HELP,
+        createdAt: '2023-01-08T07:26:16.036618Z',
+        consultMeetingTime: null,
         taskStatuses: {
           __typename: 'TRBTaskStatuses',
           adviceLetterStatus: TRBAdviceLetterStatus.COMPLETED
@@ -482,6 +447,21 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-01T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: 'Word',
+    contractNumbers: [
+      {
+        contractNumber: '24',
+        __typename: 'TRBRequestContractNumber'
+      },
+      {
+        contractNumber: '13',
+        __typename: 'TRBRequestContractNumber'
+      }
+    ],
+    systems: [
+      { id: '{0}', name: 'Quality team', __typename: 'CedarSystem' },
+      { id: '{0}', name: 'Management service', __typename: 'CedarSystem' }
+    ],
     __typename: 'TRBRequest'
   },
   {
@@ -506,6 +486,9 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-02T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: '',
+    contractNumbers: [],
+    systems: [],
     __typename: 'TRBRequest'
   },
   {
@@ -530,6 +513,9 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-03T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: '',
+    contractNumbers: [],
+    systems: [],
     __typename: 'TRBRequest'
   },
   {
@@ -554,6 +540,9 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-04T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: '',
+    contractNumbers: [],
+    systems: [],
     __typename: 'TRBRequest'
   },
   {
@@ -578,6 +567,9 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-05T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: '',
+    contractNumbers: [],
+    systems: [],
     __typename: 'TRBRequest'
   },
   {
@@ -602,6 +594,9 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-06T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: '',
+    contractNumbers: [],
+    systems: [],
     __typename: 'TRBRequest'
   }
 ];
@@ -621,13 +616,14 @@ export const trbLeadOptions: MockUserInfo[] = [
   users.next()?.userInfo!
 ];
 
-export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptions> = {
+export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptionsQuery> = {
   request: {
-    query: GetTrbLeadOptionsQuery,
+    query: GetTrbLeadOptionsDocument,
     variables: {}
   },
   result: {
     data: {
+      __typename: 'Query',
       trbLeadOptions
     }
   }

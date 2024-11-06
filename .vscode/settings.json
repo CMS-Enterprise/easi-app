@@ -12,7 +12,7 @@
         "DB_MAX_CONNECTIONS": "20",
         "AWS_REGION": "us-west-2",
         "AWS_S3_FILE_UPLOAD_BUCKET": "easi-app-file-uploads",
-        "MINIO_ADDRESS": "http://localhost:9000",
+        "MINIO_ADDRESS": "http://localhost:9004",
         "MINIO_ACCESS_KEY": "minioadmin",
         "MINIO_SECRET_KEY": "minioadmin",
         "EMAIL_TEMPLATE_DIR":"${workspaceFolder}/pkg/email/templates"
@@ -30,13 +30,15 @@
         "DB_MAX_CONNECTIONS": "20",
         "AWS_REGION": "us-west-2",
         "AWS_S3_FILE_UPLOAD_BUCKET": "easi-app-file-uploads",
-        "MINIO_ADDRESS": "http://localhost:9000",
+        "MINIO_ADDRESS": "http://localhost:9004",
         "MINIO_ACCESS_KEY": "minioadmin",
         "MINIO_SECRET_KEY": "minioadmin",
         "EMAIL_TEMPLATE_DIR":"${workspaceFolder}/pkg/email/templates"
       },
     "editor.formatOnSave": false,
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
-    }
+      "source.fixAll.eslint": "explicit"
+    },
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true
 }

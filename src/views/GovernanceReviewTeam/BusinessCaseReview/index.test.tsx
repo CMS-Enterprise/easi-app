@@ -1,9 +1,11 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { businessCaseInitialData } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
+
+import ITGovAdminContext from '../ITGovAdminContext';
 
 import BusinessCaseReview from './index';
 
@@ -16,6 +18,7 @@ describe('The GRT business case review', () => {
   const mockBusinessCase: BusinessCaseModel = {
     ...businessCaseInitialData,
     id: '54e829a9-6ce3-4b4b-81b0-7781b1e22821',
+    systemIntakeId: 'c9dcaca2-c500-45ae-96ce-a4ae527b4c8a',
     requestName: 'Easy Access to System Information',
     requester: {
       name: 'Jane Doe',
@@ -155,5 +158,19 @@ describe('The GRT business case review', () => {
     );
 
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('Renders action button for GRT admins', () => {
+    render(
+      <MemoryRouter>
+        <ITGovAdminContext.Provider value>
+          <BusinessCaseReview businessCase={mockBusinessCase} />
+        </ITGovAdminContext.Provider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByRole('link', { name: 'Take an action' })
+    ).toBeInTheDocument();
   });
 });

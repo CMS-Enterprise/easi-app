@@ -33,6 +33,17 @@ export interface GetTrbAdminTeamHome_trbRequests_form {
   submittedAt: Time | null;
 }
 
+export interface GetTrbAdminTeamHome_trbRequests_contractNumbers {
+  __typename: "TRBRequestContractNumber";
+  contractNumber: string;
+}
+
+export interface GetTrbAdminTeamHome_trbRequests_systems {
+  __typename: "CedarSystem";
+  id: string;
+  name: string;
+}
+
 export interface GetTrbAdminTeamHome_trbRequests {
   __typename: "TRBRequest";
   id: UUID;
@@ -47,6 +58,15 @@ export interface GetTrbAdminTeamHome_trbRequests {
   requesterInfo: GetTrbAdminTeamHome_trbRequests_requesterInfo;
   taskStatuses: GetTrbAdminTeamHome_trbRequests_taskStatuses;
   form: GetTrbAdminTeamHome_trbRequests_form;
+  contractName: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: GetTrbAdminTeamHome_trbRequests_contractNumbers[];
+  /**
+   * Linked systems
+   */
+  systems: GetTrbAdminTeamHome_trbRequests_systems[];
 }
 
 export interface GetTrbAdminTeamHome {

@@ -1,0 +1,8 @@
+@use 'uswds-core' as *;
+
+.outline path:nth-child(2) {
+    fill: none;
+    stroke: color('base');
+    stroke-width: 2px;
+    stroke-linejoin: round;
+}

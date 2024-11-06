@@ -12,6 +12,6 @@ The account that we use for E2E login tests is a real Okta account on the [Test 
 3. In the "Change Password" section, set the new password to a securely generated one (you can use 1Password to make one).
     - In 1Password, set the settings to be "Random Password" of length 16, and include symbols and numbers.
 	- Make sure the new password is saved in 1Password before you edit it in Okta or GitHub.
-4. [Update the OKTA_TEST_PASSWORD secret in GitHub](https://github.com/CMSgov/easi-app/settings/secrets/actions/OKTA_TEST_PASSWORD) to the new password.
-5. [Update the OKTA_TEST_PASSWORD dependabot secret in GitHub](https://github.com/CMSgov/easi-app/settings/secrets/dependabot/OKTA_TEST_PASSWORD) to the new password.
+4. [Update the OKTA_TEST_PASSWORD secret in GitHub](https://github.com/cms-enterprise/easi-app/settings/secrets/actions/OKTA_TEST_PASSWORD) to the new password.
+5. [Update the OKTA_TEST_PASSWORD dependabot secret in GitHub](https://github.com/cms-enterprise/easi-app/settings/secrets/dependabot/OKTA_TEST_PASSWORD) to the new password.
 6. Thread a response to the monthly reminder in the [#oit-easi-dev](https://cmsgov.slack.com/archives/CNU2B59UH) slack channel that the password has successfully been updated.

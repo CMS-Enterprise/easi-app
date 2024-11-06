@@ -99,7 +99,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Data Center/Cloud Service Provider name
+                  Location or cloud service provider name
                 </dt>
                 <dd
                   class="description-definition margin-0 line-height-body-3"
@@ -158,7 +158,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 >
                   <a
                     class="usa-link link-header"
-                    href="/systems/000-100-0/ato"
+                    href="/systems/000-100-0/ato-and-security"
                   >
                     View ATO information
                     <span
@@ -194,7 +194,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Total POAMs
+                  Total Open POA&Ms
                 </dt>
                 <dd
                   class="description-definition margin-0 line-height-body-3"

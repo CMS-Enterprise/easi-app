@@ -1,10 +1,10 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { IconArrowBack } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 
 import StepHeader from '.';
 
@@ -29,8 +29,7 @@ const Template: ComponentStory<typeof StepHeader> = (args: any) => (
 export const Default = Template.bind({});
 Default.args = {
   heading: 'TRB Request',
-  text:
-    'Tell the Technical Review Board (TRB) what type of technical support you need. The information you provide on this form helps the TRB understand context around your request in order to offer more targeted help.',
+  text: 'Tell the Technical Review Board (TRB) what type of technical support you need. The information you provide on this form helps the TRB understand context around your request in order to offer more targeted help.',
   subText:
     'After submitting this form, you will receive an automatic email from the TRB mailbox, and an TRB team member will reach out regarding next steps.',
   step: 2,
@@ -78,7 +77,7 @@ Default.args = {
   ),
   children: (
     <UswdsReactLink to="#save">
-      <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+      <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
       Save and exit
     </UswdsReactLink>
   )

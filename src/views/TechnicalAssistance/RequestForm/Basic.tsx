@@ -19,6 +19,7 @@ import {
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
+import useEasiForm from 'components/EasiForm/useEasiForm';
 import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import Divider from 'components/shared/Divider';
@@ -30,7 +31,6 @@ import TextAreaField from 'components/shared/TextAreaField';
 import Spinner from 'components/Spinner';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import useCacheQuery from 'hooks/useCacheQuery';
-import useEasiForm from 'hooks/useEasiForm';
 import DeleteTRBRequestFundingSource from 'queries/DeleteTRBRequestFundingSource';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import {
@@ -58,7 +58,7 @@ import {
   // fundingSourcesBasicSchema,
   TrbRequestFormBasic
 } from 'validations/trbRequestSchema';
-import FundingSources from 'views/SystemIntake/ContractDetails/FundingSources';
+import FundingSources from 'views/TechnicalAssistance/RequestForm/FundingSources/FundingSources';
 
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
@@ -101,14 +101,11 @@ function Basic({
   const history = useHistory();
   const { t } = useTranslation('technicalAssistance');
 
-  const [fundingSourcesFormActive, setFundingSourcesFormActive] = useState(
-    false
-  );
+  const [fundingSourcesFormActive, setFundingSourcesFormActive] =
+    useState(false);
 
-  const {
-    data,
-    loading: intakesLoading
-  } = useCacheQuery<GetSystemIntakesWithLCIDSType>(GetSystemIntakesWithLCIDS);
+  const { data, loading: intakesLoading } =
+    useCacheQuery<GetSystemIntakesWithLCIDSType>(GetSystemIntakesWithLCIDS);
 
   const systemIntakesWithLCIDs = useMemo(() => {
     const systemIntakes = data?.systemIntakesWithLcids
@@ -206,9 +203,11 @@ function Basic({
       if (input.hasSolutionInMind === false) {
         input.proposedSolution = null;
       }
-      if (input.whereInProcess !== 'OTHER') {
+
+      if (input?.whereInProcess && input.whereInProcess !== 'OTHER') {
         input.whereInProcessOther = null;
       }
+
       if (input.hasExpectedStartEndDates === false) {
         input.expectedStartDate = null;
         input.expectedEndDate = null;
@@ -497,7 +496,7 @@ function Basic({
                         name="proposedSolution"
                         control={control}
                         shouldUnregister
-                        // eslint-disable-next-line no-shadow
+                        // eslint-disable-next-line @typescript-eslint/no-shadow
                         render={({ field, fieldState: { error } }) => (
                           <FormGroup error={!!error} className="margin-left-4">
                             <Label htmlFor="proposedSolution" error={!!error}>
@@ -580,7 +579,7 @@ function Basic({
                   <Controller
                     name="whereInProcessOther"
                     control={control}
-                    // eslint-disable-next-line no-shadow
+                    // eslint-disable-next-line @typescript-eslint/no-shadow
                     render={({ field, fieldState: { error } }) => (
                       <FormGroup error={!!error}>
                         <Label
@@ -645,7 +644,7 @@ function Basic({
                               name="expectedStartDate"
                               control={control}
                               shouldUnregister
-                              // eslint-disable-next-line no-shadow
+                              // eslint-disable-next-line @typescript-eslint/no-shadow
                               render={({ field, fieldState: { error } }) => (
                                 <FormGroup error={!!(error || startOrEndError)}>
                                   <Label
@@ -672,7 +671,7 @@ function Basic({
                               name="expectedEndDate"
                               control={control}
                               shouldUnregister
-                              // eslint-disable-next-line no-shadow
+                              // eslint-disable-next-line @typescript-eslint/no-shadow
                               render={({ field, fieldState: { error } }) => (
                                 <FormGroup error={!!(error || startOrEndError)}>
                                   <Label
@@ -722,7 +721,7 @@ function Basic({
           <Controller
             name="fundingSources"
             control={controlFundingSources}
-            // eslint-disable-next-line no-shadow
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             render={({ field, fieldState: { error } }) => (
               <FormGroup error={!!error} className="margin-bottom-4">
                 <Label
@@ -737,7 +736,7 @@ function Basic({
                 <FundingSources
                   id="trb-funding-sources"
                   initialValues={field.value}
-                  setFieldValue={(fieldName, value) => {
+                  setFieldValue={value => {
                     if (value.delete) {
                       deleteFundingSource(value.delete);
                     } else {
@@ -817,15 +816,16 @@ function Basic({
                       const val = v as TRBCollabGroupOption;
                       const optionKeyWordUpper = upperFirst(camelCase(v));
 
-                      const collabDateKey = `collabDate${optionKeyWordUpper}` as keyof Pick<
-                        TrbRequestFormBasic,
-                        | 'collabDateSecurity'
-                        | 'collabDateEnterpriseArchitecture'
-                        | 'collabDateCloud'
-                        | 'collabDatePrivacyAdvisor'
-                        | 'collabDateGovernanceReviewBoard'
-                        | 'collabDateOther'
-                      >;
+                      const collabDateKey =
+                        `collabDate${optionKeyWordUpper}` as keyof Pick<
+                          TrbRequestFormBasic,
+                          | 'collabDateSecurity'
+                          | 'collabDateEnterpriseArchitecture'
+                          | 'collabDateCloud'
+                          | 'collabDatePrivacyAdvisor'
+                          | 'collabDateGovernanceReviewBoard'
+                          | 'collabDateOther'
+                        >;
 
                       return (
                         <React.Fragment key={v}>
@@ -854,7 +854,7 @@ function Basic({
                             <Controller
                               name="collabGroupOther"
                               control={control}
-                              // eslint-disable-next-line no-shadow
+                              // eslint-disable-next-line @typescript-eslint/no-shadow
                               render={({ field, fieldState: { error } }) => (
                                 <FormGroup
                                   error={!!error}
@@ -891,9 +891,9 @@ function Basic({
                                   name={collabDateKey}
                                   control={control}
                                   render={({
-                                    // eslint-disable-next-line no-shadow
+                                    // eslint-disable-next-line @typescript-eslint/no-shadow
                                     field,
-                                    // eslint-disable-next-line no-shadow
+                                    // eslint-disable-next-line @typescript-eslint/no-shadow
                                     fieldState: { error }
                                   }) => (
                                     <FormGroup
@@ -929,9 +929,9 @@ function Basic({
                                           name="collabGRBConsultRequested"
                                           control={control}
                                           render={({
-                                            // eslint-disable-next-line no-shadow
+                                            // eslint-disable-next-line @typescript-eslint/no-shadow
                                             field,
-                                            // eslint-disable-next-line no-shadow
+                                            // eslint-disable-next-line @typescript-eslint/no-shadow
                                             fieldState: { error }
                                           }) => (
                                             <FormGroup

@@ -6,6 +6,7 @@ import { Form, Grid } from '@trussworks/react-uswds';
 import { camelCase } from 'lodash';
 
 import PageHeading from 'components/PageHeading';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import Label from 'components/shared/Label';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
@@ -14,7 +15,6 @@ import {
   SystemIntakeState
 } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary from '../components/ActionsSummary';
@@ -137,7 +137,7 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
           { text: t('Home'), url: '/' },
           {
             text: t('governanceReviewTeam:governanceRequestDetails'),
-            url: `/governance-review-team/${systemIntakeId}/intake-request`
+            url: `/it-governance/${systemIntakeId}/intake-request`
           },
           {
             text: t('resolutions.breadcrumb', {
@@ -149,20 +149,20 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
       />
 
       <Switch>
-        <Route path="/governance-review-team/:systemId/resolutions/issue-lcid">
+        <Route path="/it-governance/:systemId/resolutions/issue-lcid">
           <IssueLcid {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
-        <Route path="/governance-review-team/:systemId/resolutions/not-it-request">
+        <Route path="/it-governance/:systemId/resolutions/not-it-request">
           <NotGovernance
             systemIntakeId={systemIntakeId}
             state={state}
             decisionState={decisionState}
           />
         </Route>
-        <Route path="/governance-review-team/:systemId/resolutions/not-approved">
+        <Route path="/it-governance/:systemId/resolutions/not-approved">
           <NotApproved {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
-        <Route path="/governance-review-team/:systemId/resolutions/close-request">
+        <Route path="/it-governance/:systemId/resolutions/close-request">
           <CloseRequest
             systemIntakeId={systemIntakeId}
             state={state}
@@ -171,7 +171,7 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
             lcidStatus={systemIntake.lcidStatus}
           />
         </Route>
-        <Route path="/governance-review-team/:systemId/resolutions/re-open-request">
+        <Route path="/it-governance/:systemId/resolutions/re-open-request">
           <ReopenRequest
             systemIntakeId={systemIntakeId}
             state={state}
@@ -179,7 +179,7 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
           />
         </Route>
 
-        <Route path="/governance-review-team/:systemId/resolutions">
+        <Route path="/it-governance/:systemId/resolutions">
           <div className="desktop:display-flex desktop:flex-align-end">
             <PageHeading className="margin-bottom-0">
               {t('resolutions.title', {
@@ -248,7 +248,7 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
                   disabled: !isDirty
                 }}
                 saveExitText={t('cancelAction')}
-                taskListUrl={`/governance-review-team/${systemIntakeId}/actions`}
+                taskListUrl={`/it-governance/${systemIntakeId}/actions`}
                 className="margin-top-6"
                 border={false}
                 submitDisabled

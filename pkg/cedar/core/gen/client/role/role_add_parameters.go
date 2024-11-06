@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewRoleAddParams creates a new RoleAddParams object,
@@ -63,7 +63,10 @@ RoleAddParams contains all the parameters to send to the API endpoint
 */
 type RoleAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Role assignment information to be added to a CEDAR application.
+	*/
 	Body *models.RoleAddRequest
 
 	timeout    time.Duration
