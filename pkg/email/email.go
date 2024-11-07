@@ -375,7 +375,7 @@ func NewClient(config Config, sender sender) (Client, error) {
 	if systemIntakeUnretireLCID == nil {
 		return Client{}, templateError(systemIntakeUnretireLCIDTemplateName)
 	}
-	appTemplates.systemIntakeRetireLCID = systemIntakeRetireLCID
+	appTemplates.systemIntakeUnretireLCID = systemIntakeUnretireLCID
 
 	systemIntakeExpireLCIDTemplateName := "system_intake_expire_lcid.gohtml"
 	systemIntakeExpireLCID := rawTemplates.Lookup(systemIntakeExpireLCIDTemplateName)

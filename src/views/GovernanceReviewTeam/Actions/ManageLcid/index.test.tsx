@@ -65,7 +65,7 @@ describe('Manage LCID selection page', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getAllByRole('radio')).toHaveLength(2);
+    expect(screen.getAllByRole('radio')).toHaveLength(3);
 
     expect(
       screen.getByRole('radio', { name: 'Change retirement date' })

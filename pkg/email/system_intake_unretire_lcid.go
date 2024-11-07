@@ -50,10 +50,11 @@ func (sie systemIntakeEmails) systemIntakeUnretireLCIDBody(
 		AdditionalInfo:           additionalInfo.ToTemplate(),
 	}
 
-	var b bytes.Buffer
 	if sie.client.templates.systemIntakeUnretireLCID == nil {
 		return "", errors.New("retire lcid template is nil")
 	}
+
+	var b bytes.Buffer
 	err := sie.client.templates.systemIntakeUnretireLCID.Execute(&b, data)
 	if err != nil {
 		return "", err
