@@ -208,7 +208,9 @@ const TeamMemberForm = ({
 
   return (
     <Grid className="tablet:grid-col-6">
-      <h1 className="margin-bottom-1">{t(`${keyPrefix}.title`)}</h1>
+      <h1 className="margin-top-6 margin-bottom-1">
+        {t(`${keyPrefix}.title`)}
+      </h1>
       <p className="margin-bottom-0 font-body-md text-light line-height-body-4">
         {t(`${keyPrefix}.description`)}
       </p>

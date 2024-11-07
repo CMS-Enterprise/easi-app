@@ -764,6 +764,14 @@ type SystemIntakeRetireLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
+// Input for "unretiring" (i.e. removing retirement date) an LCID in IT Gov v2
+type SystemIntakeUnretireLCIDInput struct {
+	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
+	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
+	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	AdminNote              *HTML                        `json:"adminNote,omitempty"`
+}
+
 // Input for updating an intake's LCID in IT Gov v2
 type SystemIntakeUpdateLCIDInput struct {
 	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
@@ -892,15 +900,17 @@ type UpdateSystemIntakePayload struct {
 
 // Input to update some fields on a system request
 type UpdateSystemIntakeRequestDetailsInput struct {
-	ID               uuid.UUID `json:"id"`
-	RequestName      *string   `json:"requestName,omitempty"`
-	BusinessNeed     *string   `json:"businessNeed,omitempty"`
-	BusinessSolution *string   `json:"businessSolution,omitempty"`
-	NeedsEaSupport   *bool     `json:"needsEaSupport,omitempty"`
-	CurrentStage     *string   `json:"currentStage,omitempty"`
-	CedarSystemID    *string   `json:"cedarSystemId,omitempty"`
-	HasUIChanges     *bool     `json:"hasUiChanges,omitempty"`
-	UsesAiTech       *bool     `json:"usesAiTech,omitempty"`
+	ID                 uuid.UUID                                `json:"id"`
+	RequestName        *string                                  `json:"requestName,omitempty"`
+	BusinessNeed       *string                                  `json:"businessNeed,omitempty"`
+	BusinessSolution   *string                                  `json:"businessSolution,omitempty"`
+	CurrentStage       *string                                  `json:"currentStage,omitempty"`
+	NeedsEaSupport     *bool                                    `json:"needsEaSupport,omitempty"`
+	HasUIChanges       *bool                                    `json:"hasUiChanges,omitempty"`
+	UsesAiTech         *bool                                    `json:"usesAiTech,omitempty"`
+	UsingSoftware      *string                                  `json:"usingSoftware,omitempty"`
+	AcquisitionMethods []SystemIntakeSoftwareAcquisitionMethods `json:"acquisitionMethods"`
+	CedarSystemID      *string                                  `json:"cedarSystemId,omitempty"`
 }
 
 // Input data used to update GRT and GRB dates for a system request
@@ -1011,6 +1021,7 @@ const (
 	SystemIntakeActionTypeUpdateLcid                     SystemIntakeActionType = "UPDATE_LCID"
 	SystemIntakeActionTypeConfirmLcid                    SystemIntakeActionType = "CONFIRM_LCID"
 	SystemIntakeActionTypeRetireLcid                     SystemIntakeActionType = "RETIRE_LCID"
+	SystemIntakeActionTypeUnretireLcid                   SystemIntakeActionType = "UNRETIRE_LCID"
 	SystemIntakeActionTypeChangeLcidRetirementDate       SystemIntakeActionType = "CHANGE_LCID_RETIREMENT_DATE"
 	SystemIntakeActionTypeIssueLcid                      SystemIntakeActionType = "ISSUE_LCID"
 	SystemIntakeActionTypeSubmitIntake                   SystemIntakeActionType = "SUBMIT_INTAKE"
@@ -1043,6 +1054,7 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 	SystemIntakeActionTypeUpdateLcid,
 	SystemIntakeActionTypeConfirmLcid,
 	SystemIntakeActionTypeRetireLcid,
+	SystemIntakeActionTypeUnretireLcid,
 	SystemIntakeActionTypeChangeLcidRetirementDate,
 	SystemIntakeActionTypeIssueLcid,
 	SystemIntakeActionTypeSubmitIntake,
@@ -1067,7 +1079,7 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 
 func (e SystemIntakeActionType) IsValid() bool {
 	switch e {
-	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeExpireLcid, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeUpdateLcid, SystemIntakeActionTypeConfirmLcid, SystemIntakeActionTypeRetireLcid, SystemIntakeActionTypeChangeLcidRetirementDate, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeSubmitIntake, SystemIntakeActionTypeReject, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase:
+	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeExpireLcid, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeUpdateLcid, SystemIntakeActionTypeConfirmLcid, SystemIntakeActionTypeRetireLcid, SystemIntakeActionTypeUnretireLcid, SystemIntakeActionTypeChangeLcidRetirementDate, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeSubmitIntake, SystemIntakeActionTypeReject, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase:
 		return true
 	}
 	return false
@@ -1239,6 +1251,54 @@ func (e *SystemIntakeGRBReviewerVotingRole) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeGRBReviewerVotingRole) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
+type SystemIntakeSoftwareAcquisitionMethods string
+
+const (
+	SystemIntakeSoftwareAcquisitionMethodsContractorFurnished SystemIntakeSoftwareAcquisitionMethods = "CONTRACTOR_FURNISHED"
+	SystemIntakeSoftwareAcquisitionMethodsFedFurnished        SystemIntakeSoftwareAcquisitionMethods = "FED_FURNISHED"
+	SystemIntakeSoftwareAcquisitionMethodsElaOrInternal       SystemIntakeSoftwareAcquisitionMethods = "ELA_OR_INTERNAL"
+	SystemIntakeSoftwareAcquisitionMethodsNotYetDetermined    SystemIntakeSoftwareAcquisitionMethods = "NOT_YET_DETERMINED"
+	SystemIntakeSoftwareAcquisitionMethodsOther               SystemIntakeSoftwareAcquisitionMethods = "OTHER"
+)
+
+var AllSystemIntakeSoftwareAcquisitionMethods = []SystemIntakeSoftwareAcquisitionMethods{
+	SystemIntakeSoftwareAcquisitionMethodsContractorFurnished,
+	SystemIntakeSoftwareAcquisitionMethodsFedFurnished,
+	SystemIntakeSoftwareAcquisitionMethodsElaOrInternal,
+	SystemIntakeSoftwareAcquisitionMethodsNotYetDetermined,
+	SystemIntakeSoftwareAcquisitionMethodsOther,
+}
+
+func (e SystemIntakeSoftwareAcquisitionMethods) IsValid() bool {
+	switch e {
+	case SystemIntakeSoftwareAcquisitionMethodsContractorFurnished, SystemIntakeSoftwareAcquisitionMethodsFedFurnished, SystemIntakeSoftwareAcquisitionMethodsElaOrInternal, SystemIntakeSoftwareAcquisitionMethodsNotYetDetermined, SystemIntakeSoftwareAcquisitionMethodsOther:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeSoftwareAcquisitionMethods) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeSoftwareAcquisitionMethods) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeSoftwareAcquisitionMethods(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeSoftwareAcquisitionMethods", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeSoftwareAcquisitionMethods) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

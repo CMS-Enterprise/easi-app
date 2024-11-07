@@ -960,6 +960,7 @@ export type Mutation = {
   createSystemIntakeActionReopenRequest?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeActionRequestEdits?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeActionRetireLCID?: Maybe<UpdateSystemIntakePayload>;
+  createSystemIntakeActionUnretireLCID?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeActionUpdateLCID?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   createSystemIntakeDocument?: Maybe<CreateSystemIntakeDocumentPayload>;
@@ -1113,6 +1114,12 @@ export type MutationCreateSystemIntakeActionRequestEditsArgs = {
 /** Defines the mutations for the schema */
 export type MutationCreateSystemIntakeActionRetireLCIDArgs = {
   input: SystemIntakeRetireLCIDInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationCreateSystemIntakeActionUnretireLCIDArgs = {
+  input: SystemIntakeUnretireLCIDInput;
 };
 
 
@@ -1804,6 +1811,7 @@ export type SubmitIntakeInput = {
 /** Represents an IT governance request for a system */
 export type SystemIntake = {
   __typename: 'SystemIntake';
+  acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>;
   actions: Array<SystemIntakeAction>;
   adminLead?: Maybe<Scalars['String']['output']>;
   annualSpending?: Maybe<SystemIntakeAnnualSpending>;
@@ -1887,6 +1895,7 @@ export type SystemIntake = {
   trbFollowUpRecommendation?: Maybe<SystemIntakeTRBFollowUp>;
   updatedAt?: Maybe<Scalars['Time']['output']>;
   usesAiTech?: Maybe<Scalars['Boolean']['output']>;
+  usingSoftware?: Maybe<Scalars['String']['output']>;
 };
 
 /** An action taken on a system intake, often resulting in a change in status. */
@@ -1941,6 +1950,7 @@ export enum SystemIntakeActionType {
   SUBMIT_BIZ_CASE = 'SUBMIT_BIZ_CASE',
   SUBMIT_FINAL_BIZ_CASE = 'SUBMIT_FINAL_BIZ_CASE',
   SUBMIT_INTAKE = 'SUBMIT_INTAKE',
+  UNRETIRE_LCID = 'UNRETIRE_LCID',
   UPDATE_LCID = 'UPDATE_LCID'
 }
 
@@ -2425,6 +2435,15 @@ export type SystemIntakeRetireLCIDInput = {
   systemIntakeID: Scalars['UUID']['input'];
 };
 
+/** SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake */
+export enum SystemIntakeSoftwareAcquisitionMethods {
+  CONTRACTOR_FURNISHED = 'CONTRACTOR_FURNISHED',
+  ELA_OR_INTERNAL = 'ELA_OR_INTERNAL',
+  FED_FURNISHED = 'FED_FURNISHED',
+  NOT_YET_DETERMINED = 'NOT_YET_DETERMINED',
+  OTHER = 'OTHER'
+}
+
 /** SystemIntakeState represents whether the intake is open or closed */
 export enum SystemIntakeState {
   CLOSED = 'CLOSED',
@@ -2499,6 +2518,14 @@ export enum SystemIntakeTRBFollowUp {
   RECOMMENDED_BUT_NOT_CRITICAL = 'RECOMMENDED_BUT_NOT_CRITICAL',
   STRONGLY_RECOMMENDED = 'STRONGLY_RECOMMENDED'
 }
+
+/** Input for "unretiring" (i.e. removing retirement date) an LCID in IT Gov v2 */
+export type SystemIntakeUnretireLCIDInput = {
+  additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
+  adminNote?: InputMaybe<Scalars['HTML']['input']>;
+  notificationRecipients?: InputMaybe<EmailNotificationRecipients>;
+  systemIntakeID: Scalars['UUID']['input'];
+};
 
 /** Input for updating an intake's LCID in IT Gov v2 */
 export type SystemIntakeUpdateLCIDInput = {
@@ -3005,6 +3032,7 @@ export type UpdateSystemIntakePayload = {
 
 /** Input to update some fields on a system request */
 export type UpdateSystemIntakeRequestDetailsInput = {
+  acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>;
   businessNeed?: InputMaybe<Scalars['String']['input']>;
   businessSolution?: InputMaybe<Scalars['String']['input']>;
   cedarSystemId?: InputMaybe<Scalars['String']['input']>;
@@ -3014,6 +3042,7 @@ export type UpdateSystemIntakeRequestDetailsInput = {
   needsEaSupport?: InputMaybe<Scalars['Boolean']['input']>;
   requestName?: InputMaybe<Scalars['String']['input']>;
   usesAiTech?: InputMaybe<Scalars['Boolean']['input']>;
+  usingSoftware?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Input data used to update GRT and GRB dates for a system request */

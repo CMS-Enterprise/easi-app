@@ -14,14 +14,15 @@ import (
 
 // Config holds EASi application specific configs for SES
 type Config struct {
-	GRTEmail          models.EmailAddress
-	ITInvestmentEmail models.EmailAddress
-	EASIHelpEmail     models.EmailAddress
-	TRBEmail          models.EmailAddress
-	CEDARTeamEmail    models.EmailAddress
-	URLHost           string
-	URLScheme         string
-	TemplateDirectory string
+	GRTEmail                    models.EmailAddress
+	ITInvestmentEmail           models.EmailAddress
+	EASIHelpEmail               models.EmailAddress
+	TRBEmail                    models.EmailAddress
+	CEDARTeamEmail              models.EmailAddress
+	OITFeedbackChannelSlackLink string
+	URLHost                     string
+	URLScheme                   string
+	TemplateDirectory           string
 }
 
 // templateCaller is an interface to helping with testing template dependencies
@@ -70,6 +71,7 @@ type templates struct {
 	systemIntakeIssueLCID                           templateCaller
 	systemIntakeConfirmLCID                         templateCaller
 	systemIntakeRetireLCID                          templateCaller
+	systemIntakeUnretireLCID                        templateCaller
 	systemIntakeExpireLCID                          templateCaller
 	systemIntakeUpdateLCID                          templateCaller
 	systemIntakeChangeLCIDRetirementDate            templateCaller
@@ -367,6 +369,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(systemIntakeRetireLCIDTemplateName)
 	}
 	appTemplates.systemIntakeRetireLCID = systemIntakeRetireLCID
+
+	systemIntakeUnretireLCIDTemplateName := "system_intake_unretire_lcid.gohtml"
+	systemIntakeUnretireLCID := rawTemplates.Lookup(systemIntakeUnretireLCIDTemplateName)
+	if systemIntakeUnretireLCID == nil {
+		return Client{}, templateError(systemIntakeUnretireLCIDTemplateName)
+	}
+	appTemplates.systemIntakeUnretireLCID = systemIntakeUnretireLCID
 
 	systemIntakeExpireLCIDTemplateName := "system_intake_expire_lcid.gohtml"
 	systemIntakeExpireLCID := rawTemplates.Lookup(systemIntakeExpireLCIDTemplateName)

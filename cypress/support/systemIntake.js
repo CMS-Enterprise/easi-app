@@ -64,6 +64,8 @@ cy.systemIntake = {
         .should('be.checked');
 
       cy.get('#hasUiChangesFalse').check({ force: true }).should('be.checked');
+
+      cy.get('#usingSoftwareNo').check({ force: true }).should('be.checked');
     }
   },
   contractDetails: {

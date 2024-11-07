@@ -1,0 +1,37 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`The Action Banner component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="upcoming-actions"
+  >
+    <span
+      class="upcoming-actions__header"
+    >
+      <h1>
+        Upcoming Actions
+      </h1>
+      <span
+        class="timestamp"
+      >
+        as of 12/31/19 at 02:45am
+      </span>
+    </span>
+    <button
+      type="button"
+    >
+      Thing
+    </button>
+    <div
+      class="Test"
+    >
+      blah
+    </div>
+    <div
+      class="Test"
+    >
+      foobar
+    </div>
+  </div>
+</DocumentFragment>
+`;
