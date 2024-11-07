@@ -78,14 +78,14 @@ const noteGuidanceLetter: TRBAdminNoteFragment = {
         __typename: 'TRBGuidanceLetterRecommendation',
         category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
         id: 'bcbd8b3e-75e7-456e-8574-c5ab0b47e0bd',
-        title: 'Recommendation One',
+        title: 'Test Recommendation',
         deletedAt: null
       },
       {
         __typename: 'TRBGuidanceLetterRecommendation',
-        category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
+        category: TRBGuidanceLetterRecommendationCategory.REQUIREMENT,
         id: '2481f229-b7e9-4056-96a6-2857c8f29af1',
-        title: 'Recommendation Two',
+        title: 'Test Requirement',
         deletedAt: null
       }
     ]
@@ -154,7 +154,7 @@ describe('TRB Admin Note', () => {
 
     expect(
       screen.getByText(
-        'Guidance letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)'
+        'Guidance letter: Meeting summary, Recommendation (Test Recommendation), Requirement (Test Requirement)'
       )
     ).toBeInTheDocument();
   });
@@ -194,7 +194,8 @@ describe('TRB Admin Note', () => {
           {
             __typename: 'TRBGuidanceLetterRecommendation',
             id: 'b97d4633-42d6-4817-9e88-919928e149e5',
-            title: 'Recommendation One',
+            title: 'Test Recommendation',
+            category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
             deletedAt: '2023-03-28T13:20:37.852099Z'
           }
         ]
@@ -204,7 +205,7 @@ describe('TRB Admin Note', () => {
 
     expect(
       screen.getByText(
-        'Guidance letter: Meeting summary, Removed recommendation (Recommendation One)'
+        'Guidance letter: Meeting summary, Removed recommendation (Test Recommendation)'
       )
     ).toBeInTheDocument();
   });

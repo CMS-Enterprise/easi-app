@@ -228,6 +228,7 @@ const technicalAssistance = {
       'There was an issue saving your guidance. Please try again, and if the problem persists, try again later.',
     continueWithoutAdding: 'Continue without adding guidance',
     priorityCategory: 'Priority category',
+    uncategorized: 'Uncategorized',
     requirement: 'Requirement',
     requirementDescription:
       'A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding.',
@@ -1056,8 +1057,8 @@ const technicalAssistance = {
       selectedDocuments: 'Selected documents',
       meetingSummary: 'Meeting summary',
       nextSteps: 'Next steps',
-      recommendation: 'Recommendation ({{title}})',
-      removedRecommendation: 'Removed recommendation ({{title}})',
+      insight: '$t(guidanceLetterForm.{{category}}) ({{title}})',
+      removedInsight: 'Removed {{category}} ({{title}})',
       removedDocument: 'Removed document ({{fileName}})'
     },
     noDocuments: 'There are no documents uploaded for this request.',

@@ -14,6 +14,7 @@ import {
   TRBAdminNoteCategory,
   useGetTRBGuidanceLetterInsightsQuery
 } from 'gql/gen/graphql';
+import { toLower } from 'lodash';
 
 import PageHeading from 'components/PageHeading';
 import RichTextEditor from 'components/RichTextEditor';
@@ -394,8 +395,9 @@ const AddNote = ({
                             value: 'appliesToNextSteps'
                           },
                           ...insights.map(insight => ({
-                            label: t('notes.labels.recommendation', {
-                              title: insight.title
+                            label: t('notes.labels.insight', {
+                              title: insight.title,
+                              category: toLower(insight.category || '')
                             }),
                             value: insight.id
                           }))

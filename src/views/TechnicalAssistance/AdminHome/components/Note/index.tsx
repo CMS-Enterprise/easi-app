@@ -10,6 +10,7 @@ import {
   TRBAdminNoteInitialRequestFormCategoryDataFragment,
   TRBAdminNoteSupportingDocumentsCategoryDataFragment
 } from 'gql/gen/graphql';
+import { toLower } from 'lodash';
 
 import { RichTextViewer } from 'components/RichTextEditor';
 import { formatDateLocal } from 'utils/date';
@@ -56,12 +57,10 @@ const Note = ({ note, className, border = true }: NoteProps) => {
       ...(appliesToMeetingSummary ? [t('notes.labels.meetingSummary')] : []),
       ...(appliesToNextSteps ? [t('notes.labels.nextSteps')] : []),
       ...insights.map(insight =>
-        t(
-          `notes.labels.${
-            insight.deletedAt ? 'removedRecommendation' : 'recommendation'
-          }`,
-          { title: insight.title }
-        )
+        t(`notes.labels.${insight.deletedAt ? 'removedInsight' : 'insight'}`, {
+          title: insight.title,
+          category: toLower(insight.category || '')
+        })
       )
     ].join(', ');
 
