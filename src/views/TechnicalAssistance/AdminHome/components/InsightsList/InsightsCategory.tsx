@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
@@ -78,7 +78,10 @@ const InsightsCategory = ({
 
       {category === TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED ? (
         <Alert type="info" slim className="margin-top-1 margin-bottom-4">
-          {t('guidanceLetterForm.uncategorizedAlert')}
+          <Trans
+            i18nKey={`technicalAssistance:guidanceLetterForm.uncategorizedAlert${editable ? 'Edit' : ''}`}
+            components={{ a: <a href="mailto:cms-trb@cms.hhs.gov">email</a> }}
+          />
         </Alert>
       ) : (
         <p className="margin-top-05 margin-bottom-3 line-height-body-5">

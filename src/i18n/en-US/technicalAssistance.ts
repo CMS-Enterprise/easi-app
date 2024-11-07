@@ -216,8 +216,10 @@ const technicalAssistance = {
       'Nothing has been added yet. Use the button above to add guidance, or click next if you have no guidance to add.',
     noInsights:
       'This guidance letter does not have any guidance categorized as a {{category}}.',
-    uncategorizedAlert:
+    uncategorizedAlertEdit:
       'Past advice letters (now guidance letters) will not have categorized advice. You may edit each existing item to add it to a category.',
+    uncategorizedAlert:
+      'Past advice letters (now guidance letters) will not have categorized advice. If you have questions about the priority or severity of the content below, please contact the TRB at <a>cms-trb@cms.hhs.gov</a>.',
     reorderGuidance:
       'If you have two or more items per category, you can use arrows on the left side of each to reorder them within the category. Edit the guidance to change the category.',
     increaseOrderAriaLabel: 'Increase guidance sort order',
