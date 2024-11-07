@@ -3,6 +3,9 @@ import {
   GetTRBAdminNotesQuery,
   GetTRBAdminNotesQueryVariables,
   GetTRBGuidanceLetterDocument,
+  GetTRBGuidanceLetterInsightsDocument,
+  GetTRBGuidanceLetterInsightsQuery,
+  GetTRBGuidanceLetterInsightsQueryVariables,
   GetTRBGuidanceLetterQuery,
   GetTRBGuidanceLetterQueryVariables,
   GetTrbLeadOptionsDocument,
@@ -400,6 +403,30 @@ export const getTrbGuidanceLetterQuery: MockedQuery<
           guidanceLetterStatus: TRBGuidanceLetterStatus.COMPLETED
         },
         guidanceLetter
+      }
+    }
+  }
+};
+
+export const getTRBGuidanceLetterInsightsQuery: MockedQuery<
+  GetTRBGuidanceLetterInsightsQuery,
+  GetTRBGuidanceLetterInsightsQueryVariables
+> = {
+  request: {
+    query: GetTRBGuidanceLetterInsightsDocument,
+    variables: {
+      id: trbRequestId
+    }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
+      trbRequest: {
+        __typename: 'TRBRequest',
+        guidanceLetter: {
+          __typename: 'TRBGuidanceLetter',
+          insights: guidanceLetter.insights
+        }
       }
     }
   }

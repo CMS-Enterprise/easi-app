@@ -2,7 +2,11 @@ import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import i18next from 'i18next';
 
-import { guidanceLetter, trbRequest } from 'data/mock/trbRequest';
+import {
+  getTRBGuidanceLetterInsightsQuery,
+  guidanceLetter,
+  trbRequest
+} from 'data/mock/trbRequest';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import InsightsList from '.';
@@ -10,9 +14,9 @@ import InsightsList from '.';
 const { insights } = guidanceLetter;
 
 /** Render component for testing within single insight list item */
-const renderInsight = (index: number, editable: boolean = true) => {
+const renderInsight = async (index: number, editable: boolean = true) => {
   render(
-    <VerboseMockedProvider>
+    <VerboseMockedProvider mocks={[getTRBGuidanceLetterInsightsQuery]}>
       <InsightsList
         trbRequestId={trbRequest.id}
         editable={editable}
@@ -21,19 +25,19 @@ const renderInsight = (index: number, editable: boolean = true) => {
     </VerboseMockedProvider>
   );
 
-  const elements = screen.getAllByTestId('insights_list-item');
+  const elements = await screen.findAllByTestId('insights_list-item');
   expect(elements.length).toEqual(3);
 
   return within(elements[index]);
 };
 
 describe('TRB guidance and insights list', () => {
-  it('renders the insight', () => {
-    const insight = renderInsight(0);
+  it('renders the insight', async () => {
+    const insight = await renderInsight(0);
 
     expect(
       insight.getByRole('heading', {
-        level: 3,
+        level: 4,
         name: insights[0].title
       })
     );
@@ -44,8 +48,8 @@ describe('TRB guidance and insights list', () => {
     expect(links.length).toEqual(insights[0].links.length);
   });
 
-  it('renders editable view', () => {
-    const insight = renderInsight(0);
+  it('renders editable view', async () => {
+    const insight = await renderInsight(0);
 
     // Reorder insights info alert
     expect(
@@ -88,8 +92,8 @@ describe('TRB guidance and insights list', () => {
     expect(reorderControls.getByTestId('order-index')).toHaveTextContent('1');
   });
 
-  it('renders non-editable view', () => {
-    renderInsight(0, false);
+  it('renders non-editable view', async () => {
+    await renderInsight(0, false);
 
     expect(screen.queryByRole('button', { name: 'Edit guidance' })).toBeNull();
 

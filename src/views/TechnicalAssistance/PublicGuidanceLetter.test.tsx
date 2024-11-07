@@ -4,68 +4,93 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import {
   GetTRBPublicGuidanceLetterDocument,
-  TRBGuidanceLetterRecommendationCategory
+  GetTRBPublicGuidanceLetterQuery,
+  GetTRBPublicGuidanceLetterQueryVariables,
+  TRBRequestType
 } from 'gql/gen/graphql';
 import i18next from 'i18next';
 
+import {
+  getTRBGuidanceLetterInsightsQuery,
+  guidanceLetter,
+  requester,
+  trbRequest as mockTrbRequest
+} from 'data/mock/trbRequest';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
+import { MockedQuery } from 'types/util';
 
 import PublicGuidanceLetter from './PublicGuidanceLetter';
 
-describe('Trb Public Guidance Letter', () => {
-  const id = '6e0d1524-204a-4014-b6d9-e995b1db3987';
-  const data = {
-    trbRequest: {
-      id,
-      name: 'Case 7 - Guidance letter in review',
-      requesterInfo: {
-        commonName: 'Adeline Aarons',
-        __typename: 'UserInfo'
-      },
-      requesterComponent: null,
-      form: {
-        id: '94a326d1-2ca7-4098-85df-556f944ba059',
-        submittedAt: '2023-04-21T14:13:01.544189Z',
-        component: 'Center for Medicare',
-        needsAssistanceWith: 'Something is wrong with my system',
-        __typename: 'TRBRequestForm'
-      },
-      type: 'NEED_HELP',
-      consultMeetingTime: '2023-04-14T10:13:01.586156Z',
-      guidanceLetter: {
-        id: 'a59f516a-107c-4baf-bdce-834ff1dc9a27',
-        meetingSummary: 'Talked about stuff',
-        nextSteps: null,
-        isFollowupRecommended: false,
-        dateSent: '2023-04-21T14:13:01.59368Z',
-        followupPoint: null,
-        insights: [
-          {
-            id: 'd29b1511-5e07-430a-97f5-c938fa67ebdf',
-            title: 'Restart your computer',
-            recommendation: 'I recommend you restart your computer',
-            links: ['google.com', 'askjeeves.com'],
-            category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
-            __typename: 'TRBGuidanceLetterRecommendation'
-          }
-        ],
-        author: {
-          euaUserId: 'ABCD',
-          commonName: 'Adeline Aarons',
-          __typename: 'UserInfo'
-        },
-        createdAt: '2023-04-21T14:13:01.589972Z',
-        modifiedAt: '2023-04-21T14:13:01.595102Z',
-        __typename: 'TRBGuidanceLetter'
-      },
-      taskStatuses: {
-        guidanceLetterStatus: TRBGuidanceLetterStatus.COMPLETED,
-        __typename: 'TRBTaskStatuses'
-      },
-      __typename: 'TRBRequest'
-    }
-  };
+const { id } = mockTrbRequest;
 
+const trbRequest: GetTRBPublicGuidanceLetterQuery['trbRequest'] = {
+  __typename: 'TRBRequest',
+  id,
+  name: 'Case 7 - Guidance letter in review',
+  requesterInfo: {
+    commonName: requester.userInfo.commonName,
+    __typename: 'UserInfo'
+  },
+  requesterComponent: requester.component,
+  form: {
+    id: '94a326d1-2ca7-4098-85df-556f944ba059',
+    submittedAt: '2023-04-21T14:13:01.544189Z',
+    component: 'Center for Medicare',
+    needsAssistanceWith: 'Something is wrong with my system',
+    __typename: 'TRBRequestForm'
+  },
+  type: TRBRequestType.NEED_HELP,
+  consultMeetingTime: '2023-04-14T10:13:01.586156Z',
+  guidanceLetter: {
+    id: 'a59f516a-107c-4baf-bdce-834ff1dc9a27',
+    meetingSummary: 'Talked about stuff',
+    nextSteps: null,
+    isFollowupRecommended: false,
+    dateSent: '2023-04-21T14:13:01.59368Z',
+    followupPoint: null,
+    insights: guidanceLetter.insights,
+    author: {
+      euaUserId: requester.userInfo.euaUserId,
+      commonName: requester.userInfo.commonName,
+      __typename: 'UserInfo'
+    },
+    createdAt: '2023-04-21T14:13:01.589972Z',
+    modifiedAt: '2023-04-21T14:13:01.595102Z',
+    __typename: 'TRBGuidanceLetter'
+  },
+  taskStatuses: {
+    guidanceLetterStatus: TRBGuidanceLetterStatus.COMPLETED,
+    __typename: 'TRBTaskStatuses'
+  }
+};
+
+const getTRBPublicGuidanceLetterQuery = (
+  guidanceLetterStatus: TRBGuidanceLetterStatus = TRBGuidanceLetterStatus.COMPLETED
+): MockedQuery<
+  GetTRBPublicGuidanceLetterQuery,
+  GetTRBPublicGuidanceLetterQueryVariables
+> => ({
+  request: {
+    query: GetTRBPublicGuidanceLetterDocument,
+    variables: {
+      id: trbRequest.id
+    }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
+      trbRequest: {
+        ...trbRequest,
+        taskStatuses: {
+          __typename: 'TRBTaskStatuses',
+          guidanceLetterStatus
+        }
+      }
+    }
+  }
+});
+
+describe('Trb Public Guidance Letter', () => {
   it('renders from email link', async () => {
     const { findByRole, asFragment } = render(
       <MockedProvider
@@ -74,17 +99,8 @@ describe('Trb Public Guidance Letter', () => {
           query: { fetchPolicy: 'no-cache' }
         }}
         mocks={[
-          {
-            request: {
-              query: GetTRBPublicGuidanceLetterDocument,
-              variables: {
-                id
-              }
-            },
-            result: {
-              data
-            }
-          }
+          getTRBGuidanceLetterInsightsQuery,
+          getTRBPublicGuidanceLetterQuery()
         ]}
       >
         <MemoryRouter initialEntries={[`/trb/guidance-letter/${id}`]}>
@@ -151,26 +167,10 @@ describe('Trb Public Guidance Letter', () => {
           query: { fetchPolicy: 'no-cache' }
         }}
         mocks={[
-          {
-            request: {
-              query: GetTRBPublicGuidanceLetterDocument,
-              variables: {
-                id
-              }
-            },
-            result: {
-              data: {
-                trbRequest: {
-                  ...data.trbRequest,
-                  taskStatuses: {
-                    guidanceLetterStatus:
-                      TRBGuidanceLetterStatus.CANNOT_START_YET,
-                    __typename: 'TRBTaskStatuses'
-                  }
-                }
-              }
-            }
-          }
+          getTRBGuidanceLetterInsightsQuery,
+          getTRBPublicGuidanceLetterQuery(
+            TRBGuidanceLetterStatus.CANNOT_START_YET
+          )
         ]}
       >
         <MemoryRouter initialEntries={[`/trb/guidance-letter/${id}`]}>
@@ -195,17 +195,8 @@ describe('Trb Public Guidance Letter', () => {
           query: { fetchPolicy: 'no-cache' }
         }}
         mocks={[
-          {
-            request: {
-              query: GetTRBPublicGuidanceLetterDocument,
-              variables: {
-                id
-              }
-            },
-            result: {
-              data
-            }
-          }
+          getTRBGuidanceLetterInsightsQuery,
+          getTRBPublicGuidanceLetterQuery()
         ]}
       >
         <MemoryRouter
