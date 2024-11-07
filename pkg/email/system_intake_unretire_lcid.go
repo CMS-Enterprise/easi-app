@@ -75,7 +75,7 @@ func (sie systemIntakeEmails) SendUnretireLCIDNotification(
 	additionalInfo *models.HTML,
 ) error {
 
-	subject := fmt.Sprintf("The reitrement date for a Life Cycle ID (%s) has been removed", lifecycleID)
+	subject := fmt.Sprintf("The retirement date for a Life Cycle ID (%s) has been removed", lifecycleID)
 	body, err := sie.systemIntakeUnretireLCIDBody(
 		lifecycleID,
 		lifecycleExpiresAt,
