@@ -70,6 +70,10 @@ describe('Manage LCID selection page', () => {
     expect(
       screen.getByRole('radio', { name: 'Change retirement date' })
     ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('radio', { name: 'Remove retirement date' })
+    ).toBeInTheDocument();
   });
 });
 
