@@ -316,8 +316,11 @@ const action = {
     reason: 'Why are you retiring this Life Cycle ID? (optional)',
     reasonHelpText:
       'Provide any additional details as to why you are retiring this LCID.',
-    success: 'Life Cycle ID {{lcid}} is now retired.',
-    remove:
+    success: 'Life Cycle ID {{lcid}} is now retired.'
+  },
+  unretireLcid: {
+    success: 'Life Cycle ID {{lcid}} has had its retirement date removed.',
+    warningAlert:
       'Completing this action will remove the set retirement date, but will not alter any previously set expiration dates or other details abou thtis Life Cycle ID (LCID). You may also choose to add an admin note as a part of this action.'
   },
   expireLcid: {

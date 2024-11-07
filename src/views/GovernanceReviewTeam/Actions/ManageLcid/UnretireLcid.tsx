@@ -9,7 +9,7 @@ import {
   CreateSystemIntakeActionUnretireLcid,
   CreateSystemIntakeActionUnretireLcidVariables
 } from 'queries/types/CreateSystemIntakeActionUnretireLcid';
-import { SystemIntakeRetireLCIDInput } from 'types/graphql-global-types';
+import { SystemIntakeUnretireLCIDInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
@@ -18,7 +18,8 @@ import LcidTitleBox from './LcidTitleBox';
 import { ManageLcidProps } from '.';
 
 type UnretireLcidFields = NonNullableProps<
-  Omit<SystemIntakeRetireLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
+  Omit<SystemIntakeUnretireLCIDInput, 'systemIntakeID'> &
+    SystemIntakeActionFields
 >;
 
 interface UnretireLcidProps extends ManageLcidProps {
@@ -33,9 +34,7 @@ const UnretireLcid = ({
 }: UnretireLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<UnretireLcidFields>({
-    defaultValues: {
-      retiresAt: lcidRetiresAt || ''
-    }
+    defaultValues: {}
   });
 
   const [unretireLcid] = useMutation<
@@ -54,7 +53,8 @@ const UnretireLcid = ({
     unretireLcid({
       variables: {
         input: {
-          systemIntakeID: systemIntakeId
+          systemIntakeID: systemIntakeId,
+          ...formData
         }
       }
     });
@@ -64,7 +64,7 @@ const UnretireLcid = ({
     <FormProvider<UnretireLcidFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
-        successMessage={t('retireLcid.success', { lcid })}
+        successMessage={t('unretireLcid.success', { lcid })}
         onSubmit={onSubmit}
         title={
           <LcidTitleBox
@@ -77,7 +77,7 @@ const UnretireLcid = ({
         notificationAlertWarn
       >
         <>
-          <Alert type="info">{t('retireLcid.remove')}</Alert>
+          <Alert type="info">{t('unretireLcid.warningAlert')}</Alert>
         </>
       </ActionForm>
     </FormProvider>
