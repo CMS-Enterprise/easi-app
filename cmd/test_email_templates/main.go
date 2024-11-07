@@ -432,6 +432,19 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
+	err = client.SystemIntake.SendUnretireLCIDNotification(
+		ctx,
+		emailNotificationRecipients,
+		lifecycleID,
+		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
+		lifecycleScope,
+		lifecycleCostBaseline,
+		nextSteps,
+		additionalInfo,
+	)
+	noErr(err)
+
 	err = client.SystemIntake.SendExpireLCIDNotification(
 		ctx,
 		emailNotificationRecipients,
