@@ -49,6 +49,9 @@ const InsightsCategory = ({
 
   /** Sort insights and execute updateOrder mutation */
   const sort = (id: string, newIndex: number) => {
+    // Return null if trying to increase order for first item or decrease order for last item in list
+    if (newIndex < 0 || newIndex === insights.length) return null;
+
     /** Updated sort order array */
     const newOrder: string[] = insights
       // Get just rec IDs
@@ -59,7 +62,7 @@ const InsightsCategory = ({
     // Insert rec ID at new index
     newOrder.splice(newIndex, 0, id);
 
-    updateOrder({
+    return updateOrder({
       variables: {
         input: {
           trbRequestId,
