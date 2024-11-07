@@ -54,6 +54,7 @@ const systemProfile = {
       label: 'Open system external link',
       view: 'View',
       tlcPhase: 'TLC phase: ',
+      tlcPhaseEmpty: 'No TLC Phase on file',
       subheader1: 'CMS component owner',
       subheader2: 'Business Owner',
       subheader2_plural: 'Business Owners',
