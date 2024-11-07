@@ -1,0 +1,30 @@
+{{template "easi_header.gohtml"}}
+
+<p class="no-margin-bottom">The Governance Team has removed the existing retirement date for a previously-issued Life Cycle ID (LCID). All previously set expiration dates or other details about this LCID are still valid.</p>
+<br>
+
+<p>If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
+
+<br>
+<div class="no-margin">
+<p><u>Summary of Life Cycle ID</u></p>
+<p><strong>Life Cycle ID:</strong> {{.LifecycleID}}</p>
+{{ if .LifecycleIssuedAt -}}
+<p><strong>Original date issued:</strong> {{.LifecycleIssuedAt}}</p>
+{{ end -}}
+<p><strong>Expiration date:</strong> {{.LifecycleExpiresAt}}</p>
+{{ if .LifecycleScope -}}
+<p><strong>Scope:</strong></p>{{.LifecycleScope}}
+{{ end -}}
+<p><strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}</p>
+{{ if .DecisionNextSteps -}}
+<p><strong>Next steps:</strong></p>{{.DecisionNextSteps}}
+{{ end -}}
+</div>
+
+{{if .AdditionalInfo -}}
+<br>
+<hr>
+<br>
+<p><strong>Additional information from the Governance Team:</strong></p><div class="no-margin">{{.AdditionalInfo}}</div>
+{{ end -}}

@@ -764,6 +764,14 @@ type SystemIntakeRetireLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
+// Input for "unretiring" (i.e. removing retirement date) an LCID in IT Gov v2
+type SystemIntakeUnretireLCIDInput struct {
+	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
+	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
+	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	AdminNote              *HTML                        `json:"adminNote,omitempty"`
+}
+
 // Input for updating an intake's LCID in IT Gov v2
 type SystemIntakeUpdateLCIDInput struct {
 	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
@@ -1013,6 +1021,7 @@ const (
 	SystemIntakeActionTypeUpdateLcid                     SystemIntakeActionType = "UPDATE_LCID"
 	SystemIntakeActionTypeConfirmLcid                    SystemIntakeActionType = "CONFIRM_LCID"
 	SystemIntakeActionTypeRetireLcid                     SystemIntakeActionType = "RETIRE_LCID"
+	SystemIntakeActionTypeUnretireLcid                   SystemIntakeActionType = "UNRETIRE_LCID"
 	SystemIntakeActionTypeChangeLcidRetirementDate       SystemIntakeActionType = "CHANGE_LCID_RETIREMENT_DATE"
 	SystemIntakeActionTypeIssueLcid                      SystemIntakeActionType = "ISSUE_LCID"
 	SystemIntakeActionTypeSubmitIntake                   SystemIntakeActionType = "SUBMIT_INTAKE"
@@ -1045,6 +1054,7 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 	SystemIntakeActionTypeUpdateLcid,
 	SystemIntakeActionTypeConfirmLcid,
 	SystemIntakeActionTypeRetireLcid,
+	SystemIntakeActionTypeUnretireLcid,
 	SystemIntakeActionTypeChangeLcidRetirementDate,
 	SystemIntakeActionTypeIssueLcid,
 	SystemIntakeActionTypeSubmitIntake,
@@ -1069,7 +1079,7 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 
 func (e SystemIntakeActionType) IsValid() bool {
 	switch e {
-	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeExpireLcid, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeUpdateLcid, SystemIntakeActionTypeConfirmLcid, SystemIntakeActionTypeRetireLcid, SystemIntakeActionTypeChangeLcidRetirementDate, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeSubmitIntake, SystemIntakeActionTypeReject, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase:
+	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeExpireLcid, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeUpdateLcid, SystemIntakeActionTypeConfirmLcid, SystemIntakeActionTypeRetireLcid, SystemIntakeActionTypeUnretireLcid, SystemIntakeActionTypeChangeLcidRetirementDate, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeSubmitIntake, SystemIntakeActionTypeReject, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase:
 		return true
 	}
 	return false
