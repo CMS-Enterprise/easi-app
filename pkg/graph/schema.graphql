@@ -1060,6 +1060,7 @@ enum SystemIntakeActionType {
   UPDATE_LCID
   CONFIRM_LCID
   RETIRE_LCID
+  UNRETIRE_LCID
   CHANGE_LCID_RETIREMENT_DATE
 
   # v1/v2 actions - originally from v1, still used in v2
@@ -1393,6 +1394,16 @@ input SystemIntakeRetireLCIDInput {
   systemIntakeID: UUID!
   retiresAt: Time!
   reason: HTML
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: HTML
+}
+
+"""
+Input for "unretiring" (i.e. removing retirement date) an LCID in IT Gov v2
+"""
+input SystemIntakeUnretireLCIDInput {
+  systemIntakeID: UUID!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
@@ -2430,6 +2441,9 @@ type Mutation {
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionRetireLCID(
     input: SystemIntakeRetireLCIDInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionUnretireLCID(
+    input: SystemIntakeUnretireLCIDInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionChangeLCIDRetirementDate(
     input: SystemIntakeChangeLCIDRetirementDateInput!

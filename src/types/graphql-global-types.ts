@@ -170,6 +170,7 @@ export enum SystemIntakeActionType {
   SUBMIT_BIZ_CASE = "SUBMIT_BIZ_CASE",
   SUBMIT_FINAL_BIZ_CASE = "SUBMIT_FINAL_BIZ_CASE",
   SUBMIT_INTAKE = "SUBMIT_INTAKE",
+  UNRETIRE_LCID = "UNRETIRE_LCID",
   UPDATE_LCID = "UPDATE_LCID",
 }
 
@@ -1013,6 +1014,16 @@ export interface SystemIntakeRetireLCIDInput {
   systemIntakeID: UUID;
   retiresAt: Time;
   reason?: HTML | null;
+  additionalInfo?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
+}
+
+/**
+ * Input for "unretiring" (i.e. removing retirement date) an LCID in IT Gov v2
+ */
+export interface SystemIntakeUnretireLCIDInput {
+  systemIntakeID: UUID;
   additionalInfo?: HTML | null;
   notificationRecipients?: EmailNotificationRecipients | null;
   adminNote?: HTML | null;
