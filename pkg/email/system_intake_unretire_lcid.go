@@ -62,7 +62,7 @@ func (sie systemIntakeEmails) systemIntakeUnretireLCIDBody(
 	return b.String(), nil
 }
 
-// SendUnretireLCIDNotification notifies user-selected recipients that a system intake form needs edits
+// SendUnretireLCIDNotification notifies user-selected recipients that a previously-issued LCID has had its retirement date removed
 func (sie systemIntakeEmails) SendUnretireLCIDNotification(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
