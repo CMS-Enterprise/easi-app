@@ -20,6 +20,7 @@ import { ActionsProps } from '..';
 
 import ExpireLcid from './ExpireLcid';
 import RetireLcid from './RetireLcid';
+import UnretireLcid from './UnretireLcid';
 import UpdateLcid from './UpdateLcid';
 
 export interface ManageLcidProps {
@@ -65,10 +66,15 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
   const actionOptions = useMemo(() => {
     if (!lcidStatusContext) return [];
 
-    const options = ['retire', 'update'];
+    const options = ['update', 'retire'];
 
     if (lcidStatusContext === SystemIntakeLCIDStatus.ISSUED) {
       options.push('expire');
+    }
+
+    // Add option to 'remove' retirement date if LCID is already retired
+    if (lcidStatusContext === SystemIntakeLCIDStatus.RETIRED) {
+      options.push('unretire');
     }
 
     return options;
@@ -107,6 +113,9 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
         </Route>
         <Route path="/it-governance/:sytemId/manage-lcid/expire">
           <ExpireLcid {...systemIntake} systemIntakeId={systemIntakeId} />
+        </Route>
+        <Route path="/it-governance/:sytemId/manage-lcid/unretire">
+          <UnretireLcid {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
 
         <Route path="/it-governance/:sytemId/manage-lcid">

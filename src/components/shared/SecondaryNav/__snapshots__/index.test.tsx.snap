@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`The Secondary Nav component > matches snapshot 1`] = `
+<DocumentFragment>
+  <nav
+    aria-label="Secondary Navigation"
+    class="easi-secondary-nav"
+  >
+    <div
+      class="grid-container"
+    >
+      <a
+        aria-current="true"
+        class="easi-secondary-nav__nav-link easi-secondary-nav__nav-link--active"
+        href="/"
+      >
+        Test
+      </a>
+    </div>
+  </nav>
+</DocumentFragment>
+`;

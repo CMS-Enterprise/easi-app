@@ -170,6 +170,7 @@ export enum SystemIntakeActionType {
   SUBMIT_BIZ_CASE = "SUBMIT_BIZ_CASE",
   SUBMIT_FINAL_BIZ_CASE = "SUBMIT_FINAL_BIZ_CASE",
   SUBMIT_INTAKE = "SUBMIT_INTAKE",
+  UNRETIRE_LCID = "UNRETIRE_LCID",
   UPDATE_LCID = "UPDATE_LCID",
 }
 
@@ -251,6 +252,17 @@ export enum SystemIntakeRequestType {
   NEW = "NEW",
   RECOMPETE = "RECOMPETE",
   SHUTDOWN = "SHUTDOWN",
+}
+
+/**
+ * SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
+ */
+export enum SystemIntakeSoftwareAcquisitionMethods {
+  CONTRACTOR_FURNISHED = "CONTRACTOR_FURNISHED",
+  ELA_OR_INTERNAL = "ELA_OR_INTERNAL",
+  FED_FURNISHED = "FED_FURNISHED",
+  NOT_YET_DETERMINED = "NOT_YET_DETERMINED",
+  OTHER = "OTHER",
 }
 
 /**
@@ -1008,6 +1020,16 @@ export interface SystemIntakeRetireLCIDInput {
 }
 
 /**
+ * Input for "unretiring" (i.e. removing retirement date) an LCID in IT Gov v2
+ */
+export interface SystemIntakeUnretireLCIDInput {
+  systemIntakeID: UUID;
+  additionalInfo?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * Input for updating an intake's LCID in IT Gov v2
  */
 export interface SystemIntakeUpdateLCIDInput {
@@ -1094,11 +1116,13 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   requestName?: string | null;
   businessNeed?: string | null;
   businessSolution?: string | null;
-  needsEaSupport?: boolean | null;
   currentStage?: string | null;
-  cedarSystemId?: string | null;
+  needsEaSupport?: boolean | null;
   hasUiChanges?: boolean | null;
   usesAiTech?: boolean | null;
+  usingSoftware?: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
+  cedarSystemId?: string | null;
 }
 
 /**

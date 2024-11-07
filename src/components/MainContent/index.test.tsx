@@ -1,11 +1,11 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 
 import MainContent from './index';
 
 describe('The MainContent component', () => {
   it('renders without crashing', () => {
-    shallow(
+    render(
       <MainContent>
         <div />
       </MainContent>
@@ -13,22 +13,22 @@ describe('The MainContent component', () => {
   });
 
   it('renders custom class names', () => {
-    const component = shallow(
+    const { container } = render(
       <MainContent className="test-class">
         <div />
       </MainContent>
     );
 
-    expect(component.find('main.test-class').exists()).toEqual(true);
+    expect(container.getElementsByClassName('test-class').length).toBe(1);
   });
 
   it('renders children', () => {
-    const component = shallow(
-      <MainContent>
+    render(
+      <MainContent className="test-class">
         <div data-testid="test-child" />
       </MainContent>
     );
 
-    expect(component.find('[data-testid="test-child"]').exists()).toEqual(true);
+    screen.getByTestId('test-child');
   });
 });
