@@ -72,8 +72,8 @@ const InsightsCategory = ({
 
   return (
     <div>
-      <h3 className="margin-bottom-05">
-        {t(`guidanceLetterForm.${categoryString}`)}
+      <h3 id="categoryHeading" className="margin-bottom-05">
+        {t(`guidanceLetterForm.categoryHeading`, { context: categoryString })}
       </h3>
 
       {category === TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED ? (
@@ -91,7 +91,10 @@ const InsightsCategory = ({
           {t('guidanceLetterForm.noInsights', { category: categoryString })}
         </Alert>
       ) : (
-        <ul className="usa-list usa-list--unstyled">
+        <ul
+          aria-labelledby="categoryHeading"
+          className="usa-list usa-list--unstyled"
+        >
           {insights.map((insight, index) => {
             const { title, id, links, recommendation: description } = insight;
             return (

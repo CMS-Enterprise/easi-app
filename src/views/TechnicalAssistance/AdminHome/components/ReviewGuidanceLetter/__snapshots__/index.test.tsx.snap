@@ -90,8 +90,9 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
         <div>
           <h3
             class="margin-bottom-05"
+            id="categoryHeading"
           >
-            Requirement
+            Requirements
           </h3>
           <p
             class="margin-top-05 margin-bottom-3 line-height-body-5"
@@ -116,8 +117,9 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
         <div>
           <h3
             class="margin-bottom-05"
+            id="categoryHeading"
           >
-            Recommendation
+            Recommendations
           </h3>
           <p
             class="margin-top-05 margin-bottom-3 line-height-body-5"
@@ -125,6 +127,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
             A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS.
           </p>
           <ul
+            aria-labelledby="categoryHeading"
             class="usa-list usa-list--unstyled"
           >
             <li
@@ -476,8 +479,9 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
         <div>
           <h3
             class="margin-bottom-05"
+            id="categoryHeading"
           >
-            Consideration
+            Considerations
           </h3>
           <p
             class="margin-top-05 margin-bottom-3 line-height-body-5"

@@ -235,7 +235,10 @@ const technicalAssistance = {
     consideration: 'Consideration',
     considerationDescription:
       'A consideration suggests that the project team should evaluate this option, but it will not significantly impact their system or CMS.',
-    uncategorized: 'Uncategorized',
+    categoryHeading_requirement: 'Requirements',
+    categoryHeading_recommendation: 'Recommendations',
+    categoryHeading_consideration: 'Considerations',
+    categoryHeading_uncategorized: 'Uncategorized',
     addResourceLink: 'Add a resource link',
     addAnotherResourceLink: 'Add another resource link',
     returnToGuidanceLetter: 'Don’t {{formType}} and return to guidance letter',
