@@ -2,17 +2,14 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import {
+  TRBAdminNoteFragment,
+  useGetTRBAdminNotesQuery
+} from 'gql/gen/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
-import useCacheQuery from 'hooks/useCacheQuery';
-import GetTRBAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
-import {
-  GetTrbAdminNotes,
-  GetTrbAdminNotes_trbRequest_adminNotes as GetTrbAdminNotesType,
-  GetTrbAdminNotesVariables
-} from 'queries/types/GetTrbAdminNotes';
 import { GetTrbRequestSummary_trbRequest as GetTrbRequestSummaryType } from 'queries/types/GetTrbRequestSummary';
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { NotFoundPartial } from 'views/NotFound';
@@ -38,16 +35,13 @@ const Notes = ({
 
   const [noteCount, setNoteCount] = useState<number>(5);
 
-  const { data, error, loading } = useCacheQuery<
-    GetTrbAdminNotes,
-    GetTrbAdminNotesVariables
-  >(GetTRBAdminNotesQuery, {
+  const { data, error, loading } = useGetTRBAdminNotesQuery({
     variables: {
       id: trbRequestId
     }
   });
 
-  const notes: GetTrbAdminNotesType[] = data?.trbRequest?.adminNotes || [];
+  const notes: TRBAdminNoteFragment[] = data?.trbRequest?.adminNotes || [];
 
   if (error) {
     return <NotFoundPartial />;

@@ -1,38 +1,15 @@
-import { ApolloCache, FetchResult, useMutation } from '@apollo/client';
-
-import { TRBAdminNoteFragment } from 'queries/GetTrbAdminNotesQuery';
-import {
-  CreateTrbAdminNoteConsultSessionQuery,
-  CreateTrbAdminNoteGeneralRequestQuery,
-  CreateTrbAdminNoteGuidanceLetterQuery,
-  CreateTrbAdminNoteInitialRequestFormQuery,
-  CreateTrbAdminNoteSupportingDocumentsQuery
-} from 'queries/TrbAdminNoteQueries';
-import {
-  CreateTRBAdminNoteConsultSession,
-  CreateTRBAdminNoteConsultSessionVariables
-} from 'queries/types/CreateTRBAdminNoteConsultSession';
-import {
-  CreateTRBAdminNoteGeneralRequest,
-  CreateTRBAdminNoteGeneralRequestVariables
-} from 'queries/types/CreateTRBAdminNoteGeneralRequest';
-import {
-  CreateTRBAdminNoteGuidanceLetter,
-  CreateTRBAdminNoteGuidanceLetterVariables
-} from 'queries/types/CreateTRBAdminNoteGuidanceLetter';
-import {
-  CreateTRBAdminNoteInitialRequestForm,
-  CreateTRBAdminNoteInitialRequestFormVariables
-} from 'queries/types/CreateTRBAdminNoteInitialRequestForm';
-import {
-  CreateTRBAdminNoteSupportingDocuments,
-  CreateTRBAdminNoteSupportingDocumentsVariables
-} from 'queries/types/CreateTRBAdminNoteSupportingDocuments';
-import { TRBAdminNoteFragment as TRBAdminNote } from 'queries/types/TRBAdminNoteFragment';
+import { ApolloCache, FetchResult } from '@apollo/client';
 import {
   CreateTRBAdminNoteGuidanceLetterInput,
-  TRBAdminNoteCategory
-} from 'types/graphql-global-types';
+  TRBAdminNoteCategory,
+  TRBAdminNoteFragment,
+  TRBAdminNoteFragmentDoc,
+  useCreateTRBAdminNoteConsultSessionMutation,
+  useCreateTRBAdminNoteGeneralRequestMutation,
+  useCreateTRBAdminNoteGuidanceLetterMutation,
+  useCreateTRBAdminNoteInitialRequestFormMutation,
+  useCreateTRBAdminNoteSupportingDocumentsMutation
+} from 'gql/gen/graphql';
 
 type AddNoteCommonFields<T extends TRBAdminNoteCategory> = {
   category: T;
@@ -68,7 +45,7 @@ const useAddNote = (trbRequestId: string) => {
   /** Modify notes in cache after mutation */
   const modifyCache = (
     cache: ApolloCache<any>,
-    noteData: TRBAdminNote | undefined
+    noteData: TRBAdminNoteFragment | undefined
   ) =>
     cache.modify({
       id: cache.identify({ __typename: 'TRBRequest', trbRequestId }),
@@ -76,52 +53,42 @@ const useAddNote = (trbRequestId: string) => {
         adminNotes(existingNotes = []) {
           const newNote = cache.writeFragment({
             data: noteData,
-            fragment: TRBAdminNoteFragment
+            fragment: TRBAdminNoteFragmentDoc
           });
           return [...existingNotes, newNote];
         }
       }
     });
 
-  const [createNoteGeneralRequest] = useMutation<
-    CreateTRBAdminNoteGeneralRequest,
-    CreateTRBAdminNoteGeneralRequestVariables
-  >(CreateTrbAdminNoteGeneralRequestQuery, {
-    update: (cache, result) =>
-      modifyCache(cache, result.data?.createTRBAdminNoteGeneralRequest)
-  });
+  const [createNoteGeneralRequest] =
+    useCreateTRBAdminNoteGeneralRequestMutation({
+      update: (cache, result) =>
+        modifyCache(cache, result.data?.createTRBAdminNoteGeneralRequest)
+    });
 
-  const [createNoteInitialRequestForm] = useMutation<
-    CreateTRBAdminNoteInitialRequestForm,
-    CreateTRBAdminNoteInitialRequestFormVariables
-  >(CreateTrbAdminNoteInitialRequestFormQuery, {
-    update: (cache, result) =>
-      modifyCache(cache, result.data?.createTRBAdminNoteInitialRequestForm)
-  });
+  const [createNoteInitialRequestForm] =
+    useCreateTRBAdminNoteInitialRequestFormMutation({
+      update: (cache, result) =>
+        modifyCache(cache, result.data?.createTRBAdminNoteInitialRequestForm)
+    });
 
-  const [createNoteSupportingDocuments] = useMutation<
-    CreateTRBAdminNoteSupportingDocuments,
-    CreateTRBAdminNoteSupportingDocumentsVariables
-  >(CreateTrbAdminNoteSupportingDocumentsQuery, {
-    update: (cache, result) =>
-      modifyCache(cache, result.data?.createTRBAdminNoteSupportingDocuments)
-  });
+  const [createNoteSupportingDocuments] =
+    useCreateTRBAdminNoteSupportingDocumentsMutation({
+      update: (cache, result) =>
+        modifyCache(cache, result.data?.createTRBAdminNoteSupportingDocuments)
+    });
 
-  const [createNoteConsultSession] = useMutation<
-    CreateTRBAdminNoteConsultSession,
-    CreateTRBAdminNoteConsultSessionVariables
-  >(CreateTrbAdminNoteConsultSessionQuery, {
-    update: (cache, result) =>
-      modifyCache(cache, result.data?.createTRBAdminNoteConsultSession)
-  });
+  const [createNoteConsultSession] =
+    useCreateTRBAdminNoteConsultSessionMutation({
+      update: (cache, result) =>
+        modifyCache(cache, result.data?.createTRBAdminNoteConsultSession)
+    });
 
-  const [createNoteGuidanceLetter] = useMutation<
-    CreateTRBAdminNoteGuidanceLetter,
-    CreateTRBAdminNoteGuidanceLetterVariables
-  >(CreateTrbAdminNoteGuidanceLetterQuery, {
-    update: (cache, result) =>
-      modifyCache(cache, result.data?.createTRBAdminNoteGuidanceLetter)
-  });
+  const [createNoteGuidanceLetter] =
+    useCreateTRBAdminNoteGuidanceLetterMutation({
+      update: (cache, result) =>
+        modifyCache(cache, result.data?.createTRBAdminNoteGuidanceLetter)
+    });
 
   const createNote = (formData: AddNoteFields): Promise<FetchResult> => {
     if (formData.category === TRBAdminNoteCategory.INITIAL_REQUEST_FORM) {

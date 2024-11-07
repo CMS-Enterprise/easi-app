@@ -353,17 +353,6 @@ export enum SystemIntakeTRBFollowUp {
 }
 
 /**
- * Represents the category of a single TRB admin note
- */
-export enum TRBAdminNoteCategory {
-  CONSULT_SESSION = "CONSULT_SESSION",
-  GENERAL_REQUEST = "GENERAL_REQUEST",
-  GUIDANCE_LETTER = "GUIDANCE_LETTER",
-  INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
-  SUPPORTING_DOCUMENTS = "SUPPORTING_DOCUMENTS",
-}
-
-/**
  * Represents the status of the TRB consult attendance step
  */
 export enum TRBAttendConsultStatus {
@@ -431,13 +420,6 @@ export enum TRBFormStatus {
   COMPLETED = "COMPLETED",
   IN_PROGRESS = "IN_PROGRESS",
   READY_TO_START = "READY_TO_START",
-}
-
-export enum TRBGuidanceLetterRecommendationCategory {
-  CONSIDERATION = "CONSIDERATION",
-  RECOMMENDATION = "RECOMMENDATION",
-  REQUIREMENT = "REQUIREMENT",
-  UNCATEGORIZED = "UNCATEGORIZED",
 }
 
 /**
@@ -588,64 +570,6 @@ export interface CreateSystemIntakeNoteInput {
 }
 
 /**
- * The data needed to create a TRB admin note with the Consult Session category
- */
-export interface CreateTRBAdminNoteConsultSessionInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-}
-
-/**
- * The data needed to create a TRB admin note with the General Request category
- */
-export interface CreateTRBAdminNoteGeneralRequestInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-}
-
-/**
- * The data needed to create a TRB admin note with the Guidance Letter category
- */
-export interface CreateTRBAdminNoteGuidanceLetterInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-  appliesToMeetingSummary: boolean;
-  appliesToNextSteps: boolean;
-  recommendationIDs: UUID[];
-}
-
-/**
- * The data needed to create a TRB admin note with the Initial Request Form category
- */
-export interface CreateTRBAdminNoteInitialRequestFormInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-  appliesToBasicRequestDetails: boolean;
-  appliesToSubjectAreas: boolean;
-  appliesToAttendees: boolean;
-}
-
-/**
- * The data needed to create a TRB admin note with the Supporting Documents category
- */
-export interface CreateTRBAdminNoteSupportingDocumentsInput {
-  trbRequestId: UUID;
-  noteText: HTML;
-  documentIDs: UUID[];
-}
-
-/**
- * The input required to add a recommendation & links to a TRB guidance letter
- */
-export interface CreateTRBGuidanceLetterRecommendationInput {
-  trbRequestId: UUID;
-  title: string;
-  recommendation: HTML;
-  links: string[];
-  category: TRBGuidanceLetterRecommendationCategory;
-}
-
-/**
  * The data needed add a TRB request attendee to a TRB request
  */
 export interface CreateTRBRequestAttendeeInput {
@@ -727,15 +651,6 @@ export interface SendReportAProblemEmailInput {
   whatWereYouDoing: string;
   whatWentWrong: string;
   howSevereWasTheProblem: string;
-}
-
-/**
- * The data needed to send a TRB guidance letter, including who to notify
- */
-export interface SendTRBGuidanceLetterInput {
-  id: UUID;
-  copyTrbMailbox: boolean;
-  notifyEuaIds: string[];
 }
 
 export interface SetRolesForUserOnSystemInput {
@@ -1140,34 +1055,6 @@ export interface UpdateSystemIntakeReviewDatesInput {
   grbDate?: Time | null;
   grtDate?: Time | null;
   id: UUID;
-}
-
-/**
- * The data needed to update a TRB guidance letter
- */
-export interface UpdateTRBGuidanceLetterInput {
-  trbRequestId: UUID;
-  meetingSummary?: HTML | null;
-  nextSteps?: HTML | null;
-  isFollowupRecommended?: boolean | null;
-  followupPoint?: string | null;
-}
-
-/**
- * The input required to update a recommendation to a TRB guidance letter
- */
-export interface UpdateTRBGuidanceLetterRecommendationInput {
-  id: UUID;
-  title?: string | null;
-  recommendation?: HTML | null;
-  links?: string[] | null;
-  category?: TRBGuidanceLetterRecommendationCategory | null;
-}
-
-export interface UpdateTRBGuidanceLetterRecommendationOrderInput {
-  trbRequestId: UUID;
-  newOrder: UUID[];
-  category: TRBGuidanceLetterRecommendationCategory;
 }
 
 /**

@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
-import { useQuery } from '@apollo/client';
 import {
   Grid,
   GridContainer,
@@ -12,6 +11,7 @@ import {
   SummaryBoxContent,
   SummaryBoxHeading
 } from '@trussworks/react-uswds';
+import { useGetTRBPublicGuidanceLetterQuery } from 'gql/gen/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -21,11 +21,6 @@ import Alert from 'components/shared/Alert';
 import Breadcrumbs, { BreadcrumbsProps } from 'components/shared/Breadcrumbs';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
-import GetTrbPublicGuidanceLetterQuery from 'queries/GetTrbPublicGuidanceLetterQuery';
-import {
-  GetTrbPublicGuidanceLetter,
-  GetTrbPublicGuidanceLetterVariables
-} from 'queries/types/GetTrbPublicGuidanceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
@@ -61,10 +56,7 @@ function PublicGuidanceLetter() {
     `
   });
 
-  const { data, error, loading } = useQuery<
-    GetTrbPublicGuidanceLetter,
-    GetTrbPublicGuidanceLetterVariables
-  >(GetTrbPublicGuidanceLetterQuery, {
+  const { data, error, loading } = useGetTRBPublicGuidanceLetterQuery({
     variables: { id }
   });
 

@@ -1,29 +1,32 @@
 import {
+  GetTRBAdminNotesDocument,
+  GetTRBAdminNotesQuery,
+  GetTRBAdminNotesQueryVariables,
+  GetTRBGuidanceLetterDocument,
+  GetTRBGuidanceLetterInsightsDocument,
+  GetTRBGuidanceLetterInsightsQuery,
+  GetTRBGuidanceLetterInsightsQueryVariables,
+  GetTRBGuidanceLetterQuery,
+  GetTRBGuidanceLetterQueryVariables,
   GetTrbLeadOptionsDocument,
-  GetTrbLeadOptionsQuery
+  GetTrbLeadOptionsQuery,
+  TRBAdminNoteCategory,
+  TRBAdminNoteFragment,
+  TRBGuidanceLetterFragment,
+  TRBGuidanceLetterRecommendationCategory
 } from 'gql/gen/graphql';
 
 import GetRequestsQuery from 'queries/GetRequestsQuery';
-import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
-import { GetTrbGuidanceLetterQuery } from 'queries/TrbGuidanceLetterQueries';
 import {
   GetRequests,
   GetRequests_myTrbRequests as MyTrbRequests
 } from 'queries/types/GetRequests';
-import {
-  GetTrbAdminNotes,
-  GetTrbAdminNotesVariables
-} from 'queries/types/GetTrbAdminNotes';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
-import {
-  GetTrbGuidanceLetter,
-  GetTrbGuidanceLetterVariables
-} from 'queries/types/GetTrbGuidanceLetter';
 import {
   GetTrbRequest,
   GetTrbRequestVariables
@@ -49,7 +52,6 @@ import {
 import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
 import {
   PersonRole,
-  TRBAdminNoteCategory,
   TRBAttendConsultStatus,
   TRBCollabGroupOption,
   TRBConsultPrepStatus,
@@ -102,7 +104,7 @@ export const taskStatuses: TaskStatuses = {
   guidanceLetterStatus: TRBGuidanceLetterStatus.CANNOT_START_YET
 };
 
-const adminNotes: GetTrbAdminNotes['trbRequest']['adminNotes'] = [
+const adminNotes: TRBAdminNoteFragment[] = [
   {
     __typename: 'TRBAdminNote',
     id: '861fa6c5-c9af-4cda-a559-0995b7b76855',
@@ -333,9 +335,7 @@ export const updateTrbRequestConsultMeetingQuery: MockedQuery<
   }
 };
 
-export const guidanceLetter: NonNullable<
-  GetTrbGuidanceLetter['trbRequest']['guidanceLetter']
-> = {
+export const guidanceLetter: NonNullable<TRBGuidanceLetterFragment> = {
   __typename: 'TRBGuidanceLetter',
   id: '1b68aeca-f0d4-42e8-90ef-70ed2de1a34b',
   meetingSummary: 'Meeting summary text',
@@ -346,6 +346,7 @@ export const guidanceLetter: NonNullable<
   insights: [
     {
       __typename: 'TRBGuidanceLetterRecommendation',
+      category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
       id: '682c9839-ac4c-48f5-8ac3-8693573e4dd8',
       title: 'Recommendation 1',
       recommendation: 'This is the recommendation text',
@@ -353,6 +354,7 @@ export const guidanceLetter: NonNullable<
     },
     {
       __typename: 'TRBGuidanceLetterRecommendation',
+      category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
       id: 'a118705f-c87b-48ef-a812-b3264ad00abe',
       title: 'Recommendation 2',
       recommendation: 'This is the recommendation text',
@@ -360,6 +362,7 @@ export const guidanceLetter: NonNullable<
     },
     {
       __typename: 'TRBGuidanceLetterRecommendation',
+      category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
       id: 'e73fefbd-0d1a-4345-a217-2ce1ebe64d4f',
       title: 'Recommendation 3',
       recommendation: 'This is the recommendation text',
@@ -376,17 +379,18 @@ export const guidanceLetter: NonNullable<
 };
 
 export const getTrbGuidanceLetterQuery: MockedQuery<
-  GetTrbGuidanceLetter,
-  GetTrbGuidanceLetterVariables
+  GetTRBGuidanceLetterQuery,
+  GetTRBGuidanceLetterQueryVariables
 > = {
   request: {
-    query: GetTrbGuidanceLetterQuery,
+    query: GetTRBGuidanceLetterDocument,
     variables: {
       id: trbRequestId
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         __typename: 'TRBRequest',
         id: trbRequestId,
@@ -404,17 +408,42 @@ export const getTrbGuidanceLetterQuery: MockedQuery<
   }
 };
 
-export const getTrbAdminNotesQuery = (
-  notes: GetTrbAdminNotes['trbRequest']['adminNotes'] = adminNotes
-): MockedQuery<GetTrbAdminNotes, GetTrbAdminNotesVariables> => ({
+export const getTRBGuidanceLetterInsightsQuery: MockedQuery<
+  GetTRBGuidanceLetterInsightsQuery,
+  GetTRBGuidanceLetterInsightsQueryVariables
+> = {
   request: {
-    query: GetTrbAdminNotesQuery,
+    query: GetTRBGuidanceLetterInsightsDocument,
     variables: {
       id: trbRequestId
     }
   },
   result: {
     data: {
+      __typename: 'Query',
+      trbRequest: {
+        __typename: 'TRBRequest',
+        guidanceLetter: {
+          __typename: 'TRBGuidanceLetter',
+          insights: guidanceLetter.insights
+        }
+      }
+    }
+  }
+};
+
+export const getTrbAdminNotesQuery = (
+  notes: TRBAdminNoteFragment[] = adminNotes
+): MockedQuery<GetTRBAdminNotesQuery, GetTRBAdminNotesQueryVariables> => ({
+  request: {
+    query: GetTRBAdminNotesDocument,
+    variables: {
+      id: trbRequestId
+    }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
       trbRequest: {
         __typename: 'TRBRequest',
         id: trbRequestId,

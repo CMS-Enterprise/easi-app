@@ -3,6 +3,11 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {
+  TRBAdminNoteCategory,
+  TRBAdminNoteFragment,
+  TRBGuidanceLetterRecommendationCategory
+} from 'gql/gen/graphql';
 import i18next from 'i18next';
 
 import {
@@ -11,8 +16,6 @@ import {
   getTrbRequestSummaryQuery
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import { TRBAdminNoteFragment } from 'queries/types/TRBAdminNoteFragment';
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
@@ -55,11 +58,13 @@ const adminNotes: TRBAdminNoteFragment[] = [
       documents: [
         {
           __typename: 'TRBRequestDocument',
+          id: 'd04c2376-7254-4d66-8e8e-671e7a421bc0',
           fileName: 'documentOne.pdf',
           deletedAt: null
         },
         {
           __typename: 'TRBRequestDocument',
+          id: '245ea373-d6a8-4b31-8fa3-796b862aaabf',
           fileName: 'documentTwo.pdf',
           deletedAt: null
         }
@@ -84,11 +89,15 @@ const adminNotes: TRBAdminNoteFragment[] = [
       insights: [
         {
           __typename: 'TRBGuidanceLetterRecommendation',
+          id: 'c5a60133-51a0-415c-bdc0-920636f5e3aa',
+          category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
           title: 'Recommendation One',
           deletedAt: null
         },
         {
           __typename: 'TRBGuidanceLetterRecommendation',
+          id: 'c1847e30-91c0-419c-93f9-b9d87b90520a',
+          category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
           title: 'Recommendation Two',
           deletedAt: null
         }

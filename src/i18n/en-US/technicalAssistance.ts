@@ -188,10 +188,9 @@ const technicalAssistance = {
           'Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.'
       },
       {
-        name: 'Guidance and Insights',
-        // TODO EASI-4626: Update step description text
+        name: 'Guidance and insights',
         description:
-          'Add recommendations for the project team. Provide a title, description, and any useful resources for each recommendation.'
+          'Add requirements, recommendations, considerations for the project team. Provide a title, description, and any useful resources for each one. Requirements stipulate that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS. A consideration suggests that the project team should evaluate this option, but it will not significantly impact their system or CMS.'
       },
       {
         name: 'Next steps',
@@ -215,6 +214,12 @@ const technicalAssistance = {
     addAdditionalGuidance: 'Add additional guidance',
     noGuidance:
       'Nothing has been added yet. Use the button above to add guidance, or click next if you have no guidance to add.',
+    noInsights:
+      'This guidance letter does not have any guidance categorized as a {{category}}.',
+    uncategorizedAlertEdit:
+      'Past advice letters (now guidance letters) will not have categorized advice. You may edit each existing item to add it to a category.',
+    uncategorizedAlert:
+      'Past advice letters (now guidance letters) will not have categorized advice. If you have questions about the priority or severity of the content below, please contact the TRB at <a>cms-trb@cms.hhs.gov</a>.',
     reorderGuidance:
       'If you have two or more items per category, you can use arrows on the left side of each to reorder them within the category. Edit the guidance to change the category.',
     increaseOrderAriaLabel: 'Increase guidance sort order',
@@ -222,10 +227,24 @@ const technicalAssistance = {
     reorderError:
       'There was an issue saving your guidance. Please try again, and if the problem persists, try again later.',
     continueWithoutAdding: 'Continue without adding guidance',
+    priorityCategory: 'Priority category',
+    uncategorized: 'Uncategorized',
+    requirement: 'Requirement',
+    requirementDescription:
+      'A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding.',
+    recommendation: 'Recommendation',
+    recommendationDescription:
+      'A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS.',
+    consideration: 'Consideration',
+    considerationDescription:
+      'A consideration suggests that the project team should evaluate this option, but it will not significantly impact their system or CMS.',
+    categoryHeading_requirement: 'Requirements',
+    categoryHeading_recommendation: 'Recommendations',
+    categoryHeading_consideration: 'Considerations',
+    categoryHeading_uncategorized: 'Uncategorized',
     addResourceLink: 'Add a resource link',
     addAnotherResourceLink: 'Add another resource link',
-    returnToGuidanceLetter: 'Don’t add and return to guidance letter',
-    editReturnToGuidanceLetter: 'Don’t edit and return to guidance letter',
+    returnToGuidanceLetter: 'Don’t {{formType}} and return to guidance letter',
     editGuidance: 'Edit guidance',
     removeGuidance: 'Remove guidance',
     nextSteps: 'Next steps',
@@ -237,7 +256,7 @@ const technicalAssistance = {
     error:
       'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
     guidanceSuccess: 'Your guidance was added to this letter.',
-    editGuidanceSuccess: 'Your guidance was edited',
+    guidanceSuccess_edit: 'Your guidance was edited',
     modal: {
       title: 'Confirm you want to remove this guidance.',
       text: 'This action cannot be undone. If you remove this guidance, all content related to it will be removed and will not be sent as a part of the guidance letter.',
@@ -1038,8 +1057,8 @@ const technicalAssistance = {
       selectedDocuments: 'Selected documents',
       meetingSummary: 'Meeting summary',
       nextSteps: 'Next steps',
-      recommendation: 'Recommendation ({{title}})',
-      removedRecommendation: 'Removed recommendation ({{title}})',
+      insight: '$t(guidanceLetterForm.{{category}}) ({{title}})',
+      removedInsight: 'Removed {{category}} ({{title}})',
       removedDocument: 'Removed document ({{fileName}})'
     },
     noDocuments: 'There are no documents uploaded for this request.',

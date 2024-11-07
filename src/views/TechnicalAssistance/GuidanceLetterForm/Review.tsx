@@ -2,33 +2,19 @@ import React, { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Accordion, Form } from '@trussworks/react-uswds';
+import {
+  GetTRBGuidanceLetterDocument,
+  TRBAdminNoteFragment,
+  useDeleteTRBGuidanceLetterInsightMutation,
+  useGetTRBAdminNotesQuery,
+  useSendTRBGuidanceLetterMutation
+} from 'gql/gen/graphql';
 
 import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import useCacheQuery from 'hooks/useCacheQuery';
-import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
-import {
-  DeleteTrbRecommendationQuery,
-  GetTrbGuidanceLetterQuery,
-  SendTRBGuidanceLetterQuery
-} from 'queries/TrbGuidanceLetterQueries';
-import {
-  DeleteTRBRecommendation,
-  DeleteTRBRecommendationVariables
-} from 'queries/types/DeleteTRBRecommendation';
-import {
-  GetTrbAdminNotes,
-  GetTrbAdminNotes_trbRequest_adminNotes as AdminNote,
-  GetTrbAdminNotesVariables
-} from 'queries/types/GetTrbAdminNotes';
-import {
-  SendTRBGuidanceLetter,
-  SendTRBGuidanceLetterVariables
-} from 'queries/types/SendTRBGuidanceLetter';
 import {
   StepComponentProps,
   TrbRecipientFields
@@ -53,29 +39,20 @@ const Review = ({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const { data } = useCacheQuery<GetTrbAdminNotes, GetTrbAdminNotesVariables>(
-    GetTrbAdminNotesQuery,
-    {
-      variables: {
-        id: trbRequestId
-      }
+  const { data } = useGetTRBAdminNotesQuery({
+    variables: {
+      id: trbRequestId
     }
-  );
+  });
 
-  const notes: AdminNote[] = data?.trbRequest?.adminNotes || [];
+  const notes: TRBAdminNoteFragment[] = data?.trbRequest?.adminNotes || [];
 
-  const [mutate, guidanceLetterResult] = useMutation<
-    SendTRBGuidanceLetter,
-    SendTRBGuidanceLetterVariables
-  >(SendTRBGuidanceLetterQuery);
+  const [mutate, guidanceLetterResult] = useSendTRBGuidanceLetterMutation();
 
-  const [remove] = useMutation<
-    DeleteTRBRecommendation,
-    DeleteTRBRecommendationVariables
-  >(DeleteTrbRecommendationQuery, {
+  const [remove] = useDeleteTRBGuidanceLetterInsightMutation({
     refetchQueries: [
       {
-        query: GetTrbGuidanceLetterQuery,
+        query: GetTRBGuidanceLetterDocument,
         variables: {
           id: trbRequestId
         }
@@ -137,18 +114,18 @@ const Review = ({
         trbRequestId={trbRequestId}
         guidanceLetter={guidanceLetter}
         className="margin-top-5 margin-bottom-4"
-        recommendationActions={{
+        insightActions={{
           setReorderError: error =>
             setFormAlert(error ? { type: 'error', message: error } : null),
-          edit: recommendation =>
+          edit: insight =>
             history.push(`/trb/${trbRequestId}/guidance/insights/form`, {
-              recommendation: {
-                ...recommendation,
-                links: recommendation.links.map(link => ({ link }))
+              insight: {
+                ...insight,
+                links: insight.links.map(link => ({ link }))
               }
             }),
-          remove: recommendation =>
-            remove({ variables: { id: recommendation.id } }).catch(() =>
+          remove: insight =>
+            remove({ variables: { id: insight.id } }).catch(() =>
               setFormAlert({
                 type: 'error',
                 message: t('guidanceLetterForm.error', {

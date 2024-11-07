@@ -1,24 +1,16 @@
 import React, { useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ApolloError, useMutation } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
+import {
+  GetTRBGuidanceLetterDocument,
+  useDeleteTRBGuidanceLetterInsightMutation,
+  useRequestReviewForTRBGuidanceLetterMutation
+} from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
-import {
-  DeleteTrbRecommendationQuery,
-  GetTrbGuidanceLetterQuery,
-  RequestReviewForTRBGuidanceLetterQuery
-} from 'queries/TrbGuidanceLetterQueries';
-import {
-  DeleteTRBRecommendation,
-  DeleteTRBRecommendationVariables
-} from 'queries/types/DeleteTRBRecommendation';
-import {
-  RequestReviewForTRBGuidanceLetter,
-  RequestReviewForTRBGuidanceLetterVariables
-} from 'queries/types/RequestReviewForTRBGuidanceLetter';
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { StepComponentProps } from 'types/technicalAssistance';
 
@@ -37,22 +29,17 @@ const InternalReview = ({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const [requestReview, { loading: isSubmitting }] = useMutation<
-    RequestReviewForTRBGuidanceLetter,
-    RequestReviewForTRBGuidanceLetterVariables
-  >(RequestReviewForTRBGuidanceLetterQuery, {
-    variables: {
-      id: guidanceLetter.id
-    }
-  });
+  const [requestReview, { loading: isSubmitting }] =
+    useRequestReviewForTRBGuidanceLetterMutation({
+      variables: {
+        id: guidanceLetter.id
+      }
+    });
 
-  const [remove] = useMutation<
-    DeleteTRBRecommendation,
-    DeleteTRBRecommendationVariables
-  >(DeleteTrbRecommendationQuery, {
+  const [remove] = useDeleteTRBGuidanceLetterInsightMutation({
     refetchQueries: [
       {
-        query: GetTrbGuidanceLetterQuery,
+        query: GetTRBGuidanceLetterDocument,
         variables: {
           id: trbRequestId
         }
@@ -71,23 +58,23 @@ const InternalReview = ({
         trbRequestId={trbRequestId}
         guidanceLetter={guidanceLetter}
         className="margin-top-5 margin-bottom-4"
-        recommendationActions={{
+        insightActions={{
           setReorderError: error =>
             setFormAlert(error ? { type: 'error', message: error } : null),
-          edit: recommendation =>
+          edit: insight =>
             history.push(`/trb/${trbRequestId}/guidance/insights/form`, {
-              recommendation: {
-                ...recommendation,
-                links: recommendation.links.map(link => ({ link }))
+              insight: {
+                ...insight,
+                links: insight.links.map(link => ({ link }))
               }
             }),
-          remove: recommendation =>
-            remove({ variables: { id: recommendation.id } }).catch(() =>
+          remove: insight =>
+            remove({ variables: { id: insight.id } }).catch(() =>
               setFormAlert({
                 type: 'error',
                 message: t('guidanceLetterForm.error', {
                   action: 'removing',
-                  type: 'recommendation'
+                  type: 'insight'
                 })
               })
             )

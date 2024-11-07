@@ -2,29 +2,29 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import {
+  GetTRBGuidanceLetterQuery,
+  TRBGuidanceLetterFragment,
+  TRBGuidanceLetterInsightFragment
+} from 'gql/gen/graphql';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { RichTextViewer } from 'components/RichTextEditor';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import {
-  GetTrbGuidanceLetter_trbRequest as TrbRequest,
-  GetTrbGuidanceLetter_trbRequest_guidanceLetter as GuidanceLetter
-} from 'queries/types/GetTrbGuidanceLetter';
-import { TRBRecommendation } from 'queries/types/TRBRecommendation';
 import { formatDateLocal } from 'utils/date';
 
-import RecommendationsList from '../RecommendationsList';
+import InsightsList from '../InsightsList';
 
 type ReviewGuidanceLetterProps = {
-  guidanceLetter: GuidanceLetter;
+  guidanceLetter: TRBGuidanceLetterFragment;
   trbRequestId: string;
-  trbRequest?: TrbRequest;
+  trbRequest?: GetTRBGuidanceLetterQuery['trbRequest'];
   requesterString?: string;
   showSectionEditLinks?: boolean;
-  recommendationActions?: {
-    edit?: (recommendation: TRBRecommendation) => void;
-    remove?: (recommendation: TRBRecommendation) => void;
+  insightActions?: {
+    edit?: (insight: TRBGuidanceLetterInsightFragment) => void;
+    remove?: (insight: TRBGuidanceLetterInsightFragment) => void;
     setReorderError?: (error: string | null) => void;
   };
   showDateSent?: boolean;
@@ -43,7 +43,7 @@ const ReviewGuidanceLetter = ({
   trbRequest,
   requesterString,
   showSectionEditLinks = false,
-  recommendationActions,
+  insightActions,
   showDateSent = true,
   showSectionBorders = true,
   editable = true,
@@ -161,7 +161,7 @@ const ReviewGuidanceLetter = ({
         )}
       </SectionWrapper>
 
-      {/* Recommendations */}
+      {/* Insights */}
       <SectionWrapper
         borderTop={showSectionBorders}
         className={classNames({
@@ -183,16 +183,15 @@ const ReviewGuidanceLetter = ({
         )}
 
         {
-          // If no recommendations, return text
+          // If no insights, return text
           insights.length === 0 ? (
             <p className="margin-top-4">{t('guidanceLetter.notSpecified')}</p>
           ) : (
-            <RecommendationsList
-              recommendations={insights}
+            <InsightsList
               trbRequestId={trbRequestId}
               className="margin-top-4"
               editable={editable}
-              {...recommendationActions}
+              {...insightActions}
             />
           )
         }

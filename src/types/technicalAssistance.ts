@@ -1,7 +1,10 @@
 import React from 'react';
 import { ModalRef } from '@trussworks/react-uswds';
+import {
+  TRBGuidanceLetterFragment,
+  TRBGuidanceLetterRecommendationCategory
+} from 'gql/gen/graphql';
 
-import { GetTrbGuidanceLetter_trbRequest_guidanceLetter as GuidanceLetter } from 'queries/types/GetTrbGuidanceLetter';
 import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'queries/types/GetTrbRequestSummary';
 import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
 
@@ -90,10 +93,11 @@ export type TrbAdminPage = {
   groupEnd?: boolean;
 };
 
-export type GuidanceLetterRecommendationFields = {
+export type GuidanceLetterInsightFields = {
   id?: string;
   title: string;
   recommendation: string;
+  category: TRBGuidanceLetterRecommendationCategory;
   /** Links array - object type to get useFieldArray hook to work */
   links?: { link: string }[];
 };
@@ -115,7 +119,7 @@ export type FormAlertObject = {
 
 export type StepComponentProps = {
   trbRequestId: string;
-  guidanceLetter: GuidanceLetter;
+  guidanceLetter: TRBGuidanceLetterFragment;
   guidanceLetterStatus: TRBGuidanceLetterStatus;
   /**
    * Set the current form step component submit handler

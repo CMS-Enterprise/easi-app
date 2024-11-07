@@ -8,6 +8,15 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {
+  CreateTRBGuidanceLetterInsightDocument,
+  CreateTRBGuidanceLetterInsightMutation,
+  CreateTRBGuidanceLetterInsightMutationVariables,
+  CreateTRBGuidanceLetterRecommendationInput,
+  GetTRBGuidanceLetterQuery,
+  GetTRBGuidanceLetterQueryVariables,
+  TRBGuidanceLetterRecommendationCategory
+} from 'gql/gen/graphql';
 import i18next from 'i18next';
 
 import {
@@ -16,16 +25,6 @@ import {
   taskStatuses
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import { CreateTrbRecommendationQuery } from 'queries/TrbGuidanceLetterQueries';
-import {
-  CreateTRBRecommendation,
-  CreateTRBRecommendationVariables
-} from 'queries/types/CreateTRBRecommendation';
-import {
-  GetTrbGuidanceLetter,
-  GetTrbGuidanceLetterVariables
-} from 'queries/types/GetTrbGuidanceLetter';
-import { TRBGuidanceLetterRecommendationCategory } from 'types/graphql-global-types';
 import { GuidanceFormStepKey } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
@@ -34,7 +33,7 @@ import typeRichText from 'utils/testing/typeRichText';
 
 import GuidanceLetterForm from '.';
 
-const mockRecommendation = {
+const mockInsight: CreateTRBGuidanceLetterRecommendationInput = {
   trbRequestId: mockTrbRequestId,
   title: 'Recommendation 3',
   recommendation: 'Recommendation description text',
@@ -42,22 +41,23 @@ const mockRecommendation = {
   category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
 };
 
-const createTrbRecommendationQuery: MockedQuery<
-  CreateTRBRecommendation,
-  CreateTRBRecommendationVariables
+const createTrbInsightQuery: MockedQuery<
+  CreateTRBGuidanceLetterInsightMutation,
+  CreateTRBGuidanceLetterInsightMutationVariables
 > = {
   request: {
-    query: CreateTrbRecommendationQuery,
+    query: CreateTRBGuidanceLetterInsightDocument,
     variables: {
-      input: mockRecommendation
+      input: mockInsight
     }
   },
   result: {
     data: {
+      __typename: 'Mutation',
       createTRBGuidanceLetterRecommendation: {
         __typename: 'TRBGuidanceLetterRecommendation',
         id: '670fdf6d-761b-415f-a108-2ebc814288c3',
-        ...mockRecommendation
+        ...mockInsight
       }
     }
   }
@@ -69,12 +69,13 @@ const defaultStore = easiMockStore({
 });
 
 const getGuidanceLetterCannotStart: MockedQuery<
-  GetTrbGuidanceLetter,
-  GetTrbGuidanceLetterVariables
+  GetTRBGuidanceLetterQuery,
+  GetTRBGuidanceLetterQueryVariables
 > = {
   ...getTrbGuidanceLetterQuery,
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         ...getTrbGuidanceLetterQuery.result.data?.trbRequest!,
         guidanceLetter: null,
@@ -102,9 +103,7 @@ const renderForm = (
       <MessageProvider>
         <Provider store={defaultStore}>
           <MockedProvider
-            mocks={
-              mocks || [getTrbGuidanceLetterQuery, createTrbRecommendationQuery]
-            }
+            mocks={mocks || [getTrbGuidanceLetterQuery, createTrbInsightQuery]}
             addTypename={false}
           >
             <Route path="/trb/:id/guidance/:formStep/:subpage?">
@@ -153,7 +152,7 @@ describe('TRB Guidance Letter Form', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders the recommendations form', async () => {
+  it('renders the insights form', async () => {
     const { findByRole, findByTestId } = renderForm('insights');
 
     const button = await findByRole('button', {
@@ -164,14 +163,14 @@ describe('TRB Guidance Letter Form', () => {
 
     // Title field
     const titleInput = await findByRole('textbox', { name: 'Title *' });
-    userEvent.type(titleInput, mockRecommendation.title);
-    expect(titleInput).toHaveValue(mockRecommendation.title);
+    userEvent.type(titleInput, mockInsight.title);
+    expect(titleInput).toHaveValue(mockInsight.title);
 
     // Description field
     const descriptionInput = await screen.findByTestId('recommendation');
-    await typeRichText(descriptionInput, mockRecommendation.recommendation);
+    await typeRichText(descriptionInput, mockInsight.recommendation);
     expect(descriptionInput).toContainHTML(
-      `<p>${mockRecommendation.recommendation!}</p>`
+      `<p>${mockInsight.recommendation!}</p>`
     );
 
     // Add resource link
@@ -188,14 +187,14 @@ describe('TRB Guidance Letter Form', () => {
 
     let linkInput = await findByTestId('links.0.link');
 
-    userEvent.type(linkInput, mockRecommendation.links[0]);
-    expect(linkInput).toHaveValue(mockRecommendation.links[0]);
+    userEvent.type(linkInput, mockInsight.links[0]);
+    expect(linkInput).toHaveValue(mockInsight.links[0]);
 
     userEvent.click(addAnotherLinkButton);
 
     linkInput = await findByTestId('links.1.link');
 
-    const linkText = `https://www.${mockRecommendation.links[1]}`;
+    const linkText = `https://www.${mockInsight.links[1]}`;
     userEvent.type(linkInput, linkText);
     expect(linkInput).toHaveValue(linkText);
   });
