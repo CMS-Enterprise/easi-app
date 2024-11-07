@@ -56,6 +56,7 @@ describe('Insights category', () => {
           trbRequestId={trbRequest.id}
           category={TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED}
           insights={[uncategorized]}
+          editable
         />
       </VerboseMockedProvider>
     );
