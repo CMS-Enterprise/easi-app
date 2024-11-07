@@ -188,7 +188,7 @@ const technicalAssistance = {
           'Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.'
       },
       {
-        name: 'Guidance and Insights',
+        name: 'Guidance and insights',
         description:
           'Add requirements, recommendations, considerations for the project team. Provide a title, description, and any useful resources for each one. Requirements stipulate that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS. A consideration suggests that the project team should evaluate this option, but it will not significantly impact their system or CMS.'
       },

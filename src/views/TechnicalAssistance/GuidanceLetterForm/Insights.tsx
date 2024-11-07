@@ -25,7 +25,7 @@ import Pager from '../RequestForm/Pager';
 import InsightsForm from './InsightsForm';
 
 /**
- * Guidance and Insights step of TRB Guidance Letter form
+ * Guidance and insights step of TRB Guidance Letter form
  */
 const Insights = ({
   trbRequestId,
