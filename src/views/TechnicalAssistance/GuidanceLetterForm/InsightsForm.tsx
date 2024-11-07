@@ -238,6 +238,13 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                   {t('guidanceLetterForm.priorityCategory')}{' '}
                   <span className="text-red">*</span>
                 </legend>
+                <ErrorMessage
+                  errors={errors}
+                  name="category"
+                  render={() => (
+                    <FieldErrorMsg>{t('errors.makeSelection')}</FieldErrorMsg>
+                  )}
+                />
                 <Radio
                   {...field}
                   inputRef={ref}
@@ -330,6 +337,9 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
             disabled:
               watch('title').length === 0 ||
               watch('recommendation').length === 0 ||
+              !watch('category') ||
+              watch('category') ===
+                TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED ||
               isSubmitting
           }}
           saveExitText={t(`guidanceLetterForm.returnToGuidanceLetter`, {

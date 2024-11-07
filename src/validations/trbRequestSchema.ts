@@ -1,3 +1,4 @@
+import { TRBGuidanceLetterRecommendationCategory } from 'gql/gen/graphql';
 import * as yup from 'yup';
 
 import {
@@ -152,6 +153,14 @@ export const documentSchema = yup.object({
 
 export const guidanceInsightSchema = yup.object({
   title: yup.string().required(),
+  category: yup
+    .mixed()
+    .oneOf([
+      TRBGuidanceLetterRecommendationCategory.REQUIREMENT,
+      TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
+      TRBGuidanceLetterRecommendationCategory.CONSIDERATION
+    ])
+    .required(),
   recommendation: yup.string().required(),
   links: yup.array(
     yup.object({
