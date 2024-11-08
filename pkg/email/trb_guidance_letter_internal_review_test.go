@@ -43,7 +43,7 @@ func (s *EmailTestSuite) TestTRBGuidanceLetterInternalReviewEmail() {
 			%s
 
 			<br>
-			<p><strong><a href="%s">View the Guidance Letter</a></strong></p>`,
+			<p><strong><a href="%s">View the guidance letter</a></strong></p>`,
 			trbRequestName,
 			leadNameStr,
 			trbAdminGuidanceLetterLink,
