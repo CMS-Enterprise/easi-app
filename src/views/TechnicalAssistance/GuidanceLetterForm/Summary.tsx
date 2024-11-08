@@ -5,7 +5,10 @@ import { useHistory } from 'react-router-dom';
 import { ApolloError } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage, Form, FormGroup } from '@trussworks/react-uswds';
-import { useUpdateTRBGuidanceLetterMutation } from 'gql/gen/graphql';
+import {
+  GetTRBGuidanceLetterDocument,
+  useUpdateTRBGuidanceLetterMutation
+} from 'gql/gen/graphql';
 
 import useEasiForm from 'components/EasiForm/useEasiForm';
 import RichTextEditor from 'components/RichTextEditor';
@@ -32,7 +35,9 @@ const Summary = ({
 
   const { meetingSummary } = guidanceLetter;
 
-  const [update] = useUpdateTRBGuidanceLetterMutation();
+  const [update] = useUpdateTRBGuidanceLetterMutation({
+    refetchQueries: [GetTRBGuidanceLetterDocument]
+  });
 
   const {
     handleSubmit,
