@@ -12,7 +12,10 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
-import { useUpdateTRBGuidanceLetterMutation } from 'gql/gen/graphql';
+import {
+  GetTRBGuidanceLetterDocument,
+  useUpdateTRBGuidanceLetterMutation
+} from 'gql/gen/graphql';
 
 import useEasiForm from 'components/EasiForm/useEasiForm';
 import RichTextEditor from 'components/RichTextEditor';
@@ -39,7 +42,9 @@ const NextSteps = ({
 
   const { nextSteps, isFollowupRecommended, followupPoint } = guidanceLetter;
 
-  const [update] = useUpdateTRBGuidanceLetterMutation();
+  const [update] = useUpdateTRBGuidanceLetterMutation({
+    refetchQueries: [GetTRBGuidanceLetterDocument]
+  });
 
   const {
     partialSubmit,
