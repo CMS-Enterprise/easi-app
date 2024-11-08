@@ -258,7 +258,7 @@ const technicalAssistance = {
     guidanceSuccess: 'Your guidance was added to this letter.',
     guidanceSuccess_edit: 'Your guidance was edited',
     modal: {
-      title: 'Confirm you want to remove this guidance.',
+      title: 'Are you sure you want to remove this guidance?',
       text: 'This action cannot be undone. If you remove this guidance, all content related to it will be removed and will not be sent as a part of the guidance letter.',
       removingTitle: 'Removing: {{title}}'
     },
