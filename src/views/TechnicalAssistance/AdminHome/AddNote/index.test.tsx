@@ -10,32 +10,30 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {
+  CreateTRBAdminNoteGeneralRequestDocument,
+  CreateTRBAdminNoteGeneralRequestMutation,
+  CreateTRBAdminNoteGeneralRequestMutationVariables,
+  GetTRBGuidanceLetterInsightsDocument,
+  GetTRBGuidanceLetterInsightsQuery,
+  GetTRBGuidanceLetterInsightsQueryVariables,
+  TRBAdminNoteCategory
+} from 'gql/gen/graphql';
 import i18next from 'i18next';
 
 import {
-  adviceLetter,
   getTRBRequestAttendeesQuery,
   getTrbRequestSummaryQuery,
+  guidanceLetter,
   requester
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
-import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
-import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
-import {
-  CreateTRBAdminNoteGeneralRequest,
-  CreateTRBAdminNoteGeneralRequestVariables
-} from 'queries/types/CreateTRBAdminNoteGeneralRequest';
-import {
-  GetTrbRecommendations,
-  GetTrbRecommendationsVariables
-} from 'queries/types/GetTrbRecommendations';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
 import {
-  TRBAdminNoteCategory,
   TRBDocumentCommonType,
   TRBRequestDocumentStatus
 } from 'types/graphql-global-types';
@@ -49,25 +47,26 @@ import AdminHome from '..';
 
 import AddNote from '.';
 
-const { recommendations } = adviceLetter;
+const { insights } = guidanceLetter;
 
-const getTrbRecommendationsQuery: MockedQuery<
-  GetTrbRecommendations,
-  GetTrbRecommendationsVariables
+const getTrbInsightsQuery: MockedQuery<
+  GetTRBGuidanceLetterInsightsQuery,
+  GetTRBGuidanceLetterInsightsQueryVariables
 > = {
   request: {
-    query: GetTrbRecommendationsQuery,
+    query: GetTRBGuidanceLetterInsightsDocument,
     variables: {
       id: mockTrbRequestId
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         __typename: 'TRBRequest',
-        adviceLetter: {
-          __typename: 'TRBAdviceLetter',
-          recommendations
+        guidanceLetter: {
+          __typename: 'TRBGuidanceLetter',
+          insights
         }
       }
     }
@@ -75,11 +74,11 @@ const getTrbRecommendationsQuery: MockedQuery<
 };
 
 const createTrbAdminNoteQuery: MockedQuery<
-  CreateTRBAdminNoteGeneralRequest,
-  CreateTRBAdminNoteGeneralRequestVariables
+  CreateTRBAdminNoteGeneralRequestMutation,
+  CreateTRBAdminNoteGeneralRequestMutationVariables
 > = {
   request: {
-    query: CreateTrbAdminNoteGeneralRequestQuery,
+    query: CreateTRBAdminNoteGeneralRequestDocument,
     variables: {
       input: {
         trbRequestId: mockTrbRequestId,
@@ -89,6 +88,7 @@ const createTrbAdminNoteQuery: MockedQuery<
   },
   result: {
     data: {
+      __typename: 'Mutation',
       createTRBAdminNoteGeneralRequest: {
         __typename: 'TRBAdminNote',
         createdAt: '2023-02-16T15:21:34.156885Z',
@@ -166,7 +166,7 @@ describe('Trb Admin Notes: Add Note', () => {
           watchQuery: { fetchPolicy: 'no-cache' },
           query: { fetchPolicy: 'no-cache' }
         }}
-        mocks={[getTrbRequestDocumentsQuery, getTrbRecommendationsQuery]}
+        mocks={[getTrbRequestDocumentsQuery, getTrbInsightsQuery]}
       >
         <MemoryRouter
           initialEntries={[`/trb/${mockTrbRequestId}/notes/add-note`]}
@@ -208,22 +208,22 @@ describe('Trb Admin Notes: Add Note', () => {
     expect(screen.getByRole('checkbox', { name: documents[0].fileName }));
     expect(screen.getByRole('checkbox', { name: documents[1].fileName }));
 
-    /* Advice letter */
+    /* Guidance letter */
 
-    userEvent.selectOptions(categorySelect, ['Advice letter']);
-    const adviceLetterSectionSelect = screen.getByRole('combobox', {
+    userEvent.selectOptions(categorySelect, ['Guidance letter']);
+    const guidanceLetterSectionSelect = screen.getByRole('combobox', {
       name: 'Which section?'
     });
 
-    selectEvent.openMenu(adviceLetterSectionSelect);
+    selectEvent.openMenu(guidanceLetterSectionSelect);
     expect(
       screen.getByRole('checkbox', {
-        name: `Recommendation (${recommendations[0].title})`
+        name: `Recommendation (${insights[0].title})`
       })
     );
     expect(
       screen.getByRole('checkbox', {
-        name: `Recommendation (${recommendations[1].title})`
+        name: `Recommendation (${insights[1].title})`
       })
     );
   });
