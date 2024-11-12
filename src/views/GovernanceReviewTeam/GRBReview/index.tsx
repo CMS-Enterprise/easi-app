@@ -37,6 +37,7 @@ import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 
+import DiscussionsCard from './DiscussionsCard';
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
 
@@ -362,6 +363,8 @@ const GRBReview = ({
             </p>
 
             <DocumentsTable systemIntakeId={id} documents={documents} />
+
+            <DiscussionsCard />
 
             <ParticipantsTable
               id={id}
