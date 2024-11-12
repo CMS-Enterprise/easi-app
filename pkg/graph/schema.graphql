@@ -1705,27 +1705,6 @@ type Tag {
 }
 
 """
-GRBDiscussion is a top-level discussion on a System Intake and can contain a list of replies.
-As of this writing, replies can NOT be nested to more than one level (e.g., replies to a Slack thread,
-not nested Reddit replies)
-"""
-type GRBDiscussion {
-  id: UUID!
-  systemIntakeId: UUID!
-  content: TaggedContent!
-  replies: [GRBReply!]!
-}
-
-"""
-GRBReply is a reply to a GRBDiscussion
-"""
-type GRBReply {
-  parentDiscussionId: UUID!
-  systemIntakeId: UUID!
-  content: TaggedContent!
-}
-
-"""
 The data needed add a TRB request attendee to a TRB request
 """
 input CreateTRBRequestAttendeeInput {
@@ -2465,14 +2444,6 @@ input ReopenTRBRequestInput {
 }
 
 """
-The data needed to start a new discussion
-"""
-input SaveGRBDiscussionInput {
-  systemIntakeId: UUID!
-  content: TaggedHTML!
-}
-
-"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -2628,7 +2599,8 @@ type Mutation {
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
 
-  saveGRBDiscussion(input: SaveGRBDiscussionInput!): GRBDiscussion!
+#  to avoid lint error for unused
+  dummy(a: TaggedHTML): TaggedContent
 }
 
 """

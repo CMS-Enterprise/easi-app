@@ -1149,9 +1149,9 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 	return resolvers.DeleteTRBLeadOption(ctx, r.store, eua)
 }
 
-// SaveGRBDiscussion is the resolver for the saveGRBDiscussion field.
-func (r *mutationResolver) SaveGRBDiscussion(ctx context.Context, input models.SaveGRBDiscussionInput) (*models.GRBDiscussion, error) {
-	panic(fmt.Errorf("not implemented: SaveGRBDiscussion - saveGRBDiscussion"))
+// Dummy is the resolver for the dummy field.
+func (r *mutationResolver) Dummy(ctx context.Context, a *models.TaggedHTML) (*models.TaggedContent, error) {
+	panic(fmt.Errorf("not implemented: Dummy - dummy"))
 }
 
 // SystemIntake is the resolver for the systemIntake field.

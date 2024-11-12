@@ -735,27 +735,6 @@ export enum ExchangeDirection {
 }
 
 /**
- * GRBDiscussion is a top-level discussion on a System Intake and can contain a list of replies.
- * As of this writing, replies can NOT be nested to more than one level (e.g., replies to a Slack thread,
- * not nested Reddit replies)
- */
-export type GRBDiscussion = {
-  __typename: 'GRBDiscussion';
-  content: TaggedContent;
-  id: Scalars['UUID']['output'];
-  replies: Array<GRBReply>;
-  systemIntakeId: Scalars['UUID']['output'];
-};
-
-/** GRBReply is a reply to a GRBDiscussion */
-export type GRBReply = {
-  __typename: 'GRBReply';
-  content: TaggedContent;
-  parentDiscussionId: Scalars['UUID']['output'];
-  systemIntakeId: Scalars['UUID']['output'];
-};
-
-/**
  * GRBReviewerComparison represents an individual GRB Reviewer within the context of a
  * comparison operation between two system intakes.
  *
@@ -1011,9 +990,9 @@ export type Mutation = {
   deleteTRBRequestDocument?: Maybe<DeleteTRBRequestDocumentPayload>;
   deleteTRBRequestFundingSources: Array<TRBFundingSource>;
   deleteTrbLeadOption: Scalars['Boolean']['output'];
+  dummy?: Maybe<TaggedContent>;
   reopenTrbRequest: TRBRequest;
   requestReviewForTRBGuidanceLetter: TRBGuidanceLetter;
-  saveGRBDiscussion: GRBDiscussion;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
@@ -1305,6 +1284,12 @@ export type MutationDeleteTrbLeadOptionArgs = {
 
 
 /** Defines the mutations for the schema */
+export type MutationDummyArgs = {
+  a?: InputMaybe<Scalars['TaggedHTML']['input']>;
+};
+
+
+/** Defines the mutations for the schema */
 export type MutationReopenTrbRequestArgs = {
   input: ReopenTRBRequestInput;
 };
@@ -1313,12 +1298,6 @@ export type MutationReopenTrbRequestArgs = {
 /** Defines the mutations for the schema */
 export type MutationRequestReviewForTRBGuidanceLetterArgs = {
   id: Scalars['UUID']['input'];
-};
-
-
-/** Defines the mutations for the schema */
-export type MutationSaveGRBDiscussionArgs = {
-  input: SaveGRBDiscussionInput;
 };
 
 
@@ -1754,12 +1733,6 @@ export enum Role {
   /** A generic EASi user */
   EASI_USER = 'EASI_USER'
 }
-
-/** The data needed to start a new discussion */
-export type SaveGRBDiscussionInput = {
-  content: Scalars['TaggedHTML']['input'];
-  systemIntakeId: Scalars['UUID']['input'];
-};
 
 export type SendCantFindSomethingEmailInput = {
   body: Scalars['String']['input'];
