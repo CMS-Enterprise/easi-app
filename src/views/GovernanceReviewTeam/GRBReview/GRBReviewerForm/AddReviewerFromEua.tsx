@@ -64,10 +64,10 @@ const AddReviewerFromEua = ({
     watch,
     handleSubmit,
     resetField,
-    formState: { errors, isSubmitted, isDirty }
+    formState: { errors, isSubmitted, isDirty, isValid }
   } = useEasiForm<GRBReviewerFields>({
     resolver: yupResolver(GRBReviewerSchema),
-    context: { errorOnDuplicates: !activeReviewer, initialGRBReviewers },
+    context: { errorOnDuplicate: !activeReviewer, initialGRBReviewers },
     // Set default values if updating existing reviewer
     defaultValues: {
       votingRole: activeReviewer?.votingRole,
@@ -270,11 +270,7 @@ const AddReviewerFromEua = ({
       <Pager
         next={{
           text: t('form.submit', { context: action }),
-          disabled:
-            !isDirty ||
-            !watch('userAccount') ||
-            !watch('votingRole') ||
-            !watch('grbRole')
+          disabled: !isDirty || !isValid
         }}
         taskListUrl={grbReviewPath}
         saveExitText={t('form.returnToRequest', {
