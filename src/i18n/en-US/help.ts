@@ -65,7 +65,7 @@ const help = {
         title: 'Technical Review Board (TRB)',
         type: 'Technical Review Board',
         content:
-          'The TRB can help with any questions related to technical advice for your system, CMS Technical Reference Architecture (TRA), and more. ',
+          'The TRB can help with any questions related to technical guidance for your system, CMS Technical Reference Architecture (TRA), and more. ',
         email: 'cms-trb@cms.hhs.gov'
       }
     }
