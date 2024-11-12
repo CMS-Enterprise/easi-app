@@ -861,16 +861,6 @@ type TRBRequestDocumentType struct {
 	OtherTypeDescription *string               `json:"otherTypeDescription,omitempty"`
 }
 
-type Tag struct {
-	ID      uuid.UUID `json:"id"`
-	Content string    `json:"content"`
-}
-
-type TaggedContent struct {
-	RawContent string `json:"rawContent"`
-	Tags       []*Tag `json:"tags"`
-}
-
 // Input data used to update the admin lead assigned to a system IT governance
 // request
 type UpdateSystemIntakeAdminLeadInput struct {
