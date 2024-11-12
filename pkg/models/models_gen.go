@@ -205,15 +205,6 @@ type CreateSystemIntakeNoteInput struct {
 	IntakeID   uuid.UUID `json:"intakeId"`
 }
 
-// The data needed to create a TRB admin note with the Advice Letter category
-type CreateTRBAdminNoteAdviceLetterInput struct {
-	TrbRequestID            uuid.UUID   `json:"trbRequestId"`
-	NoteText                HTML        `json:"noteText"`
-	AppliesToMeetingSummary bool        `json:"appliesToMeetingSummary"`
-	AppliesToNextSteps      bool        `json:"appliesToNextSteps"`
-	RecommendationIDs       []uuid.UUID `json:"recommendationIDs"`
-}
-
 // The data needed to create a TRB admin note with the Consult Session category
 type CreateTRBAdminNoteConsultSessionInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
@@ -224,6 +215,15 @@ type CreateTRBAdminNoteConsultSessionInput struct {
 type CreateTRBAdminNoteGeneralRequestInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
 	NoteText     HTML      `json:"noteText"`
+}
+
+// The data needed to create a TRB admin note with the Guidance Letter category
+type CreateTRBAdminNoteGuidanceLetterInput struct {
+	TrbRequestID            uuid.UUID   `json:"trbRequestId"`
+	NoteText                HTML        `json:"noteText"`
+	AppliesToMeetingSummary bool        `json:"appliesToMeetingSummary"`
+	AppliesToNextSteps      bool        `json:"appliesToNextSteps"`
+	RecommendationIDs       []uuid.UUID `json:"recommendationIDs"`
 }
 
 // The data needed to create a TRB admin note with the Initial Request Form category
@@ -242,12 +242,13 @@ type CreateTRBAdminNoteSupportingDocumentsInput struct {
 	DocumentIDs  []uuid.UUID `json:"documentIDs"`
 }
 
-// The input required to add a recommendation & links to a TRB advice letter
-type CreateTRBAdviceLetterRecommendationInput struct {
-	TrbRequestID   uuid.UUID `json:"trbRequestId"`
-	Title          string    `json:"title"`
-	Recommendation HTML      `json:"recommendation"`
-	Links          []string  `json:"links"`
+// The input required to add a recommendation & links to a TRB guidance letter
+type CreateTRBGuidanceLetterRecommendationInput struct {
+	TrbRequestID   uuid.UUID                               `json:"trbRequestId"`
+	Title          string                                  `json:"title"`
+	Recommendation HTML                                    `json:"recommendation"`
+	Links          []string                                `json:"links"`
+	Category       TRBGuidanceLetterRecommendationCategory `json:"category"`
 }
 
 // The data needed add a TRB request attendee to a TRB request
@@ -395,8 +396,8 @@ type SendReportAProblemEmailInput struct {
 	HowSevereWasTheProblem string `json:"howSevereWasTheProblem"`
 }
 
-// The data needed to send a TRB advice letter, including who to notify
-type SendTRBAdviceLetterInput struct {
+// The data needed to send a TRB guidance letter, including who to notify
+type SendTRBGuidanceLetterInput struct {
 	ID             uuid.UUID `json:"id"`
 	CopyTrbMailbox bool      `json:"copyTrbMailbox"`
 	NotifyEuaIds   []string  `json:"notifyEuaIds"`
@@ -785,16 +786,6 @@ type SystemIntakeUpdateLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
-// Data specific to admin notes in the Advice Letter category
-// The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
-type TRBAdminNoteAdviceLetterCategoryData struct {
-	AppliesToMeetingSummary bool                             `json:"appliesToMeetingSummary"`
-	AppliesToNextSteps      bool                             `json:"appliesToNextSteps"`
-	Recommendations         []*TRBAdviceLetterRecommendation `json:"recommendations"`
-}
-
-func (TRBAdminNoteAdviceLetterCategoryData) IsTRBAdminNoteCategorySpecificData() {}
-
 // Data specific to admin notes in the Consult Session category
 // This type doesn't contain any actual data
 type TRBAdminNoteConsultSessionCategoryData struct {
@@ -812,6 +803,16 @@ type TRBAdminNoteGeneralRequestCategoryData struct {
 }
 
 func (TRBAdminNoteGeneralRequestCategoryData) IsTRBAdminNoteCategorySpecificData() {}
+
+// Data specific to admin notes in the Guidance Letter category
+// The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
+type TRBAdminNoteGuidanceLetterCategoryData struct {
+	AppliesToMeetingSummary bool                               `json:"appliesToMeetingSummary"`
+	AppliesToNextSteps      bool                               `json:"appliesToNextSteps"`
+	Insights                []*TRBGuidanceLetterRecommendation `json:"insights"`
+}
+
+func (TRBAdminNoteGuidanceLetterCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data specific to admin notes in the Initial Request Form category
 type TRBAdminNoteInitialRequestFormCategoryData struct {
@@ -920,10 +921,11 @@ type UpdateSystemIntakeReviewDatesInput struct {
 	ID      uuid.UUID  `json:"id"`
 }
 
-type UpdateTRBAdviceLetterRecommendationOrderInput struct {
+type UpdateTRBGuidanceLetterRecommendationOrderInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
 	// List of the recommendation IDs in the new order they should be displayed
-	NewOrder []uuid.UUID `json:"newOrder"`
+	NewOrder []uuid.UUID                             `json:"newOrder"`
+	Category TRBGuidanceLetterRecommendationCategory `json:"category"`
 }
 
 // Represents an EUA user who is included as an attendee for a TRB request

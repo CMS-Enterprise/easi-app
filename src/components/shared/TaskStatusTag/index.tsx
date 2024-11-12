@@ -9,11 +9,11 @@ import {
   ITGovGRBStatus,
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
-  TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
-  TRBFormStatus
+  TRBFormStatus,
+  TRBGuidanceLetterStatus
 } from 'types/graphql-global-types';
 
 import Tag from '../Tag';
@@ -24,7 +24,7 @@ import Tag from '../Tag';
 export type TaskStatus =
   // TRB
   | keyof typeof TRBFormStatus
-  | keyof typeof TRBAdviceLetterStatus
+  | keyof typeof TRBGuidanceLetterStatus
   | keyof typeof TRBFeedbackStatus
   | keyof typeof TRBConsultPrepStatus
   | keyof typeof TRBAttendConsultStatus

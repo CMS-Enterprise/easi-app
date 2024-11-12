@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { GridContainer } from '@trussworks/react-uswds';
 
 import MainContent from 'components/MainContent';
@@ -13,10 +13,10 @@ import TRBRequestInfoWrapper from './AdminHome/RequestContext';
 import RequestEdits from './AdminHome/RequestEdits';
 import DocumentUpload from './RequestForm/DocumentUpload';
 import AdminHome from './AdminHome';
-import AdviceLetterForm from './AdviceLetterForm';
+import GuidanceLetterForm from './GuidanceLetterForm';
 import Homepage from './Homepage';
 import ProcessFlow from './ProcessFlow';
-import PublicAdviceLetter from './PublicAdviceLetter';
+import PublicGuidanceLetter from './PublicGuidanceLetter';
 import RequestForm from './RequestForm';
 import RequestType from './RequestType';
 import TaskList from './TaskList';
@@ -31,6 +31,14 @@ function TechnicalAssistance() {
   return (
     <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
       <Switch>
+        {/*
+        What we now call "Guidance Letter" used to be called "Advice Letter", so we
+        create a redirect here to generically handle the advice -> guidance route change (that
+        way old emails, bookmarks, and browser history isn't messed up)
+        */}
+        <Redirect from="*advice*" to="*guidance*" />
+        <Redirect from="*recommendations*" to="*insights*" />
+
         <Route exact path={path}>
           <Homepage />
         </Route>
@@ -71,9 +79,9 @@ function TechnicalAssistance() {
           <TrbAttendees />
         </Route>
 
-        {/* Public advice letter */}
-        <Route exact path={`${path}/advice-letter/:id`}>
-          <PublicAdviceLetter />
+        {/* Public guidance letter */}
+        <Route exact path={`${path}/guidance-letter/:id`}>
+          <PublicGuidanceLetter />
         </Route>
 
         {/* Create new or edit existing request */}
@@ -81,8 +89,8 @@ function TechnicalAssistance() {
           <RequestForm />
         </Route>
 
-        <Route path={`${path}/:id/advice/:formStep/:subpage?`}>
-          <AdviceLetterForm />
+        <Route path={`${path}/:id/guidance/:formStep/:subpage?`}>
+          <GuidanceLetterForm />
         </Route>
 
         {/* Admin view */}

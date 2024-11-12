@@ -6,14 +6,16 @@ Can open modal initiated with <AddNote /> or <Notes />
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Grid } from '@trussworks/react-uswds';
+import { TRBAdminNoteCategory } from 'gql/gen/graphql';
 
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import { TrbAdminPath } from 'types/technicalAssistance';
 
 import NotesModal from '../NoteModal';
 
-export const noteCategoryPageMap: Record<string, TRBAdminNoteCategory> = {
-  advice: TRBAdminNoteCategory.ADVICE_LETTER,
+export const noteCategoryPageMap: Partial<
+  Record<TrbAdminPath, TRBAdminNoteCategory>
+> = {
+  guidance: TRBAdminNoteCategory.GUIDANCE_LETTER,
   request: TRBAdminNoteCategory.GENERAL_REQUEST,
   'initial-request-form': TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
   documents: TRBAdminNoteCategory.SUPPORTING_DOCUMENTS

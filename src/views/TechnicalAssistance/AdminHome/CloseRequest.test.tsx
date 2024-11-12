@@ -117,7 +117,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                       feedbackStatus: 'EDITS_REQUESTED',
                       consultPrepStatus: 'CANNOT_START_YET',
                       attendConsultStatus: 'CANNOT_START_YET',
-                      adviceLetterStatus: 'IN_PROGRESS',
+                      guidanceLetterStatus: 'IN_PROGRESS',
                       __typename: 'TRBTaskStatuses'
                     },
                     adminNotes: [
@@ -320,7 +320,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                       feedbackStatus: 'EDITS_REQUESTED',
                       consultPrepStatus: 'CANNOT_START_YET',
                       attendConsultStatus: 'CANNOT_START_YET',
-                      adviceLetterStatus: 'IN_PROGRESS',
+                      guidanceLetterStatus: 'IN_PROGRESS',
                       __typename: 'TRBTaskStatuses'
                     },
                     adminNotes: [
