@@ -10,10 +10,16 @@ import {
   Grid
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import {
+  TRBAdminNoteCategory,
+  useGetTRBGuidanceLetterInsightsQuery
+} from 'gql/gen/graphql';
+import { toLower } from 'lodash';
 
 import PageHeading from 'components/PageHeading';
 import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
+import Breadcrumbs from 'components/shared/Breadcrumbs';
 import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -25,19 +31,12 @@ import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
-import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
-import {
-  GetTrbRecommendations,
-  GetTrbRecommendationsVariables
-} from 'queries/types/GetTrbRecommendations';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
-import Breadcrumbs from '../../../../components/shared/Breadcrumbs';
 import { ModalViewType } from '../components/NoteModal';
 import { TRBRequestContext } from '../RequestContext';
 
@@ -75,17 +74,13 @@ const AddNote = ({
     [documentsQuery.data]
   );
 
-  const recommendationsQuery = useCacheQuery<
-    GetTrbRecommendations,
-    GetTrbRecommendationsVariables
-  >(GetTrbRecommendationsQuery, {
+  const insightsQuery = useGetTRBGuidanceLetterInsightsQuery({
     variables: { id: trbRequestId || id }
   });
 
-  const recommendations = useMemo(
-    () =>
-      recommendationsQuery.data?.trbRequest.adviceLetter?.recommendations || [],
-    [recommendationsQuery.data]
+  const insights = useMemo(
+    () => insightsQuery.data?.trbRequest.guidanceLetter?.insights || [],
+    [insightsQuery.data]
   );
 
   const history = useHistory();
@@ -260,7 +255,7 @@ const AddNote = ({
                       TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
                       TRBAdminNoteCategory.SUPPORTING_DOCUMENTS,
                       TRBAdminNoteCategory.CONSULT_SESSION,
-                      TRBAdminNoteCategory.ADVICE_LETTER
+                      TRBAdminNoteCategory.GUIDANCE_LETTER
                     ].map(key => (
                       <option key={key} value={key}>
                         {t(`notes.categories.${key}`)}
@@ -370,7 +365,7 @@ const AddNote = ({
               />
             )}
 
-            {category === TRBAdminNoteCategory.ADVICE_LETTER && (
+            {category === TRBAdminNoteCategory.GUIDANCE_LETTER && (
               <Controller
                 control={control}
                 name="sections"
@@ -383,7 +378,7 @@ const AddNote = ({
                     <HelpText className="margin-top-1">
                       {t('notes.labels.selectHelpText')}
                     </HelpText>
-                    {recommendationsQuery.loading ? (
+                    {insightsQuery.loading ? (
                       <Spinner />
                     ) : (
                       <MultiSelect
@@ -399,11 +394,12 @@ const AddNote = ({
                             label: t('notes.labels.nextSteps'),
                             value: 'appliesToNextSteps'
                           },
-                          ...recommendations.map(rec => ({
-                            label: t('notes.labels.recommendation', {
-                              title: rec.title
+                          ...insights.map(insight => ({
+                            label: t('notes.labels.insight', {
+                              title: insight.title,
+                              category: toLower(insight.category || '')
                             }),
-                            value: rec.id
+                            value: insight.id
                           }))
                         ]}
                       />

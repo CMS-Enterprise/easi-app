@@ -242,48 +242,50 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteConsultSession() {
 
 }
 
-func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
+func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 	ctx := s.testConfigs.Context
 	store := s.testConfigs.Store
 
-	s.Run("Creating Advice Letter Admin Note referencing recommendations attached to the same TRB request works", func() {
+	s.Run("Creating Guidance Letter Admin Note referencing recommendations attached to the same TRB request works", func() {
 		// set up request
 		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequest)
 
-		// set up advice letter
-		createdAdviceLetter, err := CreateTRBAdviceLetter(ctx, store, trbRequest.ID)
+		// set up guidance letter
+		createdGuidanceLetter, err := CreateTRBGuidanceLetter(ctx, store, trbRequest.ID)
 		s.NoError(err)
-		s.NotNil(createdAdviceLetter)
+		s.NotNil(createdGuidanceLetter)
 
 		// set up recommendations
-		recToCreate1 := &models.TRBAdviceLetterRecommendation{
+		recToCreate1 := &models.TRBGuidanceLetterRecommendation{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Admin Note Test Recommendation 1",
 			Recommendation: "Keep testing rec1",
 			Links:          []string{},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
-		createdRec1, err := CreateTRBAdviceLetterRecommendation(ctx, store, recToCreate1)
+		createdRec1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate1)
 		s.NoError(err)
 		s.NotNil(createdRec1)
 		recommendationID1 := createdRec1.ID
 
-		recToCreate2 := &models.TRBAdviceLetterRecommendation{
+		recToCreate2 := &models.TRBGuidanceLetterRecommendation{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Admin Note Test Recommendation 2",
 			Recommendation: "Keep testing rec2",
 			Links:          []string{},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
-		createdRec2, err := CreateTRBAdviceLetterRecommendation(ctx, store, recToCreate2)
+		createdRec2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate2)
 		s.NoError(err)
 		s.NotNil(createdRec2)
 		recommendationID2 := createdRec2.ID
 
 		// create admin note referencing the recommendations
-		input := models.CreateTRBAdminNoteAdviceLetterInput{
+		input := models.CreateTRBAdminNoteGuidanceLetterInput{
 			TrbRequestID:            trbRequest.ID,
-			NoteText:                "test TRB admin note - advice letter",
+			NoteText:                "test TRB admin note - guidance letter",
 			AppliesToMeetingSummary: true,
 			AppliesToNextSteps:      false,
 			RecommendationIDs: []uuid.UUID{
@@ -291,15 +293,15 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 				recommendationID2,
 			},
 		}
-		createdNote, err := CreateTRBAdminNoteAdviceLetter(ctx, store, input)
+		createdNote, err := CreateTRBAdminNoteGuidanceLetter(ctx, store, input)
 		s.NoError(err)
 		s.NotNil(createdNote)
 
 		// check that createdNote has the right field values
-		s.EqualValues(models.TRBAdminNoteCategoryAdviceLetter, createdNote.Category)
+		s.EqualValues(models.TRBAdminNoteCategoryGuidanceLetter, createdNote.Category)
 		s.EqualValues(input.NoteText, createdNote.NoteText)
 
-		// these two fields should be non-null - they should _always_ have values for Advice Letter notes
+		// these two fields should be non-null - they should _always_ have values for Guidance Letter notes
 		s.NotNil(createdNote.AppliesToMeetingSummary.Ptr())
 		s.NotNil(createdNote.AppliesToNextSteps.Ptr())
 
@@ -307,7 +309,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 		s.EqualValues(input.AppliesToMeetingSummary, createdNote.AppliesToMeetingSummary.Bool)
 		s.EqualValues(input.AppliesToNextSteps, createdNote.AppliesToNextSteps.Bool)
 
-		// all these should be null because they don't apply to Advice Letter notes
+		// all these should be null because they don't apply to Guidance Letter notes
 		s.Nil(createdNote.AppliesToBasicRequestDetails.Ptr())
 		s.Nil(createdNote.AppliesToSubjectAreas.Ptr())
 		s.Nil(createdNote.AppliesToAttendees.Ptr())
@@ -318,57 +320,58 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 
 		s.Len(fetchedRecommendations, 2)
 
-		recommendation1Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBAdviceLetterRecommendation) bool {
+		recommendation1Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {
 			return rec.ID == recommendationID1
 		})
 		s.True(recommendation1Fetched)
 
-		recommendation2Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBAdviceLetterRecommendation) bool {
+		recommendation2Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {
 			return rec.ID == recommendationID2
 		})
 		s.True(recommendation2Fetched)
 	})
 
-	s.Run("Creating Admin Note referencing advice letter recommendations attached to a *different* TRB request fails", func() {
+	s.Run("Creating Admin Note referencing guidance letter recommendations attached to a *different* TRB request fails", func() {
 		// create request 1 - admin note will be attached to this
 		trbRequestForNote, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequestForNote)
 
-		// create request 2 - advice letter and recommendation will be attached to this
+		// create request 2 - guidance letter and recommendation will be attached to this
 		trbRequestForRecommendation, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequestForRecommendation)
 
-		// create advice letter for request 2
-		createdAdviceLetter, err := CreateTRBAdviceLetter(ctx, store, trbRequestForRecommendation.ID)
+		// create guidance letter for request 2
+		createdGuidanceLetter, err := CreateTRBGuidanceLetter(ctx, store, trbRequestForRecommendation.ID)
 		s.NoError(err)
-		s.NotNil(createdAdviceLetter)
+		s.NotNil(createdGuidanceLetter)
 
-		// create recommendation attached to advice letter for request 2
-		recToCreate := &models.TRBAdviceLetterRecommendation{
+		// create recommendation attached to guidance letter for request 2
+		recToCreate := &models.TRBGuidanceLetterRecommendation{
 			TRBRequestID:   trbRequestForRecommendation.ID,
 			Title:          "Admin Note Test Recommendation - Different Request",
 			Recommendation: "Make sure this fails",
 			Links:          []string{},
+			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
-		createdRec, err := CreateTRBAdviceLetterRecommendation(ctx, store, recToCreate)
+		createdRec, err := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate)
 		s.NoError(err)
 		s.NotNil(createdRec)
 
 		// try to create an admin note referencing the recommendation
 		// should fail due to database constraints, because the referenced recommendation belongs to a different TRB request
 		recommendationID := createdRec.ID
-		input := models.CreateTRBAdminNoteAdviceLetterInput{
+		input := models.CreateTRBAdminNoteGuidanceLetterInput{
 			TrbRequestID:            trbRequestForNote.ID,
-			NoteText:                "test TRB admin note - advice letter",
+			NoteText:                "test TRB admin note - guidance letter",
 			AppliesToMeetingSummary: false,
 			AppliesToNextSteps:      false,
 			RecommendationIDs: []uuid.UUID{
 				recommendationID,
 			},
 		}
-		_, err = CreateTRBAdminNoteAdviceLetter(ctx, store, input)
+		_, err = CreateTRBAdminNoteGuidanceLetter(ctx, store, input)
 		s.Error(err)
 
 		// check that admin note didn't get created at all
@@ -452,7 +455,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		s.False(document2Returned)
 	})
 
-	s.Run("Advice Letter notes return related recommendations for the note's category-specific data", func() {
+	s.Run("Guidance Letter notes return related recommendations for the note's category-specific data", func() {
 		// don't need to test AppliesToMeetingSummary/AppliesToNextSteps fields - code is trivial, just accessing fields on the note model
 
 		// set up request
@@ -460,32 +463,33 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		s.NoError(err)
 		s.NotNil(trbRequest)
 
-		// set up advice letter
-		createdAdviceLetter, err := CreateTRBAdviceLetter(ctx, store, trbRequest.ID)
+		// set up guidance letter
+		createdGuidanceLetter, err := CreateTRBGuidanceLetter(ctx, store, trbRequest.ID)
 		s.NoError(err)
-		s.NotNil(createdAdviceLetter)
+		s.NotNil(createdGuidanceLetter)
 
 		// set up three recommendations and attach two to the note
 		// we can test that the resolver returns multiple recommendations
 		// and test that not all recommendations on the request are returned
 		recommendationIDs := []uuid.UUID{}
 		for i := 0; i < 3; i++ {
-			recToCreate := &models.TRBAdviceLetterRecommendation{
+			recToCreate := &models.TRBGuidanceLetterRecommendation{
 				TRBRequestID:   trbRequest.ID,
 				Title:          fmt.Sprintf("Admin Note Test Recommendation %v", i),
 				Recommendation: "Testing category-specific data query resolver",
 				Links:          []string{},
+				Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 			}
-			createdRec, errCreatingRec := CreateTRBAdviceLetterRecommendation(ctx, store, recToCreate)
+			createdRec, errCreatingRec := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate)
 			s.NoError(errCreatingRec)
 			s.NotNil(createdRec)
 			recommendationIDs = append(recommendationIDs, createdRec.ID)
 		}
 
 		// set up admin note referencing two of the recommendations
-		input := models.CreateTRBAdminNoteAdviceLetterInput{
+		input := models.CreateTRBAdminNoteGuidanceLetterInput{
 			TrbRequestID: trbRequest.ID,
-			NoteText:     "test TRB admin note - advice letter",
+			NoteText:     "test TRB admin note - guidance letter",
 			RecommendationIDs: []uuid.UUID{
 				recommendationIDs[0],
 				recommendationIDs[1],
@@ -495,7 +499,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 			AppliesToMeetingSummary: false,
 			AppliesToNextSteps:      false,
 		}
-		createdNote, err := CreateTRBAdminNoteAdviceLetter(ctx, store, input)
+		createdNote, err := CreateTRBAdminNoteGuidanceLetter(ctx, store, input)
 		s.NoError(err)
 		s.NotNil(createdNote)
 
@@ -503,25 +507,25 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		categorySpecificData, err := GetTRBAdminNoteCategorySpecificData(ctx, store, createdNote)
 		s.NoError(err)
 		s.NotNil(categorySpecificData)
-		adviceLetterData, ok := categorySpecificData.(models.TRBAdminNoteAdviceLetterCategoryData)
+		guidanceLetterData, ok := categorySpecificData.(models.TRBAdminNoteGuidanceLetterCategoryData)
 		s.True(ok) // test that categorySpecificData is of the right type
 
 		// test that resolver returns the right recommendations
-		returnedRecommendations := adviceLetterData.Recommendations
+		returnedRecommendations := guidanceLetterData.Insights
 		s.Len(returnedRecommendations, 2)
 
-		recommendation0Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBAdviceLetterRecommendation) bool {
+		recommendation0Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {
 			return rec.ID == recommendationIDs[0]
 		})
 		s.True(recommendation0Returned)
 
-		recommendation1Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBAdviceLetterRecommendation) bool {
+		recommendation1Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {
 			return rec.ID == recommendationIDs[1]
 		})
 		s.True(recommendation1Returned)
 
 		// test that the third recommendation (that wasn't attached to the note) *isn't* returned
-		recommendation2Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBAdviceLetterRecommendation) bool {
+		recommendation2Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {
 			return rec.ID == recommendationIDs[2]
 		})
 		s.False(recommendation2Returned)

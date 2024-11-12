@@ -1285,6 +1285,105 @@ func RetireLCID(
 	return updatedIntake, nil
 }
 
+// UnretireLCID handles an Unretire LCID action on an intake as part of Admin Actions v2
+func UnretireLCID(
+	ctx context.Context,
+	store *storage.Store,
+	emailClient *email.Client,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input models.SystemIntakeUnretireLCIDInput,
+) (*models.SystemIntake, error) {
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	// create action record before updating intake, while we still have access to intake's previous retirement date
+	action := lcidactions.GetUnretireLCIDAction(*intake, *adminUserInfo)
+
+	// Reset LCID RetiresAt to nil
+	intake.LifecycleRetiresAt = nil
+
+	errGroup := new(errgroup.Group)
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+
+	// save action (including additional info for email, if any), using record returned from GetUnretireLCIDAction()
+	errGroup.Go(func() error {
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
+				Content:        input.AdminNote,
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		errGroup.Go(func() error {
+			err = emailClient.SystemIntake.SendUnretireLCIDNotification(ctx,
+				*input.NotificationRecipients,
+				intake.LifecycleID.ValueOrZero(),
+				intake.LifecycleExpiresAt,
+				intake.LifecycleIssuedAt,
+				intake.LifecycleScope,
+				intake.LifecycleCostBaseline.ValueOrZero(),
+				intake.DecisionNextSteps,
+				input.AdditionalInfo,
+			)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+	}
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
+}
+
 // ChangeLCIDRetirementDate handles a Change LCID Retirement Date action on an intake as part of Admin Actions v2
 func ChangeLCIDRetirementDate(
 	ctx context.Context,
