@@ -21,6 +21,7 @@ const (
 	ActionTypeREOPENREQUEST            ActionType = "REOPEN_REQUEST"
 	ActionTypeNOTITGOVREQUEST          ActionType = "NOT_GOVERNANCE"
 	ActionTypeRETIRELCID               ActionType = "RETIRE_LCID"
+	ActionTypeUNRETIRELCID             ActionType = "UNRETIRE_LCID"
 	ActionTypeCHANGELCIDRETIREMENTDATE ActionType = "CHANGE_LCID_RETIREMENT_DATE"
 )
 

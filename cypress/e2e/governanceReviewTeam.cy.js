@@ -444,6 +444,31 @@ describe('Governance Review Team', () => {
     // cy.get('#retiresAt').should('have.value', updatedRetirementDate);
   });
 
+  it('can remove a Life Cycle ID retirement date', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'LCID issued').should('be.visible').click();
+
+    cy.get('li.usa-sidenav__item a[href*="actions"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__unretire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.contains('h3', 'Remove retirement date');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+    cy.get('div[data-testid="alert"]').contains(
+      /Life Cycle ID [0-9]{6} has had its retirement date removed./
+    );
+  });
+
   it('can progress to the GRT meeting step', () => {
     cy.contains('a', 'Draft Business Case').should('be.visible').click();
 

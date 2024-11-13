@@ -112,14 +112,14 @@ func CreateTRBAdminNoteConsultSession(ctx context.Context, store *storage.Store,
 	return createdNote, nil
 }
 
-func CreateTRBAdminNoteAdviceLetter(ctx context.Context, store *storage.Store, input models.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
+func CreateTRBAdminNoteGuidanceLetter(ctx context.Context, store *storage.Store, input models.CreateTRBAdminNoteGuidanceLetterInput) (*models.TRBAdminNote, error) {
 	// it's valid for input.RecommendationIDs to be empty; see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
 
 	// check that the recommendations belong to the same TRB request
 	// database constraints will prevent links being created to recommendations on a different request
 	// but if we don't check, we'll still create an (invalid) admin note record
 
-	allRecommendationsOnRequest, err := store.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, input.TrbRequestID)
+	allRecommendationsOnRequest, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, input.TrbRequestID)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +132,7 @@ func CreateTRBAdminNoteAdviceLetter(ctx context.Context, store *storage.Store, i
 
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
-		Category:     models.TRBAdminNoteCategoryAdviceLetter,
+		Category:     models.TRBAdminNoteCategoryGuidanceLetter,
 		NoteText:     input.NoteText,
 
 		AppliesToMeetingSummary: null.BoolFrom(input.AppliesToMeetingSummary),
@@ -213,15 +213,15 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 		return models.TRBAdminNoteConsultSessionCategoryData{
 			PlaceholderField: nil,
 		}, nil
-	case models.TRBAdminNoteCategoryAdviceLetter:
+	case models.TRBAdminNoteCategoryGuidanceLetter:
 		recommendations, err := store.GetTRBRecommendationsByAdminNoteID(ctx, note.ID)
 		if err != nil {
 			return nil, err
 		}
-		return models.TRBAdminNoteAdviceLetterCategoryData{
+		return models.TRBAdminNoteGuidanceLetterCategoryData{
 			AppliesToMeetingSummary: note.AppliesToMeetingSummary.Bool,
 			AppliesToNextSteps:      note.AppliesToNextSteps.Bool,
-			Recommendations:         recommendations,
+			Insights:                recommendations,
 		}, nil
 	}
 
