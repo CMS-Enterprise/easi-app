@@ -1,0 +1,9 @@
+.easi-discussion-reply {
+  &__header {
+    justify-content: space-between;
+  }
+
+  &__content * {
+    line-height: 1.6 !important;
+  }
+}
