@@ -122,7 +122,7 @@ def up(frontend_included, *args, debug:false, wait:false)
     "COMPOSE_HTTP_TIMEOUT" => "120",
     "AIR_CONFIG" =>conf,
   }
-  command = "docker compose #{"--profile frontend" if frontend_included } up --build"
+  command = "docker compose #{"--profile frontend" if frontend_included } up --build --remove-orphans"
 
   if args.any?
     command = "#{command} #{args.join(' ')}"
