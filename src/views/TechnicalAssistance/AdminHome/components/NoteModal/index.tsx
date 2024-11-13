@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 import { Button, Grid, GridContainer, Icon } from '@trussworks/react-uswds';
+import { TRBAdminNoteCategory } from 'gql/gen/graphql';
 import noScroll from 'no-scroll';
-
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 
 import AddNote from '../../AddNote';
 import Notes from '../../Notes';

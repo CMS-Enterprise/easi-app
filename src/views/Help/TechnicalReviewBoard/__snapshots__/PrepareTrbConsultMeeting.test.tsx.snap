@@ -180,13 +180,13 @@ exports[`Trb Help Prepare Consult Meeting > renders 1`] = `
     <div
       class="line-height-body-5 margin-bottom-1"
     >
-      After the meeting, the TRB will deliberate and provide recommendations and next steps. Within 5 business days, the TRB will compile an advice letter for your project and send it to you. The advice letter may contain:
+      After the meeting, the TRB will deliberate and provide guidance and next steps. Within 5 business days, the TRB will compile a guidance letter for your project and send it to you. The guidance letter may contain:
     </div>
     <ul
       class="easi-list line-height-body-5"
     >
       <li>
-        recommendations for changes to your system or solution
+        any requirements, recommendations, considerations, and other next steps for your system or solution.
       </li>
       <li>
         additional teams or points of contact to reach out to who may be able to help you further
