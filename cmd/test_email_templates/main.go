@@ -64,8 +64,8 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	submissionDate := time.Now()
 	consultDate := time.Now().AddDate(0, 2, 0)
 
-	err := client.SendTRBAdviceLetterSubmittedEmail(ctx,
-		email.SendTRBAdviceLetterSubmittedEmailInput{
+	err := client.SendTRBGuidanceLetterSubmittedEmail(ctx,
+		email.SendTRBGuidanceLetterSubmittedEmailInput{
 			TRBRequestID:   requestID,
 			RequestName:    requestName,
 			RequestType:    string(models.TRBTBrainstorm),
@@ -79,8 +79,8 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
-	err = client.SendTRBAdviceLetterInternalReviewEmail(ctx,
-		email.SendTRBAdviceLetterInternalReviewEmailInput{
+	err = client.SendTRBGuidanceLetterInternalReviewEmail(ctx,
+		email.SendTRBGuidanceLetterInternalReviewEmailInput{
 			TRBRequestID:   requestID,
 			TRBRequestName: requestName,
 			TRBLeadName:    "",
@@ -88,8 +88,8 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
-	err = client.SendTRBAdviceLetterInternalReviewEmail(ctx,
-		email.SendTRBAdviceLetterInternalReviewEmailInput{
+	err = client.SendTRBGuidanceLetterInternalReviewEmail(ctx,
+		email.SendTRBGuidanceLetterInternalReviewEmailInput{
 			TRBRequestID:   requestID,
 			TRBRequestName: requestName,
 			TRBLeadName:    leadName,
@@ -427,6 +427,19 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		lifecycleScope,
 		lifecycleCostBaseline,
 		reason,
+		nextSteps,
+		additionalInfo,
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendUnretireLCIDNotification(
+		ctx,
+		emailNotificationRecipients,
+		lifecycleID,
+		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
+		lifecycleScope,
+		lifecycleCostBaseline,
 		nextSteps,
 		additionalInfo,
 	)

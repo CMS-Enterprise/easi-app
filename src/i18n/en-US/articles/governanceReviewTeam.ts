@@ -37,6 +37,7 @@ const actionNameTranslations: Record<SystemIntakeActionType, string> = {
   SUBMIT_BIZ_CASE: 'Submitted a business case',
   SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
   SUBMIT_INTAKE: 'Submitted a System Intake',
+  UNRETIRE_LCID: 'Life Cycle ID retirement date removed',
   UPDATE_LCID: 'Life Cycle ID updated'
 };
 

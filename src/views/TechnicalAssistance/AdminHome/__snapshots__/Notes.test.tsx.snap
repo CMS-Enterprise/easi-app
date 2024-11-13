@@ -226,7 +226,7 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
           <dd
             class="margin-left-0"
           >
-            Advice letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)
+            Guidance letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)
           </dd>
           <dd
             class="margin-left-0 margin-top-2"
@@ -242,7 +242,7 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
                   <p
                     data-nodeid="5"
                   >
-                    Advice Letter Note
+                    Guidance Letter Note
                   </p>
                   
 

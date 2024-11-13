@@ -3,18 +3,17 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
+import {
+  CreateTRBAdminNoteGeneralRequestDocument,
+  CreateTRBAdminNoteGeneralRequestMutation,
+  CreateTRBAdminNoteGeneralRequestMutationVariables,
+  TRBAdminNoteCategory,
+  TRBAdminNoteFragment
+} from 'gql/gen/graphql';
 import i18next from 'i18next';
 
 import { getTrbAdminNotesQuery } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
-// import { CreateTrbAdminNoteGeneralVariables } from 'queries/types/CreateTrbAdminNote';
-import {
-  CreateTRBAdminNoteGeneralRequest,
-  CreateTRBAdminNoteGeneralRequestVariables
-} from 'queries/types/CreateTRBAdminNoteGeneralRequest';
-import { TRBAdminNoteFragment } from 'queries/types/TRBAdminNoteFragment';
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
@@ -55,11 +54,11 @@ const adminNotes: TRBAdminNoteFragment[] = [
 ];
 
 const createAdminNoteQuery: MockedQuery<
-  CreateTRBAdminNoteGeneralRequest,
-  CreateTRBAdminNoteGeneralRequestVariables
+  CreateTRBAdminNoteGeneralRequestMutation,
+  CreateTRBAdminNoteGeneralRequestMutationVariables
 > = {
   request: {
-    query: CreateTrbAdminNoteGeneralRequestQuery,
+    query: CreateTRBAdminNoteGeneralRequestDocument,
     variables: {
       input: {
         trbRequestId: mockTrbRequestId,
@@ -69,6 +68,7 @@ const createAdminNoteQuery: MockedQuery<
   },
   result: {
     data: {
+      __typename: 'Mutation',
       createTRBAdminNoteGeneralRequest: adminNotes[1]
     }
   }

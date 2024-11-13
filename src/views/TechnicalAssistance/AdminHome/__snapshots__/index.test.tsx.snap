@@ -281,10 +281,10 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                 class="trb-admin__nav-link trb-admin__nav-link--border"
               >
                 <a
-                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/advice"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/guidance"
                 >
                   <span>
-                    Advice letter
+                    Guidance letter
                   </span>
                 </a>
               </li>
@@ -513,7 +513,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                     <h3
                       class="margin-0"
                     >
-                      Advice letter
+                      Guidance letter
                     </h3>
                     <p
                       class="text-base margin-0"
@@ -556,7 +556,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                       disabled=""
                       type="button"
                     >
-                      Start advice letter
+                      Start guidance letter
                     </button>
                   </div>
                 </div>

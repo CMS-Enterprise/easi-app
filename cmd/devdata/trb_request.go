@@ -141,7 +141,7 @@ func (s *seederConfig) seedTRBCase5(ctx context.Context) error {
 }
 
 func (s *seederConfig) seedTRBCase6(ctx context.Context) error {
-	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 6 - Draft advice letter").Ptr(), true)
+	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 6 - Draft guidance letter").Ptr(), true)
 	if err != nil {
 		return err
 	}
@@ -156,7 +156,7 @@ func (s *seederConfig) seedTRBCase6(ctx context.Context) error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(ctx, trb, true, false, false)
+	_, err = s.addGuidanceLetter(ctx, trb, true, false, false)
 	if err != nil {
 		return err
 	}
@@ -170,7 +170,7 @@ func (s *seederConfig) seedTRBCase6(ctx context.Context) error {
 }
 
 func (s *seederConfig) seedTRBCase7(ctx context.Context) error {
-	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 7 - Advice letter in review").Ptr(), true)
+	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 7 - Guidance letter in review").Ptr(), true)
 	if err != nil {
 		return err
 	}
@@ -185,7 +185,7 @@ func (s *seederConfig) seedTRBCase7(ctx context.Context) error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(ctx, trb, false, false, false)
+	_, err = s.addGuidanceLetter(ctx, trb, false, false, false)
 	if err != nil {
 		return err
 	}
@@ -199,7 +199,7 @@ func (s *seederConfig) seedTRBCase7(ctx context.Context) error {
 }
 
 func (s *seederConfig) seedTRBCase8(ctx context.Context) error {
-	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 8 - Advice letter in review with document").Ptr(), true)
+	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 8 - Guidance letter in review with document").Ptr(), true)
 	if err != nil {
 		return err
 	}
@@ -214,7 +214,7 @@ func (s *seederConfig) seedTRBCase8(ctx context.Context) error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(ctx, trb, false, false, false)
+	_, err = s.addGuidanceLetter(ctx, trb, false, false, false)
 	if err != nil {
 		return err
 	}
@@ -228,7 +228,7 @@ func (s *seederConfig) seedTRBCase8(ctx context.Context) error {
 }
 
 func (s *seederConfig) seedTRBCase9(ctx context.Context) error {
-	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 9 - Advice letter sent").Ptr(), true)
+	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 9 - Guidance letter sent").Ptr(), true)
 	if err != nil {
 		return err
 	}
@@ -259,7 +259,7 @@ func (s *seederConfig) seedTRBCase9(ctx context.Context) error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(ctx, trb, false, true, false)
+	_, err = s.addGuidanceLetter(ctx, trb, false, true, false)
 	if err != nil {
 		return err
 	}
@@ -273,7 +273,7 @@ func (s *seederConfig) seedTRBCase9(ctx context.Context) error {
 }
 
 func (s *seederConfig) seedTRBCase10(ctx context.Context) error {
-	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 10 - Advice letter sent (follow up)").Ptr(), true)
+	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 10 - Guidance letter sent (follow up)").Ptr(), true)
 	if err != nil {
 		return err
 	}
@@ -296,7 +296,7 @@ func (s *seederConfig) seedTRBCase10(ctx context.Context) error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(ctx, trb, false, true, true)
+	_, err = s.addGuidanceLetter(ctx, trb, false, true, true)
 	if err != nil {
 		return err
 	}
@@ -349,8 +349,8 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 		return err
 	}
 
-	// draft advice letter, not sent
-	_, err = s.addAdviceLetter(ctx, trb, true, false, false)
+	// draft guidance letter, not sent
+	_, err = s.addGuidanceLetter(ctx, trb, true, false, false)
 	if err != nil {
 		return err
 	}
@@ -368,7 +368,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	}
 
 	// create 3 recommendations we can reference in admin notes
-	recommendations, err := s.addAdviceLetterRecommendations(ctx, trb)
+	recommendations, err := s.addGuidanceLetterRecommendations(ctx, trb)
 	if err != nil {
 		return err
 	}
@@ -420,9 +420,9 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	}
 
 	// link to 2 of the recommendations so we can check that it links to multiple recs *and* that it doesn't link to all the recs on the request
-	adviceLetterNoteInput := models.CreateTRBAdminNoteAdviceLetterInput{
+	guidanceLetterNoteInput := models.CreateTRBAdminNoteGuidanceLetterInput{
 		TrbRequestID:            trb.ID,
-		NoteText:                "This is an advice letter admin note from seed data",
+		NoteText:                "This is a guidance letter admin note from seed data",
 		AppliesToMeetingSummary: true,
 		AppliesToNextSteps:      false,
 		RecommendationIDs: []uuid.UUID{
@@ -430,7 +430,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 			recommendations[1].ID,
 		},
 	}
-	_, err = resolvers.CreateTRBAdminNoteAdviceLetter(ctx, s.store, adviceLetterNoteInput)
+	_, err = resolvers.CreateTRBAdminNoteGuidanceLetter(ctx, s.store, guidanceLetterNoteInput)
 	if err != nil {
 		return err
 	}
@@ -610,8 +610,8 @@ func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
 				return err
 			}
 
-			// draft advice letter, not sent
-			_, err = s.addAdviceLetter(ctx, trbRequest, true, false, false)
+			// draft guidance letter, not sent
+			_, err = s.addGuidanceLetter(ctx, trbRequest, true, false, false)
 			if err != nil {
 				return err
 			}
@@ -628,14 +628,14 @@ func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
 				documentIDs = append(documentIDs, doc.ID)
 			}
 
-			recommendations, err := s.addAdviceLetterRecommendations(ctx, trbRequest)
+			recommendations, err := s.addGuidanceLetterRecommendations(ctx, trbRequest)
 			if err != nil {
 				return err
 			}
 
-			adviceLetterNoteInput := models.CreateTRBAdminNoteAdviceLetterInput{
+			guidanceLetterNoteInput := models.CreateTRBAdminNoteGuidanceLetterInput{
 				TrbRequestID:            trbRequest.ID,
-				NoteText:                "This is an advice letter admin note from seed data",
+				NoteText:                "This is a guidance letter admin note from seed data",
 				AppliesToMeetingSummary: true,
 				AppliesToNextSteps:      false,
 				RecommendationIDs: []uuid.UUID{
@@ -644,7 +644,7 @@ func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
 				},
 			}
 
-			_, err = resolvers.CreateTRBAdminNoteAdviceLetter(ctx, s.store, adviceLetterNoteInput)
+			_, err = resolvers.CreateTRBAdminNoteGuidanceLetter(ctx, s.store, guidanceLetterNoteInput)
 			if err != nil {
 				return err
 			}
@@ -938,45 +938,45 @@ func (s *seederConfig) addTRBLead(ctx context.Context, trb *models.TRBRequest, l
 	)
 }
 
-func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBRequest, isDraft bool, shouldSend bool, isFollowUpRequested bool) (*models.TRBAdviceLetter, error) {
+func (s *seederConfig) addGuidanceLetter(ctx context.Context, trb *models.TRBRequest, isDraft bool, shouldSend bool, isFollowUpRequested bool) (*models.TRBGuidanceLetter, error) {
 	// declare a separate err outside the scope of the (if !isDraft) block, so there's no lint issues from errors inside the block shadowing this err
-	_, outsideErr := resolvers.CreateTRBAdviceLetter(ctx, s.store, trb.ID)
+	_, outsideErr := resolvers.CreateTRBGuidanceLetter(ctx, s.store, trb.ID)
 	if outsideErr != nil {
 		return nil, outsideErr
 	}
 
-	adviceLetterChanges := map[string]interface{}{
+	guidanceLetterChanges := map[string]interface{}{
 		"trbRequestId":          trb.ID,
 		"meetingSummary":        "Talked about stuff",
 		"isFollowupRecommended": isFollowUpRequested,
 	}
-	letter, outsideErr := resolvers.UpdateTRBAdviceLetter(ctx, s.store, adviceLetterChanges)
+	letter, outsideErr := resolvers.UpdateTRBGuidanceLetter(ctx, s.store, guidanceLetterChanges)
 	if outsideErr != nil {
 		return nil, outsideErr
 	}
 
 	if !isDraft {
 		// declare a new err for use inside the (if !isDraft) block only
-		_, err := resolvers.RequestReviewForTRBAdviceLetter(ctx, s.store, nil, mock.FetchUserInfoMock, letter.ID)
+		_, err := resolvers.RequestReviewForTRBGuidanceLetter(ctx, s.store, nil, mock.FetchUserInfoMock, letter.ID)
 		if err != nil {
 			return nil, err
 		}
 
 		if shouldSend {
-			_, err = resolvers.SendTRBAdviceLetter(ctx, s.store, letter.ID, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock, false, nil)
+			_, err = resolvers.SendTRBGuidanceLetter(ctx, s.store, letter.ID, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock, false, nil)
 			if err != nil {
 				return nil, err
 			}
 		}
 
 		// create three recommendations for testing manipulation of recommendations' positions
-		_, err = s.addAdviceLetterRecommendations(ctx, trb)
+		_, err = s.addGuidanceLetterRecommendations(ctx, trb)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	letter, outsideErr = resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, trb.ID)
+	letter, outsideErr = resolvers.GetTRBGuidanceLetterByTRBRequestID(ctx, trb.ID)
 	if outsideErr != nil {
 		return nil, outsideErr
 	}
@@ -984,45 +984,159 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 	return letter, nil
 }
 
-// creates three recommendations attached to a TRB request
-func (s *seederConfig) addAdviceLetterRecommendations(ctx context.Context, trb *models.TRBRequest) ([]*models.TRBAdviceLetterRecommendation, error) {
-	recommendation1ToCreate := &models.TRBAdviceLetterRecommendation{
+// creates insights attached to a TRB request
+func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb *models.TRBRequest) ([]*models.TRBGuidanceLetterRecommendation, error) {
+	// create insights of consideration category
+	consideration1ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Try again",
+		Recommendation: "I'd consider all options at this point",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+	}
+	createdConsideration1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, consideration1ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	consideration2ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Turn it off and on",
+		Recommendation: "I'd consider a new computer",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+	}
+	createdConsideration2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, consideration2ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	consideration3ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Throw it out",
+		Recommendation: "Consider the garbage can as a solution",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+	}
+	createdConsideration3, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, consideration3ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	// create insights of recommendation category
+	recommendation1ToCreate := &models.TRBGuidanceLetterRecommendation{
 		TRBRequestID:   trb.ID,
 		Title:          "Restart your computer",
 		Recommendation: "I recommend you restart your computer",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
-	createdRecommendation1, err := resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation1ToCreate)
+	createdRecommendation1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation1ToCreate)
 	if err != nil {
 		return nil, err
 	}
 
-	recommendation2ToCreate := &models.TRBAdviceLetterRecommendation{
+	recommendation2ToCreate := &models.TRBGuidanceLetterRecommendation{
 		TRBRequestID:   trb.ID,
 		Title:          "Unplug it and plug it back in",
 		Recommendation: "I recommend you unplug your computer and plug it back in",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
-	createdRecommendation2, err := resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation2ToCreate)
+	createdRecommendation2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation2ToCreate)
 	if err != nil {
 		return nil, err
 	}
 
-	recommendation3ToCreate := &models.TRBAdviceLetterRecommendation{
+	recommendation3ToCreate := &models.TRBGuidanceLetterRecommendation{
 		TRBRequestID:   trb.ID,
 		Title:          "Get a new computer",
 		Recommendation: "Your computer is broken, you need a new one",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
-	createdRecommendation3, err := resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation3ToCreate)
+	createdRecommendation3, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation3ToCreate)
 	if err != nil {
 		return nil, err
 	}
 
-	return []*models.TRBAdviceLetterRecommendation{
+	// create insights of requirement category
+	requirement1ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Buy a new one",
+		Recommendation: "You are required to buy a new computer",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
+	}
+	createdRequirement1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, requirement1ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	requirement2ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Click more times",
+		Recommendation: "You are required to click more times for the computer to unfreeze",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
+	}
+	createdRequirement2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, requirement2ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	requirement3ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Remove all files",
+		Recommendation: "You are required to delete everything",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
+	}
+	createdRequirement3, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, requirement3ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create some uncategorized
+	uncategorized1ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Come up with some categories",
+		Recommendation: "You'll really need to come up with some categories, or at least move this insight to a category!",
+		Links:          pq.StringArray{"categories.com"},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryUncategorized,
+	}
+	createdUncategorized1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, uncategorized1ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	uncategorized2ToCreate := &models.TRBGuidanceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Organize your insights",
+		Recommendation: "Try moving these insights around to give them a category!",
+		Links:          pq.StringArray{},
+		Category:       models.TRBGuidanceLetterRecommendationCategoryUncategorized,
+	}
+	createdUncategorized2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, uncategorized2ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	return []*models.TRBGuidanceLetterRecommendation{
+		createdConsideration1,
+		createdConsideration2,
+		createdConsideration3,
+
 		createdRecommendation1,
 		createdRecommendation2,
 		createdRecommendation3,
+
+		createdRequirement1,
+		createdRequirement2,
+		createdRequirement3,
+
+		createdUncategorized1,
+		createdUncategorized2,
 	}, nil
 }
 

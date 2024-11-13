@@ -25,7 +25,7 @@ export default gql`
         feedbackStatus
         consultPrepStatus
         attendConsultStatus
-        adviceLetterStatus
+        guidanceLetterStatus
       }
 
       form {
