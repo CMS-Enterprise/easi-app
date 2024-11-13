@@ -26,6 +26,7 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	system_intake_documents,
 	system_intake_funding_sources,
 	system_intake_grb_reviewers,
+    system_intake_internal_grb_review_discussion_posts,
 	system_intake_systems,
 	system_intakes,
 	trb_admin_notes_trb_request_documents_links,

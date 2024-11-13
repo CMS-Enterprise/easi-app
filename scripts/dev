@@ -371,6 +371,7 @@ namespace :db do
       business_cases
       governance_request_feedback
       system_intake_grb_reviewers
+      system_intake_internal_grb_review_discussion_posts
       system_intake_contacts
       system_intake_funding_sources
       system_intake_documents
