@@ -17,8 +17,8 @@ const discussions = {
     nonDiscussedTopics: '{{count}} discussion without replies',
     nonDiscussedTopics_plural: '{{count}} discussions without replies',
     readMore: 'Read more', // TODO: this is in other i18n files, move to general.ts?
-    repliesInDiscussion: '{{count}} in this discussion',
-    repliesInDiscussion_plural: '{{count}} in this discussion',
+    repliesInDiscussion: '{{count}} reply in this discussion',
+    repliesInDiscussion_plural: '{{count}} replies in this discussion',
     reply: 'Reply',
     saveDiscussion: 'Save discussion',
 
@@ -29,16 +29,16 @@ const discussions = {
 
     alerts: {
       noDiscussions:
-        'There are no discussions yet. WHen a discussion topic is started, it will appear here.',
+        'There are no discussions yet. When a discussion topic is started, it will appear here.',
       replyError:
         'There was an issue with adding your reply, please try again.',
       replySuccess: 'Success! Your reply has been added.',
       saveDiscussion:
-        'WHen you save your discussion, the selected team(s) and individual(s) will be notified via email.',
+        'When you save your discussion, the selected team(s) and individual(s) will be notified via email.',
       startDiscussionError:
-        'There was an issue with adding to the discussion board please try again.',
+        'There was an issue with adding to the discussion board, please try again.',
       startDiscussionSuccess:
-        'You have successfully added to the discussion board'
+        'You have successfully added to the discussion board.'
     },
 
     contribute: {
