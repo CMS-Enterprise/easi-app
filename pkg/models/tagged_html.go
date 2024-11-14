@@ -60,16 +60,17 @@ func (th *TaggedHTML) UnmarshalGQLContext(_ context.Context, v interface{}) erro
 		return errors.New("invalid TaggedHTML")
 	}
 
+	fmt.Println("==== rawHTML ====")
+	fmt.Println(rawHTML)
+	fmt.Println("==== rawHTML ====")
+
 	// Sanitize the HTML string
-	sanitizedHTMLString := sanitization.SanitizeHTML(rawHTML)
-	tc, err := NewTaggedContentFromString(sanitizedHTMLString)
+	//sanitizedHTMLString := sanitization.SanitizeHTML(rawHTML)
+	tc, err := NewTaggedContentFromString(rawHTML)
 	if err != nil {
 		return err
 	}
 	*th = TaggedHTML(tc)
-	fmt.Println("==== tc.Tags ====")
-	fmt.Println(tc.Tags)
-	fmt.Println("==== tc.Tags ====")
 
 	return nil
 }
@@ -110,31 +111,22 @@ func (th TaggedHTML) ToTaggedContent() TaggedContent {
 // NewTaggedContentFromString converts a rawString into TaggedHTMl. It will store the input string as the raw content,
 // and then sanitize and parse the input.
 func NewTaggedContentFromString(htmlString string) (TaggedContent, error) {
-	sanitized := sanitization.SanitizeHTML(htmlString)
-
-	mentions, err := htmlMentionsFromStringRegex(sanitized)
+	mentions, err := htmlMentionsFromStringRegex(htmlString)
 	if err != nil {
 		return TaggedContent{}, err
 	}
 
 	return TaggedContent{
-		RawContent: HTML(sanitized),
+		RawContent: HTML(sanitization.SanitizeHTML(htmlString)),
 		Mentions:   mentions,
 	}, nil
 }
 
 func htmlMentionsFromStringRegex(htmlString string) ([]*HTMLMention, error) {
-	fmt.Println("==== htmlString ====")
-	fmt.Println(htmlString)
-	fmt.Println("==== htmlString ====")
-
 	mentionStrings, err := extractHTMLSpansRegex(htmlString)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("==== mentionStrings ====")
-	fmt.Println(mentionStrings)
-	fmt.Println("==== mentionStrings ====")
 
 	var (
 		mentions []*HTMLMention
@@ -155,6 +147,14 @@ func htmlMentionsFromStringRegex(htmlString string) ([]*HTMLMention, error) {
 		return mentions, fmt.Errorf("issues encountered parsing html Mentions . %v", errs)
 	}
 
+	for _, mention := range mentions {
+		if mention != nil {
+			fmt.Println("==== *mention ====")
+			fmt.Printf("%+v\n", *mention)
+			fmt.Println("==== *mention ====")
+
+		}
+	}
 	return mentions, nil
 }
 
