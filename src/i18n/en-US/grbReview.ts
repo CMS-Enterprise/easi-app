@@ -121,6 +121,8 @@ export default {
       '<strong>{{count}} results.</strong> Select reviewers you wish to add to your current request’s GRB review. You may edit roles after adding reviewers. Checkboxes are disabled for individuals who have already been added to this review.',
     grbMemberName: 'GRB member name',
     grbMemberNameHelpText: 'This field searches CMS’ EUA database.',
+    duplicateReviewerAlert:
+      "This individual is already listed as a GRB reviewer for this request. Please choose a different reviewer or return to the main review screen to manage this reviewer's roles.",
     votingRole: 'Voting role',
     votingRolesInfo: {
       label: 'What voting roles are available?',
