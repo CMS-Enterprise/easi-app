@@ -15,14 +15,11 @@ type DiscussionReplyProps = {
 
 /**
  * Reply component for use within discussions
- *
- * TODO:
- *   - Translate text with new translation file
  */
 const DiscussionReply = ({
   discussion: { initialPost, replies }
 }: DiscussionReplyProps) => {
-  const { t } = useTranslation('grbReview');
+  const { t } = useTranslation('discussions');
 
   const {
     content,
@@ -44,7 +41,8 @@ const DiscussionReply = ({
             <p className="margin-y-0">{userAccount.commonName}</p>
 
             <h5 className="margin-top-1 margin-bottom-0 font-body-xs text-base text-normal">
-              {t(`votingRoles.${votingRole}`)}, {t(`reviewerRoles.${grbRole}`)}
+              {t(`grbReview:votingRoles.${votingRole}`)},{' '}
+              {t(`grbReview:reviewerRoles.${grbRole}`)}
             </h5>
           </div>
 
@@ -66,11 +64,11 @@ const DiscussionReply = ({
           <Icon.Announcement className="text-primary margin-right-1" />
 
           <UswdsReactLink to="/" className="margin-right-205">
-            Reply
+            {t('general.reply')}
           </UswdsReactLink>
 
           <p className="text-base margin-0">
-            {replies.length} replies in this discussion
+            {t('general.repliesInDiscussion', { count: replies.length })}
           </p>
         </div>
       </div>

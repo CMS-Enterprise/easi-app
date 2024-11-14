@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import DiscussionReply from 'components/DiscussionReply';
@@ -9,9 +10,11 @@ type DiscussionsCardProps = {
 
 /** Displays recent discussions on GRB Review tab */
 const DiscussionsCard = ({ grbDiscussions }: DiscussionsCardProps) => {
+  const { t } = useTranslation('discussions');
+
   return (
     <div>
-      <h2>Discussions</h2>
+      <h2>{t('general.label')}</h2>
       <DiscussionReply discussion={grbDiscussions[0]} />
     </div>
   );
