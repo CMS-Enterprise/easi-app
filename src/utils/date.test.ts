@@ -5,6 +5,7 @@ import {
   formatDateLocal,
   formatDateUtc,
   getFiscalYear,
+  getRelativeDate,
   parseAsUTC
 } from './date';
 
@@ -89,5 +90,35 @@ describe('getFiscalYear', () => {
     const date = DateTime.fromObject({ year: 2029, month: 9, day: 30 });
 
     expect(getFiscalYear(date)).toEqual(2029);
+  });
+});
+
+describe('getRelativeDate', () => {
+  it('returns formatted date after 30 days', () => {
+    const date = DateTime.fromObject({ year: 2021, month: 3, day: 1 });
+
+    const formattedDate = date.toFormat('MM/dd/yyyy');
+
+    const relativeDate = getRelativeDate(date.toISO());
+
+    expect(relativeDate).toEqual(formattedDate);
+  });
+
+  it('formats past relative date', () => {
+    const days = 3;
+
+    const date = DateTime.now().minus({ days });
+
+    const relativeDate = getRelativeDate(date.toISO());
+
+    expect(relativeDate).toEqual(`${days} days ago`);
+  });
+
+  it('formats relative date for today', () => {
+    const date = DateTime.now();
+
+    const relativeDate = getRelativeDate(date.toISO());
+
+    expect(relativeDate).toEqual('Today');
   });
 });

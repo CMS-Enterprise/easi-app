@@ -6,6 +6,7 @@ import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 import UswdsReactLink from 'components/LinkWrapper';
 import { RichTextViewer } from 'components/RichTextEditor';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
+import { getRelativeDate } from 'utils/date';
 
 import './index.scss';
 
@@ -25,8 +26,8 @@ const DiscussionReply = ({
     content,
     grbRole,
     votingRole,
-    createdByUserAccount: userAccount
-    // createdAt
+    createdByUserAccount: userAccount,
+    createdAt
   } = initialPost;
 
   return (
@@ -46,8 +47,7 @@ const DiscussionReply = ({
             </h5>
           </div>
 
-          {/* TODO: Update to use actual date */}
-          <p className="margin-y-0 text-base">2 days ago</p>
+          <p className="margin-y-0 text-base">{getRelativeDate(createdAt)}</p>
         </div>
 
         {/**
