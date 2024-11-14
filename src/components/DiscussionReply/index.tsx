@@ -1,17 +1,16 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@trussworks/react-uswds';
+import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { RichTextViewer } from 'components/RichTextEditor';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
-import { DiscussionWithReplies } from 'data/mock/discussions';
 
 import './index.scss';
 
 type DiscussionReplyProps = {
-  // TODO: Update props to use correct type
-  discussion: DiscussionWithReplies;
+  discussion: SystemIntakeGRBReviewDiscussionFragment;
 };
 
 /**
@@ -21,24 +20,31 @@ type DiscussionReplyProps = {
  *   - Translate text with new translation file
  */
 const DiscussionReply = ({
-  discussion: { author, text, replies, createdAt }
+  discussion: { initialPost, replies }
 }: DiscussionReplyProps) => {
   const { t } = useTranslation('grbReview');
+
+  const {
+    content,
+    grbRole,
+    votingRole,
+    createdByUserAccount: userAccount
+    // createdAt
+  } = initialPost;
 
   return (
     <div className="easi-discussion-reply display-flex">
       <div className="margin-right-105">
-        <AvatarCircle user={author.userAccount.commonName} />
+        <AvatarCircle user={userAccount.commonName} />
       </div>
 
       <div>
         <div className="easi-discussion-reply__header display-flex margin-top-1 margin-bottom-105">
           <div>
-            <p className="margin-y-0">{author.userAccount.commonName}</p>
+            <p className="margin-y-0">{userAccount.commonName}</p>
 
             <h5 className="margin-top-1 margin-bottom-0 font-body-xs text-base text-normal">
-              {t(`votingRoles.${author.votingRole}`)},{' '}
-              {t(`reviewerRoles.${author.grbRole}`)}
+              {t(`votingRoles.${votingRole}`)}, {t(`reviewerRoles.${grbRole}`)}
             </h5>
           </div>
 
@@ -52,7 +58,7 @@ const DiscussionReply = ({
          *   - Truncate text after 3 lines with `Read more` button
          */}
         <RichTextViewer
-          value={text}
+          value={content}
           className="easi-discussion-reply__content"
         />
 

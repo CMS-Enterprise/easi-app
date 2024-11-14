@@ -177,6 +177,7 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[]}
+                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -186,6 +187,7 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[grbReviewer]}
+                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -256,6 +258,7 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[grbReviewer]}
+                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -265,6 +268,7 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[updatedGRBReviewer]}
+                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>

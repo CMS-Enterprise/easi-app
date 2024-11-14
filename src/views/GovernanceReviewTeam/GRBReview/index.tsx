@@ -13,6 +13,7 @@ import {
 } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
+  SystemIntakeGRBReviewDiscussionFragment,
   SystemIntakeGRBReviewerFragment,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
@@ -27,6 +28,7 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
+import mockDiscussions from 'data/mock/discussions';
 import useMessage from 'hooks/useMessage';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -50,6 +52,7 @@ type GRBReviewProps = {
   businessCase: BusinessCaseModel;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   documents: SystemIntakeDocument[];
+  grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   grbReviewStartedAt?: string | null;
 };
 
@@ -60,6 +63,7 @@ const GRBReview = ({
   state,
   grbReviewers,
   documents,
+  grbDiscussions,
   grbReviewStartedAt
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
@@ -359,7 +363,7 @@ const GRBReview = ({
 
             <DocumentsTable systemIntakeId={id} documents={documents} />
 
-            <DiscussionsCard />
+            <DiscussionsCard grbDiscussions={mockDiscussions(id)} />
 
             <ParticipantsTable
               id={id}

@@ -1,14 +1,18 @@
 import React from 'react';
+import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import DiscussionReply from 'components/DiscussionReply';
-import { discussionWithReplies } from 'data/mock/discussions';
+
+type DiscussionsCardProps = {
+  grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
+};
 
 /** Displays recent discussions on GRB Review tab */
-const DiscussionsCard = () => {
+const DiscussionsCard = ({ grbDiscussions }: DiscussionsCardProps) => {
   return (
     <div>
       <h2>Discussions</h2>
-      <DiscussionReply discussion={discussionWithReplies} />
+      <DiscussionReply discussion={grbDiscussions[0]} />
     </div>
   );
 };
