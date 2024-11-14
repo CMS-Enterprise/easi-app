@@ -8,13 +8,17 @@ const discussions = {
     cancel: 'Cancel', // TODO: this is in other i18n files, move to general.ts?
     label: 'Discussions',
     mostRecentActivity: 'Most recent activity',
-    newTopics: '{{numNewTopics}} new discussion topics',
-    discussedTopics: '{{numDiscussedTopics}} discussions with replies',
+    newTopics: '{{count}} new discussion topic',
+    newTopics_plural: '{{count}} new discussion topics',
+    discussedTopics: '{{count}} discussion with replies',
+    discussedTopics_plural: '{{count}} discussions with replies',
     fieldsMarkedRequired:
       'Fields marked with an asterisk (<asterisk />) are required.', // TODO: this is in other i18n files, move to general.ts?
-    nonDiscussedTopics: '{{numDiscussedTopics}} discussions without replies',
+    nonDiscussedTopics: '{{count}} discussion without replies',
+    nonDiscussedTopics_plural: '{{count}} discussions without replies',
     readMore: 'Read more', // TODO: this is in other i18n files, move to general.ts?
-    repliesInDiscussion: '{{numReplies}} in this discussion',
+    repliesInDiscussion: '{{count}} in this discussion',
+    repliesInDiscussion_plural: '{{count}} in this discussion',
     reply: 'Reply',
     saveDiscussion: 'Save discussion',
 
