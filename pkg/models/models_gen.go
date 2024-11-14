@@ -183,6 +183,11 @@ type CreateSystemIntakeDocumentPayload struct {
 	Document *SystemIntakeDocument `json:"document,omitempty"`
 }
 
+type CreateSystemIntakeGRBDiscussionPostPayload struct {
+	Post       *SystemIntakeGRBReviewDiscussionPost `json:"post,omitempty"`
+	UserErrors []*UserError                         `json:"userErrors,omitempty"`
+}
+
 type CreateSystemIntakeGRBReviewersInput struct {
 	SystemIntakeID uuid.UUID                 `json:"systemIntakeID"`
 	Reviewers      []*CreateGRBReviewerInput `json:"reviewers"`
@@ -616,6 +621,11 @@ type SystemIntakeFundingSourcesInput struct {
 	FundingSources  []*SystemIntakeFundingSourceInput `json:"fundingSources"`
 }
 
+type SystemIntakeGRBReviewDiscussion struct {
+	InitialPost *SystemIntakeGRBReviewDiscussionPost   `json:"initialPost"`
+	Replies     []*SystemIntakeGRBReviewDiscussionPost `json:"replies"`
+}
+
 // Contains multiple system request collaborators, if any
 type SystemIntakeGovernanceTeam struct {
 	IsPresent *bool                       `json:"isPresent,omitempty"`
@@ -961,6 +971,16 @@ type UpdateTRBRequestTRBLeadInput struct {
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
+}
+
+type CreateSystemIntakeGRBDiscussionPostInput struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
+	Content        HTML      `json:"content"`
+}
+
+type CreateSystemIntakeGRBDiscussionReplyInput struct {
+	InitialPostID uuid.UUID `json:"initialPostID"`
+	Content       HTML      `json:"content"`
 }
 
 // A user role associated with a job code
