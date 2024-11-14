@@ -14,8 +14,8 @@ const discussions = {
     discussedTopics_plural: '{{count}} discussions with replies',
     fieldsMarkedRequired:
       'Fields marked with an asterisk (<asterisk />) are required.', // TODO: this is in other i18n files, move to general.ts?
-    nonDiscussedTopics: '{{count}} discussion without replies',
-    nonDiscussedTopics_plural: '{{count}} discussions without replies',
+    discussionsWithoutReplies: '{{count}} discussion without replies',
+    discussionsWithoutReplies_plural: '{{count}} discussions without replies',
     readMore: 'Read more', // TODO: this is in other i18n files, move to general.ts?
     repliesInDiscussion: '{{count}} reply in this discussion',
     repliesInDiscussion_plural: '{{count}} replies in this discussion',
@@ -65,14 +65,11 @@ const discussions = {
 
   // Board Specific Translations
   governanceReviewBoard: {
-    adminPanel: {
-      // description:
-      //   'Use the discussion boards below to discuss this project. The internal GRB discussion board is a space for the Governance Admin Team and GRB members to discuss privately; the project team will not be able to view discussions there.',
-      description:
-        'Use the discussion boards below to discuss this project. The {{discussionBoardType}} is a space for the {{groupNames}} members to discuss privately; the project team will not be able to view discussions there.'
-    },
+    discussionsDescription:
+      'Use the discussion boards below to discuss this project. The internal GRB discussion board is a space for the Governance Admin Team and GRB members to discuss privately; the project team will not be able to view discussions there.',
     internal: {
       label: 'Internal GRB discussion board', // TODO: enum translation?
+      visibilityRestricted: 'Visibility restricted',
       // description:
       //   'Use this discussion board to ask questions or have dicussions with the Governance Admin Team and other Governance Review Board (GRB) members. The conversations here are not visible to the Project team.'
       description:
