@@ -1151,7 +1151,11 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 
 // Dummy is the resolver for the dummy field.
 func (r *mutationResolver) Dummy(ctx context.Context, a *models.TaggedHTML) (*models.TaggedContent, error) {
-	panic(fmt.Errorf("not implemented: Dummy - dummy"))
+	fmt.Println("==== a ====")
+	fmt.Println(a.RawContent, "-", a.Mentions)
+	fmt.Println("==== a ====")
+
+	return nil, nil
 }
 
 // SystemIntake is the resolver for the systemIntake field.

@@ -53,39 +53,6 @@ type HTMLMention struct {
 	//Entity      *TaggedEntity
 }
 
-//// ToTemplate converts and sanitizes the TaggedHTML type to a template.HTML struct
-//func (th *TaggedHTML) ToTemplate() template.HTML {
-//	if th == nil {
-//		return ""
-//	}
-//
-//	sanitizedHTML := sanitization.SanitizeHTML(*th.)
-//	return template.HTML(sanitizedHTML) //nolint //the html is sanitized again on the previous line so we can ignore the warning about
-//}
-
-//// ValueOrEmptyString returns either the value of the html or an empty string if nil
-//func (th *TaggedHTML) ValueOrEmptyString() string {
-//	if th != nil {
-//		return string(*th)
-//	}
-//
-//	return ""
-//}
-
-// ValueOrEmptyHTML returns either the value of the html or an empty TaggedHTML type if nil
-//func (th *TaggedHTML) ValueOrEmptyHTML() TaggedHTML {
-//	if th != nil {
-//		return *th
-//	}
-//
-//	return ""
-//}
-
-// StringPointer casts an TaggedHTML pointer to a string pointer
-//func (th *TaggedHTML) StringPointer() *string {
-//	return (*string)(th)
-//}
-
 // UnmarshalGQLContext unmarshals the data from graphql to the TaggedHTML type
 func (th *TaggedHTML) UnmarshalGQLContext(_ context.Context, v interface{}) error {
 	rawHTML, ok := v.(string)
@@ -100,6 +67,10 @@ func (th *TaggedHTML) UnmarshalGQLContext(_ context.Context, v interface{}) erro
 		return err
 	}
 	*th = TaggedHTML(tc)
+	fmt.Println("==== tc.Tags ====")
+	fmt.Println(tc.Tags)
+	fmt.Println("==== tc.Tags ====")
+
 	return nil
 }
 
@@ -153,10 +124,18 @@ func NewTaggedContentFromString(htmlString string) (TaggedContent, error) {
 }
 
 func htmlMentionsFromStringRegex(htmlString string) ([]*HTMLMention, error) {
+	fmt.Println("==== htmlString ====")
+	fmt.Println(htmlString)
+	fmt.Println("==== htmlString ====")
+
 	mentionStrings, err := extractHTMLSpansRegex(htmlString)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("==== mentionStrings ====")
+	fmt.Println(mentionStrings)
+	fmt.Println("==== mentionStrings ====")
+
 	var (
 		mentions []*HTMLMention
 		errs     []error
@@ -166,6 +145,7 @@ func htmlMentionsFromStringRegex(htmlString string) ([]*HTMLMention, error) {
 		htmlMention, err := parseHTMLMentionTagRegEx(mentionString)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("error parsing html mention %s, %w", mentionString, err))
+			continue
 		}
 
 		mentions = append(mentions, &htmlMention)
@@ -252,7 +232,7 @@ func (hm HTMLMention) ToTag(taggedField string, taggedTable string, taggedConten
 	}
 }
 
-func (hm HTMLMention) ToHTML() (HTML, error) { //nolint:all // it is desirable that hTML is not exported, so we can enforce sanitization
+func (hm HTMLMention) ToHTML() (HTML, error) {
 	// Create a new template and parse the template string
 	t, err := template.New("webpage").Parse(mentionTagTemplate)
 	if err != nil {
@@ -271,8 +251,15 @@ func TagArrayFromHTMLMentions(taggedField string, taggedTable string, taggedCont
 	var tags []*Tag
 
 	for _, mention := range mentions {
-		tag := mention.ToTag(taggedField, taggedTable, taggedContentID)
-		tags = append(tags, &tag)
+		tags = append(tags, &Tag{
+			TagType:            mention.Type,
+			TaggedField:        taggedField,
+			TaggedContentTable: taggedTable,
+			TaggedContentID:    taggedContentID,
+			EntityRaw:          mention.EntityRaw,
+			EntityUUID:         mention.EntityUUID,
+			EntityIntID:        mention.EntityIntID,
+		})
 	}
 
 	return tags
