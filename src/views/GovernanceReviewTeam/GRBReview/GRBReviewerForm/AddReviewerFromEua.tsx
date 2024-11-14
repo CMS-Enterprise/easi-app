@@ -60,12 +60,13 @@ const AddReviewerFromEua = ({
   const {
     register,
     watch,
-    setValue,
     handleSubmit,
-    formState: { errors, isSubmitted, isDirty }
+    setValue,
+    formState: { errors, isSubmitted, isDirty, isValid }
   } = useEasiForm<GRBReviewerFields>({
     resolver: yupResolver(GRBReviewerSchema),
-    context: { errorOnDuplicates: !activeReviewer, initialGRBReviewers },
+    criteriaMode: 'all',
+    context: { errorOnDuplicate: !activeReviewer, initialGRBReviewers },
     // Set default values if updating existing reviewer
     defaultValues: {
       votingRole: activeReviewer?.votingRole,
@@ -128,20 +129,23 @@ const AddReviewerFromEua = ({
         <ErrorMessage
           errors={errors}
           name="userAccount"
-          as={<FieldErrorMsg />}
+          render={({ message }) =>
+            // Only show field errors when revalidating after submission
+            isSubmitted && <FieldErrorMsg>{message}</FieldErrorMsg>
+          }
         />
         <CedarContactSelect
           {...{ ...register('userAccount'), ref: null }}
           onChange={contact =>
-            contact?.euaUserId &&
             setValue(
               'userAccount',
               {
-                username: contact.euaUserId,
-                commonName: contact.commonName,
-                email: contact.email || ''
+                username: contact?.euaUserId || '',
+                commonName: contact?.commonName || '',
+                email: contact?.email || ''
               },
-              { shouldValidate: isSubmitted }
+              // Validate field on every change
+              { shouldValidate: true }
             )
           }
           value={{
@@ -152,6 +156,20 @@ const AddReviewerFromEua = ({
           id="userAccount"
           ariaDescribedBy="userAccountHelpText"
           disabled={!!activeReviewer}
+        />
+
+        {/* Duplicate GRB reviewer warning message */}
+        <ErrorMessage
+          errors={errors}
+          name="userAccount"
+          render={({ messages }) =>
+            // Only show for duplicate reviewer error
+            !!messages?.duplicate && (
+              <Alert type="warning" slim>
+                {t('form.duplicateReviewerAlert')}
+              </Alert>
+            )
+          }
         />
       </FormGroup>
 
@@ -243,11 +261,7 @@ const AddReviewerFromEua = ({
       <Pager
         next={{
           text: t('form.submit', { context: action }),
-          disabled:
-            !isDirty ||
-            !watch('userAccount') ||
-            !watch('votingRole') ||
-            !watch('grbRole')
+          disabled: !isDirty || !isValid
         }}
         taskListUrl={grbReviewPath}
         saveExitText={t('form.returnToRequest', {
