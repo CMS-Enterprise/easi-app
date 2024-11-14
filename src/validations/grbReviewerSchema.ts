@@ -22,16 +22,15 @@ export const GRBReviewerSchema = Yup.object().shape({
       then: schema =>
         schema.when(
           '$initialGRBReviewers',
-          (initialGRBReviewers: SystemIntakeGRBReviewerFragment[]) => {
-            return schema.test(
+          (initialGRBReviewers: SystemIntakeGRBReviewerFragment[]) =>
+            schema.test(
               'duplicate',
               i18next.t('User has already been added as a GRB reviewer'),
               value =>
                 !initialGRBReviewers.find(
                   reviewer => reviewer.userAccount.username === value.username
                 )
-            );
-          }
+            )
         )
     }),
   votingRole: Yup.string()
