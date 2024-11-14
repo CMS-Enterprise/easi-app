@@ -60,12 +60,6 @@ func (th *TaggedHTML) UnmarshalGQLContext(_ context.Context, v interface{}) erro
 		return errors.New("invalid TaggedHTML")
 	}
 
-	fmt.Println("==== rawHTML ====")
-	fmt.Println(rawHTML)
-	fmt.Println("==== rawHTML ====")
-
-	// Sanitize the HTML string
-	//sanitizedHTMLString := sanitization.SanitizeHTML(rawHTML)
 	tc, err := NewTaggedContentFromString(rawHTML)
 	if err != nil {
 		return err
@@ -123,10 +117,7 @@ func NewTaggedContentFromString(htmlString string) (TaggedContent, error) {
 }
 
 func htmlMentionsFromStringRegex(htmlString string) ([]*HTMLMention, error) {
-	mentionStrings, err := extractHTMLSpansRegex(htmlString)
-	if err != nil {
-		return nil, err
-	}
+	mentionStrings := spanRe.FindAllString(htmlString, -1)
 
 	var (
 		mentions []*HTMLMention
@@ -147,19 +138,7 @@ func htmlMentionsFromStringRegex(htmlString string) ([]*HTMLMention, error) {
 		return mentions, fmt.Errorf("issues encountered parsing html Mentions . %v", errs)
 	}
 
-	for _, mention := range mentions {
-		if mention != nil {
-			fmt.Println("==== *mention ====")
-			fmt.Printf("%+v\n", *mention)
-			fmt.Println("==== *mention ====")
-
-		}
-	}
 	return mentions, nil
-}
-
-func extractHTMLSpansRegex(htmlString string) ([]string, error) {
-	return spanRe.FindAllString(htmlString, -1), nil
 }
 
 func parseHTMLMentionTagRegEx(mention string) (HTMLMention, error) {
