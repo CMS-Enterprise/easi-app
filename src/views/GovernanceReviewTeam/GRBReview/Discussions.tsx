@@ -24,6 +24,7 @@ const Discussions = ({ grbDiscussions, className }: DiscussionsProps) => {
 
   return (
     <div
+      id="discussions"
       className={classNames(
         'grb-discussions bg-base-lightest padding-x-3 padding-y-3 radius-md',
         className
