@@ -36,18 +36,20 @@ const DiscussionPost = ({
         <AvatarCircle user={userAccount.commonName} />
       </div>
 
-      <div>
-        <div className="easi-discussion-reply__header display-flex margin-top-1 margin-bottom-105">
+      <div className="width-full">
+        <div className="easi-discussion-reply__header tablet:display-flex margin-top-1 margin-bottom-105">
           <div>
             <p className="margin-y-0">{userAccount.commonName}</p>
 
-            <h5 className="margin-top-1 margin-bottom-0 font-body-xs text-base text-normal">
+            <h5 className="margin-top-05 margin-bottom-0 font-body-xs text-base text-normal">
               {t(`grbReview:votingRoles.${votingRole}`)},{' '}
               {t(`grbReview:reviewerRoles.${grbRole}`)}
             </h5>
           </div>
 
-          <p className="margin-y-0 text-base">{getRelativeDate(createdAt)}</p>
+          <p className="margin-top-105 tablet:margin-top-0 margin-bottom-0 text-base">
+            {getRelativeDate(createdAt)}
+          </p>
         </div>
 
         {/**
