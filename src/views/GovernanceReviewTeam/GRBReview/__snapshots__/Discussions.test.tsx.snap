@@ -4,6 +4,7 @@ exports[`Discussions > matches the snapshot > [Function] 1`] = `
 <DocumentFragment>
   <div
     class="grb-discussions bg-base-lightest padding-x-3 padding-y-3 radius-md"
+    id="discussions"
   >
     <h2
       class="margin-top-0 margin-bottom-1"
