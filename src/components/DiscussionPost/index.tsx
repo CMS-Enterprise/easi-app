@@ -30,6 +30,12 @@ const DiscussionPost = ({
     createdAt
   } = initialPost;
 
+  /** Displays GRB and voting role with fallback if values are null */
+  const role =
+    votingRole && grbRole
+      ? `${t(`grbReview:votingRoles.${votingRole}`)}, ${t(`grbReview:reviewerRoles.${grbRole}`)}`
+      : t('governanceReviewBoard.governanceAdminTeam');
+
   return (
     <div className="easi-discussion-reply display-flex">
       <div className="margin-right-105">
@@ -42,8 +48,7 @@ const DiscussionPost = ({
             <p className="margin-y-0">{userAccount.commonName}</p>
 
             <h5 className="margin-top-05 margin-bottom-0 font-body-xs text-base text-normal">
-              {t(`grbReview:votingRoles.${votingRole}`)},{' '}
-              {t(`grbReview:reviewerRoles.${grbRole}`)}
+              {role}
             </h5>
           </div>
 

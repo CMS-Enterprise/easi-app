@@ -68,6 +68,7 @@ const discussions = {
   governanceReviewBoard: {
     discussionsDescription:
       'Use the discussion boards below to discuss this project. The internal GRB discussion board is a space for the Governance Admin Team and GRB members to discuss privately; the project team will not be able to view discussions there.',
+    governanceAdminTeam: 'Governance Admin Team',
     internal: {
       label: 'Internal GRB discussion board', // TODO: enum translation?
       visibilityRestricted: 'Visibility restricted',

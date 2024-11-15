@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 import i18next from 'i18next';
 
 import mockDiscussions from 'data/mock/discussions';
@@ -37,5 +38,20 @@ describe('DiscussionPost', () => {
     expect(
       screen.getByText(`${repliesCount} replies in this discussion`)
     ).toBeInTheDocument();
+  });
+
+  it('displays roles fallback text', () => {
+    const discussionNoRole: SystemIntakeGRBReviewDiscussionFragment = {
+      ...discussion,
+      initialPost: {
+        ...initialPost,
+        grbRole: null,
+        votingRole: null
+      }
+    };
+
+    render(<DiscussionPost discussion={discussionNoRole} />);
+
+    expect(screen.getByText('Governance Admin Team')).toBeInTheDocument();
   });
 });
