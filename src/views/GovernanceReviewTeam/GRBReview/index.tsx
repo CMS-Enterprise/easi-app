@@ -28,7 +28,6 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import mockDiscussions from 'data/mock/discussions';
 import useMessage from 'hooks/useMessage';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -364,7 +363,7 @@ const GRBReview = ({
             <DocumentsTable systemIntakeId={id} documents={documents} />
 
             <Discussions
-              grbDiscussions={mockDiscussions(id)}
+              grbDiscussions={grbDiscussions}
               className="margin-top-4 margin-bottom-6"
             />
 
