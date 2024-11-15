@@ -1232,7 +1232,7 @@ enum SystemIntakeGRBReviewerVotingRole {
 
 type SystemIntakeGRBReviewDiscussionPost {
   id: UUID!
-  content: HTML!
+  content: TaggedContent!
   votingRole: SystemIntakeGRBReviewerVotingRole
   grbRole: SystemIntakeGRBReviewerRole
   systemIntakeID: UUID!
@@ -1250,12 +1250,12 @@ type SystemIntakeGRBReviewDiscussion {
 
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!
-  content: HTML!
+  content: TaggedHTML!
 }
 
 input createSystemIntakeGRBDiscussionReplyInput {
   initialPostID: UUID!
-  content: HTML!
+  content: TaggedHTML!
 }
 
 """
@@ -1733,7 +1733,26 @@ type TaggedContent {
 
 type Tag {
   id: UUID!
-  content: String!
+  tagType: TagType!
+  taggedField: String!
+  taggedContentTable: String!
+  taggedContentID: UUID!
+  entityUUID: UUID
+  entityIntID: Int
+
+#  entity: TaggedEntity
+
+  createdBy: UUID!
+  createdByUserAccount: UserAccount!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedByUserAccount: UserAccount
+  modifiedAt: Time
+}
+
+enum TagType {
+  USER_ACCOUNT
+  POSSIBLE_SOLUTION
 }
 
 """
@@ -2633,9 +2652,6 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
-
-#  to avoid lint error for unused
-  dummy(a: TaggedHTML): TaggedContent
 }
 
 """

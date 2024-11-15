@@ -6,7 +6,7 @@ import (
 
 type SystemIntakeGRBReviewDiscussionPost struct {
 	BaseStructUser
-	Content        HTML                     `json:"content" db:"content"`
+	Content        TaggedContent            `json:"content" db:"content"`
 	SystemIntakeID uuid.UUID                `json:"systemIntakeId" db:"system_intake_id"`
 	ReplyToID      *uuid.UUID               `db:"reply_to_id"`
 	VotingRole     *SIGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`

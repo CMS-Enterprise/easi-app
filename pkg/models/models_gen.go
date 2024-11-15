@@ -969,13 +969,13 @@ type UserError struct {
 }
 
 type CreateSystemIntakeGRBDiscussionPostInput struct {
-	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
-	Content        HTML      `json:"content"`
+	SystemIntakeID uuid.UUID  `json:"systemIntakeID"`
+	Content        TaggedHTML `json:"content"`
 }
 
 type CreateSystemIntakeGRBDiscussionReplyInput struct {
-	InitialPostID uuid.UUID `json:"initialPostID"`
-	Content       HTML      `json:"content"`
+	InitialPostID uuid.UUID  `json:"initialPostID"`
+	Content       TaggedHTML `json:"content"`
 }
 
 // A user role associated with a job code

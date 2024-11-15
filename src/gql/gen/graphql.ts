@@ -992,7 +992,6 @@ export type Mutation = {
   deleteTRBRequestDocument?: Maybe<DeleteTRBRequestDocumentPayload>;
   deleteTRBRequestFundingSources: Array<TRBFundingSource>;
   deleteTrbLeadOption: Scalars['Boolean']['output'];
-  dummy?: Maybe<TaggedContent>;
   reopenTrbRequest: TRBRequest;
   requestReviewForTRBGuidanceLetter: TRBGuidanceLetter;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
@@ -1294,12 +1293,6 @@ export type MutationDeleteTRBRequestFundingSourcesArgs = {
 /** Defines the mutations for the schema */
 export type MutationDeleteTrbLeadOptionArgs = {
   eua: Scalars['String']['input'];
-};
-
-
-/** Defines the mutations for the schema */
-export type MutationDummyArgs = {
-  a?: InputMaybe<Scalars['TaggedHTML']['input']>;
 };
 
 
@@ -2241,7 +2234,7 @@ export type SystemIntakeGRBReviewDiscussion = {
 
 export type SystemIntakeGRBReviewDiscussionPost = {
   __typename: 'SystemIntakeGRBReviewDiscussionPost';
-  content: Scalars['HTML']['output'];
+  content: TaggedContent;
   createdAt: Scalars['Time']['output'];
   createdByUserAccount: UserAccount;
   grbRole?: Maybe<SystemIntakeGRBReviewerRole>;
@@ -3019,9 +3012,25 @@ export enum TRBWhereInProcessOption {
 
 export type Tag = {
   __typename: 'Tag';
-  content: Scalars['String']['output'];
+  createdAt: Scalars['Time']['output'];
+  createdBy: Scalars['UUID']['output'];
+  createdByUserAccount: UserAccount;
+  entityIntID?: Maybe<Scalars['Int']['output']>;
+  entityUUID?: Maybe<Scalars['UUID']['output']>;
   id: Scalars['UUID']['output'];
+  modifiedAt?: Maybe<Scalars['Time']['output']>;
+  modifiedBy?: Maybe<Scalars['UUID']['output']>;
+  modifiedByUserAccount?: Maybe<UserAccount>;
+  tagType: TagType;
+  taggedContentID: Scalars['UUID']['output'];
+  taggedContentTable: Scalars['String']['output'];
+  taggedField: Scalars['String']['output'];
 };
+
+export enum TagType {
+  POSSIBLE_SOLUTION = 'POSSIBLE_SOLUTION',
+  USER_ACCOUNT = 'USER_ACCOUNT'
+}
 
 export type TaggedContent = {
   __typename: 'TaggedContent';
@@ -3240,12 +3249,12 @@ export type UserInfo = {
 };
 
 export type CreateSystemIntakeGRBDiscussionPostInput = {
-  content: Scalars['HTML']['input'];
+  content: Scalars['TaggedHTML']['input'];
   systemIntakeID: Scalars['UUID']['input'];
 };
 
 export type CreateSystemIntakeGRBDiscussionReplyInput = {
-  content: Scalars['HTML']['input'];
+  content: Scalars['TaggedHTML']['input'];
   initialPostID: Scalars['UUID']['input'];
 };
 

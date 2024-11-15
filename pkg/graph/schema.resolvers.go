@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -674,7 +673,7 @@ func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, in
 func (r *mutationResolver) CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
 	principal := appcontext.Principal(ctx).Account().ID
 	post := models.NewSystemIntakeGRBReviewDiscussion(principal)
-	post.Content = input.Content
+	post.Content = input.Content.ToTaggedContent()
 	return post, nil
 }
 
@@ -682,7 +681,7 @@ func (r *mutationResolver) CreateSystemIntakeGRBDiscussionPost(ctx context.Conte
 func (r *mutationResolver) CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
 	principal := appcontext.Principal(ctx).Account().ID
 	post := models.NewSystemIntakeGRBReviewDiscussion(principal)
-	post.Content = input.Content
+	post.Content = input.Content.ToTaggedContent()
 	return post, nil
 }
 
@@ -1164,23 +1163,6 @@ func (r *mutationResolver) CreateTrbLeadOption(ctx context.Context, eua string) 
 // DeleteTrbLeadOption is the resolver for the deleteTrbLeadOption field.
 func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error) {
 	return resolvers.DeleteTRBLeadOption(ctx, r.store, eua)
-}
-
-// Dummy is the resolver for the dummy field.
-func (r *mutationResolver) Dummy(ctx context.Context, a *models.TaggedHTML) (*models.TaggedContent, error) {
-	if a == nil {
-		panic("nil a")
-	}
-
-	for _, mention := range a.Mentions {
-		if mention != nil {
-			fmt.Println("==== *mention ====")
-			fmt.Printf("%+v\n", *mention)
-			fmt.Println("==== *mention ====")
-
-		}
-	}
-	return nil, nil
 }
 
 // SystemIntake is the resolver for the systemIntake field.
@@ -1956,11 +1938,23 @@ func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.S
 	}
 	initialPost1 := models.NewSystemIntakeGRBReviewDiscussion(principal)
 	initialPost2 := models.NewSystemIntakeGRBReviewDiscussion(principal)
-	initialPost1.Content = models.HTML("<p>This is an initial discussion post.</p>")
-	initialPost2.Content = models.HTML("<p>This is also an initial discussion post.</p>")
+	initialPost1.Content = models.TaggedContent{
+		RawContent: "<p>This is an initial discussion post.</p>",
+		Mentions:   nil,
+		Tags:       nil,
+	}
+	initialPost2.Content = models.TaggedContent{
+		RawContent: "<p>This is also an initial discussion post.</p>",
+		Mentions:   nil,
+		Tags:       nil,
+	}
 	replies := lo.Map([]uuid.UUID{user1.ID, principal, user1.ID}, func(id uuid.UUID, _ int) *models.SystemIntakeGRBReviewDiscussionPost {
 		post := models.NewSystemIntakeGRBReviewDiscussion(id)
-		post.Content = models.HTML("<p>This is a reply</p>")
+		post.Content = models.TaggedContent{
+			RawContent: "<p>This is a reply</p>",
+			Mentions:   nil,
+			Tags:       nil,
+		}
 		return post
 	})
 	return []*models.SystemIntakeGRBReviewDiscussion{
@@ -2261,14 +2255,9 @@ func (r *tRBRequestFormResolver) SubjectAreaOptions(ctx context.Context, obj *mo
 	return subjectAreas, nil
 }
 
-// Content is the resolver for the content field.
-func (r *tagResolver) Content(ctx context.Context, obj *models.Tag) (string, error) {
-	panic(fmt.Errorf("not implemented: Content - content"))
-}
-
 // RawContent is the resolver for the rawContent field.
 func (r *taggedContentResolver) RawContent(ctx context.Context, obj *models.TaggedContent) (string, error) {
-	panic(fmt.Errorf("not implemented: RawContent - rawContent"))
+	return obj.RawContent.ValueOrEmptyString(), nil
 }
 
 // CommonName is the resolver for the commonName field.
@@ -2379,9 +2368,6 @@ func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 	return &tRBRequestFormResolver{r}
 }
 
-// Tag returns generated.TagResolver implementation.
-func (r *Resolver) Tag() generated.TagResolver { return &tagResolver{r} }
-
 // TaggedContent returns generated.TaggedContentResolver implementation.
 func (r *Resolver) TaggedContent() generated.TaggedContentResolver { return &taggedContentResolver{r} }
 
@@ -2410,6 +2396,5 @@ type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }
 type tRBRequestFeedbackResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
-type tagResolver struct{ *Resolver }
 type taggedContentResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }
