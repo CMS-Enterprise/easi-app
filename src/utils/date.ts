@@ -1,4 +1,3 @@
-import { upperFirst } from 'lodash';
 import { DateTime, Interval } from 'luxon';
 
 // Used to parse out mintute, day, ,month, and years from ISOString
@@ -75,27 +74,35 @@ export const isDateInPast = (date: string | null): boolean => {
 };
 
 /**
- * If less than 30 days have passed since `date`, returns "Today" or "X days ago".
+ * If less than 30 days have passed since `date`, returns "today" or "X days ago".
  *
  * Otherwise, returns formatted date.
  */
-export const getRelativeDate = (date: string | null): string => {
+export const getRelativeDate = (
+  date: string | null,
+  /**
+   * Number of days between `date` and now to display relative date
+   * before switching to formatted date
+   */
+  relativeDateLimit: number = 30
+): string => {
   if (!date) return '';
 
+  const dateTime = DateTime.fromISO(date);
+
+  if (!dateTime.isValid) return '';
+
   /** Interval between now and `date` */
-  const interval = Interval.fromISO(`${date}/${DateTime.now().toISO()}`);
+  const interval = Interval.fromDateTimes(dateTime, DateTime.now());
 
   // Subtract one from the interval count to see how many days since the initial date
   const days = interval.count('days') - 1;
 
   // If more than 30 days have passed, return formatted date
-  if (days >= 30) {
+  if (days > relativeDateLimit) {
     return DateTime.fromISO(date).toFormat('MM/dd/yyyy');
   }
 
-  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-
   // Return relative date
-  // Uses `UpperFirst` to capitalize first letter of "Today"
-  return upperFirst(rtf.format(-days, 'days'));
+  return dateTime.toRelativeCalendar({ unit: 'days' });
 };

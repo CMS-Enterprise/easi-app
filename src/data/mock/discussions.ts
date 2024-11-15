@@ -25,7 +25,7 @@ const mockDiscussions = (
         commonName: users[5].commonName
       },
       systemIntakeID,
-      createdAt: '2024-11-12T21:59:07.368862Z'
+      createdAt: '2024-11-12T10:00:00.368862Z'
     },
     replies: [
       {
@@ -41,7 +41,7 @@ const mockDiscussions = (
           commonName: users[1].commonName
         },
         systemIntakeID,
-        createdAt: '2024-11-13T21:59:07.368862Z'
+        createdAt: '2024-11-13T10:00:00.368862Z'
       },
       {
         __typename: 'SystemIntakeGRBReviewDiscussionPost',
@@ -56,7 +56,7 @@ const mockDiscussions = (
           commonName: users[7].commonName
         },
         systemIntakeID,
-        createdAt: '2024-11-13T21:59:07.368862Z'
+        createdAt: '2024-11-13T10:00:00.368862Z'
       }
     ]
   }

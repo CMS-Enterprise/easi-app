@@ -32,12 +32,16 @@ describe('DiscussionPost', () => {
     const dateText = getRelativeDate(createdAt);
     expect(screen.getByText(dateText)).toBeInTheDocument();
 
-    expect(screen.getByRole('button', { name: 'Reply' })).toBeInTheDocument();
-
     const repliesCount = replies.length;
     expect(
-      screen.getByText(`${repliesCount} replies in this discussion`)
+      screen.getByRole('button', { name: `${repliesCount} replies` })
     ).toBeInTheDocument();
+
+    const lastReplyAtText = i18next.t('discussions:general.lastReply', {
+      date: getRelativeDate(replies[0].createdAt, 1),
+      time: '10:00 AM'
+    });
+    expect(screen.getByText(lastReplyAtText)).toBeInTheDocument();
   });
 
   it('displays roles fallback text', () => {

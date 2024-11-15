@@ -19,7 +19,7 @@ describe('Discussions', () => {
       <Discussions grbDiscussions={mockDiscussions()} />
     );
 
-    expect(asFragment).toMatchInlineSnapshot(`[Function]`);
+    expect(asFragment()).toMatchSnapshot(`[Function]`);
   });
 
   it('renders discussion with replies', () => {

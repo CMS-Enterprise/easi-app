@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@trussworks/react-uswds';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
+import { upperFirst } from 'lodash';
+import { DateTime } from 'luxon';
 
 import { RichTextViewer } from 'components/RichTextEditor';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
@@ -36,6 +38,25 @@ const DiscussionPost = ({
       ? `${t(`grbReview:votingRoles.${votingRole}`)}, ${t(`grbReview:reviewerRoles.${grbRole}`)}`
       : t('governanceReviewBoard.governanceAdminTeam');
 
+  /**
+   * Formatted text for date and time of last reply
+   *
+   * If more than one day since reply, uses formatted date.
+   * Otherwise, uses relative date.
+   */
+  const lastReplyAtText = useMemo(() => {
+    if (replies.length === 0) return '';
+
+    const [lastReply] = replies;
+
+    const dateTime = DateTime.fromISO(lastReply.createdAt);
+
+    return t('general.lastReply', {
+      date: getRelativeDate(lastReply.createdAt, 1),
+      time: dateTime.toLocaleString(DateTime.TIME_SIMPLE)
+    });
+  }, [replies, t]);
+
   return (
     <div className="easi-discussion-reply display-flex">
       <div className="margin-right-105">
@@ -53,7 +74,7 @@ const DiscussionPost = ({
           </div>
 
           <p className="margin-top-105 tablet:margin-top-0 margin-bottom-0 text-base">
-            {getRelativeDate(createdAt)}
+            {upperFirst(getRelativeDate(createdAt))}
           </p>
         </div>
 
@@ -76,12 +97,14 @@ const DiscussionPost = ({
             icon={<Icon.Announcement className="text-primary" />}
             unstyled
           >
-            {t('general.reply')}
+            {replies.length > 0
+              ? t('general.repliesCount', { count: replies.length })
+              : t('general.reply')}
           </IconButton>
 
-          <p className="text-base margin-0">
-            {t('general.repliesInDiscussion', { count: replies.length })}
-          </p>
+          {replies.length > 0 && (
+            <p className="text-base margin-0">{lastReplyAtText}</p>
+          )}
         </div>
       </div>
     </div>

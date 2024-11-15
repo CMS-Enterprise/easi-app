@@ -119,6 +119,6 @@ describe('getRelativeDate', () => {
 
     const relativeDate = getRelativeDate(date.toISO());
 
-    expect(relativeDate).toEqual('Today');
+    expect(relativeDate).toEqual('today');
   });
 });

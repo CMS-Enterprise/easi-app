@@ -19,7 +19,10 @@ const discussions = {
     readMore: 'Read more', // TODO: this is in other i18n files, move to general.ts?
     repliesInDiscussion: '{{count}} reply in this discussion',
     repliesInDiscussion_plural: '{{count}} replies in this discussion',
+    repliesCount: '{{count}} reply',
+    repliesCount_plural: '{{count}} replies',
     reply: 'Reply',
+    lastReply: 'Last reply {{date}} at {{time}}',
     saveDiscussion: 'Save discussion',
 
     startDiscussion: 'Start a new discussion',
