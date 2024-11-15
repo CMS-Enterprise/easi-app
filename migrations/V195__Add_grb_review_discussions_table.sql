@@ -14,7 +14,11 @@ CREATE TABLE IF NOT EXISTS system_intake_internal_grb_review_discussion_posts (
   created_by UUID NOT NULL REFERENCES user_account(id),
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified_by UUID REFERENCES user_account(id),
-  modified_at TIMESTAMP WITH TIME ZONE
+  modified_at TIMESTAMP WITH TIME ZONE,
+  CONSTRAINT is_admin_or_reviewer CHECK (
+    (voting_role IS NULL AND grb_role IS NULL) OR
+    (voting_role IS NOT NULL AND grb_role IS NOT NULL)
+  )
 );
 
 CREATE OR REPLACE FUNCTION prevent_nested_replies_fn() RETURNS TRIGGER AS $$

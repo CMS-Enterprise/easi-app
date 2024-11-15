@@ -563,12 +563,6 @@ export type CreateSystemIntakeDocumentPayload = {
   document?: Maybe<SystemIntakeDocument>;
 };
 
-export type CreateSystemIntakeGRBDiscussionPostPayload = {
-  __typename: 'CreateSystemIntakeGRBDiscussionPostPayload';
-  post?: Maybe<SystemIntakeGRBReviewDiscussionPost>;
-  userErrors?: Maybe<Array<UserError>>;
-};
-
 export type CreateSystemIntakeGRBReviewersInput = {
   reviewers: Array<CreateGRBReviewerInput>;
   systemIntakeID: Scalars['UUID']['input'];
@@ -971,8 +965,8 @@ export type Mutation = {
   createSystemIntakeActionUpdateLCID?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   createSystemIntakeDocument?: Maybe<CreateSystemIntakeDocumentPayload>;
-  createSystemIntakeGRBDiscussionPost?: Maybe<CreateSystemIntakeGRBDiscussionPostPayload>;
-  createSystemIntakeGRBDiscussionReply?: Maybe<CreateSystemIntakeGRBDiscussionPostPayload>;
+  createSystemIntakeGRBDiscussionPost?: Maybe<SystemIntakeGRBReviewDiscussionPost>;
+  createSystemIntakeGRBDiscussionReply?: Maybe<SystemIntakeGRBReviewDiscussionPost>;
   createSystemIntakeGRBReviewers?: Maybe<CreateSystemIntakeGRBReviewersPayload>;
   createSystemIntakeNote?: Maybe<SystemIntakeNote>;
   createTRBAdminNoteConsultSession: TRBAdminNote;

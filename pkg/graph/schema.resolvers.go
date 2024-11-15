@@ -670,23 +670,19 @@ func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, in
 }
 
 // CreateSystemIntakeGRBDiscussionPost is the resolver for the createSystemIntakeGRBDiscussionPost field.
-func (r *mutationResolver) CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.CreateSystemIntakeGRBDiscussionPostPayload, error) {
+func (r *mutationResolver) CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
 	principal := appcontext.Principal(ctx).Account().ID
 	post := models.NewSystemIntakeGRBReviewDiscussion(principal)
 	post.Content = input.Content
-	return &models.CreateSystemIntakeGRBDiscussionPostPayload{
-		Post: post,
-	}, nil
+	return post, nil
 }
 
 // CreateSystemIntakeGRBDiscussionReply is the resolver for the createSystemIntakeGRBDiscussionReply field.
-func (r *mutationResolver) CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.CreateSystemIntakeGRBDiscussionPostPayload, error) {
+func (r *mutationResolver) CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
 	principal := appcontext.Principal(ctx).Account().ID
 	post := models.NewSystemIntakeGRBReviewDiscussion(principal)
 	post.Content = input.Content
-	return &models.CreateSystemIntakeGRBDiscussionPostPayload{
-		Post: post,
-	}, nil
+	return post, nil
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.

@@ -1258,11 +1258,6 @@ input createSystemIntakeGRBDiscussionReplyInput {
   content: HTML!
 }
 
-type CreateSystemIntakeGRBDiscussionPostPayload {
-  post: SystemIntakeGRBReviewDiscussionPost
-  userErrors: [UserError!]
-}
-
 """
 Input data used to update the admin lead assigned to a system IT governance
 request
@@ -2556,8 +2551,8 @@ type Mutation {
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
   deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
 
-  createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): CreateSystemIntakeGRBDiscussionPostPayload
-  createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): CreateSystemIntakeGRBDiscussionPostPayload
+  createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
+  createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
