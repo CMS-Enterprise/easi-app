@@ -79,7 +79,10 @@ const Discussions = ({ grbDiscussions, className }: DiscussionsProps) => {
         <div className="display-flex">
           <p className="margin-0 margin-right-105 display-flex">
             {discussionsWithoutRepliesCount > 0 && (
-              <Icon.Warning className="text-warning-dark margin-right-05" />
+              <Icon.Warning
+                className="text-warning-dark margin-right-05"
+                aria-label="warning icon"
+              />
             )}
 
             {t('general.discussionsWithoutReplies', {
