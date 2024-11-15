@@ -462,11 +462,6 @@ type ComplexityRoot struct {
 		Document func(childComplexity int) int
 	}
 
-	CreateSystemIntakeGRBDiscussionPostPayload struct {
-		Post       func(childComplexity int) int
-		UserErrors func(childComplexity int) int
-	}
-
 	CreateSystemIntakeGRBReviewersPayload struct {
 		Reviewers func(childComplexity int) int
 	}
@@ -1239,8 +1234,8 @@ type MutationResolver interface {
 	CreateSystemIntakeGRBReviewers(ctx context.Context, input models.CreateSystemIntakeGRBReviewersInput) (*models.CreateSystemIntakeGRBReviewersPayload, error)
 	UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error)
 	DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error)
-	CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.CreateSystemIntakeGRBDiscussionPostPayload, error)
-	CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.CreateSystemIntakeGRBDiscussionPostPayload, error)
+	CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.SystemIntakeGRBReviewDiscussionPost, error)
+	CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error)
 	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
 	ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	SendFeedbackEmail(ctx context.Context, input models.SendFeedbackEmailInput) (*string, error)
@@ -3627,20 +3622,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CreateSystemIntakeDocumentPayload.Document(childComplexity), true
-
-	case "CreateSystemIntakeGRBDiscussionPostPayload.post":
-		if e.complexity.CreateSystemIntakeGRBDiscussionPostPayload.Post == nil {
-			break
-		}
-
-		return e.complexity.CreateSystemIntakeGRBDiscussionPostPayload.Post(childComplexity), true
-
-	case "CreateSystemIntakeGRBDiscussionPostPayload.userErrors":
-		if e.complexity.CreateSystemIntakeGRBDiscussionPostPayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.CreateSystemIntakeGRBDiscussionPostPayload.UserErrors(childComplexity), true
 
 	case "CreateSystemIntakeGRBReviewersPayload.reviewers":
 		if e.complexity.CreateSystemIntakeGRBReviewersPayload.Reviewers == nil {
@@ -9219,11 +9200,6 @@ input createSystemIntakeGRBDiscussionReplyInput {
   content: HTML!
 }
 
-type CreateSystemIntakeGRBDiscussionPostPayload {
-  post: SystemIntakeGRBReviewDiscussionPost
-  userErrors: [UserError!]
-}
-
 """
 Input data used to update the admin lead assigned to a system IT governance
 request
@@ -10517,8 +10493,8 @@ type Mutation {
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
   deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
 
-  createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): CreateSystemIntakeGRBDiscussionPostPayload
-  createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): CreateSystemIntakeGRBDiscussionPostPayload
+  createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
+  createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
@@ -28337,114 +28313,6 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeDocumentPayload_docum
 	return fc, nil
 }
 
-func (ec *executionContext) _CreateSystemIntakeGRBDiscussionPostPayload_post(ctx context.Context, field graphql.CollectedField, obj *models.CreateSystemIntakeGRBDiscussionPostPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CreateSystemIntakeGRBDiscussionPostPayload_post(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Post, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.SystemIntakeGRBReviewDiscussionPost)
-	fc.Result = res
-	return ec.marshalOSystemIntakeGRBReviewDiscussionPost2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewDiscussionPost(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_CreateSystemIntakeGRBDiscussionPostPayload_post(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "CreateSystemIntakeGRBDiscussionPostPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_id(ctx, field)
-			case "content":
-				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_content(ctx, field)
-			case "votingRole":
-				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_votingRole(ctx, field)
-			case "grbRole":
-				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_grbRole(ctx, field)
-			case "systemIntakeID":
-				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_systemIntakeID(ctx, field)
-			case "createdByUserAccount":
-				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_createdByUserAccount(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_createdAt(ctx, field)
-			case "modifiedByUserAccount":
-				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_modifiedByUserAccount(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_modifiedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewDiscussionPost", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _CreateSystemIntakeGRBDiscussionPostPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *models.CreateSystemIntakeGRBDiscussionPostPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CreateSystemIntakeGRBDiscussionPostPayload_userErrors(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*models.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUserErrorᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_CreateSystemIntakeGRBDiscussionPostPayload_userErrors(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "CreateSystemIntakeGRBDiscussionPostPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "message":
-				return ec.fieldContext_UserError_message(ctx, field)
-			case "path":
-				return ec.fieldContext_UserError_path(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _CreateSystemIntakeGRBReviewersPayload_reviewers(ctx context.Context, field graphql.CollectedField, obj *models.CreateSystemIntakeGRBReviewersPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CreateSystemIntakeGRBReviewersPayload_reviewers(ctx, field)
 	if err != nil {
@@ -33397,9 +33265,9 @@ func (ec *executionContext) _Mutation_createSystemIntakeGRBDiscussionPost(ctx co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.CreateSystemIntakeGRBDiscussionPostPayload)
+	res := resTmp.(*models.SystemIntakeGRBReviewDiscussionPost)
 	fc.Result = res
-	return ec.marshalOCreateSystemIntakeGRBDiscussionPostPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBDiscussionPostPayload(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeGRBReviewDiscussionPost2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewDiscussionPost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createSystemIntakeGRBDiscussionPost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -33410,12 +33278,26 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntakeGRBDiscussio
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "post":
-				return ec.fieldContext_CreateSystemIntakeGRBDiscussionPostPayload_post(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_CreateSystemIntakeGRBDiscussionPostPayload_userErrors(ctx, field)
+			case "id":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_id(ctx, field)
+			case "content":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_content(ctx, field)
+			case "votingRole":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_votingRole(ctx, field)
+			case "grbRole":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_grbRole(ctx, field)
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_systemIntakeID(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_createdByUserAccount(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_createdAt(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_modifiedByUserAccount(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_modifiedAt(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type CreateSystemIntakeGRBDiscussionPostPayload", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewDiscussionPost", field.Name)
 		},
 	}
 	defer func() {
@@ -33455,9 +33337,9 @@ func (ec *executionContext) _Mutation_createSystemIntakeGRBDiscussionReply(ctx c
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.CreateSystemIntakeGRBDiscussionPostPayload)
+	res := resTmp.(*models.SystemIntakeGRBReviewDiscussionPost)
 	fc.Result = res
-	return ec.marshalOCreateSystemIntakeGRBDiscussionPostPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBDiscussionPostPayload(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeGRBReviewDiscussionPost2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewDiscussionPost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createSystemIntakeGRBDiscussionReply(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -33468,12 +33350,26 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntakeGRBDiscussio
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "post":
-				return ec.fieldContext_CreateSystemIntakeGRBDiscussionPostPayload_post(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_CreateSystemIntakeGRBDiscussionPostPayload_userErrors(ctx, field)
+			case "id":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_id(ctx, field)
+			case "content":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_content(ctx, field)
+			case "votingRole":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_votingRole(ctx, field)
+			case "grbRole":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_grbRole(ctx, field)
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_systemIntakeID(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_createdByUserAccount(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_createdAt(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_modifiedByUserAccount(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussionPost_modifiedAt(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type CreateSystemIntakeGRBDiscussionPostPayload", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewDiscussionPost", field.Name)
 		},
 	}
 	defer func() {
@@ -66156,44 +66052,6 @@ func (ec *executionContext) _CreateSystemIntakeDocumentPayload(ctx context.Conte
 	return out
 }
 
-var createSystemIntakeGRBDiscussionPostPayloadImplementors = []string{"CreateSystemIntakeGRBDiscussionPostPayload"}
-
-func (ec *executionContext) _CreateSystemIntakeGRBDiscussionPostPayload(ctx context.Context, sel ast.SelectionSet, obj *models.CreateSystemIntakeGRBDiscussionPostPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, createSystemIntakeGRBDiscussionPostPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("CreateSystemIntakeGRBDiscussionPostPayload")
-		case "post":
-			out.Values[i] = ec._CreateSystemIntakeGRBDiscussionPostPayload_post(ctx, field, obj)
-		case "userErrors":
-			out.Values[i] = ec._CreateSystemIntakeGRBDiscussionPostPayload_userErrors(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var createSystemIntakeGRBReviewersPayloadImplementors = []string{"CreateSystemIntakeGRBReviewersPayload"}
 
 func (ec *executionContext) _CreateSystemIntakeGRBReviewersPayload(ctx context.Context, sel ast.SelectionSet, obj *models.CreateSystemIntakeGRBReviewersPayload) graphql.Marshaler {
@@ -78514,13 +78372,6 @@ func (ec *executionContext) marshalOCreateSystemIntakeDocumentPayload2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._CreateSystemIntakeDocumentPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOCreateSystemIntakeGRBDiscussionPostPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBDiscussionPostPayload(ctx context.Context, sel ast.SelectionSet, v *models.CreateSystemIntakeGRBDiscussionPostPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._CreateSystemIntakeGRBDiscussionPostPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCreateSystemIntakeGRBReviewersPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBReviewersPayload(ctx context.Context, sel ast.SelectionSet, v *models.CreateSystemIntakeGRBReviewersPayload) graphql.Marshaler {

@@ -183,11 +183,6 @@ type CreateSystemIntakeDocumentPayload struct {
 	Document *SystemIntakeDocument `json:"document,omitempty"`
 }
 
-type CreateSystemIntakeGRBDiscussionPostPayload struct {
-	Post       *SystemIntakeGRBReviewDiscussionPost `json:"post,omitempty"`
-	UserErrors []*UserError                         `json:"userErrors,omitempty"`
-}
-
 type CreateSystemIntakeGRBReviewersInput struct {
 	SystemIntakeID uuid.UUID                 `json:"systemIntakeID"`
 	Reviewers      []*CreateGRBReviewerInput `json:"reviewers"`
