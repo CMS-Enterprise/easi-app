@@ -30,6 +30,8 @@ const discussions = {
     alerts: {
       noDiscussions:
         'There are no discussions yet. When a discussion topic is started, it will appear here.',
+      noDiscussionsStartButton:
+        'There are not yet any discussions. <button>Start a discussion</button>.',
       replyError:
         'There was an issue with adding your reply, please try again.',
       replySuccess: 'Success! Your reply has been added.',

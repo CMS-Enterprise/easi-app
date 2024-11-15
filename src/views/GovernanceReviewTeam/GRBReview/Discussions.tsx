@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import DiscussionPost from 'components/DiscussionPost';
+import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import IconButton from 'components/shared/IconButton';
 
@@ -17,9 +18,9 @@ type DiscussionsProps = {
 const Discussions = ({ grbDiscussions, className }: DiscussionsProps) => {
   const { t } = useTranslation('discussions');
 
-  const discussionsWithoutReplies = grbDiscussions.filter(
+  const discussionsWithoutRepliesCount = grbDiscussions.filter(
     discussion => discussion.replies.length === 0
-  );
+  ).length;
 
   return (
     <div
@@ -74,28 +75,60 @@ const Discussions = ({ grbDiscussions, className }: DiscussionsProps) => {
           </Button>
         </div>
 
+        {/* Discussions without replies */}
         <div className="display-flex">
           <p className="margin-0 margin-right-105 display-flex">
-            <Icon.Warning className="text-warning-dark margin-right-05" />
+            {discussionsWithoutRepliesCount > 0 && (
+              <Icon.Warning className="text-warning-dark margin-right-05" />
+            )}
+
             {t('general.discussionsWithoutReplies', {
-              count: discussionsWithoutReplies.length
+              count: discussionsWithoutRepliesCount
             })}
           </p>
-          <IconButton
-            type="button"
-            // TODO: Open discussion board
-            onClick={() => null}
-            icon={<Icon.ArrowForward />}
-            iconPosition="after"
-            unstyled
-          >
-            {t('general.view')}
-          </IconButton>
+
+          {discussionsWithoutRepliesCount > 0 && (
+            <IconButton
+              type="button"
+              // TODO: Open discussion board
+              onClick={() => null}
+              icon={<Icon.ArrowForward />}
+              iconPosition="after"
+              unstyled
+            >
+              {t('general.view')}
+            </IconButton>
+          )}
         </div>
 
-        <h4 className="margin-bottom-2">{t('general.mostRecentActivity')}</h4>
-
-        <DiscussionPost discussion={grbDiscussions[0]} />
+        {/* Recent discussions */}
+        {grbDiscussions.length > 0 ? (
+          <>
+            <h4 className="margin-bottom-2">
+              {t('general.mostRecentActivity')}
+            </h4>
+            <DiscussionPost discussion={grbDiscussions[0]} />
+          </>
+        ) : (
+          // If no discussions, show alert
+          <Alert type="info" slim>
+            <Trans
+              i18nKey="discussions:general.alerts.noDiscussionsStartButton"
+              components={{
+                button: (
+                  <Button
+                    type="button"
+                    // TODO: Open discussion board
+                    onClick={() => null}
+                    unstyled
+                  >
+                    text
+                  </Button>
+                )
+              }}
+            />
+          </Alert>
+        )}
       </div>
     </div>
   );
