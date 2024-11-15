@@ -4,7 +4,7 @@ import { Button, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
-import DiscussionReply from 'components/DiscussionReply';
+import DiscussionPost from 'components/DiscussionPost';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import IconButton from 'components/shared/IconButton';
 
@@ -95,7 +95,7 @@ const Discussions = ({ grbDiscussions, className }: DiscussionsProps) => {
 
         <h4 className="margin-bottom-2">{t('general.mostRecentActivity')}</h4>
 
-        <DiscussionReply discussion={grbDiscussions[0]} />
+        <DiscussionPost discussion={grbDiscussions[0]} />
       </div>
     </div>
   );

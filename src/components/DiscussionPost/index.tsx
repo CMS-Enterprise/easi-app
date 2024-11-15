@@ -10,16 +10,16 @@ import { getRelativeDate } from 'utils/date';
 
 import './index.scss';
 
-type DiscussionReplyProps = {
+type DiscussionPostProps = {
   discussion: SystemIntakeGRBReviewDiscussionFragment;
 };
 
 /**
- * Reply component for use within discussions
+ * Displays single discussion post with link to replies
  */
-const DiscussionReply = ({
+const DiscussionPost = ({
   discussion: { initialPost, replies }
-}: DiscussionReplyProps) => {
+}: DiscussionPostProps) => {
   const { t } = useTranslation('discussions');
 
   const {
@@ -76,4 +76,4 @@ const DiscussionReply = ({
   );
 };
 
-export default DiscussionReply;
+export default DiscussionPost;
