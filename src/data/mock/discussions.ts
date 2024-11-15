@@ -4,8 +4,11 @@ import {
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/gen/graphql';
 
+import { systemIntake } from './systemIntake';
+import users from './users';
+
 const mockDiscussions = (
-  systemIntakeID: string = '0d191c27-4de3-46d8-9ded-c2e9c6b3fbd6'
+  systemIntakeID: string = systemIntake.id
 ): SystemIntakeGRBReviewDiscussionFragment[] => [
   {
     __typename: 'SystemIntakeGRBReviewDiscussion',
@@ -19,7 +22,7 @@ const mockDiscussions = (
       createdByUserAccount: {
         __typename: 'UserAccount',
         id: '034fa2b3-00ff-4ec6-857e-75291a59df74',
-        commonName: 'Adeline Aarons'
+        commonName: users[5].commonName
       },
       systemIntakeID,
       createdAt: '2024-11-12T21:59:07.368862Z'
@@ -35,7 +38,7 @@ const mockDiscussions = (
         createdByUserAccount: {
           __typename: 'UserAccount',
           id: '909a7888-4d6f-4bbf-9b9d-71ec1e2c3068',
-          commonName: 'Jerry Seinfeld'
+          commonName: users[1].commonName
         },
         systemIntakeID,
         createdAt: '2024-11-13T21:59:07.368862Z'
@@ -50,7 +53,7 @@ const mockDiscussions = (
         createdByUserAccount: {
           __typename: 'UserAccount',
           id: '601d52be-7baa-4b45-91cd-88b4a5935c3f',
-          commonName: 'Cosmo Kramer'
+          commonName: users[7].commonName
         },
         systemIntakeID,
         createdAt: '2024-11-13T21:59:07.368862Z'

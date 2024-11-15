@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Icon } from '@trussworks/react-uswds';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import { RichTextViewer } from 'components/RichTextEditor';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
+import IconButton from 'components/shared/IconButton';
 import { getRelativeDate } from 'utils/date';
 
 import './index.scss';
@@ -61,11 +61,16 @@ const DiscussionPost = ({
         />
 
         <div className="easi-discussion-reply__footer display-flex margin-top-2">
-          <Icon.Announcement className="text-primary margin-right-1" />
-
-          <UswdsReactLink to="/" className="margin-right-205">
+          <IconButton
+            type="button"
+            // TODO: Open discussion panel
+            onClick={() => null}
+            className="margin-right-205"
+            icon={<Icon.Announcement className="text-primary" />}
+            unstyled
+          >
             {t('general.reply')}
-          </UswdsReactLink>
+          </IconButton>
 
           <p className="text-base margin-0">
             {t('general.repliesInDiscussion', { count: replies.length })}
