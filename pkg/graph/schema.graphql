@@ -791,6 +791,10 @@ type SystemIntake {
   TRB Requests that share a CEDAR System or Contract Number
   """
   relatedTRBRequests: [TRBRequest!]!
+  """
+  GRB Review Discussion Posts/Threads
+  """
+  grbDiscussions: [SystemIntakeGRBReviewDiscussion!]!
 }
 
 type SystemIntakeContractNumber {
@@ -1224,6 +1228,34 @@ enum SystemIntakeGRBReviewerVotingRole {
   VOTING
   ALTERNATE
   NON_VOTING
+}
+
+type SystemIntakeGRBReviewDiscussionPost {
+  id: UUID!
+  content: HTML!
+  votingRole: SystemIntakeGRBReviewerVotingRole
+  grbRole: SystemIntakeGRBReviewerRole
+  systemIntakeID: UUID!
+  createdByUserAccount: UserAccount!
+  createdAt: Time!
+  modifiedByUserAccount: UserAccount
+  modifiedAt: Time
+}
+
+type SystemIntakeGRBReviewDiscussion {
+  initialPost: SystemIntakeGRBReviewDiscussionPost!
+  replies: [SystemIntakeGRBReviewDiscussionPost!]!
+}
+
+
+input createSystemIntakeGRBDiscussionPostInput {
+  systemIntakeID: UUID!
+  content: HTML!
+}
+
+input createSystemIntakeGRBDiscussionReplyInput {
+  initialPostID: UUID!
+  content: HTML!
 }
 
 """
@@ -2528,6 +2560,9 @@ type Mutation {
   createSystemIntakeGRBReviewers(input: CreateSystemIntakeGRBReviewersInput!): CreateSystemIntakeGRBReviewersPayload
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
   deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
+
+  createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
+  createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
