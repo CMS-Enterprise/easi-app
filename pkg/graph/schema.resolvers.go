@@ -1151,6 +1151,18 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 
 // Dummy is the resolver for the dummy field.
 func (r *mutationResolver) Dummy(ctx context.Context, a *models.TaggedHTML) (*models.TaggedContent, error) {
+	if a == nil {
+		panic("nil a")
+	}
+
+	for _, mention := range a.Mentions {
+		if mention != nil {
+			fmt.Println("==== *mention ====")
+			fmt.Printf("%+v\n", *mention)
+			fmt.Println("==== *mention ====")
+
+		}
+	}
 	return nil, nil
 }
 
