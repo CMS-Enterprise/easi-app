@@ -56,8 +56,7 @@ const discussions = {
       label: 'Tips for using the discussion boards',
       content: [
         'Start a new discussion thread for each new topic',
-        // 'Use tags (@) any time you need input from a specific individual or group. Group tags will notify all members of that group. Avalailble group tags: @Governance Review Board, @Governance Admin Team, @Admin Lead',
-        'Use tags (@) any time you need input from a specific individual or group. Group tags will notify all members of that group. Avalailble group tags {{groupNames}}', // TODO: wont display @ symbol?
+        'Use tags (@) any time you need input from a specific individual or group. Group tags will notify all members of that group. Avalailble group tags: <span>@Governance Review Board</span>, <span>@Governance Admin Team</span>, and <span>@Admin Lead</span>',
         'Participating individuals will get an email notification when a new discussion is started, or when they are tagged in a discussion or reply'
       ]
     }
