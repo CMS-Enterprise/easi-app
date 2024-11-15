@@ -13,6 +13,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+	"github.com/samber/lo"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -666,6 +667,22 @@ func (r *mutationResolver) UpdateSystemIntakeGRBReviewer(ctx context.Context, in
 // DeleteSystemIntakeGRBReviewer is the resolver for the deleteSystemIntakeGRBReviewer field.
 func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error) {
 	return input.ReviewerID, resolvers.DeleteSystemIntakeGRBReviewer(ctx, r.store, input.ReviewerID)
+}
+
+// CreateSystemIntakeGRBDiscussionPost is the resolver for the createSystemIntakeGRBDiscussionPost field.
+func (r *mutationResolver) CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
+	principal := appcontext.Principal(ctx).Account().ID
+	post := models.NewSystemIntakeGRBReviewDiscussion(principal)
+	post.Content = input.Content
+	return post, nil
+}
+
+// CreateSystemIntakeGRBDiscussionReply is the resolver for the createSystemIntakeGRBDiscussionReply field.
+func (r *mutationResolver) CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
+	principal := appcontext.Principal(ctx).Account().ID
+	post := models.NewSystemIntakeGRBReviewDiscussion(principal)
+	post.Content = input.Content
+	return post, nil
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
@@ -1912,6 +1929,34 @@ func (r *systemIntakeResolver) RelatedTRBRequests(ctx context.Context, obj *mode
 	return resolvers.SystemIntakeRelatedTRBRequests(ctx, obj.ID)
 }
 
+// GrbDiscussions is the resolver for the grbDiscussions field.
+func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
+	principal := appcontext.Principal(ctx).Account().ID
+	user1, err := userhelpers.GetOrCreateUserAccount(ctx, r.store, r.store, "USR1", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
+	if err != nil {
+		return nil, err
+	}
+	initialPost1 := models.NewSystemIntakeGRBReviewDiscussion(principal)
+	initialPost2 := models.NewSystemIntakeGRBReviewDiscussion(principal)
+	initialPost1.Content = models.HTML("<p>This is an initial discussion post.</p>")
+	initialPost2.Content = models.HTML("<p>This is also an initial discussion post.</p>")
+	replies := lo.Map([]uuid.UUID{user1.ID, principal, user1.ID}, func(id uuid.UUID, _ int) *models.SystemIntakeGRBReviewDiscussionPost {
+		post := models.NewSystemIntakeGRBReviewDiscussion(id)
+		post.Content = models.HTML("<p>This is a reply</p>")
+		return post
+	})
+	return []*models.SystemIntakeGRBReviewDiscussion{
+		{
+			InitialPost: initialPost1,
+			Replies:     replies,
+		},
+		{
+			InitialPost: initialPost2,
+			Replies:     replies,
+		},
+	}, nil
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
@@ -1947,6 +1992,24 @@ func (r *systemIntakeDocumentResolver) CanView(ctx context.Context, obj *models.
 		return false, err
 	}
 	return resolvers.CanViewDocument(ctx, grbUsers, obj), nil
+}
+
+// VotingRole is the resolver for the votingRole field.
+func (r *systemIntakeGRBReviewDiscussionPostResolver) VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewDiscussionPost) (*models.SystemIntakeGRBReviewerVotingRole, error) {
+	if obj.VotingRole == nil {
+		return nil, nil
+	}
+	strVal := *obj.VotingRole
+	return helpers.PointerTo(models.SystemIntakeGRBReviewerVotingRole(strVal)), nil
+}
+
+// GrbRole is the resolver for the grbRole field.
+func (r *systemIntakeGRBReviewDiscussionPostResolver) GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewDiscussionPost) (*models.SystemIntakeGRBReviewerRole, error) {
+	if obj.GRBRole == nil {
+		return nil, nil
+	}
+	strVal := *obj.GRBRole
+	return helpers.PointerTo(models.SystemIntakeGRBReviewerRole(strVal)), nil
 }
 
 // VotingRole is the resolver for the votingRole field.
@@ -2237,6 +2300,11 @@ func (r *Resolver) SystemIntakeDocument() generated.SystemIntakeDocumentResolver
 	return &systemIntakeDocumentResolver{r}
 }
 
+// SystemIntakeGRBReviewDiscussionPost returns generated.SystemIntakeGRBReviewDiscussionPostResolver implementation.
+func (r *Resolver) SystemIntakeGRBReviewDiscussionPost() generated.SystemIntakeGRBReviewDiscussionPostResolver {
+	return &systemIntakeGRBReviewDiscussionPostResolver{r}
+}
+
 // SystemIntakeGRBReviewer returns generated.SystemIntakeGRBReviewerResolver implementation.
 func (r *Resolver) SystemIntakeGRBReviewer() generated.SystemIntakeGRBReviewerResolver {
 	return &systemIntakeGRBReviewerResolver{r}
@@ -2297,6 +2365,7 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
+type systemIntakeGRBReviewDiscussionPostResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
