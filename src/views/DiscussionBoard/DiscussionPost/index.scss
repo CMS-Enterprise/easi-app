@@ -6,4 +6,11 @@
   &__content * {
     line-height: 1.6 !important;
   }
+
+  .easi-discussion-avatar {
+    box-sizing: content-box;
+    border-bottom: 4px solid white;
+    border-top: 4px solid white;
+    margin-top: -4px;
+  }
 }

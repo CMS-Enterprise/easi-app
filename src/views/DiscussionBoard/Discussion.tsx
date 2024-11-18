@@ -52,10 +52,9 @@ const Discussion = ({
             </IconButton>
           </div>
 
-          {/* TODO: Format replies list */}
-          <ul className="usa-list--unstyled">
+          <ul className="discussion-replies-thread usa-list--unstyled">
             {replies.map(reply => (
-              <li key={reply.id} className="margin-bottom-2">
+              <li key={reply.id}>
                 <DiscussionPost {...reply} />
               </li>
             ))}

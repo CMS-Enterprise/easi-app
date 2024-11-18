@@ -63,7 +63,10 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
   return (
     <div className="easi-discussion-post display-flex line-height-body-1">
       <div className="margin-right-105">
-        <AvatarCircle user={userAccount.commonName} />
+        <AvatarCircle
+          user={userAccount.commonName}
+          className="easi-discussion-avatar"
+        />
       </div>
 
       <div className="width-full">

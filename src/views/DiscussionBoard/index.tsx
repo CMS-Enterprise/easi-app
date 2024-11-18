@@ -1,10 +1,10 @@
 import React from 'react';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
-// import Discussion from './Discussion';
+import Discussion from './Discussion';
 import DiscussionModalWrapper from './DiscussionModalWrapper';
-import ViewDiscussions from './ViewDiscussions';
 
+// import ViewDiscussions from './ViewDiscussions';
 // import StartDiscussion from './StartDiscussion';
 import './index.scss';
 
@@ -23,19 +23,19 @@ function DiscussionBoard({
 }: DiscussionBoardProps) {
   return (
     <DiscussionModalWrapper isOpen={isOpen} closeModal={closeModal}>
-      <ViewDiscussions grbDiscussions={grbDiscussions} />
+      {/* <ViewDiscussions grbDiscussions={grbDiscussions} /> */}
 
       {/* <StartDiscussion
         systemIntakeId={systemIntakeId}
         closeModal={closeModal}
       /> */}
 
-      {/* <Discussion
+      <Discussion
         // TODO: Replace with active discussion
         discussion={grbDiscussions[0]}
         systemIntakeId={systemIntakeId}
         closeModal={closeModal}
-      /> */}
+      />
     </DiscussionModalWrapper>
   );
 }
