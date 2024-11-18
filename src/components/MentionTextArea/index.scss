@@ -1,0 +1,104 @@
+@use 'uswds-core' as *;
+
+/* Basic editor styles */
+.tiptap {
+  border: 1px solid black;
+  padding: .5rem;
+
+  p {
+    margin: 0px;
+  }
+
+  &__readonly {
+    margin-bottom: 1rem;
+
+    .ProseMirror {
+      outline: none;
+      border: none;
+      padding: 0;
+    }
+
+    &.notification__content {
+      p {
+        quotes: "“" "”";
+
+        &:first-child::before {
+          content: open-quote;
+        }
+
+        &:last-child::after {
+          content: close-quote;
+        }
+
+        span.react-renderer.node-mention {
+          & ~ .ProseMirror-trailingBreak {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  &__editable {
+    .ProseMirror {
+      min-height: 155px;
+      font-size: 16px;
+      line-height: 22px;
+    }
+  }
+}
+
+[data-tippy-root] {
+  width: 99.7%;
+  margin-left: .1rem !important;
+}
+
+.tippy-box {
+  max-width: none !important;
+}
+
+.mention {
+  color: #005EA2;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+}
+
+.text-base-darker {
+  .mention {
+    color: color($theme-color-base-darker);
+  }
+}
+
+.text-base-darkest {
+  .mention {
+    color: color($theme-color-base-darkest);
+  }
+}
+
+.items {
+  position: relative;
+  background: #FFF;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0px 10px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid color($theme-color-base-lighter);
+  padding: 0;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.item {
+  display: block;
+  border: none;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid color($theme-color-base-lighter);
+  min-width: 475px;
+
+  &.is-selected {
+    background-color: #d9e8f6;
+  }
+}
