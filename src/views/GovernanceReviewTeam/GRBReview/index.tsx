@@ -35,6 +35,7 @@ import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
+import DiscussionBoard from '../../DiscussionBoard';
 import ITGovAdminContext from '../ITGovAdminContext';
 
 import GRBReviewerForm from './GRBReviewerForm';
@@ -129,6 +130,8 @@ const GRBReview = ({
     },
     [history, isForm, id, mutate, showMessage, t]
   );
+
+  const [isDiscussionOpen, setIsDiscussionOpen] = useState(false);
 
   return (
     <>
@@ -362,6 +365,17 @@ const GRBReview = ({
             </p>
 
             <DocumentsTable systemIntakeId={id} documents={documents} />
+
+            <div className="margin-y-4">
+              <Button type="button" onClick={() => setIsDiscussionOpen(true)}>
+                View discussion board
+              </Button>
+            </div>
+            <DiscussionBoard
+              isOpen={isDiscussionOpen}
+              closeModal={() => setIsDiscussionOpen(false)}
+              id="grb-discussion"
+            />
 
             <ParticipantsTable
               id={id}
