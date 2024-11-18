@@ -1,19 +1,15 @@
 package models
 
 import (
-	"bytes"
 	"context"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"html/template"
 	"io"
 	"regexp"
 
-	"github.com/google/uuid"
 	"github.com/samber/lo"
-	html2 "golang.org/x/net/html"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/sanitization"
@@ -22,35 +18,15 @@ import (
 var (
 	spanRe      = regexp.MustCompile(`<span[^>]*>.*?</span>`)
 	attributeRe = regexp.MustCompile(`(\S+)="([^"]+)"`)
-	innerHTMLRe = regexp.MustCompile(`>([^<]*)<`)
 )
 
 // TaggedHTML Is the input type for HTML that could contain tags
 type TaggedHTML TaggedContent
 
-const mentionTagTemplate = `<span data-type="mention" tag-type="{{.Type}}" class="mention" data-id="{{.EntityRaw}}" ` +
-	`{{if .EntityDB}}data-id-db="{{.EntityDB}}" {{end}}` +
-	`data-label="{{.DataLabel}}">{{.InnerHTML}}</span>`
-
-// TaggedContent represents rich text HTML with possible tagged HTML mention
+// TaggedContent represents rich text HTML with possible tagged HTML
 type TaggedContent struct {
 	RawContent HTML
-	Mentions   []*HTMLMention // These are the parsed content of the HTML, and a representation of how the data represented in an individual mention HTML tag
-	Tags       []*Tag         // Tag is a representation of a tag record in the database.
-}
-
-// HTMLMention represents metadata about an entity tagged in text
-type HTMLMention struct {
-	RawHTMLNode html2.Node
-	RawHTML     HTML
-	Type        TagType
-	DataLabel   string
-	EntityRaw   string
-	InnerHTML   string
-	EntityUUID  *uuid.UUID
-	EntityIntID *int
-	EntityDB    interface{}
-	//Entity      *TaggedEntity
+	Tags       []*Tag
 }
 
 // UnmarshalGQLContext unmarshals the data from graphql to the TaggedHTML type
@@ -86,15 +62,14 @@ func (th TaggedHTML) MarshalGQLContext(ctx context.Context, w io.Writer) error {
 	return nil
 }
 
-// UniqueMentions returns a slices that are unique
-func (th TaggedHTML) UniqueMentions() []*HTMLMention {
-	uniqueMentions := lo.UniqBy(th.Mentions, func(mention *HTMLMention) string {
+func (th TaggedHTML) UniqueTags() []*Tag {
+	uniqueTags := lo.UniqBy(th.Tags, func(tag *Tag) string {
 
-		key := fmt.Sprint(mention.Type, mention.EntityRaw) //The entity raw, and tag type will be unique.
+		key := fmt.Sprint(tag.TagType, tag.EntityRaw) //The entity raw, and tag type will be unique.
 		return key
 	})
 
-	return uniqueMentions
+	return uniqueTags
 }
 
 // ToTaggedContent casts the input to TaggedContent
@@ -105,63 +80,60 @@ func (th TaggedHTML) ToTaggedContent() TaggedContent {
 // NewTaggedContentFromString converts a rawString into TaggedHTMl. It will store the input string as the raw content,
 // and then sanitize and parse the input.
 func NewTaggedContentFromString(htmlString string) (TaggedContent, error) {
-	mentions, err := htmlMentionsFromStringRegex(htmlString)
+	tags, err := tagsFromStringRegex(htmlString)
 	if err != nil {
 		return TaggedContent{}, err
 	}
 
 	return TaggedContent{
 		RawContent: HTML(sanitization.SanitizeHTML(htmlString)),
-		Mentions:   mentions,
+		Tags:       tags,
 	}, nil
 }
 
-func htmlMentionsFromStringRegex(htmlString string) ([]*HTMLMention, error) {
-	mentionStrings := spanRe.FindAllString(htmlString, -1)
+func tagsFromStringRegex(htmlString string) ([]*Tag, error) {
+	tagStrings := spanRe.FindAllString(htmlString, -1)
 
 	var (
-		mentions []*HTMLMention
-		errs     []error
+		tags []*Tag
+		errs []error
 	)
 
-	for _, mentionString := range mentionStrings {
-		htmlMention, err := parseHTMLMentionTagRegEx(mentionString)
+	for _, tagString := range tagStrings {
+		parsedTag, err := parseTagRegEx(tagString)
 		if err != nil {
-			errs = append(errs, fmt.Errorf("error parsing html mention %s, %w", mentionString, err))
+			errs = append(errs, fmt.Errorf("error parsing html tag %s, %w", tagString, err))
 			continue
 		}
 
-		mentions = append(mentions, &htmlMention)
+		tags = append(tags, &parsedTag)
 	}
 
 	if len(errs) > 1 {
-		return mentions, fmt.Errorf("issues encountered parsing html Mentions . %v", errs)
+		return tags, fmt.Errorf("issues encountered parsing html Tags . %v", errs)
 	}
 
-	return mentions, nil
+	return tags, nil
 }
 
-func parseHTMLMentionTagRegEx(mention string) (HTMLMention, error) {
-	attributes := extractAttributes(mention)
-	innerHTML := extractInnerHTML(mention)
+func parseTagRegEx(tag string) (Tag, error) {
+	attributes := extractAttributes(tag)
 
 	tagType := TagType(attributes["tag-type"])
 	if err := tagType.Validate(); err != nil {
-		return HTMLMention{}, err
+		return Tag{}, err
 	}
 
 	class := attributes["class"]
-	if class != "mention" {
-		return HTMLMention{}, fmt.Errorf("this is not a valid mention provided class is: %s", class)
+	if class != "tag" {
+		return Tag{}, fmt.Errorf("this is not a valid tag provided class is: %s", class)
 	}
 
-	return HTMLMention{
-		RawHTML:   HTML(mention),
-		InnerHTML: innerHTML,
-		Type:      tagType,
+	return Tag{
+		TagType:   tagType,
 		EntityRaw: attributes["data-id"],
-		DataLabel: attributes["data-label"],
-		EntityDB:  attributes["data-id-db"],
+		//DataLabel:  attributes["data-label"],
+		//EntityUUID: attributes["data-id-db"],
 	}, nil
 }
 
@@ -184,64 +156,6 @@ func extractAttributes(match string) map[string]string {
 	}
 
 	return attributes
-}
-
-func extractInnerHTML(match string) string {
-
-	// Find the match of the pattern in the input string
-	innerHTMLMatch := innerHTMLRe.FindStringSubmatch(match)
-
-	// Return the inner html
-	if len(innerHTMLMatch) > 1 {
-		return innerHTMLMatch[1]
-	}
-
-	return ""
-}
-
-func (hm HTMLMention) ToTag(taggedField string, taggedTable string, taggedContentID uuid.UUID) Tag {
-	return Tag{
-		TagType:            hm.Type,
-		TaggedField:        taggedField,
-		TaggedContentTable: taggedTable,
-		TaggedContentID:    taggedContentID,
-		EntityRaw:          hm.EntityRaw,
-		EntityUUID:         hm.EntityUUID,
-		EntityIntID:        hm.EntityIntID,
-	}
-}
-
-func (hm HTMLMention) ToHTML() (HTML, error) {
-	// Create a new template and parse the template string
-	t, err := template.New("webpage").Parse(mentionTagTemplate)
-	if err != nil {
-		return "", err
-	}
-
-	var buffer bytes.Buffer
-	if err := t.Execute(&buffer, &hm); err != nil {
-		return "", err
-	}
-
-	return HTML(buffer.String()), nil
-}
-
-func TagArrayFromHTMLMentions(taggedField string, taggedTable string, taggedContentID uuid.UUID, mentions []*HTMLMention) []*Tag {
-	var tags []*Tag
-
-	for _, mention := range mentions {
-		tags = append(tags, &Tag{
-			TagType:            mention.Type,
-			TaggedField:        taggedField,
-			TaggedContentTable: taggedTable,
-			TaggedContentID:    taggedContentID,
-			EntityRaw:          mention.EntityRaw,
-			EntityUUID:         mention.EntityUUID,
-			EntityIntID:        mention.EntityIntID,
-		})
-	}
-
-	return tags
 }
 
 func (th *TaggedContent) Scan(src interface{}) error {

@@ -64,7 +64,7 @@ require (
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.27
-	golang.org/x/net v0.29.0
+	golang.org/x/net v0.29.0 // indirect
 )
 
 require (

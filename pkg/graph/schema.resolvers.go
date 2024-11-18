@@ -1940,19 +1940,16 @@ func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.S
 	initialPost2 := models.NewSystemIntakeGRBReviewDiscussion(principal)
 	initialPost1.Content = models.TaggedContent{
 		RawContent: "<p>This is an initial discussion post.</p>",
-		Mentions:   nil,
 		Tags:       nil,
 	}
 	initialPost2.Content = models.TaggedContent{
 		RawContent: "<p>This is also an initial discussion post.</p>",
-		Mentions:   nil,
 		Tags:       nil,
 	}
 	replies := lo.Map([]uuid.UUID{user1.ID, principal, user1.ID}, func(id uuid.UUID, _ int) *models.SystemIntakeGRBReviewDiscussionPost {
 		post := models.NewSystemIntakeGRBReviewDiscussion(id)
 		post.Content = models.TaggedContent{
 			RawContent: "<p>This is a reply</p>",
-			Mentions:   nil,
 			Tags:       nil,
 		}
 		return post
