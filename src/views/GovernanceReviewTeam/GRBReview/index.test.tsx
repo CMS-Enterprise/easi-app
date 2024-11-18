@@ -29,6 +29,7 @@ describe('GRB review tab', () => {
                 {...systemIntake}
                 businessCase={businessCase}
                 grbReviewers={[]}
+                grbDiscussions={[]}
               />
             </ITGovAdminContext.Provider>
           </MessageProvider>
@@ -54,6 +55,7 @@ describe('GRB review tab', () => {
                 {...systemIntake}
                 businessCase={businessCase}
                 grbReviewers={[]}
+                grbDiscussions={[]}
               />
             </ITGovAdminContext.Provider>
           </MessageProvider>
@@ -81,6 +83,7 @@ describe('GRB review tab', () => {
                 businessCase={businessCase}
                 grbReviewers={[]}
                 grbReviewStartedAt={date}
+                grbDiscussions={[]}
               />
             </ITGovAdminContext.Provider>
           </MessageProvider>
@@ -133,6 +136,7 @@ describe('GRB review tab', () => {
                 businessCase={businessCase}
                 grbReviewers={grbReviewers}
                 grbReviewStartedAt={null}
+                grbDiscussions={[]}
               />
             </ITGovAdminContext.Provider>
           </MessageProvider>

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
-import { useGetSystemIntakeGRBReviewersQuery } from 'gql/gen/graphql';
+import { useGetSystemIntakeGRBReviewQuery } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
@@ -24,13 +24,14 @@ const GovernanceReviewTeam = () => {
     id: string;
   }>();
 
-  const { data, loading } = useGetSystemIntakeGRBReviewersQuery({
+  const { data, loading } = useGetSystemIntakeGRBReviewQuery({
     variables: {
       id
     }
   });
 
-  const { grbReviewers, grbReviewStartedAt } = data?.systemIntake || {};
+  const { grbReviewers, grbReviewStartedAt, grbDiscussions } =
+    data?.systemIntake || {};
 
   /** Check if current user is set as GRB reviewer */
   const isGrbReviewer: boolean = useMemo(() => {
@@ -62,6 +63,7 @@ const GovernanceReviewTeam = () => {
               <RequestOverview
                 grbReviewers={grbReviewers || []}
                 grbReviewStartedAt={grbReviewStartedAt}
+                grbDiscussions={grbDiscussions || []}
               />
             </Route>
 
