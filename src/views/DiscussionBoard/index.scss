@@ -1,0 +1,37 @@
+@use 'uswds-core' as *;
+@use 'viewports' as *;
+
+.easi-discussions {
+  &__body {
+    padding: 4rem 2rem 2rem;
+  }
+
+  &__connected {
+    border-left: .25rem solid color('base-lightest');
+    margin-left: .9rem;
+    padding-left: 1.4rem;
+    margin-top: 0.5rem;
+  }
+
+  &__not-connected {
+    padding-left: 2.6rem;
+  }
+
+  &__single-discussion:last-of-type {
+    margin-bottom: -1rem;
+    margin-top: -.5rem;
+  }
+}
+
+.no-button > .usa-accordion__heading > .usa-accordion__button {
+  background-size: 0rem !important;
+}
+
+.discussion-accordion > .usa-accordion__content {
+  padding: 0rem 1rem;
+
+  &:empty {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
