@@ -25,6 +25,7 @@ const discussions = {
     reply: 'Reply',
     lastReply: 'Last reply {{date}} at {{time}}',
     hideReplies: 'Hide replies',
+    showReplies: 'Show replies',
 
     startNewDiscussion: 'Start a new discussion',
 

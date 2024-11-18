@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@trussworks/react-uswds';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
@@ -25,6 +25,7 @@ const Discussion = ({
   closeModal
 }: DiscussionProps) => {
   const { t } = useTranslation('discussions');
+  const [showReplies, setShowReplies] = useState(true);
 
   const { initialPost, replies } = discussion;
 
@@ -42,23 +43,26 @@ const Discussion = ({
             </h4>
             <IconButton
               type="button"
-              // TODO: Hide replies functionality
-              onClick={() => null}
-              icon={<Icon.ExpandLess />}
+              onClick={() => setShowReplies(!showReplies)}
+              icon={showReplies ? <Icon.ExpandLess /> : <Icon.ExpandMore />}
               iconPosition="after"
               unstyled
             >
-              {t('general.hideReplies')}
+              {showReplies
+                ? t('general.hideReplies')
+                : t('general.showReplies')}
             </IconButton>
           </div>
 
-          <ul className="discussion-replies-thread usa-list--unstyled">
-            {replies.map(reply => (
-              <li key={reply.id}>
-                <DiscussionPost {...reply} />
-              </li>
-            ))}
-          </ul>
+          {showReplies && (
+            <ul className="discussion-replies-thread usa-list--unstyled">
+              {replies.map(reply => (
+                <li key={reply.id}>
+                  <DiscussionPost {...reply} />
+                </li>
+              ))}
+            </ul>
+          )}
         </>
       )}
 
