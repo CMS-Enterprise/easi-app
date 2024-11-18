@@ -25,7 +25,7 @@ const DiscussionModalWrapper = ({
       modalHeading={t('governanceReviewBoard.internal.label')}
       testid="discussion-modal"
     >
-      <GridContainer className="padding-top-4 padding-bottom-8">
+      <GridContainer className="easi-discussions padding-top-4 padding-bottom-8">
         <Grid desktop={{ col: 12 }}>{children}</Grid>
       </GridContainer>
     </Sidepanel>

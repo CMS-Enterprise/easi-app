@@ -55,7 +55,7 @@ const Discussion = ({
           {/* TODO: Format replies list */}
           <ul className="usa-list--unstyled">
             {replies.map(reply => (
-              <li className="margin-bottom-2">
+              <li key={reply.id} className="margin-bottom-2">
                 <DiscussionPost {...reply} />
               </li>
             ))}
