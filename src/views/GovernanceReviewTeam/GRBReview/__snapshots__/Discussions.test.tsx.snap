@@ -104,7 +104,7 @@ exports[`Discussions > matches the snapshot > [Function] 1`] = `
         Most recent activity
       </h4>
       <div
-        class="easi-discussion-reply display-flex"
+        class="easi-discussion-post display-flex"
       >
         <div
           class="margin-right-105"
@@ -120,7 +120,7 @@ exports[`Discussions > matches the snapshot > [Function] 1`] = `
           class="width-full"
         >
           <div
-            class="easi-discussion-reply__header tablet:display-flex margin-top-1 margin-bottom-105"
+            class="easi-discussion-post__header tablet:display-flex margin-top-1 margin-bottom-105"
           >
             <div>
               <p
@@ -141,7 +141,7 @@ exports[`Discussions > matches the snapshot > [Function] 1`] = `
             </p>
           </div>
           <div
-            class="easi-toast easi-toast-viewer easi-discussion-reply__content"
+            class="easi-toast easi-toast-viewer easi-discussion-post__content"
           >
             <div>
               <div
@@ -161,7 +161,7 @@ exports[`Discussions > matches the snapshot > [Function] 1`] = `
             </div>
           </div>
           <div
-            class="easi-discussion-reply__footer display-flex margin-top-2"
+            class="easi-discussion-post__replies display-flex margin-top-2"
           >
             <button
               class="usa-button usa-button--unstyled display-flex flex-align-center margin-right-205"

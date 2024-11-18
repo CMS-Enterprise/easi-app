@@ -26,6 +26,9 @@ const Discussions = ({ grbDiscussions, className }: DiscussionsProps) => {
     discussion => discussion.replies.length === 0
   ).length;
 
+  const recentDiscussion =
+    grbDiscussions.length > 0 ? grbDiscussions[0] : undefined;
+
   return (
     <>
       <DiscussionBoard
@@ -116,12 +119,15 @@ const Discussions = ({ grbDiscussions, className }: DiscussionsProps) => {
           </div>
 
           {/* Recent discussions */}
-          {grbDiscussions.length > 0 ? (
+          {recentDiscussion ? (
             <>
               <h4 className="margin-bottom-2">
                 {t('general.mostRecentActivity')}
               </h4>
-              <DiscussionPost discussion={grbDiscussions[0]} />
+              <DiscussionPost
+                {...recentDiscussion.initialPost}
+                replies={recentDiscussion.replies}
+              />
             </>
           ) : (
             // If no discussions, show alert

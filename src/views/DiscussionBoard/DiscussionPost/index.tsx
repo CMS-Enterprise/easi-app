@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@trussworks/react-uswds';
-import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
+import { SystemIntakeGRBReviewDiscussionPostFragment } from 'gql/gen/graphql';
 import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
 
@@ -12,16 +12,14 @@ import { getRelativeDate } from 'utils/date';
 
 import './index.scss';
 
-type DiscussionPostProps = {
-  discussion: SystemIntakeGRBReviewDiscussionFragment;
+type DiscussionPostProps = SystemIntakeGRBReviewDiscussionPostFragment & {
+  replies?: SystemIntakeGRBReviewDiscussionPostFragment[];
 };
 
 /**
- * Displays single discussion post with link to replies
+ * Displays single discussion or reply
  */
-const DiscussionPost = ({
-  discussion: { initialPost, replies }
-}: DiscussionPostProps) => {
+const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
   const { t } = useTranslation('discussions');
 
   const {
@@ -45,7 +43,7 @@ const DiscussionPost = ({
    * Otherwise, uses relative date.
    */
   const lastReplyAtText = useMemo(() => {
-    if (replies.length === 0) return '';
+    if (!replies || replies.length === 0) return '';
 
     const [lastReply] = replies;
 
@@ -58,13 +56,13 @@ const DiscussionPost = ({
   }, [replies, t]);
 
   return (
-    <div className="easi-discussion-reply display-flex">
+    <div className="easi-discussion-post display-flex">
       <div className="margin-right-105">
         <AvatarCircle user={userAccount.commonName} />
       </div>
 
       <div className="width-full">
-        <div className="easi-discussion-reply__header tablet:display-flex margin-top-1 margin-bottom-105">
+        <div className="easi-discussion-post__header tablet:display-flex margin-top-1 margin-bottom-105">
           <div>
             <p className="margin-y-0">{userAccount.commonName}</p>
 
@@ -85,27 +83,29 @@ const DiscussionPost = ({
          */}
         <RichTextViewer
           value={content}
-          className="easi-discussion-reply__content"
+          className="easi-discussion-post__content"
         />
 
-        <div className="easi-discussion-reply__footer display-flex margin-top-2">
-          <IconButton
-            type="button"
-            // TODO: Open discussion panel
-            onClick={() => null}
-            className="margin-right-205"
-            icon={<Icon.Announcement className="text-primary" />}
-            unstyled
-          >
-            {replies.length > 0
-              ? t('general.repliesCount', { count: replies.length })
-              : t('general.reply')}
-          </IconButton>
+        {replies && (
+          <div className="easi-discussion-post__replies display-flex margin-top-2">
+            <IconButton
+              type="button"
+              // TODO: Open discussion panel
+              onClick={() => null}
+              className="margin-right-205"
+              icon={<Icon.Announcement className="text-primary" />}
+              unstyled
+            >
+              {replies.length > 0
+                ? t('general.repliesCount', { count: replies.length })
+                : t('general.reply')}
+            </IconButton>
 
-          {replies.length > 0 && (
-            <p className="text-base margin-0">{lastReplyAtText}</p>
-          )}
-        </div>
+            {replies.length > 0 && (
+              <p className="text-base margin-0">{lastReplyAtText}</p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

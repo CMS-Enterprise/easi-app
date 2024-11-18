@@ -13,7 +13,12 @@ const { initialPost, replies } = discussion;
 
 describe('DiscussionPost', () => {
   it('renders the discussion post', () => {
-    render(<DiscussionPost discussion={discussion} />);
+    render(
+      <DiscussionPost
+        {...discussion.initialPost}
+        replies={discussion.replies}
+      />
+    );
 
     const {
       createdByUserAccount: { commonName },
@@ -54,7 +59,12 @@ describe('DiscussionPost', () => {
       }
     };
 
-    render(<DiscussionPost discussion={discussionNoRole} />);
+    render(
+      <DiscussionPost
+        {...discussionNoRole.initialPost}
+        replies={discussionNoRole.replies}
+      />
+    );
 
     expect(screen.getByText('Governance Admin Team')).toBeInTheDocument();
   });
