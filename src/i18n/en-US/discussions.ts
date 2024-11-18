@@ -7,6 +7,7 @@ const discussions = {
   general: {
     cancel: 'Cancel', // TODO: this is in other i18n files, move to general.ts?
     label: 'Discussions',
+    discussion: 'Discussion',
     mostRecentActivity: 'Most recent activity',
     newTopics: '{{count}} new discussion topic',
     newTopics_plural: '{{count}} new discussion topics',
@@ -23,7 +24,6 @@ const discussions = {
     repliesCount_plural: '{{count}} replies',
     reply: 'Reply',
     lastReply: 'Last reply {{date}} at {{time}}',
-    saveDiscussion: 'Save discussion',
 
     startNewDiscussion: 'Start a new discussion',
 
@@ -49,17 +49,17 @@ const discussions = {
     startDiscussion: {
       heading: 'Start a discussion',
       description:
-        'Have a question or comment that you want to discuss internally with the Governance Admin Team or other Governance Review Board (GRB) members involved in this request? Start a discussion and you’ll be notified when they reply.',
+        'Have a question or comment that you want to discuss internally with the Governance Admin Team or other Governance Review Board (GRB) members involved in this request? Start a discussion and you’ll be notified when they reply.'
       // description:
       // 'Have a question or comment that you want to discuss internally with the {{groupNames}} members involved in this request? Start a discussion and you’ll be notified when they reply.',
-      newTopicInstructions: 'Type your question or discussion topic',
-      taggingHelpText:
-        'To tag an individual or team, type "@" and select the individual or group you wish to notify. You may begin typing the group name or individual’s name if you do not see it in the list. In this discussion board, you are only able to tag GRB reviewers or Governance Admin Team members.'
     },
 
-    viewDiscussion: {
-      heading: 'Discussion',
-      replyLabel: 'Type your reply'
+    discussionForm: {
+      contentLabel_discussion: 'Type your question or discussion topic',
+      contentLabel_reply: 'Type your reply',
+      helpText:
+        'To tag an individual or team, type "@" and select the individual or group you wish to notify. You may begin typing the group name or individual’s name if you do not see it in the list. In this discussion board, you are only able to tag GRB reviewers or Governance Admin Team members.',
+      save: 'Save {{type}}'
     },
 
     usageTips: {

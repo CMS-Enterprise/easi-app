@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, ButtonGroup } from '@trussworks/react-uswds';
+
+import DiscussionForm from './DiscussionForm.tsx';
 
 type StartDiscussionProps = {
   systemIntakeId: string;
@@ -25,14 +26,7 @@ const StartDiscussion = ({
         {t('general.startDiscussion.description')}
       </p>
 
-      <ButtonGroup>
-        <Button type="button" outline onClick={closeModal}>
-          {t('general.cancel')}
-        </Button>
-        <Button type="submit" onClick={closeModal}>
-          {t('general.saveDiscussion')}
-        </Button>
-      </ButtonGroup>
+      <DiscussionForm closeModal={closeModal} type="discussion" />
     </div>
   );
 };

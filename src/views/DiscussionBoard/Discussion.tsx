@@ -2,9 +2,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
+import DiscussionForm from './DiscussionForm.tsx';
+
 type DiscussionProps = {
   systemIntakeId: string;
   discussion: SystemIntakeGRBReviewDiscussionFragment;
+  closeModal: () => void;
 };
 
 /**
@@ -12,14 +15,19 @@ type DiscussionProps = {
  *
  * Displays discussion, replies, and form to reply to discussion post
  */
-const Discussion = ({ systemIntakeId, discussion }: DiscussionProps) => {
+const Discussion = ({
+  systemIntakeId,
+  discussion,
+  closeModal
+}: DiscussionProps) => {
   const { t } = useTranslation('discussions');
 
   return (
     <div>
-      <h1 className="margin-bottom-105">
-        {t('general.viewDiscussion.heading')}
-      </h1>
+      <h1 className="margin-bottom-105">{t('general.discussion')}</h1>
+
+      <h2 className="margin-bottom-2">{t('general.reply')}</h2>
+      <DiscussionForm type="reply" closeModal={closeModal} />
     </div>
   );
 };
