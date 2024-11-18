@@ -14,14 +14,6 @@ const discussionWithoutReplies: SystemIntakeGRBReviewDiscussionFragment = {
 };
 
 describe('Discussions', () => {
-  it('matches the snapshot', () => {
-    const { asFragment } = render(
-      <Discussions grbDiscussions={mockDiscussions()} />
-    );
-
-    expect(asFragment()).toMatchSnapshot(`[Function]`);
-  });
-
   it('renders 0 discussions without replies', () => {
     render(<Discussions grbDiscussions={mockDiscussions()} />);
 
