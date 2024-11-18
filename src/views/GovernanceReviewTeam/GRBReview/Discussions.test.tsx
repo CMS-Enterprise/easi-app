@@ -22,7 +22,7 @@ describe('Discussions', () => {
     expect(asFragment()).toMatchSnapshot(`[Function]`);
   });
 
-  it('renders discussion with replies', () => {
+  it('renders 0 discussions without replies', () => {
     render(<Discussions grbDiscussions={mockDiscussions()} />);
 
     expect(
@@ -38,7 +38,7 @@ describe('Discussions', () => {
     expect(screen.queryByRole('button', { name: 'View' })).toBeNull();
   });
 
-  it('renders discussion without replies', () => {
+  it('renders 1 discussion without replies', () => {
     render(<Discussions grbDiscussions={[discussionWithoutReplies]} />);
 
     expect(

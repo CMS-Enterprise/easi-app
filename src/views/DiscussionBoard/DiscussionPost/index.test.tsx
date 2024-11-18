@@ -12,7 +12,7 @@ const [discussion] = mockDiscussions();
 const { initialPost, replies } = discussion;
 
 describe('DiscussionPost', () => {
-  it('renders the discussion post', () => {
+  it('renders a discussion post with replies', () => {
     render(
       <DiscussionPost
         {...discussion.initialPost}
@@ -47,6 +47,20 @@ describe('DiscussionPost', () => {
       time: '10:00 AM'
     });
     expect(screen.getByText(lastReplyAtText)).toBeInTheDocument();
+  });
+
+  it('renders a discussion post without replies', () => {
+    render(<DiscussionPost {...discussion.initialPost} replies={[]} />);
+
+    expect(screen.getByRole('button', { name: 'Reply' })).toBeInTheDocument();
+
+    expect(screen.queryByTestId('lastReplyAtText')).toBeNull();
+  });
+
+  it('hides discussion reply data', () => {
+    render(<DiscussionPost {...discussion.initialPost} />);
+
+    expect(screen.queryByTestId('discussionReplies')).toBeNull();
   });
 
   it('displays roles fallback text', () => {

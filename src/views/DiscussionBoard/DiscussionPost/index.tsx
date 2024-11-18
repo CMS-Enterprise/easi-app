@@ -13,6 +13,11 @@ import { getRelativeDate } from 'utils/date';
 import './index.scss';
 
 type DiscussionPostProps = SystemIntakeGRBReviewDiscussionPostFragment & {
+  /**
+   * Array of discussion replies
+   *
+   * Leave undefined if rendering reply or to hide discussion reply data
+   */
   replies?: SystemIntakeGRBReviewDiscussionPostFragment[];
 };
 
@@ -86,26 +91,34 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
           className="easi-discussion-post__content"
         />
 
-        {replies && (
-          <div className="easi-discussion-post__replies display-flex margin-top-2">
-            <IconButton
-              type="button"
-              // TODO: Open discussion panel
-              onClick={() => null}
-              className="margin-right-205"
-              icon={<Icon.Announcement className="text-primary" />}
-              unstyled
+        {
+          // Only render reply data if `replies` is not undefined
+          replies && (
+            <div
+              className="easi-discussion-post__replies display-flex margin-top-2"
+              data-testid="discussionReplies"
             >
-              {replies.length > 0
-                ? t('general.repliesCount', { count: replies.length })
-                : t('general.reply')}
-            </IconButton>
+              <IconButton
+                type="button"
+                // TODO: Open discussion panel
+                onClick={() => null}
+                className="margin-right-205"
+                icon={<Icon.Announcement className="text-primary" />}
+                unstyled
+              >
+                {replies.length > 0
+                  ? t('general.repliesCount', { count: replies.length })
+                  : t('general.reply')}
+              </IconButton>
 
-            {replies.length > 0 && (
-              <p className="text-base margin-0">{lastReplyAtText}</p>
-            )}
-          </div>
-        )}
+              {replies.length > 0 && (
+                <p className="text-base margin-0" data-testid="lastReplyAtText">
+                  {lastReplyAtText}
+                </p>
+              )}
+            </div>
+          )
+        }
       </div>
     </div>
   );
