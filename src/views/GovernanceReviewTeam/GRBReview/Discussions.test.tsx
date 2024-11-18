@@ -3,6 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import mockDiscussions from 'data/mock/discussions';
+import { systemIntake } from 'data/mock/systemIntake';
 
 import Discussions from './Discussions';
 
@@ -15,7 +16,12 @@ const discussionWithoutReplies: SystemIntakeGRBReviewDiscussionFragment = {
 
 describe('Discussions', () => {
   it('renders 0 discussions without replies', () => {
-    render(<Discussions grbDiscussions={mockDiscussions()} />);
+    render(
+      <Discussions
+        systemIntakeId={systemIntake.id}
+        grbDiscussions={mockDiscussions()}
+      />
+    );
 
     expect(
       screen.getByRole('heading', { name: 'Most recent activity' })
@@ -31,7 +37,12 @@ describe('Discussions', () => {
   });
 
   it('renders 1 discussion without replies', () => {
-    render(<Discussions grbDiscussions={[discussionWithoutReplies]} />);
+    render(
+      <Discussions
+        systemIntakeId={systemIntake.id}
+        grbDiscussions={[discussionWithoutReplies]}
+      />
+    );
 
     expect(
       screen.getByText('1 discussion without replies')
@@ -45,7 +56,9 @@ describe('Discussions', () => {
   });
 
   it('renders discussion board with no discussions', () => {
-    render(<Discussions grbDiscussions={[]} />);
+    render(
+      <Discussions systemIntakeId={systemIntake.id} grbDiscussions={[]} />
+    );
 
     expect(
       screen.queryByRole('heading', { name: 'Most recent activity' })

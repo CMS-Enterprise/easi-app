@@ -25,7 +25,7 @@ const discussions = {
     lastReply: 'Last reply {{date}} at {{time}}',
     saveDiscussion: 'Save discussion',
 
-    startDiscussion: 'Start a new discussion',
+    startNewDiscussion: 'Start a new discussion',
 
     view: 'View', // TODO: this is in other i18n files, move to general.ts?
     viewDiscussionBoard: 'View discussion board',
@@ -46,15 +46,20 @@ const discussions = {
         'You have successfully added to the discussion board.'
     },
 
-    contribute: {
-      //   description:
-      //     'Have a question or comment that you want to discuss internally with the Governance Admin Team or other Governance Review Board (GRB) members involved in this request? Start a discussion and you’ll be notified when they reply.',
+    startDiscussion: {
+      heading: 'Start a discussion',
       description:
-        'Have a question or comment that you want to discuss internally with the {{groupNames}} members involved in this request? Start a discussion and you’ll be notified when they reply.',
+        'Have a question or comment that you want to discuss internally with the Governance Admin Team or other Governance Review Board (GRB) members involved in this request? Start a discussion and you’ll be notified when they reply.',
+      // description:
+      // 'Have a question or comment that you want to discuss internally with the {{groupNames}} members involved in this request? Start a discussion and you’ll be notified when they reply.',
       newTopicInstructions: 'Type your question or discussion topic',
-      replyInstructions: 'Type your reply',
       taggingHelpText:
         'To tag an individual or team, type "@" and select the individual or group you wish to notify. You may begin typing the group name or individual’s name if you do not see it in the list. In this discussion board, you are only able to tag GRB reviewers or Governance Admin Team members.'
+    },
+
+    viewDiscussion: {
+      heading: 'Discussion',
+      replyLabel: 'Type your reply'
     },
 
     usageTips: {
@@ -75,10 +80,10 @@ const discussions = {
     internal: {
       label: 'Internal GRB discussion board', // TODO: enum translation?
       visibilityRestricted: 'Visibility restricted',
-      // description:
-      //   'Use this discussion board to ask questions or have dicussions with the Governance Admin Team and other Governance Review Board (GRB) members. The conversations here are not visible to the Project team.'
       description:
-        'Use this discussion board to ask questions or have dicussions with the {{groupNames}} members. The conversations here are not visible to the Project team.'
+        'Use this discussion board to ask questions or have dicussions with the Governance Admin Team and other Governance Review Board (GRB) members. The conversations here are not visible to the Project team.'
+      // description:
+      // 'Use this discussion board to ask questions or have dicussions with the {{groupNames}} members. The conversations here are not visible to the Project team.'
     }
   }
 };
