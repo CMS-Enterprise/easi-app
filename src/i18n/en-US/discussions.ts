@@ -24,6 +24,7 @@ const discussions = {
     repliesCount_plural: '{{count}} replies',
     reply: 'Reply',
     lastReply: 'Last reply {{date}} at {{time}}',
+    hideReplies: 'Hide replies',
 
     startNewDiscussion: 'Start a new discussion',
 
