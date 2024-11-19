@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
-import mockDiscussions from 'data/mock/discussions';
+import { mockDiscussions } from 'data/mock/discussions';
 import { systemIntake } from 'data/mock/systemIntake';
 
 import Discussions from './Discussions';

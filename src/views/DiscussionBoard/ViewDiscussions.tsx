@@ -37,9 +37,7 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
         {t('governanceReviewBoard.internal.description')}
       </p>
 
-      <h2 className="margin-top-5 margin-bottom-2">
-        {t('general.discussion')}
-      </h2>
+      <h2 className="margin-top-5 margin-bottom-2">{t('general.label')}</h2>
       <IconButton
         type="button"
         // TODO: Go to start discussion view

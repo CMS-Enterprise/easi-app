@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 import i18next from 'i18next';
 
-import mockDiscussions from 'data/mock/discussions';
+import { mockDiscussions } from 'data/mock/discussions';
 import { getRelativeDate } from 'utils/date';
 
 import DiscussionPost from '.';
