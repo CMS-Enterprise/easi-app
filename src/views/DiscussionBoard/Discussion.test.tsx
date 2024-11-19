@@ -23,7 +23,11 @@ describe('Discussion component', () => {
 
     render(
       <VerboseMockedProvider>
-        <Discussion discussion={discussion} closeModal={vi.fn()} />
+        <Discussion
+          discussion={discussion}
+          closeModal={vi.fn()}
+          setDiscussionAlert={vi.fn()}
+        />
       </VerboseMockedProvider>
     );
 
@@ -102,7 +106,11 @@ describe('Discussion component', () => {
 
     render(
       <VerboseMockedProvider>
-        <Discussion discussion={discussion} closeModal={vi.fn()} />
+        <Discussion
+          discussion={discussion}
+          closeModal={vi.fn()}
+          setDiscussionAlert={vi.fn()}
+        />
       </VerboseMockedProvider>
     );
 

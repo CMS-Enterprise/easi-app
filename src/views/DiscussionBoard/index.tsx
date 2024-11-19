@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import classNames from 'classnames';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
+
+import Alert from 'components/shared/Alert';
+import { DiscussionAlert } from 'types/discussions';
 
 import Discussion from './Discussion';
 import DiscussionModalWrapper from './DiscussionModalWrapper';
@@ -21,8 +25,26 @@ function DiscussionBoard({
   isOpen,
   closeModal
 }: DiscussionBoardProps) {
+  /** Discussion alert state for form success and error messages */
+  const [discussionAlert, setDiscussionAlert] = useState<DiscussionAlert>(null);
+
+  // Reset discussionAlert when side panel is opened or closed
+  useEffect(() => {
+    setDiscussionAlert(null);
+  }, [setDiscussionAlert, isOpen]);
+
   return (
     <DiscussionModalWrapper isOpen={isOpen} closeModal={closeModal}>
+      {discussionAlert && (
+        <Alert
+          slim
+          {...discussionAlert}
+          className={classNames('margin-bottom-6', discussionAlert.className)}
+          isClosable={false}
+        >
+          {discussionAlert.message}
+        </Alert>
+      )}
       {/* <ViewDiscussions grbDiscussions={grbDiscussions} /> */}
 
       {/* <StartDiscussion
@@ -34,6 +56,7 @@ function DiscussionBoard({
         // TODO: Replace with active discussion
         discussion={grbDiscussions[0]}
         closeModal={closeModal}
+        setDiscussionAlert={setDiscussionAlert}
       />
     </DiscussionModalWrapper>
   );

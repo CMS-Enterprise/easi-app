@@ -1,11 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { DiscussionAlert } from 'types/discussions';
+
 import DiscussionForm from './components/DiscussionForm';
 
 type StartDiscussionProps = {
   systemIntakeID: string;
   closeModal: () => void;
+  setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
 };
 
 /**
@@ -13,7 +16,8 @@ type StartDiscussionProps = {
  */
 const StartDiscussion = ({
   systemIntakeID,
-  closeModal
+  closeModal,
+  setDiscussionAlert
 }: StartDiscussionProps) => {
   const { t } = useTranslation('discussions');
 
@@ -30,6 +34,7 @@ const StartDiscussion = ({
         closeModal={closeModal}
         type="discussion"
         systemIntakeID={systemIntakeID}
+        setDiscussionAlert={setDiscussionAlert}
       />
     </div>
   );

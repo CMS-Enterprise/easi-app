@@ -15,23 +15,27 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import { DiscussionAlert } from 'types/discussions';
 import discussionSchema from 'validations/discussionSchema';
 
 type DiscussionContent = {
   content: string;
 };
 
-type DiscussionFormProps =
-  | {
-      type: 'discussion';
-      systemIntakeID: string;
-      closeModal: () => void;
-    }
-  | {
-      type: 'reply';
-      initialPostID: string;
-      closeModal: () => void;
-    };
+interface DiscussionFormProps {
+  setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
+  closeModal: () => void;
+}
+
+interface DiscussionProps extends DiscussionFormProps {
+  type: 'discussion';
+  systemIntakeID: string;
+}
+
+interface ReplyProps extends DiscussionFormProps {
+  type: 'reply';
+  initialPostID: string;
+}
 
 /**
  * Form for adding a discussion post or responding to a discussion
@@ -40,8 +44,9 @@ type DiscussionFormProps =
 const DiscussionForm = ({
   type,
   closeModal,
+  setDiscussionAlert,
   ...mutationProps
-}: DiscussionFormProps) => {
+}: DiscussionProps | ReplyProps) => {
   const { t } = useTranslation('discussions');
 
   const [mutateDiscussion] = useCreateSystemIntakeGRBDiscussionPostMutation();
@@ -68,11 +73,19 @@ const DiscussionForm = ({
         }
       })
         .then(() => {
-          // TODO: set success message
+          setDiscussionAlert({
+            message: t('general.alerts.startDiscussionSuccess'),
+            type: 'success'
+          });
         })
         .catch(e => {
-          // TODO: set error message
+          setDiscussionAlert({
+            message: t('general.alerts.startDiscussionError'),
+            type: 'error'
+          });
         });
+
+      // TODO: Go back to discussion board view
     }
   });
 
@@ -90,10 +103,16 @@ const DiscussionForm = ({
           // Reset field values
           reset();
 
-          // TODO: set success message
+          setDiscussionAlert({
+            message: t('general.alerts.replySuccess'),
+            type: 'success'
+          });
         })
         .catch(e => {
-          // TODO: set error message
+          setDiscussionAlert({
+            message: t('general.alerts.replyError'),
+            type: 'error'
+          });
         });
     }
   });
