@@ -42,6 +42,7 @@ const DiscussionsList = ({
   return (
     <>
       <ul
+        data-testid="discussionsList"
         className={classNames('usa-list--unstyled', className, {
           'border-bottom-1px border-base-light': hasBorder
         })}

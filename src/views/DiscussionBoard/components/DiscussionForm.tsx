@@ -21,11 +21,6 @@ type DiscussionContent = {
   content: string;
 };
 
-// type DiscussionFormProps = {
-//   type: 'discussion' | 'reply';
-//   closeModal: () => void;
-// };
-
 type DiscussionFormProps =
   | {
       type: 'discussion';
