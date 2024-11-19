@@ -8,7 +8,7 @@ import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import IconButton from 'components/shared/IconButton';
 import DiscussionBoard from 'views/DiscussionBoard';
-import DiscussionPost from 'views/DiscussionBoard/DiscussionPost';
+import DiscussionPost from 'views/DiscussionBoard/components/DiscussionPost';
 
 type DiscussionsProps = {
   systemIntakeId: string;

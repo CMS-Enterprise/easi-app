@@ -5,8 +5,9 @@ import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import IconButton from 'components/shared/IconButton';
 
-import DiscussionForm from './DiscussionForm.tsx';
-import DiscussionPost from './DiscussionPost';
+import DiscussionForm from './components/DiscussionForm';
+import DiscussionPost from './components/DiscussionPost';
+import DiscussionsList from './components/DiscussionsList';
 
 type DiscussionProps = {
   systemIntakeId: string;
@@ -55,13 +56,17 @@ const Discussion = ({
           </div>
 
           {showReplies && (
-            <ul className="discussion-replies-thread usa-list--unstyled">
+            <DiscussionsList
+              type="replies"
+              initialCount={2}
+              className="discussion-replies-thread"
+            >
               {replies.map(reply => (
                 <li key={reply.id}>
                   <DiscussionPost {...reply} />
                 </li>
               ))}
-            </ul>
+            </DiscussionsList>
           )}
         </>
       )}

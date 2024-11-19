@@ -6,7 +6,7 @@ import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 import Alert from 'components/shared/Alert';
 import IconButton from 'components/shared/IconButton';
 
-import DiscussionPost from './DiscussionPost';
+import DiscussionPost from './components/DiscussionPost';
 
 type ViewDiscussionsProps = {
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];

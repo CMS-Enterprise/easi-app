@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import DiscussionForm from './DiscussionForm.tsx';
+import DiscussionForm from './components/DiscussionForm';
 
 type StartDiscussionProps = {
   systemIntakeId: string;
