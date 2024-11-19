@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 
 // Used to parse out mintute, day, ,month, and years from ISOString
 export const parseAsUTC = (date: string) => DateTime.fromISO(date).toUTC();
@@ -71,4 +71,38 @@ export const isDateInPast = (date: string | null): boolean => {
     return true;
   }
   return false;
+};
+
+/**
+ * If less than 30 days have passed since `date`, returns "today" or "X days ago".
+ *
+ * Otherwise, returns formatted date.
+ */
+export const getRelativeDate = (
+  date: string | null,
+  /**
+   * Number of days between `date` and now to display relative date
+   * before switching to formatted date
+   */
+  relativeDateLimit: number = 30
+): string => {
+  if (!date) return '';
+
+  const dateTime = DateTime.fromISO(date);
+
+  if (!dateTime.isValid) return '';
+
+  /** Interval between now and `date` */
+  const interval = Interval.fromDateTimes(dateTime, DateTime.now());
+
+  // Subtract one from the interval count to see how many days since the initial date
+  const days = interval.count('days') - 1;
+
+  // If more than 30 days have passed, return formatted date
+  if (days > relativeDateLimit) {
+    return DateTime.fromISO(date).toFormat('MM/dd/yyyy');
+  }
+
+  // Return relative date
+  return dateTime.toRelativeCalendar({ unit: 'days' });
 };

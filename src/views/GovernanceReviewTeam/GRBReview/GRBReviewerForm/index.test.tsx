@@ -9,9 +9,9 @@ import {
   GetGRBReviewersComparisonsDocument,
   GetGRBReviewersComparisonsQuery,
   GetGRBReviewersComparisonsQueryVariables,
-  GetSystemIntakeGRBReviewersDocument,
-  GetSystemIntakeGRBReviewersQuery,
-  GetSystemIntakeGRBReviewersQueryVariables,
+  GetSystemIntakeGRBReviewDocument,
+  GetSystemIntakeGRBReviewQuery,
+  GetSystemIntakeGRBReviewQueryVariables,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
@@ -133,14 +133,14 @@ const updateSystemIntakeGRBReviewerQuery: MockedQuery<
   }
 };
 
-const getSystemIntakeGRBReviewersQuery = (
+const getSystemIntakeGRBReviewQuery = (
   reviewer?: SystemIntakeGRBReviewerFragment
 ): MockedQuery<
-  GetSystemIntakeGRBReviewersQuery,
-  GetSystemIntakeGRBReviewersQueryVariables
+  GetSystemIntakeGRBReviewQuery,
+  GetSystemIntakeGRBReviewQueryVariables
 > => ({
   request: {
-    query: GetSystemIntakeGRBReviewersDocument,
+    query: GetSystemIntakeGRBReviewDocument,
     variables: {
       id: systemIntake.id
     }
@@ -151,8 +151,9 @@ const getSystemIntakeGRBReviewersQuery = (
       systemIntake: {
         __typename: 'SystemIntake',
         id: systemIntake.id,
-        grbReviewStartedAt: null,
-        grbReviewers: reviewer ? [reviewer] : []
+        grbReviewers: reviewer ? [reviewer] : [],
+        grbDiscussions: [],
+        grbReviewStartedAt: null
       }
     }
   }
@@ -191,8 +192,8 @@ describe('GRB reviewer form', () => {
             cedarContactsQuery('Je'),
             cedarContactsQuery('Jerry Seinfeld'),
             createSystemIntakeGRBReviewersQuery,
-            getSystemIntakeGRBReviewersQuery(),
-            getSystemIntakeGRBReviewersQuery(grbReviewer)
+            getSystemIntakeGRBReviewQuery(),
+            getSystemIntakeGRBReviewQuery(grbReviewer)
           ]}
         >
           <MessageProvider>
@@ -202,6 +203,7 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[]}
+                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -211,6 +213,7 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[grbReviewer]}
+                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -279,8 +282,8 @@ describe('GRB reviewer form', () => {
             getGRBReviewersComparisonsQuery,
             cedarContactsQuery(contactLabel),
             updateSystemIntakeGRBReviewerQuery,
-            getSystemIntakeGRBReviewersQuery(grbReviewer),
-            getSystemIntakeGRBReviewersQuery(updatedGRBReviewer)
+            getSystemIntakeGRBReviewQuery(grbReviewer),
+            getSystemIntakeGRBReviewQuery(updatedGRBReviewer)
           ]}
         >
           <MessageProvider>
@@ -290,6 +293,7 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[grbReviewer]}
+                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -299,6 +303,7 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[updatedGRBReviewer]}
+                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>
