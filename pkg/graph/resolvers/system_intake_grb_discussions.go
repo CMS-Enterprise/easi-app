@@ -14,7 +14,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
-// CreateSystemIntakeGRBDiscussionPost creates GRB Reviewers for a System Intake
+// CreateSystemIntakeGRBDiscussionPost creates an initial GRB discussion post
 func CreateSystemIntakeGRBDiscussionPost(
 	ctx context.Context,
 	store *storage.Store,
@@ -43,7 +43,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 	})
 }
 
-// CreateSystemIntakeGRBDiscussionReply creates GRB Reviewers for a System Intake
+// CreateSystemIntakeGRBDiscussionReply creates a reply to a GRB Discussion post
 func CreateSystemIntakeGRBDiscussionReply(
 	ctx context.Context,
 	store *storage.Store,
