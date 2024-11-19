@@ -965,6 +965,8 @@ export type Mutation = {
   createSystemIntakeActionUpdateLCID?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   createSystemIntakeDocument?: Maybe<CreateSystemIntakeDocumentPayload>;
+  createSystemIntakeGRBDiscussionPost?: Maybe<SystemIntakeGRBReviewDiscussionPost>;
+  createSystemIntakeGRBDiscussionReply?: Maybe<SystemIntakeGRBReviewDiscussionPost>;
   createSystemIntakeGRBReviewers?: Maybe<CreateSystemIntakeGRBReviewersPayload>;
   createSystemIntakeNote?: Maybe<SystemIntakeNote>;
   createTRBAdminNoteConsultSession: TRBAdminNote;
@@ -1139,6 +1141,18 @@ export type MutationCreateSystemIntakeContactArgs = {
 /** Defines the mutations for the schema */
 export type MutationCreateSystemIntakeDocumentArgs = {
   input: CreateSystemIntakeDocumentInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationCreateSystemIntakeGRBDiscussionPostArgs = {
+  input: CreateSystemIntakeGRBDiscussionPostInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationCreateSystemIntakeGRBDiscussionReplyArgs = {
+  input: CreateSystemIntakeGRBDiscussionReplyInput;
 };
 
 
@@ -1844,6 +1858,8 @@ export type SystemIntake = {
   governanceRequestFeedbacks: Array<GovernanceRequestFeedback>;
   governanceTeams: SystemIntakeGovernanceTeam;
   grbDate?: Maybe<Scalars['Time']['output']>;
+  /** GRB Review Discussion Posts/Threads */
+  grbDiscussions: Array<SystemIntakeGRBReviewDiscussion>;
   /** This is a calculated state based on if a date exists for the GRB Meeting date */
   grbMeetingState: SystemIntakeMeetingState;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
@@ -2206,6 +2222,25 @@ export type SystemIntakeFundingSourceInput = {
 export type SystemIntakeFundingSourcesInput = {
   existingFunding?: InputMaybe<Scalars['Boolean']['input']>;
   fundingSources: Array<SystemIntakeFundingSourceInput>;
+};
+
+export type SystemIntakeGRBReviewDiscussion = {
+  __typename: 'SystemIntakeGRBReviewDiscussion';
+  initialPost: SystemIntakeGRBReviewDiscussionPost;
+  replies: Array<SystemIntakeGRBReviewDiscussionPost>;
+};
+
+export type SystemIntakeGRBReviewDiscussionPost = {
+  __typename: 'SystemIntakeGRBReviewDiscussionPost';
+  content: Scalars['HTML']['output'];
+  createdAt: Scalars['Time']['output'];
+  createdByUserAccount: UserAccount;
+  grbRole?: Maybe<SystemIntakeGRBReviewerRole>;
+  id: Scalars['UUID']['output'];
+  modifiedAt?: Maybe<Scalars['Time']['output']>;
+  modifiedByUserAccount?: Maybe<UserAccount>;
+  systemIntakeID: Scalars['UUID']['output'];
+  votingRole?: Maybe<SystemIntakeGRBReviewerVotingRole>;
 };
 
 /** GRB Reviewers for a system intake request */
@@ -3181,6 +3216,16 @@ export type UserInfo = {
   euaUserId: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
   lastName: Scalars['String']['output'];
+};
+
+export type CreateSystemIntakeGRBDiscussionPostInput = {
+  content: Scalars['HTML']['input'];
+  systemIntakeID: Scalars['UUID']['input'];
+};
+
+export type CreateSystemIntakeGRBDiscussionReplyInput = {
+  content: Scalars['HTML']['input'];
+  initialPostID: Scalars['UUID']['input'];
 };
 
 export type CreateSystemIntakeGRBReviewersMutationVariables = Exact<{
