@@ -77,16 +77,18 @@ func (th TaggedHTML) ToTaggedContent() TaggedContent {
 	return TaggedContent(th)
 }
 
-// NewTaggedContentFromString converts a rawString into TaggedHTMl. It will store the input string as the raw content,
+// NewTaggedContentFromString converts an htmlString into TaggedContent. It will store the input string as the raw content,
 // and then sanitize and parse the input.
 func NewTaggedContentFromString(htmlString string) (TaggedContent, error) {
+	// sanitize
+	htmlString = sanitization.SanitizeHTML(htmlString)
 	tags, err := tagsFromStringRegex(htmlString)
 	if err != nil {
 		return TaggedContent{}, err
 	}
 
 	return TaggedContent{
-		RawContent: HTML(sanitization.SanitizeHTML(htmlString)),
+		RawContent: HTML(htmlString),
 		Tags:       tags,
 	}, nil
 }

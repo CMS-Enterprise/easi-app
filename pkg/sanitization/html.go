@@ -46,6 +46,10 @@ func createHTMLPolicy() *bluemonday.Policy {
 	policy.AllowRelativeURLs(false)
 	policy.AddTargetBlankToFullyQualifiedLinks(true)
 	policy.RequireNoReferrerOnLinks(true)
+
+	// rules for tags
+	policy.AllowElements("span")
+	policy.AllowAttrs("data-type", "class", "data-id", "data-label", "tag-type", "data-id-db").OnElements("span")
 	return policy
 
 }
