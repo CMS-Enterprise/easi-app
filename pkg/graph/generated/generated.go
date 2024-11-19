@@ -9812,7 +9812,7 @@ type Tag {
   entityUUID: UUID
   entityIntID: Int
 
-#  entity: TaggedEntity
+  #  entity: TaggedEntity
 
   createdBy: UUID!
   createdByUserAccount: UserAccount!
@@ -9824,7 +9824,8 @@ type Tag {
 
 enum TagType {
   USER_ACCOUNT
-  POSSIBLE_SOLUTION
+  GROUP_IT_GOV
+  GROUP_GRB_REVIEWERS
 }
 
 """
@@ -78831,19 +78832,13 @@ func (ec *executionContext) marshalNTag2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeas
 }
 
 func (ec *executionContext) unmarshalNTagType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTagType(ctx context.Context, v interface{}) (models.TagType, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TagType(tmp)
+	var res models.TagType
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTagType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTagType(ctx context.Context, sel ast.SelectionSet, v models.TagType) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) marshalNTaggedContent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedContent(ctx context.Context, sel ast.SelectionSet, v models.TaggedContent) graphql.Marshaler {

@@ -1740,7 +1740,7 @@ type Tag {
   entityUUID: UUID
   entityIntID: Int
 
-#  entity: TaggedEntity
+  #  entity: TaggedEntity
 
   createdBy: UUID!
   createdByUserAccount: UserAccount!
@@ -1752,7 +1752,8 @@ type Tag {
 
 enum TagType {
   USER_ACCOUNT
-  POSSIBLE_SOLUTION
+  GROUP_IT_GOV
+  GROUP_GRB_REVIEWERS
 }
 
 """

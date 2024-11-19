@@ -65,8 +65,8 @@ func (th TaggedHTML) MarshalGQLContext(ctx context.Context, w io.Writer) error {
 func (th TaggedHTML) UniqueTags() []*Tag {
 	uniqueTags := lo.UniqBy(th.Tags, func(tag *Tag) string {
 
-		key := fmt.Sprint(tag.TagType, tag.EntityRaw) //The entity raw, and tag type will be unique.
-		return key
+		//key := fmt.Sprint(tag.TagType, tag.EntityRaw) //The entity raw, and tag type will be unique.
+		return ""
 	})
 
 	return uniqueTags
@@ -120,8 +120,8 @@ func parseTagRegEx(tag string) (Tag, error) {
 	attributes := extractAttributes(tag)
 
 	tagType := TagType(attributes["tag-type"])
-	if err := tagType.Validate(); err != nil {
-		return Tag{}, err
+	if !tagType.IsValid() {
+		return Tag{}, fmt.Errorf("%s is not a valid tag type", tagType)
 	}
 
 	class := attributes["class"]
@@ -130,7 +130,7 @@ func parseTagRegEx(tag string) (Tag, error) {
 	}
 
 	return Tag{
-		TagType:   tagType,
+		//TagType:   tagType,
 		EntityRaw: attributes["data-id"],
 		//DataLabel:  attributes["data-label"],
 		//EntityUUID: attributes["data-id-db"],
