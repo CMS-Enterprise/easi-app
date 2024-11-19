@@ -18,7 +18,7 @@ describe('Discussions', () => {
   it('renders 0 discussions without replies', () => {
     render(
       <Discussions
-        systemIntakeId={systemIntake.id}
+        systemIntakeID={systemIntake.id}
         grbDiscussions={mockDiscussions()}
       />
     );
@@ -39,7 +39,7 @@ describe('Discussions', () => {
   it('renders 1 discussion without replies', () => {
     render(
       <Discussions
-        systemIntakeId={systemIntake.id}
+        systemIntakeID={systemIntake.id}
         grbDiscussions={[discussionWithoutReplies]}
       />
     );
@@ -57,7 +57,7 @@ describe('Discussions', () => {
 
   it('renders discussion board with no discussions', () => {
     render(
-      <Discussions systemIntakeId={systemIntake.id} grbDiscussions={[]} />
+      <Discussions systemIntakeID={systemIntake.id} grbDiscussions={[]} />
     );
 
     expect(

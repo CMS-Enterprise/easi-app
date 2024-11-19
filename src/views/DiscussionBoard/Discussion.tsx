@@ -10,7 +10,6 @@ import DiscussionPost from './components/DiscussionPost';
 import DiscussionsList from './components/DiscussionsList';
 
 type DiscussionProps = {
-  systemIntakeId: string;
   discussion: SystemIntakeGRBReviewDiscussionFragment;
   closeModal: () => void;
 };
@@ -20,11 +19,7 @@ type DiscussionProps = {
  *
  * Displays discussion, replies, and form to reply to discussion post
  */
-const Discussion = ({
-  systemIntakeId,
-  discussion,
-  closeModal
-}: DiscussionProps) => {
+const Discussion = ({ discussion, closeModal }: DiscussionProps) => {
   const { t } = useTranslation('discussions');
   const [showReplies, setShowReplies] = useState(true);
 
@@ -72,7 +67,11 @@ const Discussion = ({
       )}
 
       <h2 className="margin-bottom-2 margin-top-8">{t('general.reply')}</h2>
-      <DiscussionForm type="reply" closeModal={closeModal} />
+      <DiscussionForm
+        type="reply"
+        closeModal={closeModal}
+        initialPostID={initialPost.id}
+      />
     </div>
   );
 };

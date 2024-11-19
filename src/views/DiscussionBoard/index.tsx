@@ -9,14 +9,14 @@ import DiscussionModalWrapper from './DiscussionModalWrapper';
 import './index.scss';
 
 type DiscussionBoardProps = {
-  systemIntakeId: string;
+  systemIntakeID: string;
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   isOpen: boolean;
   closeModal: () => void;
 };
 
 function DiscussionBoard({
-  systemIntakeId,
+  systemIntakeID,
   grbDiscussions,
   isOpen,
   closeModal
@@ -26,14 +26,13 @@ function DiscussionBoard({
       {/* <ViewDiscussions grbDiscussions={grbDiscussions} /> */}
 
       {/* <StartDiscussion
-        systemIntakeId={systemIntakeId}
+        systemIntakeID={systemIntakeId}
         closeModal={closeModal}
       /> */}
 
       <Discussion
         // TODO: Replace with active discussion
         discussion={grbDiscussions[0]}
-        systemIntakeId={systemIntakeId}
         closeModal={closeModal}
       />
     </DiscussionModalWrapper>

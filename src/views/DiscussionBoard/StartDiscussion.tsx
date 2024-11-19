@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import DiscussionForm from './components/DiscussionForm';
 
 type StartDiscussionProps = {
-  systemIntakeId: string;
+  systemIntakeID: string;
   closeModal: () => void;
 };
 
@@ -12,7 +12,7 @@ type StartDiscussionProps = {
  * Form to start new discussion post
  */
 const StartDiscussion = ({
-  systemIntakeId,
+  systemIntakeID,
   closeModal
 }: StartDiscussionProps) => {
   const { t } = useTranslation('discussions');
@@ -26,7 +26,11 @@ const StartDiscussion = ({
         {t('general.startDiscussion.description')}
       </p>
 
-      <DiscussionForm closeModal={closeModal} type="discussion" />
+      <DiscussionForm
+        closeModal={closeModal}
+        type="discussion"
+        systemIntakeID={systemIntakeID}
+      />
     </div>
   );
 };
