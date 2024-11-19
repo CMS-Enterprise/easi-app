@@ -3015,7 +3015,6 @@ export type Tag = {
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['UUID']['output'];
   createdByUserAccount: UserAccount;
-  entityIntID?: Maybe<Scalars['Int']['output']>;
   entityUUID?: Maybe<Scalars['UUID']['output']>;
   id: Scalars['UUID']['output'];
   modifiedAt?: Maybe<Scalars['Time']['output']>;

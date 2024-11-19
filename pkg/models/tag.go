@@ -13,5 +13,4 @@ type Tag struct {
 	TaggedContentTable string     `json:"taggedContentTable" db:"tagged_content_table"`
 	TaggedContentID    uuid.UUID  `json:"taggedContentID" db:"tagged_content_id"`
 	EntityUUID         *uuid.UUID `json:"entityUUID" db:"entity_uuid"`
-	EntityIntID        *int       `json:"entityIntID" db:"entity_intid"`
 }

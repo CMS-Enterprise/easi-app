@@ -1133,7 +1133,6 @@ type ComplexityRoot struct {
 		CreatedAt             func(childComplexity int) int
 		CreatedBy             func(childComplexity int) int
 		CreatedByUserAccount  func(childComplexity int) int
-		EntityIntID           func(childComplexity int) int
 		EntityUUID            func(childComplexity int) int
 		ID                    func(childComplexity int) int
 		ModifiedAt            func(childComplexity int) int
@@ -7675,13 +7674,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Tag.CreatedByUserAccount(childComplexity), true
 
-	case "Tag.entityIntID":
-		if e.complexity.Tag.EntityIntID == nil {
-			break
-		}
-
-		return e.complexity.Tag.EntityIntID(childComplexity), true
-
 	case "Tag.entityUUID":
 		if e.complexity.Tag.EntityUUID == nil {
 			break
@@ -9810,7 +9802,6 @@ type Tag {
   taggedContentTable: String!
   taggedContentID: UUID!
   entityUUID: UUID
-  entityIntID: Int
 
   #  entity: TaggedEntity
 
@@ -57716,47 +57707,6 @@ func (ec *executionContext) fieldContext_Tag_entityUUID(_ context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Tag_entityIntID(ctx context.Context, field graphql.CollectedField, obj *models.Tag) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Tag_entityIntID(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.EntityIntID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Tag_entityIntID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Tag",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Tag_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.Tag) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Tag_createdBy(ctx, field)
 	if err != nil {
@@ -58147,8 +58097,6 @@ func (ec *executionContext) fieldContext_TaggedContent_tags(_ context.Context, f
 				return ec.fieldContext_Tag_taggedContentID(ctx, field)
 			case "entityUUID":
 				return ec.fieldContext_Tag_entityUUID(ctx, field)
-			case "entityIntID":
-				return ec.fieldContext_Tag_entityIntID(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_Tag_createdBy(ctx, field)
 			case "createdByUserAccount":
@@ -74407,8 +74355,6 @@ func (ec *executionContext) _Tag(ctx context.Context, sel ast.SelectionSet, obj 
 			}
 		case "entityUUID":
 			out.Values[i] = ec._Tag_entityUUID(ctx, field, obj)
-		case "entityIntID":
-			out.Values[i] = ec._Tag_entityIntID(ctx, field, obj)
 		case "createdBy":
 			out.Values[i] = ec._Tag_createdBy(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
