@@ -2,7 +2,10 @@ package server
 
 import (
 	"fmt"
+	"regexp"
 	"time"
+
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appses"
@@ -58,16 +61,18 @@ func (s Server) NewEmailConfig() email.Config {
 	s.checkRequiredConfig(appconfig.ClientProtocolKey)
 	s.checkRequiredConfig(appconfig.EmailTemplateDirectoryKey)
 	s.checkRequiredConfig(appconfig.CEDAREmailAddress)
+	s.checkRequiredConfig(appconfig.OITFeedbackChannelSlackLink)
 
 	return email.Config{
-		GRTEmail:          models.NewEmailAddress(s.Config.GetString(appconfig.GRTEmailKey)),
-		ITInvestmentEmail: models.NewEmailAddress(s.Config.GetString(appconfig.ITInvestmentEmailKey)),
-		EASIHelpEmail:     models.NewEmailAddress(s.Config.GetString(appconfig.EASIHelpEmailKey)),
-		TRBEmail:          models.NewEmailAddress(s.Config.GetString(appconfig.TRBEmailKey)),
-		CEDARTeamEmail:    models.NewEmailAddress(s.Config.GetString(appconfig.CEDAREmailAddress)),
-		URLHost:           s.Config.GetString(appconfig.ClientHostKey),
-		URLScheme:         s.Config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory: s.Config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:                    models.NewEmailAddress(s.Config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail:           models.NewEmailAddress(s.Config.GetString(appconfig.ITInvestmentEmailKey)),
+		EASIHelpEmail:               models.NewEmailAddress(s.Config.GetString(appconfig.EASIHelpEmailKey)),
+		TRBEmail:                    models.NewEmailAddress(s.Config.GetString(appconfig.TRBEmailKey)),
+		CEDARTeamEmail:              models.NewEmailAddress(s.Config.GetString(appconfig.CEDAREmailAddress)),
+		OITFeedbackChannelSlackLink: s.Config.GetString(appconfig.OITFeedbackChannelSlackLink),
+		URLHost:                     s.Config.GetString(appconfig.ClientHostKey),
+		URLScheme:                   s.Config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory:           s.Config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 }
 
@@ -76,9 +81,16 @@ func (s Server) NewSESConfig() appses.Config {
 	s.checkRequiredConfig(appconfig.AWSSESSourceARNKey)
 	s.checkRequiredConfig(appconfig.AWSSESSourceKey)
 
+	// Fetch regex from env var
+	// GetString() will return "" if the variable's not set, which _is_ a valid regex (and WILL match everything)
+	sesRegexString := s.Config.GetString(appconfig.SESRecipientAllowListRegexKey)
+	sesRegex := regexp.MustCompile(sesRegexString)
+	s.logger.Debug("successfully parsed ses regex:", zap.String("parsedRegex", sesRegex.String()))
+
 	return appses.Config{
-		SourceARN: s.Config.GetString(appconfig.AWSSESSourceARNKey),
-		Source:    s.Config.GetString(appconfig.AWSSESSourceKey),
+		SourceARN:               s.Config.GetString(appconfig.AWSSESSourceARNKey),
+		Source:                  s.Config.GetString(appconfig.AWSSESSourceKey),
+		RecipientAllowListRegex: sesRegex,
 	}
 }
 

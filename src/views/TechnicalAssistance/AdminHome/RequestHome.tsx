@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { CardGroup, IconArrowForward, Link } from '@trussworks/react-uswds';
+import { CardGroup, Icon, Link } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -152,7 +152,7 @@ const RequestHome = ({
             />
 
             <InformationCard
-              type="adviceLetter"
+              type="guidanceLetter"
               trbRequest={data?.trbRequest}
             />
           </CardGroup>
@@ -181,7 +181,7 @@ const RequestHome = ({
             className="display-flex flex-align-center margin-top-2"
           >
             {t('adminHome.viewDocs')}
-            <IconArrowForward className="margin-left-1" />
+            <Icon.ArrowForward className="margin-left-1" />
           </UswdsReactLink>
         </>
       )}

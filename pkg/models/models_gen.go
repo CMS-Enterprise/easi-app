@@ -205,15 +205,6 @@ type CreateSystemIntakeNoteInput struct {
 	IntakeID   uuid.UUID `json:"intakeId"`
 }
 
-// The data needed to create a TRB admin note with the Advice Letter category
-type CreateTRBAdminNoteAdviceLetterInput struct {
-	TrbRequestID            uuid.UUID   `json:"trbRequestId"`
-	NoteText                HTML        `json:"noteText"`
-	AppliesToMeetingSummary bool        `json:"appliesToMeetingSummary"`
-	AppliesToNextSteps      bool        `json:"appliesToNextSteps"`
-	RecommendationIDs       []uuid.UUID `json:"recommendationIDs"`
-}
-
 // The data needed to create a TRB admin note with the Consult Session category
 type CreateTRBAdminNoteConsultSessionInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
@@ -224,6 +215,15 @@ type CreateTRBAdminNoteConsultSessionInput struct {
 type CreateTRBAdminNoteGeneralRequestInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
 	NoteText     HTML      `json:"noteText"`
+}
+
+// The data needed to create a TRB admin note with the Guidance Letter category
+type CreateTRBAdminNoteGuidanceLetterInput struct {
+	TrbRequestID            uuid.UUID   `json:"trbRequestId"`
+	NoteText                HTML        `json:"noteText"`
+	AppliesToMeetingSummary bool        `json:"appliesToMeetingSummary"`
+	AppliesToNextSteps      bool        `json:"appliesToNextSteps"`
+	RecommendationIDs       []uuid.UUID `json:"recommendationIDs"`
 }
 
 // The data needed to create a TRB admin note with the Initial Request Form category
@@ -242,12 +242,13 @@ type CreateTRBAdminNoteSupportingDocumentsInput struct {
 	DocumentIDs  []uuid.UUID `json:"documentIDs"`
 }
 
-// The input required to add a recommendation & links to a TRB advice letter
-type CreateTRBAdviceLetterRecommendationInput struct {
-	TrbRequestID   uuid.UUID `json:"trbRequestId"`
-	Title          string    `json:"title"`
-	Recommendation HTML      `json:"recommendation"`
-	Links          []string  `json:"links"`
+// The input required to add a recommendation & links to a TRB guidance letter
+type CreateTRBGuidanceLetterRecommendationInput struct {
+	TrbRequestID   uuid.UUID                               `json:"trbRequestId"`
+	Title          string                                  `json:"title"`
+	Recommendation HTML                                    `json:"recommendation"`
+	Links          []string                                `json:"links"`
+	Category       TRBGuidanceLetterRecommendationCategory `json:"category"`
 }
 
 // The data needed add a TRB request attendee to a TRB request
@@ -395,8 +396,8 @@ type SendReportAProblemEmailInput struct {
 	HowSevereWasTheProblem string `json:"howSevereWasTheProblem"`
 }
 
-// The data needed to send a TRB advice letter, including who to notify
-type SendTRBAdviceLetterInput struct {
+// The data needed to send a TRB guidance letter, including who to notify
+type SendTRBGuidanceLetterInput struct {
 	ID             uuid.UUID `json:"id"`
 	CopyTrbMailbox bool      `json:"copyTrbMailbox"`
 	NotifyEuaIds   []string  `json:"notifyEuaIds"`
@@ -764,6 +765,14 @@ type SystemIntakeRetireLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
+// Input for "unretiring" (i.e. removing retirement date) an LCID in IT Gov v2
+type SystemIntakeUnretireLCIDInput struct {
+	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
+	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
+	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	AdminNote              *HTML                        `json:"adminNote,omitempty"`
+}
+
 // Input for updating an intake's LCID in IT Gov v2
 type SystemIntakeUpdateLCIDInput struct {
 	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
@@ -776,16 +785,6 @@ type SystemIntakeUpdateLCIDInput struct {
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
-
-// Data specific to admin notes in the Advice Letter category
-// The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
-type TRBAdminNoteAdviceLetterCategoryData struct {
-	AppliesToMeetingSummary bool                             `json:"appliesToMeetingSummary"`
-	AppliesToNextSteps      bool                             `json:"appliesToNextSteps"`
-	Recommendations         []*TRBAdviceLetterRecommendation `json:"recommendations"`
-}
-
-func (TRBAdminNoteAdviceLetterCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data specific to admin notes in the Consult Session category
 // This type doesn't contain any actual data
@@ -804,6 +803,16 @@ type TRBAdminNoteGeneralRequestCategoryData struct {
 }
 
 func (TRBAdminNoteGeneralRequestCategoryData) IsTRBAdminNoteCategorySpecificData() {}
+
+// Data specific to admin notes in the Guidance Letter category
+// The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
+type TRBAdminNoteGuidanceLetterCategoryData struct {
+	AppliesToMeetingSummary bool                               `json:"appliesToMeetingSummary"`
+	AppliesToNextSteps      bool                               `json:"appliesToNextSteps"`
+	Insights                []*TRBGuidanceLetterRecommendation `json:"insights"`
+}
+
+func (TRBAdminNoteGuidanceLetterCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data specific to admin notes in the Initial Request Form category
 type TRBAdminNoteInitialRequestFormCategoryData struct {
@@ -892,15 +901,17 @@ type UpdateSystemIntakePayload struct {
 
 // Input to update some fields on a system request
 type UpdateSystemIntakeRequestDetailsInput struct {
-	ID               uuid.UUID `json:"id"`
-	RequestName      *string   `json:"requestName,omitempty"`
-	BusinessNeed     *string   `json:"businessNeed,omitempty"`
-	BusinessSolution *string   `json:"businessSolution,omitempty"`
-	NeedsEaSupport   *bool     `json:"needsEaSupport,omitempty"`
-	CurrentStage     *string   `json:"currentStage,omitempty"`
-	CedarSystemID    *string   `json:"cedarSystemId,omitempty"`
-	HasUIChanges     *bool     `json:"hasUiChanges,omitempty"`
-	UsesAiTech       *bool     `json:"usesAiTech,omitempty"`
+	ID                 uuid.UUID                                `json:"id"`
+	RequestName        *string                                  `json:"requestName,omitempty"`
+	BusinessNeed       *string                                  `json:"businessNeed,omitempty"`
+	BusinessSolution   *string                                  `json:"businessSolution,omitempty"`
+	CurrentStage       *string                                  `json:"currentStage,omitempty"`
+	NeedsEaSupport     *bool                                    `json:"needsEaSupport,omitempty"`
+	HasUIChanges       *bool                                    `json:"hasUiChanges,omitempty"`
+	UsesAiTech         *bool                                    `json:"usesAiTech,omitempty"`
+	UsingSoftware      *string                                  `json:"usingSoftware,omitempty"`
+	AcquisitionMethods []SystemIntakeSoftwareAcquisitionMethods `json:"acquisitionMethods"`
+	CedarSystemID      *string                                  `json:"cedarSystemId,omitempty"`
 }
 
 // Input data used to update GRT and GRB dates for a system request
@@ -910,10 +921,11 @@ type UpdateSystemIntakeReviewDatesInput struct {
 	ID      uuid.UUID  `json:"id"`
 }
 
-type UpdateTRBAdviceLetterRecommendationOrderInput struct {
+type UpdateTRBGuidanceLetterRecommendationOrderInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
 	// List of the recommendation IDs in the new order they should be displayed
-	NewOrder []uuid.UUID `json:"newOrder"`
+	NewOrder []uuid.UUID                             `json:"newOrder"`
+	Category TRBGuidanceLetterRecommendationCategory `json:"category"`
 }
 
 // Represents an EUA user who is included as an attendee for a TRB request
@@ -1011,6 +1023,7 @@ const (
 	SystemIntakeActionTypeUpdateLcid                     SystemIntakeActionType = "UPDATE_LCID"
 	SystemIntakeActionTypeConfirmLcid                    SystemIntakeActionType = "CONFIRM_LCID"
 	SystemIntakeActionTypeRetireLcid                     SystemIntakeActionType = "RETIRE_LCID"
+	SystemIntakeActionTypeUnretireLcid                   SystemIntakeActionType = "UNRETIRE_LCID"
 	SystemIntakeActionTypeChangeLcidRetirementDate       SystemIntakeActionType = "CHANGE_LCID_RETIREMENT_DATE"
 	SystemIntakeActionTypeIssueLcid                      SystemIntakeActionType = "ISSUE_LCID"
 	SystemIntakeActionTypeSubmitIntake                   SystemIntakeActionType = "SUBMIT_INTAKE"
@@ -1043,6 +1056,7 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 	SystemIntakeActionTypeUpdateLcid,
 	SystemIntakeActionTypeConfirmLcid,
 	SystemIntakeActionTypeRetireLcid,
+	SystemIntakeActionTypeUnretireLcid,
 	SystemIntakeActionTypeChangeLcidRetirementDate,
 	SystemIntakeActionTypeIssueLcid,
 	SystemIntakeActionTypeSubmitIntake,
@@ -1067,7 +1081,7 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 
 func (e SystemIntakeActionType) IsValid() bool {
 	switch e {
-	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeExpireLcid, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeUpdateLcid, SystemIntakeActionTypeConfirmLcid, SystemIntakeActionTypeRetireLcid, SystemIntakeActionTypeChangeLcidRetirementDate, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeSubmitIntake, SystemIntakeActionTypeReject, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase:
+	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeExpireLcid, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeUpdateLcid, SystemIntakeActionTypeConfirmLcid, SystemIntakeActionTypeRetireLcid, SystemIntakeActionTypeUnretireLcid, SystemIntakeActionTypeChangeLcidRetirementDate, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeSubmitIntake, SystemIntakeActionTypeReject, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase:
 		return true
 	}
 	return false
@@ -1239,6 +1253,54 @@ func (e *SystemIntakeGRBReviewerVotingRole) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeGRBReviewerVotingRole) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
+type SystemIntakeSoftwareAcquisitionMethods string
+
+const (
+	SystemIntakeSoftwareAcquisitionMethodsContractorFurnished SystemIntakeSoftwareAcquisitionMethods = "CONTRACTOR_FURNISHED"
+	SystemIntakeSoftwareAcquisitionMethodsFedFurnished        SystemIntakeSoftwareAcquisitionMethods = "FED_FURNISHED"
+	SystemIntakeSoftwareAcquisitionMethodsElaOrInternal       SystemIntakeSoftwareAcquisitionMethods = "ELA_OR_INTERNAL"
+	SystemIntakeSoftwareAcquisitionMethodsNotYetDetermined    SystemIntakeSoftwareAcquisitionMethods = "NOT_YET_DETERMINED"
+	SystemIntakeSoftwareAcquisitionMethodsOther               SystemIntakeSoftwareAcquisitionMethods = "OTHER"
+)
+
+var AllSystemIntakeSoftwareAcquisitionMethods = []SystemIntakeSoftwareAcquisitionMethods{
+	SystemIntakeSoftwareAcquisitionMethodsContractorFurnished,
+	SystemIntakeSoftwareAcquisitionMethodsFedFurnished,
+	SystemIntakeSoftwareAcquisitionMethodsElaOrInternal,
+	SystemIntakeSoftwareAcquisitionMethodsNotYetDetermined,
+	SystemIntakeSoftwareAcquisitionMethodsOther,
+}
+
+func (e SystemIntakeSoftwareAcquisitionMethods) IsValid() bool {
+	switch e {
+	case SystemIntakeSoftwareAcquisitionMethodsContractorFurnished, SystemIntakeSoftwareAcquisitionMethodsFedFurnished, SystemIntakeSoftwareAcquisitionMethodsElaOrInternal, SystemIntakeSoftwareAcquisitionMethodsNotYetDetermined, SystemIntakeSoftwareAcquisitionMethodsOther:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeSoftwareAcquisitionMethods) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeSoftwareAcquisitionMethods) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeSoftwareAcquisitionMethods(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeSoftwareAcquisitionMethods", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeSoftwareAcquisitionMethods) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

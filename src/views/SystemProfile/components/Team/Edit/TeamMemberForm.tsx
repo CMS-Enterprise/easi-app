@@ -11,7 +11,7 @@ import {
   Form,
   FormGroup,
   Grid,
-  IconArrowBack,
+  Icon,
   Label
 } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -208,7 +208,9 @@ const TeamMemberForm = ({
 
   return (
     <Grid className="tablet:grid-col-6">
-      <h1 className="margin-bottom-1">{t(`${keyPrefix}.title`)}</h1>
+      <h1 className="margin-top-6 margin-bottom-1">
+        {t(`${keyPrefix}.title`)}
+      </h1>
       <p className="margin-bottom-0 font-body-md text-light line-height-body-4">
         {t(`${keyPrefix}.description`)}
       </p>
@@ -272,7 +274,7 @@ const TeamMemberForm = ({
                   // onChange={cedarContact => console.log(cedarContact)}
                 />
                 {!isEdit && memberAlreadySelected && (
-                  <Alert slim type="info">
+                  <Alert slim type="info" headingLevel="h4">
                     {t(
                       'singleSystem.editTeam.form.add.memberAlreadySelectedInfo'
                     )}
@@ -350,7 +352,7 @@ const TeamMemberForm = ({
 
         <div className="margin-top-6">
           {!isEdit && (
-            <Alert slim type="info">
+            <Alert headingLevel="h4" slim type="info">
               {t('singleSystem.editTeam.form.add.alertInfo')}
             </Alert>
           )}
@@ -379,7 +381,7 @@ const TeamMemberForm = ({
       </Form>
 
       <IconLink
-        icon={<IconArrowBack />}
+        icon={<Icon.ArrowBack />}
         to={
           isWorkspace
             ? `/systems/${cedarSystemId}/workspace`

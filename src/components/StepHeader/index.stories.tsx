@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { IconArrowBack } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Breadcrumbs from 'components/shared/Breadcrumbs';
@@ -77,7 +77,7 @@ Default.args = {
   ),
   children: (
     <UswdsReactLink to="#save">
-      <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+      <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
       Save and exit
     </UswdsReactLink>
   )

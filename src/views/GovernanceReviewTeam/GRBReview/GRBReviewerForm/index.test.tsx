@@ -6,6 +6,9 @@ import {
   CreateSystemIntakeGRBReviewersDocument,
   CreateSystemIntakeGRBReviewersMutation,
   CreateSystemIntakeGRBReviewersMutationVariables,
+  GetGRBReviewersComparisonsDocument,
+  GetGRBReviewersComparisonsQuery,
+  GetGRBReviewersComparisonsQueryVariables,
   GetSystemIntakeGRBReviewersDocument,
   GetSystemIntakeGRBReviewersQuery,
   GetSystemIntakeGRBReviewersQueryVariables,
@@ -16,6 +19,7 @@ import {
   UpdateSystemIntakeGRBReviewerMutation,
   UpdateSystemIntakeGRBReviewerMutationVariables
 } from 'gql/gen/graphql';
+import i18next from 'i18next';
 
 import { businessCase } from 'data/mock/businessCase';
 import { systemIntake } from 'data/mock/systemIntake';
@@ -31,6 +35,8 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import ITGovAdminContext from 'views/GovernanceReviewTeam/ITGovAdminContext';
 
 import GRBReview from '..';
+
+import AddReviewerFromEua from './AddReviewerFromEua';
 
 const mockUsers = new MockUsers();
 const user = mockUsers.findByCommonName('Jerry Seinfeld')!;
@@ -145,11 +151,30 @@ const getSystemIntakeGRBReviewersQuery = (
       systemIntake: {
         __typename: 'SystemIntake',
         id: systemIntake.id,
+        grbReviewStartedAt: null,
         grbReviewers: reviewer ? [reviewer] : []
       }
     }
   }
 });
+
+const getGRBReviewersComparisonsQuery: MockedQuery<
+  GetGRBReviewersComparisonsQuery,
+  GetGRBReviewersComparisonsQueryVariables
+> = {
+  request: {
+    query: GetGRBReviewersComparisonsDocument,
+    variables: {
+      id: systemIntake.id
+    }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
+      compareGRBReviewersByIntakeID: []
+    }
+  }
+};
 
 describe('GRB reviewer form', () => {
   it('adds a GRB reviewer', async () => {
@@ -162,6 +187,7 @@ describe('GRB reviewer form', () => {
       >
         <VerboseMockedProvider
           mocks={[
+            getGRBReviewersComparisonsQuery,
             cedarContactsQuery('Je'),
             cedarContactsQuery('Jerry Seinfeld'),
             createSystemIntakeGRBReviewersQuery,
@@ -195,25 +221,33 @@ describe('GRB reviewer form', () => {
 
     expect(await screen.findByRole('heading', { name: 'Add a GRB reviewer' }));
 
-    const contactInput = screen.getByRole('combobox', {
+    const formContainer = within(
+      screen.getByTestId('addReviewerFromEua-panel')
+    );
+
+    const contactInput = formContainer.getByRole('combobox', {
       name: 'GRB member name *'
     });
 
     userEvent.type(contactInput, 'Je');
-    userEvent.click(await screen.findByText(contactLabel));
+    userEvent.click(await formContainer.findByText(contactLabel));
     expect(contactInput).toHaveValue(contactLabel);
 
-    const votingRoleField = screen.getByRole('combobox', {
+    const votingRoleField = formContainer.getByRole('combobox', {
       name: 'Voting role *'
     });
     userEvent.selectOptions(votingRoleField, 'VOTING');
     expect(votingRoleField).toHaveValue('VOTING');
 
-    const grbRoleField = screen.getByRole('combobox', { name: 'GRB role *' });
+    const grbRoleField = formContainer.getByRole('combobox', {
+      name: 'GRB role *'
+    });
     userEvent.selectOptions(grbRoleField, 'CMCS_REP');
     expect(grbRoleField).toHaveValue('CMCS_REP');
 
-    const submitButton = screen.getByRole('button', { name: 'Add reviewer' });
+    const submitButton = formContainer.getByRole('button', {
+      name: 'Add reviewer'
+    });
 
     await new Promise(resolve => setTimeout(resolve, 0));
 
@@ -242,6 +276,7 @@ describe('GRB reviewer form', () => {
       >
         <VerboseMockedProvider
           mocks={[
+            getGRBReviewersComparisonsQuery,
             cedarContactsQuery(contactLabel),
             updateSystemIntakeGRBReviewerQuery,
             getSystemIntakeGRBReviewersQuery(grbReviewer),
@@ -305,5 +340,41 @@ describe('GRB reviewer form', () => {
     expect(within(reviewerRow).getByRole('cell', { name: contact.commonName }));
     expect(within(reviewerRow).getByRole('cell', { name: 'Non-voting' }));
     expect(within(reviewerRow).getByRole('cell', { name: 'QIO Rep' }));
+  });
+
+  it('renders duplicate reviewer warning', async () => {
+    render(
+      <MemoryRouter>
+        <VerboseMockedProvider
+          mocks={[
+            cedarContactsQuery('Je'),
+            cedarContactsQuery('Jerry Seinfeld')
+          ]}
+        >
+          <MessageProvider>
+            <AddReviewerFromEua
+              systemId={systemIntake.id}
+              initialGRBReviewers={[grbReviewer]}
+              createGRBReviewers={vi.fn()}
+              setReviewerToRemove={vi.fn()}
+            />
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    const contactInput = screen.getByRole('combobox', {
+      name: 'GRB member name *'
+    });
+
+    userEvent.type(contactInput, 'Je');
+    userEvent.click(await screen.findByText(contactLabel));
+    expect(contactInput).toHaveValue(contactLabel);
+
+    const duplicateReviewerWarning = await screen.findByText(
+      i18next.t<string>('grbReview:form.duplicateReviewerAlert')
+    );
+
+    expect(duplicateReviewerWarning).toBeInTheDocument();
   });
 });

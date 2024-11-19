@@ -14,6 +14,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -141,7 +142,8 @@ func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string)
 		}
 		users = append(users, profile.toUserInfo())
 	}
-	return users, nil
+	// OneToOne makes sure the returned users are in the same order as searched usernames
+	return helpers.OneToOne(usernames, users), nil
 }
 
 // FetchUserInfo fetches a single user from Okta by EUA ID

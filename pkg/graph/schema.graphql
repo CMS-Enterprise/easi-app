@@ -722,6 +722,8 @@ type SystemIntake {
   lcidCostBaseline: String
   lcidRetiresAt: Time
   needsEaSupport: Boolean
+  usingSoftware: String
+  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
@@ -830,6 +832,17 @@ enum SystemIntakeStep {
 }
 
 """
+SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
+"""
+enum SystemIntakeSoftwareAcquisitionMethods {
+  CONTRACTOR_FURNISHED
+  FED_FURNISHED
+  ELA_OR_INTERNAL
+  NOT_YET_DETERMINED
+  OTHER
+}
+
+"""
 The statuses of the different steps in the IT Gov v2 workflow
 """
 type ITGovTaskStatuses {
@@ -928,11 +941,13 @@ input UpdateSystemIntakeRequestDetailsInput {
   requestName: String
   businessNeed: String
   businessSolution: String
-  needsEaSupport: Boolean
   currentStage: String
-  cedarSystemId: String
+  needsEaSupport: Boolean
   hasUiChanges: Boolean
   usesAiTech: Boolean
+  usingSoftware: String
+  acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
+  cedarSystemId: String
 }
 
 """
@@ -1045,6 +1060,7 @@ enum SystemIntakeActionType {
   UPDATE_LCID
   CONFIRM_LCID
   RETIRE_LCID
+  UNRETIRE_LCID
   CHANGE_LCID_RETIREMENT_DATE
 
   # v1/v2 actions - originally from v1, still used in v2
@@ -1384,6 +1400,16 @@ input SystemIntakeRetireLCIDInput {
 }
 
 """
+Input for "unretiring" (i.e. removing retirement date) an LCID in IT Gov v2
+"""
+input SystemIntakeUnretireLCIDInput {
+  systemIntakeID: UUID!
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: HTML
+}
+
+"""
 Input for changing an intake's LCID retirement date in IT Gov v2
 """
 input SystemIntakeChangeLCIDRetirementDateInput {
@@ -1581,7 +1607,7 @@ type TRBRequest {
   feedback: [TRBRequestFeedback!]!
   documents: [TRBRequestDocument!]! # This query will not return deleted documents -- see pkg/storage/trb_request_document.go `GetTRBRequestDocumentsByRequestID`
   form: TRBRequestForm!
-  adviceLetter: TRBAdviceLetter
+  guidanceLetter: TRBGuidanceLetter
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
   lastMeetingDate: Time
@@ -1637,8 +1663,8 @@ type TRBTaskStatuses {
   feedbackStatus: TRBFeedbackStatus!
   consultPrepStatus: TRBConsultPrepStatus!
   attendConsultStatus: TRBAttendConsultStatus!
-  adviceLetterStatus: TRBAdviceLetterStatus!
-  adviceLetterStatusTaskList: TRBAdviceLetterStatusTaskList!
+  guidanceLetterStatus: TRBGuidanceLetterStatus!
+  guidanceLetterStatusTaskList: TRBGuidanceLetterStatusTaskList!
 }
 
 """
@@ -1937,9 +1963,9 @@ enum TRBAttendConsultStatus {
 }
 
 """
-Represents the status of the TRB advice letter step
+Represents the status of the TRB guidance letter step
 """
-enum TRBAdviceLetterStatus {
+enum TRBGuidanceLetterStatus {
   CANNOT_START_YET
   READY_TO_START
   IN_PROGRESS
@@ -1948,9 +1974,9 @@ enum TRBAdviceLetterStatus {
 }
 
 """
-Represents the status of the TRB advice letter step
+Represents the status of the TRB guidance letter step
 """
-enum TRBAdviceLetterStatusTaskList {
+enum TRBGuidanceLetterStatusTaskList {
   CANNOT_START_YET
   IN_REVIEW
   COMPLETED
@@ -2154,7 +2180,7 @@ enum TRBAdminNoteCategory {
   INITIAL_REQUEST_FORM
   SUPPORTING_DOCUMENTS
   CONSULT_SESSION
-  ADVICE_LETTER
+  GUIDANCE_LETTER
 }
 
 """
@@ -2197,16 +2223,16 @@ type TRBAdminNoteConsultSessionCategoryData {
 }
 
 """
-Data specific to admin notes in the Advice Letter category
+Data specific to admin notes in the Guidance Letter category
 The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
 """
-type TRBAdminNoteAdviceLetterCategoryData {
+type TRBAdminNoteGuidanceLetterCategoryData {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
-  recommendations: [TRBAdviceLetterRecommendation!]!
+  insights: [TRBGuidanceLetterRecommendation!]!
 }
 
-union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteAdviceLetterCategoryData
+union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGuidanceLetterCategoryData
 
 """
 Represents an admin note attached to a TRB request
@@ -2226,9 +2252,9 @@ type TRBAdminNote {
 }
 
 """
-Represents an advice letter for a TRB request
+Represents a guidance letter for a TRB request
 """
-type TRBAdviceLetter {
+type TRBGuidanceLetter {
   id: UUID!
   trbRequestId: UUID!
   author: UserInfo!
@@ -2240,7 +2266,7 @@ type TRBAdviceLetter {
   """
   List of recommendations in the order specified by users
   """
-  recommendations: [TRBAdviceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_advice_letter_recommendation.go `GetTRBAdviceLetterRecommendationsByTRBRequestID`
+  insights: [TRBGuidanceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_guidance_letter_recommendation.go `GetTRBGuidanceLetterRecommendationsByTRBRequestID`
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2296,9 +2322,9 @@ input CreateTRBAdminNoteConsultSessionInput {
 }
 
 """
-The data needed to create a TRB admin note with the Advice Letter category
+The data needed to create a TRB admin note with the Guidance Letter category
 """
-input CreateTRBAdminNoteAdviceLetterInput {
+input CreateTRBAdminNoteGuidanceLetterInput {
   # common fields used by all TRB admin notes
   trbRequestId: UUID!
   noteText: HTML!
@@ -2310,9 +2336,9 @@ input CreateTRBAdminNoteAdviceLetterInput {
 }
 
 """
-The data needed to update a TRB advice letter
+The data needed to update a TRB guidance letter
 """
-input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBGuidanceLetterInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
   meetingSummary: HTML
   nextSteps: HTML
@@ -2321,18 +2347,18 @@ input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
 }
 
 """
-The data needed to send a TRB advice letter, including who to notify
+The data needed to send a TRB guidance letter, including who to notify
 """
-input SendTRBAdviceLetterInput {
+input SendTRBGuidanceLetterInput {
   id: UUID!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
 
 """
-Represents a recommendation and links that have been added to a TRB advice letter
+Represents a recommendation and links that have been added to a TRB guidance letter
 """
-type TRBAdviceLetterRecommendation {
+type TRBGuidanceLetterRecommendation {
   id: UUID!
   trbRequestId: UUID!
   title: String!
@@ -2344,36 +2370,47 @@ type TRBAdviceLetterRecommendation {
   modifiedBy: String
   modifiedAt: Time
   deletedAt: Time
+  category: TRBGuidanceLetterRecommendationCategory
 }
 
 """
-The input required to add a recommendation & links to a TRB advice letter
+The input required to add a recommendation & links to a TRB guidance letter
 """
-input CreateTRBAdviceLetterRecommendationInput {
+input CreateTRBGuidanceLetterRecommendationInput {
   trbRequestId: UUID!
   title: String!
   recommendation: HTML!
   links: [String!]!
+  category: TRBGuidanceLetterRecommendationCategory!
 }
 
 """
-The input required to update a recommendation to a TRB advice letter
+The input required to update a recommendation to a TRB guidance letter
 """
-input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
   recommendation: HTML
   links: [String!]
+  category: TRBGuidanceLetterRecommendationCategory
+}
+
+enum TRBGuidanceLetterRecommendationCategory {
+  REQUIREMENT
+  RECOMMENDATION
+  CONSIDERATION
+  UNCATEGORIZED
 }
 
 """
 """
-input UpdateTRBAdviceLetterRecommendationOrderInput {
+input UpdateTRBGuidanceLetterRecommendationOrderInput {
   trbRequestId: UUID!
   """
   List of the recommendation IDs in the new order they should be displayed
   """
   newOrder: [UUID!]!
+  category: TRBGuidanceLetterRecommendationCategory!
 }
 
 """
@@ -2415,6 +2452,9 @@ type Mutation {
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionRetireLCID(
     input: SystemIntakeRetireLCIDInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionUnretireLCID(
+    input: SystemIntakeUnretireLCIDInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionChangeLCIDRetirementDate(
     input: SystemIntakeChangeLCIDRetirementDateInput!
@@ -2520,25 +2560,25 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteConsultSession(input: CreateTRBAdminNoteConsultSessionInput!): TRBAdminNote!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdminNoteAdviceLetter(input: CreateTRBAdminNoteAdviceLetterInput!): TRBAdminNote!
+  createTRBAdminNoteGuidanceLetter(input: CreateTRBAdminNoteGuidanceLetterInput!): TRBAdminNote!
   @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdviceLetter(trbRequestId: UUID!): TRBAdviceLetter!
+  createTRBGuidanceLetter(trbRequestId: UUID!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBAdviceLetter(input: UpdateTRBAdviceLetterInput!): TRBAdviceLetter!
+  updateTRBGuidanceLetter(input: UpdateTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  requestReviewForTRBAdviceLetter(id: UUID!): TRBAdviceLetter!
+  requestReviewForTRBGuidanceLetter(id: UUID!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  sendTRBAdviceLetter(input: SendTRBAdviceLetterInput!): TRBAdviceLetter!
+  sendTRBGuidanceLetter(input: SendTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdviceLetterRecommendation(input: CreateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
+  createTRBGuidanceLetterRecommendation(input: CreateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
+  updateTRBGuidanceLetterRecommendation(input: UpdateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBAdviceLetterRecommendationOrder(input: UpdateTRBAdviceLetterRecommendationOrderInput!): [TRBAdviceLetterRecommendation!]!
+  updateTRBGuidanceLetterRecommendationOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterRecommendation!]!
   @hasRole(role: EASI_TRB_ADMIN)
-  deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
+  deleteTRBGuidanceLetterRecommendation(id: UUID!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
   @hasRole(role: EASI_TRB_ADMIN)
@@ -2613,9 +2653,9 @@ enum TRBRequestStatus {
   READY_FOR_CONSULT
   CONSULT_SCHEDULED
   CONSULT_COMPLETE
-  DRAFT_ADVICE_LETTER
-  ADVICE_LETTER_IN_REVIEW
-  ADVICE_LETTER_SENT
+  DRAFT_GUIDANCE_LETTER
+  GUIDANCE_LETTER_IN_REVIEW
+  GUIDANCE_LETTER_SENT
   FOLLOW_UP_REQUESTED
 }
 

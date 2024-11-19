@@ -1,12 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  IconArrowBack,
-  Label,
-  TextInput
-} from '@trussworks/react-uswds';
+import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import PageNumber from 'components/PageNumber';
@@ -167,7 +162,7 @@ const GeneralRequestInfo = ({
             </Button>
 
             <IconButton
-              icon={<IconArrowBack />}
+              icon={<Icon.ArrowBack />}
               type="button"
               unstyled
               onClick={() => {

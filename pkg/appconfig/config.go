@@ -57,32 +57,32 @@ func (e Environment) String() string {
 	}
 }
 
-// Local returns true if the environment is local
+// Local returns true if the environment is local (local development)
 func (e Environment) Local() bool {
 	return e == localEnv
 }
 
-// Test returns true if the environment is local
+// Test returns true if the environment is test (used for local or CI/CD testing)
 func (e Environment) Test() bool {
 	return e == testEnv
 }
 
-// Dev returns true if the environment is local
+// Dev returns true if the environment is dev (dev.easi.cms.gov)
 func (e Environment) Dev() bool {
 	return e == devEnv
 }
 
-// Impl returns true if the environment is local
+// Impl returns true if the environment is Impl (impl.easi.cms.gov)
 func (e Environment) Impl() bool {
 	return e == implEnv
 }
 
-// Prod returns true if the environment is local
+// Prod returns true if the environment is Production (easi.cms.gov)
 func (e Environment) Prod() bool {
 	return e == prodEnv
 }
 
-// Deployed returns true if in a deployed environment
+// Deployed returns true if in a deployed environment (anything in AWS)
 func (e Environment) Deployed() bool {
 	switch e {
 	case devEnv:
@@ -137,6 +137,9 @@ const EASIHelpEmailKey = "EASI_HELP_EMAIL"
 // TRBEmailKey is the key for the receiving email to the TRB email
 const TRBEmailKey = "TRB_EMAIL"
 
+// OITFeedbackChannelSlackLink is the key for the OIT feedback slack channel
+const OITFeedbackChannelSlackLink = "OIT_FEEDBACK_CHANNEL_SLACK_LINK"
+
 // ClientHostKey is the key for getting the client's domain name
 const ClientHostKey = "CLIENT_HOSTNAME"
 
@@ -145,6 +148,9 @@ const ClientProtocolKey = "CLIENT_PROTOCOL"
 
 // EmailTemplateDirectoryKey is the key for getting the email template directory
 const EmailTemplateDirectoryKey = "EMAIL_TEMPLATE_DIR"
+
+// SESRecipientAllowListRegexKey is the key for getting the regex that Email recipients (SES specifically) must match
+const SESRecipientAllowListRegexKey = "SES_RECIPIENT_ALLOWLIST_REGEX"
 
 // AWSS3FileUploadBucket is the key for the bucket we upload files to
 const AWSS3FileUploadBucket = "AWS_S3_FILE_UPLOAD_BUCKET"

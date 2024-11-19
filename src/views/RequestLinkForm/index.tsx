@@ -13,7 +13,7 @@ import {
   Form,
   FormGroup,
   Grid,
-  IconArrowBack,
+  Icon,
   Label,
   Radio,
   TextInput
@@ -709,7 +709,7 @@ const RequestLinkForm = ({
             </ButtonGroup>
 
             <IconButton
-              icon={<IconArrowBack className="margin-right-05" />}
+              icon={<Icon.ArrowBack className="margin-right-05" />}
               type="button"
               unstyled
               onClick={() => {

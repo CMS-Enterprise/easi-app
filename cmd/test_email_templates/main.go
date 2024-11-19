@@ -15,6 +15,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 
 	"github.com/google/uuid"
@@ -31,14 +32,15 @@ func noErr(err error) {
 
 func createEmailClient() email.Client {
 	emailConfig := email.Config{
-		GRTEmail:          models.NewEmailAddress("grt_email@cms.gov"),
-		ITInvestmentEmail: models.NewEmailAddress("it_investment_email@cms.gov"),
-		TRBEmail:          models.NewEmailAddress("trb@cms.gov"),
-		EASIHelpEmail:     models.NewEmailAddress(os.Getenv("EASI_HELP_EMAIL")),
-		CEDARTeamEmail:    models.NewEmailAddress("cedar@cedar.gov"),
-		URLHost:           os.Getenv("CLIENT_HOSTNAME"),
-		URLScheme:         os.Getenv("CLIENT_PROTOCOL"),
-		TemplateDirectory: os.Getenv("EMAIL_TEMPLATE_DIR"),
+		GRTEmail:                    models.NewEmailAddress("grt_email@cms.gov"),
+		ITInvestmentEmail:           models.NewEmailAddress("it_investment_email@cms.gov"),
+		TRBEmail:                    models.NewEmailAddress("trb@cms.gov"),
+		EASIHelpEmail:               models.NewEmailAddress(os.Getenv("EASI_HELP_EMAIL")),
+		CEDARTeamEmail:              models.NewEmailAddress("cedar@cedar.gov"),
+		OITFeedbackChannelSlackLink: "https://oddball.slack.com/archives/C059N01AYGM",
+		URLHost:                     os.Getenv("CLIENT_HOSTNAME"),
+		URLScheme:                   os.Getenv("CLIENT_PROTOCOL"),
+		TemplateDirectory:           os.Getenv("EMAIL_TEMPLATE_DIR"),
 	}
 
 	env, _ := appconfig.NewEnvironment("local") // hardcoded as "local" as it's easier than fetching from envs since we only ever use this locally
@@ -53,6 +55,7 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	requestName := "Example Request"
 	requesterName := "Requesting User"
 	requesterEmail := models.NewEmailAddress("TEST@local.fake")
+	cedarSystemID := "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"
 	component := "Test Component"
 	adminEmail := models.NewEmailAddress("admin@local.fake")
 	emailRecipients := []models.EmailAddress{requesterEmail, adminEmail}
@@ -61,8 +64,8 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	submissionDate := time.Now()
 	consultDate := time.Now().AddDate(0, 2, 0)
 
-	err := client.SendTRBAdviceLetterSubmittedEmail(ctx,
-		email.SendTRBAdviceLetterSubmittedEmailInput{
+	err := client.SendTRBGuidanceLetterSubmittedEmail(ctx,
+		email.SendTRBGuidanceLetterSubmittedEmailInput{
 			TRBRequestID:   requestID,
 			RequestName:    requestName,
 			RequestType:    string(models.TRBTBrainstorm),
@@ -76,8 +79,8 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
-	err = client.SendTRBAdviceLetterInternalReviewEmail(ctx,
-		email.SendTRBAdviceLetterInternalReviewEmailInput{
+	err = client.SendTRBGuidanceLetterInternalReviewEmail(ctx,
+		email.SendTRBGuidanceLetterInternalReviewEmailInput{
 			TRBRequestID:   requestID,
 			TRBRequestName: requestName,
 			TRBLeadName:    "",
@@ -85,8 +88,8 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
-	err = client.SendTRBAdviceLetterInternalReviewEmail(ctx,
-		email.SendTRBAdviceLetterInternalReviewEmailInput{
+	err = client.SendTRBGuidanceLetterInternalReviewEmail(ctx,
+		email.SendTRBGuidanceLetterInternalReviewEmailInput{
 			TRBRequestID:   requestID,
 			TRBRequestName: requestName,
 			TRBLeadName:    leadName,
@@ -241,6 +244,26 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		[]string{"System API Contact"},
 		"CMSGovNetSystem",
 		time.Now(),
+	)
+	noErr(err)
+
+	err = client.SendCedarNewTeamMemberEmail(
+		ctx,
+		"Oliver Queen",
+		"green.arrow@queencityquivers.org",
+		"CMSGovNetSystem",
+		cedarSystemID,
+		[]string{"System API Contact"},
+		cedarcoremock.GetSystemRoles(cedarSystemID, nil),
+	)
+	noErr(err)
+
+	err = client.SendCedarYouHaveBeenAddedEmail(
+		ctx,
+		"CMSGovNetSystem",
+		cedarSystemID,
+		[]string{"System API Contact"},
+		requesterEmail,
 	)
 	noErr(err)
 }
@@ -404,6 +427,19 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		lifecycleScope,
 		lifecycleCostBaseline,
 		reason,
+		nextSteps,
+		additionalInfo,
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendUnretireLCIDNotification(
+		ctx,
+		emailNotificationRecipients,
+		lifecycleID,
+		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
+		lifecycleScope,
+		lifecycleCostBaseline,
 		nextSteps,
 		additionalInfo,
 	)

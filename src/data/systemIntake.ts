@@ -79,6 +79,9 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   adminLead: '',
   lcidCostBaseline: '',
   requesterNameAndComponent: '',
+  usesAiTech: null,
+  usingSoftware: null,
+  acquisitionMethods: [],
   hasUiChanges: null
 };
 
@@ -104,12 +107,17 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     intake?.updatedAt && formatDateLocal(intake.updatedAt, 'MM/dd/yyyy');
   const archivedAt =
     intake?.archivedAt && formatDateLocal(intake.archivedAt, 'MM/dd/yyyy');
+  const lcidExpiresAt =
+    intake?.lcidExpiresAt &&
+    formatDateLocal(intake.lcidExpiresAt, 'MM/dd/yyyy');
 
   // Translate booleans to yes/no
   const existingFunding = convertBoolToYesNo(intake?.existingFunding);
   const usesAiTech = convertBoolToYesNo(intake?.usesAiTech);
   const needsEaSupport = convertBoolToYesNo(intake?.needsEaSupport);
   const hasUiChanges = convertBoolToYesNo(intake?.hasUiChanges);
+  const usingSoftware = intake?.usingSoftware;
+  const acquisitionMethods = intake?.acquisitionMethods;
 
   const contractNumber = formatContractNumbers(intake.contractNumbers);
   const cmsSystem = intake.systems.map(v => v.name).join(', ');
@@ -126,10 +134,13 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     usesAiTech,
     needsEaSupport,
     hasUiChanges,
+    usingSoftware,
+    acquisitionMethods,
     // Formatted dates
     createdAt,
     submittedAt,
     updatedAt,
-    archivedAt
+    archivedAt,
+    lcidExpiresAt
   });
 };

@@ -179,7 +179,7 @@ exports[`TRB Subview snapshots > matches Process Flow 1`] = `
             class="list-style-middot"
           >
             <li>
-              SMEs to provide additional advice and insight
+              SMEs to provide additional guidance and insight
             </li>
             <li>
               any additional project team members you’ve specified
@@ -199,10 +199,10 @@ exports[`TRB Subview snapshots > matches Process Flow 1`] = `
             class="usa-process-list__heading"
             data-testid="processListHeading"
           >
-            Advice letter and next steps
+            Guidance letter and next steps
           </h3>
           <p>
-            The TRB will work with any SMEs who attended your consult session to compile a letter that documents any advice for your project team as well as any recommended next steps.
+            The TRB will work with any SMEs who attended your consult session to compile a letter that documents any guidance for your project team as well as any recommended next steps.
           </p>
         </li>
       </ol>
@@ -635,6 +635,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
         <div
           class="usa-table-container--scrollable"
           data-testid="scrollable-table-container"
+          tabindex="0"
         >
           <table
             class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"

@@ -6,9 +6,11 @@ import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  Checkbox,
   Dropdown,
   Fieldset,
   Form,
+  FormGroup,
   Link as UswdsLink,
   Radio,
   Textarea,
@@ -29,7 +31,11 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import processStages from 'constants/enums/processStages';
-import { CMS_AI_EMAIL, CMS_TRB_EMAIL } from 'constants/externalUrls';
+import {
+  CMS_AI_EMAIL,
+  CMS_DVSM_EMAIL,
+  CMS_TRB_EMAIL
+} from 'constants/externalUrls';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
 import { SystemIntake } from 'queries/types/SystemIntake';
@@ -37,7 +43,10 @@ import {
   UpdateSystemIntakeRequestDetails,
   UpdateSystemIntakeRequestDetailsVariables
 } from 'queries/types/UpdateSystemIntakeRequestDetails';
-import { SystemIntakeFormState } from 'types/graphql-global-types';
+import {
+  SystemIntakeFormState,
+  SystemIntakeSoftwareAcquisitionMethods
+} from 'types/graphql-global-types';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
@@ -50,6 +59,8 @@ type RequestDetailsForm = {
   needsEaSupport: boolean | null;
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
+  usingSoftware: string | null;
+  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
 };
 
 type RequestDetailsProps = {
@@ -67,7 +78,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     currentStage,
     needsEaSupport,
     hasUiChanges,
-    usesAiTech
+    usesAiTech,
+    usingSoftware,
+    acquisitionMethods
   } = systemIntake;
 
   const history = useHistory();
@@ -79,6 +92,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     handleSubmit,
     setError,
     watch,
+    setValue,
     formState: { errors, isSubmitting, isDirty }
   } = useEasiForm<RequestDetailsForm>({
     resolver: yupResolver(SystemIntakeValidationSchema.requestDetails),
@@ -89,7 +103,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       currentStage: currentStage || '',
       needsEaSupport,
       hasUiChanges,
-      usesAiTech
+      usesAiTech,
+      usingSoftware,
+      acquisitionMethods
     }
   });
 
@@ -207,6 +223,12 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
       <MandatoryFieldsAlert className="tablet:grid-col-6" />
 
+      <hr className="margin-bottom-1 margin-top-3 opacity-30" aria-hidden />
+      <span className="font-body-sm text-bold">
+        {' '}
+        {t('requestDetails.subsectionHeadings.projectConcept')}
+      </span>
+
       <Form
         onSubmit={handleSubmit(() =>
           submit(() => history.push('contract-details'), true)
@@ -304,65 +326,10 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           </Dropdown>
         </FieldGroup>
 
-        <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>
-          <Fieldset>
-            <legend className="text-bold">
-              {t('requestDetails.usesAiTech')}
-            </legend>
-            <HelpText id="usesAiTechHelpText" className="margin-top-1">
-              <Trans
-                i18nKey="intake:requestDetails.usesAiTechHelpText"
-                components={{
-                  aiEmail: (
-                    <UswdsLink href={`mailto:${CMS_AI_EMAIL}`}> </UswdsLink>
-                  ),
-                  trbEmail: (
-                    <UswdsLink href={`mailto:${CMS_TRB_EMAIL}`}> </UswdsLink>
-                  )
-                }}
-              />
-            </HelpText>
-            <ErrorMessage
-              errors={errors}
-              name="usesAiTech"
-              as={FieldErrorMsg}
-            />
-
-            <Controller
-              control={control}
-              name="usesAiTech"
-              render={({ field: { ref, ...field } }) => (
-                <Radio
-                  {...field}
-                  inputRef={ref}
-                  checked={field.value === true}
-                  id="usesAiTechTrue"
-                  label={t('Yes')}
-                  onChange={() => field.onChange(true)}
-                  value="true"
-                  aria-describedby="usesAiTechHelpText"
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="usesAiTech"
-              render={({ field: { ref, ...field } }) => (
-                <Radio
-                  {...field}
-                  inputRef={ref}
-                  checked={field.value === false}
-                  id="usesAiTechFalse"
-                  label={t('No')}
-                  onChange={() => field.onChange(false)}
-                  value="true"
-                  aria-describedby="usesAiTechHelpText"
-                />
-              )}
-            />
-          </Fieldset>
-        </FieldGroup>
+        <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
+        <span className="font-body-sm text-bold">
+          {t('requestDetails.subsectionHeadings.collaboration')}
+        </span>
 
         <FieldGroup
           scrollElement="needsEaSupport"
@@ -436,6 +403,72 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           </>
         </CollapsableLink>
 
+        <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
+        <span className="font-body-sm text-bold">
+          {' '}
+          {t('requestDetails.subsectionHeadings.projectDetails')}
+        </span>
+
+        <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>
+          <Fieldset>
+            <legend className="text-bold">
+              {t('requestDetails.usesAiTech')}
+            </legend>
+            <HelpText id="usesAiTechHelpText" className="margin-top-1">
+              <Trans
+                i18nKey="intake:requestDetails.usesAiTechHelpText"
+                components={{
+                  aiEmail: (
+                    <UswdsLink href={`mailto:${CMS_AI_EMAIL}`}> </UswdsLink>
+                  ),
+                  trbEmail: (
+                    <UswdsLink href={`mailto:${CMS_TRB_EMAIL}`}> </UswdsLink>
+                  )
+                }}
+              />
+            </HelpText>
+            <ErrorMessage
+              errors={errors}
+              name="usesAiTech"
+              as={FieldErrorMsg}
+            />
+
+            <Controller
+              control={control}
+              name="usesAiTech"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  checked={field.value === true}
+                  id="usesAiTechTrue"
+                  label={t('Yes')}
+                  onChange={() => field.onChange(true)}
+                  value="true"
+                  aria-describedby="usesAiTechHelpText"
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="usesAiTech"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  checked={field.value === false}
+                  id="usesAiTechFalse"
+                  label={t('No')}
+                  onChange={() => field.onChange(false)}
+                  value="true"
+                  aria-describedby="usesAiTechHelpText"
+                />
+              )}
+            />
+          </Fieldset>
+        </FieldGroup>
+
         <FieldGroup scrollElement="hasUiChanges" error={!!errors.hasUiChanges}>
           <Fieldset>
             <legend className="text-bold">
@@ -481,6 +514,151 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               )}
             />
           </Fieldset>
+        </FieldGroup>
+
+        <FieldGroup
+          scrollElement="softwareAcquisition"
+          error={!!errors.usingSoftware}
+        >
+          <Label htmlFor="softwareAcquisition">
+            {t('requestDetails.softwareAcquisition.usingSoftwareLabel')}
+          </Label>
+          <HelpText id="elasHelpText" className="margin-top-1">
+            <Trans
+              i18nKey="intake:requestDetails.softwareAcquisition.usingSoftwareHelp"
+              components={{
+                dvsmEmail: (
+                  <UswdsLink href={`mailto:${CMS_DVSM_EMAIL}`}> </UswdsLink>
+                )
+              }}
+            />
+          </HelpText>
+          <ErrorMessage
+            errors={errors}
+            name="usingSoftware"
+            as={FieldErrorMsg}
+          />
+          <Controller
+            control={control}
+            name="usingSoftware"
+            render={({ field: { ref, value, ...field } }) => (
+              <Radio
+                {...field}
+                inputRef={ref}
+                id="usingSoftwareYes"
+                label={t('Yes')}
+                checked={value === 'YES'}
+                onChange={() => field.onChange('YES')}
+              />
+            )}
+          />
+          {/* If 'Yes' is selected, display additional software props (software MultiSelect (to come later) and Acquisition Approach Checkboxes) */}
+          {watch('usingSoftware') === 'YES' && (
+            <div className="margin-left-4 margin-bottom-3">
+              {/* TODO: We eventually want to display a ComboBox/MultiSelect of software the requester can select, before we 
+                can do this we need a list of "CMS known" software and/or vendors that is currently being evaluated by ICPG / DVSM */}
+
+              <Controller
+                control={control}
+                name="acquisitionMethods"
+                render={({ field, fieldState: { error } }) => {
+                  return (
+                    <FormGroup error={!!error}>
+                      <Label htmlFor="businessSolution">
+                        {t(
+                          'requestDetails.softwareAcquisition.acquisitionStrategyLabel'
+                        )}
+                      </Label>
+                      <HelpText
+                        id="businessSolutionHelpText"
+                        className="margin-top-1"
+                      >
+                        {t(
+                          'requestDetails.softwareAcquisition.acquisitionStrategyHelp'
+                        )}
+                      </HelpText>
+                      <ErrorMessage
+                        errors={errors}
+                        name="acquisitionMethods"
+                        as={FieldErrorMsg}
+                      />
+                      <Alert
+                        type="info"
+                        data-testid="mandatory-fields-alert"
+                        slim
+                      >
+                        {t(
+                          'requestDetails.softwareAcquisition.softwareRequirementsAlert'
+                        )}
+                      </Alert>
+                      {Object.values(
+                        SystemIntakeSoftwareAcquisitionMethods
+                      ).map(acqMethod => {
+                        return (
+                          <React.Fragment key={acqMethod}>
+                            <Checkbox
+                              name={acqMethod}
+                              id={`software-acquisition-${acqMethod}`}
+                              label={t(
+                                `requestDetails.softwareAcquisition.acquistionStrategyLabels.${acqMethod}`
+                              )}
+                              value={acqMethod}
+                              checked={field.value.includes(acqMethod)}
+                              onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                              ) => {
+                                field.onChange(
+                                  e.target.checked
+                                    ? [...field.value, e.target.value]
+                                    : field.value.filter(
+                                        value => value !== e.target.value
+                                      )
+                                );
+                              }}
+                            />
+                          </React.Fragment>
+                        );
+                      })}
+                    </FormGroup>
+                  );
+                }}
+              />
+            </div>
+          )}
+          <Controller
+            control={control}
+            name="usingSoftware"
+            render={({ field: { ref, value, ...field } }) => (
+              <Radio
+                {...field}
+                inputRef={ref}
+                id="usingSoftwareNo"
+                label={t('No')}
+                checked={value === 'NO'}
+                onChange={() => {
+                  field.onChange('NO');
+                  setValue('acquisitionMethods', []);
+                }}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="usingSoftware"
+            render={({ field: { ref, value, ...field } }) => (
+              <Radio
+                {...field}
+                inputRef={ref}
+                id="usingSoftwareNotSure"
+                label={t('Not Sure')}
+                checked={value === 'NOT_SURE'}
+                onChange={() => {
+                  field.onChange('NOT_SURE');
+                  setValue('acquisitionMethods', []);
+                }}
+              />
+            )}
+          />
         </FieldGroup>
 
         <Pager

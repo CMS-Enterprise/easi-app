@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Button,
-  IconExpandMore,
-  IconNavigateNext,
-  IconVisibilityOff,
-  IconVisiblity
-} from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -42,17 +36,17 @@ const CollapsableLink = ({
 
   const renderEyeIcon = () => {
     return isOpen ? (
-      <IconVisibilityOff className="easi-collapsable-link__eye-icon" />
+      <Icon.VisibilityOff className="easi-collapsable-link__eye-icon" />
     ) : (
-      <IconVisiblity className="easi-collapsable-link__eye-icon" />
+      <Icon.Visibility className="easi-collapsable-link__eye-icon" />
     );
   };
 
   const renderCaret = () => {
     return isOpen ? (
-      <IconExpandMore className="margin-right-05" />
+      <Icon.ExpandMore className="margin-right-05" />
     ) : (
-      <IconNavigateNext className="margin-right-05" />
+      <Icon.NavigateNext className="margin-right-05" />
     );
   };
 

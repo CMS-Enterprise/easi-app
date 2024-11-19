@@ -1,11 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  GridContainer,
-  IconLaunch,
-  IconLightbulbOutline,
-  Link
-} from '@trussworks/react-uswds';
+import { GridContainer, Icon, Link } from '@trussworks/react-uswds';
 
 import IconLink from 'components/shared/IconLink';
 import { SLACK_OIT_DEV_FEEDBACK } from 'constants/externalUrls';
@@ -24,7 +19,7 @@ export default () => {
           <div className="grid-row grid-gap margin-top-2 desktop:margin-top-0">
             <IconLink
               className="font-body-3xs text-white text-no-underline"
-              icon={<IconLaunch />}
+              icon={<Icon.Launch />}
               iconPosition="after"
               to="/help/report-a-problem"
               target="_blank"
@@ -34,7 +29,7 @@ export default () => {
 
             <IconLink
               className="font-body-3xs text-white text-no-underline"
-              icon={<IconLaunch />}
+              icon={<Icon.Launch />}
               iconPosition="after"
               to="/help/send-feedback"
               target="_blank"
@@ -48,11 +43,11 @@ export default () => {
               target="_blank"
             >
               {t('footer.chatOnSlack')}
-              <IconLaunch className="margin-left-1" />
+              <Icon.Launch className="margin-left-1" />
             </Link>
           </div>
         </div>
-        <IconLightbulbOutline className="text-primary-light" size={3} />
+        <Icon.LightbulbOutline className="text-primary-light" size={3} />
       </GridContainer>
     </div>
   );

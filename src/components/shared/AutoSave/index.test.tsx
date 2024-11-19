@@ -1,29 +1,31 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { render, waitFor } from '@testing-library/react';
 
 import AutoSave from './index';
 
 describe('The Autosave component', () => {
-  it('renders without crashing', () => {
-    shallow(<AutoSave values={{}} onSave={() => {}} debounceDelay={0} />);
-  });
-
   it('does not fire onSave on initial load', () => {
     const onSave = vi.fn();
-    mount(<AutoSave values={{}} onSave={onSave} debounceDelay={0} />);
+    render(<AutoSave values={{}} onSave={onSave} debounceDelay={0} />);
     expect(onSave).not.toHaveBeenCalled();
   });
 
-  it('fires onSave when values changed', () => {
+  it('fires onSave when values changed', async () => {
     const onSave = vi.fn();
-    const component = mount(
+    const { rerender } = render(
       <AutoSave
         values={{ name: 'fake name' }}
         onSave={onSave}
-        debounceDelay={1000}
+        debounceDelay={100}
       />
     );
-    component.setProps({ name: 'another name' });
-    setTimeout(() => expect(onSave).toHaveBeenCalled(), 1000);
+    rerender(
+      <AutoSave
+        values={{ name: 'another name' }}
+        onSave={onSave}
+        debounceDelay={100}
+      />
+    );
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
   });
 });

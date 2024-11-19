@@ -2,12 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ApolloQueryResult, useQuery } from '@apollo/client';
-import {
-  Button,
-  GridContainer,
-  IconArrowBack,
-  IconWarning
-} from '@trussworks/react-uswds';
+import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
 import { isEqual } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -222,7 +217,7 @@ function Header({
             }, false);
           }}
         >
-          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+          <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
           {t('button.saveAndExit')}
         </Button>
       )}
@@ -242,7 +237,7 @@ function EditsRequestedWarning({
     <div className="bg-error-lighter padding-y-2">
       <GridContainer className="width-full">
         <div>
-          <IconWarning
+          <Icon.Warning
             className="text-error-dark text-middle margin-right-1"
             size={3}
           />

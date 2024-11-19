@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
+	"github.com/lib/pq"
 )
 
 // SystemIntakeRequestType represents the type of a system intake
@@ -58,6 +59,16 @@ const (
 	SystemIntakeLCIDStatusIssued  SystemIntakeLCIDStatus = "ISSUED"
 	SystemIntakeLCIDStatusExpired SystemIntakeLCIDStatus = "EXPIRED"
 	SystemIntakeLCIDStatusRetired SystemIntakeLCIDStatus = "RETIRED"
+)
+
+type SystemIntakeSoftwareAcquisitionMethod string
+
+const (
+	SystemIntakeSoftwareAcquisitionContractorFurnished SystemIntakeSoftwareAcquisitionMethod = "CONTRACTOR_FURNISHED"
+	SystemIntakeSoftwareAcquisitionFedFurnished        SystemIntakeSoftwareAcquisitionMethod = "FED_FURNISHED"
+	SystemIntakeSoftwareAcquisitionELAOrInternal       SystemIntakeSoftwareAcquisitionMethod = "ELA_OR_INTERNAL"
+	SystemIntakeSoftwareAcquisitionNotYetDetermined    SystemIntakeSoftwareAcquisitionMethod = "NOT_YET_DETERMINED"
+	SystemIntakeSoftwareAcquisitionOther               SystemIntakeSoftwareAcquisitionMethod = "OTHER"
 )
 
 // SystemIntake is the model for the system intake form
@@ -131,6 +142,8 @@ type SystemIntake struct {
 	FundingSources                  []*SystemIntakeFundingSource `json:"fundingSources"`
 	HasUIChanges                    null.Bool                    `json:"hasUiChanges" db:"has_ui_changes"`
 	UsesAITech                      null.Bool                    `json:"usesAiTech" db:"uses_ai_tech"`
+	UsingSoftware                   zero.String                  `json:"usingSoftware" db:"using_software"`
+	AcquisitionMethods              pq.StringArray               `json:"acquisitionMethods" db:"acquisition_methods"`
 	RequestFormState                SystemIntakeFormState        `json:"requestFormState" db:"request_form_state"`
 	DraftBusinessCaseState          SystemIntakeFormState        `json:"draftBusinessCaseState" db:"draft_business_case_state"`
 	FinalBusinessCaseState          SystemIntakeFormState        `json:"finalBusinessCaseState" db:"final_business_case_state"`
