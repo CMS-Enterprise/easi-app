@@ -32,6 +32,9 @@ const discussions = {
     view: 'View', // TODO: this is in other i18n files, move to general.ts?
     viewDiscussionBoard: 'View discussion board',
 
+    viewMore: 'View more {{type}}',
+    viewLess: 'View less {{type}}',
+
     alerts: {
       noDiscussionsStarted:
         'There are no discussions yet. When a discussion topic is started, it will appear here.',
