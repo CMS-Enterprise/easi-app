@@ -58,7 +58,7 @@ const Discussion = ({
           {showReplies && (
             <DiscussionsList
               type="replies"
-              initialCount={2}
+              initialCount={4}
               className="discussion-replies-thread"
             >
               {replies.map(reply => (

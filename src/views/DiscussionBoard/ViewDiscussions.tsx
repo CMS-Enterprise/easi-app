@@ -7,6 +7,7 @@ import Alert from 'components/shared/Alert';
 import IconButton from 'components/shared/IconButton';
 
 import DiscussionPost from './components/DiscussionPost';
+import DiscussionsList from './components/DiscussionsList';
 
 type ViewDiscussionsProps = {
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
@@ -63,8 +64,8 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
             content:
               newDiscussions.length > 0 ? (
                 <>
-                  <ul className="usa-list--unstyled">
-                    {newDiscussions.map((discussion, index) => (
+                  <DiscussionsList type="discussions" initialCount={3}>
+                    {newDiscussions.map(discussion => (
                       <li
                         key={discussion.initialPost.id}
                         className="padding-y-3 padding-x-205"
@@ -75,7 +76,7 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
                         />
                       </li>
                     ))}
-                  </ul>
+                  </DiscussionsList>
 
                   {/* TODO: View more discussions button */}
                 </>
@@ -95,8 +96,8 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
             content:
               discussionsWithReplies.length > 0 ? (
                 <>
-                  <ul className="usa-list--unstyled">
-                    {discussionsWithReplies.map((discussion, index) => (
+                  <DiscussionsList type="discussions" initialCount={3}>
+                    {discussionsWithReplies.map(discussion => (
                       <li
                         key={discussion.initialPost.id}
                         className="padding-y-3 padding-x-205"
@@ -107,9 +108,7 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
                         />
                       </li>
                     ))}
-                  </ul>
-
-                  {/* TODO: View more discussions button */}
+                  </DiscussionsList>
                 </>
               ) : (
                 <Alert type="info" className="margin-top-1" slim>

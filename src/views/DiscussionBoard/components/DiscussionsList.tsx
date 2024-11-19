@@ -36,9 +36,16 @@ const DiscussionsList = ({
     .flat()
     .slice(initialCount);
 
+  /** Discussions type list has bottom border when toggle button is shown */
+  const hasBorder = type === 'discussions' && children.length > initialCount;
+
   return (
     <>
-      <ul className={classNames('usa-list--unstyled', className)}>
+      <ul
+        className={classNames('usa-list--unstyled', className, {
+          'border-bottom-1px border-base-light': hasBorder
+        })}
+      >
         {defaultContent}
 
         {isExpanded && expandedContent}
@@ -49,7 +56,9 @@ const DiscussionsList = ({
           type="button"
           unstyled
           onClick={() => setExpanded(!isExpanded)}
-          className="margin-top-4"
+          className={classNames('margin-top-4', {
+            'margin-bottom-3 width-full text-center': type === 'discussions'
+          })}
         >
           {t(`general.view${isExpanded ? 'Less' : 'More'}`, { type })}
         </Button>
