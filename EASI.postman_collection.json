@@ -1145,7 +1145,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbDiscussions {\n        initialPost {\n            id\n            content\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n        }\n        replies {\n            content\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n        }\n    }\n  }\n}",
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbDiscussions {\n        initialPost {\n            id\n            content\n            votingRole\n            grbRole\n            systemIntakeID\n            createdAt\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n            modifiedAt\n            modifiedByUserAccount {\n                givenName\n                familyName\n            }\n        }\n        replies {\n            id\n            content\n            votingRole\n            grbRole\n            systemIntakeID\n            createdAt\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n            modifiedAt\n            modifiedByUserAccount {\n                givenName\n                familyName\n            }\n        }\n    }\n  }\n}",
 										"variables": "{\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\"\r\n}"
 									}
 								},
