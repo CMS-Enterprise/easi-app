@@ -127,12 +127,12 @@ func parseTagRegEx(tag string) (Tag, error) {
 	}
 
 	class := attributes["class"]
-	if class != "tag" {
+	if class != "mention" {
 		return Tag{}, fmt.Errorf("this is not a valid tag provided class is: %s", class)
 	}
 
 	return Tag{
-		//TagType:   tagType,
+		TagType:   tagType,
 		EntityRaw: attributes["data-id"],
 		//DataLabel:  attributes["data-label"],
 		//EntityUUID: attributes["data-id-db"],
