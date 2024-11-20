@@ -70,11 +70,7 @@ const MentionTextArea = ({
   className
 }: {
   id: string;
-  setFieldValue?: (
-    field: string,
-    value: any,
-    shouldValidate?: boolean | undefined
-  ) => void;
+  setFieldValue?: (value: any, shouldValidate?: boolean | undefined) => void;
   editable?: boolean;
   disabled?: boolean;
   initialContent?: string;
@@ -138,10 +134,10 @@ const MentionTextArea = ({
       const inputContent = input?.getHTML();
       if (setFieldValue) {
         if (extractTextContent(inputContent) === '') {
-          setFieldValue('content', '');
+          setFieldValue('');
           return;
         }
-        setFieldValue('content', inputContent);
+        setFieldValue(inputContent);
       }
     },
     // Sets a alert of a mention is selected, and users/teams will be emailed
