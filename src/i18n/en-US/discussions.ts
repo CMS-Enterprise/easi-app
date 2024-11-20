@@ -22,7 +22,7 @@ const discussions = {
     reply: 'Reply',
     saveDiscussion: 'Save discussion',
 
-    startDiscussion: 'Start a new discussion',
+    startDiscussion: 'Start a discussion',
 
     view: 'View', // TODO: this is in other i18n files, move to general.ts?
     viewDiscussionBoard: 'View discussion board',

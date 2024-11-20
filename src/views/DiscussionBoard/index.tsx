@@ -1,5 +1,6 @@
 import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 
 import MentionTextArea from '../../components/MentionTextArea';
@@ -33,18 +34,20 @@ function DiscussionBoard({ isOpen, closeModal, id }: DiscussionBoardProps) {
 
   const onSubmit: SubmitHandler<DiscussionForm> = data => console.log(data);
 
+  const { t } = useTranslation('discussions');
+
   return (
     <DiscussionModalWrapper isOpen={isOpen} closeModal={closeModal}>
       {/* Question */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <h1 className="line-height-heading-4 margin-top-0 margin-bottom-1">
-          Start a discussion
+          {t('general.startDiscussion')}
         </h1>
         <p className="font-body-md line-height-body-4 margin-top-1 margin-bottom-5">
-          Have a question or comment that you want to discuss internally with
-          the Governance Admin Team or other Governance Review Board (GRB)
-          members involved in this request? Start a discussion and you’ll be
-          notified when they reply.
+          {t('general.contribute.description', {
+            groupNames:
+              'Governance Admin Team or other Governance Review Board (GRB)'
+          })}
         </p>
         <div className="position-relative">
           <Controller
@@ -73,10 +76,10 @@ function DiscussionBoard({ isOpen, closeModal, id }: DiscussionBoardProps) {
               closeModal();
             }}
           >
-            Cancel
+            {t('general.cancel')}
           </Button>
           <Button type="submit" disabled={!isValid}>
-            Save discussion
+            {t('general.saveDiscussion')}
           </Button>
         </ButtonGroup>
       </form>

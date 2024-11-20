@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // import { useTranslation } from 'react-i18next';
 import Mention from '@tiptap/extension-mention';
 import {
@@ -79,7 +80,7 @@ const MentionTextArea = ({
   initialContent?: string;
   className?: string;
 }) => {
-  // const { t } = useTranslation('');
+  const { t } = useTranslation('discussions');
 
   const [tagAlert, setTagAlert] = useState<boolean>(false);
 
@@ -152,6 +153,7 @@ const MentionTextArea = ({
 
   useEffect(() => {
     if (initialContent) editor?.commands.setContent(initialContent);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -167,9 +169,7 @@ const MentionTextArea = ({
 
       {tagAlert && editable && (
         <Alert type="info" slim>
-          {/* t() */}
-          When you save your discussion, the selected team(s) and individual(s)
-          will be notified via email.
+          {t('general.alerts.saveDiscussion')}
         </Alert>
       )}
     </>
