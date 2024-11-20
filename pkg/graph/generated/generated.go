@@ -9802,9 +9802,6 @@ type Tag {
   taggedContentTable: String!
   taggedContentID: UUID!
   entityUUID: UUID
-
-  #  entity: TaggedEntity
-
   createdBy: UUID!
   createdByUserAccount: UserAccount!
   createdAt: Time!
