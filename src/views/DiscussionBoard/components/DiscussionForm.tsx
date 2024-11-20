@@ -10,7 +10,7 @@ import {
 } from 'gql/gen/graphql';
 
 import { useEasiForm } from 'components/EasiForm';
-import RichTextEditor from 'components/RichTextEditor';
+import MentionTextArea from 'components/MentionTextArea';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
@@ -147,14 +147,12 @@ const DiscussionForm = ({
           name="content"
           control={control}
           render={({ field: { ref, ...field } }) => (
-            // TODO: Update to use <MentionTextArea /> when completed
-            <RichTextEditor
-              field={field}
-              editableProps={{
-                id: field.name,
-                'aria-describedby': 'contentHelpText'
-              }}
-              required
+            <MentionTextArea
+              id={`mention-${type}`}
+              editable
+              className="font-body-md"
+              initialContent={field.value}
+              setFieldValue={(fieldname, value) => field.onChange(value)}
             />
           )}
         />
