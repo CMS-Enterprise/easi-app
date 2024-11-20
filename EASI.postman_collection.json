@@ -1145,7 +1145,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbDiscussions {\n        initialPost {\n            content\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n        }\n        replies {\n            content\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n        }\n    }\n  }\n}",
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbDiscussions {\n        initialPost {\n            id\n            content\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n        }\n        replies {\n            content\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n        }\n    }\n  }\n}",
 										"variables": "{\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\"\r\n}"
 									}
 								},
@@ -1165,7 +1165,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"pm.collectionVariables.set(\"SystemIntakeGRBDiscussionID\", pm.response.json().data.createSystemIntakeGRBDiscussionPost.id)"
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -1212,7 +1212,7 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "mutation createSystemIntakeGRBDiscussionReply($input: createSystemIntakeGRBDiscussionReplyInput!) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n        id\n        username\n    }\n  }\n}",
-										"variables": "{\r\n  \"input\": {\r\n    \"initialPostID\": \"00000000-0000-0000-0000-000000000000\",\r\n    \"content\": \"<p>monkey kiwi phonebook</p>\"\r\n  }\r\n}"
+										"variables": "{\r\n  \"input\": {\r\n    \"initialPostID\": \"{{SystemIntakeGRBDiscussionID}}\",\r\n    \"content\": \"<p>monkey kiwi maduros senor</p>\"\r\n  }\r\n}"
 									}
 								},
 								"url": {
@@ -1498,6 +1498,39 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "query systemIntake {\n    systemIntakes(openRequests: true) {\n        id\n        requestName\n        relatedIntakes {\n            id\n            requestName\n        }\n        relatedTRBRequests {\n            id\n            name\n        }\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SystemIntake Get All w/ Discussions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query systemIntake {\n    systemIntakes(openRequests: true) {\n        id\n        requestName\n        grbDiscussions {\n            initialPost {\n                id\n                content\n            }\n            replies {\n                id\n                content\n            }\n        }\n    }\n}",
 								"variables": ""
 							}
 						},
@@ -4176,6 +4209,11 @@
 		{
 			"key": "SystemIntakeGRBReviewerID",
 			"value": ""
+		},
+		{
+			"key": "SystemIntakeGRBDiscussionID",
+			"value": "",
+			"type": "string"
 		}
 	]
 }
