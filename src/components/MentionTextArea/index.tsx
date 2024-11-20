@@ -157,7 +157,7 @@ const MentionTextArea = ({
       <EditorContent
         editor={editor}
         id={id}
-        className={classNames(className, {
+        className={classNames(className, 'usa-textarea', {
           tiptap__readonly: !editable,
           tiptap__editable: editable
         })}
