@@ -12,7 +12,8 @@ import {
   ModalHeading
 } from '@trussworks/react-uswds';
 import {
-  GetSystemIntakeGRBReviewersDocument,
+  GetSystemIntakeGRBReviewDocument,
+  SystemIntakeGRBReviewDiscussionFragment,
   SystemIntakeGRBReviewerFragment,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
@@ -35,9 +36,9 @@ import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
-import DiscussionBoard from '../../DiscussionBoard';
 import ITGovAdminContext from '../ITGovAdminContext';
 
+import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
 
@@ -50,6 +51,7 @@ type GRBReviewProps = {
   businessCase: BusinessCaseModel;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   documents: SystemIntakeDocument[];
+  grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   grbReviewStartedAt?: string | null;
 };
 
@@ -60,6 +62,7 @@ const GRBReview = ({
   state,
   grbReviewers,
   documents,
+  grbDiscussions,
   grbReviewStartedAt
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
@@ -80,12 +83,7 @@ const GRBReview = ({
   const { showMessage } = useMessage();
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
-    refetchQueries: [
-      {
-        query: GetSystemIntakeGRBReviewersDocument,
-        variables: { id }
-      }
-    ]
+    refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
 
   const [startGRBReview] = useStartGRBReviewMutation({
@@ -96,7 +94,7 @@ const GRBReview = ({
     },
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewersDocument,
+        query: GetSystemIntakeGRBReviewDocument,
         variables: { id }
       }
     ]
@@ -130,8 +128,6 @@ const GRBReview = ({
     },
     [history, isForm, id, mutate, showMessage, t]
   );
-
-  const [isDiscussionOpen, setIsDiscussionOpen] = useState(false);
 
   return (
     <>
@@ -366,15 +362,9 @@ const GRBReview = ({
 
             <DocumentsTable systemIntakeId={id} documents={documents} />
 
-            <div className="margin-y-4">
-              <Button type="button" onClick={() => setIsDiscussionOpen(true)}>
-                View discussion board
-              </Button>
-            </div>
-            <DiscussionBoard
-              isOpen={isDiscussionOpen}
-              closeModal={() => setIsDiscussionOpen(false)}
-              id="grb-discussion"
+            <Discussions
+              grbDiscussions={grbDiscussions}
+              className="margin-top-4 margin-bottom-6"
             />
 
             <ParticipantsTable

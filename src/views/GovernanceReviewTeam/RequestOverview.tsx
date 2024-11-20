@@ -6,7 +6,10 @@ import { Route, Switch, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
+import {
+  SystemIntakeGRBReviewDiscussionFragment,
+  SystemIntakeGRBReviewerFragment
+} from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
@@ -45,11 +48,13 @@ import './index.scss';
 type RequestOverviewProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbReviewStartedAt?: string | null;
+  grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
 };
 
 const RequestOverview = ({
   grbReviewers,
-  grbReviewStartedAt
+  grbReviewStartedAt,
+  grbDiscussions
 }: RequestOverviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const flags = useFlags();
@@ -211,6 +216,7 @@ const RequestOverview = ({
                         businessCase={businessCase}
                         grbReviewers={grbReviewers}
                         grbReviewStartedAt={grbReviewStartedAt}
+                        grbDiscussions={grbDiscussions}
                       />
                     )}
                   />
