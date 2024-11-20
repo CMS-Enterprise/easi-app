@@ -150,7 +150,7 @@ const DiscussionForm = ({
             <MentionTextArea
               id={`mention-${type}`}
               editable
-              className="font-body-md"
+              className="height-auto margin-top-1 font-body-md"
               initialContent={field.value}
               setFieldValue={(fieldname, value) => field.onChange(value)}
             />
