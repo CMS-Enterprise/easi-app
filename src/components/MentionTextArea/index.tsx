@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { useTranslation } from 'react-i18next';
 import Mention from '@tiptap/extension-mention';
 import {
@@ -12,6 +12,8 @@ import classNames from 'classnames';
 
 // import { sortBy } from 'lodash';
 import Alert from 'components/shared/Alert';
+
+import extractTextContent from '../../utils/extractTextContent';
 
 import suggestion from './suggestion';
 import { getMentions } from './util';
@@ -74,7 +76,7 @@ const MentionTextArea = ({
   ) => void;
   editable?: boolean;
   disabled?: boolean;
-  initialContent?: any;
+  initialContent?: string;
   className?: string;
 }) => {
   // const { t } = useTranslation('');
@@ -112,40 +114,45 @@ const MentionTextArea = ({
     ];
   };
 
-  const editor = useEditor(
-    {
-      editable: editable && !disabled,
-      editorProps: {
-        attributes: {
-          id
-        }
-      },
-      extensions: [
-        StarterKit,
-        CustomMention.configure({
-          HTMLAttributes: {
-            class: 'mention'
-          },
-          suggestion: {
-            ...suggestion,
-            items: fetchUsers
-          }
-        })
-      ],
-      onUpdate: ({ editor: input }: any) => {
-        // Uses the form setter prop (Formik) for mutation input
-        if (setFieldValue) {
-          setFieldValue('content', input?.getHTML());
-        }
-      },
-      // Sets a alert of a mention is selected, and users/teams will be emailed
-      onSelectionUpdate: ({ editor: input }: any) => {
-        setTagAlert(!!getMentions(input?.getJSON()).length);
-      },
-      content: initialContent
+  const editor = useEditor({
+    editable: editable && !disabled,
+    editorProps: {
+      attributes: {
+        id
+      }
     },
-    [initialContent, disabled]
-  );
+    extensions: [
+      StarterKit,
+      CustomMention.configure({
+        HTMLAttributes: {
+          class: 'mention'
+        },
+        suggestion: {
+          ...suggestion,
+          items: fetchUsers
+        }
+      })
+    ],
+    onUpdate: ({ editor: input }) => {
+      const inputContent = input?.getHTML();
+      if (setFieldValue) {
+        if (extractTextContent(inputContent) === '') {
+          setFieldValue('content', '');
+          return;
+        }
+        setFieldValue('content', inputContent);
+      }
+    },
+    // Sets a alert of a mention is selected, and users/teams will be emailed
+    onSelectionUpdate: ({ editor: input }: any) => {
+      setTagAlert(!!getMentions(input?.getJSON()).length);
+    },
+    content: initialContent
+  });
+
+  useEffect(() => {
+    if (initialContent) editor?.commands.setContent(initialContent);
+  }, []);
 
   return (
     <>
