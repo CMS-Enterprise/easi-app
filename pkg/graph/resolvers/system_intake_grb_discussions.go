@@ -33,7 +33,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return nil, errors.New("user not authorized to create discussion post")
 		}
 		post := models.NewSystemIntakeGRBReviewDiscussionPost(principal)
-		post.Content = input.Content.ToTaggedContent()
+		post.Content = input.Content.RawContent
 		post.SystemIntakeID = intakeID
 		if principalGRBReviewer != nil {
 			post.VotingRole = &principalGRBReviewer.VotingRole
@@ -68,7 +68,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, errors.New("user not authorized to create discussion post")
 		}
 		post := models.NewSystemIntakeGRBReviewDiscussionPost(appcontext.Principal(ctx).Account().ID)
-		post.Content = input.Content.ToTaggedContent()
+		post.Content = input.Content.RawContent
 		post.SystemIntakeID = intakeID
 		post.ReplyToID = &initialPost.ID
 		if principalGRBReviewer != nil {

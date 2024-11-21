@@ -64,9 +64,7 @@ func (th TaggedHTML) MarshalGQLContext(ctx context.Context, w io.Writer) error {
 
 func (th TaggedHTML) UniqueTags() []*Tag {
 	uniqueTags := lo.UniqBy(th.Tags, func(tag *Tag) string {
-
-		//key := fmt.Sprint(tag.TagType, tag.EntityRaw) //The entity raw, and tag type will be unique.
-		return ""
+		return fmt.Sprint(tag.TagType, tag.EntityRaw) //The entity raw, and tag type will be unique.
 	})
 
 	return uniqueTags

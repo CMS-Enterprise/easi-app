@@ -1232,7 +1232,7 @@ enum SystemIntakeGRBReviewerVotingRole {
 
 type SystemIntakeGRBReviewDiscussionPost {
   id: UUID!
-  content: TaggedContent!
+  content: HTML!
   votingRole: SystemIntakeGRBReviewerVotingRole
   grbRole: SystemIntakeGRBReviewerRole
   systemIntakeID: UUID!
@@ -1726,31 +1726,13 @@ type TRBRequestAttendee {
   modifiedAt: Time
 }
 
-type TaggedContent {
-  rawContent: String!
-  tags: [Tag!]!
-}
-
-type Tag {
-  id: UUID!
-  tagType: TagType!
-  taggedField: String!
-  taggedContentTable: String!
-  taggedContentID: UUID!
-  entityUUID: UUID
-  createdBy: UUID!
-  createdByUserAccount: UserAccount!
-  createdAt: Time!
-  modifiedBy: UUID
-  modifiedByUserAccount: UserAccount
-  modifiedAt: Time
-}
-
+# lint-disable defined-types-are-used
 enum TagType {
   USER_ACCOUNT
   GROUP_IT_GOV
   GROUP_GRB_REVIEWERS
 }
+# lint-enable defined-types-are-used
 
 """
 The data needed add a TRB request attendee to a TRB request

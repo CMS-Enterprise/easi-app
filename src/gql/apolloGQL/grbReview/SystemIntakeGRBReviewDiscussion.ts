@@ -3,9 +3,7 @@ import { gql } from '@apollo/client';
 const SystemIntakeGRBReviewDiscussionPost = gql(/* GraphQL */ `
   fragment SystemIntakeGRBReviewDiscussionPost on SystemIntakeGRBReviewDiscussionPost {
     id
-    content {
-      rawContent
-    }
+    content
     votingRole
     grbRole
     createdByUserAccount {

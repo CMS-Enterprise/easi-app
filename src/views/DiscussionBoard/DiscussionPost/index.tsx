@@ -87,7 +87,7 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
          *   - Truncate text after 3 lines with `Read more` button
          */}
         <RichTextViewer
-          value={content.rawContent}
+          value={content}
           className="easi-discussion-post__content"
         />
 

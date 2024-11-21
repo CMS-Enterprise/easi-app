@@ -2217,11 +2217,6 @@ func (r *tRBRequestFormResolver) SubjectAreaOptions(ctx context.Context, obj *mo
 	return subjectAreas, nil
 }
 
-// RawContent is the resolver for the rawContent field.
-func (r *taggedContentResolver) RawContent(ctx context.Context, obj *models.TaggedContent) (string, error) {
-	return obj.RawContent.ValueOrEmptyString(), nil
-}
-
 // CommonName is the resolver for the commonName field.
 func (r *userInfoResolver) CommonName(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return obj.DisplayName, nil
@@ -2330,9 +2325,6 @@ func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 	return &tRBRequestFormResolver{r}
 }
 
-// TaggedContent returns generated.TaggedContentResolver implementation.
-func (r *Resolver) TaggedContent() generated.TaggedContentResolver { return &taggedContentResolver{r} }
-
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2358,5 +2350,4 @@ type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }
 type tRBRequestFeedbackResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
-type taggedContentResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }
