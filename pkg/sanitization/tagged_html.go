@@ -21,15 +21,16 @@ func SanitizeTaggedHTML[stringType ~string](input stringType) stringType {
 
 func getTaggedHTMLPolicy() *bluemonday.Policy {
 	taggedHTMLInitOnce.Do(func() {
-		taggedHTMLPolicy = withTaggedHTMLPolicy(baseHTMLPolicy())
+		taggedHTMLPolicy = createTaggedHTMLPolicy()
 	})
 
 	return taggedHTMLPolicy
 }
 
-func withTaggedHTMLPolicy(policy *bluemonday.Policy) *bluemonday.Policy {
+func createTaggedHTMLPolicy() *bluemonday.Policy {
+	policy := bluemonday.NewPolicy()
 	// rules for tags
-	policy.AllowElements("span")
+	policy.AllowElements("span", "p")
 	policy.AllowAttrs("data-type", "class", "tag-type", "data-id-db").OnElements("span")
 	return policy
 }

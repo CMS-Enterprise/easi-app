@@ -22,14 +22,14 @@ func SanitizeHTML[stringType ~string](input stringType) stringType {
 
 func getHTMLSanitizerPolicy() *bluemonday.Policy {
 	htmlInitOnce.Do(func() {
-		htmlSanitizerPolicy = baseHTMLPolicy()
+		htmlSanitizerPolicy = createHTMLPolicy()
 	})
 
 	return htmlSanitizerPolicy
 }
 
-// baseHTMLPolicy instantiates the standard HTML sanitization policy for the EASI application
-func baseHTMLPolicy() *bluemonday.Policy {
+// createHTMLPolicy instantiates the standard HTML sanitization policy for the EASI application
+func createHTMLPolicy() *bluemonday.Policy {
 
 	policy := bluemonday.NewPolicy()
 	// NOTE make sure to update the allowed policy on the frontend when it is updated here as well
