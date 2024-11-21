@@ -5,13 +5,14 @@ import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import IconButton from 'components/shared/IconButton';
 import { DiscussionAlert } from 'types/discussions';
+import { NotFoundPartial } from 'views/NotFound';
 
 import DiscussionForm from './components/DiscussionForm';
 import DiscussionPost from './components/DiscussionPost';
 import DiscussionsList from './components/DiscussionsList';
 
 type DiscussionProps = {
-  discussion: SystemIntakeGRBReviewDiscussionFragment;
+  discussion: SystemIntakeGRBReviewDiscussionFragment | null;
   closeModal: () => void;
   setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
 };
@@ -28,6 +29,8 @@ const Discussion = ({
 }: DiscussionProps) => {
   const { t } = useTranslation('discussions');
   const [showReplies, setShowReplies] = useState(true);
+
+  if (!discussion) return <NotFoundPartial />;
 
   const { initialPost, replies } = discussion;
 

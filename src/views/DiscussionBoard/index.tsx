@@ -28,6 +28,9 @@ function DiscussionBoard({
   /** Discussion alert state for form success and error messages */
   const [discussionAlert, setDiscussionAlert] = useState<DiscussionAlert>(null);
 
+  // Get the first discussion from the array for testing purposes
+  const activeDiscussion = grbDiscussions.length > 0 ? grbDiscussions[0] : null;
+
   // Reset discussionAlert when side panel is opened or closed
   useEffect(() => {
     setDiscussionAlert(null);
@@ -48,13 +51,14 @@ function DiscussionBoard({
       {/* <ViewDiscussions grbDiscussions={grbDiscussions} /> */}
 
       {/* <StartDiscussion
-        systemIntakeID={systemIntakeId}
+        systemIntakeID={systemIntakeID}
         closeModal={closeModal}
+        setDiscussionAlert={setDiscussionAlert}
       /> */}
 
       <Discussion
-        // TODO: Replace with active discussion
-        discussion={grbDiscussions[0]}
+        // TODO: Update to discussion being viewed
+        discussion={activeDiscussion}
         closeModal={closeModal}
         setDiscussionAlert={setDiscussionAlert}
       />
