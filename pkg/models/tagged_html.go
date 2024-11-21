@@ -80,7 +80,7 @@ func (th TaggedHTML) ToTaggedContent() TaggedContent {
 // and then sanitize and parse the input.
 func NewTaggedContentFromString(htmlString string) (TaggedContent, error) {
 	// sanitize
-	htmlString = sanitization.SanitizeHTML(htmlString)
+	htmlString = sanitization.SanitizeTaggedHTML(htmlString)
 	tags, err := tagsFromStringRegex(htmlString)
 	if err != nil {
 		return TaggedContent{}, err
