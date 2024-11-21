@@ -9,6 +9,7 @@ import (
 	"io"
 	"regexp"
 
+	"github.com/google/uuid"
 	"github.com/samber/lo"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -64,7 +65,7 @@ func (th TaggedHTML) MarshalGQLContext(ctx context.Context, w io.Writer) error {
 
 func (th TaggedHTML) UniqueTags() []*Tag {
 	uniqueTags := lo.UniqBy(th.Tags, func(tag *Tag) string {
-		return fmt.Sprint(tag.TagType, tag.EntityRaw) //The entity raw, and tag type will be unique.
+		return fmt.Sprint(tag.TagType, tag.TaggedContentID.String()) //The entity raw, and tag type will be unique.
 	})
 
 	return uniqueTags
@@ -129,11 +130,19 @@ func parseTagRegEx(tag string) (Tag, error) {
 		return Tag{}, fmt.Errorf("this is not a valid tag provided class is: %s", class)
 	}
 
+	id := attributes["data-id"]
+	if len(id) < 1 {
+		return Tag{}, errors.New("missing data-id in tag")
+	}
+
+	parsed, err := uuid.Parse(id)
+	if err != nil {
+		return Tag{}, fmt.Errorf("failed to prase UUID when parsing tags: %w", err)
+	}
+
 	return Tag{
-		TagType:   tagType,
-		EntityRaw: attributes["data-id"],
-		//DataLabel:  attributes["data-label"],
-		//EntityUUID: attributes["data-id-db"],
+		TagType:         tagType,
+		TaggedContentID: parsed,
 	}, nil
 }
 
