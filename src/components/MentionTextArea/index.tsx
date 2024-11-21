@@ -121,7 +121,10 @@ const MentionTextArea = ({
         }
       },
       extensions: [
-        StarterKit,
+        StarterKit.configure({
+          bulletList: false,
+          orderedList: false
+        }),
         CustomMention.configure({
           HTMLAttributes: {
             class: 'mention'
