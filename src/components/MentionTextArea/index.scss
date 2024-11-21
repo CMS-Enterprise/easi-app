@@ -2,9 +2,6 @@
 
 /* Basic editor styles */
 .tiptap {
-  border: 1px solid black;
-  padding: .5rem;
-
   p {
     margin: 0px;
   }
@@ -44,6 +41,18 @@
       min-height: 155px;
       font-size: 16px;
       line-height: 22px;
+    }
+
+    &.usa-textarea {
+      padding: 0;
+
+      div[contenteditable] {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        height: inherit;
+        padding: .5rem;
+      }
     }
   }
 }
