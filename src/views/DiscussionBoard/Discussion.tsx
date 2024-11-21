@@ -40,7 +40,7 @@ const Discussion = ({
 
       <DiscussionPost {...initialPost} />
 
-      {replies && (
+      {replies.length > 0 && (
         <>
           <div className="display-flex flex-justify">
             <h4 className="margin-right-1">
