@@ -13,7 +13,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
-	"github.com/samber/lo"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -671,18 +670,12 @@ func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, in
 
 // CreateSystemIntakeGRBDiscussionPost is the resolver for the createSystemIntakeGRBDiscussionPost field.
 func (r *mutationResolver) CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
-	principal := appcontext.Principal(ctx).Account().ID
-	post := models.NewSystemIntakeGRBReviewDiscussion(principal)
-	post.Content = input.Content
-	return post, nil
+	return resolvers.CreateSystemIntakeGRBDiscussionPost(ctx, r.store, r.emailClient, input)
 }
 
 // CreateSystemIntakeGRBDiscussionReply is the resolver for the createSystemIntakeGRBDiscussionReply field.
 func (r *mutationResolver) CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
-	principal := appcontext.Principal(ctx).Account().ID
-	post := models.NewSystemIntakeGRBReviewDiscussion(principal)
-	post.Content = input.Content
-	return post, nil
+	return resolvers.CreateSystemIntakeGRBDiscussionReply(ctx, r.store, r.emailClient, input)
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
@@ -1931,30 +1924,11 @@ func (r *systemIntakeResolver) RelatedTRBRequests(ctx context.Context, obj *mode
 
 // GrbDiscussions is the resolver for the grbDiscussions field.
 func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
-	principal := appcontext.Principal(ctx).Account().ID
-	user1, err := userhelpers.GetOrCreateUserAccount(ctx, r.store, r.store, "USR1", false, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
+	posts, err := dataloaders.GetSystemIntakeGRBDiscussionPostsBySystemIntakeID(ctx, obj.ID)
 	if err != nil {
 		return nil, err
 	}
-	initialPost1 := models.NewSystemIntakeGRBReviewDiscussion(principal)
-	initialPost2 := models.NewSystemIntakeGRBReviewDiscussion(principal)
-	initialPost1.Content = models.HTML("<p>This is an initial discussion post.</p>")
-	initialPost2.Content = models.HTML("<p>This is also an initial discussion post.</p>")
-	replies := lo.Map([]uuid.UUID{user1.ID, principal, user1.ID}, func(id uuid.UUID, _ int) *models.SystemIntakeGRBReviewDiscussionPost {
-		post := models.NewSystemIntakeGRBReviewDiscussion(id)
-		post.Content = models.HTML("<p>This is a reply</p>")
-		return post
-	})
-	return []*models.SystemIntakeGRBReviewDiscussion{
-		{
-			InitialPost: initialPost1,
-			Replies:     replies,
-		},
-		{
-			InitialPost: initialPost2,
-			Replies:     replies,
-		},
-	}, nil
+	return models.CreateGRBDiscussionsFromPosts(posts)
 }
 
 // DocumentType is the resolver for the documentType field.
