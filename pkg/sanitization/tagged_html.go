@@ -30,6 +30,6 @@ func getTaggedHTMLPolicy() *bluemonday.Policy {
 func withTaggedHTMLPolicy(policy *bluemonday.Policy) *bluemonday.Policy {
 	// rules for tags
 	policy.AllowElements("span")
-	policy.AllowAttrs("data-type", "class", "data-id", "data-label", "tag-type", "data-id-db").OnElements("span")
+	policy.AllowAttrs("data-type", "class", "tag-type", "data-id-db").OnElements("span")
 	return policy
 }

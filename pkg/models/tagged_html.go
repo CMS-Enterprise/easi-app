@@ -130,7 +130,7 @@ func parseTagRegEx(tag string) (Tag, error) {
 		return Tag{}, fmt.Errorf("this is not a valid tag provided class is: %s", class)
 	}
 
-	id := attributes["data-id"]
+	id := attributes["data-id-db"]
 	if len(id) < 1 {
 		return Tag{}, errors.New("missing data-id in tag")
 	}
