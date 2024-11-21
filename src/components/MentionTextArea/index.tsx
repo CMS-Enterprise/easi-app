@@ -61,115 +61,117 @@ const CustomMention = Mention.extend({
   }
 });
 
-const MentionTextArea = ({
-  id,
-  setFieldValue,
-  editable,
-  disabled,
-  initialContent,
-  className
-}: {
-  id: string;
-  setFieldValue?: (value: any, shouldValidate?: boolean | undefined) => void;
-  editable?: boolean;
-  disabled?: boolean;
-  initialContent?: string;
-  className?: string;
-}) => {
-  const { t } = useTranslation('discussions');
+const MentionTextArea = React.forwardRef<
+  HTMLDivElement,
+  {
+    id: string;
+    setFieldValue?: (value: any, shouldValidate?: boolean | undefined) => void;
+    editable?: boolean;
+    disabled?: boolean;
+    initialContent?: string;
+    className?: string;
+  }
+>(
+  (
+    { id, setFieldValue, editable, disabled, initialContent, className },
+    ref
+  ) => {
+    const { t } = useTranslation('discussions');
 
-  const [tagAlert, setTagAlert] = useState<boolean>(false);
+    const [tagAlert, setTagAlert] = useState<boolean>(false);
 
-  const fetchUsers = ({ query }: { query: string }) => {
-    return [
-      { username: 'a', displayName: 'Admin lead', tagType: 'other' },
-      {
-        username: 'b',
-        displayName: 'Governance Admin Team',
-        tagType: 'other'
-      },
-      {
-        username: 'c',
-        displayName: 'Governance Review Board (GRB)',
-        tagType: 'other'
-      },
-      {
-        username: 'OSYC',
-        displayName: 'Grant Eliezer',
-        tagType: 'user'
-      },
-      {
-        username: 'MKCK',
-        displayName: 'Forest Brown',
-        tagType: 'user'
-      },
-      {
-        username: 'PJEA',
-        displayName: 'Janae Stokes',
-        tagType: 'user'
-      }
-    ];
-  };
-
-  const editor = useEditor({
-    editable: editable && !disabled,
-    editorProps: {
-      attributes: {
-        id
-      }
-    },
-    extensions: [
-      StarterKit,
-      CustomMention.configure({
-        HTMLAttributes: {
-          class: 'mention'
+    const fetchUsers = ({ query }: { query: string }) => {
+      return [
+        { username: 'a', displayName: 'Admin lead', tagType: 'other' },
+        {
+          username: 'b',
+          displayName: 'Governance Admin Team',
+          tagType: 'other'
         },
-        suggestion: {
-          ...suggestion,
-          items: fetchUsers
+        {
+          username: 'c',
+          displayName: 'Governance Review Board (GRB)',
+          tagType: 'other'
+        },
+        {
+          username: 'OSYC',
+          displayName: 'Grant Eliezer',
+          tagType: 'user'
+        },
+        {
+          username: 'MKCK',
+          displayName: 'Forest Brown',
+          tagType: 'user'
+        },
+        {
+          username: 'PJEA',
+          displayName: 'Janae Stokes',
+          tagType: 'user'
         }
-      })
-    ],
-    onUpdate: ({ editor: input }) => {
-      const inputContent = input?.getHTML();
-      if (setFieldValue) {
-        if (extractTextContent(inputContent) === '') {
-          setFieldValue('');
-          return;
+      ];
+    };
+
+    const editor = useEditor({
+      editable: editable && !disabled,
+      editorProps: {
+        attributes: {
+          id
         }
-        setFieldValue(inputContent);
-      }
-    },
-    // Sets a alert of a mention is selected, and users/teams will be emailed
-    onSelectionUpdate: ({ editor: input }: any) => {
-      setTagAlert(!!getMentions(input?.getJSON()).length);
-    },
-    content: initialContent
-  });
+      },
+      extensions: [
+        StarterKit,
+        CustomMention.configure({
+          HTMLAttributes: {
+            class: 'mention'
+          },
+          suggestion: {
+            ...suggestion,
+            items: fetchUsers
+          }
+        })
+      ],
+      onUpdate: ({ editor: input }) => {
+        const inputContent = input?.getHTML();
+        if (setFieldValue) {
+          if (extractTextContent(inputContent) === '') {
+            setFieldValue('');
+            return;
+          }
+          setFieldValue(inputContent);
+        }
+      },
+      // Sets a alert of a mention is selected, and users/teams will be emailed
+      onSelectionUpdate: ({ editor: input }: any) => {
+        setTagAlert(!!getMentions(input?.getJSON()).length);
+      },
+      content: initialContent
+    });
 
-  useEffect(() => {
-    if (initialContent) editor?.commands.setContent(initialContent);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    useEffect(() => {
+      if (initialContent) editor?.commands.setContent(initialContent);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-  return (
-    <>
-      <EditorContent
-        editor={editor}
-        id={id}
-        className={classNames(className, 'usa-textarea', {
-          tiptap__readonly: !editable,
-          tiptap__editable: editable
-        })}
-      />
+    return (
+      <>
+        <EditorContent
+          innerRef={ref}
+          editor={editor}
+          id={id}
+          className={classNames(className, 'usa-textarea', {
+            tiptap__readonly: !editable,
+            tiptap__editable: editable
+          })}
+        />
 
-      {tagAlert && editable && (
-        <Alert type="info" slim>
-          {t('general.alerts.saveDiscussion')}
-        </Alert>
-      )}
-    </>
-  );
-};
+        {tagAlert && editable && (
+          <Alert type="info" slim>
+            {t('general.alerts.saveDiscussion')}
+          </Alert>
+        )}
+      </>
+    );
+  }
+);
 
 export default MentionTextArea;
