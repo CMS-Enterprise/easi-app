@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // import { useTranslation } from 'react-i18next';
 import Mention from '@tiptap/extension-mention';
@@ -11,10 +11,7 @@ import {
 import StarterKit from '@tiptap/starter-kit';
 import classNames from 'classnames';
 
-// import { sortBy } from 'lodash';
 import Alert from 'components/shared/Alert';
-
-import extractTextContent from '../../utils/extractTextContent';
 
 import suggestion from './suggestion';
 import { getMentions } from './util';
@@ -132,8 +129,10 @@ const MentionTextArea = React.forwardRef<
       ],
       onUpdate: ({ editor: input }) => {
         const inputContent = input?.getHTML();
+        const inputText = input?.getText();
+
         if (setFieldValue) {
-          if (extractTextContent(inputContent) === '') {
+          if (inputText === '') {
             setFieldValue('');
             return;
           }
@@ -146,11 +145,6 @@ const MentionTextArea = React.forwardRef<
       },
       content: initialContent
     });
-
-    useEffect(() => {
-      if (initialContent) editor?.commands.setContent(initialContent);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     return (
       <>
