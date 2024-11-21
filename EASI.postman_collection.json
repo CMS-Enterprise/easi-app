@@ -1178,7 +1178,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation createSystemIntakeGRBDiscussion(\n  $input: createSystemIntakeGRBDiscussionPostInput!\n) {\n  createSystemIntakeGRBDiscussionPost(input: $input) {\n    id\n    content {\n      rawContent\n      tags {\n        id\n        tagType\n        taggedField\n        taggedContentTable\n        taggedContentID\n        entityUUID\n        createdBy\n        # createdAt\n        modifiedBy\n        modifiedAt\n      }\n    }\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n      id\n      username\n    }\n  }\n}\n",
+										"query": "mutation createSystemIntakeGRBDiscussion(\n  $input: createSystemIntakeGRBDiscussionPostInput!\n) {\n  createSystemIntakeGRBDiscussionPost(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n      id\n      username\n    }\n  }\n}\n",
 										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"content\": \"<p>banana apple carburetor Let me look into it, ok? <span data-type=\\\"mention\\\" tag-type=\\\"USER_ACCOUNT\\\" class=\\\"mention\\\" data-id=\\\"ADMI\\\" data-label=\\\"ADMI\\\">@Audrey Abrams</span>!\\\"</p>\"\r\n  }\r\n}"
 									}
 								},
