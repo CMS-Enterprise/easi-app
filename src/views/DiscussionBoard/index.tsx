@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
@@ -7,23 +8,21 @@ import { DiscussionAlert } from 'types/discussions';
 
 import Discussion from './Discussion';
 import DiscussionModalWrapper from './DiscussionModalWrapper';
+import StartDiscussion from './StartDiscussion';
+import ViewDiscussions from './ViewDiscussions';
 
-// import ViewDiscussions from './ViewDiscussions';
-// import StartDiscussion from './StartDiscussion';
 import './index.scss';
 
 type DiscussionBoardProps = {
   systemIntakeID: string;
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
-  isOpen: boolean;
-  closeModal: () => void;
 };
+
+type DiscussionMode = 'view' | 'start' | 'reply' | undefined;
 
 function DiscussionBoard({
   systemIntakeID,
-  grbDiscussions,
-  isOpen,
-  closeModal
+  grbDiscussions
 }: DiscussionBoardProps) {
   /** Discussion alert state for form success and error messages */
   const [discussionAlert, setDiscussionAlert] = useState<DiscussionAlert>(null);
@@ -31,13 +30,26 @@ function DiscussionBoard({
   // Get the first discussion from the array for testing purposes
   const activeDiscussion = grbDiscussions.length > 0 ? grbDiscussions[0] : null;
 
+  const history = useHistory();
+
+  const location = useLocation();
+  const q = new URLSearchParams(location.search);
+  const discussionMode = (q.get('discussion') || undefined) as DiscussionMode;
+
   // Reset discussionAlert when side panel is opened or closed
   useEffect(() => {
     setDiscussionAlert(null);
-  }, [setDiscussionAlert, isOpen]);
+  }, [setDiscussionAlert, discussionMode]);
+
+  const closeModal = () => {
+    history.push(`${location.pathname}`);
+  };
 
   return (
-    <DiscussionModalWrapper isOpen={isOpen} closeModal={closeModal}>
+    <DiscussionModalWrapper
+      isOpen={discussionMode !== undefined}
+      closeModal={closeModal}
+    >
       {discussionAlert && (
         <Alert
           slim
@@ -48,20 +60,27 @@ function DiscussionBoard({
           {discussionAlert.message}
         </Alert>
       )}
-      {/* <ViewDiscussions grbDiscussions={grbDiscussions} /> */}
 
-      {/* <StartDiscussion
-        systemIntakeID={systemIntakeID}
-        closeModal={closeModal}
-        setDiscussionAlert={setDiscussionAlert}
-      /> */}
+      {discussionMode === 'view' && (
+        <ViewDiscussions grbDiscussions={grbDiscussions} />
+      )}
 
-      <Discussion
-        // TODO: Update to discussion being viewed
-        discussion={activeDiscussion}
-        closeModal={closeModal}
-        setDiscussionAlert={setDiscussionAlert}
-      />
+      {discussionMode === 'start' && (
+        <StartDiscussion
+          systemIntakeID={systemIntakeID}
+          closeModal={closeModal}
+          setDiscussionAlert={setDiscussionAlert}
+        />
+      )}
+
+      {discussionMode === 'reply' && (
+        <Discussion
+          // TODO: Update to discussion being viewed
+          discussion={activeDiscussion}
+          closeModal={closeModal}
+          setDiscussionAlert={setDiscussionAlert}
+        />
+      )}
     </DiscussionModalWrapper>
   );
 }

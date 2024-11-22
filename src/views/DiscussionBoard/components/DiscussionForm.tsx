@@ -77,6 +77,8 @@ const DiscussionForm = ({
             message: t('general.alerts.startDiscussionSuccess'),
             type: 'success'
           });
+
+          // closeModal();
         })
         .catch(e => {
           setDiscussionAlert({
@@ -107,6 +109,8 @@ const DiscussionForm = ({
             message: t('general.alerts.replySuccess'),
             type: 'success'
           });
+
+          // closeModal();
         })
         .catch(e => {
           setDiscussionAlert({

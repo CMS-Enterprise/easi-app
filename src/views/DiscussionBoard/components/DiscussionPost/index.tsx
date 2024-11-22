@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Icon } from '@trussworks/react-uswds';
 import { SystemIntakeGRBReviewDiscussionPostFragment } from 'gql/gen/graphql';
 import { upperFirst } from 'lodash';
@@ -60,6 +61,9 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
     });
   }, [replies, t]);
 
+  const history = useHistory();
+  const location = useLocation();
+
   return (
     <div className="easi-discussion-post display-flex line-height-body-1">
       <div className="margin-right-105">
@@ -104,7 +108,9 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
               <IconButton
                 type="button"
                 // TODO: Open discussion panel
-                onClick={() => null}
+                onClick={() => {
+                  history.push(`${location.pathname}?discussion=reply`);
+                }}
                 className="margin-right-205"
                 icon={<Icon.Announcement className="text-primary" />}
                 unstyled

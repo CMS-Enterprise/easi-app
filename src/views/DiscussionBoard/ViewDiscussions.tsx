@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Accordion, Icon } from '@trussworks/react-uswds';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
@@ -21,6 +22,8 @@ type ViewDiscussionsProps = {
  */
 const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
   const { t } = useTranslation('discussions');
+  const history = useHistory();
+  const location = useLocation();
 
   const discussionsWithoutReplies: SystemIntakeGRBReviewDiscussionFragment[] =
     grbDiscussions.filter(discussion => discussion.replies.length === 0);
@@ -41,7 +44,10 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
       <IconButton
         type="button"
         // TODO: Go to start discussion view
-        onClick={() => null}
+        onClick={() => () => {
+          // todo onClick doesn't fire
+          history.push(`${location.pathname}?discussion=start`);
+        }}
         icon={<Icon.Announcement />}
         unstyled
       >
