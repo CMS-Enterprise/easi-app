@@ -73,7 +73,14 @@ type MentionTextAreaProps = {
  */
 const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
   (
-    { id, setFieldValue, editable, disabled, initialContent, className },
+    {
+      id,
+      setFieldValue,
+      editable = false,
+      disabled,
+      initialContent,
+      className
+    },
     ref
   ) => {
     const { t } = useTranslation('discussions');
@@ -159,9 +166,9 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
           tabIndex={-1}
           editor={editor}
           id={id}
-          className={classNames(className, 'usa-textarea', {
-            tiptap__readonly: !editable,
-            tiptap__editable: editable
+          className={classNames(className, {
+            'tiptap__readonly font-body-sm line-height-body-5': !editable,
+            'tiptap__editable usa-textarea': editable
           })}
         />
 
