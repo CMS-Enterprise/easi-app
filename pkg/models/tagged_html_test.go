@@ -54,13 +54,13 @@ func TestHTMLMentionFromString(t *testing.T) {
 	tag3Type := TagTypeGroupGrbReviewers
 	tag3 := `<span data-type="mention" tag-type="` + string(tag3Type) + `" class="mention">@` + tag3Name + `</span>`
 	htmlMention := `<p>Hey ` + tag1 + `!  Will you be able to join the meeting next week?  If not, can you contact ` + tag2 + ` to let them know?</p> We are planning on using the ` + tag3 + `solution.`
-	taggedContent, err := NewTaggedHTMLFromString(htmlMention)
+	taggedHTML, err := NewTaggedHTMLFromString(htmlMention)
 	assert.NoError(t, err)
-	assert.Len(t, taggedContent.Tags, 3)
+	assert.Len(t, taggedHTML.Tags, 3)
 
-	mention1 := taggedContent.Tags[0]
-	mention2 := taggedContent.Tags[1]
-	mention3 := taggedContent.Tags[2]
+	mention1 := taggedHTML.Tags[0]
+	mention2 := taggedHTML.Tags[1]
+	mention3 := taggedHTML.Tags[2]
 	assert.EqualValues(t, tag1Type, mention1.TagType)
 	assert.EqualValues(t, tag2Type, mention2.TagType)
 	assert.EqualValues(t, tag3Type, mention3.TagType)
