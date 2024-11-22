@@ -149,6 +149,7 @@ const DiscussionForm = ({
           render={({ field: { ref, ...field } }) => (
             <MentionTextArea
               id={`mention-${type}`}
+              ref={ref}
               editable
               className="height-auto margin-top-1 font-body-md"
               initialContent={field.value}

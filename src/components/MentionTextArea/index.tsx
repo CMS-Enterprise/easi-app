@@ -152,7 +152,8 @@ const MentionTextArea = React.forwardRef<
     return (
       <>
         <EditorContent
-          innerRef={ref}
+          ref={ref}
+          tabIndex={-1}
           editor={editor}
           id={id}
           className={classNames(className, 'usa-textarea', {
