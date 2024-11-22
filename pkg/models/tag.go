@@ -4,7 +4,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// Tag represents a reference to another data structure in the database
+// Tag represents a tagged item in HTML
 type Tag struct {
 	// BaseStructUser // TODO Introduce again if we store tags in the database
 	TagType         TagType   `json:"tagType" db:"tag_type"`

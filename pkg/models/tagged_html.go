@@ -62,7 +62,7 @@ func (th TaggedHTML) MarshalGQLContext(ctx context.Context, w io.Writer) error {
 
 func (th TaggedHTML) UniqueTags() []*Tag {
 	uniqueTags := lo.UniqBy(th.Tags, func(tag *Tag) string {
-		return fmt.Sprint(tag.TagType, tag.TaggedContentID.String()) //The entity raw, and tag type will be unique.
+		return fmt.Sprint(tag.TagType, tag.TaggedContentID.String())
 	})
 
 	return uniqueTags
@@ -87,23 +87,14 @@ func NewTaggedHTMLFromString(htmlString string) (TaggedHTML, error) {
 func tagsFromStringRegex(htmlString string) ([]*Tag, error) {
 	tagStrings := spanRe.FindAllString(htmlString, -1)
 
-	var (
-		tags []*Tag
-		errs []error
-	)
-
+	var tags []*Tag
 	for _, tagString := range tagStrings {
 		parsedTag, err := parseTagRegEx(tagString)
 		if err != nil {
-			errs = append(errs, fmt.Errorf("error parsing html tag %s, %w", tagString, err))
-			continue
+			return nil, err
 		}
 
 		tags = append(tags, &parsedTag)
-	}
-
-	if len(errs) > 1 {
-		return tags, fmt.Errorf("issues encountered parsing html Tags . %v", errs)
 	}
 
 	return tags, nil
@@ -119,12 +110,19 @@ func parseTagRegEx(tag string) (Tag, error) {
 
 	class := attributes["class"]
 	if class != "mention" {
-		return Tag{}, fmt.Errorf("this is not a valid tag provided class is: %s", class)
+		return Tag{}, fmt.Errorf("%s is not a valid class for tag", class)
+	}
+
+	// if tag type is NOT a user account, there will be no UUID to parse
+	if tagType != TagTypeUserAccount {
+		return Tag{
+			TagType: tagType,
+		}, nil
 	}
 
 	id := attributes["data-id-db"]
 	if len(id) < 1 {
-		return Tag{}, errors.New("missing data-id in tag")
+		return Tag{}, errors.New("missing data-id-db in tag")
 	}
 
 	parsed, err := uuid.Parse(id)
