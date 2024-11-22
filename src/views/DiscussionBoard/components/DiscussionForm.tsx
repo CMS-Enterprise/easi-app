@@ -153,7 +153,7 @@ const DiscussionForm = ({
               editable
               className="height-auto"
               initialContent={field.value}
-              setFieldValue={value => field.onChange(value)}
+              setFieldValue={field.onChange}
             />
           )}
         />

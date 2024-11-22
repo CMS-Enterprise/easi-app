@@ -59,17 +59,19 @@ const CustomMention = Mention.extend({
   }
 });
 
-const MentionTextArea = React.forwardRef<
-  HTMLDivElement,
-  {
-    id: string;
-    setFieldValue?: (value: any, shouldValidate?: boolean | undefined) => void;
-    editable?: boolean;
-    disabled?: boolean;
-    initialContent?: string;
-    className?: string;
-  }
->(
+type MentionTextAreaProps = {
+  id: string;
+  setFieldValue?: (value: string) => void;
+  editable?: boolean;
+  disabled?: boolean;
+  initialContent?: string;
+  className?: string;
+};
+
+/**
+ * Rich text area component with functionality to tag users or teams
+ */
+const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
   (
     { id, setFieldValue, editable, disabled, initialContent, className },
     ref
@@ -78,6 +80,7 @@ const MentionTextArea = React.forwardRef<
 
     const [tagAlert, setTagAlert] = useState<boolean>(false);
 
+    /** Mock users array for testing until tagging functionality is implemented  */
     const fetchUsers = ({ query }: { query: string }) => {
       return [
         { username: 'a', displayName: 'Admin lead', tagType: 'other' },
@@ -142,7 +145,7 @@ const MentionTextArea = React.forwardRef<
           setFieldValue(inputContent);
         }
       },
-      // Sets a alert of a mention is selected, and users/teams will be emailed
+      // Sets an alert if a mention is selected, and users/teams will be emailed
       onSelectionUpdate: ({ editor: input }: any) => {
         setTagAlert(!!getMentions(input?.getJSON()).length);
       },
