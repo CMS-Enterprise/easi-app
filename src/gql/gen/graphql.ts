@@ -3236,6 +3236,20 @@ export type CreateSystemIntakeGRBDiscussionReplyInput = {
   initialPostID: Scalars['UUID']['input'];
 };
 
+export type CreateSystemIntakeGRBDiscussionPostMutationVariables = Exact<{
+  input: CreateSystemIntakeGRBDiscussionPostInput;
+}>;
+
+
+export type CreateSystemIntakeGRBDiscussionPostMutation = { __typename: 'Mutation', createSystemIntakeGRBDiscussionPost?: { __typename: 'SystemIntakeGRBReviewDiscussionPost', id: UUID } | null };
+
+export type CreateSystemIntakeGRBDiscussionReplyMutationVariables = Exact<{
+  input: CreateSystemIntakeGRBDiscussionReplyInput;
+}>;
+
+
+export type CreateSystemIntakeGRBDiscussionReplyMutation = { __typename: 'Mutation', createSystemIntakeGRBDiscussionReply?: { __typename: 'SystemIntakeGRBReviewDiscussionPost', id: UUID } | null };
+
 export type CreateSystemIntakeGRBReviewersMutationVariables = Exact<{
   input: CreateSystemIntakeGRBReviewersInput;
 }>;
@@ -3604,6 +3618,72 @@ export const TRBGuidanceLetterFragmentDoc = gql`
   modifiedAt
 }
     ${TRBGuidanceLetterInsightFragmentDoc}`;
+export const CreateSystemIntakeGRBDiscussionPostDocument = gql`
+    mutation CreateSystemIntakeGRBDiscussionPost($input: createSystemIntakeGRBDiscussionPostInput!) {
+  createSystemIntakeGRBDiscussionPost(input: $input) {
+    id
+  }
+}
+    `;
+export type CreateSystemIntakeGRBDiscussionPostMutationFn = Apollo.MutationFunction<CreateSystemIntakeGRBDiscussionPostMutation, CreateSystemIntakeGRBDiscussionPostMutationVariables>;
+
+/**
+ * __useCreateSystemIntakeGRBDiscussionPostMutation__
+ *
+ * To run a mutation, you first call `useCreateSystemIntakeGRBDiscussionPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSystemIntakeGRBDiscussionPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSystemIntakeGrbDiscussionPostMutation, { data, loading, error }] = useCreateSystemIntakeGRBDiscussionPostMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateSystemIntakeGRBDiscussionPostMutation(baseOptions?: Apollo.MutationHookOptions<CreateSystemIntakeGRBDiscussionPostMutation, CreateSystemIntakeGRBDiscussionPostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSystemIntakeGRBDiscussionPostMutation, CreateSystemIntakeGRBDiscussionPostMutationVariables>(CreateSystemIntakeGRBDiscussionPostDocument, options);
+      }
+export type CreateSystemIntakeGRBDiscussionPostMutationHookResult = ReturnType<typeof useCreateSystemIntakeGRBDiscussionPostMutation>;
+export type CreateSystemIntakeGRBDiscussionPostMutationResult = Apollo.MutationResult<CreateSystemIntakeGRBDiscussionPostMutation>;
+export type CreateSystemIntakeGRBDiscussionPostMutationOptions = Apollo.BaseMutationOptions<CreateSystemIntakeGRBDiscussionPostMutation, CreateSystemIntakeGRBDiscussionPostMutationVariables>;
+export const CreateSystemIntakeGRBDiscussionReplyDocument = gql`
+    mutation CreateSystemIntakeGRBDiscussionReply($input: createSystemIntakeGRBDiscussionReplyInput!) {
+  createSystemIntakeGRBDiscussionReply(input: $input) {
+    id
+  }
+}
+    `;
+export type CreateSystemIntakeGRBDiscussionReplyMutationFn = Apollo.MutationFunction<CreateSystemIntakeGRBDiscussionReplyMutation, CreateSystemIntakeGRBDiscussionReplyMutationVariables>;
+
+/**
+ * __useCreateSystemIntakeGRBDiscussionReplyMutation__
+ *
+ * To run a mutation, you first call `useCreateSystemIntakeGRBDiscussionReplyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSystemIntakeGRBDiscussionReplyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSystemIntakeGrbDiscussionReplyMutation, { data, loading, error }] = useCreateSystemIntakeGRBDiscussionReplyMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateSystemIntakeGRBDiscussionReplyMutation(baseOptions?: Apollo.MutationHookOptions<CreateSystemIntakeGRBDiscussionReplyMutation, CreateSystemIntakeGRBDiscussionReplyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSystemIntakeGRBDiscussionReplyMutation, CreateSystemIntakeGRBDiscussionReplyMutationVariables>(CreateSystemIntakeGRBDiscussionReplyDocument, options);
+      }
+export type CreateSystemIntakeGRBDiscussionReplyMutationHookResult = ReturnType<typeof useCreateSystemIntakeGRBDiscussionReplyMutation>;
+export type CreateSystemIntakeGRBDiscussionReplyMutationResult = Apollo.MutationResult<CreateSystemIntakeGRBDiscussionReplyMutation>;
+export type CreateSystemIntakeGRBDiscussionReplyMutationOptions = Apollo.BaseMutationOptions<CreateSystemIntakeGRBDiscussionReplyMutation, CreateSystemIntakeGRBDiscussionReplyMutationVariables>;
 export const CreateSystemIntakeGRBReviewersDocument = gql`
     mutation CreateSystemIntakeGRBReviewers($input: CreateSystemIntakeGRBReviewersInput!) {
   createSystemIntakeGRBReviewers(input: $input) {
@@ -4902,6 +4982,8 @@ export const TypedTRBAdminNoteGuidanceLetterCategoryDataFragmentDoc = {"kind":"D
 export const TypedTRBAdminNoteFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBAdminNote"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNote"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isArchived"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"noteText"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"categorySpecificData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteInitialRequestFormCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBAdminNoteInitialRequestFormCategoryData"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteSupportingDocumentsCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBAdminNoteSupportingDocumentsCategoryData"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteGuidanceLetterCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBAdminNoteGuidanceLetterCategoryData"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBAdminNoteInitialRequestFormCategoryData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteInitialRequestFormCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"appliesToBasicRequestDetails"}},{"kind":"Field","name":{"kind":"Name","value":"appliesToSubjectAreas"}},{"kind":"Field","name":{"kind":"Name","value":"appliesToAttendees"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBAdminNoteSupportingDocumentsCategoryData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteSupportingDocumentsCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBAdminNoteGuidanceLetterCategoryData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteGuidanceLetterCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"appliesToMeetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"appliesToNextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"insights"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}}]}}]} as unknown as DocumentNode<TRBAdminNoteFragment, unknown>;
 export const TypedTRBGuidanceLetterInsightFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<TRBGuidanceLetterInsightFragment, unknown>;
 export const TypedTRBGuidanceLetterFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetter"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetter"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"nextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"isFollowupRecommended"}},{"kind":"Field","name":{"kind":"Name","value":"dateSent"}},{"kind":"Field","name":{"kind":"Name","value":"followupPoint"}},{"kind":"Field","name":{"kind":"Name","value":"insights"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterRecommendation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"recommendation"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<TRBGuidanceLetterFragment, unknown>;
+export const TypedCreateSystemIntakeGRBDiscussionPostDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeGRBDiscussionPost"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"createSystemIntakeGRBDiscussionPostInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeGRBDiscussionPost"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeGRBDiscussionPostMutation, CreateSystemIntakeGRBDiscussionPostMutationVariables>;
+export const TypedCreateSystemIntakeGRBDiscussionReplyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeGRBDiscussionReply"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"createSystemIntakeGRBDiscussionReplyInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeGRBDiscussionReply"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeGRBDiscussionReplyMutation, CreateSystemIntakeGRBDiscussionReplyMutationVariables>;
 export const TypedCreateSystemIntakeGRBReviewersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeGRBReviewersInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeGRBReviewers"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"reviewers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeGRBReviewersMutation, CreateSystemIntakeGRBReviewersMutationVariables>;
 export const TypedDeleteSystemIntakeGRBReviewerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteSystemIntakeGRBReviewer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteSystemIntakeGRBReviewerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteSystemIntakeGRBReviewer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<DeleteSystemIntakeGRBReviewerMutation, DeleteSystemIntakeGRBReviewerMutationVariables>;
 export const TypedgetGRBReviewersComparisonsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getGRBReviewersComparisons"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"compareGRBReviewersByIntakeID"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"reviewers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isCurrentReviewer"}}]}}]}}]}}]} as unknown as DocumentNode<GetGRBReviewersComparisonsQuery, GetGRBReviewersComparisonsQueryVariables>;
