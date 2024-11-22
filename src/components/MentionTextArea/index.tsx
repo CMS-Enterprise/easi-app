@@ -147,7 +147,6 @@ const MentionTextArea = ({
     [initialContent, disabled]
   );
 
-  console.info(editor?.getHTML());
   return (
     <>
       <EditorContent

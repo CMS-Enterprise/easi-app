@@ -22,10 +22,7 @@ var (
 )
 
 // TaggedHTML Is the input type for HTML that could contain tags
-type TaggedHTML TaggedContent
-
-// TaggedContent represents rich text HTML with possible tagged HTML
-type TaggedContent struct {
+type TaggedHTML struct {
 	RawContent HTML
 	Tags       []*Tag
 }
@@ -37,7 +34,7 @@ func (th *TaggedHTML) UnmarshalGQLContext(_ context.Context, v interface{}) erro
 		return errors.New("invalid TaggedHTML")
 	}
 
-	tc, err := NewTaggedContentFromString(rawHTML)
+	tc, err := NewTaggedHTMLFromString(rawHTML)
 	if err != nil {
 		return err
 	}
@@ -71,22 +68,17 @@ func (th TaggedHTML) UniqueTags() []*Tag {
 	return uniqueTags
 }
 
-// ToTaggedContent casts the input to TaggedContent
-func (th TaggedHTML) ToTaggedContent() TaggedContent {
-	return TaggedContent(th)
-}
-
-// NewTaggedContentFromString converts an htmlString into TaggedContent. It will store the input string as the raw content,
+// NewTaggedHTMLFromString converts an htmlString into TaggedHTML. It will store the input string as the raw content,
 // and then sanitize and parse the input.
-func NewTaggedContentFromString(htmlString string) (TaggedContent, error) {
+func NewTaggedHTMLFromString(htmlString string) (TaggedHTML, error) {
 	// sanitize
 	htmlString = sanitization.SanitizeTaggedHTML(htmlString)
 	tags, err := tagsFromStringRegex(htmlString)
 	if err != nil {
-		return TaggedContent{}, err
+		return TaggedHTML{}, err
 	}
 
-	return TaggedContent{
+	return TaggedHTML{
 		RawContent: HTML(htmlString),
 		Tags:       tags,
 	}, nil
@@ -167,45 +159,21 @@ func extractAttributes(match string) map[string]string {
 	return attributes
 }
 
-func (th *TaggedContent) Scan(src interface{}) error {
-	switch t := src.(type) {
-	case string:
-		tagHTML, err := NewTaggedContentFromString(t)
-		if err != nil {
-			return err
-		}
-		*th = tagHTML
-
-	case []byte:
-		tagHTML, err := NewTaggedContentFromString(string(t))
-		if err != nil {
-			return err
-		}
-		*th = tagHTML
-	}
-
-	return nil
-}
-
-func (th TaggedContent) Value() (driver.Value, error) {
-	return string(th.RawContent), nil
-}
-
 func (th *TaggedHTML) Scan(src interface{}) error {
 	switch t := src.(type) {
 	case string:
-		tagHTML, err := NewTaggedContentFromString(t)
+		tagHTML, err := NewTaggedHTMLFromString(t)
 		if err != nil {
 			return err
 		}
-		*th = TaggedHTML(tagHTML)
+		*th = tagHTML
 
 	case []byte:
-		tagHTML, err := NewTaggedContentFromString(string(t))
+		tagHTML, err := NewTaggedHTMLFromString(string(t))
 		if err != nil {
 			return err
 		}
-		*th = TaggedHTML(tagHTML)
+		*th = tagHTML
 	}
 
 	return nil
