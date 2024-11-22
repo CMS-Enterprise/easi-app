@@ -8,6 +8,7 @@ import { DiscussionAlert } from 'types/discussions';
 import Discussion from './Discussion';
 import DiscussionModalWrapper from './DiscussionModalWrapper';
 
+// import StartDiscussion from './StartDiscussion';
 // import ViewDiscussions from './ViewDiscussions';
 // import StartDiscussion from './StartDiscussion';
 import './index.scss';

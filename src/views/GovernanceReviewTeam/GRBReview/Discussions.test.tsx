@@ -1,9 +1,16 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
-import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
+import {
+  GetSystemIntakeGRBDiscussionsDocument,
+  GetSystemIntakeGRBDiscussionsQuery,
+  GetSystemIntakeGRBDiscussionsQueryVariables,
+  SystemIntakeGRBReviewDiscussionFragment
+} from 'gql/gen/graphql';
 
 import { mockDiscussions } from 'data/mock/discussions';
 import { systemIntake } from 'data/mock/systemIntake';
+import { MockedQuery } from 'types/util';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Discussions from './Discussions';
 
@@ -14,13 +21,38 @@ const discussionWithoutReplies: SystemIntakeGRBReviewDiscussionFragment = {
   replies: []
 };
 
+const getSystemIntakeGRBDiscussions = (
+  grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[]
+): MockedQuery<
+  GetSystemIntakeGRBDiscussionsQuery,
+  GetSystemIntakeGRBDiscussionsQueryVariables
+> => ({
+  request: {
+    query: GetSystemIntakeGRBDiscussionsDocument,
+    variables: {
+      id: systemIntake.id
+    }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
+      systemIntake: {
+        __typename: 'SystemIntake',
+        id: systemIntake.id,
+        grbDiscussions
+      }
+    }
+  }
+});
+
 describe('Discussions', () => {
   it('renders 0 discussions without replies', () => {
     render(
-      <Discussions
-        systemIntakeID={systemIntake.id}
-        grbDiscussions={mockDiscussions()}
-      />
+      <VerboseMockedProvider
+        mocks={[getSystemIntakeGRBDiscussions(mockDiscussions())]}
+      >
+        <Discussions systemIntakeID={systemIntake.id} />
+      </VerboseMockedProvider>
     );
 
     expect(
@@ -38,10 +70,11 @@ describe('Discussions', () => {
 
   it('renders 1 discussion without replies', () => {
     render(
-      <Discussions
-        systemIntakeID={systemIntake.id}
-        grbDiscussions={[discussionWithoutReplies]}
-      />
+      <VerboseMockedProvider
+        mocks={[getSystemIntakeGRBDiscussions([discussionWithoutReplies])]}
+      >
+        <Discussions systemIntakeID={systemIntake.id} />
+      </VerboseMockedProvider>
     );
 
     expect(
@@ -57,7 +90,9 @@ describe('Discussions', () => {
 
   it('renders discussion board with no discussions', () => {
     render(
-      <Discussions systemIntakeID={systemIntake.id} grbDiscussions={[]} />
+      <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussions([])]}>
+        <Discussions systemIntakeID={systemIntake.id} />
+      </VerboseMockedProvider>
     );
 
     expect(

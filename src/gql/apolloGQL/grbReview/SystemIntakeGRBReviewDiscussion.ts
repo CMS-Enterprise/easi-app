@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const SystemIntakeGRBReviewDiscussionPost = gql(/* GraphQL */ `
+export const SystemIntakeGRBReviewDiscussionPost = gql(/* GraphQL */ `
   fragment SystemIntakeGRBReviewDiscussionPost on SystemIntakeGRBReviewDiscussionPost {
     id
     content

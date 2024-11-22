@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
+import { useGetSystemIntakeGRBDiscussionsQuery } from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -12,20 +12,23 @@ import DiscussionPost from 'views/DiscussionBoard/components/DiscussionPost';
 
 type DiscussionsProps = {
   systemIntakeID: string;
-  grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   className?: string;
 };
 
 /** Displays recent discussions on GRB Review tab */
-const Discussions = ({
-  systemIntakeID,
-  grbDiscussions,
-  className
-}: DiscussionsProps) => {
+const Discussions = ({ systemIntakeID, className }: DiscussionsProps) => {
   const { t } = useTranslation('discussions');
 
   const [isDiscussionBoardOpen, setIsDiscussionBoardOpen] =
     useState<boolean>(false);
+
+  const { data } = useGetSystemIntakeGRBDiscussionsQuery({
+    variables: { id: systemIntakeID }
+  });
+
+  const grbDiscussions = data?.systemIntake?.grbDiscussions;
+
+  if (!grbDiscussions) return null;
 
   const discussionsWithoutRepliesCount = grbDiscussions.filter(
     discussion => discussion.replies.length === 0

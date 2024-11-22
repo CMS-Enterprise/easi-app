@@ -5,6 +5,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, ButtonGroup, Form, FormGroup } from '@trussworks/react-uswds';
 import {
+  GetSystemIntakeGRBDiscussionsDocument,
   useCreateSystemIntakeGRBDiscussionPostMutation,
   useCreateSystemIntakeGRBDiscussionReplyMutation
 } from 'gql/gen/graphql';
@@ -49,9 +50,13 @@ const DiscussionForm = ({
 }: DiscussionProps | ReplyProps) => {
   const { t } = useTranslation('discussions');
 
-  const [mutateDiscussion] = useCreateSystemIntakeGRBDiscussionPostMutation();
+  const [mutateDiscussion] = useCreateSystemIntakeGRBDiscussionPostMutation({
+    refetchQueries: [GetSystemIntakeGRBDiscussionsDocument]
+  });
 
-  const [mutateReply] = useCreateSystemIntakeGRBDiscussionReplyMutation();
+  const [mutateReply] = useCreateSystemIntakeGRBDiscussionReplyMutation({
+    refetchQueries: [GetSystemIntakeGRBDiscussionsDocument]
+  });
 
   const {
     control,

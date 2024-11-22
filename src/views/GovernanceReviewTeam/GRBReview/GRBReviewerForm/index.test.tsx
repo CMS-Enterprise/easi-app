@@ -152,7 +152,6 @@ const getSystemIntakeGRBReviewQuery = (
         __typename: 'SystemIntake',
         id: systemIntake.id,
         grbReviewers: reviewer ? [reviewer] : [],
-        grbDiscussions: [],
         grbReviewStartedAt: null
       }
     }
@@ -203,7 +202,6 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[]}
-                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -213,7 +211,6 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[grbReviewer]}
-                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -293,7 +290,6 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[grbReviewer]}
-                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -303,7 +299,6 @@ describe('GRB reviewer form', () => {
                   {...systemIntake}
                   businessCase={businessCase}
                   grbReviewers={[updatedGRBReviewer]}
-                  grbDiscussions={[]}
                 />
               </ITGovAdminContext.Provider>
             </Route>
