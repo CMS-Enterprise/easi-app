@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Document from '@tiptap/extension-document';
 import Mention from '@tiptap/extension-mention';
 import Paragraph from '@tiptap/extension-paragraph';
@@ -58,62 +59,57 @@ const CustomMention = Mention.extend({
   }
 });
 
-const MentionTextArea = ({
-  id,
-  setFieldValue,
-  editable,
-  disabled,
-  initialContent,
-  className
-}: {
-  id: string;
-  setFieldValue?: (
-    field: string,
-    value: any,
-    shouldValidate?: boolean | undefined
-  ) => void;
-  editable?: boolean;
-  disabled?: boolean;
-  initialContent?: any;
-  className?: string;
-}) => {
-  // const { t } = useTranslation('');
+const MentionTextArea = React.forwardRef<
+  HTMLDivElement,
+  {
+    id: string;
+    setFieldValue?: (value: any, shouldValidate?: boolean | undefined) => void;
+    editable?: boolean;
+    disabled?: boolean;
+    initialContent?: string;
+    className?: string;
+  }
+>(
+  (
+    { id, setFieldValue, editable, disabled, initialContent, className },
+    ref
+  ) => {
+    const { t } = useTranslation('discussions');
 
-  const [tagAlert, setTagAlert] = useState<boolean>(false);
+    const [tagAlert, setTagAlert] = useState<boolean>(false);
 
-  const fetchUsers = ({ query }: { query: string }) => {
-    return [
-      { username: 'a', displayName: 'Admin lead', tagType: 'other' },
-      {
-        username: 'b',
-        displayName: 'Governance Admin Team',
-        tagType: 'other'
-      },
-      {
-        username: 'c',
-        displayName: 'Governance Review Board (GRB)',
-        tagType: 'other'
-      },
-      {
-        username: 'OSYC',
-        displayName: 'Grant Eliezer',
-        tagType: 'user'
-      },
-      {
-        username: 'MKCK',
-        displayName: 'Forest Brown',
-        tagType: 'user'
-      },
-      {
-        username: 'PJEA',
-        displayName: 'Janae Stokes',
-        tagType: 'user'
-      }
-    ];
-  };
+    const fetchUsers = ({ query }: { query: string }) => {
+      return [
+        { username: 'a', displayName: 'Admin lead', tagType: 'other' },
+        {
+          username: 'b',
+          displayName: 'Governance Admin Team',
+          tagType: 'other'
+        },
+        {
+          username: 'c',
+          displayName: 'Governance Review Board (GRB)',
+          tagType: 'other'
+        },
+        {
+          username: 'OSYC',
+          displayName: 'Grant Eliezer',
+          tagType: 'user'
+        },
+        {
+          username: 'MKCK',
+          displayName: 'Forest Brown',
+          tagType: 'user'
+        },
+        {
+          username: 'PJEA',
+          displayName: 'Janae Stokes',
+          tagType: 'user'
+        }
+      ];
+    };
 
-  const editor = useEditor(
-    {
+    const editor = useEditor({
       editable: editable && !disabled,
       editorProps: {
         attributes: {
@@ -134,10 +130,16 @@ const MentionTextArea = ({
           }
         })
       ],
-      onUpdate: ({ editor: input }: any) => {
-        // Uses the form setter prop (Formik) for mutation input
+      onUpdate: ({ editor: input }) => {
+        const inputContent = input?.getHTML();
+        const inputText = input?.getText();
+
         if (setFieldValue) {
-          setFieldValue('content', input?.getHTML());
+          if (inputText === '') {
+            setFieldValue('');
+            return;
+          }
+          setFieldValue(inputContent);
         }
       },
       // Sets a alert of a mention is selected, and users/teams will be emailed
@@ -145,30 +147,28 @@ const MentionTextArea = ({
         setTagAlert(!!getMentions(input?.getJSON()).length);
       },
       content: initialContent
-    },
-    [initialContent, disabled]
-  );
+    });
 
-  return (
-    <>
-      <EditorContent
-        editor={editor}
-        id={id}
-        className={classNames(className, {
-          tiptap__readonly: !editable,
-          tiptap__editable: editable
-        })}
-      />
+    return (
+      <>
+        <EditorContent
+          innerRef={ref}
+          editor={editor}
+          id={id}
+          className={classNames(className, 'usa-textarea', {
+            tiptap__readonly: !editable,
+            tiptap__editable: editable
+          })}
+        />
 
-      {tagAlert && editable && (
-        <Alert type="info" slim>
-          {/* t() */}
-          When you save your discussion, the selected team(s) and individual(s)
-          will be notified via email.
-        </Alert>
-      )}
-    </>
-  );
-};
+        {tagAlert && editable && (
+          <Alert type="info" slim>
+            {t('general.alerts.saveDiscussion')}
+          </Alert>
+        )}
+      </>
+    );
+  }
+);
 
 export default MentionTextArea;

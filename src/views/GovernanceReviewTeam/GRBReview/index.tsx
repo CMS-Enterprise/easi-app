@@ -363,6 +363,7 @@ const GRBReview = ({
             <DocumentsTable systemIntakeId={id} documents={documents} />
 
             <Discussions
+              systemIntakeID={id}
               grbDiscussions={grbDiscussions}
               className="margin-top-4 margin-bottom-6"
             />

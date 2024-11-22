@@ -1,44 +1,67 @@
-import React from 'react';
-import { Button, ButtonGroup } from '@trussworks/react-uswds';
+import React, { useEffect, useState } from 'react';
+import classNames from 'classnames';
+import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
-import MentionTextArea from '../../components/MentionTextArea';
+import Alert from 'components/shared/Alert';
+import { DiscussionAlert } from 'types/discussions';
 
+import Discussion from './Discussion';
 import DiscussionModalWrapper from './DiscussionModalWrapper';
 
+// import ViewDiscussions from './ViewDiscussions';
+// import StartDiscussion from './StartDiscussion';
+import './index.scss';
+
 type DiscussionBoardProps = {
+  systemIntakeID: string;
+  grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   isOpen: boolean;
   closeModal: () => void;
-  id: string;
 };
 
-function DiscussionBoard({ isOpen, closeModal, id }: DiscussionBoardProps) {
+function DiscussionBoard({
+  systemIntakeID,
+  grbDiscussions,
+  isOpen,
+  closeModal
+}: DiscussionBoardProps) {
+  /** Discussion alert state for form success and error messages */
+  const [discussionAlert, setDiscussionAlert] = useState<DiscussionAlert>(null);
+
+  // Get the first discussion from the array for testing purposes
+  const activeDiscussion = grbDiscussions.length > 0 ? grbDiscussions[0] : null;
+
+  // Reset discussionAlert when side panel is opened or closed
+  useEffect(() => {
+    setDiscussionAlert(null);
+  }, [setDiscussionAlert, isOpen]);
+
   return (
     <DiscussionModalWrapper isOpen={isOpen} closeModal={closeModal}>
-      {/* Question */}
-      <h1 className="line-height-heading-4 margin-top-0 margin-bottom-1">
-        Start a discussion
-      </h1>
-      <p className="font-body-md line-height-body-4 margin-top-1 margin-bottom-5">
-        Have a question or comment that you want to discuss internally with the
-        Governance Admin Team or other Governance Review Board (GRB) members
-        involved in this request? Start a discussion and you’ll be notified when
-        they reply.
-      </p>
-      <div className="position-relative">
-        <MentionTextArea
-          id={`${id}-mention-question`}
-          editable
-          className="font-body-md"
-        />
-      </div>
-      <ButtonGroup className="margin-top-3">
-        <Button type="button" outline onClick={() => closeModal()}>
-          Cancel
-        </Button>
-        <Button type="button" disabled>
-          Save discussion
-        </Button>
-      </ButtonGroup>
+      {discussionAlert && (
+        <Alert
+          slim
+          {...discussionAlert}
+          className={classNames('margin-bottom-6', discussionAlert.className)}
+          isClosable={false}
+        >
+          {discussionAlert.message}
+        </Alert>
+      )}
+      {/* <ViewDiscussions grbDiscussions={grbDiscussions} /> */}
+
+      {/* <StartDiscussion
+        systemIntakeID={systemIntakeID}
+        closeModal={closeModal}
+        setDiscussionAlert={setDiscussionAlert}
+      /> */}
+
+      <Discussion
+        // TODO: Update to discussion being viewed
+        discussion={activeDiscussion}
+        closeModal={closeModal}
+        setDiscussionAlert={setDiscussionAlert}
+      />
     </DiscussionModalWrapper>
   );
 }

@@ -8,15 +8,20 @@ import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import IconButton from 'components/shared/IconButton';
 import DiscussionBoard from 'views/DiscussionBoard';
-import DiscussionPost from 'views/DiscussionBoard/DiscussionPost';
+import DiscussionPost from 'views/DiscussionBoard/components/DiscussionPost';
 
 type DiscussionsProps = {
+  systemIntakeID: string;
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   className?: string;
 };
 
 /** Displays recent discussions on GRB Review tab */
-const Discussions = ({ grbDiscussions, className }: DiscussionsProps) => {
+const Discussions = ({
+  systemIntakeID,
+  grbDiscussions,
+  className
+}: DiscussionsProps) => {
   const { t } = useTranslation('discussions');
 
   const [isDiscussionBoardOpen, setIsDiscussionBoardOpen] =
@@ -32,9 +37,10 @@ const Discussions = ({ grbDiscussions, className }: DiscussionsProps) => {
   return (
     <>
       <DiscussionBoard
+        systemIntakeID={systemIntakeID}
+        grbDiscussions={grbDiscussions}
         isOpen={isDiscussionBoardOpen}
         closeModal={() => setIsDiscussionBoardOpen(false)}
-        id="grb-discussion"
       />
 
       <div
