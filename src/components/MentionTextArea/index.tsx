@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-// import { useTranslation } from 'react-i18next';
+import Document from '@tiptap/extension-document';
 import Mention from '@tiptap/extension-mention';
+import Paragraph from '@tiptap/extension-paragraph';
+import Text from '@tiptap/extension-text';
 import {
   EditorContent,
   NodeViewWrapper,
   ReactNodeViewRenderer,
   useEditor
 } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
 import classNames from 'classnames';
 
-// import { sortBy } from 'lodash';
 import Alert from 'components/shared/Alert';
 
 import suggestion from './suggestion';
@@ -121,10 +121,9 @@ const MentionTextArea = ({
         }
       },
       extensions: [
-        StarterKit.configure({
-          bulletList: false,
-          orderedList: false
-        }),
+        Document,
+        Paragraph,
+        Text,
         CustomMention.configure({
           HTMLAttributes: {
             class: 'mention'
