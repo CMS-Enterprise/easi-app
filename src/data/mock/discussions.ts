@@ -7,7 +7,7 @@ import {
 import { systemIntake } from './systemIntake';
 import users from './users';
 
-const mockDiscussions = (
+export const mockDiscussions = (
   systemIntakeID: string = systemIntake.id
 ): SystemIntakeGRBReviewDiscussionFragment[] => [
   {
@@ -62,4 +62,80 @@ const mockDiscussions = (
   }
 ];
 
-export default mockDiscussions;
+export const mockDiscussionsWithoutReplies = (
+  systemIntakeID: string = systemIntake.id
+): SystemIntakeGRBReviewDiscussionFragment[] => [
+  {
+    __typename: 'SystemIntakeGRBReviewDiscussion',
+    initialPost: {
+      __typename: 'SystemIntakeGRBReviewDiscussionPost',
+      id: 'd6cd88e2-d330-4b7c-9006-d6cf95b775e9',
+      content: '<p>This is a discussion without replies.</p>',
+      votingRole: SystemIntakeGRBReviewerVotingRole.NON_VOTING,
+      grbRole: SystemIntakeGRBReviewerRole.CCIIO_REP,
+      createdByUserAccount: {
+        __typename: 'UserAccount',
+        id: '3f750a9d-a2a2-414f-a013-59554ed32c75',
+        commonName: users[2].commonName
+      },
+      systemIntakeID,
+      createdAt: '2024-11-18T10:00:00.368862Z'
+    },
+    replies: []
+  },
+  {
+    __typename: 'SystemIntakeGRBReviewDiscussion',
+    initialPost: {
+      __typename: 'SystemIntakeGRBReviewDiscussionPost',
+      id: '372bf1c0-3f33-4046-a973-bc063f39dc59',
+      content: '<p>This is another discussion without replies.</p>',
+      votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
+      grbRole: SystemIntakeGRBReviewerRole.CO_CHAIR_HCA,
+      createdByUserAccount: {
+        __typename: 'UserAccount',
+        id: '32c29aac-e20c-4fce-9ecb-8eb2f4c87e5f',
+        commonName: users[9].commonName
+      },
+      systemIntakeID,
+      createdAt: '2024-11-17T10:00:00.368862Z'
+    },
+    replies: []
+  },
+  {
+    __typename: 'SystemIntakeGRBReviewDiscussion',
+    initialPost: {
+      __typename: 'SystemIntakeGRBReviewDiscussionPost',
+      id: '39823b79-987d-4f81-9fcb-ae45f4c5bfeb',
+      content: '<p>This is a third discussion without replies.</p>',
+      votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
+      grbRole: SystemIntakeGRBReviewerRole.QIO_REP,
+      createdByUserAccount: {
+        __typename: 'UserAccount',
+        id: 'a9628365-16a5-49bf-9acc-7dbdade7288f',
+        commonName: users[3].commonName
+      },
+      systemIntakeID,
+      createdAt: '2024-11-17T9:00:00.368862Z'
+    },
+    replies: []
+  },
+  {
+    __typename: 'SystemIntakeGRBReviewDiscussion',
+    initialPost: {
+      __typename: 'SystemIntakeGRBReviewDiscussionPost',
+      id: 'df00daf2-f666-4014-98d3-fd28630fe996',
+      content:
+        '<p>This discussion without replies should not show up until list is expanded.</p>',
+      votingRole: SystemIntakeGRBReviewerVotingRole.ALTERNATE,
+      grbRole: SystemIntakeGRBReviewerRole.FED_ADMIN_BDG_CHAIR,
+      createdByUserAccount: {
+        __typename: 'UserAccount',
+        id: 'c7eefa37-b917-4fa3-8fc0-b86fa5de7df2',
+        commonName: users[8].commonName
+      },
+      systemIntakeID,
+      createdAt: '2024-11-17T9:30:00.368862Z'
+    },
+    replies: []
+  }
+];

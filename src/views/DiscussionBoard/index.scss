@@ -2,36 +2,38 @@
 @use 'viewports' as *;
 
 .easi-discussions {
-  &__body {
-    padding: 4rem 2rem 2rem;
+  .discussions-list {
+    .usa-accordion__content {
+      padding: 0 !important;
+
+      ul li {
+        &:not(:last-child) {
+          border-bottom: 1px solid color('base-light');
+        }
+      }
+    }
   }
 
-  &__connected {
-    border-left: .25rem solid color('base-lightest');
-    margin-left: .9rem;
-    padding-left: 1.4rem;
-    margin-top: 0.5rem;
-  }
+  .discussion-replies-thread {
+    li:not(:last-child) {
+      .easi-discussion-post {
+        > div:first-child {
+          position: relative;
 
-  &__not-connected {
-    padding-left: 2.6rem;
-  }
+          &::before {
+            content: "";
+            position: absolute;
+            height: 100%;
+            width: calc(50% + 2px);
+            border-right: 4px solid color('base-lightest');
+            z-index: -1;
+          }
+        }
 
-  &__single-discussion:last-of-type {
-    margin-bottom: -1rem;
-    margin-top: -.5rem;
-  }
-}
-
-.no-button > .usa-accordion__heading > .usa-accordion__button {
-  background-size: 0rem !important;
-}
-
-.discussion-accordion > .usa-accordion__content {
-  padding: 0rem 1rem;
-
-  &:empty {
-    padding-top: 0;
-    padding-bottom: 0;
+        > div:last-child {
+          padding-bottom: 1.75rem;
+        }
+      }
+    }
   }
 }

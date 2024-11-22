@@ -22,10 +22,10 @@ const DiscussionModalWrapper = ({
       ariaLabel={t('ariaLabel')}
       closeModal={closeModal}
       isOpen={isOpen}
-      modalHeading={t('modalHeading')}
+      modalHeading={t('governanceReviewBoard.internal.label')}
       testid="discussion-modal"
     >
-      <GridContainer className="padding-y-6">
+      <GridContainer className="easi-discussions padding-top-4 padding-bottom-8">
         <Grid desktop={{ col: 12 }}>{children}</Grid>
       </GridContainer>
     </Sidepanel>
