@@ -151,7 +151,7 @@ const DiscussionForm = ({
               id={`mention-${type}`}
               ref={ref}
               editable
-              className="height-auto margin-top-1 font-body-md"
+              className="height-auto"
               initialContent={field.value}
               setFieldValue={value => field.onChange(value)}
             />
