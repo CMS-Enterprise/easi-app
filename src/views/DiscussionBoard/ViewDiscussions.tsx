@@ -67,11 +67,7 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
                   <DiscussionsList type="discussions" initialCount={3}>
                     {discussionsWithoutReplies.map((discussion, index) => (
                       <li
-                        /**
-                         * TODO: Replace `index` key with `discussion.initialPost.id`
-                         * Seeded data discussions all have same ID
-                         */
-                        key={index} // eslint-disable-line react/no-array-index-key
+                        key={discussion.initialPost.id}
                         className="padding-y-3 padding-x-205"
                       >
                         <DiscussionPost
@@ -101,11 +97,7 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
                   <DiscussionsList type="discussions" initialCount={3}>
                     {discussionsWithReplies.map((discussion, index) => (
                       <li
-                        /**
-                         * TODO: Replace `index` key with `discussion.initialPost.id`
-                         * Seeded data discussions all have same ID
-                         */
-                        key={index} // eslint-disable-line react/no-array-index-key
+                        key={discussion.initialPost.id}
                         className="padding-y-3 padding-x-205"
                       >
                         <DiscussionPost
