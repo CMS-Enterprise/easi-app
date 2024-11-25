@@ -14,7 +14,7 @@ func createSystemIntakeGRBDiscussionPost(
 	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
-	content models.HTML,
+	content models.TaggedHTML,
 ) *models.SystemIntakeGRBReviewDiscussionPost {
 	post, err := resolvers.CreateSystemIntakeGRBDiscussionPost(
 		ctx,
@@ -35,7 +35,7 @@ func createSystemIntakeGRBDiscussionReply(
 	ctx context.Context,
 	store *storage.Store,
 	initialPostID uuid.UUID,
-	content models.HTML,
+	content models.TaggedHTML,
 ) *models.SystemIntakeGRBReviewDiscussionPost {
 	reply, err := resolvers.CreateSystemIntakeGRBDiscussionReply(
 		ctx,

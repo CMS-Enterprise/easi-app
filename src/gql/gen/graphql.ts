@@ -20,6 +20,8 @@ export type Scalars = {
   EmailAddress: { input: EmailAddress; output: EmailAddress; }
   /** HTML are represented using as strings,  <p><strong>Notification email</strong></p> */
   HTML: { input: HTML; output: HTML; }
+  /** TaggedHTML is represented using strings but can contain Tags (ex: @User) and possibly other richer elements than HTML */
+  TaggedHTML: { input: any; output: any; }
   /** Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z */
   Time: { input: Time; output: Time; }
   /** UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A */
@@ -3008,6 +3010,12 @@ export enum TRBWhereInProcessOption {
   THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE = 'THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE'
 }
 
+export enum TagType {
+  GROUP_GRB_REVIEWERS = 'GROUP_GRB_REVIEWERS',
+  GROUP_IT_GOV = 'GROUP_IT_GOV',
+  USER_ACCOUNT = 'USER_ACCOUNT'
+}
+
 /**
  * Input data used to update the admin lead assigned to a system IT governance
  * request
@@ -3219,12 +3227,12 @@ export type UserInfo = {
 };
 
 export type CreateSystemIntakeGRBDiscussionPostInput = {
-  content: Scalars['HTML']['input'];
+  content: Scalars['TaggedHTML']['input'];
   systemIntakeID: Scalars['UUID']['input'];
 };
 
 export type CreateSystemIntakeGRBDiscussionReplyInput = {
-  content: Scalars['HTML']['input'];
+  content: Scalars['TaggedHTML']['input'];
   initialPostID: Scalars['UUID']['input'];
 };
 

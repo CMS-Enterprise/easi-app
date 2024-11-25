@@ -352,24 +352,54 @@ func main() {
 	// TODO, remove <b> when they're not supported when we add tagging. Just using it now to show this is HTML
 
 	// Initial Post
-	postA := createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.HTML("Post <b>A</b> (Replies)"))
+	postA := createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
+		RawContent: "Post <b>A</b> (Replies)",
+		Tags:       nil,
+	})
 
 	// First reply is from an Admin -- default context user USR1 is an Admin
-	createSystemIntakeGRBDiscussionReply(userCtxITGovAdmin("ADMN"), store, postA.ID, models.HTML("Reply <b>A1</b>"))
+	createSystemIntakeGRBDiscussionReply(userCtxITGovAdmin("ADMN"), store, postA.ID, models.TaggedHTML{
+		RawContent: "Reply <b>A1</b>",
+		Tags:       nil,
+	})
 
 	// Then, create a reply from most of the GRB reviewers so we get replies from different non-admin GRB & Voting roles
-	createSystemIntakeGRBDiscussionReply(ctx, store, postA.ID, models.HTML("Reply <b>A2</b>"))
-	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR2"), store, postA.ID, models.HTML("Reply <b>A2</b>"))
-	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR3"), store, postA.ID, models.HTML("Reply <b>A3</b>"))
-	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR4"), store, postA.ID, models.HTML("Reply <b>A4</b>"))
+	createSystemIntakeGRBDiscussionReply(ctx, store, postA.ID, models.TaggedHTML{
+		RawContent: "Reply <b>A2</b>",
+		Tags:       nil,
+	})
+	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR2"), store, postA.ID, models.TaggedHTML{
+		RawContent: "Reply <b>A2</b>",
+		Tags:       nil,
+	})
+	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR3"), store, postA.ID, models.TaggedHTML{
+		RawContent: "Reply <b>A3</b>",
+		Tags:       nil,
+	})
+	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR4"), store, postA.ID, models.TaggedHTML{
+		RawContent: "Reply <b>A4</b>",
+		Tags:       nil,
+	})
 
 	// Make one more thread with some replies
-	postB := createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.HTML("Post <b>B</b>"))
-	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR3"), store, postB.ID, models.HTML("Reply <b>B1</b>"))
-	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR4"), store, postB.ID, models.HTML("Reply <b>B2</b>"))
+	postB := createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
+		RawContent: "Post <b>B</b>",
+		Tags:       nil,
+	})
+	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR3"), store, postB.ID, models.TaggedHTML{
+		RawContent: "Reply <b>B1</b>",
+		Tags:       nil,
+	})
+	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR4"), store, postB.ID, models.TaggedHTML{
+		RawContent: "Reply <b>B2</b>",
+		Tags:       nil,
+	})
 
 	// Lastly, create a new initial post with no replies
-	createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.HTML("Post <b>C</b> (No replies)"))
+	createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
+		RawContent: "Post <b>C</b> (No replies)",
+		Tags:       nil,
+	})
 
 	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
 	makeSystemIntakeAndProgressToStep(

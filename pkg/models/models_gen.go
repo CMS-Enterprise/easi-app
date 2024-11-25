@@ -969,13 +969,13 @@ type UserError struct {
 }
 
 type CreateSystemIntakeGRBDiscussionPostInput struct {
-	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
-	Content        HTML      `json:"content"`
+	SystemIntakeID uuid.UUID  `json:"systemIntakeID"`
+	Content        TaggedHTML `json:"content"`
 }
 
 type CreateSystemIntakeGRBDiscussionReplyInput struct {
-	InitialPostID uuid.UUID `json:"initialPostID"`
-	Content       HTML      `json:"content"`
+	InitialPostID uuid.UUID  `json:"initialPostID"`
+	Content       TaggedHTML `json:"content"`
 }
 
 // A user role associated with a job code
@@ -1362,5 +1362,48 @@ func (e *SystemIntakeStepToProgressTo) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeStepToProgressTo) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type TagType string
+
+const (
+	TagTypeUserAccount       TagType = "USER_ACCOUNT"
+	TagTypeGroupItGov        TagType = "GROUP_IT_GOV"
+	TagTypeGroupGrbReviewers TagType = "GROUP_GRB_REVIEWERS"
+)
+
+var AllTagType = []TagType{
+	TagTypeUserAccount,
+	TagTypeGroupItGov,
+	TagTypeGroupGrbReviewers,
+}
+
+func (e TagType) IsValid() bool {
+	switch e {
+	case TagTypeUserAccount, TagTypeGroupItGov, TagTypeGroupGrbReviewers:
+		return true
+	}
+	return false
+}
+
+func (e TagType) String() string {
+	return string(e)
+}
+
+func (e *TagType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TagType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TagType", str)
+	}
+	return nil
+}
+
+func (e TagType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
