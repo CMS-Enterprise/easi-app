@@ -39,13 +39,10 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
       <p className="font-body-lg text-light line-height-body-5 margin-top-105">
         {t('governanceReviewBoard.internal.description')}
       </p>
-
       <h2 className="margin-top-5 margin-bottom-2">{t('general.label')}</h2>
       <IconButton
         type="button"
-        // TODO: Go to start discussion view
-        onClick={() => () => {
-          // todo onClick doesn't fire
+        onClick={() => {
           history.push(`${location.pathname}?discussion=start`);
         }}
         icon={<Icon.Announcement />}
@@ -53,7 +50,6 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
       >
         {t('general.startNewDiscussion')}
       </IconButton>
-
       <Accordion
         className="discussions-list margin-top-5"
         multiselectable
