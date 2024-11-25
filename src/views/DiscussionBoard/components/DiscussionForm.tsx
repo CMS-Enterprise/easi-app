@@ -1,6 +1,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { useHistory, useLocation } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, ButtonGroup, Form, FormGroup } from '@trussworks/react-uswds';
@@ -62,6 +63,9 @@ const DiscussionForm = ({
     resolver: yupResolver(discussionSchema)
   });
 
+  const history = useHistory();
+  const location = useLocation();
+
   const createDiscussion = handleSubmit(({ content }) => {
     if ('systemIntakeID' in mutationProps) {
       mutateDiscussion({
@@ -78,7 +82,7 @@ const DiscussionForm = ({
             type: 'success'
           });
 
-          // closeModal();
+          history.push(`${location.pathname}?discussion=view`);
         })
         .catch(e => {
           setDiscussionAlert({
@@ -86,8 +90,6 @@ const DiscussionForm = ({
             type: 'error'
           });
         });
-
-      // TODO: Go back to discussion board view
     }
   });
 
@@ -109,8 +111,6 @@ const DiscussionForm = ({
             message: t('general.alerts.replySuccess'),
             type: 'success'
           });
-
-          // closeModal();
         })
         .catch(e => {
           setDiscussionAlert({
