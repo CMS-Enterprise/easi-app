@@ -114,7 +114,6 @@ const Discussions = ({
             {discussionsWithoutRepliesCount > 0 && (
               <IconButton
                 type="button"
-                // TODO: Open discussion board to discussions without replies?
                 onClick={() => {
                   history.push(`${location.pathname}?discussion=view`);
                 }}
@@ -147,7 +146,6 @@ const Discussions = ({
                   button: (
                     <Button
                       type="button"
-                      // TODO: Open to start discussion view
                       onClick={() => {
                         history.push(`${location.pathname}?discussion=view`);
                       }}
