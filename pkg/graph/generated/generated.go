@@ -9192,12 +9192,12 @@ type SystemIntakeGRBReviewDiscussion {
 
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!
-  content: HTML!
+  content: TaggedHTML!
 }
 
 input createSystemIntakeGRBDiscussionReplyInput {
   initialPostID: UUID!
-  content: HTML!
+  content: TaggedHTML!
 }
 
 """
@@ -9667,6 +9667,14 @@ type TRBRequestAttendee {
   modifiedBy: String
   modifiedAt: Time
 }
+
+# lint-disable defined-types-are-used
+enum TagType {
+  USER_ACCOUNT
+  GROUP_IT_GOV
+  GROUP_GRB_REVIEWERS
+}
+# lint-enable defined-types-are-used
 
 """
 The data needed add a TRB request attendee to a TRB request
@@ -10646,6 +10654,10 @@ HTML are represented using as strings,  <p><strong>Notification email</strong></
 """
 scalar HTML
 
+"""
+TaggedHTML is represented using strings but can contain Tags (ex: @User) and possibly other richer elements than HTML
+"""
+scalar TaggedHTML
 
 """
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
@@ -63816,7 +63828,7 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionPostInp
 			it.SystemIntakeID = data
 		case "content":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
-			data, err := ec.unmarshalNHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			data, err := ec.unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -63850,7 +63862,7 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionReplyIn
 			it.InitialPostID = data
 		case "content":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
-			data, err := ec.unmarshalNHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			data, err := ec.unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -77671,6 +77683,16 @@ func (ec *executionContext) marshalNTRBTaskStatuses2ᚖgithubᚗcomᚋcmsᚑente
 		return graphql.Null
 	}
 	return ec._TRBTaskStatuses(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx context.Context, v interface{}) (models.TaggedHTML, error) {
+	var res models.TaggedHTML
+	err := res.UnmarshalGQLContext(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx context.Context, sel ast.SelectionSet, v models.TaggedHTML) graphql.Marshaler {
+	return graphql.WrapContextMarshaler(ctx, v)
 }
 
 func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
