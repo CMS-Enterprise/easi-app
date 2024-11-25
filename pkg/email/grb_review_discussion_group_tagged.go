@@ -6,8 +6,9 @@ import (
 	"errors"
 	"path"
 
-	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/google/uuid"
+
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // SendGRBReviewDiscussionGroupTaggedEmailInput contains the data needed to to send an email informing an group they
@@ -26,7 +27,7 @@ type SendGRBReviewDiscussionGroupTaggedEmailInput struct {
 	Recipients               []models.EmailAddress
 }
 
-// GRBReviewDiscussionGroupTaggedEmailTemplateParams contains the data needed for interpolation in
+// GRBReviewDiscussionGroupTaggedBody contains the data needed for interpolation in
 // the GRB Discussion Group Tagged email template
 type GRBReviewDiscussionGroupTaggedBody struct {
 	SystemIntakeID           uuid.UUID

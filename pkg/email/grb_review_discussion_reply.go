@@ -6,8 +6,9 @@ import (
 	"errors"
 	"path"
 
-	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/google/uuid"
+
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // SendGRBReviewDiscussionReplyEmailInput contains the data needed to to send the GRB discussion reply email
@@ -24,7 +25,7 @@ type SendGRBReviewDiscussionReplyEmailInput struct {
 	Recipients               []models.EmailAddress
 }
 
-// GRBReviewDiscussionReplyEmailTemplateParams contains the data needed for interpolation in
+// GRBReviewDiscussionReplyBody contains the data needed for interpolation in
 // the TRB advice letter submitted email template
 type GRBReviewDiscussionReplyBody struct {
 	UserName                 string
