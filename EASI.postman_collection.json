@@ -1178,8 +1178,41 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation createSystemIntakeGRBDiscussion($input: createSystemIntakeGRBDiscussionPostInput!) {\n  createSystemIntakeGRBDiscussionPost(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n        id\n        username\n    }\n  }\n}",
-										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"content\": \"<p>banana apple carburetor</p>\"\r\n  }\r\n}"
+										"query": "mutation createSystemIntakeGRBDiscussion(\n  $input: createSystemIntakeGRBDiscussionPostInput!\n) {\n  createSystemIntakeGRBDiscussionPost(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n      id\n      username\n    }\n  }\n}\n",
+										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"content\": \"<p>banana apple carburetor Let me look into it, ok? <span data-type=\\\"mention\\\" tag-type=\\\"USER_ACCOUNT\\\" class=\\\"mention\\\" data-id-db=\\\"8dc55eda-be23-4822-aa69-a3f67de6078b\\\">@Audrey Abrams</span>!\\\" <a href=\\\"https://www.w3schools.com\\\">Visit W3Schools.com!</a></p>\"\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create GRB Discussion Group Tags",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"SystemIntakeGRBDiscussionID\", pm.response.json().data.createSystemIntakeGRBDiscussionPost.id)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation createSystemIntakeGRBDiscussion(\n  $input: createSystemIntakeGRBDiscussionPostInput!\n) {\n  createSystemIntakeGRBDiscussionPost(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n      id\n      username\n    }\n  }\n}\n",
+										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"content\": \"<p>banana apple carburetor Let me look into it, ok? <span data-type=\\\"mention\\\" tag-type=\\\"GROUP_IT_GOV\\\" class=\\\"mention\\\">@Group</span> middle <span data-type=\\\"mention\\\" tag-type=\\\"GROUP_GRB_REVIEWERS\\\" class=\\\"mention\\\">@Group2</span>!\\\"</p>\"\r\n  }\r\n}"
 									}
 								},
 								"url": {
