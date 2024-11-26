@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: easi-backend-ingress
+  namespace: easi
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: easi-backend.localdev.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: easi-backend
+                port:
+                  number: 8080

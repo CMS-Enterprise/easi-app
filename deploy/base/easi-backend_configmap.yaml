@@ -25,7 +25,7 @@ data:
   IT_INVESTMENT_EMAIL: success@simulator.amazonses.com
   EASI_HELP_EMAIL: success@simulator.amazonses.com
   TRB_EMAIL: success@simulator.amazonses.com
-  OIT_FEEDBACK_CHANNEL_SLACK_LINK: ""
+  OIT_FEEDBACK_CHANNEL_SLACK_LINK: https://oddball.slack.com/archives/C059N01AYGM
   SES_RECIPIENT_ALLOWLIST_REGEX: ''
   EMAIL_TEMPLATE_DIR: /easi/pkg/email/templates
   AWS_REGION: us-west-2
@@ -56,80 +56,3 @@ data:
   OKTA_API_URL: https://test.idp.idm.cms.gov
   OKTA_API_TOKEN: ''
   LOCAL_AUTH_ENABLED: 'true'
-
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: easi-backend
-  namespace: easi
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: easi-backend
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        app: easi-backend
-    spec:
-      containers:
-        - name: easi-backend
-          image: easi-backend:latest
-          imagePullPolicy: Never
-          envFrom:
-            - configMapRef:
-                name: easi-backend-configmap
-          ports:
-            - containerPort: 8080
-              protocol: TCP
-          resources: {}
-          command:
-             - ./bin/easi
-             - serve
-      restartPolicy: Always
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: easi-backend
-  namespace: easi
-spec:
-  ports:
-    - name: "8080"
-      port: 8080
-      targetPort: 8080
-    - name: "2345"
-      port: 2345
-      targetPort: 2345
-  selector:
-    app: easi-backend
-
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: easi-backend-ingress
-  namespace: easi
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    traefik.ingress.kubernetes.io/router.entrypoints: web
-spec:
-  rules:
-    - host: easi-backend.localdev.me
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: easi-backend
-                port:
-                  number: 8080

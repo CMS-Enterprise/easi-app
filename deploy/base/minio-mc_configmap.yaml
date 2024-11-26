@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: minio-mc-config
+  namespace: easi
+data:
+  config.json: |
+    {
+      "version": "10",
+      "aliases": {
+        "local": {
+          "url": "http://minio:9004",
+          "accessKey": "minioadmin",
+          "secretKey": "minioadmin",
+          "api": "S3v4",
+          "path": "auto"
+        }
+      }
+    }

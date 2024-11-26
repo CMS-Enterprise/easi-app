@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: easi-frontend-configmap
+  namespace: dev
+data:
+  VITE_APP_ENV: dev
