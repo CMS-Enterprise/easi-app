@@ -106,9 +106,10 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
             >
               <IconButton
                 type="button"
-                // TODO: Open discussion panel
                 onClick={() => {
-                  setDiscussion('discussion=reply');
+                  setDiscussion(
+                    `discussion=reply&discussionId=${initialPost.id}`
+                  );
                 }}
                 className="margin-right-205"
                 icon={<Icon.Announcement className="text-primary" />}

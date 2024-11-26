@@ -13,6 +13,11 @@ export default function useDiscussion() {
         undefined) as DiscussionMode;
       return discussionMode;
     },
+    getDiscussionId() {
+      const q = new URLSearchParams(location.search);
+      const discussionId = q.get('discussionId') || undefined;
+      return discussionId;
+    },
     setDiscussion(query: string | false) {
       if (query === false) {
         history.push(`${location.pathname}`);

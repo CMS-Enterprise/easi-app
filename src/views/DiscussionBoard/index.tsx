@@ -25,11 +25,12 @@ function DiscussionBoard({
   /** Discussion alert state for form success and error messages */
   const [discussionAlert, setDiscussionAlert] = useState<DiscussionAlert>(null);
 
-  // Get the first discussion from the array for testing purposes
-  const activeDiscussion = grbDiscussions.length > 0 ? grbDiscussions[0] : null;
-
-  const { getDiscussionMode, setDiscussion } = useDiscussion();
+  const { getDiscussionMode, getDiscussionId, setDiscussion } = useDiscussion();
   const discussionMode = getDiscussionMode();
+  const discussionId = getDiscussionId();
+
+  const activeDiscussion =
+    grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
 
   // Reset discussionAlert when side panel is opened or closed
   useEffect(() => {
@@ -70,7 +71,6 @@ function DiscussionBoard({
 
       {discussionMode === 'reply' && (
         <Discussion
-          // TODO: Update to discussion being viewed
           discussion={activeDiscussion}
           closeModal={closeModal}
           setDiscussionAlert={setDiscussionAlert}
