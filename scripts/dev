@@ -212,17 +212,6 @@ task restart: :consume_args do |t, args|
   Rake::Task["up"].invoke
 end
 
-desc "Run app and expose to other machines over Tailscale"
-task :tailscale do
-
-  puts "Running app on #{ENV["TAILSCALE_CLIENT_ADDRESS"]}"
-  environment = {
-    "COMPOSE_HTTP_TIMEOUT" => "120"
-  }
-  command = "docker compose --profile frontend -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.tailscale.yml up"
-  sh(environment, command, verbose: true)
-end
-
 namespace :docker do
   desc "Delete all dangling volumes"
   task :sweep do
