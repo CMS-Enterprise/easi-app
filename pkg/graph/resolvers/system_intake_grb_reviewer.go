@@ -55,8 +55,8 @@ func CreateSystemIntakeGRBReviewers(
 		for _, acct := range accts {
 			reviewerInput := reviewersByEUAMap[acct.Username]
 			reviewer := models.NewSystemIntakeGRBReviewer(acct.ID, createdByID)
-			reviewer.VotingRole = models.SIGRBReviewerVotingRole(reviewerInput.VotingRole)
-			reviewer.GRBRole = models.SIGRBReviewerRole(reviewerInput.GrbRole)
+			reviewer.GRBVotingRole = models.SIGRBReviewerVotingRole(reviewerInput.VotingRole)
+			reviewer.GRBReviewerRole = models.SIGRBReviewerRole(reviewerInput.GrbRole)
 			reviewer.SystemIntakeID = input.SystemIntakeID
 			reviewersToCreate = append(reviewersToCreate, reviewer)
 		}
@@ -144,8 +144,8 @@ func SystemIntakeCompareGRBReviewers(
 				HasLoggedIn: comparison.HasLoggedIn,
 			},
 			EuaUserID:         comparison.EuaID,
-			VotingRole:        models.SystemIntakeGRBReviewerVotingRole(comparison.VotingRole),
-			GrbRole:           models.SystemIntakeGRBReviewerRole(comparison.GRBRole),
+			VotingRole:        models.SystemIntakeGRBReviewerVotingRole(comparison.GRBVotingRole),
+			GrbRole:           models.SystemIntakeGRBReviewerRole(comparison.GRBReviewerRole),
 			IsCurrentReviewer: comparison.IsCurrentReviewer,
 		}
 		// Add the reviewer to the slice if an entry exists

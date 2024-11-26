@@ -1,0 +1,23 @@
+{{template "easi_header.gohtml"}}
+
+<p>{{.UserName}} tagged you in the {{.DiscussionBoardType}} for {{.RequestName}}.</p>
+
+<p><strong><a href="{{.GRBReviewLink}}">View this request in EASi</a></strong></p>
+<br>
+
+<h2>Discussion</h2>
+<br/>
+<p><b>{{.UserName}}</b></p>
+<p class="subtitle"> {{.Role}}</p>
+<p>{{.DiscussionContent}}</p>
+<p style="font-weight: normal">
+  <a href="{{.DiscussionLink}}">
+    Reply in EASi
+  </a>
+</p>
+
+<br>
+<p>If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
+<br>
+<hr>
+<p>You will continue to receive email notifications about this request until it is closed.</p>
