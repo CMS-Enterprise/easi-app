@@ -19,7 +19,7 @@ type SendGRBReviewDiscussionReplyEmailInput struct {
 	DiscussionBoardType      string
 	GRBReviewLink            string
 	Role                     string
-	DiscussionContent        string // TODO: NJD *models.HTML?
+	DiscussionContent        models.HTML // TODO: NJD *models.HTML?
 	DiscussionLink           string
 	ITGovernanceInboxAddress string
 	Recipients               []models.EmailAddress
@@ -33,7 +33,7 @@ type GRBReviewDiscussionReplyBody struct {
 	DiscussionBoardType      string
 	GRBReviewLink            string
 	Role                     string
-	DiscussionContent        string // TODO: NJD *models.HTML?
+	DiscussionContent        models.HTML // TODO: NJD *models.HTML?
 	DiscussionLink           string
 	ITGovernanceInboxAddress string
 }
