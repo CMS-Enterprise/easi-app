@@ -5,7 +5,7 @@ import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
 import IconButton from 'components/shared/IconButton';
-import useDiscussion from 'hooks/useDiscussion';
+import useDiscussionParams from 'hooks/useDiscussion';
 
 import DiscussionPost from './components/DiscussionPost';
 import DiscussionsList from './components/DiscussionsList';
@@ -23,7 +23,7 @@ type ViewDiscussionsProps = {
 const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
   const { t } = useTranslation('discussions');
 
-  const { setDiscussion } = useDiscussion();
+  const { pushDiscussionQuery } = useDiscussionParams();
 
   const discussionsWithoutReplies: SystemIntakeGRBReviewDiscussionFragment[] =
     grbDiscussions.filter(discussion => discussion.replies.length === 0);
@@ -43,7 +43,7 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
       <IconButton
         type="button"
         onClick={() => {
-          setDiscussion('discussion=start');
+          pushDiscussionQuery({ discussionMode: 'start' });
         }}
         icon={<Icon.Announcement />}
         unstyled

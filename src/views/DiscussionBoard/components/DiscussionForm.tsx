@@ -15,7 +15,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
-import useDiscussion from 'hooks/useDiscussion';
+import useDiscussionParams from 'hooks/useDiscussion';
 import { DiscussionAlert } from 'types/discussions';
 import discussionSchema from 'validations/discussionSchema';
 
@@ -63,7 +63,7 @@ const DiscussionForm = ({
     resolver: yupResolver(discussionSchema)
   });
 
-  const { setDiscussion } = useDiscussion();
+  const { pushDiscussionQuery } = useDiscussionParams();
 
   const createDiscussion = handleSubmit(({ content }) => {
     if ('systemIntakeID' in mutationProps) {
@@ -81,7 +81,7 @@ const DiscussionForm = ({
             type: 'success'
           });
 
-          setDiscussion('discussion=view');
+          pushDiscussionQuery({ discussionMode: 'view' });
         })
         .catch(e => {
           setDiscussionAlert({

@@ -7,7 +7,7 @@ import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import IconButton from 'components/shared/IconButton';
-import useDiscussion from 'hooks/useDiscussion';
+import useDiscussionParams from 'hooks/useDiscussion';
 import DiscussionBoard from 'views/DiscussionBoard';
 import DiscussionPost from 'views/DiscussionBoard/components/DiscussionPost';
 
@@ -32,7 +32,7 @@ const Discussions = ({
   const recentDiscussion =
     grbDiscussions.length > 0 ? grbDiscussions[0] : undefined;
 
-  const { setDiscussion } = useDiscussion();
+  const { pushDiscussionQuery } = useDiscussionParams();
 
   return (
     <>
@@ -86,7 +86,7 @@ const Discussions = ({
             <Button
               type="button"
               onClick={() => {
-                setDiscussion('discussion=view');
+                pushDiscussionQuery({ discussionMode: 'view' });
               }}
               className="margin-right-0 margin-y-2 desktop:margin-y-0 text-no-wrap"
               outline
@@ -114,7 +114,7 @@ const Discussions = ({
               <IconButton
                 type="button"
                 onClick={() => {
-                  setDiscussion('discussion=view');
+                  pushDiscussionQuery({ discussionMode: 'view' });
                 }}
                 icon={<Icon.ArrowForward />}
                 iconPosition="after"
@@ -146,7 +146,7 @@ const Discussions = ({
                     <Button
                       type="button"
                       onClick={() => {
-                        setDiscussion('discussion=start');
+                        pushDiscussionQuery({ discussionMode: 'start' });
                       }}
                       unstyled
                     >

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
-import useDiscussion from 'hooks/useDiscussion';
+import useDiscussionParams from 'hooks/useDiscussion';
 import { DiscussionAlert } from 'types/discussions';
 
 import Discussion from './Discussion';
@@ -25,9 +25,8 @@ function DiscussionBoard({
   /** Discussion alert state for form success and error messages */
   const [discussionAlert, setDiscussionAlert] = useState<DiscussionAlert>(null);
 
-  const { getDiscussionMode, getDiscussionId, setDiscussion } = useDiscussion();
-  const discussionMode = getDiscussionMode();
-  const discussionId = getDiscussionId();
+  const { getDiscussionParams, pushDiscussionQuery } = useDiscussionParams();
+  const { discussionMode, discussionId } = getDiscussionParams();
 
   const activeDiscussion =
     grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
@@ -38,7 +37,7 @@ function DiscussionBoard({
   }, [setDiscussionAlert, discussionMode]);
 
   const closeModal = () => {
-    setDiscussion(false);
+    pushDiscussionQuery(false);
   };
 
   return (
