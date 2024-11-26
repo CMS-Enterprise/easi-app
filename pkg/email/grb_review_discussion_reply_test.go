@@ -3,6 +3,7 @@ package email
 import (
 	"context"
 	"fmt"
+	"html/template"
 
 	"github.com/google/uuid"
 
@@ -16,7 +17,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 	requestName := "Salad/Sandwich Program"
 	discussionBoardType := "Internal GRB Discussion Board"
 	role := "Consumer"
-	discussionContent := models.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`)
+	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`)
 
 	grbReviewLink := fmt.Sprintf(
 		"%s://%s/it-governance/%s/grb-review",
