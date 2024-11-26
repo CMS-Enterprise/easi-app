@@ -10,12 +10,12 @@ SET
 
 WHERE id = :id
 RETURNING
-id,
-username,
-common_name,
-locale,
-email,
-given_name,
-family_name,
-zone_info,
-has_logged_in;
+    id,
+    username,
+    common_name,
+    locale,
+    email,
+    given_name,
+    family_name,
+    zone_info,
+    has_logged_in;
