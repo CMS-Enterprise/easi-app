@@ -1,0 +1,23 @@
+# https://docs.sqlfluff.com/en/stable/rules.html
+
+[sqlfluff]
+dialect = postgres
+ignore = parsing
+rules = core
+
+# Ignoring capitalisation.identifiers because it seems to want to uppercase column names if there are capitalized enums defined before the table
+# Ignoring layout.long_lines because we break line-length requirements in a few places with comments
+# Ignoring layout.spacing since it wants to mess with variable names coming from sqlx that use the `:variablename` syntax (tries to modify them to `: variablename` with a sapce)
+exclude_rules = capitalisation.identifiers, layout.long_lines, layout.spacing
+
+[sqlfluff:rules:capitalisation.keywords]
+# https://docs.sqlfluff.com/en/stable/rules.html#rule-capitalisation.keywords
+capitalisation_policy = upper
+
+[sqlfluff:rules:capitalisation.literals]
+# https://docs.sqlfluff.com/en/stable/rules.html#rule-capitalisation.literals
+capitalisation_policy = upper
+
+[sqlfluff:rules:capitalisation.types]
+# https://docs.sqlfluff.com/en/stable/rules.html#rule-capitalisation.types
+extended_capitalisation_policy = upper
