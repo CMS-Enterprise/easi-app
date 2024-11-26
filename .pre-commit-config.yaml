@@ -132,6 +132,14 @@ repos:
         name: Check for committed secrets
         entry: git-secrets --pre_commit_hook
 
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 3.2.5
+    hooks:
+      - id: sqlfluff-fix
+        exclude: ^migrations/
+      - id: sqlfluff-lint
+        exclude: ^migrations/
+
   - repo: local
     hooks:
       - id: remove-postman-ids
