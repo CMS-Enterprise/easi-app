@@ -26,7 +26,6 @@ scripts/dev minio:pending         # Mark all files in minio as pending (waiting 
 scripts/dev prereqs               # Check to see if the app's prerequisites are installed
 scripts/dev reset                 # Resets application to an empty state
 scripts/dev restart               # Restart the specified container
-scripts/dev tailscale             # Run app and expose to other machines over Tailscale
 scripts/dev test                  # Run all tests in parallel
 scripts/dev test:go               # Runs Go tests
 scripts/dev test:go:long          # Runs Go tests, including long ones

@@ -131,7 +131,6 @@ ADR
 AWS
 SES
 auth
-tailscale
 startup
 pkg
 11.4.
@@ -148,7 +147,6 @@ eua
 uncomment
 cypress_ci.yml
 cypress_local.yml
-tailscale.yml
 ci_server_test.yml
 subfolder
 subfolders
