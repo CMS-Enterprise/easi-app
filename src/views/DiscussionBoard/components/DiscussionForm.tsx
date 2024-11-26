@@ -162,7 +162,11 @@ const DiscussionForm = ({
       </FormGroup>
 
       <ButtonGroup>
-        <Button type="button" outline onClick={closeModal}>
+        <Button
+          type="button"
+          outline
+          onClick={() => pushDiscussionQuery({ discussionMode: 'view' })}
+        >
           {t('general.cancel')}
         </Button>
         <Button type="submit" disabled={!isValid}>
