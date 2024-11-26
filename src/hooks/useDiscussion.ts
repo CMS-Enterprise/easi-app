@@ -20,7 +20,7 @@ export default function useDiscussionParams() {
     } {
       const q = new URLSearchParams(location.search);
 
-      const discussionMode = q.get('discussion') as DiscussionMode | null;
+      const discussionMode = q.get('discussionMode') as DiscussionMode | null;
 
       // Silent ignore on invalid `discussionModeKeys`
       if (
