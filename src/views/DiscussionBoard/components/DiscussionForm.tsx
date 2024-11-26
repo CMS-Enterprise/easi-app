@@ -1,7 +1,6 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, ButtonGroup, Form, FormGroup } from '@trussworks/react-uswds';
@@ -16,6 +15,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import useDiscussion from 'hooks/useDiscussion';
 import { DiscussionAlert } from 'types/discussions';
 import discussionSchema from 'validations/discussionSchema';
 
@@ -63,8 +63,7 @@ const DiscussionForm = ({
     resolver: yupResolver(discussionSchema)
   });
 
-  const history = useHistory();
-  const location = useLocation();
+  const { setDiscussion } = useDiscussion();
 
   const createDiscussion = handleSubmit(({ content }) => {
     if ('systemIntakeID' in mutationProps) {
@@ -82,7 +81,7 @@ const DiscussionForm = ({
             type: 'success'
           });
 
-          history.push(`${location.pathname}?discussion=view`);
+          setDiscussion('discussion=view');
         })
         .catch(e => {
           setDiscussionAlert({

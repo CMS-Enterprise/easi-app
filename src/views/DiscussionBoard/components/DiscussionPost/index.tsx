@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
 import { Icon } from '@trussworks/react-uswds';
 import { SystemIntakeGRBReviewDiscussionPostFragment } from 'gql/gen/graphql';
 import { upperFirst } from 'lodash';
@@ -9,6 +8,7 @@ import { DateTime } from 'luxon';
 import { RichTextViewer } from 'components/RichTextEditor';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
 import IconButton from 'components/shared/IconButton';
+import useDiscussion from 'hooks/useDiscussion';
 import { getRelativeDate } from 'utils/date';
 
 import './index.scss';
@@ -61,8 +61,7 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
     });
   }, [replies, t]);
 
-  const history = useHistory();
-  const location = useLocation();
+  const { setDiscussion } = useDiscussion();
 
   return (
     <div className="easi-discussion-post display-flex line-height-body-1">
@@ -109,7 +108,7 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
                 type="button"
                 // TODO: Open discussion panel
                 onClick={() => {
-                  history.push(`${location.pathname}?discussion=reply`);
+                  setDiscussion('discussion=reply');
                 }}
                 className="margin-right-205"
                 icon={<Icon.Announcement className="text-primary" />}
@@ -119,7 +118,6 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
                   ? t('general.repliesCount', { count: replies.length })
                   : t('general.reply')}
               </IconButton>
-
               {replies.length > 0 && (
                 <p className="text-base margin-0" data-testid="lastReplyAtText">
                   {lastReplyAtText}

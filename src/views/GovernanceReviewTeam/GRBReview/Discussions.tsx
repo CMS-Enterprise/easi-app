@@ -1,6 +1,5 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
 import { Button, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
@@ -8,6 +7,7 @@ import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import IconButton from 'components/shared/IconButton';
+import useDiscussion from 'hooks/useDiscussion';
 import DiscussionBoard from 'views/DiscussionBoard';
 import DiscussionPost from 'views/DiscussionBoard/components/DiscussionPost';
 
@@ -32,8 +32,7 @@ const Discussions = ({
   const recentDiscussion =
     grbDiscussions.length > 0 ? grbDiscussions[0] : undefined;
 
-  const history = useHistory();
-  const location = useLocation();
+  const { setDiscussion } = useDiscussion();
 
   return (
     <>
@@ -87,7 +86,7 @@ const Discussions = ({
             <Button
               type="button"
               onClick={() => {
-                history.push(`${location.pathname}?discussion=view`);
+                setDiscussion('discussion=view');
               }}
               className="margin-right-0 margin-y-2 desktop:margin-y-0 text-no-wrap"
               outline
@@ -115,7 +114,7 @@ const Discussions = ({
               <IconButton
                 type="button"
                 onClick={() => {
-                  history.push(`${location.pathname}?discussion=view`);
+                  setDiscussion('discussion=view');
                 }}
                 icon={<Icon.ArrowForward />}
                 iconPosition="after"
@@ -147,7 +146,7 @@ const Discussions = ({
                     <Button
                       type="button"
                       onClick={() => {
-                        history.push(`${location.pathname}?discussion=view`);
+                        setDiscussion('discussion=start');
                       }}
                       unstyled
                     >

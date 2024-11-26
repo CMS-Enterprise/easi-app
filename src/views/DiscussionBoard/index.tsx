@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
+import useDiscussion from 'hooks/useDiscussion';
 import { DiscussionAlert } from 'types/discussions';
 
 import Discussion from './Discussion';
@@ -18,8 +18,6 @@ type DiscussionBoardProps = {
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
 };
 
-type DiscussionMode = 'view' | 'start' | 'reply' | undefined;
-
 function DiscussionBoard({
   systemIntakeID,
   grbDiscussions
@@ -30,11 +28,8 @@ function DiscussionBoard({
   // Get the first discussion from the array for testing purposes
   const activeDiscussion = grbDiscussions.length > 0 ? grbDiscussions[0] : null;
 
-  const history = useHistory();
-
-  const location = useLocation();
-  const q = new URLSearchParams(location.search);
-  const discussionMode = (q.get('discussion') || undefined) as DiscussionMode;
+  const { getDiscussionMode, setDiscussion } = useDiscussion();
+  const discussionMode = getDiscussionMode();
 
   // Reset discussionAlert when side panel is opened or closed
   useEffect(() => {
@@ -42,7 +37,7 @@ function DiscussionBoard({
   }, [setDiscussionAlert, discussionMode]);
 
   const closeModal = () => {
-    history.push(`${location.pathname}`);
+    setDiscussion(false);
   };
 
   return (
