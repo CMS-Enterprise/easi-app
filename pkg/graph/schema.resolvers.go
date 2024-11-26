@@ -1988,12 +1988,12 @@ func (r *systemIntakeGRBReviewDiscussionPostResolver) GrbRole(ctx context.Contex
 
 // VotingRole is the resolver for the votingRole field.
 func (r *systemIntakeGRBReviewerResolver) VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error) {
-	return models.SystemIntakeGRBReviewerVotingRole(obj.VotingRole), nil
+	return models.SystemIntakeGRBReviewerVotingRole(obj.GRBVotingRole), nil
 }
 
 // GrbRole is the resolver for the grbRole field.
 func (r *systemIntakeGRBReviewerResolver) GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerRole, error) {
-	return models.SystemIntakeGRBReviewerRole(obj.GRBRole), nil
+	return models.SystemIntakeGRBReviewerRole(obj.GRBReviewerRole), nil
 }
 
 // Author is the resolver for the author field.

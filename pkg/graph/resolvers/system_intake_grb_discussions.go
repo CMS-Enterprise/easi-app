@@ -36,8 +36,8 @@ func CreateSystemIntakeGRBDiscussionPost(
 		post.Content = input.Content.RawContent
 		post.SystemIntakeID = intakeID
 		if principalGRBReviewer != nil {
-			post.VotingRole = &principalGRBReviewer.VotingRole
-			post.GRBRole = &principalGRBReviewer.GRBRole
+			post.VotingRole = &principalGRBReviewer.GRBVotingRole
+			post.GRBRole = &principalGRBReviewer.GRBReviewerRole
 		}
 		return store.CreateSystemIntakeGRBDiscussionPost(ctx, tx, post)
 	})
@@ -72,8 +72,8 @@ func CreateSystemIntakeGRBDiscussionReply(
 		post.SystemIntakeID = intakeID
 		post.ReplyToID = &initialPost.ID
 		if principalGRBReviewer != nil {
-			post.VotingRole = &principalGRBReviewer.VotingRole
-			post.GRBRole = &principalGRBReviewer.GRBRole
+			post.VotingRole = &principalGRBReviewer.GRBVotingRole
+			post.GRBRole = &principalGRBReviewer.GRBReviewerRole
 		}
 		return store.CreateSystemIntakeGRBDiscussionPost(ctx, tx, post)
 	})

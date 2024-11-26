@@ -11,7 +11,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// SendGRBReviewDiscussionReplyEmailInput contains the data needed to to send the GRB discussion reply email
+// SendGRBReviewDiscussionReplyEmailInput contains the data needed to send the GRB discussion reply email
 type SendGRBReviewDiscussionReplyEmailInput struct {
 	SystemIntakeID           uuid.UUID
 	UserName                 string
