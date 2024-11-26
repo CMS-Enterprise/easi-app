@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"html/template"
 	"path"
 
 	"github.com/google/uuid"
@@ -21,7 +22,7 @@ type SendGRBReviewDiscussionGroupTaggedEmailInput struct {
 	DiscussionBoardType      string
 	GRBReviewLink            string
 	Role                     string
-	DiscussionContent        string // TODO: NJD *models.HTML?
+	DiscussionContent        template.HTML
 	DiscussionLink           string
 	ITGovernanceInboxAddress string
 	Recipients               []models.EmailAddress
@@ -37,7 +38,7 @@ type GRBReviewDiscussionGroupTaggedBody struct {
 	DiscussionBoardType      string
 	GRBReviewLink            string
 	Role                     string
-	DiscussionContent        string // TODO: NJD *models.HTML?
+	DiscussionContent        template.HTML
 	DiscussionLink           string
 	ClientAddress            string
 	ITGovernanceInboxAddress string
