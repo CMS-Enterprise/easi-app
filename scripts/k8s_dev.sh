@@ -90,8 +90,8 @@ fi
 
 # Build Docker images
 (
-    echo "🐋 Building easi-client:${NAMESPACE} image 🐋"
-    docker build -f ../Dockerfile.client_k8s -t easi-client:"$NAMESPACE" ../.
+    echo "🐋 Building easi-frontend:${NAMESPACE} image 🐋"
+    docker build -f ../Dockerfile.frontend_k8s -t easi-frontend:"$NAMESPACE" ../.
 
     # APPLICATION_VERSION=$(git rev-parse HEAD)
     # APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
@@ -123,7 +123,7 @@ delete_temp_dir() {
     kustomize create --resources ../deploy/base
     kustomize edit set namespace "$NAMESPACE"
     kustomize build > manifest.yaml
-    sed -i'' -E "s/easi-client:latest/easi-client:${NAMESPACE}/" manifest.yaml
+    sed -i'' -E "s/easi-frontend:latest/easi-frontend:${NAMESPACE}/" manifest.yaml
     sed -i'' -E "s/easi-backend:latest/easi-backend:${NAMESPACE}/" manifest.yaml
     sed -i'' -E "s/cedarproxy:latest/cedarproxy:${NAMESPACE}/" manifest.yaml
     sed -i'' -E "s/db-migrate:latest/db-migrate:${NAMESPACE}/" manifest.yaml
