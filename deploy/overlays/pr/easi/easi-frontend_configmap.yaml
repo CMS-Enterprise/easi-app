@@ -4,6 +4,6 @@ metadata:
   name: easi-frontend-configmap
   namespace: easi
 data:
-  VITE_API_ADDRESS: http://${EASI_BACKEND_INGRESS}/api/v1
-  VITE_GRAPHQL_ADDRESS: http://${EASI_BACKEND_INGRESS}/api/graph/query
+  VITE_API_ADDRESS: http://${EASI_FRONTEND_INGRESS}/api/v1
+  VITE_GRAPHQL_ADDRESS: http://${EASI_FRONTEND_INGRESS}/api/graph/query
   VITE_OKTA_REDIRECT_URI: http://${EASI_FRONTEND_INGRESS}/implicit/callback
