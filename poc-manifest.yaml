@@ -1,7 +1,18 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: easi-4577
+  name: easi
+---
+apiVersion: v1
+data:
+  CEDAR_API_URL: webmethods-apigw.cedarimpl.cms.gov
+  CEDAR_CACHE_EXPIRE_TIME: 7d
+kind: ConfigMap
+metadata:
+  name: cedarproxy-configmap
+  namespace: easi
+  labels:
+    fargate: 'true'
 ---
 apiVersion: v1
 data:
@@ -9,7 +20,9 @@ data:
 kind: ConfigMap
 metadata:
   name: db-configmap
-  namespace: easi-4577
+  namespace: easi
+  labels:
+    fargate: 'true'
 ---
 apiVersion: v1
 data:
@@ -26,13 +39,13 @@ data:
   CEDAR_API_URL: webmethods-apigw.cedarimpl.cms.gov
   CEDAR_CORE_API_VERSION: 2.0.0
   CEDAR_CORE_MOCK: "true"
-  CEDAR_CORE_SKIP_PROXY: "false"
+  CEDAR_CORE_SKIP_PROXY: "true"
   CEDAR_EMAIL_ADDRESS: EnterpriseArchitecture@notCMS.gov
   CEDAR_INTAKE_ENABLED: "false"
   CEDAR_PROXY_URL: ""
-  CLIENT_ADDRESS: http://{EASI_BACKEND_INGRESS}
-  CLIENT_DOMAIN: 
-  CLIENT_HOSTNAME: :80
+  CLIENT_ADDRESS: http://k8s-easi-easiclie-63a00365fa-835353393.us-west-2.elb.amazonaws.com
+  CLIENT_DOMAIN: k8s-easi-easiclie-63a00365fa-835353393.us-west-2.elb.amazonaws.com
+  CLIENT_HOSTNAME: k8s-easi-easiclie-63a00365fa-835353393.us-west-2.elb.amazonaws.com:80
   CLIENT_PORT: "80"
   CLIENT_PROTOCOL: http
   DB_MAX_CONNECTIONS: "20"
@@ -62,21 +75,22 @@ data:
   PGUSER: postgres
   SERVER_CERT: ""
   SERVER_KEY: ""
-  SES_RECIPIENT_ALLOWLIST_REGEX: ""
   TRB_EMAIL: success@simulator.amazonses.com
   USE_TLS: "false"
 kind: ConfigMap
 metadata:
+  labels:
+    fargate: 'true'
   name: easi-backend-configmap
-  namespace: easi-4577
+  namespace: easi
 ---
 apiVersion: v1
 data:
   CHOKIDAR_USEPOLLING: "true"
   ESLINT_NO_DEV_ERRORS: "true"
-  VITE_API_ADDRESS: http://easi-backend.localdev.me/api/v1
+  VITE_API_ADDRESS: http://k8s-easi-easiback-78b1fb3811-153238768.us-west-2.elb.amazonaws.com/api/v1
   VITE_APP_ENV: local
-  VITE_GRAPHQL_ADDRESS: http://easi-backend.localdev.me/api/graph/query
+  VITE_GRAPHQL_ADDRESS: http://k8s-easi-easiback-78b1fb3811-153238768.us-west-2.elb.amazonaws.com/api/graph/query
   VITE_LD_CLIENT_ID: 63231d448bd05a111f06195b
   VITE_LD_ENV_USER: ""
   VITE_LD_USER_HASH: ""
@@ -88,8 +102,10 @@ data:
   VITE_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
 kind: ConfigMap
 metadata:
-  name: easi-frontend-configmap
-  namespace: easi-4577
+  labels:
+    fargate: 'true'
+  name: easi-client-configmap
+  namespace: easi
 ---
 apiVersion: v1
 data:
@@ -108,14 +124,32 @@ data:
     }
 kind: ConfigMap
 metadata:
+  labels:
+    fargate: 'true'
   name: minio-mc-config
-  namespace: easi-4577
+  namespace: easi
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    fargate: 'true'
+  name: cedarproxy
+  namespace: easi
+spec:
+  ports:
+  - port: 8001
+    targetPort: 8001
+  selector:
+    app: cedarproxy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    fargate: 'true'
   name: db
-  namespace: easi-4577
+  namespace: easi
 spec:
   ports:
   - port: 5432
@@ -126,8 +160,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    fargate: 'true'
   name: easi-backend
-  namespace: easi-4577
+  namespace: easi
 spec:
   ports:
   - name: "8080"
@@ -142,20 +178,24 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: easi-frontend
-  namespace: easi-4577
+  labels:
+    fargate: 'true'
+  name: easi-client
+  namespace: easi
 spec:
   ports:
   - port: 3000
     targetPort: 3000
   selector:
-    app: easi-frontend
+    app: easi-client
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    fargate: 'true'
   name: email
-  namespace: easi-4577
+  namespace: easi
 spec:
   ports:
   - name: smtp
@@ -170,8 +210,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    fargate: 'true'
   name: minio
-  namespace: easi-4577
+  namespace: easi
 spec:
   ports:
   - name: "9004"
@@ -186,9 +228,41 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db
-  namespace: easi-4577
+  labels:
+    fargate: 'true'
+  name: cedarproxy
+  namespace: easi
 spec:
+  revisionHistoryLimit: 1 
+  selector:
+    matchLabels:
+      app: cedarproxy
+  template:
+    metadata:
+      labels:
+        app: cedarproxy
+        fargate: 'true'
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: cedarproxy-configmap
+        image: 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-cedarproxy:k8s-test
+        imagePullPolicy: Always
+        name: cedarproxy
+        ports:
+        - containerPort: 8001
+        resources: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    fargate: 'true'
+  name: db
+  namespace: easi
+spec:
+  revisionHistoryLimit: 1 
   replicas: 1
   selector:
     matchLabels:
@@ -198,12 +272,11 @@ spec:
     metadata:
       labels:
         app: db
+        fargate: 'true'
     spec:
       containers:
       - args:
         - postgres
-        - -c
-        - log_statement=all
         - -c
         - max_connections=25
         envFrom:
@@ -220,9 +293,12 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    fargate: 'true'
   name: easi-backend
-  namespace: easi-4577
+  namespace: easi
 spec:
+  revisionHistoryLimit: 1 
   replicas: 1
   selector:
     matchLabels:
@@ -233,6 +309,7 @@ spec:
     metadata:
       labels:
         app: easi-backend
+        fargate: 'true'
     spec:
       containers:
       - command:
@@ -241,8 +318,8 @@ spec:
         envFrom:
         - configMapRef:
             name: easi-backend-configmap
-        image: easi-backend:latest
-        imagePullPolicy: Always
+        image: 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-backend:k8s-test
+        imagePullPolicy: IfNotPresent
         name: easi-backend
         ports:
         - containerPort: 8080
@@ -254,48 +331,48 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: easi-frontend
-  name: easi-frontend
-  namespace: easi-4577
+    fargate: 'true'
+    app: easi-client
+  name: easi-client
+  namespace: easi
 spec:
+  revisionHistoryLimit: 1 
   replicas: 1
   selector:
     matchLabels:
-      app: easi-frontend
+      app: easi-client
   template:
     metadata:
       labels:
-        app: easi-frontend
+        app: easi-client
+        fargate: 'true'
     spec:
       containers:
       - envFrom:
         - configMapRef:
-            name: easi-frontend-configmap
-        image: easi-frontend:latest
-        imagePullPolicy: Never
-        name: easi-frontend
+            name: easi-client-configmap
+        image: 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-frontend:k8s-test
+        imagePullPolicy: IfNotPresent
+        name: easi-client
         ports:
         - containerPort: 3000
           protocol: TCP
-        resources: {}
-        volumeMounts:
-        - mountPath: /etc/nginx/conf.d/easi.conf
-          name: nginx-config
-          subPath: easi.conf
+        resources: 
+          limits:
+            memory: "2Gi"
+            cpu: "1"
       restartPolicy: Always
-      volumes:
-      - configMap:
-          name: easi-frontend-configmap-nginx
-        name: nginx-config
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    fargate: 'true'
     app: email
   name: email
-  namespace: easi-4577
+  namespace: easi
 spec:
+  revisionHistoryLimit: 1 
   replicas: 1
   selector:
     matchLabels:
@@ -304,6 +381,7 @@ spec:
     metadata:
       labels:
         app: email
+        fargate: 'true'
     spec:
       containers:
       - image: dockage/mailcatcher:latest
@@ -319,8 +397,10 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    fargate: 'true'
   name: minio
-  namespace: easi-4577
+  namespace: easi
 spec:
   replicas: 1
   selector:
@@ -332,6 +412,7 @@ spec:
     metadata:
       labels:
         app: minio
+        fargate: 'true'
     spec:
       containers:
       - args:
@@ -347,10 +428,9 @@ spec:
         name: minio
         ports:
         - containerPort: 9004
-          hostPort: 9004
           protocol: TCP
         - containerPort: 9001
-          hostPort: 9001
+          protocol: TCP
         resources: {}
       restartPolicy: Always
 ---
@@ -358,9 +438,10 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   labels:
+    fargate: 'true'
     app: db-migrate
   name: db-migrate
-  namespace: easi-4577
+  namespace: easi
 spec:
   backoffLimit: 4
   completions: 1
@@ -369,6 +450,7 @@ spec:
     metadata:
       labels:
         app: db-migrate
+        fargate: 'true'
     spec:
       containers:
       - env:
@@ -380,8 +462,8 @@ spec:
           value: jdbc:postgresql://db/postgres
         - name: FLYWAY_USER
           value: postgres
-        image: db-migrate:latest
-        imagePullPolicy: Never
+        image: 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:k8s-test
+        imagePullPolicy: Always
         name: db-migrate
         resources: {}
       restartPolicy: Never
@@ -390,9 +472,10 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   labels:
+    fargate: 'true'
     app: minio-mc
   name: minio-mc
-  namespace: easi-4577
+  namespace: easi
 spec:
   backoffLimit: 4
   completions: 1
@@ -401,6 +484,7 @@ spec:
     metadata:
       labels:
         app: minio-mc
+        fargate: 'true'
     spec:
       containers:
       - args:
@@ -422,3 +506,4 @@ spec:
           name: minio-mc-config
         name: minio-mc-config
   ttlSecondsAfterFinished: 1000
+---

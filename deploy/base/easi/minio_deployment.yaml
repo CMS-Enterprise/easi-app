@@ -16,9 +16,10 @@ spec:
         app: minio
     spec:
       containers:
-        - command: ["minio", "server", "/data", "--console-address"]
-          args: [':9001', '--address', ':9004']
+        - command: ["minio", "server", "/data"]
+          args: ['--console-address', ':9001', '--address', ':9004']
           image: minio/minio:latest
+          imagePullPolicy: Always
           name: minio
           ports:
             - containerPort: 9004
@@ -26,5 +27,6 @@ spec:
               protocol: TCP
             - containerPort: 9001
               hostPort: 9001
+              protocol: TCP
           resources: {}
       restartPolicy: Always

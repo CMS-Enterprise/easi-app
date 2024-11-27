@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../deploy/overlays/pr/easi
+namespace: wow
+images:
+- name: db-migrate
+  newName: 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate
+- name: easi-backend
+  newName: 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-backend
+- name: easi-frontend
+  newName: 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-frontend
