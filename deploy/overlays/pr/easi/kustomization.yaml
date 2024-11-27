@@ -26,6 +26,10 @@ patches:
   target:
     name: easi-frontend
     kind: Deployment
+- path: minio_deployment.yaml
+  target:
+    name: minio
+    kind: Deployment
 - path: db-migrate_job.yaml
   target:
     name: db-migrate
