@@ -134,5 +134,5 @@ echo "EMAIL-INGRESS: $EMAIL_INGRESS"
     echo "❄️  Deploying Ingress Objects via Kubectl  ❄️"
     kubectl apply -n $NAMESPACE -f manifest-easi.yaml
 
-    rm -rf "$TEMPDIR"
+    # rm -rf "$TEMPDIR"
 )
