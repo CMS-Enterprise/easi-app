@@ -80,14 +80,15 @@ const DiscussionForm = ({
             message: t('general.alerts.startDiscussionSuccess'),
             type: 'success'
           });
-
-          pushDiscussionQuery({ discussionMode: 'view' });
         })
         .catch(e => {
           setDiscussionAlert({
             message: t('general.alerts.startDiscussionError'),
             type: 'error'
           });
+        })
+        .finally(() => {
+          pushDiscussionQuery({ discussionMode: 'view' });
         });
     }
   });
