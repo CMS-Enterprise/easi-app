@@ -53,8 +53,11 @@ export default function useDiscussionParams() {
     /** Push a new url query to update the Discussion subviews state. `false` implies closing the modal */
     pushDiscussionQuery(
       query:
-        | { discussionMode: 'view' | 'start' }
-        | { discussionMode: 'reply'; discussionId: string }
+        | { discussionMode: Extract<DiscussionMode, 'view' | 'start'> }
+        | {
+            discussionMode: Extract<DiscussionMode, 'reply'>;
+            discussionId: string;
+          }
         | false
     ) {
       if (query === false) {
