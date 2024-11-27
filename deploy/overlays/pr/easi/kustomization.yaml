@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../base/easi
+
+patches:
+
+# Patches to remove cedarproxy resources in EKS VPC
+- path: ignore_cedarproxy_configmap.yaml
+- path: ignore_cedarproxy_deployment.yaml
+- path: ignore_cedarproxy_service.yaml
+
+# Patches to update ingress for use with AWS ALB
+# - path: easi-backend_ingress.yaml
+#   target:
+#     name: easi-backend-ingress
+# - path: easi-frontend_ingress.yaml
+#   target:
+#     name: easi-frontend-ingress
+# - path: email_ingress.yaml
+#   target:
+#     name: email-ingress
+# - path: minio_ingress.yaml
+#   target:
+#     name: minio-console-ingress
+- path: easi-backend_configmap.yaml
+  target:
+    name: easi-backend-configmap
+  
+- path: easi-backend_deployment.yaml
+  target:
+    name: easi-backend
+    kind: Deployment

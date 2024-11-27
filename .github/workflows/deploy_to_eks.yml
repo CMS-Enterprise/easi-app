@@ -72,5 +72,6 @@ jobs:
           aws-region: us-west-2
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name dev-easi-poc-cluster --region us-west-2
-      - name: test kubectl
-        run: kubectl get nodes -A
+      - name: Deploy to EKS
+        run: |
+          ./scripts/eks_deploy.env.sh -v

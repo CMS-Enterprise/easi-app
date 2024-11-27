@@ -1,0 +1,64 @@
+- op: replace
+  path: /metadata/labels
+  value: 
+    fargate: 'true'
+- op: replace
+  path: /metadata/annotations
+  value:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /api/v1/healthcheck
+- op: replace
+  path: /spec
+  value:
+    ingressClassName: alb
+    rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: easi-frontend
+              port:
+                number: 3030
+        -   path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: easi-backend
+                port:
+                  number: 8080
+
+# expected output:
+#
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   labels:
+#     fargate: 'true'
+#   annotations:
+#     alb.ingress.kubernetes.io/scheme: internet-facing
+#     alb.ingress.kubernetes.io/target-type: ip
+#     alb.ingress.kubernetes.io/healthcheck-path: /api/v1/healthcheck
+#   name: easi-frontend-ingress
+#   namespace: easi
+# spec:
+#   ingressClassName: alb
+#   rules:
+#   - http:
+#       paths:
+#       - frontend:
+#           service:
+#             name: easi-frontend
+#             port:
+#               number: 3000
+#         path: /
+#         pathType: Prefix
+#       - backend:
+#           service:
+#             name: easi-backend
+#             port:
+#               number: 8080
+#         path: /api
+#         pathType: Prefix

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: easi-backend-configmap
+  namespace: easi
+data:
+  CLIENT_DOMAIN: ${EASI_BACKEND_INGRESS}
+  CLIENT_HOSTNAME: ${EASI_BACKEND_INGRESS}:80
+  CLIENT_ADDRESS: http://${EASI_BACKEND_INGRESS}

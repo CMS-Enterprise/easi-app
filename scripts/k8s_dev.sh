@@ -46,10 +46,12 @@ validate_namespace() {
 
   if ! [[ $namespace =~ $valid_namespace_regex ]] ; then
     echo "Error: Invalid namespace. Per Kubernetes, namespaces must consist of lowercase alpha characters, numbers, or hyphens."
+    exit 1
   fi
 
   if [[ $namespace =~ $blacklisted_namespace_regex ]] ; then
     echo "Error: Invalid namespace. Per Kubernetes, the following namespaces are reserved and cannot be used: default, kube-public, kube-system, kube-node-lease."
+    exit 1
   fi
 
 }
@@ -112,21 +114,26 @@ fi
 )
 
 echo "❄️  Deploying EASi via Kustomize  ❄️"
-TEMPDIR=$(mktemp -d ../tmp.k8s.XXXXX)
+
 delete_temp_dir() {
     if [ -d "$TEMPDIR" ]; then
-        rm -r "$TEMPDIR"
+        rm -rf "$TEMPDIR"
     fi
 }
+
+# Create Namespace!
 (
+    echo "❄️  Creating Namespace via Kubectl  ❄️"
+    kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+)
+
+(
+    TEMPDIR=$(mktemp -d ../tmp.ingress.XXXXX)
     cd "$TEMPDIR" || exit
-    kustomize create --resources ../deploy/base
+    kustomize create --resources ../deploy/base/ingress
     kustomize edit set namespace "$NAMESPACE"
     kustomize build > manifest.yaml
-    sed -i'' -E "s/easi-frontend:latest/easi-frontend:${NAMESPACE}/" manifest.yaml
-    sed -i'' -E "s/easi-backend:latest/easi-backend:${NAMESPACE}/" manifest.yaml
-    sed -i'' -E "s/cedarproxy:latest/cedarproxy:${NAMESPACE}/" manifest.yaml
-    sed -i'' -E "s/db-migrate:latest/db-migrate:${NAMESPACE}/" manifest.yaml
+
     sed -i'' -E "s/easi-backend.localdev.me/${NAMESPACE}-backend.localdev.me/" manifest.yaml
     sed -i'' -E "s/easi.localdev.me/${NAMESPACE}.localdev.me/" manifest.yaml
     sed -i'' -E "s/email.localdev.me/${NAMESPACE}-email.localdev.me/" manifest.yaml
@@ -135,7 +142,20 @@ delete_temp_dir() {
     trap delete_temp_dir EXIT
 )
 
+(
+    TEMPDIR=$(mktemp -d ../tmp.ingress.XXXXX)
+    cd "$TEMPDIR" || exit
+    kustomize create --resources ../deploy/base/easi
+    kustomize edit set namespace "$NAMESPACE"
+    kustomize build > manifest.yaml
+    sed -i'' -E "s/easi-frontend:latest/easi-frontend:${NAMESPACE}/" manifest.yaml
+    sed -i'' -E "s/easi-backend:latest/easi-backend:${NAMESPACE}/" manifest.yaml
+    sed -i'' -E "s/cedarproxy:latest/cedarproxy:${NAMESPACE}/" manifest.yaml
+    sed -i'' -E "s/db-migrate:latest/db-migrate:${NAMESPACE}/" manifest.yaml
+    kubectl apply -f manifest.yaml
+    trap delete_temp_dir EXIT
+)
+
 echo "❄️  EASi: http://${NAMESPACE}.localdev.me ❄️"
 echo "❄️  Mailcatcher: http://${NAMESPACE}-email.localdev.me ❄️"
 echo "❄️  Minio: http://${NAMESPACE}-minio.localdev.me ❄️"
-
