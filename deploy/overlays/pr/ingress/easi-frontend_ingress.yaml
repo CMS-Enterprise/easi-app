@@ -21,7 +21,7 @@
             service:
               name: easi-frontend
               port:
-                number: 3030
+                number: 3000
         -   path: /api
             pathType: Prefix
             backend:

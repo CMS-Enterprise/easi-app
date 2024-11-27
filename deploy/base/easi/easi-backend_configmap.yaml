@@ -27,7 +27,7 @@ data:
   TRB_EMAIL: success@simulator.amazonses.com
   OIT_FEEDBACK_CHANNEL_SLACK_LINK: https://oddball.slack.com/archives/C059N01AYGM
   SES_RECIPIENT_ALLOWLIST_REGEX: ''
-  EMAIL_TEMPLATE_DIR: /easi/pkg/email/templates
+  EMAIL_TEMPLATE_DIR: /easi/templates
   AWS_REGION: us-west-2
   AWS_SES_SOURCE: '\"EASi Local\" <no-reply-local@info.easi.cms.gov>'
   AWS_SES_SOURCE_ARN: ses-arn

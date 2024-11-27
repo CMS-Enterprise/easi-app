@@ -76,7 +76,6 @@ fi
 
 # Generate and deploy ingress resources
 (
-    echo "verbose? - $VERBOSE"
     echo "❄️  Creating Ingress resources via Kustomize  ❄️"
     TEMPDIR=$(mktemp -d ../tmp.ingress.XXXXX)
     cd "$TEMPDIR" || exit
@@ -99,16 +98,14 @@ fi
     rm -rf "$TEMPDIR"
 )
 
+# TODO: Fine tune this sleep time, or engineer around it.
+# Try sleep 30 seconds for the load balancer to be created?
+sleep 30
+
 EASI_BACKEND_INGRESS=$(kubectl get ingress -n $NAMESPACE easi-backend-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 EASI_FRONTEND_INGRESS=$(kubectl get ingress -n $NAMESPACE easi-frontend-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 MINIO_CONSOLE_INGRESS=$(kubectl get ingress -n $NAMESPACE minio-console-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 EMAIL_INGRESS=$(kubectl get ingress -n $NAMESPACE email-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-
-echo "EASI-BACKEND-INGRESS: $EASI_BACKEND_INGRESS"
-echo "EASI-FRONTEND-INGRESS: $EASI_FRONTEND_INGRESS"
-echo "MINIO-CONSOLE-INGRESS: $MINIO_CONSOLE_INGRESS"
-echo "EMAIL-INGRESS: $EMAIL_INGRESS"
-
 
 # Generate and deploy EASI resources
 (
@@ -136,3 +133,9 @@ echo "EMAIL-INGRESS: $EMAIL_INGRESS"
 
     # rm -rf "$TEMPDIR"
 )
+
+
+echo "EASI-BACKEND-INGRESS: $EASI_BACKEND_INGRESS"
+echo "EASI-FRONTEND-INGRESS: $EASI_FRONTEND_INGRESS"
+echo "MINIO-CONSOLE-INGRESS: $MINIO_CONSOLE_INGRESS"
+echo "EMAIL-INGRESS: $EMAIL_INGRESS"
