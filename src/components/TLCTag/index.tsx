@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
 import Tag from 'components/shared/Tag';
@@ -25,13 +26,14 @@ type TLCTagTagProps = {
 };
 
 const TLCTag = ({ tlcPhase }: TLCTagTagProps) => {
+  const { t } = useTranslation('systemProfile');
   return (
     <div className="display-flex flex-align-center flex-justify">
       <Tag
         className={classNames(`padding-1, ${tlcPhaseClassName(tlcPhase)}`)}
         data-testid="tlc-status-tag"
       >
-        {tlcPhase}
+        {tlcPhase || t('singleSystem.summary.tlcPhaseEmpty')}
       </Tag>
     </div>
   );
