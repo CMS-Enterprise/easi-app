@@ -179,7 +179,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 			<h2>Discussion</h2>
 			<br>
 			<p><b>%s</b></p>
-			<p class="subtitle"> %s</p>
+			<p class="subtitle"> Governance Admin Team</p>
 			<p>%s</p>
 			<p style="font-weight: normal">
   				<a href="%s">
@@ -189,8 +189,6 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 
 			<hr>
 			<br>
-		    <p>If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
-			<br>
 			<p>You will continue to receive email notifications about this request until it is closed.</p>
 			`,
 			userName,
@@ -198,11 +196,8 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 			requestName,
 			grbReviewLink,
 			userName,
-			role,
 			discussionContent,
 			discussionLink,
-			ITGovInboxAddress,
-			ITGovInboxAddress,
 		)
 	}
 
