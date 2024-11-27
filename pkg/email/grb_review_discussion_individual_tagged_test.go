@@ -68,7 +68,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 			<br>
 
 			<h2>Discussion</h2>
-			<br/>
+			<br>
 			<p><b>%s</b></p>
 			<p class="subtitle"> %s</p>
 			<p>%s</p>
@@ -78,10 +78,10 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
   				</a>
 			</p>
 
+			<hr>
 			<br>
 		    <p>If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
 			<br>
-			<hr>
 			<p>You will continue to receive email notifications about this request until it is closed.</p>
 			`,
 			userName,
