@@ -74,4 +74,4 @@ jobs:
         run: aws eks update-kubeconfig --name dev-easi-poc-cluster --region us-west-2
       - name: Deploy to EKS
         run: |
-          ./scripts/eks_deploy.env.sh -v
+          ./scripts/eks_deploy_env.sh -v
