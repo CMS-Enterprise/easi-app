@@ -5,3 +5,11 @@
       protocol: TCP
     - containerPort: 9001
       protocol: TCP
+
+- op: replace
+  path: /spec/template/spec/containers/0/ports
+  value:
+    - containerPort: 9004
+      protocol: TCP
+    - containerPort: 9001
+      protocol: TCP
