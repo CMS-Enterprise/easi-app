@@ -23,10 +23,10 @@ spec:
           name: minio
           ports:
             - containerPort: 9004
-              hostPort: 9004
+              # hostPort: 9004
               protocol: TCP
             - containerPort: 9001
-              hostPort: 9001
+              # hostPort: 9001
               protocol: TCP
           resources: {}
       restartPolicy: Always

@@ -102,10 +102,10 @@ fi
 # Try sleep 30 seconds for the load balancer to be created?
 sleep 30
 
-EASI_BACKEND_INGRESS=$(kubectl get ingress -n $NAMESPACE easi-backend-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-EASI_FRONTEND_INGRESS=$(kubectl get ingress -n $NAMESPACE easi-frontend-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-MINIO_CONSOLE_INGRESS=$(kubectl get ingress -n $NAMESPACE minio-console-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-EMAIL_INGRESS=$(kubectl get ingress -n $NAMESPACE email-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+export EASI_BACKEND_INGRESS=$(kubectl get ingress -n $NAMESPACE easi-backend-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+export EASI_FRONTEND_INGRESS=$(kubectl get ingress -n $NAMESPACE easi-frontend-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+export MINIO_CONSOLE_INGRESS=$(kubectl get ingress -n $NAMESPACE minio-console-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+export EMAIL_INGRESS=$(kubectl get ingress -n $NAMESPACE email-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 
 # Generate and deploy EASI resources
 (
