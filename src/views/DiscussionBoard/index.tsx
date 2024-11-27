@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
-import useDiscussionParams from 'hooks/useDiscussion';
+import useDiscussionParams from 'hooks/useDiscussionParams';
 import { DiscussionAlert } from 'types/discussions';
 
 import Discussion from './Discussion';

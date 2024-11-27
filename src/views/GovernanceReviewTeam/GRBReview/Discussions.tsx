@@ -7,7 +7,7 @@ import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import IconButton from 'components/shared/IconButton';
-import useDiscussionParams from 'hooks/useDiscussion';
+import useDiscussionParams from 'hooks/useDiscussionParams';
 import DiscussionBoard from 'views/DiscussionBoard';
 import DiscussionPost from 'views/DiscussionBoard/components/DiscussionPost';
 

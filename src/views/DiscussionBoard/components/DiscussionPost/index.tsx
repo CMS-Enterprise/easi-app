@@ -8,7 +8,7 @@ import { DateTime } from 'luxon';
 import { RichTextViewer } from 'components/RichTextEditor';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
 import IconButton from 'components/shared/IconButton';
-import useDiscussionParams from 'hooks/useDiscussion';
+import useDiscussionParams from 'hooks/useDiscussionParams';
 import { getRelativeDate } from 'utils/date';
 
 import './index.scss';

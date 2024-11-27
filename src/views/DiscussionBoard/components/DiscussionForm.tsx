@@ -15,7 +15,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
-import useDiscussionParams from 'hooks/useDiscussion';
+import useDiscussionParams from 'hooks/useDiscussionParams';
 import { DiscussionAlert } from 'types/discussions';
 import discussionSchema from 'validations/discussionSchema';
 
