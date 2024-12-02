@@ -19,10 +19,8 @@ type SendGRBReviewDiscussionIndividualTaggedEmailInput struct {
 	UserName                 string
 	RequestName              string
 	DiscussionBoardType      string
-	GRBReviewLink            string
 	Role                     string
 	DiscussionContent        template.HTML
-	DiscussionLink           string
 	ITGovernanceInboxAddress string
 	Recipient                models.EmailAddress
 }

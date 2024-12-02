@@ -42,10 +42,8 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 		UserName:                 userName,
 		RequestName:              requestName,
 		DiscussionBoardType:      discussionBoardType,
-		GRBReviewLink:            grbReviewLink,
 		Role:                     role,
 		DiscussionContent:        discussionContent,
-		DiscussionLink:           discussionLink,
 		ITGovernanceInboxAddress: ITGovInboxAddress,
 		Recipient:                recipient,
 	}
@@ -150,10 +148,8 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 		UserName:                 userName,
 		RequestName:              requestName,
 		DiscussionBoardType:      discussionBoardType,
-		GRBReviewLink:            grbReviewLink,
 		Role:                     role,
 		DiscussionContent:        discussionContent,
-		DiscussionLink:           discussionLink,
 		ITGovernanceInboxAddress: ITGovInboxAddress,
 		Recipient:                recipient,
 	}

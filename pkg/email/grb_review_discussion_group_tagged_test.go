@@ -45,10 +45,8 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 		GroupName:                groupName,
 		RequestName:              requestName,
 		DiscussionBoardType:      discussionBoardType,
-		GRBReviewLink:            grbReviewLink,
 		Role:                     role,
 		DiscussionContent:        discussionContent,
-		DiscussionLink:           discussionLink,
 		ITGovernanceInboxAddress: ITGovInboxAddress,
 		Recipients:               recipients,
 	}
@@ -154,10 +152,8 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdm
 		GroupName:                groupName,
 		RequestName:              requestName,
 		DiscussionBoardType:      discussionBoardType,
-		GRBReviewLink:            grbReviewLink,
 		Role:                     role,
 		DiscussionContent:        discussionContent,
-		DiscussionLink:           discussionLink,
 		ITGovernanceInboxAddress: ITGovInboxAddress,
 		Recipients:               recipients,
 	}
