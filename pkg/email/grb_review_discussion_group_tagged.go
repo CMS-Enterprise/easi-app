@@ -94,7 +94,8 @@ func (sie systemIntakeEmails) SendGRBReviewDiscussionGroupTaggedEmail(ctx contex
 	return sie.client.sender.Send(
 		ctx,
 		NewEmail().
-			WithToAddresses(allRecipients). // TODO: NJD cc and/or bcc?
+			// use BCC as this is going to multiple recipients
+			WithBCCAddresses(allRecipients).
 			WithSubject(subject).
 			WithBody(body),
 	)
