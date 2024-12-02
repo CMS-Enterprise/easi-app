@@ -641,7 +641,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			DiscussionContent:        `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
 			DiscussionLink:           "google.com",
 			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
-			Recipients:               emailNotificationRecipients.RegularRecipientEmails,
+			Recipient:                requesterEmail,
 		},
 	)
 	noErr(err)
@@ -658,7 +658,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			DiscussionContent:        `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
 			DiscussionLink:           "google.com",
 			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
-			Recipients:               emailNotificationRecipients.RegularRecipientEmails,
+			Recipient:                requesterEmail,
 		},
 	)
 	noErr(err)
@@ -676,7 +676,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			DiscussionContent:        `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
 			DiscussionLink:           "google.com",
 			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
-			Recipients:               emailNotificationRecipients.RegularRecipientEmails,
+			Recipient:                requesterEmail,
 		},
 	)
 	noErr(err)
@@ -694,7 +694,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			DiscussionContent:        `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
 			DiscussionLink:           "google.com",
 			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
-			Recipients:               emailNotificationRecipients.RegularRecipientEmails,
+			Recipient:                requesterEmail,
 		},
 	)
 	noErr(err)

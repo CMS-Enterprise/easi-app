@@ -24,7 +24,7 @@ type SendGRBReviewDiscussionIndividualTaggedEmailInput struct {
 	DiscussionContent        template.HTML
 	DiscussionLink           string
 	ITGovernanceInboxAddress string
-	Recipients               []models.EmailAddress
+	Recipient                models.EmailAddress
 }
 
 // GRBReviewDiscussionIndividualTaggedBody contains the data needed for interpolation in
@@ -87,7 +87,7 @@ func (sie systemIntakeEmails) SendGRBReviewDiscussionIndividualTaggedEmail(ctx c
 	return sie.client.sender.Send(
 		ctx,
 		NewEmail().
-			WithToAddresses(input.Recipients). // TODO: NJD cc and/or bcc?
+			WithToAddresses([]models.EmailAddress{input.Recipient}).
 			WithSubject(subject).
 			WithBody(body),
 	)

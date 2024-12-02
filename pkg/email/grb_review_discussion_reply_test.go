@@ -36,7 +36,6 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
-	recipients := []models.EmailAddress{recipient}
 
 	input := SendGRBReviewDiscussionReplyEmailInput{
 		SystemIntakeID:           intakeID,
@@ -48,7 +47,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 		DiscussionContent:        discussionContent,
 		DiscussionLink:           discussionLink,
 		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipients:               recipients,
+		Recipient:                recipient,
 	}
 
 	client, err := NewClient(s.config, &sender)
@@ -145,7 +144,6 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
-	recipients := []models.EmailAddress{recipient}
 
 	input := SendGRBReviewDiscussionReplyEmailInput{
 		SystemIntakeID:           intakeID,
@@ -157,7 +155,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 		DiscussionContent:        discussionContent,
 		DiscussionLink:           discussionLink,
 		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipients:               recipients,
+		Recipient:                recipient,
 	}
 
 	client, err := NewClient(s.config, &sender)
