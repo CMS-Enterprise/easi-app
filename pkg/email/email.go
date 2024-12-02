@@ -493,6 +493,9 @@ func HumanizeSnakeCase(s string) string {
 	return strings.Join(wordSlice, " ")
 }
 
+// Email consists of the basic components of an email
+// note: only one of `To`/`CC`/`BCC` needed to send an email
+// ex: you can send to only BCC recipients if desired
 type Email struct {
 	ToAddresses  []models.EmailAddress
 	CcAddresses  []models.EmailAddress
@@ -501,30 +504,36 @@ type Email struct {
 	Body         string
 }
 
+// NewEmail returns an empty email object
 func NewEmail() Email {
 	return Email{}
 }
 
+// WithToAddresses sets the `To` field on an email
 func (e Email) WithToAddresses(toAddresses []models.EmailAddress) Email {
 	e.ToAddresses = toAddresses
 	return e
 }
 
+// WithCCAddresses sets the `CC` field on an email
 func (e Email) WithCCAddresses(ccAddresses []models.EmailAddress) Email {
 	e.CcAddresses = ccAddresses
 	return e
 }
 
+// WithBCCAddresses sets the `BCC` field on an email
 func (e Email) WithBCCAddresses(bccAddresses []models.EmailAddress) Email {
 	e.BccAddresses = bccAddresses
 	return e
 }
 
+// WithSubject sets the Subject on an email
 func (e Email) WithSubject(subject string) Email {
 	e.Subject = subject
 	return e
 }
 
+// WithBody sets the content (body) of an email
 func (e Email) WithBody(body string) Email {
 	e.Body = body
 	return e
