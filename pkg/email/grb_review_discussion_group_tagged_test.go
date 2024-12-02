@@ -109,12 +109,9 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 	})
 
 	s.Run("Recipient is correct", func() {
-		allRecipients := []models.EmailAddress{
-			recipient,
-		}
-		s.ElementsMatch(sender.toAddresses, allRecipients)
+		s.ElementsMatch(sender.bccAddresses, recipients)
 		s.Empty(sender.ccAddresses)
-		s.Empty(sender.bccAddresses)
+		s.Empty(sender.toAddresses)
 	})
 
 	s.Run("all info is included", func() {
@@ -219,9 +216,9 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdm
 		allRecipients := []models.EmailAddress{
 			recipient,
 		}
-		s.ElementsMatch(sender.toAddresses, allRecipients)
+		s.ElementsMatch(sender.bccAddresses, allRecipients)
+		s.Empty(sender.toAddresses)
 		s.Empty(sender.ccAddresses)
-		s.Empty(sender.bccAddresses)
 	})
 
 	s.Run("all info is included", func() {

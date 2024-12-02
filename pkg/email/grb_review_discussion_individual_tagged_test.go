@@ -208,10 +208,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	})
 
 	s.Run("Recipient is correct", func() {
-		allRecipients := []models.EmailAddress{
-			recipient,
-		}
-		s.ElementsMatch(sender.toAddresses, allRecipients)
+		s.Equal(sender.toAddresses[0], recipient)
 		s.Empty(sender.ccAddresses)
 		s.Empty(sender.bccAddresses)
 	})
