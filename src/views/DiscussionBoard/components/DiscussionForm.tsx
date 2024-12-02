@@ -64,7 +64,10 @@ const DiscussionForm = ({
     reset,
     formState: { isValid, errors }
   } = useEasiForm<DiscussionContent>({
-    resolver: yupResolver(discussionSchema)
+    resolver: yupResolver(discussionSchema),
+    defaultValues: {
+      content: ''
+    }
   });
 
   const createDiscussion = handleSubmit(({ content }) => {

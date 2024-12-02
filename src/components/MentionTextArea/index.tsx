@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Document from '@tiptap/extension-document';
 import Mention from '@tiptap/extension-mention';
@@ -145,10 +145,12 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
         const inputText = input?.getText();
 
         if (setFieldValue) {
+          // Prevents editor from setting value to '<p></p>' when user deletes all text
           if (inputText === '') {
             setFieldValue('');
             return;
           }
+
           setFieldValue(inputContent);
         }
       },
@@ -158,6 +160,19 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
       },
       content: initialContent
     });
+
+    /** Clear editor content when field is reset */
+    useEffect(() => {
+      if (editable) {
+        if (
+          !initialContent ||
+          // Check if value is empty string and editor is not already reset
+          (initialContent.length === 0 && initialContent !== editor?.getText())
+        ) {
+          editor?.commands.clearContent();
+        }
+      }
+    }, [editor, initialContent, editable]);
 
     return (
       <>
