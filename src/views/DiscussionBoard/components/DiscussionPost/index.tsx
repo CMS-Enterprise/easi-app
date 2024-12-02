@@ -5,7 +5,7 @@ import { SystemIntakeGRBReviewDiscussionPostFragment } from 'gql/gen/graphql';
 import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
 
-import { RichTextViewer } from 'components/RichTextEditor';
+import MentionTextArea from 'components/MentionTextArea';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
 import IconButton from 'components/shared/IconButton';
 import { getRelativeDate } from 'utils/date';
@@ -84,13 +84,9 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
           </p>
         </div>
 
-        {/**
-         * TODO:
-         *   - Update to use TipTap text area
-         *   - Truncate text after 3 lines with `Read more` button
-         */}
-        <RichTextViewer
-          value={content}
+        <MentionTextArea
+          initialContent={content}
+          id="easiDiscussionPostContent"
           className="easi-discussion-post__content"
         />
 
