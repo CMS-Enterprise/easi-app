@@ -47,6 +47,12 @@ func CreateSystemIntakeGRBDiscussionPost(
 			post.GRBRole = &principalGRBReviewer.GRBReviewerRole
 		}
 
+		// get the posting user
+		postUser, err := store.UserAccountGetByID(ctx, tx, post.CreatedBy)
+		if err != nil {
+			return nil, err
+		}
+
 		// save in DB
 		result, err := store.CreateSystemIntakeGRBDiscussionPost(ctx, tx, post)
 		if err != nil {
@@ -135,10 +141,10 @@ func CreateSystemIntakeGRBDiscussionPost(
 
 				if err := emailClient.SystemIntake.SendGRBReviewDiscussionIndividualTaggedEmail(ctx, email.SendGRBReviewDiscussionIndividualTaggedEmailInput{
 					SystemIntakeID:           intakeID,
-					UserName:                 recipient.Username,
+					UserName:                 postUser.Username,
 					RequestName:              systemIntake.ProjectName.String,
 					DiscussionBoardType:      "",
-					Role:                     role,
+					Role:                     roleFromPoster(post),
 					DiscussionContent:        input.Content.ToTemplate(),
 					ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
 					Recipient:                models.EmailAddress(recipient.Email),
@@ -186,4 +192,16 @@ func CreateSystemIntakeGRBDiscussionReply(
 		}
 		return store.CreateSystemIntakeGRBDiscussionPost(ctx, tx, post)
 	})
+}
+
+func roleFromPoster(post *models.SystemIntakeGRBReviewDiscussionPost) string {
+	if post.VotingRole == nil || post.GRBRole == nil {
+		return ""
+	}
+
+	if len(*post.VotingRole) < 1 || len(*post.GRBRole) < 1 {
+		return ""
+	}
+
+	return fmt.Sprintf("%[1]s, %[2]s", *post.VotingRole, *post.GRBRole)
 }
