@@ -86,14 +86,11 @@ func (sie systemIntakeEmails) SendGRBReviewDiscussionGroupTaggedEmail(ctx contex
 		return err
 	}
 
-	allRecipients := []models.EmailAddress{}
-	allRecipients = append(allRecipients, models.NewEmailAddress("fake@fake.com"))
-
 	return sie.client.sender.Send(
 		ctx,
 		NewEmail().
 			// use BCC as this is going to multiple recipients
-			WithBCCAddresses(allRecipients).
+			WithBCCAddresses(input.Recipients).
 			WithSubject(subject).
 			WithBody(body),
 	)

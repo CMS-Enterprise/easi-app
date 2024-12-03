@@ -81,8 +81,19 @@ func CreateSystemIntakeGRBDiscussionPost(
 			grbReviewerCache[grbReviewer.ID] = grbReviewer
 		}
 
+		// check if the grb group is being emailed, in which case we should make sure we do not send any individual emails out
+		// unless they are admins
+		var sendAdminOnly bool
+		uniqueTags := input.Content.UniqueTags()
+		for _, tag := range uniqueTags {
+			if tag.TagType == models.TagTypeGroupGrbReviewers {
+				sendAdminOnly = true
+				break
+			}
+		}
+
 		// send emails here
-		for _, tag := range input.Content.UniqueTags() {
+		for _, tag := range uniqueTags {
 			// don't think this can happen, just for safety
 			if tag == nil {
 				continue
@@ -90,12 +101,14 @@ func CreateSystemIntakeGRBDiscussionPost(
 
 			switch tag.TagType {
 			case models.TagTypeGroupItGov:
-				// this is a group tag, and we need to gather everyone from that group
+				// this is a group tag, and we need to email ITGov box
+
 			case models.TagTypeGroupGrbReviewers:
 				// this is a group tag, and we need to gather everyone from that group
+				// make sure we don't send duplicates (i.e., if an individual user and the entire GRB team is tagged, only send one)
 			case models.TagTypeUserAccount:
-				// this is an individual tag
 
+				// this is an individual tag
 				foundReviewer, ok := grbReviewerCache[tag.TaggedContentID]
 				if !ok {
 					// this means someone was tagged who should not have been
@@ -113,6 +126,11 @@ func CreateSystemIntakeGRBDiscussionPost(
 				var role string
 				if len(foundReviewer.GRBVotingRole) > 0 && len(foundReviewer.GRBReviewerRole) > 0 {
 					role = fmt.Sprintf("%[1]s, %[2]s", foundReviewer.GRBVotingRole, foundReviewer.GRBReviewerRole)
+				}
+
+				// the presence of a `role` is indicative of a non-admin user
+				if len(role) > 1 && sendAdminOnly {
+					continue
 				}
 
 				if err := emailClient.SystemIntake.SendGRBReviewDiscussionIndividualTaggedEmail(ctx, email.SendGRBReviewDiscussionIndividualTaggedEmailInput{
