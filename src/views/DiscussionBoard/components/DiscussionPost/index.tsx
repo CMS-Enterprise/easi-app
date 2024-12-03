@@ -88,6 +88,7 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
           initialContent={content}
           id="easiDiscussionPostContent"
           className="easi-discussion-post__content"
+          truncateText
         />
 
         {
