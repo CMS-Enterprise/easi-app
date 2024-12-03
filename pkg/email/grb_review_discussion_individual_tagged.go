@@ -82,11 +82,15 @@ func (sie systemIntakeEmails) SendGRBReviewDiscussionIndividualTaggedEmail(ctx c
 		return err
 	}
 
-	return sie.client.sender.Send(
-		ctx,
-		NewEmail().
-			WithToAddresses([]models.EmailAddress{input.Recipient}).
-			WithSubject(subject).
-			WithBody(body),
-	)
+	mail := NewEmail().
+		WithToAddresses([]models.EmailAddress{input.Recipient}).
+		WithSubject(subject).
+		WithBody(body)
+
+	if len(input.Role) < 1 {
+		// this is an admin, CC ITGov box
+		mail = mail.WithCCAddresses([]models.EmailAddress{"IT_Governance@cms.hhs.gov"})
+	}
+
+	return sie.client.sender.Send(ctx, mail)
 }
