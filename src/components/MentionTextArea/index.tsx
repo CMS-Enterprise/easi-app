@@ -213,7 +213,6 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
           ref={ref}
           tabIndex={editable ? -1 : undefined}
           editor={editor}
-          id={id}
           className={classNames(className, {
             'tiptap__editable usa-textarea': editable,
             'tiptap__readonly font-body-sm line-height-body-5': !editable,
