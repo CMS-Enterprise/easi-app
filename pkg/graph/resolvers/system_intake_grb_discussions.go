@@ -3,7 +3,9 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
@@ -62,8 +64,25 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return nil, err
 		}
 
+		// and the grb reviewers
+		grbReviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDsNP(ctx, tx, []uuid.UUID{intakeID})
+		if err != nil {
+			return nil, err
+		}
+
+		grbReviewerCache := map[uuid.UUID]*models.SystemIntakeGRBReviewer{}
+		// map for ease
+		for _, grbReviewer := range grbReviewers {
+			// not sure if possible, but just in case
+			if grbReviewer == nil {
+				continue
+			}
+
+			grbReviewerCache[grbReviewer.ID] = grbReviewer
+		}
+
 		// send emails here
-		for _, tag := range input.Content.Tags {
+		for _, tag := range input.Content.UniqueTags() {
 			// don't think this can happen, just for safety
 			if tag == nil {
 				continue
@@ -73,6 +92,14 @@ func CreateSystemIntakeGRBDiscussionPost(
 				// this is a group tag, and we need to gather everyone from that group
 
 			} else {
+
+				foundReviewer, ok := grbReviewerCache[tag.TaggedContentID]
+				if !ok {
+					// this means someone was tagged who should not have been
+					logger.Warn("tagged user is not a grb reviewer for this intake", zap.String("systemIntakeID", intakeID.String()))
+					continue
+				}
+
 				// this is an individual tag, and we need to build an email based on the passed in UUID
 				recipient, err := store.UserAccountGetByID(ctx, tx, tag.TaggedContentID)
 				if err != nil {
@@ -80,14 +107,19 @@ func CreateSystemIntakeGRBDiscussionPost(
 					continue
 				}
 
+				var role string
+				if len(foundReviewer.GRBVotingRole) > 0 && len(foundReviewer.GRBReviewerRole) > 0 {
+					role = fmt.Sprintf("%[1]s, %[2]s", foundReviewer.GRBVotingRole, foundReviewer.GRBReviewerRole)
+				}
+
 				if err := emailClient.SystemIntake.SendGRBReviewDiscussionIndividualTaggedEmail(ctx, email.SendGRBReviewDiscussionIndividualTaggedEmailInput{
 					SystemIntakeID:           intakeID,
 					UserName:                 recipient.Username,
 					RequestName:              systemIntake.ProjectName.String,
 					DiscussionBoardType:      "",
-					Role:                     "",
+					Role:                     role,
 					DiscussionContent:        input.Content.ToTemplate(),
-					ITGovernanceInboxAddress: "",
+					ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
 					Recipient:                models.EmailAddress(recipient.Email),
 				}); err != nil {
 					return nil, err
