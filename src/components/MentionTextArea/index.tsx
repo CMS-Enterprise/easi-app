@@ -191,7 +191,7 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
         },
         content
       },
-      [content]
+      [textExpanded]
     );
 
     /** Clear editor content when field is reset */
