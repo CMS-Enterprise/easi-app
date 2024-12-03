@@ -1,5 +1,6 @@
 UPDATE trb_request
-SET id = :id,
+SET
+    id = :id,
     name = :name,
     archived = :archived,
     type = :type,

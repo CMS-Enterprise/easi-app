@@ -118,20 +118,6 @@ export OKTA_TEST_SECRET=
 
 These values can be found in 1Password under "CMS IDM Test Account".
 
-
-
-### Accessing the application over Tailscale
-
-[Tailscale](https://tailscale.com) is a tool that provides secure networks
-between devices and can be used to access locally running programs from other
-machines without exposing ports on the open internet. It's a convenient
-alternative to a traditional VPN.
-
-`scripts/dev tailscale` will configure and start the app so it can be accessed
-over a Tailscale network. This is currently used by developers to perform
-accessibility audits of locally running applications through JAWS on cloud
-Windows instances.
-
 ### Routes Debugging
 
 Setting the `DEBUG_ROUTES` environment variable, and upon startup, this will log

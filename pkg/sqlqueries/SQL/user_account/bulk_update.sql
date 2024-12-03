@@ -8,24 +8,24 @@ SET
     zone_info = accounts.zone_info,
     has_logged_in = accounts.has_logged_in
 FROM (
-  SELECT
-    UNNEST(CAST(:ids as UUID[])) as id,
-    UNNEST(CAST(:common_names as text[])) as common_name,
-    UNNEST(CAST(:locales as text[])) as locale,
-    UNNEST(CAST(:emails as text[])) as email,
-    UNNEST(CAST(:given_names as text[])) as given_name,
-    UNNEST(CAST(:family_names as text[])) as family_name,
-    UNNEST(CAST(:zone_infos as text[])) as zone_info,
-    UNNEST(CAST(:has_logged_ins as boolean[])) as has_logged_in
-) as accounts
+    SELECT
+        UNNEST(CAST(:ids AS UUID[])) AS id,
+        UNNEST(CAST(:common_names AS TEXT[])) AS common_name,
+        UNNEST(CAST(:locales AS TEXT[])) AS locale,
+        UNNEST(CAST(:emails AS TEXT[])) AS email,
+        UNNEST(CAST(:given_names AS TEXT[])) AS given_name,
+        UNNEST(CAST(:family_names AS TEXT[])) AS family_name,
+        UNNEST(CAST(:zone_infos AS TEXT[])) AS zone_info,
+        UNNEST(CAST(:has_logged_ins AS BOOLEAN[])) AS has_logged_in
+) AS accounts
 WHERE user_account.id = accounts.id
 RETURNING
-user_account.id,
-user_account.username,
-user_account.common_name,
-user_account.locale,
-user_account.email,
-user_account.given_name,
-user_account.family_name,
-user_account.zone_info,
-user_account.has_logged_in;
+    user_account.id,
+    user_account.username,
+    user_account.common_name,
+    user_account.locale,
+    user_account.email,
+    user_account.given_name,
+    user_account.family_name,
+    user_account.zone_info,
+    user_account.has_logged_in;
