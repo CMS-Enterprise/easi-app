@@ -2,7 +2,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 const discussionModeKeys = ['view', 'start', 'reply'] as const;
 
-type DiscussionMode = (typeof discussionModeKeys)[number];
+export type DiscussionMode = (typeof discussionModeKeys)[number];
 
 /**
  * Handle Discussion (side panel modal) state with the url query params

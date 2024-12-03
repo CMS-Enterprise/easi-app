@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
-import useDiscussionParams from 'hooks/useDiscussionParams';
+import useDiscussionParams, { DiscussionMode } from 'hooks/useDiscussionParams';
 import { DiscussionAlert } from 'types/discussions';
 
 import Discussion from './Discussion';
@@ -31,10 +31,18 @@ function DiscussionBoard({
   const activeDiscussion =
     grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
 
-  // Reset discussionAlert when side panel is opened or closed
+  // Reset discussionAlert when the side panel changes from certain modes
+  const [lastMode, setLastMode] = useState<DiscussionMode | undefined>(
+    discussionMode
+  );
   useEffect(() => {
-    setDiscussionAlert(null);
-  }, [setDiscussionAlert, discussionMode]);
+    if (lastMode !== discussionMode) {
+      if (lastMode === 'view' || lastMode === 'reply') {
+        setDiscussionAlert(null);
+      }
+      setLastMode(discussionMode);
+    }
+  }, [discussionMode, lastMode, setDiscussionAlert]);
 
   const closeModal = () => {
     pushDiscussionQuery(false);
