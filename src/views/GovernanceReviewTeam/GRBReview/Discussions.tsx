@@ -136,6 +136,7 @@ const Discussions = ({ systemIntakeID, className }: DiscussionsProps) => {
               <DiscussionPost
                 {...recentDiscussion.initialPost}
                 replies={recentDiscussion.replies}
+                truncateText
               />
             </>
           ) : (

@@ -19,12 +19,18 @@ type DiscussionPostProps = SystemIntakeGRBReviewDiscussionPostFragment & {
    * Leave undefined if rendering reply or to hide discussion reply data
    */
   replies?: SystemIntakeGRBReviewDiscussionPostFragment[];
+  /** Truncates discussion content text with read more/less button */
+  truncateText?: boolean;
 };
 
 /**
  * Displays single discussion or reply
  */
-const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
+const DiscussionPost = ({
+  replies,
+  truncateText,
+  ...initialPost
+}: DiscussionPostProps) => {
   const { t } = useTranslation('discussions');
 
   const {
@@ -88,7 +94,7 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
           initialContent={content}
           id="easiDiscussionPostContent"
           className="easi-discussion-post__content"
-          truncateText
+          truncateText={truncateText}
         />
 
         {
