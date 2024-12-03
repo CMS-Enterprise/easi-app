@@ -46,7 +46,7 @@ const getSystemIntakeGRBDiscussions = (
 });
 
 describe('Discussions', () => {
-  it('renders 0 discussions without replies', () => {
+  it('renders 0 discussions without replies', async () => {
     render(
       <VerboseMockedProvider
         mocks={[getSystemIntakeGRBDiscussions(mockDiscussions())]}
@@ -56,7 +56,7 @@ describe('Discussions', () => {
     );
 
     expect(
-      screen.getByRole('heading', { name: 'Most recent activity' })
+      await screen.findByRole('heading', { name: 'Most recent activity' })
     ).toBeInTheDocument();
 
     expect(
@@ -68,7 +68,7 @@ describe('Discussions', () => {
     expect(screen.queryByRole('button', { name: 'View' })).toBeNull();
   });
 
-  it('renders 1 discussion without replies', () => {
+  it('renders 1 discussion without replies', async () => {
     render(
       <VerboseMockedProvider
         mocks={[getSystemIntakeGRBDiscussions([discussionWithoutReplies])]}
@@ -78,7 +78,7 @@ describe('Discussions', () => {
     );
 
     expect(
-      screen.getByText('1 discussion without replies')
+      await screen.findByText('1 discussion without replies')
     ).toBeInTheDocument();
 
     expect(
@@ -88,23 +88,23 @@ describe('Discussions', () => {
     expect(screen.getByRole('button', { name: 'View' })).toBeInTheDocument();
   });
 
-  it('renders discussion board with no discussions', () => {
+  it('renders discussion board with no discussions', async () => {
     render(
       <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussions([])]}>
         <Discussions systemIntakeID={systemIntake.id} />
       </VerboseMockedProvider>
     );
 
-    expect(
-      screen.queryByRole('heading', { name: 'Most recent activity' })
-    ).toBeNull();
-
-    const noDiscussionsAlert = screen.getByTestId('alert');
+    const noDiscussionsAlert = await screen.findByTestId('alert');
     const startDiscussionButton = within(noDiscussionsAlert).getByRole(
       'button',
       { name: 'Start a discussion' }
     );
 
     expect(startDiscussionButton).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('heading', { name: 'Most recent activity' })
+    ).toBeNull();
   });
 });
