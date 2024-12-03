@@ -12,7 +12,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// SendGRBReviewDiscussionGroupTaggedEmailInput contains the data needed to to send an email informing an group they
+// SendGRBReviewDiscussionGroupTaggedEmailInput contains the data needed to send an email informing a group they
 // have been tagged in a GRB discussion
 type SendGRBReviewDiscussionGroupTaggedEmailInput struct {
 	SystemIntakeID           uuid.UUID
@@ -42,11 +42,20 @@ type GRBReviewDiscussionGroupTaggedBody struct {
 	DiscussionLink           string
 	ClientAddress            string
 	ITGovernanceInboxAddress string
+	IsAdmin                  bool
 }
 
 func (sie systemIntakeEmails) grbReviewDiscussionGroupTaggedBody(input SendGRBReviewDiscussionGroupTaggedEmailInput) (string, error) {
+	if sie.client.templates.grbReviewDiscussionGroupTagged == nil {
+		return "", errors.New("grb review discussion reply template is nil")
+	}
+
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 	grbDiscussionPath := path.Join(grbReviewPath, "discussionID=BLAH") // TODO: NJD add actual discussion ID field
+	role := input.Role
+	if len(role) < 1 {
+		role = "Governance Admin Team"
+	}
 
 	data := GRBReviewDiscussionGroupTaggedBody{
 		UserName:                 input.UserName,
@@ -54,14 +63,11 @@ func (sie systemIntakeEmails) grbReviewDiscussionGroupTaggedBody(input SendGRBRe
 		RequestName:              input.RequestName,
 		DiscussionBoardType:      input.DiscussionBoardType,
 		GRBReviewLink:            sie.client.urlFromPath(grbReviewPath),
-		Role:                     input.Role,
+		Role:                     role,
 		DiscussionContent:        input.DiscussionContent,
 		DiscussionLink:           sie.client.urlFromPath(grbDiscussionPath),
 		ITGovernanceInboxAddress: input.ITGovernanceInboxAddress,
-	}
-
-	if sie.client.templates.grbReviewDiscussionGroupTagged == nil {
-		return "", errors.New("grb review discussion reply template is nil")
+		IsAdmin:                  len(input.Role) < 1,
 	}
 
 	var b bytes.Buffer
@@ -72,7 +78,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionGroupTaggedBody(input SendGRBRe
 	return b.String(), nil
 }
 
-// SendGRBReviewDiscussionGroupTaggedEmail sends an email to an group indicating that they have
+// SendGRBReviewDiscussionGroupTaggedEmail sends an email to a group indicating that they have
 // been tagged in a GRB discussion
 func (sie systemIntakeEmails) SendGRBReviewDiscussionGroupTaggedEmail(ctx context.Context, input SendGRBReviewDiscussionGroupTaggedEmailInput) error {
 	subject := "The " + input.GroupName + "was tagged in a GRB Review discussion for " + input.RequestName
@@ -82,14 +88,14 @@ func (sie systemIntakeEmails) SendGRBReviewDiscussionGroupTaggedEmail(ctx contex
 		return err
 	}
 
-	// allRecipients := input.Recipients
 	allRecipients := []models.EmailAddress{}
 	allRecipients = append(allRecipients, models.NewEmailAddress("fake@fake.com"))
 
 	return sie.client.sender.Send(
 		ctx,
 		NewEmail().
-			WithToAddresses(allRecipients). // TODO: NJD cc and/or bcc?
+			// use BCC as this is going to multiple recipients
+			WithBCCAddresses(allRecipients).
 			WithSubject(subject).
 			WithBody(body),
 	)
