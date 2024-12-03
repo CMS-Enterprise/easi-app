@@ -10,12 +10,3 @@ type Tag struct {
 	TagType         TagType   `json:"tagType" db:"tag_type"`
 	TaggedContentID uuid.UUID `json:"taggedContentID" db:"tagged_content_id"`
 }
-
-func (t TagType) IsGroup() bool {
-	switch t {
-	case TagTypeGroupItGov, TagTypeGroupGrbReviewers:
-		return true
-	default:
-		return false
-	}
-}

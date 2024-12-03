@@ -88,10 +88,13 @@ func CreateSystemIntakeGRBDiscussionPost(
 				continue
 			}
 
-			if tag.TagType.IsGroup() {
+			switch tag.TagType {
+			case models.TagTypeGroupItGov:
 				// this is a group tag, and we need to gather everyone from that group
-
-			} else {
+			case models.TagTypeGroupGrbReviewers:
+				// this is a group tag, and we need to gather everyone from that group
+			case models.TagTypeUserAccount:
+				// this is an individual tag
 
 				foundReviewer, ok := grbReviewerCache[tag.TaggedContentID]
 				if !ok {
