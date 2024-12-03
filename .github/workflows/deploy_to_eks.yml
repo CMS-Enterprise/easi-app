@@ -53,7 +53,7 @@ jobs:
     uses: ./.github/workflows/build_application_images.yml
     secrets: inherit
 
-  test_k8s_access:
+  Deploy_to_EKS:
     needs: [build_easi-frontend_image, Build_Application_Images]
     runs-on: ubuntu-latest
     environment: "dev"
@@ -74,4 +74,4 @@ jobs:
         run: aws eks update-kubeconfig --name dev-easi-poc-cluster --region us-west-2
       - name: Deploy to EKS
         run: |
-          ./scripts/eks_deploy_env.sh -v
+          ./scripts/deploy_eks_env.sh

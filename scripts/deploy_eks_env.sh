@@ -102,8 +102,7 @@ fi
 # Try sleep 30 seconds for the load balancer to be created?
 sleep 30
 
-export EASI_BACKEND_INGRESS=$(kubectl get ingress -n $NAMESPACE easi-backend-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-export EASI_FRONTEND_INGRESS=$(kubectl get ingress -n $NAMESPACE easi-frontend-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+export EASI_INGRESS=$(kubectl get ingress -n $NAMESPACE easi-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 export MINIO_CONSOLE_INGRESS=$(kubectl get ingress -n $NAMESPACE minio-console-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 export EMAIL_INGRESS=$(kubectl get ingress -n $NAMESPACE email-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 
@@ -131,11 +130,10 @@ export EMAIL_INGRESS=$(kubectl get ingress -n $NAMESPACE email-ingress -o jsonpa
     echo "❄️  Deploying Ingress Objects via Kubectl  ❄️"
     kubectl apply -n $NAMESPACE -f manifest-easi.yaml
 
-    # rm -rf "$TEMPDIR"
+    rm -rf "$TEMPDIR"
 )
 
 
-echo "EASI-BACKEND-INGRESS: $EASI_BACKEND_INGRESS"
-echo "EASI-FRONTEND-INGRESS: $EASI_FRONTEND_INGRESS"
-echo "MINIO-CONSOLE-INGRESS: $MINIO_CONSOLE_INGRESS"
-echo "EMAIL-INGRESS: $EMAIL_INGRESS"
+echo "EASI: http://$EASI_INGRESS"
+echo "Mailcatcher: http://$EMAIL_INGRESS"
+echo "Minio Console: http://$MINIO_CONSOLE_INGRESS"

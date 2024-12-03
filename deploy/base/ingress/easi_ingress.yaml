@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: easi-frontend-ingress
+  name: easi-ingress
   namespace: easi
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
@@ -25,3 +25,17 @@ spec:
                 name: easi-backend
                 port:
                   number: 8080
+          - path: /mail
+            pathType: Prefix
+            backend:
+              service:
+                name: email
+                port:
+                  number: 1080
+          - path: /minio
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port: 
+                  number: 9001
