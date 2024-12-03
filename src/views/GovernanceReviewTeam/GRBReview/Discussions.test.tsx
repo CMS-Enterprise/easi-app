@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
@@ -17,10 +18,12 @@ const discussionWithoutReplies: SystemIntakeGRBReviewDiscussionFragment = {
 describe('Discussions', () => {
   it('renders 0 discussions without replies', () => {
     render(
-      <Discussions
-        systemIntakeID={systemIntake.id}
-        grbDiscussions={mockDiscussions()}
-      />
+      <MemoryRouter>
+        <Discussions
+          systemIntakeID={systemIntake.id}
+          grbDiscussions={mockDiscussions()}
+        />
+      </MemoryRouter>
     );
 
     expect(
@@ -38,10 +41,12 @@ describe('Discussions', () => {
 
   it('renders 1 discussion without replies', () => {
     render(
-      <Discussions
-        systemIntakeID={systemIntake.id}
-        grbDiscussions={[discussionWithoutReplies]}
-      />
+      <MemoryRouter>
+        <Discussions
+          systemIntakeID={systemIntake.id}
+          grbDiscussions={[discussionWithoutReplies]}
+        />
+      </MemoryRouter>
     );
 
     expect(
@@ -57,7 +62,9 @@ describe('Discussions', () => {
 
   it('renders discussion board with no discussions', () => {
     render(
-      <Discussions systemIntakeID={systemIntake.id} grbDiscussions={[]} />
+      <MemoryRouter>
+        <Discussions systemIntakeID={systemIntake.id} grbDiscussions={[]} />
+      </MemoryRouter>
     );
 
     expect(
