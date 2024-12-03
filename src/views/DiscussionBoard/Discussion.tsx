@@ -37,9 +37,7 @@ const Discussion = ({
   return (
     <div>
       <h1 className="margin-bottom-5">{t('general.discussion')}</h1>
-
       <DiscussionPost {...initialPost} />
-
       {replies.length > 0 && (
         <>
           <div className="display-flex flex-justify">
@@ -74,7 +72,6 @@ const Discussion = ({
           )}
         </>
       )}
-
       <h2 className="margin-bottom-2 margin-top-8">{t('general.reply')}</h2>
       <DiscussionForm
         type="reply"

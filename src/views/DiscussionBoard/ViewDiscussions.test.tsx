@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
@@ -20,7 +21,11 @@ describe('ViewDiscussions component', () => {
   );
 
   it('renders the component', () => {
-    render(<ViewDiscussions grbDiscussions={mockDiscussions()} />);
+    render(
+      <MemoryRouter>
+        <ViewDiscussions grbDiscussions={mockDiscussions()} />
+      </MemoryRouter>
+    );
 
     expect(
       screen.getByRole('heading', {
@@ -41,7 +46,11 @@ describe('ViewDiscussions component', () => {
   });
 
   it('renders alerts for no discussion posts', () => {
-    render(<ViewDiscussions grbDiscussions={[]} />);
+    render(
+      <MemoryRouter>
+        <ViewDiscussions grbDiscussions={[]} />
+      </MemoryRouter>
+    );
 
     expect(screen.getByText(noNewDiscussionsText)).toBeInTheDocument();
 
@@ -61,7 +70,11 @@ describe('ViewDiscussions component', () => {
       discussion => discussion.replies.length === 0
     );
 
-    render(<ViewDiscussions grbDiscussions={grbDiscussions} />);
+    render(
+      <MemoryRouter>
+        <ViewDiscussions grbDiscussions={grbDiscussions} />
+      </MemoryRouter>
+    );
 
     /* Discussions with replies */
 

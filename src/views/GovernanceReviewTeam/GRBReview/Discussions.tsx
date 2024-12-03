@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -7,6 +7,7 @@ import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import IconButton from 'components/shared/IconButton';
+import useDiscussionParams from 'hooks/useDiscussionParams';
 import DiscussionBoard from 'views/DiscussionBoard';
 import DiscussionPost from 'views/DiscussionBoard/components/DiscussionPost';
 
@@ -24,9 +25,6 @@ const Discussions = ({
 }: DiscussionsProps) => {
   const { t } = useTranslation('discussions');
 
-  const [isDiscussionBoardOpen, setIsDiscussionBoardOpen] =
-    useState<boolean>(false);
-
   const discussionsWithoutRepliesCount = grbDiscussions.filter(
     discussion => discussion.replies.length === 0
   ).length;
@@ -34,13 +32,13 @@ const Discussions = ({
   const recentDiscussion =
     grbDiscussions.length > 0 ? grbDiscussions[0] : undefined;
 
+  const { pushDiscussionQuery } = useDiscussionParams();
+
   return (
     <>
       <DiscussionBoard
         systemIntakeID={systemIntakeID}
         grbDiscussions={grbDiscussions}
-        isOpen={isDiscussionBoardOpen}
-        closeModal={() => setIsDiscussionBoardOpen(false)}
       />
 
       <div
@@ -87,7 +85,9 @@ const Discussions = ({
             </p>
             <Button
               type="button"
-              onClick={() => setIsDiscussionBoardOpen(true)}
+              onClick={() => {
+                pushDiscussionQuery({ discussionMode: 'view' });
+              }}
               className="margin-right-0 margin-y-2 desktop:margin-y-0 text-no-wrap"
               outline
             >
@@ -113,8 +113,9 @@ const Discussions = ({
             {discussionsWithoutRepliesCount > 0 && (
               <IconButton
                 type="button"
-                // TODO: Open discussion board to discussions without replies?
-                onClick={() => setIsDiscussionBoardOpen(true)}
+                onClick={() => {
+                  pushDiscussionQuery({ discussionMode: 'view' });
+                }}
                 icon={<Icon.ArrowForward />}
                 iconPosition="after"
                 unstyled
@@ -144,8 +145,9 @@ const Discussions = ({
                   button: (
                     <Button
                       type="button"
-                      // TODO: Open to start discussion view
-                      onClick={() => setIsDiscussionBoardOpen(true)}
+                      onClick={() => {
+                        pushDiscussionQuery({ discussionMode: 'start' });
+                      }}
                       unstyled
                     >
                       text
