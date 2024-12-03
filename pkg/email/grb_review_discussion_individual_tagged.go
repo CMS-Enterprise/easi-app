@@ -24,7 +24,7 @@ type SendGRBReviewDiscussionIndividualTaggedEmailInput struct {
 	DiscussionContent        template.HTML
 	DiscussionLink           string
 	ITGovernanceInboxAddress string
-	Recipients               []models.EmailAddress
+	Recipient                models.EmailAddress
 }
 
 // GRBReviewDiscussionIndividualTaggedBody contains the data needed for interpolation in
@@ -39,25 +39,31 @@ type GRBReviewDiscussionIndividualTaggedBody struct {
 	DiscussionContent        template.HTML
 	DiscussionLink           string
 	ITGovernanceInboxAddress string
+	IsAdmin                  bool
 }
 
 func (sie systemIntakeEmails) grbReviewDiscussionIndividualTaggedBody(input SendGRBReviewDiscussionIndividualTaggedEmailInput) (string, error) {
+	if sie.client.templates.grbReviewDiscussionIndividualTagged == nil {
+		return "", errors.New("grb review discussion reply template is nil")
+	}
+
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 	grbDiscussionPath := path.Join(grbReviewPath, "discussionID=BLAH") // TODO: NJD add actual discussion ID field
+	role := input.Role
+	if len(role) < 1 {
+		role = "Governance Admin Team"
+	}
 
 	data := GRBReviewDiscussionIndividualTaggedBody{
 		UserName:                 input.UserName,
 		RequestName:              input.RequestName,
 		DiscussionBoardType:      input.DiscussionBoardType,
 		GRBReviewLink:            sie.client.urlFromPath(grbReviewPath),
-		Role:                     input.Role,
+		Role:                     role,
 		DiscussionContent:        input.DiscussionContent,
 		DiscussionLink:           sie.client.urlFromPath(grbDiscussionPath),
 		ITGovernanceInboxAddress: input.ITGovernanceInboxAddress,
-	}
-
-	if sie.client.templates.grbReviewDiscussionIndividualTagged == nil {
-		return "", errors.New("grb review discussion reply template is nil")
+		IsAdmin:                  len(input.Role) < 1,
 	}
 
 	var b bytes.Buffer
@@ -78,12 +84,10 @@ func (sie systemIntakeEmails) SendGRBReviewDiscussionIndividualTaggedEmail(ctx c
 		return err
 	}
 
-	allRecipients := input.Recipients
-
 	return sie.client.sender.Send(
 		ctx,
 		NewEmail().
-			WithToAddresses(allRecipients). // TODO: NJD cc and/or bcc?
+			WithToAddresses([]models.EmailAddress{input.Recipient}).
 			WithSubject(subject).
 			WithBody(body),
 	)

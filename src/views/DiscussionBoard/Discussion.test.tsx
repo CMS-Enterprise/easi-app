@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -22,13 +23,15 @@ describe('Discussion component', () => {
     const [discussion] = discussions;
 
     render(
-      <VerboseMockedProvider>
-        <Discussion
-          discussion={discussion}
-          closeModal={vi.fn()}
-          setDiscussionAlert={vi.fn()}
-        />
-      </VerboseMockedProvider>
+      <MemoryRouter>
+        <VerboseMockedProvider>
+          <Discussion
+            discussion={discussion}
+            closeModal={vi.fn()}
+            setDiscussionAlert={vi.fn()}
+          />
+        </VerboseMockedProvider>
+      </MemoryRouter>
     );
 
     expect(
@@ -105,13 +108,15 @@ describe('Discussion component', () => {
     };
 
     render(
-      <VerboseMockedProvider>
-        <Discussion
-          discussion={discussion}
-          closeModal={vi.fn()}
-          setDiscussionAlert={vi.fn()}
-        />
-      </VerboseMockedProvider>
+      <MemoryRouter>
+        <VerboseMockedProvider>
+          <Discussion
+            discussion={discussion}
+            closeModal={vi.fn()}
+            setDiscussionAlert={vi.fn()}
+          />
+        </VerboseMockedProvider>
+      </MemoryRouter>
     );
 
     // Toggle view more replies

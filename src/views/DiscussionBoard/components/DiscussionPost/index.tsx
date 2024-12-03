@@ -8,6 +8,7 @@ import { DateTime } from 'luxon';
 import { RichTextViewer } from 'components/RichTextEditor';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
 import IconButton from 'components/shared/IconButton';
+import useDiscussionParams from 'hooks/useDiscussionParams';
 import { getRelativeDate } from 'utils/date';
 
 import './index.scss';
@@ -60,6 +61,8 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
     });
   }, [replies, t]);
 
+  const { pushDiscussionQuery } = useDiscussionParams();
+
   return (
     <div className="easi-discussion-post display-flex line-height-body-1">
       <div className="margin-right-105">
@@ -103,8 +106,12 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
             >
               <IconButton
                 type="button"
-                // TODO: Open discussion panel
-                onClick={() => null}
+                onClick={() => {
+                  pushDiscussionQuery({
+                    discussionMode: 'reply',
+                    discussionId: initialPost.id
+                  });
+                }}
                 className="margin-right-205"
                 icon={<Icon.Announcement className="text-primary" />}
                 unstyled
@@ -113,7 +120,6 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
                   ? t('general.repliesCount', { count: replies.length })
                   : t('general.reply')}
               </IconButton>
-
               {replies.length > 0 && (
                 <p className="text-base margin-0" data-testid="lastReplyAtText">
                   {lastReplyAtText}

@@ -15,6 +15,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import useDiscussionParams from 'hooks/useDiscussionParams';
 import { DiscussionAlert } from 'types/discussions';
 import discussionSchema from 'validations/discussionSchema';
 
@@ -62,6 +63,8 @@ const DiscussionForm = ({
     resolver: yupResolver(discussionSchema)
   });
 
+  const { pushDiscussionQuery } = useDiscussionParams();
+
   const createDiscussion = handleSubmit(({ content }) => {
     if ('systemIntakeID' in mutationProps) {
       mutateDiscussion({
@@ -83,9 +86,10 @@ const DiscussionForm = ({
             message: t('general.alerts.startDiscussionError'),
             type: 'error'
           });
+        })
+        .finally(() => {
+          pushDiscussionQuery({ discussionMode: 'view' });
         });
-
-      // TODO: Go back to discussion board view
     }
   });
 
@@ -159,7 +163,11 @@ const DiscussionForm = ({
       </FormGroup>
 
       <ButtonGroup>
-        <Button type="button" outline onClick={closeModal}>
+        <Button
+          type="button"
+          outline
+          onClick={() => pushDiscussionQuery({ discussionMode: 'view' })}
+        >
           {t('general.cancel')}
         </Button>
         <Button type="submit" disabled={!isValid}>
