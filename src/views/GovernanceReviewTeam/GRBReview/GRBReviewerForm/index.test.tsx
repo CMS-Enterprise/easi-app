@@ -9,9 +9,9 @@ import {
   GetGRBReviewersComparisonsDocument,
   GetGRBReviewersComparisonsQuery,
   GetGRBReviewersComparisonsQueryVariables,
-  GetSystemIntakeGRBReviewDocument,
-  GetSystemIntakeGRBReviewQuery,
-  GetSystemIntakeGRBReviewQueryVariables,
+  GetSystemIntakeGRBReviewersDocument,
+  GetSystemIntakeGRBReviewersQuery,
+  GetSystemIntakeGRBReviewersQueryVariables,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
@@ -133,14 +133,14 @@ const updateSystemIntakeGRBReviewerQuery: MockedQuery<
   }
 };
 
-const getSystemIntakeGRBReviewQuery = (
+const getSystemIntakeGRBReviewersQuery = (
   reviewer?: SystemIntakeGRBReviewerFragment
 ): MockedQuery<
-  GetSystemIntakeGRBReviewQuery,
-  GetSystemIntakeGRBReviewQueryVariables
+  GetSystemIntakeGRBReviewersQuery,
+  GetSystemIntakeGRBReviewersQueryVariables
 > => ({
   request: {
-    query: GetSystemIntakeGRBReviewDocument,
+    query: GetSystemIntakeGRBReviewersDocument,
     variables: {
       id: systemIntake.id
     }
@@ -191,8 +191,8 @@ describe('GRB reviewer form', () => {
             cedarContactsQuery('Je'),
             cedarContactsQuery('Jerry Seinfeld'),
             createSystemIntakeGRBReviewersQuery,
-            getSystemIntakeGRBReviewQuery(),
-            getSystemIntakeGRBReviewQuery(grbReviewer)
+            getSystemIntakeGRBReviewersQuery(),
+            getSystemIntakeGRBReviewersQuery(grbReviewer)
           ]}
         >
           <MessageProvider>
@@ -279,8 +279,8 @@ describe('GRB reviewer form', () => {
             getGRBReviewersComparisonsQuery,
             cedarContactsQuery(contactLabel),
             updateSystemIntakeGRBReviewerQuery,
-            getSystemIntakeGRBReviewQuery(grbReviewer),
-            getSystemIntakeGRBReviewQuery(updatedGRBReviewer)
+            getSystemIntakeGRBReviewersQuery(grbReviewer),
+            getSystemIntakeGRBReviewersQuery(updatedGRBReviewer)
           ]}
         >
           <MessageProvider>

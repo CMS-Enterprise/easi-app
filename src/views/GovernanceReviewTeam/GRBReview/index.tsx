@@ -12,7 +12,7 @@ import {
   ModalHeading
 } from '@trussworks/react-uswds';
 import {
-  GetSystemIntakeGRBReviewDocument,
+  GetSystemIntakeGRBReviewersDocument,
   SystemIntakeGRBReviewerFragment,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
@@ -80,7 +80,7 @@ const GRBReview = ({
   const { showMessage } = useMessage();
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
-    refetchQueries: [GetSystemIntakeGRBReviewDocument]
+    refetchQueries: [GetSystemIntakeGRBReviewersDocument]
   });
 
   const [startGRBReview] = useStartGRBReviewMutation({
@@ -91,7 +91,7 @@ const GRBReview = ({
     },
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewDocument,
+        query: GetSystemIntakeGRBReviewersDocument,
         variables: { id }
       }
     ]
