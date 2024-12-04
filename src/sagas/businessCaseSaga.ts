@@ -9,9 +9,16 @@ import {
   postBusinessCase,
   putBusinessCase
 } from 'types/routines';
+import getWindowAddress from 'utils/host';
+
+// Pull the API address from the vite environment variables
+// However, if we don't have a VITE_API_ADDRESS, we should simply assume that the API is hosted on the same domain & port as the frontend
+// We also assume a path of /api/v1 should be tacked onto that
+const apiAddress =
+  import.meta.env.VITE_API_ADDRESS || `${getWindowAddress()}/api/v1`;
 
 function getBusinessCaseRequest(id: string) {
-  return axios.get(`${import.meta.env.VITE_API_ADDRESS}/business_case/${id}`);
+  return axios.get(`${apiAddress}/business_case/${id}`);
 }
 
 function* getBusinessCase(
@@ -30,7 +37,7 @@ function* getBusinessCase(
 
 function postBusinessCaseRequest(formData: BusinessCaseModel) {
   const data = prepareBusinessCaseForApi(formData);
-  return axios.post(`${import.meta.env.VITE_API_ADDRESS}/business_case`, data);
+  return axios.post(`${apiAddress}/business_case`, data);
 }
 
 function* createBusinessCase(
@@ -49,10 +56,7 @@ function* createBusinessCase(
 
 function putBusinessCaseRequest(formData: BusinessCaseModel) {
   const data = prepareBusinessCaseForApi(formData);
-  return axios.put(
-    `${import.meta.env.VITE_API_ADDRESS}/business_case/${data.id}`,
-    data
-  );
+  return axios.put(`${apiAddress}/business_case/${data.id}`, data);
 }
 
 function* updateBusinessCase(

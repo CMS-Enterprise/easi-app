@@ -16,4 +16,38 @@ COPY tsconfig.json .eslintrc vite.config.ts apollo.config.js index.html ./
 COPY public ./public
 COPY src ./src
 
-ENTRYPOINT [ "yarn", "start" ]
+# Pass in from outside (.envrc)
+ARG VITE_LD_CLIENT_ID
+ARG VITE_OKTA_CLIENT_ID
+ARG VITE_OKTA_SERVER_ID
+ARG VITE_OKTA_ISSUER
+ARG VITE_OKTA_DOMAIN
+ARG VITE_OKTA_REDIRECT_URI
+
+# Difficult (depend on k8s instantiation of ingress)
+# ARG VITE_API_ADDRESS
+# ARG VITE_GRAPHQL_ADDRESS
+
+ENV VITE_OKTA_CLIENT_ID=${VITE_OKTA_CLIENT_ID} \
+	VITE_OKTA_SERVER_ID=${VITE_OKTA_SERVER_ID} \
+	VITE_LD_CLIENT_ID=${VITE_LD_CLIENT_ID} \
+	VITE_APP_ENV=local \
+	VITE_OKTA_ISSUER=${VITE_OKTA_ISSUER} \
+	# VITE_API_ADDRESS=${VITE_API_ADDRESS} \
+	# VITE_GRAPHQL_ADDRESS=${VITE_GRAPHQL_ADDRESS} \
+	VITE_LOCAL_AUTH_ENABLED=true \
+	VITE_OKTA_DOMAIN=${VITE_OKTA_DOMAIN} \
+	VITE_OKTA_REDIRECT_URI=${VITE_OKTA_REDIRECT_URI}
+
+RUN yarn build
+
+#
+# Final layer to export just built HTML
+#
+FROM nginx:1.27.1-alpine
+
+# Copy built files from yarn build layer
+COPY --from=build /app/build /usr/share/nginx/html
+
+# https://github.com/nginxinc/docker-nginx/blob/04d0c5754673d6880b91e94c3cebaa767d9a1af7/Dockerfile
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
