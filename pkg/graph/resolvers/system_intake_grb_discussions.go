@@ -89,11 +89,11 @@ func CreateSystemIntakeGRBDiscussionPost(
 
 		// check if the grb group is being emailed, in which case we should make sure we do not send any individual emails out
 		// unless they are admins
-		var groupFound bool
+		var grbGroupFound bool
 		uniqueTags := input.Content.UniqueTags()
 		for _, tag := range uniqueTags {
 			if tag.TagType == models.TagTypeGroupGrbReviewers {
-				groupFound = true
+				grbGroupFound = true
 				break
 			}
 		}
@@ -130,6 +130,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 				for id := range grbReviewerCache {
 					uuids = append(uuids, id)
 				}
+
 				users, err := store.UserAccountsByIDsNP(ctx, tx, uuids)
 				if err != nil {
 					return nil, err
@@ -155,7 +156,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 
 			case models.TagTypeUserAccount:
 				// if we are emailing the group, we do not need to send out individual emails
-				if groupFound {
+				if grbGroupFound {
 					continue
 				}
 
