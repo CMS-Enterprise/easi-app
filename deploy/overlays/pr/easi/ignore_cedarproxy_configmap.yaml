@@ -4,4 +4,3 @@ kind: ConfigMap
 metadata:
   name: cedarproxy-configmap
   namespace: easi
-

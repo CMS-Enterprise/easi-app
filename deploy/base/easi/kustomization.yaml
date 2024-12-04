@@ -21,4 +21,3 @@ resources:
   - minio_service.yaml
   - minio-mc_configmap.yaml
   - minio-mc_job.yaml
-

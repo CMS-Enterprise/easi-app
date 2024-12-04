@@ -93,7 +93,7 @@ fi
     fi
 
     echo "❄️  Deploying Ingress Objects via Kubectl  ❄️"
-    kubectl apply -n $NAMESPACE -f manifest-ingress.yaml
+    kubectl apply -n "$NAMESPACE" -f manifest-ingress.yaml
 
     rm -rf "$TEMPDIR"
 )
@@ -102,9 +102,13 @@ fi
 # Try sleep 30 seconds for the load balancer to be created?
 sleep 30
 
-export EASI_INGRESS=$(kubectl get ingress -n $NAMESPACE easi-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-export MINIO_CONSOLE_INGRESS=$(kubectl get ingress -n $NAMESPACE minio-console-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-export EMAIL_INGRESS=$(kubectl get ingress -n $NAMESPACE email-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+EASI_INGRESS=$(kubectl get ingress -n "$NAMESPACE" easi-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+MINIO_CONSOLE_INGRESS=$(kubectl get ingress -n "$NAMESPACE" minio-console-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+EMAIL_INGRESS=$(kubectl get ingress -n "$NAMESPACE" email-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+
+export EASI_INGRESS
+export MINIO_CONSOLE_INGRESS
+export EMAIL_INGRESS
 
 # Generate and deploy EASI resources
 (
@@ -128,7 +132,7 @@ export EMAIL_INGRESS=$(kubectl get ingress -n $NAMESPACE email-ingress -o jsonpa
     fi
 
     echo "❄️  Deploying Ingress Objects via Kubectl  ❄️"
-    kubectl apply -n $NAMESPACE -f manifest-easi.yaml
+    kubectl apply -n "$NAMESPACE" -f manifest-easi.yaml
 
     rm -rf "$TEMPDIR"
 )

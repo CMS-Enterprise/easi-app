@@ -4,4 +4,3 @@ resources:
   - easi_ingress.yaml
   - email_ingress.yaml
   - minio_ingress.yaml
-
