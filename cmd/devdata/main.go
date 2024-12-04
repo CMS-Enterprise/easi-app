@@ -115,6 +115,10 @@ func main() {
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
+	fmt.Println("==== emailConfig ====")
+	fmt.Printf("%+v\n", emailConfig)
+	fmt.Println("==== emailConfig ====")
+
 	sender := &mockSender{}
 	emailClient, err := email.NewClient(emailConfig, sender)
 	if err != nil {
