@@ -75,15 +75,13 @@ func main() {
 	}
 
 	emailConfig := email.Config{
-		GRTEmail:                    models.NewEmailAddress("grt_email@cms.gov"),
-		ITInvestmentEmail:           models.NewEmailAddress("it_investment_email@cms.gov"),
-		TRBEmail:                    models.NewEmailAddress("trb@cms.gov"),
-		EASIHelpEmail:               models.NewEmailAddress(os.Getenv("EASI_HELP_EMAIL")),
-		CEDARTeamEmail:              models.NewEmailAddress("cedar@cedar.gov"),
-		OITFeedbackChannelSlackLink: "https://oddball.slack.com/archives/C059N01AYGM",
-		URLHost:                     os.Getenv("CLIENT_HOSTNAME"),
-		URLScheme:                   os.Getenv("CLIENT_PROTOCOL"),
-		TemplateDirectory:           os.Getenv("EMAIL_TEMPLATE_DIR"),
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail: models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		TRBEmail:          models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:     models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
 	env, _ := appconfig.NewEnvironment("local") // hardcoded as "local" as it's easier than fetching from envs since we only ever use this locally
