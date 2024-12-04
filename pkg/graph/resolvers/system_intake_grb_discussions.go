@@ -129,13 +129,8 @@ func CreateSystemIntakeGRBDiscussionPost(
 					continue
 				}
 
-				var role string
-				if len(foundReviewer.GRBVotingRole) > 0 && len(foundReviewer.GRBReviewerRole) > 0 {
-					role = fmt.Sprintf("%[1]s, %[2]s", foundReviewer.GRBVotingRole, foundReviewer.GRBReviewerRole)
-				}
-
 				// the presence of a `role` is indicative of a non-admin user
-				if len(role) > 1 && sendAdminOnly {
+				if sendAdminOnly && len(foundReviewer.GRBVotingRole) > 0 && len(foundReviewer.GRBReviewerRole) > 0 {
 					continue
 				}
 
