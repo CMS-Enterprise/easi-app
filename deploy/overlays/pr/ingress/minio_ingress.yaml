@@ -1,0 +1,48 @@
+- op: replace
+  path: /metadata/labels
+  value: 
+    fargate: 'true'
+- op: replace
+  path: /metadata/annotations
+  value:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+- op: replace
+  path: /spec
+  value:
+    ingressClassName: alb
+    rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: minio
+              port:
+                number: 9001
+
+### Expected output:
+#
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: minio-console-ingress
+#   namespace: easi
+#   labels:
+#     fargate: 'true'
+#   annotations:
+#     alb.ingress.kubernetes.io/scheme: internet-facing
+#     alb.ingress.kubernetes.io/target-type: ip
+# spec:
+#   ingressClassName: alb
+#   rules:
+#   - http:
+#       paths:
+#       - backend:
+#           service:
+#             name: minio
+#             port:
+#               number: 9001
+#         path: /
+#         pathType: Prefix

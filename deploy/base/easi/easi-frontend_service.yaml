@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: easi
+  name: easi-frontend
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: easi-frontend
