@@ -3,42 +3,56 @@ import classNames from 'classnames';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
+import useDiscussionParams, { DiscussionMode } from 'hooks/useDiscussionParams';
 import { DiscussionAlert } from 'types/discussions';
 
 import Discussion from './Discussion';
 import DiscussionModalWrapper from './DiscussionModalWrapper';
+import StartDiscussion from './StartDiscussion';
+import ViewDiscussions from './ViewDiscussions';
 
-// import StartDiscussion from './StartDiscussion';
-// import ViewDiscussions from './ViewDiscussions';
-// import StartDiscussion from './StartDiscussion';
 import './index.scss';
 
 type DiscussionBoardProps = {
   systemIntakeID: string;
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
-  isOpen: boolean;
-  closeModal: () => void;
 };
 
 function DiscussionBoard({
   systemIntakeID,
-  grbDiscussions,
-  isOpen,
-  closeModal
+  grbDiscussions
 }: DiscussionBoardProps) {
   /** Discussion alert state for form success and error messages */
   const [discussionAlert, setDiscussionAlert] = useState<DiscussionAlert>(null);
 
-  // Get the first discussion from the array for testing purposes
-  const activeDiscussion = grbDiscussions.length > 0 ? grbDiscussions[0] : null;
+  const { getDiscussionParams, pushDiscussionQuery } = useDiscussionParams();
+  const { discussionMode, discussionId } = getDiscussionParams();
 
-  // Reset discussionAlert when side panel is opened or closed
+  const activeDiscussion =
+    grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
+
+  // Reset discussionAlert when the side panel changes from certain modes
+  const [lastMode, setLastMode] = useState<DiscussionMode | undefined>(
+    discussionMode
+  );
   useEffect(() => {
-    setDiscussionAlert(null);
-  }, [setDiscussionAlert, isOpen]);
+    if (lastMode !== discussionMode) {
+      if (lastMode === 'view' || lastMode === 'reply') {
+        setDiscussionAlert(null);
+      }
+      setLastMode(discussionMode);
+    }
+  }, [discussionMode, lastMode, setDiscussionAlert]);
+
+  const closeModal = () => {
+    pushDiscussionQuery(false);
+  };
 
   return (
-    <DiscussionModalWrapper isOpen={isOpen} closeModal={closeModal}>
+    <DiscussionModalWrapper
+      isOpen={discussionMode !== undefined}
+      closeModal={closeModal}
+    >
       {discussionAlert && (
         <Alert
           slim
@@ -49,20 +63,26 @@ function DiscussionBoard({
           {discussionAlert.message}
         </Alert>
       )}
-      {/* <ViewDiscussions grbDiscussions={grbDiscussions} /> */}
 
-      {/* <StartDiscussion
-        systemIntakeID={systemIntakeID}
-        closeModal={closeModal}
-        setDiscussionAlert={setDiscussionAlert}
-      /> */}
+      {discussionMode === 'view' && (
+        <ViewDiscussions grbDiscussions={grbDiscussions} />
+      )}
 
-      <Discussion
-        // TODO: Update to discussion being viewed
-        discussion={activeDiscussion}
-        closeModal={closeModal}
-        setDiscussionAlert={setDiscussionAlert}
-      />
+      {discussionMode === 'start' && (
+        <StartDiscussion
+          systemIntakeID={systemIntakeID}
+          closeModal={closeModal}
+          setDiscussionAlert={setDiscussionAlert}
+        />
+      )}
+
+      {discussionMode === 'reply' && (
+        <Discussion
+          discussion={activeDiscussion}
+          closeModal={closeModal}
+          setDiscussionAlert={setDiscussionAlert}
+        />
+      )}
     </DiscussionModalWrapper>
   );
 }

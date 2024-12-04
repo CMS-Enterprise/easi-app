@@ -5,6 +5,7 @@ import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
 import IconButton from 'components/shared/IconButton';
+import useDiscussionParams from 'hooks/useDiscussionParams';
 
 import DiscussionPost from './components/DiscussionPost';
 import DiscussionsList from './components/DiscussionsList';
@@ -22,6 +23,8 @@ type ViewDiscussionsProps = {
 const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
   const { t } = useTranslation('discussions');
 
+  const { pushDiscussionQuery } = useDiscussionParams();
+
   const discussionsWithoutReplies: SystemIntakeGRBReviewDiscussionFragment[] =
     grbDiscussions.filter(discussion => discussion.replies.length === 0);
 
@@ -36,18 +39,17 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
       <p className="font-body-lg text-light line-height-body-5 margin-top-105">
         {t('governanceReviewBoard.internal.description')}
       </p>
-
       <h2 className="margin-top-5 margin-bottom-2">{t('general.label')}</h2>
       <IconButton
         type="button"
-        // TODO: Go to start discussion view
-        onClick={() => null}
+        onClick={() => {
+          pushDiscussionQuery({ discussionMode: 'start' });
+        }}
         icon={<Icon.Announcement />}
         unstyled
       >
         {t('general.startNewDiscussion')}
       </IconButton>
-
       <Accordion
         className="discussions-list margin-top-5"
         multiselectable
@@ -65,11 +67,7 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
                   <DiscussionsList type="discussions" initialCount={3}>
                     {discussionsWithoutReplies.map((discussion, index) => (
                       <li
-                        /**
-                         * TODO: Replace `index` key with `discussion.initialPost.id`
-                         * Seeded data discussions all have same ID
-                         */
-                        key={index} // eslint-disable-line react/no-array-index-key
+                        key={discussion.initialPost.id}
                         className="padding-y-3 padding-x-205"
                       >
                         <DiscussionPost
@@ -99,11 +97,7 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
                   <DiscussionsList type="discussions" initialCount={3}>
                     {discussionsWithReplies.map((discussion, index) => (
                       <li
-                        /**
-                         * TODO: Replace `index` key with `discussion.initialPost.id`
-                         * Seeded data discussions all have same ID
-                         */
-                        key={index} // eslint-disable-line react/no-array-index-key
+                        key={discussion.initialPost.id}
                         className="padding-y-3 padding-x-205"
                       >
                         <DiscussionPost

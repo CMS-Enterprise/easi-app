@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import {
   GetSystemIntakeGRBDiscussionsDocument,
@@ -48,11 +49,13 @@ const getSystemIntakeGRBDiscussions = (
 describe('Discussions', () => {
   it('renders 0 discussions without replies', async () => {
     render(
-      <VerboseMockedProvider
-        mocks={[getSystemIntakeGRBDiscussions(mockDiscussions())]}
-      >
-        <Discussions systemIntakeID={systemIntake.id} />
-      </VerboseMockedProvider>
+      <MemoryRouter>
+        <VerboseMockedProvider
+          mocks={[getSystemIntakeGRBDiscussions(mockDiscussions())]}
+        >
+          <Discussions systemIntakeID={systemIntake.id} />
+        </VerboseMockedProvider>
+      </MemoryRouter>
     );
 
     expect(
@@ -70,11 +73,13 @@ describe('Discussions', () => {
 
   it('renders 1 discussion without replies', async () => {
     render(
-      <VerboseMockedProvider
-        mocks={[getSystemIntakeGRBDiscussions([discussionWithoutReplies])]}
-      >
-        <Discussions systemIntakeID={systemIntake.id} />
-      </VerboseMockedProvider>
+      <MemoryRouter>
+        <VerboseMockedProvider
+          mocks={[getSystemIntakeGRBDiscussions([discussionWithoutReplies])]}
+        >
+          <Discussions systemIntakeID={systemIntake.id} />
+        </VerboseMockedProvider>
+      </MemoryRouter>
     );
 
     expect(
@@ -90,9 +95,11 @@ describe('Discussions', () => {
 
   it('renders discussion board with no discussions', async () => {
     render(
-      <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussions([])]}>
-        <Discussions systemIntakeID={systemIntake.id} />
-      </VerboseMockedProvider>
+      <MemoryRouter>
+        <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussions([])]}>
+          <Discussions systemIntakeID={systemIntake.id} />
+        </VerboseMockedProvider>
+      </MemoryRouter>
     );
 
     const noDiscussionsAlert = await screen.findByTestId('alert');

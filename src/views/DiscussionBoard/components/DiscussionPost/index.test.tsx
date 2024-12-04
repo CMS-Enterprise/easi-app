@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 import i18next from 'i18next';
@@ -14,10 +15,12 @@ const { initialPost, replies } = discussion;
 describe('DiscussionPost', () => {
   it('renders a discussion post with replies', () => {
     render(
-      <DiscussionPost
-        {...discussion.initialPost}
-        replies={discussion.replies}
-      />
+      <MemoryRouter>
+        <DiscussionPost
+          {...discussion.initialPost}
+          replies={discussion.replies}
+        />
+      </MemoryRouter>
     );
 
     const {
@@ -50,7 +53,11 @@ describe('DiscussionPost', () => {
   });
 
   it('renders a discussion post without replies', () => {
-    render(<DiscussionPost {...discussion.initialPost} replies={[]} />);
+    render(
+      <MemoryRouter>
+        <DiscussionPost {...discussion.initialPost} replies={[]} />
+      </MemoryRouter>
+    );
 
     expect(screen.getByRole('button', { name: 'Reply' })).toBeInTheDocument();
 
@@ -58,7 +65,11 @@ describe('DiscussionPost', () => {
   });
 
   it('hides discussion reply data', () => {
-    render(<DiscussionPost {...discussion.initialPost} />);
+    render(
+      <MemoryRouter>
+        <DiscussionPost {...discussion.initialPost} />
+      </MemoryRouter>
+    );
 
     expect(screen.queryByTestId('discussionReplies')).toBeNull();
   });
@@ -74,10 +85,12 @@ describe('DiscussionPost', () => {
     };
 
     render(
-      <DiscussionPost
-        {...discussionNoRole.initialPost}
-        replies={discussionNoRole.replies}
-      />
+      <MemoryRouter>
+        <DiscussionPost
+          {...discussionNoRole.initialPost}
+          replies={discussionNoRole.replies}
+        />
+      </MemoryRouter>
     );
 
     expect(screen.getByText('Governance Admin Team')).toBeInTheDocument();
