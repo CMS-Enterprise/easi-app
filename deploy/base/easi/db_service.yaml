@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: easi
+  name: db
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: db

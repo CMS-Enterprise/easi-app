@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: easi-frontend-configmap
+  namespace: easi
+data:
+  VITE_APP_ENV: local
+  VITE_API_ADDRESS: http://easi-backend.localdev.me/api/v1
+  VITE_GRAPHQL_ADDRESS: http://easi-backend.localdev.me/api/graph/query
+  VITE_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+  VITE_OKTA_DOMAIN: https://test.idp.idm.cms.gov
+  VITE_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+  VITE_OKTA_REDIRECT_URI: http://easi-client:3000/implicit/callback
+  VITE_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
+  VITE_LD_ENV_USER: ''
+  VITE_LD_USER_HASH: ''
+  VITE_LD_CLIENT_ID: 63231d448bd05a111f06195b
+  VITE_LOCAL_AUTH_ENABLED: 'true'
+  CHOKIDAR_USEPOLLING: 'true'
+  ESLINT_NO_DEV_ERRORS: 'true'

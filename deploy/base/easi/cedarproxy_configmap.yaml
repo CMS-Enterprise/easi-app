@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cedarproxy-configmap
+  namespace: easi
+data:
+  CEDAR_API_URL: webmethods-apigw.cedarimpl.cms.gov
+  CEDAR_CACHE_EXPIRE_TIME: "7d"

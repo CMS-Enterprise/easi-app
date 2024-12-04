@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: easi-backend
+  namespace: easi
+spec:
+  ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
+    - name: "2345"
+      port: 2345
+      targetPort: 2345
+  selector:
+    app: easi-backend

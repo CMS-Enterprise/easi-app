@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-mc
+  namespace: easi
+  labels:
+    app: minio-mc
+spec:
+  template:
+    metadata:
+      labels:
+        app: minio-mc
+    spec:
+      volumes:
+        - name: minio-mc-config
+          configMap:
+            name: minio-mc-config
+      containers:
+      - name: minio-mc
+        image: minio/mc:latest
+        volumeMounts:
+          - mountPath: /root/.mc/config.json
+            name: minio-mc-config
+            subPath: config.json
+        command: ["/bin/sh","-c"]
+        args:
+        - /usr/bin/mc mb local/easi-app-file-uploads/;
+          /usr/bin/mc anonymous set public local/easi-app-file-uploads
+        resources: {}
+      restartPolicy: Never
+  backoffLimit: 4
+  completions: 1
+  parallelism: 1
+  ttlSecondsAfterFinished: 1000
