@@ -240,12 +240,20 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, err
 		}
 
+		if systemIntake == nil {
+			return nil, errors.New("problem finding system intake when handling GRB reply")
+		}
+
 		// the initial poster will receive a notification
 		// in the event the initial poster is also tagged in a reply, we do not send both emails
 		// we only send the "someone replied" email
 		initialPoster, err := store.UserAccountGetByID(ctx, tx, initialPost.CreatedBy)
 		if err != nil {
 			return nil, err
+		}
+
+		if initialPoster == nil {
+			return nil, errors.New("problem finding initial poster when handling GRB reply")
 		}
 
 		// get user who made this reply post
