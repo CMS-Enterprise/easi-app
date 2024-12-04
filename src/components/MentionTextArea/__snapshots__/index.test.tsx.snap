@@ -6,7 +6,7 @@ exports[`MentionTextArea component > renders the component to view text 1`] = `
     class="tiptap__readonly font-body-sm line-height-body-5"
   >
     <div
-      aria-label="Rich-Text Editor"
+      aria-label="Rich text area"
       class="tiptap ProseMirror"
       contenteditable="false"
       id="mentionTextArea"
@@ -28,7 +28,7 @@ exports[`MentionTextArea component > renders the editable text area component 1`
     tabindex="-1"
   >
     <div
-      aria-label="Rich-Text Editor"
+      aria-label="Rich text area"
       class="tiptap ProseMirror ProseMirror-focused"
       contenteditable="true"
       id="mentionTextArea"

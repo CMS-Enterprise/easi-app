@@ -154,7 +154,9 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
         editable: editable && !disabled,
         editorProps: {
           attributes: {
-            id
+            id,
+            role: 'textbox',
+            'aria-label': t('Rich text area')
           }
         },
         extensions: [
