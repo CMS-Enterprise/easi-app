@@ -10,13 +10,10 @@ COPY package.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile
 
-FROM modules AS src
+FROM modules AS build
 
 COPY tsconfig.json .eslintrc vite.config.ts apollo.config.js index.html ./
 COPY public ./public
 COPY src ./src
-
-RUN yarn run build
-RUN yarn global add serve
 
 ENTRYPOINT [ "yarn", "start" ]
