@@ -106,13 +106,13 @@ func main() {
 	}
 
 	emailConfig := email.Config{
-		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
-		ITInvestmentEmail: models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
-		TRBEmail:          models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
-		EASIHelpEmail:     models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
-		URLHost:           config.GetString(appconfig.ClientHostKey),
-		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:          models.NewEmailAddress(os.Getenv(appconfig.GRTEmailKey)),
+		ITInvestmentEmail: models.NewEmailAddress(os.Getenv(appconfig.ITInvestmentEmailKey)),
+		TRBEmail:          models.NewEmailAddress(os.Getenv(appconfig.TRBEmailKey)),
+		EASIHelpEmail:     models.NewEmailAddress(os.Getenv(appconfig.EASIHelpEmailKey)),
+		URLHost:           os.Getenv(appconfig.ClientHostKey),
+		URLScheme:         os.Getenv(appconfig.ClientProtocolKey),
+		TemplateDirectory: os.Getenv(appconfig.EmailTemplateDirectoryKey),
 	}
 
 	fmt.Println("==== emailConfig ====")
