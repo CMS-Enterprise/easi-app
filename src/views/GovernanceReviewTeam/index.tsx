@@ -30,8 +30,7 @@ const GovernanceReviewTeam = () => {
     }
   });
 
-  const { grbReviewers, grbReviewStartedAt, grbDiscussions } =
-    data?.systemIntake || {};
+  const { grbReviewers, grbReviewStartedAt } = data?.systemIntake || {};
 
   /** Check if current user is set as GRB reviewer */
   const isGrbReviewer: boolean = useMemo(() => {
@@ -63,7 +62,6 @@ const GovernanceReviewTeam = () => {
               <RequestOverview
                 grbReviewers={grbReviewers || []}
                 grbReviewStartedAt={grbReviewStartedAt}
-                grbDiscussions={grbDiscussions || []}
               />
             </Route>
 

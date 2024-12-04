@@ -13,7 +13,6 @@ import {
 } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
-  SystemIntakeGRBReviewDiscussionFragment,
   SystemIntakeGRBReviewerFragment,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
@@ -51,7 +50,6 @@ type GRBReviewProps = {
   businessCase: BusinessCaseModel;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   documents: SystemIntakeDocument[];
-  grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   grbReviewStartedAt?: string | null;
 };
 
@@ -62,7 +60,6 @@ const GRBReview = ({
   state,
   grbReviewers,
   documents,
-  grbDiscussions,
   grbReviewStartedAt
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
@@ -364,7 +361,6 @@ const GRBReview = ({
 
             <Discussions
               systemIntakeID={id}
-              grbDiscussions={grbDiscussions}
               className="margin-top-4 margin-bottom-6"
             />
 
