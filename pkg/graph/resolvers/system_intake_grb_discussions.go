@@ -124,6 +124,35 @@ func CreateSystemIntakeGRBDiscussionPost(
 			case models.TagTypeGroupGrbReviewers:
 				// this is a group tag, and we need to gather everyone from that group
 				// make sure we don't send duplicates (i.e., if an individual user and the entire GRB team is tagged, only send one)
+
+				// gather grb member emails
+				var uuids []uuid.UUID
+				for id := range grbReviewerCache {
+					uuids = append(uuids, id)
+				}
+				users, err := store.UserAccountsByIDsNP(ctx, tx, uuids)
+				if err != nil {
+					return nil, err
+				}
+
+				var emails []models.EmailAddress
+				for _, user := range users {
+					emails = append(emails, models.EmailAddress(user.Email))
+				}
+
+				if err := emailClient.SystemIntake.SendGRBReviewDiscussionGroupTaggedEmail(ctx, email.SendGRBReviewDiscussionGroupTaggedEmailInput{
+					SystemIntakeID:           uuid.UUID{},
+					UserName:                 postUser.Username,
+					GroupName:                "GRB",
+					RequestName:              systemIntake.ProjectName.String,
+					Role:                     roleFromPoster(post),
+					DiscussionContent:        input.Content.ToTemplate(),
+					ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
+					Recipients:               emails,
+				}); err != nil {
+					return nil, err
+				}
+
 			case models.TagTypeUserAccount:
 				// if we are emailing the group, we do not need to send out individual emails
 				if groupFound {
