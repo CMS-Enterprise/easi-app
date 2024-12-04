@@ -254,6 +254,10 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, err
 		}
 
+		if replyPoster == nil {
+			return nil, errors.New("problem finding reply user when handling GRB reply")
+		}
+
 		// so first, we can send the reply email
 		if err := emailClient.SystemIntake.SendGRBReviewDiscussionReplyEmail(ctx, email.SendGRBReviewDiscussionReplyEmailInput{
 			SystemIntakeID:           intakeID,
