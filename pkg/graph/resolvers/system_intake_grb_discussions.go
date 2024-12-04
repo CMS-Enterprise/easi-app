@@ -143,7 +143,6 @@ func CreateSystemIntakeGRBDiscussionPost(
 					SystemIntakeID:           intakeID,
 					UserName:                 postUser.Username,
 					RequestName:              systemIntake.ProjectName.String,
-					DiscussionBoardType:      "",
 					Role:                     roleFromPoster(post),
 					DiscussionContent:        input.Content.ToTemplate(),
 					ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",

@@ -19,7 +19,6 @@ type SendGRBReviewDiscussionGroupTaggedEmailInput struct {
 	UserName                 string
 	GroupName                string // TODO NJD enum?
 	RequestName              string
-	DiscussionBoardType      string
 	Role                     string
 	DiscussionContent        template.HTML
 	ITGovernanceInboxAddress string
@@ -59,7 +58,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionGroupTaggedBody(input SendGRBRe
 		UserName:                 input.UserName,
 		GroupName:                input.GroupName,
 		RequestName:              input.RequestName,
-		DiscussionBoardType:      input.DiscussionBoardType,
+		DiscussionBoardType:      "Internal GRB Discussion Board",
 		GRBReviewLink:            sie.client.urlFromPath(grbReviewPath),
 		Role:                     role,
 		DiscussionContent:        input.DiscussionContent,

@@ -17,7 +17,6 @@ type SendGRBReviewDiscussionReplyEmailInput struct {
 	SystemIntakeID           uuid.UUID
 	UserName                 string
 	RequestName              string
-	DiscussionBoardType      string
 	Role                     string
 	DiscussionContent        template.HTML
 	ITGovernanceInboxAddress string
@@ -53,7 +52,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionReplyBody(input SendGRBReviewDi
 	data := GRBReviewDiscussionReplyBody{
 		UserName:                 input.UserName,
 		RequestName:              input.RequestName,
-		DiscussionBoardType:      input.DiscussionBoardType,
+		DiscussionBoardType:      "Internal GRB Discussion Board",
 		GRBReviewLink:            sie.client.urlFromPath(grbReviewPath),
 		Role:                     role,
 		DiscussionContent:        input.DiscussionContent,
