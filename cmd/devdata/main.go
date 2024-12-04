@@ -32,6 +32,37 @@ type seederConfig struct {
 	UserSearchClient usersearch.Client
 }
 
+type mockSender struct {
+	toAddresses  []models.EmailAddress
+	ccAddresses  []models.EmailAddress
+	bccAddresses []models.EmailAddress
+	subject      string
+	body         string
+	emailWasSent bool
+	sentEmails   []email.Email
+}
+
+func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
+	s.toAddresses = emailData.ToAddresses
+	s.ccAddresses = emailData.CcAddresses
+	s.bccAddresses = emailData.BccAddresses
+	s.subject = emailData.Subject
+	s.body = emailData.Body
+	s.emailWasSent = true
+	s.sentEmails = append(s.sentEmails, emailData)
+	return nil
+}
+
+func (s *mockSender) Clear() {
+	s.toAddresses = []models.EmailAddress{}
+	s.ccAddresses = []models.EmailAddress{}
+	s.bccAddresses = []models.EmailAddress{}
+	s.subject = ""
+	s.body = ""
+	s.emailWasSent = false
+	s.sentEmails = []email.Email{}
+}
+
 const closedRequestCount int = 10
 
 func main() {
@@ -84,8 +115,7 @@ func main() {
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
-	env, _ := appconfig.NewEnvironment("local") // hardcoded as "local" as it's easier than fetching from envs since we only ever use this locally
-	sender := local.NewSMTPSender("localhost:1025", env)
+	sender := &mockSender{}
 	emailClient, err := email.NewClient(emailConfig, sender)
 	if err != nil {
 		panic(err)
