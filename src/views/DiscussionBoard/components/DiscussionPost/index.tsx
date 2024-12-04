@@ -5,7 +5,7 @@ import { SystemIntakeGRBReviewDiscussionPostFragment } from 'gql/gen/graphql';
 import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
 
-import { RichTextViewer } from 'components/RichTextEditor';
+import MentionTextArea from 'components/MentionTextArea';
 import { AvatarCircle } from 'components/shared/Avatar/Avatar';
 import IconButton from 'components/shared/IconButton';
 import useDiscussionParams from 'hooks/useDiscussionParams';
@@ -20,12 +20,18 @@ type DiscussionPostProps = SystemIntakeGRBReviewDiscussionPostFragment & {
    * Leave undefined if rendering reply or to hide discussion reply data
    */
   replies?: SystemIntakeGRBReviewDiscussionPostFragment[];
+  /** Truncates discussion content text with read more/less button */
+  truncateText?: boolean;
 };
 
 /**
  * Displays single discussion or reply
  */
-const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
+const DiscussionPost = ({
+  replies,
+  truncateText,
+  ...initialPost
+}: DiscussionPostProps) => {
   const { t } = useTranslation('discussions');
 
   const {
@@ -87,14 +93,11 @@ const DiscussionPost = ({ replies, ...initialPost }: DiscussionPostProps) => {
           </p>
         </div>
 
-        {/**
-         * TODO:
-         *   - Update to use TipTap text area
-         *   - Truncate text after 3 lines with `Read more` button
-         */}
-        <RichTextViewer
-          value={content}
+        <MentionTextArea
+          initialContent={content}
+          id="easiDiscussionPostContent"
           className="easi-discussion-post__content"
+          truncateText={truncateText}
         />
 
         {

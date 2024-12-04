@@ -1,0 +1,17 @@
+- op: replace
+  path: /spec/template/spec/containers/0/imagePullPolicy
+  value: Always
+
+- op: replace
+  path: /spec/template/spec/containers/0/resources
+  value:
+    {
+    "requests": {
+      "cpu": "500m",
+      "memory": "1.5G"
+    },
+    "limits": {
+      "cpu": "500m",
+      "memory": "1.5G"
+    }
+    }

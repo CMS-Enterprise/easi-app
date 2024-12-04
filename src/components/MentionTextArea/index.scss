@@ -6,6 +6,13 @@
     margin: 0px;
   }
 
+  &.ProseMirror {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    height: inherit;
+  }
+
   &__readonly {
     margin-bottom: 1rem;
 
@@ -47,10 +54,6 @@
       padding: 0;
 
       div[contenteditable] {
-        font-family: inherit;
-        font-size: inherit;
-        line-height: inherit;
-        height: inherit;
         padding: .5rem;
       }
     }

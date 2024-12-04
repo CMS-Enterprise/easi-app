@@ -5,6 +5,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, ButtonGroup, Form, FormGroup } from '@trussworks/react-uswds';
 import {
+  GetSystemIntakeGRBDiscussionsDocument,
   useCreateSystemIntakeGRBDiscussionPostMutation,
   useCreateSystemIntakeGRBDiscussionReplyMutation
 } from 'gql/gen/graphql';
@@ -50,9 +51,13 @@ const DiscussionForm = ({
 }: DiscussionProps | ReplyProps) => {
   const { t } = useTranslation('discussions');
 
-  const [mutateDiscussion] = useCreateSystemIntakeGRBDiscussionPostMutation();
+  const [mutateDiscussion] = useCreateSystemIntakeGRBDiscussionPostMutation({
+    refetchQueries: [GetSystemIntakeGRBDiscussionsDocument]
+  });
 
-  const [mutateReply] = useCreateSystemIntakeGRBDiscussionReplyMutation();
+  const [mutateReply] = useCreateSystemIntakeGRBDiscussionReplyMutation({
+    refetchQueries: [GetSystemIntakeGRBDiscussionsDocument]
+  });
 
   const {
     control,
@@ -60,7 +65,10 @@ const DiscussionForm = ({
     reset,
     formState: { isValid, errors }
   } = useEasiForm<DiscussionContent>({
-    resolver: yupResolver(discussionSchema)
+    resolver: yupResolver(discussionSchema),
+    defaultValues: {
+      content: ''
+    }
   });
 
   const { pushDiscussionQuery } = useDiscussionParams();
@@ -153,10 +161,11 @@ const DiscussionForm = ({
           render={({ field: { ref, ...field } }) => (
             <MentionTextArea
               id={`mention-${type}`}
+              ref={ref}
               editable
-              className="height-auto margin-top-1 font-body-md"
+              className="height-auto"
               initialContent={field.value}
-              setFieldValue={value => field.onChange(value)}
+              setFieldValue={field.onChange}
             />
           )}
         />

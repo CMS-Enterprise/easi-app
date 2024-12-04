@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: easi-backend
+  namespace: easi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: easi-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: easi-backend
+    spec:
+      containers:
+        - name: easi-backend
+          image: easi-backend:latest
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: easi-backend-configmap
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources: {}
+          command:
+             - ./bin/easi
+             - serve
+      restartPolicy: Always

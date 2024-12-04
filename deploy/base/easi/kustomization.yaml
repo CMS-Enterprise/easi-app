@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - cedarproxy_configmap.yaml
+  - cedarproxy_deployment.yaml
+  - cedarproxy_service.yaml
+  - db_configmap.yaml
+  - db_deployment.yaml
+  - db_service.yaml
+  - db-migrate_job.yaml
+  - easi-backend_configmap.yaml
+  - easi-backend_deployment.yaml
+  - easi-backend_service.yaml
+  - easi-frontend_configmap.yaml
+  - easi-frontend_deployment.yaml
+  - easi-frontend_service.yaml
+  - email_deployment.yaml
+  - email_service.yaml
+  - minio_deployment.yaml
+  - minio_service.yaml
+  - minio-mc_configmap.yaml
+  - minio-mc_job.yaml
