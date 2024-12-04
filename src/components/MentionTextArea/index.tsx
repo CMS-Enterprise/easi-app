@@ -212,6 +212,7 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
     return (
       <>
         <EditorContent
+          id={id}
           ref={ref}
           tabIndex={editable ? -1 : undefined}
           editor={editor}
