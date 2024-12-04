@@ -90,21 +90,30 @@ if kubectl get ns "$NAMESPACE" > /dev/null 2>&1; then
     }
 fi
 
+APPLICATION_VERSION="$(git rev-parse @)"
+APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
+APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
+
+export APPLICATION_VERSION
+export APPLICATION_DATETIME
+export APPLICATION_TS
+
 # Build Docker images
 (
     echo "🐋 Building easi-frontend:${NAMESPACE} image 🐋"
-    docker build -f ../Dockerfile.frontend_k8s -t easi-frontend:"$NAMESPACE" ../.
-
-    # APPLICATION_VERSION=$(git rev-parse HEAD)
-    # APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
-    # APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
-    # echo "APPLICATION_DATETIME=${APPLICATION_DATETIME}"
-    # echo "APPLICATION_TS=${APPLICATION_TS}"
-    # echo "APPLICATION_VERSION=${APPLICATION_VERSION}"
+    docker build -f ../Dockerfile.frontend_k8s -t easi-frontend:"$NAMESPACE" ../. \
+    --build-arg VITE_LD_CLIENT_ID=63231d448bd05a111f06195b \
+    --build-arg VITE_OKTA_CLIENT_ID=0oa2e913coDQeG19S297 \
+    --build-arg VITE_OKTA_SERVER_ID=aus2e96etlbFPnBHt297 \
+    --build-arg VITE_OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297 \
+    --build-arg VITE_OKTA_DOMAIN=https://test.idp.idm.cms.gov \
+    --build-arg VITE_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback
 
     echo "🐋 Building easi-backend:${NAMESPACE} image 🐋"
-    # docker build -f ../Dockerfile --build-arg APPLICATION_DATETIME="${APPLICATION_DATETIME}" --build-arg APPLICATION_TS="${APPLICATION_TS}" --build-arg APPLICATION_VERSION="${APPLICATION_VERSION}" -t easi-backend:latest ../.
-    docker build -f ../Dockerfile.backend_k8s --target build -t easi-backend:"$NAMESPACE" ../.
+    docker build -f ../Dockerfile -t easi-backend:"$NAMESPACE" ../. \
+    --build-arg APPLICATION_DATETIME="${APPLICATION_DATETIME}" \
+    --build-arg APPLICATION_TS="${APPLICATION_TS}" \
+    --build-arg APPLICATION_VERSION="${APPLICATION_VERSION}"
 
     echo "🐋 Building db-migrate:${NAMESPACE} image 🐋"
     docker build -f ../Dockerfile.db_migrations --build-arg TAG=9.10-alpine -t db-migrate:"$NAMESPACE" ../.
@@ -134,7 +143,6 @@ delete_temp_dir() {
     kustomize edit set namespace "$NAMESPACE"
     kustomize build > manifest.yaml
 
-    sed -i'' -E "s/easi-backend.localdev.me/${NAMESPACE}-backend.localdev.me/" manifest.yaml
     sed -i'' -E "s/easi.localdev.me/${NAMESPACE}.localdev.me/" manifest.yaml
     sed -i'' -E "s/email.localdev.me/${NAMESPACE}-email.localdev.me/" manifest.yaml
     sed -i'' -E "s/minio.localdev.me/${NAMESPACE}-minio.localdev.me/" manifest.yaml
@@ -143,7 +151,7 @@ delete_temp_dir() {
 )
 
 (
-    TEMPDIR=$(mktemp -d ../tmp.ingress.XXXXX)
+    TEMPDIR=$(mktemp -d ../tmp.easi.XXXXX)
     cd "$TEMPDIR" || exit
     kustomize create --resources ../deploy/base/easi
     kustomize edit set namespace "$NAMESPACE"
