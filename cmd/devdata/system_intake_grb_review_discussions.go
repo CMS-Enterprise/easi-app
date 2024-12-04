@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -13,13 +14,14 @@ import (
 func createSystemIntakeGRBDiscussionPost(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	intake *models.SystemIntake,
 	content models.TaggedHTML,
 ) *models.SystemIntakeGRBReviewDiscussionPost {
 	post, err := resolvers.CreateSystemIntakeGRBDiscussionPost(
 		ctx,
 		store,
-		nil, // email client
+		emailClient, // email client
 		models.CreateSystemIntakeGRBDiscussionPostInput{
 			SystemIntakeID: intake.ID,
 			Content:        content,
