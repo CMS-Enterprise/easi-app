@@ -44,6 +44,14 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ env.GIT_REF_NAME }}-easi-frontend
           cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi-frontend
           tags: ${{ steps.login-ecr.outputs.registry }}/easi-frontend:${{ env.GIT_HASH }}
+          # TODO: Pull these from .envrc instead of hard-coding
+          build-args: |
+            VITE_LD_CLIENT_ID=63231d448bd05a111f06195b
+            VITE_OKTA_CLIENT_ID=0oa2e913coDQeG19S297
+            VITE_OKTA_SERVER_ID=aus2e96etlbFPnBHt297
+            VITE_OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+            VITE_OKTA_DOMAIN=https://test.idp.idm.cms.gov
+            VITE_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback
       - name: Announce failure
         if: ${{ failure() }}
         run: |
