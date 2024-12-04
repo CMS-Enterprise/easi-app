@@ -89,11 +89,11 @@ func CreateSystemIntakeGRBDiscussionPost(
 
 		// check if the grb group is being emailed, in which case we should make sure we do not send any individual emails out
 		// unless they are admins
-		var sendAdminOnly bool
+		var groupFound bool
 		uniqueTags := input.Content.UniqueTags()
 		for _, tag := range uniqueTags {
 			if tag.TagType == models.TagTypeGroupGrbReviewers {
-				sendAdminOnly = true
+				groupFound = true
 				break
 			}
 		}
@@ -108,15 +108,30 @@ func CreateSystemIntakeGRBDiscussionPost(
 			switch tag.TagType {
 			case models.TagTypeGroupItGov:
 				// this is a group tag, and we need to email ITGov box
+				if err := emailClient.SystemIntake.SendGRBReviewDiscussionGroupTaggedEmail(ctx, email.SendGRBReviewDiscussionGroupTaggedEmailInput{
+					SystemIntakeID:           systemIntake.ID,
+					UserName:                 postUser.Username,
+					GroupName:                "Governance Admin Team",
+					RequestName:              systemIntake.ProjectName.String,
+					Role:                     roleFromPoster(post),
+					DiscussionContent:        input.Content.ToTemplate(),
+					ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
+					Recipients:               []models.EmailAddress{"IT_Governance@cms.hhs.gov"},
+				}); err != nil {
+					return nil, err
+				}
 
 			case models.TagTypeGroupGrbReviewers:
 				// this is a group tag, and we need to gather everyone from that group
 				// make sure we don't send duplicates (i.e., if an individual user and the entire GRB team is tagged, only send one)
 			case models.TagTypeUserAccount:
+				// if we are emailing the group, we do not need to send out individual emails
+				if groupFound {
+					continue
+				}
 
 				// this is an individual tag
-				foundReviewer, ok := grbReviewerCache[tag.TaggedContentID]
-				if !ok {
+				if _, ok := grbReviewerCache[tag.TaggedContentID]; !ok {
 					// this means someone was tagged who should not have been
 					logger.Warn("tagged user is not a grb reviewer for this intake", zap.String("systemIntakeID", intakeID.String()))
 					continue
@@ -126,11 +141,6 @@ func CreateSystemIntakeGRBDiscussionPost(
 				recipient, err := store.UserAccountGetByID(ctx, tx, tag.TaggedContentID)
 				if err != nil {
 					logger.Error("problem getting recipient by id when sending out tag email notifications", zap.Error(err), zap.String("userID", tag.TaggedContentID.String()))
-					continue
-				}
-
-				// the presence of a `role` is indicative of a non-admin user
-				if sendAdminOnly && len(foundReviewer.GRBVotingRole) > 0 && len(foundReviewer.GRBReviewerRole) > 0 {
 					continue
 				}
 
