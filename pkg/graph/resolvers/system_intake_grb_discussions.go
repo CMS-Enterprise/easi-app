@@ -249,7 +249,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 		}
 
 		// get user who made this reply post
-		replyPoster, err := store.UserAccountGetByID(ctx, tx, post.ID)
+		replyPoster, err := store.UserAccountGetByID(ctx, tx, post.CreatedBy)
 		if err != nil {
 			return nil, err
 		}
