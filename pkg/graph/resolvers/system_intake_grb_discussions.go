@@ -113,11 +113,12 @@ func CreateSystemIntakeGRBDiscussionPost(
 			case models.TagTypeGroupItGov:
 				// this is a group tag, and we need to email ITGov box
 				if err := emailClient.SystemIntake.SendGRBReviewDiscussionGroupTaggedEmail(ctx, email.SendGRBReviewDiscussionGroupTaggedEmailInput{
-					SystemIntakeID:           systemIntake.ID,
+					SystemIntakeID:           intakeID,
 					UserName:                 postUser.Username,
 					GroupName:                "Governance Admin Team",
 					RequestName:              systemIntake.ProjectName.String,
 					Role:                     roleFromPoster(post),
+					DiscussionID:             post.ID,
 					DiscussionContent:        input.Content.ToTemplate(),
 					ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
 					Recipients:               []models.EmailAddress{"IT_Governance@cms.hhs.gov"},
@@ -146,11 +147,12 @@ func CreateSystemIntakeGRBDiscussionPost(
 				}
 
 				if err := emailClient.SystemIntake.SendGRBReviewDiscussionGroupTaggedEmail(ctx, email.SendGRBReviewDiscussionGroupTaggedEmailInput{
-					SystemIntakeID:           uuid.UUID{},
+					SystemIntakeID:           intakeID,
 					UserName:                 postUser.Username,
 					GroupName:                "GRB",
 					RequestName:              systemIntake.ProjectName.String,
 					Role:                     roleFromPoster(post),
+					DiscussionID:             post.ID,
 					DiscussionContent:        input.Content.ToTemplate(),
 					ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
 					Recipients:               emails,
@@ -183,6 +185,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 					UserName:                 postUser.Username,
 					RequestName:              systemIntake.ProjectName.String,
 					Role:                     roleFromPoster(post),
+					DiscussionID:             post.ID,
 					DiscussionContent:        input.Content.ToTemplate(),
 					ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
 					Recipient:                models.EmailAddress(recipient.Email),
@@ -281,6 +284,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 			SystemIntakeID:           intakeID,
 			UserName:                 replyPoster.Username,
 			RequestName:              systemIntake.ProjectName.String,
+			DiscussionID:             post.ID,
 			Role:                     roleFromPoster(post),
 			DiscussionContent:        post.Content.ToTemplate(),
 			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
@@ -332,7 +336,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 			case models.TagTypeGroupItGov:
 				// this is a group tag, and we need to email ITGov box
 				if err := emailClient.SystemIntake.SendGRBReviewDiscussionGroupTaggedEmail(ctx, email.SendGRBReviewDiscussionGroupTaggedEmailInput{
-					SystemIntakeID:           systemIntake.ID,
+					SystemIntakeID:           intakeID,
 					UserName:                 replyPoster.Username,
 					GroupName:                "Governance Admin Team",
 					RequestName:              systemIntake.ProjectName.String,
@@ -372,7 +376,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 				}
 
 				if err := emailClient.SystemIntake.SendGRBReviewDiscussionGroupTaggedEmail(ctx, email.SendGRBReviewDiscussionGroupTaggedEmailInput{
-					SystemIntakeID:           uuid.UUID{},
+					SystemIntakeID:           intakeID,
 					UserName:                 replyPoster.Username,
 					GroupName:                "GRB",
 					RequestName:              systemIntake.ProjectName.String,

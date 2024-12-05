@@ -22,6 +22,7 @@ type SendGRBReviewDiscussionGroupTaggedEmailInput struct {
 	RequestName              string
 	Role                     string
 	DiscussionContent        template.HTML
+	DiscussionID             uuid.UUID
 	ITGovernanceInboxAddress string
 	Recipients               []models.EmailAddress
 }
@@ -49,7 +50,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionGroupTaggedBody(input SendGRBRe
 	}
 
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
-	grbDiscussionPath := path.Join(grbReviewPath, "discussionID=BLAH") // TODO: NJD add actual discussion ID field
+
 	role := input.Role
 	if len(role) < 1 {
 		role = "Governance Admin Team"
@@ -63,7 +64,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionGroupTaggedBody(input SendGRBRe
 		GRBReviewLink:            sie.client.urlFromPath(grbReviewPath),
 		Role:                     role,
 		DiscussionContent:        input.DiscussionContent,
-		DiscussionLink:           sie.client.urlFromPath(grbDiscussionPath),
+		DiscussionLink:           fmt.Sprintf("%[1]s?discussionMode=reply&discussionId=%[2]s", sie.client.urlFromPath(grbReviewPath), input.DiscussionID.String()),
 		ITGovernanceInboxAddress: input.ITGovernanceInboxAddress,
 		IsAdmin:                  len(input.Role) < 1,
 	}
