@@ -89,7 +89,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 				continue
 			}
 
-			grbReviewerCache[grbReviewer.ID] = grbReviewer
+			grbReviewerCache[grbReviewer.UserID] = grbReviewer
 		}
 
 		// check if the grb group is being emailed, in which case we should make sure we do not send any individual emails out
@@ -308,7 +308,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 				continue
 			}
 
-			grbReviewerCache[grbReviewer.ID] = grbReviewer
+			grbReviewerCache[grbReviewer.UserID] = grbReviewer
 		}
 
 		// check if the grb group is being emailed, in which case we should make sure we do not send any individual emails out
