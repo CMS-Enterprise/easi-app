@@ -65,7 +65,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 		}
 
 		// if no emailClient, do not proceed
-		if emailClient == nil {
+		if emailClient == nil || emailClient.SystemIntake == nil {
 			return result, nil
 		}
 
@@ -290,7 +290,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 		}
 
 		// if no email client, do not proceed
-		if emailClient == nil {
+		if emailClient == nil || emailClient.SystemIntake == nil {
 			return result, nil
 		}
 
