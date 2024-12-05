@@ -167,7 +167,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 				// this is an individual tag
 				if _, ok := grbReviewerCache[tag.TaggedContentID]; !ok {
 					// this means someone was tagged who should not have been
-					logger.Warn("tagged user is not a grb reviewer for this intake", zap.String("systemIntakeID", intakeID.String()))
+					logger.Info("tagged user is not a grb reviewer for this intake", zap.String("systemIntakeID", intakeID.String()))
 					continue
 				}
 
@@ -393,7 +393,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 				// this is an individual tag
 				if _, ok := grbReviewerCache[tag.TaggedContentID]; !ok {
 					// this means someone was tagged who should not have been
-					logger.Warn("tagged user is not a grb reviewer for this intake", zap.String("systemIntakeID", intakeID.String()))
+					logger.Info("tagged user is not a grb reviewer for this intake", zap.String("systemIntakeID", intakeID.String()))
 					continue
 				}
 
