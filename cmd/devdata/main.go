@@ -110,9 +110,9 @@ func main() {
 		ITInvestmentEmail: models.NewEmailAddress(os.Getenv(appconfig.ITInvestmentEmailKey)),
 		TRBEmail:          models.NewEmailAddress(os.Getenv(appconfig.TRBEmailKey)),
 		EASIHelpEmail:     models.NewEmailAddress(os.Getenv(appconfig.EASIHelpEmailKey)),
-		URLHost:           os.Getenv(appconfig.ClientHostKey),
-		URLScheme:         os.Getenv(appconfig.ClientProtocolKey),
-		TemplateDirectory: os.Getenv(appconfig.EmailTemplateDirectoryKey),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
 	fmt.Println("==== emailConfig ====")
