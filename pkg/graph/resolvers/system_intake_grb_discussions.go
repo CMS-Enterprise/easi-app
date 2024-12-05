@@ -64,6 +64,11 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return result, nil
 		}
 
+		// if no emailClient, do not proceed
+		if emailClient == nil {
+			return result, nil
+		}
+
 		// otherwise, we need the full system intake
 		systemIntake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
@@ -281,6 +286,11 @@ func CreateSystemIntakeGRBDiscussionReply(
 
 		// if no tags, we can return here
 		if len(input.Content.Tags) < 1 {
+			return result, nil
+		}
+
+		// if no email client, do not proceed
+		if emailClient == nil {
 			return result, nil
 		}
 

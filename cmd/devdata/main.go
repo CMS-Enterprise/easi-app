@@ -16,7 +16,6 @@ import (
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -30,37 +29,6 @@ type seederConfig struct {
 	store            *storage.Store
 	s3Client         *upload.S3Client
 	UserSearchClient usersearch.Client
-}
-
-type mockSender struct {
-	toAddresses  []models.EmailAddress
-	ccAddresses  []models.EmailAddress
-	bccAddresses []models.EmailAddress
-	subject      string
-	body         string
-	emailWasSent bool
-	sentEmails   []email.Email
-}
-
-func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
-	s.toAddresses = emailData.ToAddresses
-	s.ccAddresses = emailData.CcAddresses
-	s.bccAddresses = emailData.BccAddresses
-	s.subject = emailData.Subject
-	s.body = emailData.Body
-	s.emailWasSent = true
-	s.sentEmails = append(s.sentEmails, emailData)
-	return nil
-}
-
-func (s *mockSender) Clear() {
-	s.toAddresses = []models.EmailAddress{}
-	s.ccAddresses = []models.EmailAddress{}
-	s.bccAddresses = []models.EmailAddress{}
-	s.subject = ""
-	s.body = ""
-	s.emailWasSent = false
-	s.sentEmails = []email.Email{}
 }
 
 const closedRequestCount int = 10
@@ -103,26 +71,6 @@ func main() {
 	store, storeErr := storage.NewStore(dbConfig, ldClient)
 	if storeErr != nil {
 		panic(storeErr)
-	}
-
-	emailConfig := email.Config{
-		GRTEmail:          models.NewEmailAddress(os.Getenv(appconfig.GRTEmailKey)),
-		ITInvestmentEmail: models.NewEmailAddress(os.Getenv(appconfig.ITInvestmentEmailKey)),
-		TRBEmail:          models.NewEmailAddress(os.Getenv(appconfig.TRBEmailKey)),
-		EASIHelpEmail:     models.NewEmailAddress(os.Getenv(appconfig.EASIHelpEmailKey)),
-		URLHost:           config.GetString(appconfig.ClientHostKey),
-		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
-	}
-
-	fmt.Println("==== emailConfig ====")
-	fmt.Printf("%+v\n", emailConfig)
-	fmt.Println("==== emailConfig ====")
-
-	sender := &mockSender{}
-	emailClient, err := email.NewClient(emailConfig, sender)
-	if err != nil {
-		panic(err)
 	}
 
 	s3Cfg := upload.Config{
@@ -404,7 +352,7 @@ func main() {
 	// TODO, remove <b> when they're not supported when we add tagging. Just using it now to show this is HTML
 
 	// Initial Post
-	postA := createSystemIntakeGRBDiscussionPost(ctx, store, &emailClient, intake, models.TaggedHTML{
+	postA := createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
 		RawContent: "Post <b>A</b> (Replies)",
 		Tags:       nil,
 	})
@@ -434,7 +382,7 @@ func main() {
 	})
 
 	// Make one more thread with some replies
-	postB := createSystemIntakeGRBDiscussionPost(ctx, store, &emailClient, intake, models.TaggedHTML{
+	postB := createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
 		RawContent: "Post <b>B</b>",
 		Tags:       nil,
 	})
@@ -448,7 +396,7 @@ func main() {
 	})
 
 	// Lastly, create a new initial post with no replies
-	createSystemIntakeGRBDiscussionPost(ctx, store, &emailClient, intake, models.TaggedHTML{
+	createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
 		RawContent: "Post <b>C</b> (No replies)",
 		Tags:       nil,
 	})
