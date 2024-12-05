@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"html/template"
 	"path"
 
@@ -74,7 +75,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionIndividualTaggedBody(input Send
 // SendGRBReviewDiscussionIndividualTaggedEmail sends an email to an individual indicating that they have
 // been tagged in a GRB discussion
 func (sie systemIntakeEmails) SendGRBReviewDiscussionIndividualTaggedEmail(ctx context.Context, input SendGRBReviewDiscussionIndividualTaggedEmailInput) error {
-	subject := "You were tagged in a GRB Review discussion for " + input.RequestName
+	subject := fmt.Sprintf("You were tagged in a GRB Review discussion for %s", input.RequestName)
 
 	body, err := sie.grbReviewDiscussionIndividualTaggedBody(input)
 	if err != nil {

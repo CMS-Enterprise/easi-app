@@ -98,7 +98,8 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 	}
 
 	expectedEmail := getExpectedEmail()
-	expectedSubject := "The " + groupName + "was tagged in a GRB Review discussion for " + requestName
+
+	expectedSubject := fmt.Sprintf("The %[1]s was tagged in a GRB Review discussion for %[2]s", groupName, requestName)
 
 	s.Run("Subject is correct", func() {
 		s.Equal(expectedSubject, sender.subject)
@@ -199,7 +200,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdm
 	}
 
 	expectedEmail := getExpectedEmail()
-	expectedSubject := "The " + groupName + "was tagged in a GRB Review discussion for " + requestName
+	expectedSubject := fmt.Sprintf("The %[1]s was tagged in a GRB Review discussion for %[2]s", groupName, requestName)
 
 	s.Run("Subject is correct", func() {
 		s.Equal(expectedSubject, sender.subject)

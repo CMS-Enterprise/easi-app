@@ -94,7 +94,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 	}
 
 	expectedEmail := getExpectedEmail()
-	expectedSubject := "New reply to your discussion in the GRB Review for " + requestName
+	expectedSubject := fmt.Sprintf("New reply to your discussion in the GRB Review for %s", requestName)
 
 	s.Run("Subject is correct", func() {
 		s.Equal(expectedSubject, sender.subject)
@@ -194,7 +194,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 	}
 
 	expectedEmail := getExpectedEmail()
-	expectedSubject := "New reply to your discussion in the GRB Review for " + requestName
+	expectedSubject := fmt.Sprintf("New reply to your discussion in the GRB Review for %s", requestName)
 
 	s.Run("Subject is correct", func() {
 		s.Equal(expectedSubject, sender.subject)

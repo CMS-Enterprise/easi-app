@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"html/template"
 	"path"
 
@@ -44,6 +45,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionReplyBody(input SendGRBReviewDi
 
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 	grbDiscussionPath := path.Join(grbReviewPath, "discussionID=BLAH") // TODO: NJD add actual discussion ID field
+	// it-governance/{intake_uuid}/grb-review/discussion/{discussion_uuid}/reply/{reply_uuid}
 	role := input.Role
 	if len(role) < 1 {
 		role = "Governance Admin Team"
@@ -72,7 +74,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionReplyBody(input SendGRBReviewDi
 // SendGRBReviewDiscussionReplyEmail sends an email to the EASI admin team indicating that an advice letter
 // has been submitted
 func (sie systemIntakeEmails) SendGRBReviewDiscussionReplyEmail(ctx context.Context, input SendGRBReviewDiscussionReplyEmailInput) error {
-	subject := "New reply to your discussion in the GRB Review for " + input.RequestName
+	subject := fmt.Sprintf("New reply to your discussion in the GRB Review for %s", input.RequestName)
 
 	body, err := sie.grbReviewDiscussionReplyBody(input)
 	if err != nil {
