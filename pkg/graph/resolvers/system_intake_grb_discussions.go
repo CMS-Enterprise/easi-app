@@ -271,6 +271,11 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, errors.New("problem finding reply user when handling GRB reply")
 		}
 
+		// if no email client, do not proceed
+		if emailClient == nil || emailClient.SystemIntake == nil {
+			return result, nil
+		}
+
 		// so first, we can send the reply email
 		if err := emailClient.SystemIntake.SendGRBReviewDiscussionReplyEmail(ctx, email.SendGRBReviewDiscussionReplyEmailInput{
 			SystemIntakeID:           intakeID,
@@ -286,11 +291,6 @@ func CreateSystemIntakeGRBDiscussionReply(
 
 		// if no tags, we can return here
 		if len(input.Content.Tags) < 1 {
-			return result, nil
-		}
-
-		// if no email client, do not proceed
-		if emailClient == nil || emailClient.SystemIntake == nil {
 			return result, nil
 		}
 
