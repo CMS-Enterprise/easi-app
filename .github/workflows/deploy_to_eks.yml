@@ -42,12 +42,12 @@ jobs:
         run: |
           env | grep VITE_
 
-          echo "VITE_LD_CLIENT_ID=${VITE_LD_CLIENT_ID}" >> GITHUB_OUTPUT
-          echo "VITE_OKTA_CLIENT_ID=${VITE_OKTA_CLIENT_ID}" >> GITHUB_OUTPUT
-          echo "VITE_OKTA_SERVER_ID=${VITE_OKTA_SERVER_ID}" >> GITHUB_OUTPUT
-          echo "VITE_OKTA_ISSUER=${VITE_OKTA_ISSUER}" >> GITHUB_OUTPUT
-          echo "VITE_OKTA_DOMAIN=${VITE_OKTA_DOMAIN}" >> GITHUB_OUTPUT
-          echo "VITE_OKTA_REDIRECT_URI=${VITE_OKTA_REDIRECT_URI}" >> GITHUB_OUTPUT
+          echo "VITE_LD_CLIENT_ID=${VITE_LD_CLIENT_ID}" >> $GITHUB_OUTPUT
+          echo "VITE_OKTA_CLIENT_ID=${VITE_OKTA_CLIENT_ID}" >> $GITHUB_OUTPUT
+          echo "VITE_OKTA_SERVER_ID=${VITE_OKTA_SERVER_ID}" >> $GITHUB_OUTPUT
+          echo "VITE_OKTA_ISSUER=${VITE_OKTA_ISSUER}" >> $GITHUB_OUTPUT
+          echo "VITE_OKTA_DOMAIN=${VITE_OKTA_DOMAIN}" >> $GITHUB_OUTPUT
+          echo "VITE_OKTA_REDIRECT_URI=${VITE_OKTA_REDIRECT_URI}" >> $GITHUB_OUTPUT
       - name: Build, tag, and push image to Amazon ECR
         uses: docker/build-push-action@v6
         with:
