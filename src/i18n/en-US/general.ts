@@ -12,7 +12,9 @@ const general = {
   pageLoading: 'Loading the page',
   loadingResults: 'Loading results',
   noInfoToDisplay: 'No information to display',
-  noDataAvailable: 'No data available'
+  noDataAvailable: 'No data available',
+  readMore: 'Read more',
+  readLess: 'Read less'
 };
 
 export default general;

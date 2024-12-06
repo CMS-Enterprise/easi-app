@@ -1,0 +1,39 @@
+@use 'uswds-core' as *;
+@use 'viewports' as *;
+
+.easi-discussions {
+  .discussions-list {
+    .usa-accordion__content {
+      padding: 0 !important;
+
+      ul li {
+        &:not(:last-child) {
+          border-bottom: 1px solid color('base-light');
+        }
+      }
+    }
+  }
+
+  .discussion-replies-thread {
+    li:not(:last-child) {
+      .easi-discussion-post {
+        > div:first-child {
+          position: relative;
+
+          &::before {
+            content: "";
+            position: absolute;
+            height: 100%;
+            width: calc(50% + 2px);
+            border-right: 4px solid color('base-lightest');
+            z-index: -1;
+          }
+        }
+
+        > div:last-child {
+          padding-bottom: 1.75rem;
+        }
+      }
+    }
+  }
+}

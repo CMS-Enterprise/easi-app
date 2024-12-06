@@ -2,9 +2,9 @@ import { gql } from '@apollo/client';
 
 import SystemIntakeGRBReviewer from './SystemIntakeGRBReviewer';
 
-const GetSystemIntakeGRBReviewers = gql(/* GraphQL */ `
+export default gql(/* GraphQL */ `
   ${SystemIntakeGRBReviewer}
-  query GetSystemIntakeGRBReviewers($id: UUID!) {
+  query GetSystemIntakeGRBReview($id: UUID!) {
     systemIntake(id: $id) {
       id
       grbReviewStartedAt
@@ -14,5 +14,3 @@ const GetSystemIntakeGRBReviewers = gql(/* GraphQL */ `
     }
   }
 `);
-
-export default GetSystemIntakeGRBReviewers;
