@@ -1924,11 +1924,7 @@ func (r *systemIntakeResolver) RelatedTRBRequests(ctx context.Context, obj *mode
 
 // GrbDiscussions is the resolver for the grbDiscussions field.
 func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
-	posts, err := dataloaders.GetSystemIntakeGRBDiscussionPostsBySystemIntakeID(ctx, obj.ID)
-	if err != nil {
-		return nil, err
-	}
-	return models.CreateGRBDiscussionsFromPosts(posts)
+	return resolvers.SystemIntakeGRBDiscussions(ctx, r.store, obj.ID)
 }
 
 // DocumentType is the resolver for the documentType field.
