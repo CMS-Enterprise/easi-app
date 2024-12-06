@@ -37,17 +37,19 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Set env vars with direnv # This allows docker build of FE files to pull from .envrc
         uses: HatsuneMiku3939/direnv-action@v1
-      - name: Debug env variables
-        run: env | grep VITE_      
+      - name: Calculate build args
+        id: calculate-build-args
+        run: |
+          env | grep VITE_
+
+          echo "VITE_LD_CLIENT_ID=${VITE_LD_CLIENT_ID}" >> GITHUB_OUTPUT
+          echo "VITE_OKTA_CLIENT_ID=${VITE_OKTA_CLIENT_ID}" >> GITHUB_OUTPUT
+          echo "VITE_OKTA_SERVER_ID=${VITE_OKTA_SERVER_ID}" >> GITHUB_OUTPUT
+          echo "VITE_OKTA_ISSUER=${VITE_OKTA_ISSUER}" >> GITHUB_OUTPUT
+          echo "VITE_OKTA_DOMAIN=${VITE_OKTA_DOMAIN}" >> GITHUB_OUTPUT
+          echo "VITE_OKTA_REDIRECT_URI=${VITE_OKTA_REDIRECT_URI}" >> GITHUB_OUTPUT
       - name: Build, tag, and push image to Amazon ECR
         uses: docker/build-push-action@v6
-        env:
-          VITE_LD_CLIENT_ID: $VITE_LD_CLIENT_ID
-          VITE_OKTA_CLIENT_ID: $VITE_OKTA_CLIENT_ID
-          VITE_OKTA_SERVER_ID: $VITE_OKTA_SERVER_ID
-          VITE_OKTA_ISSUER: $VITE_OKTA_ISSUER
-          VITE_OKTA_DOMAIN: $VITE_OKTA_DOMAIN
-          VITE_OKTA_REDIRECT_URI: $VITE_OKTA_REDIRECT_URI
         with:
           context: .
           file: Dockerfile.frontend_k8s
@@ -56,12 +58,12 @@ jobs:
           cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi-frontend
           tags: ${{ steps.login-ecr.outputs.registry }}/easi-frontend:${{ env.GIT_HASH }}
           build-args: |
-            VITE_LD_CLIENT_ID=${{ env.VITE_LD_CLIENT_ID }}
-            VITE_OKTA_CLIENT_ID=${{ env.VITE_OKTA_CLIENT_ID }}
-            VITE_OKTA_SERVER_ID=${{ env.VITE_OKTA_SERVER_ID }}
-            VITE_OKTA_ISSUER=${{ env.VITE_OKTA_ISSUER }}
-            VITE_OKTA_DOMAIN=${{ env.VITE_OKTA_DOMAIN }}
-            VITE_OKTA_REDIRECT_URI=${{ env.VITE_OKTA_REDIRECT_URI }}
+            VITE_LD_CLIENT_ID=${{ steps.calculate-build-args.outputs.VITE_LD_CLIENT_ID }}
+            VITE_OKTA_CLIENT_ID=${{ steps.calculate-build-args.outputs.VITE_OKTA_CLIENT_ID }}
+            VITE_OKTA_SERVER_ID=${{ steps.calculate-build-args.outputs.VITE_OKTA_SERVER_ID }}
+            VITE_OKTA_ISSUER=${{ steps.calculate-build-args.outputs.VITE_OKTA_ISSUER }}
+            VITE_OKTA_DOMAIN=${{ steps.calculate-build-args.outputs.VITE_OKTA_DOMAIN }}
+            VITE_OKTA_REDIRECT_URI=${{ steps.calculate-build-args.outputs.VITE_OKTA_REDIRECT_URI }}
       - name: Announce failure
         if: ${{ failure() }}
         run: |
