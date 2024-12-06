@@ -25,17 +25,4 @@ spec:
                 name: easi-backend
                 port:
                   number: 8080
-          - path: /mail
-            pathType: Prefix
-            backend:
-              service:
-                name: email
-                port:
-                  number: 1080
-          - path: /minio
-            pathType: Prefix
-            backend:
-              service:
-                name: minio
-                port: 
-                  number: 9001
+
