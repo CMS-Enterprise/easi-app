@@ -7,7 +7,6 @@
   value:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/healthcheck-path: /api/v1/healthcheck
 - op: replace
   path: /spec
   value:
@@ -29,4 +28,3 @@
               name: easi-backend
               port:
                 number: 8080
-
