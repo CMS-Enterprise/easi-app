@@ -10,7 +10,6 @@ import { detect } from 'detect-browser';
 import { TextEncoder } from 'text-encoding';
 
 import { localAuthStorageKey } from 'constants/localAuth';
-import getWindowAddress from 'utils/host';
 
 import './i18n';
 
@@ -21,8 +20,9 @@ import store from './store';
 
 import './index.scss';
 
-const apiHost = new URL(import.meta.env.VITE_API_ADDRESS || getWindowAddress())
-  .host;
+const apiHost = new URL(
+  import.meta.env.VITE_API_ADDRESS || window.location.origin
+).host;
 
 // Initialize tracker for Google Analytics
 ReactGA.initialize([
@@ -69,7 +69,7 @@ function getAuthHeader(targetUrl: string) {
 // We also assume a path of /api/graph/query should be tacked onto that
 const graphqlAddress =
   import.meta.env.VITE_GRAPHQL_ADDRESS ||
-  `${getWindowAddress()}/api/graph/query`;
+  `${window.location.origin}/api/graph/query`;
 
 const uploadLink = createUploadLink({
   uri: graphqlAddress
