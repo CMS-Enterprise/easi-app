@@ -25,4 +25,3 @@ spec:
                 name: easi-backend
                 port:
                   number: 8080
-
