@@ -13,9 +13,6 @@ patches:
 - path: easi-backend_configmap.yaml
   target:
     name: easi-backend-configmap
-- path: easi-frontend_configmap.yaml
-  target:
-    name: easi-frontend-configmap
 
 # Patches for deployment changes
 - path: easi-backend_deployment.yaml
