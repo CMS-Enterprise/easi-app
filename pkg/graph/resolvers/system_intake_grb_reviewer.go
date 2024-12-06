@@ -22,6 +22,18 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
+func SystemIntakeGRBDiscussions(
+	ctx context.Context,
+	store *storage.Store,
+	intakeID uuid.UUID,
+) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
+	posts, err := dataloaders.GetSystemIntakeGRBDiscussionPostsBySystemIntakeID(ctx, intakeID)
+	if err != nil {
+		return nil, err
+	}
+	return models.CreateGRBDiscussionsFromPosts(posts)
+}
+
 // CreateSystemIntakeGRBReviewers creates GRB Reviewers for a System Intake
 func CreateSystemIntakeGRBReviewers(
 	ctx context.Context,
