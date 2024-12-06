@@ -15,6 +15,7 @@ import classNames from 'classnames';
 
 import Alert from 'components/shared/Alert';
 import IconButton from 'components/shared/IconButton';
+import { MentionSuggestion } from 'types/discussions';
 
 import suggestion from './suggestion';
 import { getMentions } from './util';
@@ -27,11 +28,7 @@ Attrs of selected mention are accessed through node prop */
 const MentionComponent = ({ node }: { node: any }) => {
   const { label } = node.attrs;
 
-  // Label may return null if the text was truncated by <TruncatedText />
-  // In this case don't render the mention, and shift the line up by the height of the non-rendered label
-  if (!label) {
-    return <div className="margin-top-neg-4" />;
-  }
+  if (!label) return null;
 
   return (
     <NodeViewWrapper className="react-component display-inline">
@@ -64,6 +61,7 @@ const CustomMention = Mention.extend({
 type MentionTextAreaProps = {
   id: string;
   setFieldValue?: (value: string) => void;
+  mentionSuggestions?: MentionSuggestion[];
   editable?: boolean;
   disabled?: boolean;
   initialContent?: string;
@@ -80,6 +78,7 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
     {
       id,
       setFieldValue,
+      mentionSuggestions,
       editable = false,
       disabled,
       initialContent,
@@ -96,35 +95,13 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
     const [tagAlert, setTagAlert] = useState<boolean>(false);
 
     /** Mock users array for testing until tagging functionality is implemented  */
-    const fetchUsers = ({ query }: { query: string }) => {
-      return [
-        { username: 'a', displayName: 'Admin lead', tagType: 'other' },
-        {
-          username: 'b',
-          displayName: 'Governance Admin Team',
-          tagType: 'other'
-        },
-        {
-          username: 'c',
-          displayName: 'Governance Review Board (GRB)',
-          tagType: 'other'
-        },
-        {
-          username: 'OSYC',
-          displayName: 'Grant Eliezer',
-          tagType: 'user'
-        },
-        {
-          username: 'MKCK',
-          displayName: 'Forest Brown',
-          tagType: 'user'
-        },
-        {
-          username: 'PJEA',
-          displayName: 'Janae Stokes',
-          tagType: 'user'
-        }
-      ];
+    const fetchUsers = ({ query }: { query: string }): MentionSuggestion[] => {
+      if (!mentionSuggestions) return [];
+
+      return mentionSuggestions.filter(val =>
+        // Convert both strings to lowercase so filter is not case-sensitive
+        val.displayName.toLowerCase().includes(query.toLowerCase())
+      );
     };
 
     /** Character limit when truncating text in non-editable text area */

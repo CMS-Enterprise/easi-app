@@ -17,7 +17,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import useDiscussionParams from 'hooks/useDiscussionParams';
-import { DiscussionAlert } from 'types/discussions';
+import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 import discussionSchema from 'validations/discussionSchema';
 
 type DiscussionContent = {
@@ -27,6 +27,7 @@ type DiscussionContent = {
 interface DiscussionFormProps {
   setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
   closeModal: () => void;
+  mentionSuggestions: MentionSuggestion[];
 }
 
 interface DiscussionProps extends DiscussionFormProps {
@@ -47,6 +48,7 @@ const DiscussionForm = ({
   type,
   closeModal,
   setDiscussionAlert,
+  mentionSuggestions,
   ...mutationProps
 }: DiscussionProps | ReplyProps) => {
   const { t } = useTranslation('discussions');
@@ -166,6 +168,7 @@ const DiscussionForm = ({
               className="height-auto"
               initialContent={field.value}
               setFieldValue={field.onChange}
+              mentionSuggestions={mentionSuggestions}
             />
           )}
         />

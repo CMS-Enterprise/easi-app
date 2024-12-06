@@ -38,7 +38,7 @@ const MentionList = forwardRef((props: any, ref) => {
 
     if (item) {
       props.command({
-        id: item.username,
+        'data-id-db': item.id,
         label: item.displayName,
         'tag-type': item.tagType
       });
@@ -93,7 +93,7 @@ const MentionList = forwardRef((props: any, ref) => {
         props.items?.map((item: any, index: any) => (
           <button
             className={`item ${index === selectedIndex ? 'is-selected' : ''}`}
-            key={item.username}
+            key={item.username || item.displayName}
             id={item.username}
             type="button"
             onClick={() => selectItem(index)}

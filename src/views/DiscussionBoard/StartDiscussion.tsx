@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DiscussionAlert } from 'types/discussions';
+import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 
 import DiscussionForm from './components/DiscussionForm';
 
@@ -9,6 +9,7 @@ type StartDiscussionProps = {
   systemIntakeID: string;
   closeModal: () => void;
   setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
+  mentionSuggestions: MentionSuggestion[];
 };
 
 /**
@@ -17,7 +18,8 @@ type StartDiscussionProps = {
 const StartDiscussion = ({
   systemIntakeID,
   closeModal,
-  setDiscussionAlert
+  setDiscussionAlert,
+  mentionSuggestions
 }: StartDiscussionProps) => {
   const { t } = useTranslation('discussions');
 
@@ -35,6 +37,7 @@ const StartDiscussion = ({
         type="discussion"
         systemIntakeID={systemIntakeID}
         setDiscussionAlert={setDiscussionAlert}
+        mentionSuggestions={mentionSuggestions}
       />
     </div>
   );

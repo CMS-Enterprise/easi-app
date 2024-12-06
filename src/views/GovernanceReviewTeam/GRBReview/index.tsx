@@ -361,6 +361,7 @@ const GRBReview = ({
 
             <Discussions
               systemIntakeID={id}
+              grbReviewers={grbReviewers}
               className="margin-top-4 margin-bottom-6"
             />
 
