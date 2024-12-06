@@ -40,8 +40,6 @@ jobs:
       - name: Calculate build args
         id: calculate-build-args
         run: |
-          env | grep VITE_
-
           echo "VITE_LD_CLIENT_ID=${VITE_LD_CLIENT_ID}" >> $GITHUB_OUTPUT
           echo "VITE_OKTA_CLIENT_ID=${VITE_OKTA_CLIENT_ID}" >> $GITHUB_OUTPUT
           echo "VITE_OKTA_SERVER_ID=${VITE_OKTA_SERVER_ID}" >> $GITHUB_OUTPUT
