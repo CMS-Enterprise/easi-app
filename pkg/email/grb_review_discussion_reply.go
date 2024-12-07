@@ -15,14 +15,13 @@ import (
 
 // SendGRBReviewDiscussionReplyEmailInput contains the data needed to send the GRB discussion reply email
 type SendGRBReviewDiscussionReplyEmailInput struct {
-	SystemIntakeID           uuid.UUID
-	UserName                 string
-	RequestName              string
-	Role                     string
-	DiscussionID             uuid.UUID
-	DiscussionContent        template.HTML
-	ITGovernanceInboxAddress string
-	Recipient                models.EmailAddress
+	SystemIntakeID    uuid.UUID
+	UserName          string
+	RequestName       string
+	Role              string
+	DiscussionID      uuid.UUID
+	DiscussionContent template.HTML
+	Recipient         models.EmailAddress
 }
 
 // GRBReviewDiscussionReplyBody contains the data needed for interpolation in
@@ -35,7 +34,7 @@ type GRBReviewDiscussionReplyBody struct {
 	Role                     string
 	DiscussionContent        template.HTML
 	DiscussionLink           string
-	ITGovernanceInboxAddress string
+	ITGovernanceInboxAddress models.EmailAddress
 	IsAdmin                  bool
 }
 
@@ -47,9 +46,6 @@ func (sie systemIntakeEmails) grbReviewDiscussionReplyBody(input SendGRBReviewDi
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 
 	role := input.Role
-	if len(role) < 1 {
-		role = "Governance Admin Team"
-	}
 
 	data := GRBReviewDiscussionReplyBody{
 		UserName:                 input.UserName,
@@ -59,7 +55,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionReplyBody(input SendGRBReviewDi
 		Role:                     role,
 		DiscussionContent:        input.DiscussionContent,
 		DiscussionLink:           fmt.Sprintf("%[1]s?discussionMode=reply&discussionId=%[2]s", sie.client.urlFromPath(grbReviewPath), input.DiscussionID.String()),
-		ITGovernanceInboxAddress: input.ITGovernanceInboxAddress,
+		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
 		IsAdmin:                  len(input.Role) < 1,
 	}
 

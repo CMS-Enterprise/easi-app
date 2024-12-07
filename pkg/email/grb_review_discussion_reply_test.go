@@ -38,13 +38,12 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 	recipient := models.NewEmailAddress("fake@fake.com")
 
 	input := SendGRBReviewDiscussionReplyEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		RequestName:              requestName,
-		Role:                     role,
-		DiscussionContent:        discussionContent,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipient:                recipient,
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionContent: discussionContent,
+		Recipient:         recipient,
 	}
 
 	client, err := NewClient(s.config, &sender)
@@ -137,19 +136,17 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 		s.config.URLHost,
 		intakeID.String(),
 	)
-	ITGovInboxAddress := s.config.GRTEmail.String()
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
 
 	input := SendGRBReviewDiscussionReplyEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		RequestName:              requestName,
-		Role:                     role,
-		DiscussionContent:        discussionContent,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipient:                recipient,
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionContent: discussionContent,
+		Recipient:         recipient,
 	}
 
 	client, err := NewClient(s.config, &sender)
