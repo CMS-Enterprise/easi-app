@@ -37,20 +37,20 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
-	recipients := []models.EmailAddress{recipient}
+	recipients := models.EmailNotificationRecipients{
+		RegularRecipientEmails:   []models.EmailAddress{recipient},
+		ShouldNotifyITGovernance: false,
+		ShouldNotifyITInvestment: false,
+	}
 
 	input := SendGRBReviewDiscussionGroupTaggedEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		GroupName:                groupName,
-		RequestName:              requestName,
-		DiscussionBoardType:      discussionBoardType,
-		GRBReviewLink:            grbReviewLink,
-		Role:                     role,
-		DiscussionContent:        discussionContent,
-		DiscussionLink:           discussionLink,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipients:               recipients,
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		GroupName:         groupName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionContent: discussionContent,
+		Recipients:        recipients,
 	}
 
 	client, err := NewClient(s.config, &sender)
@@ -101,7 +101,8 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 	}
 
 	expectedEmail := getExpectedEmail()
-	expectedSubject := "The " + groupName + "was tagged in a GRB Review discussion for " + requestName
+
+	expectedSubject := fmt.Sprintf("The %[1]s was tagged in a GRB Review discussion for %[2]s", groupName, requestName)
 
 	s.Run("Subject is correct", func() {
 		s.Equal(expectedSubject, sender.subject)
@@ -142,24 +143,23 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdm
 		s.config.URLHost,
 		intakeID.String(),
 	)
-	ITGovInboxAddress := s.config.GRTEmail.String()
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
-	recipients := []models.EmailAddress{recipient}
+	recipients := models.EmailNotificationRecipients{
+		RegularRecipientEmails:   []models.EmailAddress{recipient},
+		ShouldNotifyITGovernance: false,
+		ShouldNotifyITInvestment: false,
+	}
 
 	input := SendGRBReviewDiscussionGroupTaggedEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		GroupName:                groupName,
-		RequestName:              requestName,
-		DiscussionBoardType:      discussionBoardType,
-		GRBReviewLink:            grbReviewLink,
-		Role:                     role,
-		DiscussionContent:        discussionContent,
-		DiscussionLink:           discussionLink,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipients:               recipients,
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		GroupName:         groupName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionContent: discussionContent,
+		Recipients:        recipients,
 	}
 
 	client, err := NewClient(s.config, &sender)
@@ -205,7 +205,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdm
 	}
 
 	expectedEmail := getExpectedEmail()
-	expectedSubject := "The " + groupName + "was tagged in a GRB Review discussion for " + requestName
+	expectedSubject := fmt.Sprintf("The %[1]s was tagged in a GRB Review discussion for %[2]s", groupName, requestName)
 
 	s.Run("Subject is correct", func() {
 		s.Equal(expectedSubject, sender.subject)

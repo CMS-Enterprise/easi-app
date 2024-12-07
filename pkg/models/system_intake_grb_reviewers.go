@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -32,6 +33,41 @@ const (
 	SIGRBRVRNonVoting SIGRBReviewerVotingRole = "NON_VOTING"
 	SIGRBRVRAlternate SIGRBReviewerVotingRole = "ALTERNATE"
 )
+
+func (r SIGRBReviewerVotingRole) Humanize() string {
+	var grbVotingRoleTranslationsMap = map[SIGRBReviewerVotingRole]string{
+		SIGRBRVRVoting:    "Voting",
+		SIGRBRVRNonVoting: "Non-voting",
+		SIGRBRVRAlternate: "Alternate",
+	}
+	translation, ok := grbVotingRoleTranslationsMap[r]
+	if !ok {
+		panic(fmt.Errorf("%s is not a valid SIGRBReviewerVotingRole", r))
+	}
+	return translation
+}
+
+func (r SIGRBReviewerRole) Humanize() string {
+	var grbRoleTranslationsMap = map[SIGRBReviewerRole]string{
+		SIGRBRRCoChairCIO:          "Co-Chair - CIO",
+		SIGRBRRCoChairCFO:          "CO-Chair - CFO",
+		SIGRBRRCoChairHCA:          "CO-Chair - HCA",
+		SIGRBRRACA3021Rep:          "ACA 3021 Rep",
+		SIGRBRRCCIIORep:            "CCIIO Rep",
+		SIGRBRRProgOpBDGChair:      "Program Operations BDG Chair",
+		SIGRBRRCMCSRep:             "CMCS Rep",
+		SIGRBRRFedAdminBDGChair:    "Fed Admin BDG Chair",
+		SIGRBRRProgIntBDGChair:     "Program Integrity BDG Chair",
+		SIGRBRRQIORep:              "QIO Rep",
+		SIGRBRRSubjectMatterExpert: "Subject Matter Expert (SME)",
+		SIGRBRROther:               "Other",
+	}
+	translation, ok := grbRoleTranslationsMap[r]
+	if !ok {
+		panic(fmt.Errorf("%s is not a valid SIGRBReviewerRole", r))
+	}
+	return translation
+}
 
 // SystemIntakeGRBReviewer describes
 type SystemIntakeGRBReviewer struct {

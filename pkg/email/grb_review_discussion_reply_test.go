@@ -38,16 +38,12 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 	recipient := models.NewEmailAddress("fake@fake.com")
 
 	input := SendGRBReviewDiscussionReplyEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		RequestName:              requestName,
-		DiscussionBoardType:      discussionBoardType,
-		GRBReviewLink:            grbReviewLink,
-		Role:                     role,
-		DiscussionContent:        discussionContent,
-		DiscussionLink:           discussionLink,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipient:                recipient,
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionContent: discussionContent,
+		Recipient:         recipient,
 	}
 
 	client, err := NewClient(s.config, &sender)
@@ -97,7 +93,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 	}
 
 	expectedEmail := getExpectedEmail()
-	expectedSubject := "New reply to your discussion in the GRB Review for " + requestName
+	expectedSubject := fmt.Sprintf("New reply to your discussion in the GRB Review for %s", requestName)
 
 	s.Run("Subject is correct", func() {
 		s.Equal(expectedSubject, sender.subject)
@@ -140,22 +136,17 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 		s.config.URLHost,
 		intakeID.String(),
 	)
-	ITGovInboxAddress := s.config.GRTEmail.String()
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
 
 	input := SendGRBReviewDiscussionReplyEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		RequestName:              requestName,
-		DiscussionBoardType:      discussionBoardType,
-		GRBReviewLink:            grbReviewLink,
-		Role:                     role,
-		DiscussionContent:        discussionContent,
-		DiscussionLink:           discussionLink,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipient:                recipient,
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionContent: discussionContent,
+		Recipient:         recipient,
 	}
 
 	client, err := NewClient(s.config, &sender)
@@ -200,7 +191,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 	}
 
 	expectedEmail := getExpectedEmail()
-	expectedSubject := "New reply to your discussion in the GRB Review for " + requestName
+	expectedSubject := fmt.Sprintf("New reply to your discussion in the GRB Review for %s", requestName)
 
 	s.Run("Subject is correct", func() {
 		s.Equal(expectedSubject, sender.subject)
