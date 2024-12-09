@@ -36,7 +36,7 @@ describe('Discussion Board', () => {
       // Go to its reply thread
       cy.contains('button', 'Reply').click();
 
-      // todo hold onto reply url
+      // Hold onto the reply url to visit later
       cy.url().as('replyUrl', { type: 'static' });
     });
 
@@ -63,13 +63,28 @@ describe('Discussion Board', () => {
     // Reply success
     cy.contains('.usa-alert--success', 'Success! Your reply has been added.');
     cy.contains('p', replyText);
+    // Empty field after submission
     cy.get('#mention-reply').should('have.text', '');
 
-    // Check the thread contents with yet another user
+    // Login with a 3rd visitor and check essential thread data
     cy.get('[data-testid="signout-link"]').click({ force: true });
     cy.localLogin({ name: 'USR4' });
     cy.get('@replyUrl').then(url => cy.visit(url));
-    cy.contains('p', discussionText);
-    cy.contains('p', replyText);
+
+    cy.get('[data-testid="discussion-modal"] .easi-discussion-post')
+      .eq(0)
+      .within(() => {
+        cy.contains('p', 'Adeline Aarons');
+        cy.contains('h5', 'Governance Admin Team');
+        cy.contains('p', discussionText);
+      });
+
+    cy.get('[data-testid="discussion-modal"] .easi-discussion-post')
+      .eq(1)
+      .within(() => {
+        cy.contains('p', 'User One');
+        cy.contains('h5', 'Voting, CMCS Rep');
+        cy.contains('p', replyText);
+      });
   });
 });
