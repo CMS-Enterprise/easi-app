@@ -1,0 +1,34 @@
+name: Teardown branch environment in EKS on PR close
+
+on:
+  pull_request:
+    types: [closed]
+    
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  GIT_HASH: ${{ github.sha }}
+  GIT_REF_NAME: ${{ github.ref }}
+
+jobs:
+  Teardown_env:
+    name: Teardown EKS branch environment
+    runs-on: ubuntu-latest
+    environment: "dev"
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+          aws-region: us-west-2
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name dev-easi-poc-cluster --region us-west-2
+      - name: Teardown branch environment
+        run: |
+          NAMESPACE=$(git rev-parse --abbrev-ref HEAD | sed -E 's/^(EASI-[0-9]*|NOREF).*/\1/' | tr '[:upper:]' '[:lower:]')
+          kubectl delete namespace "$NAMESPACE" --force --ignore-not-found
