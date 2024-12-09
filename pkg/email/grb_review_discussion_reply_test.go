@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"html/template"
+	"path"
 
 	"github.com/google/uuid"
 
@@ -20,21 +21,22 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 	role := "Consumer"
 	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`)
 
-	grbReviewLink := fmt.Sprintf(
-		"%s://%s/it-governance/%s/grb-review",
-		s.config.URLScheme,
-		s.config.URLHost,
-		intakeID.String(),
-	)
+	sender := mockSender{}
+	client, err := NewClient(s.config, &sender)
+	s.NoError(err)
 
-	discussionLink := fmt.Sprintf(
-		"%s?discussionMode=reply&discussionId=%s",
-		grbReviewLink,
+	intakePath := path.Join("it-governance", intakeID.String(), "grb-review")
+
+	grbReviewLink := client.urlFromPath(intakePath)
+
+	discussionLink := client.urlFromPath(fmt.Sprintf(
+		"%[1]s?discussionMode=reply&discussionId=%[2]s",
+		intakePath,
 		postID.String(),
-	)
+	))
+
 	ITGovInboxAddress := s.config.GRTEmail.String()
 
-	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
 
 	input := SendGRBReviewDiscussionReplyEmailInput{
@@ -47,27 +49,25 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 		Recipient:         recipient,
 	}
 
-	client, err := NewClient(s.config, &sender)
-	s.NoError(err)
-
 	err = client.SystemIntake.SendGRBReviewDiscussionReplyEmail(ctx, input)
 	s.NoError(err)
 
-	getExpectedEmail := func() string {
-		return fmt.Sprintf(`
+	expectedEmail := fmt.Sprintf(`
 			<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
 			<p>%s replied to your discussion on the %s for %s.</p>
 
 			<p><strong><a href="%s">View this request in EASi</a></strong></p>
-			<br>
+			<hr>
 
-			<h2>Discussion</h2>
+			<p><strong>Discussion Reply</strong></p>
 			<br>
-			<p>%s</p>
+			<p class="no-margin"><strong>%s</strong></p>
 			<p class="subtitle"> %s</p>
-			<p>%s</p>
+			<br>
+			<div class="quote">%s</div>
+			<br>
 			<p style="font-weight: normal">
   				<a href="%s">
      				Reply in EASi
@@ -75,25 +75,21 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 			</p>
 
 			<hr>
-			<br>
 		    <p>If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
-			<br>
 			<p>You will continue to receive email notifications about this request until it is closed.</p>
 			`,
-			userName,
-			discussionBoardType,
-			requestName,
-			grbReviewLink,
-			userName,
-			role,
-			discussionContent,
-			discussionLink,
-			ITGovInboxAddress,
-			ITGovInboxAddress,
-		)
-	}
+		userName,
+		discussionBoardType,
+		requestName,
+		grbReviewLink,
+		userName,
+		role,
+		discussionContent,
+		discussionLink,
+		ITGovInboxAddress,
+		ITGovInboxAddress,
+	)
 
-	expectedEmail := getExpectedEmail()
 	expectedSubject := fmt.Sprintf("New reply to your discussion in the GRB Review for %s", requestName)
 
 	s.Run("Subject is correct", func() {
@@ -122,23 +118,23 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 	userName := "Rock Lee"
 	requestName := "Salad/Sandwich Program"
 	discussionBoardType := "Internal GRB Discussion Board"
-	role := "" // empty to signify admin
+	role := "Governance Admin Team"
 	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`)
 
-	grbReviewLink := fmt.Sprintf(
-		"%s://%s/it-governance/%s/grb-review",
-		s.config.URLScheme,
-		s.config.URLHost,
-		intakeID.String(),
-	)
-
-	discussionLink := fmt.Sprintf(
-		"%s?discussionMode=reply&discussionId=%s",
-		grbReviewLink,
-		postID.String(),
-	)
-
 	sender := mockSender{}
+	client, err := NewClient(s.config, &sender)
+	s.NoError(err)
+
+	intakePath := path.Join("it-governance", intakeID.String(), "grb-review")
+
+	grbReviewLink := client.urlFromPath(intakePath)
+
+	discussionLink := client.urlFromPath(fmt.Sprintf(
+		"%[1]s?discussionMode=reply&discussionId=%[2]s",
+		intakePath,
+		postID.String(),
+	))
+
 	recipient := models.NewEmailAddress("fake@fake.com")
 
 	input := SendGRBReviewDiscussionReplyEmailInput{
@@ -151,27 +147,25 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 		Recipient:         recipient,
 	}
 
-	client, err := NewClient(s.config, &sender)
-	s.NoError(err)
-
 	err = client.SystemIntake.SendGRBReviewDiscussionReplyEmail(ctx, input)
 	s.NoError(err)
 
-	getExpectedEmail := func() string {
-		return fmt.Sprintf(`
+	expectedEmail := fmt.Sprintf(`
 			<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
 			<p>%s replied to your discussion on the %s for %s.</p>
 
 			<p><strong><a href="%s">View this request in EASi</a></strong></p>
-			<br>
+			<hr>
 
-			<h2>Discussion</h2>
+			<p><strong>Discussion Reply</strong></p>
 			<br>
-			<p>%s</p>
-			<p class="subtitle"> Governance Admin Team</p>
-			<p>%s</p>
+			<p class="no-margin"><strong>%s</strong></p>
+			<p class="subtitle no-margin-top"> Governance Admin Team</p>
+			<br>
+			<div class="quote">%s</div>
+			<br>
 			<p style="font-weight: normal">
   				<a href="%s">
      				Reply in EASi
@@ -179,20 +173,17 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 			</p>
 
 			<hr>
-			<br>
 			<p>You will continue to receive email notifications about this request until it is closed.</p>
 			`,
-			userName,
-			discussionBoardType,
-			requestName,
-			grbReviewLink,
-			userName,
-			discussionContent,
-			discussionLink,
-		)
-	}
+		userName,
+		discussionBoardType,
+		requestName,
+		grbReviewLink,
+		userName,
+		discussionContent,
+		discussionLink,
+	)
 
-	expectedEmail := getExpectedEmail()
 	expectedSubject := fmt.Sprintf("New reply to your discussion in the GRB Review for %s", requestName)
 
 	s.Run("Subject is correct", func() {

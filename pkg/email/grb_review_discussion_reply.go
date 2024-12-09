@@ -45,18 +45,16 @@ func (sie systemIntakeEmails) grbReviewDiscussionReplyBody(input SendGRBReviewDi
 
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 
-	role := input.Role
-
 	data := GRBReviewDiscussionReplyBody{
 		UserName:                 input.UserName,
 		RequestName:              input.RequestName,
 		DiscussionBoardType:      "Internal GRB Discussion Board",
 		GRBReviewLink:            sie.client.urlFromPath(grbReviewPath),
-		Role:                     role,
+		Role:                     input.Role,
 		DiscussionContent:        input.DiscussionContent,
-		DiscussionLink:           fmt.Sprintf("%[1]s?discussionMode=reply&discussionId=%[2]s", sie.client.urlFromPath(grbReviewPath), input.DiscussionID.String()),
+		DiscussionLink:           sie.client.urlFromPath(fmt.Sprintf("%[1]s?discussionMode=reply&discussionId=%[2]s", grbReviewPath, input.DiscussionID.String())),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
-		IsAdmin:                  len(input.Role) < 1,
+		IsAdmin:                  input.Role == "Governance Admin Team",
 	}
 
 	var b bytes.Buffer
