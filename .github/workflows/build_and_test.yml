@@ -32,3 +32,5 @@ jobs:
     uses: ./.github/workflows/deploy_to_eks.yml
     needs: [Build_Application_Images,Build_easi-frontend_image]
     secrets: inherit
+    with:
+      namespace: easi-pr-${{ github.event.number }}

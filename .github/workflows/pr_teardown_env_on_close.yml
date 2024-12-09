@@ -12,6 +12,7 @@ permissions:
 env:
   GIT_HASH: ${{ github.sha }}
   GIT_REF_NAME: ${{ github.ref }}
+  PR_NUMBER: ${{ github.event.number }}
 
 jobs:
   Teardown_env:
@@ -30,5 +31,4 @@ jobs:
         run: aws eks update-kubeconfig --name dev-easi-poc-cluster --region us-west-2
       - name: Teardown branch environment
         run: |
-          NAMESPACE=$(git rev-parse --abbrev-ref HEAD | sed -E 's/^(EASI-[0-9]*|NOREF).*/\1/' | tr '[:upper:]' '[:lower:]')
-          kubectl delete namespace "$NAMESPACE" --force --ignore-not-found
+          kubectl delete namespace "easi-pr-$PR_NUMBER" --force --ignore-not-found

@@ -2,6 +2,10 @@ name: Deploy branch environment to EKS
 
 on:
   workflow_call:
+    inputs:
+      namespace:
+        required: false
+        type: string
     
 
 permissions:
@@ -32,6 +36,9 @@ jobs:
         run: aws eks update-kubeconfig --name dev-easi-poc-cluster --region us-west-2
       - name: Deploy to EKS
         run: |
+          if [ -z "${{ inputs.namespace }}" ]; then
+            . ./scripts/deploy_eks_env.sh -n ${{ inputs.namespace }}
+          else
           . ./scripts/deploy_eks_env.sh
           echo "# EKS Ingress URLs" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
