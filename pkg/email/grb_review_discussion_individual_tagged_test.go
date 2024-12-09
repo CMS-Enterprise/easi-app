@@ -13,6 +13,7 @@ import (
 func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotification() {
 	ctx := context.Background()
 	intakeID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
+	postID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
 	userName := "Rock Lee"
 	requestName := "Salad/Sandwich Program"
 	discussionBoardType := "Internal GRB Discussion Board"
@@ -27,10 +28,9 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	)
 
 	discussionLink := fmt.Sprintf(
-		"%s://%s/it-governance/%s/grb-review/discussionID=BLAH",
-		s.config.URLScheme,
-		s.config.URLHost,
-		intakeID.String(),
+		"%s?discussionMode=reply&discussionId=%s",
+		grbReviewLink,
+		postID.String(),
 	)
 	ITGovInboxAddress := s.config.GRTEmail.String()
 
@@ -42,6 +42,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 		UserName:                 userName,
 		RequestName:              requestName,
 		Role:                     role,
+		DiscussionID:             postID,
 		DiscussionContent:        discussionContent,
 		ITGovernanceInboxAddress: ITGovInboxAddress,
 		Recipient:                recipient,
@@ -118,6 +119,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificationAdmin() {
 	ctx := context.Background()
 	intakeID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
+	postID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
 	userName := "Rock Lee"
 	requestName := "Salad/Sandwich Program"
 	discussionBoardType := "Internal GRB Discussion Board"
@@ -132,10 +134,9 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	)
 
 	discussionLink := fmt.Sprintf(
-		"%s://%s/it-governance/%s/grb-review/discussionID=BLAH",
-		s.config.URLScheme,
-		s.config.URLHost,
-		intakeID.String(),
+		"%s?discussionMode=reply&discussionId=%s",
+		grbReviewLink,
+		postID.String(),
 	)
 	ITGovInboxAddress := s.config.GRTEmail.String()
 
@@ -147,6 +148,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 		UserName:                 userName,
 		RequestName:              requestName,
 		Role:                     role,
+		DiscussionID:             postID,
 		DiscussionContent:        discussionContent,
 		ITGovernanceInboxAddress: ITGovInboxAddress,
 		Recipient:                recipient,

@@ -13,6 +13,7 @@ import (
 func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() {
 	ctx := context.Background()
 	intakeID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
+	postID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
 	userName := "Rock Lee"
 	groupName := "Governance Review Board"
 	requestName := "Salad/Sandwich Program"
@@ -28,10 +29,9 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 	)
 
 	discussionLink := fmt.Sprintf(
-		"%s://%s/it-governance/%s/grb-review/discussionID=BLAH",
-		s.config.URLScheme,
-		s.config.URLHost,
-		intakeID.String(),
+		"%s?discussionMode=reply&discussionId=%s",
+		grbReviewLink,
+		postID.String(),
 	)
 	ITGovInboxAddress := s.config.GRTEmail.String()
 
@@ -45,6 +45,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 		GroupName:                groupName,
 		RequestName:              requestName,
 		Role:                     role,
+		DiscussionID:             postID,
 		DiscussionContent:        discussionContent,
 		ITGovernanceInboxAddress: ITGovInboxAddress,
 		Recipients:               recipients,
@@ -120,6 +121,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdmin() {
 	ctx := context.Background()
 	intakeID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
+	postID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
 	userName := "Rock Lee"
 	groupName := "Governance Review Board"
 	requestName := "Salad/Sandwich Program"
@@ -135,10 +137,9 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdm
 	)
 
 	discussionLink := fmt.Sprintf(
-		"%s://%s/it-governance/%s/grb-review/discussionID=BLAH",
-		s.config.URLScheme,
-		s.config.URLHost,
-		intakeID.String(),
+		"%s?discussionMode=reply&discussionId=%s",
+		grbReviewLink,
+		postID.String(),
 	)
 	ITGovInboxAddress := s.config.GRTEmail.String()
 
@@ -152,6 +153,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdm
 		GroupName:                groupName,
 		RequestName:              requestName,
 		Role:                     role,
+		DiscussionID:             postID,
 		DiscussionContent:        discussionContent,
 		ITGovernanceInboxAddress: ITGovInboxAddress,
 		Recipients:               recipients,
