@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"html/template"
 	"io"
 	"regexp"
 
@@ -179,4 +180,9 @@ func (th *TaggedHTML) Scan(src interface{}) error {
 
 func (th TaggedHTML) Value() (driver.Value, error) {
 	return string(th.RawContent), nil
+}
+
+func (th TaggedHTML) ToTemplate() template.HTML {
+	sanitized := sanitization.SanitizeTaggedHTML(th.RawContent)
+	return template.HTML(sanitized) //nolint
 }

@@ -8,7 +8,7 @@ import (
 
 //TODO: This will replace base struct when the user table is fully implemented
 
-// BaseStructUser represents the shared data in common betwen all models
+// BaseStructUser represents the shared data in common between all models
 type BaseStructUser struct {
 	ID uuid.UUID `json:"id" db:"id"`
 	createdByRelation

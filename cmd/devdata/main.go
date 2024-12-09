@@ -16,6 +16,7 @@ import (
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -86,6 +87,7 @@ func main() {
 	nonUserCtx := context.Background()
 	nonUserCtx = mock.CtxWithNewDataloaders(nonUserCtx, store)
 	nonUserCtx = appcontext.WithLogger(nonUserCtx, logger)
+	nonUserCtx = appcontext.WithUserAccountService(nonUserCtx, dataloaders.GetUserAccountByID)
 
 	// userCtx is a local helper function (so we can not have to pass local variables all the time) that adds a principal
 	// to a context object and returns it.
