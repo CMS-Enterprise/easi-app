@@ -1,0 +1,31 @@
+@use 'uswds-core' as *;
+@use 'viewports' as *;
+
+.easi-sidepanel {
+  &__content {
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    right: 0;
+
+    @media screen and (min-width: $desktop) {
+      width: 50%;
+    }
+  }
+
+  &__x-button-container {
+    width: 100%;
+    box-shadow: 0px .25rem .5rem rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+  }
+
+  &__x-button {
+    background: none;
+    border: 0;
+    line-height: 0;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

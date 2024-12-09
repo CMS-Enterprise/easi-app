@@ -2,33 +2,19 @@
 @use 'viewports' as *;
 
 .easi-modal {
-  &__overlay {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 400;
-  }
-
   &__has-title svg {
     color: color('primary');
   }
 
   &__content {
-    position: absolute;
     width: 100%;
     height: 100%;
     max-height: 90vh;
     overflow-y: auto;
-    background-color: color('white');
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1;
     font-size: 1.375em;
-    line-height: 1.6em;
 
     @media screen and (min-width: $tablet) {
       width: 668px;

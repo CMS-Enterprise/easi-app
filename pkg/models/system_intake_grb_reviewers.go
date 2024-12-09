@@ -37,9 +37,9 @@ const (
 type SystemIntakeGRBReviewer struct {
 	BaseStructUser
 	userIDRelation
-	SystemIntakeID uuid.UUID               `json:"systemIntakeId" db:"system_intake_id"`
-	VotingRole     SIGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`
-	GRBRole        SIGRBReviewerRole       `json:"grbRole" db:"grb_role"`
+	SystemIntakeID  uuid.UUID               `json:"systemIntakeId" db:"system_intake_id"`
+	GRBVotingRole   SIGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`
+	GRBReviewerRole SIGRBReviewerRole       `json:"grbRole" db:"grb_role"`
 }
 
 func NewSystemIntakeGRBReviewer(userID uuid.UUID, createdBy uuid.UUID) *SystemIntakeGRBReviewer {

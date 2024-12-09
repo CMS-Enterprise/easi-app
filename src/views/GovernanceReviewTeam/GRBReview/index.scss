@@ -24,3 +24,12 @@ button#startGrbReview {
     }
   }
 }
+
+.grb-discussions .internal-discussions-board {
+  &__header {
+    gap: 1rem;
+    p {
+      flex: 2 1 auto;
+    }
+  }
+}
