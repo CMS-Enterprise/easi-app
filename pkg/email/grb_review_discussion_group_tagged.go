@@ -13,12 +13,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-type GRBDiscussionGroupTag string
-
-const (
-	GRBDiscussionGroupTagGRT GRBDiscussionGroupTag = "GRT"
-)
-
 // SendGRBReviewDiscussionGroupTaggedEmailInput contains the data needed to send an email informing a group they
 // have been tagged in a GRB discussion
 type SendGRBReviewDiscussionGroupTaggedEmailInput struct {
