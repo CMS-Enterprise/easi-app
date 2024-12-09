@@ -65,7 +65,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 
 			<h2>Discussion</h2>
 			<br>
-			<p><b>%s</b></p>
+			<p>%s</p>
 			<p class="subtitle"> %s</p>
 			<p>%s</p>
 			<p style="font-weight: normal">
@@ -169,7 +169,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 
 			<h2>Discussion</h2>
 			<br>
-			<p><b>%s</b></p>
+			<p>%s</p>
 			<p class="subtitle"> Governance Admin Team</p>
 			<p>%s</p>
 			<p style="font-weight: normal">

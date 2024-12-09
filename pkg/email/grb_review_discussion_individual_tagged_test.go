@@ -53,8 +53,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	err = client.SystemIntake.SendGRBReviewDiscussionIndividualTaggedEmail(ctx, input)
 	s.NoError(err)
 
-	getExpectedEmail := func() string {
-		return fmt.Sprintf(`
+	expectedEmail := fmt.Sprintf(`
 			<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
@@ -65,7 +64,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 
 			<h2>Discussion</h2>
 			<br>
-			<p><b>%s</b></p>
+			<p>%s</p>
 			<p class="subtitle"> %s</p>
 			<p>%s</p>
 			<p style="font-weight: normal">
@@ -80,20 +79,18 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 			<br>
 			<p>You will continue to receive email notifications about this request until it is closed.</p>
 			`,
-			userName,
-			discussionBoardType,
-			requestName,
-			grbReviewLink,
-			userName,
-			role,
-			discussionContent,
-			discussionLink,
-			ITGovInboxAddress,
-			ITGovInboxAddress,
-		)
-	}
+		userName,
+		discussionBoardType,
+		requestName,
+		grbReviewLink,
+		userName,
+		role,
+		discussionContent,
+		discussionLink,
+		ITGovInboxAddress,
+		ITGovInboxAddress,
+	)
 
-	expectedEmail := getExpectedEmail()
 	expectedSubject := fmt.Sprintf("You were tagged in a GRB Review discussion for %s", requestName)
 
 	s.Run("Subject is correct", func() {
@@ -154,8 +151,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	err = client.SystemIntake.SendGRBReviewDiscussionIndividualTaggedEmail(ctx, input)
 	s.NoError(err)
 
-	getExpectedEmail := func() string {
-		return fmt.Sprintf(`
+	expectedEmail := fmt.Sprintf(`
 			<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
@@ -166,7 +162,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 
 			<h2>Discussion</h2>
 			<br>
-			<p><b>%s</b></p>
+			<p>%s/p>
 			<p class="subtitle"> Governance Admin Team</p>
 			<p>%s</p>
 			<p style="font-weight: normal">
@@ -179,17 +175,15 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 			<br>
 			<p>You will continue to receive email notifications about this request until it is closed.</p>
 			`,
-			userName,
-			discussionBoardType,
-			requestName,
-			grbReviewLink,
-			userName,
-			discussionContent,
-			discussionLink,
-		)
-	}
+		userName,
+		discussionBoardType,
+		requestName,
+		grbReviewLink,
+		userName,
+		discussionContent,
+		discussionLink,
+	)
 
-	expectedEmail := getExpectedEmail()
 	expectedSubject := fmt.Sprintf("You were tagged in a GRB Review discussion for %s", requestName)
 
 	s.Run("Subject is correct", func() {
