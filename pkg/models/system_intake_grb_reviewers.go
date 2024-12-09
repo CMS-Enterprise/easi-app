@@ -34,7 +34,7 @@ const (
 	SIGRBRVRAlternate SIGRBReviewerVotingRole = "ALTERNATE"
 )
 
-func (r SIGRBReviewerVotingRole) Humanize() string {
+func (r SIGRBReviewerVotingRole) Humanize() (string, error) {
 	var grbVotingRoleTranslationsMap = map[SIGRBReviewerVotingRole]string{
 		SIGRBRVRVoting:    "Voting",
 		SIGRBRVRNonVoting: "Non-voting",
@@ -42,12 +42,12 @@ func (r SIGRBReviewerVotingRole) Humanize() string {
 	}
 	translation, ok := grbVotingRoleTranslationsMap[r]
 	if !ok {
-		panic(fmt.Errorf("%s is not a valid SIGRBReviewerVotingRole", r))
+		return "", fmt.Errorf("%s is not a valid SIGRBReviewerVotingRole", r)
 	}
-	return translation
+	return translation, nil
 }
 
-func (r SIGRBReviewerRole) Humanize() string {
+func (r SIGRBReviewerRole) Humanize() (string, error) {
 	var grbRoleTranslationsMap = map[SIGRBReviewerRole]string{
 		SIGRBRRCoChairCIO:          "Co-Chair - CIO",
 		SIGRBRRCoChairCFO:          "CO-Chair - CFO",
@@ -64,9 +64,9 @@ func (r SIGRBReviewerRole) Humanize() string {
 	}
 	translation, ok := grbRoleTranslationsMap[r]
 	if !ok {
-		panic(fmt.Errorf("%s is not a valid SIGRBReviewerRole", r))
+		return "", fmt.Errorf("%s is not a valid SIGRBReviewerRole", r)
 	}
-	return translation
+	return translation, nil
 }
 
 // SystemIntakeGRBReviewer describes

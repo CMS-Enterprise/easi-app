@@ -65,6 +65,11 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return result, nil
 		}
 
+		authorRole, err := getAuthorRoleFromPost(post)
+		if err != nil {
+			return nil, err
+		}
+
 		err = sendDiscussionEmailsForTags(
 			ctx,
 			store,
@@ -73,7 +78,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 			intakeID,
 			systemIntake.ProjectName.String,
 			post.ID,
-			getAuthorRoleFromPost(post),
+			authorRole,
 			input.Content.UniqueTags(),
 			input.Content.ToTemplate(),
 		)
@@ -141,7 +146,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 		// the initial poster will receive a notification
 		// in the event the initial poster is also tagged in a reply, we do not send both emails
 		// we only send the "someone replied" email
-		initialPoster, err := initialPost.CreatedByUserAccount(ctx)
+		initialPoster, err := store.UserAccountGetByID(ctx, tx, initialPost.CreatedBy)
 		if err != nil {
 			return nil, err
 		}
@@ -156,7 +161,10 @@ func CreateSystemIntakeGRBDiscussionReply(
 		}
 
 		// so first, we can send the reply email
-		authorRole := getAuthorRoleFromPost(post)
+		authorRole, err := getAuthorRoleFromPost(post)
+		if err != nil {
+			return nil, err
+		}
 		if err := emailClient.SystemIntake.SendGRBReviewDiscussionReplyEmail(ctx, email.SendGRBReviewDiscussionReplyEmailInput{
 			SystemIntakeID:    intakeID,
 			UserName:          replyPoster.CommonName,
@@ -310,13 +318,13 @@ func sendDiscussionEmailsForTags(
 	if !grbGroupFound && len(individualTagAcctIDs) > 0 {
 		// for individual tags, we need to build an email based on the passed in UUID
 		recipientAccts, err := store.UserAccountsByIDsNP(ctx, tx, individualTagAcctIDs)
-		recipients := []models.EmailAddress{}
-		for _, recipientAcct := range recipientAccts {
-			recipients = append(recipients, models.EmailAddress(recipientAcct.Email))
-		}
 		if err != nil {
 			logger.Error("problem getting recipients by id when sending out tag email notifications", zap.Error(err))
 			return err
+		}
+		recipients := []models.EmailAddress{}
+		for _, recipientAcct := range recipientAccts {
+			recipients = append(recipients, models.EmailAddress(recipientAcct.Email))
 		}
 
 		if err := emailClient.SystemIntake.SendGRBReviewDiscussionIndividualTaggedEmail(ctx, email.SendGRBReviewDiscussionIndividualTaggedEmailInput{
@@ -334,14 +342,24 @@ func sendDiscussionEmailsForTags(
 	return nil
 }
 
-func getAuthorRoleFromPost(post *models.SystemIntakeGRBReviewDiscussionPost) string {
+func getAuthorRoleFromPost(post *models.SystemIntakeGRBReviewDiscussionPost) (string, error) {
 	if post.VotingRole == nil || post.GRBRole == nil {
-		return "Governance Admin Team"
+		return "Governance Admin Team", nil
 	}
 
 	if len(*post.VotingRole) < 1 || len(*post.GRBRole) < 1 {
-		return "Governance Admin Team"
+		return "Governance Admin Team", nil
 	}
 
-	return fmt.Sprintf("%[1]s member, %[2]s", post.VotingRole.Humanize(), post.GRBRole.Humanize())
+	votingRoleStr, err := post.VotingRole.Humanize()
+	if err != nil {
+		return "", err
+	}
+
+	grbRoleStr, err := post.GRBRole.Humanize()
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%[1]s member, %[2]s", votingRoleStr, grbRoleStr), nil
 }
