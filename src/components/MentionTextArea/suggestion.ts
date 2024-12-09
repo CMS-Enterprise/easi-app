@@ -31,8 +31,6 @@ const suggestion = {
       // If we had async initial data - load a spinning symbol until onStart gets called
       // We have hardcoded in memory data for current implementation, doesn't currently get called
       onBeforeStart: (props: any) => {
-        const editorID = props.editor.options.editorProps.attributes.id;
-
         if (!props.clientRect) {
           return;
         }
@@ -44,7 +42,7 @@ const suggestion = {
 
         spinner = tippy('body', {
           getReferenceClientRect: getClientRect(props),
-          appendTo: () => document.getElementById(editorID) || document.body,
+          appendTo: props.editor.options.element,
           content: reactRenderer.element,
           showOnCreate: true,
           interactive: false,
@@ -55,8 +53,6 @@ const suggestion = {
 
       // Render any available suggestions when mention trigger is first called - @
       onStart: (props: any) => {
-        const editorID = props.editor.options.editorProps.attributes.id;
-
         if (!props.clientRect) {
           return;
         }
@@ -70,7 +66,7 @@ const suggestion = {
 
         popup = tippy('body', {
           getReferenceClientRect: getClientRect(props),
-          appendTo: () => document.getElementById(editorID) || document.body,
+          appendTo: props.editor.options.element,
           content: reactRenderer.element,
           showOnCreate: true,
           interactive: true,
