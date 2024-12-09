@@ -19,11 +19,8 @@ spec:
         - name: easi-frontend
           image: easi-frontend:latest
           imagePullPolicy: Never
-          envFrom:
-            - configMapRef:
-                name: easi-frontend-configmap
           ports:
-            - containerPort: 3000
+            - containerPort: 80
               protocol: TCP
           resources: {}
       restartPolicy: Always

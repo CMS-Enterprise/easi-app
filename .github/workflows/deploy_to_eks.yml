@@ -35,6 +35,17 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
+      - name: Set env vars with direnv # This allows docker build of FE files to pull from .envrc
+        uses: HatsuneMiku3939/direnv-action@v1
+      - name: Calculate build args
+        id: calculate-build-args
+        run: |
+          echo "VITE_LD_CLIENT_ID=${VITE_LD_CLIENT_ID}" >> $GITHUB_OUTPUT
+          echo "VITE_OKTA_CLIENT_ID=${VITE_OKTA_CLIENT_ID}" >> $GITHUB_OUTPUT
+          echo "VITE_OKTA_SERVER_ID=${VITE_OKTA_SERVER_ID}" >> $GITHUB_OUTPUT
+          echo "VITE_OKTA_ISSUER=${VITE_OKTA_ISSUER}" >> $GITHUB_OUTPUT
+          echo "VITE_OKTA_DOMAIN=${VITE_OKTA_DOMAIN}" >> $GITHUB_OUTPUT
+          echo "VITE_OKTA_REDIRECT_URI=${VITE_OKTA_REDIRECT_URI}" >> $GITHUB_OUTPUT
       - name: Build, tag, and push image to Amazon ECR
         uses: docker/build-push-action@v6
         with:
@@ -44,6 +55,13 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ env.GIT_REF_NAME }}-easi-frontend
           cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi-frontend
           tags: ${{ steps.login-ecr.outputs.registry }}/easi-frontend:${{ env.GIT_HASH }}
+          build-args: |
+            VITE_LD_CLIENT_ID=${{ steps.calculate-build-args.outputs.VITE_LD_CLIENT_ID }}
+            VITE_OKTA_CLIENT_ID=${{ steps.calculate-build-args.outputs.VITE_OKTA_CLIENT_ID }}
+            VITE_OKTA_SERVER_ID=${{ steps.calculate-build-args.outputs.VITE_OKTA_SERVER_ID }}
+            VITE_OKTA_ISSUER=${{ steps.calculate-build-args.outputs.VITE_OKTA_ISSUER }}
+            VITE_OKTA_DOMAIN=${{ steps.calculate-build-args.outputs.VITE_OKTA_DOMAIN }}
+            VITE_OKTA_REDIRECT_URI=${{ steps.calculate-build-args.outputs.VITE_OKTA_REDIRECT_URI }}
       - name: Announce failure
         if: ${{ failure() }}
         run: |
@@ -74,4 +92,9 @@ jobs:
         run: aws eks update-kubeconfig --name dev-easi-poc-cluster --region us-west-2
       - name: Deploy to EKS
         run: |
-          ./scripts/deploy_eks_env.sh
+          . ./scripts/deploy_eks_env.sh
+          echo "# EKS Ingress URLs" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- [EASi](http://${EASI_INGRESS})" >> $GITHUB_STEP_SUMMARY
+          echo "- [Mailcatcher](http://${EMAIL_INGRESS})" >> $GITHUB_STEP_SUMMARY
+          echo "- [Minio Console](http://${MINIO_CONSOLE_INGRESS})" >> $GITHUB_STEP_SUMMARY
