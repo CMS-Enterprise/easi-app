@@ -197,9 +197,9 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	})
 
 	s.Run("Recipient is correct", func() {
-		s.Equal(sender.toAddresses[0], recipients[0])
-		s.Equal(sender.ccAddresses[0], models.EmailAddress("IT_Governance@cms.hhs.gov"))
-		s.Empty(sender.bccAddresses)
+		s.Equal(sender.bccAddresses[0], recipients[0])
+		s.Empty(sender.ccAddresses)
+		s.Empty(sender.toAddresses)
 	})
 
 	s.Run("all info is included", func() {
