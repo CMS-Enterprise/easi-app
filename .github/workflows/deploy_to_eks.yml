@@ -39,7 +39,8 @@ jobs:
           if [ -z "${{ inputs.namespace }}" ]; then
             . ./scripts/deploy_eks_env.sh -n ${{ inputs.namespace }}
           else
-          . ./scripts/deploy_eks_env.sh
+            . ./scripts/deploy_eks_env.sh
+          fi
           echo "# EKS Ingress URLs" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- [EASi](http://${EASI_INGRESS})" >> $GITHUB_STEP_SUMMARY
