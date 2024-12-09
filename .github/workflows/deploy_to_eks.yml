@@ -36,7 +36,7 @@ jobs:
         run: aws eks update-kubeconfig --name dev-easi-poc-cluster --region us-west-2
       - name: Deploy to EKS
         run: |
-          if [ -z "${{ inputs.namespace }}" ]; then
+          if [ -n "${{ inputs.namespace }}" ]; then
             . ./scripts/deploy_eks_env.sh -n ${{ inputs.namespace }}
           else
             . ./scripts/deploy_eks_env.sh
