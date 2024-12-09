@@ -111,7 +111,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 	})
 
 	s.Run("Recipient is correct", func() {
-		s.ElementsMatch(sender.bccAddresses, recipients)
+		s.ElementsMatch(sender.bccAddresses, recipients.RegularRecipientEmails)
 		s.Empty(sender.ccAddresses)
 		s.Empty(sender.toAddresses)
 	})

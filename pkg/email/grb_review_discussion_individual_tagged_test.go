@@ -102,9 +102,9 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	})
 
 	s.Run("Recipient is correct", func() {
-		s.ElementsMatch(sender.toAddresses, recipients)
+		s.ElementsMatch(sender.bccAddresses, recipients)
 		s.Empty(sender.ccAddresses)
-		s.Empty(sender.bccAddresses)
+		s.Empty(sender.toAddresses)
 	})
 
 	s.Run("all info is included", func() {
