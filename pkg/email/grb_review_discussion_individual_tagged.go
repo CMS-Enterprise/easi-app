@@ -16,14 +16,13 @@ import (
 // SendGRBReviewDiscussionIndividualTaggedEmailInput contains the data needed to to send an email informing an individual they
 // have been tagged in a GRB discussion
 type SendGRBReviewDiscussionIndividualTaggedEmailInput struct {
-	SystemIntakeID           uuid.UUID
-	UserName                 string
-	RequestName              string
-	Role                     string
-	DiscussionID             uuid.UUID
-	DiscussionContent        template.HTML
-	ITGovernanceInboxAddress string
-	Recipient                models.EmailAddress
+	SystemIntakeID    uuid.UUID
+	UserName          string
+	RequestName       string
+	Role              string
+	DiscussionID      uuid.UUID
+	DiscussionContent template.HTML
+	Recipients        []models.EmailAddress
 }
 
 // GRBReviewDiscussionIndividualTaggedBody contains the data needed for interpolation in
@@ -37,7 +36,7 @@ type GRBReviewDiscussionIndividualTaggedBody struct {
 	Role                     string
 	DiscussionContent        template.HTML
 	DiscussionLink           string
-	ITGovernanceInboxAddress string
+	ITGovernanceInboxAddress models.EmailAddress
 	IsAdmin                  bool
 }
 
@@ -49,9 +48,6 @@ func (sie systemIntakeEmails) grbReviewDiscussionIndividualTaggedBody(input Send
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 
 	role := input.Role
-	if len(role) < 1 {
-		role = "Governance Admin Team"
-	}
 
 	data := GRBReviewDiscussionIndividualTaggedBody{
 		UserName:                 input.UserName,
@@ -61,7 +57,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionIndividualTaggedBody(input Send
 		Role:                     role,
 		DiscussionContent:        input.DiscussionContent,
 		DiscussionLink:           fmt.Sprintf("%[1]s?discussionMode=reply&discussionId=%[2]s", sie.client.urlFromPath(grbReviewPath), input.DiscussionID.String()),
-		ITGovernanceInboxAddress: input.ITGovernanceInboxAddress,
+		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
 		IsAdmin:                  len(input.Role) < 1,
 	}
 
@@ -84,14 +80,9 @@ func (sie systemIntakeEmails) SendGRBReviewDiscussionIndividualTaggedEmail(ctx c
 	}
 
 	mail := NewEmail().
-		WithToAddresses([]models.EmailAddress{input.Recipient}).
+		WithBCCAddresses(input.Recipients).
 		WithSubject(subject).
 		WithBody(body)
-
-	if len(input.Role) < 1 {
-		// this is an admin, CC ITGov box
-		mail = mail.WithCCAddresses([]models.EmailAddress{"IT_Governance@cms.hhs.gov"})
-	}
 
 	return sie.client.sender.Send(ctx, mail)
 }

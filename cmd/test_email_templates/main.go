@@ -632,13 +632,12 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	err = client.SystemIntake.SendGRBReviewDiscussionReplyEmail(
 		ctx,
 		email.SendGRBReviewDiscussionReplyEmailInput{
-			SystemIntakeID:           intakeID,
-			UserName:                 "Discussion Tester #1",
-			RequestName:              "GRB Review Discussion Test",
-			Role:                     "Voting Member",
-			DiscussionContent:        `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
-			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
-			Recipient:                requesterEmail,
+			SystemIntakeID:    intakeID,
+			UserName:          "Discussion Tester #1",
+			RequestName:       "GRB Review Discussion Test",
+			Role:              "Voting Member",
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			Recipient:         requesterEmail,
 		},
 	)
 	noErr(err)
@@ -646,28 +645,12 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	err = client.SystemIntake.SendGRBReviewDiscussionIndividualTaggedEmail(
 		ctx,
 		email.SendGRBReviewDiscussionIndividualTaggedEmailInput{
-			SystemIntakeID:           intakeID,
-			UserName:                 "Discussion Tester #1",
-			RequestName:              "GRB Review Discussion Test",
-			Role:                     "Voting Member",
-			DiscussionContent:        `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
-			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
-			Recipient:                requesterEmail,
-		},
-	)
-	noErr(err)
-
-	// admin version
-	err = client.SystemIntake.SendGRBReviewDiscussionIndividualTaggedEmail(
-		ctx,
-		email.SendGRBReviewDiscussionIndividualTaggedEmailInput{
-			SystemIntakeID:           intakeID,
-			UserName:                 "Discussion Tester #1",
-			RequestName:              "GRB Review Discussion Test",
-			Role:                     "", // empty to signify admin
-			DiscussionContent:        `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
-			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
-			Recipient:                requesterEmail,
+			SystemIntakeID:    intakeID,
+			UserName:          "Discussion Tester #1",
+			RequestName:       "GRB Review Discussion Test",
+			Role:              "Voting Member",
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			Recipients:        []models.EmailAddress{requesterEmail},
 		},
 	)
 	noErr(err)
@@ -676,13 +659,26 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	err = client.SystemIntake.SendGRBReviewDiscussionIndividualTaggedEmail(
 		ctx,
 		email.SendGRBReviewDiscussionIndividualTaggedEmailInput{
-			SystemIntakeID:           intakeID,
-			UserName:                 "Discussion Tester #1",
-			RequestName:              "GRB Review Discussion Test",
-			Role:                     "", // empty to signify admin
-			DiscussionContent:        `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
-			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
-			Recipient:                requesterEmail,
+			SystemIntakeID:    intakeID,
+			UserName:          "Discussion Tester #1",
+			RequestName:       "GRB Review Discussion Test",
+			Role:              "Governance Admin Team",
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			Recipients:        []models.EmailAddress{requesterEmail},
+		},
+	)
+	noErr(err)
+
+	// admin version
+	err = client.SystemIntake.SendGRBReviewDiscussionIndividualTaggedEmail(
+		ctx,
+		email.SendGRBReviewDiscussionIndividualTaggedEmailInput{
+			SystemIntakeID:    intakeID,
+			UserName:          "Discussion Tester #1",
+			RequestName:       "GRB Review Discussion Test",
+			Role:              "Governance Admin Team",
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			Recipients:        []models.EmailAddress{requesterEmail},
 		},
 	)
 	noErr(err)
@@ -690,13 +686,12 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	err = client.SystemIntake.SendGRBReviewDiscussionGroupTaggedEmail(
 		ctx,
 		email.SendGRBReviewDiscussionGroupTaggedEmailInput{
-			SystemIntakeID:           intakeID,
-			UserName:                 "Discussion Tester #1",
-			RequestName:              "GRB Review Discussion Test",
-			Role:                     "Voting Member",
-			DiscussionContent:        `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
-			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
-			Recipients:               emailNotificationRecipients.RegularRecipientEmails,
+			SystemIntakeID:    intakeID,
+			UserName:          "Discussion Tester #1",
+			RequestName:       "GRB Review Discussion Test",
+			Role:              "Voting Member, CIO",
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			Recipients:        emailNotificationRecipients,
 		},
 	)
 	noErr(err)
@@ -705,13 +700,12 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	err = client.SystemIntake.SendGRBReviewDiscussionGroupTaggedEmail(
 		ctx,
 		email.SendGRBReviewDiscussionGroupTaggedEmailInput{
-			SystemIntakeID:           intakeID,
-			UserName:                 "Discussion Tester #1",
-			RequestName:              "GRB Review Discussion Test",
-			Role:                     "", // empty to signify admin
-			DiscussionContent:        `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
-			ITGovernanceInboxAddress: "IT_Governance@cms.hhs.gov",
-			Recipients:               emailNotificationRecipients.RegularRecipientEmails,
+			SystemIntakeID:    intakeID,
+			UserName:          "Discussion Tester #1",
+			RequestName:       "GRB Review Discussion Test",
+			Role:              "Governance Admin Team",
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			Recipients:        emailNotificationRecipients,
 		},
 	)
 	noErr(err)

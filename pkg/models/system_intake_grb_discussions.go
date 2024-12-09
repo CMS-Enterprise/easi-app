@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"slices"
 
 	"github.com/google/uuid"
 )
@@ -53,6 +54,9 @@ func CreateGRBDiscussionsFromPosts(posts []*SystemIntakeGRBReviewDiscussionPost)
 		}
 		discussions = append(discussions, groupedPosts)
 	}
+	slices.SortFunc(discussions, func(a *SystemIntakeGRBReviewDiscussion, b *SystemIntakeGRBReviewDiscussion) int {
+		return a.InitialPost.CreatedAt.Compare(b.InitialPost.CreatedAt)
+	})
 	return discussions, nil
 }
 
@@ -73,6 +77,9 @@ func CreateGRBDiscussionFromPosts(posts []*SystemIntakeGRBReviewDiscussionPost) 
 	if discussion.InitialPost == nil {
 		return nil, errors.New("initial post not found")
 	}
+	slices.SortFunc(discussion.Replies, func(a *SystemIntakeGRBReviewDiscussionPost, b *SystemIntakeGRBReviewDiscussionPost) int {
+		return a.CreatedAt.Compare(b.CreatedAt)
+	})
 	return &discussion, nil
 }
 

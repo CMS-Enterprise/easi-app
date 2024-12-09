@@ -35,17 +35,16 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	ITGovInboxAddress := s.config.GRTEmail.String()
 
 	sender := mockSender{}
-	recipient := models.NewEmailAddress("fake@fake.com")
+	recipients := []models.EmailAddress{"fake@fake.com"}
 
 	input := SendGRBReviewDiscussionIndividualTaggedEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		RequestName:              requestName,
-		Role:                     role,
-		DiscussionID:             postID,
-		DiscussionContent:        discussionContent,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipient:                recipient,
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionID:      postID,
+		DiscussionContent: discussionContent,
+		Recipients:        recipients,
 	}
 
 	client, err := NewClient(s.config, &sender)
@@ -103,10 +102,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	})
 
 	s.Run("Recipient is correct", func() {
-		allRecipients := []models.EmailAddress{
-			recipient,
-		}
-		s.ElementsMatch(sender.toAddresses, allRecipients)
+		s.ElementsMatch(sender.toAddresses, recipients)
 		s.Empty(sender.ccAddresses)
 		s.Empty(sender.bccAddresses)
 	})
@@ -138,20 +134,18 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 		grbReviewLink,
 		postID.String(),
 	)
-	ITGovInboxAddress := s.config.GRTEmail.String()
 
 	sender := mockSender{}
-	recipient := models.NewEmailAddress("fake@fake.com")
+	recipients := []models.EmailAddress{"fake@fake.com"}
 
 	input := SendGRBReviewDiscussionIndividualTaggedEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		RequestName:              requestName,
-		Role:                     role,
-		DiscussionID:             postID,
-		DiscussionContent:        discussionContent,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipient:                recipient,
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionID:      postID,
+		DiscussionContent: discussionContent,
+		Recipients:        recipients,
 	}
 
 	client, err := NewClient(s.config, &sender)
@@ -203,7 +197,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	})
 
 	s.Run("Recipient is correct", func() {
-		s.Equal(sender.toAddresses[0], recipient)
+		s.Equal(sender.toAddresses[0], recipients[0])
 		s.Equal(sender.ccAddresses[0], models.EmailAddress("IT_Governance@cms.hhs.gov"))
 		s.Empty(sender.bccAddresses)
 	})

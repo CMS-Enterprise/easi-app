@@ -37,18 +37,21 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
-	recipients := []models.EmailAddress{recipient}
+	recipients := models.EmailNotificationRecipients{
+		RegularRecipientEmails:   []models.EmailAddress{recipient},
+		ShouldNotifyITGovernance: false,
+		ShouldNotifyITInvestment: false,
+	}
 
 	input := SendGRBReviewDiscussionGroupTaggedEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		GroupName:                groupName,
-		RequestName:              requestName,
-		Role:                     role,
-		DiscussionID:             postID,
-		DiscussionContent:        discussionContent,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipients:               recipients,
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		GroupName:         groupName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionID:      postID,
+		DiscussionContent: discussionContent,
+		Recipients:        recipients,
 	}
 
 	client, err := NewClient(s.config, &sender)
@@ -141,22 +144,24 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdm
 		grbReviewLink,
 		postID.String(),
 	)
-	ITGovInboxAddress := s.config.GRTEmail.String()
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
-	recipients := []models.EmailAddress{recipient}
+	recipients := models.EmailNotificationRecipients{
+		RegularRecipientEmails:   []models.EmailAddress{recipient},
+		ShouldNotifyITGovernance: false,
+		ShouldNotifyITInvestment: false,
+	}
 
 	input := SendGRBReviewDiscussionGroupTaggedEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		GroupName:                groupName,
-		RequestName:              requestName,
-		Role:                     role,
-		DiscussionID:             postID,
-		DiscussionContent:        discussionContent,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipients:               recipients,
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		GroupName:         groupName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionID:      postID,
+		DiscussionContent: discussionContent,
+		Recipients:        recipients,
 	}
 
 	client, err := NewClient(s.config, &sender)
