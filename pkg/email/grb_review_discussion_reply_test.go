@@ -30,7 +30,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 	grbReviewLink := client.urlFromPath(intakePath)
 
 	discussionLink := client.urlFromPath(fmt.Sprintf(
-		"%[1]s?discussionMode=reply&discussionId=%[2]s",
+		"%[1]s?discussionMode=reply&amp;discussionId=%[2]s",
 		intakePath,
 		postID.String(),
 	))
@@ -64,7 +64,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotification() {
 			<p><strong>Discussion Reply</strong></p>
 			<br>
 			<p class="no-margin"><strong>%s</strong></p>
-			<p class="subtitle"> %s</p>
+			<p class="subtitle no-margin-top"> %s</p>
 			<br>
 			<div class="quote">%s</div>
 			<br>
@@ -130,7 +130,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionReplyNotificationAdmin() {
 	grbReviewLink := client.urlFromPath(intakePath)
 
 	discussionLink := client.urlFromPath(fmt.Sprintf(
-		"%[1]s?discussionMode=reply&discussionId=%[2]s",
+		"%[1]s?discussionMode=reply&amp;discussionId=%[2]s",
 		intakePath,
 		postID.String(),
 	))

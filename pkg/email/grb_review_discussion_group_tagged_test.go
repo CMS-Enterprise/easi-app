@@ -31,7 +31,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 	grbReviewLink := client.urlFromPath(intakePath)
 
 	discussionLink := client.urlFromPath(fmt.Sprintf(
-		"%[1]s?discussionMode=reply&discussionId=%[2]s",
+		"%[1]s?discussionMode=reply&amp;discussionId=%[2]s",
 		intakePath,
 		postID.String(),
 	))
@@ -136,7 +136,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdm
 	grbReviewLink := client.urlFromPath(intakePath)
 
 	discussionLink := client.urlFromPath(fmt.Sprintf(
-		"%[1]s?discussionMode=reply&discussionId=%[2]s",
+		"%[1]s?discussionMode=reply&amp;discussionId=%[2]s",
 		intakePath,
 		postID.String(),
 	))
