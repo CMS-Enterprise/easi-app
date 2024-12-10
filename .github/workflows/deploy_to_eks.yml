@@ -11,6 +11,7 @@ on:
 permissions:
   id-token: write
   contents: read
+  pull-requests: write
 
 env:
   GIT_HASH: ${{ github.sha }}
@@ -46,11 +47,21 @@ jobs:
           echo "- [EASi](http://${EASI_INGRESS})" >> $GITHUB_STEP_SUMMARY
           echo "- [Mailcatcher](http://${EMAIL_INGRESS})" >> $GITHUB_STEP_SUMMARY
           echo "- [Minio Console](http://${MINIO_CONSOLE_INGRESS})" >> $GITHUB_STEP_SUMMARY
-        
+
+      #TODO: Remove this step
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          echo "${{ github.event }}"
+          echo "${{ github.event_name }}"
+          echo "${{ github.event.pull_request }}"
+
       - name: Comment on PR
         if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v3
         with:
+          comment-tag: ingress-urls
           message: |
             Hello world ! :wave:
+            This is a comment on ${{ github.event.number }}
           reactions: eyes, rocket

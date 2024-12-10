@@ -33,4 +33,4 @@ jobs:
     needs: [Build_Application_Images,Build_easi-frontend_image]
     secrets: inherit
     with:
-      namespace: easi-pr-${{ github.event.number }}
+      namespace: easi-${{ github.event.number }}
