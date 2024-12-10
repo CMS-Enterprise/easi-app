@@ -791,6 +791,10 @@ type SystemIntake {
   TRB Requests that share a CEDAR System or Contract Number
   """
   relatedTRBRequests: [TRBRequest!]!
+  """
+  GRB Review Discussion Posts/Threads
+  """
+  grbDiscussions: [SystemIntakeGRBReviewDiscussion!]!
 }
 
 type SystemIntakeContractNumber {
@@ -1224,6 +1228,34 @@ enum SystemIntakeGRBReviewerVotingRole {
   VOTING
   ALTERNATE
   NON_VOTING
+}
+
+type SystemIntakeGRBReviewDiscussionPost {
+  id: UUID!
+  content: HTML!
+  votingRole: SystemIntakeGRBReviewerVotingRole
+  grbRole: SystemIntakeGRBReviewerRole
+  systemIntakeID: UUID!
+  createdByUserAccount: UserAccount!
+  createdAt: Time!
+  modifiedByUserAccount: UserAccount
+  modifiedAt: Time
+}
+
+type SystemIntakeGRBReviewDiscussion {
+  initialPost: SystemIntakeGRBReviewDiscussionPost!
+  replies: [SystemIntakeGRBReviewDiscussionPost!]!
+}
+
+
+input createSystemIntakeGRBDiscussionPostInput {
+  systemIntakeID: UUID!
+  content: TaggedHTML!
+}
+
+input createSystemIntakeGRBDiscussionReplyInput {
+  initialPostID: UUID!
+  content: TaggedHTML!
 }
 
 """
@@ -1693,6 +1725,14 @@ type TRBRequestAttendee {
   modifiedBy: String
   modifiedAt: Time
 }
+
+# lint-disable defined-types-are-used
+enum TagType {
+  USER_ACCOUNT
+  GROUP_IT_GOV
+  GROUP_GRB_REVIEWERS
+}
+# lint-enable defined-types-are-used
 
 """
 The data needed add a TRB request attendee to a TRB request
@@ -2519,6 +2559,9 @@ type Mutation {
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
   deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
 
+  createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
+  createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
+
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
   archiveSystemIntake(id: UUID!): SystemIntake!
@@ -2669,6 +2712,10 @@ HTML are represented using as strings,  <p><strong>Notification email</strong></
 """
 scalar HTML
 
+"""
+TaggedHTML is represented using strings but can contain Tags (ex: @User) and possibly other richer elements than HTML
+"""
+scalar TaggedHTML
 
 """
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z

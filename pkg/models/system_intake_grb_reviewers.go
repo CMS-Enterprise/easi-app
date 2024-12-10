@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -33,13 +34,48 @@ const (
 	SIGRBRVRAlternate SIGRBReviewerVotingRole = "ALTERNATE"
 )
 
+func (r SIGRBReviewerVotingRole) Humanize() (string, error) {
+	var grbVotingRoleTranslationsMap = map[SIGRBReviewerVotingRole]string{
+		SIGRBRVRVoting:    "Voting",
+		SIGRBRVRNonVoting: "Non-voting",
+		SIGRBRVRAlternate: "Alternate",
+	}
+	translation, ok := grbVotingRoleTranslationsMap[r]
+	if !ok {
+		return "", fmt.Errorf("%s is not a valid SIGRBReviewerVotingRole", r)
+	}
+	return translation, nil
+}
+
+func (r SIGRBReviewerRole) Humanize() (string, error) {
+	var grbRoleTranslationsMap = map[SIGRBReviewerRole]string{
+		SIGRBRRCoChairCIO:          "Co-Chair - CIO",
+		SIGRBRRCoChairCFO:          "CO-Chair - CFO",
+		SIGRBRRCoChairHCA:          "CO-Chair - HCA",
+		SIGRBRRACA3021Rep:          "ACA 3021 Rep",
+		SIGRBRRCCIIORep:            "CCIIO Rep",
+		SIGRBRRProgOpBDGChair:      "Program Operations BDG Chair",
+		SIGRBRRCMCSRep:             "CMCS Rep",
+		SIGRBRRFedAdminBDGChair:    "Fed Admin BDG Chair",
+		SIGRBRRProgIntBDGChair:     "Program Integrity BDG Chair",
+		SIGRBRRQIORep:              "QIO Rep",
+		SIGRBRRSubjectMatterExpert: "Subject Matter Expert (SME)",
+		SIGRBRROther:               "Other",
+	}
+	translation, ok := grbRoleTranslationsMap[r]
+	if !ok {
+		return "", fmt.Errorf("%s is not a valid SIGRBReviewerRole", r)
+	}
+	return translation, nil
+}
+
 // SystemIntakeGRBReviewer describes
 type SystemIntakeGRBReviewer struct {
 	BaseStructUser
 	userIDRelation
-	SystemIntakeID uuid.UUID               `json:"systemIntakeId" db:"system_intake_id"`
-	VotingRole     SIGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`
-	GRBRole        SIGRBReviewerRole       `json:"grbRole" db:"grb_role"`
+	SystemIntakeID  uuid.UUID               `json:"systemIntakeId" db:"system_intake_id"`
+	GRBVotingRole   SIGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`
+	GRBReviewerRole SIGRBReviewerRole       `json:"grbRole" db:"grb_role"`
 }
 
 func NewSystemIntakeGRBReviewer(userID uuid.UUID, createdBy uuid.UUID) *SystemIntakeGRBReviewer {

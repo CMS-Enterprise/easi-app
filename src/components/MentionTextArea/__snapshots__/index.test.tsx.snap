@@ -1,0 +1,43 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MentionTextArea component > renders the component to view text 1`] = `
+<DocumentFragment>
+  <div
+    class="tiptap__readonly font-body-sm line-height-body-5"
+  >
+    <div
+      aria-label="Rich text area"
+      class="tiptap ProseMirror"
+      contenteditable="false"
+      id="mentionTextArea"
+      role="textbox"
+      translate="no"
+    >
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`MentionTextArea component > renders the editable text area component 1`] = `
+<DocumentFragment>
+  <div
+    class="tiptap__editable usa-textarea"
+    tabindex="-1"
+  >
+    <div
+      aria-label="Rich text area"
+      class="tiptap ProseMirror ProseMirror-focused"
+      contenteditable="true"
+      id="mentionTextArea"
+      role="textbox"
+      tabindex="0"
+      translate="no"
+    >
+      This is the text!
+    </div>
+  </div>
+</DocumentFragment>
+`;

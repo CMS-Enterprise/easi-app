@@ -76,6 +76,9 @@ type templates struct {
 	systemIntakeUpdateLCID                          templateCaller
 	systemIntakeChangeLCIDRetirementDate            templateCaller
 	systemIntakeCreateGRBReviewer                   templateCaller
+	grbReviewDiscussionReply                        templateCaller
+	grbReviewDiscussionIndividualTagged             templateCaller
+	grbReviewDiscussionGroupTagged                  templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -405,6 +408,27 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.systemIntakeCreateGRBReviewer = systemIntakeCreateGRBReviewer
 
+	grbReviewDiscussionReplyTemplateName := "grb_review_discussion_reply.gohtml"
+	grbReviewDiscussionReply := rawTemplates.Lookup(grbReviewDiscussionReplyTemplateName)
+	if grbReviewDiscussionReply == nil {
+		return Client{}, templateError(grbReviewDiscussionReplyTemplateName)
+	}
+	appTemplates.grbReviewDiscussionReply = grbReviewDiscussionReply
+
+	grbReviewDiscussionIndividualTaggedTemplateName := "grb_review_discussion_individual_tagged.gohtml"
+	grbReviewDiscussionIndividualTagged := rawTemplates.Lookup(grbReviewDiscussionIndividualTaggedTemplateName)
+	if grbReviewDiscussionIndividualTagged == nil {
+		return Client{}, templateError(grbReviewDiscussionIndividualTaggedTemplateName)
+	}
+	appTemplates.grbReviewDiscussionIndividualTagged = grbReviewDiscussionIndividualTagged
+
+	grbReviewDiscussionGroupTaggedTemplateName := "grb_review_discussion_group_tagged.gohtml"
+	grbReviewDiscussionGroupTagged := rawTemplates.Lookup(grbReviewDiscussionGroupTaggedTemplateName)
+	if grbReviewDiscussionGroupTagged == nil {
+		return Client{}, templateError(grbReviewDiscussionGroupTaggedTemplateName)
+	}
+	appTemplates.grbReviewDiscussionGroupTagged = grbReviewDiscussionGroupTagged
+
 	client := Client{
 		config:    config,
 		templates: appTemplates,
@@ -424,6 +448,19 @@ func (c Client) urlFromPath(path string) string {
 		Host:   c.config.URLHost,
 		Path:   path,
 	}
+
+	return u.String()
+}
+
+// urlFromPathAndQuery uses the client's URL configs to format one with a specific path and appended query
+func (c Client) urlFromPathAndQuery(path string, query string) string {
+	u := url.URL{
+		Scheme:   c.config.URLScheme,
+		Host:     c.config.URLHost,
+		Path:     path,
+		RawQuery: query,
+	}
+
 	return u.String()
 }
 
@@ -469,6 +506,9 @@ func HumanizeSnakeCase(s string) string {
 	return strings.Join(wordSlice, " ")
 }
 
+// Email consists of the basic components of an email
+// note: only one of `To`/`CC`/`BCC` needed to send an email
+// ex: you can send to only BCC recipients if desired
 type Email struct {
 	ToAddresses  []models.EmailAddress
 	CcAddresses  []models.EmailAddress
@@ -477,30 +517,36 @@ type Email struct {
 	Body         string
 }
 
+// NewEmail returns an empty email object
 func NewEmail() Email {
 	return Email{}
 }
 
+// WithToAddresses sets the `To` field on an email
 func (e Email) WithToAddresses(toAddresses []models.EmailAddress) Email {
 	e.ToAddresses = toAddresses
 	return e
 }
 
+// WithCCAddresses sets the `CC` field on an email
 func (e Email) WithCCAddresses(ccAddresses []models.EmailAddress) Email {
 	e.CcAddresses = ccAddresses
 	return e
 }
 
+// WithBCCAddresses sets the `BCC` field on an email
 func (e Email) WithBCCAddresses(bccAddresses []models.EmailAddress) Email {
 	e.BccAddresses = bccAddresses
 	return e
 }
 
+// WithSubject sets the Subject on an email
 func (e Email) WithSubject(subject string) Email {
 	e.Subject = subject
 	return e
 }
 
+// WithBody sets the content (body) of an email
 func (e Email) WithBody(body string) Email {
 	e.Body = body
 	return e

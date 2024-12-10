@@ -138,7 +138,7 @@ func DeleteSystemIntakeDocument(ctx context.Context, store *storage.Store, id uu
 // CanViewDocument determines if a user can view a document
 func CanViewDocument(ctx context.Context, grbUsers []*models.SystemIntakeGRBReviewer, document *models.SystemIntakeDocument) bool {
 	// admins can view
-	if services.HasRole(ctx, models.RoleEasiGovteam) {
+	if services.AuthorizeRequireGRTJobCode(ctx) {
 		return true
 	}
 

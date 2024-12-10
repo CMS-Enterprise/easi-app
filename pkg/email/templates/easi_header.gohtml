@@ -25,13 +25,27 @@
   .no-margin-top {
     margin-top: 0;
   }
-  .no-margin-bottom {
-    margin-bottom: 0;
-  }
   hr {
     border-style: solid;
     border-color: #bbb;
     border-radius: 2px;
+  }
+
+  .mention {
+    color: #005EA2;
+  }
+
+  .quote>p:first-of-type {
+    margin-top: 0;
+  }
+  .quote>p:first-of-type::before {
+    content: '\201C';
+  }
+  .quote>p:last-of-type {
+    margin-bottom: 0;
+  }
+  .quote>p:last-of-type::after {
+    content: '\201D';
   }
 </style>
 </head>

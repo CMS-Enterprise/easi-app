@@ -1,0 +1,72 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Sidepanel > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    data-react-modal-body-trap=""
+    style="position: absolute; opacity: 0;"
+    tabindex="0"
+  />
+  <div
+    data-react-modal-body-trap=""
+    style="position: absolute; opacity: 0;"
+    tabindex="0"
+  />
+  <div
+    class="ReactModalPortal"
+  >
+    <div
+      class="ReactModal__Overlay easi-sidepanel__overlay overflow-y-scroll"
+    >
+      <div
+        aria-label="ariaLabel"
+        aria-modal="true"
+        class="ReactModal__Content easi-sidepanel__content"
+        role="dialog"
+        tabindex="-1"
+      >
+        <div
+          data-testid="testid"
+        >
+          <div
+            class="easi-sidepanel__x-button-container display-flex text-base flex-align-center"
+          >
+            <button
+              aria-label="Close Modal"
+              class="easi-sidepanel__x-button margin-right-2"
+              data-testid="close-discussions"
+              type="button"
+            >
+              <svg
+                class="usa-icon usa-icon--size-4 text-base"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                />
+              </svg>
+            </button>
+            <h4
+              class="margin-0"
+            >
+              modalHeading
+            </h4>
+          </div>
+          <div>
+            children
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

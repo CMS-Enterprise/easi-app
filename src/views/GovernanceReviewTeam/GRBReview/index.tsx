@@ -12,7 +12,7 @@ import {
   ModalHeading
 } from '@trussworks/react-uswds';
 import {
-  GetSystemIntakeGRBReviewersDocument,
+  GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
@@ -37,6 +37,7 @@ import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 
+import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
 
@@ -79,12 +80,7 @@ const GRBReview = ({
   const { showMessage } = useMessage();
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
-    refetchQueries: [
-      {
-        query: GetSystemIntakeGRBReviewersDocument,
-        variables: { id }
-      }
-    ]
+    refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
 
   const [startGRBReview] = useStartGRBReviewMutation({
@@ -95,7 +91,7 @@ const GRBReview = ({
     },
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewersDocument,
+        query: GetSystemIntakeGRBReviewDocument,
         variables: { id }
       }
     ]
@@ -362,6 +358,11 @@ const GRBReview = ({
             </p>
 
             <DocumentsTable systemIntakeId={id} documents={documents} />
+
+            <Discussions
+              systemIntakeID={id}
+              className="margin-top-4 margin-bottom-6"
+            />
 
             <ParticipantsTable
               id={id}
