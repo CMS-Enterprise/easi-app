@@ -6,7 +6,7 @@ on:
       namespace:
         required: false
         type: string
-    
+        description: 'The namespace to use when deploying to EKS. If not passed, a namespace will attempt to be automatically generated from the branch name.'
 
 permissions:
   id-token: write
@@ -46,3 +46,11 @@ jobs:
           echo "- [EASi](http://${EASI_INGRESS})" >> $GITHUB_STEP_SUMMARY
           echo "- [Mailcatcher](http://${EMAIL_INGRESS})" >> $GITHUB_STEP_SUMMARY
           echo "- [Minio Console](http://${MINIO_CONSOLE_INGRESS})" >> $GITHUB_STEP_SUMMARY
+        
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          message: |
+            Hello world ! :wave:
+          reactions: eyes, rocket

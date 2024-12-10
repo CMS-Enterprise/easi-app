@@ -30,5 +30,6 @@ jobs:
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name dev-easi-poc-cluster --region us-west-2
       - name: Teardown branch environment
+        # The "easi-pr-" prefix needs to match the prefix in build_and_test.yml so that we delete the correct namespace
         run: |
           kubectl delete namespace "easi-pr-$PR_NUMBER" --force --ignore-not-found

@@ -2,6 +2,11 @@ name: Manual deploy To EKS
 
 on:
   workflow_dispatch:
+    inputs:
+      namespace:
+        required: false
+        type: string
+        description: 'The namespace to use when deploying to EKS. If not passed, a namespace will attempt to be automatically generated from the branch name.'
 
 permissions:
   id-token: write
@@ -27,3 +32,5 @@ jobs:
     needs: [Build_easi-frontend_image, Build_Application_Images]
     uses: ./.github/workflows/deploy_to_eks.yml
     secrets: inherit
+    with:
+      namespace: ${{ github.event.inputs.namespace }}
