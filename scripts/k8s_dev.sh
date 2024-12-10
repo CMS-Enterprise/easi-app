@@ -81,15 +81,6 @@ fi
 # Run validate_namespace
 validate_namespace "$NAMESPACE"
 
-# Delete namespace if it exists
-if kubectl get ns "$NAMESPACE" > /dev/null 2>&1; then
-    echo "❄️  Clear ${NAMESPACE} namespace ❄️"
-    kubectl delete ns "$NAMESPACE" || {
-        echo "Failed to delete namespace ${NAMESPACE}"
-        exit 1
-    }
-fi
-
 APPLICATION_VERSION="$(git rev-parse @)"
 APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
 APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
@@ -153,6 +144,10 @@ delete_temp_dir() {
 (
     TEMPDIR=$(mktemp -d ../tmp.easi.XXXXX)
     cd "$TEMPDIR" || exit
+    echo "❄️  Deleting old resources in namespace, if they exist  ❄️"
+    kubectl delete all --all -n "$NAMESPACE"
+
+    echo "❄️  Creating EASi resources via Kustomize  ❄️"
     kustomize create --resources ../deploy/base/easi
     kustomize edit set namespace "$NAMESPACE"
     kustomize build > manifest.yaml
