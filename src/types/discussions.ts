@@ -23,6 +23,8 @@ export type MentionSuggestion =
 export type MentionAttributes = {
   /** Text displayed within mention `span` tag */
   label: string;
+  /** Label attribute for rendering mentions */
+  'data-label': string;
   /** UUID for `USER_ACCOUNT` tag types */
   'data-id-db': string;
   'tag-type': TagType;

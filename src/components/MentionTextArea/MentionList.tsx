@@ -47,6 +47,7 @@ const MentionList = forwardRef<MentionListOnKeyDown, MentionSuggestionProps>(
         props.command({
           'tag-type': item.tagType,
           label: item.displayName,
+          'data-label': item.displayName,
           'data-id-db': item.tagType === TagType.USER_ACCOUNT ? item.id : ''
         });
       }
