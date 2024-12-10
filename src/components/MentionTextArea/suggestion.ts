@@ -1,36 +1,53 @@
 import { ReactRenderer } from '@tiptap/react';
-import tippy from 'tippy.js';
+import { SuggestionOptions } from '@tiptap/suggestion';
+import tippy, { GetReferenceClientRect, Instance } from 'tippy.js';
+
+import {
+  MentionAttributes,
+  MentionListOnKeyDown,
+  MentionSuggestion,
+  MentionSuggestionProps
+} from 'types/discussions';
 
 import MentionList, { SuggestionLoading } from './MentionList';
 
 /* Returns the current textarea/RTE editor dimension to append the Mentionslist dropdown
 MentionList should have the same width as this parent clientRect */
-const getClientRect = (props: any) => {
-  const editorID = props.editor.options.editorProps.attributes.id;
-  const elem = document.getElementById(editorID);
-  const rect = elem?.getBoundingClientRect();
-  const mentionRect = props.clientRect();
+const getClientRect = ({
+  editor,
+  clientRect
+}: MentionSuggestionProps): GetReferenceClientRect => {
+  const { element } = editor.options;
+  const rect = element.getBoundingClientRect();
+  const mentionRect = clientRect?.();
 
   return () =>
     new DOMRect(
       rect?.left,
-      mentionRect.y,
-      mentionRect.width,
-      mentionRect.height
+      mentionRect?.y,
+      mentionRect?.width,
+      mentionRect?.height
     );
 };
 
-const suggestion = {
+const suggestion: Omit<
+  SuggestionOptions<MentionSuggestion, MentionAttributes>,
+  'editor'
+> = {
   allowSpaces: true,
   render: () => {
-    let reactRenderer: any;
-    let spinner: any;
-    let popup: any;
+    let reactRenderer: ReactRenderer<
+      MentionListOnKeyDown,
+      MentionSuggestionProps
+    >;
+
+    let spinner: Partial<Instance>;
+    let popup: Partial<Instance>;
 
     return {
       // If we had async initial data - load a spinning symbol until onStart gets called
       // We have hardcoded in memory data for current implementation, doesn't currently get called
-      onBeforeStart: (props: any) => {
+      onBeforeStart: props => {
         if (!props.clientRect) {
           return;
         }
@@ -40,7 +57,7 @@ const suggestion = {
           editor: props.editor
         });
 
-        spinner = tippy('body', {
+        [spinner] = tippy('body', {
           getReferenceClientRect: getClientRect(props),
           appendTo: props.editor.options.element,
           content: reactRenderer.element,
@@ -52,19 +69,19 @@ const suggestion = {
       },
 
       // Render any available suggestions when mention trigger is first called - @
-      onStart: (props: any) => {
+      onStart: props => {
         if (!props.clientRect) {
           return;
         }
 
-        spinner[0].hide();
+        spinner.hide?.();
 
         reactRenderer = new ReactRenderer(MentionList, {
           props,
           editor: props.editor
         });
 
-        popup = tippy('body', {
+        [popup] = tippy('body', {
           getReferenceClientRect: getClientRect(props),
           appendTo: props.editor.options.element,
           content: reactRenderer.element,
@@ -76,46 +93,46 @@ const suggestion = {
       },
 
       // When async data/suggestions return, hide the spinner and show the updated list
-      onUpdate(props: any) {
+      onUpdate: props => {
         reactRenderer.updateProps(props);
 
         if (!props.clientRect) {
           return;
         }
 
-        popup[0].setProps({
-          getReferenceClientRect: getClientRect(props)
-        });
-        spinner[0].setProps({
+        popup.setProps?.({
           getReferenceClientRect: getClientRect(props)
         });
 
-        spinner[0].hide();
+        spinner.setProps?.({
+          getReferenceClientRect: getClientRect(props)
+        });
 
-        popup[0].show();
+        spinner.hide?.();
+
+        popup.show?.();
       },
 
       // If a valid character key, render the spinner until onUpdate gets called to rerender updated list
-      onKeyDown(props: any) {
+      onKeyDown: props => {
         if (props.event.key === 'Escape') {
-          popup[0].hide();
-          spinner[0].hide();
+          popup.hide?.();
+          spinner.hide?.();
 
           return true;
         }
 
         if (props.event.key.length === 1 || props.event.key === 'Backspace') {
-          popup[0].hide();
-
-          spinner[0].show();
+          popup.hide?.();
+          spinner.show?.();
         }
 
-        return reactRenderer.ref?.onKeyDown(props);
+        return !!reactRenderer?.ref && reactRenderer.ref.onKeyDown(props);
       },
 
       onExit() {
-        popup[0].destroy();
-        spinner[0].destroy();
+        popup.destroy?.();
+        spinner.destroy?.();
         reactRenderer.destroy();
       }
     };
