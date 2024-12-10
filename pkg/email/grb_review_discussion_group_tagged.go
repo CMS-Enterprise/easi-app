@@ -58,7 +58,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionGroupTaggedBody(input SendGRBRe
 		GRBReviewLink:            sie.client.urlFromPath(grbReviewPath),
 		Role:                     input.Role,
 		DiscussionContent:        input.DiscussionContent,
-		DiscussionLink:           sie.client.urlFromPath(fmt.Sprintf("%[1]s?discussionMode=reply&discussionId=%[2]s", grbReviewPath, input.DiscussionID.String())),
+		DiscussionLink:           sie.client.urlFromPathAndQuery(grbReviewPath, fmt.Sprintf("discussionMode=reply&discussionId=%s", input.DiscussionID.String())),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
 		IsAdmin:                  input.Role == "Governance Admin Team",
 	}

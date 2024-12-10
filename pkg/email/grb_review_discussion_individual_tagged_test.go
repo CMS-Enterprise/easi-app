@@ -29,11 +29,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 
 	grbReviewLink := client.urlFromPath(intakePath)
 
-	discussionLink := client.urlFromPath(fmt.Sprintf(
-		"%[1]s?discussionMode=reply&amp;discussionId=%[2]s",
-		intakePath,
-		postID.String(),
-	))
+	discussionLink := client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionMode=reply&amp;discussionId=%s", postID.String()))
 
 	ITGovInboxAddress := s.config.GRTEmail.String()
 
@@ -126,11 +122,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 
 	grbReviewLink := client.urlFromPath(intakePath)
 
-	discussionLink := client.urlFromPath(fmt.Sprintf(
-		"%[1]s?discussionMode=reply&amp;discussionId=%[2]s",
-		intakePath,
-		postID.String(),
-	))
+	discussionLink := client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionMode=reply&amp;discussionId=%s", postID.String()))
 
 	recipients := []models.EmailAddress{"fake@fake.com"}
 
