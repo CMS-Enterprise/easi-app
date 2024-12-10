@@ -55,7 +55,7 @@ jobs:
           pr-number: ${{ github.event.number }}
           message: |
             # EKS Ingress URLs
-            - [EASi]({{ steps.deploy-to-eks.outputs.EASI_INGRESS }})
-            - [Mailcatcher]({{ steps.deploy-to-eks.outputs.EMAIL_INGRESS }})
-            - [Minio Console]({{ steps.deploy-to-eks.outputs.MINIO_CONSOLE_INGRESS }})
+            - [EASi](${{ steps.deploy-to-eks.outputs.EASI_INGRESS }})
+            - [Mailcatcher](${{ steps.deploy-to-eks.outputs.EMAIL_INGRESS }})
+            - [Minio Console](${{ steps.deploy-to-eks.outputs.MINIO_CONSOLE_INGRESS }})
           reactions: eyes, rocket
