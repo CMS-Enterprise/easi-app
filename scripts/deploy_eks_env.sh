@@ -68,6 +68,7 @@ echo "Namespace is set to: $NAMESPACE"
 # Generate and deploy ingress resources
 (
     echo "❄️  Creating Ingress resources via Kustomize  ❄️"
+    mkdir -p ../tmp.ingress && cd ../tmp.ingress
     kustomize create --resources ../deploy/overlays/pr/ingress
     kustomize edit set namespace "$NAMESPACE"
     kustomize build > manifest-ingress.yaml
@@ -99,6 +100,7 @@ export EMAIL_INGRESS
 
 # Generate and deploy EASI resources
 (
+    mkdir -p ../tmp.easi && cd ../tmp.easi
     echo "❄️  Deleting old resources in namespace, if they exist  ❄️"
     kubectl delete all --all -n "$NAMESPACE"
 
@@ -123,6 +125,7 @@ export EMAIL_INGRESS
     kubectl apply -n "$NAMESPACE" -f manifest-easi.yaml
 )
 
+rm -rf ../tmp.ingress/kustomization.yaml ../tmp.easi/kustomization.yaml
 
 echo "EASI: http://$EASI_INGRESS"
 echo "Mailcatcher: http://$EMAIL_INGRESS"
