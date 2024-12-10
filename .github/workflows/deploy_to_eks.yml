@@ -36,32 +36,26 @@ jobs:
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name dev-easi-poc-cluster --region us-west-2
       - name: Deploy to EKS
+        id: deploy-to-eks
         run: |
           if [ -n "${{ inputs.namespace }}" ]; then
             . ./scripts/deploy_eks_env.sh -n ${{ inputs.namespace }}
           else
             . ./scripts/deploy_eks_env.sh
           fi
-          echo "# EKS Ingress URLs" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- [EASi](http://${EASI_INGRESS})" >> $GITHUB_STEP_SUMMARY
-          echo "- [Mailcatcher](http://${EMAIL_INGRESS})" >> $GITHUB_STEP_SUMMARY
-          echo "- [Minio Console](http://${MINIO_CONSOLE_INGRESS})" >> $GITHUB_STEP_SUMMARY
-
-      #TODO: Remove this step
-      - name: Set outputs
-        id: set-outputs
-        run: |
-          echo "${{ github.event }}"
-          echo "${{ github.event_name }}"
-          echo "${{ github.event.pull_request }}"
+          echo "EASI_INGRESS=http://${EASI_INGRESS}" >> $GITHUB_OUTPUT
+          echo "EMAIL_INGRESS=http://${EMAIL_INGRESS}" >> $GITHUB_OUTPUT
+          echo "MINIO_CONSOLE_INGRESS=http://${MINIO_CONSOLE_INGRESS}" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
         if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v3
         with:
           comment-tag: ingress-urls
+          pr-number: ${{ github.event.number }}
           message: |
-            Hello world ! :wave:
-            This is a comment on ${{ github.event.number }}
+            # EKS Ingress URLs
+            - [EASi]({{ steps.deploy-to-eks.outputs.EASI_INGRESS }})
+            - [Mailcatcher]({{ steps.deploy-to-eks.outputs.EMAIL_INGRESS }})
+            - [Minio Console]({{ steps.deploy-to-eks.outputs.MINIO_CONSOLE_INGRESS }})
           reactions: eyes, rocket
