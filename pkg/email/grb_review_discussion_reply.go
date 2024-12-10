@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"html/template"
 	"path"
 
@@ -14,16 +15,13 @@ import (
 
 // SendGRBReviewDiscussionReplyEmailInput contains the data needed to send the GRB discussion reply email
 type SendGRBReviewDiscussionReplyEmailInput struct {
-	SystemIntakeID           uuid.UUID
-	UserName                 string
-	RequestName              string
-	DiscussionBoardType      string
-	GRBReviewLink            string
-	Role                     string
-	DiscussionContent        template.HTML
-	DiscussionLink           string
-	ITGovernanceInboxAddress string
-	Recipient                models.EmailAddress
+	SystemIntakeID    uuid.UUID
+	UserName          string
+	RequestName       string
+	Role              string
+	DiscussionID      uuid.UUID
+	DiscussionContent template.HTML
+	Recipient         models.EmailAddress
 }
 
 // GRBReviewDiscussionReplyBody contains the data needed for interpolation in
@@ -36,7 +34,7 @@ type GRBReviewDiscussionReplyBody struct {
 	Role                     string
 	DiscussionContent        template.HTML
 	DiscussionLink           string
-	ITGovernanceInboxAddress string
+	ITGovernanceInboxAddress models.EmailAddress
 	IsAdmin                  bool
 }
 
@@ -46,22 +44,17 @@ func (sie systemIntakeEmails) grbReviewDiscussionReplyBody(input SendGRBReviewDi
 	}
 
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
-	grbDiscussionPath := path.Join(grbReviewPath, "discussionID=BLAH") // TODO: NJD add actual discussion ID field
-	role := input.Role
-	if len(role) < 1 {
-		role = "Governance Admin Team"
-	}
 
 	data := GRBReviewDiscussionReplyBody{
 		UserName:                 input.UserName,
 		RequestName:              input.RequestName,
-		DiscussionBoardType:      input.DiscussionBoardType,
+		DiscussionBoardType:      "Internal GRB Discussion Board",
 		GRBReviewLink:            sie.client.urlFromPath(grbReviewPath),
-		Role:                     role,
+		Role:                     input.Role,
 		DiscussionContent:        input.DiscussionContent,
-		DiscussionLink:           sie.client.urlFromPath(grbDiscussionPath),
-		ITGovernanceInboxAddress: input.ITGovernanceInboxAddress,
-		IsAdmin:                  len(input.Role) < 1,
+		DiscussionLink:           sie.client.urlFromPathAndQuery(grbReviewPath, fmt.Sprintf("discussionMode=reply&discussionId=%s", input.DiscussionID.String())),
+		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
+		IsAdmin:                  input.Role == "Governance Admin Team",
 	}
 
 	var b bytes.Buffer
@@ -75,7 +68,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionReplyBody(input SendGRBReviewDi
 // SendGRBReviewDiscussionReplyEmail sends an email to the EASI admin team indicating that an advice letter
 // has been submitted
 func (sie systemIntakeEmails) SendGRBReviewDiscussionReplyEmail(ctx context.Context, input SendGRBReviewDiscussionReplyEmailInput) error {
-	subject := "New reply to your discussion in the GRB Review for " + input.RequestName
+	subject := fmt.Sprintf("New reply to your discussion in the GRB Review for %s", input.RequestName)
 
 	body, err := sie.grbReviewDiscussionReplyBody(input)
 	if err != nil {

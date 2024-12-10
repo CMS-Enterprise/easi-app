@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"html/template"
+	"path"
 
 	"github.com/google/uuid"
 
@@ -13,6 +14,7 @@ import (
 func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() {
 	ctx := context.Background()
 	intakeID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
+	postID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
 	userName := "Rock Lee"
 	groupName := "Governance Review Board"
 	requestName := "Salad/Sandwich Program"
@@ -20,60 +22,55 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 	role := "Consumer"
 	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`)
 
-	grbReviewLink := fmt.Sprintf(
-		"%s://%s/it-governance/%s/grb-review",
-		s.config.URLScheme,
-		s.config.URLHost,
-		intakeID.String(),
-	)
-
-	discussionLink := fmt.Sprintf(
-		"%s://%s/it-governance/%s/grb-review/discussionID=BLAH",
-		s.config.URLScheme,
-		s.config.URLHost,
-		intakeID.String(),
-	)
-	ITGovInboxAddress := s.config.GRTEmail.String()
-
 	sender := mockSender{}
-	recipient := models.NewEmailAddress("fake@fake.com")
-	recipients := []models.EmailAddress{recipient}
-
-	input := SendGRBReviewDiscussionGroupTaggedEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		GroupName:                groupName,
-		RequestName:              requestName,
-		DiscussionBoardType:      discussionBoardType,
-		GRBReviewLink:            grbReviewLink,
-		Role:                     role,
-		DiscussionContent:        discussionContent,
-		DiscussionLink:           discussionLink,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipients:               recipients,
-	}
-
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
+
+	intakePath := path.Join("it-governance", intakeID.String(), "grb-review")
+
+	grbReviewLink := client.urlFromPath(intakePath)
+
+	discussionLink := client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionMode=reply&amp;discussionId=%s", postID.String()))
+
+	ITGovInboxAddress := s.config.GRTEmail.String()
+
+	recipient := models.NewEmailAddress("fake@fake.com")
+	recipients := models.EmailNotificationRecipients{
+		RegularRecipientEmails:   []models.EmailAddress{recipient},
+		ShouldNotifyITGovernance: false,
+		ShouldNotifyITInvestment: false,
+	}
+
+	input := SendGRBReviewDiscussionGroupTaggedEmailInput{
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		GroupName:         groupName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionID:      postID,
+		DiscussionContent: discussionContent,
+		Recipients:        recipients,
+	}
 
 	err = client.SystemIntake.SendGRBReviewDiscussionGroupTaggedEmail(ctx, input)
 	s.NoError(err)
 
-	getExpectedEmail := func() string {
-		return fmt.Sprintf(`
+	expectedEmail := fmt.Sprintf(`
 			<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
 			<p>%s tagged the %s in the %s for %s.</p>
 
 			<p><strong><a href="%s">View this request in EASi</a></strong></p>
-			<br>
+			<hr>
 
-			<h2>Discussion</h2>
+			<p><strong>Discussion</strong></p>
 			<br>
-			<p><b>%s</b></p>
-			<p class="subtitle"> %s</p>
-			<p>%s</p>
+			<p class="no-margin"><strong>%s</strong></p>
+			<p class="subtitle no-margin-top"> %s</p>
+			<br>
+			<div class="quote">%s</div>
+			<br>
 			<p style="font-weight: normal">
   				<a href="%s">
      				Reply in EASi
@@ -81,27 +78,23 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 			</p>
 
 			<hr>
-			<br>
 		    <p>If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
-			<br>
 			<p>You will continue to receive email notifications about this request until it is closed.</p>
 			`,
-			userName,
-			groupName,
-			discussionBoardType,
-			requestName,
-			grbReviewLink,
-			userName,
-			role,
-			discussionContent,
-			discussionLink,
-			ITGovInboxAddress,
-			ITGovInboxAddress,
-		)
-	}
+		userName,
+		groupName,
+		discussionBoardType,
+		requestName,
+		grbReviewLink,
+		userName,
+		role,
+		discussionContent,
+		discussionLink,
+		ITGovInboxAddress,
+		ITGovInboxAddress,
+	)
 
-	expectedEmail := getExpectedEmail()
-	expectedSubject := "The " + groupName + "was tagged in a GRB Review discussion for " + requestName
+	expectedSubject := fmt.Sprintf("The %[1]s was tagged in a GRB Review discussion for %[2]s", groupName, requestName)
 
 	s.Run("Subject is correct", func() {
 		s.Equal(expectedSubject, sender.subject)
@@ -109,7 +102,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 	})
 
 	s.Run("Recipient is correct", func() {
-		s.ElementsMatch(sender.bccAddresses, recipients)
+		s.ElementsMatch(sender.bccAddresses, recipients.RegularRecipientEmails)
 		s.Empty(sender.ccAddresses)
 		s.Empty(sender.toAddresses)
 	})
@@ -122,67 +115,61 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdmin() {
 	ctx := context.Background()
 	intakeID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
+	postID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
 	userName := "Rock Lee"
 	groupName := "Governance Review Board"
 	requestName := "Salad/Sandwich Program"
 	discussionBoardType := "Internal GRB Discussion Board"
-	role := "" // empty to signify admin
+	role := "Governance Admin Team"
 	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`)
 
-	grbReviewLink := fmt.Sprintf(
-		"%s://%s/it-governance/%s/grb-review",
-		s.config.URLScheme,
-		s.config.URLHost,
-		intakeID.String(),
-	)
-
-	discussionLink := fmt.Sprintf(
-		"%s://%s/it-governance/%s/grb-review/discussionID=BLAH",
-		s.config.URLScheme,
-		s.config.URLHost,
-		intakeID.String(),
-	)
-	ITGovInboxAddress := s.config.GRTEmail.String()
-
 	sender := mockSender{}
-	recipient := models.NewEmailAddress("fake@fake.com")
-	recipients := []models.EmailAddress{recipient}
-
-	input := SendGRBReviewDiscussionGroupTaggedEmailInput{
-		SystemIntakeID:           intakeID,
-		UserName:                 userName,
-		GroupName:                groupName,
-		RequestName:              requestName,
-		DiscussionBoardType:      discussionBoardType,
-		GRBReviewLink:            grbReviewLink,
-		Role:                     role,
-		DiscussionContent:        discussionContent,
-		DiscussionLink:           discussionLink,
-		ITGovernanceInboxAddress: ITGovInboxAddress,
-		Recipients:               recipients,
-	}
-
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
+
+	intakePath := path.Join("it-governance", intakeID.String(), "grb-review")
+
+	grbReviewLink := client.urlFromPath(intakePath)
+
+	discussionLink := client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionMode=reply&amp;discussionId=%s", postID.String()))
+
+	recipient := models.NewEmailAddress("fake@fake.com")
+	recipients := models.EmailNotificationRecipients{
+		RegularRecipientEmails:   []models.EmailAddress{recipient},
+		ShouldNotifyITGovernance: false,
+		ShouldNotifyITInvestment: false,
+	}
+
+	input := SendGRBReviewDiscussionGroupTaggedEmailInput{
+		SystemIntakeID:    intakeID,
+		UserName:          userName,
+		GroupName:         groupName,
+		RequestName:       requestName,
+		Role:              role,
+		DiscussionID:      postID,
+		DiscussionContent: discussionContent,
+		Recipients:        recipients,
+	}
 
 	err = client.SystemIntake.SendGRBReviewDiscussionGroupTaggedEmail(ctx, input)
 	s.NoError(err)
 
-	getExpectedEmail := func() string {
-		return fmt.Sprintf(`
+	expectedEmail := fmt.Sprintf(`
 			<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
 			<p>%s tagged the %s in the %s for %s.</p>
 
 			<p><strong><a href="%s">View this request in EASi</a></strong></p>
-			<br>
+			<hr>
 
-			<h2>Discussion</h2>
+			<p><strong>Discussion</strong></p>
 			<br>
-			<p><b>%s</b></p>
-			<p class="subtitle"> Governance Admin Team</p>
-			<p>%s</p>
+			<p class="no-margin"><strong>%s</strong></p>
+			<p class="subtitle no-margin-top"> Governance Admin Team</p>
+			<br>
+			<div class="quote">%s</div>
+			<br>
 			<p style="font-weight: normal">
   				<a href="%s">
      				Reply in EASi
@@ -190,22 +177,19 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdm
 			</p>
 
 			<hr>
-			<br>
 			<p>You will continue to receive email notifications about this request until it is closed.</p>
 			`,
-			userName,
-			groupName,
-			discussionBoardType,
-			requestName,
-			grbReviewLink,
-			userName,
-			discussionContent,
-			discussionLink,
-		)
-	}
+		userName,
+		groupName,
+		discussionBoardType,
+		requestName,
+		grbReviewLink,
+		userName,
+		discussionContent,
+		discussionLink,
+	)
 
-	expectedEmail := getExpectedEmail()
-	expectedSubject := "The " + groupName + "was tagged in a GRB Review discussion for " + requestName
+	expectedSubject := fmt.Sprintf("The %[1]s was tagged in a GRB Review discussion for %[2]s", groupName, requestName)
 
 	s.Run("Subject is correct", func() {
 		s.Equal(expectedSubject, sender.subject)
