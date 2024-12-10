@@ -81,15 +81,6 @@ fi
 # Run validate_namespace
 validate_namespace "$NAMESPACE"
 
-# Delete namespace if it exists
-if kubectl get ns "$NAMESPACE" > /dev/null 2>&1; then
-    echo "❄️  Clear ${NAMESPACE} namespace ❄️"
-    kubectl delete ns "$NAMESPACE" || {
-        echo "Failed to delete namespace ${NAMESPACE}"
-        exit 1
-    }
-fi
-
 APPLICATION_VERSION="$(git rev-parse @)"
 APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
 APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
@@ -124,12 +115,6 @@ export APPLICATION_TS
 
 echo "❄️  Deploying EASi via Kustomize  ❄️"
 
-delete_temp_dir() {
-    if [ -d "$TEMPDIR" ]; then
-        rm -rf "$TEMPDIR"
-    fi
-}
-
 # Create Namespace!
 (
     echo "❄️  Creating Namespace via Kubectl  ❄️"
@@ -137,32 +122,34 @@ delete_temp_dir() {
 )
 
 (
-    TEMPDIR=$(mktemp -d ../tmp.ingress.XXXXX)
-    cd "$TEMPDIR" || exit
+    mkdir -p ../tmp.ingress && cd ../tmp.ingress
     kustomize create --resources ../deploy/base/ingress
     kustomize edit set namespace "$NAMESPACE"
-    kustomize build > manifest.yaml
+    kustomize build > manifest-ingress.yaml
 
-    sed -i'' -E "s/easi.localdev.me/${NAMESPACE}.localdev.me/" manifest.yaml
-    sed -i'' -E "s/email.localdev.me/${NAMESPACE}-email.localdev.me/" manifest.yaml
-    sed -i'' -E "s/minio.localdev.me/${NAMESPACE}-minio.localdev.me/" manifest.yaml
-    kubectl apply -f manifest.yaml
-    trap delete_temp_dir EXIT
+    sed -i'' -E "s/easi.localdev.me/${NAMESPACE}.localdev.me/" manifest-ingress.yaml
+    sed -i'' -E "s/email.localdev.me/${NAMESPACE}-email.localdev.me/" manifest-ingress.yaml
+    sed -i'' -E "s/minio.localdev.me/${NAMESPACE}-minio.localdev.me/" manifest-ingress.yaml
+    kubectl apply -f manifest-ingress.yaml
 )
 
 (
-    TEMPDIR=$(mktemp -d ../tmp.easi.XXXXX)
-    cd "$TEMPDIR" || exit
+    mkdir -p ../tmp.easi && cd ../tmp.easi
+    echo "❄️  Deleting old resources in namespace, if they exist  ❄️"
+    kubectl delete all --all -n "$NAMESPACE"
+
+    echo "❄️  Creating EASi resources via Kustomize  ❄️"
     kustomize create --resources ../deploy/base/easi
     kustomize edit set namespace "$NAMESPACE"
-    kustomize build > manifest.yaml
-    sed -i'' -E "s/easi-frontend:latest/easi-frontend:${NAMESPACE}/" manifest.yaml
-    sed -i'' -E "s/easi-backend:latest/easi-backend:${NAMESPACE}/" manifest.yaml
-    sed -i'' -E "s/cedarproxy:latest/cedarproxy:${NAMESPACE}/" manifest.yaml
-    sed -i'' -E "s/db-migrate:latest/db-migrate:${NAMESPACE}/" manifest.yaml
-    kubectl apply -f manifest.yaml
-    trap delete_temp_dir EXIT
+    kustomize build > manifest-easi.yaml
+    sed -i'' -E "s/easi-frontend:latest/easi-frontend:${NAMESPACE}/" manifest-easi.yaml
+    sed -i'' -E "s/easi-backend:latest/easi-backend:${NAMESPACE}/" manifest-easi.yaml
+    sed -i'' -E "s/cedarproxy:latest/cedarproxy:${NAMESPACE}/" manifest-easi.yaml
+    sed -i'' -E "s/db-migrate:latest/db-migrate:${NAMESPACE}/" manifest-easi.yaml
+    kubectl apply -f manifest-easi.yaml
 )
+
+rm -rf ../tmp.ingress ../tmp.easi
 
 echo "❄️  EASi: http://${NAMESPACE}.localdev.me ❄️"
 echo "❄️  Mailcatcher: http://${NAMESPACE}-email.localdev.me ❄️"

@@ -1,0 +1,29 @@
+name: Manual deploy To EKS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  EASI_APP_NODE_VERSION: "18.20.4"
+  GIT_HASH: ${{ github.sha }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  GIT_REF_NAME: ${{ github.ref }}
+
+jobs:
+
+  Build_easi-frontend_image:
+    uses: ./.github/workflows/build_frontend_image.yml
+    secrets: inherit
+
+  Build_Application_Images:
+    uses: ./.github/workflows/build_application_images.yml
+    secrets: inherit
+
+  Deploy_to_EKS:
+    needs: [Build_easi-frontend_image, Build_Application_Images]
+    uses: ./.github/workflows/deploy_to_eks.yml
+    secrets: inherit
