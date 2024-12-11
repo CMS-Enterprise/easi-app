@@ -2,31 +2,43 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { useGetSystemIntakeGRBDiscussionsQuery } from 'gql/gen/graphql';
+import {
+  SystemIntakeGRBReviewDiscussionFragment,
+  SystemIntakeGRBReviewerFragment,
+  useGetSystemIntakeGRBDiscussionsQuery
+} from 'gql/gen/graphql';
 
+import { getMostRecentDiscussion } from 'components/MentionTextArea/util';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import IconButton from 'components/shared/IconButton';
+import Spinner from 'components/Spinner';
 import useDiscussionParams from 'hooks/useDiscussionParams';
 import DiscussionBoard from 'views/DiscussionBoard';
 import DiscussionPost from 'views/DiscussionBoard/components/DiscussionPost';
 
 type DiscussionsProps = {
   systemIntakeID: string;
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
   className?: string;
 };
 
 /** Displays recent discussions on GRB Review tab */
-const Discussions = ({ systemIntakeID, className }: DiscussionsProps) => {
+const Discussions = ({
+  systemIntakeID,
+  grbReviewers,
+  className
+}: DiscussionsProps) => {
   const { t } = useTranslation('discussions');
 
   const { pushDiscussionQuery } = useDiscussionParams();
 
-  const { data } = useGetSystemIntakeGRBDiscussionsQuery({
+  const { data, loading } = useGetSystemIntakeGRBDiscussionsQuery({
     variables: { id: systemIntakeID }
   });
 
-  const grbDiscussions = data?.systemIntake?.grbDiscussions;
+  const grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[] | undefined =
+    data?.systemIntake?.grbDiscussions;
 
   if (!grbDiscussions) return null;
 
@@ -34,13 +46,14 @@ const Discussions = ({ systemIntakeID, className }: DiscussionsProps) => {
     discussion => discussion.replies.length === 0
   ).length;
 
-  const recentDiscussion =
-    grbDiscussions.length > 0 ? grbDiscussions[0] : undefined;
+  /** Discussion with latest activity - either when discussion was created or latest reply */
+  const recentDiscussion = getMostRecentDiscussion(grbDiscussions);
 
   return (
     <>
       <DiscussionBoard
         systemIntakeID={systemIntakeID}
+        grbReviewers={grbReviewers}
         grbDiscussions={grbDiscussions}
       />
 
@@ -134,11 +147,16 @@ const Discussions = ({ systemIntakeID, className }: DiscussionsProps) => {
               <h4 className="margin-bottom-2">
                 {t('general.mostRecentActivity')}
               </h4>
-              <DiscussionPost
-                {...recentDiscussion.initialPost}
-                replies={recentDiscussion.replies}
-                truncateText
-              />
+
+              {loading ? (
+                <Spinner />
+              ) : (
+                <DiscussionPost
+                  {...recentDiscussion.initialPost}
+                  replies={recentDiscussion.replies}
+                  truncateText
+                />
+              )}
             </>
           ) : (
             // If no discussions, show alert

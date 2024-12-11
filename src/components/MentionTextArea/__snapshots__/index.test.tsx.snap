@@ -4,6 +4,7 @@ exports[`MentionTextArea component > renders the component to view text 1`] = `
 <DocumentFragment>
   <div
     class="tiptap__readonly font-body-sm line-height-body-5"
+    id="mentionTextArea-editorContent"
   >
     <div
       aria-label="Rich text area"
@@ -25,6 +26,7 @@ exports[`MentionTextArea component > renders the editable text area component 1`
 <DocumentFragment>
   <div
     class="tiptap__editable usa-textarea"
+    id="mentionTextArea-editorContent"
     tabindex="-1"
   >
     <div
