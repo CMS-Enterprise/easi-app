@@ -10,6 +10,7 @@ import {
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import IconButton from 'components/shared/IconButton';
+import Spinner from 'components/Spinner';
 import useDiscussionParams from 'hooks/useDiscussionParams';
 import DiscussionBoard from 'views/DiscussionBoard';
 import DiscussionPost from 'views/DiscussionBoard/components/DiscussionPost';
@@ -30,7 +31,7 @@ const Discussions = ({
 
   const { pushDiscussionQuery } = useDiscussionParams();
 
-  const { data } = useGetSystemIntakeGRBDiscussionsQuery({
+  const { data, loading } = useGetSystemIntakeGRBDiscussionsQuery({
     variables: { id: systemIntakeID }
   });
 
@@ -43,7 +44,9 @@ const Discussions = ({
   ).length;
 
   const recentDiscussion =
-    grbDiscussions.length > 0 ? grbDiscussions[0] : undefined;
+    grbDiscussions.length > 0
+      ? grbDiscussions[grbDiscussions.length - 1]
+      : undefined;
 
   return (
     <>
@@ -143,11 +146,16 @@ const Discussions = ({
               <h4 className="margin-bottom-2">
                 {t('general.mostRecentActivity')}
               </h4>
-              <DiscussionPost
-                {...recentDiscussion.initialPost}
-                replies={recentDiscussion.replies}
-                truncateText
-              />
+
+              {loading ? (
+                <Spinner />
+              ) : (
+                <DiscussionPost
+                  {...recentDiscussion.initialPost}
+                  replies={recentDiscussion.replies}
+                  truncateText
+                />
+              )}
             </>
           ) : (
             // If no discussions, show alert
