@@ -3,10 +3,12 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Button, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
+  SystemIntakeGRBReviewDiscussionFragment,
   SystemIntakeGRBReviewerFragment,
   useGetSystemIntakeGRBDiscussionsQuery
 } from 'gql/gen/graphql';
 
+import { getMostRecentDiscussion } from 'components/MentionTextArea/util';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import IconButton from 'components/shared/IconButton';
@@ -35,7 +37,8 @@ const Discussions = ({
     variables: { id: systemIntakeID }
   });
 
-  const grbDiscussions = data?.systemIntake?.grbDiscussions;
+  const grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[] | undefined =
+    data?.systemIntake?.grbDiscussions;
 
   if (!grbDiscussions) return null;
 
@@ -43,10 +46,8 @@ const Discussions = ({
     discussion => discussion.replies.length === 0
   ).length;
 
-  const recentDiscussion =
-    grbDiscussions.length > 0
-      ? grbDiscussions[grbDiscussions.length - 1]
-      : undefined;
+  /** Discussion with latest activity - either when discussion was created or latest reply */
+  const recentDiscussion = getMostRecentDiscussion(grbDiscussions);
 
   return (
     <>

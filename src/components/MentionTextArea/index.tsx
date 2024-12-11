@@ -21,7 +21,7 @@ import IconButton from 'components/shared/IconButton';
 import { MentionAttributes, MentionSuggestion } from 'types/discussions';
 
 import suggestion from './suggestion';
-import getMentions from './util';
+import { getMentions } from './util';
 
 import './index.scss';
 
