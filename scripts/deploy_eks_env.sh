@@ -121,7 +121,7 @@ export EMAIL_INGRESS
         cat manifest-easi.yaml
     fi
 
-    echo "❄️  Deploying Ingress Objects via Kubectl  ❄️"
+    echo "❄️  Deploying EASi Objects via Kubectl  ❄️"
     kubectl apply -n "$NAMESPACE" -f manifest-easi.yaml
 )
 
