@@ -110,7 +110,7 @@ export EMAIL_INGRESS
     kustomize edit set image easi-backend=840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-backend:"$GIT_HASH"
     kustomize edit set image easi-frontend=840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-frontend:"$GIT_HASH"
     kustomize edit set image db-migrate=840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:"$GIT_HASH"
-    kustomize build | envsubst '$EASI_INGRESS,$MINIO_CONSOLE_INGRESS,$EMAIL_INGRESS' > manifest-easi.yaml
+    kustomize build | envsubst "$EASI_INGRESS,$MINIO_CONSOLE_INGRESS,$EMAIL_INGRESS" > manifest-easi.yaml
 
     # if verbose, print out the kustomization.yaml and manifest-easi.yaml
     if [ "$VERBOSE" = true ]; then
