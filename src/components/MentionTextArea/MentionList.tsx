@@ -35,7 +35,7 @@ const scrollIntoView = () => {
 /** Renders the list of suggestions within `MentionTextArea` */
 const MentionList = forwardRef<MentionListOnKeyDown, MentionSuggestionProps>(
   (props, ref) => {
-    const { t } = useTranslation('discussionsMisc');
+    const { t } = useTranslation('general');
 
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
@@ -113,7 +113,7 @@ const MentionList = forwardRef<MentionListOnKeyDown, MentionSuggestionProps>(
             </button>
           ))
         ) : (
-          <div className="item">{t('noResults')}</div>
+          <span className="item padding-x-1">{t('noResults')}</span>
         )}
       </div>
     );
