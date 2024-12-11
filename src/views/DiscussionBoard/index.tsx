@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
+import {
+  SystemIntakeGRBReviewDiscussionFragment,
+  SystemIntakeGRBReviewerFragment,
+  TagType
+} from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
 import useDiscussionParams, { DiscussionMode } from 'hooks/useDiscussionParams';
-import { DiscussionAlert } from 'types/discussions';
+import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 
 import Discussion from './Discussion';
 import DiscussionModalWrapper from './DiscussionModalWrapper';
@@ -15,11 +19,13 @@ import './index.scss';
 
 type DiscussionBoardProps = {
   systemIntakeID: string;
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
 };
 
 function DiscussionBoard({
   systemIntakeID,
+  grbReviewers,
   grbDiscussions
 }: DiscussionBoardProps) {
   /** Discussion alert state for form success and error messages */
@@ -28,13 +34,32 @@ function DiscussionBoard({
   const { getDiscussionParams, pushDiscussionQuery } = useDiscussionParams();
   const { discussionMode, discussionId } = getDiscussionParams();
 
-  const activeDiscussion =
-    grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
-
   // Reset discussionAlert when the side panel changes from certain modes
   const [lastMode, setLastMode] = useState<DiscussionMode | undefined>(
     discussionMode
   );
+
+  /** Mention suggestions for discussion form tags */
+  const mentionSuggestions: MentionSuggestion[] = [
+    {
+      displayName: 'Governance Admin Team',
+      tagType: TagType.GROUP_IT_GOV
+    },
+    {
+      displayName: 'Governance Review Board (GRB)',
+      tagType: TagType.GROUP_GRB_REVIEWERS
+    },
+    ...grbReviewers.map(({ userAccount }) => ({
+      key: userAccount.username,
+      tagType: TagType.USER_ACCOUNT,
+      displayName: userAccount.commonName,
+      id: userAccount.id
+    }))
+  ];
+
+  const activeDiscussion =
+    grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
+
   useEffect(() => {
     if (lastMode !== discussionMode) {
       if (lastMode === 'view' || lastMode === 'reply') {
@@ -70,6 +95,7 @@ function DiscussionBoard({
 
       {discussionMode === 'start' && (
         <StartDiscussion
+          mentionSuggestions={mentionSuggestions}
           systemIntakeID={systemIntakeID}
           closeModal={closeModal}
           setDiscussionAlert={setDiscussionAlert}
@@ -78,6 +104,7 @@ function DiscussionBoard({
 
       {discussionMode === 'reply' && (
         <Discussion
+          mentionSuggestions={mentionSuggestions}
           discussion={activeDiscussion}
           closeModal={closeModal}
           setDiscussionAlert={setDiscussionAlert}

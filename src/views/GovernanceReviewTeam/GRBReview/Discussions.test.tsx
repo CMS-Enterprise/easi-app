@@ -53,7 +53,7 @@ describe('Discussions', () => {
         <VerboseMockedProvider
           mocks={[getSystemIntakeGRBDiscussions(mockDiscussions())]}
         >
-          <Discussions systemIntakeID={systemIntake.id} />
+          <Discussions grbReviewers={[]} systemIntakeID={systemIntake.id} />
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -77,7 +77,7 @@ describe('Discussions', () => {
         <VerboseMockedProvider
           mocks={[getSystemIntakeGRBDiscussions([discussionWithoutReplies])]}
         >
-          <Discussions systemIntakeID={systemIntake.id} />
+          <Discussions grbReviewers={[]} systemIntakeID={systemIntake.id} />
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -97,7 +97,7 @@ describe('Discussions', () => {
     render(
       <MemoryRouter>
         <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussions([])]}>
-          <Discussions systemIntakeID={systemIntake.id} />
+          <Discussions grbReviewers={[]} systemIntakeID={systemIntake.id} />
         </VerboseMockedProvider>
       </MemoryRouter>
     );

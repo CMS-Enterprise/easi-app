@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { Grid, Icon } from '@trussworks/react-uswds';
 import {
-  GetSystemIntakeGRBReviewDocument,
+  GetSystemIntakeGRBReviewersDocument,
   SystemIntakeGRBReviewerFragment,
   useCreateSystemIntakeGRBReviewersMutation
 } from 'gql/gen/graphql';
@@ -41,7 +41,7 @@ const GRBReviewerForm = ({
   }>();
 
   const [mutate] = useCreateSystemIntakeGRBReviewersMutation({
-    refetchQueries: [GetSystemIntakeGRBReviewDocument]
+    refetchQueries: [GetSystemIntakeGRBReviewersDocument]
   });
 
   const createGRBReviewers = (reviewers: GRBReviewerFields[]) =>

@@ -2,7 +2,10 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { useGetSystemIntakeGRBDiscussionsQuery } from 'gql/gen/graphql';
+import {
+  SystemIntakeGRBReviewerFragment,
+  useGetSystemIntakeGRBDiscussionsQuery
+} from 'gql/gen/graphql';
 
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -13,11 +16,16 @@ import DiscussionPost from 'views/DiscussionBoard/components/DiscussionPost';
 
 type DiscussionsProps = {
   systemIntakeID: string;
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
   className?: string;
 };
 
 /** Displays recent discussions on GRB Review tab */
-const Discussions = ({ systemIntakeID, className }: DiscussionsProps) => {
+const Discussions = ({
+  systemIntakeID,
+  grbReviewers,
+  className
+}: DiscussionsProps) => {
   const { t } = useTranslation('discussions');
 
   const { pushDiscussionQuery } = useDiscussionParams();
@@ -41,6 +49,7 @@ const Discussions = ({ systemIntakeID, className }: DiscussionsProps) => {
     <>
       <DiscussionBoard
         systemIntakeID={systemIntakeID}
+        grbReviewers={grbReviewers}
         grbDiscussions={grbDiscussions}
       />
 

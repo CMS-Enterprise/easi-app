@@ -26,6 +26,7 @@ describe('Discussion component', () => {
       <MemoryRouter>
         <VerboseMockedProvider>
           <Discussion
+            mentionSuggestions={[]}
             discussion={discussion}
             closeModal={vi.fn()}
             setDiscussionAlert={vi.fn()}
@@ -111,6 +112,7 @@ describe('Discussion component', () => {
       <MemoryRouter>
         <VerboseMockedProvider>
           <Discussion
+            mentionSuggestions={[]}
             discussion={discussion}
             closeModal={vi.fn()}
             setDiscussionAlert={vi.fn()}

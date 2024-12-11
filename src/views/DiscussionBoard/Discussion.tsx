@@ -4,7 +4,7 @@ import { Icon } from '@trussworks/react-uswds';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/gen/graphql';
 
 import IconButton from 'components/shared/IconButton';
-import { DiscussionAlert } from 'types/discussions';
+import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 import { NotFoundPartial } from 'views/NotFound';
 
 import DiscussionForm from './components/DiscussionForm';
@@ -15,6 +15,7 @@ type DiscussionProps = {
   discussion: SystemIntakeGRBReviewDiscussionFragment | null;
   closeModal: () => void;
   setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
+  mentionSuggestions: MentionSuggestion[];
 };
 
 /**
@@ -25,7 +26,8 @@ type DiscussionProps = {
 const Discussion = ({
   discussion,
   closeModal,
-  setDiscussionAlert
+  setDiscussionAlert,
+  mentionSuggestions
 }: DiscussionProps) => {
   const { t } = useTranslation('discussions');
   const [showReplies, setShowReplies] = useState(true);
@@ -78,6 +80,7 @@ const Discussion = ({
         closeModal={closeModal}
         initialPostID={initialPost.id}
         setDiscussionAlert={setDiscussionAlert}
+        mentionSuggestions={mentionSuggestions}
       />
     </div>
   );
