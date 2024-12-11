@@ -27,6 +27,6 @@ spec:
               protocol: TCP
           resources: {}
           command:
-             - ./bin/easi
+             - /easi/easi
              - serve
       restartPolicy: Always

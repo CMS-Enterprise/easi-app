@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"html/template"
 	"path"
 
@@ -15,17 +16,14 @@ import (
 // SendGRBReviewDiscussionGroupTaggedEmailInput contains the data needed to send an email informing a group they
 // have been tagged in a GRB discussion
 type SendGRBReviewDiscussionGroupTaggedEmailInput struct {
-	SystemIntakeID           uuid.UUID
-	UserName                 string
-	GroupName                string // TODO NJD enum?
-	RequestName              string
-	DiscussionBoardType      string
-	GRBReviewLink            string
-	Role                     string
-	DiscussionContent        template.HTML
-	DiscussionLink           string
-	ITGovernanceInboxAddress string
-	Recipients               []models.EmailAddress
+	SystemIntakeID    uuid.UUID
+	UserName          string
+	GroupName         string // TODO NJD enum?
+	RequestName       string
+	Role              string
+	DiscussionContent template.HTML
+	DiscussionID      uuid.UUID
+	Recipients        models.EmailNotificationRecipients
 }
 
 // GRBReviewDiscussionGroupTaggedBody contains the data needed for interpolation in
@@ -41,7 +39,7 @@ type GRBReviewDiscussionGroupTaggedBody struct {
 	DiscussionContent        template.HTML
 	DiscussionLink           string
 	ClientAddress            string
-	ITGovernanceInboxAddress string
+	ITGovernanceInboxAddress models.EmailAddress
 	IsAdmin                  bool
 }
 
@@ -51,23 +49,18 @@ func (sie systemIntakeEmails) grbReviewDiscussionGroupTaggedBody(input SendGRBRe
 	}
 
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
-	grbDiscussionPath := path.Join(grbReviewPath, "discussionID=BLAH") // TODO: NJD add actual discussion ID field
-	role := input.Role
-	if len(role) < 1 {
-		role = "Governance Admin Team"
-	}
 
 	data := GRBReviewDiscussionGroupTaggedBody{
 		UserName:                 input.UserName,
 		GroupName:                input.GroupName,
 		RequestName:              input.RequestName,
-		DiscussionBoardType:      input.DiscussionBoardType,
+		DiscussionBoardType:      "Internal GRB Discussion Board",
 		GRBReviewLink:            sie.client.urlFromPath(grbReviewPath),
-		Role:                     role,
+		Role:                     input.Role,
 		DiscussionContent:        input.DiscussionContent,
-		DiscussionLink:           sie.client.urlFromPath(grbDiscussionPath),
-		ITGovernanceInboxAddress: input.ITGovernanceInboxAddress,
-		IsAdmin:                  len(input.Role) < 1,
+		DiscussionLink:           sie.client.urlFromPathAndQuery(grbReviewPath, fmt.Sprintf("discussionMode=reply&discussionId=%s", input.DiscussionID.String())),
+		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
+		IsAdmin:                  input.Role == "Governance Admin Team",
 	}
 
 	var b bytes.Buffer
@@ -81,22 +74,24 @@ func (sie systemIntakeEmails) grbReviewDiscussionGroupTaggedBody(input SendGRBRe
 // SendGRBReviewDiscussionGroupTaggedEmail sends an email to a group indicating that they have
 // been tagged in a GRB discussion
 func (sie systemIntakeEmails) SendGRBReviewDiscussionGroupTaggedEmail(ctx context.Context, input SendGRBReviewDiscussionGroupTaggedEmailInput) error {
-	subject := "The " + input.GroupName + "was tagged in a GRB Review discussion for " + input.RequestName
+	subject := fmt.Sprintf("The %[1]s was tagged in a GRB Review discussion for %[2]s", input.GroupName, input.RequestName)
 
 	body, err := sie.grbReviewDiscussionGroupTaggedBody(input)
 	if err != nil {
 		return err
 	}
+	email := NewEmail().
+		// use BCC as this is going to multiple recipients
+		WithBCCAddresses(input.Recipients.RegularRecipientEmails).
+		WithSubject(subject).
+		WithBody(body)
 
-	allRecipients := []models.EmailAddress{}
-	allRecipients = append(allRecipients, models.NewEmailAddress("fake@fake.com"))
+	if input.Recipients.ShouldNotifyITGovernance {
+		email = email.WithCCAddresses([]models.EmailAddress{sie.client.config.GRTEmail})
+	}
 
 	return sie.client.sender.Send(
 		ctx,
-		NewEmail().
-			// use BCC as this is going to multiple recipients
-			WithBCCAddresses(allRecipients).
-			WithSubject(subject).
-			WithBody(body),
+		email,
 	)
 }

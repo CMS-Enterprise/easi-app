@@ -4,8 +4,10 @@ import (
 	"context"
 	"database/sql"
 	_ "embed"
+	"errors"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
@@ -80,7 +82,7 @@ func (s *Store) UserAccountGetByID(ctx context.Context, np sqlutils.NamedPrepare
 	})
 
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
 		}
 		return nil, err
@@ -91,8 +93,14 @@ func (s *Store) UserAccountGetByID(ctx context.Context, np sqlutils.NamedPrepare
 
 // UserAccountsByIDs gets user accounts by user ID
 func (s *Store) UserAccountsByIDs(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, error) {
+	return sqlutils.WithTransactionRet[[]*authentication.UserAccount](ctx, s, func(tx *sqlx.Tx) ([]*authentication.UserAccount, error) {
+		return s.UserAccountsByIDsNP(ctx, tx, userIDs)
+	})
+}
+
+func (s *Store) UserAccountsByIDsNP(ctx context.Context, np sqlutils.NamedPreparer, userIDs []uuid.UUID) ([]*authentication.UserAccount, error) {
 	var accounts []*authentication.UserAccount
-	return accounts, namedSelect(ctx, s.db, &accounts, sqlqueries.UserAccount.GetByIDs, args{
+	return accounts, namedSelect(ctx, np, &accounts, sqlqueries.UserAccount.GetByIDs, args{
 		"user_ids": pq.Array(userIDs),
 	})
 }

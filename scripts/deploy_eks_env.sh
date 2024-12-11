@@ -58,15 +58,6 @@ fi
 validate_namespace "$NAMESPACE"
 echo "Namespace is set to: $NAMESPACE"
 
-# Delete namespace if it exists
-if kubectl get ns "$NAMESPACE" > /dev/null 2>&1; then
-    echo "❄️  Deleting ${NAMESPACE} namespace ❄️"
-    kubectl delete ns "$NAMESPACE" --force || {
-        echo "Failed to delete namespace ${NAMESPACE}"
-        exit 1
-    }
-fi
-
 # Create Namespace!
 (
     echo "❄️  Creating Namespace via Kubectl  ❄️"
@@ -77,8 +68,7 @@ fi
 # Generate and deploy ingress resources
 (
     echo "❄️  Creating Ingress resources via Kustomize  ❄️"
-    TEMPDIR=$(mktemp -d ../tmp.ingress.XXXXX)
-    cd "$TEMPDIR" || exit
+    mkdir -p ../tmp.ingress && cd ../tmp.ingress
     kustomize create --resources ../deploy/overlays/pr/ingress
     kustomize edit set namespace "$NAMESPACE"
     kustomize build > manifest-ingress.yaml
@@ -94,8 +84,6 @@ fi
 
     echo "❄️  Deploying Ingress Objects via Kubectl  ❄️"
     kubectl apply -n "$NAMESPACE" -f manifest-ingress.yaml
-
-    rm -rf "$TEMPDIR"
 )
 
 # TODO: Fine tune this sleep time, or engineer around it.
@@ -112,9 +100,11 @@ export EMAIL_INGRESS
 
 # Generate and deploy EASI resources
 (
+    mkdir -p ../tmp.easi && cd ../tmp.easi
+    echo "❄️  Deleting old resources in namespace, if they exist  ❄️"
+    kubectl delete all --all -n "$NAMESPACE"
+
     echo "❄️  Creating EASi resources via Kustomize  ❄️"
-    TEMPDIR=$(mktemp -d ../tmp.easi.XXXXX)
-    cd "$TEMPDIR" || exit
     kustomize create --resources ../deploy/overlays/pr/easi
     kustomize edit set namespace "$NAMESPACE"
     kustomize edit set image easi-backend=840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-backend:"$GIT_HASH"
@@ -133,10 +123,9 @@ export EMAIL_INGRESS
 
     echo "❄️  Deploying Ingress Objects via Kubectl  ❄️"
     kubectl apply -n "$NAMESPACE" -f manifest-easi.yaml
-
-    rm -rf "$TEMPDIR"
 )
 
+rm -rf ../tmp.ingress/kustomization.yaml ../tmp.easi/kustomization.yaml
 
 echo "EASI: http://$EASI_INGRESS"
 echo "Mailcatcher: http://$EMAIL_INGRESS"
