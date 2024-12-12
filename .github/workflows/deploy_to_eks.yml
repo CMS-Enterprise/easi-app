@@ -21,6 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: "dev"
     steps:
+      - name: Check for `eks_ignore` label before continuing
+        if: ${{ contains( github.event.pull_request.labels.*.name, 'eks_ignore') }}
+        run: |
+          echo "PR has 'eks_ignore' label, and will not deploy to EKS when the branch is updated."
+          exit 1
       - name: Check out code
         uses: actions/checkout@v4
       - name: Login to Docker Hub
