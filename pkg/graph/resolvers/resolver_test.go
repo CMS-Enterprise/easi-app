@@ -48,7 +48,7 @@ func (s *ResolverSuite) SetupTest() {
 	assert.NoError(s.T(), err)
 
 	// Get the user account from the DB fresh for each test
-	princ := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.UserInfo.Username)
+	princ := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.UserInfo.Username, true)
 	s.testConfigs.Principal = princ
 
 	// get new dataloaders to clear any existing cached data
@@ -60,6 +60,11 @@ func (s *ResolverSuite) SetupTest() {
 
 	// Clear email data between tests
 	s.testConfigs.Sender.Clear()
+}
+
+func (s *ResolverSuite) getTestContextWithPrincipal(euaID string, isAdmin bool) (context.Context, *authentication.EUAPrincipal) {
+	princ := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, euaID, isAdmin)
+	return appcontext.WithPrincipal(s.testConfigs.Context, princ), princ
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -174,15 +179,16 @@ func NewEmailClient() (*email.Client, *mockSender) {
 }
 
 // getTestPrincipal gets a user principal from database
-func (s *ResolverSuite) getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {
+func (s *ResolverSuite) getTestPrincipal(ctx context.Context, store *storage.Store, userName string, isAdmin bool) *authentication.EUAPrincipal {
 
 	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
 
 	princ := &authentication.EUAPrincipal{
-		EUAID:       userName,
-		JobCodeEASi: true,
-		JobCodeGRT:  true,
-		UserAccount: userAccount,
+		EUAID:           userName,
+		JobCodeEASi:     true,
+		JobCodeGRT:      isAdmin,
+		JobCodeTRBAdmin: isAdmin,
+		UserAccount:     userAccount,
 	}
 	return princ
 

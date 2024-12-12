@@ -448,6 +448,19 @@ func (c Client) urlFromPath(path string) string {
 		Host:   c.config.URLHost,
 		Path:   path,
 	}
+
+	return u.String()
+}
+
+// urlFromPathAndQuery uses the client's URL configs to format one with a specific path and appended query
+func (c Client) urlFromPathAndQuery(path string, query string) string {
+	u := url.URL{
+		Scheme:   c.config.URLScheme,
+		Host:     c.config.URLHost,
+		Path:     path,
+		RawQuery: query,
+	}
+
 	return u.String()
 }
 

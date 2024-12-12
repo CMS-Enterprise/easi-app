@@ -4,7 +4,7 @@ import SystemIntakeGRBReviewer from './SystemIntakeGRBReviewer';
 
 export default gql(/* GraphQL */ `
   ${SystemIntakeGRBReviewer}
-  query GetSystemIntakeGRBReview($id: UUID!) {
+  query GetSystemIntakeGRBReviewers($id: UUID!) {
     systemIntake(id: $id) {
       id
       grbReviewStartedAt

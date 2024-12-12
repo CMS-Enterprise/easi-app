@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Document from '@tiptap/extension-document';
-import Mention from '@tiptap/extension-mention';
+import Mention, { MentionOptions } from '@tiptap/extension-mention';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import {
   EditorContent,
+  EditorEvents,
+  Node,
+  NodeViewProps,
   NodeViewWrapper,
   ReactNodeViewRenderer,
   useEditor
@@ -15,23 +18,20 @@ import classNames from 'classnames';
 
 import Alert from 'components/shared/Alert';
 import IconButton from 'components/shared/IconButton';
+import { MentionAttributes, MentionSuggestion } from 'types/discussions';
 
 import suggestion from './suggestion';
 import { getMentions } from './util';
 
 import './index.scss';
 
-/* The rendered Mention after selected from MentionList
-This component can be any react jsx component, but must be wrapped in <NodeViewWrapper />
-Attrs of selected mention are accessed through node prop */
-const MentionComponent = ({ node }: { node: any }) => {
+/** The rendered Mention after selected from MentionList */
+// This component can be any react jsx component, but must be wrapped in <NodeViewWrapper />
+const MentionComponent = ({ node }: NodeViewProps) => {
+  // Get attributes of selected mention
   const { label } = node.attrs;
 
-  // Label may return null if the text was truncated by <TruncatedText />
-  // In this case don't render the mention, and shift the line up by the height of the non-rendered label
-  if (!label) {
-    return <div className="margin-top-neg-4" />;
-  }
+  if (!label) return null;
 
   return (
     <NodeViewWrapper className="react-component display-inline">
@@ -40,9 +40,14 @@ const MentionComponent = ({ node }: { node: any }) => {
   );
 };
 
-/* Extended TipTap Mention class with additional attributes
-Additionally sets a addNodeView to render custo JSX as mention */
-const CustomMention = Mention.extend({
+/**
+ * Extended TipTap Mention class with additional attributes
+ *
+ * Additionally sets a addNodeView to render custo JSX as mention
+ */
+const CustomMention: Node<
+  MentionOptions<MentionSuggestion, MentionAttributes>
+> = Mention.extend({
   atom: true,
   selectable: true,
   addAttributes() {
@@ -64,6 +69,7 @@ const CustomMention = Mention.extend({
 type MentionTextAreaProps = {
   id: string;
   setFieldValue?: (value: string) => void;
+  mentionSuggestions?: MentionSuggestion[];
   editable?: boolean;
   disabled?: boolean;
   initialContent?: string;
@@ -80,6 +86,7 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
     {
       id,
       setFieldValue,
+      mentionSuggestions,
       editable = false,
       disabled,
       initialContent,
@@ -96,35 +103,13 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
     const [tagAlert, setTagAlert] = useState<boolean>(false);
 
     /** Mock users array for testing until tagging functionality is implemented  */
-    const fetchUsers = ({ query }: { query: string }) => {
-      return [
-        { username: 'a', displayName: 'Admin lead', tagType: 'other' },
-        {
-          username: 'b',
-          displayName: 'Governance Admin Team',
-          tagType: 'other'
-        },
-        {
-          username: 'c',
-          displayName: 'Governance Review Board (GRB)',
-          tagType: 'other'
-        },
-        {
-          username: 'OSYC',
-          displayName: 'Grant Eliezer',
-          tagType: 'user'
-        },
-        {
-          username: 'MKCK',
-          displayName: 'Forest Brown',
-          tagType: 'user'
-        },
-        {
-          username: 'PJEA',
-          displayName: 'Janae Stokes',
-          tagType: 'user'
-        }
-      ];
+    const fetchUsers = ({ query }: { query: string }): MentionSuggestion[] => {
+      if (!mentionSuggestions) return [];
+
+      return mentionSuggestions.filter(val =>
+        // Convert both strings to lowercase so filter is not case-sensitive
+        val.displayName.toLowerCase().includes(query.toLowerCase())
+      );
     };
 
     /** Character limit when truncating text in non-editable text area */
@@ -188,7 +173,9 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
           }
         },
         // Sets an alert if a mention is selected, and users/teams will be emailed
-        onSelectionUpdate: ({ editor: input }: any) => {
+        onSelectionUpdate: ({
+          editor: input
+        }: EditorEvents['selectionUpdate']) => {
           setTagAlert(!!getMentions(input?.getJSON()).length);
         },
         content
@@ -212,6 +199,7 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
     return (
       <>
         <EditorContent
+          id={`${id}-editorContent`}
           ref={ref}
           tabIndex={editable ? -1 : undefined}
           editor={editor}

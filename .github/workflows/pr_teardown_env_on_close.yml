@@ -1,0 +1,35 @@
+name: Teardown branch environment in EKS on PR close
+
+on:
+  pull_request:
+    types: [closed]
+    
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  GIT_HASH: ${{ github.sha }}
+  GIT_REF_NAME: ${{ github.ref }}
+  PR_NUMBER: ${{ github.event.number }}
+
+jobs:
+  Teardown_env:
+    name: Teardown EKS branch environment
+    runs-on: ubuntu-latest
+    environment: "dev"
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+          aws-region: us-west-2
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name dev-easi-poc-cluster --region us-west-2
+      - name: Teardown branch environment
+        # The "easi-pr-" prefix needs to match the prefix in build_and_test.yml so that we delete the correct namespace
+        run: |
+          kubectl delete namespace "easi-$PR_NUMBER" --force --ignore-not-found

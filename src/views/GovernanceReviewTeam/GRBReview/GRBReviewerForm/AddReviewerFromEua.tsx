@@ -5,7 +5,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Dropdown, Form, FormGroup } from '@trussworks/react-uswds';
 import {
-  GetSystemIntakeGRBReviewDocument,
+  GetSystemIntakeGRBReviewersDocument,
   SystemIntakeGRBReviewerFragment,
   useUpdateSystemIntakeGRBReviewerMutation
 } from 'gql/gen/graphql';
@@ -51,7 +51,7 @@ const AddReviewerFromEua = ({
   const [updateGRBReviewer] = useUpdateSystemIntakeGRBReviewerMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewDocument,
+        query: GetSystemIntakeGRBReviewersDocument,
         variables: { id: systemId }
       }
     ]

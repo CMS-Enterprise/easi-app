@@ -11,6 +11,7 @@ const general = {
   remove: 'Remove',
   pageLoading: 'Loading the page',
   loadingResults: 'Loading results',
+  noResults: 'No results',
   noInfoToDisplay: 'No information to display',
   noDataAvailable: 'No data available',
   readMore: 'Read more',
