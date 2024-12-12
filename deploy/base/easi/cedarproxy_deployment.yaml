@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cedarproxy
+  namespace: easi
+spec:
+  selector:
+    matchLabels:
+      app: cedarproxy
+  template:
+    metadata:
+      labels:
+        app: cedarproxy
+    spec:
+      containers:
+      - name: cedarproxy
+        image: cedarproxy:latest
+        imagePullPolicy: Never
+        envFrom:
+          - configMapRef:
+              name: cedarproxy-configmap
+        resources: {}
+        ports:
+        - containerPort: 8001

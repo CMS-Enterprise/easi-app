@@ -1,0 +1,30 @@
+- op: replace
+  path: /metadata/labels
+  value: 
+    fargate: 'true'
+- op: replace
+  path: /metadata/annotations
+  value:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+- op: replace
+  path: /spec
+  value:
+    ingressClassName: alb
+    rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: easi-frontend
+              port:
+                number: 80
+        - path: /api
+          pathType: Prefix
+          backend:
+            service:
+              name: easi-backend
+              port:
+                number: 8080

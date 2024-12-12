@@ -45,14 +45,14 @@ type templates struct {
 	trbRequestConsultMeeting                        templateCaller
 	trbRequestTRBLeadAdmin                          templateCaller
 	trbRequestTRBLeadAssignee                       templateCaller
-	trbAdviceLetterInternalReview                   templateCaller
+	trbGuidanceLetterInternalReview                 templateCaller
 	trbFormSubmittedAdmin                           templateCaller
 	trbFormSubmittedRequester                       templateCaller
 	trbAttendeeAdded                                templateCaller
 	trbReadyForConsult                              templateCaller
 	trbEditsNeededOnForm                            templateCaller
 	trbRequestReopened                              templateCaller
-	trbAdviceLetterSubmitted                        templateCaller
+	trbGuidanceLetterSubmitted                      templateCaller
 	trbRequestClosed                                templateCaller
 	cedarRolesChanged                               templateCaller
 	cedarYouHaveBeenAdded                           templateCaller
@@ -71,6 +71,7 @@ type templates struct {
 	systemIntakeIssueLCID                           templateCaller
 	systemIntakeConfirmLCID                         templateCaller
 	systemIntakeRetireLCID                          templateCaller
+	systemIntakeUnretireLCID                        templateCaller
 	systemIntakeExpireLCID                          templateCaller
 	systemIntakeUpdateLCID                          templateCaller
 	systemIntakeChangeLCIDRetirementDate            templateCaller
@@ -187,12 +188,12 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.trbRequestTRBLeadAssignee = trbRequestTRBLeadAssigneeTemplate
 
-	trbAdviceLetterInternalReviewTemplateName := "trb_advice_letter_internal_review.gohtml"
-	trbAdviceLetterInternalReviewTemplate := rawTemplates.Lookup(trbAdviceLetterInternalReviewTemplateName)
-	if trbAdviceLetterInternalReviewTemplate == nil {
-		return Client{}, templateError(trbAdviceLetterInternalReviewTemplateName)
+	trbGuidanceLetterInternalReviewTemplateName := "trb_guidance_letter_internal_review.gohtml"
+	trbGuidanceLetterInternalReviewTemplate := rawTemplates.Lookup(trbGuidanceLetterInternalReviewTemplateName)
+	if trbGuidanceLetterInternalReviewTemplate == nil {
+		return Client{}, templateError(trbGuidanceLetterInternalReviewTemplateName)
 	}
-	appTemplates.trbAdviceLetterInternalReview = trbAdviceLetterInternalReviewTemplate
+	appTemplates.trbGuidanceLetterInternalReview = trbGuidanceLetterInternalReviewTemplate
 
 	trbFormSubmittedAdminTemplateName := "trb_request_form_submission_admin.gohtml"
 	trbFormSubmittedAdminTemplate := rawTemplates.Lookup(trbFormSubmittedAdminTemplateName)
@@ -222,12 +223,12 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.trbReadyForConsult = trbReadyForConsultTemplate
 
-	trbAdviceLetterSubmittedTemplateName := "trb_advice_letter_submitted.gohtml"
-	trbAdviceLetterSubmittedTemplate := rawTemplates.Lookup(trbAdviceLetterSubmittedTemplateName)
-	if trbAdviceLetterSubmittedTemplate == nil {
-		return Client{}, templateError(trbAdviceLetterSubmittedTemplateName)
+	trbGuidanceLetterSubmittedTemplateName := "trb_guidance_letter_submitted.gohtml"
+	trbGuidanceLetterSubmittedTemplate := rawTemplates.Lookup(trbGuidanceLetterSubmittedTemplateName)
+	if trbGuidanceLetterSubmittedTemplate == nil {
+		return Client{}, templateError(trbGuidanceLetterSubmittedTemplateName)
 	}
-	appTemplates.trbAdviceLetterSubmitted = trbAdviceLetterSubmittedTemplate
+	appTemplates.trbGuidanceLetterSubmitted = trbGuidanceLetterSubmittedTemplate
 
 	trbEditsNeededOnFormTemplateName := "trb_edits_needed_on_form.gohtml"
 	trbEditsNeededOnFormTemplate := rawTemplates.Lookup(trbEditsNeededOnFormTemplateName)
@@ -368,6 +369,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(systemIntakeRetireLCIDTemplateName)
 	}
 	appTemplates.systemIntakeRetireLCID = systemIntakeRetireLCID
+
+	systemIntakeUnretireLCIDTemplateName := "system_intake_unretire_lcid.gohtml"
+	systemIntakeUnretireLCID := rawTemplates.Lookup(systemIntakeUnretireLCIDTemplateName)
+	if systemIntakeUnretireLCID == nil {
+		return Client{}, templateError(systemIntakeUnretireLCIDTemplateName)
+	}
+	appTemplates.systemIntakeUnretireLCID = systemIntakeUnretireLCID
 
 	systemIntakeExpireLCIDTemplateName := "system_intake_expire_lcid.gohtml"
 	systemIntakeExpireLCID := rawTemplates.Lookup(systemIntakeExpireLCIDTemplateName)

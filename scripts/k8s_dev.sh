@@ -46,10 +46,12 @@ validate_namespace() {
 
   if ! [[ $namespace =~ $valid_namespace_regex ]] ; then
     echo "Error: Invalid namespace. Per Kubernetes, namespaces must consist of lowercase alpha characters, numbers, or hyphens."
+    exit 1
   fi
 
   if [[ $namespace =~ $blacklisted_namespace_regex ]] ; then
     echo "Error: Invalid namespace. Per Kubernetes, the following namespaces are reserved and cannot be used: default, kube-public, kube-system, kube-node-lease."
+    exit 1
   fi
 
 }
@@ -79,30 +81,30 @@ fi
 # Run validate_namespace
 validate_namespace "$NAMESPACE"
 
-# Delete namespace if it exists
-if kubectl get ns "$NAMESPACE" > /dev/null 2>&1; then
-    echo "❄️  Clear ${NAMESPACE} namespace ❄️"
-    kubectl delete ns "$NAMESPACE" || {
-        echo "Failed to delete namespace ${NAMESPACE}"
-        exit 1
-    }
-fi
+APPLICATION_VERSION="$(git rev-parse @)"
+APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
+APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
+
+export APPLICATION_VERSION
+export APPLICATION_DATETIME
+export APPLICATION_TS
 
 # Build Docker images
 (
-    echo "🐋 Building easi-client:${NAMESPACE} image 🐋"
-    docker build -f ../Dockerfile.client_k8s -t easi-client:"$NAMESPACE" ../.
-
-    # APPLICATION_VERSION=$(git rev-parse HEAD)
-    # APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
-    # APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
-    # echo "APPLICATION_DATETIME=${APPLICATION_DATETIME}"
-    # echo "APPLICATION_TS=${APPLICATION_TS}"
-    # echo "APPLICATION_VERSION=${APPLICATION_VERSION}"
+    echo "🐋 Building easi-frontend:${NAMESPACE} image 🐋"
+    docker build -f ../Dockerfile.frontend_k8s -t easi-frontend:"$NAMESPACE" ../. \
+    --build-arg VITE_LD_CLIENT_ID=63231d448bd05a111f06195b \
+    --build-arg VITE_OKTA_CLIENT_ID=0oa2e913coDQeG19S297 \
+    --build-arg VITE_OKTA_SERVER_ID=aus2e96etlbFPnBHt297 \
+    --build-arg VITE_OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297 \
+    --build-arg VITE_OKTA_DOMAIN=https://test.idp.idm.cms.gov \
+    --build-arg VITE_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback
 
     echo "🐋 Building easi-backend:${NAMESPACE} image 🐋"
-    # docker build -f ../Dockerfile --build-arg APPLICATION_DATETIME="${APPLICATION_DATETIME}" --build-arg APPLICATION_TS="${APPLICATION_TS}" --build-arg APPLICATION_VERSION="${APPLICATION_VERSION}" -t easi-backend:latest ../.
-    docker build -f ../Dockerfile.backend_k8s --target build -t easi-backend:"$NAMESPACE" ../.
+    docker build -f ../Dockerfile -t easi-backend:"$NAMESPACE" ../. \
+    --build-arg APPLICATION_DATETIME="${APPLICATION_DATETIME}" \
+    --build-arg APPLICATION_TS="${APPLICATION_TS}" \
+    --build-arg APPLICATION_VERSION="${APPLICATION_VERSION}"
 
     echo "🐋 Building db-migrate:${NAMESPACE} image 🐋"
     docker build -f ../Dockerfile.db_migrations --build-arg TAG=9.10-alpine -t db-migrate:"$NAMESPACE" ../.
@@ -112,30 +114,43 @@ fi
 )
 
 echo "❄️  Deploying EASi via Kustomize  ❄️"
-TEMPDIR=$(mktemp -d ../tmp.k8s.XXXXX)
-delete_temp_dir() {
-    if [ -d "$TEMPDIR" ]; then
-        rm -r "$TEMPDIR"
-    fi
-}
+
+# Create Namespace!
 (
-    cd "$TEMPDIR" || exit
-    kustomize create --resources ../deploy/base
-    kustomize edit set namespace "$NAMESPACE"
-    kustomize build > manifest.yaml
-    sed -i'' -E "s/easi-client:latest/easi-client:${NAMESPACE}/" manifest.yaml
-    sed -i'' -E "s/easi-backend:latest/easi-backend:${NAMESPACE}/" manifest.yaml
-    sed -i'' -E "s/cedarproxy:latest/cedarproxy:${NAMESPACE}/" manifest.yaml
-    sed -i'' -E "s/db-migrate:latest/db-migrate:${NAMESPACE}/" manifest.yaml
-    sed -i'' -E "s/easi-backend.localdev.me/${NAMESPACE}-backend.localdev.me/" manifest.yaml
-    sed -i'' -E "s/easi.localdev.me/${NAMESPACE}.localdev.me/" manifest.yaml
-    sed -i'' -E "s/email.localdev.me/${NAMESPACE}-email.localdev.me/" manifest.yaml
-    sed -i'' -E "s/minio.localdev.me/${NAMESPACE}-minio.localdev.me/" manifest.yaml
-    kubectl apply -f manifest.yaml
-    trap delete_temp_dir EXIT
+    echo "❄️  Creating Namespace via Kubectl  ❄️"
+    kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
 )
+
+(
+    mkdir -p ../tmp.ingress && cd ../tmp.ingress
+    kustomize create --resources ../deploy/base/ingress
+    kustomize edit set namespace "$NAMESPACE"
+    kustomize build > manifest-ingress.yaml
+
+    sed -i'' -E "s/easi.localdev.me/${NAMESPACE}.localdev.me/" manifest-ingress.yaml
+    sed -i'' -E "s/email.localdev.me/${NAMESPACE}-email.localdev.me/" manifest-ingress.yaml
+    sed -i'' -E "s/minio.localdev.me/${NAMESPACE}-minio.localdev.me/" manifest-ingress.yaml
+    kubectl apply -f manifest-ingress.yaml
+)
+
+(
+    mkdir -p ../tmp.easi && cd ../tmp.easi
+    echo "❄️  Deleting old resources in namespace, if they exist  ❄️"
+    kubectl delete all --all -n "$NAMESPACE"
+
+    echo "❄️  Creating EASi resources via Kustomize  ❄️"
+    kustomize create --resources ../deploy/base/easi
+    kustomize edit set namespace "$NAMESPACE"
+    kustomize build > manifest-easi.yaml
+    sed -i'' -E "s/easi-frontend:latest/easi-frontend:${NAMESPACE}/" manifest-easi.yaml
+    sed -i'' -E "s/easi-backend:latest/easi-backend:${NAMESPACE}/" manifest-easi.yaml
+    sed -i'' -E "s/cedarproxy:latest/cedarproxy:${NAMESPACE}/" manifest-easi.yaml
+    sed -i'' -E "s/db-migrate:latest/db-migrate:${NAMESPACE}/" manifest-easi.yaml
+    kubectl apply -f manifest-easi.yaml
+)
+
+rm -rf ../tmp.ingress ../tmp.easi
 
 echo "❄️  EASi: http://${NAMESPACE}.localdev.me ❄️"
 echo "❄️  Mailcatcher: http://${NAMESPACE}-email.localdev.me ❄️"
 echo "❄️  Minio: http://${NAMESPACE}-minio.localdev.me ❄️"
-

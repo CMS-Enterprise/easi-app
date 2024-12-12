@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  namespace: easi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - command: ["minio", "server", "/data"]
+          args: ['--console-address', ':9001', '--address', ':9004']
+          image: minio/minio:latest
+          imagePullPolicy: Always
+          name: minio
+          ports:
+            - containerPort: 9004
+              # hostPort: 9004
+              protocol: TCP
+            - containerPort: 9001
+              # hostPort: 9001
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always

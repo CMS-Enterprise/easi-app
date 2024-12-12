@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: db-migrate
+  name: db-migrate
+  namespace: easi
+spec:
+  template:
+    metadata:
+      labels:
+        app: db-migrate
+    spec:
+      containers:
+        - env:
+            - name: FLYWAY_PASSWORD
+              value: mysecretpassword
+            - name: FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD
+              value: supersecretapp
+            - name: FLYWAY_URL
+              value: jdbc:postgresql://db/postgres
+            - name: FLYWAY_USER
+              value: postgres
+          image: db-migrate:latest
+          imagePullPolicy: Never
+          name: db-migrate
+          resources: {}
+      restartPolicy: Never
+  backoffLimit: 4
+  completions: 1
+  parallelism: 1

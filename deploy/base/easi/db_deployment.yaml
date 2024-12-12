@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: easi
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - args:
+            - postgres
+            - -c
+            - log_statement=all
+            - -c
+            - max_connections=25
+          envFrom:
+            - configMapRef:
+                name: db-configmap        
+          image: postgres:14.11
+          name: db
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always

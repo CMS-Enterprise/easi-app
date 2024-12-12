@@ -11,7 +11,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// SendTRBRequestReopenedEmailInput contains the data needed to to send the TRB advice
+// SendTRBRequestReopenedEmailInput contains the data needed to send the TRB guidance
 // letter submitted email
 type SendTRBRequestReopenedEmailInput struct {
 	TRBRequestID   uuid.UUID

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: email
+  name: email
+  namespace: easi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: email
+  template:
+    metadata:
+      labels:
+        app: email
+    spec:
+      containers:
+        - image: dockage/mailcatcher:latest
+          name: email
+          ports:
+            - containerPort: 1025
+              protocol: TCP
+            - containerPort: 1080
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always

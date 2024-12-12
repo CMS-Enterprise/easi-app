@@ -69,39 +69,39 @@ const technicalAssistance = {
           'The consult session is scheduled. Continue to review the initial request form and the supporting documentation as needed before the meeting.'
       },
       CONSULT_COMPLETE: {
-        title: 'Draft advice letter',
+        title: 'Draft guidance letter',
         description:
-          'Compile an advice letter for the requester and project team. Once you send the advice letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.',
+          'Compile a guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any requirements, recommendations, considerations, and other next steps you include.',
         list: {
-          label: 'What should I include in the advice letter?',
-          text: 'EASi will direct you to complete the following parts of the advice letter:',
+          label: 'What should I include in the guidance letter?',
+          text: 'EASi will direct you to complete the following parts of the guidance letter:',
           unorderedItems: [
             '<b>Meeting summary (“What we heard”):</b> Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.',
-            '<b>Recommendations and feedback (“What we recommend”):</b> Work with SMEs and other TRB members to compile recommendations for the requester and project team. Provide a title, description, and any useful resources for each recommendation.',
+            '<b>Requirements, recommendations, and considerations (“Guidance and insights”):</b> Work with SMEs and other TRB members to compile guidance for the requester and project team. Provide a title, description, priority, and any useful resources for each item.',
             '<b>Next steps:</b> Outline any additional steps that the project team should take, including whether the project team should schedule another consult session with the TRB in the future.'
           ]
         }
       },
-      DRAFT_ADVICE_LETTER: {
-        title: 'Draft advice letter',
+      DRAFT_GUIDANCE_LETTER: {
+        title: 'Draft guidance letter',
         description:
-          'Compile an advice letter for the requester and project team. Once you send the advice letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.',
+          'Compile a guidance letter for the requester and project team. Once you send the guidance letter, the requester will get a notification and be able to see any requirements, recommendations, considerations, and other next steps you include.',
         list: {
-          label: 'What should I include in the advice letter?',
-          text: 'EASi will direct you to complete the following parts of the advice letter:',
+          label: 'What should I include in the guidance letter?',
+          text: 'EASi will direct you to complete the following parts of the guidance letter:',
           unorderedItems: [
             '<b>Meeting summary (“What we heard”):</b> Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.',
-            '<b>Recommendations and feedback (“What we recommend”):</b> Work with SMEs and other TRB members to compile recommendations for the requester and project team. Provide a title, description, and any useful resources for each recommendation.',
+            '<b>Requirements, recommendations, and considerations (“Guidance and insights”):</b> Work with SMEs and other TRB members to compile guidance for the requester and project team. Provide a title, description, priority, and any useful resources for each item.',
             '<b>Next steps:</b> Outline any additional steps that the project team should take, including whether the project team should schedule another consult session with the TRB in the future.'
           ]
         }
       },
-      ADVICE_LETTER_IN_REVIEW: {
-        title: 'Review advice letter before sending',
+      GUIDANCE_LETTER_IN_REVIEW: {
+        title: 'Review guidance letter before sending',
         description:
-          'Review this draft advice letter and leave a note with any comments or corrections. The TRB lead for this request will then edit the advice letter to incorporate your comments and feedback before finalizing the letter and sending it to the requester and project team.'
+          'Review this draft guidance letter and leave a note with any comments or corrections. The TRB lead for this request will then edit the guidance letter to incorporate your comments and feedback before finalizing the letter and sending it to the requester and project team.'
       },
-      ADVICE_LETTER_SENT: {
+      GUIDANCE_LETTER_SENT: {
         title: 'Close request',
         description:
           'If this is a Consult as a Service request (CaaS), you may choose to leave this request open until the engagement is complete. For all other requests, you may close this request at any time.'
@@ -128,10 +128,10 @@ const technicalAssistance = {
       addDateTime: 'Add date and time',
       assignTrbLead: 'Assign a TRB lead',
       viewSupportingDocuments: 'View supporting documents',
-      viewAdviceLetter: 'View advice letter',
-      startAdviceLetter: 'Start advice letter',
-      continueAdviceLetter: 'Continue advice letter',
-      finalizeAdviceLetter: 'Finalize and send advice letter',
+      viewGuidanceLetter: 'View guidance letter',
+      startGuidanceLetter: 'Start guidance letter',
+      continueGuidanceLetter: 'Continue guidance letter',
+      finalizeGuidanceLetter: 'Finalize and send guidance letter',
       addNote: 'Add a note'
     }
   },
@@ -140,46 +140,46 @@ const technicalAssistance = {
     viewNotes: 'View notes',
     addNote: 'Add a note'
   },
-  adviceLetter: {
+  guidanceLetter: {
     introText:
-      'The advice letter is sent to the requester after the consult is complete. It outlines any outcomes, advice, recommendations, and next steps that the TRB has for this request.',
+      'The guidance letter is sent to the requester after the consult is complete. It outlines any outcomes, requirements, recommendations, considerations, and other next steps that the TRB has for this request.',
     alerts: {
       error:
-        'There was an error creating this advice letter. Please try again. If the error persists, please try again at a later date.',
-      info: 'There is no advice letter for this request yet. Once the consult date has passed, you may create an advice letter for this request.'
+        'There was an error creating this guidance letter. Please try again. If the error persists, please try again at a later date.',
+      info: 'There is no guidance letter for this request yet. Once the consult date has passed, you may create an guidance letter for this request.'
     },
-    downloadAsPdf: 'Download advice letter as PDF',
+    downloadAsPdf: 'Download guidance letter as PDF',
     sendDate: 'Send date',
     consultSessionDate: 'Consult session date',
     notYetSent: 'Not yet sent',
     whatWeHeard: 'What we heard',
     meetingSummary: 'Meeting summary',
-    whatWeRecommend: 'What we recommend',
+    guidanceAndInsights: 'Guidance and insights',
     resources: 'Resources',
     nextSteps: 'Next steps',
     notSpecified: 'Not specified yet',
     followup: 'Should the team return for a follow-up session?',
-    adviceLetter: 'Advice Letter',
+    guidanceLetter: 'Guidance Letter',
     description:
-      'This is an advice letter that was sent to the project team for the request summarized below. If you have any questions about this advice letter, you may reach out to the TRB at <a>{{email}}</a>.',
+      'This is an guidance letter that was sent to the project team for the request summarized below. If you have any questions about this guidance letter, you may reach out to the TRB at <a>{{email}}</a>.',
     thankYou: 'Thank you for attending the TRB consult session!',
     requestSummary: 'Request summary',
     whatOtherRequestTypes: 'What other request types are there?',
     showSummary: 'Show summary',
     hideSummary: 'Hide summary',
-    haveQuestions: 'Have questions about this advice letter?',
+    haveQuestions: 'Have questions about this guidance letter?',
     haveQuestionsContact: 'Reach out to the TRB at <a>{{email}}</a>',
-    incomplete: 'Advice letter incomplete',
+    incomplete: 'Guidance letter incomplete',
     incompleteCheckLater:
-      'The Technical Review Board is still compiling the advice letter for this project. Please check back later'
+      'The Technical Review Board is still compiling the guidance letter for this project. Please check back later'
   },
   requiredFields:
     'Fields marked with an asterisk ( <red>*</red> ) are required.',
-  adviceLetterForm: {
-    heading: 'Advice letter',
+  guidanceLetterForm: {
+    heading: 'Guidance letter',
     description:
-      'Document any outcomes, advice, findings, recommendations, or next steps that the TRB has for this request.',
-    text: 'After submitting this form, the requester will receive an automatic notification letting them know their advice letter is available.',
+      'Document any outcomes, requirements, recommendations, considerations, and other next steps that the TRB has for this request.',
+    text: 'After submitting this form, the requester will receive an automatic notification letting them know their guidance letter is available.',
     returnToRequest: 'Save and return to request',
     steps: [
       {
@@ -188,9 +188,9 @@ const technicalAssistance = {
           'Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.'
       },
       {
-        name: 'What we recommend',
+        name: 'Guidance and insights',
         description:
-          'Add recommendations for the project team. Provide a title, description, and any useful resources for each recommendation.'
+          'Add requirements, recommendations, considerations for the project team. Provide a title, description, and any useful resources for each one. Requirements stipulate that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS. A consideration suggests that the project team should evaluate this option, but it will not significantly impact their system or CMS.'
       },
       {
         name: 'Next steps',
@@ -204,63 +204,82 @@ const technicalAssistance = {
       {
         name: 'Check and send',
         longName:
-          'Check the content of your advice letter and send it to the requester',
+          'Check the content of your guidance letter and send it to the requester',
         description:
-          'Review the notes from your TRB team members and incorporate any feedback into the advice letter. When you are ready, send it to the requester, project team, and any other recipients you would like to include.'
+          'Review the notes from your TRB team members and incorporate any feedback into the guidance letter. When you are ready, send it to the requester, project team, and any other recipients you would like to include.'
       }
     ],
     meetingSummary: 'Meeting summary',
-    addRecommendation: 'Add a recommendation',
-    addAnotherRecommendation: 'Add another recommendation',
-    noRecommendations:
-      'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
-    reorderRecommendations:
-      'If you have two or more recommendations, you can use arrows on the left side of each recommendation to reorder them.',
+    addGuidance: 'Add guidance',
+    addAdditionalGuidance: 'Add additional guidance',
+    noGuidance:
+      'Nothing has been added yet. Use the button above to add guidance, or click next if you have no guidance to add.',
+    noInsights:
+      'This guidance letter does not have any guidance categorized as a {{category}}.',
+    uncategorizedAlertEdit:
+      'Past advice letters (now guidance letters) will not have categorized advice. You may edit each existing item to add it to a category.',
+    uncategorizedAlert:
+      'Past advice letters (now guidance letters) will not have categorized advice. If you have questions about the priority or severity of the content below, please contact the TRB at <a>cms-trb@cms.hhs.gov</a>.',
+    reorderGuidance:
+      'If you have two or more items per category, you can use arrows on the left side of each to reorder them within the category. Edit the guidance to change the category.',
+    increaseOrderAriaLabel: 'Increase guidance sort order',
+    decreaseOrderAriaLabel: 'Decrease guidance sort order',
     reorderError:
-      'There was an issue saving your recommendation. Please try again, and if the problem persists, try again later.',
-    continueWithoutAdding: 'Continue without adding recommendations',
+      'There was an issue saving your guidance. Please try again, and if the problem persists, try again later.',
+    continueWithoutAdding: 'Continue without adding guidance',
+    priorityCategory: 'Priority category',
+    uncategorized: 'Uncategorized',
+    requirement: 'Requirement',
+    requirementDescription:
+      'A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding.',
+    recommendation: 'Recommendation',
+    recommendationDescription:
+      'A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS.',
+    consideration: 'Consideration',
+    considerationDescription:
+      'A consideration suggests that the project team should evaluate this option, but it will not significantly impact their system or CMS.',
+    categoryHeading_requirement: 'Requirements',
+    categoryHeading_recommendation: 'Recommendations',
+    categoryHeading_consideration: 'Considerations',
+    categoryHeading_uncategorized: 'Uncategorized',
     addResourceLink: 'Add a resource link',
     addAnotherResourceLink: 'Add another resource link',
-    returnToAdviceLetter:
-      'Don’t add a recommendation and return to advice letter',
-    editReturnToAdviceLetter:
-      'Don’t edit recommendation and return to advice letter',
-    editRecommendation: 'Edit recommendation',
-    removeRecommendation: 'Remove recommendation',
+    returnToGuidanceLetter: 'Don’t {{formType}} and return to guidance letter',
+    editGuidance: 'Edit guidance',
+    removeGuidance: 'Remove guidance',
     nextSteps: 'Next steps',
     isFollowupRecommended: 'Should the team return for a follow-up session?',
     followupYes: 'Yes, a follow-up is recommended',
     notNecessary: 'Not necessary',
     followupHelpText: 'Examples: in 6 months, when development is complete',
-    removeSuccess: 'Your recommendation was removed from this advice letter.',
+    removeSuccess: 'Your guidance was removed from this letter.',
     error:
       'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
-    recommendationSuccess:
-      'Your recommendation was added to this advice letter.',
-    editRecommendationSuccess: 'Your recommendation was edited',
+    guidanceSuccess: 'Your guidance was added to this letter.',
+    guidanceSuccess_edit: 'Your guidance was edited',
     modal: {
-      title: 'Confirm you want to remove this recommendation.',
-      text: 'This action cannot be undone. If you remove this recommendation, all content related to it will be removed and will not be sent as a part of the advice letter.',
+      title: 'Are you sure you want to remove this guidance?',
+      text: 'This action cannot be undone. If you remove this guidance, all content related to it will be removed and will not be sent as a part of the guidance letter.',
       removingTitle: 'Removing: {{title}}'
     },
     internalReviewNeeded: {
       heading: 'Internal TRB review needed',
-      text: 'You should not send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
+      text: 'You should not send this guidance letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
     },
     requestInternalReview: 'Request internal review',
     requestAnotherInternalReview: 'Request another internal review',
     progressToNextStep: 'or, <1>progress to next step</1>',
     notesAlert:
-      'Your TRB team members have not yet left any notes about your draft advice letter. Please confirm with the team to make sure this advice letter has been reviewed before you proceed with sending the final letter.',
+      'Your TRB team members have not yet left any notes about your draft guidance letter. Please confirm with the team to make sure this guidance letter has been reviewed before you proceed with sending the final letter.',
     notesCount:
-      '<bold>{{count}}</bold> note{{plural}} about this advice letter',
+      '<bold>{{count}}</bold> note{{plural}} about this guidance letter',
     done: {
       success:
-        'Your advice letter has been sent. Selected email notification recipients will receive a confirmation email with a link to the advice letter. Additionally, the original requester can view this letter from their request task list.',
+        'Your guidance letter has been sent. Selected email notification recipients will receive a confirmation email with a link to the guidance letter. Additionally, the original requester can view this letter from their request task list.',
       error:
-        'Your advice letter was not sent. Please either return to the previous page and try again, or try again at a later date. The requester will not be able to view the advice letter until it is successfully sent.',
+        'Your guidance letter was not sent. Please either return to the previous page and try again, or try again at a later date. The requester will not be able to view the guidance letter until it is successfully sent.',
       returnToRequestHome: 'Return to request home',
-      backToAdviceLetter: 'Back to advice letter'
+      backToGuidanceLetter: 'Back to guidance letter'
     }
   },
   emailRecipientFields: {
@@ -327,9 +346,9 @@ const technicalAssistance = {
       READY_FOR_CONSULT: 'Ready for consult',
       CONSULT_SCHEDULED: 'Consult scheduled',
       CONSULT_COMPLETE: 'Consult complete',
-      DRAFT_ADVICE_LETTER: 'Draft advice letter',
-      ADVICE_LETTER_IN_REVIEW: 'Advice letter in review',
-      ADVICE_LETTER_SENT: 'Advice letter sent',
+      DRAFT_GUIDANCE_LETTER: 'Draft guidance letter',
+      GUIDANCE_LETTER_IN_REVIEW: 'Guidance letter in review',
+      GUIDANCE_LETTER_SENT: 'Guidance letter sent',
       FOLLOW_UP_REQUESTED: 'Follow-up requested'
     },
     noRequests:
@@ -382,7 +401,7 @@ const technicalAssistance = {
       },
       FORMAL_REVIEW: {
         heading: 'Formal design review',
-        text: 'Though the TRB has shifted to become more of a consultation and advice service, you can still request a more formal design review or readiness review. Choose this option if:',
+        text: 'Though the TRB has shifted to become more of a consultation and guidance service, you can still request a more formal design review or readiness review. Choose this option if:',
         list: [
           'you have a architecture solution in mind and would like a review',
           "you are ready to go live and would like one final review with the TRB to make sure your team didn't miss anything",
@@ -430,7 +449,7 @@ const technicalAssistance = {
       'If this day or time does not work for you, or if you need to reschedule, please contact the TRB at ',
     trbConsultAttended:
       'You attended your project’s TRB consult session on {{-date}} at {{-time}}',
-    viewAdviceLetter: 'View advice letter',
+    viewGuidanceLetter: 'View guidance letter',
     taskList: [
       {
         heading: 'Fill out the initial request form',
@@ -451,11 +470,11 @@ const technicalAssistance = {
       },
       {
         heading: 'Attend the TRB consult session',
-        text: 'A TRB team member will schedule a consult session for your project. Attendees could include Subject Matter Experts (SMEs) to provide additional advice and insight, any additional attendees you’ve specified from your team, and 1 or more TRB team members. Consult sessions are usually 1-hour sessions on Tuesday or Thursday.'
+        text: 'A TRB team member will schedule a consult session for your project. Attendees could include Subject Matter Experts (SMEs) to provide additional guidance and insight, any additional attendees you’ve specified from your team, and 1 or more TRB team members. Consult sessions are usually 1-hour sessions on Tuesday or Thursday.'
       },
       {
-        heading: 'Advice letter and next steps',
-        text: 'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any advice for your project team as well as any recommended next steps.'
+        heading: 'Guidance letter and next steps',
+        text: 'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any outcomes, requirements, recommendations, considerations, and other next steps that the TRB has for this request.'
       }
     ]
   },
@@ -812,11 +831,11 @@ const technicalAssistance = {
       CLOSED: 'Closed'
     },
     trbRequestStatuses: {
-      ADVICE_LETTER_IN_REVIEW: 'Advice letter in review',
-      ADVICE_LETTER_SENT: 'Advice letter sent',
+      GUIDANCE_LETTER_IN_REVIEW: 'Guidance letter in review',
+      GUIDANCE_LETTER_SENT: 'Guidance letter sent',
       CONSULT_COMPLETE: 'Consult complete',
       CONSULT_SCHEDULED: 'Consult scheduled',
-      DRAFT_ADVICE_LETTER: 'Draft advice letter',
+      DRAFT_GUIDANCE_LETTER: 'Draft guidance letter',
       DRAFT_REQUEST_FORM: 'Draft request form',
       FOLLOW_UP_REQUESTED: 'Follow-up requested',
       NEW: 'New',
@@ -847,12 +866,12 @@ const technicalAssistance = {
         SCHEDULED: 'Consult scheduled',
         COMPLETED: 'Consult complete'
       },
-      adviceLetterStatus: {
+      guidanceLetterStatus: {
         CANNOT_START_YET: 'Consult complete',
-        IN_PROGRESS: 'Draft advice letter',
-        READY_FOR_REVIEW: 'Advice letter in review',
+        IN_PROGRESS: 'Draft guidance letter',
+        READY_FOR_REVIEW: 'Guidance letter in review',
         READY_TO_START: 'Consult complete',
-        COMPLETED: 'Advice letter sent'
+        COMPLETED: 'Guidance letter sent'
       }
     },
     consultDetails: 'Consult meeting details',
@@ -869,8 +888,8 @@ const technicalAssistance = {
     toBeCompleted: 'To be completed by TRB',
     lastUpdated: 'Last updated',
     view: 'View',
-    viewAdvice: 'View advice letter',
-    startAdvice: 'Start advice letter',
+    viewGuidance: 'View guidance letter',
+    startGuidance: 'Start guidance letter',
     notStarted: 'Not started',
     supportingDocs: 'Supporting documents',
     docInfo:
@@ -892,7 +911,7 @@ const technicalAssistance = {
     initialRequestForm: 'Initial request form',
     supportingDocuments: 'Supporting documents',
     feedback: 'Feedback',
-    adviceLetter: 'Advice letter',
+    guidanceLetter: 'Guidance letter',
     additionalInformation: 'Additional information',
     notes: 'Notes',
     byNameOnDate: 'by {{name}} on {{date}}'
@@ -1038,13 +1057,13 @@ const technicalAssistance = {
       selectedDocuments: 'Selected documents',
       meetingSummary: 'Meeting summary',
       nextSteps: 'Next steps',
-      recommendation: 'Recommendation ({{title}})',
-      removedRecommendation: 'Removed recommendation ({{title}})',
+      insight: '$t(guidanceLetterForm.{{category}}) ({{title}})',
+      removedInsight: 'Removed {{category}} ({{title}})',
       removedDocument: 'Removed document ({{fileName}})'
     },
     noDocuments: 'There are no documents uploaded for this request.',
     categories: {
-      ADVICE_LETTER: 'Advice letter',
+      GUIDANCE_LETTER: 'Guidance letter',
       CONSULT_SESSION: 'Consult session',
       GENERAL_REQUEST: 'General note about this request',
       INITIAL_REQUEST_FORM: 'Initial request form',
@@ -1057,7 +1076,7 @@ const technicalAssistance = {
       'Use this action if work on this request is complete, or if it is not a TRB request.',
     breadcrumb: 'Close request',
     label: 'Why are you closing this request?',
-    hint: 'Give a brief explanation, especially if you are closing this request without sending an advice letter.',
+    hint: 'Give a brief explanation, especially if you are closing this request without sending an guidance letter.',
     submit: 'Complete action and close request',
     success: 'Action complete. This request is now closed.',
     error:
