@@ -99,8 +99,8 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		reviewerEUA := "ABCD"
 		originalVotingRole := models.SystemIntakeGRBReviewerVotingRoleAlternate
 		originalGRBRole := models.SystemIntakeGRBReviewerRoleAca3021Rep
-		newVotingRole := models.SIGRBRVRVoting
-		newGRBRole := models.SIGRBRRCMCSRep
+		newVotingRole := models.SystemIntakeGRBReviewerVotingRoleVoting
+		newGRBRole := models.SystemIntakeGRBReviewerRoleCmcsRep
 
 		userAcct := s.getOrCreateUserAcct(reviewerEUA)
 		intake, reviewer := s.createIntakeAndAddReviewer(&models.CreateGRBReviewerInput{
