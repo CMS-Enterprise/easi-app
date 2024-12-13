@@ -161,10 +161,9 @@ func (tc *TestConfigs) GetDefaults() {
 	tc.EmailClient = emailClient
 }
 
-func NewEmailClient() (*email.Client, *mockSender) {
-	sender := &mockSender{}
+func getTestEmailConfig() email.Config {
 	config := testhelpers.NewConfig()
-	emailConfig := email.Config{
+	return email.Config{
 		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
 		ITInvestmentEmail: models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
 		TRBEmail:          models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
@@ -173,7 +172,11 @@ func NewEmailClient() (*email.Client, *mockSender) {
 		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
+}
 
+func NewEmailClient() (*email.Client, *mockSender) {
+	sender := &mockSender{}
+	emailConfig := getTestEmailConfig()
 	emailClient, _ := email.NewClient(emailConfig, sender)
 	return &emailClient, sender
 }
@@ -269,7 +272,7 @@ func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.Us
 }
 
 // utility method to get userAcct in resolver tests
-func (s *ResolverSuite) getOrCreateUserAccts(euaUserIDs []string) []*authentication.UserAccount {
+func (s *ResolverSuite) getOrCreateUserAccts(euaUserIDs ...string) []*authentication.UserAccount {
 	ctx := s.testConfigs.Context
 	store := s.testConfigs.Store
 	okta := local.NewOktaAPIClient()

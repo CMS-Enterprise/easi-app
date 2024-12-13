@@ -165,20 +165,24 @@ func CreateSystemIntakeGRBDiscussionReply(
 		if err != nil {
 			return nil, err
 		}
-		if err := emailClient.SystemIntake.SendGRBReviewDiscussionReplyEmail(ctx, email.SendGRBReviewDiscussionReplyEmailInput{
-			SystemIntakeID:    intakeID,
-			UserName:          replyPoster.CommonName,
-			RequestName:       systemIntake.ProjectName.String,
-			DiscussionID:      initialPost.ID,
-			Role:              authorRole,
-			DiscussionContent: input.Content.ToTemplate(),
-			Recipient:         models.EmailAddress(initialPoster.Email),
-		}); err != nil {
-			return nil, err
+
+		// don't send email to author if reply is from author
+		if initialPoster.ID != replyPoster.ID {
+			if err := emailClient.SystemIntake.SendGRBReviewDiscussionReplyEmail(ctx, email.SendGRBReviewDiscussionReplyEmailInput{
+				SystemIntakeID:    intakeID,
+				UserName:          replyPoster.CommonName,
+				RequestName:       systemIntake.ProjectName.String,
+				DiscussionID:      initialPost.ID,
+				Role:              authorRole,
+				DiscussionContent: input.Content.ToTemplate(),
+				Recipient:         models.EmailAddress(initialPoster.Email),
+			}); err != nil {
+				return nil, err
+			}
 		}
 
 		uniqueTags := input.Content.UniqueTags()
-		// strip discussion author from tags in case author was tagged
+		// strip initial post author from tags in case author was tagged
 		uniqueTagsWithoutInitialPoster := lo.Filter(uniqueTags, func(t *models.Tag, _ int) bool {
 			return t.TaggedContentID != initialPoster.ID
 		})
@@ -235,6 +239,13 @@ func sendDiscussionEmailsForTags(
 	for _, grbReviewer := range grbReviewers {
 		// not sure if possible, but just in case
 		if grbReviewer == nil {
+			continue
+		}
+		// skip including author/current user in Reviewers to be tagged
+		// individual tags are also built from this cache below, so this will exclude the author from the
+		// GRB group tag email as well as an individual tag email
+		// GRT admin tags go to ITGov inbox, so an admin author will still receive an admin tag email
+		if grbReviewer.UserID == principal.Account().ID {
 			continue
 		}
 

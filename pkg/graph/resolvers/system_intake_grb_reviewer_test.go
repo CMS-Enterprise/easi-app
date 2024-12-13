@@ -28,7 +28,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		grbRole2 := models.SystemIntakeGRBReviewerRoleFedAdminBdgChair
 
 		intake := s.createNewIntake()
-		userAccts := s.getOrCreateUserAccts([]string{reviewerEUA1, reviewerEUA2})
+		userAccts := s.getOrCreateUserAccts(reviewerEUA1, reviewerEUA2)
 
 		payload, err := CreateSystemIntakeGRBReviewers(
 			ctx,
