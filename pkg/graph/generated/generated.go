@@ -54,7 +54,6 @@ type ResolverRoot interface {
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
 	SystemIntakeDocument() SystemIntakeDocumentResolver
-	SystemIntakeGRBReviewDiscussionPost() SystemIntakeGRBReviewDiscussionPostResolver
 	SystemIntakeGRBReviewer() SystemIntakeGRBReviewerResolver
 	SystemIntakeNote() SystemIntakeNoteResolver
 	TRBAdminNote() TRBAdminNoteResolver
@@ -852,7 +851,7 @@ type ComplexityRoot struct {
 		Content               func(childComplexity int) int
 		CreatedAt             func(childComplexity int) int
 		CreatedByUserAccount  func(childComplexity int) int
-		GrbRole               func(childComplexity int) int
+		GRBRole               func(childComplexity int) int
 		ID                    func(childComplexity int) int
 		ModifiedAt            func(childComplexity int) int
 		ModifiedByUserAccount func(childComplexity int) int
@@ -1379,10 +1378,6 @@ type SystemIntakeDocumentResolver interface {
 	URL(ctx context.Context, obj *models.SystemIntakeDocument) (*string, error)
 	CanDelete(ctx context.Context, obj *models.SystemIntakeDocument) (bool, error)
 	CanView(ctx context.Context, obj *models.SystemIntakeDocument) (bool, error)
-}
-type SystemIntakeGRBReviewDiscussionPostResolver interface {
-	VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewDiscussionPost) (*models.SystemIntakeGRBReviewerVotingRole, error)
-	GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewDiscussionPost) (*models.SystemIntakeGRBReviewerRole, error)
 }
 type SystemIntakeGRBReviewerResolver interface {
 	VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error)
@@ -6237,11 +6232,11 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		return e.complexity.SystemIntakeGRBReviewDiscussionPost.CreatedByUserAccount(childComplexity), true
 
 	case "SystemIntakeGRBReviewDiscussionPost.grbRole":
-		if e.complexity.SystemIntakeGRBReviewDiscussionPost.GrbRole == nil {
+		if e.complexity.SystemIntakeGRBReviewDiscussionPost.GRBRole == nil {
 			break
 		}
 
-		return e.complexity.SystemIntakeGRBReviewDiscussionPost.GrbRole(childComplexity), true
+		return e.complexity.SystemIntakeGRBReviewDiscussionPost.GRBRole(childComplexity), true
 
 	case "SystemIntakeGRBReviewDiscussionPost.id":
 		if e.complexity.SystemIntakeGRBReviewDiscussionPost.ID == nil {
@@ -47847,7 +47842,7 @@ func (ec *executionContext) _SystemIntakeGRBReviewDiscussionPost_votingRole(ctx 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeGRBReviewDiscussionPost().VotingRole(rctx, obj)
+		return obj.VotingRole, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -47865,8 +47860,8 @@ func (ec *executionContext) fieldContext_SystemIntakeGRBReviewDiscussionPost_vot
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBReviewDiscussionPost",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type SystemIntakeGRBReviewerVotingRole does not have child fields")
 		},
@@ -47888,7 +47883,7 @@ func (ec *executionContext) _SystemIntakeGRBReviewDiscussionPost_grbRole(ctx con
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeGRBReviewDiscussionPost().GrbRole(rctx, obj)
+		return obj.GRBRole, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -47906,8 +47901,8 @@ func (ec *executionContext) fieldContext_SystemIntakeGRBReviewDiscussionPost_grb
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBReviewDiscussionPost",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type SystemIntakeGRBReviewerRole does not have child fields")
 		},
@@ -70486,71 +70481,9 @@ func (ec *executionContext) _SystemIntakeGRBReviewDiscussionPost(ctx context.Con
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "votingRole":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeGRBReviewDiscussionPost_votingRole(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntakeGRBReviewDiscussionPost_votingRole(ctx, field, obj)
 		case "grbRole":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeGRBReviewDiscussionPost_grbRole(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntakeGRBReviewDiscussionPost_grbRole(ctx, field, obj)
 		case "systemIntakeID":
 			out.Values[i] = ec._SystemIntakeGRBReviewDiscussionPost_systemIntakeID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

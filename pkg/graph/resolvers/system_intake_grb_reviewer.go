@@ -67,8 +67,8 @@ func CreateSystemIntakeGRBReviewers(
 		for _, acct := range accts {
 			reviewerInput := reviewersByEUAMap[acct.Username]
 			reviewer := models.NewSystemIntakeGRBReviewer(acct.ID, createdByID)
-			reviewer.GRBVotingRole = models.SIGRBReviewerVotingRole(reviewerInput.VotingRole)
-			reviewer.GRBReviewerRole = models.SIGRBReviewerRole(reviewerInput.GrbRole)
+			reviewer.GRBVotingRole = models.SystemIntakeGRBReviewerVotingRole(reviewerInput.VotingRole)
+			reviewer.GRBReviewerRole = models.SystemIntakeGRBReviewerRole(reviewerInput.GrbRole)
 			reviewer.SystemIntakeID = input.SystemIntakeID
 			reviewersToCreate = append(reviewersToCreate, reviewer)
 		}

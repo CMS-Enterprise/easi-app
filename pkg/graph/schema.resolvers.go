@@ -1965,24 +1965,6 @@ func (r *systemIntakeDocumentResolver) CanView(ctx context.Context, obj *models.
 }
 
 // VotingRole is the resolver for the votingRole field.
-func (r *systemIntakeGRBReviewDiscussionPostResolver) VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewDiscussionPost) (*models.SystemIntakeGRBReviewerVotingRole, error) {
-	if obj.VotingRole == nil {
-		return nil, nil
-	}
-	strVal := *obj.VotingRole
-	return helpers.PointerTo(models.SystemIntakeGRBReviewerVotingRole(strVal)), nil
-}
-
-// GrbRole is the resolver for the grbRole field.
-func (r *systemIntakeGRBReviewDiscussionPostResolver) GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewDiscussionPost) (*models.SystemIntakeGRBReviewerRole, error) {
-	if obj.GRBRole == nil {
-		return nil, nil
-	}
-	strVal := *obj.GRBRole
-	return helpers.PointerTo(models.SystemIntakeGRBReviewerRole(strVal)), nil
-}
-
-// VotingRole is the resolver for the votingRole field.
 func (r *systemIntakeGRBReviewerResolver) VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error) {
 	return models.SystemIntakeGRBReviewerVotingRole(obj.GRBVotingRole), nil
 }
@@ -2270,11 +2252,6 @@ func (r *Resolver) SystemIntakeDocument() generated.SystemIntakeDocumentResolver
 	return &systemIntakeDocumentResolver{r}
 }
 
-// SystemIntakeGRBReviewDiscussionPost returns generated.SystemIntakeGRBReviewDiscussionPostResolver implementation.
-func (r *Resolver) SystemIntakeGRBReviewDiscussionPost() generated.SystemIntakeGRBReviewDiscussionPostResolver {
-	return &systemIntakeGRBReviewDiscussionPostResolver{r}
-}
-
 // SystemIntakeGRBReviewer returns generated.SystemIntakeGRBReviewerResolver implementation.
 func (r *Resolver) SystemIntakeGRBReviewer() generated.SystemIntakeGRBReviewerResolver {
 	return &systemIntakeGRBReviewerResolver{r}
@@ -2335,7 +2312,6 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
-type systemIntakeGRBReviewDiscussionPostResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
