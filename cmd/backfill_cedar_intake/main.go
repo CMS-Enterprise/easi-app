@@ -14,6 +14,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
@@ -57,8 +59,6 @@ func submitToCEDAR() {
 	zapLogger, err := zap.NewDevelopment()
 	noErr(err)
 
-	ctx := appcontext.WithLogger(context.Background(), zapLogger)
-
 	td := ldtestdata.DataSource()
 	td.Update(td.Flag("emit-to-cedar").BooleanFlag().VariationForAll(true))
 	config := ld.Config{
@@ -74,6 +74,17 @@ func submitToCEDAR() {
 
 	client := makeCedarIntakeClient(ldClient)
 	store := makeStore(ldClient)
+
+	// Add dataloaders with mock Okta/CEDAR Core functions (not needed in this context)
+	ctx := appcontext.WithLogger(context.Background(), zapLogger)
+	buildDataloaders := func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(
+			store,
+			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
+			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
+		)
+	}
+	ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
 
 	// Fetch all intakes
 	fmt.Println("Fetching all system intakes")
@@ -94,6 +105,9 @@ func submitToCEDAR() {
 		fmt.Println("=======================================")
 
 		fmt.Println("Fetching business case for intake", intake.ID.String())
+		if intake.BusinessCaseID == nil {
+			continue
+		}
 		businessCase, err := store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
 		noErr(err)
 		if businessCase == nil {
