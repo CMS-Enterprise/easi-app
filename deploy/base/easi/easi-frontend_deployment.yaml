@@ -15,6 +15,10 @@ spec:
       labels:
         app: easi-frontend
     spec:
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: easi-frontend-configmap-nginx
       containers:
         - name: easi-frontend
           image: easi-frontend:latest
@@ -23,4 +27,8 @@ spec:
             - containerPort: 80
               protocol: TCP
           resources: {}
+          volumeMounts:
+          - name: nginx-config
+            mountPath: /etc/nginx/conf.d/easi.conf
+            subPath: easi.conf
       restartPolicy: Always
