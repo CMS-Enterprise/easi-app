@@ -12,6 +12,7 @@ resources:
   - easi-backend_configmap.yaml
   - easi-backend_deployment.yaml
   - easi-backend_service.yaml
+  - easi-frontend_nginx_configmap.yaml
   - easi-frontend_deployment.yaml
   - easi-frontend_service.yaml
   - email_deployment.yaml

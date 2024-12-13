@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: easi-frontend-configmap-nginx
+  namespace: easi
+data:
+  easi.conf: |
+    server {
+      listen 80 default_server;
+      root /usr/share/nginx/html;
+      location / {
+        try_files $uri /index.html;
+      }
+    }
