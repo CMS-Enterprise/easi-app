@@ -73,7 +73,7 @@ const discussions = {
       label: 'Tips for using the discussion boards',
       content: [
         'Start a new discussion thread for each new topic',
-        'Use tags (@) any time you need input from a specific individual or group. Group tags will notify all members of that group. Avalailble group tags: <span>@Governance Review Board</span>, <span>@Governance Admin Team</span>, and <span>@Admin Lead</span>',
+        'Use tags (@) any time you need input from a specific individual or group. Group tags will notify all members of that group. Available group tags: <span>@Governance Review Board</span> and <span>@Governance Admin Team</span>.',
         'Participating individuals will get an email notification when a new discussion is started, or when they are tagged in a discussion or reply'
       ]
     }
