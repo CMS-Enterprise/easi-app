@@ -8,17 +8,45 @@ describe('Discussion Board', () => {
 
     cy.visit('/it-governance/61efa6eb-1976-4431-a158-d89cc00ce31d/grb-review');
 
+    // Keep the participants list to check against later
+    let participants;
+    cy.get('[data-testid="grb-participants-table"] td:first-child').then(
+      els => {
+        participants = Array.from(els, el => el.innerText.trim());
+      }
+    );
+
     // Opens modal to view mode
     cy.contains('button', 'View discussion board').click();
 
     // Continue to start a new discussion
     cy.contains('button', 'Start a new discussion').click();
 
+    // Mention trigger
+    cy.get('#mention-discussion').type('@');
+
+    // Check that all participants in the dropdown match the table, + some more groups
+    const groups = ['Governance Admin Team', 'Governance Review Board (GRB)'];
+    cy.get('#mention-discussion-editorContent button.item').then(els => {
+      const dropdownItems = Array.from(els, el => el.innerText.trim());
+      // The dropdown will have the participants + some groups
+      expect([...participants, ...groups].toSorted()).to.deep.equal(
+        dropdownItems.toSorted()
+      );
+    });
+
+    // Type narrow down to Ally Anderson
+    const mentionName = 'Ally Anderson';
+    cy.get('#mention-discussion').type('Al');
+    cy.contains('#mention-discussion-editorContent button.item', mentionName)
+      .as('ally')
+      .should('have.length', 1);
+
+    // Select Ally Anderson
+    cy.get('@ally').click();
+
     // Fill out and submit
     const discussionText = 'e2e post 1';
-
-    // todo mention trigger
-
     cy.get('#mention-discussion').type(discussionText);
     cy.contains('button', 'Save discussion').click();
 
@@ -76,7 +104,7 @@ describe('Discussion Board', () => {
       .within(() => {
         cy.contains('p', 'Adeline Aarons');
         cy.contains('h5', 'Governance Admin Team');
-        cy.contains('p', discussionText);
+        cy.contains('p', `${mentionName} ${discussionText}`);
       });
 
     cy.get('[data-testid="discussion-modal"] .easi-discussion-post')
