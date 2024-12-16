@@ -351,55 +351,53 @@ func main() {
 	)
 
 	// Forgive my incredibly uncreative seed data...
-	// TODO, remove <b> when they're not supported when we add tagging. Just using it now to show this is HTML
-
 	// Initial Post
 	postA := createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
-		RawContent: "Post <b>A</b> (Replies)",
+		RawContent: "<p>Post A (Replies)</p>",
 		Tags:       nil,
 	})
 
 	// First reply is from an Admin -- default context user USR1 is an Admin
 	createSystemIntakeGRBDiscussionReply(userCtxITGovAdmin("ADMN"), store, postA.ID, models.TaggedHTML{
-		RawContent: "Reply <b>A1</b>",
+		RawContent: "<p>Reply A1</p>",
 		Tags:       nil,
 	})
 
 	// Then, create a reply from most of the GRB reviewers so we get replies from different non-admin GRB & Voting roles
 	createSystemIntakeGRBDiscussionReply(ctx, store, postA.ID, models.TaggedHTML{
-		RawContent: "Reply <b>A2</b>",
+		RawContent: "<p>Reply A2</p>",
 		Tags:       nil,
 	})
 	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR2"), store, postA.ID, models.TaggedHTML{
-		RawContent: "Reply <b>A2</b>",
+		RawContent: "<p>Reply A2</p>",
 		Tags:       nil,
 	})
 	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR3"), store, postA.ID, models.TaggedHTML{
-		RawContent: "Reply <b>A3</b>",
+		RawContent: "<p>Reply A3</p>",
 		Tags:       nil,
 	})
 	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR4"), store, postA.ID, models.TaggedHTML{
-		RawContent: "Reply <b>A4</b>",
+		RawContent: "<p>Reply A4</p>",
 		Tags:       nil,
 	})
 
 	// Make one more thread with some replies
 	postB := createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
-		RawContent: "Post <b>B</b>",
+		RawContent: "<p>Post B</p>",
 		Tags:       nil,
 	})
 	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR3"), store, postB.ID, models.TaggedHTML{
-		RawContent: "Reply <b>B1</b>",
+		RawContent: "<p>Reply B1</p>",
 		Tags:       nil,
 	})
 	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR4"), store, postB.ID, models.TaggedHTML{
-		RawContent: "Reply <b>B2</b>",
+		RawContent: "<p>Reply B2</p>",
 		Tags:       nil,
 	})
 
 	// Lastly, create a new initial post with no replies
 	createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
-		RawContent: "Post <b>C</b> (No replies)",
+		RawContent: "<p>Post C (No replies)</p>",
 		Tags:       nil,
 	})
 
