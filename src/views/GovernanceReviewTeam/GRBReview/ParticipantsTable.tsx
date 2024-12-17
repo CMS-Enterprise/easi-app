@@ -196,7 +196,7 @@ const ParticipantsTable = ({
         </div>
       )}
 
-      <div className="margin-top-3">
+      <div className="margin-top-3" data-testid="grb-participants-table">
         <Table bordered={false} fullWidth scrollable {...getTableProps()}>
           <thead>
             {headerGroups.map(headerGroup => (
