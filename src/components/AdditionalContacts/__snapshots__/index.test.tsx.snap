@@ -282,6 +282,11 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 Offices of Hearings and Inquiries (OHI)
               </option>
               <option
+                value="Office of Healthcare Experience and Interoperability"
+              >
+                Office of Healthcare Experience and Interoperability (OHEI)
+              </option>
+              <option
                 value="Other"
               >
                 Other

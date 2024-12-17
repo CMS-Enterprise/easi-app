@@ -208,6 +208,11 @@ exports[`Trb Request form: Basic > submits the form successfully after a failed 
               Offices of Hearings and Inquiries (OHI)
             </option>
             <option
+              value="Office of Healthcare Experience and Interoperability"
+            >
+              Office of Healthcare Experience and Interoperability (OHEI)
+            </option>
+            <option
               value="Other"
             >
               Other

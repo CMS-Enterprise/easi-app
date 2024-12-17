@@ -100,6 +100,10 @@ const cmsDivisionsAndOffices = [
     name: 'Offices of Hearings and Inquiries'
   },
   {
+    acronym: 'OHEI',
+    name: 'Office of Healthcare Experience and Interoperability'
+  },
+  {
     acronym: '',
     name: 'Other'
   }
