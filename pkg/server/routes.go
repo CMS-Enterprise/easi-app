@@ -11,9 +11,12 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
+	"github.com/99designs/gqlgen/graphql/handler/lru"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
+	"github.com/vektah/gqlparser/v2/ast"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/alerts"
@@ -209,7 +212,7 @@ func (s *Server) routes() {
 		return next(ctx)
 	}}
 	gqlConfig := generated.Config{Resolvers: resolver, Directives: gqlDirectives}
-	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(gqlConfig))
+	graphqlServer := newGQLServer(generated.NewExecutableSchema(gqlConfig))
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
 
@@ -352,5 +355,25 @@ func (s *Server) routes() {
 		store.UpdateSystemIntake,
 		emailClient.SendLCIDExpirationAlertEmail,
 		time.Hour*24)
+}
 
+func newGQLServer(es graphql.ExecutableSchema) *handler.Server {
+	srv := handler.New(es)
+
+	srv.AddTransport(transport.Websocket{
+		KeepAlivePingInterval: 10 * time.Second,
+	})
+	srv.AddTransport(transport.Options{})
+	srv.AddTransport(transport.GET{})
+	srv.AddTransport(transport.POST{})
+	srv.AddTransport(transport.MultipartForm{})
+
+	srv.SetQueryCache(lru.New[*ast.QueryDocument](1000))
+
+	srv.Use(extension.Introspection{})
+	srv.Use(extension.AutomaticPersistedQuery{
+		Cache: lru.New[string](100),
+	})
+
+	return srv
 }
