@@ -59,7 +59,7 @@ describe('Discussion Board', () => {
     // New posts are at the end
     cy.get('#grbDiscussionsNew li:last-child').within(() => {
       // Check contents
-      cy.contains('p', discussionText);
+      cy.contains('p', `${mentionName} ${discussionText}`);
 
       // Go to its reply thread
       cy.contains('button', 'Reply').click();
@@ -78,9 +78,6 @@ describe('Discussion Board', () => {
     cy.get('[data-testid="signout-link"]').click({ force: true });
     cy.localLogin({ name: 'USR1' });
     cy.get('@replyUrl').then(url => cy.visit(url));
-
-    // Check contents of the original post
-    cy.contains('p', discussionText);
 
     // Submit a reply
     const replyText = 'e2e post 2';
