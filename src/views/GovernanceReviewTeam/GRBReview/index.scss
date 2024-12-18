@@ -1,7 +1,12 @@
 @use 'uswds-core' as *;
 
-button#startGrbReview {
-  scroll-margin-top: 4rem;
+#grbReview {
+  button#startGrbReview,
+  #discussions,
+  #documents,
+  #participants {
+    scroll-margin-top: 4rem;
+  }
 }
 
 .grb-review-select-checkbox {
