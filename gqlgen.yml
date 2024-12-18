@@ -84,6 +84,9 @@ models:
   HTML:
     model:
       - github.com/cms-enterprise/easi-app/pkg/models.HTML
+  TaggedHTML:
+    model:
+      - github.com/cms-enterprise/easi-app/pkg/models.TaggedHTML
   EmailAddress:
     model:
       - github.com/cms-enterprise/easi-app/pkg/models.EmailAddress

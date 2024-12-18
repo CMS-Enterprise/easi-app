@@ -151,8 +151,8 @@ const getSystemIntakeGRBReviewersQuery = (
       systemIntake: {
         __typename: 'SystemIntake',
         id: systemIntake.id,
-        grbReviewStartedAt: null,
-        grbReviewers: reviewer ? [reviewer] : []
+        grbReviewers: reviewer ? [reviewer] : [],
+        grbReviewStartedAt: null
       }
     }
   }

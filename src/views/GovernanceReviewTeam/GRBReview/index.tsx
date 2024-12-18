@@ -37,6 +37,7 @@ import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 
+import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
 
@@ -79,12 +80,7 @@ const GRBReview = ({
   const { showMessage } = useMessage();
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
-    refetchQueries: [
-      {
-        query: GetSystemIntakeGRBReviewersDocument,
-        variables: { id }
-      }
-    ]
+    refetchQueries: [GetSystemIntakeGRBReviewersDocument]
   });
 
   const [startGRBReview] = useStartGRBReviewMutation({
@@ -217,7 +213,7 @@ const GRBReview = ({
             )
           }
 
-          <div className="padding-bottom-4">
+          <div className="padding-bottom-4" id="grbReview">
             <PageHeading className="margin-y-0">{t('title')}</PageHeading>
 
             <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
@@ -264,7 +260,7 @@ const GRBReview = ({
             }
 
             {/* Supporting Docs text */}
-            <h2 className="margin-bottom-0 margin-top-6">
+            <h2 className="margin-bottom-0 margin-top-6" id="documents">
               {t('supportingDocuments')}
             </h2>
             <p className="margin-top-05 line-height-body-5">
@@ -333,9 +329,7 @@ const GRBReview = ({
             </div>
 
             {/* Additional Documents Title and Link */}
-            <h3 className="margin-bottom-1" id="documents">
-              {t('additionalDocuments')}
-            </h3>
+            <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
 
             {isITGovAdmin && (
               <UswdsReactLink
@@ -362,6 +356,12 @@ const GRBReview = ({
             </p>
 
             <DocumentsTable systemIntakeId={id} documents={documents} />
+
+            <Discussions
+              systemIntakeID={id}
+              grbReviewers={grbReviewers}
+              className="margin-top-4 margin-bottom-6"
+            />
 
             <ParticipantsTable
               id={id}
