@@ -133,9 +133,9 @@ exports[`Trb Request form: Basic > submits the form successfully after a failed 
               Office of Acquisition and Grants Management (OAGM)
             </option>
             <option
-              value="Office of Burden Reduction and Health Informatics"
+              value="Office of Healthcare Experience and Interoperability"
             >
-              Office of Burden Reduction and Health Informatics (OBRHI)
+              Office of Healthcare Experience and Interoperability (OHEI)
             </option>
             <option
               value="Office of Communications"
@@ -206,11 +206,6 @@ exports[`Trb Request form: Basic > submits the form successfully after a failed 
               value="Offices of Hearings and Inquiries"
             >
               Offices of Hearings and Inquiries (OHI)
-            </option>
-            <option
-              value="Office of Healthcare Experience and Interoperability"
-            >
-              Office of Healthcare Experience and Interoperability (OHEI)
             </option>
             <option
               value="Other"

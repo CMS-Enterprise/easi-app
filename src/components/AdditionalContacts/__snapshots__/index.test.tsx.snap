@@ -207,9 +207,9 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 Office of Acquisition and Grants Management (OAGM)
               </option>
               <option
-                value="Office of Burden Reduction and Health Informatics"
+                value="Office of Healthcare Experience and Interoperability"
               >
-                Office of Burden Reduction and Health Informatics (OBRHI)
+                Office of Healthcare Experience and Interoperability (OHEI)
               </option>
               <option
                 value="Office of Communications"
@@ -280,11 +280,6 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 value="Offices of Hearings and Inquiries"
               >
                 Offices of Hearings and Inquiries (OHI)
-              </option>
-              <option
-                value="Office of Healthcare Experience and Interoperability"
-              >
-                Office of Healthcare Experience and Interoperability (OHEI)
               </option>
               <option
                 value="Other"
