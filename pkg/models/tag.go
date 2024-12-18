@@ -6,7 +6,7 @@ import (
 
 // Tag represents a tagged item in HTML
 type Tag struct {
-	// BaseStructUser // TODO Introduce again if we store tags in the database
+	// BaseStructUser // Introduce this if we end up storing tags in the database
 	TagType         TagType   `json:"tagType" db:"tag_type"`
 	TaggedContentID uuid.UUID `json:"taggedContentID" db:"tagged_content_id"`
 }

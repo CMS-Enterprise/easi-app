@@ -18,7 +18,7 @@ import (
 type SendGRBReviewDiscussionGroupTaggedEmailInput struct {
 	SystemIntakeID    uuid.UUID
 	UserName          string
-	GroupName         string // TODO NJD enum?
+	GroupName         string
 	RequestName       string
 	Role              string
 	DiscussionContent template.HTML
