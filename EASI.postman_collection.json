@@ -1000,7 +1000,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.collectionVariables.set(\"SystemIntakeGRBReviewerID\", pm.response.json().data.createSystemIntakeGRBReviewer.id)"
+											"pm.collectionVariables.set(\"SystemIntakeGRBReviewerID\", pm.response.json().data.createSystemIntakeGRBReviewers.reviewers[0].id)"
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -1013,8 +1013,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation createS($input: CreateSystemIntakeGRBReviewerInput!) {\n  createSystemIntakeGRBReviewer(input: $input) {\n    id\n    userAccount {\n      id\n    }\n    grbRole\n    votingRole\n    systemIntakeID\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n  }\n}",
-										"variables": "{\r\n  \"input\": {\r\n    \"euaUserId\": \"ABCD\",\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"votingRole\": \"NON_VOTING\",\r\n    \"grbRole\": \"CMCS_REP\"\r\n  }\r\n}"
+										"query": "mutation createSystemIntakeGRBReviewer($input: CreateSystemIntakeGRBReviewersInput!) {\n  createSystemIntakeGRBReviewers(input: $input) {\n    reviewers {\n        id\n        userAccount {\n        id\n        }\n        grbRole\n        votingRole\n        systemIntakeID\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n    }\n    \n  }\n}",
+										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"reviewers\": {\r\n        \"euaUserId\": \"ABCD\",\r\n        \"votingRole\": \"NON_VOTING\",\r\n        \"grbRole\": \"CMCS_REP\"\r\n    }\r\n  }\r\n}"
 									}
 								},
 								"url": {
@@ -1114,6 +1114,171 @@
 									"graphql": {
 										"query": "query getReviewersComparisons($systemIntakeID: UUID!) {\n  compareGRBReviewersByIntakeID(id: $systemIntakeID) {\n    id\n    requestName\n    reviewers {\n      euaUserId\n      userAccount {\n        commonName\n      }\n      isCurrentReviewer\n      grbRole\n    }\n  }\n}",
 										"variables": "{\r\n    \"systemIntakeID\": \"5af245bc-fc54-4677-bab1-1b3e798bb43c\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get GRB Discussions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbDiscussions {\n        initialPost {\n            id\n            content\n            votingRole\n            grbRole\n            systemIntakeID\n            createdAt\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n            modifiedAt\n            modifiedByUserAccount {\n                givenName\n                familyName\n            }\n        }\n        replies {\n            id\n            content\n            votingRole\n            grbRole\n            systemIntakeID\n            createdAt\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n            modifiedAt\n            modifiedByUserAccount {\n                givenName\n                familyName\n            }\n        }\n    }\n  }\n}",
+										"variables": "{\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create GRB Discussion",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"SystemIntakeGRBDiscussionID\", pm.response.json().data.createSystemIntakeGRBDiscussionPost.id)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation createSystemIntakeGRBDiscussion(\n  $input: createSystemIntakeGRBDiscussionPostInput!\n) {\n  createSystemIntakeGRBDiscussionPost(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n      id\n      username\n    }\n  }\n}\n",
+										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"content\": \"<p>banana apple carburetor Let me look into it, ok? <span data-type=\\\"mention\\\" tag-type=\\\"USER_ACCOUNT\\\" class=\\\"mention\\\" data-id-db=\\\"{{UserAccountID}}\\\">@Mckayla Fritsch</span>!</p>\"\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create GRB Discussion Group Tags",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"SystemIntakeGRBDiscussionID\", pm.response.json().data.createSystemIntakeGRBDiscussionPost.id)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation createSystemIntakeGRBDiscussion(\n  $input: createSystemIntakeGRBDiscussionPostInput!\n) {\n  createSystemIntakeGRBDiscussionPost(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n      id\n      username\n    }\n  }\n}\n",
+										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"content\": \"<p>banana apple carburetor Let me look into it, ok? <span data-type=\\\"mention\\\" tag-type=\\\"GROUP_IT_GOV\\\" class=\\\"mention\\\">@Group</span> middle <span data-type=\\\"mention\\\" tag-type=\\\"GROUP_GRB_REVIEWERS\\\" class=\\\"mention\\\">@Group2</span>!\\\"</p>\"\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add GRB Discussion Reply",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation createSystemIntakeGRBDiscussionReply($input: createSystemIntakeGRBDiscussionReplyInput!) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n        id\n        username\n    }\n  }\n}",
+										"variables": "{\r\n  \"input\": {\r\n    \"initialPostID\": \"{{SystemIntakeGRBDiscussionID}}\",\r\n    \"content\": \"<p>monkey kiwi maduros senor <span data-type=\\\"mention\\\" tag-type=\\\"USER_ACCOUNT\\\" class=\\\"mention\\\" data-id-db=\\\"{{UserAccountID}}\\\">@Mckayla Fritsch</span>!</p>\"\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add GRB Discussion Reply Group Tags",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation createSystemIntakeGRBDiscussionReply($input: createSystemIntakeGRBDiscussionReplyInput!) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n        id\n        username\n    }\n  }\n}",
+										"variables": "{\r\n  \"input\": {\r\n    \"initialPostID\": \"{{SystemIntakeGRBDiscussionID}}\",\r\n    \"content\": \"<p>Let me look into it, ok? <span data-type=\\\"mention\\\" tag-type=\\\"GROUP_IT_GOV\\\" class=\\\"mention\\\">@Group</span><span data-type=\\\"mention\\\" tag-type=\\\"GROUP_GRB_REVIEWERS\\\" class=\\\"mention\\\">@Group2</span>!</p>\"\r\n  }\r\n}"
 									}
 								},
 								"url": {
@@ -1399,6 +1564,39 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "query systemIntake {\n    systemIntakes(openRequests: true) {\n        id\n        requestName\n        relatedIntakes {\n            id\n            requestName\n        }\n        relatedTRBRequests {\n            id\n            name\n        }\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SystemIntake Get All w/ Discussions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query systemIntake {\n    systemIntakes(openRequests: true) {\n        id\n        requestName\n        grbDiscussions {\n            initialPost {\n                id\n                content\n            }\n            replies {\n                id\n                content\n            }\n        }\n    }\n}",
 								"variables": ""
 							}
 						},
@@ -3824,9 +4022,10 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									""
+									"pm.collectionVariables.set(\"UserAccountID\", pm.response.json().data.userAccount.id)"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -3836,8 +4035,8 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query {\n  userAccount(username: \"EASI_SYSTEM\") {\n    id\n    username\n    commonName\n    familyName\n    givenName\n    email\n    locale\n    }\n}",
-								"variables": ""
+								"query": "query($username: String!) {\n  userAccount(username: $username) {\n    id\n    username\n    commonName\n    familyName\n    givenName\n    email\n    locale\n    }\n}",
+								"variables": "{\r\n    \"username\": \"USR1\"\r\n}"
 							}
 						},
 						"url": {
@@ -4072,6 +4271,19 @@
 		},
 		{
 			"key": "CedarAtoIds",
+			"value": ""
+		},
+		{
+			"key": "SystemIntakeGRBReviewerID",
+			"value": ""
+		},
+		{
+			"key": "SystemIntakeGRBDiscussionID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "UserAccountID",
 			"value": ""
 		}
 	]

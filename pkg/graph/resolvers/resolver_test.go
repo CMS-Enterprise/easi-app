@@ -48,7 +48,7 @@ func (s *ResolverSuite) SetupTest() {
 	assert.NoError(s.T(), err)
 
 	// Get the user account from the DB fresh for each test
-	princ := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.UserInfo.Username)
+	princ := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.UserInfo.Username, true)
 	s.testConfigs.Principal = princ
 
 	// get new dataloaders to clear any existing cached data
@@ -60,6 +60,11 @@ func (s *ResolverSuite) SetupTest() {
 
 	// Clear email data between tests
 	s.testConfigs.Sender.Clear()
+}
+
+func (s *ResolverSuite) getTestContextWithPrincipal(euaID string, isAdmin bool) (context.Context, *authentication.EUAPrincipal) {
+	princ := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, euaID, isAdmin)
+	return appcontext.WithPrincipal(s.testConfigs.Context, princ), princ
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -156,10 +161,9 @@ func (tc *TestConfigs) GetDefaults() {
 	tc.EmailClient = emailClient
 }
 
-func NewEmailClient() (*email.Client, *mockSender) {
-	sender := &mockSender{}
+func getTestEmailConfig() email.Config {
 	config := testhelpers.NewConfig()
-	emailConfig := email.Config{
+	return email.Config{
 		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
 		ITInvestmentEmail: models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
 		TRBEmail:          models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
@@ -168,21 +172,26 @@ func NewEmailClient() (*email.Client, *mockSender) {
 		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
+}
 
+func NewEmailClient() (*email.Client, *mockSender) {
+	sender := &mockSender{}
+	emailConfig := getTestEmailConfig()
 	emailClient, _ := email.NewClient(emailConfig, sender)
 	return &emailClient, sender
 }
 
 // getTestPrincipal gets a user principal from database
-func (s *ResolverSuite) getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {
+func (s *ResolverSuite) getTestPrincipal(ctx context.Context, store *storage.Store, userName string, isAdmin bool) *authentication.EUAPrincipal {
 
 	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
 
 	princ := &authentication.EUAPrincipal{
-		EUAID:       userName,
-		JobCodeEASi: true,
-		JobCodeGRT:  true,
-		UserAccount: userAccount,
+		EUAID:           userName,
+		JobCodeEASi:     true,
+		JobCodeGRT:      isAdmin,
+		JobCodeTRBAdmin: isAdmin,
+		UserAccount:     userAccount,
 	}
 	return princ
 
@@ -263,7 +272,7 @@ func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.Us
 }
 
 // utility method to get userAcct in resolver tests
-func (s *ResolverSuite) getOrCreateUserAccts(euaUserIDs []string) []*authentication.UserAccount {
+func (s *ResolverSuite) getOrCreateUserAccts(euaUserIDs ...string) []*authentication.UserAccount {
 	ctx := s.testConfigs.Context
 	store := s.testConfigs.Store
 	okta := local.NewOktaAPIClient()

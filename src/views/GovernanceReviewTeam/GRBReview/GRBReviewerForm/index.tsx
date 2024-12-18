@@ -41,12 +41,7 @@ const GRBReviewerForm = ({
   }>();
 
   const [mutate] = useCreateSystemIntakeGRBReviewersMutation({
-    refetchQueries: [
-      {
-        query: GetSystemIntakeGRBReviewersDocument,
-        variables: { id: systemId }
-      }
-    ]
+    refetchQueries: [GetSystemIntakeGRBReviewersDocument]
   });
 
   const createGRBReviewers = (reviewers: GRBReviewerFields[]) =>
