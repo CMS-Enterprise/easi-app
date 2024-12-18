@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.uber.org/zap"
-
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
@@ -37,8 +35,8 @@ func FetchUserInfosMock(ctx context.Context, usernames []string) ([]*models.User
 	return localOktaClient.FetchUserInfos(ctx, usernames)
 }
 
-// CtxWithLoggerAndPrincipal makes a context with a mocked logger and principal
-func CtxWithLoggerAndPrincipal(ctx context.Context, logger *zap.Logger, store *storage.Store, username string) context.Context {
+// CtxWithPrincipal makes a context with a principal and automatically calls GetOrCreateUserAccount to populate the user account
+func CtxWithPrincipal(ctx context.Context, store *storage.Store, username string, isGRTAdmin bool, isTRBAdmin bool) context.Context {
 	//Future Enhancement: Consider adding this to the seederConfig, and also emb
 	if len(username) < 1 {
 		username = PrincipalUser
@@ -51,14 +49,15 @@ func CtxWithLoggerAndPrincipal(ctx context.Context, logger *zap.Logger, store *s
 	}
 
 	princ := &authentication.EUAPrincipal{
-		EUAID:       username,
-		JobCodeEASi: true,
-		JobCodeGRT:  true,
-		UserAccount: userAccount,
+		EUAID:           username,
+		JobCodeEASi:     true,
+		JobCodeGRT:      isGRTAdmin,
+		JobCodeTRBAdmin: isTRBAdmin,
+		UserAccount:     userAccount,
 	}
-	ctx = appcontext.WithLogger(ctx, logger)
-	ctx = appcontext.WithPrincipal(ctx, princ)
-	return ctx
+
+	newCtx := appcontext.WithPrincipal(ctx, princ)
+	return newCtx
 }
 
 func CtxWithNewDataloaders(ctx context.Context, store *storage.Store) context.Context {

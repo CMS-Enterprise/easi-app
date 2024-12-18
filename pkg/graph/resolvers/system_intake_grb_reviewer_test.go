@@ -28,7 +28,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		grbRole2 := models.SystemIntakeGRBReviewerRoleFedAdminBdgChair
 
 		intake := s.createNewIntake()
-		userAccts := s.getOrCreateUserAccts([]string{reviewerEUA1, reviewerEUA2})
+		userAccts := s.getOrCreateUserAccts(reviewerEUA1, reviewerEUA2)
 
 		payload, err := CreateSystemIntakeGRBReviewers(
 			ctx,
@@ -54,12 +54,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		reviewers := payload.Reviewers
 		s.NoError(err)
 		s.Equal(userAccts[0].ID, reviewers[0].UserID)
-		s.Equal(string(votingRole1), string(reviewers[0].VotingRole))
-		s.Equal(string(grbRole1), string(reviewers[0].GRBRole))
+		s.Equal(string(votingRole1), string(reviewers[0].GRBVotingRole))
+		s.Equal(string(grbRole1), string(reviewers[0].GRBReviewerRole))
 		s.Equal(intake.ID, reviewers[0].SystemIntakeID)
 		s.Equal(userAccts[1].ID, reviewers[1].UserID)
-		s.Equal(string(votingRole2), string(reviewers[1].VotingRole))
-		s.Equal(string(grbRole2), string(reviewers[1].GRBRole))
+		s.Equal(string(votingRole2), string(reviewers[1].GRBVotingRole))
+		s.Equal(string(grbRole2), string(reviewers[1].GRBReviewerRole))
 		s.Equal(intake.ID, reviewers[1].SystemIntakeID)
 		s.False(sender.emailWasSent)
 	})
@@ -99,8 +99,8 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		reviewerEUA := "ABCD"
 		originalVotingRole := models.SystemIntakeGRBReviewerVotingRoleAlternate
 		originalGRBRole := models.SystemIntakeGRBReviewerRoleAca3021Rep
-		newVotingRole := models.SIGRBRVRVoting
-		newGRBRole := models.SIGRBRRCMCSRep
+		newVotingRole := models.SystemIntakeGRBReviewerVotingRoleVoting
+		newGRBRole := models.SystemIntakeGRBReviewerRoleCmcsRep
 
 		userAcct := s.getOrCreateUserAcct(reviewerEUA)
 		intake, reviewer := s.createIntakeAndAddReviewer(&models.CreateGRBReviewerInput{
@@ -123,8 +123,8 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		s.Equal(reviewer.ID, updatedReviewer.ID)
 		s.Equal(reviewer.UserID, updatedReviewer.UserID)
 		s.Equal(intake.ID, updatedReviewer.SystemIntakeID)
-		s.Equal(newVotingRole, updatedReviewer.VotingRole)
-		s.Equal(newGRBRole, updatedReviewer.GRBRole)
+		s.Equal(newVotingRole, updatedReviewer.GRBVotingRole)
+		s.Equal(newGRBRole, updatedReviewer.GRBReviewerRole)
 	})
 
 	s.Run("delete GRB reviewer", func() {

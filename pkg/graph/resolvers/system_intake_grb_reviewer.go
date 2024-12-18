@@ -22,6 +22,18 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
+func SystemIntakeGRBDiscussions(
+	ctx context.Context,
+	store *storage.Store,
+	intakeID uuid.UUID,
+) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
+	posts, err := dataloaders.GetSystemIntakeGRBDiscussionPostsBySystemIntakeID(ctx, intakeID)
+	if err != nil {
+		return nil, err
+	}
+	return models.CreateGRBDiscussionsFromPosts(posts)
+}
+
 // CreateSystemIntakeGRBReviewers creates GRB Reviewers for a System Intake
 func CreateSystemIntakeGRBReviewers(
 	ctx context.Context,
@@ -55,8 +67,8 @@ func CreateSystemIntakeGRBReviewers(
 		for _, acct := range accts {
 			reviewerInput := reviewersByEUAMap[acct.Username]
 			reviewer := models.NewSystemIntakeGRBReviewer(acct.ID, createdByID)
-			reviewer.VotingRole = models.SIGRBReviewerVotingRole(reviewerInput.VotingRole)
-			reviewer.GRBRole = models.SIGRBReviewerRole(reviewerInput.GrbRole)
+			reviewer.GRBVotingRole = reviewerInput.VotingRole
+			reviewer.GRBReviewerRole = reviewerInput.GrbRole
 			reviewer.SystemIntakeID = input.SystemIntakeID
 			reviewersToCreate = append(reviewersToCreate, reviewer)
 		}
@@ -144,8 +156,8 @@ func SystemIntakeCompareGRBReviewers(
 				HasLoggedIn: comparison.HasLoggedIn,
 			},
 			EuaUserID:         comparison.EuaID,
-			VotingRole:        models.SystemIntakeGRBReviewerVotingRole(comparison.VotingRole),
-			GrbRole:           models.SystemIntakeGRBReviewerRole(comparison.GRBRole),
+			VotingRole:        models.SystemIntakeGRBReviewerVotingRole(comparison.GRBVotingRole),
+			GrbRole:           models.SystemIntakeGRBReviewerRole(comparison.GRBReviewerRole),
 			IsCurrentReviewer: comparison.IsCurrentReviewer,
 		}
 		// Add the reviewer to the slice if an entry exists
@@ -222,4 +234,18 @@ func StartGRBReview(
 		}
 		return helpers.PointerTo("started GRB review"), nil
 	})
+}
+
+func GetPrincipalAsGRBReviewerBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeGRBReviewer, error) {
+	principalUserAcctID := appcontext.Principal(ctx).Account().ID
+	grbReviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+	for _, reviewer := range grbReviewers {
+		if reviewer != nil && reviewer.UserID == principalUserAcctID {
+			return reviewer, nil
+		}
+	}
+	return nil, nil
 }

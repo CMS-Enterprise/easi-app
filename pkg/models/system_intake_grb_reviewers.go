@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,38 +9,48 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 )
 
-type SIGRBReviewerRole string
+func (r SystemIntakeGRBReviewerVotingRole) Humanize() (string, error) {
+	var grbVotingRoleTranslationsMap = map[SystemIntakeGRBReviewerVotingRole]string{
+		SystemIntakeGRBReviewerVotingRoleVoting:    "Voting",
+		SystemIntakeGRBReviewerVotingRoleNonVoting: "Non-voting",
+		SystemIntakeGRBReviewerVotingRoleAlternate: "Alternate",
+	}
+	translation, ok := grbVotingRoleTranslationsMap[r]
+	if !ok {
+		return "", fmt.Errorf("%s is not a valid SIGRBReviewerVotingRole", r)
+	}
+	return translation, nil
+}
 
-const (
-	SIGRBRRCoChairCIO          SIGRBReviewerRole = "CO_CHAIR_CIO"
-	SIGRBRRCoChairCFO          SIGRBReviewerRole = "CO_CHAIR_CFO"
-	SIGRBRRCoChairHCA          SIGRBReviewerRole = "CO_CHAIR_HCA"
-	SIGRBRRACA3021Rep          SIGRBReviewerRole = "ACA_3021_REP"
-	SIGRBRRCCIIORep            SIGRBReviewerRole = "CCIIO_REP"
-	SIGRBRRProgOpBDGChair      SIGRBReviewerRole = "PROGRAM_OPERATIONS_BDG_CHAIR"
-	SIGRBRRCMCSRep             SIGRBReviewerRole = "CMCS_REP"
-	SIGRBRRFedAdminBDGChair    SIGRBReviewerRole = "FED_ADMIN_BDG_CHAIR"
-	SIGRBRRProgIntBDGChair     SIGRBReviewerRole = "PROGRAM_INTEGRITY_BDG_CHAIR"
-	SIGRBRRQIORep              SIGRBReviewerRole = "QIO_REP"
-	SIGRBRRSubjectMatterExpert SIGRBReviewerRole = "SUBJECT_MATTER_EXPERT"
-	SIGRBRROther               SIGRBReviewerRole = "OTHER"
-)
-
-type SIGRBReviewerVotingRole string
-
-const (
-	SIGRBRVRVoting    SIGRBReviewerVotingRole = "VOTING"
-	SIGRBRVRNonVoting SIGRBReviewerVotingRole = "NON_VOTING"
-	SIGRBRVRAlternate SIGRBReviewerVotingRole = "ALTERNATE"
-)
+func (r SystemIntakeGRBReviewerRole) Humanize() (string, error) {
+	var grbRoleTranslationsMap = map[SystemIntakeGRBReviewerRole]string{
+		SystemIntakeGRBReviewerRoleCoChairCio:                "Co-Chair - CIO",
+		SystemIntakeGRBReviewerRoleCoChairCfo:                "CO-Chair - CFO",
+		SystemIntakeGRBReviewerRoleCoChairHca:                "CO-Chair - HCA",
+		SystemIntakeGRBReviewerRoleAca3021Rep:                "ACA 3021 Rep",
+		SystemIntakeGRBReviewerRoleCciioRep:                  "CCIIO Rep",
+		SystemIntakeGRBReviewerRoleProgramOperationsBdgChair: "Program Operations BDG Chair",
+		SystemIntakeGRBReviewerRoleCmcsRep:                   "CMCS Rep",
+		SystemIntakeGRBReviewerRoleFedAdminBdgChair:          "Fed Admin BDG Chair",
+		SystemIntakeGRBReviewerRoleProgramIntegrityBdgChair:  "Program Integrity BDG Chair",
+		SystemIntakeGRBReviewerRoleQioRep:                    "QIO Rep",
+		SystemIntakeGRBReviewerRoleSubjectMatterExpert:       "Subject Matter Expert (SME)",
+		SystemIntakeGRBReviewerRoleOther:                     "Other",
+	}
+	translation, ok := grbRoleTranslationsMap[r]
+	if !ok {
+		return "", fmt.Errorf("%s is not a valid SIGRBReviewerRole", r)
+	}
+	return translation, nil
+}
 
 // SystemIntakeGRBReviewer describes
 type SystemIntakeGRBReviewer struct {
 	BaseStructUser
 	userIDRelation
-	SystemIntakeID uuid.UUID               `json:"systemIntakeId" db:"system_intake_id"`
-	VotingRole     SIGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`
-	GRBRole        SIGRBReviewerRole       `json:"grbRole" db:"grb_role"`
+	SystemIntakeID  uuid.UUID                         `json:"systemIntakeId" db:"system_intake_id"`
+	GRBVotingRole   SystemIntakeGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`
+	GRBReviewerRole SystemIntakeGRBReviewerRole       `json:"grbRole" db:"grb_role"`
 }
 
 func NewSystemIntakeGRBReviewer(userID uuid.UUID, createdBy uuid.UUID) *SystemIntakeGRBReviewer {
