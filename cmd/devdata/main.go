@@ -15,6 +15,8 @@ import (
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -80,10 +82,30 @@ func main() {
 
 	s3Client := upload.NewS3Client(s3Cfg)
 
-	ctx := context.Background()
+	// nonUserCtx represents a context that has dataloaders, a logger, and other dependencies EXCEPT a principal
+	// This allows us to use this context as a base to create other contexts with different users without having to re-create all those dependencies each time.
+	nonUserCtx := context.Background()
+	nonUserCtx = mock.CtxWithNewDataloaders(nonUserCtx, store)
+	nonUserCtx = appcontext.WithLogger(nonUserCtx, logger)
+	nonUserCtx = appcontext.WithUserAccountService(nonUserCtx, dataloaders.GetUserAccountByID)
 
-	ctx = mock.CtxWithNewDataloaders(ctx, store)
-	ctx = mock.CtxWithLoggerAndPrincipal(ctx, logger, store, mock.PrincipalUser)
+	// userCtx is a local helper function (so we can not have to pass local variables all the time) that adds a principal
+	// to a context object and returns it.
+	// Useful for making calls as different types of users within the dev data
+	userCtx := func(username string, itGovAdmin bool, trbAdmin bool) context.Context {
+		return mock.CtxWithPrincipal(nonUserCtx, store, username, itGovAdmin, trbAdmin)
+	}
+	// userCtxNonAdmin wraps userCtx to allow creating a regular user context (no admin permissions)
+	userCtxNonAdmin := func(username string) context.Context {
+		return userCtx(username, false, false)
+	}
+	// userCtxITGovAdmin wraps userCtx to allow creating a context with IT Gov Admin permissions
+	userCtxITGovAdmin := func(username string) context.Context {
+		return userCtx(username, true, false)
+	}
+
+	// Create a context that most of the dev data can use
+	ctx := userCtx(mock.PrincipalUser, true, false)
 
 	localOktaClient := local.NewOktaAPIClient()
 
@@ -284,7 +306,7 @@ func main() {
 	intakeID = uuid.MustParse("61efa6eb-1976-4431-a158-d89cc00ce31d")
 	intake = makeSystemIntakeAndProgressToStep(
 		ctx,
-		"System Intake with some different GRB Reviewers",
+		"System Intake with some different GRB Reviewers (and discussions)",
 		&intakeID,
 		mock.PrincipalUser,
 		store,
@@ -327,6 +349,57 @@ func main() {
 			},
 		},
 	)
+
+	// Forgive my incredibly uncreative seed data...
+	// Initial Post
+	postA := createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
+		RawContent: "<p>Post A (Replies)</p>",
+		Tags:       nil,
+	})
+
+	// First reply is from an Admin -- default context user USR1 is an Admin
+	createSystemIntakeGRBDiscussionReply(userCtxITGovAdmin("ADMN"), store, postA.ID, models.TaggedHTML{
+		RawContent: "<p>Reply A1</p>",
+		Tags:       nil,
+	})
+
+	// Then, create a reply from most of the GRB reviewers so we get replies from different non-admin GRB & Voting roles
+	createSystemIntakeGRBDiscussionReply(ctx, store, postA.ID, models.TaggedHTML{
+		RawContent: "<p>Reply A2</p>",
+		Tags:       nil,
+	})
+	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR2"), store, postA.ID, models.TaggedHTML{
+		RawContent: "<p>Reply A2</p>",
+		Tags:       nil,
+	})
+	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR3"), store, postA.ID, models.TaggedHTML{
+		RawContent: "<p>Reply A3</p>",
+		Tags:       nil,
+	})
+	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR4"), store, postA.ID, models.TaggedHTML{
+		RawContent: "<p>Reply A4</p>",
+		Tags:       nil,
+	})
+
+	// Make one more thread with some replies
+	postB := createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
+		RawContent: "<p>Post B</p>",
+		Tags:       nil,
+	})
+	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR3"), store, postB.ID, models.TaggedHTML{
+		RawContent: "<p>Reply B1</p>",
+		Tags:       nil,
+	})
+	createSystemIntakeGRBDiscussionReply(userCtxNonAdmin("USR4"), store, postB.ID, models.TaggedHTML{
+		RawContent: "<p>Reply B2</p>",
+		Tags:       nil,
+	})
+
+	// Lastly, create a new initial post with no replies
+	createSystemIntakeGRBDiscussionPost(ctx, store, intake, models.TaggedHTML{
+		RawContent: "<p>Post C (No replies)</p>",
+		Tags:       nil,
+	})
 
 	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
 	makeSystemIntakeAndProgressToStep(

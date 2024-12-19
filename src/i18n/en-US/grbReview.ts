@@ -54,7 +54,7 @@ export default {
     'Many projects coming through the IT Governance process require review by the Governance Review Board (GRB). These reviews may happen at regularly scheduled GRB meetings or during an alternate asynchronous review process. GRB members will review project details, discuss any concerns, and vote on the merits of the project under consideration. ',
   featureInProgress: 'Feature in progress',
   featureInProgressText:
-    'The capabilities currently available allow Governance Admin Team members to invite GRB reviewers to access documentation related to requests. Future capabilities will include voting, discussions with project teams and GRB members, timelines, and more. Currently, however, all communication with the GRB and the project team must be completed via email or during meetings. If you have any questions, please complete the <a>feedback form</a> in the footer of this page.',
+    'The capabilities currently available allow Governance Admin Team members to invite GRB reviewers to access documentation related to requests. Future capabilities will include voting, discussions with project teams, timelines, and more. Currently, however, all communication with the project team must be completed via email or during meetings. If you have any questions, please complete the <a>feedback form</a> in the footer of this page.',
   startGrbReview: 'Start GRB review',
   reviewStartedOn: 'Review started on {{date}}',
   startReviewModal: {
@@ -74,11 +74,11 @@ export default {
   viewIntakeRequest: 'View Intake Request',
   viewOtherDocuments: 'View other supporting documents',
   addGrbReviewer: 'Add a GRB reviewer',
-  supportingDocuments: 'Supporting Documents',
+  supportingDocuments: 'Supporting documents',
   supportingDocumentsText:
     'The documents below will help the GRB review this IT Governance request, and were completed during the course of this IT Governance request or were added by the requester and/or the Governance Admin Team. You may add additional documents and may remove any that have been added by Governance Admin Team members.',
   businessCaseOverview: {
-    title: 'Business Case Overview',
+    title: 'Business Case overview',
     submitted: 'Last Updated',
     need: 'Business or user need',
     preferredSolution: 'Preferred solution: Summary',

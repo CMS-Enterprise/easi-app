@@ -27,7 +27,7 @@ var componentAcronym = map[string]string{
 	"Emergency Preparedness and Response Operations":           "EPRO",
 	"Federal Coordinated Health Care Office":                   "FCHCO",
 	"Office of Acquisition and Grants Management":              "OAGM",
-	"Office of Burden Reduction and Health Informatics":        "OBRHI",
+	"Office of Healthcare Experience and Interoperability":     "OHEI",
 	"Office of Communications":                                 "OC",
 	"Office of Enterprise Data and Analytics":                  "OEDA",
 	"Office of Equal Opportunity and Civil Rights":             "OEOCR",

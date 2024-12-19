@@ -38,6 +38,10 @@ const subNavItems = (
           text: 'grbReview:supportingDocuments'
         },
         {
+          route: `/it-governance/${systemId}/grb-review#discussions`,
+          text: 'discussions:general.label'
+        },
+        {
           route: `/it-governance/${systemId}/grb-review#participants`,
           text: 'grbReview:participants'
         }
