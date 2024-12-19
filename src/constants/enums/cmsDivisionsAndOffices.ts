@@ -40,8 +40,8 @@ const cmsDivisionsAndOffices = [
     name: 'Office of Acquisition and Grants Management'
   },
   {
-    acronym: 'OBRHI',
-    name: 'Office of Burden Reduction and Health Informatics'
+    acronym: 'OHEI',
+    name: 'Office of Healthcare Experience and Interoperability'
   },
   {
     acronym: 'OC',
