@@ -34,6 +34,7 @@ type RoleType struct {
 
 	// name
 	// Required: true
+	// Enum: [AI Contact API Contact Budget Analyst Business Owner Business Question Contact Contracting Officer's Representative (COR) DA Reviewer Data Center Contact ISSO Government Task Lead (GTL) Project Lead QA Reviewer System Maintainer Subject Matter Expert (SME) Support Staff Survey Point of Contact Technical System Issues Contact]
 	Name *string `json:"name"`
 }
 
@@ -111,9 +112,85 @@ func (m *RoleType) validateID(formats strfmt.Registry) error {
 	return nil
 }
 
+var roleTypeTypeNamePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["AI Contact","API Contact","Budget Analyst","Business Owner","Business Question Contact","Contracting Officer's Representative (COR)","DA Reviewer","Data Center Contact","ISSO Government Task Lead (GTL)","Project Lead","QA Reviewer","System Maintainer","Subject Matter Expert (SME)","Support Staff","Survey Point of Contact","Technical System Issues Contact"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		roleTypeTypeNamePropEnum = append(roleTypeTypeNamePropEnum, v)
+	}
+}
+
+const (
+
+	// RoleTypeNameAIContact captures enum value "AI Contact"
+	RoleTypeNameAIContact string = "AI Contact"
+
+	// RoleTypeNameAPIContact captures enum value "API Contact"
+	RoleTypeNameAPIContact string = "API Contact"
+
+	// RoleTypeNameBudgetAnalyst captures enum value "Budget Analyst"
+	RoleTypeNameBudgetAnalyst string = "Budget Analyst"
+
+	// RoleTypeNameBusinessOwner captures enum value "Business Owner"
+	RoleTypeNameBusinessOwner string = "Business Owner"
+
+	// RoleTypeNameBusinessQuestionContact captures enum value "Business Question Contact"
+	RoleTypeNameBusinessQuestionContact string = "Business Question Contact"
+
+	// RoleTypeNameContractingOfficersRepresentativeCOR captures enum value "Contracting Officer's Representative (COR)"
+	RoleTypeNameContractingOfficersRepresentativeCOR string = "Contracting Officer's Representative (COR)"
+
+	// RoleTypeNameDAReviewer captures enum value "DA Reviewer"
+	RoleTypeNameDAReviewer string = "DA Reviewer"
+
+	// RoleTypeNameDataCenterContact captures enum value "Data Center Contact"
+	RoleTypeNameDataCenterContact string = "Data Center Contact"
+
+	// RoleTypeNameISSOGovernmentTaskLeadGTL captures enum value "ISSO Government Task Lead (GTL)"
+	RoleTypeNameISSOGovernmentTaskLeadGTL string = "ISSO Government Task Lead (GTL)"
+
+	// RoleTypeNameProjectLead captures enum value "Project Lead"
+	RoleTypeNameProjectLead string = "Project Lead"
+
+	// RoleTypeNameQAReviewer captures enum value "QA Reviewer"
+	RoleTypeNameQAReviewer string = "QA Reviewer"
+
+	// RoleTypeNameSystemMaintainer captures enum value "System Maintainer"
+	RoleTypeNameSystemMaintainer string = "System Maintainer"
+
+	// RoleTypeNameSubjectMatterExpertSME captures enum value "Subject Matter Expert (SME)"
+	RoleTypeNameSubjectMatterExpertSME string = "Subject Matter Expert (SME)"
+
+	// RoleTypeNameSupportStaff captures enum value "Support Staff"
+	RoleTypeNameSupportStaff string = "Support Staff"
+
+	// RoleTypeNameSurveyPointOfContact captures enum value "Survey Point of Contact"
+	RoleTypeNameSurveyPointOfContact string = "Survey Point of Contact"
+
+	// RoleTypeNameTechnicalSystemIssuesContact captures enum value "Technical System Issues Contact"
+	RoleTypeNameTechnicalSystemIssuesContact string = "Technical System Issues Contact"
+)
+
+// prop value enum
+func (m *RoleType) validateNameEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, roleTypeTypeNamePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (m *RoleType) validateName(formats strfmt.Registry) error {
 
 	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	// value enum
+	if err := m.validateNameEnum("name", "body", *m.Name); err != nil {
 		return err
 	}
 
