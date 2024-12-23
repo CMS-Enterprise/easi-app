@@ -2414,20 +2414,20 @@ type TRBGuidanceLetterRecommendation {
 }
 
 """
-The input required to add a recommendation & links to a TRB guidance letter
+The input required to add an insight & links to a TRB guidance letter
 """
-input CreateTRBGuidanceLetterRecommendationInput {
+input CreateTRBGuidanceLetterInsightInput {
   trbRequestId: UUID!
   title: String!
-  recommendation: HTML!
+  insight: HTML!
   links: [String!]!
   category: TRBGuidanceLetterRecommendationCategory!
 }
 
 """
-The input required to update a recommendation to a TRB guidance letter
+The input required to update an insight to a TRB guidance letter
 """
-input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBGuidanceLetterInsightInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
   recommendation: HTML
@@ -2615,9 +2615,9 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   sendTRBGuidanceLetter(input: SendTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBGuidanceLetterRecommendation(input: CreateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
+  createTRBGuidanceLetterRecommendation(input: CreateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterRecommendation(input: UpdateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
+  updateTRBGuidanceLetterRecommendation(input: UpdateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
   updateTRBGuidanceLetterRecommendationOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterRecommendation!]!
   @hasRole(role: EASI_TRB_ADMIN)

@@ -573,7 +573,7 @@ type ComplexityRoot struct {
 		CreateTRBAdminNoteInitialRequestForm             func(childComplexity int, input models.CreateTRBAdminNoteInitialRequestFormInput) int
 		CreateTRBAdminNoteSupportingDocuments            func(childComplexity int, input models.CreateTRBAdminNoteSupportingDocumentsInput) int
 		CreateTRBGuidanceLetter                          func(childComplexity int, trbRequestID uuid.UUID) int
-		CreateTRBGuidanceLetterRecommendation            func(childComplexity int, input models.CreateTRBGuidanceLetterRecommendationInput) int
+		CreateTRBGuidanceLetterRecommendation            func(childComplexity int, input models.CreateTRBGuidanceLetterInsightInput) int
 		CreateTRBRequest                                 func(childComplexity int, requestType models.TRBRequestType) int
 		CreateTRBRequestAttendee                         func(childComplexity int, input models.CreateTRBRequestAttendeeInput) int
 		CreateTRBRequestDocument                         func(childComplexity int, input models.CreateTRBRequestDocumentInput) int
@@ -1270,7 +1270,7 @@ type MutationResolver interface {
 	UpdateTRBGuidanceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetter, error)
 	RequestReviewForTRBGuidanceLetter(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetter, error)
 	SendTRBGuidanceLetter(ctx context.Context, input models.SendTRBGuidanceLetterInput) (*models.TRBGuidanceLetter, error)
-	CreateTRBGuidanceLetterRecommendation(ctx context.Context, input models.CreateTRBGuidanceLetterRecommendationInput) (*models.TRBGuidanceLetterRecommendation, error)
+	CreateTRBGuidanceLetterRecommendation(ctx context.Context, input models.CreateTRBGuidanceLetterInsightInput) (*models.TRBGuidanceLetterRecommendation, error)
 	UpdateTRBGuidanceLetterRecommendation(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error)
 	UpdateTRBGuidanceLetterRecommendationOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) ([]*models.TRBGuidanceLetterRecommendation, error)
 	DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error)
@@ -4277,7 +4277,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateTRBGuidanceLetterRecommendation(childComplexity, args["input"].(models.CreateTRBGuidanceLetterRecommendationInput)), true
+		return e.complexity.Mutation.CreateTRBGuidanceLetterRecommendation(childComplexity, args["input"].(models.CreateTRBGuidanceLetterInsightInput)), true
 
 	case "Mutation.createTRBRequest":
 		if e.complexity.Mutation.CreateTRBRequest == nil {
@@ -7771,7 +7771,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateTRBAdminNoteGuidanceLetterInput,
 		ec.unmarshalInputCreateTRBAdminNoteInitialRequestFormInput,
 		ec.unmarshalInputCreateTRBAdminNoteSupportingDocumentsInput,
-		ec.unmarshalInputCreateTRBGuidanceLetterRecommendationInput,
+		ec.unmarshalInputCreateTRBGuidanceLetterInsightInput,
 		ec.unmarshalInputCreateTRBRequestAttendeeInput,
 		ec.unmarshalInputCreateTRBRequestDocumentInput,
 		ec.unmarshalInputCreateTRBRequestFeedbackInput,
@@ -7829,7 +7829,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeReviewDatesInput,
 		ec.unmarshalInputUpdateTRBGuidanceLetterInput,
-		ec.unmarshalInputUpdateTRBGuidanceLetterRecommendationInput,
+		ec.unmarshalInputUpdateTRBGuidanceLetterInsightInput,
 		ec.unmarshalInputUpdateTRBGuidanceLetterRecommendationOrderInput,
 		ec.unmarshalInputUpdateTRBRequestAttendeeInput,
 		ec.unmarshalInputUpdateTRBRequestConsultMeetingTimeInput,
@@ -10351,20 +10351,20 @@ type TRBGuidanceLetterRecommendation {
 }
 
 """
-The input required to add a recommendation & links to a TRB guidance letter
+The input required to add an insight & links to a TRB guidance letter
 """
-input CreateTRBGuidanceLetterRecommendationInput {
+input CreateTRBGuidanceLetterInsightInput {
   trbRequestId: UUID!
   title: String!
-  recommendation: HTML!
+  insight: HTML!
   links: [String!]!
   category: TRBGuidanceLetterRecommendationCategory!
 }
 
 """
-The input required to update a recommendation to a TRB guidance letter
+The input required to update an insight to a TRB guidance letter
 """
-input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBGuidanceLetterInsightInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
   recommendation: HTML
@@ -10552,9 +10552,9 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   sendTRBGuidanceLetter(input: SendTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBGuidanceLetterRecommendation(input: CreateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
+  createTRBGuidanceLetterRecommendation(input: CreateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterRecommendation(input: UpdateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
+  updateTRBGuidanceLetterRecommendation(input: UpdateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
   updateTRBGuidanceLetterRecommendationOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterRecommendation!]!
   @hasRole(role: EASI_TRB_ADMIN)
@@ -12031,22 +12031,22 @@ func (ec *executionContext) field_Mutation_createTRBGuidanceLetterRecommendation
 func (ec *executionContext) field_Mutation_createTRBGuidanceLetterRecommendation_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (models.CreateTRBGuidanceLetterRecommendationInput, error) {
+) (models.CreateTRBGuidanceLetterInsightInput, error) {
 	// We won't call the directive if the argument is null.
 	// Set call_argument_directives_with_null to true to call directives
 	// even if the argument is null.
 	_, ok := rawArgs["input"]
 	if !ok {
-		var zeroVal models.CreateTRBGuidanceLetterRecommendationInput
+		var zeroVal models.CreateTRBGuidanceLetterInsightInput
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNCreateTRBGuidanceLetterRecommendationInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterRecommendationInput(ctx, tmp)
+		return ec.unmarshalNCreateTRBGuidanceLetterInsightInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterInsightInput(ctx, tmp)
 	}
 
-	var zeroVal models.CreateTRBGuidanceLetterRecommendationInput
+	var zeroVal models.CreateTRBGuidanceLetterInsightInput
 	return zeroVal, nil
 }
 
@@ -13537,7 +13537,7 @@ func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterRecommendation
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNUpdateTRBGuidanceLetterRecommendationInput2map(ctx, tmp)
+		return ec.unmarshalNUpdateTRBGuidanceLetterInsightInput2map(ctx, tmp)
 	}
 
 	var zeroVal map[string]interface{}
@@ -36783,7 +36783,7 @@ func (ec *executionContext) _Mutation_createTRBGuidanceLetterRecommendation(ctx 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateTRBGuidanceLetterRecommendation(rctx, fc.Args["input"].(models.CreateTRBGuidanceLetterRecommendationInput))
+			return ec.resolvers.Mutation().CreateTRBGuidanceLetterRecommendation(rctx, fc.Args["input"].(models.CreateTRBGuidanceLetterInsightInput))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
@@ -60568,14 +60568,14 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteSupportingDocumentsI
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterRecommendationInput(ctx context.Context, obj any) (models.CreateTRBGuidanceLetterRecommendationInput, error) {
-	var it models.CreateTRBGuidanceLetterRecommendationInput
+func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterInsightInput(ctx context.Context, obj any) (models.CreateTRBGuidanceLetterInsightInput, error) {
+	var it models.CreateTRBGuidanceLetterInsightInput
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "title", "recommendation", "links", "category"}
+	fieldsInOrder := [...]string{"trbRequestId", "title", "insight", "links", "category"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -60596,13 +60596,13 @@ func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterRecommendationI
 				return it, err
 			}
 			it.Title = data
-		case "recommendation":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendation"))
+		case "insight":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("insight"))
 			data, err := ec.unmarshalNHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Recommendation = data
+			it.Insight = data
 		case "links":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("links"))
 			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
@@ -63352,7 +63352,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterInput(ctx conte
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationInput(ctx context.Context, obj any) (map[string]interface{}, error) {
+func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterInsightInput(ctx context.Context, obj any) (map[string]interface{}, error) {
 	it := make(map[string]any, len(obj.(map[string]any)))
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
@@ -75007,8 +75007,8 @@ func (ec *executionContext) unmarshalNCreateTRBAdminNoteSupportingDocumentsInput
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateTRBGuidanceLetterRecommendationInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterRecommendationInput(ctx context.Context, v any) (models.CreateTRBGuidanceLetterRecommendationInput, error) {
-	res, err := ec.unmarshalInputCreateTRBGuidanceLetterRecommendationInput(ctx, v)
+func (ec *executionContext) unmarshalNCreateTRBGuidanceLetterInsightInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterInsightInput(ctx context.Context, v any) (models.CreateTRBGuidanceLetterInsightInput, error) {
+	res, err := ec.unmarshalInputCreateTRBGuidanceLetterInsightInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -77761,8 +77761,8 @@ func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterInput2map(ctx conte
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterRecommendationInput2map(ctx context.Context, v any) (map[string]interface{}, error) {
-	res, err := ec.unmarshalInputUpdateTRBGuidanceLetterRecommendationInput(ctx, v)
+func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterInsightInput2map(ctx context.Context, v any) (map[string]interface{}, error) {
+	res, err := ec.unmarshalInputUpdateTRBGuidanceLetterInsightInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

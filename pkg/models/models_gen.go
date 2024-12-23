@@ -242,13 +242,13 @@ type CreateTRBAdminNoteSupportingDocumentsInput struct {
 	DocumentIDs  []uuid.UUID `json:"documentIDs"`
 }
 
-// The input required to add a recommendation & links to a TRB guidance letter
-type CreateTRBGuidanceLetterRecommendationInput struct {
-	TrbRequestID   uuid.UUID                               `json:"trbRequestId"`
-	Title          string                                  `json:"title"`
-	Recommendation HTML                                    `json:"recommendation"`
-	Links          []string                                `json:"links"`
-	Category       TRBGuidanceLetterRecommendationCategory `json:"category"`
+// The input required to add an insight & links to a TRB guidance letter
+type CreateTRBGuidanceLetterInsightInput struct {
+	TrbRequestID uuid.UUID                               `json:"trbRequestId"`
+	Title        string                                  `json:"title"`
+	Insight      HTML                                    `json:"insight"`
+	Links        []string                                `json:"links"`
+	Category     TRBGuidanceLetterRecommendationCategory `json:"category"`
 }
 
 // The data needed add a TRB request attendee to a TRB request

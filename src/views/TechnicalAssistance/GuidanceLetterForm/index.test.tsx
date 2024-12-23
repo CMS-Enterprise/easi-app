@@ -10,9 +10,9 @@ import {
 import userEvent from '@testing-library/user-event';
 import {
   CreateTRBGuidanceLetterInsightDocument,
+  CreateTRBGuidanceLetterInsightInput,
   CreateTRBGuidanceLetterInsightMutation,
   CreateTRBGuidanceLetterInsightMutationVariables,
-  CreateTRBGuidanceLetterRecommendationInput,
   GetTRBGuidanceLetterQuery,
   GetTRBGuidanceLetterQueryVariables,
   TRBGuidanceLetterRecommendationCategory
@@ -33,10 +33,10 @@ import typeRichText from 'utils/testing/typeRichText';
 
 import GuidanceLetterForm from '.';
 
-const mockInsight: CreateTRBGuidanceLetterRecommendationInput = {
+const mockInsight: CreateTRBGuidanceLetterInsightInput = {
   trbRequestId: mockTrbRequestId,
   title: 'Recommendation 3',
-  recommendation: 'Recommendation description text',
+  insight: 'Recommendation description text',
   links: ['google.com', 'easi.cms.gov'],
   category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
 };
@@ -57,6 +57,7 @@ const createTrbInsightQuery: MockedQuery<
       createTRBGuidanceLetterRecommendation: {
         __typename: 'TRBGuidanceLetterRecommendation',
         id: '670fdf6d-761b-415f-a108-2ebc814288c3',
+        recommendation: mockInsight.insight,
         ...mockInsight
       }
     }
@@ -168,10 +169,8 @@ describe('TRB Guidance Letter Form', () => {
 
     // Description field
     const descriptionInput = await screen.findByTestId('recommendation');
-    await typeRichText(descriptionInput, mockInsight.recommendation);
-    expect(descriptionInput).toContainHTML(
-      `<p>${mockInsight.recommendation!}</p>`
-    );
+    await typeRichText(descriptionInput, mockInsight.insight);
+    expect(descriptionInput).toContainHTML(`<p>${mockInsight.insight!}</p>`);
 
     // Add resource link
     const addLinkButton = await findByRole('button', {

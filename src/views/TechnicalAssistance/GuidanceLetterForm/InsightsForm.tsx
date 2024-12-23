@@ -134,7 +134,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                     trbRequestId,
                     category,
                     title,
-                    recommendation,
+                    insight: recommendation,
                     links
                   }
                 }
