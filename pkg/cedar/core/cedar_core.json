@@ -2624,7 +2624,7 @@
           "role"
         ],
         "summary": "Finds a list of role types available within an application. This interface takes in application.",
-        "description": "Finds a list of role types available within an application. This interface takes in application.",
+        "description": "Finds a list of role types available within an application. This interface takes in application. The list of current roles are: AI Contact API Contact Budget Analyst Business Owner Business Question Contact Contracting Officer's Representative (COR) DA Reviewer Data Center Contact ISSO Government Task Lead (GTL) Project Lead QA Reviewer System Maintainer Subject Matter Expert (SME) Support Staff Survey Point of Contact Technical System Issues Contact",
         "operationId": "roleTypeFind",
         "produces": [
           "application/json"
@@ -3821,7 +3821,25 @@
           ]
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "AI Contact",
+            "API Contact",
+            "Budget Analyst",
+            "Business Owner",
+            "Business Question Contact",
+            "Contracting Officer's Representative (COR)",
+            "DA Reviewer",
+            "Data Center Contact",
+            "ISSO Government Task Lead (GTL)",
+            "Project Lead",
+            "QA Reviewer",
+            "System Maintainer",
+            "Subject Matter Expert (SME)",
+            "Support Staff",
+            "Survey Point of Contact",
+            "Technical System Issues Contact"
+          ]
         },
         "description": {
           "type": "string"
@@ -3938,6 +3956,10 @@
         "name": {
           "type": "string",
           "example": "Accountable Care Organization Management System v.1.0 (COOP DR)"
+        },
+        "wanTypeOther": {
+          "type": "string",
+          "example": "Internet - Contractor"
         },
         "startDate": {
           "type": "string",
@@ -4366,6 +4388,12 @@
         },
         "containsHealthDisparityData": {
           "type": "boolean"
+        },
+        "exchangeCUIType": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "isAddressEditable": {
           "type": "boolean"
