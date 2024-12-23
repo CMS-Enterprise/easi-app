@@ -1008,7 +1008,7 @@ func (e Role) String() string {
 	return string(e)
 }
 
-func (e *Role) UnmarshalGQL(v interface{}) error {
+func (e *Role) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -1106,7 +1106,7 @@ func (e SystemIntakeActionType) String() string {
 	return string(e)
 }
 
-func (e *SystemIntakeActionType) UnmarshalGQL(v interface{}) error {
+func (e *SystemIntakeActionType) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -1150,7 +1150,7 @@ func (e SystemIntakeFormStep) String() string {
 	return string(e)
 }
 
-func (e *SystemIntakeFormStep) UnmarshalGQL(v interface{}) error {
+func (e *SystemIntakeFormStep) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -1211,7 +1211,7 @@ func (e SystemIntakeGRBReviewerRole) String() string {
 	return string(e)
 }
 
-func (e *SystemIntakeGRBReviewerRole) UnmarshalGQL(v interface{}) error {
+func (e *SystemIntakeGRBReviewerRole) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -1254,7 +1254,7 @@ func (e SystemIntakeGRBReviewerVotingRole) String() string {
 	return string(e)
 }
 
-func (e *SystemIntakeGRBReviewerVotingRole) UnmarshalGQL(v interface{}) error {
+func (e *SystemIntakeGRBReviewerVotingRole) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -1302,7 +1302,7 @@ func (e SystemIntakeSoftwareAcquisitionMethods) String() string {
 	return string(e)
 }
 
-func (e *SystemIntakeSoftwareAcquisitionMethods) UnmarshalGQL(v interface{}) error {
+func (e *SystemIntakeSoftwareAcquisitionMethods) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -1348,7 +1348,7 @@ func (e SystemIntakeStepToProgressTo) String() string {
 	return string(e)
 }
 
-func (e *SystemIntakeStepToProgressTo) UnmarshalGQL(v interface{}) error {
+func (e *SystemIntakeStepToProgressTo) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -1391,7 +1391,7 @@ func (e TagType) String() string {
 	return string(e)
 }
 
-func (e *TagType) UnmarshalGQL(v interface{}) error {
+func (e *TagType) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
