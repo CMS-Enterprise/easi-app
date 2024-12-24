@@ -309,7 +309,7 @@ func (s *seederConfig) seedTRBCase10(ctx context.Context) error {
 	return nil
 }
 
-// seed a TRB request with category-specific admin notes, including references to documents and recommendations
+// seed a TRB request with category-specific admin notes, including references to documents and insights
 func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 11 - Admin notes w/ category-specific data").Ptr(), true)
 	if err != nil {
@@ -367,8 +367,8 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 		documentIDs = append(documentIDs, doc.ID)
 	}
 
-	// create 3 recommendations we can reference in admin notes
-	recommendations, err := s.addGuidanceLetterRecommendations(ctx, trb)
+	// create 3 insights we can reference in admin notes
+	insights, err := s.addGuidanceLetterInsights(ctx, trb)
 	if err != nil {
 		return err
 	}
@@ -419,15 +419,15 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 		return err
 	}
 
-	// link to 2 of the recommendations so we can check that it links to multiple recs *and* that it doesn't link to all the recs on the request
+	// link to 2 of the insights so we can check that it links to multiple recs *and* that it doesn't link to all the recs on the request
 	guidanceLetterNoteInput := models.CreateTRBAdminNoteGuidanceLetterInput{
 		TrbRequestID:            trb.ID,
 		NoteText:                "This is a guidance letter admin note from seed data",
 		AppliesToMeetingSummary: true,
 		AppliesToNextSteps:      false,
 		RecommendationIDs: []uuid.UUID{
-			recommendations[0].ID,
-			recommendations[1].ID,
+			insights[0].ID,
+			insights[1].ID,
 		},
 	}
 	_, err = resolvers.CreateTRBAdminNoteGuidanceLetter(ctx, s.store, guidanceLetterNoteInput)
@@ -628,7 +628,7 @@ func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
 				documentIDs = append(documentIDs, doc.ID)
 			}
 
-			recommendations, err := s.addGuidanceLetterRecommendations(ctx, trbRequest)
+			insights, err := s.addGuidanceLetterInsights(ctx, trbRequest)
 			if err != nil {
 				return err
 			}
@@ -639,8 +639,8 @@ func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
 				AppliesToMeetingSummary: true,
 				AppliesToNextSteps:      false,
 				RecommendationIDs: []uuid.UUID{
-					recommendations[0].ID,
-					recommendations[1].ID,
+					insights[0].ID,
+					insights[1].ID,
 				},
 			}
 
@@ -969,8 +969,8 @@ func (s *seederConfig) addGuidanceLetter(ctx context.Context, trb *models.TRBReq
 			}
 		}
 
-		// create three recommendations for testing manipulation of recommendations' positions
-		_, err = s.addGuidanceLetterRecommendations(ctx, trb)
+		// create three insights for testing manipulation of insights' positions
+		_, err = s.addGuidanceLetterInsights(ctx, trb)
 		if err != nil {
 			return nil, err
 		}
@@ -985,7 +985,7 @@ func (s *seederConfig) addGuidanceLetter(ctx context.Context, trb *models.TRBReq
 }
 
 // creates insights attached to a TRB request
-func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb *models.TRBRequest) ([]*models.TRBGuidanceLetterRecommendation, error) {
+func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *models.TRBRequest) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	// create insights of consideration category
 	consideration1ToCreate := &models.TRBGuidanceLetterRecommendation{
 		TRBRequestID:   trb.ID,
