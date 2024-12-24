@@ -1,4 +1,4 @@
-package recommendations
+package insights
 
 import (
 	"errors"

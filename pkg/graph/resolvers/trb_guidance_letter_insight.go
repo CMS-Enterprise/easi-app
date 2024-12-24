@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/trb/recommendations"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/trb/insights"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -91,7 +91,7 @@ func UpdateTRBGuidanceLetterInsightOrder(
 	store *storage.Store,
 	input models.UpdateTRBGuidanceLetterRecommendationOrderInput,
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
-	// this extra database query is necessary for validation, so we don't mess up the recommendations' positions with an invalid order,
+	// this extra database query is necessary for validation, so we don't mess up the insights' positions with an invalid order,
 	// but requiring an extra database call is unfortunate
 	currentRecommendations, err := store.GetTRBGuidanceLetterInsightsByTRBRequestIDAndCategory(ctx, input.TrbRequestID, input.Category)
 	if err != nil {
@@ -103,8 +103,8 @@ func UpdateTRBGuidanceLetterInsightOrder(
 	// This code doesn't currently worry about that, because we don't think it's likely to happen,
 	// due to the low likelihood of multiple users concurrently editing the same guidance letter.
 	// There are issues that could occur in theory, though, such as a recommendation getting deleted between when this function queries and when it updates;
-	// that could lead to a `newOrder` with more elements than there are recommendations being accepted, which would throw off the recs' positions.
-	if err := recommendations.IsNewRecommendationOrderValid(currentRecommendations, input.NewOrder); err != nil {
+	// that could lead to a `newOrder` with more elements than there are insights being accepted, which would throw off the recs' positions.
+	if err := insights.IsNewRecommendationOrderValid(currentRecommendations, input.NewOrder); err != nil {
 		return nil, err
 	}
 
@@ -122,14 +122,14 @@ func DeleteTRBGuidanceLetterRecommendation(
 	store *storage.Store,
 	id uuid.UUID,
 ) (*models.TRBGuidanceLetterRecommendation, error) {
-	// as well as deleting the recommendation, we need to update the position of the remaining recommendations for that TRB request, so there aren't any gaps in the ordering
+	// as well as deleting the recommendation, we need to update the position of the remaining insights for that TRB request, so there aren't any gaps in the ordering
 
 	allRecommendationsForRequest, err := store.GetTRBGuidanceLetterInsightsSharingTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
-	// sort recommendations by position, so we can loop over them to find the recommendations we need to update
+	// sort insights by position, so we can loop over them to find the insights we need to update
 	slices.SortFunc(allRecommendationsForRequest, func(recommendationA, recommendationB *models.TRBGuidanceLetterRecommendation) int {
 		return int(recommendationA.PositionInLetter.ValueOrZero()) - int(recommendationB.PositionInLetter.ValueOrZero())
 	})
