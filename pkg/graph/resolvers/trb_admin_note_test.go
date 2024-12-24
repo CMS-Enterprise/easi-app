@@ -315,7 +315,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 		s.Nil(createdNote.AppliesToAttendees.Ptr())
 
 		// check that links to recommendations were created
-		fetchedRecommendations, err := store.GetTRBRecommendationsByAdminNoteID(ctx, createdNote.ID)
+		fetchedRecommendations, err := store.GetTRBInsightsByAdminNoteID(ctx, createdNote.ID)
 		s.NoError(err)
 
 		s.Len(fetchedRecommendations, 2)
@@ -331,7 +331,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 		s.True(recommendation2Fetched)
 	})
 
-	s.Run("Creating Admin Note referencing guidance letter recommendations attached to a *different* TRB request fails", func() {
+	s.Run("Creating Admin Note referencing guidance letter insights attached to a *different* TRB request fails", func() {
 		// create request 1 - admin note will be attached to this
 		trbRequestForNote, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
 		s.NoError(err)

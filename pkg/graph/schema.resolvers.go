@@ -2011,7 +2011,7 @@ func (r *tRBGuidanceLetterResolver) Author(ctx context.Context, obj *models.TRBG
 
 // Insights is the resolver for the insights field.
 func (r *tRBGuidanceLetterResolver) Insights(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterRecommendation, error) {
-	return resolvers.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
+	return resolvers.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
 }
 
 // Links is the resolver for the links field.

@@ -10,12 +10,12 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// IsNewRecommendationOrderValid checks that a new order for TRB guidance letter recommendations is valid for the current recommendations
+// IsNewRecommendationOrderValid checks that a new order for TRB guidance letter insights is valid for the current recommendations
 func IsNewRecommendationOrderValid(currentRecommendations []*models.TRBGuidanceLetterRecommendation, newOrder []uuid.UUID) error {
 	// check that newOrder has the same number of IDs as there are in the current recommendations
 	if len(newOrder) != len(currentRecommendations) {
 		return &apperrors.BadRequestError{
-			Err: errors.New("new order for TRB guidance letter recommendations must have the same number of IDs as there are current recommendations"),
+			Err: errors.New("new order for TRB guidance letter insights must have the same number of IDs as there are current recommendations"),
 		}
 	}
 
@@ -25,7 +25,7 @@ func IsNewRecommendationOrderValid(currentRecommendations []*models.TRBGuidanceL
 			return newOrderID == currentRecommendation.ID
 		}) {
 			return &apperrors.BadRequestError{
-				Err: errors.New("new order for TRB guidance letter recommendations must contain all IDs of current recommendations"),
+				Err: errors.New("new order for TRB guidance letter insights must contain all IDs of current recommendations"),
 			}
 		}
 	}
@@ -35,7 +35,7 @@ func IsNewRecommendationOrderValid(currentRecommendations []*models.TRBGuidanceL
 	for _, newOrderID := range newOrder {
 		if _, ok := newOrderIDs[newOrderID]; ok { // non-distinct ID detected
 			return &apperrors.BadRequestError{
-				Err: errors.New("new order for TRB guidance letter recommendations must contain distinct IDs"),
+				Err: errors.New("new order for TRB guidance letter insights must contain distinct IDs"),
 			}
 		}
 

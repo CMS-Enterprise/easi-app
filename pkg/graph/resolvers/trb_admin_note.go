@@ -119,7 +119,7 @@ func CreateTRBAdminNoteGuidanceLetter(ctx context.Context, store *storage.Store,
 	// database constraints will prevent links being created to recommendations on a different request
 	// but if we don't check, we'll still create an (invalid) admin note record
 
-	allRecommendationsOnRequest, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, input.TrbRequestID)
+	allRecommendationsOnRequest, err := store.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, input.TrbRequestID)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +151,7 @@ func CreateTRBAdminNoteGuidanceLetter(ctx context.Context, store *storage.Store,
 
 	// create links to recommendations referenced the by the admin note (if any are present)
 	if len(input.RecommendationIDs) > 0 {
-		_, err = store.CreateTRBAdminNoteTRBRecommendationLinks(ctx, input.TrbRequestID, createdNote.ID, input.RecommendationIDs)
+		_, err = store.CreateTRBAdminNoteTRBInsightLinks(ctx, input.TrbRequestID, createdNote.ID, input.RecommendationIDs)
 		if err != nil {
 			return nil, err
 		}
@@ -214,7 +214,7 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 			PlaceholderField: nil,
 		}, nil
 	case models.TRBAdminNoteCategoryGuidanceLetter:
-		recommendations, err := store.GetTRBRecommendationsByAdminNoteID(ctx, note.ID)
+		recommendations, err := store.GetTRBInsightsByAdminNoteID(ctx, note.ID)
 		if err != nil {
 			return nil, err
 		}

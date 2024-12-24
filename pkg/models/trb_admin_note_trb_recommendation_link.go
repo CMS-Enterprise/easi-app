@@ -3,7 +3,7 @@ package models
 import "github.com/google/uuid"
 
 // TRBAdminNoteTRBGuidanceLetterRecommendationLink represents an association between a TRB admin note (in the Guidance Letter category)
-// and a TRB guidance letter recommendation
+// and a TRB guidance letter insight
 type TRBAdminNoteTRBGuidanceLetterRecommendationLink struct {
 	BaseStruct
 	TRBRequestID                      uuid.UUID `json:"trbRequestId" db:"trb_request_id"`

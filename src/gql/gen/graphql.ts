@@ -2733,7 +2733,7 @@ export type TRBGuidanceLetter = {
   dateSent?: Maybe<Scalars['Time']['output']>;
   followupPoint?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
-  /** List of recommendations in the order specified by users */
+  /** List of insights in the order specified by users */
   insights: Array<TRBGuidanceLetterRecommendation>;
   isFollowupRecommended?: Maybe<Scalars['Boolean']['output']>;
   meetingSummary?: Maybe<Scalars['HTML']['output']>;

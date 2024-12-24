@@ -2304,9 +2304,9 @@ type TRBGuidanceLetter {
   dateSent: Time
   followupPoint: String
   """
-  List of recommendations in the order specified by users
+  List of insights in the order specified by users
   """
-  insights: [TRBGuidanceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_guidance_letter_recommendation.go `GetTRBGuidanceLetterRecommendationsByTRBRequestID`
+  insights: [TRBGuidanceLetterRecommendation!]! # This query will not return deleted insights -- see pkg/storage/trb_guidance_letter_insight.go `GetTRBGuidanceLetterInsightsByTRBRequestID`
   createdBy: String!
   createdAt: Time!
   modifiedBy: String

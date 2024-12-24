@@ -8,7 +8,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// TestTRBGuidanceLetterRecommendationCRUD tests CRUD for TRB guidance letter recommendations
+// TestTRBGuidanceLetterRecommendationCRUD tests CRUD for TRB guidance letter insights
 func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 	ctx := s.testConfigs.Context
 	anonEua := "ANON"
@@ -40,7 +40,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(toCreate.PositionInLetter.Int64, 0)
 
 		// Test fetch of recommendations list
-		recommendations, err := GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, store, trbRequest.ID)
+		recommendations, err := GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, store, trbRequest.ID)
 		s.NoError(err)
 		s.True(len(recommendations) == 1)
 
@@ -135,7 +135,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.NoError(err)
 
 		// check that the last recommendation's position was adjusted from 2 to 1 to close the gap
-		lastRecommendationAfterDelete, err := store.GetTRBGuidanceLetterRecommendationByID(ctx, createdRecommendations[2].ID)
+		lastRecommendationAfterDelete, err := store.GetTRBGuidanceLetterInsightByID(ctx, createdRecommendations[2].ID)
 		s.NoError(err)
 		s.EqualValues(1, lastRecommendationAfterDelete.PositionInLetter.ValueOrZero())
 	})
@@ -362,13 +362,13 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(updated[2].ID, createdConsideration2.ID)
 
 		// confirm this had no effect on recommendations or requirements
-		recommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestIDAndCategory(ctx, trbRequest.ID, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
+		recommendations, err := store.GetTRBGuidanceLetterInsightsByTRBRequestIDAndCategory(ctx, trbRequest.ID, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
 		s.NoError(err)
 		s.Len(recommendations, 2)
 		s.EqualValues(recommendations[0].ID, createdRecommendation1.ID)
 		s.EqualValues(recommendations[1].ID, createdRecommendation2.ID)
 
-		requirements, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestIDAndCategory(ctx, trbRequest.ID, models.TRBGuidanceLetterRecommendationCategoryRequirement)
+		requirements, err := store.GetTRBGuidanceLetterInsightsByTRBRequestIDAndCategory(ctx, trbRequest.ID, models.TRBGuidanceLetterRecommendationCategoryRequirement)
 		s.NoError(err)
 		s.Len(requirements, 2)
 		s.EqualValues(requirements[0].ID, createdRequirement1.ID)
@@ -493,7 +493,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(updated.PositionInLetter.Int64, int64(2))
 
 		// check considerations to confirm consideration 3 moved up to position 2
-		considerations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestIDAndCategory(ctx, trbRequest.ID, models.TRBGuidanceLetterRecommendationCategoryConsideration)
+		considerations, err := store.GetTRBGuidanceLetterInsightsByTRBRequestIDAndCategory(ctx, trbRequest.ID, models.TRBGuidanceLetterRecommendationCategoryConsideration)
 		s.NoError(err)
 		s.Len(considerations, 2)
 		s.EqualValues(considerations[0].PositionInLetter.Int64, int64(0))

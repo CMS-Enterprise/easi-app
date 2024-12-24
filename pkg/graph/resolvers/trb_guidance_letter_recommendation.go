@@ -22,17 +22,17 @@ func CreateTRBGuidanceLetterRecommendation(
 	recommendation *models.TRBGuidanceLetterRecommendation,
 ) (*models.TRBGuidanceLetterRecommendation, error) {
 	recommendation.CreatedBy = appcontext.Principal(ctx).ID()
-	createdRecommendation, err := store.CreateTRBGuidanceLetterRecommendation(ctx, recommendation)
+	createdRecommendation, err := store.CreateTRBGuidanceLetterInsight(ctx, recommendation)
 	if err != nil {
 		return nil, err
 	}
 	return createdRecommendation, nil
 }
 
-// GetTRBGuidanceLetterRecommendationsByTRBRequestID retrieves TRB request guidance letter recommendations records for a given TRB request ID,
+// GetTRBGuidanceLetterInsightsByTRBRequestID retrieves TRB request guidance letter insights records for a given TRB request ID,
 // ordering them in the user-specified positions
-func GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBGuidanceLetterRecommendation, error) {
-	results, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, id)
+func GetTRBGuidanceLetterInsightsByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBGuidanceLetterRecommendation, error) {
+	results, err := store.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -49,12 +49,12 @@ func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 	// conv uuid first
 	id, ok := idIface.(uuid.UUID)
 	if !ok {
-		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB guidance letter recommendation: %v", idIface)
+		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB guidance letter insight: %v", idIface)
 	}
 
 	// This will fail to fetch an existing recommendation if the recommendation is deleted, which is sufficient protection
 	// against attempting to update a deleted recommendation.
-	recommendation, err := store.GetTRBGuidanceLetterRecommendationByID(ctx, id)
+	recommendation, err := store.GetTRBGuidanceLetterInsightByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 		return nil, errors.New("cannot set category to `uncategorized` on an insight")
 	}
 
-	updated, err := store.UpdateTRBGuidanceLetterRecommendation(ctx, recommendation)
+	updated, err := store.UpdateTRBGuidanceLetterInsight(ctx, recommendation)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 	return updated, nil
 }
 
-// UpdateTRBGuidanceLetterRecommendationOrder updates the order that TRB guidance letter recommendations are displayed in
+// UpdateTRBGuidanceLetterRecommendationOrder updates the order that TRB guidance letter insights are displayed in
 func UpdateTRBGuidanceLetterRecommendationOrder(
 	ctx context.Context,
 	store *storage.Store,
@@ -93,7 +93,7 @@ func UpdateTRBGuidanceLetterRecommendationOrder(
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	// this extra database query is necessary for validation, so we don't mess up the recommendations' positions with an invalid order,
 	// but requiring an extra database call is unfortunate
-	currentRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestIDAndCategory(ctx, input.TrbRequestID, input.Category)
+	currentRecommendations, err := store.GetTRBGuidanceLetterInsightsByTRBRequestIDAndCategory(ctx, input.TrbRequestID, input.Category)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +124,7 @@ func DeleteTRBGuidanceLetterRecommendation(
 ) (*models.TRBGuidanceLetterRecommendation, error) {
 	// as well as deleting the recommendation, we need to update the position of the remaining recommendations for that TRB request, so there aren't any gaps in the ordering
 
-	allRecommendationsForRequest, err := store.GetTRBGuidanceLetterRecommendationsSharingTRBRequestID(ctx, id)
+	allRecommendationsForRequest, err := store.GetTRBGuidanceLetterInsightsSharingTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +142,7 @@ func DeleteTRBGuidanceLetterRecommendation(
 		}
 	}
 
-	return store.DeleteTRBGuidanceLetterRecommendation(ctx, id, newOrder)
+	return store.DeleteTRBGuidanceLetterInsight(ctx, id, newOrder)
 }
 
 // cleanupGuidanceLetterInsightOrder sets re-ordered lists of insights for each category
@@ -152,7 +152,7 @@ func DeleteTRBGuidanceLetterRecommendation(
 // with 1, 2, 3
 func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) error {
 	// first, get list of all insights for this guidance letter
-	allRecommendations, err := store.GetTRBGuidanceLetterRecommendationsByTRBRequestID(ctx, trbRequestID)
+	allRecommendations, err := store.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, trbRequestID)
 	if err != nil {
 		return err
 	}
