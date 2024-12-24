@@ -10,22 +10,22 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// IsNewRecommendationOrderValid checks that a new order for TRB guidance letter insights is valid for the current recommendations
-func IsNewRecommendationOrderValid(currentRecommendations []*models.TRBGuidanceLetterRecommendation, newOrder []uuid.UUID) error {
-	// check that newOrder has the same number of IDs as there are in the current recommendations
-	if len(newOrder) != len(currentRecommendations) {
+// IsNewInsightOrderValid checks that a new order for TRB guidance letter insights is valid for the current insights
+func IsNewInsightOrderValid(currentInsights []*models.TRBGuidanceLetterRecommendation, newOrder []uuid.UUID) error {
+	// check that newOrder has the same number of IDs as there are in the current insights
+	if len(newOrder) != len(currentInsights) {
 		return &apperrors.BadRequestError{
-			Err: errors.New("new order for TRB guidance letter insights must have the same number of IDs as there are current recommendations"),
+			Err: errors.New("new order for TRB guidance letter insights must have the same number of IDs as there are current insights"),
 		}
 	}
 
-	// check that all IDs in newOrder are present in currentRecommendations
+	// check that all IDs in newOrder are present in currentInsights
 	for _, newOrderID := range newOrder {
-		if !slices.ContainsFunc(currentRecommendations, func(currentRecommendation *models.TRBGuidanceLetterRecommendation) bool {
-			return newOrderID == currentRecommendation.ID
+		if !slices.ContainsFunc(currentInsights, func(currentInsight *models.TRBGuidanceLetterRecommendation) bool {
+			return newOrderID == currentInsight.ID
 		}) {
 			return &apperrors.BadRequestError{
-				Err: errors.New("new order for TRB guidance letter insights must contain all IDs of current recommendations"),
+				Err: errors.New("new order for TRB guidance letter insights must contain all IDs of current insights"),
 			}
 		}
 	}
@@ -43,10 +43,10 @@ func IsNewRecommendationOrderValid(currentRecommendations []*models.TRBGuidanceL
 	}
 
 	// since we've checked that:
-	// * newOrder is exactly as long as currentRecommendations
-	// * all IDs in newOrder are present in currentRecommendations
+	// * newOrder is exactly as long as currentInsights
+	// * all IDs in newOrder are present in currentInsights
 	// * all IDs in newOrder are distinct
-	// this means that all IDs in currentRecommendations must be present in newOrder, so we don't have to explicitly check that
+	// this means that all IDs in currentInsights must be present in newOrder, so we don't have to explicitly check that
 
 	return nil
 }

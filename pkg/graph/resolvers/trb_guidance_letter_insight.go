@@ -15,18 +15,18 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
-// CreateTRBGuidanceLetterInsight creates a TRBGuidanceLetterRecommendation in the database
+// CreateTRBGuidanceLetterInsight creates a TRBGuidanceLetterInsight in the database
 func CreateTRBGuidanceLetterInsight(
 	ctx context.Context,
 	store *storage.Store,
-	recommendation *models.TRBGuidanceLetterRecommendation,
+	insight *models.TRBGuidanceLetterRecommendation,
 ) (*models.TRBGuidanceLetterRecommendation, error) {
-	recommendation.CreatedBy = appcontext.Principal(ctx).ID()
-	createdRecommendation, err := store.CreateTRBGuidanceLetterInsight(ctx, recommendation)
+	insight.CreatedBy = appcontext.Principal(ctx).ID()
+	createdInsight, err := store.CreateTRBGuidanceLetterInsight(ctx, insight)
 	if err != nil {
 		return nil, err
 	}
-	return createdRecommendation, nil
+	return createdInsight, nil
 }
 
 // GetTRBGuidanceLetterInsightsByTRBRequestID retrieves TRB request guidance letter insights records for a given TRB request ID,
@@ -39,7 +39,7 @@ func GetTRBGuidanceLetterInsightsByTRBRequestID(ctx context.Context, store *stor
 	return results, nil
 }
 
-// UpdateTRBGuidanceLetterInsight updates a TRBGuidanceLetterRecommendation record in the database
+// UpdateTRBGuidanceLetterInsight updates a TRBGuidanceLetterInsight record in the database
 func UpdateTRBGuidanceLetterInsight(ctx context.Context, store *storage.Store, changes map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error) {
 	idIface, idFound := changes["id"]
 	if !idFound {
@@ -54,22 +54,22 @@ func UpdateTRBGuidanceLetterInsight(ctx context.Context, store *storage.Store, c
 
 	// This will fail to fetch an existing insight if the insight is deleted, which is sufficient protection
 	// against attempting to update a deleted insight.
-	recommendation, err := store.GetTRBGuidanceLetterInsightByID(ctx, id)
+	insight, err := store.GetTRBGuidanceLetterInsightByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
-	err = ApplyChangesAndMetaData(changes, recommendation, appcontext.Principal(ctx))
+	err = ApplyChangesAndMetaData(changes, insight, appcontext.Principal(ctx))
 	if err != nil {
 		return nil, err
 	}
 
 	// do not allow users to set category to `uncategorized`
-	if recommendation.Category == models.TRBGuidanceLetterRecommendationCategoryUncategorized {
+	if insight.Category == models.TRBGuidanceLetterRecommendationCategoryUncategorized {
 		return nil, errors.New("cannot set category to `uncategorized` on an insight")
 	}
 
-	updated, err := store.UpdateTRBGuidanceLetterInsight(ctx, recommendation)
+	updated, err := store.UpdateTRBGuidanceLetterInsight(ctx, insight)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func UpdateTRBGuidanceLetterInsight(ctx context.Context, store *storage.Store, c
 	// ex: having considerations 1, 2, 3, 4 and moving consideration 2 to a requirement, leaving considerations 1, 3, 4)
 	// while the missing order numbers will not affect the UI as the UI displays the insights in the order received (we
 	// do not send the position int to the UI), it is still better db hygiene to clean up the orders
-	if err := cleanupGuidanceLetterInsightOrder(ctx, store, recommendation.TRBRequestID); err != nil {
+	if err := cleanupGuidanceLetterInsightOrder(ctx, store, insight.TRBRequestID); err != nil {
 		return nil, err
 	}
 
@@ -93,7 +93,7 @@ func UpdateTRBGuidanceLetterInsightOrder(
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	// this extra database query is necessary for validation, so we don't mess up the insights' positions with an invalid order,
 	// but requiring an extra database call is unfortunate
-	currentRecommendations, err := store.GetTRBGuidanceLetterInsightsByTRBRequestIDAndCategory(ctx, input.TrbRequestID, input.Category)
+	currentInsights, err := store.GetTRBGuidanceLetterInsightsByTRBRequestIDAndCategory(ctx, input.TrbRequestID, input.Category)
 	if err != nil {
 		return nil, err
 	}
@@ -102,9 +102,9 @@ func UpdateTRBGuidanceLetterInsightOrder(
 	// the data in the database might be updated between querying and updating, in which case this validity check won't reflect the latest data
 	// This code doesn't currently worry about that, because we don't think it's likely to happen,
 	// due to the low likelihood of multiple users concurrently editing the same guidance letter.
-	// There are issues that could occur in theory, though, such as a recommendation getting deleted between when this function queries and when it updates;
+	// There are issues that could occur in theory, though, such as an insight getting deleted between when this function queries and when it updates;
 	// that could lead to a `newOrder` with more elements than there are insights being accepted, which would throw off the recs' positions.
-	if err := insights.IsNewRecommendationOrderValid(currentRecommendations, input.NewOrder); err != nil {
+	if err := insights.IsNewInsightOrderValid(currentInsights, input.NewOrder); err != nil {
 		return nil, err
 	}
 
@@ -116,29 +116,29 @@ func UpdateTRBGuidanceLetterInsightOrder(
 	return updated, nil
 }
 
-// DeleteTRBGuidanceLetterRecommendation deletes a TRBGuidanceLetterRecommendation record from the database
-func DeleteTRBGuidanceLetterRecommendation(
+// DeleteTRBGuidanceLetterInsight deletes a TRBGuidanceLetterInsight record from the database
+func DeleteTRBGuidanceLetterInsight(
 	ctx context.Context,
 	store *storage.Store,
 	id uuid.UUID,
 ) (*models.TRBGuidanceLetterRecommendation, error) {
-	// as well as deleting the recommendation, we need to update the position of the remaining insights for that TRB request, so there aren't any gaps in the ordering
+	// as well as deleting the insight, we need to update the position of the remaining insights for that TRB request, so there aren't any gaps in the ordering
 
-	allRecommendationsForRequest, err := store.GetTRBGuidanceLetterInsightsSharingTRBRequestID(ctx, id)
+	allInsightsForRequest, err := store.GetTRBGuidanceLetterInsightsSharingTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
 	// sort insights by position, so we can loop over them to find the insights we need to update
-	slices.SortFunc(allRecommendationsForRequest, func(recommendationA, recommendationB *models.TRBGuidanceLetterRecommendation) int {
-		return int(recommendationA.PositionInLetter.ValueOrZero()) - int(recommendationB.PositionInLetter.ValueOrZero())
+	slices.SortFunc(allInsightsForRequest, func(insightA, insightB *models.TRBGuidanceLetterRecommendation) int {
+		return int(insightA.PositionInLetter.ValueOrZero()) - int(insightB.PositionInLetter.ValueOrZero())
 	})
 
 	newOrder := []uuid.UUID{} // updated positions
 
-	for _, recommendation := range allRecommendationsForRequest {
-		if recommendation.ID != id { // skip over the recommendation we want to delete
-			newOrder = append(newOrder, recommendation.ID)
+	for _, insight := range allInsightsForRequest {
+		if insight.ID != id { // skip over the insight we want to delete
+			newOrder = append(newOrder, insight.ID)
 		}
 	}
 

@@ -65,7 +65,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(linksChanges[2], updated.Links[2])
 
 		// Test deletion of a recommendation
-		_, err = DeleteTRBGuidanceLetterRecommendation(ctx, store, created.ID)
+		_, err = DeleteTRBGuidanceLetterInsight(ctx, store, created.ID)
 		s.NoError(err)
 	})
 
@@ -90,7 +90,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.NoError(err)
 
 		// Delete the recommendation
-		_, err = DeleteTRBGuidanceLetterRecommendation(ctx, store, created.ID)
+		_, err = DeleteTRBGuidanceLetterInsight(ctx, store, created.ID)
 		s.NoError(err)
 
 		// Attempt to update the recommendation
@@ -131,7 +131,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		}
 
 		// delete recommendation in the middle of the order
-		_, err = DeleteTRBGuidanceLetterRecommendation(ctx, store, createdRecommendations[1].ID)
+		_, err = DeleteTRBGuidanceLetterInsight(ctx, store, createdRecommendations[1].ID)
 		s.NoError(err)
 
 		// check that the last recommendation's position was adjusted from 2 to 1 to close the gap

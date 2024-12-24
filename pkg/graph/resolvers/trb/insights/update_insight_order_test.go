@@ -54,7 +54,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 		}
 		newOrder := []uuid.UUID{currentRecs[1].ID, currentRecs[0].ID, currentRecs[2].ID, currentRecs[3].ID}
 
-		err := IsNewRecommendationOrderValid(currentRecs, newOrder)
+		err := IsNewInsightOrderValid(currentRecs, newOrder)
 		assert.NoError(t, err)
 	})
 
@@ -62,7 +62,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 		currentRecs := []*models.TRBGuidanceLetterRecommendation{}
 		newOrder := []uuid.UUID{uuid.New()}
 
-		err := IsNewRecommendationOrderValid(currentRecs, newOrder)
+		err := IsNewInsightOrderValid(currentRecs, newOrder)
 		assert.Error(t, err)
 	})
 
@@ -82,7 +82,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 		}
 		newOrder := []uuid.UUID{}
 
-		err := IsNewRecommendationOrderValid(currentRecs, newOrder)
+		err := IsNewInsightOrderValid(currentRecs, newOrder)
 		assert.Error(t, err)
 	})
 
@@ -134,7 +134,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 			invalidID,
 		}
 
-		err := IsNewRecommendationOrderValid(currentRecs, newOrder)
+		err := IsNewInsightOrderValid(currentRecs, newOrder)
 		assert.Error(t, err)
 	})
 
@@ -185,7 +185,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 			currentRecIDs[1], // duplicate - this should make newOrder invalid
 		}
 
-		err := IsNewRecommendationOrderValid(currentRecs, newOrder)
+		err := IsNewInsightOrderValid(currentRecs, newOrder)
 		assert.Error(t, err)
 	})
 }

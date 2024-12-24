@@ -1115,7 +1115,7 @@ func (r *mutationResolver) UpdateTRBGuidanceLetterRecommendationOrder(ctx contex
 
 // DeleteTRBGuidanceLetterRecommendation is the resolver for the deleteTRBGuidanceLetterRecommendation field.
 func (r *mutationResolver) DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
-	return resolvers.DeleteTRBGuidanceLetterRecommendation(ctx, r.store, id)
+	return resolvers.DeleteTRBGuidanceLetterInsight(ctx, r.store, id)
 }
 
 // CloseTRBRequest is the resolver for the closeTRBRequest field.
