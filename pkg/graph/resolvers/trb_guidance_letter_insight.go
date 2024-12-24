@@ -15,8 +15,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
-// CreateTRBGuidanceLetterRecommendation creates a TRBGuidanceLetterRecommendation in the database
-func CreateTRBGuidanceLetterRecommendation(
+// CreateTRBGuidanceLetterInsight creates a TRBGuidanceLetterRecommendation in the database
+func CreateTRBGuidanceLetterInsight(
 	ctx context.Context,
 	store *storage.Store,
 	recommendation *models.TRBGuidanceLetterRecommendation,
@@ -39,8 +39,8 @@ func GetTRBGuidanceLetterInsightsByTRBRequestID(ctx context.Context, store *stor
 	return results, nil
 }
 
-// UpdateTRBGuidanceLetterRecommendation updates a TRBGuidanceLetterRecommendation record in the database
-func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.Store, changes map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error) {
+// UpdateTRBGuidanceLetterInsight updates a TRBGuidanceLetterRecommendation record in the database
+func UpdateTRBGuidanceLetterInsight(ctx context.Context, store *storage.Store, changes map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error) {
 	idIface, idFound := changes["id"]
 	if !idFound {
 		return nil, errors.New("missing required property id")
@@ -52,8 +52,8 @@ func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB guidance letter insight: %v", idIface)
 	}
 
-	// This will fail to fetch an existing recommendation if the recommendation is deleted, which is sufficient protection
-	// against attempting to update a deleted recommendation.
+	// This will fail to fetch an existing insight if the insight is deleted, which is sufficient protection
+	// against attempting to update a deleted insight.
 	recommendation, err := store.GetTRBGuidanceLetterInsightByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -85,8 +85,8 @@ func UpdateTRBGuidanceLetterRecommendation(ctx context.Context, store *storage.S
 	return updated, nil
 }
 
-// UpdateTRBGuidanceLetterRecommendationOrder updates the order that TRB guidance letter insights are displayed in
-func UpdateTRBGuidanceLetterRecommendationOrder(
+// UpdateTRBGuidanceLetterInsightOrder updates the order that TRB guidance letter insights are displayed in
+func UpdateTRBGuidanceLetterInsightOrder(
 	ctx context.Context,
 	store *storage.Store,
 	input models.UpdateTRBGuidanceLetterRecommendationOrderInput,
@@ -108,7 +108,7 @@ func UpdateTRBGuidanceLetterRecommendationOrder(
 		return nil, err
 	}
 
-	updated, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, input)
+	updated, err := store.UpdateTRBGuidanceLetterInsightOrder(ctx, input)
 	if err != nil {
 		return nil, err
 	}
@@ -152,14 +152,14 @@ func DeleteTRBGuidanceLetterRecommendation(
 // with 1, 2, 3
 func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) error {
 	// first, get list of all insights for this guidance letter
-	allRecommendations, err := store.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, trbRequestID)
+	allInsights, err := store.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, trbRequestID)
 	if err != nil {
 		return err
 	}
 
 	// presort, regardless of category, for ease later
-	sort.Slice(allRecommendations, func(i, j int) bool {
-		return allRecommendations[i].PositionInLetter.Int64 < allRecommendations[j].PositionInLetter.Int64
+	sort.Slice(allInsights, func(i, j int) bool {
+		return allInsights[i].PositionInLetter.Int64 < allInsights[j].PositionInLetter.Int64
 	})
 
 	// group by category, shuffle up the order if needed, update db
@@ -171,7 +171,7 @@ func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store
 	}
 
 	// populate map
-	for _, insight := range allRecommendations {
+	for _, insight := range allInsights {
 		m[insight.Category] = append(m[insight.Category], insight)
 	}
 
@@ -185,7 +185,7 @@ func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store
 		}
 
 		// save new order for each category
-		if _, err := store.UpdateTRBGuidanceLetterRecommendationOrder(ctx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
+		if _, err := store.UpdateTRBGuidanceLetterInsightOrder(ctx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
 			TrbRequestID: trbRequestID,
 			NewOrder:     ordered,
 			Category:     category,

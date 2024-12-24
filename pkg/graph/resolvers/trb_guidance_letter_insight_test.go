@@ -30,7 +30,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 
-		created, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &toCreate)
+		created, err := CreateTRBGuidanceLetterInsight(ctx, store, &toCreate)
 		s.NoError(err)
 		s.EqualValues(toCreate.Title, created.Title)
 		s.EqualValues(toCreate.Recommendation, created.Recommendation)
@@ -56,7 +56,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.NoError(err)
 
 		// Test updating a recommendation
-		updated, err := UpdateTRBGuidanceLetterRecommendation(ctx, store, changes)
+		updated, err := UpdateTRBGuidanceLetterInsight(ctx, store, changes)
 		s.NoError(err)
 		s.EqualValues(changes["title"], updated.Title)
 		s.EqualValues(changes["recommendation"], updated.Recommendation)
@@ -86,7 +86,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		}
 
 		// Create a recommendation
-		created, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &toCreate)
+		created, err := CreateTRBGuidanceLetterInsight(ctx, store, &toCreate)
 		s.NoError(err)
 
 		// Delete the recommendation
@@ -104,7 +104,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		}
 
 		// This update should fail, since the resolver won't be able to fetch the row
-		_, err = UpdateTRBGuidanceLetterRecommendation(ctx, store, changes)
+		_, err = UpdateTRBGuidanceLetterInsight(ctx, store, changes)
 		s.Error(err)
 	})
 
@@ -124,7 +124,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 				Links:          pq.StringArray{"google.com", "askjeeves.com"},
 				Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 			}
-			created, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &toCreate)
+			created, err := CreateTRBGuidanceLetterInsight(ctx, store, &toCreate)
 			s.NoError(err)
 			s.EqualValues(i, created.PositionInLetter.ValueOrZero()) // check that positions were ordered oldest-to-newest during creation
 			createdRecommendations = append(createdRecommendations, created)
@@ -166,12 +166,12 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 
-		createdRecommendation1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &recommendationToCreate1)
+		createdRecommendation1, err := CreateTRBGuidanceLetterInsight(ctx, store, &recommendationToCreate1)
 		s.NoError(err)
 		s.EqualValues(createdRecommendation1.PositionInLetter.Int64, int64(0))
 		s.EqualValues(createdRecommendation1.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
 
-		createdRecommendation2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &recommendationToCreate2)
+		createdRecommendation2, err := CreateTRBGuidanceLetterInsight(ctx, store, &recommendationToCreate2)
 		s.NoError(err)
 		s.EqualValues(createdRecommendation2.PositionInLetter.Int64, int64(1))
 		s.EqualValues(createdRecommendation2.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
@@ -193,12 +193,12 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 		}
 
-		createdConsideration1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate1)
+		createdConsideration1, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate1)
 		s.NoError(err)
 		s.EqualValues(createdConsideration1.PositionInLetter.Int64, int64(0))
 		s.EqualValues(createdConsideration1.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
 
-		createdConsideration2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate2)
+		createdConsideration2, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate2)
 		s.NoError(err)
 		s.EqualValues(createdConsideration2.PositionInLetter.Int64, int64(1))
 		s.EqualValues(createdConsideration2.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
@@ -220,12 +220,12 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
 		}
 
-		createdRequirement1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &requirementToCreate1)
+		createdRequirement1, err := CreateTRBGuidanceLetterInsight(ctx, store, &requirementToCreate1)
 		s.NoError(err)
 		s.EqualValues(createdRequirement1.PositionInLetter.Int64, int64(0))
 		s.EqualValues(createdRequirement1.Category, models.TRBGuidanceLetterRecommendationCategoryRequirement)
 
-		createdRequirement2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &requirementToCreate2)
+		createdRequirement2, err := CreateTRBGuidanceLetterInsight(ctx, store, &requirementToCreate2)
 		s.NoError(err)
 		s.EqualValues(createdRequirement2.PositionInLetter.Int64, int64(1))
 		s.EqualValues(createdRequirement2.Category, models.TRBGuidanceLetterRecommendationCategoryRequirement)
@@ -239,7 +239,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 		}
 
-		createdConsideration3, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate3)
+		createdConsideration3, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate3)
 		s.NoError(err)
 		s.EqualValues(createdConsideration3.PositionInLetter.Int64, int64(2))
 		s.EqualValues(createdConsideration3.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
@@ -271,12 +271,12 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 
-		createdRecommendation1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &recommendationToCreate1)
+		createdRecommendation1, err := CreateTRBGuidanceLetterInsight(ctx, store, &recommendationToCreate1)
 		s.NoError(err)
 		s.EqualValues(createdRecommendation1.PositionInLetter.Int64, int64(0))
 		s.EqualValues(createdRecommendation1.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
 
-		createdRecommendation2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &recommendationToCreate2)
+		createdRecommendation2, err := CreateTRBGuidanceLetterInsight(ctx, store, &recommendationToCreate2)
 		s.NoError(err)
 		s.EqualValues(createdRecommendation2.PositionInLetter.Int64, int64(1))
 		s.EqualValues(createdRecommendation2.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
@@ -306,17 +306,17 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 		}
 
-		createdConsideration1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate1)
+		createdConsideration1, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate1)
 		s.NoError(err)
 		s.EqualValues(createdConsideration1.PositionInLetter.Int64, int64(0))
 		s.EqualValues(createdConsideration1.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
 
-		createdConsideration2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate2)
+		createdConsideration2, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate2)
 		s.NoError(err)
 		s.EqualValues(createdConsideration2.PositionInLetter.Int64, int64(1))
 		s.EqualValues(createdConsideration2.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
 
-		createdConsideration3, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate3)
+		createdConsideration3, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate3)
 		s.NoError(err)
 		s.EqualValues(createdConsideration3.PositionInLetter.Int64, int64(2))
 		s.EqualValues(createdConsideration3.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
@@ -338,18 +338,18 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
 		}
 
-		createdRequirement1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &requirementToCreate1)
+		createdRequirement1, err := CreateTRBGuidanceLetterInsight(ctx, store, &requirementToCreate1)
 		s.NoError(err)
 		s.EqualValues(createdRequirement1.PositionInLetter.Int64, int64(0))
 		s.EqualValues(createdRequirement1.Category, models.TRBGuidanceLetterRecommendationCategoryRequirement)
 
-		createdRequirement2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &requirementToCreate2)
+		createdRequirement2, err := CreateTRBGuidanceLetterInsight(ctx, store, &requirementToCreate2)
 		s.NoError(err)
 		s.EqualValues(createdRequirement2.PositionInLetter.Int64, int64(1))
 		s.EqualValues(createdRequirement2.Category, models.TRBGuidanceLetterRecommendationCategoryRequirement)
 
 		// let's try swapping consideration 2 and 3
-		updated, err := UpdateTRBGuidanceLetterRecommendationOrder(ctx, store, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
+		updated, err := UpdateTRBGuidanceLetterInsightOrder(ctx, store, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
 			TrbRequestID: trbRequest.ID,
 			NewOrder:     []uuid.UUID{createdConsideration1.ID, createdConsideration3.ID, createdConsideration2.ID},
 			Category:     models.TRBGuidanceLetterRecommendationCategoryConsideration,
@@ -401,12 +401,12 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 
-		createdRecommendation1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &recommendationToCreate1)
+		createdRecommendation1, err := CreateTRBGuidanceLetterInsight(ctx, store, &recommendationToCreate1)
 		s.NoError(err)
 		s.EqualValues(createdRecommendation1.PositionInLetter.Int64, int64(0))
 		s.EqualValues(createdRecommendation1.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
 
-		createdRecommendation2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &recommendationToCreate2)
+		createdRecommendation2, err := CreateTRBGuidanceLetterInsight(ctx, store, &recommendationToCreate2)
 		s.NoError(err)
 		s.EqualValues(createdRecommendation2.PositionInLetter.Int64, int64(1))
 		s.EqualValues(createdRecommendation2.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
@@ -436,17 +436,17 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 		}
 
-		createdConsideration1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate1)
+		createdConsideration1, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate1)
 		s.NoError(err)
 		s.EqualValues(createdConsideration1.PositionInLetter.Int64, int64(0))
 		s.EqualValues(createdConsideration1.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
 
-		createdConsideration2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate2)
+		createdConsideration2, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate2)
 		s.NoError(err)
 		s.EqualValues(createdConsideration2.PositionInLetter.Int64, int64(1))
 		s.EqualValues(createdConsideration2.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
 
-		createdConsideration3, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &considerationToCreate3)
+		createdConsideration3, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate3)
 		s.NoError(err)
 		s.EqualValues(createdConsideration3.PositionInLetter.Int64, int64(2))
 		s.EqualValues(createdConsideration3.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
@@ -468,12 +468,12 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
 		}
 
-		createdRequirement1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &requirementToCreate1)
+		createdRequirement1, err := CreateTRBGuidanceLetterInsight(ctx, store, &requirementToCreate1)
 		s.NoError(err)
 		s.EqualValues(createdRequirement1.PositionInLetter.Int64, int64(0))
 		s.EqualValues(createdRequirement1.Category, models.TRBGuidanceLetterRecommendationCategoryRequirement)
 
-		createdRequirement2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &requirementToCreate2)
+		createdRequirement2, err := CreateTRBGuidanceLetterInsight(ctx, store, &requirementToCreate2)
 		s.NoError(err)
 		s.EqualValues(createdRequirement2.PositionInLetter.Int64, int64(1))
 		s.EqualValues(createdRequirement2.Category, models.TRBGuidanceLetterRecommendationCategoryRequirement)
@@ -481,7 +481,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		// let's try moving consideration 2 to requirements
 		// we should expect it to be number 3 in requirements after the move
 		// we should expect consideration 3 to bump up to consideration 2 to fill in the gap
-		updated, err := UpdateTRBGuidanceLetterRecommendation(ctx, store, map[string]interface{}{
+		updated, err := UpdateTRBGuidanceLetterInsight(ctx, store, map[string]interface{}{
 			"id":       createdConsideration2.ID,
 			"category": models.TRBGuidanceLetterRecommendationCategoryRequirement.String(),
 		})
@@ -516,13 +516,13 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 
-		createdRecommendation1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, &recommendationToCreate1)
+		createdRecommendation1, err := CreateTRBGuidanceLetterInsight(ctx, store, &recommendationToCreate1)
 		s.NoError(err)
 		s.EqualValues(createdRecommendation1.PositionInLetter.Int64, int64(0))
 		s.EqualValues(createdRecommendation1.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
 
 		// try to update the category to `uncategorized`
-		_, err = UpdateTRBGuidanceLetterRecommendation(ctx, store, map[string]interface{}{
+		_, err = UpdateTRBGuidanceLetterInsight(ctx, store, map[string]interface{}{
 			"id":       createdRecommendation1.ID,
 			"category": models.TRBGuidanceLetterRecommendationCategoryUncategorized.String(),
 		})

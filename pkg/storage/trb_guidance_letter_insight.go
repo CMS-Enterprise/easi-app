@@ -88,7 +88,7 @@ func (s *Store) CreateTRBGuidanceLetterInsight(
 // GetTRBGuidanceLetterInsightByID retrieves a TRB guidance letter insight record from the database
 // It will not return any entities that have a deleted_at value
 func (s *Store) GetTRBGuidanceLetterInsightByID(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
-	recommendation := models.TRBGuidanceLetterRecommendation{}
+	insight := models.TRBGuidanceLetterRecommendation{}
 	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_guidance_letter_recommendations WHERE id = :id AND deleted_at IS NULL`)
 	if err != nil {
 		return nil, err
@@ -96,7 +96,7 @@ func (s *Store) GetTRBGuidanceLetterInsightByID(ctx context.Context, id uuid.UUI
 	defer stmt.Close()
 
 	arg := map[string]interface{}{"id": id}
-	err = stmt.Get(&recommendation, arg)
+	err = stmt.Get(&insight, arg)
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -106,11 +106,11 @@ func (s *Store) GetTRBGuidanceLetterInsightByID(ctx context.Context, id uuid.UUI
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
-			Model:     recommendation,
+			Model:     insight,
 			Operation: apperrors.QueryFetch,
 		}
 	}
-	return &recommendation, err
+	return &insight, err
 }
 
 // GetTRBGuidanceLetterInsightsByTRBRequestID queries the DB for all the TRB guidance letter insights,
@@ -206,7 +206,7 @@ func (s *Store) GetTRBGuidanceLetterInsightsSharingTRBRequestID(ctx context.Cont
 
 // UpdateTRBGuidanceLetterInsight updates an existing TRB guidance letter insight record in the database
 // This purposely does not update the position_in_letter column unless the `category` changes - to update the order through
-// normal reordering operation, use UpdateTRBGuidanceLetterRecommendationOrder()
+// normal reordering operation, use UpdateTRBGuidanceLetterInsightOrder()
 func (s *Store) UpdateTRBGuidanceLetterInsight(ctx context.Context, recommendation *models.TRBGuidanceLetterRecommendation) (*models.TRBGuidanceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_guidance_letter_recommendations
@@ -291,7 +291,7 @@ func (s *Store) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID
 		}
 
 		// remove from order
-		if _, err := updateTRBGuidanceLetterRecommendationOrder(ctx, tx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
+		if _, err := updateTRBGuidanceLetterInsightOrder(ctx, tx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
 			TrbRequestID: deleted.TRBRequestID,
 			NewOrder:     newOrder,
 			Category:     deleted.Category,
@@ -304,30 +304,30 @@ func (s *Store) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID
 	})
 }
 
-// UpdateTRBGuidanceLetterRecommendationOrder updates the ordering of recommendations for a given guidance letter,
-// using the order of the recommendation IDs passed in as newOrder. No other recommendation columns/fields are updated.
-func (s *Store) UpdateTRBGuidanceLetterRecommendationOrder(
+// UpdateTRBGuidanceLetterInsightOrder updates the ordering of insights for a given guidance letter,
+// using the order of the insight IDs passed in as newOrder. No other insight columns/fields are updated.
+func (s *Store) UpdateTRBGuidanceLetterInsightOrder(
 	ctx context.Context,
 	update models.UpdateTRBGuidanceLetterRecommendationOrderInput,
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBGuidanceLetterRecommendation, error) {
-		return updateTRBGuidanceLetterRecommendationOrder(ctx, tx, update)
+		return updateTRBGuidanceLetterInsightOrder(ctx, tx, update)
 	})
 }
 
-func updateTRBGuidanceLetterRecommendationOrder(
+func updateTRBGuidanceLetterInsightOrder(
 	ctx context.Context,
 	tx *sqlx.Tx,
 	update models.UpdateTRBGuidanceLetterRecommendationOrderInput,
 ) ([]*models.TRBGuidanceLetterRecommendation, error) {
-	// convert newOrder into a slice of maps with entries for recommendation ID and new position,
+	// convert newOrder into a slice of maps with entries for insight ID and new position,
 	// which can then be passed to SQL as JSON, then used in the query via json_to_recordset()
 	newPositions := []map[string]any{}
 
-	for index, recommendationID := range update.NewOrder {
+	for index, insightID := range update.NewOrder {
 		newEntry := map[string]any{
 			// important to use the same keys as the columns in the SQL table, otherwise sqlx returns "missing destination name position" error
-			"id":                 recommendationID,
+			"id":                 insightID,
 			"position_in_letter": index,
 		}
 		newPositions = append(newPositions, newEntry)
@@ -336,7 +336,7 @@ func updateTRBGuidanceLetterRecommendationOrder(
 	newPositionsSerialized, err := json.Marshal(newPositions)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to marshal the JSON for updating TRB recommendation guidance letters with error %s", err),
+			fmt.Sprintf("Failed to marshal the JSON for updating TRB insight guidance letters with error %s", err),
 			zap.Error(err),
 			zap.String("trbRequestID", update.TrbRequestID.String()),
 		)
@@ -344,8 +344,8 @@ func updateTRBGuidanceLetterRecommendationOrder(
 		return nil, err
 	}
 
-	// json_to_recordset() lets us build a temporary table (new_positions) with the new positions for each recommendation,
-	// which we can use in a CTE (common table expression, denoted by the WITH keyword) to update the recommendations
+	// json_to_recordset() lets us build a temporary table (new_positions) with the new positions for each insight,
+	// which we can use in a CTE (common table expression, denoted by the WITH keyword) to update the insights
 	// json_to_recordset() documentation - https://www.postgresql.org/docs/14/functions-json.html
 	stmt, err := tx.PrepareNamed(`
 		WITH new_positions AS (
@@ -362,7 +362,7 @@ func updateTRBGuidanceLetterRecommendationOrder(
 		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to prepare SQL statement for UpdateTRBGuidanceLetterRecommendationOrder() with error %s", err),
+			fmt.Sprintf("Failed to prepare SQL statement for UpdateTRBGuidanceLetterInsightOrder() with error %s", err),
 			zap.Error(err),
 			zap.String("trbRequestID", update.TrbRequestID.String()),
 		)
@@ -370,28 +370,28 @@ func updateTRBGuidanceLetterRecommendationOrder(
 	}
 	defer stmt.Close()
 
-	updatedRecommendations := []*models.TRBGuidanceLetterRecommendation{}
+	updatedInsights := []*models.TRBGuidanceLetterRecommendation{}
 	arg := map[string]interface{}{
 		"newPositions": string(newPositionsSerialized),
 		"trbRequestID": update.TrbRequestID.String(),
 		"category":     update.Category,
 	}
 
-	err = stmt.Select(&updatedRecommendations, arg)
+	err = stmt.Select(&updatedInsights, arg)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update the order of TRB recommendation guidance letters with error %s", err),
+			fmt.Sprintf("Failed to update the order of TRB insight guidance letters with error %s", err),
 			zap.Error(err),
 			zap.String("trbRequestID", update.TrbRequestID.String()),
 		)
 		return nil, err
 	}
 
-	// sort updated recommendations by position, return in correct order
+	// sort updated insights by position, return in correct order
 	// (easier to do this in Go than in SQL; doing it in SQL would require wrapping the whole UPDATE query in another CTE, then using ORDER BY on that)
-	slices.SortFunc(updatedRecommendations, func(recommendationA, recommendationB *models.TRBGuidanceLetterRecommendation) int {
-		return int(recommendationA.PositionInLetter.ValueOrZero()) - int(recommendationB.PositionInLetter.ValueOrZero())
+	slices.SortFunc(updatedInsights, func(insightA, insightB *models.TRBGuidanceLetterRecommendation) int {
+		return int(insightA.PositionInLetter.ValueOrZero()) - int(insightB.PositionInLetter.ValueOrZero())
 	})
 
-	return updatedRecommendations, nil
+	return updatedInsights, nil
 }

@@ -265,7 +265,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			Links:          []string{},
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
-		createdRec1, err := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate1)
+		createdRec1, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate1)
 		s.NoError(err)
 		s.NotNil(createdRec1)
 		recommendationID1 := createdRec1.ID
@@ -277,7 +277,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			Links:          []string{},
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
-		createdRec2, err := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate2)
+		createdRec2, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate2)
 		s.NoError(err)
 		s.NotNil(createdRec2)
 		recommendationID2 := createdRec2.ID
@@ -355,7 +355,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			Links:          []string{},
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
-		createdRec, err := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate)
+		createdRec, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate)
 		s.NoError(err)
 		s.NotNil(createdRec)
 
@@ -480,7 +480,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 				Links:          []string{},
 				Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 			}
-			createdRec, errCreatingRec := CreateTRBGuidanceLetterRecommendation(ctx, store, recToCreate)
+			createdRec, errCreatingRec := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate)
 			s.NoError(errCreatingRec)
 			s.NotNil(createdRec)
 			recommendationIDs = append(recommendationIDs, createdRec.ID)

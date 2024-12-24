@@ -1091,7 +1091,7 @@ func (r *mutationResolver) SendTRBGuidanceLetter(ctx context.Context, input mode
 // CreateTRBGuidanceLetterRecommendation is the resolver for the createTRBGuidanceLetterRecommendation field.
 func (r *mutationResolver) CreateTRBGuidanceLetterRecommendation(ctx context.Context, input models.CreateTRBGuidanceLetterInsightInput) (*models.TRBGuidanceLetterRecommendation, error) {
 	links := models.ConvertEnums[string](input.Links)
-	return resolvers.CreateTRBGuidanceLetterRecommendation(
+	return resolvers.CreateTRBGuidanceLetterInsight(
 		ctx,
 		r.store,
 		&models.TRBGuidanceLetterRecommendation{
@@ -1105,12 +1105,12 @@ func (r *mutationResolver) CreateTRBGuidanceLetterRecommendation(ctx context.Con
 
 // UpdateTRBGuidanceLetterRecommendation is the resolver for the updateTRBGuidanceLetterRecommendation field.
 func (r *mutationResolver) UpdateTRBGuidanceLetterRecommendation(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error) {
-	return resolvers.UpdateTRBGuidanceLetterRecommendation(ctx, r.store, input)
+	return resolvers.UpdateTRBGuidanceLetterInsight(ctx, r.store, input)
 }
 
 // UpdateTRBGuidanceLetterRecommendationOrder is the resolver for the updateTRBGuidanceLetterRecommendationOrder field.
 func (r *mutationResolver) UpdateTRBGuidanceLetterRecommendationOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) ([]*models.TRBGuidanceLetterRecommendation, error) {
-	return resolvers.UpdateTRBGuidanceLetterRecommendationOrder(ctx, r.store, input)
+	return resolvers.UpdateTRBGuidanceLetterInsightOrder(ctx, r.store, input)
 }
 
 // DeleteTRBGuidanceLetterRecommendation is the resolver for the deleteTRBGuidanceLetterRecommendation field.

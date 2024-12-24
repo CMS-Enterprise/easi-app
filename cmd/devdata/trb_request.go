@@ -994,7 +994,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 	}
-	createdConsideration1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, consideration1ToCreate)
+	createdConsideration1, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, consideration1ToCreate)
 	if err != nil {
 		return nil, err
 	}
@@ -1006,7 +1006,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 	}
-	createdConsideration2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, consideration2ToCreate)
+	createdConsideration2, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, consideration2ToCreate)
 	if err != nil {
 		return nil, err
 	}
@@ -1018,7 +1018,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 	}
-	createdConsideration3, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, consideration3ToCreate)
+	createdConsideration3, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, consideration3ToCreate)
 	if err != nil {
 		return nil, err
 	}
@@ -1031,7 +1031,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
-	createdRecommendation1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation1ToCreate)
+	createdRecommendation1, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, recommendation1ToCreate)
 	if err != nil {
 		return nil, err
 	}
@@ -1043,7 +1043,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
-	createdRecommendation2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation2ToCreate)
+	createdRecommendation2, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, recommendation2ToCreate)
 	if err != nil {
 		return nil, err
 	}
@@ -1055,7 +1055,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 	}
-	createdRecommendation3, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, recommendation3ToCreate)
+	createdRecommendation3, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, recommendation3ToCreate)
 	if err != nil {
 		return nil, err
 	}
@@ -1068,7 +1068,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
 	}
-	createdRequirement1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, requirement1ToCreate)
+	createdRequirement1, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, requirement1ToCreate)
 	if err != nil {
 		return nil, err
 	}
@@ -1080,7 +1080,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
 	}
-	createdRequirement2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, requirement2ToCreate)
+	createdRequirement2, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, requirement2ToCreate)
 	if err != nil {
 		return nil, err
 	}
@@ -1092,7 +1092,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
 	}
-	createdRequirement3, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, requirement3ToCreate)
+	createdRequirement3, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, requirement3ToCreate)
 	if err != nil {
 		return nil, err
 	}
@@ -1105,7 +1105,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Links:          pq.StringArray{"categories.com"},
 		Category:       models.TRBGuidanceLetterRecommendationCategoryUncategorized,
 	}
-	createdUncategorized1, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, uncategorized1ToCreate)
+	createdUncategorized1, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, uncategorized1ToCreate)
 	if err != nil {
 		return nil, err
 	}
@@ -1117,7 +1117,7 @@ func (s *seederConfig) addGuidanceLetterRecommendations(ctx context.Context, trb
 		Links:          pq.StringArray{},
 		Category:       models.TRBGuidanceLetterRecommendationCategoryUncategorized,
 	}
-	createdUncategorized2, err := resolvers.CreateTRBGuidanceLetterRecommendation(ctx, s.store, uncategorized2ToCreate)
+	createdUncategorized2, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, uncategorized2ToCreate)
 	if err != nil {
 		return nil, err
 	}
