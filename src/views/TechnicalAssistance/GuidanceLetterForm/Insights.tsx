@@ -46,7 +46,7 @@ const Insights = ({
     resolver: yupResolver(guidanceInsightSchema),
     defaultValues: {
       title: '',
-      recommendation: '',
+      insight: '',
       links: []
     }
   });

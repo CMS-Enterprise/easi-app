@@ -2430,7 +2430,7 @@ The input required to update an insight to a TRB guidance letter
 input UpdateTRBGuidanceLetterInsightInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
-  recommendation: HTML
+  insight: HTML
   links: [String!]
   category: TRBGuidanceLetterInsightCategory
 }

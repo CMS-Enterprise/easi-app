@@ -96,7 +96,7 @@ export type TrbAdminPage = {
 export type GuidanceLetterInsightFields = {
   id?: string;
   title: string;
-  recommendation: string;
+  insight: string;
   category: TRBGuidanceLetterInsightCategory;
   /** Links array - object type to get useFieldArray hook to work */
   links?: { link: string }[];

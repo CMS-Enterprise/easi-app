@@ -113,7 +113,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
               formatUrl(link)
             );
 
-            const { id, title, recommendation, category } = formData;
+            const { id, title, insight, category } = formData;
 
             if (id) {
               await update({
@@ -122,7 +122,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                     id,
                     category,
                     title,
-                    recommendation,
+                    insight,
                     links
                   }
                 }
@@ -134,7 +134,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                     trbRequestId,
                     category,
                     title,
-                    insight: recommendation,
+                    insight,
                     links
                   }
                 }
@@ -292,7 +292,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
         </FormGroup>
 
         {/* Description */}
-        <FormGroup className="margin-top-3" error={!!errors?.recommendation}>
+        <FormGroup className="margin-top-3" error={!!errors?.insight}>
           <Label
             className="text-normal"
             id="recommendation-label"
@@ -309,7 +309,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
             )}
           />
           <Controller
-            name="recommendation"
+            name="insight"
             control={control}
             render={({ field, fieldState: { error } }) => (
               <RichTextEditor
@@ -335,7 +335,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
             onClick: () => submit(() => history.push(returnLink)),
             disabled:
               watch('title').length === 0 ||
-              watch('recommendation').length === 0 ||
+              watch('insight').length === 0 ||
               !watch('category') ||
               watch('category') ===
                 TRBGuidanceLetterInsightCategory.UNCATEGORIZED ||

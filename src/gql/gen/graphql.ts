@@ -3117,8 +3117,8 @@ export type UpdateTRBGuidanceLetterInput = {
 export type UpdateTRBGuidanceLetterInsightInput = {
   category?: InputMaybe<TRBGuidanceLetterInsightCategory>;
   id: Scalars['UUID']['input'];
+  insight?: InputMaybe<Scalars['HTML']['input']>;
   links?: InputMaybe<Array<Scalars['String']['input']>>;
-  recommendation?: InputMaybe<Scalars['HTML']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 

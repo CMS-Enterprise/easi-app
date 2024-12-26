@@ -10367,7 +10367,7 @@ The input required to update an insight to a TRB guidance letter
 input UpdateTRBGuidanceLetterInsightInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
-  recommendation: HTML
+  insight: HTML
   links: [String!]
   category: TRBGuidanceLetterInsightCategory
 }
@@ -63359,7 +63359,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterInsightInput(ct
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "title", "recommendation", "links", "category"}
+	fieldsInOrder := [...]string{"id", "title", "insight", "links", "category"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -63380,13 +63380,13 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterInsightInput(ct
 				return it, err
 			}
 			it["title"] = data
-		case "recommendation":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendation"))
+		case "insight":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("insight"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it["recommendation"] = data
+			it["insight"] = data
 		case "links":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("links"))
 			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
