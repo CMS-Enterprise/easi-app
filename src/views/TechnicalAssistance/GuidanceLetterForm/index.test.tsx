@@ -54,7 +54,7 @@ const createTrbInsightQuery: MockedQuery<
   result: {
     data: {
       __typename: 'Mutation',
-      createTRBGuidanceLetterRecommendation: {
+      createTRBGuidanceLetterInsight: {
         __typename: 'TRBGuidanceLetterRecommendation',
         id: '670fdf6d-761b-415f-a108-2ebc814288c3',
         recommendation: mockInsight.insight,

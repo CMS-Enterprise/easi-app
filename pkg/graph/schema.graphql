@@ -2615,7 +2615,7 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   sendTRBGuidanceLetter(input: SendTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBGuidanceLetterRecommendation(input: CreateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterRecommendation!
+  createTRBGuidanceLetterInsight(input: CreateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
   updateTRBGuidanceLetterRecommendation(input: UpdateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterRecommendation!
   @hasRole(role: EASI_TRB_ADMIN)
