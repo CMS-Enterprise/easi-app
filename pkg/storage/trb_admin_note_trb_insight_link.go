@@ -25,9 +25,9 @@ func (s *Store) CreateTRBAdminNoteTRBInsightLinks(
 
 	for _, insightID := range trbGuidanceLetterInsightIDs {
 		link := models.TRBAdminNoteTRBGuidanceLetterInsightLink{
-			TRBRequestID:                      trbRequestID,
-			TRBAdminNoteID:                    trbAdminNoteID,
-			TRBGuidanceLetterRecommendationID: insightID,
+			TRBRequestID:               trbRequestID,
+			TRBAdminNoteID:             trbAdminNoteID,
+			TRBGuidanceLetterInsightID: insightID,
 		}
 		link.ID = uuid.New()
 		link.CreatedBy = creatingUserEUAID
@@ -36,17 +36,17 @@ func (s *Store) CreateTRBAdminNoteTRBInsightLinks(
 	}
 
 	const trbAdminNoteInsightLinkCreateSQL = `
-		INSERT INTO trb_admin_notes_trb_admin_note_recommendations_links (
+		INSERT INTO trb_admin_notes_trb_admin_note_insights_links (
 			id,
 			trb_request_id,
 			trb_admin_note_id,
-			trb_guidance_letter_recommendation_id,
+			trb_guidance_letter_insight_id,
 			created_by
 		) VALUES (
 			:id,
 			:trb_request_id,
 			:trb_admin_note_id,
-			:trb_guidance_letter_recommendation_id,
+			:trb_guidance_letter_insight_id,
 			:created_by
 		) RETURNING *;
 	`
@@ -91,11 +91,11 @@ func (s *Store) CreateTRBAdminNoteTRBInsightLinks(
 // which need to display previously deleted insight titles
 func (s *Store) GetTRBInsightsByAdminNoteID(ctx context.Context, adminNoteID uuid.UUID) ([]*models.TRBGuidanceLetterInsight, error) {
 	const trbRequestInsightsGetByAdminNoteIDSQL = `
-		SELECT trb_guidance_letter_recommendations.*
-		FROM trb_guidance_letter_recommendations
-		INNER JOIN trb_admin_notes_trb_admin_note_recommendations_links
-			ON trb_guidance_letter_recommendations.id = trb_admin_notes_trb_admin_note_recommendations_links.trb_guidance_letter_recommendation_id
-		WHERE trb_admin_notes_trb_admin_note_recommendations_links.trb_admin_note_id = :admin_note_id
+		SELECT trb_guidance_letter_insights.*
+		FROM trb_guidance_letter_insights
+		INNER JOIN trb_admin_notes_trb_admin_note_insights_links
+			ON trb_guidance_letter_insights.id = trb_admin_notes_trb_admin_note_insights_links.trb_guidance_letter_insight_id
+		WHERE trb_admin_notes_trb_admin_note_insights_links.trb_admin_note_id = :admin_note_id
 	`
 
 	stmt, err := s.db.PrepareNamed(trbRequestInsightsGetByAdminNoteIDSQL)

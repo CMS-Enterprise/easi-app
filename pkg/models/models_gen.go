@@ -223,7 +223,7 @@ type CreateTRBAdminNoteGuidanceLetterInput struct {
 	NoteText                HTML        `json:"noteText"`
 	AppliesToMeetingSummary bool        `json:"appliesToMeetingSummary"`
 	AppliesToNextSteps      bool        `json:"appliesToNextSteps"`
-	RecommendationIDs       []uuid.UUID `json:"recommendationIDs"`
+	InsightIDs              []uuid.UUID `json:"insightIDs"`
 }
 
 // The data needed to create a TRB admin note with the Initial Request Form category

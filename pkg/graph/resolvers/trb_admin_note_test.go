@@ -288,7 +288,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			NoteText:                "test TRB admin note - guidance letter",
 			AppliesToMeetingSummary: true,
 			AppliesToNextSteps:      false,
-			RecommendationIDs: []uuid.UUID{
+			InsightIDs: []uuid.UUID{
 				recommendationID1,
 				recommendationID2,
 			},
@@ -367,7 +367,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			NoteText:                "test TRB admin note - guidance letter",
 			AppliesToMeetingSummary: false,
 			AppliesToNextSteps:      false,
-			RecommendationIDs: []uuid.UUID{
+			InsightIDs: []uuid.UUID{
 				recommendationID,
 			},
 		}
@@ -490,7 +490,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		input := models.CreateTRBAdminNoteGuidanceLetterInput{
 			TrbRequestID: trbRequest.ID,
 			NoteText:     "test TRB admin note - guidance letter",
-			RecommendationIDs: []uuid.UUID{
+			InsightIDs: []uuid.UUID{
 				recommendationIDs[0],
 				recommendationIDs[1],
 			},

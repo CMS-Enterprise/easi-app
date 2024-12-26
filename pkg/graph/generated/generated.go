@@ -10310,7 +10310,7 @@ input CreateTRBAdminNoteGuidanceLetterInput {
   # category-specific data
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
-  recommendationIDs: [UUID!]!
+  insightIDs: [UUID!]!
 }
 
 """
@@ -60425,7 +60425,7 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteGuidanceLetterInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "noteText", "appliesToMeetingSummary", "appliesToNextSteps", "recommendationIDs"}
+	fieldsInOrder := [...]string{"trbRequestId", "noteText", "appliesToMeetingSummary", "appliesToNextSteps", "insightIDs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -60460,13 +60460,13 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteGuidanceLetterInput(
 				return it, err
 			}
 			it.AppliesToNextSteps = data
-		case "recommendationIDs":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendationIDs"))
+		case "insightIDs":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("insightIDs"))
 			data, err := ec.unmarshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RecommendationIDs = data
+			it.InsightIDs = data
 		}
 	}
 

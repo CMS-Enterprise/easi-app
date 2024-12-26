@@ -604,8 +604,8 @@ export type CreateTRBAdminNoteGeneralRequestInput = {
 export type CreateTRBAdminNoteGuidanceLetterInput = {
   appliesToMeetingSummary: Scalars['Boolean']['input'];
   appliesToNextSteps: Scalars['Boolean']['input'];
+  insightIDs: Array<Scalars['UUID']['input']>;
   noteText: Scalars['HTML']['input'];
-  recommendationIDs: Array<Scalars['UUID']['input']>;
   trbRequestId: Scalars['UUID']['input'];
 };
 

@@ -113,7 +113,7 @@ func CreateTRBAdminNoteConsultSession(ctx context.Context, store *storage.Store,
 }
 
 func CreateTRBAdminNoteGuidanceLetter(ctx context.Context, store *storage.Store, input models.CreateTRBAdminNoteGuidanceLetterInput) (*models.TRBAdminNote, error) {
-	// it's valid for input.RecommendationIDs to be empty; see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
+	// it's valid for input.InsightIDs to be empty; see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
 
 	// check that the recommendations belong to the same TRB request
 	// database constraints will prevent links being created to recommendations on a different request
@@ -124,7 +124,7 @@ func CreateTRBAdminNoteGuidanceLetter(ctx context.Context, store *storage.Store,
 		return nil, err
 	}
 
-	if !models.ContainsAllIDs(allRecommendationsOnRequest, input.RecommendationIDs) {
+	if !models.ContainsAllIDs(allRecommendationsOnRequest, input.InsightIDs) {
 		return nil, &apperrors.BadRequestError{
 			Err: errors.New("all recommendations referenced in admin note must belong to the same TRB request as the admin note"),
 		}
@@ -150,8 +150,8 @@ func CreateTRBAdminNoteGuidanceLetter(ctx context.Context, store *storage.Store,
 	}
 
 	// create links to recommendations referenced the by the admin note (if any are present)
-	if len(input.RecommendationIDs) > 0 {
-		_, err = store.CreateTRBAdminNoteTRBInsightLinks(ctx, input.TrbRequestID, createdNote.ID, input.RecommendationIDs)
+	if len(input.InsightIDs) > 0 {
+		_, err = store.CreateTRBAdminNoteTRBInsightLinks(ctx, input.TrbRequestID, createdNote.ID, input.InsightIDs)
 		if err != nil {
 			return nil, err
 		}

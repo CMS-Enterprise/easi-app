@@ -425,7 +425,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 		NoteText:                "This is a guidance letter admin note from seed data",
 		AppliesToMeetingSummary: true,
 		AppliesToNextSteps:      false,
-		RecommendationIDs: []uuid.UUID{
+		InsightIDs: []uuid.UUID{
 			insights[0].ID,
 			insights[1].ID,
 		},
@@ -638,7 +638,7 @@ func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
 				NoteText:                "This is a guidance letter admin note from seed data",
 				AppliesToMeetingSummary: true,
 				AppliesToNextSteps:      false,
-				RecommendationIDs: []uuid.UUID{
+				InsightIDs: []uuid.UUID{
 					insights[0].ID,
 					insights[1].ID,
 				},
