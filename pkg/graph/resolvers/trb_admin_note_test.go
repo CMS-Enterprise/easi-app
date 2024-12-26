@@ -260,7 +260,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 		// set up recommendations
 		recToCreate1 := &models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
-			Title:          "Admin Note Test Recommendation 1",
+			Title:          "Admin Note Test Insight 1",
 			Recommendation: "Keep testing rec1",
 			Links:          []string{},
 			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
@@ -272,7 +272,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 
 		recToCreate2 := &models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
-			Title:          "Admin Note Test Recommendation 2",
+			Title:          "Admin Note Test Insight 2",
 			Recommendation: "Keep testing rec2",
 			Links:          []string{},
 			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,

@@ -5,7 +5,7 @@ export default gql(/* GraphQL */ `
     id
     category
     title
-    recommendation
+    insight
     links
   }
 `);

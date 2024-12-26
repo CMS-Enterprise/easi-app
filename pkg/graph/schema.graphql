@@ -2402,7 +2402,7 @@ type TRBGuidanceLetterInsight {
   id: UUID!
   trbRequestId: UUID!
   title: String!
-  recommendation: HTML!
+  insight: HTML!
   links: [String!]!
   author: UserInfo!
   createdBy: String!

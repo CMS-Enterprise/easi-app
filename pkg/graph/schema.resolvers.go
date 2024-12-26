@@ -2015,6 +2015,11 @@ func (r *tRBGuidanceLetterResolver) Insights(ctx context.Context, obj *models.TR
 	return resolvers.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
 }
 
+// Insight is the resolver for the insight field.
+func (r *tRBGuidanceLetterInsightResolver) Insight(ctx context.Context, obj *models.TRBGuidanceLetterInsight) (models.HTML, error) {
+	panic(fmt.Errorf("not implemented: Insight - insight"))
+}
+
 // Links is the resolver for the links field.
 func (r *tRBGuidanceLetterInsightResolver) Links(ctx context.Context, obj *models.TRBGuidanceLetterInsight) ([]string, error) {
 	panic(fmt.Errorf("not implemented: Links - links"))

@@ -102,7 +102,7 @@ const InsightsCategory = ({
           className="usa-list usa-list--unstyled"
         >
           {insights.map((insight, index) => {
-            const { title, id, links, recommendation: description } = insight;
+            const { title, id, links, insight: description } = insight;
             return (
               <li
                 data-testid="insights_list-item"

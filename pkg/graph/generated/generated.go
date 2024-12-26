@@ -985,18 +985,18 @@ type ComplexityRoot struct {
 	}
 
 	TRBGuidanceLetterInsight struct {
-		Author         func(childComplexity int) int
-		Category       func(childComplexity int) int
-		CreatedAt      func(childComplexity int) int
-		CreatedBy      func(childComplexity int) int
-		DeletedAt      func(childComplexity int) int
-		ID             func(childComplexity int) int
-		Links          func(childComplexity int) int
-		ModifiedAt     func(childComplexity int) int
-		ModifiedBy     func(childComplexity int) int
-		Recommendation func(childComplexity int) int
-		TRBRequestID   func(childComplexity int) int
-		Title          func(childComplexity int) int
+		Author       func(childComplexity int) int
+		Category     func(childComplexity int) int
+		CreatedAt    func(childComplexity int) int
+		CreatedBy    func(childComplexity int) int
+		DeletedAt    func(childComplexity int) int
+		ID           func(childComplexity int) int
+		Insight      func(childComplexity int) int
+		Links        func(childComplexity int) int
+		ModifiedAt   func(childComplexity int) int
+		ModifiedBy   func(childComplexity int) int
+		TRBRequestID func(childComplexity int) int
+		Title        func(childComplexity int) int
 	}
 
 	TRBRequest struct {
@@ -1399,6 +1399,7 @@ type TRBGuidanceLetterResolver interface {
 	Insights(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterInsight, error)
 }
 type TRBGuidanceLetterInsightResolver interface {
+	Insight(ctx context.Context, obj *models.TRBGuidanceLetterInsight) (models.HTML, error)
 	Links(ctx context.Context, obj *models.TRBGuidanceLetterInsight) ([]string, error)
 	Author(ctx context.Context, obj *models.TRBGuidanceLetterInsight) (*models.UserInfo, error)
 }
@@ -6854,6 +6855,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBGuidanceLetterInsight.ID(childComplexity), true
 
+	case "TRBGuidanceLetterInsight.insight":
+		if e.complexity.TRBGuidanceLetterInsight.Insight == nil {
+			break
+		}
+
+		return e.complexity.TRBGuidanceLetterInsight.Insight(childComplexity), true
+
 	case "TRBGuidanceLetterInsight.links":
 		if e.complexity.TRBGuidanceLetterInsight.Links == nil {
 			break
@@ -6874,13 +6882,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBGuidanceLetterInsight.ModifiedBy(childComplexity), true
-
-	case "TRBGuidanceLetterInsight.recommendation":
-		if e.complexity.TRBGuidanceLetterInsight.Recommendation == nil {
-			break
-		}
-
-		return e.complexity.TRBGuidanceLetterInsight.Recommendation(childComplexity), true
 
 	case "TRBGuidanceLetterInsight.trbRequestId":
 		if e.complexity.TRBGuidanceLetterInsight.TRBRequestID == nil {
@@ -10339,7 +10340,7 @@ type TRBGuidanceLetterInsight {
   id: UUID!
   trbRequestId: UUID!
   title: String!
-  recommendation: HTML!
+  insight: HTML!
   links: [String!]!
   author: UserInfo!
   createdBy: String!
@@ -36840,8 +36841,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBGuidanceLetterInsight
 				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
 				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterInsight_recommendation(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
@@ -36948,8 +36949,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterInsight
 				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
 				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterInsight_recommendation(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
@@ -37056,8 +37057,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterInsight
 				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
 				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterInsight_recommendation(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
@@ -37164,8 +37165,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBGuidanceLetterInsight
 				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
 				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterInsight_recommendation(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
@@ -50446,8 +50447,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteGuidanceLetterCategoryData_
 				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
 				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterInsight_recommendation(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
@@ -51403,8 +51404,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetter_insights(_ context.Co
 				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
 				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterInsight_recommendation(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
@@ -51730,8 +51731,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_title(_ contex
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterInsight_recommendation(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_recommendation(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_insight(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51744,7 +51745,7 @@ func (ec *executionContext) _TRBGuidanceLetterInsight_recommendation(ctx context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Recommendation, nil
+		return ec.resolvers.TRBGuidanceLetterInsight().Insight(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -51761,12 +51762,12 @@ func (ec *executionContext) _TRBGuidanceLetterInsight_recommendation(ctx context
 	return ec.marshalNHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_recommendation(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_insight(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type HTML does not have child fields")
 		},
@@ -71726,11 +71727,42 @@ func (ec *executionContext) _TRBGuidanceLetterInsight(ctx context.Context, sel a
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
-		case "recommendation":
-			out.Values[i] = ec._TRBGuidanceLetterInsight_recommendation(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+		case "insight":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBGuidanceLetterInsight_insight(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "links":
 			field := field
 

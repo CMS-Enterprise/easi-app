@@ -35,8 +35,8 @@ import GuidanceLetterForm from '.';
 
 const mockInsight: CreateTRBGuidanceLetterInsightInput = {
   trbRequestId: mockTrbRequestId,
-  title: 'Recommendation 3',
-  insight: 'Recommendation description text',
+  title: 'Insight 3',
+  insight: 'Insight description text',
   links: ['google.com', 'easi.cms.gov'],
   category: TRBGuidanceLetterInsightCategory.RECOMMENDATION
 };
@@ -57,7 +57,6 @@ const createTrbInsightQuery: MockedQuery<
       createTRBGuidanceLetterInsight: {
         __typename: 'TRBGuidanceLetterInsight',
         id: '670fdf6d-761b-415f-a108-2ebc814288c3',
-        recommendation: mockInsight.insight,
         ...mockInsight
       }
     }

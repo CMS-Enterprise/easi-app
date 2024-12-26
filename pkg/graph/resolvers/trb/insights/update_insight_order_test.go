@@ -113,7 +113,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				},
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(1),
-				Title:            "Current recommendation 1",
+				Title:            "Current insight 1",
 				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 			{
@@ -122,7 +122,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				},
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(2),
-				Title:            "Current recommendation 2",
+				Title:            "Current insight 2",
 				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 		}
@@ -165,7 +165,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				},
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(1),
-				Title:            "Current recommendation 1",
+				Title:            "Current insight 1",
 				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 			{
@@ -174,7 +174,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				},
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(2),
-				Title:            "Current recommendation 2",
+				Title:            "Current insight 2",
 				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 		}
