@@ -2627,7 +2627,7 @@ export type TRBAdminNoteGeneralRequestCategoryData = {
 
 /**
  * Data specific to admin notes in the Guidance Letter category
- * The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
+ * The "insights" property _will_ return deleted insights so that UI can reference the insight title
  */
 export type TRBAdminNoteGuidanceLetterCategoryData = {
   __typename: 'TRBAdminNoteGuidanceLetterCategoryData';
