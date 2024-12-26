@@ -57,6 +57,9 @@ type Exchange struct {
 	// exchange c UI description
 	ExchangeCUIDescription string `json:"exchangeCUIDescription,omitempty"`
 
+	// exchange c UI type
+	ExchangeCUIType []string `json:"exchangeCUIType"`
+
 	// exchange connection authenticated
 	ExchangeConnectionAuthenticated bool `json:"exchangeConnectionAuthenticated,omitempty"`
 
