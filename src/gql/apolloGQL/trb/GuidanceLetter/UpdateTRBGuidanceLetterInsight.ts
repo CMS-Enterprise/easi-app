@@ -7,7 +7,7 @@ export default gql(/* GraphQL */ `
   mutation UpdateTRBGuidanceLetterInsight(
     $input: UpdateTRBGuidanceLetterInsightInput!
   ) {
-    updateTRBGuidanceLetterRecommendation(input: $input) {
+    updateTRBGuidanceLetterInsight(input: $input) {
       ...TRBGuidanceLetterInsight
     }
   }
