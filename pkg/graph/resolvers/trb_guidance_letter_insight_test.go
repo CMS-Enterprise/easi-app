@@ -22,7 +22,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.NoError(err)
 
 		// Test creation of a recommendation
-		toCreate := models.TRBGuidanceLetterRecommendation{
+		toCreate := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer",
 			Recommendation: "I recommend you restart your computer",
@@ -77,7 +77,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.NoError(err)
 
 		// Test creation of a recommendation
-		toCreate := models.TRBGuidanceLetterRecommendation{
+		toCreate := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer",
 			Recommendation: "I recommend you restart your computer",
@@ -115,9 +115,9 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
 		s.NoError(err)
 
-		createdRecommendations := []*models.TRBGuidanceLetterRecommendation{}
+		createdRecommendations := []*models.TRBGuidanceLetterInsight{}
 		for i := 0; i < 3; i++ {
-			toCreate := models.TRBGuidanceLetterRecommendation{
+			toCreate := models.TRBGuidanceLetterInsight{
 				TRBRequestID:   trbRequest.ID,
 				Title:          "Restart your computer",
 				Recommendation: "I recommend you restart your computer",
@@ -150,7 +150,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		// add 2 insights of each category
 
 		// create insights of recommendation category
-		recommendationToCreate1 := models.TRBGuidanceLetterRecommendation{
+		recommendationToCreate1 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer1",
 			Recommendation: "I recommend you restart your computer1",
@@ -158,7 +158,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 
-		recommendationToCreate2 := models.TRBGuidanceLetterRecommendation{
+		recommendationToCreate2 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer2",
 			Recommendation: "I recommend you restart your computer2",
@@ -177,7 +177,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(createdRecommendation2.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
 
 		// create insights of consideration category
-		considerationToCreate1 := models.TRBGuidanceLetterRecommendation{
+		considerationToCreate1 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer3",
 			Recommendation: "I consider you restart your computer1",
@@ -185,7 +185,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 		}
 
-		considerationToCreate2 := models.TRBGuidanceLetterRecommendation{
+		considerationToCreate2 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer4",
 			Recommendation: "I consider you restart your computer2",
@@ -204,7 +204,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(createdConsideration2.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
 
 		// create insights of requirement category
-		requirementToCreate1 := models.TRBGuidanceLetterRecommendation{
+		requirementToCreate1 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer5",
 			Recommendation: "I require you restart your computer1",
@@ -212,7 +212,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
 		}
 
-		requirementToCreate2 := models.TRBGuidanceLetterRecommendation{
+		requirementToCreate2 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer6",
 			Recommendation: "I require you restart your computer2",
@@ -231,7 +231,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(createdRequirement2.Category, models.TRBGuidanceLetterRecommendationCategoryRequirement)
 
 		// add a third consideration, confirm index position
-		considerationToCreate3 := models.TRBGuidanceLetterRecommendation{
+		considerationToCreate3 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer7",
 			Recommendation: "I consider you restart your computer2",
@@ -255,7 +255,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		// add 2 insights of each category
 
 		// create insights of recommendation category
-		recommendationToCreate1 := models.TRBGuidanceLetterRecommendation{
+		recommendationToCreate1 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer1",
 			Recommendation: "I recommend you restart your computer1",
@@ -263,7 +263,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 
-		recommendationToCreate2 := models.TRBGuidanceLetterRecommendation{
+		recommendationToCreate2 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer2",
 			Recommendation: "I recommend you restart your computer2",
@@ -282,7 +282,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(createdRecommendation2.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
 
 		// create insights of consideration category
-		considerationToCreate1 := models.TRBGuidanceLetterRecommendation{
+		considerationToCreate1 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer3",
 			Recommendation: "I consider you restart your computer1",
@@ -290,7 +290,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 		}
 
-		considerationToCreate2 := models.TRBGuidanceLetterRecommendation{
+		considerationToCreate2 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer4",
 			Recommendation: "I consider you restart your computer2",
@@ -298,7 +298,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 		}
 
-		considerationToCreate3 := models.TRBGuidanceLetterRecommendation{
+		considerationToCreate3 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer7",
 			Recommendation: "I consider you restart your computer2",
@@ -322,7 +322,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(createdConsideration3.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
 
 		// create insights of requirement category
-		requirementToCreate1 := models.TRBGuidanceLetterRecommendation{
+		requirementToCreate1 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer5",
 			Recommendation: "I require you restart your computer1",
@@ -330,7 +330,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
 		}
 
-		requirementToCreate2 := models.TRBGuidanceLetterRecommendation{
+		requirementToCreate2 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer6",
 			Recommendation: "I require you restart your computer2",
@@ -385,7 +385,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		// add 2 insights of each category
 
 		// create insights of recommendation category
-		recommendationToCreate1 := models.TRBGuidanceLetterRecommendation{
+		recommendationToCreate1 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer1",
 			Recommendation: "I recommend you restart your computer1",
@@ -393,7 +393,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
 		}
 
-		recommendationToCreate2 := models.TRBGuidanceLetterRecommendation{
+		recommendationToCreate2 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer2",
 			Recommendation: "I recommend you restart your computer2",
@@ -412,7 +412,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(createdRecommendation2.Category, models.TRBGuidanceLetterRecommendationCategoryRecommendation)
 
 		// create insights of consideration category
-		considerationToCreate1 := models.TRBGuidanceLetterRecommendation{
+		considerationToCreate1 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer3",
 			Recommendation: "I consider you restart your computer1",
@@ -420,7 +420,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 		}
 
-		considerationToCreate2 := models.TRBGuidanceLetterRecommendation{
+		considerationToCreate2 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer4",
 			Recommendation: "I consider you restart your computer2",
@@ -428,7 +428,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
 		}
 
-		considerationToCreate3 := models.TRBGuidanceLetterRecommendation{
+		considerationToCreate3 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer7",
 			Recommendation: "I consider you restart your computer2",
@@ -452,7 +452,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(createdConsideration3.Category, models.TRBGuidanceLetterRecommendationCategoryConsideration)
 
 		// create insights of requirement category
-		requirementToCreate1 := models.TRBGuidanceLetterRecommendation{
+		requirementToCreate1 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer5",
 			Recommendation: "I require you restart your computer1",
@@ -460,7 +460,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
 		}
 
-		requirementToCreate2 := models.TRBGuidanceLetterRecommendation{
+		requirementToCreate2 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer6",
 			Recommendation: "I require you restart your computer2",
@@ -508,7 +508,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.NoError(err)
 
 		// create insights of recommendation category
-		recommendationToCreate1 := models.TRBGuidanceLetterRecommendation{
+		recommendationToCreate1 := models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Restart your computer1",
 			Recommendation: "I recommend you restart your computer1",

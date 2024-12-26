@@ -14,7 +14,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 	t.Run("happy path - valid new order for the existing recommendations", func(t *testing.T) {
 		trbRequestID := uuid.New()
 
-		currentRecs := []*models.TRBGuidanceLetterRecommendation{
+		currentRecs := []*models.TRBGuidanceLetterInsight{
 			{
 				BaseStruct: models.BaseStruct{
 					ID: uuid.New(),
@@ -59,7 +59,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 	})
 
 	t.Run("newOrder has more IDs than there are current recommendations - invalid", func(t *testing.T) {
-		currentRecs := []*models.TRBGuidanceLetterRecommendation{}
+		currentRecs := []*models.TRBGuidanceLetterInsight{}
 		newOrder := []uuid.UUID{uuid.New()}
 
 		err := IsNewInsightOrderValid(currentRecs, newOrder)
@@ -69,7 +69,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 	t.Run("newOrder has fewer IDs than there are current recommendations - invalid", func(t *testing.T) {
 		trbRequestID := uuid.New()
 
-		currentRecs := []*models.TRBGuidanceLetterRecommendation{
+		currentRecs := []*models.TRBGuidanceLetterInsight{
 			{
 				BaseStruct: models.BaseStruct{
 					ID: uuid.New(),
@@ -97,7 +97,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 			uuid.MustParse("30000000-0000-4000-a000-000000000000"),
 		}
 
-		currentRecs := []*models.TRBGuidanceLetterRecommendation{
+		currentRecs := []*models.TRBGuidanceLetterInsight{
 			{
 				BaseStruct: models.BaseStruct{
 					ID: currentRecIDs[0],
@@ -149,7 +149,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 			uuid.MustParse("30000000-0000-4000-a000-000000000000"),
 		}
 
-		currentRecs := []*models.TRBGuidanceLetterRecommendation{
+		currentRecs := []*models.TRBGuidanceLetterInsight{
 			{
 				BaseStruct: models.BaseStruct{
 					ID: currentRecIDs[0],

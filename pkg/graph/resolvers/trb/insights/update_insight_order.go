@@ -11,7 +11,7 @@ import (
 )
 
 // IsNewInsightOrderValid checks that a new order for TRB guidance letter insights is valid for the current insights
-func IsNewInsightOrderValid(currentInsights []*models.TRBGuidanceLetterRecommendation, newOrder []uuid.UUID) error {
+func IsNewInsightOrderValid(currentInsights []*models.TRBGuidanceLetterInsight, newOrder []uuid.UUID) error {
 	// check that newOrder has the same number of IDs as there are in the current insights
 	if len(newOrder) != len(currentInsights) {
 		return &apperrors.BadRequestError{
@@ -21,7 +21,7 @@ func IsNewInsightOrderValid(currentInsights []*models.TRBGuidanceLetterRecommend
 
 	// check that all IDs in newOrder are present in currentInsights
 	for _, newOrderID := range newOrder {
-		if !slices.ContainsFunc(currentInsights, func(currentInsight *models.TRBGuidanceLetterRecommendation) bool {
+		if !slices.ContainsFunc(currentInsights, func(currentInsight *models.TRBGuidanceLetterInsight) bool {
 			return newOrderID == currentInsight.ID
 		}) {
 			return &apperrors.BadRequestError{

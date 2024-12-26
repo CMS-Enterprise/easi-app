@@ -985,9 +985,9 @@ func (s *seederConfig) addGuidanceLetter(ctx context.Context, trb *models.TRBReq
 }
 
 // creates insights attached to a TRB request
-func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *models.TRBRequest) ([]*models.TRBGuidanceLetterRecommendation, error) {
+func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *models.TRBRequest) ([]*models.TRBGuidanceLetterInsight, error) {
 	// create insights of consideration category
-	consideration1ToCreate := &models.TRBGuidanceLetterRecommendation{
+	consideration1ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID:   trb.ID,
 		Title:          "Try again",
 		Recommendation: "I'd consider all options at this point",
@@ -999,7 +999,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		return nil, err
 	}
 
-	consideration2ToCreate := &models.TRBGuidanceLetterRecommendation{
+	consideration2ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID:   trb.ID,
 		Title:          "Turn it off and on",
 		Recommendation: "I'd consider a new computer",
@@ -1011,7 +1011,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		return nil, err
 	}
 
-	consideration3ToCreate := &models.TRBGuidanceLetterRecommendation{
+	consideration3ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID:   trb.ID,
 		Title:          "Throw it out",
 		Recommendation: "Consider the garbage can as a solution",
@@ -1024,7 +1024,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 	}
 
 	// create insights of recommendation category
-	recommendation1ToCreate := &models.TRBGuidanceLetterRecommendation{
+	recommendation1ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID:   trb.ID,
 		Title:          "Restart your computer",
 		Recommendation: "I recommend you restart your computer",
@@ -1036,7 +1036,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		return nil, err
 	}
 
-	recommendation2ToCreate := &models.TRBGuidanceLetterRecommendation{
+	recommendation2ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID:   trb.ID,
 		Title:          "Unplug it and plug it back in",
 		Recommendation: "I recommend you unplug your computer and plug it back in",
@@ -1048,7 +1048,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		return nil, err
 	}
 
-	recommendation3ToCreate := &models.TRBGuidanceLetterRecommendation{
+	recommendation3ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID:   trb.ID,
 		Title:          "Get a new computer",
 		Recommendation: "Your computer is broken, you need a new one",
@@ -1061,7 +1061,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 	}
 
 	// create insights of requirement category
-	requirement1ToCreate := &models.TRBGuidanceLetterRecommendation{
+	requirement1ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID:   trb.ID,
 		Title:          "Buy a new one",
 		Recommendation: "You are required to buy a new computer",
@@ -1073,7 +1073,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		return nil, err
 	}
 
-	requirement2ToCreate := &models.TRBGuidanceLetterRecommendation{
+	requirement2ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID:   trb.ID,
 		Title:          "Click more times",
 		Recommendation: "You are required to click more times for the computer to unfreeze",
@@ -1085,7 +1085,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		return nil, err
 	}
 
-	requirement3ToCreate := &models.TRBGuidanceLetterRecommendation{
+	requirement3ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID:   trb.ID,
 		Title:          "Remove all files",
 		Recommendation: "You are required to delete everything",
@@ -1098,7 +1098,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 	}
 
 	// Create some uncategorized
-	uncategorized1ToCreate := &models.TRBGuidanceLetterRecommendation{
+	uncategorized1ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID:   trb.ID,
 		Title:          "Come up with some categories",
 		Recommendation: "You'll really need to come up with some categories, or at least move this insight to a category!",
@@ -1110,7 +1110,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		return nil, err
 	}
 
-	uncategorized2ToCreate := &models.TRBGuidanceLetterRecommendation{
+	uncategorized2ToCreate := &models.TRBGuidanceLetterInsight{
 		TRBRequestID:   trb.ID,
 		Title:          "Organize your insights",
 		Recommendation: "Try moving these insights around to give them a category!",
@@ -1122,7 +1122,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		return nil, err
 	}
 
-	return []*models.TRBGuidanceLetterRecommendation{
+	return []*models.TRBGuidanceLetterInsight{
 		createdConsideration1,
 		createdConsideration2,
 		createdConsideration3,

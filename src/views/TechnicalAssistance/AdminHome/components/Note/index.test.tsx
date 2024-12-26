@@ -75,14 +75,14 @@ const noteGuidanceLetter: TRBAdminNoteFragment = {
     appliesToNextSteps: false,
     insights: [
       {
-        __typename: 'TRBGuidanceLetterRecommendation',
+        __typename: 'TRBGuidanceLetterInsight',
         category: TRBGuidanceLetterInsightCategory.RECOMMENDATION,
         id: 'bcbd8b3e-75e7-456e-8574-c5ab0b47e0bd',
         title: 'Test Recommendation',
         deletedAt: null
       },
       {
-        __typename: 'TRBGuidanceLetterRecommendation',
+        __typename: 'TRBGuidanceLetterInsight',
         category: TRBGuidanceLetterInsightCategory.REQUIREMENT,
         id: '2481f229-b7e9-4056-96a6-2857c8f29af1',
         title: 'Test Requirement',
@@ -192,7 +192,7 @@ describe('TRB Admin Note', () => {
         appliesToNextSteps: false,
         insights: [
           {
-            __typename: 'TRBGuidanceLetterRecommendation',
+            __typename: 'TRBGuidanceLetterInsight',
             id: 'b97d4633-42d6-4817-9e88-919928e149e5',
             title: 'Test Recommendation',
             category: TRBGuidanceLetterInsightCategory.RECOMMENDATION,

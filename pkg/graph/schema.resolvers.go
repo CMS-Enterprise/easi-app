@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1089,12 +1090,12 @@ func (r *mutationResolver) SendTRBGuidanceLetter(ctx context.Context, input mode
 }
 
 // CreateTRBGuidanceLetterInsight is the resolver for the createTRBGuidanceLetterInsight field.
-func (r *mutationResolver) CreateTRBGuidanceLetterInsight(ctx context.Context, input models.CreateTRBGuidanceLetterInsightInput) (*models.TRBGuidanceLetterRecommendation, error) {
+func (r *mutationResolver) CreateTRBGuidanceLetterInsight(ctx context.Context, input models.CreateTRBGuidanceLetterInsightInput) (*models.TRBGuidanceLetterInsight, error) {
 	links := models.ConvertEnums[string](input.Links)
 	return resolvers.CreateTRBGuidanceLetterInsight(
 		ctx,
 		r.store,
-		&models.TRBGuidanceLetterRecommendation{
+		&models.TRBGuidanceLetterInsight{
 			TRBRequestID:   input.TrbRequestID,
 			Title:          input.Title,
 			Recommendation: input.Insight,
@@ -1104,17 +1105,17 @@ func (r *mutationResolver) CreateTRBGuidanceLetterInsight(ctx context.Context, i
 }
 
 // UpdateTRBGuidanceLetterInsight is the resolver for the updateTRBGuidanceLetterInsight field.
-func (r *mutationResolver) UpdateTRBGuidanceLetterInsight(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error) {
+func (r *mutationResolver) UpdateTRBGuidanceLetterInsight(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterInsight, error) {
 	return resolvers.UpdateTRBGuidanceLetterInsight(ctx, r.store, input)
 }
 
 // UpdateTRBGuidanceLetterInsightOrder is the resolver for the updateTRBGuidanceLetterInsightOrder field.
-func (r *mutationResolver) UpdateTRBGuidanceLetterInsightOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) ([]*models.TRBGuidanceLetterRecommendation, error) {
+func (r *mutationResolver) UpdateTRBGuidanceLetterInsightOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) ([]*models.TRBGuidanceLetterInsight, error) {
 	return resolvers.UpdateTRBGuidanceLetterInsightOrder(ctx, r.store, input)
 }
 
 // DeleteTRBGuidanceLetterInsight is the resolver for the deleteTRBGuidanceLetterInsight field.
-func (r *mutationResolver) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error) {
+func (r *mutationResolver) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterInsight, error) {
 	return resolvers.DeleteTRBGuidanceLetterInsight(ctx, r.store, id)
 }
 
@@ -2010,24 +2011,18 @@ func (r *tRBGuidanceLetterResolver) Author(ctx context.Context, obj *models.TRBG
 }
 
 // Insights is the resolver for the insights field.
-func (r *tRBGuidanceLetterResolver) Insights(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterRecommendation, error) {
+func (r *tRBGuidanceLetterResolver) Insights(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterInsight, error) {
 	return resolvers.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
 }
 
 // Links is the resolver for the links field.
-func (r *tRBGuidanceLetterRecommendationResolver) Links(ctx context.Context, obj *models.TRBGuidanceLetterRecommendation) ([]string, error) {
-	links := models.ConvertEnums[string](obj.Links)
-	return links, nil
+func (r *tRBGuidanceLetterInsightResolver) Links(ctx context.Context, obj *models.TRBGuidanceLetterInsight) ([]string, error) {
+	panic(fmt.Errorf("not implemented: Links - links"))
 }
 
 // Author is the resolver for the author field.
-func (r *tRBGuidanceLetterRecommendationResolver) Author(ctx context.Context, obj *models.TRBGuidanceLetterRecommendation) (*models.UserInfo, error) {
-	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
-	if err != nil {
-		return nil, err
-	}
-
-	return authorInfo, nil
+func (r *tRBGuidanceLetterInsightResolver) Author(ctx context.Context, obj *models.TRBGuidanceLetterInsight) (*models.UserInfo, error) {
+	panic(fmt.Errorf("not implemented: Author - author"))
 }
 
 // Status is the resolver for the status field.
@@ -2270,9 +2265,9 @@ func (r *Resolver) TRBGuidanceLetter() generated.TRBGuidanceLetterResolver {
 	return &tRBGuidanceLetterResolver{r}
 }
 
-// TRBGuidanceLetterRecommendation returns generated.TRBGuidanceLetterRecommendationResolver implementation.
-func (r *Resolver) TRBGuidanceLetterRecommendation() generated.TRBGuidanceLetterRecommendationResolver {
-	return &tRBGuidanceLetterRecommendationResolver{r}
+// TRBGuidanceLetterInsight returns generated.TRBGuidanceLetterInsightResolver implementation.
+func (r *Resolver) TRBGuidanceLetterInsight() generated.TRBGuidanceLetterInsightResolver {
+	return &tRBGuidanceLetterInsightResolver{r}
 }
 
 // TRBRequest returns generated.TRBRequestResolver implementation.
@@ -2316,7 +2311,7 @@ type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
 type tRBGuidanceLetterResolver struct{ *Resolver }
-type tRBGuidanceLetterRecommendationResolver struct{ *Resolver }
+type tRBGuidanceLetterInsightResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
 type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }

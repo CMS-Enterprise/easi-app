@@ -19,8 +19,8 @@ import (
 func CreateTRBGuidanceLetterInsight(
 	ctx context.Context,
 	store *storage.Store,
-	insight *models.TRBGuidanceLetterRecommendation,
-) (*models.TRBGuidanceLetterRecommendation, error) {
+	insight *models.TRBGuidanceLetterInsight,
+) (*models.TRBGuidanceLetterInsight, error) {
 	insight.CreatedBy = appcontext.Principal(ctx).ID()
 	createdInsight, err := store.CreateTRBGuidanceLetterInsight(ctx, insight)
 	if err != nil {
@@ -31,7 +31,7 @@ func CreateTRBGuidanceLetterInsight(
 
 // GetTRBGuidanceLetterInsightsByTRBRequestID retrieves TRB request guidance letter insights records for a given TRB request ID,
 // ordering them in the user-specified positions
-func GetTRBGuidanceLetterInsightsByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBGuidanceLetterRecommendation, error) {
+func GetTRBGuidanceLetterInsightsByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBGuidanceLetterInsight, error) {
 	results, err := store.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func GetTRBGuidanceLetterInsightsByTRBRequestID(ctx context.Context, store *stor
 }
 
 // UpdateTRBGuidanceLetterInsight updates a TRBGuidanceLetterInsight record in the database
-func UpdateTRBGuidanceLetterInsight(ctx context.Context, store *storage.Store, changes map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error) {
+func UpdateTRBGuidanceLetterInsight(ctx context.Context, store *storage.Store, changes map[string]interface{}) (*models.TRBGuidanceLetterInsight, error) {
 	idIface, idFound := changes["id"]
 	if !idFound {
 		return nil, errors.New("missing required property id")
@@ -90,7 +90,7 @@ func UpdateTRBGuidanceLetterInsightOrder(
 	ctx context.Context,
 	store *storage.Store,
 	input models.UpdateTRBGuidanceLetterRecommendationOrderInput,
-) ([]*models.TRBGuidanceLetterRecommendation, error) {
+) ([]*models.TRBGuidanceLetterInsight, error) {
 	// this extra database query is necessary for validation, so we don't mess up the insights' positions with an invalid order,
 	// but requiring an extra database call is unfortunate
 	currentInsights, err := store.GetTRBGuidanceLetterInsightsByTRBRequestIDAndCategory(ctx, input.TrbRequestID, input.Category)
@@ -121,7 +121,7 @@ func DeleteTRBGuidanceLetterInsight(
 	ctx context.Context,
 	store *storage.Store,
 	id uuid.UUID,
-) (*models.TRBGuidanceLetterRecommendation, error) {
+) (*models.TRBGuidanceLetterInsight, error) {
 	// as well as deleting the insight, we need to update the position of the remaining insights for that TRB request, so there aren't any gaps in the ordering
 
 	allInsightsForRequest, err := store.GetTRBGuidanceLetterInsightsSharingTRBRequestID(ctx, id)
@@ -130,7 +130,7 @@ func DeleteTRBGuidanceLetterInsight(
 	}
 
 	// sort insights by position, so we can loop over them to find the insights we need to update
-	slices.SortFunc(allInsightsForRequest, func(insightA, insightB *models.TRBGuidanceLetterRecommendation) int {
+	slices.SortFunc(allInsightsForRequest, func(insightA, insightB *models.TRBGuidanceLetterInsight) int {
 		return int(insightA.PositionInLetter.ValueOrZero()) - int(insightB.PositionInLetter.ValueOrZero())
 	})
 
@@ -163,11 +163,11 @@ func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store
 	})
 
 	// group by category, shuffle up the order if needed, update db
-	m := map[models.TRBGuidanceLetterInsightCategory][]*models.TRBGuidanceLetterRecommendation{}
+	m := map[models.TRBGuidanceLetterInsightCategory][]*models.TRBGuidanceLetterInsight{}
 
 	// prefill with all available categories
 	for _, category := range models.AllTRBGuidanceLetterRecommendationCategory {
-		m[category] = []*models.TRBGuidanceLetterRecommendation{}
+		m[category] = []*models.TRBGuidanceLetterInsight{}
 	}
 
 	// populate map

@@ -258,7 +258,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 		s.NotNil(createdGuidanceLetter)
 
 		// set up recommendations
-		recToCreate1 := &models.TRBGuidanceLetterRecommendation{
+		recToCreate1 := &models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Admin Note Test Recommendation 1",
 			Recommendation: "Keep testing rec1",
@@ -270,7 +270,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 		s.NotNil(createdRec1)
 		recommendationID1 := createdRec1.ID
 
-		recToCreate2 := &models.TRBGuidanceLetterRecommendation{
+		recToCreate2 := &models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequest.ID,
 			Title:          "Admin Note Test Recommendation 2",
 			Recommendation: "Keep testing rec2",
@@ -320,12 +320,12 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 
 		s.Len(fetchedRecommendations, 2)
 
-		recommendation1Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {
+		recommendation1Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBGuidanceLetterInsight) bool {
 			return rec.ID == recommendationID1
 		})
 		s.True(recommendation1Fetched)
 
-		recommendation2Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {
+		recommendation2Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBGuidanceLetterInsight) bool {
 			return rec.ID == recommendationID2
 		})
 		s.True(recommendation2Fetched)
@@ -348,7 +348,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 		s.NotNil(createdGuidanceLetter)
 
 		// create recommendation attached to guidance letter for request 2
-		recToCreate := &models.TRBGuidanceLetterRecommendation{
+		recToCreate := &models.TRBGuidanceLetterInsight{
 			TRBRequestID:   trbRequestForRecommendation.ID,
 			Title:          "Admin Note Test Recommendation - Different Request",
 			Recommendation: "Make sure this fails",
@@ -473,7 +473,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		// and test that not all recommendations on the request are returned
 		recommendationIDs := []uuid.UUID{}
 		for i := 0; i < 3; i++ {
-			recToCreate := &models.TRBGuidanceLetterRecommendation{
+			recToCreate := &models.TRBGuidanceLetterInsight{
 				TRBRequestID:   trbRequest.ID,
 				Title:          fmt.Sprintf("Admin Note Test Recommendation %v", i),
 				Recommendation: "Testing category-specific data query resolver",
@@ -514,18 +514,18 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		returnedRecommendations := guidanceLetterData.Insights
 		s.Len(returnedRecommendations, 2)
 
-		recommendation0Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {
+		recommendation0Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterInsight) bool {
 			return rec.ID == recommendationIDs[0]
 		})
 		s.True(recommendation0Returned)
 
-		recommendation1Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {
+		recommendation1Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterInsight) bool {
 			return rec.ID == recommendationIDs[1]
 		})
 		s.True(recommendation1Returned)
 
 		// test that the third recommendation (that wasn't attached to the note) *isn't* returned
-		recommendation2Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterRecommendation) bool {
+		recommendation2Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBGuidanceLetterInsight) bool {
 			return rec.ID == recommendationIDs[2]
 		})
 		s.False(recommendation2Returned)

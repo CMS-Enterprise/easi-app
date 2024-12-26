@@ -89,7 +89,7 @@ func (s *Store) CreateTRBAdminNoteTRBInsightLinks(
 // GetTRBInsightsByAdminNoteID fetches all TRB guidance letter documents linked to a TRB admin note
 // This function specifically fetches all insights (even deleted ones), as this function is called by the resolver for TRB Admin Notes,
 // which need to display previously deleted insight titles
-func (s *Store) GetTRBInsightsByAdminNoteID(ctx context.Context, adminNoteID uuid.UUID) ([]*models.TRBGuidanceLetterRecommendation, error) {
+func (s *Store) GetTRBInsightsByAdminNoteID(ctx context.Context, adminNoteID uuid.UUID) ([]*models.TRBGuidanceLetterInsight, error) {
 	const trbRequestRecommendationsGetByAdminNoteIDSQL = `
 		SELECT trb_guidance_letter_recommendations.*
 		FROM trb_guidance_letter_recommendations
@@ -113,7 +113,7 @@ func (s *Store) GetTRBInsightsByAdminNoteID(ctx context.Context, adminNoteID uui
 		"admin_note_id": adminNoteID,
 	}
 
-	recommendations := []*models.TRBGuidanceLetterRecommendation{}
+	recommendations := []*models.TRBGuidanceLetterInsight{}
 	err = stmt.Select(&recommendations, arg)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -124,7 +124,7 @@ func (s *Store) GetTRBInsightsByAdminNoteID(ctx context.Context, adminNoteID uui
 
 		return nil, &apperrors.QueryError{
 			Err:       err,
-			Model:     models.TRBGuidanceLetterRecommendation{},
+			Model:     models.TRBGuidanceLetterInsight{},
 			Operation: apperrors.QueryFetch,
 		}
 	}

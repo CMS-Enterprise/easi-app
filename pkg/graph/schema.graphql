@@ -2269,7 +2269,7 @@ The "recommendations" property _will_ return deleted recommendations so that UI 
 type TRBAdminNoteGuidanceLetterCategoryData {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
-  insights: [TRBGuidanceLetterRecommendation!]!
+  insights: [TRBGuidanceLetterInsight!]!
 }
 
 union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGuidanceLetterCategoryData
@@ -2306,7 +2306,7 @@ type TRBGuidanceLetter {
   """
   List of insights in the order specified by users
   """
-  insights: [TRBGuidanceLetterRecommendation!]! # This query will not return deleted insights -- see pkg/storage/trb_guidance_letter_insight.go `GetTRBGuidanceLetterInsightsByTRBRequestID`
+  insights: [TRBGuidanceLetterInsight!]! # This query will not return deleted insights -- see pkg/storage/trb_guidance_letter_insight.go `GetTRBGuidanceLetterInsightsByTRBRequestID`
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2396,9 +2396,9 @@ input SendTRBGuidanceLetterInput {
 }
 
 """
-Represents a recommendation and links that have been added to a TRB guidance letter
+Represents an insight and links that have been added to a TRB guidance letter
 """
-type TRBGuidanceLetterRecommendation {
+type TRBGuidanceLetterInsight {
   id: UUID!
   trbRequestId: UUID!
   title: String!
@@ -2615,13 +2615,13 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   sendTRBGuidanceLetter(input: SendTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBGuidanceLetterInsight(input: CreateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterRecommendation!
+  createTRBGuidanceLetterInsight(input: CreateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterInsight!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterInsight(input: UpdateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterRecommendation!
+  updateTRBGuidanceLetterInsight(input: UpdateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterInsight!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterInsightOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterRecommendation!]!
+  updateTRBGuidanceLetterInsightOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterInsight!]!
   @hasRole(role: EASI_TRB_ADMIN)
-  deleteTRBGuidanceLetterInsight(id: UUID!): TRBGuidanceLetterRecommendation!
+  deleteTRBGuidanceLetterInsight(id: UUID!): TRBGuidanceLetterInsight!
   @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
   @hasRole(role: EASI_TRB_ADMIN)
