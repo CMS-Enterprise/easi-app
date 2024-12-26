@@ -15,7 +15,7 @@ import {
   CreateTRBGuidanceLetterInsightMutationVariables,
   GetTRBGuidanceLetterQuery,
   GetTRBGuidanceLetterQueryVariables,
-  TRBGuidanceLetterRecommendationCategory
+  TRBGuidanceLetterInsightCategory
 } from 'gql/gen/graphql';
 import i18next from 'i18next';
 
@@ -38,7 +38,7 @@ const mockInsight: CreateTRBGuidanceLetterInsightInput = {
   title: 'Recommendation 3',
   insight: 'Recommendation description text',
   links: ['google.com', 'easi.cms.gov'],
-  category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
+  category: TRBGuidanceLetterInsightCategory.RECOMMENDATION
 };
 
 const createTrbInsightQuery: MockedQuery<

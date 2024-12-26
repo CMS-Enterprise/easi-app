@@ -2410,7 +2410,7 @@ type TRBGuidanceLetterRecommendation {
   modifiedBy: String
   modifiedAt: Time
   deletedAt: Time
-  category: TRBGuidanceLetterRecommendationCategory
+  category: TRBGuidanceLetterInsightCategory
 }
 
 """
@@ -2421,7 +2421,7 @@ input CreateTRBGuidanceLetterInsightInput {
   title: String!
   insight: HTML!
   links: [String!]!
-  category: TRBGuidanceLetterRecommendationCategory!
+  category: TRBGuidanceLetterInsightCategory!
 }
 
 """
@@ -2432,10 +2432,10 @@ input UpdateTRBGuidanceLetterInsightInput @goModel(model: "map[string]interface{
   title: String
   recommendation: HTML
   links: [String!]
-  category: TRBGuidanceLetterRecommendationCategory
+  category: TRBGuidanceLetterInsightCategory
 }
 
-enum TRBGuidanceLetterRecommendationCategory {
+enum TRBGuidanceLetterInsightCategory {
   REQUIREMENT
   RECOMMENDATION
   CONSIDERATION
@@ -2450,7 +2450,7 @@ input UpdateTRBGuidanceLetterRecommendationOrderInput {
   List of the recommendation IDs in the new order they should be displayed
   """
   newOrder: [UUID!]!
-  category: TRBGuidanceLetterRecommendationCategory!
+  category: TRBGuidanceLetterInsightCategory!
 }
 
 """

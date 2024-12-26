@@ -11,34 +11,34 @@ import (
 // TRBGuidanceLetterRecommendation represents the data for a TRB guidance letter insight
 type TRBGuidanceLetterRecommendation struct {
 	BaseStruct
-	TRBRequestID     uuid.UUID                               `json:"trbRequestId" db:"trb_request_id"`
-	Title            string                                  `json:"title" db:"title"`
-	Recommendation   HTML                                    `json:"recommendation" db:"recommendation"`
-	Links            pq.StringArray                          `json:"links" db:"links"`
-	PositionInLetter null.Int                                `json:"positionInLetter" db:"position_in_letter"` // 0-based indexing
-	DeletedAt        *time.Time                              `json:"deletedAt" db:"deleted_at"`
-	Category         TRBGuidanceLetterRecommendationCategory `json:"category" db:"category"`
+	TRBRequestID     uuid.UUID                        `json:"trbRequestId" db:"trb_request_id"`
+	Title            string                           `json:"title" db:"title"`
+	Recommendation   HTML                             `json:"recommendation" db:"recommendation"`
+	Links            pq.StringArray                   `json:"links" db:"links"`
+	PositionInLetter null.Int                         `json:"positionInLetter" db:"position_in_letter"` // 0-based indexing
+	DeletedAt        *time.Time                       `json:"deletedAt" db:"deleted_at"`
+	Category         TRBGuidanceLetterInsightCategory `json:"category" db:"category"`
 }
 
-// TRBGuidanceLetterRecommendationCategory implemented here instead of in gen files
+// TRBGuidanceLetterInsightCategory implemented here instead of in gen files
 // see Note [gql enums]
-type TRBGuidanceLetterRecommendationCategory string
+type TRBGuidanceLetterInsightCategory string
 
 const (
-	TRBGuidanceLetterRecommendationCategoryRequirement    TRBGuidanceLetterRecommendationCategory = "REQUIREMENT"
-	TRBGuidanceLetterRecommendationCategoryRecommendation TRBGuidanceLetterRecommendationCategory = "RECOMMENDATION"
-	TRBGuidanceLetterRecommendationCategoryConsideration  TRBGuidanceLetterRecommendationCategory = "CONSIDERATION"
-	TRBGuidanceLetterRecommendationCategoryUncategorized  TRBGuidanceLetterRecommendationCategory = "UNCATEGORIZED"
+	TRBGuidanceLetterRecommendationCategoryRequirement    TRBGuidanceLetterInsightCategory = "REQUIREMENT"
+	TRBGuidanceLetterRecommendationCategoryRecommendation TRBGuidanceLetterInsightCategory = "RECOMMENDATION"
+	TRBGuidanceLetterRecommendationCategoryConsideration  TRBGuidanceLetterInsightCategory = "CONSIDERATION"
+	TRBGuidanceLetterRecommendationCategoryUncategorized  TRBGuidanceLetterInsightCategory = "UNCATEGORIZED"
 )
 
-var AllTRBGuidanceLetterRecommendationCategory = []TRBGuidanceLetterRecommendationCategory{
+var AllTRBGuidanceLetterRecommendationCategory = []TRBGuidanceLetterInsightCategory{
 	TRBGuidanceLetterRecommendationCategoryRequirement,
 	TRBGuidanceLetterRecommendationCategoryRecommendation,
 	TRBGuidanceLetterRecommendationCategoryConsideration,
 	TRBGuidanceLetterRecommendationCategoryUncategorized,
 }
 
-func (t TRBGuidanceLetterRecommendationCategory) String() string {
+func (t TRBGuidanceLetterInsightCategory) String() string {
 	return string(t)
 }
 

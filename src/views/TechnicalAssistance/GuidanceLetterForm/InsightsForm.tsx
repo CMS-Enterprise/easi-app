@@ -13,7 +13,7 @@ import {
 } from '@trussworks/react-uswds';
 import {
   GetTRBGuidanceLetterDocument,
-  TRBGuidanceLetterRecommendationCategory,
+  TRBGuidanceLetterInsightCategory,
   useCreateTRBGuidanceLetterInsightMutation,
   useUpdateTRBGuidanceLetterInsightMutation
 } from 'gql/gen/graphql';
@@ -253,10 +253,9 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                   labelDescription={t(
                     'guidanceLetterForm.requirementDescription'
                   )}
-                  value={TRBGuidanceLetterRecommendationCategory.REQUIREMENT}
+                  value={TRBGuidanceLetterInsightCategory.REQUIREMENT}
                   checked={
-                    field.value ===
-                    TRBGuidanceLetterRecommendationCategory.REQUIREMENT
+                    field.value === TRBGuidanceLetterInsightCategory.REQUIREMENT
                   }
                 />
                 <Radio
@@ -267,10 +266,10 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                   labelDescription={t(
                     'guidanceLetterForm.recommendationDescription'
                   )}
-                  value={TRBGuidanceLetterRecommendationCategory.RECOMMENDATION}
+                  value={TRBGuidanceLetterInsightCategory.RECOMMENDATION}
                   checked={
                     field.value ===
-                    TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
+                    TRBGuidanceLetterInsightCategory.RECOMMENDATION
                   }
                 />
                 <Radio
@@ -281,10 +280,10 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                   labelDescription={t(
                     'guidanceLetterForm.considerationDescription'
                   )}
-                  value={TRBGuidanceLetterRecommendationCategory.CONSIDERATION}
+                  value={TRBGuidanceLetterInsightCategory.CONSIDERATION}
                   checked={
                     field.value ===
-                    TRBGuidanceLetterRecommendationCategory.CONSIDERATION
+                    TRBGuidanceLetterInsightCategory.CONSIDERATION
                   }
                 />
               </Fieldset>
@@ -339,7 +338,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
               watch('recommendation').length === 0 ||
               !watch('category') ||
               watch('category') ===
-                TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED ||
+                TRBGuidanceLetterInsightCategory.UNCATEGORIZED ||
               isSubmitting
           }}
           saveExitText={t(`guidanceLetterForm.returnToGuidanceLetter`, {

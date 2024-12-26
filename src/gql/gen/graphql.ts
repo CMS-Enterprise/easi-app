@@ -627,7 +627,7 @@ export type CreateTRBAdminNoteSupportingDocumentsInput = {
 
 /** The input required to add an insight & links to a TRB guidance letter */
 export type CreateTRBGuidanceLetterInsightInput = {
-  category: TRBGuidanceLetterRecommendationCategory;
+  category: TRBGuidanceLetterInsightCategory;
   insight: Scalars['HTML']['input'];
   links: Array<Scalars['String']['input']>;
   title: Scalars['String']['input'];
@@ -2743,11 +2743,18 @@ export type TRBGuidanceLetter = {
   trbRequestId: Scalars['UUID']['output'];
 };
 
+export enum TRBGuidanceLetterInsightCategory {
+  CONSIDERATION = 'CONSIDERATION',
+  RECOMMENDATION = 'RECOMMENDATION',
+  REQUIREMENT = 'REQUIREMENT',
+  UNCATEGORIZED = 'UNCATEGORIZED'
+}
+
 /** Represents a recommendation and links that have been added to a TRB guidance letter */
 export type TRBGuidanceLetterRecommendation = {
   __typename: 'TRBGuidanceLetterRecommendation';
   author: UserInfo;
-  category?: Maybe<TRBGuidanceLetterRecommendationCategory>;
+  category?: Maybe<TRBGuidanceLetterInsightCategory>;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['String']['output'];
   deletedAt?: Maybe<Scalars['Time']['output']>;
@@ -2759,13 +2766,6 @@ export type TRBGuidanceLetterRecommendation = {
   title: Scalars['String']['output'];
   trbRequestId: Scalars['UUID']['output'];
 };
-
-export enum TRBGuidanceLetterRecommendationCategory {
-  CONSIDERATION = 'CONSIDERATION',
-  RECOMMENDATION = 'RECOMMENDATION',
-  REQUIREMENT = 'REQUIREMENT',
-  UNCATEGORIZED = 'UNCATEGORIZED'
-}
 
 /** Represents the status of the TRB guidance letter step */
 export enum TRBGuidanceLetterStatus {
@@ -3115,7 +3115,7 @@ export type UpdateTRBGuidanceLetterInput = {
 
 /** The input required to update an insight to a TRB guidance letter */
 export type UpdateTRBGuidanceLetterInsightInput = {
-  category?: InputMaybe<TRBGuidanceLetterRecommendationCategory>;
+  category?: InputMaybe<TRBGuidanceLetterInsightCategory>;
   id: Scalars['UUID']['input'];
   links?: InputMaybe<Array<Scalars['String']['input']>>;
   recommendation?: InputMaybe<Scalars['HTML']['input']>;
@@ -3123,7 +3123,7 @@ export type UpdateTRBGuidanceLetterInsightInput = {
 };
 
 export type UpdateTRBGuidanceLetterRecommendationOrderInput = {
-  category: TRBGuidanceLetterRecommendationCategory;
+  category: TRBGuidanceLetterInsightCategory;
   /** List of the recommendation IDs in the new order they should be displayed */
   newOrder: Array<Scalars['UUID']['input']>;
   trbRequestId: Scalars['UUID']['input'];
@@ -3338,50 +3338,50 @@ export type CreateTRBAdminNoteConsultSessionMutationVariables = Exact<{
 }>;
 
 
-export type CreateTRBAdminNoteConsultSessionMutation = { __typename: 'Mutation', createTRBAdminNoteConsultSession: { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } } };
+export type CreateTRBAdminNoteConsultSessionMutation = { __typename: 'Mutation', createTRBAdminNoteConsultSession: { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } } };
 
 export type CreateTRBAdminNoteGeneralRequestMutationVariables = Exact<{
   input: CreateTRBAdminNoteGeneralRequestInput;
 }>;
 
 
-export type CreateTRBAdminNoteGeneralRequestMutation = { __typename: 'Mutation', createTRBAdminNoteGeneralRequest: { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } } };
+export type CreateTRBAdminNoteGeneralRequestMutation = { __typename: 'Mutation', createTRBAdminNoteGeneralRequest: { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } } };
 
 export type CreateTRBAdminNoteGuidanceLetterMutationVariables = Exact<{
   input: CreateTRBAdminNoteGuidanceLetterInput;
 }>;
 
 
-export type CreateTRBAdminNoteGuidanceLetterMutation = { __typename: 'Mutation', createTRBAdminNoteGuidanceLetter: { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } } };
+export type CreateTRBAdminNoteGuidanceLetterMutation = { __typename: 'Mutation', createTRBAdminNoteGuidanceLetter: { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } } };
 
 export type CreateTRBAdminNoteInitialRequestFormMutationVariables = Exact<{
   input: CreateTRBAdminNoteInitialRequestFormInput;
 }>;
 
 
-export type CreateTRBAdminNoteInitialRequestFormMutation = { __typename: 'Mutation', createTRBAdminNoteInitialRequestForm: { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } } };
+export type CreateTRBAdminNoteInitialRequestFormMutation = { __typename: 'Mutation', createTRBAdminNoteInitialRequestForm: { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } } };
 
 export type CreateTRBAdminNoteSupportingDocumentsMutationVariables = Exact<{
   input: CreateTRBAdminNoteSupportingDocumentsInput;
 }>;
 
 
-export type CreateTRBAdminNoteSupportingDocumentsMutation = { __typename: 'Mutation', createTRBAdminNoteSupportingDocuments: { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } } };
+export type CreateTRBAdminNoteSupportingDocumentsMutation = { __typename: 'Mutation', createTRBAdminNoteSupportingDocuments: { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } } };
 
 export type GetTRBAdminNotesQueryVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
 
 
-export type GetTRBAdminNotesQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', id: UUID, adminNotes: Array<{ __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } }> } };
+export type GetTRBAdminNotesQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', id: UUID, adminNotes: Array<{ __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } }> } };
 
 export type TRBAdminNoteInitialRequestFormCategoryDataFragment = { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean };
 
 export type TRBAdminNoteSupportingDocumentsCategoryDataFragment = { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> };
 
-export type TRBAdminNoteGuidanceLetterCategoryDataFragment = { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, deletedAt?: Time | null }> };
+export type TRBAdminNoteGuidanceLetterCategoryDataFragment = { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, deletedAt?: Time | null }> };
 
-export type TRBAdminNoteFragment = { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } };
+export type TRBAdminNoteFragment = { __typename: 'TRBAdminNote', id: UUID, isArchived: boolean, category: TRBAdminNoteCategory, noteText: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string }, categorySpecificData: { __typename: 'TRBAdminNoteConsultSessionCategoryData' } | { __typename: 'TRBAdminNoteGeneralRequestCategoryData' } | { __typename: 'TRBAdminNoteGuidanceLetterCategoryData', appliesToMeetingSummary: boolean, appliesToNextSteps: boolean, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, deletedAt?: Time | null }> } | { __typename: 'TRBAdminNoteInitialRequestFormCategoryData', appliesToBasicRequestDetails: boolean, appliesToSubjectAreas: boolean, appliesToAttendees: boolean } | { __typename: 'TRBAdminNoteSupportingDocumentsCategoryData', documents: Array<{ __typename: 'TRBRequestDocument', id: UUID, fileName: string, deletedAt?: Time | null }> } };
 
 export type GetTrbLeadOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3407,42 +3407,42 @@ export type CreateTRBGuidanceLetterMutationVariables = Exact<{
 }>;
 
 
-export type CreateTRBGuidanceLetterMutation = { __typename: 'Mutation', createTRBGuidanceLetter: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } };
+export type CreateTRBGuidanceLetterMutation = { __typename: 'Mutation', createTRBGuidanceLetter: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } };
 
 export type CreateTRBGuidanceLetterInsightMutationVariables = Exact<{
   input: CreateTRBGuidanceLetterInsightInput;
 }>;
 
 
-export type CreateTRBGuidanceLetterInsightMutation = { __typename: 'Mutation', createTRBGuidanceLetterRecommendation: { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, recommendation: HTML, links: Array<string> } };
+export type CreateTRBGuidanceLetterInsightMutation = { __typename: 'Mutation', createTRBGuidanceLetterRecommendation: { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, recommendation: HTML, links: Array<string> } };
 
 export type DeleteTRBGuidanceLetterInsightMutationVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
 
 
-export type DeleteTRBGuidanceLetterInsightMutation = { __typename: 'Mutation', deleteTRBGuidanceLetterRecommendation: { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, recommendation: HTML, links: Array<string> } };
+export type DeleteTRBGuidanceLetterInsightMutation = { __typename: 'Mutation', deleteTRBGuidanceLetterRecommendation: { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, recommendation: HTML, links: Array<string> } };
 
 export type GetTRBGuidanceLetterQueryVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
 
 
-export type GetTRBGuidanceLetterQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', id: UUID, name?: string | null, type: TRBRequestType, createdAt: Time, consultMeetingTime?: Time | null, taskStatuses: { __typename: 'TRBTaskStatuses', guidanceLetterStatus: TRBGuidanceLetterStatus }, guidanceLetter?: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } | null } };
+export type GetTRBGuidanceLetterQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', id: UUID, name?: string | null, type: TRBRequestType, createdAt: Time, consultMeetingTime?: Time | null, taskStatuses: { __typename: 'TRBTaskStatuses', guidanceLetterStatus: TRBGuidanceLetterStatus }, guidanceLetter?: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } | null } };
 
 export type GetTRBGuidanceLetterInsightsQueryVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
 
 
-export type GetTRBGuidanceLetterInsightsQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', guidanceLetter?: { __typename: 'TRBGuidanceLetter', insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, recommendation: HTML, links: Array<string> }> } | null } };
+export type GetTRBGuidanceLetterInsightsQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', guidanceLetter?: { __typename: 'TRBGuidanceLetter', insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, recommendation: HTML, links: Array<string> }> } | null } };
 
 export type GetTRBPublicGuidanceLetterQueryVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
 
 
-export type GetTRBPublicGuidanceLetterQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', id: UUID, name?: string | null, requesterComponent?: string | null, type: TRBRequestType, consultMeetingTime?: Time | null, requesterInfo: { __typename: 'UserInfo', commonName: string }, form: { __typename: 'TRBRequestForm', id: UUID, submittedAt?: Time | null, component?: string | null, needsAssistanceWith?: string | null }, guidanceLetter?: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } | null, taskStatuses: { __typename: 'TRBTaskStatuses', guidanceLetterStatus: TRBGuidanceLetterStatus } } };
+export type GetTRBPublicGuidanceLetterQuery = { __typename: 'Query', trbRequest: { __typename: 'TRBRequest', id: UUID, name?: string | null, requesterComponent?: string | null, type: TRBRequestType, consultMeetingTime?: Time | null, requesterInfo: { __typename: 'UserInfo', commonName: string }, form: { __typename: 'TRBRequestForm', id: UUID, submittedAt?: Time | null, component?: string | null, needsAssistanceWith?: string | null }, guidanceLetter?: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } | null, taskStatuses: { __typename: 'TRBTaskStatuses', guidanceLetterStatus: TRBGuidanceLetterStatus } } };
 
 export type RequestReviewForTRBGuidanceLetterMutationVariables = Exact<{
   id: Scalars['UUID']['input'];
@@ -3458,30 +3458,30 @@ export type SendTRBGuidanceLetterMutationVariables = Exact<{
 
 export type SendTRBGuidanceLetterMutation = { __typename: 'Mutation', sendTRBGuidanceLetter: { __typename: 'TRBGuidanceLetter', id: UUID } };
 
-export type TRBGuidanceLetterFragment = { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } };
+export type TRBGuidanceLetterFragment = { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } };
 
-export type TRBGuidanceLetterInsightFragment = { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, recommendation: HTML, links: Array<string> };
+export type TRBGuidanceLetterInsightFragment = { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, recommendation: HTML, links: Array<string> };
 
 export type UpdateTRBGuidanceLetterMutationVariables = Exact<{
   input: UpdateTRBGuidanceLetterInput;
 }>;
 
 
-export type UpdateTRBGuidanceLetterMutation = { __typename: 'Mutation', updateTRBGuidanceLetter: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } };
+export type UpdateTRBGuidanceLetterMutation = { __typename: 'Mutation', updateTRBGuidanceLetter: { __typename: 'TRBGuidanceLetter', id: UUID, meetingSummary?: HTML | null, nextSteps?: HTML | null, isFollowupRecommended?: boolean | null, dateSent?: Time | null, followupPoint?: string | null, createdAt: Time, modifiedAt?: Time | null, insights: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, recommendation: HTML, links: Array<string> }>, author: { __typename: 'UserInfo', euaUserId: string, commonName: string } } };
 
 export type UpdateTRBGuidanceLetterInsightMutationVariables = Exact<{
   input: UpdateTRBGuidanceLetterInsightInput;
 }>;
 
 
-export type UpdateTRBGuidanceLetterInsightMutation = { __typename: 'Mutation', updateTRBGuidanceLetterRecommendation: { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, recommendation: HTML, links: Array<string> } };
+export type UpdateTRBGuidanceLetterInsightMutation = { __typename: 'Mutation', updateTRBGuidanceLetterRecommendation: { __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, recommendation: HTML, links: Array<string> } };
 
 export type UpdateTRBGuidanceLetterInsightOrderMutationVariables = Exact<{
   input: UpdateTRBGuidanceLetterRecommendationOrderInput;
 }>;
 
 
-export type UpdateTRBGuidanceLetterInsightOrderMutation = { __typename: 'Mutation', updateTRBGuidanceLetterRecommendationOrder: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterRecommendationCategory | null, title: string, recommendation: HTML, links: Array<string> }> };
+export type UpdateTRBGuidanceLetterInsightOrderMutation = { __typename: 'Mutation', updateTRBGuidanceLetterRecommendationOrder: Array<{ __typename: 'TRBGuidanceLetterRecommendation', id: UUID, category?: TRBGuidanceLetterInsightCategory | null, title: string, recommendation: HTML, links: Array<string> }> };
 
 export type UpdateTrbRequestFormStatusMutationVariables = Exact<{
   isSubmitted: Scalars['Boolean']['input'];

@@ -139,7 +139,7 @@ func (s *Store) GetTRBGuidanceLetterInsightsByTRBRequestID(ctx context.Context, 
 
 // GetTRBGuidanceLetterInsightsByTRBRequestIDAndCategory queries the DB for all the TRB guidance letter insights,
 // filtering by the given TRB request ID and ordered in the user-specified positions
-func (s *Store) GetTRBGuidanceLetterInsightsByTRBRequestIDAndCategory(ctx context.Context, trbRequestID uuid.UUID, category models.TRBGuidanceLetterRecommendationCategory) ([]*models.TRBGuidanceLetterRecommendation, error) {
+func (s *Store) GetTRBGuidanceLetterInsightsByTRBRequestIDAndCategory(ctx context.Context, trbRequestID uuid.UUID, category models.TRBGuidanceLetterInsightCategory) ([]*models.TRBGuidanceLetterRecommendation, error) {
 	results := []*models.TRBGuidanceLetterRecommendation{}
 
 	err := s.db.Select(&results, `

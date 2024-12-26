@@ -244,11 +244,11 @@ type CreateTRBAdminNoteSupportingDocumentsInput struct {
 
 // The input required to add an insight & links to a TRB guidance letter
 type CreateTRBGuidanceLetterInsightInput struct {
-	TrbRequestID uuid.UUID                               `json:"trbRequestId"`
-	Title        string                                  `json:"title"`
-	Insight      HTML                                    `json:"insight"`
-	Links        []string                                `json:"links"`
-	Category     TRBGuidanceLetterRecommendationCategory `json:"category"`
+	TrbRequestID uuid.UUID                        `json:"trbRequestId"`
+	Title        string                           `json:"title"`
+	Insight      HTML                             `json:"insight"`
+	Links        []string                         `json:"links"`
+	Category     TRBGuidanceLetterInsightCategory `json:"category"`
 }
 
 // The data needed add a TRB request attendee to a TRB request
@@ -929,8 +929,8 @@ type UpdateSystemIntakeReviewDatesInput struct {
 type UpdateTRBGuidanceLetterRecommendationOrderInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
 	// List of the recommendation IDs in the new order they should be displayed
-	NewOrder []uuid.UUID                             `json:"newOrder"`
-	Category TRBGuidanceLetterRecommendationCategory `json:"category"`
+	NewOrder []uuid.UUID                      `json:"newOrder"`
+	Category TRBGuidanceLetterInsightCategory `json:"category"`
 }
 
 // Represents an EUA user who is included as an attendee for a TRB request

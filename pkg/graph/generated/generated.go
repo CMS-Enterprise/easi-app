@@ -10347,7 +10347,7 @@ type TRBGuidanceLetterRecommendation {
   modifiedBy: String
   modifiedAt: Time
   deletedAt: Time
-  category: TRBGuidanceLetterRecommendationCategory
+  category: TRBGuidanceLetterInsightCategory
 }
 
 """
@@ -10358,7 +10358,7 @@ input CreateTRBGuidanceLetterInsightInput {
   title: String!
   insight: HTML!
   links: [String!]!
-  category: TRBGuidanceLetterRecommendationCategory!
+  category: TRBGuidanceLetterInsightCategory!
 }
 
 """
@@ -10369,10 +10369,10 @@ input UpdateTRBGuidanceLetterInsightInput @goModel(model: "map[string]interface{
   title: String
   recommendation: HTML
   links: [String!]
-  category: TRBGuidanceLetterRecommendationCategory
+  category: TRBGuidanceLetterInsightCategory
 }
 
-enum TRBGuidanceLetterRecommendationCategory {
+enum TRBGuidanceLetterInsightCategory {
   REQUIREMENT
   RECOMMENDATION
   CONSIDERATION
@@ -10387,7 +10387,7 @@ input UpdateTRBGuidanceLetterRecommendationOrderInput {
   List of the recommendation IDs in the new order they should be displayed
   """
   newOrder: [UUID!]!
-  category: TRBGuidanceLetterRecommendationCategory!
+  category: TRBGuidanceLetterInsightCategory!
 }
 
 """
@@ -52108,9 +52108,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_category(ctx contex
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(models.TRBGuidanceLetterRecommendationCategory)
+	res := resTmp.(models.TRBGuidanceLetterInsightCategory)
 	fc.Result = res
-	return ec.marshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, field.Selections, res)
+	return ec.marshalOTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_category(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -52120,7 +52120,7 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_categor
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type TRBGuidanceLetterRecommendationCategory does not have child fields")
+			return nil, errors.New("field of type TRBGuidanceLetterInsightCategory does not have child fields")
 		},
 	}
 	return fc, nil
@@ -60612,7 +60612,7 @@ func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterInsightInput(ct
 			it.Links = data
 		case "category":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			data, err := ec.unmarshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -63396,7 +63396,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterInsightInput(ct
 			it["links"] = data
 		case "category":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			data, err := ec.unmarshalOTRBGuidanceLetterInsightCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -63437,7 +63437,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationO
 			it.NewOrder = data
 		case "category":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			data, err := ec.unmarshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -77108,6 +77108,22 @@ func (ec *executionContext) marshalNTRBGuidanceLetter2ᚖgithubᚗcomᚋcmsᚑen
 	return ec._TRBGuidanceLetter(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, v any) (models.TRBGuidanceLetterInsightCategory, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.TRBGuidanceLetterInsightCategory(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterInsightCategory) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendation) graphql.Marshaler {
 	return ec._TRBGuidanceLetterRecommendation(ctx, sel, &v)
 }
@@ -77164,22 +77180,6 @@ func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗ
 		return graphql.Null
 	}
 	return ec._TRBGuidanceLetterRecommendation(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v any) (models.TRBGuidanceLetterRecommendationCategory, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBGuidanceLetterRecommendationCategory(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
 }
 
 func (ec *executionContext) unmarshalNTRBGuidanceLetterStatus2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterStatus(ctx context.Context, v any) (models.TRBGuidanceLetterStatus, error) {
@@ -79055,27 +79055,27 @@ func (ec *executionContext) marshalOTRBGuidanceLetter2ᚖgithubᚗcomᚋcmsᚑen
 	return ec._TRBGuidanceLetter(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v any) (models.TRBGuidanceLetterRecommendationCategory, error) {
+func (ec *executionContext) unmarshalOTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, v any) (models.TRBGuidanceLetterInsightCategory, error) {
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBGuidanceLetterRecommendationCategory(tmp)
+	res := models.TRBGuidanceLetterInsightCategory(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+func (ec *executionContext) marshalOTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterInsightCategory) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	return res
 }
 
-func (ec *executionContext) unmarshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v any) (*models.TRBGuidanceLetterRecommendationCategory, error) {
+func (ec *executionContext) unmarshalOTRBGuidanceLetterInsightCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, v any) (*models.TRBGuidanceLetterInsightCategory, error) {
 	if v == nil {
 		return nil, nil
 	}
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBGuidanceLetterRecommendationCategory(tmp)
+	res := models.TRBGuidanceLetterInsightCategory(tmp)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v *models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+func (ec *executionContext) marshalOTRBGuidanceLetterInsightCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, sel ast.SelectionSet, v *models.TRBGuidanceLetterInsightCategory) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

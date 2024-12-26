@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@trussworks/react-uswds';
 import {
   GetTRBGuidanceLetterDocument,
-  TRBGuidanceLetterRecommendationCategory,
+  TRBGuidanceLetterInsightCategory,
   useDeleteTRBGuidanceLetterInsightMutation
 } from 'gql/gen/graphql';
 
@@ -121,7 +121,7 @@ const Insights = ({
                       ...insight,
                       category:
                         insight?.category ||
-                        TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED,
+                        TRBGuidanceLetterInsightCategory.UNCATEGORIZED,
                       // Revert link strings to object for form array field
                       links: insight.links.map(link => ({ link }))
                     },
