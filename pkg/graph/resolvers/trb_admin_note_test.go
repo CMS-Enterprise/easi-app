@@ -263,7 +263,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			Title:          "Admin Note Test Recommendation 1",
 			Recommendation: "Keep testing rec1",
 			Links:          []string{},
-			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 		createdRec1, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate1)
 		s.NoError(err)
@@ -275,7 +275,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			Title:          "Admin Note Test Recommendation 2",
 			Recommendation: "Keep testing rec2",
 			Links:          []string{},
-			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 		createdRec2, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate2)
 		s.NoError(err)
@@ -353,7 +353,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 			Title:          "Admin Note Test Recommendation - Different Request",
 			Recommendation: "Make sure this fails",
 			Links:          []string{},
-			Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 		createdRec, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate)
 		s.NoError(err)
@@ -478,7 +478,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 				Title:          fmt.Sprintf("Admin Note Test Recommendation %v", i),
 				Recommendation: "Testing category-specific data query resolver",
 				Links:          []string{},
-				Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+				Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
 			}
 			createdRec, errCreatingRec := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate)
 			s.NoError(errCreatingRec)

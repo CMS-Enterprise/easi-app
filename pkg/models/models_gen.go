@@ -926,9 +926,9 @@ type UpdateSystemIntakeReviewDatesInput struct {
 	ID      uuid.UUID  `json:"id"`
 }
 
-type UpdateTRBGuidanceLetterRecommendationOrderInput struct {
+type UpdateTRBGuidanceLetterInsightOrderInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
-	// List of the recommendation IDs in the new order they should be displayed
+	// List of the insight IDs in the new order they should be displayed
 	NewOrder []uuid.UUID                      `json:"newOrder"`
 	Category TRBGuidanceLetterInsightCategory `json:"category"`
 }

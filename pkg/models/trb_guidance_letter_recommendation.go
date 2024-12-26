@@ -25,17 +25,17 @@ type TRBGuidanceLetterInsight struct {
 type TRBGuidanceLetterInsightCategory string
 
 const (
-	TRBGuidanceLetterRecommendationCategoryRequirement    TRBGuidanceLetterInsightCategory = "REQUIREMENT"
-	TRBGuidanceLetterRecommendationCategoryRecommendation TRBGuidanceLetterInsightCategory = "RECOMMENDATION"
-	TRBGuidanceLetterRecommendationCategoryConsideration  TRBGuidanceLetterInsightCategory = "CONSIDERATION"
-	TRBGuidanceLetterRecommendationCategoryUncategorized  TRBGuidanceLetterInsightCategory = "UNCATEGORIZED"
+	TRBGuidanceLetterInsightCategoryRequirement    TRBGuidanceLetterInsightCategory = "REQUIREMENT"
+	TRBGuidanceLetterInsightCategoryRecommendation TRBGuidanceLetterInsightCategory = "RECOMMENDATION"
+	TRBGuidanceLetterInsightCategoryConsideration  TRBGuidanceLetterInsightCategory = "CONSIDERATION"
+	TRBGuidanceLetterInsightCategoryUncategorized  TRBGuidanceLetterInsightCategory = "UNCATEGORIZED"
 )
 
-var AllTRBGuidanceLetterRecommendationCategory = []TRBGuidanceLetterInsightCategory{
-	TRBGuidanceLetterRecommendationCategoryRequirement,
-	TRBGuidanceLetterRecommendationCategoryRecommendation,
-	TRBGuidanceLetterRecommendationCategoryConsideration,
-	TRBGuidanceLetterRecommendationCategoryUncategorized,
+var AllTRBGuidanceLetterInsightCategory = []TRBGuidanceLetterInsightCategory{
+	TRBGuidanceLetterInsightCategoryRequirement,
+	TRBGuidanceLetterInsightCategoryRecommendation,
+	TRBGuidanceLetterInsightCategoryConsideration,
+	TRBGuidanceLetterInsightCategoryUncategorized,
 }
 
 func (t TRBGuidanceLetterInsightCategory) String() string {

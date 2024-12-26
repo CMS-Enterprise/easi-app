@@ -2264,7 +2264,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UpdateRecommendationOrder($input: UpdateTRBGuidanceLetterRecommendationOrderInput!) {\r\n    updateTRBGuidanceLetterRecommendationOrder(input: $input) {\r\n        id\r\n        title\r\n        recommendation\r\n        category\r\n    }\r\n}",
+										"query": "mutation UpdateRecommendationOrder($input: UpdateTRBGuidanceLetterInsightOrderInput!) {\r\n    updateTRBGuidanceLetterRecommendationOrder(input: $input) {\r\n        id\r\n        title\r\n        recommendation\r\n        category\r\n    }\r\n}",
 										"variables": "{\r\n    \"input\": {\r\n        \"trbRequestId\": \"{{trbRequestID}}\",\r\n        \"newOrder\": [\r\n            \"cf8f6038-4ccc-4814-bd7f-9b0643dc7b20\",\r\n            \"13a78a54-450d-4674-ae7a-3423159f81ee\",\r\n            \"f625d3c1-c27e-4772-9665-8668f5ca8076\"\r\n        ],\r\n        \"category\": \"REQUIREMENT\"\r\n    }\r\n}"
 									}
 								},

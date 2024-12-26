@@ -291,7 +291,7 @@ func (s *Store) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID
 		}
 
 		// remove from order
-		if _, err := updateTRBGuidanceLetterInsightOrder(ctx, tx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
+		if _, err := updateTRBGuidanceLetterInsightOrder(ctx, tx, models.UpdateTRBGuidanceLetterInsightOrderInput{
 			TrbRequestID: deleted.TRBRequestID,
 			NewOrder:     newOrder,
 			Category:     deleted.Category,
@@ -308,7 +308,7 @@ func (s *Store) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID
 // using the order of the insight IDs passed in as newOrder. No other insight columns/fields are updated.
 func (s *Store) UpdateTRBGuidanceLetterInsightOrder(
 	ctx context.Context,
-	update models.UpdateTRBGuidanceLetterRecommendationOrderInput,
+	update models.UpdateTRBGuidanceLetterInsightOrderInput,
 ) ([]*models.TRBGuidanceLetterInsight, error) {
 	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBGuidanceLetterInsight, error) {
 		return updateTRBGuidanceLetterInsightOrder(ctx, tx, update)
@@ -318,7 +318,7 @@ func (s *Store) UpdateTRBGuidanceLetterInsightOrder(
 func updateTRBGuidanceLetterInsightOrder(
 	ctx context.Context,
 	tx *sqlx.Tx,
-	update models.UpdateTRBGuidanceLetterRecommendationOrderInput,
+	update models.UpdateTRBGuidanceLetterInsightOrderInput,
 ) ([]*models.TRBGuidanceLetterInsight, error) {
 	// convert newOrder into a slice of maps with entries for insight ID and new position,
 	// which can then be passed to SQL as JSON, then used in the query via json_to_recordset()

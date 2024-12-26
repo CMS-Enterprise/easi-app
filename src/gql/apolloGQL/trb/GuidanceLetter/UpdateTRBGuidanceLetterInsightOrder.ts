@@ -5,7 +5,7 @@ import TRBGuidanceLetterInsight from './TRBGuidanceLetterInsight';
 export default gql(/* GraphQL */ `
   ${TRBGuidanceLetterInsight}
   mutation UpdateTRBGuidanceLetterInsightOrder(
-    $input: UpdateTRBGuidanceLetterRecommendationOrderInput!
+    $input: UpdateTRBGuidanceLetterInsightOrderInput!
   ) {
     updateTRBGuidanceLetterInsightOrder(input: $input) {
       ...TRBGuidanceLetterInsight

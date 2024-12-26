@@ -2444,10 +2444,10 @@ enum TRBGuidanceLetterInsightCategory {
 
 """
 """
-input UpdateTRBGuidanceLetterRecommendationOrderInput {
+input UpdateTRBGuidanceLetterInsightOrderInput {
   trbRequestId: UUID!
   """
-  List of the recommendation IDs in the new order they should be displayed
+  List of the insight IDs in the new order they should be displayed
   """
   newOrder: [UUID!]!
   category: TRBGuidanceLetterInsightCategory!
@@ -2619,7 +2619,7 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   updateTRBGuidanceLetterInsight(input: UpdateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterInsight!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterInsightOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterInsight!]!
+  updateTRBGuidanceLetterInsightOrder(input: UpdateTRBGuidanceLetterInsightOrderInput!): [TRBGuidanceLetterInsight!]!
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBGuidanceLetterInsight(id: UUID!): TRBGuidanceLetterInsight!
   @hasRole(role: EASI_TRB_ADMIN)

@@ -992,7 +992,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		Title:          "Try again",
 		Recommendation: "I'd consider all options at this point",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+		Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
 	}
 	createdConsideration1, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, consideration1ToCreate)
 	if err != nil {
@@ -1004,7 +1004,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		Title:          "Turn it off and on",
 		Recommendation: "I'd consider a new computer",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+		Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
 	}
 	createdConsideration2, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, consideration2ToCreate)
 	if err != nil {
@@ -1016,7 +1016,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		Title:          "Throw it out",
 		Recommendation: "Consider the garbage can as a solution",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		Category:       models.TRBGuidanceLetterRecommendationCategoryConsideration,
+		Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
 	}
 	createdConsideration3, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, consideration3ToCreate)
 	if err != nil {
@@ -1029,7 +1029,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		Title:          "Restart your computer",
 		Recommendation: "I recommend you restart your computer",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+		Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
 	}
 	createdRecommendation1, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, recommendation1ToCreate)
 	if err != nil {
@@ -1041,7 +1041,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		Title:          "Unplug it and plug it back in",
 		Recommendation: "I recommend you unplug your computer and plug it back in",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+		Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
 	}
 	createdRecommendation2, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, recommendation2ToCreate)
 	if err != nil {
@@ -1053,7 +1053,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		Title:          "Get a new computer",
 		Recommendation: "Your computer is broken, you need a new one",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		Category:       models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+		Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
 	}
 	createdRecommendation3, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, recommendation3ToCreate)
 	if err != nil {
@@ -1066,7 +1066,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		Title:          "Buy a new one",
 		Recommendation: "You are required to buy a new computer",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
+		Category:       models.TRBGuidanceLetterInsightCategoryRequirement,
 	}
 	createdRequirement1, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, requirement1ToCreate)
 	if err != nil {
@@ -1078,7 +1078,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		Title:          "Click more times",
 		Recommendation: "You are required to click more times for the computer to unfreeze",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
+		Category:       models.TRBGuidanceLetterInsightCategoryRequirement,
 	}
 	createdRequirement2, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, requirement2ToCreate)
 	if err != nil {
@@ -1090,7 +1090,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		Title:          "Remove all files",
 		Recommendation: "You are required to delete everything",
 		Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		Category:       models.TRBGuidanceLetterRecommendationCategoryRequirement,
+		Category:       models.TRBGuidanceLetterInsightCategoryRequirement,
 	}
 	createdRequirement3, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, requirement3ToCreate)
 	if err != nil {
@@ -1103,7 +1103,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		Title:          "Come up with some categories",
 		Recommendation: "You'll really need to come up with some categories, or at least move this insight to a category!",
 		Links:          pq.StringArray{"categories.com"},
-		Category:       models.TRBGuidanceLetterRecommendationCategoryUncategorized,
+		Category:       models.TRBGuidanceLetterInsightCategoryUncategorized,
 	}
 	createdUncategorized1, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, uncategorized1ToCreate)
 	if err != nil {
@@ -1115,7 +1115,7 @@ func (s *seederConfig) addGuidanceLetterInsights(ctx context.Context, trb *model
 		Title:          "Organize your insights",
 		Recommendation: "Try moving these insights around to give them a category!",
 		Links:          pq.StringArray{},
-		Category:       models.TRBGuidanceLetterRecommendationCategoryUncategorized,
+		Category:       models.TRBGuidanceLetterInsightCategoryUncategorized,
 	}
 	createdUncategorized2, err := resolvers.CreateTRBGuidanceLetterInsight(ctx, s.store, uncategorized2ToCreate)
 	if err != nil {

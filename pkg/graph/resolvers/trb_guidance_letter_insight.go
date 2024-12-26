@@ -65,7 +65,7 @@ func UpdateTRBGuidanceLetterInsight(ctx context.Context, store *storage.Store, c
 	}
 
 	// do not allow users to set category to `uncategorized`
-	if insight.Category == models.TRBGuidanceLetterRecommendationCategoryUncategorized {
+	if insight.Category == models.TRBGuidanceLetterInsightCategoryUncategorized {
 		return nil, errors.New("cannot set category to `uncategorized` on an insight")
 	}
 
@@ -89,7 +89,7 @@ func UpdateTRBGuidanceLetterInsight(ctx context.Context, store *storage.Store, c
 func UpdateTRBGuidanceLetterInsightOrder(
 	ctx context.Context,
 	store *storage.Store,
-	input models.UpdateTRBGuidanceLetterRecommendationOrderInput,
+	input models.UpdateTRBGuidanceLetterInsightOrderInput,
 ) ([]*models.TRBGuidanceLetterInsight, error) {
 	// this extra database query is necessary for validation, so we don't mess up the insights' positions with an invalid order,
 	// but requiring an extra database call is unfortunate
@@ -166,7 +166,7 @@ func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store
 	m := map[models.TRBGuidanceLetterInsightCategory][]*models.TRBGuidanceLetterInsight{}
 
 	// prefill with all available categories
-	for _, category := range models.AllTRBGuidanceLetterRecommendationCategory {
+	for _, category := range models.AllTRBGuidanceLetterInsightCategory {
 		m[category] = []*models.TRBGuidanceLetterInsight{}
 	}
 
@@ -185,7 +185,7 @@ func cleanupGuidanceLetterInsightOrder(ctx context.Context, store *storage.Store
 		}
 
 		// save new order for each category
-		if _, err := store.UpdateTRBGuidanceLetterInsightOrder(ctx, models.UpdateTRBGuidanceLetterRecommendationOrderInput{
+		if _, err := store.UpdateTRBGuidanceLetterInsightOrder(ctx, models.UpdateTRBGuidanceLetterInsightOrderInput{
 			TrbRequestID: trbRequestID,
 			NewOrder:     ordered,
 			Category:     category,
