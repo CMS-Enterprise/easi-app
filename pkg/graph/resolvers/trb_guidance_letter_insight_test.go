@@ -46,11 +46,11 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		linksChanges := []string{"bing.com", "yahoo.com", "pets.com"}
 		changes := map[string]interface{}{
-			"id":             created.ID,
-			"trbRequestId":   trbRequest.ID.String(),
-			"title":          "Restart your PC",
-			"recommendation": "I recommend you restart your PC",
-			"links":          linksChanges,
+			"id":           created.ID,
+			"trbRequestId": trbRequest.ID.String(),
+			"title":        "Restart your PC",
+			"insight":      "I recommend you restart your PC",
+			"links":        linksChanges,
 		}
 		err = ApplyChangesAndMetaData(changes, created, appcontext.Principal(ctx))
 		s.NoError(err)
@@ -59,7 +59,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		updated, err := UpdateTRBGuidanceLetterInsight(ctx, store, changes)
 		s.NoError(err)
 		s.EqualValues(changes["title"], updated.Title)
-		s.EqualValues(changes["recommendation"], updated.Insight)
+		s.EqualValues(changes["insight"], updated.Insight)
 		s.EqualValues(linksChanges[0], updated.Links[0])
 		s.EqualValues(linksChanges[1], updated.Links[1])
 		s.EqualValues(linksChanges[2], updated.Links[2])
@@ -96,11 +96,11 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		// Attempt to update the recommendation
 		linksChanges := []string{"bing.com", "yahoo.com", "pets.com"}
 		changes := map[string]interface{}{
-			"id":             created.ID,
-			"trbRequestId":   trbRequest.ID.String(),
-			"title":          "Restart your PC",
-			"recommendation": "I recommend you restart your PC",
-			"links":          linksChanges,
+			"id":           created.ID,
+			"trbRequestId": trbRequest.ID.String(),
+			"title":        "Restart your PC",
+			"insight":      "I recommend you restart your PC",
+			"links":        linksChanges,
 		}
 
 		// This update should fail, since the resolver won't be able to fetch the row
