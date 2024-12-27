@@ -23,17 +23,17 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// Test creation of a recommendation
 		toCreate := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer",
-			Recommendation: "I recommend you restart your computer",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer",
+			Insight:      "I recommend you restart your computer",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 
 		created, err := CreateTRBGuidanceLetterInsight(ctx, store, &toCreate)
 		s.NoError(err)
 		s.EqualValues(toCreate.Title, created.Title)
-		s.EqualValues(toCreate.Recommendation, created.Recommendation)
+		s.EqualValues(toCreate.Insight, created.Insight)
 		s.EqualValues(toCreate.Links[0], created.Links[0])
 		s.EqualValues(toCreate.Links[1], created.Links[1])
 		s.EqualValues(toCreate.Category, created.Category)
@@ -59,7 +59,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		updated, err := UpdateTRBGuidanceLetterInsight(ctx, store, changes)
 		s.NoError(err)
 		s.EqualValues(changes["title"], updated.Title)
-		s.EqualValues(changes["recommendation"], updated.Recommendation)
+		s.EqualValues(changes["recommendation"], updated.Insight)
 		s.EqualValues(linksChanges[0], updated.Links[0])
 		s.EqualValues(linksChanges[1], updated.Links[1])
 		s.EqualValues(linksChanges[2], updated.Links[2])
@@ -78,11 +78,11 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// Test creation of a recommendation
 		toCreate := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer",
-			Recommendation: "I recommend you restart your computer",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer",
+			Insight:      "I recommend you restart your computer",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 
 		// Create a recommendation
@@ -118,11 +118,11 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		createdRecommendations := []*models.TRBGuidanceLetterInsight{}
 		for i := 0; i < 3; i++ {
 			toCreate := models.TRBGuidanceLetterInsight{
-				TRBRequestID:   trbRequest.ID,
-				Title:          "Restart your computer",
-				Recommendation: "I recommend you restart your computer",
-				Links:          pq.StringArray{"google.com", "askjeeves.com"},
-				Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+				TRBRequestID: trbRequest.ID,
+				Title:        "Restart your computer",
+				Insight:      "I recommend you restart your computer",
+				Links:        pq.StringArray{"google.com", "askjeeves.com"},
+				Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 			}
 			created, err := CreateTRBGuidanceLetterInsight(ctx, store, &toCreate)
 			s.NoError(err)
@@ -151,19 +151,19 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// create insights of recommendation category
 		recommendationToCreate1 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer1",
-			Recommendation: "I recommend you restart your computer1",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer1",
+			Insight:      "I recommend you restart your computer1",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 
 		recommendationToCreate2 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer2",
-			Recommendation: "I recommend you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer2",
+			Insight:      "I recommend you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 
 		createdRecommendation1, err := CreateTRBGuidanceLetterInsight(ctx, store, &recommendationToCreate1)
@@ -178,19 +178,19 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// create insights of consideration category
 		considerationToCreate1 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer3",
-			Recommendation: "I consider you restart your computer1",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer3",
+			Insight:      "I consider you restart your computer1",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryConsideration,
 		}
 
 		considerationToCreate2 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer4",
-			Recommendation: "I consider you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer4",
+			Insight:      "I consider you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryConsideration,
 		}
 
 		createdConsideration1, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate1)
@@ -205,19 +205,19 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// create insights of requirement category
 		requirementToCreate1 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer5",
-			Recommendation: "I require you restart your computer1",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRequirement,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer5",
+			Insight:      "I require you restart your computer1",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRequirement,
 		}
 
 		requirementToCreate2 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer6",
-			Recommendation: "I require you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRequirement,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer6",
+			Insight:      "I require you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRequirement,
 		}
 
 		createdRequirement1, err := CreateTRBGuidanceLetterInsight(ctx, store, &requirementToCreate1)
@@ -232,11 +232,11 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// add a third consideration, confirm index position
 		considerationToCreate3 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer7",
-			Recommendation: "I consider you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer7",
+			Insight:      "I consider you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryConsideration,
 		}
 
 		createdConsideration3, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate3)
@@ -256,19 +256,19 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// create insights of recommendation category
 		recommendationToCreate1 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer1",
-			Recommendation: "I recommend you restart your computer1",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer1",
+			Insight:      "I recommend you restart your computer1",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 
 		recommendationToCreate2 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer2",
-			Recommendation: "I recommend you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer2",
+			Insight:      "I recommend you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 
 		createdRecommendation1, err := CreateTRBGuidanceLetterInsight(ctx, store, &recommendationToCreate1)
@@ -283,27 +283,27 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// create insights of consideration category
 		considerationToCreate1 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer3",
-			Recommendation: "I consider you restart your computer1",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer3",
+			Insight:      "I consider you restart your computer1",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryConsideration,
 		}
 
 		considerationToCreate2 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer4",
-			Recommendation: "I consider you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer4",
+			Insight:      "I consider you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryConsideration,
 		}
 
 		considerationToCreate3 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer7",
-			Recommendation: "I consider you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer7",
+			Insight:      "I consider you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryConsideration,
 		}
 
 		createdConsideration1, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate1)
@@ -323,19 +323,19 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// create insights of requirement category
 		requirementToCreate1 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer5",
-			Recommendation: "I require you restart your computer1",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRequirement,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer5",
+			Insight:      "I require you restart your computer1",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRequirement,
 		}
 
 		requirementToCreate2 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer6",
-			Recommendation: "I require you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRequirement,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer6",
+			Insight:      "I require you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRequirement,
 		}
 
 		createdRequirement1, err := CreateTRBGuidanceLetterInsight(ctx, store, &requirementToCreate1)
@@ -386,19 +386,19 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// create insights of recommendation category
 		recommendationToCreate1 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer1",
-			Recommendation: "I recommend you restart your computer1",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer1",
+			Insight:      "I recommend you restart your computer1",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 
 		recommendationToCreate2 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer2",
-			Recommendation: "I recommend you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer2",
+			Insight:      "I recommend you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 
 		createdRecommendation1, err := CreateTRBGuidanceLetterInsight(ctx, store, &recommendationToCreate1)
@@ -413,27 +413,27 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// create insights of consideration category
 		considerationToCreate1 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer3",
-			Recommendation: "I consider you restart your computer1",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer3",
+			Insight:      "I consider you restart your computer1",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryConsideration,
 		}
 
 		considerationToCreate2 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer4",
-			Recommendation: "I consider you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer4",
+			Insight:      "I consider you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryConsideration,
 		}
 
 		considerationToCreate3 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer7",
-			Recommendation: "I consider you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryConsideration,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer7",
+			Insight:      "I consider you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryConsideration,
 		}
 
 		createdConsideration1, err := CreateTRBGuidanceLetterInsight(ctx, store, &considerationToCreate1)
@@ -453,19 +453,19 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// create insights of requirement category
 		requirementToCreate1 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer5",
-			Recommendation: "I require you restart your computer1",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRequirement,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer5",
+			Insight:      "I require you restart your computer1",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRequirement,
 		}
 
 		requirementToCreate2 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer6",
-			Recommendation: "I require you restart your computer2",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRequirement,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer6",
+			Insight:      "I require you restart your computer2",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRequirement,
 		}
 
 		createdRequirement1, err := CreateTRBGuidanceLetterInsight(ctx, store, &requirementToCreate1)
@@ -509,11 +509,11 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// create insights of recommendation category
 		recommendationToCreate1 := models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Restart your computer1",
-			Recommendation: "I recommend you restart your computer1",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Restart your computer1",
+			Insight:      "I recommend you restart your computer1",
+			Links:        pq.StringArray{"google.com", "askjeeves.com"},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 
 		createdRecommendation1, err := CreateTRBGuidanceLetterInsight(ctx, store, &recommendationToCreate1)

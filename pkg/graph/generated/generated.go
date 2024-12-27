@@ -1399,7 +1399,6 @@ type TRBGuidanceLetterResolver interface {
 	Insights(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterInsight, error)
 }
 type TRBGuidanceLetterInsightResolver interface {
-	Insight(ctx context.Context, obj *models.TRBGuidanceLetterInsight) (models.HTML, error)
 	Links(ctx context.Context, obj *models.TRBGuidanceLetterInsight) ([]string, error)
 	Author(ctx context.Context, obj *models.TRBGuidanceLetterInsight) (*models.UserInfo, error)
 }
@@ -51745,7 +51744,7 @@ func (ec *executionContext) _TRBGuidanceLetterInsight_insight(ctx context.Contex
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBGuidanceLetterInsight().Insight(rctx, obj)
+		return obj.Insight, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -51766,8 +51765,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_insight(_ cont
 	fc = &graphql.FieldContext{
 		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type HTML does not have child fields")
 		},
@@ -71728,41 +71727,10 @@ func (ec *executionContext) _TRBGuidanceLetterInsight(ctx context.Context, sel a
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "insight":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._TRBGuidanceLetterInsight_insight(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._TRBGuidanceLetterInsight_insight(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
 			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "links":
 			field := field
 

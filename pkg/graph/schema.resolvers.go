@@ -1096,11 +1096,11 @@ func (r *mutationResolver) CreateTRBGuidanceLetterInsight(ctx context.Context, i
 		ctx,
 		r.store,
 		&models.TRBGuidanceLetterInsight{
-			TRBRequestID:   input.TrbRequestID,
-			Title:          input.Title,
-			Recommendation: input.Insight,
-			Links:          links,
-			Category:       input.Category,
+			TRBRequestID: input.TrbRequestID,
+			Title:        input.Title,
+			Insight:      input.Insight,
+			Links:        links,
+			Category:     input.Category,
 		})
 }
 
@@ -2013,11 +2013,6 @@ func (r *tRBGuidanceLetterResolver) Author(ctx context.Context, obj *models.TRBG
 // Insights is the resolver for the insights field.
 func (r *tRBGuidanceLetterResolver) Insights(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterInsight, error) {
 	return resolvers.GetTRBGuidanceLetterInsightsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
-}
-
-// Insight is the resolver for the insight field.
-func (r *tRBGuidanceLetterInsightResolver) Insight(ctx context.Context, obj *models.TRBGuidanceLetterInsight) (models.HTML, error) {
-	panic(fmt.Errorf("not implemented: Insight - insight"))
 }
 
 // Links is the resolver for the links field.

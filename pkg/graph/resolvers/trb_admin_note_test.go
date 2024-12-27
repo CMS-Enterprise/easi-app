@@ -259,11 +259,11 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 
 		// set up recommendations
 		recToCreate1 := &models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Admin Note Test Insight 1",
-			Recommendation: "Keep testing rec1",
-			Links:          []string{},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Admin Note Test Insight 1",
+			Insight:      "Keep testing rec1",
+			Links:        []string{},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 		createdRec1, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate1)
 		s.NoError(err)
@@ -271,11 +271,11 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 		recommendationID1 := createdRec1.ID
 
 		recToCreate2 := &models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequest.ID,
-			Title:          "Admin Note Test Insight 2",
-			Recommendation: "Keep testing rec2",
-			Links:          []string{},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequest.ID,
+			Title:        "Admin Note Test Insight 2",
+			Insight:      "Keep testing rec2",
+			Links:        []string{},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 		createdRec2, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate2)
 		s.NoError(err)
@@ -349,11 +349,11 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGuidanceLetter() {
 
 		// create recommendation attached to guidance letter for request 2
 		recToCreate := &models.TRBGuidanceLetterInsight{
-			TRBRequestID:   trbRequestForRecommendation.ID,
-			Title:          "Admin Note Test Recommendation - Different Request",
-			Recommendation: "Make sure this fails",
-			Links:          []string{},
-			Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+			TRBRequestID: trbRequestForRecommendation.ID,
+			Title:        "Admin Note Test Insight - Different Request",
+			Insight:      "Make sure this fails",
+			Links:        []string{},
+			Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 		}
 		createdRec, err := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate)
 		s.NoError(err)
@@ -474,11 +474,11 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		recommendationIDs := []uuid.UUID{}
 		for i := 0; i < 3; i++ {
 			recToCreate := &models.TRBGuidanceLetterInsight{
-				TRBRequestID:   trbRequest.ID,
-				Title:          fmt.Sprintf("Admin Note Test Recommendation %v", i),
-				Recommendation: "Testing category-specific data query resolver",
-				Links:          []string{},
-				Category:       models.TRBGuidanceLetterInsightCategoryRecommendation,
+				TRBRequestID: trbRequest.ID,
+				Title:        fmt.Sprintf("Admin Note Test Insight %v", i),
+				Insight:      "Testing category-specific data query resolver",
+				Links:        []string{},
+				Category:     models.TRBGuidanceLetterInsightCategoryRecommendation,
 			}
 			createdRec, errCreatingRec := CreateTRBGuidanceLetterInsight(ctx, store, recToCreate)
 			s.NoError(errCreatingRec)
