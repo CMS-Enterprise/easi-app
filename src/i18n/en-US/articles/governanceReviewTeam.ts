@@ -328,7 +328,9 @@ const governanceReviewTeam = {
       'Nicholas Downey',
       'Savannah Huttenberger',
       'Tara Ross',
-      'Valerie Hartz'
+      'Valerie Hartz',
+      'Dominese Withers',
+      'Kayla Jones'
     ]
   }
 };
