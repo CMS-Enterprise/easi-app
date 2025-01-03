@@ -201,7 +201,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                   <h4
                     class="margin-top-0 margin-bottom-2"
                   >
-                    Recommendation 1
+                    Insight 1
                   </h4>
                   <div
                     class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
@@ -214,7 +214,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                         <p
                           data-nodeid="5"
                         >
-                          This is the recommendation text
+                          This is the insight text
                         </p>
                         
 
@@ -326,7 +326,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                   <h4
                     class="margin-top-0 margin-bottom-2"
                   >
-                    Recommendation 2
+                    Insight 2
                   </h4>
                   <div
                     class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
@@ -339,7 +339,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                         <p
                           data-nodeid="7"
                         >
-                          This is the recommendation text
+                          This is the insight text
                         </p>
                         
 
@@ -451,7 +451,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                   <h4
                     class="margin-top-0 margin-bottom-2"
                   >
-                    Recommendation 3
+                    Insight 3
                   </h4>
                   <div
                     class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
@@ -464,7 +464,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                         <p
                           data-nodeid="9"
                         >
-                          This is the recommendation text
+                          This is the insight text
                         </p>
                         
 

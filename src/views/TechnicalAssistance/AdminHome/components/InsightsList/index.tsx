@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  TRBGuidanceLetterInsightCategory,
   TRBGuidanceLetterInsightFragment,
-  TRBGuidanceLetterRecommendationCategory,
   useGetTRBGuidanceLetterInsightsQuery
 } from 'gql/gen/graphql';
 
@@ -60,24 +60,22 @@ export default function InsightsList({
   }
 
   const requirements = insights.filter(
-    insight =>
-      insight.category === TRBGuidanceLetterRecommendationCategory.REQUIREMENT
+    insight => insight.category === TRBGuidanceLetterInsightCategory.REQUIREMENT
   );
 
   const recommendations = insights.filter(
     insight =>
-      insight.category ===
-      TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
+      insight.category === TRBGuidanceLetterInsightCategory.RECOMMENDATION
   );
 
   const considerations = insights.filter(
     insight =>
-      insight.category === TRBGuidanceLetterRecommendationCategory.CONSIDERATION
+      insight.category === TRBGuidanceLetterInsightCategory.CONSIDERATION
   );
 
   const uncategorized = insights.filter(
     insight =>
-      insight.category === TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED
+      insight.category === TRBGuidanceLetterInsightCategory.UNCATEGORIZED
   );
 
   return (
@@ -106,7 +104,7 @@ export default function InsightsList({
 
       <InsightsCategory
         insights={requirements}
-        category={TRBGuidanceLetterRecommendationCategory.REQUIREMENT}
+        category={TRBGuidanceLetterInsightCategory.REQUIREMENT}
         trbRequestId={trbRequestId}
         editable={editable}
         edit={edit}
@@ -116,7 +114,7 @@ export default function InsightsList({
 
       <InsightsCategory
         insights={recommendations}
-        category={TRBGuidanceLetterRecommendationCategory.RECOMMENDATION}
+        category={TRBGuidanceLetterInsightCategory.RECOMMENDATION}
         trbRequestId={trbRequestId}
         editable={editable}
         edit={edit}
@@ -126,7 +124,7 @@ export default function InsightsList({
 
       <InsightsCategory
         insights={considerations}
-        category={TRBGuidanceLetterRecommendationCategory.CONSIDERATION}
+        category={TRBGuidanceLetterInsightCategory.CONSIDERATION}
         trbRequestId={trbRequestId}
         editable={editable}
         edit={edit}
@@ -137,7 +135,7 @@ export default function InsightsList({
       {uncategorized.length > 0 && (
         <InsightsCategory
           insights={uncategorized}
-          category={TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED}
+          category={TRBGuidanceLetterInsightCategory.UNCATEGORIZED}
           trbRequestId={trbRequestId}
           editable={editable}
           edit={edit}

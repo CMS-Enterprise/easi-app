@@ -42,7 +42,7 @@ describe('TRB guidance and insights list', () => {
       })
     );
 
-    expect(insight.getByText(insights[0].recommendation));
+    expect(insight.getByText(insights[0].insight));
 
     const links = insight.getAllByRole('link');
     expect(links.length).toEqual(insights[0].links.length);

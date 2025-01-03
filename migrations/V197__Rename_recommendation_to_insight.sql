@@ -1,0 +1,22 @@
+-- trb_admin_notes_trb_admin_note_recommendations_links
+ALTER TABLE trb_admin_notes_trb_admin_note_recommendations_links
+  RENAME COLUMN trb_guidance_letter_recommendation_id TO trb_guidance_letter_insight_id;
+
+ALTER TABLE trb_admin_notes_trb_admin_note_recommendations_links
+  RENAME CONSTRAINT fk_admin_notes_have_same_request_id_as_recommendation_link TO fk_admin_notes_have_same_request_id_as_insight_link;
+
+ALTER TABLE trb_admin_notes_trb_admin_note_recommendations_links
+  RENAME CONSTRAINT fk_recommendations_have_same_request_id_as_recommendation_link TO fk_insights_have_same_request_id_as_insight_link;
+
+COMMENT ON CONSTRAINT fk_insights_have_same_request_id_as_insight_link ON trb_admin_notes_trb_admin_note_recommendations_links IS
+  'This checks that the referenced insight belongs to the same TRB request as this record';
+
+ALTER TABLE trb_admin_notes_trb_admin_note_recommendations_links
+  RENAME TO trb_admin_notes_trb_admin_note_insights_links;
+
+-- trb_guidance_letter_recommendations
+ALTER TABLE trb_guidance_letter_recommendations
+  RENAME COLUMN recommendation TO insight;
+
+ALTER TABLE trb_guidance_letter_recommendations
+  RENAME TO trb_guidance_letter_insights;

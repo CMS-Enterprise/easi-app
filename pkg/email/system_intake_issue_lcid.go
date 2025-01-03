@@ -22,7 +22,7 @@ type systemIntakeIssueLCIDEmailParameters struct {
 	LifecycleScope           template.HTML
 	LifecycleCostBaseline    *string
 	DecisionNextSteps        template.HTML
-	TRBRecommendation        string
+	TRBInsight               string
 	RequesterName            string
 	SystemIntakeRequestLink  string
 	SystemIntakeAdminLink    string
@@ -71,7 +71,7 @@ func (sie systemIntakeEmails) SystemIntakeIssueLCIDBody(
 		LifecycleScope:           lifecycleScope.ToTemplate(),
 		LifecycleCostBaseline:    lifecycleCostBaseline,
 		DecisionNextSteps:        decisionNextSteps.ToTemplate(),
-		TRBRecommendation:        trbFollowUpReadable,
+		TRBInsight:               trbFollowUpReadable,
 		RequesterName:            requesterName,
 		SystemIntakeRequestLink:  sie.client.urlFromPath(requesterPath),
 		SystemIntakeAdminLink:    sie.client.urlFromPath(adminPath),

@@ -305,7 +305,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
                       <h4
                         class="margin-top-0 margin-bottom-2"
                       >
-                        Recommendation 1
+                        Insight 1
                       </h4>
                       <div
                         class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
@@ -318,7 +318,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
                             <p
                               data-nodeid="3"
                             >
-                              This is the recommendation text
+                              This is the insight text
                             </p>
                             
 
@@ -372,7 +372,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
                       <h4
                         class="margin-top-0 margin-bottom-2"
                       >
-                        Recommendation 2
+                        Insight 2
                       </h4>
                       <div
                         class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
@@ -385,7 +385,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
                             <p
                               data-nodeid="5"
                             >
-                              This is the recommendation text
+                              This is the insight text
                             </p>
                             
 
@@ -439,7 +439,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
                       <h4
                         class="margin-top-0 margin-bottom-2"
                       >
-                        Recommendation 3
+                        Insight 3
                       </h4>
                       <div
                         class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
@@ -452,7 +452,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
                             <p
                               data-nodeid="7"
                             >
-                              This is the recommendation text
+                              This is the insight text
                             </p>
                             
 
@@ -789,7 +789,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
                       <h4
                         class="margin-top-0 margin-bottom-2"
                       >
-                        Recommendation 1
+                        Insight 1
                       </h4>
                       <div
                         class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
@@ -802,7 +802,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
                             <p
                               data-nodeid="11"
                             >
-                              This is the recommendation text
+                              This is the insight text
                             </p>
                             
 
@@ -856,7 +856,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
                       <h4
                         class="margin-top-0 margin-bottom-2"
                       >
-                        Recommendation 2
+                        Insight 2
                       </h4>
                       <div
                         class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
@@ -869,7 +869,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
                             <p
                               data-nodeid="13"
                             >
-                              This is the recommendation text
+                              This is the insight text
                             </p>
                             
 
@@ -923,7 +923,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
                       <h4
                         class="margin-top-0 margin-bottom-2"
                       >
-                        Recommendation 3
+                        Insight 3
                       </h4>
                       <div
                         class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
@@ -936,7 +936,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
                             <p
                               data-nodeid="15"
                             >
-                              This is the recommendation text
+                              This is the insight text
                             </p>
                             
 

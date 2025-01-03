@@ -134,7 +134,7 @@ const useAddNote = (trbRequestId: string) => {
         noteText: formData.noteText,
         appliesToMeetingSummary: false,
         appliesToNextSteps: false,
-        recommendationIDs: []
+        insightIDs: []
       };
 
       // Set input values based on sections array
@@ -147,7 +147,7 @@ const useAddNote = (trbRequestId: string) => {
             input.appliesToNextSteps = true;
             break;
           default:
-            input.recommendationIDs.push(value);
+            input.insightIDs.push(value);
             break;
         }
       });

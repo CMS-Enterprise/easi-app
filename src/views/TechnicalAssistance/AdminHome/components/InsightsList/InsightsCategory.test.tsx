@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
-import { TRBGuidanceLetterRecommendationCategory } from 'gql/gen/graphql';
+import { TRBGuidanceLetterInsightCategory } from 'gql/gen/graphql';
 
 import { guidanceLetter, trbRequest } from 'data/mock/trbRequest';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -13,15 +13,14 @@ describe('Insights category', () => {
   it('renders the category', () => {
     const recommendations = insights.filter(
       insight =>
-        insight.category ===
-        TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
+        insight.category === TRBGuidanceLetterInsightCategory.RECOMMENDATION
     );
 
     render(
       <VerboseMockedProvider>
         <InsightsCategory
           trbRequestId={trbRequest.id}
-          category={TRBGuidanceLetterRecommendationCategory.RECOMMENDATION}
+          category={TRBGuidanceLetterInsightCategory.RECOMMENDATION}
           insights={recommendations}
         />
       </VerboseMockedProvider>
@@ -47,14 +46,14 @@ describe('Insights category', () => {
   it('renders uncategorized insights', () => {
     const uncategorized = {
       ...insights[0],
-      category: TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED
+      category: TRBGuidanceLetterInsightCategory.UNCATEGORIZED
     };
 
     render(
       <VerboseMockedProvider>
         <InsightsCategory
           trbRequestId={trbRequest.id}
-          category={TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED}
+          category={TRBGuidanceLetterInsightCategory.UNCATEGORIZED}
           insights={[uncategorized]}
           editable
         />

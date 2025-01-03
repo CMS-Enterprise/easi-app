@@ -10,12 +10,12 @@ import {
 import userEvent from '@testing-library/user-event';
 import {
   CreateTRBGuidanceLetterInsightDocument,
+  CreateTRBGuidanceLetterInsightInput,
   CreateTRBGuidanceLetterInsightMutation,
   CreateTRBGuidanceLetterInsightMutationVariables,
-  CreateTRBGuidanceLetterRecommendationInput,
   GetTRBGuidanceLetterQuery,
   GetTRBGuidanceLetterQueryVariables,
-  TRBGuidanceLetterRecommendationCategory
+  TRBGuidanceLetterInsightCategory
 } from 'gql/gen/graphql';
 import i18next from 'i18next';
 
@@ -33,12 +33,12 @@ import typeRichText from 'utils/testing/typeRichText';
 
 import GuidanceLetterForm from '.';
 
-const mockInsight: CreateTRBGuidanceLetterRecommendationInput = {
+const mockInsight: CreateTRBGuidanceLetterInsightInput = {
   trbRequestId: mockTrbRequestId,
-  title: 'Recommendation 3',
-  recommendation: 'Recommendation description text',
+  title: 'Insight 3',
+  insight: 'Insight description text',
   links: ['google.com', 'easi.cms.gov'],
-  category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
+  category: TRBGuidanceLetterInsightCategory.RECOMMENDATION
 };
 
 const createTrbInsightQuery: MockedQuery<
@@ -54,8 +54,8 @@ const createTrbInsightQuery: MockedQuery<
   result: {
     data: {
       __typename: 'Mutation',
-      createTRBGuidanceLetterRecommendation: {
-        __typename: 'TRBGuidanceLetterRecommendation',
+      createTRBGuidanceLetterInsight: {
+        __typename: 'TRBGuidanceLetterInsight',
         id: '670fdf6d-761b-415f-a108-2ebc814288c3',
         ...mockInsight
       }
@@ -167,11 +167,9 @@ describe('TRB Guidance Letter Form', () => {
     expect(titleInput).toHaveValue(mockInsight.title);
 
     // Description field
-    const descriptionInput = await screen.findByTestId('recommendation');
-    await typeRichText(descriptionInput, mockInsight.recommendation);
-    expect(descriptionInput).toContainHTML(
-      `<p>${mockInsight.recommendation!}</p>`
-    );
+    const descriptionInput = await screen.findByTestId('insight');
+    await typeRichText(descriptionInput, mockInsight.insight);
+    expect(descriptionInput).toContainHTML(`<p>${mockInsight.insight!}</p>`);
 
     // Add resource link
     const addLinkButton = await findByRole('button', {

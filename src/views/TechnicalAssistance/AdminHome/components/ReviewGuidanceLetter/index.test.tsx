@@ -25,7 +25,7 @@ describe('TRB Guidance Letter review component', () => {
     expect(screen.getByText('Meeting summary text')).toBeInTheDocument();
 
     // Guidance letter renders
-    expect(await screen.findByText('Recommendation 1')).toBeInTheDocument();
+    expect(await screen.findByText('Insight 1')).toBeInTheDocument();
 
     // Snapshot
     expect(asFragment()).toMatchSnapshot();

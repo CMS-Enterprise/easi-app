@@ -13,7 +13,7 @@ import {
   TRBAdminNoteCategory,
   TRBAdminNoteFragment,
   TRBGuidanceLetterFragment,
-  TRBGuidanceLetterRecommendationCategory
+  TRBGuidanceLetterInsightCategory
 } from 'gql/gen/graphql';
 
 import GetRequestsQuery from 'queries/GetRequestsQuery';
@@ -345,27 +345,27 @@ export const guidanceLetter: NonNullable<TRBGuidanceLetterFragment> = {
   followupPoint: 'Six months from now',
   insights: [
     {
-      __typename: 'TRBGuidanceLetterRecommendation',
-      category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
+      __typename: 'TRBGuidanceLetterInsight',
+      category: TRBGuidanceLetterInsightCategory.RECOMMENDATION,
       id: '682c9839-ac4c-48f5-8ac3-8693573e4dd8',
-      title: 'Recommendation 1',
-      recommendation: 'This is the recommendation text',
+      title: 'Insight 1',
+      insight: 'This is the insight text',
       links: ['easi.cms.gov', 'https://google.com']
     },
     {
-      __typename: 'TRBGuidanceLetterRecommendation',
-      category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
+      __typename: 'TRBGuidanceLetterInsight',
+      category: TRBGuidanceLetterInsightCategory.RECOMMENDATION,
       id: 'a118705f-c87b-48ef-a812-b3264ad00abe',
-      title: 'Recommendation 2',
-      recommendation: 'This is the recommendation text',
+      title: 'Insight 2',
+      insight: 'This is the insight text',
       links: ['easi.cms.gov', 'cms.gov']
     },
     {
-      __typename: 'TRBGuidanceLetterRecommendation',
-      category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
+      __typename: 'TRBGuidanceLetterInsight',
+      category: TRBGuidanceLetterInsightCategory.RECOMMENDATION,
       id: 'e73fefbd-0d1a-4345-a217-2ce1ebe64d4f',
-      title: 'Recommendation 3',
-      recommendation: 'This is the recommendation text',
+      title: 'Insight 3',
+      insight: 'This is the insight text',
       links: []
     }
   ],

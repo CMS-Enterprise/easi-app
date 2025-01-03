@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event';
 import {
   TRBAdminNoteCategory,
   TRBAdminNoteFragment,
-  TRBGuidanceLetterRecommendationCategory
+  TRBGuidanceLetterInsightCategory
 } from 'gql/gen/graphql';
 import i18next from 'i18next';
 
@@ -88,16 +88,16 @@ const adminNotes: TRBAdminNoteFragment[] = [
       appliesToNextSteps: false,
       insights: [
         {
-          __typename: 'TRBGuidanceLetterRecommendation',
+          __typename: 'TRBGuidanceLetterInsight',
           id: 'c5a60133-51a0-415c-bdc0-920636f5e3aa',
-          category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
+          category: TRBGuidanceLetterInsightCategory.RECOMMENDATION,
           title: 'Recommendation One',
           deletedAt: null
         },
         {
-          __typename: 'TRBGuidanceLetterRecommendation',
+          __typename: 'TRBGuidanceLetterInsight',
           id: 'c1847e30-91c0-419c-93f9-b9d87b90520a',
-          category: TRBGuidanceLetterRecommendationCategory.RECOMMENDATION,
+          category: TRBGuidanceLetterInsightCategory.RECOMMENDATION,
           title: 'Recommendation Two',
           deletedAt: null
         }
