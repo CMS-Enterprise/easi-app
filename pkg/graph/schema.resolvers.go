@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -2017,12 +2016,18 @@ func (r *tRBGuidanceLetterResolver) Insights(ctx context.Context, obj *models.TR
 
 // Links is the resolver for the links field.
 func (r *tRBGuidanceLetterInsightResolver) Links(ctx context.Context, obj *models.TRBGuidanceLetterInsight) ([]string, error) {
-	panic(fmt.Errorf("not implemented: Links - links"))
+	links := models.ConvertEnums[string](obj.Links)
+	return links, nil
 }
 
 // Author is the resolver for the author field.
 func (r *tRBGuidanceLetterInsightResolver) Author(ctx context.Context, obj *models.TRBGuidanceLetterInsight) (*models.UserInfo, error) {
-	panic(fmt.Errorf("not implemented: Author - author"))
+	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	return authorInfo, nil
 }
 
 // Status is the resolver for the status field.

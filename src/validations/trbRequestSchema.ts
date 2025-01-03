@@ -161,7 +161,7 @@ export const guidanceInsightSchema = yup.object({
       TRBGuidanceLetterInsightCategory.CONSIDERATION
     ])
     .required(),
-  recommendation: yup.string().required(),
+  insight: yup.string().required(),
   links: yup.array(
     yup.object({
       link: yup.string().required()

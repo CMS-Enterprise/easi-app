@@ -152,8 +152,9 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
           }
           callback?.();
         } catch (e) {
+          console.info(e);
           if (e instanceof ApolloError) {
-            setShowFormError(true);
+            // setShowFormError(true);
           }
         }
       })(),
@@ -295,15 +296,15 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
         <FormGroup className="margin-top-3" error={!!errors?.insight}>
           <Label
             className="text-normal"
-            id="recommendation-label"
-            htmlFor="recommendation"
+            id="insight-label"
+            htmlFor="insight"
             required
           >
             {t('Description')}
           </Label>
           <ErrorMessage
             errors={errors}
-            name="recommendation"
+            name="insight"
             render={() => (
               <FieldErrorMsg>{t('errors.fillBlank')}</FieldErrorMsg>
             )}
@@ -314,9 +315,9 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
             render={({ field, fieldState: { error } }) => (
               <RichTextEditor
                 editableProps={{
-                  id: 'recommendation',
-                  'data-testid': 'recommendation',
-                  'aria-labelledby': 'recommendation-label'
+                  id: 'insight',
+                  'data-testid': 'insight',
+                  'aria-labelledby': 'insight-label'
                 }}
                 field={{ ...field, value: field.value || '' }}
                 required

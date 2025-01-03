@@ -167,7 +167,7 @@ describe('TRB Guidance Letter Form', () => {
     expect(titleInput).toHaveValue(mockInsight.title);
 
     // Description field
-    const descriptionInput = await screen.findByTestId('recommendation');
+    const descriptionInput = await screen.findByTestId('insight');
     await typeRichText(descriptionInput, mockInsight.insight);
     expect(descriptionInput).toContainHTML(`<p>${mockInsight.insight!}</p>`);
 
