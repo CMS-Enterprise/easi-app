@@ -1,4 +1,4 @@
-package recommendations
+package insights
 
 import (
 	"testing"
@@ -14,7 +14,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 	t.Run("happy path - valid new order for the existing recommendations", func(t *testing.T) {
 		trbRequestID := uuid.New()
 
-		currentRecs := []*models.TRBGuidanceLetterRecommendation{
+		currentRecs := []*models.TRBGuidanceLetterInsight{
 			{
 				BaseStruct: models.BaseStruct{
 					ID: uuid.New(),
@@ -22,7 +22,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(0),
 				Title:            "Currently at the start, will be reordered to the end",
-				Category:         models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 			{
 				BaseStruct: models.BaseStruct{
@@ -31,7 +31,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(1),
 				Title:            "Currently at the end, will be reordered to the start",
-				Category:         models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 			{
 				BaseStruct: models.BaseStruct{
@@ -40,7 +40,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(0),
 				Title:            "Currently at the start, will be reordered to the end",
-				Category:         models.TRBGuidanceLetterRecommendationCategoryConsideration,
+				Category:         models.TRBGuidanceLetterInsightCategoryConsideration,
 			},
 			{
 				BaseStruct: models.BaseStruct{
@@ -49,27 +49,27 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(1),
 				Title:            "Currently at the end, will be reordered to the start",
-				Category:         models.TRBGuidanceLetterRecommendationCategoryConsideration,
+				Category:         models.TRBGuidanceLetterInsightCategoryConsideration,
 			},
 		}
 		newOrder := []uuid.UUID{currentRecs[1].ID, currentRecs[0].ID, currentRecs[2].ID, currentRecs[3].ID}
 
-		err := IsNewRecommendationOrderValid(currentRecs, newOrder)
+		err := IsNewInsightOrderValid(currentRecs, newOrder)
 		assert.NoError(t, err)
 	})
 
 	t.Run("newOrder has more IDs than there are current recommendations - invalid", func(t *testing.T) {
-		currentRecs := []*models.TRBGuidanceLetterRecommendation{}
+		currentRecs := []*models.TRBGuidanceLetterInsight{}
 		newOrder := []uuid.UUID{uuid.New()}
 
-		err := IsNewRecommendationOrderValid(currentRecs, newOrder)
+		err := IsNewInsightOrderValid(currentRecs, newOrder)
 		assert.Error(t, err)
 	})
 
 	t.Run("newOrder has fewer IDs than there are current recommendations - invalid", func(t *testing.T) {
 		trbRequestID := uuid.New()
 
-		currentRecs := []*models.TRBGuidanceLetterRecommendation{
+		currentRecs := []*models.TRBGuidanceLetterInsight{
 			{
 				BaseStruct: models.BaseStruct{
 					ID: uuid.New(),
@@ -77,12 +77,12 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(0),
 				Title:            "A single current recommendation",
-				Category:         models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 		}
 		newOrder := []uuid.UUID{}
 
-		err := IsNewRecommendationOrderValid(currentRecs, newOrder)
+		err := IsNewInsightOrderValid(currentRecs, newOrder)
 		assert.Error(t, err)
 	})
 
@@ -97,7 +97,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 			uuid.MustParse("30000000-0000-4000-a000-000000000000"),
 		}
 
-		currentRecs := []*models.TRBGuidanceLetterRecommendation{
+		currentRecs := []*models.TRBGuidanceLetterInsight{
 			{
 				BaseStruct: models.BaseStruct{
 					ID: currentRecIDs[0],
@@ -105,7 +105,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(0),
 				Title:            "Current recommendation 0",
-				Category:         models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 			{
 				BaseStruct: models.BaseStruct{
@@ -113,8 +113,8 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				},
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(1),
-				Title:            "Current recommendation 1",
-				Category:         models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+				Title:            "Current insight 1",
+				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 			{
 				BaseStruct: models.BaseStruct{
@@ -122,8 +122,8 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				},
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(2),
-				Title:            "Current recommendation 2",
-				Category:         models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+				Title:            "Current insight 2",
+				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 		}
 
@@ -134,7 +134,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 			invalidID,
 		}
 
-		err := IsNewRecommendationOrderValid(currentRecs, newOrder)
+		err := IsNewInsightOrderValid(currentRecs, newOrder)
 		assert.Error(t, err)
 	})
 
@@ -149,7 +149,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 			uuid.MustParse("30000000-0000-4000-a000-000000000000"),
 		}
 
-		currentRecs := []*models.TRBGuidanceLetterRecommendation{
+		currentRecs := []*models.TRBGuidanceLetterInsight{
 			{
 				BaseStruct: models.BaseStruct{
 					ID: currentRecIDs[0],
@@ -157,7 +157,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(0),
 				Title:            "Current recommendation 0",
-				Category:         models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 			{
 				BaseStruct: models.BaseStruct{
@@ -165,8 +165,8 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				},
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(1),
-				Title:            "Current recommendation 1",
-				Category:         models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+				Title:            "Current insight 1",
+				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 			{
 				BaseStruct: models.BaseStruct{
@@ -174,8 +174,8 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 				},
 				TRBRequestID:     trbRequestID,
 				PositionInLetter: null.IntFrom(2),
-				Title:            "Current recommendation 2",
-				Category:         models.TRBGuidanceLetterRecommendationCategoryRecommendation,
+				Title:            "Current insight 2",
+				Category:         models.TRBGuidanceLetterInsightCategoryRecommendation,
 			},
 		}
 
@@ -185,7 +185,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 			currentRecIDs[1], // duplicate - this should make newOrder invalid
 		}
 
-		err := IsNewRecommendationOrderValid(currentRecs, newOrder)
+		err := IsNewInsightOrderValid(currentRecs, newOrder)
 		assert.Error(t, err)
 	})
 }

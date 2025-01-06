@@ -58,7 +58,7 @@ type ResolverRoot interface {
 	SystemIntakeNote() SystemIntakeNoteResolver
 	TRBAdminNote() TRBAdminNoteResolver
 	TRBGuidanceLetter() TRBGuidanceLetterResolver
-	TRBGuidanceLetterRecommendation() TRBGuidanceLetterRecommendationResolver
+	TRBGuidanceLetterInsight() TRBGuidanceLetterInsightResolver
 	TRBRequest() TRBRequestResolver
 	TRBRequestAttendee() TRBRequestAttendeeResolver
 	TRBRequestDocument() TRBRequestDocumentResolver
@@ -573,7 +573,7 @@ type ComplexityRoot struct {
 		CreateTRBAdminNoteInitialRequestForm             func(childComplexity int, input models.CreateTRBAdminNoteInitialRequestFormInput) int
 		CreateTRBAdminNoteSupportingDocuments            func(childComplexity int, input models.CreateTRBAdminNoteSupportingDocumentsInput) int
 		CreateTRBGuidanceLetter                          func(childComplexity int, trbRequestID uuid.UUID) int
-		CreateTRBGuidanceLetterRecommendation            func(childComplexity int, input models.CreateTRBGuidanceLetterRecommendationInput) int
+		CreateTRBGuidanceLetterInsight                   func(childComplexity int, input models.CreateTRBGuidanceLetterInsightInput) int
 		CreateTRBRequest                                 func(childComplexity int, requestType models.TRBRequestType) int
 		CreateTRBRequestAttendee                         func(childComplexity int, input models.CreateTRBRequestAttendeeInput) int
 		CreateTRBRequestDocument                         func(childComplexity int, input models.CreateTRBRequestDocumentInput) int
@@ -583,7 +583,7 @@ type ComplexityRoot struct {
 		DeleteSystemIntakeContact                        func(childComplexity int, input models.DeleteSystemIntakeContactInput) int
 		DeleteSystemIntakeDocument                       func(childComplexity int, id uuid.UUID) int
 		DeleteSystemIntakeGRBReviewer                    func(childComplexity int, input models.DeleteSystemIntakeGRBReviewerInput) int
-		DeleteTRBGuidanceLetterRecommendation            func(childComplexity int, id uuid.UUID) int
+		DeleteTRBGuidanceLetterInsight                   func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestDocument                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestFundingSources                   func(childComplexity int, input models.DeleteTRBRequestFundingSourcesInput) int
@@ -617,8 +617,8 @@ type ComplexityRoot struct {
 		UpdateSystemIntakeRequestType                    func(childComplexity int, id uuid.UUID, newType models.SystemIntakeRequestType) int
 		UpdateSystemIntakeReviewDates                    func(childComplexity int, input models.UpdateSystemIntakeReviewDatesInput) int
 		UpdateTRBGuidanceLetter                          func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBGuidanceLetterRecommendation            func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBGuidanceLetterRecommendationOrder       func(childComplexity int, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) int
+		UpdateTRBGuidanceLetterInsight                   func(childComplexity int, input map[string]interface{}) int
+		UpdateTRBGuidanceLetterInsightOrder              func(childComplexity int, input models.UpdateTRBGuidanceLetterInsightOrderInput) int
 		UpdateTRBRequest                                 func(childComplexity int, id uuid.UUID, changes map[string]interface{}) int
 		UpdateTRBRequestAttendee                         func(childComplexity int, input models.UpdateTRBRequestAttendeeInput) int
 		UpdateTRBRequestConsultMeetingTime               func(childComplexity int, input models.UpdateTRBRequestConsultMeetingTimeInput) int
@@ -984,19 +984,19 @@ type ComplexityRoot struct {
 		TRBRequestID          func(childComplexity int) int
 	}
 
-	TRBGuidanceLetterRecommendation struct {
-		Author         func(childComplexity int) int
-		Category       func(childComplexity int) int
-		CreatedAt      func(childComplexity int) int
-		CreatedBy      func(childComplexity int) int
-		DeletedAt      func(childComplexity int) int
-		ID             func(childComplexity int) int
-		Links          func(childComplexity int) int
-		ModifiedAt     func(childComplexity int) int
-		ModifiedBy     func(childComplexity int) int
-		Recommendation func(childComplexity int) int
-		TRBRequestID   func(childComplexity int) int
-		Title          func(childComplexity int) int
+	TRBGuidanceLetterInsight struct {
+		Author       func(childComplexity int) int
+		Category     func(childComplexity int) int
+		CreatedAt    func(childComplexity int) int
+		CreatedBy    func(childComplexity int) int
+		DeletedAt    func(childComplexity int) int
+		ID           func(childComplexity int) int
+		Insight      func(childComplexity int) int
+		Links        func(childComplexity int) int
+		ModifiedAt   func(childComplexity int) int
+		ModifiedBy   func(childComplexity int) int
+		TRBRequestID func(childComplexity int) int
+		Title        func(childComplexity int) int
 	}
 
 	TRBRequest struct {
@@ -1270,10 +1270,10 @@ type MutationResolver interface {
 	UpdateTRBGuidanceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetter, error)
 	RequestReviewForTRBGuidanceLetter(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetter, error)
 	SendTRBGuidanceLetter(ctx context.Context, input models.SendTRBGuidanceLetterInput) (*models.TRBGuidanceLetter, error)
-	CreateTRBGuidanceLetterRecommendation(ctx context.Context, input models.CreateTRBGuidanceLetterRecommendationInput) (*models.TRBGuidanceLetterRecommendation, error)
-	UpdateTRBGuidanceLetterRecommendation(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error)
-	UpdateTRBGuidanceLetterRecommendationOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) ([]*models.TRBGuidanceLetterRecommendation, error)
-	DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error)
+	CreateTRBGuidanceLetterInsight(ctx context.Context, input models.CreateTRBGuidanceLetterInsightInput) (*models.TRBGuidanceLetterInsight, error)
+	UpdateTRBGuidanceLetterInsight(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterInsight, error)
+	UpdateTRBGuidanceLetterInsightOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterInsightOrderInput) ([]*models.TRBGuidanceLetterInsight, error)
+	DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterInsight, error)
 	CloseTRBRequest(ctx context.Context, input models.CloseTRBRequestInput) (*models.TRBRequest, error)
 	ReopenTrbRequest(ctx context.Context, input models.ReopenTRBRequestInput) (*models.TRBRequest, error)
 	CreateTrbLeadOption(ctx context.Context, eua string) (*models.UserInfo, error)
@@ -1396,11 +1396,11 @@ type TRBAdminNoteResolver interface {
 type TRBGuidanceLetterResolver interface {
 	Author(ctx context.Context, obj *models.TRBGuidanceLetter) (*models.UserInfo, error)
 
-	Insights(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterRecommendation, error)
+	Insights(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterInsight, error)
 }
-type TRBGuidanceLetterRecommendationResolver interface {
-	Links(ctx context.Context, obj *models.TRBGuidanceLetterRecommendation) ([]string, error)
-	Author(ctx context.Context, obj *models.TRBGuidanceLetterRecommendation) (*models.UserInfo, error)
+type TRBGuidanceLetterInsightResolver interface {
+	Links(ctx context.Context, obj *models.TRBGuidanceLetterInsight) ([]string, error)
+	Author(ctx context.Context, obj *models.TRBGuidanceLetterInsight) (*models.UserInfo, error)
 }
 type TRBRequestResolver interface {
 	Status(ctx context.Context, obj *models.TRBRequest) (models.TRBRequestStatus, error)
@@ -4267,17 +4267,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateTRBGuidanceLetter(childComplexity, args["trbRequestId"].(uuid.UUID)), true
 
-	case "Mutation.createTRBGuidanceLetterRecommendation":
-		if e.complexity.Mutation.CreateTRBGuidanceLetterRecommendation == nil {
+	case "Mutation.createTRBGuidanceLetterInsight":
+		if e.complexity.Mutation.CreateTRBGuidanceLetterInsight == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_createTRBGuidanceLetterRecommendation_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_createTRBGuidanceLetterInsight_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateTRBGuidanceLetterRecommendation(childComplexity, args["input"].(models.CreateTRBGuidanceLetterRecommendationInput)), true
+		return e.complexity.Mutation.CreateTRBGuidanceLetterInsight(childComplexity, args["input"].(models.CreateTRBGuidanceLetterInsightInput)), true
 
 	case "Mutation.createTRBRequest":
 		if e.complexity.Mutation.CreateTRBRequest == nil {
@@ -4387,17 +4387,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteSystemIntakeGRBReviewer(childComplexity, args["input"].(models.DeleteSystemIntakeGRBReviewerInput)), true
 
-	case "Mutation.deleteTRBGuidanceLetterRecommendation":
-		if e.complexity.Mutation.DeleteTRBGuidanceLetterRecommendation == nil {
+	case "Mutation.deleteTRBGuidanceLetterInsight":
+		if e.complexity.Mutation.DeleteTRBGuidanceLetterInsight == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_deleteTRBGuidanceLetterRecommendation_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_deleteTRBGuidanceLetterInsight_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteTRBGuidanceLetterRecommendation(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Mutation.DeleteTRBGuidanceLetterInsight(childComplexity, args["id"].(uuid.UUID)), true
 
 	case "Mutation.deleteTRBRequestAttendee":
 		if e.complexity.Mutation.DeleteTRBRequestAttendee == nil {
@@ -4795,29 +4795,29 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateTRBGuidanceLetter(childComplexity, args["input"].(map[string]interface{})), true
 
-	case "Mutation.updateTRBGuidanceLetterRecommendation":
-		if e.complexity.Mutation.UpdateTRBGuidanceLetterRecommendation == nil {
+	case "Mutation.updateTRBGuidanceLetterInsight":
+		if e.complexity.Mutation.UpdateTRBGuidanceLetterInsight == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_updateTRBGuidanceLetterRecommendation_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_updateTRBGuidanceLetterInsight_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBGuidanceLetterRecommendation(childComplexity, args["input"].(map[string]interface{})), true
+		return e.complexity.Mutation.UpdateTRBGuidanceLetterInsight(childComplexity, args["input"].(map[string]interface{})), true
 
-	case "Mutation.updateTRBGuidanceLetterRecommendationOrder":
-		if e.complexity.Mutation.UpdateTRBGuidanceLetterRecommendationOrder == nil {
+	case "Mutation.updateTRBGuidanceLetterInsightOrder":
+		if e.complexity.Mutation.UpdateTRBGuidanceLetterInsightOrder == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_updateTRBGuidanceLetterRecommendationOrder_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_updateTRBGuidanceLetterInsightOrder_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBGuidanceLetterRecommendationOrder(childComplexity, args["input"].(models.UpdateTRBGuidanceLetterRecommendationOrderInput)), true
+		return e.complexity.Mutation.UpdateTRBGuidanceLetterInsightOrder(childComplexity, args["input"].(models.UpdateTRBGuidanceLetterInsightOrderInput)), true
 
 	case "Mutation.updateTRBRequest":
 		if e.complexity.Mutation.UpdateTRBRequest == nil {
@@ -6812,89 +6812,89 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBGuidanceLetter.TRBRequestID(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.author":
-		if e.complexity.TRBGuidanceLetterRecommendation.Author == nil {
+	case "TRBGuidanceLetterInsight.author":
+		if e.complexity.TRBGuidanceLetterInsight.Author == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.Author(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.Author(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.category":
-		if e.complexity.TRBGuidanceLetterRecommendation.Category == nil {
+	case "TRBGuidanceLetterInsight.category":
+		if e.complexity.TRBGuidanceLetterInsight.Category == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.Category(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.Category(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.createdAt":
-		if e.complexity.TRBGuidanceLetterRecommendation.CreatedAt == nil {
+	case "TRBGuidanceLetterInsight.createdAt":
+		if e.complexity.TRBGuidanceLetterInsight.CreatedAt == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.CreatedAt(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.CreatedAt(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.createdBy":
-		if e.complexity.TRBGuidanceLetterRecommendation.CreatedBy == nil {
+	case "TRBGuidanceLetterInsight.createdBy":
+		if e.complexity.TRBGuidanceLetterInsight.CreatedBy == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.CreatedBy(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.CreatedBy(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.deletedAt":
-		if e.complexity.TRBGuidanceLetterRecommendation.DeletedAt == nil {
+	case "TRBGuidanceLetterInsight.deletedAt":
+		if e.complexity.TRBGuidanceLetterInsight.DeletedAt == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.DeletedAt(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.DeletedAt(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.id":
-		if e.complexity.TRBGuidanceLetterRecommendation.ID == nil {
+	case "TRBGuidanceLetterInsight.id":
+		if e.complexity.TRBGuidanceLetterInsight.ID == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.ID(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.ID(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.links":
-		if e.complexity.TRBGuidanceLetterRecommendation.Links == nil {
+	case "TRBGuidanceLetterInsight.insight":
+		if e.complexity.TRBGuidanceLetterInsight.Insight == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.Links(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.Insight(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.modifiedAt":
-		if e.complexity.TRBGuidanceLetterRecommendation.ModifiedAt == nil {
+	case "TRBGuidanceLetterInsight.links":
+		if e.complexity.TRBGuidanceLetterInsight.Links == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.ModifiedAt(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.Links(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.modifiedBy":
-		if e.complexity.TRBGuidanceLetterRecommendation.ModifiedBy == nil {
+	case "TRBGuidanceLetterInsight.modifiedAt":
+		if e.complexity.TRBGuidanceLetterInsight.ModifiedAt == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.ModifiedBy(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.ModifiedAt(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.recommendation":
-		if e.complexity.TRBGuidanceLetterRecommendation.Recommendation == nil {
+	case "TRBGuidanceLetterInsight.modifiedBy":
+		if e.complexity.TRBGuidanceLetterInsight.ModifiedBy == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.Recommendation(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.ModifiedBy(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.trbRequestId":
-		if e.complexity.TRBGuidanceLetterRecommendation.TRBRequestID == nil {
+	case "TRBGuidanceLetterInsight.trbRequestId":
+		if e.complexity.TRBGuidanceLetterInsight.TRBRequestID == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.TRBRequestID(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.TRBRequestID(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.title":
-		if e.complexity.TRBGuidanceLetterRecommendation.Title == nil {
+	case "TRBGuidanceLetterInsight.title":
+		if e.complexity.TRBGuidanceLetterInsight.Title == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.Title(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.Title(childComplexity), true
 
 	case "TRBRequest.adminNotes":
 		if e.complexity.TRBRequest.AdminNotes == nil {
@@ -7771,7 +7771,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateTRBAdminNoteGuidanceLetterInput,
 		ec.unmarshalInputCreateTRBAdminNoteInitialRequestFormInput,
 		ec.unmarshalInputCreateTRBAdminNoteSupportingDocumentsInput,
-		ec.unmarshalInputCreateTRBGuidanceLetterRecommendationInput,
+		ec.unmarshalInputCreateTRBGuidanceLetterInsightInput,
 		ec.unmarshalInputCreateTRBRequestAttendeeInput,
 		ec.unmarshalInputCreateTRBRequestDocumentInput,
 		ec.unmarshalInputCreateTRBRequestFeedbackInput,
@@ -7829,8 +7829,8 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeReviewDatesInput,
 		ec.unmarshalInputUpdateTRBGuidanceLetterInput,
-		ec.unmarshalInputUpdateTRBGuidanceLetterRecommendationInput,
-		ec.unmarshalInputUpdateTRBGuidanceLetterRecommendationOrderInput,
+		ec.unmarshalInputUpdateTRBGuidanceLetterInsightInput,
+		ec.unmarshalInputUpdateTRBGuidanceLetterInsightOrderInput,
 		ec.unmarshalInputUpdateTRBRequestAttendeeInput,
 		ec.unmarshalInputUpdateTRBRequestConsultMeetingTimeInput,
 		ec.unmarshalInputUpdateTRBRequestFormInput,
@@ -10201,12 +10201,12 @@ type TRBAdminNoteConsultSessionCategoryData {
 
 """
 Data specific to admin notes in the Guidance Letter category
-The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
+The "insights" property _will_ return deleted insights so that UI can reference the insight title
 """
 type TRBAdminNoteGuidanceLetterCategoryData {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
-  insights: [TRBGuidanceLetterRecommendation!]!
+  insights: [TRBGuidanceLetterInsight!]!
 }
 
 union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGuidanceLetterCategoryData
@@ -10241,9 +10241,9 @@ type TRBGuidanceLetter {
   dateSent: Time
   followupPoint: String
   """
-  List of recommendations in the order specified by users
+  List of insights in the order specified by users
   """
-  insights: [TRBGuidanceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_guidance_letter_recommendation.go ` + "`" + `GetTRBGuidanceLetterRecommendationsByTRBRequestID` + "`" + `
+  insights: [TRBGuidanceLetterInsight!]! # This query will not return deleted insights -- see pkg/storage/trb_guidance_letter_insight.go ` + "`" + `GetTRBGuidanceLetterInsightsByTRBRequestID` + "`" + `
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -10309,7 +10309,7 @@ input CreateTRBAdminNoteGuidanceLetterInput {
   # category-specific data
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
-  recommendationIDs: [UUID!]!
+  insightIDs: [UUID!]!
 }
 
 """
@@ -10333,13 +10333,13 @@ input SendTRBGuidanceLetterInput {
 }
 
 """
-Represents a recommendation and links that have been added to a TRB guidance letter
+Represents an insight and links that have been added to a TRB guidance letter
 """
-type TRBGuidanceLetterRecommendation {
+type TRBGuidanceLetterInsight {
   id: UUID!
   trbRequestId: UUID!
   title: String!
-  recommendation: HTML!
+  insight: HTML!
   links: [String!]!
   author: UserInfo!
   createdBy: String!
@@ -10347,32 +10347,32 @@ type TRBGuidanceLetterRecommendation {
   modifiedBy: String
   modifiedAt: Time
   deletedAt: Time
-  category: TRBGuidanceLetterRecommendationCategory
+  category: TRBGuidanceLetterInsightCategory
 }
 
 """
-The input required to add a recommendation & links to a TRB guidance letter
+The input required to add an insight & links to a TRB guidance letter
 """
-input CreateTRBGuidanceLetterRecommendationInput {
+input CreateTRBGuidanceLetterInsightInput {
   trbRequestId: UUID!
   title: String!
-  recommendation: HTML!
+  insight: HTML!
   links: [String!]!
-  category: TRBGuidanceLetterRecommendationCategory!
+  category: TRBGuidanceLetterInsightCategory!
 }
 
 """
-The input required to update a recommendation to a TRB guidance letter
+The input required to update an insight to a TRB guidance letter
 """
-input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBGuidanceLetterInsightInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
-  recommendation: HTML
+  insight: HTML
   links: [String!]
-  category: TRBGuidanceLetterRecommendationCategory
+  category: TRBGuidanceLetterInsightCategory
 }
 
-enum TRBGuidanceLetterRecommendationCategory {
+enum TRBGuidanceLetterInsightCategory {
   REQUIREMENT
   RECOMMENDATION
   CONSIDERATION
@@ -10381,13 +10381,13 @@ enum TRBGuidanceLetterRecommendationCategory {
 
 """
 """
-input UpdateTRBGuidanceLetterRecommendationOrderInput {
+input UpdateTRBGuidanceLetterInsightOrderInput {
   trbRequestId: UUID!
   """
-  List of the recommendation IDs in the new order they should be displayed
+  List of the insight IDs in the new order they should be displayed
   """
   newOrder: [UUID!]!
-  category: TRBGuidanceLetterRecommendationCategory!
+  category: TRBGuidanceLetterInsightCategory!
 }
 
 """
@@ -10552,13 +10552,13 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   sendTRBGuidanceLetter(input: SendTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBGuidanceLetterRecommendation(input: CreateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
+  createTRBGuidanceLetterInsight(input: CreateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterInsight!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterRecommendation(input: UpdateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
+  updateTRBGuidanceLetterInsight(input: UpdateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterInsight!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterRecommendationOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterRecommendation!]!
+  updateTRBGuidanceLetterInsightOrder(input: UpdateTRBGuidanceLetterInsightOrderInput!): [TRBGuidanceLetterInsight!]!
   @hasRole(role: EASI_TRB_ADMIN)
-  deleteTRBGuidanceLetterRecommendation(id: UUID!): TRBGuidanceLetterRecommendation!
+  deleteTRBGuidanceLetterInsight(id: UUID!): TRBGuidanceLetterInsight!
   @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
   @hasRole(role: EASI_TRB_ADMIN)
@@ -12018,35 +12018,35 @@ func (ec *executionContext) field_Mutation_createTRBAdminNoteSupportingDocuments
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_createTRBGuidanceLetterRecommendation_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+func (ec *executionContext) field_Mutation_createTRBGuidanceLetterInsight_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_createTRBGuidanceLetterRecommendation_argsInput(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_createTRBGuidanceLetterInsight_argsInput(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_createTRBGuidanceLetterRecommendation_argsInput(
+func (ec *executionContext) field_Mutation_createTRBGuidanceLetterInsight_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (models.CreateTRBGuidanceLetterRecommendationInput, error) {
+) (models.CreateTRBGuidanceLetterInsightInput, error) {
 	// We won't call the directive if the argument is null.
 	// Set call_argument_directives_with_null to true to call directives
 	// even if the argument is null.
 	_, ok := rawArgs["input"]
 	if !ok {
-		var zeroVal models.CreateTRBGuidanceLetterRecommendationInput
+		var zeroVal models.CreateTRBGuidanceLetterInsightInput
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNCreateTRBGuidanceLetterRecommendationInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterRecommendationInput(ctx, tmp)
+		return ec.unmarshalNCreateTRBGuidanceLetterInsightInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterInsightInput(ctx, tmp)
 	}
 
-	var zeroVal models.CreateTRBGuidanceLetterRecommendationInput
+	var zeroVal models.CreateTRBGuidanceLetterInsightInput
 	return zeroVal, nil
 }
 
@@ -12370,17 +12370,17 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeGRBReviewer_argsInp
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterRecommendation_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterInsight_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_deleteTRBGuidanceLetterRecommendation_argsID(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_deleteTRBGuidanceLetterInsight_argsID(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["id"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterRecommendation_argsID(
+func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterInsight_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
@@ -13480,49 +13480,49 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeReviewDates_argsInp
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterRecommendationOrder_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterInsightOrder_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_updateTRBGuidanceLetterRecommendationOrder_argsInput(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_updateTRBGuidanceLetterInsightOrder_argsInput(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterRecommendationOrder_argsInput(
+func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterInsightOrder_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (models.UpdateTRBGuidanceLetterRecommendationOrderInput, error) {
+) (models.UpdateTRBGuidanceLetterInsightOrderInput, error) {
 	// We won't call the directive if the argument is null.
 	// Set call_argument_directives_with_null to true to call directives
 	// even if the argument is null.
 	_, ok := rawArgs["input"]
 	if !ok {
-		var zeroVal models.UpdateTRBGuidanceLetterRecommendationOrderInput
+		var zeroVal models.UpdateTRBGuidanceLetterInsightOrderInput
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNUpdateTRBGuidanceLetterRecommendationOrderInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateTRBGuidanceLetterRecommendationOrderInput(ctx, tmp)
+		return ec.unmarshalNUpdateTRBGuidanceLetterInsightOrderInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateTRBGuidanceLetterInsightOrderInput(ctx, tmp)
 	}
 
-	var zeroVal models.UpdateTRBGuidanceLetterRecommendationOrderInput
+	var zeroVal models.UpdateTRBGuidanceLetterInsightOrderInput
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterRecommendation_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterInsight_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_updateTRBGuidanceLetterRecommendation_argsInput(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_updateTRBGuidanceLetterInsight_argsInput(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterRecommendation_argsInput(
+func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterInsight_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (map[string]interface{}, error) {
@@ -13537,7 +13537,7 @@ func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterRecommendation
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNUpdateTRBGuidanceLetterRecommendationInput2map(ctx, tmp)
+		return ec.unmarshalNUpdateTRBGuidanceLetterInsightInput2map(ctx, tmp)
 	}
 
 	var zeroVal map[string]interface{}
@@ -36768,8 +36768,8 @@ func (ec *executionContext) fieldContext_Mutation_sendTRBGuidanceLetter(ctx cont
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_createTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createTRBGuidanceLetterRecommendation(ctx, field)
+func (ec *executionContext) _Mutation_createTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createTRBGuidanceLetterInsight(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -36783,17 +36783,17 @@ func (ec *executionContext) _Mutation_createTRBGuidanceLetterRecommendation(ctx 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateTRBGuidanceLetterRecommendation(rctx, fc.Args["input"].(models.CreateTRBGuidanceLetterRecommendationInput))
+			return ec.resolvers.Mutation().CreateTRBGuidanceLetterInsight(rctx, fc.Args["input"].(models.CreateTRBGuidanceLetterInsightInput))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
 			if err != nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, err
 			}
 			if ec.directives.HasRole == nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, errors.New("directive hasRole is not implemented")
 			}
 			return ec.directives.HasRole(ctx, nil, directive0, role)
@@ -36806,10 +36806,10 @@ func (ec *executionContext) _Mutation_createTRBGuidanceLetterRecommendation(ctx 
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*models.TRBGuidanceLetterRecommendation); ok {
+		if data, ok := tmp.(*models.TRBGuidanceLetterInsight); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterRecommendation`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterInsight`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -36821,12 +36821,12 @@ func (ec *executionContext) _Mutation_createTRBGuidanceLetterRecommendation(ctx 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.(*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_createTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_createTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -36835,31 +36835,31 @@ func (ec *executionContext) fieldContext_Mutation_createTRBGuidanceLetterRecomme
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	defer func() {
@@ -36869,15 +36869,15 @@ func (ec *executionContext) fieldContext_Mutation_createTRBGuidanceLetterRecomme
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createTRBGuidanceLetterRecommendation_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_createTRBGuidanceLetterInsight_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateTRBGuidanceLetterRecommendation(ctx, field)
+func (ec *executionContext) _Mutation_updateTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateTRBGuidanceLetterInsight(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -36891,17 +36891,17 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendation(ctx 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterRecommendation(rctx, fc.Args["input"].(map[string]interface{}))
+			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterInsight(rctx, fc.Args["input"].(map[string]interface{}))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
 			if err != nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, err
 			}
 			if ec.directives.HasRole == nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, errors.New("directive hasRole is not implemented")
 			}
 			return ec.directives.HasRole(ctx, nil, directive0, role)
@@ -36914,10 +36914,10 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendation(ctx 
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*models.TRBGuidanceLetterRecommendation); ok {
+		if data, ok := tmp.(*models.TRBGuidanceLetterInsight); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterRecommendation`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterInsight`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -36929,12 +36929,12 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendation(ctx 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.(*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -36943,31 +36943,31 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecomme
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	defer func() {
@@ -36977,15 +36977,15 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecomme
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateTRBGuidanceLetterRecommendation_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_updateTRBGuidanceLetterInsight_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendationOrder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateTRBGuidanceLetterRecommendationOrder(ctx, field)
+func (ec *executionContext) _Mutation_updateTRBGuidanceLetterInsightOrder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateTRBGuidanceLetterInsightOrder(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -36999,17 +36999,17 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendationOrder
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterRecommendationOrder(rctx, fc.Args["input"].(models.UpdateTRBGuidanceLetterRecommendationOrderInput))
+			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterInsightOrder(rctx, fc.Args["input"].(models.UpdateTRBGuidanceLetterInsightOrderInput))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
 			if err != nil {
-				var zeroVal []*models.TRBGuidanceLetterRecommendation
+				var zeroVal []*models.TRBGuidanceLetterInsight
 				return zeroVal, err
 			}
 			if ec.directives.HasRole == nil {
-				var zeroVal []*models.TRBGuidanceLetterRecommendation
+				var zeroVal []*models.TRBGuidanceLetterInsight
 				return zeroVal, errors.New("directive hasRole is not implemented")
 			}
 			return ec.directives.HasRole(ctx, nil, directive0, role)
@@ -37022,10 +37022,10 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendationOrder
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.([]*models.TRBGuidanceLetterRecommendation); ok {
+		if data, ok := tmp.([]*models.TRBGuidanceLetterInsight); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterRecommendation`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterInsight`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -37037,12 +37037,12 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendationOrder
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.([]*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecommendationOrder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterInsightOrder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -37051,31 +37051,31 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecomme
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	defer func() {
@@ -37085,15 +37085,15 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecomme
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateTRBGuidanceLetterRecommendationOrder_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_updateTRBGuidanceLetterInsightOrder_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_deleteTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_deleteTRBGuidanceLetterRecommendation(ctx, field)
+func (ec *executionContext) _Mutation_deleteTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteTRBGuidanceLetterInsight(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -37107,17 +37107,17 @@ func (ec *executionContext) _Mutation_deleteTRBGuidanceLetterRecommendation(ctx 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().DeleteTRBGuidanceLetterRecommendation(rctx, fc.Args["id"].(uuid.UUID))
+			return ec.resolvers.Mutation().DeleteTRBGuidanceLetterInsight(rctx, fc.Args["id"].(uuid.UUID))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
 			if err != nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, err
 			}
 			if ec.directives.HasRole == nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, errors.New("directive hasRole is not implemented")
 			}
 			return ec.directives.HasRole(ctx, nil, directive0, role)
@@ -37130,10 +37130,10 @@ func (ec *executionContext) _Mutation_deleteTRBGuidanceLetterRecommendation(ctx 
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*models.TRBGuidanceLetterRecommendation); ok {
+		if data, ok := tmp.(*models.TRBGuidanceLetterInsight); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterRecommendation`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterInsight`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -37145,12 +37145,12 @@ func (ec *executionContext) _Mutation_deleteTRBGuidanceLetterRecommendation(ctx 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.(*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_deleteTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_deleteTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -37159,31 +37159,31 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBGuidanceLetterRecomme
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	defer func() {
@@ -37193,7 +37193,7 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBGuidanceLetterRecomme
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_deleteTRBGuidanceLetterRecommendation_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_deleteTRBGuidanceLetterInsight_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -50427,9 +50427,9 @@ func (ec *executionContext) _TRBAdminNoteGuidanceLetterCategoryData_insights(ctx
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.([]*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBAdminNoteGuidanceLetterCategoryData_insights(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -50441,31 +50441,31 @@ func (ec *executionContext) fieldContext_TRBAdminNoteGuidanceLetterCategoryData_
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	return fc, nil
@@ -51384,9 +51384,9 @@ func (ec *executionContext) _TRBGuidanceLetter_insights(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.([]*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBGuidanceLetter_insights(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -51398,31 +51398,31 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetter_insights(_ context.Co
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	return fc, nil
@@ -51598,8 +51598,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetter_modifiedAt(_ context.
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_id(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_id(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51629,9 +51629,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_id(ctx context.Cont
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51642,8 +51642,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_id(_ co
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_trbRequestId(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_trbRequestId(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51673,9 +51673,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_trbRequestId(ctx co
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_trbRequestId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51686,8 +51686,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_trbRequ
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_title(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_title(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51717,9 +51717,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_title(ctx context.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51730,8 +51730,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_title(_
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_recommendation(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_insight(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51744,7 +51744,7 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_recommendation(ctx 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Recommendation, nil
+		return obj.Insight, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -51761,9 +51761,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_recommendation(ctx 
 	return ec.marshalNHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_recommendation(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_insight(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51774,8 +51774,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_recomme
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_links(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_links(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51788,7 +51788,7 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_links(ctx context.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBGuidanceLetterRecommendation().Links(rctx, obj)
+		return ec.resolvers.TRBGuidanceLetterInsight().Links(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -51805,9 +51805,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_links(ctx context.C
 	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_links(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_links(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
@@ -51818,8 +51818,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_links(_
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_author(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_author(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51832,7 +51832,7 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_author(ctx context.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBGuidanceLetterRecommendation().Author(rctx, obj)
+		return ec.resolvers.TRBGuidanceLetterInsight().Author(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -51849,9 +51849,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_author(ctx context.
 	return ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_author(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_author(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
@@ -51874,8 +51874,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_author(
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51905,9 +51905,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_createdBy(ctx conte
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_createdBy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_createdBy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51918,8 +51918,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_created
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51949,9 +51949,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_createdAt(ctx conte
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51962,8 +51962,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_created
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_modifiedBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_modifiedBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51990,9 +51990,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_modifiedBy(ctx cont
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_modifiedBy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -52003,8 +52003,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_modifie
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_modifiedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_modifiedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -52031,9 +52031,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_modifiedAt(ctx cont
 	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_modifiedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -52044,8 +52044,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_modifie
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_deletedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_deletedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -52072,9 +52072,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_deletedAt(ctx conte
 	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_deletedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_deletedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -52085,8 +52085,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_deleted
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_category(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_category(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -52108,19 +52108,19 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_category(ctx contex
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(models.TRBGuidanceLetterRecommendationCategory)
+	res := resTmp.(models.TRBGuidanceLetterInsightCategory)
 	fc.Result = res
-	return ec.marshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, field.Selections, res)
+	return ec.marshalOTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_category(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_category(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type TRBGuidanceLetterRecommendationCategory does not have child fields")
+			return nil, errors.New("field of type TRBGuidanceLetterInsightCategory does not have child fields")
 		},
 	}
 	return fc, nil
@@ -60424,7 +60424,7 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteGuidanceLetterInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "noteText", "appliesToMeetingSummary", "appliesToNextSteps", "recommendationIDs"}
+	fieldsInOrder := [...]string{"trbRequestId", "noteText", "appliesToMeetingSummary", "appliesToNextSteps", "insightIDs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -60459,13 +60459,13 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteGuidanceLetterInput(
 				return it, err
 			}
 			it.AppliesToNextSteps = data
-		case "recommendationIDs":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendationIDs"))
+		case "insightIDs":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("insightIDs"))
 			data, err := ec.unmarshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RecommendationIDs = data
+			it.InsightIDs = data
 		}
 	}
 
@@ -60568,14 +60568,14 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteSupportingDocumentsI
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterRecommendationInput(ctx context.Context, obj any) (models.CreateTRBGuidanceLetterRecommendationInput, error) {
-	var it models.CreateTRBGuidanceLetterRecommendationInput
+func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterInsightInput(ctx context.Context, obj any) (models.CreateTRBGuidanceLetterInsightInput, error) {
+	var it models.CreateTRBGuidanceLetterInsightInput
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "title", "recommendation", "links", "category"}
+	fieldsInOrder := [...]string{"trbRequestId", "title", "insight", "links", "category"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -60596,13 +60596,13 @@ func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterRecommendationI
 				return it, err
 			}
 			it.Title = data
-		case "recommendation":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendation"))
+		case "insight":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("insight"))
 			data, err := ec.unmarshalNHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Recommendation = data
+			it.Insight = data
 		case "links":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("links"))
 			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
@@ -60612,7 +60612,7 @@ func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterRecommendationI
 			it.Links = data
 		case "category":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			data, err := ec.unmarshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -63352,14 +63352,14 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterInput(ctx conte
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationInput(ctx context.Context, obj any) (map[string]interface{}, error) {
+func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterInsightInput(ctx context.Context, obj any) (map[string]interface{}, error) {
 	it := make(map[string]any, len(obj.(map[string]any)))
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "title", "recommendation", "links", "category"}
+	fieldsInOrder := [...]string{"id", "title", "insight", "links", "category"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -63380,13 +63380,13 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationI
 				return it, err
 			}
 			it["title"] = data
-		case "recommendation":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendation"))
+		case "insight":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("insight"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it["recommendation"] = data
+			it["insight"] = data
 		case "links":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("links"))
 			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
@@ -63396,7 +63396,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationI
 			it["links"] = data
 		case "category":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			data, err := ec.unmarshalOTRBGuidanceLetterInsightCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -63407,8 +63407,8 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationI
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationOrderInput(ctx context.Context, obj any) (models.UpdateTRBGuidanceLetterRecommendationOrderInput, error) {
-	var it models.UpdateTRBGuidanceLetterRecommendationOrderInput
+func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterInsightOrderInput(ctx context.Context, obj any) (models.UpdateTRBGuidanceLetterInsightOrderInput, error) {
+	var it models.UpdateTRBGuidanceLetterInsightOrderInput
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
@@ -63437,7 +63437,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationO
 			it.NewOrder = data
 		case "category":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			data, err := ec.unmarshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -67317,30 +67317,30 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "createTRBGuidanceLetterRecommendation":
+		case "createTRBGuidanceLetterInsight":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createTRBGuidanceLetterRecommendation(ctx, field)
+				return ec._Mutation_createTRBGuidanceLetterInsight(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "updateTRBGuidanceLetterRecommendation":
+		case "updateTRBGuidanceLetterInsight":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateTRBGuidanceLetterRecommendation(ctx, field)
+				return ec._Mutation_updateTRBGuidanceLetterInsight(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "updateTRBGuidanceLetterRecommendationOrder":
+		case "updateTRBGuidanceLetterInsightOrder":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateTRBGuidanceLetterRecommendationOrder(ctx, field)
+				return ec._Mutation_updateTRBGuidanceLetterInsightOrder(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "deleteTRBGuidanceLetterRecommendation":
+		case "deleteTRBGuidanceLetterInsight":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_deleteTRBGuidanceLetterRecommendation(ctx, field)
+				return ec._Mutation_deleteTRBGuidanceLetterInsight(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -71700,34 +71700,34 @@ func (ec *executionContext) _TRBGuidanceLetter(ctx context.Context, sel ast.Sele
 	return out
 }
 
-var tRBGuidanceLetterRecommendationImplementors = []string{"TRBGuidanceLetterRecommendation"}
+var tRBGuidanceLetterInsightImplementors = []string{"TRBGuidanceLetterInsight"}
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation(ctx context.Context, sel ast.SelectionSet, obj *models.TRBGuidanceLetterRecommendation) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, tRBGuidanceLetterRecommendationImplementors)
+func (ec *executionContext) _TRBGuidanceLetterInsight(ctx context.Context, sel ast.SelectionSet, obj *models.TRBGuidanceLetterInsight) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBGuidanceLetterInsightImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	deferred := make(map[string]*graphql.FieldSet)
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("TRBGuidanceLetterRecommendation")
+			out.Values[i] = graphql.MarshalString("TRBGuidanceLetterInsight")
 		case "id":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_id(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "trbRequestId":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_trbRequestId(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_trbRequestId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "title":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_title(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
-		case "recommendation":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_recommendation(ctx, field, obj)
+		case "insight":
+			out.Values[i] = ec._TRBGuidanceLetterInsight_insight(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
@@ -71740,7 +71740,7 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation(ctx context.Context
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._TRBGuidanceLetterRecommendation_links(ctx, field, obj)
+				res = ec._TRBGuidanceLetterInsight_links(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -71776,7 +71776,7 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation(ctx context.Context
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._TRBGuidanceLetterRecommendation_author(ctx, field, obj)
+				res = ec._TRBGuidanceLetterInsight_author(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -71804,23 +71804,23 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation(ctx context.Context
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdBy":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_createdBy(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_createdBy(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "createdAt":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_createdAt(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "modifiedBy":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_modifiedBy(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_modifiedBy(ctx, field, obj)
 		case "modifiedAt":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_modifiedAt(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_modifiedAt(ctx, field, obj)
 		case "deletedAt":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_deletedAt(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_deletedAt(ctx, field, obj)
 		case "category":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_category(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_category(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -75007,8 +75007,8 @@ func (ec *executionContext) unmarshalNCreateTRBAdminNoteSupportingDocumentsInput
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateTRBGuidanceLetterRecommendationInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterRecommendationInput(ctx context.Context, v any) (models.CreateTRBGuidanceLetterRecommendationInput, error) {
-	res, err := ec.unmarshalInputCreateTRBGuidanceLetterRecommendationInput(ctx, v)
+func (ec *executionContext) unmarshalNCreateTRBGuidanceLetterInsightInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterInsightInput(ctx context.Context, v any) (models.CreateTRBGuidanceLetterInsightInput, error) {
+	res, err := ec.unmarshalInputCreateTRBGuidanceLetterInsightInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -77108,11 +77108,11 @@ func (ec *executionContext) marshalNTRBGuidanceLetter2ᚖgithubᚗcomᚋcmsᚑen
 	return ec._TRBGuidanceLetter(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendation) graphql.Marshaler {
-	return ec._TRBGuidanceLetterRecommendation(ctx, sel, &v)
+func (ec *executionContext) marshalNTRBGuidanceLetterInsight2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterInsight) graphql.Marshaler {
+	return ec._TRBGuidanceLetterInsight(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.TRBGuidanceLetterRecommendation) graphql.Marshaler {
+func (ec *executionContext) marshalNTRBGuidanceLetterInsight2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.TRBGuidanceLetterInsight) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -77136,7 +77136,7 @@ func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithub
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx, sel, v[i])
+			ret[i] = ec.marshalNTRBGuidanceLetterInsight2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -77156,23 +77156,23 @@ func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithub
 	return ret
 }
 
-func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx context.Context, sel ast.SelectionSet, v *models.TRBGuidanceLetterRecommendation) graphql.Marshaler {
+func (ec *executionContext) marshalNTRBGuidanceLetterInsight2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx context.Context, sel ast.SelectionSet, v *models.TRBGuidanceLetterInsight) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
-	return ec._TRBGuidanceLetterRecommendation(ctx, sel, v)
+	return ec._TRBGuidanceLetterInsight(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v any) (models.TRBGuidanceLetterRecommendationCategory, error) {
+func (ec *executionContext) unmarshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, v any) (models.TRBGuidanceLetterInsightCategory, error) {
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBGuidanceLetterRecommendationCategory(tmp)
+	res := models.TRBGuidanceLetterInsightCategory(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+func (ec *executionContext) marshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterInsightCategory) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -77761,13 +77761,13 @@ func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterInput2map(ctx conte
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterRecommendationInput2map(ctx context.Context, v any) (map[string]interface{}, error) {
-	res, err := ec.unmarshalInputUpdateTRBGuidanceLetterRecommendationInput(ctx, v)
+func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterInsightInput2map(ctx context.Context, v any) (map[string]interface{}, error) {
+	res, err := ec.unmarshalInputUpdateTRBGuidanceLetterInsightInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterRecommendationOrderInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateTRBGuidanceLetterRecommendationOrderInput(ctx context.Context, v any) (models.UpdateTRBGuidanceLetterRecommendationOrderInput, error) {
-	res, err := ec.unmarshalInputUpdateTRBGuidanceLetterRecommendationOrderInput(ctx, v)
+func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterInsightOrderInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateTRBGuidanceLetterInsightOrderInput(ctx context.Context, v any) (models.UpdateTRBGuidanceLetterInsightOrderInput, error) {
+	res, err := ec.unmarshalInputUpdateTRBGuidanceLetterInsightOrderInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -79055,27 +79055,27 @@ func (ec *executionContext) marshalOTRBGuidanceLetter2ᚖgithubᚗcomᚋcmsᚑen
 	return ec._TRBGuidanceLetter(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v any) (models.TRBGuidanceLetterRecommendationCategory, error) {
+func (ec *executionContext) unmarshalOTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, v any) (models.TRBGuidanceLetterInsightCategory, error) {
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBGuidanceLetterRecommendationCategory(tmp)
+	res := models.TRBGuidanceLetterInsightCategory(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+func (ec *executionContext) marshalOTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterInsightCategory) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	return res
 }
 
-func (ec *executionContext) unmarshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v any) (*models.TRBGuidanceLetterRecommendationCategory, error) {
+func (ec *executionContext) unmarshalOTRBGuidanceLetterInsightCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, v any) (*models.TRBGuidanceLetterInsightCategory, error) {
 	if v == nil {
 		return nil, nil
 	}
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBGuidanceLetterRecommendationCategory(tmp)
+	res := models.TRBGuidanceLetterInsightCategory(tmp)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v *models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+func (ec *executionContext) marshalOTRBGuidanceLetterInsightCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, sel ast.SelectionSet, v *models.TRBGuidanceLetterInsightCategory) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
