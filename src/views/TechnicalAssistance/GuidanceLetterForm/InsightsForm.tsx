@@ -152,9 +152,8 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
           }
           callback?.();
         } catch (e) {
-          console.info(e);
           if (e instanceof ApolloError) {
-            // setShowFormError(true);
+            setShowFormError(true);
           }
         }
       })(),
