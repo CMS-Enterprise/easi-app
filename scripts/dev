@@ -368,13 +368,13 @@ namespace :db do
       system_intake_systems
       system_intakes
       trb_admin_notes_trb_request_documents_links
-      trb_admin_notes_trb_admin_note_recommendations_links
+      trb_admin_notes_trb_admin_note_insights_links
       trb_lead_options
       trb_request_documents
       trb_request_forms
       trb_request_attendees
       trb_request_feedback
-      trb_guidance_letter_recommendations
+      trb_guidance_letter_insights
       trb_admin_notes
       trb_guidance_letters
       trb_request_contract_numbers

@@ -13,7 +13,7 @@ import {
 } from '@trussworks/react-uswds';
 import {
   GetTRBGuidanceLetterDocument,
-  TRBGuidanceLetterRecommendationCategory,
+  TRBGuidanceLetterInsightCategory,
   useCreateTRBGuidanceLetterInsightMutation,
   useUpdateTRBGuidanceLetterInsightMutation
 } from 'gql/gen/graphql';
@@ -113,7 +113,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
               formatUrl(link)
             );
 
-            const { id, title, recommendation, category } = formData;
+            const { id, title, insight, category } = formData;
 
             if (id) {
               await update({
@@ -122,7 +122,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                     id,
                     category,
                     title,
-                    recommendation,
+                    insight,
                     links
                   }
                 }
@@ -134,7 +134,7 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                     trbRequestId,
                     category,
                     title,
-                    recommendation,
+                    insight,
                     links
                   }
                 }
@@ -253,10 +253,9 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                   labelDescription={t(
                     'guidanceLetterForm.requirementDescription'
                   )}
-                  value={TRBGuidanceLetterRecommendationCategory.REQUIREMENT}
+                  value={TRBGuidanceLetterInsightCategory.REQUIREMENT}
                   checked={
-                    field.value ===
-                    TRBGuidanceLetterRecommendationCategory.REQUIREMENT
+                    field.value === TRBGuidanceLetterInsightCategory.REQUIREMENT
                   }
                 />
                 <Radio
@@ -267,10 +266,10 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                   labelDescription={t(
                     'guidanceLetterForm.recommendationDescription'
                   )}
-                  value={TRBGuidanceLetterRecommendationCategory.RECOMMENDATION}
+                  value={TRBGuidanceLetterInsightCategory.RECOMMENDATION}
                   checked={
                     field.value ===
-                    TRBGuidanceLetterRecommendationCategory.RECOMMENDATION
+                    TRBGuidanceLetterInsightCategory.RECOMMENDATION
                   }
                 />
                 <Radio
@@ -281,10 +280,10 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
                   labelDescription={t(
                     'guidanceLetterForm.considerationDescription'
                   )}
-                  value={TRBGuidanceLetterRecommendationCategory.CONSIDERATION}
+                  value={TRBGuidanceLetterInsightCategory.CONSIDERATION}
                   checked={
                     field.value ===
-                    TRBGuidanceLetterRecommendationCategory.CONSIDERATION
+                    TRBGuidanceLetterInsightCategory.CONSIDERATION
                   }
                 />
               </Fieldset>
@@ -293,31 +292,31 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
         </FormGroup>
 
         {/* Description */}
-        <FormGroup className="margin-top-3" error={!!errors?.recommendation}>
+        <FormGroup className="margin-top-3" error={!!errors?.insight}>
           <Label
             className="text-normal"
-            id="recommendation-label"
-            htmlFor="recommendation"
+            id="insight-label"
+            htmlFor="insight"
             required
           >
             {t('Description')}
           </Label>
           <ErrorMessage
             errors={errors}
-            name="recommendation"
+            name="insight"
             render={() => (
               <FieldErrorMsg>{t('errors.fillBlank')}</FieldErrorMsg>
             )}
           />
           <Controller
-            name="recommendation"
+            name="insight"
             control={control}
             render={({ field, fieldState: { error } }) => (
               <RichTextEditor
                 editableProps={{
-                  id: 'recommendation',
-                  'data-testid': 'recommendation',
-                  'aria-labelledby': 'recommendation-label'
+                  id: 'insight',
+                  'data-testid': 'insight',
+                  'aria-labelledby': 'insight-label'
                 }}
                 field={{ ...field, value: field.value || '' }}
                 required
@@ -336,10 +335,10 @@ const InsightsForm = ({ trbRequestId, setFormAlert }: InsightsFormProps) => {
             onClick: () => submit(() => history.push(returnLink)),
             disabled:
               watch('title').length === 0 ||
-              watch('recommendation').length === 0 ||
+              watch('insight').length === 0 ||
               !watch('category') ||
               watch('category') ===
-                TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED ||
+                TRBGuidanceLetterInsightCategory.UNCATEGORIZED ||
               isSubmitting
           }}
           saveExitText={t(`guidanceLetterForm.returnToGuidanceLetter`, {
