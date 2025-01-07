@@ -9,7 +9,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cms-enterprise/easi-app/pkg/email/translation"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -40,7 +39,7 @@ func (sie systemIntakeEmails) grbReviewPresentationLinksUpdatedBody(input SendGR
 		ProjectName:              input.ProjectName,
 		SystemIntakeLink:         sie.client.urlFromPath(grbReviewPath),
 		RequesterName:            input.RequesterName,
-		RequesterComponent:       translation.GetComponentAcronym(input.RequesterComponent),
+		RequesterComponent:       input.RequesterComponent,
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
 	}
 

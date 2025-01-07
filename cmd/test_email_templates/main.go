@@ -723,4 +723,16 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		},
 	)
 	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewPresentationLinksUpdatedEmail(
+		ctx,
+		email.SendGRBReviewPresentationLinksUpdatedEmailInput{
+			SystemIntakeID:     intakeID,
+			ProjectName:        "Project with Presentation",
+			RequesterName:      "Nobody",
+			RequesterComponent: "Office of Strategy, Performance, and Results",
+			Recipients:         emailNotificationRecipients.RegularRecipientEmails,
+		},
+	)
+	noErr(err)
 }
