@@ -321,16 +321,16 @@ const governanceReviewTeam = {
     members: [
       'Alex Smith',
       'Ashley Marks',
+      'Dominese Withers',
       'Emily Hill',
       'Jaime Cadwell',
+      'Kayla Jones',
       'Leah Nguyen',
       'Leilani Fields',
       'Nicholas Downey',
       'Savannah Huttenberger',
       'Tara Ross',
-      'Valerie Hartz',
-      'Dominese Withers',
-      'Kayla Jones'
+      'Valerie Hartz'
     ]
   }
 };
