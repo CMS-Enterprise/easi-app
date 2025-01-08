@@ -3,8 +3,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
+  TRBGuidanceLetterInsightCategory,
   TRBGuidanceLetterInsightFragment,
-  TRBGuidanceLetterRecommendationCategory,
   useUpdateTRBGuidanceLetterInsightOrderMutation
 } from 'gql/gen/graphql';
 import { toLower } from 'lodash';
@@ -16,7 +16,7 @@ import InsightLinks from './InsightLinks';
 
 type InsightsCategoryProps = {
   trbRequestId: string;
-  category: TRBGuidanceLetterRecommendationCategory;
+  category: TRBGuidanceLetterInsightCategory;
   insights: TRBGuidanceLetterInsightFragment[];
   editable?: boolean;
   edit?: (insight: TRBGuidanceLetterInsightFragment) => void;
@@ -79,7 +79,7 @@ const InsightsCategory = ({
         {t(`guidanceLetterForm.categoryHeading`, { context: categoryString })}
       </h3>
 
-      {category === TRBGuidanceLetterRecommendationCategory.UNCATEGORIZED ? (
+      {category === TRBGuidanceLetterInsightCategory.UNCATEGORIZED ? (
         <Alert type="info" slim className="margin-top-1 margin-bottom-4">
           <Trans
             i18nKey={`technicalAssistance:guidanceLetterForm.uncategorizedAlert${editable ? 'Edit' : ''}`}
@@ -102,7 +102,7 @@ const InsightsCategory = ({
           className="usa-list usa-list--unstyled"
         >
           {insights.map((insight, index) => {
-            const { title, id, links, recommendation: description } = insight;
+            const { title, id, links, insight: description } = insight;
             return (
               <li
                 data-testid="insights_list-item"

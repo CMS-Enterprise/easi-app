@@ -58,7 +58,7 @@ type ResolverRoot interface {
 	SystemIntakeNote() SystemIntakeNoteResolver
 	TRBAdminNote() TRBAdminNoteResolver
 	TRBGuidanceLetter() TRBGuidanceLetterResolver
-	TRBGuidanceLetterRecommendation() TRBGuidanceLetterRecommendationResolver
+	TRBGuidanceLetterInsight() TRBGuidanceLetterInsightResolver
 	TRBRequest() TRBRequestResolver
 	TRBRequestAttendee() TRBRequestAttendeeResolver
 	TRBRequestDocument() TRBRequestDocumentResolver
@@ -573,7 +573,7 @@ type ComplexityRoot struct {
 		CreateTRBAdminNoteInitialRequestForm             func(childComplexity int, input models.CreateTRBAdminNoteInitialRequestFormInput) int
 		CreateTRBAdminNoteSupportingDocuments            func(childComplexity int, input models.CreateTRBAdminNoteSupportingDocumentsInput) int
 		CreateTRBGuidanceLetter                          func(childComplexity int, trbRequestID uuid.UUID) int
-		CreateTRBGuidanceLetterRecommendation            func(childComplexity int, input models.CreateTRBGuidanceLetterRecommendationInput) int
+		CreateTRBGuidanceLetterInsight                   func(childComplexity int, input models.CreateTRBGuidanceLetterInsightInput) int
 		CreateTRBRequest                                 func(childComplexity int, requestType models.TRBRequestType) int
 		CreateTRBRequestAttendee                         func(childComplexity int, input models.CreateTRBRequestAttendeeInput) int
 		CreateTRBRequestDocument                         func(childComplexity int, input models.CreateTRBRequestDocumentInput) int
@@ -583,7 +583,7 @@ type ComplexityRoot struct {
 		DeleteSystemIntakeContact                        func(childComplexity int, input models.DeleteSystemIntakeContactInput) int
 		DeleteSystemIntakeDocument                       func(childComplexity int, id uuid.UUID) int
 		DeleteSystemIntakeGRBReviewer                    func(childComplexity int, input models.DeleteSystemIntakeGRBReviewerInput) int
-		DeleteTRBGuidanceLetterRecommendation            func(childComplexity int, id uuid.UUID) int
+		DeleteTRBGuidanceLetterInsight                   func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestDocument                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestFundingSources                   func(childComplexity int, input models.DeleteTRBRequestFundingSourcesInput) int
@@ -617,8 +617,8 @@ type ComplexityRoot struct {
 		UpdateSystemIntakeRequestType                    func(childComplexity int, id uuid.UUID, newType models.SystemIntakeRequestType) int
 		UpdateSystemIntakeReviewDates                    func(childComplexity int, input models.UpdateSystemIntakeReviewDatesInput) int
 		UpdateTRBGuidanceLetter                          func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBGuidanceLetterRecommendation            func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBGuidanceLetterRecommendationOrder       func(childComplexity int, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) int
+		UpdateTRBGuidanceLetterInsight                   func(childComplexity int, input map[string]interface{}) int
+		UpdateTRBGuidanceLetterInsightOrder              func(childComplexity int, input models.UpdateTRBGuidanceLetterInsightOrderInput) int
 		UpdateTRBRequest                                 func(childComplexity int, id uuid.UUID, changes map[string]interface{}) int
 		UpdateTRBRequestAttendee                         func(childComplexity int, input models.UpdateTRBRequestAttendeeInput) int
 		UpdateTRBRequestConsultMeetingTime               func(childComplexity int, input models.UpdateTRBRequestConsultMeetingTimeInput) int
@@ -984,19 +984,19 @@ type ComplexityRoot struct {
 		TRBRequestID          func(childComplexity int) int
 	}
 
-	TRBGuidanceLetterRecommendation struct {
-		Author         func(childComplexity int) int
-		Category       func(childComplexity int) int
-		CreatedAt      func(childComplexity int) int
-		CreatedBy      func(childComplexity int) int
-		DeletedAt      func(childComplexity int) int
-		ID             func(childComplexity int) int
-		Links          func(childComplexity int) int
-		ModifiedAt     func(childComplexity int) int
-		ModifiedBy     func(childComplexity int) int
-		Recommendation func(childComplexity int) int
-		TRBRequestID   func(childComplexity int) int
-		Title          func(childComplexity int) int
+	TRBGuidanceLetterInsight struct {
+		Author       func(childComplexity int) int
+		Category     func(childComplexity int) int
+		CreatedAt    func(childComplexity int) int
+		CreatedBy    func(childComplexity int) int
+		DeletedAt    func(childComplexity int) int
+		ID           func(childComplexity int) int
+		Insight      func(childComplexity int) int
+		Links        func(childComplexity int) int
+		ModifiedAt   func(childComplexity int) int
+		ModifiedBy   func(childComplexity int) int
+		TRBRequestID func(childComplexity int) int
+		Title        func(childComplexity int) int
 	}
 
 	TRBRequest struct {
@@ -1270,10 +1270,10 @@ type MutationResolver interface {
 	UpdateTRBGuidanceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetter, error)
 	RequestReviewForTRBGuidanceLetter(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetter, error)
 	SendTRBGuidanceLetter(ctx context.Context, input models.SendTRBGuidanceLetterInput) (*models.TRBGuidanceLetter, error)
-	CreateTRBGuidanceLetterRecommendation(ctx context.Context, input models.CreateTRBGuidanceLetterRecommendationInput) (*models.TRBGuidanceLetterRecommendation, error)
-	UpdateTRBGuidanceLetterRecommendation(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterRecommendation, error)
-	UpdateTRBGuidanceLetterRecommendationOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterRecommendationOrderInput) ([]*models.TRBGuidanceLetterRecommendation, error)
-	DeleteTRBGuidanceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterRecommendation, error)
+	CreateTRBGuidanceLetterInsight(ctx context.Context, input models.CreateTRBGuidanceLetterInsightInput) (*models.TRBGuidanceLetterInsight, error)
+	UpdateTRBGuidanceLetterInsight(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterInsight, error)
+	UpdateTRBGuidanceLetterInsightOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterInsightOrderInput) ([]*models.TRBGuidanceLetterInsight, error)
+	DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterInsight, error)
 	CloseTRBRequest(ctx context.Context, input models.CloseTRBRequestInput) (*models.TRBRequest, error)
 	ReopenTrbRequest(ctx context.Context, input models.ReopenTRBRequestInput) (*models.TRBRequest, error)
 	CreateTrbLeadOption(ctx context.Context, eua string) (*models.UserInfo, error)
@@ -1396,11 +1396,11 @@ type TRBAdminNoteResolver interface {
 type TRBGuidanceLetterResolver interface {
 	Author(ctx context.Context, obj *models.TRBGuidanceLetter) (*models.UserInfo, error)
 
-	Insights(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterRecommendation, error)
+	Insights(ctx context.Context, obj *models.TRBGuidanceLetter) ([]*models.TRBGuidanceLetterInsight, error)
 }
-type TRBGuidanceLetterRecommendationResolver interface {
-	Links(ctx context.Context, obj *models.TRBGuidanceLetterRecommendation) ([]string, error)
-	Author(ctx context.Context, obj *models.TRBGuidanceLetterRecommendation) (*models.UserInfo, error)
+type TRBGuidanceLetterInsightResolver interface {
+	Links(ctx context.Context, obj *models.TRBGuidanceLetterInsight) ([]string, error)
+	Author(ctx context.Context, obj *models.TRBGuidanceLetterInsight) (*models.UserInfo, error)
 }
 type TRBRequestResolver interface {
 	Status(ctx context.Context, obj *models.TRBRequest) (models.TRBRequestStatus, error)
@@ -4267,17 +4267,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateTRBGuidanceLetter(childComplexity, args["trbRequestId"].(uuid.UUID)), true
 
-	case "Mutation.createTRBGuidanceLetterRecommendation":
-		if e.complexity.Mutation.CreateTRBGuidanceLetterRecommendation == nil {
+	case "Mutation.createTRBGuidanceLetterInsight":
+		if e.complexity.Mutation.CreateTRBGuidanceLetterInsight == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_createTRBGuidanceLetterRecommendation_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_createTRBGuidanceLetterInsight_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateTRBGuidanceLetterRecommendation(childComplexity, args["input"].(models.CreateTRBGuidanceLetterRecommendationInput)), true
+		return e.complexity.Mutation.CreateTRBGuidanceLetterInsight(childComplexity, args["input"].(models.CreateTRBGuidanceLetterInsightInput)), true
 
 	case "Mutation.createTRBRequest":
 		if e.complexity.Mutation.CreateTRBRequest == nil {
@@ -4387,17 +4387,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteSystemIntakeGRBReviewer(childComplexity, args["input"].(models.DeleteSystemIntakeGRBReviewerInput)), true
 
-	case "Mutation.deleteTRBGuidanceLetterRecommendation":
-		if e.complexity.Mutation.DeleteTRBGuidanceLetterRecommendation == nil {
+	case "Mutation.deleteTRBGuidanceLetterInsight":
+		if e.complexity.Mutation.DeleteTRBGuidanceLetterInsight == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_deleteTRBGuidanceLetterRecommendation_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_deleteTRBGuidanceLetterInsight_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteTRBGuidanceLetterRecommendation(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Mutation.DeleteTRBGuidanceLetterInsight(childComplexity, args["id"].(uuid.UUID)), true
 
 	case "Mutation.deleteTRBRequestAttendee":
 		if e.complexity.Mutation.DeleteTRBRequestAttendee == nil {
@@ -4795,29 +4795,29 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateTRBGuidanceLetter(childComplexity, args["input"].(map[string]interface{})), true
 
-	case "Mutation.updateTRBGuidanceLetterRecommendation":
-		if e.complexity.Mutation.UpdateTRBGuidanceLetterRecommendation == nil {
+	case "Mutation.updateTRBGuidanceLetterInsight":
+		if e.complexity.Mutation.UpdateTRBGuidanceLetterInsight == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_updateTRBGuidanceLetterRecommendation_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_updateTRBGuidanceLetterInsight_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBGuidanceLetterRecommendation(childComplexity, args["input"].(map[string]interface{})), true
+		return e.complexity.Mutation.UpdateTRBGuidanceLetterInsight(childComplexity, args["input"].(map[string]interface{})), true
 
-	case "Mutation.updateTRBGuidanceLetterRecommendationOrder":
-		if e.complexity.Mutation.UpdateTRBGuidanceLetterRecommendationOrder == nil {
+	case "Mutation.updateTRBGuidanceLetterInsightOrder":
+		if e.complexity.Mutation.UpdateTRBGuidanceLetterInsightOrder == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_updateTRBGuidanceLetterRecommendationOrder_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_updateTRBGuidanceLetterInsightOrder_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBGuidanceLetterRecommendationOrder(childComplexity, args["input"].(models.UpdateTRBGuidanceLetterRecommendationOrderInput)), true
+		return e.complexity.Mutation.UpdateTRBGuidanceLetterInsightOrder(childComplexity, args["input"].(models.UpdateTRBGuidanceLetterInsightOrderInput)), true
 
 	case "Mutation.updateTRBRequest":
 		if e.complexity.Mutation.UpdateTRBRequest == nil {
@@ -6812,89 +6812,89 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBGuidanceLetter.TRBRequestID(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.author":
-		if e.complexity.TRBGuidanceLetterRecommendation.Author == nil {
+	case "TRBGuidanceLetterInsight.author":
+		if e.complexity.TRBGuidanceLetterInsight.Author == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.Author(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.Author(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.category":
-		if e.complexity.TRBGuidanceLetterRecommendation.Category == nil {
+	case "TRBGuidanceLetterInsight.category":
+		if e.complexity.TRBGuidanceLetterInsight.Category == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.Category(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.Category(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.createdAt":
-		if e.complexity.TRBGuidanceLetterRecommendation.CreatedAt == nil {
+	case "TRBGuidanceLetterInsight.createdAt":
+		if e.complexity.TRBGuidanceLetterInsight.CreatedAt == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.CreatedAt(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.CreatedAt(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.createdBy":
-		if e.complexity.TRBGuidanceLetterRecommendation.CreatedBy == nil {
+	case "TRBGuidanceLetterInsight.createdBy":
+		if e.complexity.TRBGuidanceLetterInsight.CreatedBy == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.CreatedBy(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.CreatedBy(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.deletedAt":
-		if e.complexity.TRBGuidanceLetterRecommendation.DeletedAt == nil {
+	case "TRBGuidanceLetterInsight.deletedAt":
+		if e.complexity.TRBGuidanceLetterInsight.DeletedAt == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.DeletedAt(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.DeletedAt(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.id":
-		if e.complexity.TRBGuidanceLetterRecommendation.ID == nil {
+	case "TRBGuidanceLetterInsight.id":
+		if e.complexity.TRBGuidanceLetterInsight.ID == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.ID(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.ID(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.links":
-		if e.complexity.TRBGuidanceLetterRecommendation.Links == nil {
+	case "TRBGuidanceLetterInsight.insight":
+		if e.complexity.TRBGuidanceLetterInsight.Insight == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.Links(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.Insight(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.modifiedAt":
-		if e.complexity.TRBGuidanceLetterRecommendation.ModifiedAt == nil {
+	case "TRBGuidanceLetterInsight.links":
+		if e.complexity.TRBGuidanceLetterInsight.Links == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.ModifiedAt(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.Links(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.modifiedBy":
-		if e.complexity.TRBGuidanceLetterRecommendation.ModifiedBy == nil {
+	case "TRBGuidanceLetterInsight.modifiedAt":
+		if e.complexity.TRBGuidanceLetterInsight.ModifiedAt == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.ModifiedBy(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.ModifiedAt(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.recommendation":
-		if e.complexity.TRBGuidanceLetterRecommendation.Recommendation == nil {
+	case "TRBGuidanceLetterInsight.modifiedBy":
+		if e.complexity.TRBGuidanceLetterInsight.ModifiedBy == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.Recommendation(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.ModifiedBy(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.trbRequestId":
-		if e.complexity.TRBGuidanceLetterRecommendation.TRBRequestID == nil {
+	case "TRBGuidanceLetterInsight.trbRequestId":
+		if e.complexity.TRBGuidanceLetterInsight.TRBRequestID == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.TRBRequestID(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.TRBRequestID(childComplexity), true
 
-	case "TRBGuidanceLetterRecommendation.title":
-		if e.complexity.TRBGuidanceLetterRecommendation.Title == nil {
+	case "TRBGuidanceLetterInsight.title":
+		if e.complexity.TRBGuidanceLetterInsight.Title == nil {
 			break
 		}
 
-		return e.complexity.TRBGuidanceLetterRecommendation.Title(childComplexity), true
+		return e.complexity.TRBGuidanceLetterInsight.Title(childComplexity), true
 
 	case "TRBRequest.adminNotes":
 		if e.complexity.TRBRequest.AdminNotes == nil {
@@ -7771,7 +7771,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateTRBAdminNoteGuidanceLetterInput,
 		ec.unmarshalInputCreateTRBAdminNoteInitialRequestFormInput,
 		ec.unmarshalInputCreateTRBAdminNoteSupportingDocumentsInput,
-		ec.unmarshalInputCreateTRBGuidanceLetterRecommendationInput,
+		ec.unmarshalInputCreateTRBGuidanceLetterInsightInput,
 		ec.unmarshalInputCreateTRBRequestAttendeeInput,
 		ec.unmarshalInputCreateTRBRequestDocumentInput,
 		ec.unmarshalInputCreateTRBRequestFeedbackInput,
@@ -7829,8 +7829,8 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeReviewDatesInput,
 		ec.unmarshalInputUpdateTRBGuidanceLetterInput,
-		ec.unmarshalInputUpdateTRBGuidanceLetterRecommendationInput,
-		ec.unmarshalInputUpdateTRBGuidanceLetterRecommendationOrderInput,
+		ec.unmarshalInputUpdateTRBGuidanceLetterInsightInput,
+		ec.unmarshalInputUpdateTRBGuidanceLetterInsightOrderInput,
 		ec.unmarshalInputUpdateTRBRequestAttendeeInput,
 		ec.unmarshalInputUpdateTRBRequestConsultMeetingTimeInput,
 		ec.unmarshalInputUpdateTRBRequestFormInput,
@@ -10201,12 +10201,12 @@ type TRBAdminNoteConsultSessionCategoryData {
 
 """
 Data specific to admin notes in the Guidance Letter category
-The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
+The "insights" property _will_ return deleted insights so that UI can reference the insight title
 """
 type TRBAdminNoteGuidanceLetterCategoryData {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
-  insights: [TRBGuidanceLetterRecommendation!]!
+  insights: [TRBGuidanceLetterInsight!]!
 }
 
 union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGuidanceLetterCategoryData
@@ -10241,9 +10241,9 @@ type TRBGuidanceLetter {
   dateSent: Time
   followupPoint: String
   """
-  List of recommendations in the order specified by users
+  List of insights in the order specified by users
   """
-  insights: [TRBGuidanceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_guidance_letter_recommendation.go ` + "`" + `GetTRBGuidanceLetterRecommendationsByTRBRequestID` + "`" + `
+  insights: [TRBGuidanceLetterInsight!]! # This query will not return deleted insights -- see pkg/storage/trb_guidance_letter_insight.go ` + "`" + `GetTRBGuidanceLetterInsightsByTRBRequestID` + "`" + `
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -10309,7 +10309,7 @@ input CreateTRBAdminNoteGuidanceLetterInput {
   # category-specific data
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
-  recommendationIDs: [UUID!]!
+  insightIDs: [UUID!]!
 }
 
 """
@@ -10333,13 +10333,13 @@ input SendTRBGuidanceLetterInput {
 }
 
 """
-Represents a recommendation and links that have been added to a TRB guidance letter
+Represents an insight and links that have been added to a TRB guidance letter
 """
-type TRBGuidanceLetterRecommendation {
+type TRBGuidanceLetterInsight {
   id: UUID!
   trbRequestId: UUID!
   title: String!
-  recommendation: HTML!
+  insight: HTML!
   links: [String!]!
   author: UserInfo!
   createdBy: String!
@@ -10347,32 +10347,32 @@ type TRBGuidanceLetterRecommendation {
   modifiedBy: String
   modifiedAt: Time
   deletedAt: Time
-  category: TRBGuidanceLetterRecommendationCategory
+  category: TRBGuidanceLetterInsightCategory
 }
 
 """
-The input required to add a recommendation & links to a TRB guidance letter
+The input required to add an insight & links to a TRB guidance letter
 """
-input CreateTRBGuidanceLetterRecommendationInput {
+input CreateTRBGuidanceLetterInsightInput {
   trbRequestId: UUID!
   title: String!
-  recommendation: HTML!
+  insight: HTML!
   links: [String!]!
-  category: TRBGuidanceLetterRecommendationCategory!
+  category: TRBGuidanceLetterInsightCategory!
 }
 
 """
-The input required to update a recommendation to a TRB guidance letter
+The input required to update an insight to a TRB guidance letter
 """
-input UpdateTRBGuidanceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBGuidanceLetterInsightInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
-  recommendation: HTML
+  insight: HTML
   links: [String!]
-  category: TRBGuidanceLetterRecommendationCategory
+  category: TRBGuidanceLetterInsightCategory
 }
 
-enum TRBGuidanceLetterRecommendationCategory {
+enum TRBGuidanceLetterInsightCategory {
   REQUIREMENT
   RECOMMENDATION
   CONSIDERATION
@@ -10381,13 +10381,13 @@ enum TRBGuidanceLetterRecommendationCategory {
 
 """
 """
-input UpdateTRBGuidanceLetterRecommendationOrderInput {
+input UpdateTRBGuidanceLetterInsightOrderInput {
   trbRequestId: UUID!
   """
-  List of the recommendation IDs in the new order they should be displayed
+  List of the insight IDs in the new order they should be displayed
   """
   newOrder: [UUID!]!
-  category: TRBGuidanceLetterRecommendationCategory!
+  category: TRBGuidanceLetterInsightCategory!
 }
 
 """
@@ -10552,13 +10552,13 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   sendTRBGuidanceLetter(input: SendTRBGuidanceLetterInput!): TRBGuidanceLetter!
   @hasRole(role: EASI_TRB_ADMIN)
-  createTRBGuidanceLetterRecommendation(input: CreateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
+  createTRBGuidanceLetterInsight(input: CreateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterInsight!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterRecommendation(input: UpdateTRBGuidanceLetterRecommendationInput!): TRBGuidanceLetterRecommendation!
+  updateTRBGuidanceLetterInsight(input: UpdateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterInsight!
   @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterRecommendationOrder(input: UpdateTRBGuidanceLetterRecommendationOrderInput!): [TRBGuidanceLetterRecommendation!]!
+  updateTRBGuidanceLetterInsightOrder(input: UpdateTRBGuidanceLetterInsightOrderInput!): [TRBGuidanceLetterInsight!]!
   @hasRole(role: EASI_TRB_ADMIN)
-  deleteTRBGuidanceLetterRecommendation(id: UUID!): TRBGuidanceLetterRecommendation!
+  deleteTRBGuidanceLetterInsight(id: UUID!): TRBGuidanceLetterInsight!
   @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
   @hasRole(role: EASI_TRB_ADMIN)
@@ -11040,11 +11040,7 @@ func (ec *executionContext) dir_hasRole_argsRole(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.Role, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["role"]
-	if !ok {
+	if _, ok := rawArgs["role"]; !ok {
 		var zeroVal models.Role
 		return zeroVal, nil
 	}
@@ -11072,11 +11068,7 @@ func (ec *executionContext) field_CedarSystem_linkedSystemIntakes_argsState(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeState, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["state"]
-	if !ok {
+	if _, ok := rawArgs["state"]; !ok {
 		var zeroVal models.SystemIntakeState
 		return zeroVal, nil
 	}
@@ -11104,11 +11096,7 @@ func (ec *executionContext) field_CedarSystem_linkedTrbRequests_argsState(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.TRBRequestState, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["state"]
-	if !ok {
+	if _, ok := rawArgs["state"]; !ok {
 		var zeroVal models.TRBRequestState
 		return zeroVal, nil
 	}
@@ -11136,11 +11124,7 @@ func (ec *executionContext) field_Mutation_archiveSystemIntake_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -11168,11 +11152,7 @@ func (ec *executionContext) field_Mutation_closeTRBRequest_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CloseTRBRequestInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CloseTRBRequestInput
 		return zeroVal, nil
 	}
@@ -11200,11 +11180,7 @@ func (ec *executionContext) field_Mutation_createCedarSystemBookmark_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateCedarSystemBookmarkInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateCedarSystemBookmarkInput
 		return zeroVal, nil
 	}
@@ -11232,11 +11208,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionChangeLCIDRet
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeChangeLCIDRetirementDateInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeChangeLCIDRetirementDateInput
 		return zeroVal, nil
 	}
@@ -11264,11 +11236,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionCloseRequest_
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeCloseRequestInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeCloseRequestInput
 		return zeroVal, nil
 	}
@@ -11296,11 +11264,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionConfirmLCID_a
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeConfirmLCIDInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeConfirmLCIDInput
 		return zeroVal, nil
 	}
@@ -11328,11 +11292,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionExpireLCID_ar
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeExpireLCIDInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeExpireLCIDInput
 		return zeroVal, nil
 	}
@@ -11360,11 +11320,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionIssueLCID_arg
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeIssueLCIDInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeIssueLCIDInput
 		return zeroVal, nil
 	}
@@ -11392,11 +11348,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionNotITGovReque
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeNotITGovReqInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeNotITGovReqInput
 		return zeroVal, nil
 	}
@@ -11424,11 +11376,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionProgressToNew
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeProgressToNewStepsInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeProgressToNewStepsInput
 		return zeroVal, nil
 	}
@@ -11456,11 +11404,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionRejectIntake_
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeRejectIntakeInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeRejectIntakeInput
 		return zeroVal, nil
 	}
@@ -11488,11 +11432,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionReopenRequest
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeReopenRequestInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeReopenRequestInput
 		return zeroVal, nil
 	}
@@ -11520,11 +11460,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionRequestEdits_
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeRequestEditsInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeRequestEditsInput
 		return zeroVal, nil
 	}
@@ -11552,11 +11488,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionRetireLCID_ar
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeRetireLCIDInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeRetireLCIDInput
 		return zeroVal, nil
 	}
@@ -11584,11 +11516,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionUnretireLCID_
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeUnretireLCIDInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeUnretireLCIDInput
 		return zeroVal, nil
 	}
@@ -11616,11 +11544,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionUpdateLCID_ar
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeUpdateLCIDInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SystemIntakeUpdateLCIDInput
 		return zeroVal, nil
 	}
@@ -11648,11 +11572,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeContact_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateSystemIntakeContactInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateSystemIntakeContactInput
 		return zeroVal, nil
 	}
@@ -11680,11 +11600,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeDocument_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateSystemIntakeDocumentInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateSystemIntakeDocumentInput
 		return zeroVal, nil
 	}
@@ -11712,11 +11628,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeGRBDiscussionPost_a
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateSystemIntakeGRBDiscussionPostInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateSystemIntakeGRBDiscussionPostInput
 		return zeroVal, nil
 	}
@@ -11744,11 +11656,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeGRBDiscussionReply_
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateSystemIntakeGRBDiscussionReplyInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateSystemIntakeGRBDiscussionReplyInput
 		return zeroVal, nil
 	}
@@ -11776,11 +11684,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeGRBReviewers_argsIn
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateSystemIntakeGRBReviewersInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateSystemIntakeGRBReviewersInput
 		return zeroVal, nil
 	}
@@ -11808,11 +11712,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeNote_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateSystemIntakeNoteInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateSystemIntakeNoteInput
 		return zeroVal, nil
 	}
@@ -11840,11 +11740,7 @@ func (ec *executionContext) field_Mutation_createSystemIntake_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateSystemIntakeInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateSystemIntakeInput
 		return zeroVal, nil
 	}
@@ -11872,11 +11768,7 @@ func (ec *executionContext) field_Mutation_createTRBAdminNoteConsultSession_args
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateTRBAdminNoteConsultSessionInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateTRBAdminNoteConsultSessionInput
 		return zeroVal, nil
 	}
@@ -11904,11 +11796,7 @@ func (ec *executionContext) field_Mutation_createTRBAdminNoteGeneralRequest_args
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateTRBAdminNoteGeneralRequestInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateTRBAdminNoteGeneralRequestInput
 		return zeroVal, nil
 	}
@@ -11936,11 +11824,7 @@ func (ec *executionContext) field_Mutation_createTRBAdminNoteGuidanceLetter_args
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateTRBAdminNoteGuidanceLetterInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateTRBAdminNoteGuidanceLetterInput
 		return zeroVal, nil
 	}
@@ -11968,11 +11852,7 @@ func (ec *executionContext) field_Mutation_createTRBAdminNoteInitialRequestForm_
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateTRBAdminNoteInitialRequestFormInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateTRBAdminNoteInitialRequestFormInput
 		return zeroVal, nil
 	}
@@ -12000,11 +11880,7 @@ func (ec *executionContext) field_Mutation_createTRBAdminNoteSupportingDocuments
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateTRBAdminNoteSupportingDocumentsInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateTRBAdminNoteSupportingDocumentsInput
 		return zeroVal, nil
 	}
@@ -12018,35 +11894,31 @@ func (ec *executionContext) field_Mutation_createTRBAdminNoteSupportingDocuments
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_createTRBGuidanceLetterRecommendation_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+func (ec *executionContext) field_Mutation_createTRBGuidanceLetterInsight_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_createTRBGuidanceLetterRecommendation_argsInput(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_createTRBGuidanceLetterInsight_argsInput(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_createTRBGuidanceLetterRecommendation_argsInput(
+func (ec *executionContext) field_Mutation_createTRBGuidanceLetterInsight_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (models.CreateTRBGuidanceLetterRecommendationInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
-		var zeroVal models.CreateTRBGuidanceLetterRecommendationInput
+) (models.CreateTRBGuidanceLetterInsightInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.CreateTRBGuidanceLetterInsightInput
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNCreateTRBGuidanceLetterRecommendationInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterRecommendationInput(ctx, tmp)
+		return ec.unmarshalNCreateTRBGuidanceLetterInsightInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterInsightInput(ctx, tmp)
 	}
 
-	var zeroVal models.CreateTRBGuidanceLetterRecommendationInput
+	var zeroVal models.CreateTRBGuidanceLetterInsightInput
 	return zeroVal, nil
 }
 
@@ -12064,11 +11936,7 @@ func (ec *executionContext) field_Mutation_createTRBGuidanceLetter_argsTrbReques
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["trbRequestId"]
-	if !ok {
+	if _, ok := rawArgs["trbRequestId"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -12096,11 +11964,7 @@ func (ec *executionContext) field_Mutation_createTRBRequestAttendee_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateTRBRequestAttendeeInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateTRBRequestAttendeeInput
 		return zeroVal, nil
 	}
@@ -12128,11 +11992,7 @@ func (ec *executionContext) field_Mutation_createTRBRequestDocument_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateTRBRequestDocumentInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateTRBRequestDocumentInput
 		return zeroVal, nil
 	}
@@ -12160,11 +12020,7 @@ func (ec *executionContext) field_Mutation_createTRBRequestFeedback_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateTRBRequestFeedbackInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateTRBRequestFeedbackInput
 		return zeroVal, nil
 	}
@@ -12192,11 +12048,7 @@ func (ec *executionContext) field_Mutation_createTRBRequest_argsRequestType(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.TRBRequestType, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["requestType"]
-	if !ok {
+	if _, ok := rawArgs["requestType"]; !ok {
 		var zeroVal models.TRBRequestType
 		return zeroVal, nil
 	}
@@ -12224,11 +12076,7 @@ func (ec *executionContext) field_Mutation_createTrbLeadOption_argsEua(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["eua"]
-	if !ok {
+	if _, ok := rawArgs["eua"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -12256,11 +12104,7 @@ func (ec *executionContext) field_Mutation_deleteCedarSystemBookmark_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.CreateCedarSystemBookmarkInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.CreateCedarSystemBookmarkInput
 		return zeroVal, nil
 	}
@@ -12288,11 +12132,7 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeContact_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.DeleteSystemIntakeContactInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.DeleteSystemIntakeContactInput
 		return zeroVal, nil
 	}
@@ -12320,11 +12160,7 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeDocument_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -12352,11 +12188,7 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeGRBReviewer_argsInp
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.DeleteSystemIntakeGRBReviewerInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.DeleteSystemIntakeGRBReviewerInput
 		return zeroVal, nil
 	}
@@ -12370,25 +12202,21 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeGRBReviewer_argsInp
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterRecommendation_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterInsight_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_deleteTRBGuidanceLetterRecommendation_argsID(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_deleteTRBGuidanceLetterInsight_argsID(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["id"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterRecommendation_argsID(
+func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterInsight_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -12416,11 +12244,7 @@ func (ec *executionContext) field_Mutation_deleteTRBRequestAttendee_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -12448,11 +12272,7 @@ func (ec *executionContext) field_Mutation_deleteTRBRequestDocument_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -12480,11 +12300,7 @@ func (ec *executionContext) field_Mutation_deleteTRBRequestFundingSources_argsIn
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.DeleteTRBRequestFundingSourcesInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.DeleteTRBRequestFundingSourcesInput
 		return zeroVal, nil
 	}
@@ -12512,11 +12328,7 @@ func (ec *executionContext) field_Mutation_deleteTrbLeadOption_argsEua(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["eua"]
-	if !ok {
+	if _, ok := rawArgs["eua"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -12544,11 +12356,7 @@ func (ec *executionContext) field_Mutation_reopenTrbRequest_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.ReopenTRBRequestInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.ReopenTRBRequestInput
 		return zeroVal, nil
 	}
@@ -12576,11 +12384,7 @@ func (ec *executionContext) field_Mutation_requestReviewForTRBGuidanceLetter_arg
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -12608,11 +12412,7 @@ func (ec *executionContext) field_Mutation_sendCantFindSomethingEmail_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SendCantFindSomethingEmailInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SendCantFindSomethingEmailInput
 		return zeroVal, nil
 	}
@@ -12640,11 +12440,7 @@ func (ec *executionContext) field_Mutation_sendFeedbackEmail_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SendFeedbackEmailInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SendFeedbackEmailInput
 		return zeroVal, nil
 	}
@@ -12672,11 +12468,7 @@ func (ec *executionContext) field_Mutation_sendReportAProblemEmail_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SendReportAProblemEmailInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SendReportAProblemEmailInput
 		return zeroVal, nil
 	}
@@ -12704,11 +12496,7 @@ func (ec *executionContext) field_Mutation_sendTRBGuidanceLetter_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SendTRBGuidanceLetterInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SendTRBGuidanceLetterInput
 		return zeroVal, nil
 	}
@@ -12736,11 +12524,7 @@ func (ec *executionContext) field_Mutation_setRolesForUserOnSystem_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SetRolesForUserOnSystemInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SetRolesForUserOnSystemInput
 		return zeroVal, nil
 	}
@@ -12768,11 +12552,7 @@ func (ec *executionContext) field_Mutation_setSystemIntakeRelationExistingServic
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (*models.SetSystemIntakeRelationExistingServiceInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal *models.SetSystemIntakeRelationExistingServiceInput
 		return zeroVal, nil
 	}
@@ -12800,11 +12580,7 @@ func (ec *executionContext) field_Mutation_setSystemIntakeRelationExistingSystem
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (*models.SetSystemIntakeRelationExistingSystemInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal *models.SetSystemIntakeRelationExistingSystemInput
 		return zeroVal, nil
 	}
@@ -12832,11 +12608,7 @@ func (ec *executionContext) field_Mutation_setSystemIntakeRelationNewSystem_args
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (*models.SetSystemIntakeRelationNewSystemInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal *models.SetSystemIntakeRelationNewSystemInput
 		return zeroVal, nil
 	}
@@ -12869,11 +12641,7 @@ func (ec *executionContext) field_Mutation_setTRBAdminNoteArchived_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -12891,11 +12659,7 @@ func (ec *executionContext) field_Mutation_setTRBAdminNoteArchived_argsIsArchive
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (bool, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["isArchived"]
-	if !ok {
+	if _, ok := rawArgs["isArchived"]; !ok {
 		var zeroVal bool
 		return zeroVal, nil
 	}
@@ -12923,11 +12687,7 @@ func (ec *executionContext) field_Mutation_setTRBRequestRelationExistingService_
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SetTRBRequestRelationExistingServiceInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SetTRBRequestRelationExistingServiceInput
 		return zeroVal, nil
 	}
@@ -12955,11 +12715,7 @@ func (ec *executionContext) field_Mutation_setTRBRequestRelationExistingSystem_a
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SetTRBRequestRelationExistingSystemInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SetTRBRequestRelationExistingSystemInput
 		return zeroVal, nil
 	}
@@ -12987,11 +12743,7 @@ func (ec *executionContext) field_Mutation_setTRBRequestRelationNewSystem_argsIn
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SetTRBRequestRelationNewSystemInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SetTRBRequestRelationNewSystemInput
 		return zeroVal, nil
 	}
@@ -13019,11 +12771,7 @@ func (ec *executionContext) field_Mutation_startGRBReview_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.StartGRBReviewInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.StartGRBReviewInput
 		return zeroVal, nil
 	}
@@ -13051,11 +12799,7 @@ func (ec *executionContext) field_Mutation_submitIntake_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SubmitIntakeInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.SubmitIntakeInput
 		return zeroVal, nil
 	}
@@ -13083,11 +12827,7 @@ func (ec *executionContext) field_Mutation_unlinkSystemIntakeRelation_argsIntake
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["intakeID"]
-	if !ok {
+	if _, ok := rawArgs["intakeID"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -13115,11 +12855,7 @@ func (ec *executionContext) field_Mutation_unlinkTRBRequestRelation_argsTrbReque
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["trbRequestID"]
-	if !ok {
+	if _, ok := rawArgs["trbRequestID"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -13147,11 +12883,7 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeAdminLead_argsInput
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateSystemIntakeAdminLeadInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateSystemIntakeAdminLeadInput
 		return zeroVal, nil
 	}
@@ -13179,11 +12911,7 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeContactDetails_args
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateSystemIntakeContactDetailsInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateSystemIntakeContactDetailsInput
 		return zeroVal, nil
 	}
@@ -13211,11 +12939,7 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeContact_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateSystemIntakeContactInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateSystemIntakeContactInput
 		return zeroVal, nil
 	}
@@ -13243,11 +12967,7 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeContractDetails_arg
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateSystemIntakeContractDetailsInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateSystemIntakeContractDetailsInput
 		return zeroVal, nil
 	}
@@ -13275,11 +12995,7 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewer_argsInp
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateSystemIntakeGRBReviewerInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateSystemIntakeGRBReviewerInput
 		return zeroVal, nil
 	}
@@ -13307,11 +13023,7 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeLinkedCedarSystem_a
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateSystemIntakeLinkedCedarSystemInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateSystemIntakeLinkedCedarSystemInput
 		return zeroVal, nil
 	}
@@ -13339,11 +13051,7 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeNote_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateSystemIntakeNoteInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateSystemIntakeNoteInput
 		return zeroVal, nil
 	}
@@ -13371,11 +13079,7 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeRequestDetails_args
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateSystemIntakeRequestDetailsInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateSystemIntakeRequestDetailsInput
 		return zeroVal, nil
 	}
@@ -13408,11 +13112,7 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeRequestType_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -13430,11 +13130,7 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeRequestType_argsNew
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.SystemIntakeRequestType, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["newType"]
-	if !ok {
+	if _, ok := rawArgs["newType"]; !ok {
 		var zeroVal models.SystemIntakeRequestType
 		return zeroVal, nil
 	}
@@ -13462,11 +13158,7 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeReviewDates_argsInp
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateSystemIntakeReviewDatesInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateSystemIntakeReviewDatesInput
 		return zeroVal, nil
 	}
@@ -13480,64 +13172,56 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeReviewDates_argsInp
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterRecommendationOrder_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterInsightOrder_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_updateTRBGuidanceLetterRecommendationOrder_argsInput(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_updateTRBGuidanceLetterInsightOrder_argsInput(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterRecommendationOrder_argsInput(
+func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterInsightOrder_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (models.UpdateTRBGuidanceLetterRecommendationOrderInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
-		var zeroVal models.UpdateTRBGuidanceLetterRecommendationOrderInput
+) (models.UpdateTRBGuidanceLetterInsightOrderInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.UpdateTRBGuidanceLetterInsightOrderInput
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNUpdateTRBGuidanceLetterRecommendationOrderInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateTRBGuidanceLetterRecommendationOrderInput(ctx, tmp)
+		return ec.unmarshalNUpdateTRBGuidanceLetterInsightOrderInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateTRBGuidanceLetterInsightOrderInput(ctx, tmp)
 	}
 
-	var zeroVal models.UpdateTRBGuidanceLetterRecommendationOrderInput
+	var zeroVal models.UpdateTRBGuidanceLetterInsightOrderInput
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterRecommendation_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterInsight_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_updateTRBGuidanceLetterRecommendation_argsInput(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_updateTRBGuidanceLetterInsight_argsInput(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterRecommendation_argsInput(
+func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterInsight_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (map[string]interface{}, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal map[string]interface{}
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNUpdateTRBGuidanceLetterRecommendationInput2map(ctx, tmp)
+		return ec.unmarshalNUpdateTRBGuidanceLetterInsightInput2map(ctx, tmp)
 	}
 
 	var zeroVal map[string]interface{}
@@ -13558,11 +13242,7 @@ func (ec *executionContext) field_Mutation_updateTRBGuidanceLetter_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (map[string]interface{}, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal map[string]interface{}
 		return zeroVal, nil
 	}
@@ -13590,11 +13270,7 @@ func (ec *executionContext) field_Mutation_updateTRBRequestAttendee_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateTRBRequestAttendeeInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateTRBRequestAttendeeInput
 		return zeroVal, nil
 	}
@@ -13622,11 +13298,7 @@ func (ec *executionContext) field_Mutation_updateTRBRequestConsultMeetingTime_ar
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateTRBRequestConsultMeetingTimeInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateTRBRequestConsultMeetingTimeInput
 		return zeroVal, nil
 	}
@@ -13654,11 +13326,7 @@ func (ec *executionContext) field_Mutation_updateTRBRequestForm_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (map[string]interface{}, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal map[string]interface{}
 		return zeroVal, nil
 	}
@@ -13686,11 +13354,7 @@ func (ec *executionContext) field_Mutation_updateTRBRequestFundingSources_argsIn
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateTRBRequestFundingSourcesInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateTRBRequestFundingSourcesInput
 		return zeroVal, nil
 	}
@@ -13718,11 +13382,7 @@ func (ec *executionContext) field_Mutation_updateTRBRequestTRBLead_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (models.UpdateTRBRequestTRBLeadInput, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["input"]
-	if !ok {
+	if _, ok := rawArgs["input"]; !ok {
 		var zeroVal models.UpdateTRBRequestTRBLeadInput
 		return zeroVal, nil
 	}
@@ -13755,11 +13415,7 @@ func (ec *executionContext) field_Mutation_updateTRBRequest_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -13777,11 +13433,7 @@ func (ec *executionContext) field_Mutation_updateTRBRequest_argsChanges(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (map[string]interface{}, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["changes"]
-	if !ok {
+	if _, ok := rawArgs["changes"]; !ok {
 		var zeroVal map[string]interface{}
 		return zeroVal, nil
 	}
@@ -13809,11 +13461,7 @@ func (ec *executionContext) field_Query___type_argsName(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["name"]
-	if !ok {
+	if _, ok := rawArgs["name"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -13841,11 +13489,7 @@ func (ec *executionContext) field_Query_cedarAuthorityToOperate_argsCedarSystemI
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemID"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemID"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -13873,11 +13517,7 @@ func (ec *executionContext) field_Query_cedarBudgetSystemCost_argsCedarSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemID"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemID"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -13905,11 +13545,7 @@ func (ec *executionContext) field_Query_cedarBudget_argsCedarSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemID"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemID"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -13937,11 +13573,7 @@ func (ec *executionContext) field_Query_cedarContractsBySystem_argsCedarSystemID
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemId"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemId"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -13969,11 +13601,7 @@ func (ec *executionContext) field_Query_cedarPersonsByCommonName_argsCommonName(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["commonName"]
-	if !ok {
+	if _, ok := rawArgs["commonName"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -14001,11 +13629,7 @@ func (ec *executionContext) field_Query_cedarSoftwareProducts_argsCedarSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemId"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemId"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -14033,11 +13657,7 @@ func (ec *executionContext) field_Query_cedarSubSystems_argsCedarSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemId"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemId"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -14065,11 +13685,7 @@ func (ec *executionContext) field_Query_cedarSystemDetails_argsCedarSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemId"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemId"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -14097,11 +13713,7 @@ func (ec *executionContext) field_Query_cedarSystem_argsCedarSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemId"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemId"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -14129,11 +13741,7 @@ func (ec *executionContext) field_Query_cedarThreat_argsCedarSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemId"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemId"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -14161,11 +13769,7 @@ func (ec *executionContext) field_Query_compareGRBReviewersByIntakeID_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -14208,11 +13812,7 @@ func (ec *executionContext) field_Query_deployments_argsCedarSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemId"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemId"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -14230,11 +13830,7 @@ func (ec *executionContext) field_Query_deployments_argsDeploymentType(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (*string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["deploymentType"]
-	if !ok {
+	if _, ok := rawArgs["deploymentType"]; !ok {
 		var zeroVal *string
 		return zeroVal, nil
 	}
@@ -14252,11 +13848,7 @@ func (ec *executionContext) field_Query_deployments_argsState(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (*string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["state"]
-	if !ok {
+	if _, ok := rawArgs["state"]; !ok {
 		var zeroVal *string
 		return zeroVal, nil
 	}
@@ -14274,11 +13866,7 @@ func (ec *executionContext) field_Query_deployments_argsStatus(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (*string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["status"]
-	if !ok {
+	if _, ok := rawArgs["status"]; !ok {
 		var zeroVal *string
 		return zeroVal, nil
 	}
@@ -14306,11 +13894,7 @@ func (ec *executionContext) field_Query_exchanges_argsCedarSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemId"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemId"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -14338,11 +13922,7 @@ func (ec *executionContext) field_Query_myTrbRequests_argsArchived(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (bool, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["archived"]
-	if !ok {
+	if _, ok := rawArgs["archived"]; !ok {
 		var zeroVal bool
 		return zeroVal, nil
 	}
@@ -14375,11 +13955,7 @@ func (ec *executionContext) field_Query_roles_argsCedarSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemId"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemId"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -14397,11 +13973,7 @@ func (ec *executionContext) field_Query_roles_argsRoleTypeID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (*string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["roleTypeID"]
-	if !ok {
+	if _, ok := rawArgs["roleTypeID"]; !ok {
 		var zeroVal *string
 		return zeroVal, nil
 	}
@@ -14429,11 +14001,7 @@ func (ec *executionContext) field_Query_systemIntakeContacts_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -14461,11 +14029,7 @@ func (ec *executionContext) field_Query_systemIntake_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -14493,11 +14057,7 @@ func (ec *executionContext) field_Query_systemIntakes_argsOpenRequests(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (bool, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["openRequests"]
-	if !ok {
+	if _, ok := rawArgs["openRequests"]; !ok {
 		var zeroVal bool
 		return zeroVal, nil
 	}
@@ -14525,11 +14085,7 @@ func (ec *executionContext) field_Query_trbAdminNote_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -14557,11 +14113,7 @@ func (ec *executionContext) field_Query_trbRequest_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["id"]
-	if !ok {
+	if _, ok := rawArgs["id"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
@@ -14589,11 +14141,7 @@ func (ec *executionContext) field_Query_trbRequests_argsArchived(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (bool, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["archived"]
-	if !ok {
+	if _, ok := rawArgs["archived"]; !ok {
 		var zeroVal bool
 		return zeroVal, nil
 	}
@@ -14621,11 +14169,7 @@ func (ec *executionContext) field_Query_urls_argsCedarSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["cedarSystemId"]
-	if !ok {
+	if _, ok := rawArgs["cedarSystemId"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -14653,11 +14197,7 @@ func (ec *executionContext) field_Query_userAccount_argsUsername(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["username"]
-	if !ok {
+	if _, ok := rawArgs["username"]; !ok {
 		var zeroVal string
 		return zeroVal, nil
 	}
@@ -14685,11 +14225,7 @@ func (ec *executionContext) field___Type_enumValues_argsIncludeDeprecated(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (bool, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["includeDeprecated"]
-	if !ok {
+	if _, ok := rawArgs["includeDeprecated"]; !ok {
 		var zeroVal bool
 		return zeroVal, nil
 	}
@@ -14717,11 +14253,7 @@ func (ec *executionContext) field___Type_fields_argsIncludeDeprecated(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (bool, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["includeDeprecated"]
-	if !ok {
+	if _, ok := rawArgs["includeDeprecated"]; !ok {
 		var zeroVal bool
 		return zeroVal, nil
 	}
@@ -36768,8 +36300,8 @@ func (ec *executionContext) fieldContext_Mutation_sendTRBGuidanceLetter(ctx cont
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_createTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createTRBGuidanceLetterRecommendation(ctx, field)
+func (ec *executionContext) _Mutation_createTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createTRBGuidanceLetterInsight(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -36783,17 +36315,17 @@ func (ec *executionContext) _Mutation_createTRBGuidanceLetterRecommendation(ctx 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateTRBGuidanceLetterRecommendation(rctx, fc.Args["input"].(models.CreateTRBGuidanceLetterRecommendationInput))
+			return ec.resolvers.Mutation().CreateTRBGuidanceLetterInsight(rctx, fc.Args["input"].(models.CreateTRBGuidanceLetterInsightInput))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
 			if err != nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, err
 			}
 			if ec.directives.HasRole == nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, errors.New("directive hasRole is not implemented")
 			}
 			return ec.directives.HasRole(ctx, nil, directive0, role)
@@ -36806,10 +36338,10 @@ func (ec *executionContext) _Mutation_createTRBGuidanceLetterRecommendation(ctx 
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*models.TRBGuidanceLetterRecommendation); ok {
+		if data, ok := tmp.(*models.TRBGuidanceLetterInsight); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterRecommendation`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterInsight`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -36821,12 +36353,12 @@ func (ec *executionContext) _Mutation_createTRBGuidanceLetterRecommendation(ctx 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.(*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_createTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_createTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -36835,31 +36367,31 @@ func (ec *executionContext) fieldContext_Mutation_createTRBGuidanceLetterRecomme
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	defer func() {
@@ -36869,15 +36401,15 @@ func (ec *executionContext) fieldContext_Mutation_createTRBGuidanceLetterRecomme
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createTRBGuidanceLetterRecommendation_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_createTRBGuidanceLetterInsight_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateTRBGuidanceLetterRecommendation(ctx, field)
+func (ec *executionContext) _Mutation_updateTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateTRBGuidanceLetterInsight(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -36891,17 +36423,17 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendation(ctx 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterRecommendation(rctx, fc.Args["input"].(map[string]interface{}))
+			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterInsight(rctx, fc.Args["input"].(map[string]interface{}))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
 			if err != nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, err
 			}
 			if ec.directives.HasRole == nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, errors.New("directive hasRole is not implemented")
 			}
 			return ec.directives.HasRole(ctx, nil, directive0, role)
@@ -36914,10 +36446,10 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendation(ctx 
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*models.TRBGuidanceLetterRecommendation); ok {
+		if data, ok := tmp.(*models.TRBGuidanceLetterInsight); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterRecommendation`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterInsight`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -36929,12 +36461,12 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendation(ctx 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.(*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -36943,31 +36475,31 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecomme
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	defer func() {
@@ -36977,15 +36509,15 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecomme
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateTRBGuidanceLetterRecommendation_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_updateTRBGuidanceLetterInsight_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendationOrder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateTRBGuidanceLetterRecommendationOrder(ctx, field)
+func (ec *executionContext) _Mutation_updateTRBGuidanceLetterInsightOrder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateTRBGuidanceLetterInsightOrder(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -36999,17 +36531,17 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendationOrder
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterRecommendationOrder(rctx, fc.Args["input"].(models.UpdateTRBGuidanceLetterRecommendationOrderInput))
+			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterInsightOrder(rctx, fc.Args["input"].(models.UpdateTRBGuidanceLetterInsightOrderInput))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
 			if err != nil {
-				var zeroVal []*models.TRBGuidanceLetterRecommendation
+				var zeroVal []*models.TRBGuidanceLetterInsight
 				return zeroVal, err
 			}
 			if ec.directives.HasRole == nil {
-				var zeroVal []*models.TRBGuidanceLetterRecommendation
+				var zeroVal []*models.TRBGuidanceLetterInsight
 				return zeroVal, errors.New("directive hasRole is not implemented")
 			}
 			return ec.directives.HasRole(ctx, nil, directive0, role)
@@ -37022,10 +36554,10 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendationOrder
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.([]*models.TRBGuidanceLetterRecommendation); ok {
+		if data, ok := tmp.([]*models.TRBGuidanceLetterInsight); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterRecommendation`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterInsight`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -37037,12 +36569,12 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterRecommendationOrder
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.([]*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecommendationOrder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterInsightOrder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -37051,31 +36583,31 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecomme
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	defer func() {
@@ -37085,15 +36617,15 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBGuidanceLetterRecomme
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateTRBGuidanceLetterRecommendationOrder_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_updateTRBGuidanceLetterInsightOrder_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_deleteTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_deleteTRBGuidanceLetterRecommendation(ctx, field)
+func (ec *executionContext) _Mutation_deleteTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteTRBGuidanceLetterInsight(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -37107,17 +36639,17 @@ func (ec *executionContext) _Mutation_deleteTRBGuidanceLetterRecommendation(ctx 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().DeleteTRBGuidanceLetterRecommendation(rctx, fc.Args["id"].(uuid.UUID))
+			return ec.resolvers.Mutation().DeleteTRBGuidanceLetterInsight(rctx, fc.Args["id"].(uuid.UUID))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
 			if err != nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, err
 			}
 			if ec.directives.HasRole == nil {
-				var zeroVal *models.TRBGuidanceLetterRecommendation
+				var zeroVal *models.TRBGuidanceLetterInsight
 				return zeroVal, errors.New("directive hasRole is not implemented")
 			}
 			return ec.directives.HasRole(ctx, nil, directive0, role)
@@ -37130,10 +36662,10 @@ func (ec *executionContext) _Mutation_deleteTRBGuidanceLetterRecommendation(ctx 
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*models.TRBGuidanceLetterRecommendation); ok {
+		if data, ok := tmp.(*models.TRBGuidanceLetterInsight); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterRecommendation`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBGuidanceLetterInsight`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -37145,12 +36677,12 @@ func (ec *executionContext) _Mutation_deleteTRBGuidanceLetterRecommendation(ctx 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.(*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_deleteTRBGuidanceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_deleteTRBGuidanceLetterInsight(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -37159,31 +36691,31 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBGuidanceLetterRecomme
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	defer func() {
@@ -37193,7 +36725,7 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBGuidanceLetterRecomme
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_deleteTRBGuidanceLetterRecommendation_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_deleteTRBGuidanceLetterInsight_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -50427,9 +49959,9 @@ func (ec *executionContext) _TRBAdminNoteGuidanceLetterCategoryData_insights(ctx
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.([]*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBAdminNoteGuidanceLetterCategoryData_insights(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -50441,31 +49973,31 @@ func (ec *executionContext) fieldContext_TRBAdminNoteGuidanceLetterCategoryData_
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	return fc, nil
@@ -51384,9 +50916,9 @@ func (ec *executionContext) _TRBGuidanceLetter_insights(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.TRBGuidanceLetterRecommendation)
+	res := resTmp.([]*models.TRBGuidanceLetterInsight)
 	fc.Result = res
-	return ec.marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTRBGuidanceLetterInsight2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBGuidanceLetter_insights(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -51398,31 +50930,31 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetter_insights(_ context.Co
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 			case "trbRequestId":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 			case "title":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
-			case "recommendation":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
+			case "insight":
+				return ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 			case "links":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 			case "author":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 			case "createdBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 			case "modifiedBy":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 			case "modifiedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 			case "deletedAt":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 			case "category":
-				return ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+				return ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterRecommendation", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TRBGuidanceLetterInsight", field.Name)
 		},
 	}
 	return fc, nil
@@ -51598,8 +51130,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetter_modifiedAt(_ context.
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_id(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_id(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_id(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51629,9 +51161,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_id(ctx context.Cont
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51642,8 +51174,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_id(_ co
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_trbRequestId(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_trbRequestId(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_trbRequestId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51673,9 +51205,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_trbRequestId(ctx co
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_trbRequestId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_trbRequestId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51686,8 +51218,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_trbRequ
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_title(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_title(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_title(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_title(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51717,9 +51249,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_title(ctx context.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51730,8 +51262,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_title(_
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_recommendation(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_recommendation(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_insight(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_insight(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51744,7 +51276,7 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_recommendation(ctx 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Recommendation, nil
+		return obj.Insight, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -51761,9 +51293,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_recommendation(ctx 
 	return ec.marshalNHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_recommendation(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_insight(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51774,8 +51306,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_recomme
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_links(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_links(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_links(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_links(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51788,7 +51320,7 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_links(ctx context.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBGuidanceLetterRecommendation().Links(rctx, obj)
+		return ec.resolvers.TRBGuidanceLetterInsight().Links(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -51805,9 +51337,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_links(ctx context.C
 	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_links(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_links(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
@@ -51818,8 +51350,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_links(_
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_author(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_author(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_author(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_author(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51832,7 +51364,7 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_author(ctx context.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBGuidanceLetterRecommendation().Author(rctx, obj)
+		return ec.resolvers.TRBGuidanceLetterInsight().Author(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -51849,9 +51381,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_author(ctx context.
 	return ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_author(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_author(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
@@ -51874,8 +51406,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_author(
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_createdBy(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_createdBy(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51905,9 +51437,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_createdBy(ctx conte
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_createdBy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_createdBy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51918,8 +51450,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_created
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_createdAt(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_createdAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51949,9 +51481,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_createdAt(ctx conte
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -51962,8 +51494,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_created
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_modifiedBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_modifiedBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_modifiedBy(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51990,9 +51522,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_modifiedBy(ctx cont
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_modifiedBy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_modifiedBy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -52003,8 +51535,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_modifie
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_modifiedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_modifiedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_modifiedAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -52031,9 +51563,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_modifiedAt(ctx cont
 	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_modifiedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_modifiedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -52044,8 +51576,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_modifie
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_deletedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_deletedAt(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_deletedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_deletedAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -52072,9 +51604,9 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_deletedAt(ctx conte
 	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_deletedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_deletedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -52085,8 +51617,8 @@ func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_deleted
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation_category(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterRecommendation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBGuidanceLetterRecommendation_category(ctx, field)
+func (ec *executionContext) _TRBGuidanceLetterInsight_category(ctx context.Context, field graphql.CollectedField, obj *models.TRBGuidanceLetterInsight) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBGuidanceLetterInsight_category(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -52108,19 +51640,19 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation_category(ctx contex
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(models.TRBGuidanceLetterRecommendationCategory)
+	res := resTmp.(models.TRBGuidanceLetterInsightCategory)
 	fc.Result = res
-	return ec.marshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, field.Selections, res)
+	return ec.marshalOTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBGuidanceLetterRecommendation_category(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBGuidanceLetterInsight_category(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBGuidanceLetterRecommendation",
+		Object:     "TRBGuidanceLetterInsight",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type TRBGuidanceLetterRecommendationCategory does not have child fields")
+			return nil, errors.New("field of type TRBGuidanceLetterInsightCategory does not have child fields")
 		},
 	}
 	return fc, nil
@@ -60424,7 +59956,7 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteGuidanceLetterInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "noteText", "appliesToMeetingSummary", "appliesToNextSteps", "recommendationIDs"}
+	fieldsInOrder := [...]string{"trbRequestId", "noteText", "appliesToMeetingSummary", "appliesToNextSteps", "insightIDs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -60459,13 +59991,13 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteGuidanceLetterInput(
 				return it, err
 			}
 			it.AppliesToNextSteps = data
-		case "recommendationIDs":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendationIDs"))
+		case "insightIDs":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("insightIDs"))
 			data, err := ec.unmarshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RecommendationIDs = data
+			it.InsightIDs = data
 		}
 	}
 
@@ -60568,14 +60100,14 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteSupportingDocumentsI
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterRecommendationInput(ctx context.Context, obj any) (models.CreateTRBGuidanceLetterRecommendationInput, error) {
-	var it models.CreateTRBGuidanceLetterRecommendationInput
+func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterInsightInput(ctx context.Context, obj any) (models.CreateTRBGuidanceLetterInsightInput, error) {
+	var it models.CreateTRBGuidanceLetterInsightInput
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "title", "recommendation", "links", "category"}
+	fieldsInOrder := [...]string{"trbRequestId", "title", "insight", "links", "category"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -60596,13 +60128,13 @@ func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterRecommendationI
 				return it, err
 			}
 			it.Title = data
-		case "recommendation":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendation"))
+		case "insight":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("insight"))
 			data, err := ec.unmarshalNHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Recommendation = data
+			it.Insight = data
 		case "links":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("links"))
 			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
@@ -60612,7 +60144,7 @@ func (ec *executionContext) unmarshalInputCreateTRBGuidanceLetterRecommendationI
 			it.Links = data
 		case "category":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			data, err := ec.unmarshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -63352,14 +62884,14 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterInput(ctx conte
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationInput(ctx context.Context, obj any) (map[string]interface{}, error) {
+func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterInsightInput(ctx context.Context, obj any) (map[string]interface{}, error) {
 	it := make(map[string]any, len(obj.(map[string]any)))
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "title", "recommendation", "links", "category"}
+	fieldsInOrder := [...]string{"id", "title", "insight", "links", "category"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -63380,13 +62912,13 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationI
 				return it, err
 			}
 			it["title"] = data
-		case "recommendation":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendation"))
+		case "insight":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("insight"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it["recommendation"] = data
+			it["insight"] = data
 		case "links":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("links"))
 			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
@@ -63396,7 +62928,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationI
 			it["links"] = data
 		case "category":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			data, err := ec.unmarshalOTRBGuidanceLetterInsightCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -63407,8 +62939,8 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationI
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationOrderInput(ctx context.Context, obj any) (models.UpdateTRBGuidanceLetterRecommendationOrderInput, error) {
-	var it models.UpdateTRBGuidanceLetterRecommendationOrderInput
+func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterInsightOrderInput(ctx context.Context, obj any) (models.UpdateTRBGuidanceLetterInsightOrderInput, error) {
+	var it models.UpdateTRBGuidanceLetterInsightOrderInput
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
@@ -63437,7 +62969,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBGuidanceLetterRecommendationO
 			it.NewOrder = data
 		case "category":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx, v)
+			data, err := ec.unmarshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -67317,30 +66849,30 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "createTRBGuidanceLetterRecommendation":
+		case "createTRBGuidanceLetterInsight":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createTRBGuidanceLetterRecommendation(ctx, field)
+				return ec._Mutation_createTRBGuidanceLetterInsight(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "updateTRBGuidanceLetterRecommendation":
+		case "updateTRBGuidanceLetterInsight":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateTRBGuidanceLetterRecommendation(ctx, field)
+				return ec._Mutation_updateTRBGuidanceLetterInsight(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "updateTRBGuidanceLetterRecommendationOrder":
+		case "updateTRBGuidanceLetterInsightOrder":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateTRBGuidanceLetterRecommendationOrder(ctx, field)
+				return ec._Mutation_updateTRBGuidanceLetterInsightOrder(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "deleteTRBGuidanceLetterRecommendation":
+		case "deleteTRBGuidanceLetterInsight":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_deleteTRBGuidanceLetterRecommendation(ctx, field)
+				return ec._Mutation_deleteTRBGuidanceLetterInsight(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -71700,34 +71232,34 @@ func (ec *executionContext) _TRBGuidanceLetter(ctx context.Context, sel ast.Sele
 	return out
 }
 
-var tRBGuidanceLetterRecommendationImplementors = []string{"TRBGuidanceLetterRecommendation"}
+var tRBGuidanceLetterInsightImplementors = []string{"TRBGuidanceLetterInsight"}
 
-func (ec *executionContext) _TRBGuidanceLetterRecommendation(ctx context.Context, sel ast.SelectionSet, obj *models.TRBGuidanceLetterRecommendation) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, tRBGuidanceLetterRecommendationImplementors)
+func (ec *executionContext) _TRBGuidanceLetterInsight(ctx context.Context, sel ast.SelectionSet, obj *models.TRBGuidanceLetterInsight) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBGuidanceLetterInsightImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	deferred := make(map[string]*graphql.FieldSet)
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("TRBGuidanceLetterRecommendation")
+			out.Values[i] = graphql.MarshalString("TRBGuidanceLetterInsight")
 		case "id":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_id(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "trbRequestId":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_trbRequestId(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_trbRequestId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "title":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_title(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
-		case "recommendation":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_recommendation(ctx, field, obj)
+		case "insight":
+			out.Values[i] = ec._TRBGuidanceLetterInsight_insight(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
@@ -71740,7 +71272,7 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation(ctx context.Context
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._TRBGuidanceLetterRecommendation_links(ctx, field, obj)
+				res = ec._TRBGuidanceLetterInsight_links(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -71776,7 +71308,7 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation(ctx context.Context
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._TRBGuidanceLetterRecommendation_author(ctx, field, obj)
+				res = ec._TRBGuidanceLetterInsight_author(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -71804,23 +71336,23 @@ func (ec *executionContext) _TRBGuidanceLetterRecommendation(ctx context.Context
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdBy":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_createdBy(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_createdBy(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "createdAt":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_createdAt(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "modifiedBy":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_modifiedBy(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_modifiedBy(ctx, field, obj)
 		case "modifiedAt":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_modifiedAt(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_modifiedAt(ctx, field, obj)
 		case "deletedAt":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_deletedAt(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_deletedAt(ctx, field, obj)
 		case "category":
-			out.Values[i] = ec._TRBGuidanceLetterRecommendation_category(ctx, field, obj)
+			out.Values[i] = ec._TRBGuidanceLetterInsight_category(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -75007,8 +74539,8 @@ func (ec *executionContext) unmarshalNCreateTRBAdminNoteSupportingDocumentsInput
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateTRBGuidanceLetterRecommendationInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterRecommendationInput(ctx context.Context, v any) (models.CreateTRBGuidanceLetterRecommendationInput, error) {
-	res, err := ec.unmarshalInputCreateTRBGuidanceLetterRecommendationInput(ctx, v)
+func (ec *executionContext) unmarshalNCreateTRBGuidanceLetterInsightInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateTRBGuidanceLetterInsightInput(ctx context.Context, v any) (models.CreateTRBGuidanceLetterInsightInput, error) {
+	res, err := ec.unmarshalInputCreateTRBGuidanceLetterInsightInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -77108,11 +76640,11 @@ func (ec *executionContext) marshalNTRBGuidanceLetter2ᚖgithubᚗcomᚋcmsᚑen
 	return ec._TRBGuidanceLetter(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendation) graphql.Marshaler {
-	return ec._TRBGuidanceLetterRecommendation(ctx, sel, &v)
+func (ec *executionContext) marshalNTRBGuidanceLetterInsight2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterInsight) graphql.Marshaler {
+	return ec._TRBGuidanceLetterInsight(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.TRBGuidanceLetterRecommendation) graphql.Marshaler {
+func (ec *executionContext) marshalNTRBGuidanceLetterInsight2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.TRBGuidanceLetterInsight) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -77136,7 +76668,7 @@ func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithub
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx, sel, v[i])
+			ret[i] = ec.marshalNTRBGuidanceLetterInsight2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -77156,23 +76688,23 @@ func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2ᚕᚖgithub
 	return ret
 }
 
-func (ec *executionContext) marshalNTRBGuidanceLetterRecommendation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendation(ctx context.Context, sel ast.SelectionSet, v *models.TRBGuidanceLetterRecommendation) graphql.Marshaler {
+func (ec *executionContext) marshalNTRBGuidanceLetterInsight2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsight(ctx context.Context, sel ast.SelectionSet, v *models.TRBGuidanceLetterInsight) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
-	return ec._TRBGuidanceLetterRecommendation(ctx, sel, v)
+	return ec._TRBGuidanceLetterInsight(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v any) (models.TRBGuidanceLetterRecommendationCategory, error) {
+func (ec *executionContext) unmarshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, v any) (models.TRBGuidanceLetterInsightCategory, error) {
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBGuidanceLetterRecommendationCategory(tmp)
+	res := models.TRBGuidanceLetterInsightCategory(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+func (ec *executionContext) marshalNTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterInsightCategory) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -77761,13 +77293,13 @@ func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterInput2map(ctx conte
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterRecommendationInput2map(ctx context.Context, v any) (map[string]interface{}, error) {
-	res, err := ec.unmarshalInputUpdateTRBGuidanceLetterRecommendationInput(ctx, v)
+func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterInsightInput2map(ctx context.Context, v any) (map[string]interface{}, error) {
+	res, err := ec.unmarshalInputUpdateTRBGuidanceLetterInsightInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterRecommendationOrderInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateTRBGuidanceLetterRecommendationOrderInput(ctx context.Context, v any) (models.UpdateTRBGuidanceLetterRecommendationOrderInput, error) {
-	res, err := ec.unmarshalInputUpdateTRBGuidanceLetterRecommendationOrderInput(ctx, v)
+func (ec *executionContext) unmarshalNUpdateTRBGuidanceLetterInsightOrderInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateTRBGuidanceLetterInsightOrderInput(ctx context.Context, v any) (models.UpdateTRBGuidanceLetterInsightOrderInput, error) {
+	res, err := ec.unmarshalInputUpdateTRBGuidanceLetterInsightOrderInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -79055,27 +78587,27 @@ func (ec *executionContext) marshalOTRBGuidanceLetter2ᚖgithubᚗcomᚋcmsᚑen
 	return ec._TRBGuidanceLetter(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v any) (models.TRBGuidanceLetterRecommendationCategory, error) {
+func (ec *executionContext) unmarshalOTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, v any) (models.TRBGuidanceLetterInsightCategory, error) {
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBGuidanceLetterRecommendationCategory(tmp)
+	res := models.TRBGuidanceLetterInsightCategory(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOTRBGuidanceLetterRecommendationCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+func (ec *executionContext) marshalOTRBGuidanceLetterInsightCategory2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBGuidanceLetterInsightCategory) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	return res
 }
 
-func (ec *executionContext) unmarshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, v any) (*models.TRBGuidanceLetterRecommendationCategory, error) {
+func (ec *executionContext) unmarshalOTRBGuidanceLetterInsightCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, v any) (*models.TRBGuidanceLetterInsightCategory, error) {
 	if v == nil {
 		return nil, nil
 	}
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBGuidanceLetterRecommendationCategory(tmp)
+	res := models.TRBGuidanceLetterInsightCategory(tmp)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOTRBGuidanceLetterRecommendationCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterRecommendationCategory(ctx context.Context, sel ast.SelectionSet, v *models.TRBGuidanceLetterRecommendationCategory) graphql.Marshaler {
+func (ec *executionContext) marshalOTRBGuidanceLetterInsightCategory2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBGuidanceLetterInsightCategory(ctx context.Context, sel ast.SelectionSet, v *models.TRBGuidanceLetterInsightCategory) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
