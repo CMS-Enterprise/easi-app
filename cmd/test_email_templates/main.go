@@ -730,7 +730,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			SystemIntakeID:     intakeID,
 			ProjectName:        "Project with Presentation",
 			RequesterName:      "Nobody",
-			RequesterComponent: "Office of Strategy, Performance, and Results",
+			RequesterComponent: "ABCD",
 			Recipients:         emailNotificationRecipients.RegularRecipientEmails,
 		},
 	)
