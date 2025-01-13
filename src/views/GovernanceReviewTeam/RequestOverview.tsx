@@ -26,6 +26,7 @@ import UploadForm from 'views/SystemIntake/Documents/UploadForm';
 
 import AccordionNavigation from '../../components/shared/AccordionNavigation';
 
+import PresentationLinksForm from './GRBReview/PresentationLinksForm';
 import Actions from './Actions';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
@@ -203,17 +204,25 @@ const RequestOverview = ({
                 />
 
                 {flags?.grbReviewTab && (
-                  <Route
-                    path="/it-governance/:systemId/grb-review/:action(add|edit)?"
-                    render={() => (
-                      <GRBReview
-                        {...systemIntake}
-                        businessCase={businessCase}
-                        grbReviewers={grbReviewers}
-                        grbReviewStartedAt={grbReviewStartedAt}
-                      />
-                    )}
-                  />
+                  <>
+                    <Route
+                      path="/it-governance/:systemId/grb-review/presentation-links"
+                      render={() => <PresentationLinksForm />}
+                    />
+
+                    <Route
+                      path="/it-governance/:systemId/grb-review/:action(add|edit)?"
+                      exact
+                      render={() => (
+                        <GRBReview
+                          {...systemIntake}
+                          businessCase={businessCase}
+                          grbReviewers={grbReviewers}
+                          grbReviewStartedAt={grbReviewStartedAt}
+                        />
+                      )}
+                    />
+                  </>
                 )}
 
                 {/* GRT only routes */}
