@@ -700,6 +700,29 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 	}, nil
 }
 
+// SetSystemIntakeGRBPresentationLinks is the resolver for the setSystemIntakeGRBPresentationLinks field.
+func (r *mutationResolver) SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error) {
+	mockPresentationLinks := &models.SystemIntakeGRBPresentationLinks{
+		SystemIntakeID:    uuid.MustParse("5af245bc-fc54-4677-bab1-1b3e798bb43c"),
+		CreatedBy:         appcontext.Principal(ctx).Account().ID,
+		CreatedAt:         time.Now(),
+		RecordingLink:     input.RecordingLink,
+		RecordingPasscode: input.RecordingPasscode,
+		TranscriptLink:    input.TranscriptLink,
+	}
+	if input.TranscriptFileData != nil {
+		mockPresentationLinks.TranscriptFileName = &input.TranscriptFileData.Filename
+		mockPresentationLinks.TranscriptFileURL = helpers.PointerTo("somes3bucketurl.com")
+		mockPresentationLinks.TranscriptFileStatus = helpers.PointerTo(models.SystemIntakeDocumentStatusPending)
+	}
+	if input.PresentationDeckFileData != nil {
+		mockPresentationLinks.PresentationDeckFileName = &input.PresentationDeckFileData.Filename
+		mockPresentationLinks.PresentationDeckFileURL = helpers.PointerTo("somes3bucketurl.com")
+		mockPresentationLinks.PresentationDeckFileStatus = helpers.PointerTo(models.SystemIntakeDocumentStatusPending)
+	}
+	return mockPresentationLinks, nil
+}
+
 // ArchiveSystemIntake is the resolver for the archiveSystemIntake field.
 func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
@@ -1925,6 +1948,24 @@ func (r *systemIntakeResolver) RelatedTRBRequests(ctx context.Context, obj *mode
 // GrbDiscussions is the resolver for the grbDiscussions field.
 func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
 	return resolvers.SystemIntakeGRBDiscussions(ctx, r.store, obj.ID)
+}
+
+// GrbPresentationLinks is the resolver for the grbPresentationLinks field.
+func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error) {
+	return &models.SystemIntakeGRBPresentationLinks{
+		SystemIntakeID:             uuid.MustParse("5af245bc-fc54-4677-bab1-1b3e798bb43c"),
+		CreatedBy:                  appcontext.Principal(ctx).Account().ID,
+		CreatedAt:                  time.Now(),
+		RecordingLink:              helpers.PointerTo("https://google.com"),
+		RecordingPasscode:          helpers.PointerTo("123456"),
+		TranscriptLink:             nil,
+		TranscriptFileName:         helpers.PointerTo("transcript.doc"),
+		TranscriptFileURL:          helpers.PointerTo("somes3bucketurl.com"),
+		TranscriptFileStatus:       helpers.PointerTo(models.SystemIntakeDocumentStatusPending),
+		PresentationDeckFileName:   helpers.PointerTo("presentationDeck.pptx"),
+		PresentationDeckFileURL:    helpers.PointerTo("somes3bucketurl.com"),
+		PresentationDeckFileStatus: helpers.PointerTo(models.SystemIntakeDocumentStatusPending),
+	}, nil
 }
 
 // DocumentType is the resolver for the documentType field.

@@ -999,6 +999,7 @@ export type Mutation = {
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
   sendTRBGuidanceLetter: TRBGuidanceLetter;
   setRolesForUserOnSystem?: Maybe<Scalars['String']['output']>;
+  setSystemIntakeGRBPresentationLinks?: Maybe<SystemIntakeGRBPresentationLinks>;
   setSystemIntakeRelationExistingService?: Maybe<UpdateSystemIntakePayload>;
   setSystemIntakeRelationExistingSystem?: Maybe<UpdateSystemIntakePayload>;
   setSystemIntakeRelationNewSystem?: Maybe<UpdateSystemIntakePayload>;
@@ -1335,6 +1336,12 @@ export type MutationSendTRBGuidanceLetterArgs = {
 /** Defines the mutations for the schema */
 export type MutationSetRolesForUserOnSystemArgs = {
   input: SetRolesForUserOnSystemInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationSetSystemIntakeGRBPresentationLinksArgs = {
+  input: SystemIntakeGRBPresentationLinksInput;
 };
 
 
@@ -1864,6 +1871,8 @@ export type SystemIntake = {
   grbDiscussions: Array<SystemIntakeGRBReviewDiscussion>;
   /** This is a calculated state based on if a date exists for the GRB Meeting date */
   grbMeetingState: SystemIntakeMeetingState;
+  /** GRB Presentation Link Data */
+  grbPresentationLinks?: Maybe<SystemIntakeGRBPresentationLinks>;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
   grbReviewers: Array<SystemIntakeGRBReviewer>;
   grtDate?: Maybe<Scalars['Time']['output']>;
@@ -2224,6 +2233,35 @@ export type SystemIntakeFundingSourceInput = {
 export type SystemIntakeFundingSourcesInput = {
   existingFunding?: InputMaybe<Scalars['Boolean']['input']>;
   fundingSources: Array<SystemIntakeFundingSourceInput>;
+};
+
+/** Represents a single row of presentation link and document data for a system intake's Async GRB review */
+export type SystemIntakeGRBPresentationLinks = {
+  __typename: 'SystemIntakeGRBPresentationLinks';
+  createdAt: Scalars['Time']['output'];
+  createdBy: Scalars['UUID']['output'];
+  modifiedAt?: Maybe<Scalars['Time']['output']>;
+  modifiedBy?: Maybe<Scalars['UUID']['output']>;
+  presentationDeckFileName?: Maybe<Scalars['String']['output']>;
+  presentationDeckFileStatus?: Maybe<SystemIntakeDocumentStatus>;
+  presentationDeckFileURL?: Maybe<Scalars['String']['output']>;
+  recordingLink?: Maybe<Scalars['String']['output']>;
+  recordingPasscode?: Maybe<Scalars['String']['output']>;
+  systemIntakeID: Scalars['UUID']['output'];
+  transcriptFileName?: Maybe<Scalars['String']['output']>;
+  transcriptFileStatus?: Maybe<SystemIntakeDocumentStatus>;
+  transcriptFileURL?: Maybe<Scalars['String']['output']>;
+  transcriptLink?: Maybe<Scalars['String']['output']>;
+};
+
+/** Data needed to add system intake presentation link data */
+export type SystemIntakeGRBPresentationLinksInput = {
+  presentationDeckFileData?: InputMaybe<Scalars['Upload']['input']>;
+  recordingLink?: InputMaybe<Scalars['String']['input']>;
+  recordingPasscode?: InputMaybe<Scalars['String']['input']>;
+  systemIntakeID: Scalars['UUID']['input'];
+  transcriptFileData?: InputMaybe<Scalars['Upload']['input']>;
+  transcriptLink?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SystemIntakeGRBReviewDiscussion = {
