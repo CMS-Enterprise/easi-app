@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS system_intake_grb_presentation_links (
     transcript_link TEXT,
     transcript_s3_key TEXT,
     transcript_file_name TEXT,
+    presentation_deck_s3_key TEXT,
+    presentation_deck_file_name TEXT,
     CONSTRAINT transcript_link_or_doc_null_check CHECK (
       (
         transcript_link IS NULL AND
@@ -28,8 +30,6 @@ CREATE TABLE IF NOT EXISTS system_intake_grb_presentation_links (
         transcript_file_name IS NOT NULL
       )
     ),
-    presentation_deck_s3_key TEXT,
-    presentation_deck_file_name TEXT,
     CONSTRAINT presentation_deck_null_check CHECK (
       (
         presentation_deck_s3_key IS NULL AND
