@@ -158,7 +158,7 @@ func (s *AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 	intake := testhelpers.NewSystemIntake()
 	businessCase := testhelpers.NewBusinessCase(intake.ID)
 	dev := models.LifecycleCostPhaseDEVELOPMENT
-	cost := 300
+	cost := int64(300)
 
 	s.Run("golden path", func() {
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
@@ -266,7 +266,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForSubmit() {
 		businessCase := models.BusinessCaseWithCosts{
 			BusinessCase: models.BusinessCase{},
 		}
-		cost := 300
+		cost := int64(300)
 		businessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
 			models.EstimatedLifecycleCost{
 				Solution: models.LifecycleCostSolutionPREFERRED,
