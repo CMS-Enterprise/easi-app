@@ -97,7 +97,7 @@ func alternativeBRequired(businessCase *models.BusinessCaseWithCosts) bool {
 		businessCase.AlternativeBCostSavings.Valid
 }
 
-type solutionCostLines map[string]map[string]int
+type solutionCostLines map[string]map[string]int64
 
 func validateRequiredCost(lines solutionCostLines) string {
 	years := []string{}
@@ -142,14 +142,14 @@ func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCaseWithCost
 			valid = false
 		}
 
-		if validate.RequireInt(cost.Cost) {
+		if validate.RequireInt64(cost.Cost) {
 			solutionYearPhase := string(cost.Solution) + string(cost.Year) + string(*cost.Phase)
 			validations[solutionYearPhase] = "requires a cost"
 			valid = false
 		}
 
 		if valid {
-			value := map[string]int{
+			value := map[string]int64{
 				string(*cost.Phase): *cost.Cost,
 			}
 			switch cost.Solution {

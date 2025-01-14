@@ -122,7 +122,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 
 		cost := ""
 		if line.Cost != nil {
-			cost = strconv.Itoa(*line.Cost)
+			cost = strconv.FormatInt(*line.Cost, 10)
 		}
 		lc.Cost = pStr(cost)
 
