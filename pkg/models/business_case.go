@@ -69,7 +69,7 @@ type EstimatedLifecycleCost struct {
 	Solution       LifecycleCostSolution `json:"solution"`
 	Phase          *LifecycleCostPhase   `json:"phase"`
 	Year           LifecycleCostYear     `json:"year"`
-	Cost           *int                  `json:"cost"`
+	Cost           *int64                `json:"cost"`
 }
 
 func (e EstimatedLifecycleCost) GetMappingKey() uuid.UUID {
