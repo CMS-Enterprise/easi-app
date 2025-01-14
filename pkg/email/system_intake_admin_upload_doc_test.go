@@ -39,7 +39,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeAdminUploadDocEmail() {
 
 		<br>
 		<div class="no-margin">
-		  <p><u>Request Summary</u></p>
+		  <p><strong>Request summary:</strong></p>
 		  <p><strong>Project title:</strong> %[1]s</p>
 		  <p><strong>Requester:</strong> %[3]s, %[4]s
 		  </p>
@@ -49,7 +49,6 @@ func (s *EmailTestSuite) TestSendSystemIntakeAdminUploadDocEmail() {
 		<br>
 		<p>If you have questions, please contact the Governance Team at <a
 		    href="mailto:%[5]s">%[5]s</a>.</p>
-		<br>
 		<hr>
 		<p>You will continue to receive email notifications about your request until it is closed.</p>`,
 			requestName,
