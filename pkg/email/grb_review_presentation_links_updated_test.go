@@ -56,8 +56,8 @@ func (s *EmailTestSuite) TestSendGRBReviewPresentationLinksUpdatedEmail() {
 		<br>
 		<div class="no-margin">
   		  <p><strong>Request summary:</strong></p>
-  		  <p><strong>Project title:</strong> %[1]s</p>
-  		  <p><strong>Requester:</strong> %[3]s, %[4]s</p>
+  		  <p>Project title: %[1]s</p>
+  		  <p>Requester: %[3]s, %[4]s</p>
 		</div>
 
 		<br>
