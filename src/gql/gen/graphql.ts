@@ -2245,7 +2245,7 @@ export type SystemIntakeGRBPresentationLinks = {
   presentationDeckFileName?: Maybe<Scalars['String']['output']>;
   presentationDeckFileStatus?: Maybe<SystemIntakeDocumentStatus>;
   presentationDeckFileURL?: Maybe<Scalars['String']['output']>;
-  recordingLink?: Maybe<Scalars['String']['output']>;
+  recordingLink: Scalars['String']['output'];
   recordingPasscode?: Maybe<Scalars['String']['output']>;
   systemIntakeID: Scalars['UUID']['output'];
   transcriptFileName?: Maybe<Scalars['String']['output']>;
@@ -2257,7 +2257,7 @@ export type SystemIntakeGRBPresentationLinks = {
 /** Data needed to add system intake presentation link data */
 export type SystemIntakeGRBPresentationLinksInput = {
   presentationDeckFileData?: InputMaybe<Scalars['Upload']['input']>;
-  recordingLink?: InputMaybe<Scalars['String']['input']>;
+  recordingLink: Scalars['String']['input'];
   recordingPasscode?: InputMaybe<Scalars['String']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
   transcriptFileData?: InputMaybe<Scalars['Upload']['input']>;

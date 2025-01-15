@@ -54,6 +54,7 @@ type ResolverRoot interface {
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
 	SystemIntakeDocument() SystemIntakeDocumentResolver
+	SystemIntakeGRBPresentationLinks() SystemIntakeGRBPresentationLinksResolver
 	SystemIntakeGRBReviewer() SystemIntakeGRBReviewerResolver
 	SystemIntakeNote() SystemIntakeNoteResolver
 	TRBAdminNote() TRBAdminNoteResolver
@@ -1399,6 +1400,13 @@ type SystemIntakeDocumentResolver interface {
 	URL(ctx context.Context, obj *models.SystemIntakeDocument) (*string, error)
 	CanDelete(ctx context.Context, obj *models.SystemIntakeDocument) (bool, error)
 	CanView(ctx context.Context, obj *models.SystemIntakeDocument) (bool, error)
+}
+type SystemIntakeGRBPresentationLinksResolver interface {
+	TranscriptFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error)
+	TranscriptFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error)
+
+	PresentationDeckFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error)
+	PresentationDeckFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error)
 }
 type SystemIntakeGRBReviewerResolver interface {
 	VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error)
@@ -8768,7 +8776,7 @@ type SystemIntakeGRBPresentationLinks {
   createdAt: Time!
   modifiedBy: UUID
   modifiedAt: Time
-  recordingLink: String
+  recordingLink: String!
   recordingPasscode: String
   transcriptLink: String
   transcriptFileName: String
@@ -8784,7 +8792,7 @@ Data needed to add system intake presentation link data
 """
 input SystemIntakeGRBPresentationLinksInput {
   systemIntakeID: UUID!
-  recordingLink: String
+  recordingLink: String!
   recordingPasscode: String
   transcriptLink: String
   transcriptFileData: Upload
@@ -47761,11 +47769,14 @@ func (ec *executionContext) _SystemIntakeGRBPresentationLinks_recordingLink(ctx 
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeGRBPresentationLinks_recordingLink(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -47918,7 +47929,7 @@ func (ec *executionContext) _SystemIntakeGRBPresentationLinks_transcriptFileURL(
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.TranscriptFileURL, nil
+		return ec.resolvers.SystemIntakeGRBPresentationLinks().TranscriptFileURL(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -47936,8 +47947,8 @@ func (ec *executionContext) fieldContext_SystemIntakeGRBPresentationLinks_transc
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBPresentationLinks",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -47959,7 +47970,7 @@ func (ec *executionContext) _SystemIntakeGRBPresentationLinks_transcriptFileStat
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.TranscriptFileStatus, nil
+		return ec.resolvers.SystemIntakeGRBPresentationLinks().TranscriptFileStatus(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -47977,8 +47988,8 @@ func (ec *executionContext) fieldContext_SystemIntakeGRBPresentationLinks_transc
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBPresentationLinks",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type SystemIntakeDocumentStatus does not have child fields")
 		},
@@ -48041,7 +48052,7 @@ func (ec *executionContext) _SystemIntakeGRBPresentationLinks_presentationDeckFi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PresentationDeckFileURL, nil
+		return ec.resolvers.SystemIntakeGRBPresentationLinks().PresentationDeckFileURL(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48059,8 +48070,8 @@ func (ec *executionContext) fieldContext_SystemIntakeGRBPresentationLinks_presen
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBPresentationLinks",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -48082,7 +48093,7 @@ func (ec *executionContext) _SystemIntakeGRBPresentationLinks_presentationDeckFi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PresentationDeckFileStatus, nil
+		return ec.resolvers.SystemIntakeGRBPresentationLinks().PresentationDeckFileStatus(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48100,8 +48111,8 @@ func (ec *executionContext) fieldContext_SystemIntakeGRBPresentationLinks_presen
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBPresentationLinks",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type SystemIntakeDocumentStatus does not have child fields")
 		},
@@ -62559,7 +62570,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeGRBPresentationLinksInput(
 			it.SystemIntakeID = data
 		case "recordingLink":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recordingLink"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -71031,17 +71042,17 @@ func (ec *executionContext) _SystemIntakeGRBPresentationLinks(ctx context.Contex
 		case "systemIntakeID":
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_systemIntakeID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "createdBy":
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_createdBy(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "createdAt":
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "modifiedBy":
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_modifiedBy(ctx, field, obj)
@@ -71049,6 +71060,9 @@ func (ec *executionContext) _SystemIntakeGRBPresentationLinks(ctx context.Contex
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_modifiedAt(ctx, field, obj)
 		case "recordingLink":
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_recordingLink(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
 		case "recordingPasscode":
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_recordingPasscode(ctx, field, obj)
 		case "transcriptLink":
@@ -71056,15 +71070,139 @@ func (ec *executionContext) _SystemIntakeGRBPresentationLinks(ctx context.Contex
 		case "transcriptFileName":
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_transcriptFileName(ctx, field, obj)
 		case "transcriptFileURL":
-			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_transcriptFileURL(ctx, field, obj)
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeGRBPresentationLinks_transcriptFileURL(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "transcriptFileStatus":
-			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_transcriptFileStatus(ctx, field, obj)
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeGRBPresentationLinks_transcriptFileStatus(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "presentationDeckFileName":
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_presentationDeckFileName(ctx, field, obj)
 		case "presentationDeckFileURL":
-			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_presentationDeckFileURL(ctx, field, obj)
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeGRBPresentationLinks_presentationDeckFileURL(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "presentationDeckFileStatus":
-			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_presentationDeckFileStatus(ctx, field, obj)
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeGRBPresentationLinks_presentationDeckFileStatus(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

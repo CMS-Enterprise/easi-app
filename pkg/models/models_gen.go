@@ -616,28 +616,10 @@ type SystemIntakeFundingSourcesInput struct {
 	FundingSources  []*SystemIntakeFundingSourceInput `json:"fundingSources"`
 }
 
-// Represents a single row of presentation link and document data for a system intake's Async GRB review
-type SystemIntakeGRBPresentationLinks struct {
-	SystemIntakeID             uuid.UUID                   `json:"systemIntakeID"`
-	CreatedBy                  uuid.UUID                   `json:"createdBy"`
-	CreatedAt                  time.Time                   `json:"createdAt"`
-	ModifiedBy                 *uuid.UUID                  `json:"modifiedBy,omitempty"`
-	ModifiedAt                 *time.Time                  `json:"modifiedAt,omitempty"`
-	RecordingLink              *string                     `json:"recordingLink,omitempty"`
-	RecordingPasscode          *string                     `json:"recordingPasscode,omitempty"`
-	TranscriptLink             *string                     `json:"transcriptLink,omitempty"`
-	TranscriptFileName         *string                     `json:"transcriptFileName,omitempty"`
-	TranscriptFileURL          *string                     `json:"transcriptFileURL,omitempty"`
-	TranscriptFileStatus       *SystemIntakeDocumentStatus `json:"transcriptFileStatus,omitempty"`
-	PresentationDeckFileName   *string                     `json:"presentationDeckFileName,omitempty"`
-	PresentationDeckFileURL    *string                     `json:"presentationDeckFileURL,omitempty"`
-	PresentationDeckFileStatus *SystemIntakeDocumentStatus `json:"presentationDeckFileStatus,omitempty"`
-}
-
 // Data needed to add system intake presentation link data
 type SystemIntakeGRBPresentationLinksInput struct {
 	SystemIntakeID           uuid.UUID       `json:"systemIntakeID"`
-	RecordingLink            *string         `json:"recordingLink,omitempty"`
+	RecordingLink            string          `json:"recordingLink"`
 	RecordingPasscode        *string         `json:"recordingPasscode,omitempty"`
 	TranscriptLink           *string         `json:"transcriptLink,omitempty"`
 	TranscriptFileData       *graphql.Upload `json:"transcriptFileData,omitempty"`

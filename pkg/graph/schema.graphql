@@ -692,7 +692,7 @@ type SystemIntakeGRBPresentationLinks {
   createdAt: Time!
   modifiedBy: UUID
   modifiedAt: Time
-  recordingLink: String
+  recordingLink: String!
   recordingPasscode: String
   transcriptLink: String
   transcriptFileName: String
@@ -708,7 +708,7 @@ Data needed to add system intake presentation link data
 """
 input SystemIntakeGRBPresentationLinksInput {
   systemIntakeID: UUID!
-  recordingLink: String
+  recordingLink: String!
   recordingPasscode: String
   transcriptLink: String
   transcriptFileData: Upload
