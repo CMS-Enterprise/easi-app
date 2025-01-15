@@ -41,8 +41,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeAdminUploadDocEmail() {
 		<div class="no-margin">
 		  <p><strong>Request summary:</strong></p>
 		  <p>Project title: %[1]s</p>
-		  <p>Requester: %[3]s, %[4]s
-		  </p>
+		  <p>Requester: %[3]s, %[4]s</p>
 		</div>
 
 
