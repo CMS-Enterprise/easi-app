@@ -684,6 +684,38 @@ type SystemIntakeRequester {
 }
 
 """
+Represents a single row of presentation link and document data for a system intake's Async GRB review
+"""
+type SystemIntakeGRBPresentationLinks {
+  systemIntakeID: UUID!
+  createdBy: UUID!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
+  recordingLink: String!
+  recordingPasscode: String
+  transcriptLink: String
+  transcriptFileName: String
+  transcriptFileURL: String
+  transcriptFileStatus: SystemIntakeDocumentStatus
+  presentationDeckFileName: String
+  presentationDeckFileURL: String
+  presentationDeckFileStatus: SystemIntakeDocumentStatus
+}
+
+"""
+Data needed to add system intake presentation link data
+"""
+input SystemIntakeGRBPresentationLinksInput {
+  systemIntakeID: UUID!
+  recordingLink: String!
+  recordingPasscode: String
+  transcriptLink: String
+  transcriptFileData: Upload
+  presentationDeckFileData: Upload
+}
+
+"""
 Represents an IT governance request for a system
 """
 type SystemIntake {
@@ -795,6 +827,10 @@ type SystemIntake {
   GRB Review Discussion Posts/Threads
   """
   grbDiscussions: [SystemIntakeGRBReviewDiscussion!]!
+  """
+  GRB Presentation Link Data
+  """
+  grbPresentationLinks: SystemIntakeGRBPresentationLinks
 }
 
 type SystemIntakeContractNumber {
@@ -2563,6 +2599,8 @@ type Mutation {
   createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
+
+  setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 
