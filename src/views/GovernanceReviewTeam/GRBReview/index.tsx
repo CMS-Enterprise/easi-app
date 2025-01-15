@@ -66,10 +66,6 @@ const GRBReview = ({
   const { t } = useTranslation('grbReview');
   const history = useHistory();
 
-  // todo
-  // do not show card at all for non-admin + empty
-  const [isEmptyAdmin, setIsEmptyAdmin] = useState(true);
-
   const { action } = useParams<{
     action?: GRBReviewFormAction;
   }>();
@@ -81,6 +77,20 @@ const GRBReview = ({
 
   const [startReviewModalIsOpen, setStartReviewModalIsOpen] =
     useState<boolean>(false);
+
+  // todo
+  // do not show card at all for non-admin + empty
+  const [isEmptyAdmin, setIsEmptyAdmin] = useState(false);
+
+  const [
+    isRemovePresentationLinksModalOpen,
+    setRemovePresentationLinksModalOpen
+  ] = useState<boolean>(false);
+
+  const removePresentationLinks = () => {
+    // console.warn('todo');
+    setRemovePresentationLinksModalOpen(false);
+  };
 
   const { showMessage } = useMessage();
 
@@ -266,6 +276,7 @@ const GRBReview = ({
             <p className="margin-top-05 line-height-body-5">
               {t('supportingDocumentsText')}
             </p>
+
             {/* Asynchronous presentation */}
             {/* eslint-disable-next-line */}
             <div
@@ -297,7 +308,12 @@ const GRBReview = ({
                     <Button type="button" unstyled className="margin-right-2">
                       {t('asyncPresentation.editPresentationLinks')}
                     </Button>
-                    <Button type="button" unstyled className="text-error">
+                    <Button
+                      type="button"
+                      unstyled
+                      className="text-error"
+                      onClick={() => setRemovePresentationLinksModalOpen(true)}
+                    >
                       {t('asyncPresentation.removeAllPresentationLinks')}
                     </Button>
                   </div>
@@ -323,6 +339,37 @@ const GRBReview = ({
                 )}
               </CardFooter>
             </div>
+
+            {/* Modal to remove presentation links */}
+            <Modal
+              isOpen={isRemovePresentationLinksModalOpen}
+              closeModal={() => setRemovePresentationLinksModalOpen(false)}
+            >
+              <ModalHeading>
+                {t('asyncPresentation.modalRemoveLinks.title')}
+              </ModalHeading>
+
+              <p>{t('asyncPresentation.modalRemoveLinks.text')}</p>
+
+              <ButtonGroup>
+                <Button
+                  className="margin-right-1 bg-error"
+                  type="button"
+                  onClick={removePresentationLinks}
+                >
+                  {t('asyncPresentation.modalRemoveLinks.confirm')}
+                </Button>
+
+                <Button
+                  type="button"
+                  unstyled
+                  onClick={() => setRemovePresentationLinksModalOpen(false)}
+                >
+                  {t('asyncPresentation.modalRemoveLinks.cancel')}
+                </Button>
+              </ButtonGroup>
+            </Modal>
+
             {/* Business Case Card */}
             <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
               <CardHeader>
