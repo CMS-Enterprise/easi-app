@@ -583,6 +583,7 @@ type ComplexityRoot struct {
 		DeleteCedarSystemBookmark                        func(childComplexity int, input models.CreateCedarSystemBookmarkInput) int
 		DeleteSystemIntakeContact                        func(childComplexity int, input models.DeleteSystemIntakeContactInput) int
 		DeleteSystemIntakeDocument                       func(childComplexity int, id uuid.UUID) int
+		DeleteSystemIntakeGRBPresentationLinks           func(childComplexity int, input models.DeleteSystemIntakeGRBPresentationLinksInput) int
 		DeleteSystemIntakeGRBReviewer                    func(childComplexity int, input models.DeleteSystemIntakeGRBReviewerInput) int
 		DeleteTRBGuidanceLetterInsight                   func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
@@ -1257,6 +1258,7 @@ type MutationResolver interface {
 	CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error)
 	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
 	SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error)
+	DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, input models.DeleteSystemIntakeGRBPresentationLinksInput) (uuid.UUID, error)
 	ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	SendFeedbackEmail(ctx context.Context, input models.SendFeedbackEmailInput) (*string, error)
 	SendCantFindSomethingEmail(ctx context.Context, input models.SendCantFindSomethingEmailInput) (*string, error)
@@ -4403,6 +4405,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteSystemIntakeDocument(childComplexity, args["id"].(uuid.UUID)), true
+
+	case "Mutation.deleteSystemIntakeGRBPresentationLinks":
+		if e.complexity.Mutation.DeleteSystemIntakeGRBPresentationLinks == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteSystemIntakeGRBPresentationLinks_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteSystemIntakeGRBPresentationLinks(childComplexity, args["input"].(models.DeleteSystemIntakeGRBPresentationLinksInput)), true
 
 	case "Mutation.deleteSystemIntakeGRBReviewer":
 		if e.complexity.Mutation.DeleteSystemIntakeGRBReviewer == nil {
@@ -7922,6 +7936,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateTRBRequestDocumentInput,
 		ec.unmarshalInputCreateTRBRequestFeedbackInput,
 		ec.unmarshalInputDeleteSystemIntakeContactInput,
+		ec.unmarshalInputDeleteSystemIntakeGRBPresentationLinksInput,
 		ec.unmarshalInputDeleteSystemIntakeGRBReviewerInput,
 		ec.unmarshalInputDeleteTRBRequestFundingSourcesInput,
 		ec.unmarshalInputEmailNotificationRecipients,
@@ -8797,6 +8812,10 @@ input SystemIntakeGRBPresentationLinksInput {
   transcriptLink: String
   transcriptFileData: Upload
   presentationDeckFileData: Upload
+}
+
+input DeleteSystemIntakeGRBPresentationLinksInput {
+  systemIntakeID: UUID!
 }
 
 """
@@ -10685,6 +10704,7 @@ type Mutation {
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
   setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
+  deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 
@@ -12356,6 +12376,34 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeDocument_argsID(
 	}
 
 	var zeroVal uuid.UUID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteSystemIntakeGRBPresentationLinks_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_deleteSystemIntakeGRBPresentationLinks_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_deleteSystemIntakeGRBPresentationLinks_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.DeleteSystemIntakeGRBPresentationLinksInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.DeleteSystemIntakeGRBPresentationLinksInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNDeleteSystemIntakeGRBPresentationLinksInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐDeleteSystemIntakeGRBPresentationLinksInput(ctx, tmp)
+	}
+
+	var zeroVal models.DeleteSystemIntakeGRBPresentationLinksInput
 	return zeroVal, nil
 }
 
@@ -33280,6 +33328,61 @@ func (ec *executionContext) fieldContext_Mutation_setSystemIntakeGRBPresentation
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_setSystemIntakeGRBPresentationLinks_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteSystemIntakeGRBPresentationLinks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteSystemIntakeGRBPresentationLinks(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteSystemIntakeGRBPresentationLinks(rctx, fc.Args["input"].(models.DeleteSystemIntakeGRBPresentationLinksInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteSystemIntakeGRBPresentationLinks(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteSystemIntakeGRBPresentationLinks_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -61315,6 +61418,33 @@ func (ec *executionContext) unmarshalInputDeleteSystemIntakeContactInput(ctx con
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputDeleteSystemIntakeGRBPresentationLinksInput(ctx context.Context, obj any) (models.DeleteSystemIntakeGRBPresentationLinksInput, error) {
+	var it models.DeleteSystemIntakeGRBPresentationLinksInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputDeleteSystemIntakeGRBReviewerInput(ctx context.Context, obj any) (models.DeleteSystemIntakeGRBReviewerInput, error) {
 	var it models.DeleteSystemIntakeGRBReviewerInput
 	asMap := map[string]any{}
@@ -67695,6 +67825,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_setSystemIntakeGRBPresentationLinks(ctx, field)
 			})
+		case "deleteSystemIntakeGRBPresentationLinks":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteSystemIntakeGRBPresentationLinks(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "archiveSystemIntake":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_archiveSystemIntake(ctx, field)
@@ -75840,6 +75977,11 @@ func (ec *executionContext) unmarshalNCreateTRBRequestFeedbackInput2githubᚗcom
 
 func (ec *executionContext) unmarshalNDeleteSystemIntakeContactInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐDeleteSystemIntakeContactInput(ctx context.Context, v any) (models.DeleteSystemIntakeContactInput, error) {
 	res, err := ec.unmarshalInputDeleteSystemIntakeContactInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNDeleteSystemIntakeGRBPresentationLinksInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐDeleteSystemIntakeGRBPresentationLinksInput(ctx context.Context, v any) (models.DeleteSystemIntakeGRBPresentationLinksInput, error) {
+	res, err := ec.unmarshalInputDeleteSystemIntakeGRBPresentationLinksInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

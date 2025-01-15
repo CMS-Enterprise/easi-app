@@ -715,6 +715,10 @@ input SystemIntakeGRBPresentationLinksInput {
   presentationDeckFileData: Upload
 }
 
+input DeleteSystemIntakeGRBPresentationLinksInput {
+  systemIntakeID: UUID!
+}
+
 """
 Represents an IT governance request for a system
 """
@@ -2601,6 +2605,7 @@ type Mutation {
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
   setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
+  deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 

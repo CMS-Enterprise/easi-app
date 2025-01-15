@@ -718,6 +718,11 @@ func (r *mutationResolver) SetSystemIntakeGRBPresentationLinks(ctx context.Conte
 	return mockPresentationLinks, nil
 }
 
+// DeleteSystemIntakeGRBPresentationLinks is the resolver for the deleteSystemIntakeGRBPresentationLinks field.
+func (r *mutationResolver) DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, input models.DeleteSystemIntakeGRBPresentationLinksInput) (uuid.UUID, error) {
+	return input.SystemIntakeID, r.store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
+}
+
 // ArchiveSystemIntake is the resolver for the archiveSystemIntake field.
 func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
