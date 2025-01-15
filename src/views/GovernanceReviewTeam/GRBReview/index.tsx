@@ -27,6 +27,7 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
+import Divider from 'components/shared/Divider';
 import useMessage from 'hooks/useMessage';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -64,6 +65,10 @@ const GRBReview = ({
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
+
+  // todo
+  // do not show card at all for non-admin + empty
+  const [isEmptyAdmin, setIsEmptyAdmin] = useState(true);
 
   const { action } = useParams<{
     action?: GRBReviewFormAction;
@@ -215,11 +220,9 @@ const GRBReview = ({
 
           <div className="padding-bottom-4" id="grbReview">
             <PageHeading className="margin-y-0">{t('title')}</PageHeading>
-
             <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
               {t('description')}
             </p>
-
             {/* Feature in progress alert */}
             <Alert type="info" heading={t('featureInProgress')}>
               <Trans
@@ -233,7 +236,6 @@ const GRBReview = ({
                 }}
               />
             </Alert>
-
             {grbReviewStartedAt && (
               <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
                 <Trans
@@ -244,7 +246,6 @@ const GRBReview = ({
                 />
               </p>
             )}
-
             {
               // Only show button if user is admin and review has not been started
               !grbReviewStartedAt && isITGovAdmin && (
@@ -258,7 +259,6 @@ const GRBReview = ({
                 </Button>
               )
             }
-
             {/* Supporting Docs text */}
             <h2 className="margin-bottom-0 margin-top-6" id="documents">
               {t('supportingDocuments')}
@@ -266,7 +266,63 @@ const GRBReview = ({
             <p className="margin-top-05 line-height-body-5">
               {t('supportingDocumentsText')}
             </p>
-
+            {/* Asynchronous presentation */}
+            {/* eslint-disable-next-line */}
+            <div
+              className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4"
+              // eslint-disable-next-line
+              onClick={() => setIsEmptyAdmin(!isEmptyAdmin)}
+            >
+              <CardHeader>
+                <h3 className="display-inline-block margin-right-2 margin-bottom-0">
+                  {t('asyncPresentation.title')}
+                </h3>
+              </CardHeader>
+              <CardBody>
+                {isEmptyAdmin ? (
+                  <>
+                    <Alert type="info" slim className="margin-bottom-1">
+                      {t('asyncPresentation.adminEmptyAlert')}
+                    </Alert>
+                    <div className="margin-top-2 margin-bottom-neg-2">
+                      <Button type="button" unstyled className="margin-right-2">
+                        {t(
+                          'asyncPresentation.addAsynchronousPresentationLinks'
+                        )}
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="margin-top-neg-1">
+                    <Button type="button" unstyled className="margin-right-2">
+                      {t('asyncPresentation.editPresentationLinks')}
+                    </Button>
+                    <Button type="button" unstyled className="text-error">
+                      {t('asyncPresentation.removeAllPresentationLinks')}
+                    </Button>
+                  </div>
+                )}
+              </CardBody>
+              <CardFooter>
+                {!isEmptyAdmin && (
+                  <>
+                    <Divider className="margin-bottom-1" />
+                    <Button type="button" unstyled className="margin-right-2">
+                      {t('asyncPresentation.viewRecording')}
+                    </Button>
+                    <span className="text-base margin-right-2">
+                      {t('asyncPresentation.passcode', { passcode: 1010101 })}
+                    </span>
+                    <Button type="button" unstyled className="margin-right-2">
+                      {t('asyncPresentation.viewTranscript')}
+                    </Button>
+                    <Button type="button" unstyled className="margin-right-2">
+                      {t('asyncPresentation.viewSlideDeck')}
+                    </Button>
+                  </>
+                )}
+              </CardFooter>
+            </div>
             {/* Business Case Card */}
             <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
               <CardHeader>
@@ -340,7 +396,6 @@ const GRBReview = ({
                 <span>{t('additionalDocsLink')}</span>
               </UswdsReactLink>
             )}
-
             {/* Intake Request Link */}
             <p className="usa-card__container margin-x-0 padding-x-2 padding-y-1 display-inline-flex flex-row flex-wrap border-width-1px">
               <span className="margin-right-1">
@@ -354,15 +409,12 @@ const GRBReview = ({
                 {t('documentsIntakeLinkText')}
               </UswdsReactLink>
             </p>
-
             <DocumentsTable systemIntakeId={id} documents={documents} />
-
             <Discussions
               systemIntakeID={id}
               grbReviewers={grbReviewers}
               className="margin-top-4 margin-bottom-6"
             />
-
             <ParticipantsTable
               id={id}
               state={state}
