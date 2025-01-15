@@ -616,6 +616,16 @@ type SystemIntakeFundingSourcesInput struct {
 	FundingSources  []*SystemIntakeFundingSourceInput `json:"fundingSources"`
 }
 
+// Data needed to add system intake presentation link data
+type SystemIntakeGRBPresentationLinksInput struct {
+	SystemIntakeID           uuid.UUID       `json:"systemIntakeID"`
+	RecordingLink            string          `json:"recordingLink"`
+	RecordingPasscode        *string         `json:"recordingPasscode,omitempty"`
+	TranscriptLink           *string         `json:"transcriptLink,omitempty"`
+	TranscriptFileData       *graphql.Upload `json:"transcriptFileData,omitempty"`
+	PresentationDeckFileData *graphql.Upload `json:"presentationDeckFileData,omitempty"`
+}
+
 type SystemIntakeGRBReviewDiscussion struct {
 	InitialPost *SystemIntakeGRBReviewDiscussionPost   `json:"initialPost"`
 	Replies     []*SystemIntakeGRBReviewDiscussionPost `json:"replies"`
