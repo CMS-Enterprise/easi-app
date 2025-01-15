@@ -29,6 +29,10 @@ type systemIntakeAdminUploadDocBody struct {
 }
 
 func (sie systemIntakeEmails) systemIntakeAdminUploadDocBody(input SendSystemIntakeAdminUploadDocEmailInput) (string, error) {
+	if sie.client.templates.systemIntakeAdminUploadDocTemplate == nil {
+		return "", errors.New("system intake admin upload doc template is nil")
+	}
+
 	link := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 
 	data := systemIntakeAdminUploadDocBody{
@@ -37,10 +41,6 @@ func (sie systemIntakeEmails) systemIntakeAdminUploadDocBody(input SendSystemInt
 		RequestComponent:         input.RequesterComponent,
 		Link:                     sie.client.urlFromPath(link),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
-	}
-
-	if sie.client.templates.systemIntakeAdminUploadDocTemplate == nil {
-		return "", errors.New("system intake admin upload doc template is nil")
 	}
 
 	var b bytes.Buffer
