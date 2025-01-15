@@ -23,6 +23,7 @@ func (s *Store) DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, syst
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("failed to get rows affected when deleting GRB presentation links", zap.Error(err))
+		// don't return here - prefer to err from the below
 	}
 
 	if rowsAffected != 1 {
