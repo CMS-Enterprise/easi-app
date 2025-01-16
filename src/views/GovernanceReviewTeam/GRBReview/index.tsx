@@ -89,6 +89,7 @@ const GRBReview = ({
 
   const removePresentationLinks = () => {
     // console.warn('todo');
+    setIsEmptyAdmin(true);
     setRemovePresentationLinksModalOpen(false);
   };
 
@@ -278,12 +279,7 @@ const GRBReview = ({
             </p>
 
             {/* Asynchronous presentation */}
-            {/* eslint-disable-next-line */}
-            <div
-              className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4"
-              // eslint-disable-next-line
-              onClick={() => setIsEmptyAdmin(!isEmptyAdmin)}
-            >
+            <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
               <CardHeader>
                 <h3 className="display-inline-block margin-right-2 margin-bottom-0">
                   {t('asyncPresentation.title')}
@@ -296,7 +292,15 @@ const GRBReview = ({
                       {t('asyncPresentation.adminEmptyAlert')}
                     </Alert>
                     <div className="margin-top-2 margin-bottom-neg-2">
-                      <Button type="button" unstyled className="margin-right-2">
+                      <Button
+                        type="button"
+                        unstyled
+                        className="margin-right-2 display-flex flex-align-center"
+                        onClick={() => {
+                          setIsEmptyAdmin(false);
+                        }}
+                      >
+                        <Icon.Add className="margin-right-1" />
                         {t(
                           'asyncPresentation.addAsynchronousPresentationLinks'
                         )}
@@ -322,19 +326,26 @@ const GRBReview = ({
               <CardFooter>
                 {!isEmptyAdmin && (
                   <>
-                    <Divider className="margin-bottom-1" />
-                    <Button type="button" unstyled className="margin-right-2">
-                      {t('asyncPresentation.viewRecording')}
-                    </Button>
-                    <span className="text-base margin-right-2">
-                      {t('asyncPresentation.passcode', { passcode: 1010101 })}
-                    </span>
-                    <Button type="button" unstyled className="margin-right-2">
-                      {t('asyncPresentation.viewTranscript')}
-                    </Button>
-                    <Button type="button" unstyled className="margin-right-2">
-                      {t('asyncPresentation.viewSlideDeck')}
-                    </Button>
+                    <Divider className="margin-bottom-2" />
+                    <div className="display-flex flex-wrap">
+                      <Button
+                        type="button"
+                        unstyled
+                        className="margin-right-2 display-flex flex-align-center"
+                      >
+                        {t('asyncPresentation.viewRecording')}
+                        <Icon.Launch className="margin-left-05" />
+                      </Button>
+                      <span className="text-base margin-right-2">
+                        {t('asyncPresentation.passcode', { passcode: 1010101 })}
+                      </span>
+                      <Button type="button" unstyled className="margin-right-2">
+                        {t('asyncPresentation.viewTranscript')}
+                      </Button>
+                      <Button type="button" unstyled className="margin-right-2">
+                        {t('asyncPresentation.viewSlideDeck')}
+                      </Button>
+                    </div>
                   </>
                 )}
               </CardFooter>
