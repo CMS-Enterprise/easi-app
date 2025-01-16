@@ -10,6 +10,7 @@ import {
   Icon,
   TextInput
 } from '@trussworks/react-uswds';
+import { SystemIntakeGRBPresentationLinksInput } from 'gql/gen/graphql';
 
 import { useEasiForm } from 'components/EasiForm';
 import Alert from 'components/shared/Alert';
@@ -19,15 +20,18 @@ import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 
-type MockPresentationLink = {
-  presentationDeck: File;
-  recordingLink: string;
-  recordingPasscode?: string | null;
-  transcriptLink?: string | null;
-  transcriptDocument?: File;
+type PresentationLinkFields = Omit<
+  SystemIntakeGRBPresentationLinksInput,
+  'systemIntakeID'
+>;
+
+type PresentationLinksFormProps = {
+  systemIntakeID: string;
 };
 
-const PresentationLinksForm = () => {
+const PresentationLinksForm = ({
+  systemIntakeID
+}: PresentationLinksFormProps) => {
   const { t } = useTranslation('grbReview');
 
   const formType: 'add' | 'edit' = 'add';
@@ -35,7 +39,7 @@ const PresentationLinksForm = () => {
   const {
     register,
     formState: { errors }
-  } = useEasiForm<MockPresentationLink>();
+  } = useEasiForm<PresentationLinkFields>();
 
   return (
     <Grid col={6} className="margin-top-7 margin-bottom-10 padding-bottom-3">
@@ -121,7 +125,7 @@ const PresentationLinksForm = () => {
           />
 
           <FileInput
-            {...register('presentationDeck')}
+            {...register('presentationDeckFileData')}
             id="presentationDeck"
             accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
             className="maxw-none"

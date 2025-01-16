@@ -207,7 +207,11 @@ const RequestOverview = ({
                   <>
                     <Route
                       path="/it-governance/:systemId/grb-review/presentation-links"
-                      render={() => <PresentationLinksForm />}
+                      render={() => (
+                        <PresentationLinksForm
+                          systemIntakeID={systemIntake.id}
+                        />
+                      )}
                     />
 
                     <Route
