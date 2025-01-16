@@ -180,6 +180,9 @@ export default {
     presentationDeckHelpText: 'Select a PDF, PPT, DOC, DOCX, XLS, or XLSX',
     uploadAlert:
       "To keep CMS safe, documents are scanned for viruses after uploading. If something goes wrong, we'll let you know.",
-    savePresentationDetails: 'Save presentation details'
+    savePresentationDetails: 'Save presentation details',
+    success: 'Your presentation details have been added.',
+    error:
+      'There was an issue saving your presentation details. Please try again, and if the problem persists, try again later.'
   }
 };
