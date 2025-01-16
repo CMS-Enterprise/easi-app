@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import {
   Button,
+  Fieldset,
   FileInput,
   Form,
   FormGroup,
@@ -23,7 +24,10 @@ import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import { TabPanel, Tabs } from 'components/Tabs';
 import useMessage from 'hooks/useMessage';
+
+import './index.scss';
 
 type PresentationLinkFields = Omit<
   SystemIntakeGRBPresentationLinksInput,
@@ -154,11 +158,70 @@ const PresentationLinksForm = ({
           </FormGroup>
 
           <FormGroup>
+            <Fieldset id="transcriptFields">
+              <legend className="text-bold">
+                {t('presentationLinks.transcript')}
+              </legend>
+              <HelpText id="transcriptHelpText" className="margin-top-05">
+                {t('presentationLinks.transcriptHelpText')}
+              </HelpText>
+
+              <Tabs className="margin-top-105">
+                <TabPanel
+                  id="addLink"
+                  tabName={t('presentationLinks.addLink')}
+                  className="outline-0"
+                >
+                  <ErrorMessage
+                    errors={errors}
+                    name="transcriptLink"
+                    as={<FieldErrorMsg />}
+                  />
+
+                  <TextInput
+                    {...register('transcriptLink')}
+                    id="transcriptLink"
+                    aria-describedby="transcriptHelpText"
+                    type="url"
+                    className="margin-top-2"
+                  />
+                </TabPanel>
+                <TabPanel
+                  id="addDocument"
+                  tabName={t('presentationLinks.uploadDocument')}
+                  className="outline-0"
+                >
+                  <HelpText
+                    id="transcriptFileDataHelpText"
+                    className="margin-top-2"
+                  >
+                    {t('presentationLinks.documentUploadHelpText')}
+                  </HelpText>
+
+                  <ErrorMessage
+                    errors={errors}
+                    name="transcriptFileData"
+                    as={<FieldErrorMsg />}
+                  />
+
+                  <FileInput
+                    {...register('transcriptFileData')}
+                    id="transcriptFileData"
+                    accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                    aria-describedby="transcriptHelpText transcriptFileDataHelpText"
+                    className="maxw-none"
+                  />
+                </TabPanel>
+              </Tabs>
+            </Fieldset>
+          </FormGroup>
+
+          <FormGroup>
             <Label htmlFor="presentationDeck">
               {t('presentationLinks.presentationDeckLabel')}
             </Label>
             <HelpText id="presentationDeckHelpText" className="margin-top-05">
-              {t('presentationLinks.presentationDeckHelpText')}
+              {t('presentationLinks.documentUploadHelpText')}
             </HelpText>
 
             <ErrorMessage
@@ -171,6 +234,7 @@ const PresentationLinksForm = ({
               {...register('presentationDeckFileData')}
               id="presentationDeck"
               accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+              aria-describedby="presentationDeckHelpText"
               className="maxw-none"
             />
           </FormGroup>

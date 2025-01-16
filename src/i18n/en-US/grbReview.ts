@@ -176,8 +176,13 @@ export default {
     recordingPasscodeLabel: 'Recording passcode',
     recordingPasscodeHelpText:
       'Include a passcode if one is required to view the recording.',
+    transcript: 'Transcript',
+    transcriptHelpText:
+      'If the transcript of the above recording is located elsewhere, include that link or upload that document below. You cannot include both a link and a document.',
+    addLink: 'Add link',
+    uploadDocument: 'Upload document',
     presentationDeckLabel: 'Upload a presentation deck',
-    presentationDeckHelpText: 'Select a PDF, PPT, DOC, DOCX, XLS, or XLSX',
+    documentUploadHelpText: 'Select a PDF, PPT, DOC, DOCX, XLS, or XLSX',
     uploadAlert:
       "To keep CMS safe, documents are scanned for viruses after uploading. If something goes wrong, we'll let you know.",
     savePresentationDetails: 'Save presentation details',
