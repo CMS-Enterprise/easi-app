@@ -685,6 +685,7 @@ type SystemIntakeRequester {
 
 """
 Represents a single row of presentation link and document data for a system intake's Async GRB review
+All data values are optional but there is a constraint to require one data value on insertion
 """
 type SystemIntakeGRBPresentationLinks {
   systemIntakeID: UUID!
@@ -692,7 +693,7 @@ type SystemIntakeGRBPresentationLinks {
   createdAt: Time!
   modifiedBy: UUID
   modifiedAt: Time
-  recordingLink: String!
+  recordingLink: String
   recordingPasscode: String
   transcriptLink: String
   transcriptFileName: String
@@ -705,14 +706,19 @@ type SystemIntakeGRBPresentationLinks {
 
 """
 Data needed to add system intake presentation link data
+One of the optional link/files values is required to pass the database constraint
 """
 input SystemIntakeGRBPresentationLinksInput {
   systemIntakeID: UUID!
-  recordingLink: String!
+  recordingLink: String
   recordingPasscode: String
   transcriptLink: String
   transcriptFileData: Upload
   presentationDeckFileData: Upload
+}
+
+input DeleteSystemIntakeGRBPresentationLinksInput {
+  systemIntakeID: UUID!
 }
 
 """
@@ -2601,6 +2607,7 @@ type Mutation {
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
   setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
+  deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 
