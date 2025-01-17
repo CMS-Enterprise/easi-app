@@ -694,6 +694,10 @@ export type DeleteSystemIntakeDocumentPayload = {
   document?: Maybe<SystemIntakeDocument>;
 };
 
+export type DeleteSystemIntakeGRBPresentationLinksInput = {
+  systemIntakeID: Scalars['UUID']['input'];
+};
+
 export type DeleteSystemIntakeGRBReviewerInput = {
   reviewerID: Scalars['UUID']['input'];
 };
@@ -986,6 +990,7 @@ export type Mutation = {
   deleteCedarSystemBookmark?: Maybe<DeleteCedarSystemBookmarkPayload>;
   deleteSystemIntakeContact?: Maybe<DeleteSystemIntakeContactPayload>;
   deleteSystemIntakeDocument?: Maybe<DeleteSystemIntakeDocumentPayload>;
+  deleteSystemIntakeGRBPresentationLinks: Scalars['UUID']['output'];
   deleteSystemIntakeGRBReviewer: Scalars['UUID']['output'];
   deleteTRBGuidanceLetterInsight: TRBGuidanceLetterInsight;
   deleteTRBRequestAttendee: TRBRequestAttendee;
@@ -1258,6 +1263,12 @@ export type MutationDeleteSystemIntakeContactArgs = {
 /** Defines the mutations for the schema */
 export type MutationDeleteSystemIntakeDocumentArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationDeleteSystemIntakeGRBPresentationLinksArgs = {
+  input: DeleteSystemIntakeGRBPresentationLinksInput;
 };
 
 

@@ -306,6 +306,10 @@ type DeleteSystemIntakeDocumentPayload struct {
 	Document *SystemIntakeDocument `json:"document,omitempty"`
 }
 
+type DeleteSystemIntakeGRBPresentationLinksInput struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
+}
+
 type DeleteSystemIntakeGRBReviewerInput struct {
 	ReviewerID uuid.UUID `json:"reviewerID"`
 }
