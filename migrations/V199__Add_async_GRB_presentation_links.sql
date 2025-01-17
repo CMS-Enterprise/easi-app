@@ -51,4 +51,4 @@ COMMENT ON CONSTRAINT transcript_link_or_doc_null_check ON system_intake_grb_pre
 
 COMMENT ON CONSTRAINT presentation_deck_null_check ON system_intake_grb_presentation_links IS 'Ensures presentation deck file name and s3 key are both present or both null';
 
-COMMENT ON CONSTRAINT one_value_present_null_check ON system_intake_grb_presentation_links IS 'Ensures at least one presentation link value is inserted in a row to prevent a row of only metadata'
+COMMENT ON CONSTRAINT one_value_present_null_check ON system_intake_grb_presentation_links IS 'Ensures at least one presentation link value is inserted in a row to prevent a row of only metadata';
