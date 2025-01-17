@@ -11,6 +11,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
 
+func (s *Store) SystemIntakeGRBPresentationLinks() {}
+
 func (s *Store) DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, systemIntakeID uuid.UUID) error {
 	res, err := namedExec(ctx, s.db, sqlqueries.SystemIntakeGRBPresentationLinks.Delete, args{
 		"system_intake_id": systemIntakeID,
