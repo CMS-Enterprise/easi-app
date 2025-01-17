@@ -8784,6 +8784,7 @@ type SystemIntakeRequester {
 
 """
 Represents a single row of presentation link and document data for a system intake's Async GRB review
+All data values are optional but there is a constraint to require one data value on insertion
 """
 type SystemIntakeGRBPresentationLinks {
   systemIntakeID: UUID!
@@ -8791,7 +8792,7 @@ type SystemIntakeGRBPresentationLinks {
   createdAt: Time!
   modifiedBy: UUID
   modifiedAt: Time
-  recordingLink: String!
+  recordingLink: String
   recordingPasscode: String
   transcriptLink: String
   transcriptFileName: String
@@ -8804,10 +8805,11 @@ type SystemIntakeGRBPresentationLinks {
 
 """
 Data needed to add system intake presentation link data
+One of the optional link/files values is required to pass the database constraint
 """
 input SystemIntakeGRBPresentationLinksInput {
   systemIntakeID: UUID!
-  recordingLink: String!
+  recordingLink: String
   recordingPasscode: String
   transcriptLink: String
   transcriptFileData: Upload
@@ -47872,14 +47874,11 @@ func (ec *executionContext) _SystemIntakeGRBPresentationLinks_recordingLink(ctx 
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeGRBPresentationLinks_recordingLink(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -62700,7 +62699,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeGRBPresentationLinksInput(
 			it.SystemIntakeID = data
 		case "recordingLink":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recordingLink"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -71197,9 +71196,6 @@ func (ec *executionContext) _SystemIntakeGRBPresentationLinks(ctx context.Contex
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_modifiedAt(ctx, field, obj)
 		case "recordingLink":
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_recordingLink(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "recordingPasscode":
 			out.Values[i] = ec._SystemIntakeGRBPresentationLinks_recordingPasscode(ctx, field, obj)
 		case "transcriptLink":
