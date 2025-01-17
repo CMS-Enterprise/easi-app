@@ -2235,7 +2235,10 @@ export type SystemIntakeFundingSourcesInput = {
   fundingSources: Array<SystemIntakeFundingSourceInput>;
 };
 
-/** Represents a single row of presentation link and document data for a system intake's Async GRB review */
+/**
+ * Represents a single row of presentation link and document data for a system intake's Async GRB review
+ * All data values are optional but there is a constraint to require one data value on insertion
+ */
 export type SystemIntakeGRBPresentationLinks = {
   __typename: 'SystemIntakeGRBPresentationLinks';
   createdAt: Scalars['Time']['output'];
@@ -2245,7 +2248,7 @@ export type SystemIntakeGRBPresentationLinks = {
   presentationDeckFileName?: Maybe<Scalars['String']['output']>;
   presentationDeckFileStatus?: Maybe<SystemIntakeDocumentStatus>;
   presentationDeckFileURL?: Maybe<Scalars['String']['output']>;
-  recordingLink: Scalars['String']['output'];
+  recordingLink?: Maybe<Scalars['String']['output']>;
   recordingPasscode?: Maybe<Scalars['String']['output']>;
   systemIntakeID: Scalars['UUID']['output'];
   transcriptFileName?: Maybe<Scalars['String']['output']>;
@@ -2254,10 +2257,13 @@ export type SystemIntakeGRBPresentationLinks = {
   transcriptLink?: Maybe<Scalars['String']['output']>;
 };
 
-/** Data needed to add system intake presentation link data */
+/**
+ * Data needed to add system intake presentation link data
+ * One of the optional link/files values is required to pass the database constraint
+ */
 export type SystemIntakeGRBPresentationLinksInput = {
   presentationDeckFileData?: InputMaybe<Scalars['Upload']['input']>;
-  recordingLink: Scalars['String']['input'];
+  recordingLink?: InputMaybe<Scalars['String']['input']>;
   recordingPasscode?: InputMaybe<Scalars['String']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
   transcriptFileData?: InputMaybe<Scalars['Upload']['input']>;

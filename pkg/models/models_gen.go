@@ -617,9 +617,10 @@ type SystemIntakeFundingSourcesInput struct {
 }
 
 // Data needed to add system intake presentation link data
+// One of the optional link/files values is required to pass the database constraint
 type SystemIntakeGRBPresentationLinksInput struct {
 	SystemIntakeID           uuid.UUID       `json:"systemIntakeID"`
-	RecordingLink            string          `json:"recordingLink"`
+	RecordingLink            *string         `json:"recordingLink,omitempty"`
 	RecordingPasscode        *string         `json:"recordingPasscode,omitempty"`
 	TranscriptLink           *string         `json:"transcriptLink,omitempty"`
 	TranscriptFileData       *graphql.Upload `json:"transcriptFileData,omitempty"`

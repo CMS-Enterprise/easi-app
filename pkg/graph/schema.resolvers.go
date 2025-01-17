@@ -1951,7 +1951,7 @@ func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *mo
 	mockPresentationLinks.SystemIntakeID = uuid.MustParse("5af245bc-fc54-4677-bab1-1b3e798bb43c")
 	mockPresentationLinks.CreatedBy = appcontext.Principal(ctx).Account().ID
 	mockPresentationLinks.CreatedAt = time.Now()
-	mockPresentationLinks.RecordingLink = "https://google.com"
+	mockPresentationLinks.RecordingLink = helpers.PointerTo("https://google.com")
 	mockPresentationLinks.RecordingPasscode = helpers.PointerTo("123456")
 	mockPresentationLinks.TranscriptLink = nil
 	mockPresentationLinks.TranscriptFileName = helpers.PointerTo("transcript.doc")
