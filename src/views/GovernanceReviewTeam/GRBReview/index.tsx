@@ -28,7 +28,9 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import Divider from 'components/shared/Divider';
+import IconLink from 'components/shared/IconLink';
 import useMessage from 'hooks/useMessage';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeState } from 'types/graphql-global-types';
@@ -52,6 +54,7 @@ type GRBReviewProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   documents: SystemIntakeDocument[];
   grbReviewStartedAt?: string | null;
+  grbPresentationLinks: SystemIntake['grbPresentationLinks'];
 };
 
 const GRBReview = ({
@@ -61,7 +64,8 @@ const GRBReview = ({
   state,
   grbReviewers,
   documents,
-  grbReviewStartedAt
+  grbReviewStartedAt,
+  grbPresentationLinks
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -292,6 +296,7 @@ const GRBReview = ({
                       {t('asyncPresentation.adminEmptyAlert')}
                     </Alert>
                     <div className="margin-top-2 margin-bottom-neg-2">
+                      {/*
                       <Button
                         type="button"
                         unstyled
@@ -305,13 +310,30 @@ const GRBReview = ({
                           'asyncPresentation.addAsynchronousPresentationLinks'
                         )}
                       </Button>
+                      */}
+                      <IconLink
+                        icon={<Icon.Add className="margin-right-1" />}
+                        to={`/it-governance/${id}/grb-review/presentation-links`}
+                      >
+                        {t(
+                          'asyncPresentation.addAsynchronousPresentationLinks'
+                        )}
+                      </IconLink>
                     </div>
                   </>
                 ) : (
                   <div className="margin-top-neg-1">
+                    {/*
                     <Button type="button" unstyled className="margin-right-2">
                       {t('asyncPresentation.editPresentationLinks')}
                     </Button>
+                    */}
+                    <UswdsReactLink
+                      className="margin-right-2"
+                      to={`/it-governance/${id}/grb-review/presentation-links`}
+                    >
+                      {t('asyncPresentation.editPresentationLinks')}
+                    </UswdsReactLink>
                     <Button
                       type="button"
                       unstyled
@@ -328,23 +350,45 @@ const GRBReview = ({
                   <>
                     <Divider className="margin-bottom-2" />
                     <div className="display-flex flex-wrap">
-                      <Button
-                        type="button"
-                        unstyled
-                        className="margin-right-2 display-flex flex-align-center"
-                      >
-                        {t('asyncPresentation.viewRecording')}
-                        <Icon.Launch className="margin-left-05" />
-                      </Button>
-                      <span className="text-base margin-right-2">
-                        {t('asyncPresentation.passcode', { passcode: 1010101 })}
-                      </span>
-                      <Button type="button" unstyled className="margin-right-2">
-                        {t('asyncPresentation.viewTranscript')}
-                      </Button>
-                      <Button type="button" unstyled className="margin-right-2">
-                        {t('asyncPresentation.viewSlideDeck')}
-                      </Button>
+                      {grbPresentationLinks?.recordingLink && (
+                        <Button
+                          type="button"
+                          unstyled
+                          className="margin-right-2 display-flex flex-align-center"
+                        >
+                          {t('asyncPresentation.viewRecording')}
+                          <Icon.Launch className="margin-left-05" />
+                        </Button>
+                      )}
+                      {grbPresentationLinks?.recordingPasscode && (
+                        <span className="text-base margin-right-2">
+                          {t('asyncPresentation.passcode', {
+                            passcode: grbPresentationLinks.recordingPasscode
+                          })}
+                        </span>
+                      )}
+                      {grbPresentationLinks &&
+                        grbPresentationLinks.transcriptFileStatus &&
+                        grbPresentationLinks.transcriptFileURL && (
+                          <Button
+                            type="button"
+                            unstyled
+                            className="margin-right-2"
+                          >
+                            {t('asyncPresentation.viewTranscript')}
+                          </Button>
+                        )}
+                      {grbPresentationLinks &&
+                        grbPresentationLinks.presentationDeckFileStatus &&
+                        grbPresentationLinks.presentationDeckFileURL && (
+                          <Button
+                            type="button"
+                            unstyled
+                            className="margin-right-2"
+                          >
+                            {t('asyncPresentation.viewSlideDeck')}
+                          </Button>
+                        )}
                     </div>
                   </>
                 )}

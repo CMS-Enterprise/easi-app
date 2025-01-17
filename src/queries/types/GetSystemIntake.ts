@@ -185,6 +185,23 @@ export interface GetSystemIntake_systemIntake_relatedIntakes {
   submittedAt: Time | null;
 }
 
+export interface GetSystemIntake_systemIntake_grbPresentationLinks {
+  __typename: "SystemIntakeGRBPresentationLinks";
+  systemIntakeID: UUID;
+  createdAt: Time;
+  createdBy: UUID;
+  modifiedAt: Time | null;
+  modifiedBy: UUID | null;
+  recordingLink: string;
+  recordingPasscode: string | null;
+  transcriptFileName: string | null;
+  transcriptFileStatus: SystemIntakeDocumentStatus | null;
+  transcriptFileURL: string | null;
+  presentationDeckFileName: string | null;
+  presentationDeckFileStatus: SystemIntakeDocumentStatus | null;
+  presentationDeckFileURL: string | null;
+}
+
 export interface GetSystemIntake_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
@@ -257,6 +274,10 @@ export interface GetSystemIntake_systemIntake {
    * Other System Intakes that share a CEDAR System or Contract Number
    */
   relatedIntakes: GetSystemIntake_systemIntake_relatedIntakes[];
+  /**
+   * GRB Presentation Link Data
+   */
+  grbPresentationLinks: GetSystemIntake_systemIntake_grbPresentationLinks | null;
 }
 
 export interface GetSystemIntake {

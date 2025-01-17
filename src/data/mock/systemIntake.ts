@@ -161,6 +161,23 @@ export const documents: SystemIntakeDocument[] = [
   }
 ];
 
+const grbPresentationLinks: SystemIntake['grbPresentationLinks'] = {
+  __typename: 'SystemIntakeGRBPresentationLinks',
+  systemIntakeID: '5af245bc-fc54-4677-bab1-1b3e798bb43c',
+  createdAt: '2025-01-17T04:20:32.122480967Z',
+  createdBy: '4e7b7b03-4b79-4adf-a9d1-e6f9dd764dad',
+  modifiedAt: null,
+  modifiedBy: null,
+  recordingLink: 'https://google.com',
+  recordingPasscode: '123456',
+  transcriptFileName: 'transcript.doc',
+  transcriptFileStatus: SystemIntakeDocumentStatus.PENDING,
+  transcriptFileURL: 'https://google.com',
+  presentationDeckFileName: 'presentationDeck.pptx',
+  presentationDeckFileStatus: SystemIntakeDocumentStatus.PENDING,
+  presentationDeckFileURL: 'https://google.com'
+};
+
 export const emptySystemIntake: SystemIntake = {
   __typename: 'SystemIntake',
   requestName: null,
@@ -288,7 +305,8 @@ export const emptySystemIntake: SystemIntake = {
     }
   ],
   relatedIntakes: [],
-  relatedTRBRequests: []
+  relatedTRBRequests: [],
+  grbPresentationLinks
 };
 
 export const systemIntake: SystemIntake = {
@@ -448,7 +466,8 @@ export const systemIntake: SystemIntake = {
       status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
       createdAt: new Date().toString()
     }
-  ]
+  ],
+  grbPresentationLinks
 };
 
 export const systemIntakeForTable: TableSystemIntake = {
