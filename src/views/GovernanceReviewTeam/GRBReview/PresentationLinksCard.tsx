@@ -18,6 +18,7 @@ import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import IconLink from 'components/shared/IconLink';
 import { SystemIntake } from 'queries/types/SystemIntake';
+import { SystemIntakeDocumentStatus } from 'types/graphql-global-types';
 
 type Props = {
   systemIntakeID: string;
@@ -30,9 +31,16 @@ function PresentationLinksCard({
 }: Props) {
   const { t } = useTranslation('grbReview');
 
-  // todo tmp bool to toggle display state, determine with actual variables next
-  // do not show card at all for non-admin + empty
   const [isEmptyAdmin, setIsEmptyAdmin] = useState(false);
+  const { recordingLink, transcriptFileStatus, presentationDeckFileStatus } =
+    grbPresentationLinks || {};
+
+  const isEmpty =
+    grbPresentationLinks === null ||
+    (grbPresentationLinks &&
+      recordingLink === null &&
+      transcriptFileStatus === SystemIntakeDocumentStatus.UNAVAILABLE &&
+      presentationDeckFileStatus === SystemIntakeDocumentStatus.UNAVAILABLE);
 
   const [deleteSystemIntakeGRBPresentationLinks] =
     useDeleteSystemIntakeGRBPresentationLinksMutation({
@@ -67,7 +75,7 @@ function PresentationLinksCard({
           </h3>
         </CardHeader>
         <CardBody>
-          {isEmptyAdmin ? (
+          {isEmpty ? (
             <>
               <Alert type="info" slim className="margin-bottom-1">
                 {t('asyncPresentation.adminEmptyAlert')}
@@ -123,7 +131,8 @@ function PresentationLinksCard({
                   </span>
                 )}
                 {grbPresentationLinks &&
-                  grbPresentationLinks.transcriptFileStatus &&
+                  grbPresentationLinks.transcriptFileStatus ===
+                    SystemIntakeDocumentStatus.AVAILABLE &&
                   grbPresentationLinks.transcriptFileURL && (
                     <Link
                       className="margin-right-2"
@@ -134,7 +143,8 @@ function PresentationLinksCard({
                     </Link>
                   )}
                 {grbPresentationLinks &&
-                  grbPresentationLinks.presentationDeckFileStatus &&
+                  grbPresentationLinks.presentationDeckFileStatus ===
+                    SystemIntakeDocumentStatus.AVAILABLE &&
                   grbPresentationLinks.presentationDeckFileURL && (
                     <Link
                       className="margin-right-2"
