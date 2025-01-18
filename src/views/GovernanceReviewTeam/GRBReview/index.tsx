@@ -14,6 +14,7 @@ import {
 import {
   GetSystemIntakeGRBReviewersDocument,
   SystemIntakeGRBReviewerFragment,
+  useDeleteSystemIntakeGRBPresentationLinksMutation,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
 } from 'gql/gen/graphql';
@@ -82,9 +83,18 @@ const GRBReview = ({
   const [startReviewModalIsOpen, setStartReviewModalIsOpen] =
     useState<boolean>(false);
 
-  // todo
+  // todo tmp bool to toggle display state, determine with actual variables next
   // do not show card at all for non-admin + empty
   const [isEmptyAdmin, setIsEmptyAdmin] = useState(false);
+
+  const [deleteSystemIntakeGRBPresentationLinks] =
+    useDeleteSystemIntakeGRBPresentationLinksMutation({
+      variables: {
+        input: {
+          systemIntakeID: id
+        }
+      }
+    });
 
   const [
     isRemovePresentationLinksModalOpen,
@@ -92,9 +102,13 @@ const GRBReview = ({
   ] = useState<boolean>(false);
 
   const removePresentationLinks = () => {
-    // console.warn('todo');
-    setIsEmptyAdmin(true);
-    setRemovePresentationLinksModalOpen(false);
+    deleteSystemIntakeGRBPresentationLinks()
+      .then(() => {
+        setIsEmptyAdmin(true);
+      })
+      .finally(() => {
+        setRemovePresentationLinksModalOpen(false);
+      });
   };
 
   const { showMessage } = useMessage();

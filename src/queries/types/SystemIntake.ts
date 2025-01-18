@@ -192,7 +192,7 @@ export interface SystemIntake_grbPresentationLinks {
   createdBy: UUID;
   modifiedAt: Time | null;
   modifiedBy: UUID | null;
-  recordingLink: string;
+  recordingLink: string | null;
   recordingPasscode: string | null;
   transcriptFileName: string | null;
   transcriptFileStatus: SystemIntakeDocumentStatus | null;
