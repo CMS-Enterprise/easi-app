@@ -14,7 +14,6 @@ import {
 import {
   GetSystemIntakeGRBReviewersDocument,
   SystemIntakeGRBReviewerFragment,
-  useDeleteSystemIntakeGRBPresentationLinksMutation,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
 } from 'gql/gen/graphql';
@@ -28,10 +27,8 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import Divider from 'components/shared/Divider';
-import IconLink from 'components/shared/IconLink';
 import useMessage from 'hooks/useMessage';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeState } from 'types/graphql-global-types';
@@ -44,6 +41,7 @@ import ITGovAdminContext from '../ITGovAdminContext';
 import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
+import PresentationLinksCard from './PresentationLinksCard';
 
 import './index.scss';
 
@@ -82,34 +80,6 @@ const GRBReview = ({
 
   const [startReviewModalIsOpen, setStartReviewModalIsOpen] =
     useState<boolean>(false);
-
-  // todo tmp bool to toggle display state, determine with actual variables next
-  // do not show card at all for non-admin + empty
-  const [isEmptyAdmin, setIsEmptyAdmin] = useState(false);
-
-  const [deleteSystemIntakeGRBPresentationLinks] =
-    useDeleteSystemIntakeGRBPresentationLinksMutation({
-      variables: {
-        input: {
-          systemIntakeID: id
-        }
-      }
-    });
-
-  const [
-    isRemovePresentationLinksModalOpen,
-    setRemovePresentationLinksModalOpen
-  ] = useState<boolean>(false);
-
-  const removePresentationLinks = () => {
-    deleteSystemIntakeGRBPresentationLinks()
-      .then(() => {
-        setIsEmptyAdmin(true);
-      })
-      .finally(() => {
-        setRemovePresentationLinksModalOpen(false);
-      });
-  };
 
   const { showMessage } = useMessage();
 
@@ -296,148 +266,10 @@ const GRBReview = ({
               {t('supportingDocumentsText')}
             </p>
 
-            {/* Asynchronous presentation */}
-            <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
-              <CardHeader>
-                <h3 className="display-inline-block margin-right-2 margin-bottom-0">
-                  {t('asyncPresentation.title')}
-                </h3>
-              </CardHeader>
-              <CardBody>
-                {isEmptyAdmin ? (
-                  <>
-                    <Alert type="info" slim className="margin-bottom-1">
-                      {t('asyncPresentation.adminEmptyAlert')}
-                    </Alert>
-                    <div className="margin-top-2 margin-bottom-neg-2">
-                      {/*
-                      <Button
-                        type="button"
-                        unstyled
-                        className="margin-right-2 display-flex flex-align-center"
-                        onClick={() => {
-                          setIsEmptyAdmin(false);
-                        }}
-                      >
-                        <Icon.Add className="margin-right-1" />
-                        {t(
-                          'asyncPresentation.addAsynchronousPresentationLinks'
-                        )}
-                      </Button>
-                      */}
-                      <IconLink
-                        icon={<Icon.Add className="margin-right-1" />}
-                        to={`/it-governance/${id}/grb-review/presentation-links`}
-                      >
-                        {t(
-                          'asyncPresentation.addAsynchronousPresentationLinks'
-                        )}
-                      </IconLink>
-                    </div>
-                  </>
-                ) : (
-                  <div className="margin-top-neg-1">
-                    {/*
-                    <Button type="button" unstyled className="margin-right-2">
-                      {t('asyncPresentation.editPresentationLinks')}
-                    </Button>
-                    */}
-                    <UswdsReactLink
-                      className="margin-right-2"
-                      to={`/it-governance/${id}/grb-review/presentation-links`}
-                    >
-                      {t('asyncPresentation.editPresentationLinks')}
-                    </UswdsReactLink>
-                    <Button
-                      type="button"
-                      unstyled
-                      className="text-error"
-                      onClick={() => setRemovePresentationLinksModalOpen(true)}
-                    >
-                      {t('asyncPresentation.removeAllPresentationLinks')}
-                    </Button>
-                  </div>
-                )}
-              </CardBody>
-              <CardFooter>
-                {!isEmptyAdmin && (
-                  <>
-                    <Divider className="margin-bottom-2" />
-                    <div className="display-flex flex-wrap">
-                      {grbPresentationLinks?.recordingLink && (
-                        <Button
-                          type="button"
-                          unstyled
-                          className="margin-right-2 display-flex flex-align-center"
-                        >
-                          {t('asyncPresentation.viewRecording')}
-                          <Icon.Launch className="margin-left-05" />
-                        </Button>
-                      )}
-                      {grbPresentationLinks?.recordingPasscode && (
-                        <span className="text-base margin-right-2">
-                          {t('asyncPresentation.passcode', {
-                            passcode: grbPresentationLinks.recordingPasscode
-                          })}
-                        </span>
-                      )}
-                      {grbPresentationLinks &&
-                        grbPresentationLinks.transcriptFileStatus &&
-                        grbPresentationLinks.transcriptFileURL && (
-                          <Button
-                            type="button"
-                            unstyled
-                            className="margin-right-2"
-                          >
-                            {t('asyncPresentation.viewTranscript')}
-                          </Button>
-                        )}
-                      {grbPresentationLinks &&
-                        grbPresentationLinks.presentationDeckFileStatus &&
-                        grbPresentationLinks.presentationDeckFileURL && (
-                          <Button
-                            type="button"
-                            unstyled
-                            className="margin-right-2"
-                          >
-                            {t('asyncPresentation.viewSlideDeck')}
-                          </Button>
-                        )}
-                    </div>
-                  </>
-                )}
-              </CardFooter>
-            </div>
-
-            {/* Modal to remove presentation links */}
-            <Modal
-              isOpen={isRemovePresentationLinksModalOpen}
-              closeModal={() => setRemovePresentationLinksModalOpen(false)}
-            >
-              <ModalHeading>
-                {t('asyncPresentation.modalRemoveLinks.title')}
-              </ModalHeading>
-
-              <p>{t('asyncPresentation.modalRemoveLinks.text')}</p>
-
-              <ButtonGroup>
-                <Button
-                  className="margin-right-1 bg-error"
-                  type="button"
-                  onClick={removePresentationLinks}
-                >
-                  {t('asyncPresentation.modalRemoveLinks.confirm')}
-                </Button>
-
-                <Button
-                  type="button"
-                  unstyled
-                  onClick={() => setRemovePresentationLinksModalOpen(false)}
-                >
-                  {t('asyncPresentation.modalRemoveLinks.cancel')}
-                </Button>
-              </ButtonGroup>
-            </Modal>
+            <PresentationLinksCard
+              systemIntakeID={id}
+              grbPresentationLinks={grbPresentationLinks}
+            />
 
             {/* Business Case Card */}
             <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
