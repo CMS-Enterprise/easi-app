@@ -182,7 +182,7 @@ export default {
     addLink: 'Add link',
     uploadDocument: 'Upload document',
     presentationDeckLabel: 'Upload a presentation deck',
-    documentUploadHelpText: 'Select a PDF, PPT, DOC, DOCX, XLS, or XLSX',
+    documentUploadHelpText: 'Select a PDF, PPT, PPTX, DOC, DOCX, XLS, or XLSX',
     uploadAlert:
       "To keep CMS safe, documents are scanned for viruses after uploading. If something goes wrong, we'll let you know.",
     savePresentationDetails: 'Save presentation details',
