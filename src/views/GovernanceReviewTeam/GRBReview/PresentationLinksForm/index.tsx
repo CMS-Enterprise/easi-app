@@ -1,4 +1,5 @@
 import React from 'react';
+import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
@@ -54,6 +55,7 @@ const PresentationLinksForm = ({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors }
   } = useEasiForm<PresentationLinkFields>();
 
@@ -129,6 +131,7 @@ const PresentationLinksForm = ({
 
             <TextInput
               {...register('recordingLink')}
+              ref={null}
               id="recordingLink"
               aria-describedby="recordingLinkHelpText"
               type="text"
@@ -151,6 +154,7 @@ const PresentationLinksForm = ({
 
             <TextInput
               {...register('recordingPasscode')}
+              ref={null}
               id="recordingPasscode"
               aria-describedby="recordingPasscodeHelpText"
               type="text"
@@ -180,6 +184,7 @@ const PresentationLinksForm = ({
 
                   <TextInput
                     {...register('transcriptLink')}
+                    ref={null}
                     id="transcriptLink"
                     aria-describedby="transcriptHelpText"
                     type="url"
@@ -204,12 +209,21 @@ const PresentationLinksForm = ({
                     as={<FieldErrorMsg />}
                   />
 
-                  <FileInput
-                    {...register('transcriptFileData')}
-                    id="transcriptFileData"
-                    accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
-                    aria-describedby="transcriptHelpText transcriptFileDataHelpText"
-                    className="maxw-none"
+                  <Controller
+                    control={control}
+                    name="transcriptFileData"
+                    render={({ field: { ref, ...field } }) => (
+                      <FileInput
+                        name={field.name}
+                        id={field.name}
+                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                        aria-describedby="transcriptHelpText transcriptFileDataHelpText"
+                        className="maxw-none"
+                        onChange={e =>
+                          field.onChange(e.currentTarget?.files?.[0])
+                        }
+                      />
+                    )}
                   />
                 </TabPanel>
               </Tabs>
@@ -217,7 +231,7 @@ const PresentationLinksForm = ({
           </FormGroup>
 
           <FormGroup>
-            <Label htmlFor="presentationDeck">
+            <Label htmlFor="presentationDeckFileData">
               {t('presentationLinks.presentationDeckLabel')}
             </Label>
             <HelpText id="presentationDeckHelpText" className="margin-top-05">
@@ -226,16 +240,23 @@ const PresentationLinksForm = ({
 
             <ErrorMessage
               errors={errors}
-              name="presentationDeck"
+              name="presentationDeckFileData"
               as={<FieldErrorMsg />}
             />
 
-            <FileInput
-              {...register('presentationDeckFileData')}
-              id="presentationDeck"
-              accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
-              aria-describedby="presentationDeckHelpText"
-              className="maxw-none"
+            <Controller
+              control={control}
+              name="presentationDeckFileData"
+              render={({ field: { ref, ...field } }) => (
+                <FileInput
+                  name={field.name}
+                  id={field.name}
+                  accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                  aria-describedby="presentationDeckHelpText"
+                  className="maxw-none"
+                  onChange={e => field.onChange(e.currentTarget?.files?.[0])}
+                />
+              )}
             />
           </FormGroup>
 
