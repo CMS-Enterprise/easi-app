@@ -17,12 +17,10 @@ type SystemIntakeGRBPresentationLinks struct {
 }
 
 func (s SystemIntakeGRBPresentationLinks) GetMappingKey() uuid.UUID {
-	//TODO implement me
 	return s.SystemIntakeID
 }
 
 func (s SystemIntakeGRBPresentationLinks) GetMappingVal() *SystemIntakeGRBPresentationLinks {
-	//TODO implement me
 	return &s
 }
 
