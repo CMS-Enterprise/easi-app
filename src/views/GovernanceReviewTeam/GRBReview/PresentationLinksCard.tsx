@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -15,6 +15,7 @@ import { useDeleteSystemIntakeGRBPresentationLinksMutation } from 'gql/gen/graph
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import Alert from 'components/shared/Alert';
+import ExternalLinkModal from 'components/shared/ExternalLinkModal';
 import IconLink from 'components/shared/IconLink';
 import useMessage from 'hooks/useMessage';
 import { SystemIntake } from 'queries/types/SystemIntake';
@@ -53,6 +54,8 @@ function PresentationLinksCard({
       transcriptFileStatus === SystemIntakeDocumentStatus.UNAVAILABLE &&
       presentationDeckFileStatus === SystemIntakeDocumentStatus.UNAVAILABLE);
 
+  // Remove links handling
+
   const [deleteSystemIntakeGRBPresentationLinks] =
     useDeleteSystemIntakeGRBPresentationLinksMutation({
       variables: {
@@ -83,6 +86,35 @@ function PresentationLinksCard({
         setRemovePresentationLinksModalOpen(false);
       });
   };
+
+  // External link modal handling
+
+  const [externalUrl, setExternalUrl] = useState<string>('');
+  const [isExternalModalOpen, setExternalModalOpen] = useState<boolean>(false);
+
+  const externalModalScopeRef = useRef<HTMLDivElement>(null);
+
+  function linkHandler(event: MouseEvent) {
+    const a = (event.target as HTMLElement)?.closest(
+      '.presentation-card-links a'
+    );
+    if (a) {
+      event.preventDefault();
+      const href = a.getAttribute('href');
+      if (href) {
+        setExternalUrl(href);
+        setExternalModalOpen(true);
+      }
+    }
+  }
+
+  useEffect(() => {
+    const eventEl = externalModalScopeRef.current;
+    eventEl?.addEventListener('click', linkHandler);
+    return () => {
+      eventEl?.removeEventListener('click', linkHandler);
+    };
+  }, []);
 
   // Render empty if not an admin and no links
   if (!isITGovAdmin && isEmpty) return null;
@@ -132,7 +164,10 @@ function PresentationLinksCard({
         </CardBody>
         <CardFooter>
           {!isEmpty && (
-            <div className="display-flex flex-wrap border-top-1px border-gray-10 padding-top-2">
+            <div
+              ref={externalModalScopeRef}
+              className="presentation-card-links display-flex flex-wrap border-top-1px border-gray-10 padding-top-2"
+            >
               {recordingLink && (
                 <Link
                   className="margin-right-2 display-flex flex-align-center"
@@ -205,6 +240,13 @@ function PresentationLinksCard({
           </Button>
         </ButtonGroup>
       </Modal>
+
+      {/* Modal for external links */}
+      <ExternalLinkModal
+        isOpen={isExternalModalOpen}
+        url={externalUrl}
+        closeModal={() => setExternalModalOpen(false)}
+      />
     </>
   );
 }
