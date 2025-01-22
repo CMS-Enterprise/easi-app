@@ -16,6 +16,14 @@ type SystemIntakeGRBPresentationLinks struct {
 	PresentationDeckFileName *string   `json:"presentationDeckFileName" db:"presentation_deck_file_name"`
 }
 
+func (s SystemIntakeGRBPresentationLinks) GetMappingKey() uuid.UUID {
+	return s.SystemIntakeID
+}
+
+func (s SystemIntakeGRBPresentationLinks) GetMappingVal() *SystemIntakeGRBPresentationLinks {
+	return &s
+}
+
 func NewSystemIntakeGRBPresentationLinks(createdByUserAcctID uuid.UUID) *SystemIntakeGRBPresentationLinks {
 	return &SystemIntakeGRBPresentationLinks{
 		BaseStructUser: NewBaseStructUser(createdByUserAcctID),
