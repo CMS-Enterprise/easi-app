@@ -15,12 +15,12 @@ import { useDeleteSystemIntakeGRBPresentationLinksMutation } from 'gql/gen/graph
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import Alert from 'components/shared/Alert';
-import Divider from 'components/shared/Divider';
 import IconLink from 'components/shared/IconLink';
+import useMessage from 'hooks/useMessage';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeDocumentStatus } from 'types/graphql-global-types';
 
-type Props = {
+export type PresentationLinksCardProps = {
   systemIntakeID: string;
   grbPresentationLinks: SystemIntake['grbPresentationLinks'];
 };
@@ -28,12 +28,19 @@ type Props = {
 function PresentationLinksCard({
   systemIntakeID,
   grbPresentationLinks
-}: Props) {
+}: PresentationLinksCardProps) {
   const { t } = useTranslation('grbReview');
 
-  const [isEmptyAdmin, setIsEmptyAdmin] = useState(false);
-  const { recordingLink, transcriptFileStatus, presentationDeckFileStatus } =
-    grbPresentationLinks || {};
+  const { showMessage } = useMessage();
+
+  const {
+    recordingLink,
+    recordingPasscode,
+    transcriptFileStatus,
+    transcriptFileURL,
+    presentationDeckFileStatus,
+    presentationDeckFileURL
+  } = grbPresentationLinks || {};
 
   const isEmpty =
     grbPresentationLinks === null ||
@@ -58,16 +65,24 @@ function PresentationLinksCard({
 
   const removePresentationLinks = () => {
     deleteSystemIntakeGRBPresentationLinks()
-      // .then(() => {})
+      .then(() => {
+        showMessage(t('asyncPresentation.modalRemoveLinks.success'), {
+          type: 'success'
+        });
+      })
+      .catch(() => {
+        showMessage(t('asyncPresentation.modalRemoveLinks.error'), {
+          type: 'error'
+        });
+      })
       .finally(() => {
-        setIsEmptyAdmin(true);
         setRemovePresentationLinksModalOpen(false);
       });
   };
 
   return (
     <>
-      {/* Asynchronous presentation */}
+      {/* Asynchronous presentation links card */}
       <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
         <CardHeader>
           <h3 className="display-inline-block margin-right-2 margin-bottom-0">
@@ -109,56 +124,51 @@ function PresentationLinksCard({
           )}
         </CardBody>
         <CardFooter>
-          {!isEmptyAdmin && (
-            <>
-              <Divider className="margin-bottom-2" />
-              <div className="display-flex flex-wrap">
-                {grbPresentationLinks?.recordingLink && (
+          {!isEmpty && (
+            <div className="display-flex flex-wrap border-top-1px border-gray-10 padding-top-2">
+              {recordingLink && (
+                <Link
+                  className="margin-right-2 display-flex flex-align-center"
+                  href={recordingLink}
+                  target="_blank"
+                >
+                  {t('asyncPresentation.viewRecording')}
+                  <Icon.Launch className="margin-left-05" />
+                </Link>
+              )}
+              {recordingPasscode && (
+                <span className="text-base margin-right-2">
+                  {t('asyncPresentation.passcode', {
+                    passcode: recordingPasscode
+                  })}
+                </span>
+              )}
+              {transcriptFileStatus === SystemIntakeDocumentStatus.AVAILABLE &&
+                transcriptFileURL && (
                   <Link
-                    className="margin-right-2 display-flex flex-align-center"
-                    href={grbPresentationLinks.recordingLink}
+                    className="margin-right-2"
+                    href={transcriptFileURL}
                     target="_blank"
                   >
-                    {t('asyncPresentation.viewRecording')}
-                    <Icon.Launch className="margin-left-05" />
+                    {t('asyncPresentation.viewTranscript')}
                   </Link>
                 )}
-                {grbPresentationLinks?.recordingPasscode && (
-                  <span className="text-base margin-right-2">
-                    {t('asyncPresentation.passcode', {
-                      passcode: grbPresentationLinks.recordingPasscode
-                    })}
-                  </span>
+              {presentationDeckFileStatus ===
+                SystemIntakeDocumentStatus.AVAILABLE &&
+                presentationDeckFileURL && (
+                  <Link
+                    className="margin-right-2"
+                    href={presentationDeckFileURL}
+                    target="_blank"
+                  >
+                    {t('asyncPresentation.viewSlideDeck')}
+                  </Link>
                 )}
-                {grbPresentationLinks &&
-                  grbPresentationLinks.transcriptFileStatus ===
-                    SystemIntakeDocumentStatus.AVAILABLE &&
-                  grbPresentationLinks.transcriptFileURL && (
-                    <Link
-                      className="margin-right-2"
-                      href={grbPresentationLinks.transcriptFileURL}
-                      target="_blank"
-                    >
-                      {t('asyncPresentation.viewTranscript')}
-                    </Link>
-                  )}
-                {grbPresentationLinks &&
-                  grbPresentationLinks.presentationDeckFileStatus ===
-                    SystemIntakeDocumentStatus.AVAILABLE &&
-                  grbPresentationLinks.presentationDeckFileURL && (
-                    <Link
-                      className="margin-right-2"
-                      href={grbPresentationLinks.presentationDeckFileURL}
-                      target="_blank"
-                    >
-                      {t('asyncPresentation.viewSlideDeck')}
-                    </Link>
-                  )}
-              </div>
-            </>
+            </div>
           )}
         </CardFooter>
       </div>
+
       {/* Modal to remove presentation links */}
       <Modal
         isOpen={isRemovePresentationLinksModalOpen}

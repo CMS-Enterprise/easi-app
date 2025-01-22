@@ -93,7 +93,10 @@ export default {
       title: 'Remove presentation links?',
       text: 'This action will remove any links and files previously added about this asynchronous presesntation and cannot be undone. Are you sure you want to continue?',
       confirm: 'Remove presentation links',
-      cancel: "Don't remove"
+      cancel: "Don't remove",
+      success: 'Presentation links have been removed.',
+      error:
+        'There was an issue deleting the presentation details. Please try again, and if the problem persists, try again later.'
     }
   },
   businessCaseOverview: {
