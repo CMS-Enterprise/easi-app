@@ -15,6 +15,7 @@ import {
   GetGovernanceRequestFeedback,
   GetGovernanceRequestFeedbackVariables
 } from 'queries/types/GetGovernanceRequestFeedback';
+import { GovernanceRequestFeedbackType } from 'types/graphql-global-types';
 
 import FeedbackItem from './FeedbackItem';
 
@@ -25,6 +26,7 @@ type FeedbackListProps = {
     text: string;
     path: string;
   };
+  filterType?: GovernanceRequestFeedbackType;
 };
 
 /**
@@ -32,7 +34,11 @@ type FeedbackListProps = {
  *
  * Includes functionality to download feedback as PDF
  */
-const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
+const FeedbackList = ({
+  systemIntakeId,
+  returnLink,
+  filterType
+}: FeedbackListProps) => {
   const { t } = useTranslation('taskList');
 
   const { data, loading } = useCacheQuery<
@@ -44,7 +50,9 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
     }
   });
 
-  const feedback = data?.systemIntake?.governanceRequestFeedbacks || [];
+  let feedback = data?.systemIntake?.governanceRequestFeedbacks || [];
+  if (filterType) feedback = feedback.filter(f => f.type === filterType);
+
   const { requestName } = data?.systemIntake || {};
 
   const printRef = useRef<HTMLDivElement>(null);

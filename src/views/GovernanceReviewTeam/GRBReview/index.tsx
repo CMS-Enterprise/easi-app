@@ -30,9 +30,13 @@ import {
 import useMessage from 'hooks/useMessage';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { BusinessCaseModel } from 'types/businessCase';
-import { SystemIntakeState } from 'types/graphql-global-types';
+import {
+  GovernanceRequestFeedbackType,
+  SystemIntakeState
+} from 'types/graphql-global-types';
 import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
+import FeedbackList from 'views/GovernanceTaskList/Feedback/FeedbackList';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
 import ITGovAdminContext from '../ITGovAdminContext';
@@ -258,6 +262,12 @@ const GRBReview = ({
                 </Button>
               )
             }
+
+            {/* Review details */}
+            <FeedbackList
+              systemIntakeId={id}
+              filterType={GovernanceRequestFeedbackType.GRB}
+            />
 
             {/* Supporting Docs text */}
             <h2 className="margin-bottom-0 margin-top-6" id="documents">
