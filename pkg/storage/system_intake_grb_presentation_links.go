@@ -13,6 +13,19 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
 
+func (s *Store) SetSystemIntakeGRBPresentationLinks(ctx context.Context, links *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeGRBPresentationLinks, error) {
+	if links.ID == uuid.Nil {
+		links.ID = uuid.New()
+	}
+
+	if _, err := namedExec(ctx, s.db, sqlqueries.SystemIntakeGRBPresentationLinks.Upsert, links); err != nil {
+		appcontext.ZLogger(ctx).Error("failed to set system intake GRB presentation links", zap.Error(err))
+		return nil, err
+	}
+
+	return links, nil
+}
+
 func (s *Store) SystemIntakeGRBPresentationLinksByIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeGRBPresentationLinks, error) {
 	var links []*models.SystemIntakeGRBPresentationLinks
 	if err := namedSelect(ctx, s.db, &links, sqlqueries.SystemIntakeGRBPresentationLinks.GetByIntakeIDs, args{
