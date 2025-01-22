@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -20,6 +20,8 @@ import useMessage from 'hooks/useMessage';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeDocumentStatus } from 'types/graphql-global-types';
 
+import ITGovAdminContext from '../ITGovAdminContext';
+
 export type PresentationLinksCardProps = {
   systemIntakeID: string;
   grbPresentationLinks: SystemIntake['grbPresentationLinks'];
@@ -30,6 +32,8 @@ function PresentationLinksCard({
   grbPresentationLinks
 }: PresentationLinksCardProps) {
   const { t } = useTranslation('grbReview');
+
+  const isITGovAdmin = useContext(ITGovAdminContext);
 
   const { showMessage } = useMessage();
 
@@ -79,6 +83,9 @@ function PresentationLinksCard({
         setRemovePresentationLinksModalOpen(false);
       });
   };
+
+  // Render empty if not an admin and no links
+  if (!isITGovAdmin && isEmpty) return null;
 
   return (
     <>
