@@ -292,6 +292,7 @@ const GRBReview = ({
                   <FeedbackList
                     systemIntakeId={id}
                     filterType={GovernanceRequestFeedbackType.GRB}
+                    mode="inner-content"
                   />
                 </CollapsableLink>
               </CardHeader>

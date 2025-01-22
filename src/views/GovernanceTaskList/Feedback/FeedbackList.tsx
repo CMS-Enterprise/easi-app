@@ -27,6 +27,7 @@ type FeedbackListProps = {
     path: string;
   };
   filterType?: GovernanceRequestFeedbackType;
+  mode?: 'normal' | 'inner-content';
 };
 
 /**
@@ -37,7 +38,8 @@ type FeedbackListProps = {
 const FeedbackList = ({
   systemIntakeId,
   returnLink,
-  filterType
+  filterType,
+  mode = 'normal'
 }: FeedbackListProps) => {
   const { t } = useTranslation('taskList');
 
@@ -99,6 +101,16 @@ const FeedbackList = ({
     );
   }
 
+  const feedbackList = (
+    <ul className="usa-list--unstyled margin-top-4" data-testid="feedback-list">
+      {[...feedback].reverse().map(item => (
+        <FeedbackItem key={item.id} {...item} />
+      ))}
+    </ul>
+  );
+
+  if (mode === 'inner-content') return feedbackList;
+
   return (
     <>
       <ActionLinks />
@@ -108,14 +120,7 @@ const FeedbackList = ({
           {t('governanceReviewTeam:feedback.title')}
         </PageHeading>
 
-        <ul
-          className="usa-list--unstyled margin-top-4"
-          data-testid="feedback-list"
-        >
-          {[...feedback].reverse().map(item => (
-            <FeedbackItem key={item.id} {...item} />
-          ))}
-        </ul>
+        {feedbackList}
       </div>
 
       <Divider className="margin-bottom-4 easi-no-print" />
