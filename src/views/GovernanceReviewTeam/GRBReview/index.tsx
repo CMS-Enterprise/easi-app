@@ -22,6 +22,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import CollapsableLink from 'components/shared/CollapsableLink';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -264,10 +265,37 @@ const GRBReview = ({
             }
 
             {/* Review details */}
-            <FeedbackList
-              systemIntakeId={id}
-              filterType={GovernanceRequestFeedbackType.GRB}
-            />
+            <h2 className="margin-bottom-0 margin-top-6" id="details">
+              {t('reviewDetails.title')}
+            </h2>
+            <p className="margin-top-05 line-height-body-5">
+              {t('reviewDetails.text')}
+            </p>
+
+            {/* GRB feedback card */}
+            <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
+              <CardHeader>
+                <h3 className="display-inline-block margin-right-2 margin-bottom-0">
+                  {t('reviewDetails.grbFeedback.title')}
+                </h3>
+                <p className="margin-top-05 line-height-body-5">
+                  {t('reviewDetails.grbFeedback.text')}
+                </p>
+                <CollapsableLink
+                  id="grb-feedback-card-list"
+                  label={t('reviewDetails.grbFeedback.show')}
+                  closeLabel={t('reviewDetails.grbFeedback.hide')}
+                  eyeIcon
+                  styleLeftBar={false}
+                  bold={false}
+                >
+                  <FeedbackList
+                    systemIntakeId={id}
+                    filterType={GovernanceRequestFeedbackType.GRB}
+                  />
+                </CollapsableLink>
+              </CardHeader>
+            </div>
 
             {/* Supporting Docs text */}
             <h2 className="margin-bottom-0 margin-top-6" id="documents">
