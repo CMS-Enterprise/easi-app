@@ -66,6 +66,15 @@ func (s *StoreTestSuite) TestSystemIntakeGRBPresentationLinks() {
 
 		s.Equal(*data[0].RecordingLink, newRecordingLink)
 
+		// update links to something they are not allowed to be (i.e., containing fields that cannot both be set
+		links.TranscriptLink = helpers.PointerTo("transcript link should not be allowed")
+		links.TranscriptFileName = helpers.PointerTo("transcript file name should not be allowed")
+		links.TranscriptS3Key = helpers.PointerTo("transcript s3 key should not be allowed")
+
+		out, err = s.store.SetSystemIntakeGRBPresentationLinks(ctx, links)
+		s.Error(err)
+		s.Nil(out)
+
 		// delete these links
 		err = s.store.DeleteSystemIntakeGRBPresentationLinks(ctx, intake.ID)
 		s.NoError(err)
