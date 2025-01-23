@@ -273,7 +273,7 @@ const GRBReview = ({
 
             {/* GRT recommendations to the GRB */}
             <GRBFeedbackCard
-              id={id}
+              systemIntakeID={id}
               governanceRequestFeedbacks={governanceRequestFeedbacks}
             />
 

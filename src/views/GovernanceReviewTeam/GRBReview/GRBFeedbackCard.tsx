@@ -8,13 +8,13 @@ import { SystemIntake } from 'queries/types/SystemIntake';
 import { GovernanceRequestFeedbackType } from 'types/graphql-global-types';
 import FeedbackList from 'views/GovernanceTaskList/Feedback/FeedbackList';
 
-type GRBFeedbackCardProps = {
-  id: string;
+export type GRBFeedbackCardProps = {
+  systemIntakeID: string;
   governanceRequestFeedbacks: SystemIntake['governanceRequestFeedbacks'];
 };
 
 function GRBFeedbackCard({
-  id,
+  systemIntakeID,
   governanceRequestFeedbacks
 }: GRBFeedbackCardProps) {
   const { t } = useTranslation('grbReview');
@@ -47,7 +47,7 @@ function GRBFeedbackCard({
             bold={false}
           >
             <FeedbackList
-              systemIntakeId={id}
+              systemIntakeId={systemIntakeID}
               filterType={GovernanceRequestFeedbackType.GRB}
               mode="inner-content"
             />

@@ -28,6 +28,8 @@ import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeContact } from 'queries/types/SystemIntakeContact';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import {
+  GovernanceRequestFeedbackTargetForm,
+  GovernanceRequestFeedbackType,
   ITGovDecisionStatus,
   ITGovDraftBusinessCaseStatus,
   ITGovFeedbackStatus,
@@ -160,6 +162,61 @@ export const documents: SystemIntakeDocument[] = [
     __typename: 'SystemIntakeDocument'
   }
 ];
+
+export const governanceRequestFeedbacks: SystemIntake['governanceRequestFeedbacks'] =
+  [
+    {
+      id: '401c5caa-2245-4078-aa8d-670e72d6020d',
+      feedback:
+        'grb recommendations for DRAFT_BUSINESS_CASE progressing to GRT_MEETING',
+      targetForm: GovernanceRequestFeedbackTargetForm.NO_TARGET_PROVIDED,
+      type: GovernanceRequestFeedbackType.GRB,
+      author: {
+        commonName: 'User One',
+        __typename: 'UserInfo'
+      },
+      createdAt: '2025-01-17T23:06:47.48853Z',
+      __typename: 'GovernanceRequestFeedback'
+    },
+    {
+      id: '06f198f0-9752-403a-a188-101cf84e7f38',
+      feedback: 'feedback for DRAFT_BUSINESS_CASE progressing to GRT_MEETING',
+      targetForm: GovernanceRequestFeedbackTargetForm.NO_TARGET_PROVIDED,
+      type: GovernanceRequestFeedbackType.REQUESTER,
+      author: {
+        commonName: 'User One',
+        __typename: 'UserInfo'
+      },
+      createdAt: '2025-01-17T23:06:47.484384Z',
+      __typename: 'GovernanceRequestFeedback'
+    },
+    {
+      id: '81e49d6c-17c0-443d-b3de-226f7244b1a1',
+      feedback:
+        'grb recommendations for INITIAL_REQUEST_FORM progressing to DRAFT_BUSINESS_CASE',
+      targetForm: GovernanceRequestFeedbackTargetForm.NO_TARGET_PROVIDED,
+      type: GovernanceRequestFeedbackType.GRB,
+      author: {
+        commonName: 'User One',
+        __typename: 'UserInfo'
+      },
+      createdAt: '2025-01-17T23:06:47.473107Z',
+      __typename: 'GovernanceRequestFeedback'
+    },
+    {
+      id: '1a4c9577-7573-4a39-b8ee-240db0b35476',
+      feedback:
+        'feedback for INITIAL_REQUEST_FORM progressing to DRAFT_BUSINESS_CASE',
+      targetForm: GovernanceRequestFeedbackTargetForm.NO_TARGET_PROVIDED,
+      type: GovernanceRequestFeedbackType.REQUESTER,
+      author: {
+        commonName: 'User One',
+        __typename: 'UserInfo'
+      },
+      createdAt: '2025-01-17T23:06:47.475119Z',
+      __typename: 'GovernanceRequestFeedback'
+    }
+  ];
 
 export const emptySystemIntake: SystemIntake = {
   __typename: 'SystemIntake',
