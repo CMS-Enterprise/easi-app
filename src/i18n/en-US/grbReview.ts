@@ -80,6 +80,8 @@ export default {
     grbFeedback: {
       title: 'GRT recommendations to the GRB',
       text: 'The Governance Review Team (GRT) has provided recommendations and feedback about this project.',
+      emptyAlert:
+        'The Governance Review Team (GRT) did not provide recommendations or feedback for this project.',
       show: 'Show GRT recommendations',
       hide: 'Hide GRT recommendations'
     }

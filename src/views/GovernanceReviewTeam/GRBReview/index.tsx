@@ -29,6 +29,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import useMessage from 'hooks/useMessage';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { BusinessCaseModel } from 'types/businessCase';
 import {
@@ -56,6 +57,7 @@ type GRBReviewProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   documents: SystemIntakeDocument[];
   grbReviewStartedAt?: string | null;
+  governanceRequestFeedbacks: SystemIntake['governanceRequestFeedbacks'];
 };
 
 const GRBReview = ({
@@ -65,7 +67,8 @@ const GRBReview = ({
   state,
   grbReviewers,
   documents,
-  grbReviewStartedAt
+  grbReviewStartedAt,
+  governanceRequestFeedbacks
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -130,6 +133,11 @@ const GRBReview = ({
     },
     [history, isForm, id, mutate, showMessage, t]
   );
+
+  const isGrbFeedback =
+    governanceRequestFeedbacks.filter(
+      f => f.type === GovernanceRequestFeedbackType.GRB
+    ).length > 0;
 
   return (
     <>
@@ -281,21 +289,29 @@ const GRBReview = ({
                 <p className="margin-top-05 line-height-body-5">
                   {t('reviewDetails.grbFeedback.text')}
                 </p>
-                <CollapsableLink
-                  id="grb-feedback-card-list"
-                  label={t('reviewDetails.grbFeedback.show')}
-                  closeLabel={t('reviewDetails.grbFeedback.hide')}
-                  eyeIcon
-                  styleLeftBar={false}
-                  bold={false}
-                >
-                  <FeedbackList
-                    systemIntakeId={id}
-                    filterType={GovernanceRequestFeedbackType.GRB}
-                    mode="inner-content"
-                  />
-                </CollapsableLink>
               </CardHeader>
+              <CardBody className="padding-top-2">
+                {isGrbFeedback ? (
+                  <CollapsableLink
+                    id="grb-feedback-card-list"
+                    label={t('reviewDetails.grbFeedback.show')}
+                    closeLabel={t('reviewDetails.grbFeedback.hide')}
+                    eyeIcon
+                    styleLeftBar={false}
+                    bold={false}
+                  >
+                    <FeedbackList
+                      systemIntakeId={id}
+                      filterType={GovernanceRequestFeedbackType.GRB}
+                      mode="inner-content"
+                    />
+                  </CollapsableLink>
+                ) : (
+                  <Alert type="info" slim>
+                    {t('reviewDetails.grbFeedback.emptyAlert')}
+                  </Alert>
+                )}
+              </CardBody>
             </div>
 
             {/* Supporting Docs text */}
