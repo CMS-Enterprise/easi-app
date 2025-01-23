@@ -11,7 +11,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func (s *StoreTestSuite) TestSetSystemIntakeGRBPresentationLinks() {
+func (s *StoreTestSuite) TestSystemIntakeGRBPresentationLinks() {
 	ctx := context.Background()
 	euaID := "ABCD"
 
@@ -31,13 +31,12 @@ func (s *StoreTestSuite) TestSetSystemIntakeGRBPresentationLinks() {
 	links.PresentationDeckFileName = helpers.PointerTo("prez file name")
 
 	// set initial links
-	s.Run("set links on a system intake", func() {
+	s.Run("handle link operations on a system intake", func() {
 		out, err := s.store.SetSystemIntakeGRBPresentationLinks(ctx, links)
 		s.NoError(err)
 		s.NotNil(out)
 
 		// check that those links can be retrieved
-
 		data, err := s.store.SystemIntakeGRBPresentationLinksByIntakeIDs(ctx, []uuid.UUID{intake.ID})
 		s.NoError(err)
 		s.Len(data, 1)
@@ -50,7 +49,24 @@ func (s *StoreTestSuite) TestSetSystemIntakeGRBPresentationLinks() {
 		s.Nil(data[0].TranscriptLink)
 		s.Nil(data[0].TranscriptS3Key)
 		s.Nil(data[0].TranscriptFileName)
+
+		// update the links and save, confirming the upsert functions as expected
+		newRecordingLink := "new recording link"
+		links.RecordingLink = helpers.PointerTo(newRecordingLink)
+		out, err = s.store.SetSystemIntakeGRBPresentationLinks(ctx, links)
+		s.NoError(err)
+		s.NotNil(out)
+
+		// retrieve links again
+		data, err = s.store.SystemIntakeGRBPresentationLinksByIntakeIDs(ctx, []uuid.UUID{intake.ID})
+		s.NoError(err)
+		s.Len(data, 1)
+
+		s.NotNil(data[0].RecordingLink)
+
+		s.Equal(*data[0].RecordingLink, newRecordingLink)
 	})
+
 }
 
 func (s *StoreTestSuite) TestSystemIntakeGRBPresentationLinksByIntakeIDs() {
