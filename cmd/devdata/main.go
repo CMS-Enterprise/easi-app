@@ -406,6 +406,7 @@ func main() {
 	mockUser, err := store.UserAccountGetByUsername(ctx, store, mock.PrincipalUser)
 	must(nil, err)
 
+	// create one with recording link and presentation file
 	links := models.NewSystemIntakeGRBPresentationLinks(mockUser.ID)
 	links.SystemIntakeID = intakeID
 	links.RecordingLink = helpers.PointerTo("test recording link")
@@ -427,6 +428,15 @@ func main() {
 			meetingDate: &pastMeetingDate,
 		},
 	)
+
+	// create one with recording link and transcript link
+	links = models.NewSystemIntakeGRBPresentationLinks(mockUser.ID)
+	links.SystemIntakeID = intakeID
+	links.RecordingLink = helpers.PointerTo("test recording link")
+	links.RecordingPasscode = helpers.PointerTo("secret password")
+	links.TranscriptLink = helpers.PointerTo("transcript link")
+	links.TranscriptFileName = helpers.PointerTo("transcript file name")
+	links.TranscriptS3Key = helpers.PointerTo("transcript s3 key")
 
 	intakeID = uuid.MustParse("5c82f10a-0413-4a43-9b0f-e9e5c4f2699f")
 	makeSystemIntakeAndProgressToStep(
