@@ -30,9 +30,11 @@ function GRBFeedbackCard({
         <h3 className="display-inline-block margin-right-2 margin-bottom-0">
           {t('reviewDetails.grbFeedback.title')}
         </h3>
-        <p className="margin-top-05 line-height-body-5">
-          {t('reviewDetails.grbFeedback.text')}
-        </p>
+        {isGrbFeedback && (
+          <p className="margin-top-05 line-height-body-5">
+            {t('reviewDetails.grbFeedback.text')}
+          </p>
+        )}
       </CardHeader>
       <CardBody className="padding-top-2">
         {isGrbFeedback ? (
