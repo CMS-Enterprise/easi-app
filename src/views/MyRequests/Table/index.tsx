@@ -105,8 +105,8 @@ const Table = ({
           a: Row<MergedRequestsForTable>,
           b: Row<MergedRequestsForTable>
         ) => {
-          return (a.original.submissionDate || '') >
-            (b.original.submissionDate || '')
+          return (a.original.submissionDate || 'z') >
+            (b.original.submissionDate || 'z')
             ? 1
             : -1;
         }
@@ -325,7 +325,7 @@ const Table = ({
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'submissionDate', desc: false }], []),
+        sortBy: useMemo(() => [{ id: 'submissionDate', desc: true }], []),
         pageIndex: 0,
         pageSize: defaultPageSize
       }
