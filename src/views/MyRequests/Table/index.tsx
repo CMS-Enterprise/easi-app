@@ -92,7 +92,6 @@ const Table = ({
     Column<MergedRequestsForTable>[]
   >(() => {
     return [
-      // todo default not submitted at the top, then most recent
       {
         Header: t<string>('requestsTable.headers.submittedAt'),
         accessor: 'submissionDate',
