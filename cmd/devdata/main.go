@@ -17,6 +17,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -400,6 +401,19 @@ func main() {
 		RawContent: "<p>Post C (No replies)</p>",
 		Tags:       nil,
 	})
+
+	// add GRB links to intake
+	mockUser, err := store.UserAccountGetByUsername(ctx, store, mock.PrincipalUser)
+	must(nil, err)
+
+	links := models.NewSystemIntakeGRBPresentationLinks(mockUser.ID)
+	links.SystemIntakeID = intakeID
+	links.RecordingLink = helpers.PointerTo("test recording link")
+	links.RecordingPasscode = helpers.PointerTo("secret password")
+	links.PresentationDeckS3Key = helpers.PointerTo("prez deck s3 key")
+	links.PresentationDeckFileName = helpers.PointerTo("prez file name")
+
+	makeSystemIntakeGRBPresentationLinks(ctx, store, links)
 
 	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
 	makeSystemIntakeAndProgressToStep(
