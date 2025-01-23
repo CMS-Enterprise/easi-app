@@ -92,6 +92,7 @@ const Table = ({
     Column<MergedRequestsForTable>[]
   >(() => {
     return [
+      // todo default not submitted at the top, then most recent
       {
         Header: t<string>('requestsTable.headers.submittedAt'),
         accessor: 'submissionDate',
@@ -100,6 +101,15 @@ const Table = ({
             return formatDateUtc(value, 'MM/dd/yyyy');
           }
           return 'Not submitted';
+        },
+        sortType: (
+          a: Row<MergedRequestsForTable>,
+          b: Row<MergedRequestsForTable>
+        ) => {
+          return (a.original.submissionDate || '') >
+            (b.original.submissionDate || '')
+            ? 1
+            : -1;
         }
       },
       {
@@ -316,7 +326,7 @@ const Table = ({
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
+        sortBy: useMemo(() => [{ id: 'submissionDate', desc: false }], []),
         pageIndex: 0,
         pageSize: defaultPageSize
       }
