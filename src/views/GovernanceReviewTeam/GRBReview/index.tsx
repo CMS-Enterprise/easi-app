@@ -22,7 +22,6 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
-import CollapsableLink from 'components/shared/CollapsableLink';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -32,18 +31,15 @@ import useMessage from 'hooks/useMessage';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { BusinessCaseModel } from 'types/businessCase';
-import {
-  GovernanceRequestFeedbackType,
-  SystemIntakeState
-} from 'types/graphql-global-types';
+import { SystemIntakeState } from 'types/graphql-global-types';
 import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
-import FeedbackList from 'views/GovernanceTaskList/Feedback/FeedbackList';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 
 import Discussions from './Discussions';
+import GRBFeedbackCard from './GRBFeedbackCard';
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
 
@@ -133,11 +129,6 @@ const GRBReview = ({
     },
     [history, isForm, id, mutate, showMessage, t]
   );
-
-  const isGrbFeedback =
-    governanceRequestFeedbacks.filter(
-      f => f.type === GovernanceRequestFeedbackType.GRB
-    ).length > 0;
 
   return (
     <>
@@ -280,39 +271,11 @@ const GRBReview = ({
               {t('reviewDetails.text')}
             </p>
 
-            {/* GRB feedback card */}
-            <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
-              <CardHeader>
-                <h3 className="display-inline-block margin-right-2 margin-bottom-0">
-                  {t('reviewDetails.grbFeedback.title')}
-                </h3>
-                <p className="margin-top-05 line-height-body-5">
-                  {t('reviewDetails.grbFeedback.text')}
-                </p>
-              </CardHeader>
-              <CardBody className="padding-top-2">
-                {isGrbFeedback ? (
-                  <CollapsableLink
-                    id="grb-feedback-card-list"
-                    label={t('reviewDetails.grbFeedback.show')}
-                    closeLabel={t('reviewDetails.grbFeedback.hide')}
-                    eyeIcon
-                    styleLeftBar={false}
-                    bold={false}
-                  >
-                    <FeedbackList
-                      systemIntakeId={id}
-                      filterType={GovernanceRequestFeedbackType.GRB}
-                      mode="inner-content"
-                    />
-                  </CollapsableLink>
-                ) : (
-                  <Alert type="info" slim>
-                    {t('reviewDetails.grbFeedback.emptyAlert')}
-                  </Alert>
-                )}
-              </CardBody>
-            </div>
+            {/* GRT recommendations to the GRB */}
+            <GRBFeedbackCard
+              id={id}
+              governanceRequestFeedbacks={governanceRequestFeedbacks}
+            />
 
             {/* Supporting Docs text */}
             <h2 className="margin-bottom-0 margin-top-6" id="documents">
