@@ -24,7 +24,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
             role="row"
           >
             <th
-              aria-sort="ascending"
+              aria-sort="descending"
               class="table-header"
               colspan="1"
               role="columnheader"
@@ -40,7 +40,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
                 Submission date
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
-                  data-testid="caret--up"
+                  data-testid="caret--down"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -53,7 +53,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
                     fill="none"
                   />
                   <path
-                    d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"
+                    d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
                   />
                 </svg>
               </button>
@@ -292,7 +292,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
       aria-live="polite"
       class="usa-sr-only usa-table__announcement-region"
     >
-      Requests table sorted by Submission date ascending
+      Requests table sorted by Submission date descending
     </div>
   </div>
 </DocumentFragment>
