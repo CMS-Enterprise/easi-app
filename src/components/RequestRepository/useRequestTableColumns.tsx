@@ -154,8 +154,8 @@ const useRequestTableColumns = (
         return (a.original.lcid || '') > (b.original.lcid || '') ? 1 : -1;
       }
 
-      const ai = SystemIntakeStatusAdminIndex()[astatus];
-      const bi = SystemIntakeStatusAdminIndex()[bstatus];
+      const ai = SystemIntakeStatusAdminIndex[astatus];
+      const bi = SystemIntakeStatusAdminIndex[bstatus];
       return ai > bi ? 1 : -1;
     }
   };
