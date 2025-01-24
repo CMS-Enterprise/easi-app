@@ -14,6 +14,7 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import {
+  SystemIntakeGRBPresentationLinks,
   SystemIntakeGRBPresentationLinksInput,
   useSetSystemIntakeGRBPresentationLinksMutation
 } from 'gql/gen/graphql';
@@ -36,13 +37,16 @@ type PresentationLinkFields = Omit<
 
 type PresentationLinksFormProps = {
   systemIntakeID: string;
+  // Pass presentation link to form if editing
+  grbPresentationLink?: SystemIntakeGRBPresentationLinks;
 };
 
 /**
  * Form to add or edit GRB review presentation links
  */
 const PresentationLinksForm = ({
-  systemIntakeID
+  systemIntakeID,
+  grbPresentationLink
 }: PresentationLinksFormProps) => {
   const { t } = useTranslation('grbReview');
   const { showMessage, showMessageOnNextPage } = useMessage();
@@ -57,10 +61,11 @@ const PresentationLinksForm = ({
     control,
     formState: { errors, isValid }
   } = useEasiForm<PresentationLinkFields>({
-    resolver: yupResolver(SetGRBPresentationLinksSchema)
+    resolver: yupResolver(SetGRBPresentationLinksSchema),
+    defaultValues: { ...grbPresentationLink }
   });
 
-  const formType: 'add' | 'edit' = 'add';
+  const formType: 'add' | 'edit' = grbPresentationLink ? 'edit' : 'add';
 
   const grbReviewPath = `/it-governance/${systemIntakeID}/grb-review`;
 
