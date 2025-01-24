@@ -188,6 +188,8 @@ export default {
     savePresentationDetails: 'Save presentation details',
     success: 'Your presentation details have been added.',
     error:
-      'There was an issue saving your presentation details. Please try again, and if the problem persists, try again later.'
+      'There was an issue saving your presentation details. Please try again, and if the problem persists, try again later.',
+    emptyFormError:
+      'Please complete either the recording link or presentation deck field before submitting.'
   }
 };

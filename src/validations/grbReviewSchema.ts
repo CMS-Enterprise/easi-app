@@ -1,6 +1,7 @@
 import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
 import i18next from 'i18next';
 import * as Yup from 'yup';
+import { MixedSchema } from 'yup/lib/mixed';
 
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 
@@ -48,3 +49,27 @@ export const CreateGRBReviewersSchema = Yup.object({
     i18next.t('Please select at least one GRB reviewer')
   )
 });
+
+/** Presentation links schema */
+export const SetGRBPresentationLinksSchema = Yup.object().shape(
+  {
+    // Form requires either recordingLink or presentationDeckFileData fields
+    recordingLink: Yup.string().when('presentationDeckFileData', {
+      is: (value?: MixedSchema) => !value,
+      then: Yup.string().required('This is a required field.'),
+      otherwise: Yup.string()
+    }),
+    presentationDeckFileData: Yup.mixed().when('recordingLink', {
+      is: (value?: string) => !value,
+      then: Yup.mixed().required('This is a required field.'),
+      otherwise: Yup.mixed()
+    }),
+
+    // Optional fields
+    recordingPasscode: Yup.string(),
+    transcriptFileData: Yup.mixed(),
+    transcriptLink: Yup.string()
+  },
+  // Prevents cyclic dependency error
+  [['recordingLink', 'presentationDeckFileData']]
+);
