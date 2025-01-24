@@ -145,7 +145,7 @@ const Table = ({
               // return admin status for admins
               if (isITGovAdmin || isTRBAdmin) {
                 return t<string>(
-                  `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`,
+                  `governanceReviewTeam:systemIntakeStatusAdmin.${request.status}`,
                   { lcid: request.lcid }
                 );
               }

@@ -120,6 +120,10 @@ type Deployment struct {
 	// wan type
 	// Example: Internet - Contractor
 	WanType string `json:"wanType,omitempty"`
+
+	// wan type other
+	// Example: Internet - Contractor
+	WanTypeOther string `json:"wanTypeOther,omitempty"`
 }
 
 // Validate validates this deployment

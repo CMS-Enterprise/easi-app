@@ -3,9 +3,9 @@ module github.com/cms-enterprise/easi-app
 go 1.23.4
 
 require (
-	github.com/99designs/gqlgen v0.17.60
+	github.com/99designs/gqlgen v0.17.63
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
-	github.com/aws/aws-sdk-go v1.55.5
+	github.com/aws/aws-sdk-go v1.55.6
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-openapi/errors v0.22.0
 	github.com/go-openapi/runtime v0.28.0
@@ -25,7 +25,7 @@ require (
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.10.0
-	github.com/vektah/gqlparser/v2 v2.5.20
+	github.com/vektah/gqlparser/v2 v2.5.21
 	github.com/vikstrous/dataloadgen v0.0.6
 	go.uber.org/zap v1.27.0
 	golang.org/x/sync v0.10.0
@@ -65,7 +65,7 @@ require (
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.27
-	golang.org/x/net v0.29.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 )
 
 require (
