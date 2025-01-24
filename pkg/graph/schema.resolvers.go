@@ -718,6 +718,11 @@ func (r *mutationResolver) SetSystemIntakeGRBPresentationLinks(ctx context.Conte
 	return mockPresentationLinks, nil
 }
 
+// DeleteSystemIntakeGRBPresentationLinks is the resolver for the deleteSystemIntakeGRBPresentationLinks field.
+func (r *mutationResolver) DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, input models.DeleteSystemIntakeGRBPresentationLinksInput) (uuid.UUID, error) {
+	return input.SystemIntakeID, r.store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
+}
+
 // ArchiveSystemIntake is the resolver for the archiveSystemIntake field.
 func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
@@ -1947,16 +1952,7 @@ func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.S
 
 // GrbPresentationLinks is the resolver for the grbPresentationLinks field.
 func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error) {
-	mockPresentationLinks := models.NewSystemIntakeGRBPresentationLinks(appcontext.Principal(ctx).Account().ID)
-	mockPresentationLinks.SystemIntakeID = uuid.MustParse("5af245bc-fc54-4677-bab1-1b3e798bb43c")
-	mockPresentationLinks.CreatedBy = appcontext.Principal(ctx).Account().ID
-	mockPresentationLinks.CreatedAt = time.Now()
-	mockPresentationLinks.RecordingLink = "https://google.com"
-	mockPresentationLinks.RecordingPasscode = helpers.PointerTo("123456")
-	mockPresentationLinks.TranscriptLink = nil
-	mockPresentationLinks.TranscriptFileName = helpers.PointerTo("transcript.doc")
-	mockPresentationLinks.PresentationDeckFileName = helpers.PointerTo("presentationDeck.pptx")
-	return mockPresentationLinks, nil
+	return dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.ID)
 }
 
 // DocumentType is the resolver for the documentType field.
