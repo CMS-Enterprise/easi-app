@@ -6,7 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   Fieldset,
-  FileInput,
   Form,
   FormGroup,
   Grid,
@@ -20,6 +19,7 @@ import {
 } from 'gql/gen/graphql';
 
 import { useEasiForm } from 'components/EasiForm';
+import FileInput from 'components/FileInput';
 import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
@@ -228,16 +228,22 @@ const PresentationLinksForm = ({
             <Controller
               control={control}
               name="presentationDeckFileData"
-              render={({ field: { ref, ...field } }) => (
-                <FileInput
-                  name={field.name}
-                  id={field.name}
-                  accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
-                  aria-describedby="presentationDeckHelpText"
-                  className="maxw-none"
-                  onChange={e => field.onChange(e.currentTarget?.files?.[0])}
-                />
-              )}
+              render={({ field: { ref, ...field } }) => {
+                return (
+                  <FileInput
+                    defaultFileName={
+                      grbPresentationLink?.presentationDeckFileName || ''
+                    }
+                    name={field.name}
+                    id={field.name}
+                    // ref={fileInputRef}
+                    accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                    aria-describedby="presentationDeckHelpText"
+                    className="maxw-none"
+                    onChange={e => field.onChange(e.currentTarget?.files?.[0])}
+                  />
+                );
+              }}
             />
           </FormGroup>
 

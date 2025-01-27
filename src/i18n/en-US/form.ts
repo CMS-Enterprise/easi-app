@@ -10,7 +10,14 @@ const form = {
     includeExplanation: 'Please include an explanation',
     makeSelection: 'Please make a selection',
     selectFile: 'Please select a file'
-  }
+  },
+  // File upload
+  selectedFile: 'Selected file',
+  clearFile: 'Clear file',
+  fileType: 'Uploaded file',
+  fileType_pdf: 'Uploaded PDF file',
+  fileType_word: 'Uploaded word document',
+  fileType_excel: 'Uploaded spreadsheet'
 };
 
 export default form;
