@@ -438,6 +438,8 @@ func main() {
 	links.TranscriptFileName = helpers.PointerTo("transcript file name")
 	links.TranscriptS3Key = helpers.PointerTo("transcript s3 key")
 
+	makeSystemIntakeGRBPresentationLinks(ctx, store, links)
+
 	intakeID = uuid.MustParse("5c82f10a-0413-4a43-9b0f-e9e5c4f2699f")
 	makeSystemIntakeAndProgressToStep(
 		ctx,
