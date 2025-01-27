@@ -434,7 +434,6 @@ func main() {
 	links.SystemIntakeID = intakeID
 	links.RecordingLink = helpers.PointerTo("test recording link")
 	links.RecordingPasscode = helpers.PointerTo("secret password")
-	links.TranscriptLink = helpers.PointerTo("transcript link")
 	links.TranscriptFileName = helpers.PointerTo("transcript file name")
 	links.TranscriptS3Key = helpers.PointerTo("transcript s3 key")
 
