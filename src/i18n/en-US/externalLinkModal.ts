@@ -1,6 +1,10 @@
 const externalLinkModal = {
   heading: 'You are leaving EASi.',
   genericHeading: 'Are you sure you want to leave EASi?',
+  modalTypes: {
+    cfacts: 'CFACTS',
+    cloud: 'Cloud'
+  },
   description: {
     cfacts:
       'CFACTS requires connectivity via VPN and may require job codes and/or permissions in order to access specific content in the system.',

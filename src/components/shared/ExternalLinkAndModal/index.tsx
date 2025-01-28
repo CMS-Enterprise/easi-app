@@ -10,11 +10,11 @@ import ExternalLink from '../ExternalLink';
 const ExternalLinkAndModal = ({
   children,
   href,
-  type = 'GENERIC'
+  modalType = 'GENERIC'
 }: {
   children: React.ReactNode;
   href: string;
-  type?: 'CFACTS' | 'CLOUD' | 'GENERIC';
+  modalType?: 'CFACTS' | 'CLOUD' | 'GENERIC';
 }) => {
   const { t: externalT } = useTranslation('externalLinkModal');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,7 +25,7 @@ const ExternalLinkAndModal = ({
       CLOUD: externalT('description.cloud'),
       GENERIC: externalT('description.generic')
     };
-    return description[type];
+    return description[modalType];
   };
 
   return (
@@ -46,7 +46,8 @@ const ExternalLinkAndModal = ({
         >
           {renderDescription()}
         </p>
-        {!type && (
+        {/* Render contact info if modal type is generic */}
+        {!modalType && (
           <p
             className="font-body-md line-height-sans-4 margin-top-0 margin-bottom-3"
             style={{ whiteSpace: 'break-spaces' }}
@@ -60,8 +61,8 @@ const ExternalLinkAndModal = ({
           className="usa-button text-white text-no-underline"
           variant="unstyled"
         >
-          {type
-            ? externalT('continueButton', { value: type })
+          {modalType
+            ? externalT('continueButton', { value: modalType })
             : externalT('leaveEasi')}
         </ExternalLink>
 
