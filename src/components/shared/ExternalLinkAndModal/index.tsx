@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Button, Icon } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
@@ -48,13 +48,20 @@ const ExternalLinkAndModal = ({
         >
           {renderDescription()}
         </p>
+
         {/* Render contact info if modal type is generic */}
-        {!modalType && (
+        {modalType === 'GENERIC' && (
           <p
             className="font-body-md line-height-sans-4 margin-top-0 margin-bottom-3"
             style={{ whiteSpace: 'break-spaces' }}
           >
-            {externalT('description.contactInfo')}
+            <Trans
+              t={externalT}
+              i18nKey="description.contactInfo"
+              components={{
+                span: <span className="text-no-wrap" />
+              }}
+            />
           </p>
         )}
 

@@ -13,7 +13,7 @@ const externalLinkModal = {
     generic:
       'If you are accessing another CMS system or site, it could require connectivity via VPN and/or job codes and permissions to access content.',
     contactInfo:
-      'Please contact the CMS IT Service Desk at 410-786-2580 or 800-562-1963 if you need assistance.'
+      'Please contact the CMS IT Service Desk at <span>410-786-2580</span> or <span>800-562-1963</span> if you need assistance.'
   },
   redirectingCopy: 'This link is redirecting you to:',
   notConfident:
