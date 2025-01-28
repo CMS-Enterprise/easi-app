@@ -204,10 +204,6 @@
       margin-bottom: 0;
     }
   }
-  // Remove max width on alert body
-  &.usa-alert .usa-alert__body {
-    max-width: none;
-  }
 }
 
 .bg-transparent {
@@ -282,4 +278,16 @@
     z-index: 1;
     line-height: 1.6em;
   }
+}
+
+.usa-table thead th {
+  background-color: transparent !important;
+}
+
+.usa-alert__body > * {
+  margin-left: 0 !important;
+}
+
+.usa-alert__text > * {
+  margin-left: 0 !important;
 }
