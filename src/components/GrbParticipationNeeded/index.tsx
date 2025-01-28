@@ -89,10 +89,16 @@ const GrbParticipationNeeded = () => {
       {
         Header: t<string>('homepage.grbDate'),
         accessor: 'grbDate',
-        Cell: ({ value }) =>
-          value
-            ? formatDateLocal(value, 'MM/dd/yyyy')
-            : t<string>('homepage.noDateSet'),
+        Cell: cell => {
+          const { value } = cell;
+          return (
+            <>
+              {value
+                ? formatDateLocal(value, 'MM/dd/yyyy')
+                : t<string>('homepage.noDateSet')}
+            </>
+          );
+        },
         sortType: (rowA, rowB) =>
           sortGrbDates(rowA.values.grbDate, rowB.values.grbDate)
       }
