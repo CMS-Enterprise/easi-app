@@ -241,6 +241,7 @@ function Consult() {
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
               <TimePicker
+                label={t('actionScheduleConsult.labels.meetingTime')}
                 id={field.name}
                 name={field.name}
                 minTime="08:00"
