@@ -7,6 +7,8 @@ import PageHeading from 'components/PageHeading';
 
 import ExternalLink from '../ExternalLink';
 
+export type ExternalModalType = 'CFACTS' | 'CLOUD' | 'GENERIC';
+
 const ExternalLinkAndModal = ({
   children,
   href,
@@ -14,7 +16,7 @@ const ExternalLinkAndModal = ({
 }: {
   children: React.ReactNode;
   href: string;
-  modalType?: 'CFACTS' | 'CLOUD' | 'GENERIC';
+  modalType?: ExternalModalType;
 }) => {
   const { t: externalT } = useTranslation('externalLinkModal');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,8 +63,10 @@ const ExternalLinkAndModal = ({
           className="usa-button text-white text-no-underline"
           variant="unstyled"
         >
-          {modalType
-            ? externalT('continueButton', { value: modalType })
+          {modalType !== 'GENERIC'
+            ? externalT('continueButton', {
+                value: externalT(`modalTypes.${modalType}`)
+              })
             : externalT('leaveEasi')}
         </ExternalLink>
 

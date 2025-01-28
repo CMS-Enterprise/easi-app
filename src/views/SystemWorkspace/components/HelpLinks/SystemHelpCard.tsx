@@ -1,16 +1,11 @@
 import React from 'react';
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Icon,
-  Link
-} from '@trussworks/react-uswds';
+import { Card, CardBody, CardHeader, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import ExternalLink from 'components/shared/ExternalLink';
-import ExternalLinkAndModal from 'components/shared/ExternalLinkAndModal';
+import ExternalLinkAndModal, {
+  ExternalModalType
+} from 'components/shared/ExternalLinkAndModal';
 
 import './index.scss';
 
@@ -20,6 +15,7 @@ type SystemHelpCardProps = {
   linkText: string;
   link: string;
   external?: boolean;
+  modalType?: ExternalModalType;
 };
 
 const SystemHelpCard = ({
@@ -27,7 +23,8 @@ const SystemHelpCard = ({
   header,
   link,
   linkText,
-  external
+  external,
+  modalType
 }: SystemHelpCardProps) => {
   return (
     <Card
@@ -42,7 +39,9 @@ const SystemHelpCard = ({
 
       <CardBody className="padding-y-0 flex-1 system-help-links__fill-card-space">
         {external ? (
-          <ExternalLinkAndModal href={link}>{linkText}</ExternalLinkAndModal>
+          <ExternalLinkAndModal href={link} modalType={modalType}>
+            {linkText}
+          </ExternalLinkAndModal>
         ) : (
           <UswdsReactLink
             className="display-flex flex-align-center"
