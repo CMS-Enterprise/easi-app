@@ -171,11 +171,13 @@ function Homepage() {
             className="trb-admin-alert"
             data-testid="trbAdmin-siteAlert"
           >
-            <Trans i18nKey="technicalAssistance:adminInfoBox.text">
-              indexOne
-              <UswdsReactLink to="/">admin</UswdsReactLink>
-              indexTwo
-            </Trans>
+            <div className="display-block">
+              <Trans i18nKey="technicalAssistance:adminInfoBox.text">
+                indexOne
+                <UswdsReactLink to="/">admin</UswdsReactLink>
+                indexTwo
+              </Trans>
+            </div>
           </SiteAlert>
         )
       }

@@ -82,12 +82,18 @@ const ParticipantsTable = ({
       {
         Header: t<string>('participantsTable.votingRole'),
         accessor: 'votingRole',
-        Cell: ({ value }) => t<string>(`votingRoles.${value}`)
+        Cell: cell => {
+          const { value } = cell;
+          return <>{t<string>(`votingRoles.${value}`)}</>;
+        }
       },
       {
         Header: t<string>('participantsTable.grbRole'),
         accessor: 'grbRole',
-        Cell: ({ value }) => t<string>(`reviewerRoles.${value}`)
+        Cell: cell => {
+          const { value } = cell;
+          return <>{t<string>(`reviewerRoles.${value}`)}</>;
+        }
       },
       // Only display action column if user is GRT admin
       ...(isITGovAdmin ? [actionColumn] : [])
