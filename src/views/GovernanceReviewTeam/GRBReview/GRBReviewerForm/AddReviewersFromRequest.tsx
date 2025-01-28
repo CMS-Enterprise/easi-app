@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import {
-  Cell,
   CellProps,
   Column,
   HeaderGroup,

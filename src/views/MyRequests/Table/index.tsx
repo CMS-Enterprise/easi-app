@@ -97,9 +97,9 @@ const Table = ({
         accessor: 'submissionDate',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDateUtc(value, 'MM/dd/yyyy');
+            return <>{formatDateUtc(value, 'MM/dd/yyyy')}</>;
           }
-          return 'Not submitted';
+          return <>Not submitted</>;
         }
       },
       {
@@ -219,16 +219,18 @@ const Table = ({
         accessor: 'nextMeetingDate',
         Cell: ({ value }: { value: string | null }) => {
           if (value) {
-            return formatDateUtc(value, 'MM/dd/yyyy');
+            return <>{formatDateUtc(value, 'MM/dd/yyyy')}</>;
           }
-          return 'None';
+          return <>None</>;
         }
       },
       {
         Header: t<string>('requestsTable.headers.relatedSystems'),
         accessor: 'systems',
-        Cell: ({ value }: { value: string[] }) => {
-          return value.join(', ');
+        Cell: cell => {
+          const { value } = cell;
+          /* eslint react/prop-types: 0 */
+          return <>{value.join(', ')}</>;
         },
         width: '250px'
       }
