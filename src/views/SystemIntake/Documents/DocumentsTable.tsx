@@ -89,7 +89,10 @@ const DocumentsTable = ({ systemIntakeId, documents }: DocumentsTableProps) => {
       {
         Header: t<string>('intake:documents.table.dateAdded'),
         accessor: 'uploadedAt',
-        Cell: ({ value }) => formatDateLocal(value, 'MM/dd/yyyy')
+        Cell: cell => {
+          const { value } = cell;
+          return <>{formatDateLocal(value, 'MM/dd/yyyy')}</>;
+        }
       },
       {
         Header: t<string>('intake:documents.table.actions'),
@@ -155,9 +158,9 @@ const DocumentsTable = ({ systemIntakeId, documents }: DocumentsTableProps) => {
           }
           // Infected unavailable
           if (row.original.status === SystemIntakeDocumentStatus.UNAVAILABLE) {
-            return t('technicalAssistance:documents.table.unavailable');
+            return <>{t('technicalAssistance:documents.table.unavailable')}</>;
           }
-          return '';
+          return <></>;
         }
       }
     ];

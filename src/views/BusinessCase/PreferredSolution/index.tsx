@@ -9,7 +9,7 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import PageNumber from 'components/PageNumber';
@@ -22,6 +22,7 @@ import TextAreaField from 'components/shared/TextAreaField';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
+import { LifecycleCosts } from 'types/estimatedLifecycle';
 import flattenErrors from 'utils/flattenErrors';
 import { BusinessCaseSchema } from 'validations/businessCaseSchema';
 
@@ -544,7 +545,9 @@ const PreferredSolution = ({
                   errors.preferredSolution &&
                   errors.preferredSolution.estimatedLifecycleCost
                 }
-                setFieldValue={setFieldValue}
+                setFieldValue={
+                  setFieldValue as FormikHelpers<LifecycleCosts>['setFieldValue']
+                }
               />
 
               <FieldGroup
