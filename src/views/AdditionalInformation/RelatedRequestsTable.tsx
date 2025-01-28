@@ -153,20 +153,20 @@ const RelatedRequestsTable = ({
         }: {
           row: Row<LinkedRequestForTable>;
           value: LinkedRequestForTable['projectTitle'];
-        }): string | JSX.Element => {
+        }): JSX.Element => {
           // non-admins cannot click through the request titles
           if (!isTRBAdmin && !isITGovAdmin) {
-            return value;
+            return <>{value}</>;
           }
 
           // a non-TRB-admin cannot click through a TRB
           if (row.original.process === 'TRB' && !isTRBAdmin) {
-            return value;
+            return <>{value}</>;
           }
 
           // a non-ITGov-admin cannot click through an ITGov
           if (row.original.process === 'IT Governance' && !isITGovAdmin) {
-            return value;
+            return <>{value}</>;
           }
 
           let link: string;
@@ -216,7 +216,7 @@ const RelatedRequestsTable = ({
           value
         }: {
           value: LinkedRequestForTable['submissionDate'];
-        }): string => formatDateLocal(value, 'MM/dd/yyyy')
+        }): JSX.Element => <>{formatDateLocal(value, 'MM/dd/yyyy')}</>
       }
     ];
   }, [isITGovAdmin, isTRBAdmin, t]);
