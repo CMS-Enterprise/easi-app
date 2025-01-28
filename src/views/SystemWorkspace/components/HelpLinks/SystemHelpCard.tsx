@@ -9,6 +9,8 @@ import {
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import ExternalLink from 'components/shared/ExternalLink';
+import ExternalLinkAndModal from 'components/shared/ExternalLinkAndModal';
 
 import './index.scss';
 
@@ -40,15 +42,7 @@ const SystemHelpCard = ({
 
       <CardBody className="padding-y-0 flex-1 system-help-links__fill-card-space">
         {external ? (
-          <Link
-            href={link}
-            aria-label={header}
-            variant="external"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {linkText}
-          </Link>
+          <ExternalLinkAndModal href={link}>{linkText}</ExternalLinkAndModal>
         ) : (
           <UswdsReactLink
             className="display-flex flex-align-center"
