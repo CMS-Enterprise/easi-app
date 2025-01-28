@@ -77,7 +77,7 @@ const ExternalDocumentLinkModal = ({
         href={url}
         variant="unstyled"
       >
-        {externalT('continueButton')}
+        {externalT('continueButton', { value: 'site' })}
       </ExternalLink>
 
       <Button
