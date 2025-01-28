@@ -18,7 +18,7 @@ describe('The ExternalLinkAndModal component', async () => {
     expect(screen.getByRole('button', { name: 'Example' })).toBeInTheDocument();
   });
 
-  it.only('renders the GENERIC external link modal', async () => {
+  it('renders the GENERIC external link modal', async () => {
     render(
       <ExternalLinkAndModal href="https://www.example.com">
         Example
