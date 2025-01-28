@@ -59,7 +59,7 @@ const PresentationLinksForm = ({
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid }
+    formState: { errors, isValid, isDirty }
   } = useEasiForm<PresentationLinkFields>({
     resolver: yupResolver(SetGRBPresentationLinksSchema),
     defaultValues: { ...grbPresentationLink }
@@ -251,7 +251,11 @@ const PresentationLinksForm = ({
             {t('presentationLinks.uploadAlert')}
           </Alert>
 
-          <Button type="submit" className="margin-top-205" disabled={!isValid}>
+          <Button
+            type="submit"
+            className="margin-top-205"
+            disabled={!isValid || !isDirty}
+          >
             {t('presentationLinks.savePresentationDetails')}
           </Button>
         </Form>
