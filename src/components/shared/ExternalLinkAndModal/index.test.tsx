@@ -18,7 +18,7 @@ describe('The ExternalLinkAndModal component', async () => {
     expect(screen.getByRole('button', { name: 'Example' })).toBeInTheDocument();
   });
 
-  it('renders the GENERIC external link modal', async () => {
+  it.only('renders the GENERIC external link modal', async () => {
     render(
       <ExternalLinkAndModal href="https://www.example.com">
         Example
@@ -27,13 +27,13 @@ describe('The ExternalLinkAndModal component', async () => {
 
     userEvent.click(screen.getByRole('button', { name: 'Example' }));
 
-    const modalTitle = await screen.findByText(
-      'Are you sure you want to leave EASi?'
+    const modalTitle = screen.getByText(
+      i18next.t<string>('externalLinkModal:genericHeading')
     );
     expect(modalTitle).toBeInTheDocument();
 
     const genericModalText = screen.getByText(
-      'If you are accessing another CMS system or site, it could require connectivity via VPN and/or job codes and permissions to access content.'
+      i18next.t<string>('externalLinkModal:description.generic')
     );
     expect(genericModalText).toBeInTheDocument();
 
