@@ -65,7 +65,7 @@ function TeamTable({
         id: 'role',
         accessor: 'roles',
         Cell: ({ row }: CellProps<UsernameWithRoles>) => {
-          return row.original.roles.map(r => r.roleTypeName).join(', ');
+          return <>{row.original.roles.map(r => r.roleTypeName).join(', ')}</>;
         },
         sortType: (a: Row<UsernameWithRoles>, b: Row<UsernameWithRoles>) => {
           const ar = a.original.roles[0];
