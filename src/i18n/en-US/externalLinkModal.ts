@@ -2,8 +2,8 @@ const externalLinkModal = {
   heading: 'You are leaving EASi.',
   genericHeading: 'Are you sure you want to leave EASi?',
   modalTypes: {
-    cfacts: 'CFACTS',
-    cloud: 'Cloud'
+    CFACTS: 'CFACTS',
+    CLOUD: 'Cloud'
   },
   description: {
     cfacts:
