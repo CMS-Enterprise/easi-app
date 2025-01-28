@@ -12,10 +12,12 @@ export type ExternalModalType = 'CFACTS' | 'CLOUD' | 'GENERIC';
 const ExternalLinkAndModal = ({
   children,
   href,
+  buttonType = 'unstyled',
   modalType = 'GENERIC'
 }: {
   children: React.ReactNode;
   href: string;
+  buttonType?: 'outline' | 'unstyled';
   modalType?: ExternalModalType;
 }) => {
   const { t: externalT } = useTranslation('externalLinkModal');
@@ -90,7 +92,8 @@ const ExternalLinkAndModal = ({
       </Modal>
       <Button
         type="button"
-        unstyled
+        unstyled={buttonType === 'unstyled'}
+        outline={buttonType === 'outline'}
         onClick={() => {
           setIsModalOpen(true);
         }}
@@ -100,7 +103,7 @@ const ExternalLinkAndModal = ({
           style={{ columnGap: '0.25rem' }}
         >
           {children}
-          <Icon.Launch />
+          {buttonType === 'unstyled' && <Icon.Launch />}
         </span>
       </Button>
     </>
