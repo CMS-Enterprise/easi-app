@@ -213,14 +213,14 @@ const httpsRe = /^https?:\/\//;
 // See sanitizeInput() -> DOMPurify.sanitize()
 DOMPurify.addHook('afterSanitizeAttributes', node => {
   // check all href attributes for validity
-  if (node.hasAttribute('href')) {
-    const href = node.getAttribute('href');
+  if ((node as Element).hasAttribute('href')) {
+    const href = (node as Element).getAttribute('href');
     if (href === null) return;
     // Allow `mailto:` urls
     if (href.match(mailtoRe)) return;
     // Ensure url has a `https://` prefix
     if (!href.match(httpsRe)) {
-      node.setAttribute('href', `https://${href}`);
+      (node as Element).setAttribute('href', `https://${href}`);
     }
   }
 });
