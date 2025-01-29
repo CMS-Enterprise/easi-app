@@ -1,6 +1,11 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { act, render, screen } from '@testing-library/react';
+import {
+  act,
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
@@ -170,6 +175,8 @@ describe('Issue LCID form', async () => {
         </MemoryRouter>
       </VerboseMockedProvider>
     );
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     // Current LCID is displayed
     const testId = await screen.findByTestId('current-lcid');

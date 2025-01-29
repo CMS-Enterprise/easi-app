@@ -33,36 +33,28 @@ describe('The governance overview page', () => {
   });
 
   it('matches the snapshot (w/o id param)', async () => {
-    let tree: any;
-    await act(async () => {
-      tree = renderer.create(
-        <MemoryRouter initialEntries={['/governance-overview']}>
-          <Route
-            path="/governance-overview/:systemId?"
-            component={GovernanceOverview}
-          />
-        </MemoryRouter>
-      );
-    });
+    const { asFragment } = render(
+      <MemoryRouter initialEntries={['/governance-overview']}>
+        <Route
+          path="/governance-overview/:systemId?"
+          component={GovernanceOverview}
+        />
+      </MemoryRouter>
+    );
 
-    expect(tree.toJSON()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('matches the snapshot (w/ id param)', async () => {
-    let tree: any;
-    await act(async () => {
-      tree = renderer.create(
-        <MemoryRouter
-          initialEntries={['/governance-overview/test-intake-guid']}
-        >
-          <Route
-            path="/governance-overview/:systemId?"
-            component={GovernanceOverview}
-          />
-        </MemoryRouter>
-      );
-    });
+    const { asFragment } = render(
+      <MemoryRouter initialEntries={['/governance-overview/test-intake-guid']}>
+        <Route
+          path="/governance-overview/:systemId?"
+          component={GovernanceOverview}
+        />
+      </MemoryRouter>
+    );
 
-    expect(tree.toJSON()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
