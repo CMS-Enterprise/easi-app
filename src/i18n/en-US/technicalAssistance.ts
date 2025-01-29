@@ -157,6 +157,8 @@ const technicalAssistance = {
     guidanceAndInsights: 'Guidance and insights',
     resources: 'Resources',
     nextSteps: 'Next steps',
+    nextStepsDescription:
+      'If implementation of a requirement has been completed and you need help resolving the CFACTS finding, please contact the Technical Review Board (TRB) at cms-trb@cms.hhs.gov for next steps.',
     notSpecified: 'Not specified yet',
     followup: 'Should the team return for a follow-up session?',
     guidanceLetter: 'Guidance Letter',
@@ -248,8 +250,6 @@ const technicalAssistance = {
     editGuidance: 'Edit guidance',
     removeGuidance: 'Remove guidance',
     nextSteps: 'Next steps',
-    nextStepsDescription:
-      'If implementation of a requirement has been completed and you need help resolving the CFACTS finding, please contact the Technical Review Board (TRB) at cms-trb@cms.hhs.gov for next steps.',
     isFollowupRecommended: 'Should the team return for a follow-up session?',
     followupYes: 'Yes, a follow-up is recommended',
     notNecessary: 'Not necessary',
