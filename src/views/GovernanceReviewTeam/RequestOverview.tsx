@@ -204,29 +204,27 @@ const RequestOverview = ({
                 />
 
                 {flags?.grbReviewTab && (
-                  <>
-                    <Route
-                      path="/it-governance/:systemId/grb-review/presentation-links"
-                      render={() => (
-                        <PresentationLinksForm
-                          systemIntakeID={systemIntake.id}
-                        />
-                      )}
-                    />
+                  <Route
+                    path="/it-governance/:systemId/grb-review/presentation-links"
+                    render={() => (
+                      <PresentationLinksForm systemIntakeID={systemIntake.id} />
+                    )}
+                  />
+                )}
 
-                    <Route
-                      path="/it-governance/:systemId/grb-review/:action(add|edit)?"
-                      exact
-                      render={() => (
-                        <GRBReview
-                          {...systemIntake}
-                          businessCase={businessCase}
-                          grbReviewers={grbReviewers}
-                          grbReviewStartedAt={grbReviewStartedAt}
-                        />
-                      )}
-                    />
-                  </>
+                {flags?.grbReviewTab && (
+                  <Route
+                    path="/it-governance/:systemId/grb-review/:action(add|edit)?"
+                    exact
+                    render={() => (
+                      <GRBReview
+                        {...systemIntake}
+                        businessCase={businessCase}
+                        grbReviewers={grbReviewers}
+                        grbReviewStartedAt={grbReviewStartedAt}
+                      />
+                    )}
+                  />
                 )}
 
                 {/* GRT only routes */}
