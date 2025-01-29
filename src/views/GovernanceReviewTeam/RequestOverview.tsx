@@ -206,9 +206,7 @@ const RequestOverview = ({
                 {flags?.grbReviewTab && (
                   <Route
                     path="/it-governance/:systemId/grb-review/presentation-links"
-                    render={() => (
-                      <PresentationLinksForm systemIntakeID={systemIntake.id} />
-                    )}
+                    render={() => <PresentationLinksForm {...systemIntake} />}
                   />
                 )}
 

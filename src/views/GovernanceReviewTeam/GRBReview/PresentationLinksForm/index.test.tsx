@@ -15,7 +15,7 @@ describe('GRB presentation links form', () => {
       <MemoryRouter>
         <VerboseMockedProvider>
           <MessageProvider>
-            <PresentationLinksForm systemIntakeID={systemIntake.id} />
+            <PresentationLinksForm {...systemIntake} />
           </MessageProvider>
         </VerboseMockedProvider>
       </MemoryRouter>
@@ -49,7 +49,7 @@ describe('GRB presentation links form', () => {
         <VerboseMockedProvider>
           <MessageProvider>
             <PresentationLinksForm
-              systemIntakeID={systemIntake.id}
+              {...systemIntake}
               grbPresentationLink={
                 {
                   recordingLink: 'http://google.com',

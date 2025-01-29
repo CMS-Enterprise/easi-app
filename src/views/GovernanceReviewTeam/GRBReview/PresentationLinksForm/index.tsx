@@ -36,7 +36,7 @@ type PresentationLinkFields = Omit<
 >;
 
 type PresentationLinksFormProps = {
-  systemIntakeID: string;
+  id: string;
   // Pass presentation link to form if editing
   grbPresentationLink?: SystemIntakeGRBPresentationLinks;
 };
@@ -45,7 +45,7 @@ type PresentationLinksFormProps = {
  * Form to add or edit GRB review presentation links
  */
 const PresentationLinksForm = ({
-  systemIntakeID,
+  id,
   grbPresentationLink
 }: PresentationLinksFormProps) => {
   const { t } = useTranslation('grbReview');
@@ -67,7 +67,7 @@ const PresentationLinksForm = ({
 
   const formType: 'add' | 'edit' = grbPresentationLink ? 'edit' : 'add';
 
-  const grbReviewPath = `/it-governance/${systemIntakeID}/grb-review`;
+  const grbReviewPath = `/it-governance/${id}/grb-review`;
 
   /**
    * Returns true if both recordingLink and presentationDeckFileData fields have errors
@@ -80,7 +80,7 @@ const PresentationLinksForm = ({
     setPresentationLinks({
       variables: {
         input: {
-          systemIntakeID,
+          systemIntakeID: id,
           ...values
         }
       }
