@@ -99,8 +99,7 @@ const ExternalLinkAndModal = ({
           icon={<Icon.Launch className="margin-left-0" />}
           iconPosition="after"
         >
-          {' '}
-          {children}{' '}
+          {children}
         </IconButton>
       ) : (
         <Button
