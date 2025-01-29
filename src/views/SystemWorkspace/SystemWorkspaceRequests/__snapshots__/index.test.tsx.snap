@@ -224,7 +224,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Submission date
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--down"
                     focusable="false"
                     height="1em"
@@ -261,7 +261,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Request name
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
                     height="1em"
@@ -298,7 +298,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Process
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
                     height="1em"
@@ -335,7 +335,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Status
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
                     height="1em"
@@ -372,7 +372,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Upcoming meeting date
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
                     height="1em"
@@ -409,7 +409,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Requester
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
                     height="1em"
@@ -936,7 +936,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Submission date
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--down"
                     focusable="false"
                     height="1em"
@@ -973,7 +973,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Request name
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
                     height="1em"
@@ -1010,7 +1010,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Process
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
                     height="1em"
@@ -1047,7 +1047,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Status
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
                     height="1em"
@@ -1084,7 +1084,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Most recent meeting date
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
                     height="1em"
@@ -1121,7 +1121,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Requester
                   <svg
-                    class="usa-icon margin-left-05 position-absolute"
+                    class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
                     height="1em"

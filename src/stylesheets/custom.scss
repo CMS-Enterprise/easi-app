@@ -298,11 +298,6 @@
   font-weight: 400;
 }
 
-// Revert original USWDS button styles to inline-block from new inline-flex
-.usa-button {
-  display: inline-block;
-}
-
 .usa-site-alert .usa-alert .usa-alert__body {
   display: flex;
 }

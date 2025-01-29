@@ -130,7 +130,7 @@ exports[`Workspace team page > renders 1`] = `
               >
                 Name
                 <svg
-                  class="usa-icon margin-left-05 position-absolute"
+                  class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
                   height="1em"
@@ -167,7 +167,7 @@ exports[`Workspace team page > renders 1`] = `
               >
                 Role(s)
                 <svg
-                  class="usa-icon margin-left-05 position-absolute"
+                  class="usa-icon margin-left-05"
                   data-testid="caret--down"
                   focusable="false"
                   height="1em"
@@ -200,7 +200,7 @@ exports[`Workspace team page > renders 1`] = `
               >
                 Actions
                 <svg
-                  class="usa-icon margin-left-05 position-absolute"
+                  class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
                   height="1em"

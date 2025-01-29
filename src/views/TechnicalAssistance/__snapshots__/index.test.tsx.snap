@@ -663,7 +663,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
                   >
                     Project title
                     <svg
-                      class="usa-icon margin-left-05 position-absolute"
+                      class="usa-icon margin-left-05"
                       data-testid="caret--sort"
                       focusable="false"
                       height="1em"
@@ -700,7 +700,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
                   >
                     Request status
                     <svg
-                      class="usa-icon margin-left-05 position-absolute"
+                      class="usa-icon margin-left-05"
                       data-testid="caret--sort"
                       focusable="false"
                       height="1em"
@@ -737,7 +737,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
                   >
                     Submission date
                     <svg
-                      class="usa-icon margin-left-05 position-absolute"
+                      class="usa-icon margin-left-05"
                       data-testid="caret--down"
                       focusable="false"
                       height="1em"
