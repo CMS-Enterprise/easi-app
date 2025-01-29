@@ -59,7 +59,7 @@ const PresentationLinksForm = ({
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid, isDirty }
+    formState: { errors, isValid, isDirty, defaultValues }
   } = useEasiForm<PresentationLinkFields>({
     resolver: yupResolver(SetGRBPresentationLinksSchema),
     defaultValues: { ...grbPresentationLink }
@@ -169,14 +169,22 @@ const PresentationLinksForm = ({
                 {t('presentationLinks.transcriptHelpText')}
               </HelpText>
 
-              <Tabs className="margin-top-105">
+              <Tabs
+                className="margin-top-105"
+                // Default to upload document tab when document has been uploaded
+                defaultActiveTab={
+                  defaultValues?.transcriptFileData
+                    ? t('presentationLinks.uploadDocument')
+                    : t('presentationLinks.addLink')
+                }
+              >
                 <TabPanel
                   id="addLink"
                   tabName={t('presentationLinks.addLink')}
                   className="outline-0"
                 >
                   <TextInput
-                    {...register('transcriptLink')}
+                    {...register('transcriptLink', { shouldUnregister: true })}
                     ref={null}
                     id="transcriptLink"
                     aria-describedby="transcriptHelpText"
@@ -199,6 +207,7 @@ const PresentationLinksForm = ({
                   <Controller
                     control={control}
                     name="transcriptFileData"
+                    shouldUnregister
                     render={({ field: { ref, ...field } }) => (
                       <FileInput
                         name={field.name}
@@ -236,7 +245,6 @@ const PresentationLinksForm = ({
                     }
                     name={field.name}
                     id={field.name}
-                    // ref={fileInputRef}
                     accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
                     aria-describedby="presentationDeckHelpText"
                     className="maxw-none"
