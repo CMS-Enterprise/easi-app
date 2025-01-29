@@ -122,39 +122,31 @@ exports[`Workspace team page > renders 1`] = `
               title="Toggle SortBy"
             >
               <button
-                class="usa-button usa-button--unstyled width-full display-flex"
+                class="usa-button usa-button--unstyled"
                 data-testid="button"
                 style="cursor: pointer;"
                 title="Toggle SortBy"
                 type="button"
               >
-                <div
-                  class="flex-fill text-no-wrap"
+                Name
+                <svg
+                  class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  Name
-                </div>
-                <div
-                  class="position-relative width-205 margin-left-05"
-                >
-                  <svg
-                    class="usa-icon margin-left-05 position-absolute"
-                    data-testid="caret--sort"
-                    focusable="false"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
-                    />
-                  </svg>
-                </div>
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
               </button>
             </th>
             <th
@@ -167,39 +159,31 @@ exports[`Workspace team page > renders 1`] = `
               title="Toggle SortBy"
             >
               <button
-                class="usa-button usa-button--unstyled width-full display-flex"
+                class="usa-button usa-button--unstyled"
                 data-testid="button"
                 style="cursor: pointer;"
                 title="Toggle SortBy"
                 type="button"
               >
-                <div
-                  class="flex-fill text-no-wrap"
+                Role(s)
+                <svg
+                  class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--down"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  Role(s)
-                </div>
-                <div
-                  class="position-relative width-205 margin-left-05"
-                >
-                  <svg
-                    class="usa-icon margin-left-05 position-absolute"
-                    data-testid="caret--down"
-                    focusable="false"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
-                    />
-                  </svg>
-                </div>
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                  />
+                </svg>
               </button>
             </th>
             <th
@@ -210,37 +194,29 @@ exports[`Workspace team page > renders 1`] = `
               scope="col"
             >
               <button
-                class="usa-button usa-button--unstyled width-full display-flex"
+                class="usa-button usa-button--unstyled"
                 data-testid="button"
                 type="button"
               >
-                <div
-                  class="flex-fill text-no-wrap"
+                Actions
+                <svg
+                  class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  Actions
-                </div>
-                <div
-                  class="position-relative width-205 margin-left-05"
-                >
-                  <svg
-                    class="usa-icon margin-left-05 position-absolute"
-                    data-testid="caret--sort"
-                    focusable="false"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
-                    />
-                  </svg>
-                </div>
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
               </button>
             </th>
           </tr>
