@@ -906,7 +906,7 @@ const technicalAssistance = {
     trbLead: 'TRB Lead',
     notAssigned: 'Not assigned',
     assign: 'Assign',
-    backToRequests: 'Back to All Requests',
+    backToRequests: 'Back to all requests',
     requestHome: 'Request home',
     initialRequestForm: 'Initial request form',
     supportingDocuments: 'Supporting documents',
