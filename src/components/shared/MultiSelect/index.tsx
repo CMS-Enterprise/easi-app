@@ -238,7 +238,7 @@ const MultiSelect = ({
         isMulti
         hideSelectedOptions={false}
         closeMenuOnSelect={false}
-        onChange={selectedOptions => {
+        onChange={(selectedOptions: MultiSelectOptionProps[]) => {
           setSelected(selectedOptions);
           onChange(selectedOptions.map(option => option.value));
         }}

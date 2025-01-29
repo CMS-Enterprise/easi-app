@@ -185,13 +185,16 @@ function DocumentsTable({
           if (commonType === TRBDocumentCommonType.OTHER) {
             return otherTypeDescription || '';
           }
-          return t(`documents.upload.type.${commonType}`);
+          return <>{t(`documents.upload.type.${commonType}`)}</>;
         }
       },
       {
         Header: t<string>('documents.table.header.uploadDate'),
         accessor: 'uploadedAt',
-        Cell: ({ value }) => formatDateLocal(value, 'MM/dd/yyyy')
+        Cell: cell => {
+          const { value } = cell;
+          return <>{formatDateLocal(value, 'MM/dd/yyyy')}</>;
+        }
       },
       {
         Header: t<string>('documents.table.header.actions'),
@@ -242,8 +245,8 @@ function DocumentsTable({
           }
           // Infected unavailable
           if (row.original.status === TRBRequestDocumentStatus.UNAVAILABLE)
-            return t('documents.table.unavailable');
-          return '';
+            return <>{t('documents.table.unavailable')}</>;
+          return <></>;
         }
       }
     ];

@@ -27,6 +27,11 @@ func RequireInt(i *int) bool {
 	return i == nil
 }
 
+// RequireInt64 checks if it's not nil
+func RequireInt64(i *int64) bool {
+	return i == nil
+}
+
 // RequireCostPhase checks if it's not nil
 func RequireCostPhase(p *models.LifecycleCostPhase) bool {
 	return p == nil

@@ -77,7 +77,11 @@ const getGuidanceLetterCannotStart: MockedQuery<
     data: {
       __typename: 'Query',
       trbRequest: {
-        ...getTrbGuidanceLetterQuery.result.data?.trbRequest!,
+        ...(
+          getTrbGuidanceLetterQuery.result as {
+            data: GetTRBGuidanceLetterQuery;
+          }
+        ).data.trbRequest!,
         guidanceLetter: null,
         taskStatuses
       }

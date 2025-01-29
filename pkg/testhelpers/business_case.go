@@ -15,13 +15,13 @@ type EstimatedLifecycleCostOptions struct {
 	Solution       *models.LifecycleCostSolution
 	Phase          *models.LifecycleCostPhase
 	Year           *models.LifecycleCostYear
-	Cost           *int
+	Cost           *int64
 }
 
 // NewEstimatedLifecycleCost helps generate a new lifecycle cost for a given business case
 func NewEstimatedLifecycleCost(opts EstimatedLifecycleCostOptions) models.EstimatedLifecycleCost {
 	development := models.LifecycleCostPhaseDEVELOPMENT
-	cost := 100
+	cost := int64(100)
 	elc := models.EstimatedLifecycleCost{
 		ID:             uuid.New(),
 		BusinessCaseID: uuid.New(),
@@ -53,7 +53,7 @@ func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
 	dev := models.LifecycleCostPhaseDEVELOPMENT
 	om := models.LifecycleCostPhaseOPERATIONMAINTENANCE
 	other := models.LifecycleCostPhaseOTHER
-	cost := 100
+	cost := int64(100)
 	return models.EstimatedLifecycleCosts{
 		models.EstimatedLifecycleCost{
 			BusinessCaseID: *id,

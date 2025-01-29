@@ -263,7 +263,7 @@ func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *
 				phase := phase
 
 				// make a copy, so when we increment costAmount, previously created lifecycleCost.Cost's don't point to the updated value
-				cost := increasingCost
+				cost := int64(increasingCost)
 
 				lifecycleCost := models.EstimatedLifecycleCost{
 					ID:             uuid.New(),

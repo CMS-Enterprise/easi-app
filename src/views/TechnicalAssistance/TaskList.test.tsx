@@ -175,7 +175,9 @@ describe('Trb Task List', () => {
     await screen.findByText(
       i18next.t<string>('taskList:withdraw_modal:confirmationText', {
         context: 'name',
-        requestName: getTrbTasklistQuery.result.data?.trbRequest.name
+        requestName:
+          (getTrbTasklistQuery.result as { data: GetTrbTasklist }).data
+            .trbRequest.name ?? ''
       })
     );
   });

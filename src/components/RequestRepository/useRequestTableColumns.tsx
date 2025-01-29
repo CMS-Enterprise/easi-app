@@ -31,11 +31,13 @@ const useRequestTableColumns = (
     Header: t<string>('intake:fields.submissionDate'),
     accessor: 'submittedAt',
     Cell: cell => {
-      if (cell.value) {
-        return formatDateLocal(cell.value, 'MM/dd/yyyy');
+      const { value } = cell;
+
+      if (value) {
+        return <>{formatDateLocal(value, 'MM/dd/yyyy')}</>;
       }
 
-      return t('requestRepository.table.submissionDate.null');
+      return <>{t('requestRepository.table.submissionDate.null')}</>;
     }
   };
 
@@ -82,7 +84,7 @@ const useRequestTableColumns = (
           </div>
         );
       }
-      return adminLead;
+      return <>{adminLead}</>;
     }
   };
 
@@ -103,7 +105,7 @@ const useRequestTableColumns = (
           </UswdsReactLink>
         );
       }
-      return formatDateUtc(value, 'MM/dd/yyyy');
+      return <>{formatDateUtc(value, 'MM/dd/yyyy')}</>;
     }
   };
 
@@ -124,7 +126,7 @@ const useRequestTableColumns = (
           </UswdsReactLink>
         );
       }
-      return formatDateUtc(value, 'MM/dd/yyyy');
+      return <>{formatDateUtc(value, 'MM/dd/yyyy')}</>;
     }
   };
 
@@ -163,13 +165,15 @@ const useRequestTableColumns = (
   const lcidExpirationDateColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.lcidExpirationDate'),
     accessor: 'lcidExpiresAt',
-    Cell: ({ value: lcidExpiresAt }) => {
+    Cell: cell => {
+      const { value: lcidExpiresAt } = cell;
+
       if (lcidExpiresAt) {
-        return formatDateUtc(lcidExpiresAt, 'MM/dd/yyyy');
+        return <>{formatDateUtc(lcidExpiresAt, 'MM/dd/yyyy')}</>;
       }
 
       // If no LCID Expiration exists, display 'No LCID Issued'
-      return 'No LCID Issued';
+      return <>No LCID Issued</>;
     }
   };
 
@@ -181,7 +185,7 @@ const useRequestTableColumns = (
     }: {
       value: SystemIntakeForTable['lastAdminNote'];
     }) => {
-      if (!lastAdminNote) return 'No Admin Notes';
+      if (!lastAdminNote) return <>No Admin Notes</>;
 
       return (
         // Display admin note using truncated text field that

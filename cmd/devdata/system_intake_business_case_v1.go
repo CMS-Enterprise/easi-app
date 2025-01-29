@@ -35,7 +35,7 @@ func makeFinalBusinessCaseV1(ctx context.Context, name string, store *storage.St
 		for i, v := range []string{"1", "2", "3", "4", "5"} {
 			phase1 := models.LifecycleCostPhaseDEVELOPMENT
 			phase2 := models.LifecycleCostPhaseOPERATIONMAINTENANCE
-			cost := (i + 1) * 100
+			cost := int64((i + 1) * 10000000000000000)
 			estimatedLifeCycleCost := models.EstimatedLifecycleCost{
 				Solution: models.LifecycleCostSolutionPREFERRED,
 				Year:     models.LifecycleCostYear(v),
@@ -86,8 +86,8 @@ func makeBusinessCaseV1(ctx context.Context, name string, store *storage.Store, 
 	}
 
 	phase := models.LifecycleCostPhaseDEVELOPMENT
-	cost := 123456
-	noCost := 0
+	cost := int64(123456)
+	noCost := int64(0)
 	businessCase := models.BusinessCase{
 		CreatedAt:              helpers.PointerTo(time.Now().AddDate(0, 0, -2)),
 		UpdatedAt:              helpers.PointerTo(time.Now()),
