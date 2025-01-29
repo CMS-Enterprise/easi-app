@@ -100,6 +100,15 @@ const Table = ({
             return <>{formatDateUtc(value, 'MM/dd/yyyy')}</>;
           }
           return <>Not submitted</>;
+        },
+        sortType: (
+          a: Row<MergedRequestsForTable>,
+          b: Row<MergedRequestsForTable>
+        ) => {
+          return (a.original.submissionDate || 'z') >
+            (b.original.submissionDate || 'z')
+            ? 1
+            : -1;
         }
       },
       {
@@ -318,7 +327,7 @@ const Table = ({
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
+        sortBy: useMemo(() => [{ id: 'submissionDate', desc: true }], []),
         pageIndex: 0,
         pageSize: defaultPageSize
       }
