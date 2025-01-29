@@ -231,7 +231,7 @@ const technicalAssistance = {
     uncategorized: 'Uncategorized',
     requirement: 'Requirement',
     requirementDescription:
-      'A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding.',
+      'A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. Requirements may be submitted to CFACTS if not implemented, or in the process of implementation, within the provided timeline. The TRB will inform you if requirements will be submitted.',
     recommendation: 'Recommendation',
     recommendationDescription:
       'A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS.',
