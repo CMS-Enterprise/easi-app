@@ -94,7 +94,7 @@ const ExternalLinkAndModal = ({
       {buttonType === 'unstyled' ? (
         <IconButton
           type="button"
-          unstyled={buttonType === 'unstyled'}
+          unstyled
           onClick={() => setIsModalOpen(true)}
           icon={<Icon.Launch className="margin-left-0" />}
           iconPosition="after"
