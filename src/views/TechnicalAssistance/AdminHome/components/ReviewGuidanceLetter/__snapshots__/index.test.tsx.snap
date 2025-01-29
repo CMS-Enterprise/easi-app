@@ -515,6 +515,11 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
         Next steps
       </h2>
       <p
+        class="margin-top-1 margin-bottom-1"
+      >
+        If implementation of a requirement has been completed and you need help resolving the CFACTS finding, please contact the Technical Review Board (TRB) at cms-trb@cms.hhs.gov for next steps.
+      </p>
+      <p
         class="text-bold margin-top-4 margin-bottom-1"
       >
         Next steps
