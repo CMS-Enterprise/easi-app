@@ -38,7 +38,7 @@ const SideNavigation = ({
   const { t } = useTranslation('technicalAssistance');
 
   return (
-    <nav>
+    <nav className="sticky" style={{ top: '4rem' }}>
       <ul className="trb-admin__nav-list usa-list usa-list--unstyled">
         <li className="trb-admin__view-all-link margin-bottom-4">
           <Link to="/">

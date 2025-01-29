@@ -202,7 +202,10 @@ exports[`TRB admin home > matches the snapshot 1`] = `
           class="grid-col desktop:grid-col-3 display-none desktop:display-block"
           data-testid="grid"
         >
-          <nav>
+          <nav
+            class="sticky"
+            style="top: 4rem;"
+          >
             <ul
               class="trb-admin__nav-list usa-list usa-list--unstyled"
             >
