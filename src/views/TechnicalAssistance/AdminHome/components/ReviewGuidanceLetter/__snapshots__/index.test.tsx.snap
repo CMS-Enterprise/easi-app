@@ -97,7 +97,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
           <p
             class="margin-top-05 margin-bottom-3 line-height-body-5"
           >
-            A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding.
+            A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. Requirements may be submitted to CFACTS if not implemented, or in the process of implementation, within the provided timeline. The TRB will inform you if requirements will be submitted.
           </p>
           <div
             class="usa-alert usa-alert--info usa-alert--slim margin-top-neg-1 margin-bottom-4"
