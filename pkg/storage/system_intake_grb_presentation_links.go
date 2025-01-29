@@ -14,16 +14,13 @@ import (
 )
 
 func (s *Store) SetSystemIntakeGRBPresentationLinks(ctx context.Context, links *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeGRBPresentationLinks, error) {
-	if links.ID == uuid.Nil {
-		links.ID = uuid.New()
-	}
-
-	if _, err := namedExec(ctx, s.db, sqlqueries.SystemIntakeGRBPresentationLinks.Upsert, links); err != nil {
+	var output models.SystemIntakeGRBPresentationLinks
+	if err := namedGet(ctx, s.db, &output, sqlqueries.SystemIntakeGRBPresentationLinks.Upsert, links); err != nil {
 		appcontext.ZLogger(ctx).Error("failed to set system intake GRB presentation links", zap.Error(err))
 		return nil, err
 	}
 
-	return links, nil
+	return &output, nil
 }
 
 func (s *Store) SystemIntakeGRBPresentationLinksByIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeGRBPresentationLinks, error) {

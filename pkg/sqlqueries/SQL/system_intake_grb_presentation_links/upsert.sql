@@ -15,7 +15,7 @@ INSERT INTO system_intake_grb_presentation_links
     presentation_deck_file_name
 )
 VALUES (
-    :id,
+    gen_random_uuid(),
     :created_by,
     :created_at,
     :modified_by,
@@ -42,7 +42,7 @@ SET (
     presentation_deck_file_name
 ) = (
     :modified_by,
-    :modified_at,
+    now(),
     :recording_link,
     :recording_passcode,
     :transcript_link,
@@ -50,4 +50,5 @@ SET (
     :transcript_file_name,
     :presentation_deck_s3_key,
     :presentation_deck_file_name
-);
+)
+RETURNING *;
