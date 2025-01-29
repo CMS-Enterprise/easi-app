@@ -230,15 +230,10 @@ function TeamTable({
                   <Button
                     type="button"
                     unstyled
-                    className="width-full display-flex"
                     {...column.getSortByToggleProps()}
                   >
-                    <div className="flex-fill text-no-wrap">
-                      {column.render('Header')}
-                    </div>
-                    <div className="position-relative width-205 margin-left-05">
-                      {getHeaderSortIcon(column)}
-                    </div>
+                    {column.render('Header')}
+                    {getHeaderSortIcon(column)}
                   </Button>
                 </th>
               ))}

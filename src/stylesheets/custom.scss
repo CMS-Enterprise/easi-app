@@ -207,6 +207,7 @@
   // Remove max width on alert body
   &.usa-alert .usa-alert__body {
     max-width: none;
+    display: inline-block;
   }
 }
 
@@ -219,6 +220,15 @@
   position: sticky;
   position: -webkit-sticky;
   top: -1px;
+}
+
+.usa-button-group {
+  align-items: center;
+}
+
+// Fixes button icon margin with updated USWDS
+.usa-button .usa-icon {
+  margin-right: 0rem !important;
 }
 
 // Fixes button group item margins when nested inside .usa-list
@@ -286,4 +296,8 @@
 
 .usa-table th {
   font-weight: 400;
+}
+
+.usa-site-alert .usa-alert .usa-alert__body {
+  display: flex;
 }
