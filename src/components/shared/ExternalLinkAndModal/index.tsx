@@ -6,6 +6,7 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 
 import ExternalLink from '../ExternalLink';
+import IconButton from '../IconButton';
 
 export type ExternalModalType = 'CFACTS' | 'CLOUD' | 'GENERIC';
 
@@ -90,22 +91,33 @@ const ExternalLinkAndModal = ({
           {externalT('goBackToEasi')}
         </Button>
       </Modal>
-      <Button
-        type="button"
-        unstyled={buttonType === 'unstyled'}
-        outline={buttonType === 'outline'}
-        onClick={() => {
-          setIsModalOpen(true);
-        }}
-      >
-        <span
-          className="display-flex flex-align-center"
-          style={{ columnGap: '0.25rem' }}
+      {buttonType === 'unstyled' ? (
+        <IconButton
+          type="button"
+          unstyled={buttonType === 'unstyled'}
+          onClick={() => setIsModalOpen(true)}
+          icon={<Icon.Launch className="margin-left-0" />}
+          iconPosition="after"
         >
-          {children}
-          {buttonType === 'unstyled' && <Icon.Launch />}
-        </span>
-      </Button>
+          {' '}
+          {children}{' '}
+        </IconButton>
+      ) : (
+        <Button
+          type="button"
+          outline
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          <span
+            className="display-flex flex-align-center"
+            style={{ columnGap: '0.25rem' }}
+          >
+            {children}
+          </span>
+        </Button>
+      )}
     </>
   );
 };
