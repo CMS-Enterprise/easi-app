@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
@@ -22,6 +23,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/client/intake"
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/translation"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Intake API
@@ -161,4 +163,87 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 	_ = resp
 
 	return nil
+}
+
+func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, dayOfWeek time.Weekday, hourInUTC int) {
+	logger := appcontext.ZLogger(ctx)
+	if hourInUTC > 24 || hourInUTC < 0 {
+		logger.Error("incorrect hour given for publish schedule, use int between 0 and 24")
+		return
+	}
+	if !c.enabled {
+		logger.Info("CEDAR intake publish schedule is disabled")
+		return
+	}
+
+	for {
+		nextPublish := getDurationUntilNextDayAndTime(time.Now().UTC(), dayOfWeek, hourInUTC)
+		logger.Info(fmt.Sprintf(
+			"next intake publish to CEDAR in %s at %s",
+			nextPublish,
+			time.Now().UTC().Add(nextPublish).Format(time.RFC3339),
+		))
+		time.Sleep(nextPublish)
+
+		logger.Info("running scheduled intake publish to CEDAR")
+		c.publishIntakeAndBusinessCase(ctx, store)
+	}
+}
+
+func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, store *storage.Store) {
+	allIntakes, err := store.FetchSystemIntakes(ctx)
+	if err != nil {
+		appcontext.ZLogger(ctx).Warn("failed to fetch intakes when publishing to CEDAR", zap.Error(err))
+		return
+	}
+	for _, intake := range allIntakes {
+		err = c.PublishSystemIntake(ctx, intake)
+		if err != nil {
+			appcontext.ZLogger(ctx).Warn(
+				"failed to publish intake when publishing to CEDAR",
+				zap.String("id", intake.ID.String()),
+				zap.Error(err),
+			)
+		}
+		if intake.BusinessCaseID == nil {
+			continue
+		}
+		businessCase, err := store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
+		appcontext.ZLogger(ctx).Warn(
+			"failed to fetch business case for intake when publishing to CEDAR",
+			zap.String("id", intake.ID.String()),
+			zap.Error(err),
+		)
+		if businessCase == nil {
+			continue
+		}
+		err = c.PublishBusinessCase(ctx, *businessCase)
+		if err != nil {
+			appcontext.ZLogger(ctx).Warn(
+				"failed to publish business case to CEDAR",
+				zap.String("id", intake.ID.String()),
+				zap.Error(err),
+			)
+		}
+	}
+}
+
+func getDurationUntilNextDayAndTime(startTime time.Time, d time.Weekday, hour int) time.Duration {
+	daysUntilTarget := getDaysTil(startTime.Weekday(), d)
+
+	if daysUntilTarget == 0 && startTime.After(getTimeAtHour(startTime, hour)) {
+		daysUntilTarget = 7
+	}
+
+	targetDay := startTime.AddDate(0, 0, daysUntilTarget)
+	targetDayAndTime := getTimeAtHour(targetDay, hour)
+	return targetDayAndTime.Sub(startTime)
+}
+
+func getDaysTil(startDay time.Weekday, targetDay time.Weekday) int {
+	return (int(targetDay) - int(startDay) + 7) % 7
+}
+
+func getTimeAtHour(t time.Time, hour int) time.Time {
+	return t.Truncate(24 * time.Hour).Add(time.Duration(hour) * time.Hour)
 }

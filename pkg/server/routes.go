@@ -345,6 +345,14 @@ func (s *Server) routes() {
 		})
 	}
 
+	// This code publishes all system intakes to CEDAR's intake API
+	go publisher.PublishOnSchedule(
+		appcontext.WithLogger(context.Background(), s.logger),
+		store,
+		time.Friday,
+		17, // noon in UTC (containers run in UTC)
+	)
+
 	// This is a temporary solution for EASI-2597 until a more robust event scheduling solution is implemented
 
 	// Check for upcoming LCID expirations every 24 hours
