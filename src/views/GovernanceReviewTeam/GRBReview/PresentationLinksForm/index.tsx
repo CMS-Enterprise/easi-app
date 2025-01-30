@@ -26,6 +26,7 @@ import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import { TabPanel, Tabs } from 'components/Tabs';
 import useMessage from 'hooks/useMessage';
+import { fileToBase64File } from 'utils/downloadFile';
 import { SetGRBPresentationLinksSchema } from 'validations/grbReviewSchema';
 
 import './index.scss';
@@ -76,12 +77,22 @@ const PresentationLinksForm = ({
     !!errors?.recordingLink && !!errors?.presentationDeckFileData;
 
   /** Submit form to set GRB review presentation links */
-  const submit = handleSubmit(values =>
+  const submit = handleSubmit(async values => {
+    const transcriptFileData = values.transcriptFileData
+      ? await fileToBase64File(values.transcriptFileData)
+      : undefined;
+
+    const presentationDeckFileData = values.presentationDeckFileData
+      ? await fileToBase64File(values.presentationDeckFileData)
+      : undefined;
+
     setPresentationLinks({
       variables: {
         input: {
           systemIntakeID: id,
-          ...values
+          ...values,
+          transcriptFileData,
+          presentationDeckFileData
         }
       }
     })
@@ -98,8 +109,8 @@ const PresentationLinksForm = ({
         // Scroll to error
         const err = document.querySelector('.usa-alert');
         err?.scrollIntoView();
-      })
-  );
+      });
+  });
 
   return (
     <>
