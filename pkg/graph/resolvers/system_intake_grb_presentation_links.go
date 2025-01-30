@@ -40,6 +40,9 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 		links.TranscriptS3Key = &s3Key
 
 	case input.PresentationDeckFileData != nil:
+		// set this to nil as we will not be using a transcript in this case
+		links.TranscriptLink = nil
+
 		links.PresentationDeckFileName = &input.PresentationDeckFileData.Filename
 
 		s3Key, err := handleFile(s3Client, input.PresentationDeckFileData)
