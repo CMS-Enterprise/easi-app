@@ -95,18 +95,22 @@ function Homepage() {
       {
         Header: t<string>('table.header.status'),
         accessor: ({ status, state }) =>
-          state === TRBRequestState.CLOSED
-            ? t(`table.requestState.${state}`)
-            : t(`table.requestStatus.${status}`),
+          state === TRBRequestState.CLOSED ? (
+            <>{t(`table.requestState.${state}`)}</>
+          ) : (
+            <>{t(`table.requestStatus.${status}`)}</>
+          ),
         sortType: trbRequestStatusSortType
       },
       {
         Header: t<string>('table.header.submissionDate'),
         accessor: 'form.submittedAt', // This is what breaks the Column type arg
         Cell: ({ value }: { value: string | null }) =>
-          value
-            ? formatDateLocal(value, 'MM/dd/yyyy')
-            : t('check.notYetSubmitted')
+          value ? (
+            <>{formatDateLocal(value, 'MM/dd/yyyy')}</>
+          ) : (
+            <>{t('check.notYetSubmitted')}</>
+          )
       }
     ];
   }, [t]);
@@ -171,11 +175,13 @@ function Homepage() {
             className="trb-admin-alert"
             data-testid="trbAdmin-siteAlert"
           >
-            <Trans i18nKey="technicalAssistance:adminInfoBox.text">
-              indexOne
-              <UswdsReactLink to="/">admin</UswdsReactLink>
-              indexTwo
-            </Trans>
+            <div className="display-block">
+              <Trans i18nKey="technicalAssistance:adminInfoBox.text">
+                indexOne
+                <UswdsReactLink to="/">admin</UswdsReactLink>
+                indexTwo
+              </Trans>
+            </div>
           </SiteAlert>
         )
       }
@@ -240,15 +246,10 @@ function Homepage() {
                       <Button
                         type="button"
                         unstyled
-                        className="width-full display-flex"
                         {...column.getSortByToggleProps()}
                       >
-                        <div className="flex-fill text-no-wrap">
-                          {column.render('Header')}
-                        </div>
-                        <div className="position-relative width-205 margin-left-05">
-                          {getHeaderSortIcon(column)}
-                        </div>
+                        {column.render('Header')}
+                        {getHeaderSortIcon(column)}
                       </Button>
                     </th>
                   ))}
