@@ -215,6 +215,10 @@ const ReviewGuidanceLetter = ({
           </UswdsReactLink>
         )}
 
+        <p className="margin-top-1 margin-bottom-1">
+          {t('guidanceLetter.nextStepsDescription')}
+        </p>
+
         <p className="text-bold margin-top-4 margin-bottom-1">
           {t('guidanceLetter.nextSteps')}
         </p>

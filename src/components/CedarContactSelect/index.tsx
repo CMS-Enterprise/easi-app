@@ -316,14 +316,16 @@ export default function CedarContactSelect({
             }
           : undefined
       }
-      onChange={item => updateContact(item?.value || null)}
-      onBlur={e => {
+      onChange={(item: CedarContactSelectOption) =>
+        updateContact(item?.value || null)
+      }
+      onBlur={() => {
         // Automatically select on blur if search returns single result
         if (shouldAutoSearch && contacts.length === 1) {
           updateContact(contacts[0]);
         }
       }}
-      onInputChange={(newValue, { action }) => {
+      onInputChange={(newValue: string, { action }: { action: string }) => {
         if (action !== 'input-blur' && action !== 'menu-close') {
           queryContacts(newValue);
         }
