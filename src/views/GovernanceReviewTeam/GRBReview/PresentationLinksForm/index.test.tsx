@@ -50,7 +50,7 @@ describe('GRB presentation links form', () => {
           <MessageProvider>
             <PresentationLinksForm
               {...systemIntake}
-              grbPresentationLink={
+              grbPresentationLinks={
                 {
                   recordingLink: 'http://google.com',
                   presentationDeckFileName: 'test.pdf'

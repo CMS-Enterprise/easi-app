@@ -38,7 +38,7 @@ type PresentationLinkFields = Omit<
 type PresentationLinksFormProps = {
   id: string;
   // Pass presentation link to form if editing
-  grbPresentationLink?: SystemIntakeGRBPresentationLinks;
+  grbPresentationLinks?: SystemIntakeGRBPresentationLinks;
 };
 
 /**
@@ -46,7 +46,7 @@ type PresentationLinksFormProps = {
  */
 const PresentationLinksForm = ({
   id,
-  grbPresentationLink
+  grbPresentationLinks
 }: PresentationLinksFormProps) => {
   const { t } = useTranslation('grbReview');
   const { showMessage, showMessageOnNextPage } = useMessage();
@@ -62,10 +62,10 @@ const PresentationLinksForm = ({
     formState: { errors, isValid, isDirty, defaultValues }
   } = useEasiForm<PresentationLinkFields>({
     resolver: yupResolver(SetGRBPresentationLinksSchema),
-    defaultValues: { ...grbPresentationLink }
+    defaultValues: { ...grbPresentationLinks }
   });
 
-  const formType: 'add' | 'edit' = grbPresentationLink ? 'edit' : 'add';
+  const formType: 'add' | 'edit' = grbPresentationLinks ? 'edit' : 'add';
 
   const grbReviewPath = `/it-governance/${id}/grb-review`;
 
@@ -241,7 +241,7 @@ const PresentationLinksForm = ({
                 return (
                   <FileInput
                     defaultFileName={
-                      grbPresentationLink?.presentationDeckFileName || ''
+                      grbPresentationLinks?.presentationDeckFileName || ''
                     }
                     name={field.name}
                     id={field.name}
