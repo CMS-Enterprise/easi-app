@@ -53,8 +53,9 @@ const PresentationLinksForm = ({
   const { showMessage, showMessageOnNextPage } = useMessage();
   const history = useHistory();
 
-  const [setPresentationLinks] =
-    useSetSystemIntakeGRBPresentationLinksMutation();
+  const [setPresentationLinks] = useSetSystemIntakeGRBPresentationLinksMutation(
+    { refetchQueries: ['GetSystemIntake'] }
+  );
 
   const {
     register,
@@ -63,7 +64,11 @@ const PresentationLinksForm = ({
     formState: { errors, isValid, isDirty, defaultValues }
   } = useEasiForm<PresentationLinkFields>({
     resolver: yupResolver(SetGRBPresentationLinksSchema),
-    defaultValues: { ...grbPresentationLinks }
+    defaultValues: {
+      recordingLink: grbPresentationLinks?.recordingLink,
+      recordingPasscode: grbPresentationLinks?.recordingPasscode,
+      transcriptLink: grbPresentationLinks?.transcriptLink
+    }
   });
 
   const formType: 'add' | 'edit' = grbPresentationLinks ? 'edit' : 'add';
