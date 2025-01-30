@@ -2,7 +2,6 @@ package resolvers
 
 import (
 	"context"
-	"errors"
 	"path/filepath"
 	"time"
 
@@ -26,37 +25,51 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	links.RecordingPasscode = input.RecordingPasscode
 	links.TranscriptLink = input.TranscriptLink
 
-	var fileToUse *graphql.Upload
-	if input.TranscriptFileData != nil {
+	switch {
+	case input.TranscriptFileData != nil:
+		// set this to nil in order to use s3key instead
+		links.TranscriptLink = nil
+
 		links.TranscriptFileName = &input.TranscriptFileData.Filename
-		fileToUse = input.TranscriptFileData
-	}
 
-	if input.PresentationDeckFileData != nil {
+		s3Key, err := handleFile(s3Client, input.TranscriptFileData)
+		if err != nil {
+			return nil, err
+		}
+
+		links.TranscriptS3Key = &s3Key
+
+	case input.PresentationDeckFileData != nil:
 		links.PresentationDeckFileName = &input.PresentationDeckFileData.Filename
-		fileToUse = input.PresentationDeckFileData
+
+		s3Key, err := handleFile(s3Client, input.PresentationDeckFileData)
+		if err != nil {
+			return nil, err
+		}
+
+		links.PresentationDeckS3Key = &s3Key
 	}
 
-	if fileToUse == nil {
-		return nil, errors.New("no file found when setting system intake GRB presentation links")
-	}
+	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
+}
 
+func handleFile(s3Client *upload.S3Client, upload *graphql.Upload) (string, error) {
 	s3Key := uuid.New().String()
-	ext := filepath.Ext(fileToUse.Filename)
+	ext := filepath.Ext(upload.Filename)
 	if len(ext) > 0 {
 		s3Key += ext
 	} else {
 		s3Key += fallbackExtension
 	}
 
-	decodedReadSeeker, err := easiencoding.DecodeBase64File(&fileToUse.File)
+	decodedReadSeeker, err := easiencoding.DecodeBase64File(&upload.File)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	if err := s3Client.UploadFile(s3Key, decodedReadSeeker); err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
+	return s3Key, nil
 }
