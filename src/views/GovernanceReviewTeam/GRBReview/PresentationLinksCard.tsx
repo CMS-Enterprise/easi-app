@@ -54,6 +54,11 @@ function PresentationLinksCard({
       transcriptFileStatus === SystemIntakeDocumentStatus.UNAVAILABLE &&
       presentationDeckFileStatus === SystemIntakeDocumentStatus.UNAVAILABLE);
 
+  const isVirusScanning =
+    grbPresentationLinks &&
+    transcriptFileStatus === SystemIntakeDocumentStatus.PENDING &&
+    presentationDeckFileStatus === SystemIntakeDocumentStatus.PENDING;
+
   // Remove links handling
 
   const [deleteSystemIntakeGRBPresentationLinks] =
@@ -168,44 +173,51 @@ function PresentationLinksCard({
               ref={externalModalScopeRef}
               className="presentation-card-links display-flex flex-wrap border-top-1px border-gray-10 padding-top-2"
             >
-              {recordingLink && (
-                <Link
-                  className="margin-right-2 display-flex flex-align-center"
-                  href={recordingLink}
-                  target="_blank"
-                >
-                  {t('asyncPresentation.viewRecording')}
-                  <Icon.Launch className="margin-left-05" />
-                </Link>
+              {isVirusScanning ? (
+                <em>{t('asyncPresentation.virusScanning')}</em>
+              ) : (
+                <>
+                  {recordingLink && (
+                    <Link
+                      className="margin-right-2 display-flex flex-align-center"
+                      href={recordingLink}
+                      target="_blank"
+                    >
+                      {t('asyncPresentation.viewRecording')}
+                      <Icon.Launch className="margin-left-05" />
+                    </Link>
+                  )}
+                  {recordingPasscode && (
+                    <span className="text-base margin-right-2">
+                      {t('asyncPresentation.passcode', {
+                        passcode: recordingPasscode
+                      })}
+                    </span>
+                  )}
+                  {transcriptFileStatus ===
+                    SystemIntakeDocumentStatus.AVAILABLE &&
+                    transcriptFileURL && (
+                      <Link
+                        className="margin-right-2"
+                        href={transcriptFileURL}
+                        target="_blank"
+                      >
+                        {t('asyncPresentation.viewTranscript')}
+                      </Link>
+                    )}
+                  {presentationDeckFileStatus ===
+                    SystemIntakeDocumentStatus.AVAILABLE &&
+                    presentationDeckFileURL && (
+                      <Link
+                        className="margin-right-2"
+                        href={presentationDeckFileURL}
+                        target="_blank"
+                      >
+                        {t('asyncPresentation.viewSlideDeck')}
+                      </Link>
+                    )}
+                </>
               )}
-              {recordingPasscode && (
-                <span className="text-base margin-right-2">
-                  {t('asyncPresentation.passcode', {
-                    passcode: recordingPasscode
-                  })}
-                </span>
-              )}
-              {transcriptFileStatus === SystemIntakeDocumentStatus.AVAILABLE &&
-                transcriptFileURL && (
-                  <Link
-                    className="margin-right-2"
-                    href={transcriptFileURL}
-                    target="_blank"
-                  >
-                    {t('asyncPresentation.viewTranscript')}
-                  </Link>
-                )}
-              {presentationDeckFileStatus ===
-                SystemIntakeDocumentStatus.AVAILABLE &&
-                presentationDeckFileURL && (
-                  <Link
-                    className="margin-right-2"
-                    href={presentationDeckFileURL}
-                    target="_blank"
-                  >
-                    {t('asyncPresentation.viewSlideDeck')}
-                  </Link>
-                )}
             </div>
           )}
         </CardFooter>
