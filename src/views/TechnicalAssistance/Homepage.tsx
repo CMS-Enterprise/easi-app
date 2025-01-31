@@ -95,18 +95,22 @@ function Homepage() {
       {
         Header: t<string>('table.header.status'),
         accessor: ({ status, state }) =>
-          state === TRBRequestState.CLOSED
-            ? t(`table.requestState.${state}`)
-            : t(`table.requestStatus.${status}`),
+          state === TRBRequestState.CLOSED ? (
+            <>{t(`table.requestState.${state}`)}</>
+          ) : (
+            <>{t(`table.requestStatus.${status}`)}</>
+          ),
         sortType: trbRequestStatusSortType
       },
       {
         Header: t<string>('table.header.submissionDate'),
         accessor: 'form.submittedAt', // This is what breaks the Column type arg
         Cell: ({ value }: { value: string | null }) =>
-          value
-            ? formatDateLocal(value, 'MM/dd/yyyy')
-            : t('check.notYetSubmitted')
+          value ? (
+            <>{formatDateLocal(value, 'MM/dd/yyyy')}</>
+          ) : (
+            <>{t('check.notYetSubmitted')}</>
+          )
       }
     ];
   }, [t]);
@@ -242,15 +246,10 @@ function Homepage() {
                       <Button
                         type="button"
                         unstyled
-                        className="width-full display-flex"
                         {...column.getSortByToggleProps()}
                       >
-                        <div className="flex-fill text-no-wrap">
-                          {column.render('Header')}
-                        </div>
-                        <div className="position-relative width-205 margin-left-05">
-                          {getHeaderSortIcon(column)}
-                        </div>
+                        {column.render('Header')}
+                        {getHeaderSortIcon(column)}
                       </Button>
                     </th>
                   ))}

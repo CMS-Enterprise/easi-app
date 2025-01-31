@@ -702,20 +702,7 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 
 // SetSystemIntakeGRBPresentationLinks is the resolver for the setSystemIntakeGRBPresentationLinks field.
 func (r *mutationResolver) SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error) {
-	mockPresentationLinks := models.NewSystemIntakeGRBPresentationLinks(appcontext.Principal(ctx).Account().ID)
-	mockPresentationLinks.SystemIntakeID = uuid.MustParse("5af245bc-fc54-4677-bab1-1b3e798bb43c")
-	mockPresentationLinks.CreatedAt = time.Now()
-	mockPresentationLinks.RecordingLink = input.RecordingLink
-	mockPresentationLinks.RecordingPasscode = input.RecordingPasscode
-	mockPresentationLinks.TranscriptLink = input.TranscriptLink
-
-	if input.TranscriptFileData != nil {
-		mockPresentationLinks.TranscriptFileName = &input.TranscriptFileData.Filename
-	}
-	if input.PresentationDeckFileData != nil {
-		mockPresentationLinks.PresentationDeckFileName = &input.PresentationDeckFileData.Filename
-	}
-	return mockPresentationLinks, nil
+	return resolvers.SetSystemIntakeGRBPresentationLinks(ctx, r.store, r.s3Client, input)
 }
 
 // DeleteSystemIntakeGRBPresentationLinks is the resolver for the deleteSystemIntakeGRBPresentationLinks field.

@@ -157,6 +157,8 @@ const technicalAssistance = {
     guidanceAndInsights: 'Guidance and insights',
     resources: 'Resources',
     nextSteps: 'Next steps',
+    nextStepsDescription:
+      'If implementation of a requirement has been completed and you need help resolving the CFACTS finding, please contact the Technical Review Board (TRB) at cms-trb@cms.hhs.gov for next steps.',
     notSpecified: 'Not specified yet',
     followup: 'Should the team return for a follow-up session?',
     guidanceLetter: 'Guidance Letter',
@@ -231,7 +233,7 @@ const technicalAssistance = {
     uncategorized: 'Uncategorized',
     requirement: 'Requirement',
     requirementDescription:
-      'A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding.',
+      'A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. Requirements may be submitted to CFACTS if not implemented, or in the process of implementation, within the provided timeline. The TRB will inform you if requirements will be submitted.',
     recommendation: 'Recommendation',
     recommendationDescription:
       'A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS.',
