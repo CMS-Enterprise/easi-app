@@ -155,6 +155,21 @@ export const SystemIntake = gql`
       decisionState
       submittedAt
     }
+    grbPresentationLinks {
+      systemIntakeID
+      createdAt
+      createdBy
+      modifiedAt
+      modifiedBy
+      recordingLink
+      recordingPasscode
+      transcriptFileName
+      transcriptFileStatus
+      transcriptFileURL
+      presentationDeckFileName
+      presentationDeckFileStatus
+      presentationDeckFileURL
+    }
   }
 `;
 

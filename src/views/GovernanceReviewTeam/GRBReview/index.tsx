@@ -28,6 +28,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import useMessage from 'hooks/useMessage';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeState } from 'types/graphql-global-types';
@@ -40,6 +41,7 @@ import ITGovAdminContext from '../ITGovAdminContext';
 import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
+import PresentationLinksCard from './PresentationLinksCard';
 
 import './index.scss';
 
@@ -51,6 +53,7 @@ type GRBReviewProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   documents: SystemIntakeDocument[];
   grbReviewStartedAt?: string | null;
+  grbPresentationLinks: SystemIntake['grbPresentationLinks'];
 };
 
 const GRBReview = ({
@@ -60,7 +63,8 @@ const GRBReview = ({
   state,
   grbReviewers,
   documents,
-  grbReviewStartedAt
+  grbReviewStartedAt,
+  grbPresentationLinks
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -215,11 +219,9 @@ const GRBReview = ({
 
           <div className="padding-bottom-4" id="grbReview">
             <PageHeading className="margin-y-0">{t('title')}</PageHeading>
-
             <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
               {t('description')}
             </p>
-
             {/* Feature in progress alert */}
             <Alert type="info" heading={t('featureInProgress')}>
               <Trans
@@ -233,7 +235,6 @@ const GRBReview = ({
                 }}
               />
             </Alert>
-
             {grbReviewStartedAt && (
               <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
                 <Trans
@@ -244,7 +245,6 @@ const GRBReview = ({
                 />
               </p>
             )}
-
             {
               // Only show button if user is admin and review has not been started
               !grbReviewStartedAt && isITGovAdmin && (
@@ -258,7 +258,6 @@ const GRBReview = ({
                 </Button>
               )
             }
-
             {/* Supporting Docs text */}
             <h2 className="margin-bottom-0 margin-top-6" id="documents">
               {t('supportingDocuments')}
@@ -266,6 +265,11 @@ const GRBReview = ({
             <p className="margin-top-05 line-height-body-5">
               {t('supportingDocumentsText')}
             </p>
+
+            <PresentationLinksCard
+              systemIntakeID={id}
+              grbPresentationLinks={grbPresentationLinks}
+            />
 
             {/* Business Case Card */}
             <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
@@ -340,7 +344,6 @@ const GRBReview = ({
                 <span>{t('additionalDocsLink')}</span>
               </UswdsReactLink>
             )}
-
             {/* Intake Request Link */}
             <p className="usa-card__container margin-x-0 padding-x-2 padding-y-1 display-inline-flex flex-row flex-wrap border-width-1px">
               <span className="margin-right-1">
@@ -354,15 +357,12 @@ const GRBReview = ({
                 {t('documentsIntakeLinkText')}
               </UswdsReactLink>
             </p>
-
             <DocumentsTable systemIntakeId={id} documents={documents} />
-
             <Discussions
               systemIntakeID={id}
               grbReviewers={grbReviewers}
               className="margin-top-4 margin-bottom-6"
             />
-
             <ParticipantsTable
               id={id}
               state={state}
