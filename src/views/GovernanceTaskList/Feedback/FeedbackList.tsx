@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useReactToPrint } from 'react-to-print';
 import { Icon } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -19,6 +20,8 @@ import { GovernanceRequestFeedbackType } from 'types/graphql-global-types';
 
 import FeedbackItem from './FeedbackItem';
 
+import 'index.scss';
+
 type FeedbackListProps = {
   systemIntakeId: string;
   /** Props for optional link to return to task list, form, etc */
@@ -27,7 +30,7 @@ type FeedbackListProps = {
     path: string;
   };
   filterType?: GovernanceRequestFeedbackType;
-  mode?: 'normal' | 'inner-content';
+  contentOnly?: boolean;
 };
 
 /**
@@ -39,7 +42,7 @@ const FeedbackList = ({
   systemIntakeId,
   returnLink,
   filterType,
-  mode = 'normal'
+  contentOnly = false
 }: FeedbackListProps) => {
   const { t } = useTranslation('taskList');
 
@@ -102,14 +105,20 @@ const FeedbackList = ({
   }
 
   const feedbackList = (
-    <ul className="usa-list--unstyled margin-top-4" data-testid="feedback-list">
+    <ul
+      className={classNames('usa-list--unstyled', {
+        'margin-top-4': !contentOnly,
+        'grb-feedback-list-content-only': contentOnly
+      })}
+      data-testid="feedback-list"
+    >
       {[...feedback].reverse().map(item => (
-        <FeedbackItem key={item.id} {...item} />
+        <FeedbackItem key={item.id} {...item} contentOnly={contentOnly} />
       ))}
     </ul>
   );
 
-  if (mode === 'inner-content') return feedbackList;
+  if (contentOnly) return feedbackList;
 
   return (
     <>

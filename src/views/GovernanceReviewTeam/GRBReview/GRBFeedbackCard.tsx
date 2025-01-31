@@ -49,7 +49,7 @@ function GRBFeedbackCard({
             <FeedbackList
               systemIntakeId={systemIntakeID}
               filterType={GovernanceRequestFeedbackType.GRB}
-              mode="inner-content"
+              contentOnly
             />
           </CollapsableLink>
         ) : (

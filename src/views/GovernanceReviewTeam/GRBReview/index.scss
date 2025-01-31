@@ -39,3 +39,12 @@
     }
   }
 }
+
+ul.grb-feedback-list-content-only {
+  margin-top: -10px;
+  margin-bottom: -10px;
+  li:first-of-type {
+    margin-top: 0 !important;
+    border-top: 0 !important;
+  }
+}

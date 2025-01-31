@@ -7,6 +7,10 @@ import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedba
 import { GovernanceRequestFeedbackTargetForm } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
+// function FeedbackListItem({}: { children?: React.ReactNode }) {
+//   return <div>FeedbackItem</div>;
+// }
+
 /**
  * IT Governance request feedback item
  */
@@ -15,9 +19,22 @@ const FeedbackItem = ({
   type,
   createdAt,
   author,
-  feedback
-}: GovernanceRequestFeedback) => {
+  feedback,
+  contentOnly = false
+}: GovernanceRequestFeedback & {
+  contentOnly?: boolean;
+}) => {
   const { t } = useTranslation('taskList');
+
+  const richContent = <RichTextViewer value={feedback} />;
+
+  if (contentOnly) {
+    return (
+      <li className="border-top-1px border-base-light margin-top-3 padding-top-3">
+        {richContent}
+      </li>
+    );
+  }
 
   return (
     <li className="border-top-1px border-base-light margin-bottom-4">
@@ -54,7 +71,7 @@ const FeedbackItem = ({
               </dd>
             </dl>
           )}
-          <RichTextViewer value={feedback} />
+          {richContent}
         </div>
       </dl>
     </li>
