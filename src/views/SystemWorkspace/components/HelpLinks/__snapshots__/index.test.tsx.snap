@@ -126,15 +126,30 @@ exports[`Help Links component > matches snapshot 1`] = `
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
             >
-              <a
-                aria-label="Learn more about the Target Life Cycle (TLC)"
-                class="usa-link usa-link--external"
-                href="https://www.cms.gov/data-research/cms-information-technology/tlc"
-                rel="noopener noreferrer"
-                target="_blank"
+              <button
+                class="usa-button usa-button--unstyled display-flex flex-align-center"
+                data-testid="button"
+                type="button"
               >
                 Go to the TLC homepage
-              </a>
+                <svg
+                  class="usa-icon margin-left-0 margin-left-1"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </li>
@@ -160,15 +175,30 @@ exports[`Help Links component > matches snapshot 1`] = `
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
             >
-              <a
-                aria-label="Learn more about security and privacy at CMS"
-                class="usa-link usa-link--external"
-                href="https://security.cms.gov/"
-                rel="noopener noreferrer"
-                target="_blank"
+              <button
+                class="usa-button usa-button--unstyled display-flex flex-align-center"
+                data-testid="button"
+                type="button"
               >
                 Go to CyberGeek
-              </a>
+                <svg
+                  class="usa-icon margin-left-0 margin-left-1"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </li>
@@ -194,15 +224,30 @@ exports[`Help Links component > matches snapshot 1`] = `
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
             >
-              <a
-                aria-label="Consider Threat Modeling for your system"
-                class="usa-link usa-link--external"
-                href="https://security.cms.gov/learn/threat-modeling"
-                rel="noopener noreferrer"
-                target="_blank"
+              <button
+                class="usa-button usa-button--unstyled display-flex flex-align-center"
+                data-testid="button"
+                type="button"
               >
                 Learn more on CyberGeek
-              </a>
+                <svg
+                  class="usa-icon margin-left-0 margin-left-1"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </li>
@@ -228,15 +273,30 @@ exports[`Help Links component > matches snapshot 1`] = `
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
             >
-              <a
-                aria-label="Learn more about Cloud offerings at CMS"
-                class="usa-link usa-link--external"
-                href="https://cloud.cms.gov/"
-                rel="noopener noreferrer"
-                target="_blank"
+              <button
+                class="usa-button usa-button--unstyled display-flex flex-align-center"
+                data-testid="button"
+                type="button"
               >
                 Go to the Cloud homepage
-              </a>
+                <svg
+                  class="usa-icon margin-left-0 margin-left-1"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </li>
