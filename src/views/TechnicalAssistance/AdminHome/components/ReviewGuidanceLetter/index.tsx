@@ -1,6 +1,6 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Grid } from '@trussworks/react-uswds';
+import { Trans, useTranslation } from 'react-i18next';
+import { Alert, Grid, Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   GetTRBGuidanceLetterQuery,
@@ -215,9 +215,14 @@ const ReviewGuidanceLetter = ({
           </UswdsReactLink>
         )}
 
-        <p className="margin-top-1 margin-bottom-1">
-          {t('guidanceLetter.nextStepsDescription')}
-        </p>
+        <Alert type="info" slim className="margin-bottom-4" headingLevel="h1">
+          <Trans
+            i18nKey="technicalAssistance:guidanceLetter.nextStepsDescription"
+            components={{
+              a: <Link href="mailto:cms-trb@cms.hhs.gov"> </Link>
+            }}
+          />
+        </Alert>
 
         <p className="text-bold margin-top-4 margin-bottom-1">
           {t('guidanceLetter.nextSteps')}
