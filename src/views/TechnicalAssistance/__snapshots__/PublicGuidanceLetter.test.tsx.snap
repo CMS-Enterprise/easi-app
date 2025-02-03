@@ -259,7 +259,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
               <p
                 class="margin-top-05 margin-bottom-3 line-height-body-5"
               >
-                A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. Requirements may be submitted to CFACTS if not implemented, or in the process of implementation, within the provided timeline. The TRB will inform you if requirements will be submitted.
+                A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. Requirements may be submitted to CFACTS if not implemented or are still in the process of implementation within the provided timeline. The TRB will inform project teams if requirements will be submitted.
               </p>
               <div
                 class="usa-alert usa-alert--info usa-alert--slim margin-top-neg-1 margin-bottom-4"
@@ -502,11 +502,27 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
           >
             Next steps
           </h2>
-          <p
-            class="margin-top-1 margin-bottom-1"
+          <div
+            class="usa-alert usa-alert--info usa-alert--slim margin-bottom-4"
+            data-testid="alert"
           >
-            If implementation of a requirement has been completed and you need help resolving the CFACTS finding, please contact the Technical Review Board (TRB) at cms-trb@cms.hhs.gov for next steps.
-          </p>
+            <div
+              class="usa-alert__body"
+            >
+              <p
+                class="usa-alert__text"
+              >
+                If implementation of a requirement has been completed and you need help resolving the CFACTS finding, please contact the Technical Review Board (TRB) at 
+                <a
+                  class="usa-link"
+                  href="mailto:cms-trb@cms.hhs.gov"
+                >
+                  cms-trb@cms.hhs.gov
+                </a>
+                 for next steps.
+              </p>
+            </div>
+          </div>
           <p
             class="text-bold margin-top-4 margin-bottom-1"
           >
@@ -748,7 +764,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
               <p
                 class="margin-top-05 margin-bottom-3 line-height-body-5"
               >
-                A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. Requirements may be submitted to CFACTS if not implemented, or in the process of implementation, within the provided timeline. The TRB will inform you if requirements will be submitted.
+                A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. Requirements may be submitted to CFACTS if not implemented or are still in the process of implementation within the provided timeline. The TRB will inform project teams if requirements will be submitted.
               </p>
               <div
                 class="usa-alert usa-alert--info usa-alert--slim margin-top-neg-1 margin-bottom-4"
@@ -991,11 +1007,27 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
           >
             Next steps
           </h2>
-          <p
-            class="margin-top-1 margin-bottom-1"
+          <div
+            class="usa-alert usa-alert--info usa-alert--slim margin-bottom-4"
+            data-testid="alert"
           >
-            If implementation of a requirement has been completed and you need help resolving the CFACTS finding, please contact the Technical Review Board (TRB) at cms-trb@cms.hhs.gov for next steps.
-          </p>
+            <div
+              class="usa-alert__body"
+            >
+              <p
+                class="usa-alert__text"
+              >
+                If implementation of a requirement has been completed and you need help resolving the CFACTS finding, please contact the Technical Review Board (TRB) at 
+                <a
+                  class="usa-link"
+                  href="mailto:cms-trb@cms.hhs.gov"
+                >
+                  cms-trb@cms.hhs.gov
+                </a>
+                 for next steps.
+              </p>
+            </div>
+          </div>
           <p
             class="text-bold margin-top-4 margin-bottom-1"
           >
