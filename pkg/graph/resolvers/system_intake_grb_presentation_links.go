@@ -3,7 +3,6 @@ package resolvers
 import (
 	"context"
 	"path/filepath"
-	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
@@ -19,8 +18,6 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	userID := appcontext.Principal(ctx).Account().ID
 	links := models.NewSystemIntakeGRBPresentationLinks(userID)
 	links.SystemIntakeID = input.SystemIntakeID
-	links.CreatedAt = time.Now()
-	links.CreatedBy = userID
 	links.RecordingLink = input.RecordingLink
 	links.RecordingPasscode = input.RecordingPasscode
 	links.TranscriptLink = input.TranscriptLink
