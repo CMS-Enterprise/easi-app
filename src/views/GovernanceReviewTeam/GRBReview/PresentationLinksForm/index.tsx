@@ -39,7 +39,7 @@ type PresentationLinkFields = Omit<
 type PresentationLinksFormProps = {
   id: string;
   // Pass presentation link to form if editing
-  grbPresentationLinks?: SystemIntakeGRBPresentationLinks;
+  grbPresentationLinks?: SystemIntakeGRBPresentationLinks | null;
 };
 
 /**
