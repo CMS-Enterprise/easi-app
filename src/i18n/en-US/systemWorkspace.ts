@@ -1,8 +1,11 @@
+import { ExternalModalType } from 'components/shared/ExternalLinkAndModal';
+
 export type HelpLinkType = {
   header: string;
   linkText: string;
   link: string;
   external?: boolean;
+  modalType?: ExternalModalType;
 };
 
 const helpLinks: HelpLinkType[] = [
@@ -38,7 +41,8 @@ const helpLinks: HelpLinkType[] = [
     header: 'Learn more about Cloud offerings at CMS',
     link: 'https://cloud.cms.gov/',
     linkText: 'Go to the Cloud homepage',
-    external: true
+    external: true,
+    modalType: 'CLOUD'
   }
 ];
 
