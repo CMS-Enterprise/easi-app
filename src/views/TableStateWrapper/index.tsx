@@ -50,7 +50,7 @@ const initialTableStates: Record<string, TableStates> = {
         pageIndex: 0,
         globalFilter: '',
         sortBy: [{ desc: true, id: 'consultMeetingTime' }],
-        pageSize: 50
+        pageSize: 10
       },
       activeTableState: 'open'
     }

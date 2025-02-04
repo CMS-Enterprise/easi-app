@@ -26,6 +26,7 @@ import CsvDownloadLink from 'components/shared/CsvDownloadLink';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
+import TableResults from 'components/TableResults';
 import useTableState from 'hooks/useTableState';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
@@ -460,7 +461,9 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       initialState: {
         sortBy: useMemo(() => [{ id: 'consultMeetingTime', desc: true }], []),
         pageIndex: 0,
-        pageSize: 10
+        pageSize: window.localStorage['request-table-page-size']
+          ? Number(window.localStorage['request-table-page-size'])
+          : 10
       }
     },
     useFilters,
