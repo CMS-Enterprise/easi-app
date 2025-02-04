@@ -47,6 +47,7 @@ const HelpCardGroup = ({
                 link={link}
                 linkText={card.linkText}
                 external={card.external}
+                modalType={card.modalType}
               />
             </Grid>
           );
