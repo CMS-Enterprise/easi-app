@@ -3,14 +3,12 @@ package resolvers
 import (
 	"context"
 	"path/filepath"
-	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
@@ -25,7 +23,6 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	links.TranscriptLink = input.TranscriptLink
 
 	links.ModifiedBy = &userID
-	links.ModifiedAt = helpers.PointerTo(time.Now())
 
 	switch {
 	case input.TranscriptFileData != nil:

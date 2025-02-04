@@ -51,5 +51,18 @@ func createSystemIntakeGRBPresentationLinkUpload(suite *ResolverSuite, systemInt
 	suite.NoError(err)
 	suite.NotNil(createdLinks)
 
+	suite.Nil(createdLinks.ModifiedBy)
+
+	updatedLinks, err := SetSystemIntakeGRBPresentationLinks(
+		suite.testConfigs.Context,
+		suite.testConfigs.Store,
+		suite.testConfigs.S3Client,
+		gqlInput,
+	)
+	suite.NoError(err)
+	suite.NotNil(updatedLinks)
+
+	suite.NotNil(updatedLinks.ModifiedBy)
+
 	return createdLinks
 }
