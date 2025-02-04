@@ -13,7 +13,7 @@ type ExternalLinkModalTypes = {
   url: string;
 };
 
-const ExternalLinkModal = ({
+const ExternalDocumentLinkModal = ({
   isOpen,
   closeModal,
   url
@@ -77,7 +77,7 @@ const ExternalLinkModal = ({
         href={url}
         variant="unstyled"
       >
-        {externalT('continueButton')}
+        {externalT('continueButton', { value: 'site' })}
       </ExternalLink>
 
       <Button
@@ -95,4 +95,4 @@ const ExternalLinkModal = ({
   );
 };
 
-export default ExternalLinkModal;
+export default ExternalDocumentLinkModal;
