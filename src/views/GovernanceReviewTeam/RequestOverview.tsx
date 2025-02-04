@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Grid } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -26,6 +25,7 @@ import UploadForm from 'views/SystemIntake/Documents/UploadForm';
 
 import AccordionNavigation from '../../components/shared/AccordionNavigation';
 
+import GRBReviewForm from './GRBReview/GRBReviewForm';
 import Actions from './Actions';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
@@ -81,9 +81,9 @@ const RequestOverview = ({
     (state: AppState) => state.businessCase.form
   );
 
-  /** Hides summary and side navigation for all action subpages */
+  /** Full page layout hides summary and side navigation */
   const fullPageLayout: boolean =
-    activePage === 'resolutions' || activePage === 'manage-lcid' || !!subPage;
+    ['resolutions', 'manage-lcid'].includes(activePage) || !!subPage;
 
   const navItems = subNavItems(systemId, isITGovAdmin, flags);
 
@@ -106,21 +106,22 @@ const RequestOverview = ({
           {...systemIntake}
           requestName={systemIntake.requestName || ''}
           contractNumbers={
-            systemIntake?.contractNumbers?.map(c => c.contractNumber) || []
+            systemIntake.contractNumbers?.map(c => c.contractNumber) || []
           }
         />
       )}
 
       {!fullPageLayout && <AccordionNavigation items={navItems} />}
 
-      <section className="grid-container">
+      <div
+        // Do not use `grid-container` class for "Set up GRB review" form
+        className={classnames({ 'grid-container': subPage !== 'set-up' })}
+      >
         <Message className="margin-top-2" />
 
-        <Grid
-          row
-          gap
+        <div
           className={classnames({
-            'margin-bottom-5 margin-top-7': !fullPageLayout
+            'grid-row grid-gap margin-bottom-5 margin-top-7': !fullPageLayout
           })}
         >
           {!fullPageLayout && (
@@ -204,17 +205,22 @@ const RequestOverview = ({
 
                 {flags?.grbReviewTab && (
                   <Route
-                    path="/it-governance/:systemId/grb-review/:action(add|edit)?"
-                    render={() => (
-                      <GRBReview
-                        {...systemIntake}
-                        businessCase={businessCase}
-                        grbReviewers={grbReviewers}
-                        grbReviewStartedAt={grbReviewStartedAt}
-                      />
-                    )}
+                    path="/it-governance/:systemId/grb-review/set-up"
+                    render={() => <GRBReviewForm />}
                   />
                 )}
+
+                <Route
+                  path="/it-governance/:systemId/grb-review/:action(add|edit)?"
+                  render={() => (
+                    <GRBReview
+                      {...systemIntake}
+                      businessCase={businessCase}
+                      grbReviewers={grbReviewers}
+                      grbReviewStartedAt={grbReviewStartedAt}
+                    />
+                  )}
+                />
 
                 {/* GRT only routes */}
 
@@ -232,8 +238,8 @@ const RequestOverview = ({
               </Switch>
             </section>
           )}
-        </Grid>
-      </section>
+        </div>
+      </div>
     </MainContent>
   );
 };

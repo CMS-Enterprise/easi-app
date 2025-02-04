@@ -161,5 +161,12 @@ export default {
     hideGrbReviews: 'Hide GRB reviews',
     grbDate: 'GRB date',
     noDateSet: 'No date set'
+  },
+  setUpGrbReviewForm: {
+    heading: 'Set up GRB review',
+    subHeading:
+      'Use this form to set up a Governance Review Board (GRB) review in EASi.',
+    description:
+      'You will be able to select the type of review, add recordings and documents, invite GRB members to review this project, and set a timeframe for an asynchronous review.'
   }
 };

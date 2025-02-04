@@ -54,11 +54,7 @@ const GovernanceReviewTeam = () => {
               </Route>
             )}
 
-            <Route
-              // reviewerType differentiates between GRT and GRB views for admin pages
-              path="/it-governance/:systemId/:activePage/:subPage?"
-              exact
-            >
+            <Route path="/it-governance/:systemId/:activePage/:subPage?" exact>
               <RequestOverview
                 grbReviewers={grbReviewers || []}
                 grbReviewStartedAt={grbReviewStartedAt}
