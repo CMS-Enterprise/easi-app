@@ -78,7 +78,7 @@ const PresentationLinksForm = ({
   /**
    * Returns true if both recordingLink and presentationDeckFileData fields have errors
    */
-  const formIsEmpty =
+  const hasRequiredFieldErrors =
     !!errors?.recordingLink && !!errors?.presentationDeckFileData;
 
   /** Submit form to set GRB review presentation links */
@@ -119,7 +119,7 @@ const PresentationLinksForm = ({
 
   return (
     <>
-      {formIsEmpty && (
+      {hasRequiredFieldErrors && (
         <Alert type="error" slim className="margin-top-2">
           {t('presentationLinks.emptyFormError')}
         </Alert>
@@ -142,7 +142,7 @@ const PresentationLinksForm = ({
         </IconLink>
 
         <Form onSubmit={submit} className="maxw-none">
-          <FormGroup error={formIsEmpty}>
+          <FormGroup error={hasRequiredFieldErrors}>
             <Label htmlFor="recordingLink">
               {t('presentationLinks.recordingLinkLabel')}
             </Label>
@@ -242,7 +242,7 @@ const PresentationLinksForm = ({
             </Fieldset>
           </FormGroup>
 
-          <FormGroup error={formIsEmpty}>
+          <FormGroup error={hasRequiredFieldErrors}>
             <Label htmlFor="presentationDeckFileData">
               {t('presentationLinks.presentationDeckLabel')}
             </Label>
