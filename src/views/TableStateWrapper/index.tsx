@@ -49,7 +49,7 @@ const initialTableStates: Record<string, TableStates> = {
       state: {
         pageIndex: 0,
         globalFilter: '',
-        sortBy: [{ desc: true, id: 'submittedAt' }],
+        sortBy: [{ desc: true, id: 'consultMeetingTime' }],
         pageSize: 50
       },
       activeTableState: 'open'

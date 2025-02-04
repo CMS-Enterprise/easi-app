@@ -538,8 +538,9 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
 
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
-        tableID={t('systemTable.id')}
-        tableName={t('systemTable.title')}
+        initialFilter={trbExistingRequests.current.state.globalFilter}
+        tableID={t('adminTeamHome.existingRequests.id')}
+        tableName={t('adminTeamHome.existingRequests.heading')}
         className="margin-bottom-5 maxw-mobile-lg"
       />
 
