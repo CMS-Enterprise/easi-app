@@ -26,7 +26,6 @@ import CsvDownloadLink from 'components/shared/CsvDownloadLink';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
-import TableResults from 'components/TableResults';
 import useTableState from 'hooks/useTableState';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
