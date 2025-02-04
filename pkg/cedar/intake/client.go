@@ -228,22 +228,35 @@ func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, store *storag
 	}
 }
 
+// This function returns the duration from the start time to a given day of week and hour
 func getDurationUntilNextDayAndTime(startTime time.Time, d time.Weekday, hour int) time.Duration {
 	daysUntilTarget := getDaysTil(startTime.Weekday(), d)
 
+	// given weekday matches start date, check if the time has passed given hour
+	// if it has, add 7 days of duration
 	if daysUntilTarget == 0 && startTime.After(getTimeAtHour(startTime, hour)) {
 		daysUntilTarget = 7
 	}
 
+	// adds days to start time
 	targetDay := startTime.AddDate(0, 0, daysUntilTarget)
+	// sets hour of day on target day to given hour
 	targetDayAndTime := getTimeAtHour(targetDay, hour)
+	// return the duration (difference) between the start date and the given day and time
 	return targetDayAndTime.Sub(startTime)
 }
 
+// This function gets the number of days until the given weekday from the start date
+// getDaysTil(dateThatsAThursday.Weekday(), time.Friday) -> returns 1
+// getDaysTil(time.Friday, time.Friday) -> returns 0
+// getDaysTil(time.Saturday, time.Friday) -> returns 6
 func getDaysTil(startDay time.Weekday, targetDay time.Weekday) int {
 	return (int(targetDay) - int(startDay) + 7) % 7
 }
 
+// This function first sets the time to midnight through Truncate
+// and then adds the provided hour to that time
+// getTimeAtHour(date, 13) -> returns date with time at 1pm
 func getTimeAtHour(t time.Time, hour int) time.Time {
 	return t.Truncate(24 * time.Hour).Add(time.Duration(hour) * time.Hour)
 }
