@@ -43,6 +43,17 @@ const initialTableStates: Record<string, TableStates> = {
       },
       activeTableState: 'open'
     }
+  },
+  trbExistingRequests: {
+    current: {
+      state: {
+        pageIndex: 0,
+        globalFilter: '',
+        sortBy: [{ desc: true, id: 'submittedAt' }],
+        pageSize: 50
+      },
+      activeTableState: 'open'
+    }
   }
 };
 
@@ -61,6 +72,9 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   const itGovAdmin = useRef<ITGovTableState>({
     ...initialTableStates.itGovAdmin.current
   });
+  const trbExistingRequests = useRef<ITGovTableState>({
+    ...initialTableStates.trbExistingRequests.current
+  });
 
   // Reset the state to their inital state in the abscence of isGovTeamRoute
   useEffect(() => {
@@ -71,7 +85,7 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
 
   return (
     // The Provider gives access to the context to its children
-    <TableStateContext.Provider value={{ itGovAdmin }}>
+    <TableStateContext.Provider value={{ itGovAdmin, trbExistingRequests }}>
       {children}
     </TableStateContext.Provider>
   );
