@@ -3,12 +3,14 @@ package resolvers
 import (
 	"context"
 	"path/filepath"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
@@ -22,6 +24,9 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	links.RecordingPasscode = input.RecordingPasscode
 	links.TranscriptLink = input.TranscriptLink
 
+	links.ModifiedBy = &userID
+	links.ModifiedAt = helpers.PointerTo(time.Now())
+
 	switch {
 	case input.TranscriptFileData != nil:
 		// set this to nil in order to use s3key instead
@@ -29,7 +34,7 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 
 		links.TranscriptFileName = &input.TranscriptFileData.Filename
 
-		s3Key, err := handleFile(s3Client, input.TranscriptFileData)
+		s3Key, err := handleS3Upload(s3Client, input.TranscriptFileData)
 		if err != nil {
 			return nil, err
 		}
@@ -42,7 +47,7 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 
 		links.PresentationDeckFileName = &input.PresentationDeckFileData.Filename
 
-		s3Key, err := handleFile(s3Client, input.PresentationDeckFileData)
+		s3Key, err := handleS3Upload(s3Client, input.PresentationDeckFileData)
 		if err != nil {
 			return nil, err
 		}
@@ -53,7 +58,8 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
 }
 
-func handleFile(s3Client *upload.S3Client, upload *graphql.Upload) (string, error) {
+// handleS3Upload uploads a file to S3
+func handleS3Upload(s3Client *upload.S3Client, upload *graphql.Upload) (string, error) {
 	s3Key := uuid.New().String()
 	ext := filepath.Ext(upload.Filename)
 	if len(ext) > 0 {
