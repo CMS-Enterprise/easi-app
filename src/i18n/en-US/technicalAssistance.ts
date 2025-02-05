@@ -934,6 +934,7 @@ const technicalAssistance = {
         'There are currently no new requests. The TRB Mailbox will receive an email notification when a new request is submitted, or you can check back here later.'
     },
     existingRequests: {
+      id: 'existing-requests',
       heading: 'Existing requests',
       description:
         'Use the tabs below to navigate between closed requests and those that are open and have been reviewed and assigned.',
