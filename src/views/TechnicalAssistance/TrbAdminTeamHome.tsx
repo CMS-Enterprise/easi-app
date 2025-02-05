@@ -459,7 +459,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => [{ id: 'consultMeetingTime', desc: true }], []),
-        pageIndex: 0,
+        pageIndex: trbExistingRequests.current.state.pageIndex,
         pageSize: window.localStorage['request-table-page-size']
           ? Number(window.localStorage['request-table-page-size'])
           : 10
@@ -515,7 +515,10 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
               className={`easi-request-repo__tab-btn line-height-body-3 text-${
                 activeTable === 'open' ? 'primary' : 'base-dark'
               }`}
-              onClick={() => setActiveTable('open')}
+              onClick={() => {
+                setActiveTable('open');
+                gotoPage(0);
+              }}
             >
               {t('adminTeamHome.existingRequests.tabs.open.name')}
             </button>
@@ -530,7 +533,10 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
               className={`easi-request-repo__tab-btn line-height-body-3 text-${
                 activeTable === 'closed' ? 'primary' : 'base-dark'
               }`}
-              onClick={() => setActiveTable('closed')}
+              onClick={() => {
+                setActiveTable('closed');
+                gotoPage(0);
+              }}
             >
               {t('adminTeamHome.existingRequests.tabs.closed.name')}
             </button>
