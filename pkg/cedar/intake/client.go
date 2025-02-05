@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
@@ -22,14 +23,16 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/client/intake"
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/translation"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Intake API
-func NewClient(cedarHost string, cedarAPIKey string, enabled bool) *Client {
+func NewClient(cedarHost string, cedarAPIKey string, enabled bool, publisherEnabled bool) *Client {
 	hc := http.DefaultClient
 
 	return &Client{
-		enabled: enabled,
+		enabled:          enabled,
+		publisherEnabled: publisherEnabled,
 		auth: httptransport.APIKeyAuth(
 			"x-Gateway-APIKey",
 			"header",
@@ -49,10 +52,11 @@ func NewClient(cedarHost string, cedarAPIKey string, enabled bool) *Client {
 
 // Client represents a connection to the CEDAR Intake API
 type Client struct {
-	enabled bool
-	auth    runtime.ClientAuthInfoWriter
-	sdk     *apiclient.CEDARIntake
-	hc      *http.Client
+	enabled          bool
+	publisherEnabled bool
+	auth             runtime.ClientAuthInfoWriter
+	sdk              *apiclient.CEDARIntake
+	hc               *http.Client
 }
 
 // CheckConnection hits the CEDAR Intake API `/healthcheck` endpoint to verify
@@ -161,4 +165,101 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 	_ = resp
 
 	return nil
+}
+
+func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, dayOfWeek time.Weekday, hourInUTC int) {
+	logger := appcontext.ZLogger(ctx)
+	if hourInUTC > 24 || hourInUTC < 0 {
+		logger.Error("incorrect hour given for publish schedule, use int between 0 and 24")
+		return
+	}
+	// check both if the publisher is enabled. If not, return.
+	if !c.publisherEnabled {
+		logger.Info("CEDAR intake publish schedule is disabled")
+		return
+	}
+
+	for {
+		nextPublish := getDurationUntilNextDayAndTime(time.Now().UTC(), dayOfWeek, hourInUTC)
+		logger.Info(fmt.Sprintf(
+			"next intake publish to CEDAR in %s at %s",
+			nextPublish,
+			time.Now().UTC().Add(nextPublish).Format(time.RFC3339),
+		))
+		time.Sleep(nextPublish)
+
+		logger.Info("running scheduled intake publish to CEDAR")
+		c.publishIntakeAndBusinessCase(ctx, store)
+	}
+}
+
+func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, store *storage.Store) {
+	allIntakes, err := store.FetchSystemIntakes(ctx)
+	if err != nil {
+		appcontext.ZLogger(ctx).Warn("failed to fetch intakes when publishing to CEDAR", zap.Error(err))
+		return
+	}
+	for _, intake := range allIntakes {
+		err = c.PublishSystemIntake(ctx, intake)
+		if err != nil {
+			appcontext.ZLogger(ctx).Warn(
+				"failed to publish intake when publishing to CEDAR",
+				zap.String("id", intake.ID.String()),
+				zap.Error(err),
+			)
+		}
+		if intake.BusinessCaseID == nil {
+			continue
+		}
+		businessCase, err := store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
+		appcontext.ZLogger(ctx).Warn(
+			"failed to fetch business case for intake when publishing to CEDAR",
+			zap.String("id", intake.ID.String()),
+			zap.Error(err),
+		)
+		if businessCase == nil {
+			continue
+		}
+		err = c.PublishBusinessCase(ctx, *businessCase)
+		if err != nil {
+			appcontext.ZLogger(ctx).Warn(
+				"failed to publish business case to CEDAR",
+				zap.String("id", intake.ID.String()),
+				zap.Error(err),
+			)
+		}
+	}
+}
+
+// This function returns the duration from the start time to a given day of week and hour
+func getDurationUntilNextDayAndTime(startTime time.Time, d time.Weekday, hour int) time.Duration {
+	daysUntilTarget := getDaysTil(startTime.Weekday(), d)
+
+	// given weekday matches start date, check if the time has passed given hour
+	// if it has, add 7 days of duration
+	if daysUntilTarget == 0 && startTime.After(getTimeAtHour(startTime, hour)) {
+		daysUntilTarget = 7
+	}
+
+	// adds days to start time
+	targetDay := startTime.AddDate(0, 0, daysUntilTarget)
+	// sets hour of day on target day to given hour
+	targetDayAndTime := getTimeAtHour(targetDay, hour)
+	// return the duration (difference) between the start date and the given day and time
+	return targetDayAndTime.Sub(startTime)
+}
+
+// This function gets the number of days until the given weekday from the start date
+// getDaysTil(dateThatsAThursday.Weekday(), time.Friday) -> returns 1
+// getDaysTil(time.Friday, time.Friday) -> returns 0
+// getDaysTil(time.Saturday, time.Friday) -> returns 6
+func getDaysTil(startDay time.Weekday, targetDay time.Weekday) int {
+	return (int(targetDay) - int(startDay) + 7) % 7
+}
+
+// This function first sets the time to midnight through Truncate
+// and then adds the provided hour to that time
+// getTimeAtHour(date, 13) -> returns date with time at 1pm
+func getTimeAtHour(t time.Time, hour int) time.Time {
+	return t.Truncate(24 * time.Hour).Add(time.Duration(hour) * time.Hour)
 }
