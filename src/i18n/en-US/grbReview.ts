@@ -164,9 +164,29 @@ export default {
   },
   setUpGrbReviewForm: {
     heading: 'Set up GRB review',
-    subHeading:
-      'Use this form to set up a Governance Review Board (GRB) review in EASi.',
-    description:
-      'You will be able to select the type of review, add recordings and documents, invite GRB members to review this project, and set a timeframe for an asynchronous review.'
+    text: 'Use this form to set up a Governance Review Board (GRB) review in EASi.',
+    subText:
+      'You will be able to select the type of review, add recordings and documents, invite GRB members to review this project, and set a timeframe for an asynchronous review.',
+    steps: [
+      {
+        label: 'Review type',
+        description: 'Select the type of GRB review required for this project'
+      },
+      {
+        label: 'Presentation',
+        description:
+          'Organize a date and time for the project team to record or present their project. For asynchronous reviews, also add links to the presentation materials.'
+      },
+      {
+        label: 'Additional documentation',
+        description:
+          'EASi will automatically link the Business Case (if applicable) and Intake Request form, but you may upload any additional documents necessary to provide GRB reviewers with project information or context. Documents already listed below were uploaded by the requester or project team as a part of their intake request. You may remove any documents uploaded by other Governance Admin Team members, but will not be able to remove documents uploaded by the requester or project team.'
+      },
+      {
+        label: 'Participants and timeframe',
+        description:
+          'Add the voting and non-voting GRB members who should participate in this review. For asynchronous reviews, add an end date for the review.'
+      }
+    ]
   }
 };
