@@ -68,6 +68,7 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
 
   const isGovTeamRoute: boolean =
     routeParams[1] === 'it-governance' || pathname === '/';
+  const isTRBRoute: boolean = routeParams[1] === 'trb' || pathname === '/';
 
   const itGovAdmin = useRef<ITGovTableState>({
     ...initialTableStates.itGovAdmin.current
@@ -81,7 +82,12 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
     if (!isGovTeamRoute) {
       itGovAdmin.current = { ...initialTableStates.itGovAdmin.current };
     }
-  }, [isGovTeamRoute]);
+    if (!isTRBRoute) {
+      trbExistingRequests.current = {
+        ...initialTableStates.trbExistingRequests.current
+      };
+    }
+  }, [isGovTeamRoute, isTRBRoute]);
 
   return (
     // The Provider gives access to the context to its children
