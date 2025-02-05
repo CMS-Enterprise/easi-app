@@ -82,12 +82,18 @@ const ParticipantsTable = ({
       {
         Header: t<string>('participantsTable.votingRole'),
         accessor: 'votingRole',
-        Cell: ({ value }) => t<string>(`votingRoles.${value}`)
+        Cell: cell => {
+          const { value } = cell;
+          return <>{t<string>(`votingRoles.${value}`)}</>;
+        }
       },
       {
         Header: t<string>('participantsTable.grbRole'),
         accessor: 'grbRole',
-        Cell: ({ value }) => t<string>(`reviewerRoles.${value}`)
+        Cell: cell => {
+          const { value } = cell;
+          return <>{t<string>(`reviewerRoles.${value}`)}</>;
+        }
       },
       // Only display action column if user is GRT admin
       ...(isITGovAdmin ? [actionColumn] : [])
@@ -211,15 +217,10 @@ const ParticipantsTable = ({
                     <Button
                       type="button"
                       unstyled
-                      className="width-full display-flex"
                       {...column.getSortByToggleProps()}
                     >
-                      <div className="flex-fill text-no-wrap">
-                        {column.render('Header')}
-                      </div>
-                      <div className="position-relative width-205 margin-left-05">
-                        {getHeaderSortIcon(column)}
-                      </div>
+                      {column.render('Header')}
+                      {getHeaderSortIcon(column)}
                     </Button>
                   </th>
                 ))}

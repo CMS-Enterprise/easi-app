@@ -1,7 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { Cell, Column, HeaderGroup, useSortBy, useTable } from 'react-table';
+import {
+  CellProps,
+  Column,
+  HeaderGroup,
+  useSortBy,
+  useTable
+} from 'react-table';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -175,27 +181,32 @@ const AddReviewersFromRequest = ({
   const columns = useMemo<Column<GRBReviewerComparison>[]>(() => {
     return [
       {
-        Header: ({
-          column
-        }: {
-          column: HeaderGroup<GRBReviewerComparison>;
-        }) => <SelectAllCheckbox column={column} />,
+        Header: (props: any) => {
+          const { column } = props;
+          return <SelectAllCheckbox column={column} />;
+        },
         accessor: 'userAccount',
         Cell: ({
           row: { original: reviewer }
-        }: Cell<GRBReviewerComparison>) => (
+        }: CellProps<GRBReviewerComparison>) => (
           <GRBReviewerCheckbox reviewer={reviewer} />
         )
       },
       {
         Header: t<string>('participantsTable.votingRole'),
         accessor: 'votingRole',
-        Cell: ({ value }) => t<string>(`votingRoles.${value}`)
+        Cell: (cell: CellProps<GRBReviewerComparison>) => {
+          const { value } = cell;
+          return <>{t<string>(`votingRoles.${value}`)}</>;
+        }
       },
       {
         Header: t<string>('participantsTable.grbRole'),
         accessor: 'grbRole',
-        Cell: ({ value }) => t<string>(`reviewerRoles.${value}`)
+        Cell: (cell: CellProps<GRBReviewerComparison>) => {
+          const { value } = cell;
+          return <>{t<string>(`reviewerRoles.${value}`)}</>;
+        }
       }
     ];
   }, [t, GRBReviewerCheckbox, SelectAllCheckbox]);
@@ -278,15 +289,10 @@ const AddReviewersFromRequest = ({
                           <Button
                             type="button"
                             unstyled
-                            className="width-full display-flex margin-top-0"
                             {...column.getSortByToggleProps()}
                           >
-                            <div className="flex-fill text-no-wrap">
-                              {column.render('Header')}
-                            </div>
-                            <div className="position-relative width-205 margin-left-05">
-                              {getHeaderSortIcon(column)}
-                            </div>
+                            {column.render('Header')}
+                            {getHeaderSortIcon(column)}
                           </Button>
                         )}
                       </th>

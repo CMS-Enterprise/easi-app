@@ -76,7 +76,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
     [linkedSystemIntakes, linkedTrbRequests]
   );
 
-  const columns: Column<SystemLinkedRequest>[] = useMemo(() => {
+  const columns: Column<any>[] = useMemo(() => {
     return [
       {
         Header: t<string>('header.submissionDate'),
@@ -89,9 +89,11 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
           return lr.submittedAt;
         },
         Cell: ({ value }: CellProps<SystemLinkedRequest, string | null>) => {
-          return value
-            ? formatDateLocal(value, 'MM/dd/yyyy')
-            : t<string>('defaultVal.notSubmitted');
+          return value ? (
+            <>{formatDateLocal(value, 'MM/dd/yyyy')}</>
+          ) : (
+            <>{t<string>('defaultVal.notSubmitted')}</>
+          );
         }
       },
       {
@@ -100,7 +102,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
         Cell: ({
           value
         }: CellProps<SystemLinkedRequest, SystemLinkedRequest['name']>) => {
-          return value || t<string>('defaultVal.draft');
+          return <>{value}</> || <>{t<string>('defaultVal.draft')}</>;
         }
       },
       {
@@ -112,7 +114,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
           SystemLinkedRequest,
           SystemLinkedRequest['__typename']
         >) => {
-          return processName[value];
+          return <>{processName[value]}</>;
         }
       },
       {
@@ -122,13 +124,18 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
           const lr = row.original;
           // eslint-disable-next-line no-underscore-dangle
           if (lr.__typename === 'TRBRequest') {
-            return lr.state === TRBRequestState.CLOSED
-              ? t(`status.requestState.${lr.state}`)
-              : t(`status.requestStatus.${value}`);
+            return lr.state === TRBRequestState.CLOSED ? (
+              <>{t(`status.requestState.${lr.state}`)}</>
+            ) : (
+              <>{t(`status.requestStatus.${value}`)}</>
+            );
           }
-          return t(
-            `governanceReviewTeam:systemIntakeStatusRequester.${value}`,
-            { lcid: lr.lcid }
+          return (
+            <>
+              {t(`governanceReviewTeam:systemIntakeStatusRequester.${value}`, {
+                lcid: lr.lcid
+              })}
+            </>
           );
         }
       },
@@ -138,9 +145,9 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
             accessor: 'nextMeetingDate',
             Cell: ({ value }: CellProps<SystemLinkedRequest, string>) => {
               if (value) {
-                return formatDateUtc(value, 'MM/dd/yyyy');
+                return <>{formatDateUtc(value, 'MM/dd/yyyy')}</>;
               }
-              return t('defaultVal.none');
+              return <>{t('defaultVal.none')}</>;
             }
           }
         : {
@@ -148,9 +155,9 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
             accessor: 'lastMeetingDate',
             Cell: ({ value }: CellProps<SystemLinkedRequest, string>) => {
               if (value) {
-                return formatDateUtc(value, 'MM/dd/yyyy');
+                return <>{formatDateUtc(value, 'MM/dd/yyyy')}</>;
               }
-              return t('defaultVal.none');
+              return <>{t('defaultVal.none')}</>;
             }
           },
       {
@@ -158,9 +165,9 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
         accessor: lr => {
           // eslint-disable-next-line no-underscore-dangle
           if (lr.__typename === 'TRBRequest') {
-            return lr.requesterInfo.commonName;
+            return <>{lr.requesterInfo.commonName}</>;
           }
-          return lr.requesterName;
+          return <>{lr.requesterName}</>;
         }
       }
     ];
@@ -271,15 +278,10 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
                   <Button
                     type="button"
                     unstyled
-                    className="width-full display-flex"
                     {...column.getSortByToggleProps()}
                   >
-                    <div className="flex-fill text-no-wrap">
-                      {column.render('Header')}
-                    </div>
-                    <div className="position-relative width-205 margin-left-05">
-                      {getHeaderSortIcon(column)}
-                    </div>
+                    {column.render('Header')}
+                    {getHeaderSortIcon(column)}
                   </Button>
                 </th>
               ))}
