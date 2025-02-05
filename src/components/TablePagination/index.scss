@@ -1,5 +1,14 @@
 #main-content .usa-pagination {
     justify-content: left;
+    background-color: transparent;
+
+    .usa-pagination__button:not(.usa-current) {
+      background-color: white !important; 
+    }
+
+    .usa-current {
+      background-color: black !important;
+    }
 
     &__page-no {
       margin-left: -0.25em;
@@ -8,11 +17,5 @@
     &__link {
         border: none;
         background-color: transparent;
-    }
-
-    &--transparent-bg {
-      .usa-pagination__button:not(.usa-current) {
-        background: transparent;
-      }
     }
 }
