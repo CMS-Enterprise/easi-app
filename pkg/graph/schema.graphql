@@ -713,8 +713,8 @@ input SystemIntakeGRBPresentationLinksInput {
   recordingLink: String
   recordingPasscode: String
   transcriptLink: String
-  transcriptFileData: Upload
-  presentationDeckFileData: Upload
+  transcriptFileData: Upload @goField(omittable: true)
+  presentationDeckFileData: Upload @goField(omittable: true)
 }
 
 input DeleteSystemIntakeGRBPresentationLinksInput {
@@ -2786,6 +2786,13 @@ directive @goModel(
   models: [String!]
   forceGenerate: Boolean
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
+
+# https://gqlgen.com/config/#inline-config-with-directives
+directive @goField(
+  forceResolver: Boolean
+  name: String
+  omittable: Boolean
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
 """
 A user role associated with a job code

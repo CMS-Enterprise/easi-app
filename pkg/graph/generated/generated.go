@@ -8812,8 +8812,8 @@ input SystemIntakeGRBPresentationLinksInput {
   recordingLink: String
   recordingPasscode: String
   transcriptLink: String
-  transcriptFileData: Upload
-  presentationDeckFileData: Upload
+  transcriptFileData: Upload @goField(omittable: true)
+  presentationDeckFileData: Upload @goField(omittable: true)
 }
 
 input DeleteSystemIntakeGRBPresentationLinksInput {
@@ -10885,6 +10885,13 @@ directive @goModel(
   models: [String!]
   forceGenerate: Boolean
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
+
+# https://gqlgen.com/config/#inline-config-with-directives
+directive @goField(
+  forceResolver: Boolean
+  name: String
+  omittable: Boolean
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
 """
 A user role associated with a job code
@@ -62960,14 +62967,14 @@ func (ec *executionContext) unmarshalInputSystemIntakeGRBPresentationLinksInput(
 			if err != nil {
 				return it, err
 			}
-			it.TranscriptFileData = data
+			it.TranscriptFileData = graphql.OmittableOf(data)
 		case "presentationDeckFileData":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("presentationDeckFileData"))
 			data, err := ec.unmarshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.PresentationDeckFileData = data
+			it.PresentationDeckFileData = graphql.OmittableOf(data)
 		}
 	}
 

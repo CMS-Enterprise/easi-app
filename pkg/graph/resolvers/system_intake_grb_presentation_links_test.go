@@ -34,12 +34,12 @@ func createSystemIntakeGRBPresentationLinkUpload(suite *ResolverSuite, systemInt
 		RecordingLink:     helpers.PointerTo("recording link"),
 		RecordingPasscode: helpers.PointerTo("recording pass"),
 		TranscriptLink:    helpers.PointerTo("transcript link"),
-		TranscriptFileData: &graphql.Upload{
+		TranscriptFileData: graphql.OmittableOf[*graphql.Upload](&graphql.Upload{
 			File:        fileToUpload,
 			Filename:    "test presentation link upload.txt",
 			Size:        fileToUpload.Size(),
 			ContentType: "text/plain",
-		},
+		}),
 	}
 
 	createdLinks, err := SetSystemIntakeGRBPresentationLinks(
