@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"strconv"
+	"time"
 
 	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
@@ -164,8 +165,18 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 	if bc.CreatedAt != nil {
 		result.ClientCreatedDate = pStrfmtDateTime(bc.CreatedAt)
 	}
+
+	// Optionally send the updated at date if it exists
+	// Otherwise, send the created at date, falling back to the current time
+	// This code exists because the `ClientLastUpdatedDate` field is required by the CEDAR API
+	// but it's possible that the biz case doesn't have it set (as we have it nullable)
 	if bc.UpdatedAt != nil {
 		result.ClientLastUpdatedDate = pStrfmtDateTime(bc.UpdatedAt)
+	} else if bc.CreatedAt != nil {
+		result.ClientLastUpdatedDate = pStrfmtDateTime(bc.CreatedAt)
+	} else {
+		now := time.Now()
+		result.ClientLastUpdatedDate = pStrfmtDateTime(&now)
 	}
 
 	return result, nil

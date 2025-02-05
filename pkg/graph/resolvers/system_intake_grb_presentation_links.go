@@ -2,13 +2,15 @@ package resolvers
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"path/filepath"
-	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -17,35 +19,52 @@ import (
 
 func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error) {
 	userID := appcontext.Principal(ctx).Account().ID
-	links := models.NewSystemIntakeGRBPresentationLinks(userID)
-	links.SystemIntakeID = input.SystemIntakeID
-	links.CreatedAt = time.Now()
-	links.CreatedBy = userID
-	links.RecordingLink = input.RecordingLink
-	links.RecordingPasscode = input.RecordingPasscode
-	links.TranscriptLink = input.TranscriptLink
 
-	switch {
-	case input.TranscriptFileData != nil:
+	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, input.SystemIntakeID)
+	if err != nil {
+		if !errors.Is(err, sql.ErrNoRows) {
+			return nil, err
+		}
+	}
+
+	if links == nil {
+		// initialize new links struct if one does not already exist
+		links = models.NewSystemIntakeGRBPresentationLinks(userID)
+		links.SystemIntakeID = input.SystemIntakeID
+	}
+
+	if input.RecordingLink != nil {
+		links.RecordingLink = input.RecordingLink
+	}
+
+	if input.RecordingPasscode != nil {
+		links.RecordingPasscode = input.RecordingPasscode
+	}
+
+	if input.TranscriptLink != nil {
+		links.TranscriptLink = input.TranscriptLink
+	}
+
+	links.ModifiedBy = &userID
+
+	if value, ok := input.TranscriptFileData.ValueOK(); ok {
 		// set this to nil in order to use s3key instead
 		links.TranscriptLink = nil
 
-		links.TranscriptFileName = &input.TranscriptFileData.Filename
+		links.TranscriptFileName = &value.Filename
 
-		s3Key, err := handleFile(s3Client, input.TranscriptFileData)
+		s3Key, err := handleS3Upload(s3Client, value)
 		if err != nil {
 			return nil, err
 		}
 
 		links.TranscriptS3Key = &s3Key
+	}
 
-	case input.PresentationDeckFileData != nil:
-		// set this to nil as we will not be using a transcript in this case
-		links.TranscriptLink = nil
+	if value, ok := input.PresentationDeckFileData.ValueOK(); ok {
+		links.PresentationDeckFileName = &value.Filename
 
-		links.PresentationDeckFileName = &input.PresentationDeckFileData.Filename
-
-		s3Key, err := handleFile(s3Client, input.PresentationDeckFileData)
+		s3Key, err := handleS3Upload(s3Client, value)
 		if err != nil {
 			return nil, err
 		}
@@ -56,7 +75,8 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
 }
 
-func handleFile(s3Client *upload.S3Client, upload *graphql.Upload) (string, error) {
+// handleS3Upload uploads a file to S3
+func handleS3Upload(s3Client *upload.S3Client, upload *graphql.Upload) (string, error) {
 	s3Key := uuid.New().String()
 	ext := filepath.Ext(upload.Filename)
 	if len(ext) > 0 {

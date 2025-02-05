@@ -131,7 +131,7 @@ const RequestOverview = ({
                 to: '/',
                 text: t('back.allRequests')
               }}
-              className="desktop:grid-col-3 desktop:display-block display-none"
+              className="desktop:grid-col-3 desktop:display-block display-none sticky top-8"
             />
           )}
 
