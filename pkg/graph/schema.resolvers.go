@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1981,7 +1982,25 @@ func (r *systemIntakeDocumentResolver) CanView(ctx context.Context, obj *models.
 
 // TranscriptFileURL is the resolver for the transcriptFileURL field.
 func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error) {
-	return helpers.PointerTo("https://google.com"), nil
+	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if links == nil {
+		return nil, fmt.Errorf("unexpected nil links data for system intake id: %s", obj.SystemIntakeID.String())
+	}
+
+	if links.TranscriptS3Key == nil {
+		return nil, fmt.Errorf("nil transcript S3 key for system intake id: %s", obj.SystemIntakeID.String())
+	}
+
+	data, err := r.s3Client.NewGetPresignedURL(*links.TranscriptS3Key)
+	if err != nil {
+		return nil, err
+	}
+
+	return helpers.PointerTo(data.URL), nil
 }
 
 // TranscriptFileStatus is the resolver for the transcriptFileStatus field.
@@ -1991,7 +2010,25 @@ func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileStatus(ctx cont
 
 // PresentationDeckFileURL is the resolver for the presentationDeckFileURL field.
 func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error) {
-	return helpers.PointerTo("https://google.com"), nil
+	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if links == nil {
+		return nil, fmt.Errorf("unexpected nil links data for system intake id: %s", obj.SystemIntakeID.String())
+	}
+
+	if links.PresentationDeckS3Key == nil {
+		return nil, fmt.Errorf("nil presentation deck S3 key for system intake id: %s", obj.SystemIntakeID.String())
+	}
+
+	data, err := r.s3Client.NewGetPresignedURL(*links.PresentationDeckS3Key)
+	if err != nil {
+		return nil, err
+	}
+
+	return helpers.PointerTo(data.URL), nil
 }
 
 // PresentationDeckFileStatus is the resolver for the presentationDeckFileStatus field.
