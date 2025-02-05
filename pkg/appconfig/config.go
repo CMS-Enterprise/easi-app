@@ -195,6 +195,11 @@ const CEDARCoreMock = "CEDAR_CORE_MOCK"
 // If set to false, the Intake API Client methods will do nothing
 const CEDARIntakeEnabled = "CEDAR_INTAKE_ENABLED"
 
+// CEDARIntakePublisherEnabled is the key for the environment variable that determines if the CEDAR Intake API publisher should enabled
+// If true, the intake publisher will be enabled
+// If false, the intake publisher will be disabled
+const CEDARIntakePublisherEnabled = "CEDAR_INTAKE_PUBLISHER_ENABLED"
+
 // LDKey is the key for accessing LaunchDarkly
 const LDKey = "LD_SDK_KEY"
 
