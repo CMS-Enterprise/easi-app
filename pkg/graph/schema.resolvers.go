@@ -1992,7 +1992,7 @@ func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileURL(ctx context
 	}
 
 	if links.TranscriptS3Key == nil {
-		return nil, fmt.Errorf("nil transcript S3 key when getting transcript file URL for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, nil
 	}
 
 	data, err := r.s3Client.NewGetPresignedURL(*links.TranscriptS3Key)
@@ -2015,7 +2015,7 @@ func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileStatus(ctx cont
 	}
 
 	if links.TranscriptS3Key == nil {
-		return nil, fmt.Errorf("nil transcript deck S3 key when checking transcript file status for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, nil
 	}
 
 	fileStatus, err := resolvers.GetStatusForSystemIntakeDocument(r.s3Client, *links.TranscriptS3Key)
@@ -2038,7 +2038,7 @@ func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileURL(ctx c
 	}
 
 	if links.PresentationDeckS3Key == nil {
-		return nil, fmt.Errorf("nil presentation deck S3 key when getting presentation deck URL for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, nil
 	}
 
 	data, err := r.s3Client.NewGetPresignedURL(*links.PresentationDeckS3Key)
@@ -2061,7 +2061,7 @@ func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileStatus(ct
 	}
 
 	if links.PresentationDeckS3Key == nil {
-		return nil, fmt.Errorf("nil presentation deck S3 key when checking presentation file status for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, nil
 	}
 
 	fileStatus, err := resolvers.GetStatusForSystemIntakeDocument(r.s3Client, *links.PresentationDeckS3Key)
