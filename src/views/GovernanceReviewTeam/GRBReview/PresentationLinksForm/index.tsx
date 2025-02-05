@@ -67,7 +67,14 @@ const PresentationLinksForm = ({
     defaultValues: {
       recordingLink: grbPresentationLinks?.recordingLink,
       recordingPasscode: grbPresentationLinks?.recordingPasscode,
-      transcriptLink: grbPresentationLinks?.transcriptLink
+      transcriptLink: grbPresentationLinks?.transcriptLink,
+      // Only include file name in default values
+      transcriptFileData: {
+        name: grbPresentationLinks?.transcriptFileName || ''
+      } as File,
+      presentationDeckFileData: {
+        name: grbPresentationLinks?.presentationDeckFileName || ''
+      } as File
     }
   });
 
@@ -79,15 +86,19 @@ const PresentationLinksForm = ({
    * Returns true if both recordingLink and presentationDeckFileData fields have errors
    */
   const hasRequiredFieldErrors =
-    !!errors?.recordingLink && !!errors?.presentationDeckFileData;
+    !!errors?.recordingLink &&
+    (!!errors?.presentationDeckFileData ||
+      !defaultValues?.presentationDeckFileData?.name);
 
   /** Submit form to set GRB review presentation links */
   const submit = handleSubmit(async values => {
-    const transcriptFileData = values.transcriptFileData
+    // Only include newly updated file data, not default values
+    // File data from default values does not have `size` field
+    const transcriptFileData = values.transcriptFileData?.size
       ? await fileToBase64File(values.transcriptFileData)
       : undefined;
 
-    const presentationDeckFileData = values.presentationDeckFileData
+    const presentationDeckFileData = values.presentationDeckFileData?.size
       ? await fileToBase64File(values.presentationDeckFileData)
       : undefined;
 
@@ -226,6 +237,9 @@ const PresentationLinksForm = ({
                     shouldUnregister
                     render={({ field: { ref, ...field } }) => (
                       <FileInput
+                        defaultFileName={
+                          defaultValues?.transcriptFileData?.name
+                        }
                         name={field.name}
                         id={field.name}
                         accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
@@ -257,7 +271,7 @@ const PresentationLinksForm = ({
                 return (
                   <FileInput
                     defaultFileName={
-                      grbPresentationLinks?.presentationDeckFileName || ''
+                      defaultValues?.presentationDeckFileData?.name
                     }
                     name={field.name}
                     id={field.name}
