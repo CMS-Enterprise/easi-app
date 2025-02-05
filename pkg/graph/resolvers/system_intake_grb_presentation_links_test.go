@@ -36,6 +36,12 @@ func createSystemIntakeGRBPresentationLinkUpload(suite *ResolverSuite, systemInt
 		TranscriptLink:    helpers.PointerTo("transcript link"),
 		TranscriptFileData: graphql.OmittableOf[*graphql.Upload](&graphql.Upload{
 			File:        fileToUpload,
+			Filename:    "test transcript link upload.txt",
+			Size:        fileToUpload.Size(),
+			ContentType: "text/plain",
+		}),
+		PresentationDeckFileData: graphql.OmittableOf[*graphql.Upload](&graphql.Upload{
+			File:        fileToUpload,
 			Filename:    "test presentation link upload.txt",
 			Size:        fileToUpload.Size(),
 			ContentType: "text/plain",

@@ -25,7 +25,9 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 		if !errors.Is(err, sql.ErrNoRows) {
 			return nil, err
 		}
+	}
 
+	if links == nil {
 		// initialize new links struct if one does not already exist
 		links = models.NewSystemIntakeGRBPresentationLinks(userID)
 		links.SystemIntakeID = input.SystemIntakeID
