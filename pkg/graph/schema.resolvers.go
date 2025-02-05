@@ -1988,11 +1988,11 @@ func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileURL(ctx context
 	}
 
 	if links == nil {
-		return nil, fmt.Errorf("unexpected nil links data for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, fmt.Errorf("unexpected nil links data when getting transcript file URL for system intake id: %s", obj.SystemIntakeID.String())
 	}
 
 	if links.TranscriptS3Key == nil {
-		return nil, fmt.Errorf("nil transcript S3 key for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, fmt.Errorf("nil transcript S3 key when getting transcript file URL for system intake id: %s", obj.SystemIntakeID.String())
 	}
 
 	data, err := r.s3Client.NewGetPresignedURL(*links.TranscriptS3Key)
@@ -2005,7 +2005,25 @@ func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileURL(ctx context
 
 // TranscriptFileStatus is the resolver for the transcriptFileStatus field.
 func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error) {
-	return helpers.PointerTo(models.SystemIntakeDocumentStatusPending), nil
+	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if links == nil {
+		return nil, fmt.Errorf("unexpected nil links data when checking transcript file status for system intake id: %s", obj.SystemIntakeID.String())
+	}
+
+	if links.TranscriptS3Key == nil {
+		return nil, fmt.Errorf("nil transcript deck S3 key when checking transcript file status for system intake id: %s", obj.SystemIntakeID.String())
+	}
+
+	fileStatus, err := resolvers.GetStatusForSystemIntakeDocument(r.s3Client, *links.TranscriptS3Key)
+	if err != nil {
+		return nil, err
+	}
+
+	return helpers.PointerTo(fileStatus), nil
 }
 
 // PresentationDeckFileURL is the resolver for the presentationDeckFileURL field.
@@ -2016,11 +2034,11 @@ func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileURL(ctx c
 	}
 
 	if links == nil {
-		return nil, fmt.Errorf("unexpected nil links data for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, fmt.Errorf("unexpected nil links data when getting presentation deck URL for system intake id: %s", obj.SystemIntakeID.String())
 	}
 
 	if links.PresentationDeckS3Key == nil {
-		return nil, fmt.Errorf("nil presentation deck S3 key for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, fmt.Errorf("nil presentation deck S3 key when getting presentation deck URL for system intake id: %s", obj.SystemIntakeID.String())
 	}
 
 	data, err := r.s3Client.NewGetPresignedURL(*links.PresentationDeckS3Key)
@@ -2033,7 +2051,25 @@ func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileURL(ctx c
 
 // PresentationDeckFileStatus is the resolver for the presentationDeckFileStatus field.
 func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error) {
-	return helpers.PointerTo(models.SystemIntakeDocumentStatusPending), nil
+	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if links == nil {
+		return nil, fmt.Errorf("unexpected nil links data when checking presentation file status for system intake id: %s", obj.SystemIntakeID.String())
+	}
+
+	if links.PresentationDeckS3Key == nil {
+		return nil, fmt.Errorf("nil presentation deck S3 key when checking presentation file status for system intake id: %s", obj.SystemIntakeID.String())
+	}
+
+	fileStatus, err := resolvers.GetStatusForSystemIntakeDocument(r.s3Client, *links.PresentationDeckS3Key)
+	if err != nil {
+		return nil, err
+	}
+
+	return helpers.PointerTo(fileStatus), nil
 }
 
 // VotingRole is the resolver for the votingRole field.
