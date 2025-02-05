@@ -136,7 +136,10 @@ const PresentationLinksForm = ({
         </Alert>
       )}
 
-      <Grid col={6} className="margin-top-7 margin-bottom-10 padding-bottom-3">
+      <Grid
+        tablet={{ col: 6 }}
+        className="margin-top-7 margin-bottom-10 padding-bottom-3"
+      >
         <h1 className="margin-bottom-1">
           {t('presentationLinks.heading', { context: formType })}
         </h1>
@@ -200,7 +203,7 @@ const PresentationLinksForm = ({
                 className="margin-top-105"
                 // Default to upload document tab when document has been uploaded
                 defaultActiveTab={
-                  defaultValues?.transcriptFileData
+                  defaultValues?.transcriptFileData?.name
                     ? t('presentationLinks.uploadDocument')
                     : t('presentationLinks.addLink')
                 }
