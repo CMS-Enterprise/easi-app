@@ -27,11 +27,12 @@ import (
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Intake API
-func NewClient(cedarHost string, cedarAPIKey string, enabled bool) *Client {
+func NewClient(cedarHost string, cedarAPIKey string, enabled bool, publisherEnabled bool) *Client {
 	hc := http.DefaultClient
 
 	return &Client{
-		enabled: enabled,
+		enabled:          enabled,
+		publisherEnabled: publisherEnabled,
 		auth: httptransport.APIKeyAuth(
 			"x-Gateway-APIKey",
 			"header",
@@ -51,10 +52,11 @@ func NewClient(cedarHost string, cedarAPIKey string, enabled bool) *Client {
 
 // Client represents a connection to the CEDAR Intake API
 type Client struct {
-	enabled bool
-	auth    runtime.ClientAuthInfoWriter
-	sdk     *apiclient.CEDARIntake
-	hc      *http.Client
+	enabled          bool
+	publisherEnabled bool
+	auth             runtime.ClientAuthInfoWriter
+	sdk              *apiclient.CEDARIntake
+	hc               *http.Client
 }
 
 // CheckConnection hits the CEDAR Intake API `/healthcheck` endpoint to verify
@@ -171,7 +173,8 @@ func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, da
 		logger.Error("incorrect hour given for publish schedule, use int between 0 and 24")
 		return
 	}
-	if !c.enabled {
+	// check both if cedar or the publisher is enabled. If not, return.
+	if !c.enabled || !c.publisherEnabled {
 		logger.Info("CEDAR intake publish schedule is disabled")
 		return
 	}
