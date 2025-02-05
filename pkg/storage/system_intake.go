@@ -272,7 +272,8 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			acquisition_methods = :acquisition_methods,
 			trb_follow_up_recommendation = :trb_follow_up_recommendation,
 			contract_name = :contract_name,
-			system_relation_type = :system_relation_type
+			system_relation_type = :system_relation_type,
+			grb_review_type = :grb_review_type
 		WHERE system_intakes.id = :id
 	`
 	updateStmt, err := np.PrepareNamed(updateSystemIntakeSQL)

@@ -709,6 +709,7 @@ type SystemIntakeProgressToNewStepsInput struct {
 	GrbRecommendations     *HTML                        `json:"grbRecommendations,omitempty"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
+	GrbReviewType          *SystemIntakeGRBReviewType   `json:"grbReviewType,omitempty"`
 }
 
 // Input for setting an intake's decision to Not Approved by GRB in IT Gov v2

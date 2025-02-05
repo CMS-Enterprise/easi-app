@@ -1,7 +1,9 @@
 {
 	"info": {
+		"_postman_id": "26c2c8fa-7956-4ff2-bf69-62e0b260f712",
 		"name": "EASI",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20435042"
 	},
 	"item": [
 		{
@@ -133,6 +135,27 @@
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {\r\n    createSystemIntakeActionProgressToNewStep(input: $input) {\r\n        systemIntake {\r\n            step\r\n            grbDate\r\n        }\r\n    }\r\n}\r\n",
 												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"GRB_MEETING\",\r\n        \"meetingDate\": \"2029-07-28T20:12:31.703Z\",\r\n        \"feedback\": \"this is more feedback\",\r\n        \"additionalInfo\": \"add'l info\"\r\n    }\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Progress to GRB meeting with GRB Review Type",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {\r\n    createSystemIntakeActionProgressToNewStep(input: $input) {\r\n        systemIntake {\r\n            step\r\n            grbDate\r\n            grbReviewType\r\n        }\r\n    }\r\n}\r\n",
+												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"GRB_MEETING\",\r\n        \"meetingDate\": \"2029-07-28T20:12:31.703Z\",\r\n        \"feedback\": \"this is more feedback\",\r\n        \"additionalInfo\": \"add'l info\",\r\n        \"grbReviewType\": \"STANDARD\"\r\n    }\r\n}"
 											}
 										},
 										"url": {

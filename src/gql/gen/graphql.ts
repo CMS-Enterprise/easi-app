@@ -2411,6 +2411,7 @@ export type SystemIntakeProgressToNewStepsInput = {
   adminNote?: InputMaybe<Scalars['HTML']['input']>;
   feedback?: InputMaybe<Scalars['HTML']['input']>;
   grbRecommendations?: InputMaybe<Scalars['HTML']['input']>;
+  grbReviewType?: InputMaybe<SystemIntakeGRBReviewType>;
   meetingDate?: InputMaybe<Scalars['Time']['input']>;
   newStep: SystemIntakeStepToProgressTo;
   notificationRecipients?: InputMaybe<EmailNotificationRecipients>;
