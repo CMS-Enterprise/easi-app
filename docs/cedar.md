@@ -70,6 +70,8 @@ export CEDAR_API_KEY=[insert IMPL API key from 1Password here]
 export CEDAR_CORE_API_VERSION=2.0.0
 ```
 
+You can optionally set CEDAR_INTAKE_PUBLISHER_ENABLED = true to test the publishing cron job for CEDAR intakes
+
 Additionally, if you're using the `openconnect-tinyproxy` VPN container for selective proxying, add the following to your `.envrc.local` file to instruct Go to use the proxy:
 
 ```

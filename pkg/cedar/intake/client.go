@@ -173,8 +173,8 @@ func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, da
 		logger.Error("incorrect hour given for publish schedule, use int between 0 and 24")
 		return
 	}
-	// check both if cedar or the publisher is enabled. If not, return.
-	if !c.enabled || !c.publisherEnabled {
+	// check both if the publisher is enabled. If not, return.
+	if !c.publisherEnabled {
 		logger.Info("CEDAR intake publish schedule is disabled")
 		return
 	}
