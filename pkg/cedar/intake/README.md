@@ -41,5 +41,5 @@ The CEDAR Intake API has two endpoints that can be used together to verify that 
 
 ## Publishing data to cedar on a CRON job
 
-The client has a `PublishOnSchedule` function which sends data to CEDAR. It relies on the environment variable `CEDAR_INTAKE_PUBLISHER_ENABLED` to conditionally to publish data to CEDAR on a schedule. `True` will publish it. Currently the timing is hardcoded to be Fridays at noon.
+The client has a `PublishOnSchedule` function which sends data to CEDAR. It relies on the environment variable `CEDAR_INTAKE_PUBLISHER_ENABLED` to conditionally to publish data to CEDAR on a schedule. `True` will publish it. Currently the timing is hard coded to be Fridays at noon.
  
