@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -676,6 +677,11 @@ func (r *mutationResolver) CreateSystemIntakeGRBDiscussionPost(ctx context.Conte
 // CreateSystemIntakeGRBDiscussionReply is the resolver for the createSystemIntakeGRBDiscussionReply field.
 func (r *mutationResolver) CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
 	return resolvers.CreateSystemIntakeGRBDiscussionReply(ctx, r.store, r.emailClient, input)
+}
+
+// UpdateSystemIntakeGRBReviewType is the resolver for the updateSystemIntakeGRBReviewType field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewType(ctx context.Context, input models.UpdateSystemIntakeGRBReviewTypeInput) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.UpdateSystemIntakeGRBReviewType(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
@@ -1925,6 +1931,11 @@ func (r *systemIntakeResolver) RelatedTRBRequests(ctx context.Context, obj *mode
 // GrbDiscussions is the resolver for the grbDiscussions field.
 func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
 	return resolvers.SystemIntakeGRBDiscussions(ctx, r.store, obj.ID)
+}
+
+// GrbReviewType is the resolver for the grbReviewType field.
+func (r *systemIntakeResolver) GrbReviewType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewType, error) {
+	panic(fmt.Errorf("not implemented: GrbReviewType - grbReviewType"))
 }
 
 // DocumentType is the resolver for the documentType field.

@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
@@ -88,4 +87,31 @@ func (s *Store) CompareSystemIntakeGRBReviewers(ctx context.Context, systemIntak
 	return comparisons, namedSelect(ctx, s.db, &comparisons, sqlqueries.SystemIntakeGRBReviewer.CompareGRBReviewers, args{
 		"system_intake_id": systemIntakeID,
 	})
+}
+
+func (s *Store) UpdateSystemIntakeGRBReviewType(
+	ctx context.Context,
+	tx *sqlx.Tx,
+	systemIntakeID uuid.UUID,
+	reviewType models.SystemIntakeGRBReviewType,
+) (*models.UpdateSystemIntakePayload, error) {
+	updatedIntake := &models.SystemIntake{}
+
+	if err := namedGet(ctx, tx, updatedIntake, sqlqueries.SystemIntakeGRBReviewType.Update, args{
+		"system_intake_id": systemIntakeID,
+		"grb_review_type":  reviewType,
+		"eua_user_id":      appcontext.Principal(ctx).ID(),
+	}); err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"error updating system intake GRB reviewer",
+			zap.String("system_intake_id", systemIntakeID.String()),
+			zap.String("grb_review_type", reviewType.String()),
+		)
+
+		return nil, err
+	}
+
+	return &models.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
+	}, nil
 }
