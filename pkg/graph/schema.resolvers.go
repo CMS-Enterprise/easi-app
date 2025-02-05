@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1988,7 +1987,7 @@ func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileURL(ctx context
 	}
 
 	if links == nil {
-		return nil, fmt.Errorf("unexpected nil links data when getting transcript file URL for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, nil
 	}
 
 	if links.TranscriptS3Key == nil {
@@ -2011,7 +2010,7 @@ func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileStatus(ctx cont
 	}
 
 	if links == nil {
-		return nil, fmt.Errorf("unexpected nil links data when checking transcript file status for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, nil
 	}
 
 	if links.TranscriptS3Key == nil {
@@ -2034,7 +2033,7 @@ func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileURL(ctx c
 	}
 
 	if links == nil {
-		return nil, fmt.Errorf("unexpected nil links data when getting presentation deck URL for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, nil
 	}
 
 	if links.PresentationDeckS3Key == nil {
@@ -2057,7 +2056,7 @@ func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileStatus(ct
 	}
 
 	if links == nil {
-		return nil, fmt.Errorf("unexpected nil links data when checking presentation file status for system intake id: %s", obj.SystemIntakeID.String())
+		return nil, nil
 	}
 
 	if links.PresentationDeckS3Key == nil {
