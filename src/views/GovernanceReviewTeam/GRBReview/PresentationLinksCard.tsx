@@ -15,7 +15,7 @@ import { useDeleteSystemIntakeGRBPresentationLinksMutation } from 'gql/gen/graph
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import Alert from 'components/shared/Alert';
-import ExternalLinkModal from 'components/shared/ExternalLinkModal';
+import ExternalDocumentLinkModal from 'components/shared/ExternalDocumentLinkModal';
 import IconLink from 'components/shared/IconLink';
 import useMessage from 'hooks/useMessage';
 import { SystemIntake } from 'queries/types/SystemIntake';
@@ -242,7 +242,7 @@ function PresentationLinksCard({
       </Modal>
 
       {/* Modal for external links */}
-      <ExternalLinkModal
+      <ExternalDocumentLinkModal
         isOpen={isExternalModalOpen}
         url={externalUrl}
         closeModal={() => setExternalModalOpen(false)}
