@@ -136,7 +136,10 @@ const PresentationLinksForm = ({
         </Alert>
       )}
 
-      <Grid col={6} className="margin-top-7 margin-bottom-10 padding-bottom-3">
+      <Grid
+        tablet={{ col: 6 }}
+        className="margin-top-7 margin-bottom-10 padding-bottom-3"
+      >
         <h1 className="margin-bottom-1">
           {t('presentationLinks.heading', { context: formType })}
         </h1>
