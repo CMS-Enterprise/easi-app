@@ -200,7 +200,7 @@ const PresentationLinksForm = ({
                 className="margin-top-105"
                 // Default to upload document tab when document has been uploaded
                 defaultActiveTab={
-                  defaultValues?.transcriptFileData
+                  defaultValues?.transcriptFileData?.name
                     ? t('presentationLinks.uploadDocument')
                     : t('presentationLinks.addLink')
                 }
