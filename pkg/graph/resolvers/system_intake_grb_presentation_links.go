@@ -33,16 +33,16 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 		links.SystemIntakeID = input.SystemIntakeID
 	}
 
-	if input.RecordingLink != nil {
-		links.RecordingLink = input.RecordingLink
+	if value, ok := input.RecordingLink.ValueOK(); ok {
+		links.RecordingLink = value
 	}
 
-	if input.RecordingPasscode != nil {
-		links.RecordingPasscode = input.RecordingPasscode
+	if value, ok := input.RecordingPasscode.ValueOK(); ok {
+		links.RecordingPasscode = value
 	}
 
-	if input.TranscriptLink != nil {
-		links.TranscriptLink = input.TranscriptLink
+	if value, ok := input.TranscriptLink.ValueOK(); ok {
+		links.TranscriptLink = value
 	}
 
 	links.ModifiedBy = &userID

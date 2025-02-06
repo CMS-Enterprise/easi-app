@@ -8809,9 +8809,9 @@ One of the optional link/files values is required to pass the database constrain
 """
 input SystemIntakeGRBPresentationLinksInput {
   systemIntakeID: UUID!
-  recordingLink: String
-  recordingPasscode: String
-  transcriptLink: String
+  recordingLink: String @goField(omittable: true)
+  recordingPasscode: String @goField(omittable: true)
+  transcriptLink: String @goField(omittable: true)
   transcriptFileData: Upload @goField(omittable: true)
   presentationDeckFileData: Upload @goField(omittable: true)
 }
@@ -62944,21 +62944,21 @@ func (ec *executionContext) unmarshalInputSystemIntakeGRBPresentationLinksInput(
 			if err != nil {
 				return it, err
 			}
-			it.RecordingLink = data
+			it.RecordingLink = graphql.OmittableOf(data)
 		case "recordingPasscode":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recordingPasscode"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RecordingPasscode = data
+			it.RecordingPasscode = graphql.OmittableOf(data)
 		case "transcriptLink":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("transcriptLink"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.TranscriptLink = data
+			it.TranscriptLink = graphql.OmittableOf(data)
 		case "transcriptFileData":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("transcriptFileData"))
 			data, err := ec.unmarshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)

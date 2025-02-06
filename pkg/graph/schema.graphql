@@ -710,9 +710,9 @@ One of the optional link/files values is required to pass the database constrain
 """
 input SystemIntakeGRBPresentationLinksInput {
   systemIntakeID: UUID!
-  recordingLink: String
-  recordingPasscode: String
-  transcriptLink: String
+  recordingLink: String @goField(omittable: true)
+  recordingPasscode: String @goField(omittable: true)
+  transcriptLink: String @goField(omittable: true)
   transcriptFileData: Upload @goField(omittable: true)
   presentationDeckFileData: Upload @goField(omittable: true)
 }

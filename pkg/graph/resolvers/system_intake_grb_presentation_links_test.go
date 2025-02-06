@@ -31,9 +31,9 @@ func createSystemIntakeGRBPresentationLinkUpload(suite *ResolverSuite, systemInt
 	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
 	gqlInput := models.SystemIntakeGRBPresentationLinksInput{
 		SystemIntakeID:    systemIntakeID,
-		RecordingLink:     helpers.PointerTo("recording link"),
-		RecordingPasscode: helpers.PointerTo("recording pass"),
-		TranscriptLink:    helpers.PointerTo("transcript link"),
+		RecordingLink:     graphql.OmittableOf[*string](helpers.PointerTo("recording link")),
+		RecordingPasscode: graphql.OmittableOf[*string](helpers.PointerTo("recording pass")),
+		TranscriptLink:    graphql.OmittableOf[*string](helpers.PointerTo("transcript link")),
 		TranscriptFileData: graphql.OmittableOf[*graphql.Upload](&graphql.Upload{
 			File:        fileToUpload,
 			Filename:    "test transcript link upload.txt",
