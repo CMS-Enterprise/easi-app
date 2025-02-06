@@ -197,6 +197,7 @@ export interface GetSystemIntake_systemIntake_grbPresentationLinks {
   transcriptFileName: string | null;
   transcriptFileStatus: SystemIntakeDocumentStatus | null;
   transcriptFileURL: string | null;
+  transcriptLink: string | null;
   presentationDeckFileName: string | null;
   presentationDeckFileStatus: SystemIntakeDocumentStatus | null;
   presentationDeckFileURL: string | null;

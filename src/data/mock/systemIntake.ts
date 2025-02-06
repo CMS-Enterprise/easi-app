@@ -172,6 +172,7 @@ export const grbPresentationLinks: SystemIntake['grbPresentationLinks'] = {
   recordingPasscode: '123456',
   transcriptFileName: 'transcript.doc',
   transcriptFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
+  transcriptLink: 'https://link.com',
   transcriptFileURL: 'https://google.com',
   presentationDeckFileName: 'presentationDeck.pptx',
   presentationDeckFileStatus: SystemIntakeDocumentStatus.AVAILABLE,

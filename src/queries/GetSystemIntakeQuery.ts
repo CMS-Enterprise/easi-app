@@ -166,6 +166,7 @@ export const SystemIntake = gql`
       transcriptFileName
       transcriptFileStatus
       transcriptFileURL
+      transcriptLink
       presentationDeckFileName
       presentationDeckFileStatus
       presentationDeckFileURL
