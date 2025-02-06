@@ -204,6 +204,11 @@
       margin-bottom: 0;
     }
   }
+  // Remove max width on alert body
+  &.usa-alert .usa-alert__body {
+    max-width: none;
+    display: inline-block;
+  }
 }
 
 .bg-transparent {
@@ -215,6 +220,19 @@
   position: sticky;
   position: -webkit-sticky;
   top: -1px;
+}
+
+.top-8 {
+  top: 4rem !important;
+}
+
+.usa-button-group {
+  align-items: center;
+}
+
+// Fixes button icon margin with updated USWDS
+.usa-button .usa-icon {
+  margin-right: 0rem !important;
 }
 
 // Fixes button group item margins when nested inside .usa-list
@@ -280,14 +298,10 @@
   }
 }
 
-.usa-table thead th {
-  background-color: transparent !important;
+.usa-table th {
+  font-weight: 400;
 }
 
-.usa-alert__body > * {
-  margin-left: 0 !important;
-}
-
-.usa-alert__text > * {
-  margin-left: 0 !important;
+.usa-site-alert .usa-alert .usa-alert__body {
+  display: flex;
 }

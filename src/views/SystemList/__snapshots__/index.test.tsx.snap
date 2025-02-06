@@ -235,7 +235,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                         />
                       </svg>
                       <svg
-                        class="usa-icon margin-left-05 position-absolute"
+                        class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
                         height="1em"
@@ -266,7 +266,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     >
                       Acronym
                       <svg
-                        class="usa-icon margin-left-05 position-absolute"
+                        class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
                         height="1em"
@@ -297,7 +297,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     >
                       System name
                       <svg
-                        class="usa-icon margin-left-05 position-absolute"
+                        class="usa-icon margin-left-05"
                         data-testid="caret--up"
                         focusable="false"
                         height="1em"
@@ -328,7 +328,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     >
                       CMS component
                       <svg
-                        class="usa-icon margin-left-05 position-absolute"
+                        class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
                         height="1em"

@@ -17,6 +17,7 @@ services:
     environment:
       - CEDAR_CORE_MOCK
       - CEDAR_INTAKE_ENABLED
+      - CEDAR_INTAKE_PUBLISHER_ENABLED
       - CEDAR_API_KEY
       - CEDAR_API_URL
       - CEDAR_PROXY_URL=cedarproxy:8001

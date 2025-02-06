@@ -24,7 +24,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
             role="row"
           >
             <th
-              aria-sort="none"
+              aria-sort="descending"
               class="table-header"
               colspan="1"
               role="columnheader"
@@ -39,8 +39,8 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Submission date
                 <svg
-                  class="usa-icon margin-left-05 position-absolute"
-                  data-testid="caret--sort"
+                  class="usa-icon margin-left-05"
+                  data-testid="caret--down"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -49,7 +49,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                    d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
                   />
                 </svg>
               </button>
@@ -70,7 +70,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Request name
                 <svg
-                  class="usa-icon margin-left-05 position-absolute"
+                  class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
                   height="1em"
@@ -101,7 +101,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Governance
                 <svg
-                  class="usa-icon margin-left-05 position-absolute"
+                  class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
                   height="1em"
@@ -132,7 +132,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Status
                 <svg
-                  class="usa-icon margin-left-05 position-absolute"
+                  class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
                   height="1em"
@@ -163,7 +163,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Upcoming meeting date
                 <svg
-                  class="usa-icon margin-left-05 position-absolute"
+                  class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
                   height="1em"
@@ -194,7 +194,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Related systems
                 <svg
-                  class="usa-icon margin-left-05 position-absolute"
+                  class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
                   height="1em"
@@ -268,7 +268,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
       aria-live="polite"
       class="usa-sr-only usa-table__announcement-region"
     >
-      Requests table reset to default sort order
+      Requests table sorted by Submission date descending
     </div>
   </div>
 </DocumentFragment>
