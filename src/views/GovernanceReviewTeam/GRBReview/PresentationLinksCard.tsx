@@ -149,22 +149,24 @@ function PresentationLinksCard({
               </div>
             </>
           ) : (
-            <div className="margin-top-neg-1">
-              <UswdsReactLink
-                className="margin-right-2"
-                to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
-              >
-                {t('asyncPresentation.editPresentationLinks')}
-              </UswdsReactLink>
-              <Button
-                type="button"
-                unstyled
-                className="text-error"
-                onClick={() => setRemovePresentationLinksModalOpen(true)}
-              >
-                {t('asyncPresentation.removeAllPresentationLinks')}
-              </Button>
-            </div>
+            isITGovAdmin && (
+              <div className="margin-top-neg-1">
+                <UswdsReactLink
+                  className="margin-right-2"
+                  to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
+                >
+                  {t('asyncPresentation.editPresentationLinks')}
+                </UswdsReactLink>
+                <Button
+                  type="button"
+                  unstyled
+                  className="text-error"
+                  onClick={() => setRemovePresentationLinksModalOpen(true)}
+                >
+                  {t('asyncPresentation.removeAllPresentationLinks')}
+                </Button>
+              </div>
+            )
           )}
         </CardBody>
         <CardFooter>

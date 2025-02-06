@@ -1,5 +1,4 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
@@ -8,7 +7,6 @@ import { render, screen } from '@testing-library/react';
 import { grbPresentationLinks as grbPresentationLinksMock } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import { SystemIntakeDocumentStatus } from 'types/graphql-global-types';
-import easiMockStore from 'utils/testing/easiMockStore';
 import { getExpectedAlertType } from 'utils/testing/helpers';
 
 import ITGovAdminContext from '../ITGovAdminContext';
@@ -21,34 +19,23 @@ describe('Async Presentation Links Card', () => {
   function renderCard(
     grbPresentationLinks: PresentationLinksCardProps['grbPresentationLinks'],
     isAdmin: boolean = true
-    // Default to render in the itgo admin context since thats where most of the render conditions are
-    // groups: JobCode[] = ['EASI_D_GOVTEAM', 'EASI_P_GOVTEAM']
   ) {
-    // const mockStore = easiMockStore({
-    //   groups
-    // });
-    const mockStore = easiMockStore({
-      groups: []
-    });
-
     const { systemIntakeID } = grbPresentationLinksMock!;
 
     return render(
       <MemoryRouter
         initialEntries={[`/it-governance/${systemIntakeID}/grb-review`]}
       >
-        <Provider store={mockStore}>
-          <MessageProvider>
-            <MockedProvider>
-              <ITGovAdminContext.Provider value={isAdmin}>
-                <PresentationLinksCard
-                  systemIntakeID={systemIntakeID}
-                  grbPresentationLinks={grbPresentationLinks}
-                />
-              </ITGovAdminContext.Provider>
-            </MockedProvider>
-          </MessageProvider>
-        </Provider>
+        <MessageProvider>
+          <MockedProvider>
+            <ITGovAdminContext.Provider value={isAdmin}>
+              <PresentationLinksCard
+                systemIntakeID={systemIntakeID}
+                grbPresentationLinks={grbPresentationLinks}
+              />
+            </ITGovAdminContext.Provider>
+          </MockedProvider>
+        </MessageProvider>
       </MemoryRouter>
     );
   }
@@ -126,6 +113,17 @@ describe('Async Presentation Links Card', () => {
 
     expect(
       screen.queryByRole('header', { name: 'Asynchronous presentation' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('wont show link buttons if not admin', () => {
+    renderCard(grbPresentationLinksMock, false);
+
+    expect(
+      screen.queryByRole('link', { name: 'Edit presentation links' })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Remove all presentation links' })
     ).not.toBeInTheDocument();
   });
 });
