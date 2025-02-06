@@ -33,43 +33,58 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 		links.SystemIntakeID = input.SystemIntakeID
 	}
 
-	if input.RecordingLink != nil {
-		links.RecordingLink = input.RecordingLink
+	if value, ok := input.RecordingLink.ValueOK(); ok {
+		links.RecordingLink = value
 	}
 
-	if input.RecordingPasscode != nil {
-		links.RecordingPasscode = input.RecordingPasscode
+	if value, ok := input.RecordingPasscode.ValueOK(); ok {
+		links.RecordingPasscode = value
 	}
 
-	if input.TranscriptLink != nil {
-		links.TranscriptLink = input.TranscriptLink
+	if value, ok := input.TranscriptLink.ValueOK(); ok {
+		links.TranscriptLink = value
 	}
 
 	links.ModifiedBy = &userID
 
 	if value, ok := input.TranscriptFileData.ValueOK(); ok {
-		// set this to nil in order to use s3key instead
-		links.TranscriptLink = nil
+		// if no file is attached
+		if value == nil {
+			// remove references to file
+			links.TranscriptFileName = nil
+			links.TranscriptS3Key = nil
+		} else {
+			// set this to nil in order to use s3key instead
+			links.TranscriptLink = nil
 
-		links.TranscriptFileName = &value.Filename
+			links.TranscriptFileName = &value.Filename
 
-		s3Key, err := handleS3Upload(s3Client, value)
-		if err != nil {
-			return nil, err
+			s3Key, err := handleS3Upload(s3Client, value)
+			if err != nil {
+				return nil, err
+			}
+
+			links.TranscriptS3Key = &s3Key
 		}
 
-		links.TranscriptS3Key = &s3Key
 	}
 
 	if value, ok := input.PresentationDeckFileData.ValueOK(); ok {
-		links.PresentationDeckFileName = &value.Filename
+		// if no file is attached
+		if value == nil {
+			// remove references to file
+			links.PresentationDeckFileName = nil
+			links.PresentationDeckS3Key = nil
+		} else {
+			links.PresentationDeckFileName = &value.Filename
 
-		s3Key, err := handleS3Upload(s3Client, value)
-		if err != nil {
-			return nil, err
+			s3Key, err := handleS3Upload(s3Client, value)
+			if err != nil {
+				return nil, err
+			}
+
+			links.PresentationDeckS3Key = &s3Key
 		}
-
-		links.PresentationDeckS3Key = &s3Key
 	}
 
 	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
