@@ -22,6 +22,9 @@
     .usa-alert {
       border-left: none;
     }
+    .usa-alert__body {
+      max-width: 64rem;
+    }
   }
   .trb-requests-table {
     th:last-child, tr:last-child {

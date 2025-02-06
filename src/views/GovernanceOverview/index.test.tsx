@@ -1,6 +1,5 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import renderer, { act } from 'react-test-renderer';
 import { render } from '@testing-library/react';
 
 import GovernanceOverview from './index';
