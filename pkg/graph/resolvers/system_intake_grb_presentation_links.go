@@ -48,7 +48,7 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	links.ModifiedBy = &userID
 
 	if value, ok := input.TranscriptFileData.ValueOK(); ok {
-
+		// if no file is attached
 		if value == nil {
 			// remove references to file
 			links.TranscriptFileName = nil
@@ -70,6 +70,7 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	}
 
 	if value, ok := input.PresentationDeckFileData.ValueOK(); ok {
+		// if no file is attached
 		if value == nil {
 			// remove references to file
 			links.PresentationDeckFileName = nil
