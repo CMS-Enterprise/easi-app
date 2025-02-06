@@ -328,7 +328,7 @@ func makeCedarIntakeClient() *intake.Client {
 	cedarAPIHost := os.Getenv(appconfig.CEDARAPIURL)
 	cedarAPIKey := os.Getenv(appconfig.CEDARAPIKey)
 
-	client := intake.NewClient(cedarAPIHost, cedarAPIKey, false)
+	client := intake.NewClient(cedarAPIHost, cedarAPIKey, false, false)
 	return client
 }
 

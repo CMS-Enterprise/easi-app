@@ -48,7 +48,8 @@ const prepareTrbConsultMeeting = {
       'any requirements, recommendations, considerations, and other next steps for your system or solution.',
       'additional teams or points of contact to reach out to who may be able to help you further',
       'suggestions for systems, services, or solutions to use to implement your idea or solve your problem',
-      'a request for a follow-up consultation session'
+      'a request for a follow-up consultation session',
+      'submission of requirements to CFACTS if those requirements are not implemented, or are still in the process of implementation, within the provided timeline. The TRB will inform you if requirements will be submitted.'
     ]
   },
   help: {
