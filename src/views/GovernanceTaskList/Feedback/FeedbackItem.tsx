@@ -7,10 +7,6 @@ import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedba
 import { GovernanceRequestFeedbackTargetForm } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
-// function FeedbackListItem({}: { children?: React.ReactNode }) {
-//   return <div>FeedbackItem</div>;
-// }
-
 /**
  * IT Governance request feedback item
  */
