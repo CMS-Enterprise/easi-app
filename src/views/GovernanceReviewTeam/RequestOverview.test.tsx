@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
+import { SystemIntakeActionType } from 'gql/gen/graphql';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
@@ -14,7 +15,9 @@ import {
 } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
+import { GetAdminNotesAndActions } from 'queries/types/GetAdminNotesAndActions';
 
+import Actions from './Actions';
 import RequestOverview from './RequestOverview';
 
 vi.mock('@okta/okta-react', () => ({
@@ -66,6 +69,62 @@ const defaultStore = mockStore({
   }
 });
 
+const adminNotesAndActionsQueryData: GetAdminNotesAndActions = {
+  systemIntake: {
+    __typename: 'SystemIntake',
+    id: systemIntake.id,
+    lcid: null,
+    notes: [
+      {
+        __typename: 'SystemIntakeNote',
+        id: '074632f8-44fd-4c57-851c-4577ec1af230',
+        createdAt: '2021-07-07T20:27:04Z',
+        content: 'a clever remark',
+        author: {
+          __typename: 'SystemIntakeNoteAuthor',
+          name: 'Author Name',
+          eua: 'QQQQ'
+        },
+        editor: {
+          __typename: 'UserInfo',
+          commonName: 'Jerry Seinfeld'
+        },
+        modifiedBy: 'SF13',
+        modifiedAt: '',
+        isArchived: false
+      }
+    ],
+    actions: [
+      {
+        __typename: 'SystemIntakeAction',
+        id: '9c3e767b-f1af-46ff-93cf-0ace61f30e89',
+        createdAt: '2021-07-07T20:32:04Z',
+        feedback: 'This business case needs feedback',
+        type: SystemIntakeActionType.PROVIDE_FEEDBACK_NEED_BIZ_CASE,
+        lcidExpirationChange: null,
+        actor: {
+          __typename: 'SystemIntakeActionActor',
+          name: 'Actor Name',
+          email: 'actor@example.com'
+        }
+      },
+      {
+        __typename: 'SystemIntakeAction',
+        id: '7e94bf26-70ac-44f2-af8c-179e34b960cf',
+        createdAt: '2021-07-07T20:22:04Z',
+        feedback: null,
+        type: SystemIntakeActionType.SUBMIT_INTAKE,
+        lcidExpirationChange: null,
+        actor: {
+          __typename: 'SystemIntakeActionActor',
+          name: 'Actor Name',
+          email: 'actor@example.com'
+        }
+      }
+    ]
+  }
+};
+
 describe('Governance Review Team', () => {
   const adminNotesAndActionsQuery = {
     request: {
@@ -75,53 +134,7 @@ describe('Governance Review Team', () => {
       }
     },
     result: {
-      data: {
-        systemIntake: {
-          id: systemIntake.id,
-          lcid: null,
-          notes: [
-            {
-              id: '074632f8-44fd-4c57-851c-4577ec1af230',
-              createdAt: '2021-07-07T20:27:04Z',
-              content: 'a clever remark',
-              author: {
-                name: 'Author Name',
-                eua: 'QQQQ'
-              },
-              editor: {
-                commonName: 'Jerry Seinfeld'
-              },
-              modifiedBy: 'SF13',
-              modifiedAt: '',
-              isArchived: false
-            }
-          ],
-          actions: [
-            {
-              id: '9c3e767b-f1af-46ff-93cf-0ace61f30e89',
-              createdAt: '2021-07-07T20:32:04Z',
-              feedback: 'This business case needs feedback',
-              type: 'PROVIDE_FEEDBACK_NEED_BIZ_CASE',
-              lcidExpirationChange: null,
-              actor: {
-                name: 'Actor Name',
-                email: 'actor@example.com'
-              }
-            },
-            {
-              id: '7e94bf26-70ac-44f2-af8c-179e34b960cf',
-              createdAt: '2021-07-07T20:22:04Z',
-              feedback: null,
-              type: 'SUBMIT_INTAKE',
-              lcidExpirationChange: null,
-              actor: {
-                name: 'Actor Name',
-                email: 'actor@example.com'
-              }
-            }
-          ]
-        }
-      }
+      data: adminNotesAndActionsQueryData
     }
   };
 
@@ -244,17 +257,18 @@ describe('Governance Review Team', () => {
           mocks={[getSystemIntakeQuery(), getGovernanceTaskListQuery()]}
           addTypename={false}
         >
-          <Provider store={defaultStore}>
-            <MessageProvider>
-              <Route path="/it-governance/:systemId/actions">
-                <RequestOverview grbReviewers={[]} />
-              </Route>
-            </MessageProvider>
-          </Provider>
+          <MessageProvider>
+            <Route path="/it-governance/:systemId/actions">
+              <Actions systemIntake={systemIntake} />
+            </Route>
+          </MessageProvider>
         </MockedProvider>
       </MemoryRouter>
     );
+
     await waitForPageLoad('grt-actions-view');
+
+    // screen.debug(undefined, Infinity);
   });
 });
 

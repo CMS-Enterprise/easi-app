@@ -20,7 +20,26 @@
   resolved "https://registry.yarnpkg.com/@apollo/cache-control-types/-/cache-control-types-1.0.3.tgz#5da62cf64c3b4419dabfef4536b57a40c8ff0b47"
   integrity sha512-F17/vCp7QVwom9eG7ToauIKdAxpSoadsJnqIfyryLFSkLSOEqu+eC5Z3N8OXcUVStuOMcNHlyraRsA6rRICu4g==
 
-"@apollo/client@^3.12.8", "@apollo/client@^3.7.0":
+"@apollo/client@^3.12.5":
+  version "3.12.9"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.12.9.tgz#fb7afc254bc4a5bfeeae905426edcb9d3e643fae"
+  integrity sha512-rH2Vzfbp+IR0l/xAjUIbDH4/sqBzPATMbzXv/L36E33yhp40yM5LFJnC6cc4YDPUH2gom7Dk4BrYZVLbFpYTsA==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.1"
+    "@wry/caches" "^1.0.0"
+    "@wry/equality" "^0.5.6"
+    "@wry/trie" "^0.5.0"
+    graphql-tag "^2.12.6"
+    hoist-non-react-statics "^3.3.2"
+    optimism "^0.18.0"
+    prop-types "^15.7.2"
+    rehackt "^0.1.0"
+    symbol-observable "^4.0.0"
+    ts-invariant "^0.10.3"
+    tslib "^2.3.0"
+    zen-observable-ts "^1.2.5"
+
+"@apollo/client@^3.7.0":
   version "3.12.8"
   resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.12.8.tgz#99670386104f77ceba03f7e3dc0d91813f03cd3c"
   integrity sha512-053z5eCM7zNl81Lxs/SqHv8e+x3sszrtmGS2TNuPW0ZTZzmKATMsIsoblx1Kt0E67Ze3jb99JSPiQHG9ozGc3g==
