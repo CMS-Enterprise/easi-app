@@ -10888,8 +10888,6 @@ directive @goModel(
 
 # https://gqlgen.com/config/#inline-config-with-directives
 directive @goField(
-  forceResolver: Boolean
-  name: String
   omittable: Boolean
 ) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
