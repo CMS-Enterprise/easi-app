@@ -1873,7 +1873,7 @@ export type SystemIntake = {
   grbMeetingState: SystemIntakeMeetingState;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
   /** GRB Review Type */
-  grbReviewType?: Maybe<SystemIntakeGRBReviewType>;
+  grbReviewType: SystemIntakeGRBReviewType;
   grbReviewers: Array<SystemIntakeGRBReviewer>;
   grtDate?: Maybe<Scalars['Time']['output']>;
   /** This is a calculated state based on if a date exists for the GRT Meeting date */

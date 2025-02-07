@@ -4,8 +4,4 @@ CREATE TYPE grb_review_type AS ENUM (
   );
 
 ALTER TABLE system_intakes
-  ADD COLUMN grb_review_type grb_review_type;
-
-UPDATE system_intakes
-  SET grb_review_type = 'STANDARD'
-  WHERE grb_review_type IS NULL;
+  ADD COLUMN grb_review_type grb_review_type NOT NULL DEFAULT 'STANDARD';

@@ -75,7 +75,7 @@ func UpdateIntake(
 		intake.Step = models.SystemIntakeStepGRBMEETING
 
 		if grbReviewType != nil {
-			intake.GrbReviewType = grbReviewType
+			intake.GrbReviewType = *grbReviewType
 		}
 
 		if newMeetingDate != nil {

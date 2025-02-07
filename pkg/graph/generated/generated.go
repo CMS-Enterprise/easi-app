@@ -8758,7 +8758,7 @@ type SystemIntake {
   """
   GRB Review Type
   """
-  grbReviewType: SystemIntakeGRBReviewType
+  grbReviewType: SystemIntakeGRBReviewType!
 }
 
 type SystemIntakeContractNumber {
@@ -44623,11 +44623,14 @@ func (ec *executionContext) _SystemIntake_grbReviewType(ctx context.Context, fie
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.SystemIntakeGRBReviewType)
+	res := resTmp.(models.SystemIntakeGRBReviewType)
 	fc.Result = res
-	return ec.marshalOSystemIntakeGRBReviewType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeGRBReviewType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_grbReviewType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -69551,6 +69554,9 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "grbReviewType":
 			out.Values[i] = ec._SystemIntake_grbReviewType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -76340,13 +76346,19 @@ func (ec *executionContext) marshalNSystemIntakeGRBReviewDiscussionPost2ᚖgithu
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeGRBReviewType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx context.Context, v any) (models.SystemIntakeGRBReviewType, error) {
-	var res models.SystemIntakeGRBReviewType
-	err := res.UnmarshalGQL(v)
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeGRBReviewType(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNSystemIntakeGRBReviewType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeGRBReviewType) graphql.Marshaler {
-	return v
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNSystemIntakeGRBReviewer2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewer(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeGRBReviewer) graphql.Marshaler {
@@ -78897,16 +78909,17 @@ func (ec *executionContext) unmarshalOSystemIntakeGRBReviewType2ᚖgithubᚗcom�
 	if v == nil {
 		return nil, nil
 	}
-	var res = new(models.SystemIntakeGRBReviewType)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeGRBReviewType(tmp)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOSystemIntakeGRBReviewType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeGRBReviewType) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return v
+	res := graphql.MarshalString(string(*v))
+	return res
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeGRBReviewerRole2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerRole(ctx context.Context, v any) (*models.SystemIntakeGRBReviewerRole, error) {

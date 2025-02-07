@@ -106,7 +106,7 @@ func (s *Store) UpdateSystemIntakeGRBReviewType(
 		appcontext.ZLogger(ctx).Error(
 			"error updating system intake GRB reviewer",
 			zap.String("system_intake_id", systemIntakeID.String()),
-			zap.String("grb_review_type", reviewType.String()),
+			zap.String("grb_review_type", string(reviewType)),
 		)
 
 		return nil, err

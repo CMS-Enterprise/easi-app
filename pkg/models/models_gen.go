@@ -1174,47 +1174,6 @@ func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-type SystemIntakeGRBReviewType string
-
-const (
-	SystemIntakeGRBReviewTypeStandard SystemIntakeGRBReviewType = "STANDARD"
-	SystemIntakeGRBReviewTypeAsync    SystemIntakeGRBReviewType = "ASYNC"
-)
-
-var AllSystemIntakeGRBReviewType = []SystemIntakeGRBReviewType{
-	SystemIntakeGRBReviewTypeStandard,
-	SystemIntakeGRBReviewTypeAsync,
-}
-
-func (e SystemIntakeGRBReviewType) IsValid() bool {
-	switch e {
-	case SystemIntakeGRBReviewTypeStandard, SystemIntakeGRBReviewTypeAsync:
-		return true
-	}
-	return false
-}
-
-func (e SystemIntakeGRBReviewType) String() string {
-	return string(e)
-}
-
-func (e *SystemIntakeGRBReviewType) UnmarshalGQL(v any) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = SystemIntakeGRBReviewType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SystemIntakeGRBReviewType", str)
-	}
-	return nil
-}
-
-func (e SystemIntakeGRBReviewType) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
 type SystemIntakeGRBReviewerRole string
 
 const (

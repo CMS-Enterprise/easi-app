@@ -331,7 +331,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateGrbReviewType() {
 
 	s.Equal(
 		models.SystemIntakeGRBReviewTypeAsync,
-		*updatedPayload.SystemIntake.GrbReviewType,
+		updatedPayload.SystemIntake.GrbReviewType,
 	)
 }
 
