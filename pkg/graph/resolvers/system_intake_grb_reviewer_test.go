@@ -309,7 +309,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateGrbReviewType() {
 	s.NotNil(systemIntake)
 
 	s.Equal(
-		(*models.SystemIntakeGRBReviewType)(nil),
+		models.SystemIntakeGRBReviewTypeStandard,
 		systemIntake.GrbReviewType,
 	)
 
