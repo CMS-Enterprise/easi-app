@@ -710,11 +710,11 @@ One of the optional link/files values is required to pass the database constrain
 """
 input SystemIntakeGRBPresentationLinksInput {
   systemIntakeID: UUID!
-  recordingLink: String
-  recordingPasscode: String
-  transcriptLink: String
-  transcriptFileData: Upload
-  presentationDeckFileData: Upload
+  recordingLink: String @goField(omittable: true)
+  recordingPasscode: String @goField(omittable: true)
+  transcriptLink: String @goField(omittable: true)
+  transcriptFileData: Upload @goField(omittable: true)
+  presentationDeckFileData: Upload @goField(omittable: true)
 }
 
 input DeleteSystemIntakeGRBPresentationLinksInput {
@@ -2786,6 +2786,11 @@ directive @goModel(
   models: [String!]
   forceGenerate: Boolean
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
+
+# https://gqlgen.com/config/#inline-config-with-directives
+directive @goField(
+  omittable: Boolean
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
 """
 A user role associated with a job code

@@ -121,7 +121,7 @@ const home = {
         link: "What's included in the Portfolio Update Report?",
         heading: 'About the Portfolio Update Report',
         content:
-          '<p>Downloading the Portfolio Update Report will generate and download a csv file of all IT Governance requests within the date range you select. The dates selected are based on the last admin note date.</p><p>The Report contains the following fields: Project name, Requester component, Last admin note, Project Manager name, Business Owner name, Business Owner component, Business need, Business solution, Process status, Funding source and number, Current annual spend, Planned annual spend, Contractor(s), Contract vehicle, Period of performance start, Period of performance end, Status, LCID scope, Admin lead, Updated at, and Submitted at.</p>'
+          '<p>Downloading the Portfolio Update Report will generate and download a comma-separated (CSV) file of all IT Governance requests within the date range you select. The dates selected are based on the last admin team note date.</p><p>The Report contains the following fields: Project name, Requester name, EUA ID, Requester component, Last admin team note, Product Manager name, Business Owner name, Business Owner component, Business need, Business solution, Process status, AI tech involved, Funding number and source, Current annual spend, Current annual spend IT portion, Planned annual spend, Planned annual spend IT portion, Contractor(s), Contract vehicle, Period of performance start, Period of performance end, Status, LCID, LCID scope, LCID expiration date, Admin lead, Updated at, and Submitted at.</p>'
       },
       configureReport: {
         button: 'Configure Portfolio Update Report',

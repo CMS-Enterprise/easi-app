@@ -38,3 +38,8 @@ The CEDAR Intake API has two endpoints that can be used together to verify that 
 
 1. Use Postman to call `GET /intake/status/client/{id}?clientStatus=Initiated&version=1`, where `id` is the `ClientID` of the entity submitted (usually the ID of the top-level entity). If CEDAR received the payload, it will return an HTTP 200, and the body will contain a `cedarId` field. If it did not receive it, it will return an HTTP 400 with the error message "Intake could not be found with those parameters".
 1. Use Postman to call `GET /intake/cedar/{id}`, where `id` is the value of the `cedarId` field from the previous response. The response should contain a `body` field containing the payload that was sent to CEDAR Intake.
+
+## Publishing data to cedar on a CRON job
+
+The client has a `PublishOnSchedule` function which sends data to CEDAR. It relies on the environment variable `CEDAR_INTAKE_PUBLISHER_ENABLED` to conditionally to publish data to CEDAR on a schedule. `True` will publish it. Currently the timing is hard coded to be Fridays at noon.
+ 

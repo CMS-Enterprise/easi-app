@@ -702,20 +702,7 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 
 // SetSystemIntakeGRBPresentationLinks is the resolver for the setSystemIntakeGRBPresentationLinks field.
 func (r *mutationResolver) SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error) {
-	mockPresentationLinks := models.NewSystemIntakeGRBPresentationLinks(appcontext.Principal(ctx).Account().ID)
-	mockPresentationLinks.SystemIntakeID = uuid.MustParse("5af245bc-fc54-4677-bab1-1b3e798bb43c")
-	mockPresentationLinks.CreatedAt = time.Now()
-	mockPresentationLinks.RecordingLink = input.RecordingLink
-	mockPresentationLinks.RecordingPasscode = input.RecordingPasscode
-	mockPresentationLinks.TranscriptLink = input.TranscriptLink
-
-	if input.TranscriptFileData != nil {
-		mockPresentationLinks.TranscriptFileName = &input.TranscriptFileData.Filename
-	}
-	if input.PresentationDeckFileData != nil {
-		mockPresentationLinks.PresentationDeckFileName = &input.PresentationDeckFileData.Filename
-	}
-	return mockPresentationLinks, nil
+	return resolvers.SetSystemIntakeGRBPresentationLinks(ctx, r.store, r.s3Client, input)
 }
 
 // DeleteSystemIntakeGRBPresentationLinks is the resolver for the deleteSystemIntakeGRBPresentationLinks field.
@@ -1952,16 +1939,7 @@ func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.S
 
 // GrbPresentationLinks is the resolver for the grbPresentationLinks field.
 func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error) {
-	mockPresentationLinks := models.NewSystemIntakeGRBPresentationLinks(appcontext.Principal(ctx).Account().ID)
-	mockPresentationLinks.SystemIntakeID = uuid.MustParse("5af245bc-fc54-4677-bab1-1b3e798bb43c")
-	mockPresentationLinks.CreatedBy = appcontext.Principal(ctx).Account().ID
-	mockPresentationLinks.CreatedAt = time.Now()
-	mockPresentationLinks.RecordingLink = helpers.PointerTo("https://google.com")
-	mockPresentationLinks.RecordingPasscode = helpers.PointerTo("123456")
-	mockPresentationLinks.TranscriptLink = nil
-	mockPresentationLinks.TranscriptFileName = helpers.PointerTo("transcript.doc")
-	mockPresentationLinks.PresentationDeckFileName = helpers.PointerTo("presentationDeck.pptx")
-	return mockPresentationLinks, nil
+	return dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.ID)
 }
 
 // DocumentType is the resolver for the documentType field.
@@ -2003,22 +1981,22 @@ func (r *systemIntakeDocumentResolver) CanView(ctx context.Context, obj *models.
 
 // TranscriptFileURL is the resolver for the transcriptFileURL field.
 func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error) {
-	return helpers.PointerTo("https://google.com"), nil
+	return resolvers.SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx, r.s3Client, obj.SystemIntakeID)
 }
 
 // TranscriptFileStatus is the resolver for the transcriptFileStatus field.
 func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error) {
-	return helpers.PointerTo(models.SystemIntakeDocumentStatusPending), nil
+	return resolvers.SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx, r.s3Client, obj.SystemIntakeID)
 }
 
 // PresentationDeckFileURL is the resolver for the presentationDeckFileURL field.
 func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error) {
-	return helpers.PointerTo("https://google.com"), nil
+	return resolvers.SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx, r.s3Client, obj.SystemIntakeID)
 }
 
 // PresentationDeckFileStatus is the resolver for the presentationDeckFileStatus field.
 func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error) {
-	return helpers.PointerTo(models.SystemIntakeDocumentStatusPending), nil
+	return resolvers.SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx, r.s3Client, obj.SystemIntakeID)
 }
 
 // VotingRole is the resolver for the votingRole field.

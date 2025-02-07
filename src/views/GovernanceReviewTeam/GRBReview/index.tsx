@@ -39,6 +39,7 @@ import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 import ITGovAdminContext from '../ITGovAdminContext';
 
 import Discussions from './Discussions';
+import GRBFeedbackCard from './GRBFeedbackCard';
 import GRBReviewerForm from './GRBReviewerForm';
 import ParticipantsTable from './ParticipantsTable';
 import PresentationLinksCard from './PresentationLinksCard';
@@ -54,6 +55,7 @@ type GRBReviewProps = {
   documents: SystemIntakeDocument[];
   grbReviewStartedAt?: string | null;
   grbPresentationLinks: SystemIntake['grbPresentationLinks'];
+  governanceRequestFeedbacks: SystemIntake['governanceRequestFeedbacks'];
 };
 
 const GRBReview = ({
@@ -64,7 +66,8 @@ const GRBReview = ({
   grbReviewers,
   documents,
   grbReviewStartedAt,
-  grbPresentationLinks
+  grbPresentationLinks,
+  governanceRequestFeedbacks
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -258,6 +261,21 @@ const GRBReview = ({
                 </Button>
               )
             }
+
+            {/* Review details */}
+            <h2 className="margin-bottom-0 margin-top-6" id="details">
+              {t('reviewDetails.title')}
+            </h2>
+            <p className="margin-top-05 line-height-body-5">
+              {t('reviewDetails.text')}
+            </p>
+
+            {/* GRT recommendations to the GRB */}
+            <GRBFeedbackCard
+              systemIntakeID={id}
+              governanceRequestFeedbacks={governanceRequestFeedbacks}
+            />
+
             {/* Supporting Docs text */}
             <h2 className="margin-bottom-0 margin-top-6" id="documents">
               {t('supportingDocuments')}

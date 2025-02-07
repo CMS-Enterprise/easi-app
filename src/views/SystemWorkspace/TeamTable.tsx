@@ -65,7 +65,7 @@ function TeamTable({
         id: 'role',
         accessor: 'roles',
         Cell: ({ row }: CellProps<UsernameWithRoles>) => {
-          return row.original.roles.map(r => r.roleTypeName).join(', ');
+          return <>{row.original.roles.map(r => r.roleTypeName).join(', ')}</>;
         },
         sortType: (a: Row<UsernameWithRoles>, b: Row<UsernameWithRoles>) => {
           const ar = a.original.roles[0];
@@ -230,15 +230,10 @@ function TeamTable({
                   <Button
                     type="button"
                     unstyled
-                    className="width-full display-flex"
                     {...column.getSortByToggleProps()}
                   >
-                    <div className="flex-fill text-no-wrap">
-                      {column.render('Header')}
-                    </div>
-                    <div className="position-relative width-205 margin-left-05">
-                      {getHeaderSortIcon(column)}
-                    </div>
+                    {column.render('Header')}
+                    {getHeaderSortIcon(column)}
                   </Button>
                 </th>
               ))}

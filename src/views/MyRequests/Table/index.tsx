@@ -97,9 +97,18 @@ const Table = ({
         accessor: 'submissionDate',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDateUtc(value, 'MM/dd/yyyy');
+            return <>{formatDateUtc(value, 'MM/dd/yyyy')}</>;
           }
-          return 'Not submitted';
+          return <>Not submitted</>;
+        },
+        sortType: (
+          a: Row<MergedRequestsForTable>,
+          b: Row<MergedRequestsForTable>
+        ) => {
+          return (a.original.submissionDate || 'z') >
+            (b.original.submissionDate || 'z')
+            ? 1
+            : -1;
         }
       },
       {
@@ -219,16 +228,18 @@ const Table = ({
         accessor: 'nextMeetingDate',
         Cell: ({ value }: { value: string | null }) => {
           if (value) {
-            return formatDateUtc(value, 'MM/dd/yyyy');
+            return <>{formatDateUtc(value, 'MM/dd/yyyy')}</>;
           }
-          return 'None';
+          return <>None</>;
         }
       },
       {
         Header: t<string>('requestsTable.headers.relatedSystems'),
         accessor: 'systems',
-        Cell: ({ value }: { value: string[] }) => {
-          return value.join(', ');
+        Cell: cell => {
+          const { value } = cell;
+          /* eslint react/prop-types: 0 */
+          return <>{value.join(', ')}</>;
         },
         width: '250px'
       }
@@ -316,7 +327,7 @@ const Table = ({
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
+        sortBy: useMemo(() => [{ id: 'submissionDate', desc: true }], []),
         pageIndex: 0,
         pageSize: defaultPageSize
       }

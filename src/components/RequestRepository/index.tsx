@@ -204,6 +204,7 @@ const RequestRepository = () => {
       autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => lastSort[activeTable], [lastSort, activeTable]),
+        pageIndex: itGovAdmin.current.state.pageIndex,
         pageSize: defaultPageSize
       }
     },

@@ -197,6 +197,9 @@ exports[`Trb Help Prepare Consult Meeting > renders 1`] = `
       <li>
         a request for a follow-up consultation session
       </li>
+      <li>
+        submission of requirements to CFACTS if those requirements are not implemented, or are still in the process of implementation, within the provided timeline. The TRB will inform you if requirements will be submitted.
+      </li>
     </ul>
     <div
       class="usa-summary-box desktop:grid-col-6 margin-top-6"
