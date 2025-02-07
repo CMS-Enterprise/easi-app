@@ -1981,94 +1981,22 @@ func (r *systemIntakeDocumentResolver) CanView(ctx context.Context, obj *models.
 
 // TranscriptFileURL is the resolver for the transcriptFileURL field.
 func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error) {
-	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.SystemIntakeID)
-	if err != nil {
-		return nil, err
-	}
-
-	if links == nil {
-		return nil, nil
-	}
-
-	if links.TranscriptS3Key == nil {
-		return nil, nil
-	}
-
-	data, err := r.s3Client.NewGetPresignedURL(*links.TranscriptS3Key)
-	if err != nil {
-		return nil, err
-	}
-
-	return helpers.PointerTo(data.URL), nil
+	return resolvers.SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx, r.s3Client, obj.SystemIntakeID)
 }
 
 // TranscriptFileStatus is the resolver for the transcriptFileStatus field.
 func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error) {
-	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.SystemIntakeID)
-	if err != nil {
-		return nil, err
-	}
-
-	if links == nil {
-		return nil, nil
-	}
-
-	if links.TranscriptS3Key == nil {
-		return nil, nil
-	}
-
-	fileStatus, err := resolvers.GetStatusForSystemIntakeDocument(r.s3Client, *links.TranscriptS3Key)
-	if err != nil {
-		return nil, err
-	}
-
-	return helpers.PointerTo(fileStatus), nil
+	return resolvers.SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx, r.s3Client, obj.SystemIntakeID)
 }
 
 // PresentationDeckFileURL is the resolver for the presentationDeckFileURL field.
 func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error) {
-	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.SystemIntakeID)
-	if err != nil {
-		return nil, err
-	}
-
-	if links == nil {
-		return nil, nil
-	}
-
-	if links.PresentationDeckS3Key == nil {
-		return nil, nil
-	}
-
-	data, err := r.s3Client.NewGetPresignedURL(*links.PresentationDeckS3Key)
-	if err != nil {
-		return nil, err
-	}
-
-	return helpers.PointerTo(data.URL), nil
+	return resolvers.SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx, r.s3Client, obj.SystemIntakeID)
 }
 
 // PresentationDeckFileStatus is the resolver for the presentationDeckFileStatus field.
 func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error) {
-	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.SystemIntakeID)
-	if err != nil {
-		return nil, err
-	}
-
-	if links == nil {
-		return nil, nil
-	}
-
-	if links.PresentationDeckS3Key == nil {
-		return nil, nil
-	}
-
-	fileStatus, err := resolvers.GetStatusForSystemIntakeDocument(r.s3Client, *links.PresentationDeckS3Key)
-	if err != nil {
-		return nil, err
-	}
-
-	return helpers.PointerTo(fileStatus), nil
+	return resolvers.SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx, r.s3Client, obj.SystemIntakeID)
 }
 
 // VotingRole is the resolver for the votingRole field.

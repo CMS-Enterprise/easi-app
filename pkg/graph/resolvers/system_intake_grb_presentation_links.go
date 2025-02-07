@@ -12,6 +12,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
@@ -88,6 +89,94 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	}
 
 	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
+}
+
+func SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx context.Context, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
+	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if links == nil {
+		return nil, nil
+	}
+
+	if links.TranscriptS3Key == nil {
+		return nil, nil
+	}
+
+	data, err := s3Client.NewGetPresignedURL(*links.TranscriptS3Key)
+	if err != nil {
+		return nil, err
+	}
+
+	return helpers.PointerTo(data.URL), nil
+}
+
+func SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx context.Context, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*models.SystemIntakeDocumentStatus, error) {
+	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if links == nil {
+		return nil, nil
+	}
+
+	if links.TranscriptS3Key == nil {
+		return nil, nil
+	}
+
+	fileStatus, err := GetStatusForSystemIntakeDocument(s3Client, *links.TranscriptS3Key)
+	if err != nil {
+		return nil, err
+	}
+
+	return helpers.PointerTo(fileStatus), nil
+}
+
+func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
+	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if links == nil {
+		return nil, nil
+	}
+
+	if links.PresentationDeckS3Key == nil {
+		return nil, nil
+	}
+
+	data, err := s3Client.NewGetPresignedURL(*links.PresentationDeckS3Key)
+	if err != nil {
+		return nil, err
+	}
+
+	return helpers.PointerTo(data.URL), nil
+}
+
+func SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx context.Context, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*models.SystemIntakeDocumentStatus, error) {
+	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if links == nil {
+		return nil, nil
+	}
+
+	if links.PresentationDeckS3Key == nil {
+		return nil, nil
+	}
+
+	fileStatus, err := GetStatusForSystemIntakeDocument(s3Client, *links.PresentationDeckS3Key)
+	if err != nil {
+		return nil, err
+	}
+
+	return helpers.PointerTo(fileStatus), nil
 }
 
 // handleS3Upload uploads a file to S3
