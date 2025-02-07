@@ -8809,11 +8809,11 @@ One of the optional link/files values is required to pass the database constrain
 """
 input SystemIntakeGRBPresentationLinksInput {
   systemIntakeID: UUID!
-  recordingLink: String
-  recordingPasscode: String
-  transcriptLink: String
-  transcriptFileData: Upload
-  presentationDeckFileData: Upload
+  recordingLink: String @goField(omittable: true)
+  recordingPasscode: String @goField(omittable: true)
+  transcriptLink: String @goField(omittable: true)
+  transcriptFileData: Upload @goField(omittable: true)
+  presentationDeckFileData: Upload @goField(omittable: true)
 }
 
 input DeleteSystemIntakeGRBPresentationLinksInput {
@@ -10885,6 +10885,11 @@ directive @goModel(
   models: [String!]
   forceGenerate: Boolean
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
+
+# https://gqlgen.com/config/#inline-config-with-directives
+directive @goField(
+  omittable: Boolean
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
 """
 A user role associated with a job code
@@ -62939,35 +62944,35 @@ func (ec *executionContext) unmarshalInputSystemIntakeGRBPresentationLinksInput(
 			if err != nil {
 				return it, err
 			}
-			it.RecordingLink = data
+			it.RecordingLink = graphql.OmittableOf(data)
 		case "recordingPasscode":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recordingPasscode"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RecordingPasscode = data
+			it.RecordingPasscode = graphql.OmittableOf(data)
 		case "transcriptLink":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("transcriptLink"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.TranscriptLink = data
+			it.TranscriptLink = graphql.OmittableOf(data)
 		case "transcriptFileData":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("transcriptFileData"))
 			data, err := ec.unmarshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.TranscriptFileData = data
+			it.TranscriptFileData = graphql.OmittableOf(data)
 		case "presentationDeckFileData":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("presentationDeckFileData"))
 			data, err := ec.unmarshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.PresentationDeckFileData = data
+			it.PresentationDeckFileData = graphql.OmittableOf(data)
 		}
 	}
 

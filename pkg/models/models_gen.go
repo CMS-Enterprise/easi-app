@@ -623,12 +623,12 @@ type SystemIntakeFundingSourcesInput struct {
 // Data needed to add system intake presentation link data
 // One of the optional link/files values is required to pass the database constraint
 type SystemIntakeGRBPresentationLinksInput struct {
-	SystemIntakeID           uuid.UUID       `json:"systemIntakeID"`
-	RecordingLink            *string         `json:"recordingLink,omitempty"`
-	RecordingPasscode        *string         `json:"recordingPasscode,omitempty"`
-	TranscriptLink           *string         `json:"transcriptLink,omitempty"`
-	TranscriptFileData       *graphql.Upload `json:"transcriptFileData,omitempty"`
-	PresentationDeckFileData *graphql.Upload `json:"presentationDeckFileData,omitempty"`
+	SystemIntakeID           uuid.UUID                          `json:"systemIntakeID"`
+	RecordingLink            graphql.Omittable[*string]         `json:"recordingLink,omitempty"`
+	RecordingPasscode        graphql.Omittable[*string]         `json:"recordingPasscode,omitempty"`
+	TranscriptLink           graphql.Omittable[*string]         `json:"transcriptLink,omitempty"`
+	TranscriptFileData       graphql.Omittable[*graphql.Upload] `json:"transcriptFileData,omitempty"`
+	PresentationDeckFileData graphql.Omittable[*graphql.Upload] `json:"presentationDeckFileData,omitempty"`
 }
 
 type SystemIntakeGRBReviewDiscussion struct {
