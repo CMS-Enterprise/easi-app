@@ -56,7 +56,7 @@ import users from './users';
 
 type ContactRole =
   | 'Requester'
-  | 'Business Owner'
+  | 'Business owner'
   | 'Product Manager'
   | 'ISSO'
   | 'Product Owner'
@@ -93,7 +93,7 @@ export const requester: MockSystemIntakeContact = {
 
 const businessOwner: MockSystemIntakeContact = {
   ...contacts[1],
-  role: 'Business Owner',
+  role: 'Business owner',
   component: 'Center for Medicare'
 };
 

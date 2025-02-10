@@ -175,7 +175,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                           <dd
                             class="description-definition margin-0 font-body-xs line-height-body-2"
                           >
-                            Business Owner
+                            Business owner
                           </dd>
                           <dt
                             class="text-bold margin-bottom-05 font-heading-lg line-height-heading-2"

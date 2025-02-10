@@ -34,7 +34,7 @@ type RoleType struct {
 
 	// name
 	// Required: true
-	// Enum: [AI Contact API Contact Budget Analyst Business Owner Business Question Contact Contracting Officer's Representative (COR) DA Reviewer Data Center Contact ISSO Government Task Lead (GTL) Project Lead QA Reviewer System Maintainer Subject Matter Expert (SME) Support Staff Survey Point of Contact Technical System Issues Contact]
+	// Enum: [AI Contact API Contact Budget Analyst Business owner Business Question Contact Contracting Officer's Representative (COR) DA Reviewer Data Center Contact ISSO Government Task Lead (GTL) Project Lead QA Reviewer System Maintainer Subject Matter Expert (SME) Support Staff Survey Point of Contact Technical System Issues Contact]
 	Name *string `json:"name"`
 }
 
@@ -116,7 +116,7 @@ var roleTypeTypeNamePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["AI Contact","API Contact","Budget Analyst","Business Owner","Business Question Contact","Contracting Officer's Representative (COR)","DA Reviewer","Data Center Contact","ISSO Government Task Lead (GTL)","Project Lead","QA Reviewer","System Maintainer","Subject Matter Expert (SME)","Support Staff","Survey Point of Contact","Technical System Issues Contact"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["AI Contact","API Contact","Budget Analyst","Business owner","Business Question Contact","Contracting Officer's Representative (COR)","DA Reviewer","Data Center Contact","ISSO Government Task Lead (GTL)","Project Lead","QA Reviewer","System Maintainer","Subject Matter Expert (SME)","Support Staff","Survey Point of Contact","Technical System Issues Contact"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -135,8 +135,8 @@ const (
 	// RoleTypeNameBudgetAnalyst captures enum value "Budget Analyst"
 	RoleTypeNameBudgetAnalyst string = "Budget Analyst"
 
-	// RoleTypeNameBusinessOwner captures enum value "Business Owner"
-	RoleTypeNameBusinessOwner string = "Business Owner"
+	// RoleTypeNameBusinessOwner captures enum value "Business owner"
+	RoleTypeNameBusinessOwner string = "Business owner"
 
 	// RoleTypeNameBusinessQuestionContact captures enum value "Business Question Contact"
 	RoleTypeNameBusinessQuestionContact string = "Business Question Contact"

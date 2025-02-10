@@ -12,7 +12,7 @@ export const initialContactDetails = {
 
 export const initialContactsObject: FormattedContacts = {
   requester: { ...initialContactDetails, role: 'Requester' },
-  businessOwner: { ...initialContactDetails, role: 'Business Owner' },
+  businessOwner: { ...initialContactDetails, role: 'Business owner' },
   productManager: { ...initialContactDetails, role: 'Product Manager' },
   isso: { ...initialContactDetails, role: 'ISSO' },
   additionalContacts: []

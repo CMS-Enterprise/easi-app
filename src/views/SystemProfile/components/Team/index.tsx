@@ -42,7 +42,7 @@ import './index.scss';
 
 /**
  * Get team members in sections of Cedar Role Types:
- * Business Owners, Project Leads, Additional.
+ * Business owners, Project Leads, Additional.
  */
 export function getTeam(
   usernamesWithRoles: UsernameWithRoles[]
@@ -57,7 +57,7 @@ export function getTeam(
   for (const person of usernamesWithRoles) {
     const { roles } = person;
 
-    // Members in Business Owner and Project Lead roles appear in both sections
+    // Members in Business owner and Project Lead roles appear in both sections
     if (
       roles.some(
         ({ roleTypeName }) => roleTypeName === RoleTypeName.BUSINESS_OWNER

@@ -614,7 +614,7 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "mutation UpdateSystemIntakeContact($input: UpdateSystemIntakeContactInput!) {\n  updateSystemIntakeContact(input: $input) {\n    #   \"{{$guid}}\" #use this to make a guid\n      #this gets submitted 3 times to provide all the contacts we need\n    systemIntakeContact {\n      id # NOTE, this is provided by the front end!\n      euaUserId\n      systemIntakeId\n      component\n      role\n      __typename\n    }\n    __typename\n  }\n}\n",
-										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeContactID}}\",\n    \"euaUserId\": \"ADMN\",\n    \"component\": \"Center for Clinical Standards and Quality\",\n    \"role\": \"Business Owner\",\n    \"systemIntakeId\": \"{{systemIntakeID}}\"\n  }\n}"
+										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeContactID}}\",\n    \"euaUserId\": \"ADMN\",\n    \"component\": \"Center for Clinical Standards and Quality\",\n    \"role\": \"Business owner\",\n    \"systemIntakeId\": \"{{systemIntakeID}}\"\n  }\n}"
 									}
 								},
 								"url": {

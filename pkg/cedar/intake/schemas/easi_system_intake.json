@@ -91,7 +91,7 @@
         },
         "businessOwnerComponent": {
           "type": "string",
-          "description": "Component of the Business Owner",
+          "description": "Component of the Business owner",
           "examples": [
             "OIT"
           ]

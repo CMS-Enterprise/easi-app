@@ -52,7 +52,7 @@ const lifecycleCostsSchema = Yup.object().shape({
 
 export const BusinessCaseFinalValidationSchema = {
   generalRequestInfo: Yup.object().shape({
-    requestName: Yup.string().trim().required('Enter the Project Name'),
+    requestName: Yup.string().trim().required('Enter the Project name'),
     requester: Yup.object().shape({
       name: Yup.string().trim().required("Enter the Requester's name"),
       phoneNumber: Yup.string()
@@ -66,7 +66,7 @@ export const BusinessCaseFinalValidationSchema = {
         )
     }),
     businessOwner: Yup.object().shape({
-      name: Yup.string().trim().required("Enter the Business Owner's name")
+      name: Yup.string().trim().required("Enter the Business owner's name")
     })
   }),
   requestDescription: Yup.object().shape({

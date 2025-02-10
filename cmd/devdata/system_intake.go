@@ -96,7 +96,7 @@ func fillOutInitialIntake(
 	createSystemIntakeContact(ctx, store, intake,
 		"A11Y",
 		"Office of Healthcare Experience and Interoperability",
-		"Business Owner",
+		"Business owner",
 	)
 	createSystemIntakeContact(ctx, store, intake,
 		"OQYV",

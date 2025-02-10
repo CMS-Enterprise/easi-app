@@ -19,11 +19,11 @@ const GeneralRequestInfoReview = ({
     <DescriptionList title="General request information">
       <ReviewRow>
         <div>
-          <DescriptionTerm term="Project Name" />
+          <DescriptionTerm term="Project name" />
           <DescriptionDefinition definition={values.requestName} />
         </div>
         <div>
-          <DescriptionTerm term="Business Owner" />
+          <DescriptionTerm term="Business owner" />
           <DescriptionDefinition definition={values.businessOwner.name} />
         </div>
       </ReviewRow>
@@ -33,7 +33,7 @@ const GeneralRequestInfoReview = ({
           <DescriptionDefinition definition={values.requester.name} />
         </div>
         <div>
-          <DescriptionTerm term="Requester Phone Number" />
+          <DescriptionTerm term="Requester phone number" />
           <DescriptionDefinition definition={values.requester.phoneNumber} />
         </div>
       </ReviewRow>

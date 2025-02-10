@@ -9,7 +9,7 @@ import (
 type PersonRole string
 
 const (
-	// PersonRoleBusinessOwner is a person with the "Business Owner" role
+	// PersonRoleBusinessOwner is a person with the "Business owner" role
 	PersonRoleBusinessOwner PersonRole = "BUSINESS_OWNER"
 	// PersonRoleProductOwner is a person with the "Product Owner" role
 	PersonRoleProductOwner PersonRole = "PRODUCT_OWNER"

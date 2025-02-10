@@ -2,7 +2,7 @@ import { TeamMemberRoleTypeName } from 'types/systemProfile';
 
 /** A sort index that covers most cedar roles */
 const teamRolesIndex: Record<TeamMemberRoleTypeName, number> = {
-  'Business Owner': 0,
+  'Business owner': 0,
   'System Maintainer': 1,
   "Contracting Officer's Representative (COR)": 2,
   'Government Task Lead (GTL)': 3,
@@ -22,7 +22,7 @@ export default teamRolesIndex;
 
 /** A sort index of roles for workspace team management */
 export const teamManagementRolesIndex: Partial<typeof teamRolesIndex> = {
-  'Business Owner': 0,
+  'Business owner': 0,
   'Project Lead': 1,
   'Government Task Lead (GTL)': 2,
   "Contracting Officer's Representative (COR)": 3

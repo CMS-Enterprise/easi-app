@@ -305,7 +305,7 @@ export type CedarRole = {
   roleTypeName?: Maybe<Scalars['String']['output']>;
 };
 
-/** CedarRoleType represents a type of role that a user or organization can hold for some system, i.e. "Business Owner" or "Project Lead" */
+/** CedarRoleType represents a type of role that a user or organization can hold for some system, i.e. "Business owner" or "Project Lead" */
 export type CedarRoleType = {
   __typename: 'CedarRoleType';
   application: Scalars['String']['output'];

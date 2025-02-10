@@ -55,7 +55,7 @@ describe('The System Intake Form', () => {
   });
 
   it('fills out minimum required fields (smoke test)', () => {
-    // Contact Details
+    // Contact details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
     // Test "Business owner same as requester" checkbox
@@ -63,7 +63,7 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    // Business Owner name should be disabled when checkbox is checked
+    // Business owner name should be disabled when checkbox is checked
     cy.get('#react-select-businessOwnerCommonName-input').should('be.disabled');
 
     // Check that business owner fields updated to display requester values
@@ -91,7 +91,7 @@ describe('The System Intake Form', () => {
 
     cy.wait('@updateContactDetails');
 
-    // Request Details
+    // Request details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
     cy.get('#currentStage')
@@ -100,7 +100,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    // Contract Details
+    // Contract details
     cy.get('#currentAnnualSpending')
       .type('Mock Current Annual Spend')
       .should('have.value', 'Mock Current Annual Spend');
@@ -132,7 +132,7 @@ describe('The System Intake Form', () => {
   });
 
   it('displays and fills conditional fields', () => {
-    // Contact Details
+    // Contact details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
     // Test "same as requester" checkbox
@@ -193,7 +193,7 @@ describe('The System Intake Form', () => {
 
     cy.wait('@updateContactDetails');
 
-    // Request Details
+    // Request details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
     cy.get('#currentStage')
@@ -210,7 +210,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    // Contract Details
+    // Contract details
     const fundingNumber = '123456';
 
     cy.systemIntake.contractDetails.addFundingSource({
@@ -328,25 +328,25 @@ describe('The System Intake Form', () => {
       .siblings('dd')
       .contains('EndToEnd One');
 
-    cy.contains('.easi-review-row dt', 'Requester Component')
+    cy.contains('.easi-review-row dt', 'Requester component')
       .siblings('dd')
       .contains('Center for Medicare');
 
-    cy.contains('.easi-review-row dt', "CMS Business Owner's Name")
+    cy.contains('.easi-review-row dt', "CMS business owner's name")
       .siblings('dd')
       .contains('Audrey Abrams');
 
-    cy.contains('.easi-review-row dt', 'CMS Business Owner Component')
+    cy.contains('.easi-review-row dt', 'CMS business owner component')
       .siblings('dd')
       .contains('CMS Wide');
 
-    cy.contains('.easi-review-row dt', 'CMS Project/Product Manager or lead')
+    cy.contains('.easi-review-row dt', 'CMS project/product manager or lead')
       .siblings('dd')
       .contains('Delphia Green');
 
     cy.contains(
       '.easi-review-row dt',
-      'CMS Project/Product manager or lead Component'
+      'CMS project/product manager or lead component'
     )
       .siblings('dd')
       .contains('Office of Legislation');
@@ -379,7 +379,7 @@ describe('The System Intake Form', () => {
         /^Enterprise Architecture, Enterprise Architecture Collaborator$/
       );
 
-    cy.contains('.easi-review-row dt', 'Project Name')
+    cy.contains('.easi-review-row dt', 'Project name')
       .siblings('dd')
       .contains(testSystemIntakeName);
 

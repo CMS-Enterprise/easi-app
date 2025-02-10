@@ -81,7 +81,7 @@ describe('Business case general request info form', () => {
     await renderPage(defaultStore);
 
     const projectNameField = screen.getByRole('textbox', {
-      name: /Project Name/i
+      name: /Project name/i
     });
     userEvent.type(projectNameField, 'Test Project 1');
     expect(projectNameField).toHaveValue('Test Project 1');
@@ -93,7 +93,7 @@ describe('Business case general request info form', () => {
     expect(requesterField).toHaveValue('John Doe');
 
     const businessOwnerField = screen.getByRole('textbox', {
-      name: /Business Owner/i
+      name: /Business owner/i
     });
     userEvent.type(businessOwnerField, 'Sally Doe');
     expect(businessOwnerField).toHaveValue('Sally Doe');

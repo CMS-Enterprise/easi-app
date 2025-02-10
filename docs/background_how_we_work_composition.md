@@ -13,7 +13,7 @@ Oddball is also responsible for the future development of key features of the ap
 
 ### Current system/background of the legacy environment 
 
-The objective of the EASi contract is to modernize and standardize IT governance processes while promoting data sharing within the Office of Information Technology (OIT) and across CMS. For many years, the IT Governance process has been extremely difficult and time consuming for CMS Business Owners to navigate, resulting in delayed project schedules and increased contracting costs. EASi is an open source tool used to ease this burden by facilitating the system development lifecycle process for CMS business owners, who will utilize EASi for interfacing with the IT Governance processes mandated by CMS when standing up or maintaining a system. 
+The objective of the EASi contract is to modernize and standardize IT governance processes while promoting data sharing within the Office of Information Technology (OIT) and across CMS. For many years, the IT Governance process has been extremely difficult and time consuming for CMS Business owners to navigate, resulting in delayed project schedules and increased contracting costs. EASi is an open source tool used to ease this burden by facilitating the system development lifecycle process for CMS business owners, who will utilize EASi for interfacing with the IT Governance processes mandated by CMS when standing up or maintaining a system. 
 
 ## Customers/Stakeholders/other collaborators:
 - 	CMS OIT- Funding and product direction for the EASi application
@@ -28,7 +28,7 @@ The objective of the EASi contract is to modernize and standardize IT governance
     - Internal CMMI groups and teams interviewed for user research include BSG, DITOS, and front offices
 ## User community composition
 - For the EASi System:
-    - CMS Business Owners, Product Owners, and technical leads
+    - CMS Business owners, Product Owners, and technical leads
     - CMS OIT Governance Teams (Governance Review Team, Governance Review Board, Technical Review Board, Governance Admin Team, Enterprise Architecture)
     - CMS Leadership, within OIT and at component levels
 - For the MINT System:

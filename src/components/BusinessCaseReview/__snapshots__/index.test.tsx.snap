@@ -30,7 +30,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Project Name
+                Project name
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -42,7 +42,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Business Owner
+                Business owner
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -70,7 +70,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Requester Phone Number
+                Requester phone number
               </dt>
               <dd
                 class="description-definition margin-0"

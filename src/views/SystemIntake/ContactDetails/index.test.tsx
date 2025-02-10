@@ -41,7 +41,7 @@ const getSystemIntakeContactsQuery: MockedQuery<
   }
 };
 
-describe('System intake form - Contact Details', () => {
+describe('System intake form - Contact details', () => {
   it('renders fields for new request', async () => {
     render(
       <VerboseMockedProvider
@@ -104,7 +104,7 @@ describe('System intake form - Contact Details', () => {
     ).toBeInTheDocument();
 
     expect(
-      within(errorSummary).getByText('Select a Business Owner Component')
+      within(errorSummary).getByText('Select a Business owner Component')
     ).toBeInTheDocument();
 
     expect(

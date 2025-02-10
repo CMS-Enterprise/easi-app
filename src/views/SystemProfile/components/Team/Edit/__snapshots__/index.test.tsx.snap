@@ -249,7 +249,7 @@ exports[`Workspace team page > renders 1`] = `
             <td
               role="cell"
             >
-              Business Owner
+              Business owner
             </td>
             <td
               role="cell"
@@ -298,7 +298,7 @@ exports[`Workspace team page > renders 1`] = `
             <td
               role="cell"
             >
-              Business Owner, ISSO, API Contact, Budget Analyst, Support Staff
+              Business owner, ISSO, API Contact, Budget Analyst, Support Staff
             </td>
             <td
               role="cell"
@@ -347,7 +347,7 @@ exports[`Workspace team page > renders 1`] = `
             <td
               role="cell"
             >
-              Business Owner, Subject Matter Expert (SME)
+              Business owner, Subject Matter Expert (SME)
             </td>
             <td
               role="cell"

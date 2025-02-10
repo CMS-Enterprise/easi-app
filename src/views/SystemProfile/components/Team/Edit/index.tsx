@@ -40,7 +40,7 @@ export const getTeamMemberName = (user: UsernameWithRoles) => {
 };
 
 export const requisiteLevelsOfTeamRoles: TeamMemberRoleTypeName[][] = [
-  ['Business Owner'],
+  ['Business owner'],
   ['System Maintainer'],
   [
     // Treat this set as a matcher for any of these roles

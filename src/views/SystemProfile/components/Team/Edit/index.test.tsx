@@ -125,7 +125,7 @@ describe('Workspace team page', () => {
     // BO
     {
       i: 0,
-      t: 'This action cannot be undone. Each system should have at least one Business Owner, and Eliezer Grant is currently the only Business Owner listed for this system. Removing Eliezer Grant will remove any roles and permissions they have for this system.'
+      t: 'This action cannot be undone. Each system should have at least one Business owner, and Eliezer Grant is currently the only Business owner listed for this system. Removing Eliezer Grant will remove any roles and permissions they have for this system.'
     },
     // System maintainer
     {
