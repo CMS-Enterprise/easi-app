@@ -92,13 +92,12 @@ func (s *Store) CompareSystemIntakeGRBReviewers(ctx context.Context, systemIntak
 
 func (s *Store) UpdateSystemIntakeGRBReviewType(
 	ctx context.Context,
-	tx *sqlx.Tx,
 	systemIntakeID uuid.UUID,
 	reviewType models.SystemIntakeGRBReviewType,
 ) (*models.UpdateSystemIntakePayload, error) {
 	updatedIntake := &models.SystemIntake{}
 
-	if err := namedGet(ctx, tx, updatedIntake, sqlqueries.SystemIntakeGRBReviewType.Update, args{
+	if err := namedGet(ctx, s.db, updatedIntake, sqlqueries.SystemIntakeGRBReviewType.Update, args{
 		"system_intake_id": systemIntakeID,
 		"grb_review_type":  reviewType,
 		"eua_user_id":      appcontext.Principal(ctx).ID(),

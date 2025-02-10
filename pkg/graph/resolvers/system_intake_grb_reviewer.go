@@ -256,18 +256,9 @@ func UpdateSystemIntakeGRBReviewType(
 	store *storage.Store,
 	input models.UpdateSystemIntakeGRBReviewTypeInput,
 ) (*models.UpdateSystemIntakePayload, error) {
-	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.UpdateSystemIntakePayload, error) {
-		updatedIntake, err := store.UpdateSystemIntakeGRBReviewType(
-			ctx,
-			tx,
-			input.SystemIntakeID,
-			input.GrbReviewType,
-		)
-
-		if err != nil {
-			return nil, err
-		}
-
-		return updatedIntake, nil
-	})
+	return store.UpdateSystemIntakeGRBReviewType(
+		ctx,
+		input.SystemIntakeID,
+		input.GrbReviewType,
+	)
 }
