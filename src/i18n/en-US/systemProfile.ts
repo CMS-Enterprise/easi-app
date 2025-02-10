@@ -288,28 +288,9 @@ const systemProfile = {
           'There was a problem removing a team member. Please try again. If the error persists, please try again at a later date.',
         availableRoles: {
           link: 'What roles are available?',
-          primaryLabel: 'Primary roles',
-          pocLabel: 'Points of contact',
+          descriptionNull: 'Error fetching role description',
           pocText:
-            'These are additional roles to signify primary points of contact for specific topics as appropriate. They identify who is best to contact if someone has questions on those topics.',
-          primaryList: [
-            '<strong>Business Owner:</strong> A person on the Business Owner team for the system or the person officially responsible for the business decisions of the system and the budgeting for the system. Every system should have at least one Business Owner, and this role must be a federal employee.',
-            '<strong>System Maintainer:</strong> A lead of the system maintainer team for the system or the person responsible for overseeing the technical operations of the system. Every system should have at least one System Maintainer, and this role must be a federal employee.',
-            "<strong>Contracting Officer's Representative (COR):</strong> A person responsible for all contracting tasks and activities related to the one or more system contracts. Every system should have at least one of the following: COR, GTL, or Project Lead, and that role must be filled by a federal employee.",
-            '<strong>Government Task Lead (GTL):</strong> A person responsible for leading the work on one or more task orders on a contract for the system. Every system should have at least one of the following: COR, GTL, or Project Lead, and that role must be filled by a federal employee.',
-            '<strong>Project Lead:</strong> A Project Manager or person responsible for leading the day-to-day work on a project or multiple projects for the system. Every system should have at least one of the following: COR, GTL, or Project Lead, and that role must be filled by a federal employee.',
-            '<strong>Information System Security Officer (ISSO):</strong> A person who is the security specialist for the system. This person is responsible for leading any security compliance procedures required for the system. An ISSO may often be an OIT staff member and may work on multiple systems.',
-            '<strong>Subject Matter Expert (SME):</strong> Additional staff who provide policy, process, or business expertise to a system.',
-            '<strong>Budget Analyst:</strong> The person who prepares and submits the annual budget request for the system.',
-            '<strong>Support Staff:</strong> A person who supports this system as a team member or in another capacity. Select this option if none of the other role options are applicable.'
-          ],
-          pocList: [
-            '<strong>Business Question Contact:</strong> A contact who can answer business questions for the system. Every system should have a team member with this role.',
-            '<strong>Technical System Issues Contact:</strong> The person on the team to contact if technical issues are found with the system. Every system should have a team member with this role.',
-            '<strong>Data Center Contact:</strong> The person on the team to contact if there is a question regarding the system’s data center or hosting environment.',
-            '<strong>API Contact:</strong> A person knowledgeable about API related information for the system.',
-            '<strong>AI Contact:</strong> A person knowledgeable about Artificial Intelligence (AI) and/or Machine Learning (ML) related information for the system.'
-          ]
+            "Roles that end in 'Contact' are additional roles to signify points of contact for specific topics as appropriate. They identify who is best to contact if someone has questions on those topics."
         }
       }
     },

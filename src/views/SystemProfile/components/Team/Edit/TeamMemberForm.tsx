@@ -97,13 +97,6 @@ const TeamMemberForm = ({
     GetCedarRoleTypesQuery
   );
 
-  const availableRolesText = t<Record<string, string[]>>(
-    'singleSystem.editTeam.form.availableRoles',
-    {
-      returnObjects: true
-    }
-  );
-
   const rolesOrdered: CedarRoleTypes[] = useMemo(() => {
     const roles = data?.roleTypes;
 
@@ -316,35 +309,25 @@ const TeamMemberForm = ({
             </FormGroup>
           )}
         />
+
         <CollapsableLink
           id="availableRoles"
           label={t('singleSystem.editTeam.form.availableRoles.link')}
         >
-          <p className="margin-y-0 line-heigt-body-5">
-            <strong>
-              {t('singleSystem.editTeam.form.availableRoles.primaryLabel')}
-            </strong>
-          </p>
           <ul className="easi-list padding-left-2">
-            {availableRolesText.primaryList.map(li => (
-              <li key={li} className="margin-top-1">
-                <Trans>{li}</Trans>
-              </li>
-            ))}
-          </ul>
-          <p className="margin-bottom-0 line-height-body-5">
-            <strong>
-              {t('singleSystem.editTeam.form.availableRoles.pocLabel')}
-            </strong>
-            <br />
             <span className="text-base-dark">
               {t('singleSystem.editTeam.form.availableRoles.pocText')}
             </span>
-          </p>
-          <ul className="easi-list padding-left-2">
-            {availableRolesText.pocList.map(li => (
-              <li key={li} className="margin-top-1">
-                <Trans>{li}</Trans>
+
+            {/* Loop through all available CEDAR roles and print out their name and description (if available) */}
+            {rolesOrdered.map(currRole => (
+              <li key={currRole.id} className="margin-top-1">
+                <strong>{currRole.name}</strong>:{' '}
+                {currRole?.description
+                  ? currRole.description
+                  : t(
+                      'singleSystem.editTeam.form.availableRoles.descriptionNull'
+                    )}
               </li>
             ))}
           </ul>
