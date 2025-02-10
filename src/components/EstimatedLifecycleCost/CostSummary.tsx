@@ -8,7 +8,7 @@ import {
 
 import CollapsableList from 'components/CollapsableList';
 
-/** Summary box describing business case lifecycle cost categories */
+/** Summary box describing Business Case lifecycle cost categories */
 const LifecycleCostSummary = () => {
   const { t } = useTranslation('businessCase');
   return (

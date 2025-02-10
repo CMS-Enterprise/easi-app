@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useReactToPrint } from 'react-to-print';
 import { Icon } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -15,8 +16,11 @@ import {
   GetGovernanceRequestFeedback,
   GetGovernanceRequestFeedbackVariables
 } from 'queries/types/GetGovernanceRequestFeedback';
+import { GovernanceRequestFeedbackType } from 'types/graphql-global-types';
 
 import FeedbackItem from './FeedbackItem';
+
+import 'index.scss';
 
 type FeedbackListProps = {
   systemIntakeId: string;
@@ -25,14 +29,21 @@ type FeedbackListProps = {
     text: string;
     path: string;
   };
+  filterType?: GovernanceRequestFeedbackType;
+  contentOnly?: boolean;
 };
 
 /**
- * List of feedback items for intake requests
+ * List of feedback items for Intake Requests
  *
  * Includes functionality to download feedback as PDF
  */
-const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
+const FeedbackList = ({
+  systemIntakeId,
+  returnLink,
+  filterType,
+  contentOnly = false
+}: FeedbackListProps) => {
   const { t } = useTranslation('taskList');
 
   const { data, loading } = useCacheQuery<
@@ -44,7 +55,9 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
     }
   });
 
-  const feedback = data?.systemIntake?.governanceRequestFeedbacks || [];
+  let feedback = data?.systemIntake?.governanceRequestFeedbacks || [];
+  if (filterType) feedback = feedback.filter(f => f.type === filterType);
+
   const { requestName } = data?.systemIntake || {};
 
   const printRef = useRef<HTMLDivElement>(null);
@@ -91,6 +104,22 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
     );
   }
 
+  const feedbackList = (
+    <ul
+      className={classNames('usa-list--unstyled', {
+        'margin-top-4': !contentOnly,
+        'grb-feedback-list-content-only': contentOnly
+      })}
+      data-testid="feedback-list"
+    >
+      {[...feedback].reverse().map(item => (
+        <FeedbackItem key={item.id} {...item} contentOnly={contentOnly} />
+      ))}
+    </ul>
+  );
+
+  if (contentOnly) return feedbackList;
+
   return (
     <>
       <ActionLinks />
@@ -100,14 +129,7 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
           {t('governanceReviewTeam:feedback.title')}
         </PageHeading>
 
-        <ul
-          className="usa-list--unstyled margin-top-4"
-          data-testid="feedback-list"
-        >
-          {[...feedback].reverse().map(item => (
-            <FeedbackItem key={item.id} {...item} />
-          ))}
-        </ul>
+        {feedbackList}
       </div>
 
       <Divider className="margin-bottom-4 easi-no-print" />

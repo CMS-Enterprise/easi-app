@@ -100,7 +100,7 @@ describe('Governance Review Team', () => {
             {
               id: '9c3e767b-f1af-46ff-93cf-0ace61f30e89',
               createdAt: '2021-07-07T20:32:04Z',
-              feedback: 'This business case needs feedback',
+              feedback: 'This Business Case needs feedback',
               type: 'PROVIDE_FEEDBACK_NEED_BIZ_CASE',
               lcidExpirationChange: null,
               actor: {
@@ -125,7 +125,7 @@ describe('Governance Review Team', () => {
     }
   };
 
-  it('renders without errors (intake request)', async () => {
+  it('renders without errors (Intake Request)', async () => {
     render(
       <MemoryRouter
         initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
@@ -150,7 +150,7 @@ describe('Governance Review Team', () => {
     expect(screen.getByTestId('intake-review')).toBeInTheDocument();
   });
 
-  it('renders GRT business case view', async () => {
+  it('renders GRT Business Case view', async () => {
     render(
       <MemoryRouter
         initialEntries={[`/it-governance/${systemIntake.id}/business-case`]}

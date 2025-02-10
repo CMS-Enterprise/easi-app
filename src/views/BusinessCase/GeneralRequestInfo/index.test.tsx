@@ -81,7 +81,7 @@ describe('Business case general request info form', () => {
     await renderPage(defaultStore);
 
     const projectNameField = screen.getByRole('textbox', {
-      name: /Project Name/i
+      name: /Project name/i
     });
     userEvent.type(projectNameField, 'Test Project 1');
     expect(projectNameField).toHaveValue('Test Project 1');
@@ -141,7 +141,7 @@ describe('Business case general request info form', () => {
     });
   });
 
-  describe('Final business case', () => {
+  describe('Final Business Case', () => {
     it('renders mandatory fields message', async () => {
       await renderPage(defaultStore, true);
 

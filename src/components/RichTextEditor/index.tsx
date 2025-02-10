@@ -19,7 +19,7 @@ import classNames from 'classnames';
 import DOMPurify from 'dompurify';
 import { FieldHookConfig, useField } from 'formik';
 
-import ExternalLinkModal from 'components/shared/ExternalLinkModal';
+import ExternalDocumentLinkModal from 'components/shared/ExternalDocumentLinkModal';
 import extractTextContent from 'utils/extractTextContent';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -213,14 +213,14 @@ const httpsRe = /^https?:\/\//;
 // See sanitizeInput() -> DOMPurify.sanitize()
 DOMPurify.addHook('afterSanitizeAttributes', node => {
   // check all href attributes for validity
-  if (node.hasAttribute('href')) {
-    const href = node.getAttribute('href');
+  if ((node as Element).hasAttribute('href')) {
+    const href = (node as Element).getAttribute('href');
     if (href === null) return;
     // Allow `mailto:` urls
     if (href.match(mailtoRe)) return;
     // Ensure url has a `https://` prefix
     if (!href.match(httpsRe)) {
-      node.setAttribute('href', `https://${href}`);
+      (node as Element).setAttribute('href', `https://${href}`);
     }
   }
 });
@@ -459,7 +459,7 @@ export function useRichTextViewerLinkModal() {
   return {
     modalScopeRef,
     externalLinkModal: (
-      <ExternalLinkModal
+      <ExternalDocumentLinkModal
         isOpen={isOpen}
         url={url}
         closeModal={() => setIsOpen(false)}

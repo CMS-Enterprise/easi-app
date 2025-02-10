@@ -29,7 +29,7 @@ The CEDAR team needs a schema of the data we send them in order to decode it for
 
 [`cmd/test_cedar_intake/main.go`](/cmd/test_cedar_intake/main.go) is a script that creates test data (based on the seed data used in `cmd/devdata/*.go`), which can be used either for examining our translation of data locally or for testing pushing data over to CEDAR Intake, depending on whether the `dump` or `submit` subcommand is used.
 
-- `go run cmd/test_cedar_intake/main.go dump` will create JSON files for test business case, GRT feedback, and system intake data inside the `cmd/test_cedar_intake/` directory. These are examples of the payloads that will be marshaled and sent to CEDAR.
+- `go run cmd/test_cedar_intake/main.go dump` will create JSON files for test Business Case, GRT feedback, and system intake data inside the `cmd/test_cedar_intake/` directory. These are examples of the payloads that will be marshaled and sent to CEDAR.
 - `go run cmd/test_cedar_intake/main.go submit` will call our Intake client to send data to CEDAR. It requires that `CEDAR_INTAKE_ENABLED`, `CEDAR_API_URL`, and `CEDAR_API_KEY` environment variables to be set; these should be set in your .envrc.local, pointing to the CEDAR impl environment.
 
 ## Checking whether CEDAR Intake received payload
@@ -38,3 +38,8 @@ The CEDAR Intake API has two endpoints that can be used together to verify that 
 
 1. Use Postman to call `GET /intake/status/client/{id}?clientStatus=Initiated&version=1`, where `id` is the `ClientID` of the entity submitted (usually the ID of the top-level entity). If CEDAR received the payload, it will return an HTTP 200, and the body will contain a `cedarId` field. If it did not receive it, it will return an HTTP 400 with the error message "Intake could not be found with those parameters".
 1. Use Postman to call `GET /intake/cedar/{id}`, where `id` is the value of the `cedarId` field from the previous response. The response should contain a `body` field containing the payload that was sent to CEDAR Intake.
+
+## Publishing data to cedar on a CRON job
+
+The client has a `PublishOnSchedule` function which sends data to CEDAR. It relies on the environment variable `CEDAR_INTAKE_PUBLISHER_ENABLED` to conditionally to publish data to CEDAR on a schedule. `True` will publish it. Currently the timing is hard coded to be Fridays at noon.
+ 

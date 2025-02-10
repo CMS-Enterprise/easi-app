@@ -107,7 +107,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 	}
 
 	draftBizCaseTests := testCasesForStep{
-		stepName: "Draft business case",
+		stepName: "Draft Business Case",
 		testCases: []calculateSystemIntakeRequesterStatusTestCase{
 			{
 				testName: "Draft Biz Case form not started",
@@ -211,7 +211,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 	}
 
 	finalBizCaseTests := testCasesForStep{
-		stepName: "Final business case",
+		stepName: "Final Business Case",
 		testCases: []calculateSystemIntakeRequesterStatusTestCase{
 			{
 				testName: "Final Biz Case form not started",

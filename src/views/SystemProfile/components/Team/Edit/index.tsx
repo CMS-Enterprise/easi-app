@@ -76,7 +76,13 @@ const EditTeam = ({
 }: EditTeamProps) => {
   const { t } = useTranslation(['systemProfile', 'systemWorkspace']);
   const history = useHistory();
-  const { Message, showMessage } = useMessage();
+  const {
+    Message,
+    showMessage,
+    errorMessageInModal,
+    showErrorMessageInModal,
+    clearMessage
+  } = useMessage();
 
   const flags = useFlags();
   const isWorkspace = useIsWorkspaceParam();
@@ -165,9 +171,9 @@ const EditTeam = ({
         );
       })
       .catch(() =>
-        showMessage(t('singleSystem.editTeam.form.errorRemoveContact'), {
-          type: 'error'
-        })
+        showErrorMessageInModal(
+          t('singleSystem.editTeam.form.errorRemoveContact')
+        )
       );
   };
 
@@ -449,11 +455,19 @@ const EditTeam = ({
           {/* Remove user modal */}
           <Modal
             isOpen={!!memberToDelete}
-            closeModal={() => setMemberToDelete(null)}
+            closeModal={() => {
+              clearMessage();
+              setMemberToDelete(null);
+            }}
           >
             <h3 className="margin-y-0 line-height-heading-2">
               {t('singleSystem.editTeam.removeModalTitle')}
             </h3>
+            {errorMessageInModal && (
+              <Alert type="error" className="margin-top-2" headingLevel="h4">
+                {errorMessageInModal}
+              </Alert>
+            )}
             <p>
               {!isWorkspace
                 ? t('singleSystem.editTeam.removeModalDescription', {
@@ -482,6 +496,7 @@ const EditTeam = ({
                     }
                   )}
             </p>
+
             <ButtonGroup>
               {/* Confirm remove user */}
               <Button
@@ -496,7 +511,10 @@ const EditTeam = ({
               {/* Keep user / close modal */}
               <Button
                 type="button"
-                onClick={() => setMemberToDelete(null)}
+                onClick={() => {
+                  clearMessage();
+                  setMemberToDelete(null);
+                }}
                 className="margin-left-1"
                 unstyled
               >
