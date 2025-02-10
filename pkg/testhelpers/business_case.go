@@ -18,7 +18,7 @@ type EstimatedLifecycleCostOptions struct {
 	Cost           *int64
 }
 
-// NewEstimatedLifecycleCost helps generate a new lifecycle cost for a given business case
+// NewEstimatedLifecycleCost helps generate a new lifecycle cost for a given Business Case
 func NewEstimatedLifecycleCost(opts EstimatedLifecycleCostOptions) models.EstimatedLifecycleCost {
 	development := models.LifecycleCostPhaseDEVELOPMENT
 	cost := int64(100)
@@ -48,7 +48,7 @@ func NewEstimatedLifecycleCost(opts EstimatedLifecycleCostOptions) models.Estima
 	return elc
 }
 
-// NewValidLifecycleCosts helps generate valid lifecycle costs for a given business case ready for submission
+// NewValidLifecycleCosts helps generate valid lifecycle costs for a given Business Case ready for submission
 func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
 	dev := models.LifecycleCostPhaseDEVELOPMENT
 	om := models.LifecycleCostPhaseOPERATIONMAINTENANCE
@@ -184,7 +184,7 @@ func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
 	}
 }
 
-// NewBusinessCase allows us to generate a business case for tests
+// NewBusinessCase allows us to generate a Business Case for tests
 func NewBusinessCase(systemIntakeID uuid.UUID) models.BusinessCaseWithCosts {
 	now := time.Now().UTC()
 	year2 := models.LifecycleCostYear2

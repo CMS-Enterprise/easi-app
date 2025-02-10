@@ -6,27 +6,27 @@ import {
 
 /** System intake action type translations */
 const actionNameTranslations: Record<SystemIntakeActionType, string> = {
-  BIZ_CASE_NEEDS_CHANGES: 'Requested business case changes (not ready for GRT)',
+  BIZ_CASE_NEEDS_CHANGES: 'Requested Business Case changes (not ready for GRT)',
   CHANGE_LCID_RETIREMENT_DATE: 'Life Cycle ID retirement date updated',
   CLOSE_REQUEST: 'Closed the request',
   CONFIRM_LCID: 'Life Cycle ID confirmed',
-  CREATE_BIZ_CASE: 'Created a new business case',
+  CREATE_BIZ_CASE: 'Created a new Business Case',
   EXPIRE_LCID: 'Life Cycle ID expired',
   EXTEND_LCID: 'Life Cycle ID extended',
   GUIDE_RECEIVED_CLOSE: 'Guide received. Closed the request.',
   ISSUE_LCID: 'Issued Life Cycle ID with no further governance',
-  NEED_BIZ_CASE: 'Requested a business case',
+  NEED_BIZ_CASE: 'Requested a Business Case',
   NOT_GOVERNANCE: 'Marked as not an IT governance request',
   NOT_IT_REQUEST: 'Marked as not an IT governance request',
   NOT_RESPONDING_CLOSE: 'Requester was not responding. Closed the request.',
   NO_GOVERNANCE_NEEDED: 'Marked as no further governance needed',
   PROGRESS_TO_NEW_STEP: 'Progressed to a new step',
   PROVIDE_FEEDBACK_NEED_BIZ_CASE:
-    'Provided GRT Feedback and progressed to business case',
+    'Provided GRT Feedback and progressed to Business Case',
   PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT:
-    'Provided GRT feedback and kept business case draft',
+    'Provided GRT feedback and kept Business Case draft',
   PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL:
-    'Provided GRT feedback and moved business case to final',
+    'Provided GRT feedback and moved Business Case to final',
   READY_FOR_GRB: 'Marked as ready for GRB',
   READY_FOR_GRT: 'Marked as ready for GRT',
   REJECT: 'Rejected the request',
@@ -34,8 +34,8 @@ const actionNameTranslations: Record<SystemIntakeActionType, string> = {
   REQUEST_EDITS: 'Requested edits to a form',
   RETIRE_LCID: 'Life Cycle ID retired',
   SEND_EMAIL: 'Email sent to requester',
-  SUBMIT_BIZ_CASE: 'Submitted a business case',
-  SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
+  SUBMIT_BIZ_CASE: 'Submitted a Business Case',
+  SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft Business Case',
   SUBMIT_INTAKE: 'Submitted a System Intake',
   UNRETIRE_LCID: 'Life Cycle ID retirement date removed',
   UPDATE_LCID: 'Life Cycle ID updated'
@@ -121,7 +121,7 @@ const governanceReviewTeam = {
       title: 'Enterprise Architecture and Data',
       items: [
         'Have you checked to see if the project capabilities already exist within CMS and if so, is the current system owner willing to support your needs?',
-        'Do you have a clearly identified business owner?',
+        'Do you have a clearly identified Business Owner?',
         'What other CMS business processes/systems/programs will you interact with?',
         'How many users would you have and who are they?',
         'Do you align with Technical Reference Architecture guidelines?',
@@ -249,9 +249,9 @@ const governanceReviewTeam = {
     }
   },
   aria: {
-    openIntake: 'Open intake request',
+    openIntake: 'Open Intake Request',
     openDocuments: 'Open documents',
-    openBusiness: 'Open business case',
+    openBusiness: 'Open Business Case',
     openNotes: 'Open admin team notes',
     openDecision: 'Open decision',
     openAdditionalInformation: 'Open additional information',

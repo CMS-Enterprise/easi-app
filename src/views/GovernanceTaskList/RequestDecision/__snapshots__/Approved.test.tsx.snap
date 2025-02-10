@@ -9,7 +9,7 @@ exports[`Business owner task list approved view > matches the snapshot 1`] = `
     <h2
       class="margin-top-05 margin-bottom-1"
     >
-      Your business case has been approved.
+      Your Business Case has been approved.
     </h2>
     <dl>
       <dt>

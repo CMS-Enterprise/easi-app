@@ -22,7 +22,7 @@ type EASIIntake struct {
 	CostIncrease                string               `json:"costIncrease" jsonschema:"description=Is there a cost increase associated with this request,example=YES,example=NOT_SURE"`
 	CostIncreaseAmount          *string              `json:"costIncreaseAmount,omitempty" jsonschema:"description=How much is the cost increase,example=Over two million dollars"`
 	DecidedAt                   *string              `json:"decidedAt,omitempty" jsonschema:"description=Timestamp of when decision was reached,example=2022-02-17T14:34:43Z"`
-	DecisionNextSteps           *string              `json:"decisionNextSteps,omitempty" jsonschema:"description=Steps that the business owner should take after receiving their decision,example=Go get a contract"`
+	DecisionNextSteps           *string              `json:"decisionNextSteps,omitempty" jsonschema:"description=Steps that the Business Owner should take after receiving their decision,example=Go get a contract"`
 	EaCollaboratorName          *string              `json:"eaCollaboratorName,omitempty" jsonschema:"description=Enterprise Architecture (EA) Collaborator,example=John Doe"`
 	EaSupportRequest            *bool                `json:"eaSupportRequest,omitempty" jsonschema:"description=Does the request need EA support,example=True"`
 	ExistingContract            string               `json:"existingContract" jsonschema:"description=Is there an existing contract for this effort,example=HAVE_CONTRACT"`
@@ -38,7 +38,7 @@ type EASIIntake struct {
 	LifecycleID                 *string              `json:"lifecycleID,omitempty" jsonschema:"description=LCID (if one is issued) associated with this request,example=220970"`
 	LifecycleScope              *string              `json:"lifecycleScope,omitempty" jsonschema:"description=Scope of LCID,example=This LCID covers development and operation of the application"`
 	OitSecurityCollaboratorName *string              `json:"oitSecurityCollaboratorName,omitempty" jsonschema:"description=OIT's Security and Privacy (ISPG) Collaborator,example=John Doe"`
-	ProcessStatus               string               `json:"processStatus" jsonschema:"description=Where is the business owner in process,example=Initial development underway"`
+	ProcessStatus               string               `json:"processStatus" jsonschema:"description=Where is the Business Owner in process,example=Initial development underway"`
 	ProductManager              string               `json:"productManager" jsonschema:"description=Product Manager for the effort deatiled in this request,example=John Doe"`
 	ProductManagerComponent     string               `json:"productManagerComponent" jsonschema:"description=Component of the Product Manager,example=OIT"`
 	ProjectAcronym              *string              `json:"projectAcronym,omitempty" jsonschema:"description=Acronym for project,example=EASi"`

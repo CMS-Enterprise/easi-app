@@ -16,7 +16,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// BusinessOwnerInformation business owner information
+// BusinessOwnerInformation Business Owner information
 //
 // swagger:model BusinessOwnerInformation
 type BusinessOwnerInformation struct {
@@ -74,7 +74,7 @@ type BusinessOwnerInformation struct {
 	StoresBeneficiaryAddress bool `json:"storesBeneficiaryAddress,omitempty"`
 }
 
-// Validate validates this business owner information
+// Validate validates this Business Owner information
 func (m *BusinessOwnerInformation) Validate(formats strfmt.Registry) error {
 	var res []error
 
@@ -216,7 +216,7 @@ func (m *BusinessOwnerInformation) validateBeneficiaryInformation(formats strfmt
 	return nil
 }
 
-// ContextValidate validates this business owner information based on context it is used
+// ContextValidate validates this Business Owner information based on context it is used
 func (m *BusinessOwnerInformation) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }

@@ -24,7 +24,7 @@ const (
 	TRBRequestDocumentCommonTypeArchitectureDiagram TRBDocumentCommonType = "ARCHITECTURE_DIAGRAM"
 	// TRBRequestDocumentCommonTypePresentationSlideDeck means the document is a presentation slide deck
 	TRBRequestDocumentCommonTypePresentationSlideDeck TRBDocumentCommonType = "PRESENTATION_SLIDE_DECK"
-	// TRBRequestDocumentCommonTypeBusinessCase means the document is a business case
+	// TRBRequestDocumentCommonTypeBusinessCase means the document is a Business Case
 	TRBRequestDocumentCommonTypeBusinessCase TRBDocumentCommonType = "BUSINESS_CASE"
 	// TRBRequestDocumentCommonTypeOther means the document is some type other than the common document types
 	TRBRequestDocumentCommonTypeOther TRBDocumentCommonType = "OTHER"

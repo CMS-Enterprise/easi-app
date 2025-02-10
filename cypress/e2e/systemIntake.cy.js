@@ -66,7 +66,7 @@ describe('The System Intake Form', () => {
     // Business owner name should be disabled when checkbox is checked
     cy.get('#react-select-businessOwnerCommonName-input').should('be.disabled');
 
-    // Check that business owner fields updated to display requester values
+    // Check that Business Owner fields updated to display requester values
     cy.get('#react-select-businessOwnerCommonName-input').should(
       'have.value',
       // Requester name shows as User E2E1 instead of "EndToEnd One" (their actual name) during testing
@@ -127,7 +127,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Check your answers before sending');
 
     // Submit
-    cy.contains('button', 'Send my intake request').click();
+    cy.contains('button', 'Send my Intake Request').click();
     cy.contains('h1', 'Your Intake Request has been submitted');
   });
 
@@ -332,21 +332,21 @@ describe('The System Intake Form', () => {
       .siblings('dd')
       .contains('Center for Medicare');
 
-    cy.contains('.easi-review-row dt', "CMS business owner's name")
+    cy.contains('.easi-review-row dt', "CMS Business Owner's name")
       .siblings('dd')
       .contains('Audrey Abrams');
 
-    cy.contains('.easi-review-row dt', 'CMS business owner component')
+    cy.contains('.easi-review-row dt', 'CMS Business Owner component')
       .siblings('dd')
       .contains('CMS Wide');
 
-    cy.contains('.easi-review-row dt', 'CMS project/product manager or lead')
+    cy.contains('.easi-review-row dt', 'CMS Project/Product Manager or Lead')
       .siblings('dd')
       .contains('Delphia Green');
 
     cy.contains(
       '.easi-review-row dt',
-      'CMS project/product manager or lead component'
+      'CMS Project/Product Manager or Lead component'
     )
       .siblings('dd')
       .contains('Office of Legislation');

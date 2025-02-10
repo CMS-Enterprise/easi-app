@@ -93,7 +93,7 @@ export const BusinessCase = () => {
   const isFinal: boolean =
     data?.systemIntake?.step === SystemIntakeStep.FINAL_BUSINESS_CASE;
 
-  // Start new business case or resume existing business case
+  // Start new Business Case or resume existing Business Case
   useEffect(() => {
     if (businessCaseId === 'new') {
       const systemIntakeId =
@@ -109,7 +109,7 @@ export const BusinessCase = () => {
     }
 
     return () => {
-      // clear business case when unmounting
+      // clear Business Case when unmounting
       dispatch(clearBusinessCase());
     };
 

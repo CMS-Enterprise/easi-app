@@ -137,9 +137,9 @@ const intake = {
   lifecycleId: 'Life Cycle ID',
   banner: {
     title: {
-      intakeIncomplete: 'Intake request incomplete',
+      intakeIncomplete: 'Intake Request incomplete',
       pendingResponse: 'Pending response',
-      startBizCase: 'Start business case',
+      startBizCase: 'Start Business Case',
       bizCaseIncomplete: 'Business case incomplete',
       responseRecevied: 'Response received',
       prepareGrt: 'Prepare for GRT',
@@ -411,13 +411,13 @@ const intake = {
     heading: 'Check your answers before sending',
     notSubmitted: 'Not yet submitted',
     systemRequest: 'System Request',
-    submissionDate: 'Submission Date',
+    submissionDate: 'Submission date',
     contactDetails: 'Contact details',
     requesterComponent: 'Requester component',
-    cmsBusinessOwnerName: "CMS business owner's name",
-    cmsBusinessOwnerComponent: 'CMS business owner component',
-    cmsProjectManagerName: 'CMS project/product manager or lead',
-    cmsProjectManagerComponent: 'CMS project/product manager or lead component',
+    cmsBusinessOwnerName: "CMS Business Owner's name",
+    cmsBusinessOwnerComponent: 'CMS Business Owner component',
+    cmsProjectManagerName: 'CMS Project/Product Manager or Lead',
+    cmsProjectManagerComponent: 'CMS Project/Product Manager or Lead component',
     isso: 'Does your project have an Information System Security Officer (ISSO)?',
     collaborating: 'I have started collaborating with',
     requestDetails: 'Request details',
@@ -459,7 +459,7 @@ const intake = {
       decide: 'or decide there is no further governance needed',
       timeline: 'They will get back to you in two business days.'
     },
-    sendIntakeRequest: 'Send my intake request'
+    sendIntakeRequest: 'Send my Intake Request'
   }
 };
 

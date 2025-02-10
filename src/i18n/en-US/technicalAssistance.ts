@@ -826,7 +826,7 @@ const technicalAssistance = {
     breadcrumb: 'TRB request details',
     requestType: 'Request type',
     requester: 'Requester',
-    submissionDate: 'Submission Date',
+    submissionDate: 'Submission date',
     status: 'Status',
     requestStatuses: {
       OPEN: 'Open',
