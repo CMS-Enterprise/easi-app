@@ -41,7 +41,7 @@ const getSystemIntakeContactsQuery: MockedQuery<
   }
 };
 
-describe('System intake form - Contact Details', () => {
+describe('System intake form - Contact details', () => {
   it('renders fields for new request', async () => {
     render(
       <VerboseMockedProvider

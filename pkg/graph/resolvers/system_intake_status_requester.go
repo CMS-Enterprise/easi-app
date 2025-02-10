@@ -10,7 +10,7 @@ import (
 
 const noDecisionInvalidStateErrMsg = "issue calculating the requester intake status, intake is in an invalid state - step is DECISION, but decisionState is NO_DECISION"
 
-// CalculateSystemIntakeRequesterStatus calculates the status to display in the requester view for a System Intake request,
+// CalculateSystemIntakeRequesterStatus calculates the status to display in the requester view for a System Intake Request,
 // based on the intake's current step, the state of that step, and the overall intake state (open/closed)
 func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTime time.Time) (models.SystemIntakeStatusRequester, error) {
 	if intake.Step == models.SystemIntakeStepDECISION && intake.DecisionState == models.SIDSNoDecision {

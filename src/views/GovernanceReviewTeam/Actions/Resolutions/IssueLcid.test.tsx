@@ -149,7 +149,7 @@ describe('Issue LCID form', async () => {
     expect(modalTitle).toBeInTheDocument();
 
     const modalText = screen.getByText(
-      'You previously requested that the team make changes to their intake request form. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.'
+      'You previously requested that the team make changes to their Intake Request form. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.'
     );
     expect(modalText).toBeInTheDocument();
   });

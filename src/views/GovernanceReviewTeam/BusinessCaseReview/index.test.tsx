@@ -14,7 +14,7 @@ window.matchMedia = (): any => ({
   removeListener: () => {}
 });
 
-describe('The GRT business case review', () => {
+describe('The GRT Business Case review', () => {
   const mockBusinessCase: BusinessCaseModel = {
     ...businessCaseInitialData,
     id: '54e829a9-6ce3-4b4b-81b0-7781b1e22821',

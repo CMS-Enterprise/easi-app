@@ -34,7 +34,7 @@ func NewBusinessCaseHandler(
 	}
 }
 
-// BusinessCaseHandler is the handler for CRUD operations on business case
+// BusinessCaseHandler is the handler for CRUD operations on Business Case
 type BusinessCaseHandler struct {
 	HandlerBase
 	FetchBusinessCaseByID fetchBusinessCaseByID
@@ -61,7 +61,7 @@ func requireBusinessCaseID(reqVars map[string]string) (uuid.UUID, error) {
 	return businessCaseID, nil
 }
 
-// Handle handles a request for the business case form
+// Handle handles a request for the Business Case form
 func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := appcontext.ZLogger(r.Context())
@@ -175,7 +175,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 
 			updatedBusinessCase, err := h.UpdateBusinessCase(r.Context(), &businessCaseToUpdate)
 			if err != nil {
-				logger.Error(fmt.Sprintf("Failed to update business case to response: %v", err))
+				logger.Error(fmt.Sprintf("Failed to update Business Case to response: %v", err))
 
 				h.WriteErrorResponse(r.Context(), w, err)
 			}

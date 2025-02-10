@@ -86,7 +86,7 @@ func (c *Client) PublishSystemIntake(ctx context.Context, si models.SystemIntake
 	return c.publishIntakeObject(ctx, &intakeObject)
 }
 
-// PublishBusinessCase sends a business case to CEDAR through the Intake API for eventual storage in Alfabet
+// PublishBusinessCase sends a Business Case to CEDAR through the Intake API for eventual storage in Alfabet
 func (c *Client) PublishBusinessCase(ctx context.Context, bc models.BusinessCaseWithCosts) error {
 	intakeObject := translation.TranslatableBusinessCase(bc)
 	return c.publishIntakeObject(ctx, &intakeObject)
@@ -213,7 +213,7 @@ func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, store *storag
 		}
 		businessCase, err := store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
 		appcontext.ZLogger(ctx).Warn(
-			"failed to fetch business case for intake when publishing to CEDAR",
+			"failed to fetch Business Case for intake when publishing to CEDAR",
 			zap.String("id", intake.ID.String()),
 			zap.Error(err),
 		)
@@ -223,7 +223,7 @@ func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, store *storag
 		err = c.PublishBusinessCase(ctx, *businessCase)
 		if err != nil {
 			appcontext.ZLogger(ctx).Warn(
-				"failed to publish business case to CEDAR",
+				"failed to publish Business Case to CEDAR",
 				zap.String("id", intake.ID.String()),
 				zap.Error(err),
 			)

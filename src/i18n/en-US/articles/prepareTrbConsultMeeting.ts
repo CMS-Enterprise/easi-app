@@ -31,7 +31,7 @@ const prepareTrbConsultMeeting = {
     list: [
       'an architecture diagram if you have one',
       'a presentation slide deck if you choose to share one. You may download TRB deck templates below.',
-      'any additional materials you wish to discuss at the meeting, such as a business case, incident report, security findings, etc.'
+      'any additional materials you wish to discuss at the meeting, such as a Business Case, incident report, security findings, etc.'
     ]
   },
   downloadTemplates: {
