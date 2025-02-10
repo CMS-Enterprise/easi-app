@@ -104,7 +104,7 @@ describe('System intake form - Contact details', () => {
     ).toBeInTheDocument();
 
     expect(
-      within(errorSummary).getByText('Select a Business owner Component')
+      within(errorSummary).getByText('Select a Business Owner Component')
     ).toBeInTheDocument();
 
     expect(

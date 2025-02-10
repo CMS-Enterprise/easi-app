@@ -29,7 +29,7 @@ const (
 	cedarOrganizationAssignee = "organization"
 
 	// the name of the Business Owner role in the CEDAR role/role types responses
-	cedarBusinessOwnerRoleName = "Business owner"
+	cedarBusinessOwnerRoleName = "Business Owner"
 )
 
 // TODO: cache this properly

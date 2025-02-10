@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Business owner task list rejected view > matches the snapshot 1`] = `
+exports[`Business Owner task list rejected view > matches the snapshot 1`] = `
 <DocumentFragment>
   <h2
     class="margin-top-0"

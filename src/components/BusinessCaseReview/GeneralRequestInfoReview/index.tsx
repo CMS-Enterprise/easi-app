@@ -23,7 +23,7 @@ const GeneralRequestInfoReview = ({
           <DescriptionDefinition definition={values.requestName} />
         </div>
         <div>
-          <DescriptionTerm term="Business owner" />
+          <DescriptionTerm term="Business Owner" />
           <DescriptionDefinition definition={values.businessOwner.name} />
         </div>
       </ReviewRow>

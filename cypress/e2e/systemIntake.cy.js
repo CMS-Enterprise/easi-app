@@ -58,12 +58,12 @@ describe('The System Intake Form', () => {
     // Contact details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
-    // Test "Business owner same as requester" checkbox
+    // Test "Business Owner same as requester" checkbox
     cy.get('#businessOwnerSameAsRequester')
       .check({ force: true })
       .should('be.checked');
 
-    // Business owner name should be disabled when checkbox is checked
+    // Business Owner name should be disabled when checkbox is checked
     cy.get('#react-select-businessOwnerCommonName-input').should('be.disabled');
 
     // Check that Business Owner fields updated to display requester values

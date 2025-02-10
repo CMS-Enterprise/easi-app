@@ -29,7 +29,7 @@ import {
 
 const rolesMap = {
   Requester: 'requester',
-  'Business owner': 'businessOwner',
+  'Business Owner': 'businessOwner',
   'Product Manager': 'productManager',
   ISSO: 'isso'
 } as const;

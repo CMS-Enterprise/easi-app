@@ -61,7 +61,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
       class="margin-y-4"
       id="businessOwners"
     >
-      Business owners
+      Business Owners
     </h2>
     <div>
       <ul
@@ -92,7 +92,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
               >
-                Business owner
+                Business Owner
               </h5>
             </div>
           </div>
@@ -121,7 +121,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
               >
-                Business owner
+                Business Owner
               </h5>
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
@@ -178,7 +178,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
               >
-                Business owner
+                Business Owner
               </h5>
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"

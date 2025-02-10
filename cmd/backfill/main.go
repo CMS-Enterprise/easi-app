@@ -255,7 +255,7 @@ func convert(row []string) (*entry, error) {
 	// is "#435" representative of their "component?"
 	data.Intake.ProductManager = null.StringFrom(row[colProjectMgr])
 
-	// TODO - labelled "Business owner"
+	// TODO - labelled "Business Owner"
 	// example entry - "Carlos Borges Martinez;#435"
 	// is "#435" representative of their "component?"
 	data.Intake.BusinessOwner = null.StringFrom(row[colBizOwn])

@@ -36,7 +36,7 @@
         },
         "businessOwner": {
           "type": "string",
-          "description": "Business owner of this request",
+          "description": "Business Owner of this request",
           "examples": [
             "John Doe"
           ]

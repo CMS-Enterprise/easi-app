@@ -34,7 +34,7 @@ const emptyRoles: CedarRole[] = [
     assigneeOrgName: 'Web and Emerging Technologies Group',
     assigneeFirstName: null,
     assigneeLastName: null,
-    roleTypeName: 'Business owner',
+    roleTypeName: 'Business Owner',
     roleID: '384-16116-0',
     __typename: 'CedarRole'
   },
@@ -64,7 +64,7 @@ const emptyRoles: CedarRole[] = [
     assigneeOrgName: null,
     assigneeFirstName: null,
     assigneeLastName: null,
-    roleTypeName: 'Business owner',
+    roleTypeName: 'Business Owner',
     roleID: '384-16670-0',
     __typename: 'CedarRole'
   },

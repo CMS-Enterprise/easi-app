@@ -196,7 +196,7 @@ func NewBusinessCase(systemIntakeID uuid.UUID) models.BusinessCaseWithCosts {
 		Status:                          models.BusinessCaseStatusOPEN,
 		Requester:                       null.StringFrom("Test Requester"),
 		RequesterPhoneNumber:            null.StringFrom("6666666666"),
-		BusinessOwner:                   null.StringFrom("Test Business owner"),
+		BusinessOwner:                   null.StringFrom("Test Business Owner"),
 		BusinessNeed:                    null.StringFrom("Test Business Need"),
 		CurrentSolutionSummary:          null.StringFrom("Test Current Solution Summary"),
 		CMSBenefit:                      null.StringFrom("Test CMS Benefit"),

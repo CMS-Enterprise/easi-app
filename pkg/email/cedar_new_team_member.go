@@ -107,7 +107,7 @@ func (c Client) SendCedarNewTeamMemberEmail(
 }
 
 func determineProjectLeadEmails(roles []*models.CedarRole, newTeamMemberEmail string) []models.EmailAddress {
-	// we want to send to the Project Lead, Survey Point of Contact, and Business owner
+	// we want to send to the Project Lead, Survey Point of Contact, and Business Owner
 	// * if no Project Lead, use Government Task Lead (GTL)
 	// * if no Government Task Lead (GTL), use Contracting Officer's Representative (COR)
 

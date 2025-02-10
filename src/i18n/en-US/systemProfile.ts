@@ -15,7 +15,7 @@ const systemProfile = {
     team: 'Team',
     contracts: 'Contracts',
     teamFte: 'FTE',
-    teamBusinessOwners: 'Business owner(s)',
+    teamBusinessOwners: 'Business Owner(s)',
     teamProjectLeads: 'Project lead(s)',
     teamAdditional: 'Additional team members',
     'funding-and-budget': 'Funding and Budget',
@@ -56,8 +56,8 @@ const systemProfile = {
       tlcPhase: 'TLC phase: ',
       tlcPhaseEmpty: 'No TLC Phase on file',
       subheader1: 'CMS component owner',
-      subheader2: 'Business owner',
-      subheader2_plural: 'Business owners',
+      subheader2: 'Business Owner',
+      subheader2_plural: 'Business Owners',
       subheader3: 'Go live date',
       subheader4: 'Most recent major change release',
       goToWorkspace: 'Go to system workspace'
@@ -172,14 +172,14 @@ const systemProfile = {
     team: {
       header: {
         fte: 'Full-time employees (FTE)',
-        businessOwners: 'Business owners',
+        businessOwners: 'Business Owners',
         projectLeads: 'Project Leads',
         additional: 'Additional team members',
         contractInformation: 'Contract Information'
       },
       noData: {
         businessOwners:
-          'There are no Business owners identified for this system.',
+          'There are no Business Owners identified for this system.',
         projectLeads: 'There are no Project Leads identified for this system.',
         additional:
           'There are no additional team members identified for this system.'
@@ -234,14 +234,14 @@ const systemProfile = {
         teamRoleRequirementAlert:
           'Please add additional system team members. Every system should have at least one:',
         teamRoleRequirementAlertList: [
-          'Business owner',
+          'Business Owner',
           'System Maintainer',
           'Contracting Officer’s Representative (COR), Government Task Lead (GTL), or Project Lead'
         ],
         removeModalDescription: {
           text: 'This action cannot be undone. {{roleDetail}} Removing {{commonName}} will remove any roles and permissions they have for this system.',
-          'Business owner':
-            'Each system should have at least one Business owner, and {{commonName}} is currently the only Business owner listed for this system.',
+          'Business Owner':
+            'Each system should have at least one Business Owner, and {{commonName}} is currently the only Business Owner listed for this system.',
           'System Maintainer':
             'Each system should have at least one System Maintainer, and {{commonName}} is currently the only System Maintainer listed for this system.',
           'Project Lead':
@@ -293,7 +293,7 @@ const systemProfile = {
           pocText:
             'These are additional roles to signify primary points of contact for specific topics as appropriate. They identify who is best to contact if someone has questions on those topics.',
           primaryList: [
-            '<strong>Business owner:</strong> A person on the Business Owner team for the system or the person officially responsible for the business decisions of the system and the budgeting for the system. Every system should have at least one Business owner, and this role must be a federal employee.',
+            '<strong>Business Owner:</strong> A person on the Business Owner team for the system or the person officially responsible for the business decisions of the system and the budgeting for the system. Every system should have at least one Business Owner, and this role must be a federal employee.',
             '<strong>System Maintainer:</strong> A lead of the system maintainer team for the system or the person responsible for overseeing the technical operations of the system. Every system should have at least one System Maintainer, and this role must be a federal employee.',
             "<strong>Contracting Officer's Representative (COR):</strong> A person responsible for all contracting tasks and activities related to the one or more system contracts. Every system should have at least one of the following: COR, GTL, or Project Lead, and that role must be filled by a federal employee.",
             '<strong>Government Task Lead (GTL):</strong> A person responsible for leading the work on one or more task orders on a contract for the system. Every system should have at least one of the following: COR, GTL, or Project Lead, and that role must be filled by a federal employee.',

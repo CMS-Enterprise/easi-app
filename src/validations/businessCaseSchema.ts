@@ -66,7 +66,7 @@ export const BusinessCaseFinalValidationSchema = {
         )
     }),
     businessOwner: Yup.object().shape({
-      name: Yup.string().trim().required("Enter the Business owner's name")
+      name: Yup.string().trim().required("Enter the Business Owner's name")
     })
   }),
   requestDescription: Yup.object().shape({

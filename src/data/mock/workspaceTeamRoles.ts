@@ -163,7 +163,7 @@ const teamRoles: CedarRoleAssigneePerson[] = [
     assigneeOrgName: null,
     assigneeFirstName: 'Vickie',
     assigneeLastName: 'Denesik',
-    roleTypeName: 'Business owner',
+    roleTypeName: 'Business Owner',
     roleID: '{mock-role-0}',
     __typename: 'CedarRole'
   },
@@ -283,7 +283,7 @@ const teamRoles: CedarRoleAssigneePerson[] = [
     assigneeOrgName: null,
     assigneeFirstName: 'Aletha',
     assigneeLastName: 'Leannon',
-    roleTypeName: 'Business owner',
+    roleTypeName: 'Business Owner',
     roleID: '{mock-role-33}',
     __typename: 'CedarRole'
   },
@@ -403,7 +403,7 @@ const teamRoles: CedarRoleAssigneePerson[] = [
     assigneeOrgName: null,
     assigneeFirstName: 'Elbert',
     assigneeLastName: 'Huel',
-    roleTypeName: 'Business owner',
+    roleTypeName: 'Business Owner',
     roleID: '{mock-role-26}',
     __typename: 'CedarRole'
   },
@@ -528,7 +528,7 @@ export const teamRequisiteRoles: CedarRoleAssigneePerson[] = [
     assigneeOrgName: null,
     assigneeFirstName: 'Eliezer',
     assigneeLastName: 'Grant',
-    roleTypeName: 'Business owner',
+    roleTypeName: 'Business Owner',
     roleID: '{mock-role-4}',
     __typename: 'CedarRole'
   },

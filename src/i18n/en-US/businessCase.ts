@@ -12,7 +12,7 @@ const businessCase = {
     "Make a first draft of the various solutions you've thought of and the costs involved to build or buy them. Once you have a draft Business Case ready for review, send it to the Governance Review Admin Team who will ensure it is ready to be presented at the Governance Review Team (GRT) Meeting.",
   projectName: 'Project name',
   requester: 'Requester',
-  businessOwner: 'Business owner',
+  businessOwner: 'Business Owner',
   requesterPhoneNumber: 'Requester phone number',
   requesterPhoneNumberHelpText: 'For example 1234567890 or 123-456-7890',
   requestDescription: 'Request description',
@@ -121,9 +121,9 @@ const businessCase = {
     dateSRHelpText: 'Feedback from the meeting on {{date}}',
     grbHelpText:
       'These are the Governance Review Team recommendations for the Governance Review Board.',
-    businessOwnerSubhead: 'GRT recommendations to the Business owner',
+    businessOwnerSubhead: 'GRT recommendations to the Business Owner',
     businessOwnerHelpText:
-      'These are the Governance Review Team recommendations for the Business owner.'
+      'These are the Governance Review Team recommendations for the Business Owner.'
   },
   lifecycleCost: {
     heading: 'Estimated lifecycle cost',

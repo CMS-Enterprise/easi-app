@@ -69,7 +69,7 @@ type SystemIntakeRoleKeys = keyof Omit<ContactDetailsForm, 'governanceTeams'>;
 
 const systemIntakeRolesMap: Record<SystemIntakeRoleKeys, string> = {
   requester: 'Requester',
-  businessOwner: 'Business owner',
+  businessOwner: 'Business Owner',
   productManager: 'Product Manager',
   isso: 'ISSO'
 };
@@ -416,7 +416,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           </Dropdown>
         </FormGroup>
 
-        {/* Business owner */}
+        {/* Business Owner */}
 
         <Fieldset className="margin-top-3">
           <legend

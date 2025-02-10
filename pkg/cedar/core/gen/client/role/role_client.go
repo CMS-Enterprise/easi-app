@@ -167,7 +167,7 @@ func (a *Client) RoleFindByID(params *RoleFindByIDParams, authInfo runtime.Clien
 /*
 RoleTypeFind finds a list of role types available within an application this interface takes in application
 
-Finds a list of role types available within an application. This interface takes in application. The list of current roles are: AI Contact API Contact Budget Analyst Business owner Business Question Contact Contracting Officer's Representative (COR) DA Reviewer Data Center Contact ISSO Government Task Lead (GTL) Project Lead QA Reviewer System Maintainer Subject Matter Expert (SME) Support Staff Survey Point of Contact Technical System Issues Contact
+Finds a list of role types available within an application. This interface takes in application. The list of current roles are: AI Contact API Contact Budget Analyst Business Owner Business Question Contact Contracting Officer's Representative (COR) DA Reviewer Data Center Contact ISSO Government Task Lead (GTL) Project Lead QA Reviewer System Maintainer Subject Matter Expert (SME) Support Staff Survey Point of Contact Technical System Issues Contact
 */
 func (a *Client) RoleTypeFind(params *RoleTypeFindParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*RoleTypeFindOK, error) {
 	// TODO: Validate the params before sending

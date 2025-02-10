@@ -76,7 +76,7 @@ const intake = {
     adminLead: 'Admin Lead',
     status: 'Status',
     fundingNumber: 'Funding number',
-    businessOwner: 'Business owner',
+    businessOwner: 'Business Owner',
     lcidExpirationDate: 'LCID Expiration Date',
     lastAdminNote: 'Last Admin Note',
     contractNumber: 'Contract number'
@@ -174,8 +174,8 @@ const intake = {
     euaId: 'EUA ID',
     requesterName: 'Requester Name',
     requesterComponent: 'Requester component',
-    businessOwnerName: 'Business owner Name',
-    businessOwnerComponent: 'Business owner Component',
+    businessOwnerName: 'Business Owner Name',
+    businessOwnerComponent: 'Business Owner Component',
     productManagerName: 'Product Manager Name',
     productManagerComponent: 'Product Manager Component',
     isso: 'ISSO Name',
@@ -247,13 +247,13 @@ const intake = {
     requester: 'Requester',
     requesterComponent: 'Requester component',
     businessOwner: {
-      sameAsRequester: 'CMS Business owner is same as requester',
-      name: 'CMS Business owner',
+      sameAsRequester: 'CMS Business Owner is same as requester',
+      name: 'CMS Business Owner',
       helpText:
         'This person owns a line of business related to this request and will champion the request moving forward',
-      nameField: 'CMS Business owner name',
-      component: 'CMS Business owner component',
-      email: 'CMS Business owner email'
+      nameField: 'CMS Business Owner name',
+      component: 'CMS Business Owner component',
+      email: 'CMS Business Owner email'
     },
     productManager: {
       sameAsRequester: 'CMS Product Manager is same as requester',

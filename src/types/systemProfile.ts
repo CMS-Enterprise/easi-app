@@ -73,7 +73,7 @@ export type SubpageKey =
  */
 export enum RoleTypeName {
   API_CONTACT = 'API Contact',
-  BUSINESS_OWNER = 'Business owner',
+  BUSINESS_OWNER = 'Business Owner',
   COR = "Contracting Officer's Representative (COR)",
   ISSO = 'ISSO',
   PROJECT_LEAD = 'Project Lead',
@@ -105,7 +105,7 @@ export enum RoleTypeName {
  * These are known names that are also referenced from UX.
  */
 export type TeamMemberRoleTypeName =
-  | 'Business owner'
+  | 'Business Owner'
   | 'System Maintainer'
   | "Contracting Officer's Representative (COR)"
   | 'Government Task Lead (GTL)'

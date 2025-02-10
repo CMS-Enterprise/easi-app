@@ -51,7 +51,7 @@ const SystemIntakeValidationSchema = {
       commonName: Yup.string()
         .trim()
         .required("Enter the Business or Product Owner's name"),
-      component: Yup.string().required('Select a Business owner Component')
+      component: Yup.string().required('Select a Business Owner Component')
     }),
     productManager: Yup.object().shape({
       commonName: Yup.string()

@@ -19,7 +19,7 @@ const (
 	AIContactRole                     CedarRoleNameType = "AI Contact"
 	APIContactRole                    CedarRoleNameType = "API Contact"
 	BudgetAnalystRole                 CedarRoleNameType = "Budget Analyst"
-	BusinessOwnerRole                 CedarRoleNameType = "Business owner"
+	BusinessOwnerRole                 CedarRoleNameType = "Business Owner"
 	CORRole                           CedarRoleNameType = "Contracting Officer's Representative (COR)"
 	DataCenterContactRole             CedarRoleNameType = "Data Center Contact"
 	ISSORole                          CedarRoleNameType = "ISSO"
@@ -63,7 +63,7 @@ type CedarRole struct {
 	ObjectType   zero.String
 }
 
-// CedarRoleType is the model for a type of role that a user or organization can hold for some system, i.e. "Business owner" or "Project Lead"
+// CedarRoleType is the model for a type of role that a user or organization can hold for some system, i.e. "Business Owner" or "Project Lead"
 type CedarRoleType struct {
 	// always-present fields
 	ID          zero.String

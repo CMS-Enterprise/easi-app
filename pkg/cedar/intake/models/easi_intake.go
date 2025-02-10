@@ -12,7 +12,7 @@ type EASIIntake struct {
 	ArchivedAt                  *string              `json:"archivedAt,omitempty" jsonschema:"description=Timestamp of when request was archived,example=2022-02-17T14:34:43Z"`
 	BusinessNeed                string               `json:"businessNeed" jsonschema:"description=Business Need for the effort detailed in this request,example=Process takes too long and holds up key stakeholders"`
 	BusinessOwner               string               `json:"businessOwner" jsonschema:"description=Person who owns a line of business related to this request,example=John Doe"`
-	BusinessOwnerComponent      string               `json:"businessOwnerComponent" jsonschema:"description=Component of the Business owner,example=OIT"`
+	BusinessOwnerComponent      string               `json:"businessOwnerComponent" jsonschema:"description=Component of the Business Owner,example=OIT"`
 	Component                   string               `json:"component" jsonschema:"description=Component of the person who submitted this request,example=OIT"`
 	ContractEndDate             *string              `json:"contractEndDate,omitempty" jsonschema:"description=The contract's end date,example=2026-10-20"`
 	ContractStartDate           *string              `json:"contractStartDate,omitempty" jsonschema:"description=The contract's start date,example=2022-10-20"`

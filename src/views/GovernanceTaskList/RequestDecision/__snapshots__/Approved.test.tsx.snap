@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Business owner task list approved view > matches the snapshot 1`] = `
+exports[`Business Owner task list approved view > matches the snapshot 1`] = `
 <DocumentFragment>
   <div
     class="easi-governance-decision__info padding-2"

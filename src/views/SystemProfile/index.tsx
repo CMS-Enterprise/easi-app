@@ -548,7 +548,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                           })}
                         />
                       </Grid>
-                      {/* Business owner */}
+                      {/* Business Owner */}
                       <Grid desktop={{ col: 6 }} className="margin-bottom-2">
                         <DescriptionDefinition
                           className="font-body-xs line-height-body-2"

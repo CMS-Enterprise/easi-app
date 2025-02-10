@@ -51,7 +51,7 @@ exports[`TeamCard > renders 1`] = `
                 <p
                   class="font-body-2xs line-height-body-2 margin-y-0"
                 >
-                  Business owner
+                  Business Owner
                   <br />
                   +1 more role
                 </p>
@@ -77,7 +77,7 @@ exports[`TeamCard > renders 1`] = `
                 <p
                   class="font-body-2xs line-height-body-2 margin-y-0"
                 >
-                  Business owner
+                  Business Owner
                   <br />
                   +4 more roles
                 </p>
@@ -103,7 +103,7 @@ exports[`TeamCard > renders 1`] = `
                 <p
                   class="font-body-2xs line-height-body-2 margin-y-0"
                 >
-                  Business owner
+                  Business Owner
                 </p>
               </div>
             </div>

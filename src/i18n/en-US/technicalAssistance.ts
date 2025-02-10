@@ -687,7 +687,7 @@ const technicalAssistance = {
       }
     },
     contactRoles: {
-      BUSINESS_OWNER: 'Business owner',
+      BUSINESS_OWNER: 'Business Owner',
       PRODUCT_OWNER: 'Product Owner',
       SYSTEM_OWNER: 'System Owner',
       SYSTEM_MAINTAINER: 'System Maintainer',

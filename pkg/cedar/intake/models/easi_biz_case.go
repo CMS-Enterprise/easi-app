@@ -12,7 +12,7 @@ type EASIBizCase struct {
 	ArchivedAt             *string                 `json:"archivedAt,omitempty" jsonschema:"description=Timestamp of when request was archived,example=2023-02-27T14:34:43Z"`
 	BusinessCaseID         string                  `json:"businessCaseId" jsonschema:"description=Unique ID of this Business Case,example=91e5c1f3-11fb-4124-805c-adbdd02c5395"`
 	BusinessNeed           *string                 `json:"businessNeed,omitempty" jsonschema:"description=Business Need for this effort,example=Process takes too long and holds up key stakeholders"`
-	BusinessOwner          string                  `json:"businessOwner" jsonschema:"description=Business owner of this request,example=John Doe"`
+	BusinessOwner          string                  `json:"businessOwner" jsonschema:"description=Business Owner of this request,example=John Doe"`
 	BusinessSolutions      []*EASIBusinessSolution `json:"businessSolutions,omitempty" jsonschema:"description=Array Business Solutions (preferred and alternatives),example=N/A"`
 	CmsBenefit             *string                 `json:"cmsBenefit,omitempty" jsonschema:"description=How CMS will benefit from this effort,example=Reduce FTE hours and generate better end products"`
 	CurrentSolutionSummary *string                 `json:"currentSolutionSummary,omitempty" jsonschema:"description=Summary of the current solution,example=Managed through spreadsheets and email"`

@@ -44,13 +44,13 @@ describe('System Profile Team subpage', () => {
         {
           "assigneeUsername": "A",
           "roles": [
-            { "application": "alfabet", "objectID": "", "roleTypeID": "", "assigneeType": "PERSON", "assigneeUsername": "A", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": "Business owner", "roleID": null, "__typename": "CedarRole" }
+            { "application": "alfabet", "objectID": "", "roleTypeID": "", "assigneeType": "PERSON", "assigneeUsername": "A", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": "Business Owner", "roleID": null, "__typename": "CedarRole" }
           ]
         },
         {
           "assigneeUsername": "B",
           "roles": [
-            { "application": "alfabet", "objectID": "", "roleTypeID": "", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": "Business owner", "roleID": null, "__typename": "CedarRole" },
+            { "application": "alfabet", "objectID": "", "roleTypeID": "", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": "Business Owner", "roleID": null, "__typename": "CedarRole" },
             { "application": "alfabet", "objectID": "", "roleTypeID": "", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": "Project Lead", "roleID": null, "__typename": "CedarRole" },
             { "application": "alfabet", "objectID": "", "roleTypeID": "", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": "0", "roleID": null, "__typename": "CedarRole" }
           ]
@@ -60,7 +60,7 @@ describe('System Profile Team subpage', () => {
         {
           "assigneeUsername": "B",
           "roles": [
-            { "application": "alfabet", "objectID": "", "roleTypeID": "", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": "Business owner", "roleID": null, "__typename": "CedarRole" },
+            { "application": "alfabet", "objectID": "", "roleTypeID": "", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": "Business Owner", "roleID": null, "__typename": "CedarRole" },
             { "application": "alfabet", "objectID": "", "roleTypeID": "", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": "Project Lead", "roleID": null, "__typename": "CedarRole" },
             { "application": "alfabet", "objectID": "", "roleTypeID": "", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": "0", "roleID": null, "__typename": "CedarRole" }
           ]
