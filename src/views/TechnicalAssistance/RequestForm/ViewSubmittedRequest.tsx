@@ -29,8 +29,13 @@ function ViewSubmittedRequest({
       {!newTab && breadcrumbBar}
 
       {newTab && (
-        <Button type="button" unstyled onClick={() => window.close()}>
-          <Icon.Close className="margin-right-05 margin-top-6 text-tbottom" />
+        <Button
+          type="button"
+          unstyled
+          onClick={() => window.close()}
+          className="margin-top-6"
+        >
+          <Icon.Close className="margin-right-05 text-tbottom" />
           {t('closeTab')}
         </Button>
       )}
