@@ -194,8 +194,10 @@ const Table = ({
             a.original.type === 'IT Governance' &&
             b.original.type === 'IT Governance'
           ) {
-            const astatus = a.original.statusRequester;
-            const bstatus = b.original.statusRequester;
+            const astatus: SystemIntakeStatusRequester =
+              a.original.statusRequester;
+            const bstatus: SystemIntakeStatusRequester =
+              b.original.statusRequester;
 
             // Check some matching statuses to further sort by lcid value
             if (

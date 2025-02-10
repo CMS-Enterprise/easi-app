@@ -1,3 +1,9 @@
+import {
+  SystemIntakeStatusAdmin,
+  SystemIntakeStatusRequester,
+  TRBRequestStatus
+} from 'gql/gen/graphql';
+
 import { TRBRequestState } from 'types/graphql-global-types';
 
 /**
@@ -30,7 +36,10 @@ Output
 
 */
 
-export const SystemIntakeStatusRequesterIndex: Record<string, number> = {
+export const SystemIntakeStatusRequesterIndex: Record<
+  SystemIntakeStatusRequester,
+  number
+> = {
   INITIAL_REQUEST_FORM_NEW: 0,
   INITIAL_REQUEST_FORM_IN_PROGRESS: 1,
   INITIAL_REQUEST_FORM_SUBMITTED: 2,
@@ -53,7 +62,10 @@ export const SystemIntakeStatusRequesterIndex: Record<string, number> = {
   CLOSED: 19
 } as const;
 
-export const SystemIntakeStatusAdminIndex: Record<string, number> = {
+export const SystemIntakeStatusAdminIndex: Record<
+  SystemIntakeStatusAdmin,
+  number
+> = {
   INITIAL_REQUEST_FORM_IN_PROGRESS: 0,
   INITIAL_REQUEST_FORM_SUBMITTED: 1,
   DRAFT_BUSINESS_CASE_IN_PROGRESS: 2,
@@ -72,7 +84,11 @@ export const SystemIntakeStatusAdminIndex: Record<string, number> = {
   CLOSED: 15
 } as const;
 
-export const TRBRequestStatusIndex: Record<string, number> = {
+// Adding 'OPEN' status for typescript, but will never be needed in trbRequestStatusSortType
+export const TRBRequestStatusIndex: Record<
+  TRBRequestStatus | TRBRequestState,
+  number
+> = {
   NEW: 0,
   DRAFT_REQUEST_FORM: 1,
   REQUEST_FORM_COMPLETE: 2,
@@ -83,10 +99,15 @@ export const TRBRequestStatusIndex: Record<string, number> = {
   GUIDANCE_LETTER_IN_REVIEW: 7,
   GUIDANCE_LETTER_SENT: 8,
   FOLLOW_UP_REQUESTED: 9,
-  CLOSED: 10
+  CLOSED: 10,
+  OPEN: 11
 } as const;
 
-export function trbRequestStatusSortType(a: any, b: any) {
+type SortInput = {
+  original: { status: TRBRequestStatus; state: TRBRequestState };
+};
+
+export function trbRequestStatusSortType(a: SortInput, b: SortInput) {
   const astatus =
     a.original.state === TRBRequestState.CLOSED
       ? a.original.state
