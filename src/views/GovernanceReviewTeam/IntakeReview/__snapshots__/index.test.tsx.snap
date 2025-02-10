@@ -31,7 +31,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Submission Date
+                Submission date
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -47,10 +47,10 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
         <h2
           class="font-heading-xl"
         >
-          Contact Details
+          Contact details
         </h2>
         <dl
-          title="Contact Details"
+          title="Contact details"
         >
           <div
             class="easi-review-row"
@@ -73,7 +73,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Requester Component
+                Requester component
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -89,7 +89,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                CMS Business Owner's Name
+                CMS Business Owner's name
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -101,7 +101,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                CMS Business Owner Component
+                CMS Business Owner component
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -117,7 +117,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                CMS Project/Product Manager or lead
+                CMS Project/Product Manager or Lead
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -129,7 +129,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                CMS Project/Product manager or lead Component
+                CMS Project/Product Manager or Lead component
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -173,10 +173,10 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
         <h2
           class="font-heading-xl"
         >
-          Request Details
+          Request details
         </h2>
         <dl
-          title="Request Details"
+          title="Request details"
         >
           <div
             class="easi-review-row"
@@ -185,7 +185,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Project Name
+                Project name
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -313,10 +313,10 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
         <h2
           class="font-heading-xl"
         >
-          Contract Details
+          Contract details
         </h2>
         <dl
-          title="Contract Details"
+          title="Contract details"
         >
           <div
             class="easi-review-row"

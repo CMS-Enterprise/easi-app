@@ -13,7 +13,7 @@ Oddball is also responsible for the future development of key features of the ap
 
 ### Current system/background of the legacy environment 
 
-The objective of the EASi contract is to modernize and standardize IT governance processes while promoting data sharing within the Office of Information Technology (OIT) and across CMS. For many years, the IT Governance process has been extremely difficult and time consuming for CMS Business Owners to navigate, resulting in delayed project schedules and increased contracting costs. EASi is an open source tool used to ease this burden by facilitating the system development lifecycle process for CMS business owners, who will utilize EASi for interfacing with the IT Governance processes mandated by CMS when standing up or maintaining a system. 
+The objective of the EASi contract is to modernize and standardize IT governance processes while promoting data sharing within the Office of Information Technology (OIT) and across CMS. For many years, the IT Governance process has been extremely difficult and time consuming for CMS Business Owners to navigate, resulting in delayed project schedules and increased contracting costs. EASi is an open source tool used to ease this burden by facilitating the system development lifecycle process for CMS Business Owners, who will utilize EASi for interfacing with the IT Governance processes mandated by CMS when standing up or maintaining a system. 
 
 ## Customers/Stakeholders/other collaborators:
 - 	CMS OIT- Funding and product direction for the EASi application
@@ -21,7 +21,7 @@ The objective of the EASi contract is to modernize and standardize IT governance
     -	batCAVE initiative- exploring shared devops and shared/inherited security protocols
     -	IDM- Identity Management team for setting up access to the MINT application.
     -	CEDAR (and through CEDAR, CAMS/CALM)- data sources for System Profile and other EASi features
-        - Customers interviewed for user research include project leads and business owners from other CMS components such as: CCSQ, OSORA, OMH, OEDA, and CM
+        - Customers interviewed for user research include project leads and Business Owners from other CMS components such as: CCSQ, OSORA, OMH, OEDA, and CM
     - Other OIT groups interviewed for user research include: DIIMP, ICPG, and front offices
 -	CMS CMMI- Funding and product direction for the MINT application
     - MACs and Shared System Maintainers (CWF, FISS, MCS)  interviewed by previous contractors for user research before Oddball was on the team, and we were unable to conduct further interviews, but we are currently building features for them

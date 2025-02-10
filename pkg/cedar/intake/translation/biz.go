@@ -21,7 +21,7 @@ func (bc *TranslatableBusinessCase) ObjectID() string {
 
 // ObjectType is a human-readable identifier for the BusinessCase type, for use in logging
 func (bc *TranslatableBusinessCase) ObjectType() string {
-	return "business case"
+	return "Business Case"
 }
 
 // CreateIntakeModel translates a BusinessCase into an IntakeInput
@@ -30,10 +30,10 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		UserEUA:                bc.EUAUserID,
 		BusinessCaseID:         bc.ID.String(),
 		IntakeID:               pStr(bc.SystemIntakeID.String()),
-		ProjectName:            bc.ProjectName.ValueOrZero(), // will always have a value by the time a draft business case is submitted
-		Requester:              bc.Requester.ValueOrZero(),   // will always have a value by the time a draft business case is submitted
+		ProjectName:            bc.ProjectName.ValueOrZero(), // will always have a value by the time a draft Business Case is submitted
+		Requester:              bc.Requester.ValueOrZero(),   // will always have a value by the time a draft Business Case is submitted
 		RequesterPhoneNumber:   bc.RequesterPhoneNumber.Ptr(),
-		BusinessOwner:          bc.BusinessOwner.ValueOrZero(), // will always have a value by the time a draft business case is submitted
+		BusinessOwner:          bc.BusinessOwner.ValueOrZero(), // will always have a value by the time a draft Business Case is submitted
 		BusinessNeed:           bc.BusinessNeed.Ptr(),
 		CurrentSolutionSummary: bc.CurrentSolutionSummary.Ptr(),
 		CmsBenefit:             bc.CMSBenefit.Ptr(),

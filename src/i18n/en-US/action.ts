@@ -202,8 +202,8 @@ const action = {
     option: {
       intakeFormStep: {
         INITIAL_REQUEST_FORM: 'Intake Request form',
-        DRAFT_BUSINESS_CASE: 'Draft business case',
-        FINAL_BUSINESS_CASE: 'Final business case'
+        DRAFT_BUSINESS_CASE: 'Draft Business Case',
+        FINAL_BUSINESS_CASE: 'Final Business Case'
       }
     },
     confirm: {
@@ -221,17 +221,17 @@ const action = {
   },
   actions: {
     notItRequest: 'Not an IT governance request',
-    needBizCase: 'Request a draft business case',
+    needBizCase: 'Request a draft Business Case',
     readyForGrt: 'Mark as ready for GRT',
     readyForGrb: 'Mark as ready for GRB',
     provideFeedbackNeedBizCase:
-      'Provide GRT Feedback and progress to business case',
+      'Provide GRT Feedback and progress to Business Case',
     issueLcid: 'Issue Life Cycle ID with no further governance',
     bizCaseNeedsChanges: 'Business case needs changes and is not ready for GRT',
     provideGrtFeedbackKeepDraft:
-      'Provide GRT feedback and keep working on draft business case',
+      'Provide GRT feedback and keep working on draft Business Case',
     provideGrtFeedbackNeedFinal:
-      'Provide GRT feedback and request final business case for GRB',
+      'Provide GRT feedback and request final Business Case for GRB',
     noGovernance: 'Close project',
     rejectIntake: 'Project not approved by GRB',
     sendEmail: 'Send email',
@@ -295,9 +295,9 @@ const action = {
       'Are you sure you want to complete this action to progress to a new step?',
     content:
       'You previously requested that the team make changes to their {{action}}. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.',
-    intakeRequest: 'intake request form',
-    draftBusinessCase: 'draft business case',
-    finalBusinessCase: 'final business case'
+    intakeRequest: 'Intake Request form',
+    draftBusinessCase: 'draft Business Case',
+    finalBusinessCase: 'final Business Case'
   },
   lcidStatusTag: {
     ISSUED: 'Active',
@@ -389,7 +389,7 @@ const action = {
       'Which step of the IT Governance process should this request move to?',
     DRAFT_BUSINESS_CASE: 'Draft Business Case',
     draftBusinessCaseDescription:
-      'Choose this step if this request requires a business case and a GRT meeting. This will unlock the Business Case for the requester.',
+      'Choose this step if this request requires a Business Case and a GRT meeting. This will unlock the Business Case for the requester.',
     GRT_MEETING: 'GRT meeting',
     grtMeetingDescription:
       'Choose this step if the request either does not need a Business Case, but should be reviewed by the GRT, or if the draft Business Case is complete and the request is ready for the GRT.',
@@ -460,7 +460,7 @@ const action = {
       'Provide the exact set of reasons why their request in its current state has been rejected. Include the concerns raised about it.'
   },
   provideGRTFeedback: {
-    grtFeedbackLabel: 'GRT feedback to the business owner',
+    grtFeedbackLabel: 'GRT feedback to the Business Owner',
     grtFeedbackHelpText:
       'This feedback will be added to the bottom of both the Draft Business Case and Final Business Case pages.'
   },

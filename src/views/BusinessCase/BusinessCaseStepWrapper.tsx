@@ -34,7 +34,7 @@ type BusinessCaseStepWrapperProps = {
 };
 
 /**
- * Wrapper for business case form steps
+ * Wrapper for Business Case form steps
  *
  * Wraps `children` in form step title, error alert, and feedback banner
  */
@@ -62,7 +62,7 @@ const BusinessCaseStepWrapper = ({
   const isFinal: boolean =
     data?.systemIntake?.step === SystemIntakeStep.FINAL_BUSINESS_CASE;
 
-  /** Whether or not business case has edits requested */
+  /** Whether or not Business Case has edits requested */
   const hasEditsRequested: boolean = useMemo(() => {
     const { bizCaseDraftStatus, bizCaseFinalStatus } =
       data?.systemIntake?.itGovTaskStatuses || {};

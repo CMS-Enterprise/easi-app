@@ -29,7 +29,7 @@ export const Default = () => (
             </p>
             <p>
               This step can take some time due to scheduling and availability.
-              You may go through multiple rounds of editing your business case
+              You may go through multiple rounds of editing your Business Case
               and receiving feedback.
             </p>
             <Alert type="info">
@@ -61,7 +61,7 @@ export const Default = () => (
             </p>
             <p>
               This step can take some time due to scheduling and availability.
-              You may go through multiple rounds of editing your business case
+              You may go through multiple rounds of editing your Business Case
               and receiving feedback.
             </p>
           </TaskListDescription>

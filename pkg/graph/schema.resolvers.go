@@ -713,15 +713,15 @@ func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID
 
 	now := helpers.PointerTo(time.Now())
 
-	// close out any associated business case
+	// close out any associated Business Case
 	if intake.BusinessCaseID != nil {
-		// get business case
+		// get Business Case
 		businessCase, err := r.store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
 		if err != nil {
 			return nil, err
 		}
 
-		// only attempt to close if business case is not yet closed
+		// only attempt to close if Business Case is not yet closed
 		if businessCase.Status != models.BusinessCaseStatusCLOSED {
 			businessCase.UpdatedAt = now
 			businessCase.Status = models.BusinessCaseStatusCLOSED

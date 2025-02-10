@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`The GRT business case review > matches the snapshot 1`] = `
+exports[`The GRT Business Case review > matches the snapshot 1`] = `
 <DocumentFragment>
   <div
     data-testid="business-case-review"
@@ -35,7 +35,7 @@ exports[`The GRT business case review > matches the snapshot 1`] = `
             <dt
               class="text-bold margin-bottom-05"
             >
-              Project Name
+              Project name
             </dt>
             <dd
               class="description-definition margin-0"
@@ -75,7 +75,7 @@ exports[`The GRT business case review > matches the snapshot 1`] = `
             <dt
               class="text-bold margin-bottom-05"
             >
-              Requester Phone Number
+              Requester phone number
             </dt>
             <dd
               class="description-definition margin-0"
