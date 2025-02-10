@@ -153,7 +153,7 @@ type AddRelatedCostFieldProps = {
   addRelatedCost: (category: LifecyclePhaseKey) => void;
 };
 
-/** Dropdown field to add related lifecycle cost to business case */
+/** Dropdown field to add related lifecycle cost to Business Case */
 const AddRelatedCostField = ({
   lifecycleCosts,
   relatedCosts,
@@ -243,7 +243,7 @@ type EstimatedLifecycleCostProps = {
   className?: string;
 };
 
-/** Table to enter lifecycle cost fields for business case */
+/** Table to enter lifecycle cost fields for Business Case */
 const EstimatedLifecycleCost = ({
   formikKey,
   lifecycleCosts,

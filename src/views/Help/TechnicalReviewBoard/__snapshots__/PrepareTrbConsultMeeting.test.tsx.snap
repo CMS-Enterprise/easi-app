@@ -130,7 +130,7 @@ exports[`Trb Help Prepare Consult Meeting > renders 1`] = `
         a presentation slide deck if you choose to share one. You may download TRB deck templates below.
       </li>
       <li>
-        any additional materials you wish to discuss at the meeting, such as a business case, incident report, security findings, etc.
+        any additional materials you wish to discuss at the meeting, such as a Business Case, incident report, security findings, etc.
       </li>
     </ul>
     <div

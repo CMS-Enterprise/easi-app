@@ -14,7 +14,7 @@ import (
 func (s *StoreTestSuite) TestFetchBusinessCaseByID() {
 	ctx := context.Background()
 
-	s.Run("golden path to fetch a business case", func() {
+	s.Run("golden path to fetch a Business Case", func() {
 		intake := testhelpers.NewSystemIntake()
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
@@ -23,13 +23,13 @@ func (s *StoreTestSuite) TestFetchBusinessCaseByID() {
 		s.NoError(err)
 		fetched, err := s.store.FetchBusinessCaseByID(ctx, created.ID)
 
-		s.NoError(err, "failed to fetch business case")
+		s.NoError(err, "failed to fetch Business Case")
 		s.Equal(created.ID, fetched.ID)
 		s.Equal(businessCase.EUAUserID, fetched.EUAUserID)
 		s.Len(fetched.LifecycleCostLines, 2)
 	})
 
-	s.Run("fetches an open business case", func() {
+	s.Run("fetches an open Business Case", func() {
 		intake := testhelpers.NewSystemIntake()
 		retIntake, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
@@ -39,7 +39,7 @@ func (s *StoreTestSuite) TestFetchBusinessCaseByID() {
 		s.NoError(err)
 		fetched, err := s.store.FetchOpenBusinessCaseByIntakeID(ctx, intake.ID)
 
-		s.NoError(err, "failed to fetch business case")
+		s.NoError(err, "failed to fetch Business Case")
 		s.Equal(created.ID, fetched.ID)
 		s.Equal(businessCase.EUAUserID, fetched.EUAUserID)
 		s.Len(fetched.LifecycleCostLines, 2)
@@ -58,7 +58,7 @@ func (s *StoreTestSuite) TestFetchBusinessCaseByID() {
 func (s *StoreTestSuite) TestCreateBusinessCase() {
 	ctx := context.Background()
 
-	s.Run("golden path to create a business case", func() {
+	s.Run("golden path to create a Business Case", func() {
 		intake := testhelpers.NewSystemIntake()
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
@@ -74,7 +74,7 @@ func (s *StoreTestSuite) TestCreateBusinessCase() {
 		}
 		created, err := s.store.CreateBusinessCase(ctx, &businessCase)
 
-		s.NoError(err, "failed to create a business case")
+		s.NoError(err, "failed to create a Business Case")
 		s.NotNil(created.ID)
 		s.Equal(businessCase.EUAUserID, created.EUAUserID)
 		s.Len(created.LifecycleCostLines, 1)
@@ -164,7 +164,7 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 	year3 := models.LifecycleCostYear3
 	solution := models.LifecycleCostSolutionA
 
-	s.Run("golden path to update a business case", func() {
+	s.Run("golden path to update a Business Case", func() {
 		expectedPhoneNumber := null.StringFrom("3452345678")
 		expectedProjectName := null.StringFrom("Fake name")
 		businessCaseToUpdate := models.BusinessCaseWithCosts{
@@ -187,7 +187,7 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 		}
 		_, err := s.store.UpdateBusinessCase(ctx, &businessCaseToUpdate)
 		s.NoError(err)
-		//	fetch the newly updated business case
+		//	fetch the newly updated Business Case
 		updated, err := s.store.FetchBusinessCaseByID(context.Background(), id)
 		s.NoError(err)
 		s.Equal(expectedPhoneNumber, updated.RequesterPhoneNumber)
@@ -226,7 +226,7 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 		}
 		_, err := s.store.UpdateBusinessCase(ctx, &businessCaseToUpdate)
 		s.NoError(err)
-		//	fetch the newly updated business case
+		//	fetch the newly updated Business Case
 		updated, err := s.store.FetchBusinessCaseByID(context.Background(), id)
 		s.NoError(err)
 		s.Equal(7, len(updated.LifecycleCostLines))
@@ -245,7 +245,7 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 		}
 		_, err := s.store.UpdateBusinessCase(ctx, &businessCaseToUpdate)
 		s.NoError(err)
-		//	fetch the newly updated business case
+		//	fetch the newly updated Business Case
 		updated, err := s.store.FetchBusinessCaseByID(context.Background(), id)
 		s.NoError(err)
 		s.NotEqual(unwantedSystemIntakeID, updated.SystemIntakeID)
@@ -254,7 +254,7 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 		s.Equal(euaID, updated.EUAUserID)
 	})
 
-	s.Run("fails if the business case ID doesn't exist", func() {
+	s.Run("fails if the Business Case ID doesn't exist", func() {
 		badUUID := uuid.New()
 		businessCaseToUpdate := models.BusinessCaseWithCosts{
 			BusinessCase: models.BusinessCase{

@@ -183,7 +183,7 @@ func NewSubmitSystemIntake(
 }
 
 // NewSubmitBusinessCase returns a function that
-// executes submit of a business case
+// executes submit of a Business Case
 func NewSubmitBusinessCase(
 	config Config,
 	authorized func(context.Context, *models.SystemIntake) bool,
@@ -212,7 +212,7 @@ func NewSubmitBusinessCase(
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		if !authorized(ctx, intake) {
-			return &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to submit business case")}
+			return &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to submit Business Case")}
 		}
 
 		businessCase, err := fetchOpenBusinessCase(ctx, intake.ID)

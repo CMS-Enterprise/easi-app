@@ -22,7 +22,7 @@
         },
         "businessCaseId": {
           "type": "string",
-          "description": "Unique ID of this business case",
+          "description": "Unique ID of this Business Case",
           "examples": [
             "91e5c1f3-11fb-4124-805c-adbdd02c5395"
           ]
@@ -36,7 +36,7 @@
         },
         "businessOwner": {
           "type": "string",
-          "description": "Business owner of this request",
+          "description": "Business Owner of this request",
           "examples": [
             "John Doe"
           ]
@@ -65,7 +65,7 @@
         },
         "intakeId": {
           "type": "string",
-          "description": "Unique ID of the intake associated with this business case",
+          "description": "Unique ID of the intake associated with this Business Case",
           "examples": [
             "36b85781-169a-4539-aa66-916663d8118c"
           ]

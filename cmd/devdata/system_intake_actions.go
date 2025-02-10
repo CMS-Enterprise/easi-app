@@ -38,7 +38,7 @@ func makeSystemIntakeAndProgressToStep(
 	if options.meetingDate != nil &&
 		(newStep == models.SystemIntakeStepToProgressToDraftBusinessCase ||
 			newStep == models.SystemIntakeStepToProgressToFinalBusinessCase) {
-		panic("cannot assign meeting date to business case")
+		panic("cannot assign meeting date to Business Case")
 	}
 	if options.completeOtherSteps {
 		pastMeetingDate := time.Now().AddDate(0, -2, 0)
@@ -71,7 +71,7 @@ func makeSystemIntakeAndProgressToStep(
 		}
 	}
 	intake = progressIntake(ctx, store, intake, newStep, options.meetingDate)
-	// skip if previous steps already filled out the business case
+	// skip if previous steps already filled out the Business Case
 	if options.fillForm && !options.completeOtherSteps {
 		switch newStep {
 		case models.SystemIntakeStepToProgressToDraftBusinessCase:

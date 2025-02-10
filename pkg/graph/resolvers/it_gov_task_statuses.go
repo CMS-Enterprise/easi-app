@@ -56,10 +56,10 @@ func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) (models.ITGovF
 // BizCaseDraftStatus calculates the ITGovDraftBusinessCaseStatus for the BizCaseDraft section for the system intake task list for the requester view
 func BizCaseDraftStatus(intake *models.SystemIntake) (models.ITGovDraftBusinessCaseStatus, error) {
 	switch intake.Step {
-	case models.SystemIntakeStepINITIALFORM: //This is before the draft business case, always show can't start for clarity
+	case models.SystemIntakeStepINITIALFORM: //This is before the draft Business Case, always show can't start for clarity
 		return models.ITGDBCSCantStart, nil
 	case models.SystemIntakeStepDRAFTBIZCASE:
-		switch intake.DraftBusinessCaseState { // The business case status depends on the state if in the draft business case step.
+		switch intake.DraftBusinessCaseState { // The Business Case status depends on the state if in the draft Business Case step.
 		case models.SIRFSSubmitted:
 			return models.ITGDBCSSubmitted, nil
 		case models.SIRFSNotStarted:
@@ -69,18 +69,18 @@ func BizCaseDraftStatus(intake *models.SystemIntake) (models.ITGovDraftBusinessC
 		case models.SIRFSEditsRequested:
 			return models.ITGDBCSEditsRequested, nil
 		default:
-			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its draft business case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
+			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its draft Business Case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
 		}
 
 	case models.SystemIntakeStepDECISION, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE, models.SystemIntakeStepGRBMEETING:
 
 		switch intake.DraftBusinessCaseState {
-		case models.SIRFSSubmitted, models.SIRFSInProgress, models.SIRFSEditsRequested: // If the draft business case had any progress made on it, and then the step advances, the case is considered complete.
+		case models.SIRFSSubmitted, models.SIRFSInProgress, models.SIRFSEditsRequested: // If the draft Business Case had any progress made on it, and then the step advances, the case is considered complete.
 			return models.ITGDBCSDone, nil
-		case models.SIRFSNotStarted: // If in a more advanced step, and nothing has been completed, the draft business case is not needed.
+		case models.SIRFSNotStarted: // If in a more advanced step, and nothing has been completed, the draft Business Case is not needed.
 			return models.ITGDBCSNotNeeded, nil
 		default:
-			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its draft business case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
+			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its draft Business Case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
 		}
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
 		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
@@ -120,10 +120,10 @@ func GrtMeetingStatus(intake *models.SystemIntake) (models.ITGovGRTStatus, error
 // BizCaseFinalStatus calculates the ITGovFinalBusinessCaseStatus for the BizCaseFinal section for the system intake task list for the requester view
 func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessCaseStatus, error) {
 	switch intake.Step {
-	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepDRAFTBIZCASE: //Any task before final business case, always show can't start for clarity
+	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepDRAFTBIZCASE: //Any task before final Business Case, always show can't start for clarity
 		return models.ITGFBCSCantStart, nil
 	case models.SystemIntakeStepFINALBIZCASE:
-		switch intake.FinalBusinessCaseState { // The business case status depends on the state if in the final business case step.
+		switch intake.FinalBusinessCaseState { // The Business Case status depends on the state if in the final Business Case step.
 		case models.SIRFSSubmitted:
 			return models.ITGFBCSSubmitted, nil
 		case models.SIRFSNotStarted:
@@ -133,18 +133,18 @@ func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessC
 		case models.SIRFSEditsRequested:
 			return models.ITGFBCSEditsRequested, nil
 		default:
-			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its final business case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
+			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its final Business Case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
 		}
 
 	case models.SystemIntakeStepDECISION, models.SystemIntakeStepGRBMEETING:
 
 		switch intake.FinalBusinessCaseState {
-		case models.SIRFSSubmitted, models.SIRFSInProgress, models.SIRFSEditsRequested: // If the final business case had any progress made on it, and then the step advances, the case is considered complete.
+		case models.SIRFSSubmitted, models.SIRFSInProgress, models.SIRFSEditsRequested: // If the final Business Case had any progress made on it, and then the step advances, the case is considered complete.
 			return models.ITGFBCSDone, nil
-		case models.SIRFSNotStarted: // If in a more advanced step, and nothing has been completed, the final business case is not needed.
+		case models.SIRFSNotStarted: // If in a more advanced step, and nothing has been completed, the final Business Case is not needed.
 			return models.ITGFBCSNotNeeded, nil
 		default:
-			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its final business case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
+			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its final Business Case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
 		}
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
 		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")

@@ -79,7 +79,7 @@ const AddReviewersFromRequest = ({
     )?.reviewers;
   }, [activeITGovernanceRequestId, itGovernanceRequests]);
 
-  /** Reviewers that have NOT already been added to this intake request */
+  /** Reviewers that have NOT already been added to this Intake Request */
   const availableReviewers: GRBReviewerComparison[] = useMemo(() => {
     return (
       grbReviewersArray?.filter(reviewer => !reviewer.isCurrentReviewer) || []
