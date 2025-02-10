@@ -3,7 +3,7 @@ describe('The Business Case Form', () => {
     cy.localLogin({ name: 'E2E1' });
   });
 
-  it('fills out all business case fields', () => {
+  it('fills out all Business Case fields', () => {
     cy.visit('/');
     cy.get('.requests-table')
       .contains('a', 'Easy Access to System Information')

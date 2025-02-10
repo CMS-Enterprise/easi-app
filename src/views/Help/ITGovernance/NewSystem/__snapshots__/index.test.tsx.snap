@@ -141,7 +141,7 @@ exports[`New System > matches the snapshot 1`] = `
               class="usa-process-list__heading"
               data-testid="processListHeading"
             >
-              Fill the intake request form
+              Fill the Intake Request form
             </h3>
             <p
               class="margin-bottom-1"
@@ -161,7 +161,7 @@ exports[`New System > matches the snapshot 1`] = `
             <p
               class="margin-bottom-1"
             >
-              The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps.
+              The Governance admin team will review your Intake Request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps.
             </p>
           </li>
         </ol>

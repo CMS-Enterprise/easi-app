@@ -1,6 +1,6 @@
 # Don't need to send unique IDs for sub-entities to the CEDAR Intake API
 
-When discussing [EASI-1538](https://jiraent.cms.gov/browse/EASI-1538) with the CEDAR team, the question arose of whether we needed to have unique IDs for sub-entities (non-top-level entities) when submitting data to the CEDAR Intake API. Examples of such sub-entities are the business solutions and lifecycle cost lines included in business cases. Sometimes, these sub-entities don't have IDs at all in our database, or the IDs are not constant over time due to the entities being deleted and regenerated (this happens with lifecycle cost lines). On October 10, 2022, Clay Benson, Dylan Sprague, and John Shoup from the CMS CEDAR team met to discuss whether the EASi team needed to guarantee unique, stable IDs for sub-entities.
+When discussing [EASI-1538](https://jiraent.cms.gov/browse/EASI-1538) with the CEDAR team, the question arose of whether we needed to have unique IDs for sub-entities (non-top-level entities) when submitting data to the CEDAR Intake API. Examples of such sub-entities are the business solutions and lifecycle cost lines included in Business Cases. Sometimes, these sub-entities don't have IDs at all in our database, or the IDs are not constant over time due to the entities being deleted and regenerated (this happens with lifecycle cost lines). On October 10, 2022, Clay Benson, Dylan Sprague, and John Shoup from the CMS CEDAR team met to discuss whether the EASi team needed to guarantee unique, stable IDs for sub-entities.
 
 ## Considered Alternatives
 
@@ -23,5 +23,5 @@ When discussing [EASI-1538](https://jiraent.cms.gov/browse/EASI-1538) with the C
 * `-` Would require greater engineering work for us (both in generating unique IDs and possibly in reworking our data model(s)) without a clear benefit.
 
 ### Don't send IDs for sub-entities
-* `+` Reduces the amount of work we have to do - we don't have to make sure there's a stable ID, or generate a synthetic ID (i.e. for lifecycle cost lines, concatenating business case ID, solution, phase, and year).
+* `+` Reduces the amount of work we have to do - we don't have to make sure there's a stable ID, or generate a synthetic ID (i.e. for lifecycle cost lines, concatenating Business Case ID, solution, phase, and year).
 * `-` CEDAR and Alfabet can't directly tie our sub-entities to rows in EASi's database. 

@@ -535,7 +535,7 @@ func IssueLCID(
 	return updatedIntake, nil
 }
 
-// CreateSystemIntakeActionReopenRequest reopens an intake request
+// CreateSystemIntakeActionReopenRequest reopens an Intake Request
 func CreateSystemIntakeActionReopenRequest(
 	ctx context.Context,
 	store *storage.Store,
@@ -613,7 +613,7 @@ func CreateSystemIntakeActionReopenRequest(
 	return intake, nil
 }
 
-// CreateSystemIntakeActionCloseRequest closes an intake request
+// CreateSystemIntakeActionCloseRequest closes an Intake Request
 func CreateSystemIntakeActionCloseRequest(
 	ctx context.Context,
 	store *storage.Store,

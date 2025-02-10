@@ -70,7 +70,7 @@ export interface GetAdminNotesAndActions_systemIntake {
 
 export interface GetAdminNotesAndActions {
   /**
-   * Requests fetches a requester's own intake requests
+   * Requests fetches a requester's own Intake Requests
    * first is currently non-functional and can be removed later
    */
   systemIntake: GetAdminNotesAndActions_systemIntake | null;

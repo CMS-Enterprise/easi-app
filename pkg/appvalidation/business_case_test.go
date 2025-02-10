@@ -82,7 +82,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForCreation() {
 		s.NoError(err)
 	})
 
-	s.Run("returns validation error when business case fails validation", func() {
+	s.Run("returns validation error when Business Case fails validation", func() {
 		intake := testhelpers.NewSystemIntake()
 		businessCase := models.BusinessCaseWithCosts{
 			BusinessCase: models.BusinessCase{
@@ -100,7 +100,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForCreation() {
 
 	// Uncomment below when UI has changed for unique lifecycle costs by
 	// replacing the previous test with this one.
-	//s.Run("returns validation error when business case fails validation", func() {
+	//s.Run("returns validation error when Business Case fails validation", func() {
 	//	submittedIntake := testhelpers.NewSystemIntake()
 	//	elc1 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
 	//	elc2 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
@@ -133,7 +133,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForUpdate() {
 		s.NoError(err)
 	})
 
-	s.Run("returns validation error when business case fails validation", func() {
+	s.Run("returns validation error when Business Case fails validation", func() {
 		elc2 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
 		id := uuid.New()
 

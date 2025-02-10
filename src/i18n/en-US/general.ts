@@ -15,7 +15,8 @@ const general = {
   noInfoToDisplay: 'No information to display',
   noDataAvailable: 'No data available',
   readMore: 'Read more',
-  readLess: 'Read less'
+  readLess: 'Read less',
+  newTab: 'Open in a new tab'
 };
 
 export default general;

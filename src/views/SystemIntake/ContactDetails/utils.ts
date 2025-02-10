@@ -33,7 +33,7 @@ export const formatGovernanceTeamsInput = (
     });
 };
 
-/** Format system intake governance team data for Contact Details fields */
+/** Format system intake governance team data for Contact details fields */
 export const formatGovTeamsField = (
   /** System intake `governanceTeams.teams` value */
   teams: SystemIntakeCollaborator[] | null

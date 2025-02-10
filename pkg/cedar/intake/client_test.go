@@ -79,12 +79,12 @@ func (s *ClientTestSuite) TestClient() {
 	ctx := appcontext.WithLogger(s.ctx, s.logger)
 
 	s.Run("Instantiation successful", func() {
-		c := NewClient("fake", "fake", false)
+		c := NewClient("fake", "fake", false, false)
 		s.NotNil(c)
 	})
 
 	s.Run("LD defaults protects invocation", func() {
-		c := NewClient("fake", "fake", false)
+		c := NewClient("fake", "fake", false, false)
 		err := c.CheckConnection(ctx)
 		s.NoError(err)
 

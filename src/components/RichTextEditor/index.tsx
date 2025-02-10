@@ -19,7 +19,7 @@ import classNames from 'classnames';
 import DOMPurify from 'dompurify';
 import { FieldHookConfig, useField } from 'formik';
 
-import ExternalLinkModal from 'components/shared/ExternalLinkModal';
+import ExternalDocumentLinkModal from 'components/shared/ExternalDocumentLinkModal';
 import extractTextContent from 'utils/extractTextContent';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -459,7 +459,7 @@ export function useRichTextViewerLinkModal() {
   return {
     modalScopeRef,
     externalLinkModal: (
-      <ExternalLinkModal
+      <ExternalDocumentLinkModal
         isOpen={isOpen}
         url={url}
         closeModal={() => setIsOpen(false)}

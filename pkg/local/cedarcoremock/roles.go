@@ -169,7 +169,7 @@ func GetSystemRoles(cedarSystemID string, roleTypeID *string) []*models.CedarRol
 	fakeBusinessOwnerRoleTypeID := "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID09}"
 	fakeBusinessOwnerRoleType := GetRoleTypeByRoleTypeID(fakeBusinessOwnerRoleTypeID)
 
-	// add extra business owners if roleTypeID was not provided or the provided type ID was for Biz Owner
+	// add extra Business Owners if roleTypeID was not provided or the provided type ID was for Biz Owner
 	if roleTypeIDStr == "" || roleTypeIDStr == fakeBusinessOwnerRoleTypeID {
 		mockSystemRoles = append(
 			mockSystemRoles,

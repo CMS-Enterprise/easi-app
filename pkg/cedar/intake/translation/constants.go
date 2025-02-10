@@ -11,7 +11,7 @@ const (
 	// inputStatusFinal indicates an object has been finalized in EASi
 	// applies to:
 	// * all actions
-	// * closed business cases
+	// * closed Business Cases
 	// * all GRT feedback entries
 	// * all notes
 	// * closed system intakes

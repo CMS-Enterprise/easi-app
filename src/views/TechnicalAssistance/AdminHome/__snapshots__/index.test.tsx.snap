@@ -202,7 +202,9 @@ exports[`TRB admin home > matches the snapshot 1`] = `
           class="grid-col desktop:grid-col-3 display-none desktop:display-block"
           data-testid="grid"
         >
-          <nav>
+          <nav
+            class="sticky top-8"
+          >
             <ul
               class="trb-admin__nav-list usa-list usa-list--unstyled"
             >
@@ -230,7 +232,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                       d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
                     />
                   </svg>
-                  Back to All Requests
+                  Back to all requests
                 </a>
               </li>
               <li

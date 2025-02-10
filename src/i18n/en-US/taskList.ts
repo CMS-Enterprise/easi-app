@@ -17,11 +17,11 @@ const taskList = {
     cancel: 'Go back'
   },
   decision: {
-    bizCaseApproved: 'Your business case has been approved.',
-    bizCaseRejected: 'Your business case has been rejected.',
+    bizCaseApproved: 'Your Business Case has been approved.',
+    bizCaseRejected: 'Your Business Case has been rejected.',
     aboutThisLcid: 'About this Life Cycle ID',
     tempLcidExplanation:
-      'You have been issued a Life Cycle ID, but you still have more steps to complete before your business case is fully approved.',
+      'You have been issued a Life Cycle ID, but you still have more steps to complete before your Business Case is fully approved.',
     tempLcidNextSteps:
       'Even though you have been issued a Life Cycle ID, you have some remaining tasks before your request is complete. After reviewing the information on this page, please return to the task list to continue your request.',
     notItRequest: 'Not an IT Request',
@@ -102,13 +102,13 @@ const taskList = {
   businessCase: {
     heading: 'Prepare your Business Case for the GRT',
     descriptionOne:
-      'Draft a business case to communicate the business need, the solutions and its associated costs. Meet with the Governance Review Team to discuss your draft, receive feedback and refine your business case.',
+      'Draft a Business Case to communicate the business need, the solutions and its associated costs. Meet with the Governance Review Team to discuss your draft, receive feedback and refine your Business Case.',
     descriptionTwo:
-      'This step can take some time due to scheduling and availability. You may go through multiple rounds of editing your business case and receiving feedback.',
+      'This step can take some time due to scheduling and availability. You may go through multiple rounds of editing your Business Case and receiving feedback.',
     status: 'Status:'
   },
   finalApproval: {
-    heading: 'Submit the business case for final approval',
+    heading: 'Submit the Business Case for final approval',
     description:
       'Update the Business Case based on feedback from the review meeting and submit it to the Governance Review Board.',
     link: 'Review and Submit'
@@ -128,8 +128,8 @@ const taskList = {
     continue: 'Continue',
     start: 'Start',
     viewSubmittedBusinessCase: 'View submitted request form',
-    updateDraftBusinessCase: 'Update draft business case',
-    updateSubmittedBusinessCase: 'Update submitted draft business case',
+    updateDraftBusinessCase: 'Update draft Business Case',
+    updateSubmittedBusinessCase: 'Update submitted draft Business Case',
     prepareGRB: 'Prepare for the GRB meeting (opens in new tab)',
     prepareGRT: 'Prepare for the GRT meeting (opens in new tab)',
     readDecision: 'Read decision from board'

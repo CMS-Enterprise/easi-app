@@ -33,7 +33,7 @@ export interface GetGovernanceRequestFeedback_systemIntake {
 
 export interface GetGovernanceRequestFeedback {
   /**
-   * Requests fetches a requester's own intake requests
+   * Requests fetches a requester's own Intake Requests
    * first is currently non-functional and can be removed later
    */
   systemIntake: GetGovernanceRequestFeedback_systemIntake | null;

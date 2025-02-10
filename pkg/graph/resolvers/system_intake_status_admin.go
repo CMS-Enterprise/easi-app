@@ -7,7 +7,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// CalculateSystemIntakeAdminStatus calculates the status to display in the admin view for a System Intake request, based on the current step, and the state of that step and the overall state
+// CalculateSystemIntakeAdminStatus calculates the status to display in the admin view for a System Intake Request, based on the current step, and the state of that step and the overall state
 func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
 	if intake.Step == models.SystemIntakeStepDECISION && intake.DecisionState == models.SIDSNoDecision {
 		return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application

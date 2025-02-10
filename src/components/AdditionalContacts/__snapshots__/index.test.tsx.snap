@@ -311,9 +311,9 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 Select an option
               </option>
               <option
-                value="Business owner"
+                value="Business Owner"
               >
-                Business owner
+                Business Owner
               </option>
               <option
                 value="Product Owner"

@@ -40,7 +40,7 @@ func NewEmailAddress(address string) EmailAddress {
 	return EmailAddress(address)
 }
 
-// EmailNotificationRecipients contains info about who to notify when an action is taken on an intake request
+// EmailNotificationRecipients contains info about who to notify when an action is taken on an Intake Request
 type EmailNotificationRecipients struct {
 	RegularRecipientEmails   []EmailAddress
 	ShouldNotifyITGovernance bool

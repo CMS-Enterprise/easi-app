@@ -207,7 +207,7 @@ describe('Trb Admin Team Home', () => {
       </Provider>
     );
 
-    // Default sort order on Submission Date desc
+    // Default sort order on Submission date desc
     expect(await findByTestId('trb-new-cell-0-0')).toHaveTextContent(
       '03/02/2023'
     );

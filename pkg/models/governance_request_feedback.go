@@ -15,7 +15,7 @@ const (
 	GRFSAProgressToNewStep GovernanceRequestFeedbackSourceAction = "PROGRESS_TO_NEW_STEP"
 )
 
-// GovernanceRequestFeedbackTargetForm is an enumeration of the possible forms on a governance intake request that can receive feedback
+// GovernanceRequestFeedbackTargetForm is an enumeration of the possible forms on a governance Intake Request that can receive feedback
 type GovernanceRequestFeedbackTargetForm string
 
 // These are the possible forms that can have governance request feedback

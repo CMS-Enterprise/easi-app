@@ -11,7 +11,7 @@ const notes = [
   {
     id: '1',
     content:
-      'The business case is not satisfactory. Requester needs to provide more details about alternative solutions.',
+      'The Business Case is not satisfactory. Requester needs to provide more details about alternative solutions.',
     byline: 'by John Smith | January 1 2021 at 11:59 AM'
   },
   {

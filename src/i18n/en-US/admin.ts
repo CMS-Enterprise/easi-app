@@ -5,7 +5,7 @@ const admin = {
   somethingIncorrect: 'See something incorrect?',
   editInformation: 'Edit information',
   component: 'CMS component owner',
-  businessOwner: 'Business owner',
+  businessOwner: 'Business Owner',
   viewSystem: 'View system profile',
   serviceOrContract: 'Service or contract names',
   contractNumber: 'Contract number',

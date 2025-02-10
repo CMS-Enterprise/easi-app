@@ -6,6 +6,7 @@ metadata:
 data:
   CEDAR_CORE_MOCK: 'true'
   CEDAR_INTAKE_ENABLED: 'false'
+  CEDAR_INTAKE_PUBLISHER_ENABLED: 'false'
   CEDAR_API_KEY: ""
   CEDAR_PROXY_URL: ""
   CEDAR_CORE_SKIP_PROXY: "false"

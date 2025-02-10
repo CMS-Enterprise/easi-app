@@ -264,7 +264,7 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contact Details</h2>
+      <h2 className="font-heading-xl">Contact details</h2>
 
       <DescriptionList title={t('review.contactDetails')}>
         <ReviewRow>
@@ -381,7 +381,7 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contract Details</h2>
+      <h2 className="font-heading-xl">Contract details</h2>
 
       <DescriptionList title={t('review.contractDetails')}>
         <ReviewRow>

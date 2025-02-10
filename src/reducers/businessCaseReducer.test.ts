@@ -11,7 +11,7 @@ import {
 
 import businessCaseReducer from './businessCaseReducer';
 
-describe('The business case reducer', () => {
+describe('The Business Case reducer', () => {
   it('returns the initial state', () => {
     expect(
       businessCaseReducer(undefined, {

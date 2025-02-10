@@ -71,7 +71,7 @@ export interface GetGovernanceTaskList_systemIntake {
 
 export interface GetGovernanceTaskList {
   /**
-   * Requests fetches a requester's own intake requests
+   * Requests fetches a requester's own Intake Requests
    * first is currently non-functional and can be removed later
    */
   systemIntake: GetGovernanceTaskList_systemIntake | null;

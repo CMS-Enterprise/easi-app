@@ -35,7 +35,7 @@ const governanceReviewBoard = {
       body: 'The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.',
 
       items: [
-        'At the meeting, you will talk through your business case with the board members and how the approval of your project will help benefit CMS Programs.',
+        'At the meeting, you will talk through your Business Case with the board members and how the approval of your project will help benefit CMS Programs.',
         'The Review Board will review your proposed alternatives and their pros and cons.',
         'At the meeting, you’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. '
       ],
@@ -55,7 +55,7 @@ const governanceReviewBoard = {
       takeWithYou: {
         title: 'Take with you',
         items: [
-          'Your business case',
+          'Your Business Case',
           'Any contracting materials that you might have in place. For example, a statement of work, a performance work statement etc.',
           'Additional materials that you’d like to talk through like a System Concept diagram etc."'
         ]
@@ -63,7 +63,7 @@ const governanceReviewBoard = {
       duringTheMeeting: {
         title: 'During the meeting',
         items: [
-          'When walking through the business case, highlight how this project would benefit CMS and further their current priorities.',
+          'When walking through the Business Case, highlight how this project would benefit CMS and further their current priorities.',
           'Review your costs in the Business Case and identify the assumptions you made when you calculated them.',
           'If you have been having discussing your request with Subject Matter Expert (SME) groups, highight it during the meeting. This helps the Review Board understand the project team’s circumstance and offers them reassurance. '
         ]

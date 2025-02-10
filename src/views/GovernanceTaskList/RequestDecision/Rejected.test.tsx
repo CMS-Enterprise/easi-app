@@ -8,7 +8,7 @@ import { SystemIntakeForm } from 'types/systemIntake';
 
 import Rejected from './Rejected';
 
-describe('Business owner task list rejected view', () => {
+describe('Business Owner task list rejected view', () => {
   const rejectedIntake: SystemIntake = {
     ...initialSystemIntakeForm,
     id: '40e866cb-6bf4-4b1a-8fc6-bf0d8328cdfc',

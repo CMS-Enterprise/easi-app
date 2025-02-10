@@ -1,6 +1,6 @@
 package models
 
-// SystemIntakeStatusAdmin represents the types of statuses that a user can see in the admin view of a system intake request.
+// SystemIntakeStatusAdmin represents the types of statuses that a user can see in the admin view of a system Intake Request.
 type SystemIntakeStatusAdmin string
 
 // These are the options for SystemIntakeStatusAdmin

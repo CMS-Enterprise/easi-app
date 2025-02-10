@@ -75,7 +75,7 @@ export function getTeam(
     }
 
     // Additional Points of Contact
-    // Anyone else not a business owner or project lead appears here
+    // Anyone else not a Business Owner or project lead appears here
     if (
       roles.every(
         ({ roleTypeName }) =>

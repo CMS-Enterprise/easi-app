@@ -196,7 +196,7 @@ func (s *EmailTestSuite) TestSubmitBizCaseRequester() {
 		)
 
 		s.Error(err)
-		s.Equal("submit business case requester template is nil", err.Error())
+		s.Equal("submit Business Case requester template is nil", err.Error())
 	})
 
 	s.Run("if the template fails to execute, we get the error from it", func() {

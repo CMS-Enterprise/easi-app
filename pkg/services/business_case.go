@@ -14,7 +14,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-// NewFetchBusinessCaseByID is a service to fetch the business case by id
+// NewFetchBusinessCaseByID is a service to fetch the Business Case by id
 func NewFetchBusinessCaseByID(
 	config Config,
 	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error),
@@ -24,7 +24,7 @@ func NewFetchBusinessCaseByID(
 		logger := appcontext.ZLogger(ctx)
 		businessCase, err := fetch(ctx, id)
 		if err != nil {
-			logger.Error("failed to fetch business case")
+			logger.Error("failed to fetch Business Case")
 			return &models.BusinessCaseWithCosts{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
@@ -32,13 +32,13 @@ func NewFetchBusinessCaseByID(
 			}
 		}
 		if !authorized(ctx) {
-			return &models.BusinessCaseWithCosts{}, &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to fetch business case")}
+			return &models.BusinessCaseWithCosts{}, &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to fetch Business Case")}
 		}
 		return businessCase, nil
 	}
 }
 
-// NewCreateBusinessCase is a service to create a business case
+// NewCreateBusinessCase is a service to create a Business Case
 func NewCreateBusinessCase(
 	config Config,
 	fetchIntake func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
@@ -51,15 +51,15 @@ func NewCreateBusinessCase(
 	return func(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
 		intake, err := fetchIntake(ctx, businessCase.SystemIntakeID)
 		if err != nil {
-			// We return an empty id in this error because the business case hasn't been created
+			// We return an empty id in this error because the Business Case hasn't been created
 			return &models.BusinessCaseWithCosts{}, &apperrors.ResourceConflictError{
-				Err:        errors.New("system intake is required to create a business case"),
+				Err:        errors.New("system intake is required to create a Business Case"),
 				Resource:   models.BusinessCase{},
 				ResourceID: "",
 			}
 		}
 		if !authorized(ctx, intake) {
-			return &models.BusinessCaseWithCosts{}, &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to create business case")}
+			return &models.BusinessCaseWithCosts{}, &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to create Business Case")}
 		}
 		err = appvalidation.BusinessCaseForCreation(businessCase, intake)
 		if err != nil {
@@ -118,7 +118,7 @@ func NewCreateBusinessCase(
 	}
 }
 
-// NewUpdateBusinessCase is a service to create a business case
+// NewUpdateBusinessCase is a service to create a Business Case
 func NewUpdateBusinessCase(
 	config Config,
 	fetchBusinessCase func(c context.Context, id uuid.UUID) (*models.BusinessCaseWithCosts, error),
@@ -138,7 +138,7 @@ func NewUpdateBusinessCase(
 			}
 		}
 		if !authorized(ctx, &existingBusinessCase.BusinessCase) {
-			return &models.BusinessCaseWithCosts{}, &apperrors.UnauthorizedError{Err: errors.New("user unauthorized to update business case")}
+			return &models.BusinessCaseWithCosts{}, &apperrors.UnauthorizedError{Err: errors.New("user unauthorized to update Business Case")}
 		}
 		// Uncomment below when UI has changed for unique lifecycle costs
 		//err = appvalidation.BusinessCaseForUpdate(businessCase)
@@ -150,7 +150,7 @@ func NewUpdateBusinessCase(
 
 		businessCase, err = update(ctx, businessCase)
 		if err != nil {
-			logger.Error("failed to update business case")
+			logger.Error("failed to update Business Case")
 			return &models.BusinessCaseWithCosts{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
@@ -160,7 +160,7 @@ func NewUpdateBusinessCase(
 
 		intake, err := fetchIntake(ctx, existingBusinessCase.SystemIntakeID)
 		if err != nil {
-			logger.Error("failed to fetch system intake after updating business case")
+			logger.Error("failed to fetch system intake after updating Business Case")
 			return businessCase, &apperrors.QueryError{ //return the error
 				Err:       err,
 				Model:     businessCase,
@@ -168,7 +168,7 @@ func NewUpdateBusinessCase(
 			}
 		}
 
-		// Since the db doesn't differentiate between draft or final, we need to rely on the step the intake is in. If the intake isn't in that state, the business case state won't update.
+		// Since the db doesn't differentiate between draft or final, we need to rely on the step the intake is in. If the intake isn't in that state, the Business Case state won't update.
 		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 			intake.DraftBusinessCaseState = formstate.GetNewStateForUpdatedForm(intake.DraftBusinessCaseState)
 		} else if intake.Step == models.SystemIntakeStepFINALBIZCASE {
@@ -176,7 +176,7 @@ func NewUpdateBusinessCase(
 		}
 		_, err = updateIntake(ctx, intake)
 		if err != nil {
-			logger.Error("failed to update system intake businessCaseState after updating business case state")
+			logger.Error("failed to update system intake businessCaseState after updating Business Case state")
 			return businessCase, &apperrors.QueryError{ //return the error
 				Err:       err,
 				Model:     businessCase,

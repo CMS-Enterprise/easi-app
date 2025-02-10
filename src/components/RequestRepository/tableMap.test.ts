@@ -104,7 +104,7 @@ const intakes: Array<TableSystemIntake> = [
   }
 ];
 
-describe('System intake request table map', () => {
+describe('System Intake Request table map', () => {
   const { t } = useTranslation();
   it('references correct admin note or action for filter date', () => {
     const formattedIntakes = tableMap(intakes, t);

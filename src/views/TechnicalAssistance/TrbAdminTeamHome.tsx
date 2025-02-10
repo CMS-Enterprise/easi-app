@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   CellProps,
@@ -26,6 +26,7 @@ import CsvDownloadLink from 'components/shared/CsvDownloadLink';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
+import useTableState from 'hooks/useTableState';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
 import { TRBRequestState } from 'types/graphql-global-types';
@@ -45,6 +46,7 @@ import {
   getHeaderSortIcon
 } from 'utils/tableSort';
 import NotFound from 'views/NotFound';
+import { ActiveStateType, TableStateContext } from 'views/TableStateWrapper';
 
 import TrbAssignLeadModal, {
   TrbAssignLeadModalOpener
@@ -263,15 +265,10 @@ function TrbNewRequestsTable({ requests, className }: TrbRequestsTableProps) {
                     <Button
                       type="button"
                       unstyled
-                      className="width-full display-flex"
                       {...column.getSortByToggleProps()}
                     >
-                      <div className="flex-fill text-no-wrap">
-                        {column.render('Header')}
-                      </div>
-                      <div className="position-relative width-205 margin-left-05">
-                        {getHeaderSortIcon(column)}
-                      </div>
+                      {column.render('Header')}
+                      {getHeaderSortIcon(column)}
                     </Button>
                   ) : (
                     <div className="text-normal text-no-wrap">
@@ -350,7 +347,10 @@ function TrbNewRequestsTable({ requests, className }: TrbRequestsTableProps) {
 function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
   const { t } = useTranslation('technicalAssistance');
 
-  const [activeTable, setActiveTable] = useState<'open' | 'closed'>('open');
+  const { trbExistingRequests } = useContext(TableStateContext);
+  const [activeTable, setActiveTable] = useState<ActiveStateType>(
+    trbExistingRequests.current.activeTableState
+  );
 
   // @ts-ignore
   const columns = useMemo<Column<TrbAdminTeamHomeRequest>[]>(() => {
@@ -425,6 +425,13 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
     ];
   }, [t]);
 
+  const data = useMemo(
+    () =>
+      // Switch on open vs closed existing requests
+      requests.filter((d: any) => d.state.toLowerCase() === activeTable),
+    [activeTable, requests]
+  );
+
   const {
     canNextPage,
     canPreviousPage,
@@ -441,23 +448,21 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
     rows,
     setGlobalFilter,
     setPageSize,
-    state
+    state,
+    setSortBy
   } = useTable(
     {
       columns,
       globalFilter: useMemo(() => globalFilterCellText, []),
-      data: useMemo(
-        () =>
-          // Switch on open vs closed existing requests
-          requests.filter((d: any) => d.state.toLowerCase() === activeTable),
-        [activeTable, requests]
-      ),
+      data,
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => [{ id: 'consultMeetingTime', desc: true }], []),
-        pageIndex: 0,
-        pageSize: 10
+        pageIndex: trbExistingRequests.current.state.pageIndex,
+        pageSize: window.localStorage['request-table-page-size']
+          ? Number(window.localStorage['request-table-page-size'])
+          : 10
       }
     },
     useFilters,
@@ -467,6 +472,17 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
   );
 
   rows.map(row => prepareRow(row));
+
+  // Sets persisted table state and stores state on unmount
+  useTableState(
+    'trbExistingRequests',
+    state,
+    gotoPage,
+    setSortBy,
+    setGlobalFilter,
+    activeTable,
+    data
+  );
 
   return (
     <div>
@@ -499,7 +515,10 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
               className={`easi-request-repo__tab-btn line-height-body-3 text-${
                 activeTable === 'open' ? 'primary' : 'base-dark'
               }`}
-              onClick={() => setActiveTable('open')}
+              onClick={() => {
+                setActiveTable('open');
+                gotoPage(0);
+              }}
             >
               {t('adminTeamHome.existingRequests.tabs.open.name')}
             </button>
@@ -514,7 +533,10 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
               className={`easi-request-repo__tab-btn line-height-body-3 text-${
                 activeTable === 'closed' ? 'primary' : 'base-dark'
               }`}
-              onClick={() => setActiveTable('closed')}
+              onClick={() => {
+                setActiveTable('closed');
+                gotoPage(0);
+              }}
             >
               {t('adminTeamHome.existingRequests.tabs.closed.name')}
             </button>
@@ -524,8 +546,9 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
 
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
-        tableID={t('systemTable.id')}
-        tableName={t('systemTable.title')}
+        initialFilter={trbExistingRequests.current.state.globalFilter}
+        tableID={t('adminTeamHome.existingRequests.id')}
+        tableName={t('adminTeamHome.existingRequests.heading')}
         className="margin-bottom-5 maxw-mobile-lg"
       />
 
@@ -543,15 +566,10 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
                   <Button
                     type="button"
                     unstyled
-                    className="width-full display-flex"
                     {...column.getSortByToggleProps()}
                   >
-                    <div className="flex-fill text-no-wrap">
-                      {column.render('Header')}
-                    </div>
-                    <div className="position-relative width-205 margin-left-05">
-                      {getHeaderSortIcon(column)}
-                    </div>
+                    {column.render('Header')}
+                    {getHeaderSortIcon(column)}
                   </Button>
                 </th>
               ))}

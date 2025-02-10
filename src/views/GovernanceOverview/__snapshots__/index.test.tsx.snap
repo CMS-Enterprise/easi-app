@@ -134,7 +134,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
             className="usa-process-list__heading"
             data-testid="processListHeading"
           >
-            Fill the intake request form
+            Fill the Intake Request form
           </h3>
           <p
             className="margin-bottom-1"
@@ -154,7 +154,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
           <p
             className="margin-bottom-1"
           >
-            The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps.
+            The Governance admin team will review your Intake Request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps.
           </p>
         </li>
       </ol>
@@ -453,7 +453,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
             className="usa-process-list__heading"
             data-testid="processListHeading"
           >
-            Fill the intake request form
+            Fill the Intake Request form
           </h3>
           <p
             className="margin-bottom-1"
@@ -473,7 +473,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
           <p
             className="margin-bottom-1"
           >
-            The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps.
+            The Governance admin team will review your Intake Request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps.
           </p>
         </li>
       </ol>

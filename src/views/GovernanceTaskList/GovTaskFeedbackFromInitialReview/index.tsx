@@ -40,7 +40,7 @@ const GovTaskFeedbackFromInitialReview = ({
     if (feedbackFromInitialReviewStatus === ITGovFeedbackStatus.CANT_START)
       return false;
 
-    // Return true if request has feedback on intake request
+    // Return true if request has feedback on Intake Request
     return !!governanceRequestFeedbacks.find(
       ({ targetForm }) =>
         targetForm === GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST

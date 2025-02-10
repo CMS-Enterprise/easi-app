@@ -46,7 +46,7 @@ export type AugmentedSystemIntakeContact = {
 };
 
 /**
- * A business case associated with an system IT governence request; contains
+ * A Business Case associated with an system IT governence request; contains
  * equester's justification for their system request
  */
 export type BusinessCase = {
@@ -72,7 +72,7 @@ export type BusinessCase = {
   updatedAt: Scalars['Time']['output'];
 };
 
-/** A solution proposal within a business case */
+/** A solution proposal within a Business Case */
 export type BusinessCaseSolution = {
   __typename: 'BusinessCaseSolution';
   acquisitionApproach?: Maybe<Scalars['String']['output']>;
@@ -89,7 +89,7 @@ export type BusinessCaseSolution = {
   title?: Maybe<Scalars['String']['output']>;
 };
 
-/** The status of a business case associated with an system IT governence request */
+/** The status of a Business Case associated with an system IT governence request */
 export enum BusinessCaseStatus {
   CLOSED = 'CLOSED',
   OPEN = 'OPEN'
@@ -171,7 +171,7 @@ export type CedarBudgetSystemCost = {
   budgetActualCost: Array<CedarBudgetActualCost>;
 };
 
-/** BusinessOwnerInformation contains information about the business owner for a CEDAR system */
+/** BusinessOwnerInformation contains information about the Business Owner for a CEDAR system */
 export type CedarBusinessOwnerInformation = {
   __typename: 'CedarBusinessOwnerInformation';
   beneficiaryAddressPurpose: Array<Scalars['String']['output']>;
@@ -813,13 +813,13 @@ export enum ITGovDecisionStatus {
   IN_REVIEW = 'IN_REVIEW'
 }
 
-/** The requester view of the IT gov draft business case step status */
+/** The requester view of the IT gov draft Business Case step status */
 export enum ITGovDraftBusinessCaseStatus {
   /** This step can't be started yet */
   CANT_START = 'CANT_START',
-  /** The draft business case has been completed and the intake is on a further step */
+  /** The draft Business Case has been completed and the intake is on a further step */
   DONE = 'DONE',
-  /** This draft business case has edits requested */
+  /** This draft Business Case has edits requested */
   EDITS_REQUESTED = 'EDITS_REQUESTED',
   /** The form has started to be filled out */
   IN_PROGRESS = 'IN_PROGRESS',
@@ -827,7 +827,7 @@ export enum ITGovDraftBusinessCaseStatus {
   NOT_NEEDED = 'NOT_NEEDED',
   /** Ready to begin filling out */
   READY = 'READY',
-  /** The draft business case has been submitted and it is waiting for feedback from the governance team */
+  /** The draft Business Case has been submitted and it is waiting for feedback from the governance team */
   SUBMITTED = 'SUBMITTED'
 }
 
@@ -845,9 +845,9 @@ export enum ITGovFeedbackStatus {
 export enum ITGovFinalBusinessCaseStatus {
   /** This step can't be started yet */
   CANT_START = 'CANT_START',
-  /** The business case has been completed and the intake is on a further step */
+  /** The Business Case has been completed and the intake is on a further step */
   DONE = 'DONE',
-  /** This business case has edits requested */
+  /** This Business Case has edits requested */
   EDITS_REQUESTED = 'EDITS_REQUESTED',
   /** The form has started to be filled out */
   IN_PROGRESS = 'IN_PROGRESS',
@@ -855,7 +855,7 @@ export enum ITGovFinalBusinessCaseStatus {
   NOT_NEEDED = 'NOT_NEEDED',
   /** Ready to begin filling out */
   READY = 'READY',
-  /** The business case has been submitted and it is waiting for feedback from the governance team */
+  /** The Business Case has been submitted and it is waiting for feedback from the governance team */
   SUBMITTED = 'SUBMITTED'
 }
 
@@ -929,7 +929,7 @@ export enum LifecycleCostPhase {
   OTHER = 'OTHER'
 }
 
-/** The type of a lifecycle cost solution, part of a business case */
+/** The type of a lifecycle cost solution, part of a Business Case */
 export enum LifecycleCostSolution {
   A = 'A',
   B = 'B',
@@ -1559,7 +1559,7 @@ export type Query = {
   roleTypes: Array<CedarRoleType>;
   roles: Array<CedarRole>;
   /**
-   * Requests fetches a requester's own intake requests
+   * Requests fetches a requester's own Intake Requests
    * first is currently non-functional and can be removed later
    */
   systemIntake?: Maybe<SystemIntake>;
@@ -1990,14 +1990,14 @@ export type SystemIntakeAnnualSpendingInput = {
   plannedYearOneSpendingITPortion?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Represents the OIT business owner of a system */
+/** Represents the OIT Business Owner of a system */
 export type SystemIntakeBusinessOwner = {
   __typename: 'SystemIntakeBusinessOwner';
   component?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
 
-/** The input data used to set the CMS business owner of a system */
+/** The input data used to set the CMS Business Owner of a system */
 export type SystemIntakeBusinessOwnerInput = {
   component: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -2245,7 +2245,7 @@ export type SystemIntakeGRBReviewDiscussionPost = {
   votingRole?: Maybe<SystemIntakeGRBReviewerVotingRole>;
 };
 
-/** GRB Reviewers for a system intake request */
+/** GRB Reviewers for a system Intake Request */
 export type SystemIntakeGRBReviewer = {
   __typename: 'SystemIntakeGRBReviewer';
   createdAt: Scalars['Time']['output'];
@@ -2508,7 +2508,7 @@ export enum SystemIntakeStatusAdmin {
   NOT_GOVERNANCE = 'NOT_GOVERNANCE'
 }
 
-/** This represents the (calculated) statuses that a requester view of a system intake request can show as part of the IT Gov v2 workflow */
+/** This represents the (calculated) statuses that a requester view of a system Intake Request can show as part of the IT Gov v2 workflow */
 export enum SystemIntakeStatusRequester {
   CLOSED = 'CLOSED',
   DRAFT_BUSINESS_CASE_EDITS_REQUESTED = 'DRAFT_BUSINESS_CASE_EDITS_REQUESTED',

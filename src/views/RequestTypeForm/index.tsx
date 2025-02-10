@@ -44,7 +44,7 @@ const RequestTypeForm = () => {
 
   // Set isNew from checking loc state false explicitly
   // This is done in such a way as a stop gap to fix the problem where
-  // changing Intake Request Types, from the overview page, will create new intake requests
+  // changing Intake Request Types, from the overview page, will create new Intake Requests
   const { state } = useLocation<{ isNew?: boolean }>();
   const isNew = state?.isNew !== false;
 

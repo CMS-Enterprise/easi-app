@@ -77,7 +77,7 @@ const getGovernanceRequestFeedbackQuery: MockedQuery<
       systemIntake: {
         __typename: 'SystemIntake',
         id: systemIntake.id,
-        requestName: 'System intake request',
+        requestName: 'System Intake Request',
         governanceRequestFeedbacks
       }
     }
@@ -141,7 +141,7 @@ describe('Feedback page', () => {
         initialEntries={[
           {
             pathname: `/governance-task-list/${systemIntake.id}/feedback`,
-            // Set state for when navigating to feedback from intake request form
+            // Set state for when navigating to feedback from Intake Request form
             state: {
               form: {
                 pathname: `/system/${systemIntake.id}/contact-details`,
@@ -179,7 +179,7 @@ describe('Feedback page', () => {
     );
     expect(breadcrumbLinks).toHaveLength(4);
 
-    // Check for intake request form breadcrumb link
+    // Check for Intake Request form breadcrumb link
     expect(
       within(breadcrumbLinks[2]).getByText(
         i18next.t<string>('Intake Request Form')

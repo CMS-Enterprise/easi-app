@@ -69,13 +69,13 @@ func AuthorizeUserIsBusinessCaseRequester(ctx context.Context, bizCase *models.B
 		return false
 	}
 
-	// If business case is owned by user, authorize
+	// If Business Case is owned by user, authorize
 	if principal.ID() == bizCase.EUAUserID {
 		return true
 	}
 	// Default to failure to authorize and create a quick audit log
 	logger.With(zap.Bool("Authorized", false)).
-		Info("user unauthorized as owning the business case")
+		Info("user unauthorized as owning the Business Case")
 	return false
 }
 

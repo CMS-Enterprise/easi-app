@@ -55,8 +55,8 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		s.Equal(http.StatusUnauthorized, resp.StatusCode)
 	})
 
-	// This needs to be run after the successful post test to ensure we have a business case to fetch
-	s.Run("GET will fetch the updated business case just saved", func() {
+	// This needs to be run after the successful post test to ensure we have a Business Case to fetch
+	s.Run("GET will fetch the updated Business Case just saved", func() {
 		req, err := http.NewRequest(http.MethodGet, getURL.String(), nil)
 		s.NoError(err)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
@@ -75,7 +75,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		s.Equal(intakeID, actualBusinessCase.SystemIntakeID)
 	})
 
-	// This needs to be run after the successful post test to ensure we have a business case to fetch
+	// This needs to be run after the successful post test to ensure we have a Business Case to fetch
 	s.Run("UPDATE will fail with no Authorization", func() {
 		putURL := getURL
 		requester := "Test Requester"
@@ -93,8 +93,8 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		s.Equal(http.StatusUnauthorized, resp.StatusCode)
 	})
 
-	// This needs to be run after the successful post test to ensure we have a business case to fetch
-	s.Run("UPDATE will fetch the updated business case just saved", func() {
+	// This needs to be run after the successful post test to ensure we have a Business Case to fetch
+	s.Run("UPDATE will fetch the updated Business Case just saved", func() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{

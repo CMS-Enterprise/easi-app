@@ -22,7 +22,7 @@ export const getColumnSortStatus = <T extends {}>(
 
 // Returns header sort icon based on sort status
 export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
-  const sharedClassName = 'margin-left-05 position-absolute';
+  const sharedClassName = 'margin-left-05';
 
   if (!column.isSorted) {
     return (

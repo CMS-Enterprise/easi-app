@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, ButtonGroup, Icon, Link } from '@trussworks/react-uswds';
+import { Icon, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
-import Modal from 'components/Modal';
 import { AtoStatusTag } from 'components/shared/AtoStatus';
+import ExternalLinkAndModal from 'components/shared/ExternalLinkAndModal';
 import { ATO_LEARN_MORE, CFACTS } from 'constants/externalUrls';
 import { GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate } from 'queries/types/GetSystemProfile';
 import { GetSystemWorkspace_cedarSystemDetails_roles as CedarRole } from 'queries/types/GetSystemWorkspace';
@@ -29,9 +29,6 @@ function AtoCard({
   className
 }: Props) {
   const { t } = useTranslation('systemWorkspace');
-
-  const [cfactsLinkModalOpen, setCfactsLinkModalOpen] =
-    useState<boolean>(false);
 
   return (
     <>
@@ -73,16 +70,13 @@ function AtoCard({
             >
               {t('spaces.ato.contact')}
             </Link>
-            <Link
-              className="usa-button usa-button--outline"
+            <ExternalLinkAndModal
               href={CFACTS}
-              onClick={e => {
-                e.preventDefault();
-                setCfactsLinkModalOpen(true);
-              }}
+              modalType="CFACTS"
+              buttonType="outline"
             >
               {t('spaces.ato.cfacts')}
-            </Link>
+            </ExternalLinkAndModal>
             <Link
               variant="unstyled"
               href={ATO_LEARN_MORE}
@@ -95,35 +89,6 @@ function AtoCard({
           </div>
         }
       />
-
-      {/* Leaving easi modal */}
-      <Modal
-        isOpen={!!cfactsLinkModalOpen}
-        closeModal={() => setCfactsLinkModalOpen(false)}
-      >
-        <h2 className="usa-modal__heading margin-bottom-2">
-          {t('spaces.ato.modal.header')}
-        </h2>
-        <p className="margin-y-0">{t('spaces.ato.modal.text')}</p>
-        <ButtonGroup className="margin-top-3">
-          <Link
-            className="usa-button"
-            href={CFACTS}
-            target="_blank"
-            onClick={() => setCfactsLinkModalOpen(false)}
-          >
-            {t('spaces.ato.modal.continue')}
-          </Link>
-          <Button
-            type="button"
-            unstyled
-            className="margin-left-1"
-            onClick={() => setCfactsLinkModalOpen(false)}
-          >
-            {t('spaces.ato.modal.cancel')}
-          </Button>
-        </ButtonGroup>
-      </Modal>
     </>
   );
 }

@@ -642,7 +642,7 @@ const mockBusinessCase: BusinessCaseModel = {
   }
 };
 
-describe('The business case data', () => {
+describe('The Business Case data', () => {
   describe('prepareBusinessCaseForApp', () => {
     const testDataFromApi = {
       id: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',

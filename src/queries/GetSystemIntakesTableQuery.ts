@@ -5,7 +5,7 @@ import { FundingSource } from './GetSystemIntakeQuery';
 /**
  * For use on requests table
  *
- * Returns all system intakes that have a submitted intake request form
+ * Returns all system intakes that have a submitted Intake Request form
  */
 export default gql`
   ${FundingSource}

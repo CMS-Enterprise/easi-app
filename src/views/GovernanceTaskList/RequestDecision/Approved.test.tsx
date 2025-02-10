@@ -8,7 +8,7 @@ import { SystemIntakeForm } from 'types/systemIntake';
 
 import Approved from './Approved';
 
-describe('Business owner task list approved view', () => {
+describe('Business Owner task list approved view', () => {
   const approvedIntake: SystemIntake = {
     ...initialSystemIntakeForm,
     id: '40e866cb-6bf4-4b1a-8fc6-bf0d8328cdfc',

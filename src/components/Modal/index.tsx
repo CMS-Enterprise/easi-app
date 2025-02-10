@@ -8,6 +8,7 @@ import './index.scss';
 
 export type ModalProps = {
   overlayClassName?: string;
+  className?: string;
   alignment?: 'right' | 'left';
   title?: string;
   children: ReactNode | ReactNodeArray;
@@ -19,6 +20,7 @@ export type ModalProps = {
 
 const Modal = ({
   overlayClassName,
+  className,
   alignment,
   title,
   children,
@@ -46,7 +48,7 @@ const Modal = ({
         },
         overlayClassName
       )}
-      className={classNames('easi-modal__content outline-0', {
+      className={classNames(className, 'easi-modal__content outline-0', {
         [`easi-modal__align-${alignment}`]: !!alignment,
         'radius-md': !alignment
       })}

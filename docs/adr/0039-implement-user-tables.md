@@ -72,7 +72,7 @@ As noted previously, we will handle the simpler cases of EUAIDs first, and later
 #### Areas that add Users
 1. System Intake
     a. Requester
-    b. business owner
+    b. Business Owner
     c. product manager
     d. ISSO
     e. TRB Collaborator
@@ -83,7 +83,7 @@ As noted previously, we will handle the simpler cases of EUAIDs first, and later
 
 2. Business Cases
     a. Requester (Should be the same as system intake)
-    b. business owner (Should be the same as system intake)
+    b. Business Owner (Should be the same as system intake)
 
 ## Proofs of Concepts
 

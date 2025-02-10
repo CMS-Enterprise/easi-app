@@ -69,7 +69,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": "NON_EXISTENT"})
 		BusinessCaseHandler{
 			HandlerBase:           s.base,
-			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(fmt.Errorf("failed to parse business case id to uuid")),
+			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(fmt.Errorf("failed to parse Business Case id to uuid")),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 
@@ -150,7 +150,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
-	s.Run("POST fails if business case isn't created", func() {
+	s.Run("POST fails if Business Case isn't created", func() {
 		rr := httptest.NewRecorder()
 		body, err := json.Marshal(map[string]string{
 			"system_intake_id": id.String(),
@@ -162,7 +162,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 		BusinessCaseHandler{
 			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
-			CreateBusinessCase:    newMockCreateBusinessCase(fmt.Errorf("failed to create business case")),
+			CreateBusinessCase:    newMockCreateBusinessCase(fmt.Errorf("failed to create Business Case")),
 		}.Handle()(rr, req)
 		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
@@ -287,7 +287,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 		BusinessCaseHandler{
 			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
-			UpdateBusinessCase:    newMockUpdateBusinessCase(fmt.Errorf("failed to update business case")),
+			UpdateBusinessCase:    newMockUpdateBusinessCase(fmt.Errorf("failed to update Business Case")),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 		s.Equal(http.StatusInternalServerError, rr.Code)

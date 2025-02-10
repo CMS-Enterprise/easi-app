@@ -62,7 +62,7 @@ const (
 	LifecycleCostYear5 LifecycleCostYear = "5"
 )
 
-// EstimatedLifecycleCost is the model for the cost of an estimated lifecycle line in the business case.
+// EstimatedLifecycleCost is the model for the cost of an estimated lifecycle line in the Business Case.
 type EstimatedLifecycleCost struct {
 	ID             uuid.UUID             `json:"id"`
 	BusinessCaseID uuid.UUID             `json:"business_case" db:"business_case"`
@@ -88,7 +88,7 @@ func (e *EstimatedLifecycleCosts) Scan(src interface{}) error {
 	return json.Unmarshal(src.([]byte), e)
 }
 
-// BusinessCase is the model for the business case form.
+// BusinessCase is the model for the Business Case form.
 type BusinessCase struct {
 	ID                                  uuid.UUID          `json:"id"`
 	EUAUserID                           string             `json:"euaUserId" db:"eua_user_id"`
@@ -151,13 +151,13 @@ type BusinessCase struct {
 }
 
 // BusinessCaseWithCosts is a helper to allow for legacy REST code
-// to function that combines lifecycle costs with the business case model
+// to function that combines lifecycle costs with the Business Case model
 type BusinessCaseWithCosts struct {
 	BusinessCase
 	LifecycleCostLines EstimatedLifecycleCosts `json:"lifecycleCostLines" db:"lifecycle_cost_lines"`
 }
 
-// BusinessCases is the model for a list of business cases
+// BusinessCases is the model for a list of Business Cases
 type BusinessCases []BusinessCase
 
 func (b BusinessCase) GetMappingKey() uuid.UUID {

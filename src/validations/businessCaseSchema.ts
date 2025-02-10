@@ -52,7 +52,7 @@ const lifecycleCostsSchema = Yup.object().shape({
 
 export const BusinessCaseFinalValidationSchema = {
   generalRequestInfo: Yup.object().shape({
-    requestName: Yup.string().trim().required('Enter the Project Name'),
+    requestName: Yup.string().trim().required('Enter the Project name'),
     requester: Yup.object().shape({
       name: Yup.string().trim().required("Enter the Requester's name"),
       phoneNumber: Yup.string()
@@ -307,7 +307,7 @@ export const BusinessCaseFinalValidationSchema = {
   })
 };
 
-// We don't validate much when a business case is in draft
+// We don't validate much when a Business Case is in draft
 // This mostly empty validation makes it easier to switch validations in the form code
 export const BusinessCaseDraftValidationSchema = {
   generalRequestInfo: Yup.object().shape({
@@ -324,7 +324,7 @@ export const BusinessCaseDraftValidationSchema = {
   alternativeB: Yup.object().shape({})
 };
 
-/** Returns business case schema based on whether final or draft */
+/** Returns Business Case schema based on whether final or draft */
 export const BusinessCaseSchema = (isFinal: boolean) =>
   isFinal
     ? BusinessCaseFinalValidationSchema

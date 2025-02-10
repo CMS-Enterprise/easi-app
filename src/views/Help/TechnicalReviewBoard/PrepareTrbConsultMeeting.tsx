@@ -95,10 +95,11 @@ function PrepareTrbConsultMeeting() {
           {t('outcomes.description')}
         </div>
         <ul className="easi-list line-height-body-5">
-          <li>{t('outcomes.list.0')}</li>
-          <li>{t('outcomes.list.1')}</li>
-          <li>{t('outcomes.list.2')}</li>
-          <li>{t('outcomes.list.3')}</li>
+          {t<string[]>('outcomes.list', {
+            returnObjects: true
+          }).map(item => (
+            <li key={item}>{item}</li>
+          ))}
         </ul>
 
         <NeedHelpBox

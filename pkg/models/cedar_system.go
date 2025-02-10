@@ -29,7 +29,7 @@ type CedarSubSystem struct {
 	Acronym     zero.String `json:"acronym"`
 }
 
-// BusinessOwnerInformation contains information about the business owner for a CEDAR system
+// BusinessOwnerInformation contains information about the Business Owner for a CEDAR system
 type BusinessOwnerInformation struct {
 	BeneficiaryAddressPurpose      []zero.String `json:"beneficiaryAddressPurpose"`
 	BeneficiaryAddressPurposeOther zero.String   `json:"beneficiaryAddressPurposeOther"`

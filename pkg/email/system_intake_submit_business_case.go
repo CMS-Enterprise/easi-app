@@ -47,7 +47,7 @@ func (sie systemIntakeEmails) businessCaseSubmissionRequesterBody(
 	}
 	var b bytes.Buffer
 	if sie.client.templates.systemIntakeSubmitBusinessCaseRequesterTemplate == nil {
-		return "", errors.New("submit business case requester template is nil")
+		return "", errors.New("submit Business Case requester template is nil")
 	}
 	err := sie.client.templates.systemIntakeSubmitBusinessCaseRequesterTemplate.Execute(&b, data)
 	if err != nil {
@@ -56,7 +56,7 @@ func (sie systemIntakeEmails) businessCaseSubmissionRequesterBody(
 	return b.String(), nil
 }
 
-// SendSubmitBizCaseRequesterNotification sends an email for a submitted business case
+// SendSubmitBizCaseRequesterNotification sends an email for a submitted Business Case
 func (sie systemIntakeEmails) SendSubmitBizCaseRequesterNotification(
 	ctx context.Context,
 	requesterEmailAddress models.EmailAddress,
@@ -117,7 +117,7 @@ func (sie systemIntakeEmails) businessCaseSubmissionReviewerBody(
 	}
 	var b bytes.Buffer
 	if sie.client.templates.systemIntakeSubmitBusinessCaseReviewerTemplate == nil {
-		return "", errors.New("submit business case reviewer template is nil")
+		return "", errors.New("submit Business Case reviewer template is nil")
 	}
 	err := sie.client.templates.systemIntakeSubmitBusinessCaseReviewerTemplate.Execute(&b, data)
 	if err != nil {
@@ -126,7 +126,7 @@ func (sie systemIntakeEmails) businessCaseSubmissionReviewerBody(
 	return b.String(), nil
 }
 
-// SendSubmitBizCaseReviewerNotification sends an email for a submitted business case
+// SendSubmitBizCaseReviewerNotification sends an email for a submitted Business Case
 func (sie systemIntakeEmails) SendSubmitBizCaseReviewerNotification(
 	ctx context.Context,
 	systemIntakeID uuid.UUID,

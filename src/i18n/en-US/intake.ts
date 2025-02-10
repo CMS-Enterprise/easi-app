@@ -137,9 +137,9 @@ const intake = {
   lifecycleId: 'Life Cycle ID',
   banner: {
     title: {
-      intakeIncomplete: 'Intake request incomplete',
+      intakeIncomplete: 'Intake Request incomplete',
       pendingResponse: 'Pending response',
-      startBizCase: 'Start business case',
+      startBizCase: 'Start Business Case',
       bizCaseIncomplete: 'Business case incomplete',
       responseRecevied: 'Response received',
       prepareGrt: 'Prepare for GRT',
@@ -173,7 +173,7 @@ const intake = {
   csvHeadings: {
     euaId: 'EUA ID',
     requesterName: 'Requester Name',
-    requesterComponent: 'Requester Component',
+    requesterComponent: 'Requester component',
     businessOwnerName: 'Business Owner Name',
     businessOwnerComponent: 'Business Owner Component',
     productManagerName: 'Product Manager Name',
@@ -182,7 +182,7 @@ const intake = {
     trbCollaborator: 'TRB Collaborator Name',
     oitCollaborator: 'OIT security Collaborator Name',
     eaCollaborator: 'EA Collaborator Name',
-    projectName: 'Project Name',
+    projectName: 'Project name',
     existingFunding: 'Existing Funding',
     fundingSource: 'Funding Number and Source',
     businessNeed: 'Business Need',
@@ -245,7 +245,7 @@ const intake = {
       'The EASi System Intake process can guide you through all stages of your procurement/project, connecting you with the resources, people and services that you need. Please complete and submit this CMS IT Intake form to engage with the CMS IT Governance review process. This is the first step to receive a CMS IT Life Cycle ID. Upon submission, you will receive an email promptly from the IT_Governance mailbox, and an IT Governance Team member will reach out regarding next steps.',
     heading: 'Contact details',
     requester: 'Requester',
-    requesterComponent: 'Requester Component',
+    requesterComponent: 'Requester component',
     businessOwner: {
       sameAsRequester: 'CMS Business Owner is same as requester',
       name: 'CMS Business Owner',
@@ -411,17 +411,17 @@ const intake = {
     heading: 'Check your answers before sending',
     notSubmitted: 'Not yet submitted',
     systemRequest: 'System Request',
-    submissionDate: 'Submission Date',
-    contactDetails: 'Contact Details',
-    requesterComponent: 'Requester Component',
-    cmsBusinessOwnerName: "CMS Business Owner's Name",
-    cmsBusinessOwnerComponent: 'CMS Business Owner Component',
-    cmsProjectManagerName: 'CMS Project/Product Manager or lead',
-    cmsProjectManagerComponent: 'CMS Project/Product manager or lead Component',
+    submissionDate: 'Submission date',
+    contactDetails: 'Contact details',
+    requesterComponent: 'Requester component',
+    cmsBusinessOwnerName: "CMS Business Owner's name",
+    cmsBusinessOwnerComponent: 'CMS Business Owner component',
+    cmsProjectManagerName: 'CMS Project/Product Manager or Lead',
+    cmsProjectManagerComponent: 'CMS Project/Product Manager or Lead component',
     isso: 'Does your project have an Information System Security Officer (ISSO)?',
     collaborating: 'I have started collaborating with',
-    requestDetails: 'Request Details',
-    projectName: 'Project Name',
+    requestDetails: 'Request details',
+    projectName: 'Project name',
     businessNeed: 'What is your business need?',
     solving: 'How are you thinking of solving it?',
     process: 'Where are you in the process?',
@@ -432,7 +432,7 @@ const intake = {
     usingSoftware:
       'Do you plan to use any software products to fulfill your business needs?',
     softwareAcquisitionMethods: 'How will the software be acquired?',
-    contractDetails: 'Contract Details',
+    contractDetails: 'Contract details',
     costs:
       'Do the costs for this request exceed what you are currently spending to meet your business need?',
     increase: 'Approximately how much do you expect the cost to increase?',
@@ -459,7 +459,7 @@ const intake = {
       decide: 'or decide there is no further governance needed',
       timeline: 'They will get back to you in two business days.'
     },
-    sendIntakeRequest: 'Send my intake request'
+    sendIntakeRequest: 'Send my Intake Request'
   }
 };
 

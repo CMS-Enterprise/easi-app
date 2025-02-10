@@ -23,7 +23,7 @@ func makeSystemIntakeAndIssueLCID(
 ) *models.SystemIntake {
 	pastMeetingDate := time.Now().AddDate(0, -1, 0)
 	var intake *models.SystemIntake
-	// business cases require EUA ID to be set in DB constraint
+	// Business Cases require EUA ID to be set in DB constraint
 	if requesterEUA == "" {
 		intake = makeSystemIntakeAndProgressToStep(
 			ctx,
