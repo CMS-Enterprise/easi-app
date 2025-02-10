@@ -28,14 +28,14 @@ const (
 	cedarPersonAssignee       = "person"
 	cedarOrganizationAssignee = "organization"
 
-	// the name of the business owner role in the CEDAR role/role types responses
+	// the name of the Business Owner role in the CEDAR role/role types responses
 	cedarBusinessOwnerRoleName = "Business Owner"
 )
 
 // TODO: cache this properly
 var cedarBusinessOwnerRoleTypeID string
 
-// getCedarBusinessOwnerRoleTypeID is a helper for fetching the business owner role type ID because role type IDs will differ per ENV
+// getCedarBusinessOwnerRoleTypeID is a helper for fetching the Business Owner role type ID because role type IDs will differ per ENV
 func getCedarBusinessOwnerRoleTypeID(ctx context.Context, c *Client) (string, error) {
 	// grab global and return role ID to prevent additional calls to CEDAR
 	if cedarBusinessOwnerRoleTypeID != "" {
@@ -51,7 +51,7 @@ func getCedarBusinessOwnerRoleTypeID(ctx context.Context, c *Client) (string, er
 			return role.ID.String, nil
 		}
 	}
-	return "", errors.New("no business owner role type found")
+	return "", errors.New("no Business Owner role type found")
 }
 
 func cedarRoleApplicationPtr() *string {
@@ -73,7 +73,7 @@ func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool)
 	}
 }
 
-// GetBusinessOwnerRolesBySystem makes a GET call to the /role endpoint using a system ID and a business owner role type ID
+// GetBusinessOwnerRolesBySystem makes a GET call to the /role endpoint using a system ID and a Business Owner role type ID
 func (c *Client) GetBusinessOwnerRolesBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarRole, error) {
 	businessOwnerRoleID, err := getCedarBusinessOwnerRoleTypeID(ctx, c)
 	if err != nil {

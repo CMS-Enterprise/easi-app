@@ -29,7 +29,7 @@ const GovernanceFeedback = () => {
   /**
    * Breadcrumb links
    *
-   * Includes form link if navigating from intake or business case form
+   * Includes form link if navigating from intake or Business Case form
    */
   const BreadcrumbLinks = () => {
     return (

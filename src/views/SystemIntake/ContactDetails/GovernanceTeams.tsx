@@ -18,7 +18,7 @@ import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { ContactDetailsForm } from 'types/systemIntake';
 
 /**
- * Governance team fields for use in Contact Details section of System Intake form
+ * Governance team fields for use in Contact details section of System Intake form
  */
 const GovernanceTeams = () => {
   const { t } = useTranslation('intake');

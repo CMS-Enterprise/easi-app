@@ -7,7 +7,7 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import RequestDetails from '.';
 
-describe('System intake form - Request Details', () => {
+describe('System intake form - Request details', () => {
   it('renders fields', () => {
     render(
       <VerboseMockedProvider>

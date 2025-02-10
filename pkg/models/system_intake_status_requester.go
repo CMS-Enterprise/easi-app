@@ -1,6 +1,6 @@
 package models
 
-// SystemIntakeStatusRequester represents the (calculated) statuses that a requester view of a system intake request can show
+// SystemIntakeStatusRequester represents the (calculated) statuses that a requester view of a system Intake Request can show
 type SystemIntakeStatusRequester string
 
 // These are the options for SystemIntakeStatusRequester
