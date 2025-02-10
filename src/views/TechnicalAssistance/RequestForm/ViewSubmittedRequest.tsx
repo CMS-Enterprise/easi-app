@@ -1,11 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
+import { GridContainer, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import IconButton from 'components/shared/IconButton';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 
 import SubmittedRequest from './SubmittedRequest';
@@ -29,15 +30,15 @@ function ViewSubmittedRequest({
       {!newTab && breadcrumbBar}
 
       {newTab && (
-        <Button
+        <IconButton
+          icon={<Icon.Close />}
           type="button"
           unstyled
           onClick={() => window.close()}
           className="margin-top-6"
         >
-          <Icon.Close className="margin-right-05 text-tbottom" />
           {t('closeTab')}
-        </Button>
+        </IconButton>
       )}
 
       <PageHeading
