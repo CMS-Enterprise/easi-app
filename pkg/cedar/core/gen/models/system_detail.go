@@ -19,7 +19,7 @@ import (
 // swagger:model SystemDetail
 type SystemDetail struct {
 
-	// Business Owner information
+	// business owner information
 	BusinessOwnerInformation *BusinessOwnerInformation `json:"BusinessOwnerInformation,omitempty"`
 
 	// data center hosting
@@ -49,11 +49,11 @@ type SystemDetail struct {
 	// Example: 326-10-0
 	BelongsTo string `json:"belongsTo,omitempty"`
 
-	// Business Owner org
+	// business owner org
 	// Example: Center for Medicare Management
 	BusinessOwnerOrg string `json:"businessOwnerOrg,omitempty"`
 
-	// Business Owner org comp
+	// business owner org comp
 	// Example: CM-(FFS)
 	BusinessOwnerOrgComp string `json:"businessOwnerOrgComp,omitempty"`
 
