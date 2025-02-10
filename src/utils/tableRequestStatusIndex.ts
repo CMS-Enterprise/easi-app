@@ -103,11 +103,11 @@ export const TRBRequestStatusIndex: Record<
   OPEN: 11
 } as const;
 
-type SortInput = {
+export type SortTRBInput = {
   original: { status: TRBRequestStatus; state: TRBRequestState };
 };
 
-export function trbRequestStatusSortType(a: SortInput, b: SortInput) {
+export function trbRequestStatusSortType(a: SortTRBInput, b: SortTRBInput) {
   const astatus =
     a.original.state === TRBRequestState.CLOSED
       ? a.original.state
