@@ -21,7 +21,9 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import AdminAction from 'components/shared/AdminAction';
 import Alert from 'components/shared/Alert';
+import CollapsableLink from 'components/shared/CollapsableLink';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -248,6 +250,37 @@ const GRBReview = ({
                 />
               </p>
             )}
+
+            <AdminAction
+              type="ITGov"
+              title="Set up GRB Review"
+              buttons={[
+                {
+                  label: 'Set up GRB Review',
+                  onClick: () =>
+                    history.push(`/it-governance/${id}/grb-review/form`)
+                },
+                {
+                  label: 'or, take a different action',
+                  unstyled: true,
+                  onClick: () =>
+                    history.push(`/it-governance/${id}/grb-review/reviewers`)
+                }
+              ]}
+            >
+              <p className="margin-top-0">
+                EASi will guide you through setting up a GRB review, including
+                the decision between an asynchronous review in EASi and a
+                standard review meeting.
+              </p>
+              <CollapsableLink
+                id="setUpGRBReview"
+                className="margin-top-2"
+                label="What do I need in order to set up a GRB review?"
+              >
+                sdfsdf
+              </CollapsableLink>
+            </AdminAction>
 
             {
               // Only show button if user is admin and review has not been started

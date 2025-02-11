@@ -173,5 +173,8 @@ export default {
     hideGrbReviews: 'Hide GRB reviews',
     grbDate: 'GRB date',
     noDateSet: 'No date set'
+  },
+  adminTask: {
+    title: 'Admin Task'
   }
 };
