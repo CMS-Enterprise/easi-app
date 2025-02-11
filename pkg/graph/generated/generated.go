@@ -8141,7 +8141,7 @@ type CedarThreat {
 }
 
 """
-BusinessOwnerInformation contains information about the business owner for a CEDAR system
+BusinessOwnerInformation contains information about the Business Owner for a CEDAR system
 """
 type CedarBusinessOwnerInformation {
   beneficiaryAddressPurpose: [String!]!
@@ -8426,7 +8426,7 @@ type CedarExchange {
 }
 
 """
-A solution proposal within a business case
+A solution proposal within a Business Case
 """
 type BusinessCaseSolution {
   acquisitionApproach: String
@@ -8453,7 +8453,7 @@ enum LifecycleCostPhase {
 }
 
 """
-The type of a lifecycle cost solution, part of a business case
+The type of a lifecycle cost solution, part of a Business Case
 """
 enum LifecycleCostSolution {
   A
@@ -8486,7 +8486,7 @@ type EstimatedLifecycleCost {
 }
 
 """
-The status of a business case associated with an system IT governence request
+The status of a Business Case associated with an system IT governence request
 """
 enum BusinessCaseStatus {
   CLOSED
@@ -8494,7 +8494,7 @@ enum BusinessCaseStatus {
 }
 
 """
-A business case associated with an system IT governence request; contains
+A Business Case associated with an system IT governence request; contains
 equester's justification for their system request
 """
 type BusinessCase {
@@ -8530,7 +8530,7 @@ enum SystemIntakeRequestType {
 }
 
 """
-Represents the OIT business owner of a system
+Represents the OIT Business Owner of a system
 """
 type SystemIntakeBusinessOwner {
   component: String
@@ -8848,7 +8848,7 @@ input SystemIntakeRequesterWithComponentInput {
 }
 
 """
-The input data used to set the CMS business owner of a system
+The input data used to set the CMS Business Owner of a system
 """
 input SystemIntakeBusinessOwnerInput {
   name: String!
@@ -9103,7 +9103,7 @@ input StartGRBReviewInput {
 }
 
 """
-GRB Reviewers for a system intake request
+GRB Reviewers for a system Intake Request
 """
 type SystemIntakeGRBReviewer {
   id: UUID!
@@ -10620,7 +10620,7 @@ Query definition for the schema
 """
 type Query {
   """
-  Requests fetches a requester's own intake requests
+  Requests fetches a requester's own Intake Requests
   first is currently non-functional and can be removed later
   """
   systemIntake(id: UUID!): SystemIntake
@@ -10807,7 +10807,7 @@ enum ITGovDecisionStatus {
 
 
 """
-The requester view of the IT gov draft business case step status
+The requester view of the IT gov draft Business Case step status
 """
 enum ITGovDraftBusinessCaseStatus {
   """
@@ -10828,17 +10828,17 @@ enum ITGovDraftBusinessCaseStatus {
   IN_PROGRESS
 
   """
-  This draft business case has edits requested
+  This draft Business Case has edits requested
   """
   EDITS_REQUESTED
 
   """
-  The draft business case has been submitted and it is waiting for feedback from the governance team
+  The draft Business Case has been submitted and it is waiting for feedback from the governance team
   """
   SUBMITTED
 
   """
-  The draft business case has been completed and the intake is on a further step
+  The draft Business Case has been completed and the intake is on a further step
   """
   DONE
 }
@@ -10895,17 +10895,17 @@ enum ITGovFinalBusinessCaseStatus {
   """
   IN_PROGRESS
   """
-  This business case has edits requested
+  This Business Case has edits requested
   """
   EDITS_REQUESTED
 
   """
-  The business case has been submitted and it is waiting for feedback from the governance team
+  The Business Case has been submitted and it is waiting for feedback from the governance team
   """
   SUBMITTED
 
   """
-  The business case has been completed and the intake is on a further step
+  The Business Case has been completed and the intake is on a further step
   """
   DONE
 }
@@ -10991,7 +10991,7 @@ enum SystemIntakeStatusAdmin {
 }
 
 """
-This represents the (calculated) statuses that a requester view of a system intake request can show as part of the IT Gov v2 workflow
+This represents the (calculated) statuses that a requester view of a system Intake Request can show as part of the IT Gov v2 workflow
 """
 enum SystemIntakeStatusRequester {
   INITIAL_REQUEST_FORM_NEW

@@ -60,7 +60,7 @@ const PDFExport = ({
     // Set auto margins back to show everything the browser renders
     pageStyle: `
       @page {
-        margin: auto;
+        margin: 1in;
       }
     `
   });

@@ -3,7 +3,7 @@ const systemProfile = {
   subHeader: 'Find information about existing CMS systems and applications.',
   newRequest: {
     info: 'Have a new system or application?',
-    button: 'Start an intake request'
+    button: 'Start an Intake Request'
   },
   navigation: {
     home: 'System Home',
@@ -123,7 +123,7 @@ const systemProfile = {
       activityOwner: 'Activity owner',
       completed: 'Completed on ',
       due: 'Due ',
-      noEmailContact: "Please contact this system's business owner.",
+      noEmailContact: "Please contact this system's Business Owner.",
       noATODisclaimer:
         'There is no ATO on file for this system. If you believe this to be an error, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>',
       noATOPOAM:
@@ -293,7 +293,7 @@ const systemProfile = {
           pocText:
             'These are additional roles to signify primary points of contact for specific topics as appropriate. They identify who is best to contact if someone has questions on those topics.',
           primaryList: [
-            '<strong>Business Owner:</strong> A person on the business owner team for the system or the person officially responsible for the business decisions of the system and the budgeting for the system. Every system should have at least one Business Owner, and this role must be a federal employee.',
+            '<strong>Business Owner:</strong> A person on the Business Owner team for the system or the person officially responsible for the business decisions of the system and the budgeting for the system. Every system should have at least one Business Owner, and this role must be a federal employee.',
             '<strong>System Maintainer:</strong> A lead of the system maintainer team for the system or the person responsible for overseeing the technical operations of the system. Every system should have at least one System Maintainer, and this role must be a federal employee.',
             "<strong>Contracting Officer's Representative (COR):</strong> A person responsible for all contracting tasks and activities related to the one or more system contracts. Every system should have at least one of the following: COR, GTL, or Project Lead, and that role must be filled by a federal employee.",
             '<strong>Government Task Lead (GTL):</strong> A person responsible for leading the work on one or more task orders on a contract for the system. Every system should have at least one of the following: COR, GTL, or Project Lead, and that role must be filled by a federal employee.',

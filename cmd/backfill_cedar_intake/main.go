@@ -104,20 +104,20 @@ func submitToCEDAR() {
 		fmt.Println("Successfully sent system intake", intake.ID.String())
 		fmt.Println("=======================================")
 
-		fmt.Println("Fetching business case for intake", intake.ID.String())
+		fmt.Println("Fetching Business Case for intake", intake.ID.String())
 		if intake.BusinessCaseID == nil {
 			continue
 		}
 		businessCase, err := store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
 		noErr(err)
 		if businessCase == nil {
-			fmt.Println("No business case found for intake", intake.ID.String(), ". Skipping")
+			fmt.Println("No Business Case found for intake", intake.ID.String(), ". Skipping")
 		} else {
-			fmt.Println("Sending business case", businessCase.ID.String(), "with intake ID", intake.ID.String())
+			fmt.Println("Sending Business Case", businessCase.ID.String(), "with intake ID", intake.ID.String())
 			err = client.PublishBusinessCase(ctx, *businessCase)
 			if err != nil {
 				errors = append(errors, err)
-				fmt.Println("Error sending business case", err)
+				fmt.Println("Error sending Business Case", err)
 			}
 		}
 		fmt.Println("=======================================")

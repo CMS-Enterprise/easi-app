@@ -657,7 +657,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		s.IsType(&apperrors.QueryError{}, err)
 	})
 
-	s.Run("Submits business case data to CEDAR when submitting draft business case", func() {
+	s.Run("Submits Business Case data to CEDAR when submitting draft Business Case", func() {
 		sendRequesterEmail := func(
 			ctx context.Context,
 			requesterEmail models.EmailAddress,
@@ -710,7 +710,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		s.Equal(1, submitToCEDARCount)
 	})
 
-	s.Run("Error submitting business case data to CEDAR when submitting draft business case does not return overall error", func() {
+	s.Run("Error submitting Business Case data to CEDAR when submitting draft Business Case does not return overall error", func() {
 		sendRequesterEmail := func(
 			ctx context.Context,
 			requesterEmail models.EmailAddress,
@@ -733,7 +733,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		}
 
 		failSubmitToCEDAR := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
-			return errors.New("Could not submit business case to CEDAR")
+			return errors.New("Could not submit Business Case to CEDAR")
 		}
 
 		intake := models.SystemIntake{}
