@@ -110,7 +110,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			acquisition_methods,
 			trb_follow_up_recommendation,
 			contract_name,
-		    grb_review_type,
+			grb_review_type,
 			created_at,
 			updated_at
 		)
@@ -170,7 +170,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:acquisition_methods,
 			:trb_follow_up_recommendation,
 			:contract_name,
-		    :grb_review_type,
+			:grb_review_type,
 			:created_at,
 			:updated_at
 		)`
