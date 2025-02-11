@@ -256,7 +256,7 @@ func UpdateSystemIntakeGRBReviewType(
 	store *storage.Store,
 	input models.UpdateSystemIntakeGRBReviewTypeInput,
 ) (*models.UpdateSystemIntakePayload, error) {
-	return store.UpdateSystemIntakeGRBReviewType(
+	return storage.UpdateSystemIntakeGRBReviewType(
 		ctx,
 		store,
 		input.SystemIntakeID,

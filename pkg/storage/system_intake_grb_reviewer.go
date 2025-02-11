@@ -90,7 +90,7 @@ func (s *Store) CompareSystemIntakeGRBReviewers(ctx context.Context, systemIntak
 	})
 }
 
-func (s *Store) UpdateSystemIntakeGRBReviewType(
+func UpdateSystemIntakeGRBReviewType(
 	ctx context.Context,
 	np sqlutils.NamedPreparer,
 	systemIntakeID uuid.UUID,
