@@ -33,6 +33,8 @@ import typeRichText from 'utils/testing/typeRichText';
 
 import GuidanceLetterForm from '.';
 
+window.scrollTo = vi.fn();
+
 const mockInsight: CreateTRBGuidanceLetterInsightInput = {
   trbRequestId: mockTrbRequestId,
   title: 'Insight 3',
