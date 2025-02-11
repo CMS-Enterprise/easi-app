@@ -1,6 +1,5 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import renderer, { act } from 'react-test-renderer';
 import { render } from '@testing-library/react';
 
 import GovernanceOverview from './index';
@@ -33,36 +32,28 @@ describe('The governance overview page', () => {
   });
 
   it('matches the snapshot (w/o id param)', async () => {
-    let tree: any;
-    await act(async () => {
-      tree = renderer.create(
-        <MemoryRouter initialEntries={['/governance-overview']}>
-          <Route
-            path="/governance-overview/:systemId?"
-            component={GovernanceOverview}
-          />
-        </MemoryRouter>
-      );
-    });
+    const { asFragment } = render(
+      <MemoryRouter initialEntries={['/governance-overview']}>
+        <Route
+          path="/governance-overview/:systemId?"
+          component={GovernanceOverview}
+        />
+      </MemoryRouter>
+    );
 
-    expect(tree.toJSON()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('matches the snapshot (w/ id param)', async () => {
-    let tree: any;
-    await act(async () => {
-      tree = renderer.create(
-        <MemoryRouter
-          initialEntries={['/governance-overview/test-intake-guid']}
-        >
-          <Route
-            path="/governance-overview/:systemId?"
-            component={GovernanceOverview}
-          />
-        </MemoryRouter>
-      );
-    });
+    const { asFragment } = render(
+      <MemoryRouter initialEntries={['/governance-overview/test-intake-guid']}>
+        <Route
+          path="/governance-overview/:systemId?"
+          component={GovernanceOverview}
+        />
+      </MemoryRouter>
+    );
 
-    expect(tree.toJSON()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

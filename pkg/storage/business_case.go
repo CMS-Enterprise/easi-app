@@ -30,7 +30,7 @@ const ValidStatusMsg = "pq: invalid input value for enum business_case_status: "
 // UniqueIntakeMsg is a match for an error we see when the system intake already has a biz case
 const UniqueIntakeMsg = "pq: duplicate key value violates unique constraint \"unique_intake_per_biz_case\""
 
-// FetchBusinessCaseByID queries the DB for a business case matching the given ID
+// FetchBusinessCaseByID queries the DB for a Business Case matching the given ID
 // This is legacy code used in REST endpoints
 func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.UUID) (*models.BusinessCaseWithCosts, error) {
 	businessCase := models.BusinessCaseWithCosts{}
@@ -51,7 +51,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.U
 	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, businessCaseID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business case %s", err),
+			fmt.Sprintf("Failed to fetch Business Case %s", err),
 			zap.String("id", businessCaseID.String()),
 		)
 		if errors.Is(err, sql.ErrNoRows) {
@@ -62,20 +62,20 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.U
 	return &businessCase, nil
 }
 
-// GetBusinessCaseBySystemIntakeID queries the DB for a business case matching the given ID of the System Intake
+// GetBusinessCaseBySystemIntakeID queries the DB for a Business Case matching the given ID of the System Intake
 func (s *Store) GetBusinessCaseBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.BusinessCase, error) {
 	businessCase := models.BusinessCase{}
 	err := namedGet(ctx, s.db, &businessCase, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeID, args{
 		"system_intake_id": systemIntakeID,
 	})
 	if err != nil {
-		// This function, unlike a few others in this file, does NOT error out if there is no business case, since it's
-		// totally valid to have a system intake without a business case, so we check the error type BEFORE logging
+		// This function, unlike a few others in this file, does NOT error out if there is no Business Case, since it's
+		// totally valid to have a system intake without a Business Case, so we check the error type BEFORE logging
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
 		}
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business case by SystemIntakeID %s", err),
+			fmt.Sprintf("Failed to fetch Business Case by SystemIntakeID %s", err),
 			zap.String("systemIntakeId", systemIntakeID.String()),
 		)
 		return nil, err
@@ -83,7 +83,7 @@ func (s *Store) GetBusinessCaseBySystemIntakeID(ctx context.Context, systemIntak
 	return &businessCase, nil
 }
 
-// GetBusinessCaseBySystemIntakeIDs queries the DB for a business case matching the given ID of the System Intake
+// GetBusinessCaseBySystemIntakeIDs queries the DB for a Business Case matching the given ID of the System Intake
 func (s *Store) GetBusinessCaseBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.BusinessCase, error) {
 	businessCases := []*models.BusinessCase{}
 	err := namedSelect(ctx, s.db, &businessCases, sqlqueries.SystemIntakeBusinessCase.GetBusinessCaseByIntakeIDs, args{
@@ -91,7 +91,7 @@ func (s *Store) GetBusinessCaseBySystemIntakeIDs(ctx context.Context, systemInta
 	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business case by SystemIntakeIDs %s", err),
+			fmt.Sprintf("Failed to fetch Business Case by SystemIntakeIDs %s", err),
 		)
 		return nil, err
 	}
@@ -106,7 +106,7 @@ func (s *Store) GetLifecycleCostsByBizCaseID(ctx context.Context, businessCaseID
 	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business case lifecycle costs by business case ID %s", err),
+			fmt.Sprintf("Failed to fetch Business Case lifecycle costs by Business Case ID %s", err),
 			zap.String("businessCaseID", businessCaseID.String()),
 		)
 		return nil, err
@@ -122,14 +122,14 @@ func (s *Store) GetLifecycleCostsByBizCaseIDs(ctx context.Context, businessCaseI
 	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business case lifecycle costs by business case ID %s", err),
+			fmt.Sprintf("Failed to fetch Business Case lifecycle costs by Business Case ID %s", err),
 		)
 		return nil, err
 	}
 	return estimatedLifecycleCosts, nil
 }
 
-// FetchOpenBusinessCaseByIntakeID queries the DB for an open business case matching the given intake ID
+// FetchOpenBusinessCaseByIntakeID queries the DB for an open Business Case matching the given intake ID
 // This is legacy code used in REST endpoints
 func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uuid.UUID) (*models.BusinessCaseWithCosts, error) {
 	businessCase := models.BusinessCaseWithCosts{}
@@ -149,7 +149,7 @@ func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uu
 	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, intakeID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business case %s", err),
+			fmt.Sprintf("Failed to fetch Business Case %s", err),
 			zap.String("id", intakeID.String()),
 		)
 		if errors.Is(err, sql.ErrNoRows) {
@@ -207,7 +207,7 @@ func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCas
 	return nil
 }
 
-// CreateBusinessCase creates a business case
+// CreateBusinessCase creates a Business Case
 func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
 	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) (*models.BusinessCaseWithCosts, error) {
 		id := uuid.New()
@@ -324,7 +324,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 		_, err := tx.NamedExec(createBusinessCaseSQL, &businessCase)
 		if err != nil {
 			logger.Error(
-				fmt.Sprintf("Failed to create business case with error %s", err),
+				fmt.Sprintf("Failed to create Business Case with error %s", err),
 				zap.String("EUAUserID", businessCase.EUAUserID),
 				zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
 			)
@@ -345,7 +345,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 		err = createEstimatedLifecycleCosts(ctx, tx, businessCase.ID, businessCase.LifecycleCostLines)
 		if err != nil {
 			logger.Error(
-				fmt.Sprintf("Failed to create business case with lifecycle costs with error %s", err),
+				fmt.Sprintf("Failed to create Business Case with lifecycle costs with error %s", err),
 				zap.String("EUAUserID", businessCase.EUAUserID),
 				zap.String("BusinessCaseID", businessCase.ID.String()),
 			)
@@ -360,7 +360,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 	})
 }
 
-// UpdateBusinessCase creates a business case
+// UpdateBusinessCase creates a Business Case
 func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.BusinessCaseWithCosts) (*models.BusinessCaseWithCosts, error) {
 	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) (*models.BusinessCaseWithCosts, error) {
 		// We are explicitly not updating ID, EUAUserID and SystemIntakeID
@@ -426,7 +426,7 @@ func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.Bus
 		result, err := tx.NamedExec(updateBusinessCaseSQL, &businessCase)
 		if err != nil {
 			logger.Error(
-				fmt.Sprintf("Failed to update business case %s", err),
+				fmt.Sprintf("Failed to update Business Case %s", err),
 				zap.String("id", businessCase.ID.String()),
 			)
 			return businessCase, err
@@ -434,7 +434,7 @@ func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.Bus
 		affectedRows, rowsAffectedErr := result.RowsAffected()
 		if affectedRows == 0 || rowsAffectedErr != nil {
 			logger.Error(
-				fmt.Sprintf("Failed to update business case %s", err),
+				fmt.Sprintf("Failed to update Business Case %s", err),
 				zap.String("id", businessCase.ID.String()),
 			)
 			return businessCase, errors.New("business case not found")
@@ -443,7 +443,7 @@ func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.Bus
 		_, err = tx.NamedExec(deleteLifecycleCostsSQL, &businessCase)
 		if err != nil {
 			logger.Error(
-				fmt.Sprintf("Failed to update pre-existing business case costs %s", err),
+				fmt.Sprintf("Failed to update pre-existing Business Case costs %s", err),
 				zap.String("id", businessCase.ID.String()),
 			)
 			return businessCase, err

@@ -23,10 +23,6 @@ exports[`Trb Help Prepare Consult Meeting > renders 1`] = `
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
-        <path
           d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
         />
       </svg>
@@ -130,7 +126,7 @@ exports[`Trb Help Prepare Consult Meeting > renders 1`] = `
         a presentation slide deck if you choose to share one. You may download TRB deck templates below.
       </li>
       <li>
-        any additional materials you wish to discuss at the meeting, such as a business case, incident report, security findings, etc.
+        any additional materials you wish to discuss at the meeting, such as a Business Case, incident report, security findings, etc.
       </li>
     </ul>
     <div

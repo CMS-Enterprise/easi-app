@@ -46,7 +46,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
               class="usa-link easi-request__button-link"
               href="/system/request-type"
             >
-              Start an intake request
+              Start an Intake Request
             </a>
           </div>
         </div>
@@ -104,10 +104,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
-                  />
-                  <path
                     d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
                   />
                 </svg>
@@ -142,10 +138,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
         width="1em"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
         <path
           d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
         />
@@ -203,7 +195,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
             tabindex="0"
           >
             <table
-              class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
+              class="usa-table usa-table--borderless width-full"
               data-testid="table"
             >
               <caption
@@ -239,10 +231,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
                           d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
                         />
                       </svg>
@@ -256,10 +244,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                         width="1em"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
                         <path
                           d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
                         />
@@ -292,10 +276,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
                           d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
                         />
                       </svg>
@@ -326,10 +306,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                         width="1em"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
                         <path
                           d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"
                         />
@@ -362,10 +338,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
                           d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
                         />
                       </svg>
@@ -397,10 +369,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                         width="1em"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
                         <path
                           d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
                         />
@@ -452,10 +420,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
                           d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
                         />
                       </svg>
@@ -506,10 +470,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
                           d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
                         />
                       </svg>
@@ -559,10 +519,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                         width="1em"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
                         <path
                           d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
                         />

@@ -49,7 +49,7 @@ export default {
       bizCaseDraft: {
         title: 'Prepare a draft Business Case',
         description:
-          'Draft a business case to communicate your business need, possible solutions and their associated costs. The Governance Team will review it with you and determine whether you are ready for a GRT or GRB meeting.',
+          'Draft a Business Case to communicate your business need, possible solutions and their associated costs. The Governance Team will review it with you and determine whether you are ready for a GRT or GRB meeting.',
         viewSubmittedDraftBusinessCase: 'View submitted draft Business Case',
         submittedInfo: 'Draft Business Case submitted. Waiting for feedback.',
         editsRequestedWarning:

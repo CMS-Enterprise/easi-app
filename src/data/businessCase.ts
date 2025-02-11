@@ -362,7 +362,7 @@ export const prepareBusinessCaseForApi = (
       : [])
   ];
 
-  // Return business case and convert empty strings to null for backend validation
+  // Return Business Case and convert empty strings to null for backend validation
   return {
     ...(businessCase.id && {
       id: businessCase.id

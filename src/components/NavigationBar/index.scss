@@ -104,12 +104,17 @@
     }
 }
 
+.system-dropdown {
+    padding: .92rem !important;
+}
+
 .system-dropdown:hover {
+
     @media (min-width: $desktop) {
         color: color('base-dark') !important;
     }
 
     &::after {
-        bottom: 0 !important;
+        bottom: -.1px !important;
     }
 }

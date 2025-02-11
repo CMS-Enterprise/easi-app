@@ -162,7 +162,7 @@
         },
         "decisionNextSteps": {
           "type": "string",
-          "description": "Steps that the business owner should take after receiving their decision",
+          "description": "Steps that the Business Owner should take after receiving their decision",
           "examples": [
             "Go get a contract"
           ]
@@ -269,7 +269,7 @@
         },
         "processStatus": {
           "type": "string",
-          "description": "Where is the business owner in process",
+          "description": "Where is the Business Owner in process",
           "examples": [
             "Initial development underway"
           ]

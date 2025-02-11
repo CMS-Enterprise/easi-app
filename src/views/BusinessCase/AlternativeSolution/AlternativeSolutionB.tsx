@@ -143,7 +143,7 @@ const AlternativeSolutionB = ({
                 type="button"
                 onClick={() => {
                   dispatchSave();
-                  // If final business case OR any field is filled
+                  // If final Business Case OR any field is filled
                   if (
                     isFinal &&
                     alternativeSolutionHasFilledFields(
