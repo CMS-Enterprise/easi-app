@@ -27,7 +27,7 @@ import Label from 'components/shared/Label';
 import Spinner from 'components/Spinner';
 import { GRBReviewerComparison, GRBReviewerFields } from 'types/grbReview';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
-import { CreateGRBReviewersSchema } from 'validations/grbReviewerSchema';
+import { CreateGRBReviewersSchema } from 'validations/grbReviewSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 type AddReviewersFromRequestProps = {
