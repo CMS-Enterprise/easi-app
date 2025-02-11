@@ -1,7 +1,7 @@
 CREATE TYPE grb_review_type AS ENUM (
-  'STANDARD',
-  'ASYNC'
-  );
+    'STANDARD',
+    'ASYNC'
+);
 
 ALTER TABLE system_intakes
-  ADD COLUMN grb_review_type grb_review_type NOT NULL DEFAULT 'STANDARD';
+ADD COLUMN grb_review_type GRB_REVIEW_TYPE NOT NULL DEFAULT 'STANDARD';
