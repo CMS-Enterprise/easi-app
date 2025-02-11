@@ -235,6 +235,11 @@ export enum SystemIntakeFormStep {
   INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
 }
 
+export enum SystemIntakeGRBReviewType {
+  ASYNC = "ASYNC",
+  STANDARD = "STANDARD",
+}
+
 /**
  * The possible statuses that an issued LCID can be in
  */
@@ -876,6 +881,7 @@ export interface SystemIntakeProgressToNewStepsInput {
   grbRecommendations?: HTML | null;
   additionalInfo?: HTML | null;
   adminNote?: HTML | null;
+  grbReviewType?: SystemIntakeGRBReviewType | null;
 }
 
 /**

@@ -1014,6 +1014,7 @@ export type Mutation = {
   updateSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   updateSystemIntakeContactDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeContractDetails?: Maybe<UpdateSystemIntakePayload>;
+  updateSystemIntakeGRBReviewType?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeGRBReviewer: SystemIntakeGRBReviewer;
   updateSystemIntakeLinkedCedarSystem?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeNote: SystemIntakeNote;
@@ -1426,6 +1427,12 @@ export type MutationUpdateSystemIntakeContactDetailsArgs = {
 /** Defines the mutations for the schema */
 export type MutationUpdateSystemIntakeContractDetailsArgs = {
   input: UpdateSystemIntakeContractDetailsInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationUpdateSystemIntakeGRBReviewTypeArgs = {
+  input: UpdateSystemIntakeGRBReviewTypeInput;
 };
 
 
@@ -1865,6 +1872,8 @@ export type SystemIntake = {
   /** This is a calculated state based on if a date exists for the GRB Meeting date */
   grbMeetingState: SystemIntakeMeetingState;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
+  /** GRB Review Type */
+  grbReviewType: SystemIntakeGRBReviewType;
   grbReviewers: Array<SystemIntakeGRBReviewer>;
   grtDate?: Maybe<Scalars['Time']['output']>;
   /** This is a calculated state based on if a date exists for the GRT Meeting date */
@@ -2245,6 +2254,11 @@ export type SystemIntakeGRBReviewDiscussionPost = {
   votingRole?: Maybe<SystemIntakeGRBReviewerVotingRole>;
 };
 
+export enum SystemIntakeGRBReviewType {
+  ASYNC = 'ASYNC',
+  STANDARD = 'STANDARD'
+}
+
 /** GRB Reviewers for a system intake request */
 export type SystemIntakeGRBReviewer = {
   __typename: 'SystemIntakeGRBReviewer';
@@ -2397,6 +2411,7 @@ export type SystemIntakeProgressToNewStepsInput = {
   adminNote?: InputMaybe<Scalars['HTML']['input']>;
   feedback?: InputMaybe<Scalars['HTML']['input']>;
   grbRecommendations?: InputMaybe<Scalars['HTML']['input']>;
+  grbReviewType?: InputMaybe<SystemIntakeGRBReviewType>;
   meetingDate?: InputMaybe<Scalars['Time']['input']>;
   newStep: SystemIntakeStepToProgressTo;
   notificationRecipients?: InputMaybe<EmailNotificationRecipients>;
@@ -3234,6 +3249,12 @@ export type CreateSystemIntakeGRBDiscussionPostInput = {
 export type CreateSystemIntakeGRBDiscussionReplyInput = {
   content: Scalars['TaggedHTML']['input'];
   initialPostID: Scalars['UUID']['input'];
+};
+
+/** Input data used to set or update a System Intake's GRB Review Type */
+export type UpdateSystemIntakeGRBReviewTypeInput = {
+  grbReviewType: SystemIntakeGRBReviewType;
+  systemIntakeID: Scalars['UUID']['input'];
 };
 
 export type CreateSystemIntakeGRBDiscussionPostMutationVariables = Exact<{

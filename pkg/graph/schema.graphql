@@ -795,6 +795,10 @@ type SystemIntake {
   GRB Review Discussion Posts/Threads
   """
   grbDiscussions: [SystemIntakeGRBReviewDiscussion!]!
+  """
+  GRB Review Type
+  """
+  grbReviewType: SystemIntakeGRBReviewType!
 }
 
 type SystemIntakeContractNumber {
@@ -1247,6 +1251,11 @@ type SystemIntakeGRBReviewDiscussion {
   replies: [SystemIntakeGRBReviewDiscussionPost!]!
 }
 
+enum SystemIntakeGRBReviewType {
+  STANDARD
+  ASYNC
+}
+
 
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!
@@ -1256,6 +1265,14 @@ input createSystemIntakeGRBDiscussionPostInput {
 input createSystemIntakeGRBDiscussionReplyInput {
   initialPostID: UUID!
   content: TaggedHTML!
+}
+
+"""
+Input data used to set or update a System Intake's GRB Review Type
+"""
+input updateSystemIntakeGRBReviewTypeInput {
+  systemIntakeID: UUID!
+  grbReviewType: SystemIntakeGRBReviewType!
 }
 
 """
@@ -1324,7 +1341,9 @@ input SystemIntakeProgressToNewStepsInput {
   grbRecommendations: HTML
   additionalInfo: HTML
   adminNote: HTML
+  grbReviewType: SystemIntakeGRBReviewType
 }
+
 """
 Input for updating an intake's LCID in IT Gov v2
 """
@@ -2561,6 +2580,9 @@ type Mutation {
 
   createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
   createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
+
+  updateSystemIntakeGRBReviewType(input: updateSystemIntakeGRBReviewTypeInput!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 

@@ -71,6 +71,13 @@ const (
 	SystemIntakeSoftwareAcquisitionOther               SystemIntakeSoftwareAcquisitionMethod = "OTHER"
 )
 
+type SystemIntakeGRBReviewType string
+
+const (
+	SystemIntakeGRBReviewTypeStandard SystemIntakeGRBReviewType = "STANDARD"
+	SystemIntakeGRBReviewTypeAsync    SystemIntakeGRBReviewType = "ASYNC"
+)
+
 // SystemIntake is the model for the system intake form
 type SystemIntake struct {
 	ID                              uuid.UUID                    `json:"id"`
@@ -151,6 +158,7 @@ type SystemIntake struct {
 	TRBFollowUpRecommendation       *SystemIntakeTRBFollowUp     `json:"trbFollowUpRecommendation" db:"trb_follow_up_recommendation"`
 	ContractName                    zero.String                  `json:"contractName" db:"contract_name"`
 	SystemRelationType              *RequestRelationType         `json:"relationType" db:"system_relation_type"`
+	GrbReviewType                   SystemIntakeGRBReviewType    `json:"grbReviewType" db:"grb_review_type"`
 }
 
 // SystemIntakes is a list of System Intakes

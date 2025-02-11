@@ -249,3 +249,17 @@ func GetPrincipalAsGRBReviewerBySystemIntakeID(ctx context.Context, systemIntake
 	}
 	return nil, nil
 }
+
+// UpdateSystemIntakeGRBReviewType updates the GRB review type on a system intake
+func UpdateSystemIntakeGRBReviewType(
+	ctx context.Context,
+	store *storage.Store,
+	input models.UpdateSystemIntakeGRBReviewTypeInput,
+) (*models.UpdateSystemIntakePayload, error) {
+	return storage.UpdateSystemIntakeGRBReviewType(
+		ctx,
+		store,
+		input.SystemIntakeID,
+		input.GrbReviewType,
+	)
+}
