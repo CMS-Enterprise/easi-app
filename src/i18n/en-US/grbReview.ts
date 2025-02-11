@@ -175,6 +175,25 @@ export default {
     noDateSet: 'No date set'
   },
   adminTask: {
-    title: 'Admin Task'
+    title: 'Admin Task',
+    setUpGRBReview: {
+      title: 'Set up GRB review',
+      description:
+        'EASi will guide you through setting up a GRB review, including the decision between an asynchronous review in EASi and a standard review meeting.',
+      whatDoINeedLabel: 'What do I need in order to set up a GRB review?',
+      whatDoINeed: [
+        '<bold>Presentation recording and transcript</bold>: Organize a time to asynchronously record this project team’s presentation. You will need to add a link to the recording during the setup process.',
+        '<bold>Additional supporting documents</bold>: EASi will automatically add a reference to the Business Case, Intake Request form, and any supporting documents already uploaded by the requester. Please have on hand any additional documents for the GRB to consider as a part of this request.',
+        '<bold>GRB reviewers</bold>: EASi will guide you through the process of adding voting and non-voting GRB reviewers. Please have on hand the names, email addresses, or EUA IDs of these individuals.',
+        '<bold>Timeframe</bold>: Decide on the number of days allotted for this GRB review. You will be able to add more time during the review process if needed.'
+      ]
+    },
+    sendReviewReminder: {
+      title: 'Send review reminder',
+      description:
+        'GRB voting members will get an automatic reminder when there is one day left in the review process. You may use the button below to send an additional reminder at any time.',
+      sendReminder: 'Send reminder'
+    },
+    takeADifferentAction: 'or, take a different action'
   }
 };
