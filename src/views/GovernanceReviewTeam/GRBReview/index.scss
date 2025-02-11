@@ -2,6 +2,7 @@
 
 #grbReview {
   button#startGrbReview,
+  #details,
   #discussions,
   #documents,
   #participants {
@@ -36,5 +37,14 @@
     p {
       flex: 2 1 auto;
     }
+  }
+}
+
+ul.grb-feedback-list-content-only {
+  margin-top: -10px;
+  margin-bottom: -10px;
+  li:first-of-type {
+    margin-top: 0 !important;
+    border-top: 0 !important;
   }
 }

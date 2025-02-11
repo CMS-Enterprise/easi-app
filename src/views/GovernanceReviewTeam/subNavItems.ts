@@ -34,6 +34,10 @@ const subNavItems = (
       hidden: !flags?.grbReviewTab,
       children: [
         {
+          route: `/it-governance/${systemId}/grb-review#details`,
+          text: 'grbReview:reviewDetails.title'
+        },
+        {
           route: `/it-governance/${systemId}/grb-review#documents`,
           text: 'grbReview:supportingDocuments'
         },
