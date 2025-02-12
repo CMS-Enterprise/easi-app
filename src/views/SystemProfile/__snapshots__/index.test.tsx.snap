@@ -253,7 +253,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
         data-testid="gridContainer"
       >
         <div
-          class="usa-alert usa-alert--info"
+          class="usa-alert usa-alert--info easi-alert-text"
           data-testid="alert"
         >
           <div
@@ -274,6 +274,17 @@ exports[`System Profile parent request > matches snapshot 1`] = `
               >
                 EnterpriseArchitecture@cms.hhs.gov
               </a>
+              .
+              <button
+                aria-label="Close Button"
+                class="usa-button usa-button--unstyled easi-alert__close-button text-black text-no-underline margin-top-0"
+                data-testid="button"
+                role="button"
+                tabindex="0"
+                type="button"
+              >
+                ✕
+              </button>
             </p>
           </div>
         </div>
