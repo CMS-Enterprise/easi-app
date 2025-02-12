@@ -207,6 +207,442 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
         </div>
       </li>
       <li
+        class="usa-card grid-col-12"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <header
+            class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
+            data-testid="CardHeader"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <dt>
+                  API status
+                </dt>
+              </div>
+            </div>
+          </header>
+          <div
+            class="usa-card__body padding-x-2 padding-y-0"
+            data-testid="CardBody"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <h3
+                  class="link-header margin-top-0 margin-bottom-2"
+                >
+                  API developed and launched 
+                </h3>
+                <div
+                  class="margin-bottom-2"
+                >
+                  <a
+                    class="usa-link link-header"
+                    href="/systems/000-100-0/system-data"
+                  >
+                    View API information
+                    <span
+                      aria-hidden="true"
+                    >
+                       
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                      → 
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div
+              class="easi-divider"
+            />
+          </div>
+          <div
+            class="usa-card__footer padding-0"
+            data-testid="CardFooter"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-2"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Data content categories
+                </dt>
+                <span
+                  class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+                  data-testid="tag"
+                >
+                  Agile Methodology 
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-card grid-col-12"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <div
+            class="usa-card__body padding-2"
+            data-testid="CardBody"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <dt>
+                  System fiscal year (FY) cost
+                </dt>
+                <h3
+                  class="link-header margin-top-0 margin-bottom-2"
+                >
+                  $4,500,000 
+                </h3>
+                <a
+                  class="usa-link link-header"
+                  href="/systems/000-100-0/funding-and-budget"
+                >
+                  Show more budget projects
+                  <span
+                    aria-hidden="true"
+                  >
+                     
+                  </span>
+                  <span
+                    aria-hidden="true"
+                  >
+                    → 
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-card grid-col-12"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <header
+            class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top margin-bottom-2"
+            data-testid="CardHeader"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <dt>
+                  Data exchanges
+                </dt>
+              </div>
+            </div>
+          </header>
+          <div
+            class="usa-card__body padding-x-2 padding-y-0"
+            data-testid="CardBody"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <div
+                  class="margin-bottom-1 text-bold"
+                >
+                  <svg
+                    class="usa-icon text-success"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                   
+                  <span
+                    class="text-tbottom line-height-body-3"
+                  >
+                    Beneficiary Information in the Cloud 
+                  </span>
+                  <svg
+                    class="usa-icon text-base"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="margin-bottom-1 text-bold"
+                >
+                  <svg
+                    class="usa-icon text-success"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                   
+                  <span
+                    class="text-tbottom line-height-body-3"
+                  >
+                    Happiness Quality Information 
+                  </span>
+                  <svg
+                    class="usa-icon text-base"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="text-underline link-header text-primary pointer"
+                  role="button"
+                  tabindex="0"
+                >
+                  + 1 more
+                </div>
+              </div>
+            </div>
+            <div
+              class="easi-divider margin-top-2"
+            />
+          </div>
+          <div
+            class="usa-card__footer padding-0"
+            data-testid="CardFooter"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-2"
+                data-testid="grid"
+              >
+                <a
+                  class="usa-link link-header"
+                  href="/systems/000-100-0/system-data"
+                >
+                  View data exchange details
+                  <span
+                    aria-hidden="true"
+                  >
+                     
+                  </span>
+                  <span
+                    aria-hidden="true"
+                  >
+                    → 
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-card grid-col-12"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <header
+            class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top margin-bottom-2"
+            data-testid="CardHeader"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <dt>
+                  Sub-systems
+                </dt>
+              </div>
+            </div>
+          </header>
+          <div
+            class="usa-card__body padding-x-2 padding-y-0"
+            data-testid="CardBody"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <div
+                  class="margin-bottom-1"
+                >
+                  <svg
+                    class="usa-icon text-base-lighter margin-right-1"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <a
+                    class="usa-link link-header margin-bottom-1 text-bold"
+                    href="/systems/000-100-0/sub-systems"
+                  >
+                    <span
+                      class="text-tbottom line-height-body-3"
+                    >
+                      Test Ocular Fiction Utensil 
+                    </span>
+                  </a>
+                </div>
+                <div
+                  class="margin-bottom-1"
+                >
+                  <svg
+                    class="usa-icon text-base-lighter margin-right-1"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <a
+                    class="usa-link link-header margin-bottom-1 text-bold"
+                    href="/systems/000-100-0/sub-systems"
+                  >
+                    <span
+                      class="text-tbottom line-height-body-3"
+                    >
+                      Bio-Energy Engagement File 
+                    </span>
+                  </a>
+                </div>
+                <div
+                  class="text-underline link-header text-primary pointer margin-top-2"
+                  role="button"
+                  tabindex="0"
+                >
+                  + 1 more
+                </div>
+              </div>
+            </div>
+            <div
+              class="easi-divider margin-top-2"
+            />
+          </div>
+          <div
+            class="usa-card__footer padding-0"
+            data-testid="CardFooter"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-2"
+                data-testid="grid"
+              >
+                <a
+                  class="usa-link link-header"
+                  href="/systems/000-100-0/sub-systems"
+                >
+                  View sub-system information
+                  <span
+                    aria-hidden="true"
+                  >
+                     
+                  </span>
+                  <span
+                    aria-hidden="true"
+                  >
+                    → 
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li
         class="usa-card grid-col-12 margin-bottom-0"
         data-testid="Card"
       >
