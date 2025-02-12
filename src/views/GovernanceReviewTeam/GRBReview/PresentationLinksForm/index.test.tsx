@@ -15,7 +15,10 @@ describe('GRB presentation links form', () => {
       <MemoryRouter>
         <VerboseMockedProvider>
           <MessageProvider>
-            <PresentationLinksForm {...systemIntake} />
+            <PresentationLinksForm
+              {...systemIntake}
+              grbPresentationLinks={null}
+            />
           </MessageProvider>
         </VerboseMockedProvider>
       </MemoryRouter>
