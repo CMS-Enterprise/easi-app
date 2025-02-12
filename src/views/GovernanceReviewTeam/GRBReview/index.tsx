@@ -231,21 +231,8 @@ const GRBReview = ({
               {t('description')}
             </p>
 
-            {/* Feature in progress alert */}
-            {/* <Alert type="info" heading={t('featureInProgress')}>
-              <Trans
-                i18nKey="grbReview:featureInProgressText"
-                components={{
-                  a: (
-                    <UswdsReactLink to="/help/send-feedback" target="_blank">
-                      feedback form
-                    </UswdsReactLink>
-                  )
-                }}
-              />
-            </Alert>
-
-            {grbReviewStartedAt && (
+            {/* TODO: Remove/reuse once BE work done */}
+            {/* {grbReviewStartedAt && (
               <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
                 <Trans
                   i18nKey="grbReview:reviewStartedOn"
@@ -258,6 +245,7 @@ const GRBReview = ({
 
             {isITGovAdmin && (
               <>
+                {/* TODO: May change once BE work is done to send reminder */}
                 {grbReviewStartedAt ? (
                   <AdminAction
                     type="ITGov"
@@ -296,9 +284,7 @@ const GRBReview = ({
                         label: t('adminTask.takeADifferentAction'),
                         unstyled: true,
                         onClick: () =>
-                          history.push(
-                            `/it-governance/${id}/grb-review/reviewers`
-                          )
+                          history.push(`/it-governance/${id}/actions`)
                       }
                     ]}
                   >
@@ -326,20 +312,6 @@ const GRBReview = ({
                 )}
               </>
             )}
-
-            {/* {
-              // Only show button if user is admin and review has not been started
-              !grbReviewStartedAt && isITGovAdmin && (
-                <Button
-                  type="button"
-                  onClick={() => setStartReviewModalIsOpen(true)}
-                  id="startGrbReview"
-                  className="margin-top-3"
-                >
-                  {t('startGrbReview')}
-                </Button>
-              )
-            } */}
 
             {/* Review details */}
             <h2 className="margin-bottom-0 margin-top-6" id="details">
