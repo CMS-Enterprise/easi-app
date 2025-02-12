@@ -321,7 +321,7 @@ const systemProfile = {
       tempEditBanner: {
         heading: 'See something incorrect on this page?',
         content:
-          'To request edits to the information on this page, please email <1>EnterpriseArchitecture@cms.hhs.gov</1>'
+          'To request edits to the information on this page, please email <1>EnterpriseArchitecture@cms.hhs.gov</1>.'
       }
     },
     toolsAndSoftware: {

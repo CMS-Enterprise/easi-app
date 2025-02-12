@@ -4,7 +4,6 @@ import { Link as RouterLink, NavLink, useParams } from 'react-router-dom';
 import { NavHashLink } from 'react-router-hash-link';
 import { useQuery } from '@apollo/client';
 import {
-  Alert,
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
@@ -24,6 +23,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import { getAtoStatus } from 'components/shared/AtoStatus';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import {
@@ -597,7 +597,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
           <GridContainer className="margin-bottom-3 margin-top-2">
             <Alert
               type="info"
-              headingLevel="h4"
+              isClosable
               heading={t('singleSystem.editPage.tempEditBanner.heading')}
             >
               <Trans i18nKey="systemProfile:singleSystem.editPage.tempEditBanner.content">
