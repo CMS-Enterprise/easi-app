@@ -3,7 +3,7 @@
 exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="easi-section padding-bottom-4 margin-bottom-4"
+    class="easi-section"
     data-testid="section-wrapper"
   >
     <ul
@@ -207,7 +207,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
         </div>
       </li>
       <li
-        class="usa-card grid-col-12"
+        class="usa-card grid-col-12 margin-bottom-0"
         data-testid="Card"
       >
         <div

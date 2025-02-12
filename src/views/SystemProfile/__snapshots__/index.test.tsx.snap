@@ -249,6 +249,36 @@ exports[`System Profile parent request > matches snapshot 1`] = `
         </div>
       </div>
       <div
+        class="grid-container margin-bottom-3 margin-top-2"
+        data-testid="gridContainer"
+      >
+        <div
+          class="usa-alert usa-alert--info"
+          data-testid="alert"
+        >
+          <div
+            class="usa-alert__body"
+          >
+            <h4
+              class="usa-alert__heading"
+            >
+              See something incorrect on this page?
+            </h4>
+            <p
+              class="usa-alert__text"
+            >
+              To request edits to the information on this page, please email 
+              <a
+                class="usa-link"
+                href="mailto:EnterpriseArchitecture@cms.hhs.gov"
+              >
+                EnterpriseArchitecture@cms.hhs.gov
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
         class="system-detail__subNav-accordion"
       >
         <button
@@ -410,7 +440,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                       data-testid="grid"
                     >
                       <div
-                        class="easi-section padding-bottom-4 margin-bottom-4"
+                        class="easi-section"
                         data-testid="section-wrapper"
                       >
                         <ul
@@ -614,7 +644,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                             </div>
                           </li>
                           <li
-                            class="usa-card grid-col-12"
+                            class="usa-card grid-col-12 margin-bottom-0"
                             data-testid="Card"
                           >
                             <div
@@ -720,6 +750,18 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                             </div>
                           </li>
                         </ul>
+                      </div>
+                      <div
+                        class="margin-top-6 padding-1 bg-base-lightest"
+                      >
+                        <p
+                          class="margin-0"
+                        >
+                          <strong>
+                            CMS UUID 
+                          </strong>
+                          000-100-0
+                        </p>
                       </div>
                     </div>
                     <div
