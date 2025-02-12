@@ -10,6 +10,7 @@ import {
   Link,
   ModalHeading
 } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 import { useDeleteSystemIntakeGRBPresentationLinksMutation } from 'gql/gen/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -128,47 +129,52 @@ function PresentationLinksCard({
     <>
       {/* Asynchronous presentation links card */}
       <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
-        <CardHeader>
+        <CardHeader
+          className={classNames({ 'padding-bottom-0': !isITGovAdmin })}
+        >
           <h3 className="display-inline-block margin-right-2 margin-bottom-0">
             {t('asyncPresentation.title')}
           </h3>
         </CardHeader>
-        <CardBody>
-          {isEmpty ? (
-            <>
-              <Alert type="info" slim className="margin-bottom-1">
-                {t('asyncPresentation.adminEmptyAlert')}
-              </Alert>
-              <div className="margin-top-2 margin-bottom-neg-2">
-                <IconLink
-                  icon={<Icon.Add className="margin-right-1" />}
-                  to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
-                >
-                  {t('asyncPresentation.addAsynchronousPresentationLinks')}
-                </IconLink>
-              </div>
-            </>
-          ) : (
-            isITGovAdmin && (
-              <div className="margin-top-neg-1">
-                <UswdsReactLink
-                  className="margin-right-2"
-                  to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
-                >
-                  {t('asyncPresentation.editPresentationLinks')}
-                </UswdsReactLink>
-                <Button
-                  type="button"
-                  unstyled
-                  className="text-error"
-                  onClick={() => setRemovePresentationLinksModalOpen(true)}
-                >
-                  {t('asyncPresentation.removeAllPresentationLinks')}
-                </Button>
-              </div>
-            )
-          )}
-        </CardBody>
+        {
+          // Hide action buttons for GRB reviewers
+          isITGovAdmin && (
+            <CardBody>
+              {isEmpty ? (
+                <>
+                  <Alert type="info" slim className="margin-bottom-1">
+                    {t('asyncPresentation.adminEmptyAlert')}
+                  </Alert>
+                  <div className="margin-top-2 margin-bottom-neg-2">
+                    <IconLink
+                      icon={<Icon.Add className="margin-right-1" />}
+                      to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
+                    >
+                      {t('asyncPresentation.addAsynchronousPresentationLinks')}
+                    </IconLink>
+                  </div>
+                </>
+              ) : (
+                <div className="margin-top-neg-1">
+                  <UswdsReactLink
+                    className="margin-right-2"
+                    to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
+                  >
+                    {t('asyncPresentation.editPresentationLinks')}
+                  </UswdsReactLink>
+                  <Button
+                    type="button"
+                    unstyled
+                    className="text-error"
+                    onClick={() => setRemovePresentationLinksModalOpen(true)}
+                  >
+                    {t('asyncPresentation.removeAllPresentationLinks')}
+                  </Button>
+                </div>
+              )}
+            </CardBody>
+          )
+        }
         <CardFooter>
           {!isEmpty && (
             <div
