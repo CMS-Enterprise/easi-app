@@ -194,6 +194,12 @@ function PresentationLinksCard({
                     </Link>
                   )}
 
+                  {!recordingLink && (recordingPasscode || transcriptLink) && (
+                    <span className="margin-right-2">
+                      {t('asyncPresentation.noRecordingLinkAvailable')}
+                    </span>
+                  )}
+
                   {recordingPasscode && (
                     <span className="text-base margin-right-2">
                       {t('asyncPresentation.passcode', {

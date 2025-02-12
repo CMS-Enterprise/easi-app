@@ -94,6 +94,7 @@ export default {
     editPresentationLinks: 'Edit presentation links',
     removeAllPresentationLinks: 'Remove all presentation links',
     viewRecording: 'View recording',
+    noRecordingLinkAvailable: 'No recording link available',
     passcode: '(Passcode: {{passcode}})',
     viewTranscript: 'View transcript',
     viewSlideDeck: 'View slide deck',
