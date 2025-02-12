@@ -54,9 +54,9 @@ function PresentationLinksCard({
       transcriptFileStatus === SystemIntakeDocumentStatus.UNAVAILABLE &&
       presentationDeckFileStatus === SystemIntakeDocumentStatus.UNAVAILABLE);
 
+  /** Returns true if either document is still being scanned */
   const isVirusScanning =
-    grbPresentationLinks &&
-    transcriptFileStatus === SystemIntakeDocumentStatus.PENDING &&
+    transcriptFileStatus === SystemIntakeDocumentStatus.PENDING ||
     presentationDeckFileStatus === SystemIntakeDocumentStatus.PENDING;
 
   // Remove links handling
