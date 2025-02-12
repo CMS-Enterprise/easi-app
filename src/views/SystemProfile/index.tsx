@@ -234,19 +234,6 @@ export function getSystemProfileData(
   };
 }
 
-/**
- * Determine whether a particular sub page is editable based on sub page key.
- */
-export function subPageIsEditable(componentID: SubpageKey): boolean {
-  // TODO: Add sub pages as they become editable (this will remove the temporary edit system profile banner from that sub page)
-  const editableComponentIDs: SubpageKey[] = ['home', 'team'];
-
-  if (!editableComponentIDs.includes(componentID)) {
-    return true;
-  }
-  return false;
-}
-
 type SystemProfileProps = {
   id?: string;
   modal?: boolean;
@@ -606,9 +593,8 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
           </SummaryBoxContent>
         </SummaryBox>
 
-        {/* Only display temporary edit system profile banner if sub page does not have full edit functionality */}
-        {subPageIsEditable(subpageKey) && (
-          <GridContainer className="margin-bottom-3 margin-top-2 desktop:margin-bottom-3">
+        {subinfo !== 'team' && (
+          <GridContainer className="margin-bottom-3 margin-top-2">
             <Alert
               type="info"
               headingLevel="h4"
@@ -677,6 +663,13 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                           className="padding-top-3"
                         >
                           {subComponent.component}
+                          <div className="margin-top-6 padding-1 bg-base-lightest">
+                            <p className="margin-0">
+                              <strong>{t('singleSystem.cmsId')}</strong>
+                              {cedarSystem.id ??
+                                t('singleSystem.noDataAvailable')}
+                            </p>
+                          </div>
                         </Grid>
 
                         {/* Contact info sidebar */}
