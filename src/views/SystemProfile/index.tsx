@@ -666,8 +666,11 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                           <div className="margin-top-6 padding-1 bg-base-lightest">
                             <p className="margin-0">
                               <strong>{t('singleSystem.cmsId')}</strong>
-                              {cedarSystem.id ??
-                                t('singleSystem.noDataAvailable')}
+                              {cedarSystem.id ?? (
+                                <span className="text-italic text-bold">
+                                  {t('singleSystem.noDataAvailable')}
+                                </span>
+                              )}
                             </p>
                           </div>
                         </Grid>
