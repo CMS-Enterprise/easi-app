@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -15,7 +15,7 @@ import { useDeleteSystemIntakeGRBPresentationLinksMutation } from 'gql/gen/graph
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import Alert from 'components/shared/Alert';
-import ExternalDocumentLinkModal from 'components/shared/ExternalDocumentLinkModal';
+import ExternalLinkAndModal from 'components/shared/ExternalLinkAndModal';
 import IconLink from 'components/shared/IconLink';
 import useMessage from 'hooks/useMessage';
 import { SystemIntakeGRBPresentationLinks } from 'queries/types/SystemIntakeGRBPresentationLinks';
@@ -94,35 +94,6 @@ function PresentationLinksCard({
       });
   };
 
-  // External link modal handling
-
-  const [externalUrl, setExternalUrl] = useState<string>('');
-  const [isExternalModalOpen, setExternalModalOpen] = useState<boolean>(false);
-
-  const externalModalScopeRef = useRef<HTMLDivElement>(null);
-
-  function linkHandler(event: MouseEvent) {
-    const a = (event.target as HTMLElement)?.closest(
-      '.presentation-card-links a'
-    );
-    if (a) {
-      event.preventDefault();
-      const href = a.getAttribute('href');
-      if (href) {
-        setExternalUrl(href);
-        setExternalModalOpen(true);
-      }
-    }
-  }
-
-  useEffect(() => {
-    const eventEl = externalModalScopeRef.current;
-    eventEl?.addEventListener('click', linkHandler);
-    return () => {
-      eventEl?.removeEventListener('click', linkHandler);
-    };
-  }, []);
-
   // Render empty if not an admin and no links
   if (!isITGovAdmin && isEmpty) return null;
 
@@ -177,7 +148,7 @@ function PresentationLinksCard({
         <CardFooter>
           {!isEmpty && (
             <div
-              ref={externalModalScopeRef}
+              // ref={externalModalScopeRef}
               className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 border-top-1px border-gray-10 padding-top-2"
             >
               {isVirusScanning ? (
@@ -186,14 +157,9 @@ function PresentationLinksCard({
                 <>
                   <div className="display-flex flex-wrap flex-gap-1">
                     {recordingLink && (
-                      <Link
-                        className="display-flex flex-align-center"
-                        href={recordingLink}
-                        target="_blank"
-                      >
+                      <ExternalLinkAndModal href={recordingLink}>
                         {t('asyncPresentation.viewRecording')}
-                        <Icon.Launch className="margin-left-05" />
-                      </Link>
+                      </ExternalLinkAndModal>
                     )}
 
                     {!recordingLink &&
@@ -213,14 +179,9 @@ function PresentationLinksCard({
                   </div>
 
                   {transcriptLink && (
-                    <Link
-                      className="display-flex flex-align-center"
-                      href={transcriptLink}
-                      target="_blank"
-                    >
+                    <ExternalLinkAndModal href={transcriptLink}>
                       {t('asyncPresentation.viewTranscript')}
-                      <Icon.Launch className="margin-left-05" />
-                    </Link>
+                    </ExternalLinkAndModal>
                   )}
 
                   {transcriptFileStatus ===
@@ -274,13 +235,6 @@ function PresentationLinksCard({
           </Button>
         </ButtonGroup>
       </Modal>
-
-      {/* Modal for external links */}
-      <ExternalDocumentLinkModal
-        isOpen={isExternalModalOpen}
-        url={externalUrl}
-        closeModal={() => setExternalModalOpen(false)}
-      />
     </>
   );
 }
