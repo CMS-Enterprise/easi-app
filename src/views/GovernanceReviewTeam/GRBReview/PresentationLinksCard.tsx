@@ -48,13 +48,6 @@ function PresentationLinksCard({
     presentationDeckFileURL
   } = grbPresentationLinks || {};
 
-  const isEmpty =
-    grbPresentationLinks === null ||
-    (grbPresentationLinks &&
-      recordingLink === null &&
-      transcriptFileStatus === SystemIntakeDocumentStatus.UNAVAILABLE &&
-      presentationDeckFileStatus === SystemIntakeDocumentStatus.UNAVAILABLE);
-
   /** Returns true if either document is still being scanned */
   const isVirusScanning =
     transcriptFileStatus === SystemIntakeDocumentStatus.PENDING ||
@@ -95,7 +88,7 @@ function PresentationLinksCard({
   };
 
   // Render empty if not an admin and no links
-  if (!isITGovAdmin && isEmpty) return null;
+  if (!isITGovAdmin && !grbPresentationLinks) return null;
 
   return (
     <>
@@ -110,7 +103,7 @@ function PresentationLinksCard({
           // Hide action buttons for GRB reviewers
           isITGovAdmin && (
             <CardBody>
-              {isEmpty ? (
+              {!grbPresentationLinks ? (
                 <>
                   <Alert type="info" slim className="margin-bottom-1">
                     {t('asyncPresentation.adminEmptyAlert')}
@@ -146,11 +139,8 @@ function PresentationLinksCard({
           )
         }
         <CardFooter>
-          {!isEmpty && (
-            <div
-              // ref={externalModalScopeRef}
-              className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 border-top-1px border-gray-10 padding-top-2"
-            >
+          {grbPresentationLinks && (
+            <div className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 border-top-1px border-gray-10 padding-top-2">
               {isVirusScanning ? (
                 <em>{t('asyncPresentation.virusScanning')}</em>
               ) : (
