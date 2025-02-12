@@ -20,7 +20,7 @@ import Label from 'components/shared/Label';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
 import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
-import { GRBReviewerSchema } from 'validations/grbReviewerSchema';
+import { GRBReviewerSchema } from 'validations/grbReviewSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 type AddReviewerFromEuaProps = {

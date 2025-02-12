@@ -112,7 +112,7 @@ const Insights = ({
                 className="margin-bottom-7"
                 trbRequestId={trbRequestId}
                 setReorderError={error =>
-                  setFormAlert(error ? { type: 'error', message: error } : null)
+                  error ? setFormAlert({ type: 'error', message: error }) : null
                 }
                 edit={insight => {
                   // Set form field values for editing
