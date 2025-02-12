@@ -589,9 +589,9 @@ func main() {
 		},
 	)
 
-	// getting to the final business case through the normal process means
-	// the business case was already filled as a draft, so there's no
-	// seed data needed for an unfilled Final business case
+	// getting to the final Business Case through the normal process means
+	// the Business Case was already filled as a draft, so there's no
+	// seed data needed for an unfilled Final Business Case
 
 	intakeID = uuid.MustParse("561a5cfc-83a6-4600-9531-3a465dddec19")
 	makeSystemIntakeAndProgressToStep(
@@ -876,7 +876,7 @@ func main() {
 	intakeID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
 	intake = makeSystemIntakeAndProgressToStep(
 		ctx,
-		"For business case Cypress test",
+		"For Business Case Cypress test",
 		&intakeID,
 		mock.EndToEndUserOne,
 		store,

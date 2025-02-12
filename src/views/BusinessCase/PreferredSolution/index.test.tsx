@@ -298,7 +298,7 @@ describe('Business case preferred solution form', () => {
     });
   });
 
-  describe('Final business case', () => {
+  describe('Final Business Case', () => {
     it('renders mandatory fields message', async () => {
       await renderPage(defaultStore, true);
 

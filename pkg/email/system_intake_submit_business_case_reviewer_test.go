@@ -180,7 +180,7 @@ func (s *EmailTestSuite) TestSubmitBizCaseReviewer() {
 		)
 
 		s.Error(err)
-		s.Equal("submit business case reviewer template is nil", err.Error())
+		s.Equal("submit Business Case reviewer template is nil", err.Error())
 	})
 
 	s.Run("if the template fails to execute, we get the error from it", func() {

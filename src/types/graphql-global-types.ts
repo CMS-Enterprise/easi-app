@@ -48,7 +48,7 @@ export enum ITGovDecisionStatus {
 }
 
 /**
- * The requester view of the IT gov draft business case step status
+ * The requester view of the IT gov draft Business Case step status
  */
 export enum ITGovDraftBusinessCaseStatus {
   CANT_START = "CANT_START",
@@ -296,7 +296,7 @@ export enum SystemIntakeStatusAdmin {
 }
 
 /**
- * This represents the (calculated) statuses that a requester view of a system intake request can show as part of the IT Gov v2 workflow
+ * This represents the (calculated) statuses that a requester view of a system Intake Request can show as part of the IT Gov v2 workflow
  */
 export enum SystemIntakeStatusRequester {
   CLOSED = "CLOSED",
@@ -711,7 +711,7 @@ export interface SystemIntakeAnnualSpendingInput {
 }
 
 /**
- * The input data used to set the CMS business owner of a system
+ * The input data used to set the CMS Business Owner of a system
  */
 export interface SystemIntakeBusinessOwnerInput {
   name: string;
