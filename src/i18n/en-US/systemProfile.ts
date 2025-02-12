@@ -48,7 +48,7 @@ const systemProfile = {
     },
     noDescription: 'No system description available',
     summary: {
-      back: 'Back to All systems',
+      back: 'Back to all systems',
       expand: 'Show system summary',
       hide: 'Hide system summary',
       label: 'Open system external link',
