@@ -6,7 +6,7 @@ const systemProfile = {
     button: 'Start an Intake Request'
   },
   navigation: {
-    home: 'System Home',
+    home: 'System home',
     details: 'Implementation details',
     detailsBasic: 'Basic details',
     detailsUrls: 'URLs and locations',
