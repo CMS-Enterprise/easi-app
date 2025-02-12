@@ -56,10 +56,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
   }, [locations, productionLocation, t]);
 
   return (
-    <SectionWrapper
-      borderBottom={isMobile}
-      className="padding-bottom-4 margin-bottom-4"
-    >
+    <SectionWrapper borderBottom={isMobile}>
       <CardGroup className="margin-0">
         {urlLocationCard && (
           <Card className="grid-col-12">
@@ -383,7 +380,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
             </Card>
           </>
         )}
-        <Card className="grid-col-12">
+        <Card className="grid-col-12 margin-bottom-0">
           <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
             <Grid row>
               <Grid desktop={{ col: 12 }} className="padding-0">
