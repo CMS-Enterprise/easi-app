@@ -49,7 +49,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                           href="/systems"
                         >
                           <span>
-                            Back to All systems
+                            Back to all systems
                           </span>
                         </a>
                       </li>
@@ -260,7 +260,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
           <h3
             class="padding-left-1"
           >
-            System Home
+            System home
           </h3>
           <svg
             class="usa-icon usa-icon--size-3"
@@ -305,7 +305,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                     class="nav-group-border usa-current"
                     href="/systems/000-100-0/home"
                   >
-                    System Home
+                    System home
                   </a>
                 </li>
                 <li
