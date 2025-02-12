@@ -106,6 +106,10 @@
 
 .system-dropdown {
     padding: .92rem !important;
+
+    &::after {
+        bottom: -1.1px !important;
+    }
 }
 
 .system-dropdown:hover {
@@ -115,6 +119,6 @@
     }
 
     &::after {
-        bottom: -.1px !important;
+        bottom: -1.1px !important;
     }
 }

@@ -208,6 +208,7 @@
   &.usa-alert .usa-alert__body {
     max-width: none;
     display: inline-block;
+    width: 100%;
   }
 }
 
@@ -224,10 +225,6 @@
 
 .top-8 {
   top: 4rem !important;
-}
-
-.usa-button-group {
-  align-items: center;
 }
 
 // Fixes button icon margin with updated USWDS
