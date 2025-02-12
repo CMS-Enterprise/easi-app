@@ -349,10 +349,10 @@ func submitToCEDAR(ctx context.Context) {
 		fmt.Println("Successfully sent action")
 	*/
 
-	fmt.Println("Sending business case")
+	fmt.Println("Sending Business Case")
 	err = client.PublishBusinessCase(ctx, *testData.businessCase)
 	noErr(err)
-	fmt.Println("Successfully sent business case")
+	fmt.Println("Successfully sent Business Case")
 
 	// fmt.Println("Sending GRT feedback")
 	// err = client.PublishGRTFeedback(ctx, *testData.feedback)
@@ -391,7 +391,7 @@ func dumpPayload(ctx context.Context) {
 
 	testData := makeTestData()
 
-	fmt.Println("Dumping business case data")
+	fmt.Println("Dumping Business Case data")
 	businessCaseIntakeObject := translation.TranslatableBusinessCase(*testData.businessCase)
 	dumpIntakeObject(ctx, &businessCaseIntakeObject, execDir)
 	fmt.Println("Business case data dumped inside " + execDir + string(filepath.Separator))

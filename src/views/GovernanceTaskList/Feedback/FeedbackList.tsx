@@ -34,7 +34,7 @@ type FeedbackListProps = {
 };
 
 /**
- * List of feedback items for intake requests
+ * List of feedback items for Intake Requests
  *
  * Includes functionality to download feedback as PDF
  */

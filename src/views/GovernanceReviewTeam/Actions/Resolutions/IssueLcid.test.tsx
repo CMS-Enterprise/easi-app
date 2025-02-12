@@ -1,6 +1,11 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { act, render, screen } from '@testing-library/react';
+import {
+  act,
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
@@ -144,7 +149,7 @@ describe('Issue LCID form', async () => {
     expect(modalTitle).toBeInTheDocument();
 
     const modalText = screen.getByText(
-      'You previously requested that the team make changes to their intake request form. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.'
+      'You previously requested that the team make changes to their Intake Request form. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.'
     );
     expect(modalText).toBeInTheDocument();
   });
@@ -170,6 +175,8 @@ describe('Issue LCID form', async () => {
         </MemoryRouter>
       </VerboseMockedProvider>
     );
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     // Current LCID is displayed
     const testId = await screen.findByTestId('current-lcid');

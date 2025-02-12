@@ -282,7 +282,7 @@ export interface GetSystemIntake_systemIntake {
 
 export interface GetSystemIntake {
   /**
-   * Requests fetches a requester's own intake requests
+   * Requests fetches a requester's own Intake Requests
    * first is currently non-functional and can be removed later
    */
   systemIntake: GetSystemIntake_systemIntake | null;

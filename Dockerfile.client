@@ -7,7 +7,7 @@
 # when the dependencies change.
 
 # Start with the official Node.js image to install dependencies
-FROM node:18.20.4-alpine AS modules
+FROM node:20.12.2-alpine AS modules
 
 WORKDIR /app
 # ENV PATH /app/node_modules/.bin:$PATH
