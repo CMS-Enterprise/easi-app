@@ -69,15 +69,21 @@ const sideNavItems = (
           componentId: 'system-data',
           hashLinks: [
             {
-              name: 'System data',
+              name: i18next.t<string>(
+                'systemProfile:singleSystem.systemData.header'
+              ),
               hash: '#system'
             },
             {
-              name: 'API Information',
+              name: i18next.t<string>(
+                'systemProfile:singleSystem.systemData.apiInfo'
+              ),
               hash: '#api'
             },
             {
-              name: 'Data exchanges',
+              name: i18next.t<string>(
+                'systemProfile:singleSystem.systemData.dataExchanges'
+              ),
               hash: '#exchanges'
             }
             /* {
