@@ -666,7 +666,9 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                           <div className="margin-top-6 padding-1 bg-base-lightest">
                             <p className="margin-0">
                               <strong>{t('singleSystem.cmsId')}</strong>
-                              {cedarSystem.id ?? (
+                              {/* Cedar System ID returns UUID with curly braces around it */}
+                              {/* the following will remove the curly braces, if not null */}
+                              {cedarSystem.id.replace(/[{}]/g, '') ?? (
                                 <span className="text-italic text-bold">
                                   {t('singleSystem.noDataAvailable')}
                                 </span>
