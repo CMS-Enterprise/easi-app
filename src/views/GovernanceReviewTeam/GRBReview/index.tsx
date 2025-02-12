@@ -21,7 +21,9 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import AdminAction from 'components/shared/AdminAction';
 import Alert from 'components/shared/Alert';
+import CollapsableLink from 'components/shared/CollapsableLink';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -67,6 +69,11 @@ const GRBReview = ({
   governanceRequestFeedbacks
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
+
+  const whatDoINeedItems: string[] = t('adminTask.setUpGRBReview.whatDoINeed', {
+    returnObjects: true
+  });
+
   const history = useHistory();
 
   const { action } = useParams<{
@@ -224,21 +231,8 @@ const GRBReview = ({
               {t('description')}
             </p>
 
-            {/* Feature in progress alert */}
-            <Alert type="info" heading={t('featureInProgress')}>
-              <Trans
-                i18nKey="grbReview:featureInProgressText"
-                components={{
-                  a: (
-                    <UswdsReactLink to="/help/send-feedback" target="_blank">
-                      feedback form
-                    </UswdsReactLink>
-                  )
-                }}
-              />
-            </Alert>
-
-            {grbReviewStartedAt && (
+            {/* TODO: Remove/reuse once BE work done */}
+            {/* {grbReviewStartedAt && (
               <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
                 <Trans
                   i18nKey="grbReview:reviewStartedOn"
@@ -247,21 +241,77 @@ const GRBReview = ({
                   }}
                 />
               </p>
-            )}
+            )} */}
 
-            {
-              // Only show button if user is admin and review has not been started
-              !grbReviewStartedAt && isITGovAdmin && (
-                <Button
-                  type="button"
-                  onClick={() => setStartReviewModalIsOpen(true)}
-                  className="margin-top-3"
-                  id="startGrbReview"
-                >
-                  {t('startGrbReview')}
-                </Button>
-              )
-            }
+            {isITGovAdmin && (
+              <>
+                {/* TODO: May change once BE work is done to send reminder */}
+                {grbReviewStartedAt ? (
+                  <AdminAction
+                    type="ITGov"
+                    title={t('adminTask.sendReviewReminder.title')}
+                    buttons={[
+                      {
+                        label: t('adminTask.sendReviewReminder.sendReminder'),
+                        onClick: () =>
+                          history.push(`/it-governance/${id}/grb-review/form`)
+                      },
+                      {
+                        label: t('adminTask.takeADifferentAction'),
+                        unstyled: true,
+                        onClick: () =>
+                          history.push(
+                            `/it-governance/${id}/grb-review/reviewers`
+                          )
+                      }
+                    ]}
+                  >
+                    <p className="margin-top-0">
+                      {t('adminTask.sendReviewReminder.description')}
+                    </p>
+                  </AdminAction>
+                ) : (
+                  <AdminAction
+                    type="ITGov"
+                    title={t('adminTask.setUpGRBReview.title')}
+                    buttons={[
+                      {
+                        label: t('adminTask.setUpGRBReview.title'),
+                        onClick: () => setStartReviewModalIsOpen(true)
+                        // history.push(`/it-governance/${id}/grb-review/form`)
+                      },
+                      {
+                        label: t('adminTask.takeADifferentAction'),
+                        unstyled: true,
+                        onClick: () =>
+                          history.push(`/it-governance/${id}/actions`)
+                      }
+                    ]}
+                  >
+                    <p className="margin-top-0">
+                      {t('adminTask.setUpGRBReview.description')}
+                    </p>
+
+                    <CollapsableLink
+                      id="setUpGRBReview"
+                      className="margin-top-2"
+                      label={t('adminTask.setUpGRBReview.whatDoINeedLabel')}
+                    >
+                      <ul className="padding-left-3 margin-0">
+                        {whatDoINeedItems.map((item, index) => (
+                          <li key={item}>
+                            <Trans
+                              i18nKey={`grbReview:adminTask.setUpGRBReview.whatDoINeed.${index}`}
+                              components={{ bold: <strong /> }}
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    </CollapsableLink>
+                  </AdminAction>
+                )}
+              </>
+            )}
 
             {/* Review details */}
             <h2 className="margin-bottom-0 margin-top-6" id="details">
