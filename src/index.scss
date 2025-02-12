@@ -107,6 +107,25 @@ h5 {
   }
 }
 
+
+
+// Add `flex-gap`, `flex-row-gap`, and `flex-column-gap` util classes
+$sizes: 1, '105', 2, '205', 3, 4, 5, 6, 7, 8, 9, 10;
+@mixin gap($property) {
+  @each $size in $sizes {
+    &.flex-#{$property}-#{$size} {
+      #{$property}: units($size)
+    }
+  }
+}
+
+.display-flex {
+  @include gap('gap');
+  @include gap('row-gap');
+  @include gap('column-gap');
+}
+
+
 // Common list styles
 ul.list-style-none {
   list-style: none;

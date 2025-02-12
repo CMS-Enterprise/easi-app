@@ -177,40 +177,43 @@ function PresentationLinksCard({
           {!isEmpty && (
             <div
               ref={externalModalScopeRef}
-              className="presentation-card-links display-flex flex-wrap border-top-1px border-gray-10 padding-top-2"
+              className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 border-top-1px border-gray-10 padding-top-2"
             >
               {isVirusScanning ? (
                 <em>{t('asyncPresentation.virusScanning')}</em>
               ) : (
                 <>
-                  {recordingLink && (
-                    <Link
-                      className="margin-right-2 display-flex flex-align-center"
-                      href={recordingLink}
-                      target="_blank"
-                    >
-                      {t('asyncPresentation.viewRecording')}
-                      <Icon.Launch className="margin-left-05" />
-                    </Link>
-                  )}
+                  <div className="display-flex flex-wrap flex-gap-1">
+                    {recordingLink && (
+                      <Link
+                        className="display-flex flex-align-center"
+                        href={recordingLink}
+                        target="_blank"
+                      >
+                        {t('asyncPresentation.viewRecording')}
+                        <Icon.Launch className="margin-left-05" />
+                      </Link>
+                    )}
 
-                  {!recordingLink && (recordingPasscode || transcriptLink) && (
-                    <span className="margin-right-2">
-                      {t('asyncPresentation.noRecordingLinkAvailable')}
-                    </span>
-                  )}
+                    {!recordingLink &&
+                      (recordingPasscode || transcriptLink) && (
+                        <span>
+                          {t('asyncPresentation.noRecordingLinkAvailable')}
+                        </span>
+                      )}
 
-                  {recordingPasscode && (
-                    <span className="text-base margin-right-2">
-                      {t('asyncPresentation.passcode', {
-                        passcode: recordingPasscode
-                      })}
-                    </span>
-                  )}
+                    {recordingPasscode && (
+                      <span className="text-base">
+                        {t('asyncPresentation.passcode', {
+                          passcode: recordingPasscode
+                        })}
+                      </span>
+                    )}
+                  </div>
 
                   {transcriptLink && (
                     <Link
-                      className="margin-right-2 display-flex flex-align-center"
+                      className="display-flex flex-align-center"
                       href={transcriptLink}
                       target="_blank"
                     >
@@ -222,11 +225,7 @@ function PresentationLinksCard({
                   {transcriptFileStatus ===
                     SystemIntakeDocumentStatus.AVAILABLE &&
                     transcriptFileURL && (
-                      <Link
-                        className="margin-right-2"
-                        href={transcriptFileURL}
-                        target="_blank"
-                      >
+                      <Link href={transcriptFileURL} target="_blank">
                         {t('asyncPresentation.viewTranscript')}
                       </Link>
                     )}
@@ -234,11 +233,7 @@ function PresentationLinksCard({
                   {presentationDeckFileStatus ===
                     SystemIntakeDocumentStatus.AVAILABLE &&
                     presentationDeckFileURL && (
-                      <Link
-                        className="margin-right-2"
-                        href={presentationDeckFileURL}
-                        target="_blank"
-                      >
+                      <Link href={presentationDeckFileURL} target="_blank">
                         {t('asyncPresentation.viewSlideDeck')}
                       </Link>
                     )}
