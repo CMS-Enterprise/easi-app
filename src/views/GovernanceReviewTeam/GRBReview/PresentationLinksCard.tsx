@@ -68,7 +68,8 @@ function PresentationLinksCard({
         input: {
           systemIntakeID
         }
-      }
+      },
+      refetchQueries: ['GetSystemIntake']
     });
 
   const [
