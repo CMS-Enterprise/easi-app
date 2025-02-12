@@ -3,34 +3,32 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 
-// import { JobCode } from 'constants/jobCodes';
-import { grbPresentationLinks as grbPresentationLinksMock } from 'data/mock/systemIntake';
+import { systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import { SystemIntakeGRBPresentationLinks } from 'queries/types/SystemIntakeGRBPresentationLinks';
 import { SystemIntakeDocumentStatus } from 'types/graphql-global-types';
 import { getExpectedAlertType } from 'utils/testing/helpers';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 
-import PresentationLinksCard, {
-  PresentationLinksCardProps
-} from './PresentationLinksCard';
+import PresentationLinksCard from './PresentationLinksCard';
 
 describe('Async Presentation Links Card', () => {
+  const grbPresentationLinksMock = systemIntake.grbPresentationLinks;
+
   function renderCard(
-    grbPresentationLinks: PresentationLinksCardProps['grbPresentationLinks'],
+    grbPresentationLinks: SystemIntakeGRBPresentationLinks | null,
     isAdmin: boolean = true
   ) {
-    const { systemIntakeID } = grbPresentationLinksMock!;
-
     return render(
       <MemoryRouter
-        initialEntries={[`/it-governance/${systemIntakeID}/grb-review`]}
+        initialEntries={[`/it-governance/${systemIntake.id}/grb-review`]}
       >
         <MessageProvider>
           <MockedProvider>
             <ITGovAdminContext.Provider value={isAdmin}>
               <PresentationLinksCard
-                systemIntakeID={systemIntakeID}
+                systemIntakeID={systemIntake.id}
                 grbPresentationLinks={grbPresentationLinks}
               />
             </ITGovAdminContext.Provider>
@@ -55,7 +53,7 @@ describe('Async Presentation Links Card', () => {
     screen.getByRole('link', { name: 'Add asynchronous presentation links' });
   });
 
-  it('With all transcript link)', () => {
+  it('With all transcript link', () => {
     renderCard(grbPresentationLinksMock);
 
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument();

@@ -27,6 +27,7 @@ import {
 import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeContact } from 'queries/types/SystemIntakeContact';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
+import { SystemIntakeGRBPresentationLinks } from 'queries/types/SystemIntakeGRBPresentationLinks';
 import {
   GovernanceRequestFeedbackTargetForm,
   GovernanceRequestFeedbackType,
@@ -163,18 +164,14 @@ export const documents: SystemIntakeDocument[] = [
   }
 ];
 
-export const grbPresentationLinks: SystemIntake['grbPresentationLinks'] = {
+export const grbPresentationLinks: SystemIntakeGRBPresentationLinks = {
   __typename: 'SystemIntakeGRBPresentationLinks',
-  systemIntakeID: '5af245bc-fc54-4677-bab1-1b3e798bb43c',
-  createdAt: '2025-01-17T04:20:32.122480967Z',
-  createdBy: '4e7b7b03-4b79-4adf-a9d1-e6f9dd764dad',
-  modifiedAt: null,
-  modifiedBy: null,
   recordingLink: 'https://google.com',
   recordingPasscode: '123456',
   transcriptFileName: 'transcript.doc',
   transcriptFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
   transcriptFileURL: 'https://google.com',
+  transcriptLink: null,
   presentationDeckFileName: 'presentationDeck.pptx',
   presentationDeckFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
   presentationDeckFileURL: 'https://google.com'

@@ -187,16 +187,12 @@ export interface GetSystemIntake_systemIntake_relatedIntakes {
 
 export interface GetSystemIntake_systemIntake_grbPresentationLinks {
   __typename: "SystemIntakeGRBPresentationLinks";
-  systemIntakeID: UUID;
-  createdAt: Time;
-  createdBy: UUID;
-  modifiedAt: Time | null;
-  modifiedBy: UUID | null;
   recordingLink: string | null;
   recordingPasscode: string | null;
   transcriptFileName: string | null;
   transcriptFileStatus: SystemIntakeDocumentStatus | null;
   transcriptFileURL: string | null;
+  transcriptLink: string | null;
   presentationDeckFileName: string | null;
   presentationDeckFileStatus: SystemIntakeDocumentStatus | null;
   presentationDeckFileURL: string | null;

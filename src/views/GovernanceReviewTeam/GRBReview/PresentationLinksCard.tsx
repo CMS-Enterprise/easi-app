@@ -18,14 +18,14 @@ import Alert from 'components/shared/Alert';
 import ExternalDocumentLinkModal from 'components/shared/ExternalDocumentLinkModal';
 import IconLink from 'components/shared/IconLink';
 import useMessage from 'hooks/useMessage';
-import { SystemIntake } from 'queries/types/SystemIntake';
+import { SystemIntakeGRBPresentationLinks } from 'queries/types/SystemIntakeGRBPresentationLinks';
 import { SystemIntakeDocumentStatus } from 'types/graphql-global-types';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 
 export type PresentationLinksCardProps = {
   systemIntakeID: string;
-  grbPresentationLinks: SystemIntake['grbPresentationLinks'];
+  grbPresentationLinks: SystemIntakeGRBPresentationLinks | null;
 };
 
 function PresentationLinksCard({
@@ -41,6 +41,7 @@ function PresentationLinksCard({
   const {
     recordingLink,
     recordingPasscode,
+    transcriptLink,
     transcriptFileStatus,
     transcriptFileURL,
     presentationDeckFileStatus,
@@ -192,6 +193,7 @@ function PresentationLinksCard({
                       <Icon.Launch className="margin-left-05" />
                     </Link>
                   )}
+
                   {recordingPasscode && (
                     <span className="text-base margin-right-2">
                       {t('asyncPresentation.passcode', {
@@ -199,6 +201,18 @@ function PresentationLinksCard({
                       })}
                     </span>
                   )}
+
+                  {transcriptLink && (
+                    <Link
+                      className="margin-right-2 display-flex flex-align-center"
+                      href={transcriptLink}
+                      target="_blank"
+                    >
+                      {t('asyncPresentation.viewTranscript')}
+                      <Icon.Launch className="margin-left-05" />
+                    </Link>
+                  )}
+
                   {transcriptFileStatus ===
                     SystemIntakeDocumentStatus.AVAILABLE &&
                     transcriptFileURL && (
@@ -210,6 +224,7 @@ function PresentationLinksCard({
                         {t('asyncPresentation.viewTranscript')}
                       </Link>
                     )}
+
                   {presentationDeckFileStatus ===
                     SystemIntakeDocumentStatus.AVAILABLE &&
                     presentationDeckFileURL && (

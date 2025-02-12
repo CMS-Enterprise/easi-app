@@ -13,7 +13,6 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import {
-  SystemIntakeGRBPresentationLinks,
   SystemIntakeGRBPresentationLinksInput,
   useSetSystemIntakeGRBPresentationLinksMutation
 } from 'gql/gen/graphql';
@@ -26,6 +25,7 @@ import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import { TabPanel, Tabs } from 'components/Tabs';
 import useMessage from 'hooks/useMessage';
+import { SystemIntakeGRBPresentationLinks } from 'queries/types/SystemIntakeGRBPresentationLinks';
 import { fileToBase64File } from 'utils/downloadFile';
 import { SetGRBPresentationLinksSchema } from 'validations/grbReviewSchema';
 
