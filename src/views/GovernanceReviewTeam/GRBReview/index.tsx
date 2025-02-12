@@ -289,8 +289,8 @@ const GRBReview = ({
                     buttons={[
                       {
                         label: t('adminTask.setUpGRBReview.title'),
-                        onClick: () =>
-                          history.push(`/it-governance/${id}/grb-review/form`)
+                        onClick: () => setStartReviewModalIsOpen(true)
+                        // history.push(`/it-governance/${id}/grb-review/form`)
                       },
                       {
                         label: t('adminTask.takeADifferentAction'),
