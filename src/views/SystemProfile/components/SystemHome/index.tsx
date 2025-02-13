@@ -217,12 +217,19 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                               </Tag>
                             )
                         )}
-                        <Tag
-                          key="expand-tags"
-                          className="system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
+                        <UswdsReactLink
+                          className="link-header"
+                          to={`/systems/${system.id}/system-data#data-categories`}
                         >
-                          +{system.cedarSoftwareProducts.apiDataArea.length - 2}
-                        </Tag>
+                          <Tag
+                            key="expand-tags"
+                            className="system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
+                          >
+                            +
+                            {system.cedarSoftwareProducts.apiDataArea.length -
+                              2}
+                          </Tag>
+                        </UswdsReactLink>
                       </>
                     ) : (
                       system.cedarSoftwareProducts.apiDataArea.map(tag => (
