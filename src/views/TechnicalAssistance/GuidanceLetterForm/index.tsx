@@ -223,8 +223,16 @@ const GuidanceLetterForm = () => {
 
   useEffect(() => {
     if (formAlert) {
-      const err = document.querySelector('.trb-form-error');
-      err?.scrollIntoView();
+      const alertComponent =
+        document.querySelector('.trb-form-error') ||
+        document.querySelector('.trb-form-success');
+
+      // Component needed any offset to sccurately smooth scroll to location
+      const y = alertComponent
+        ? alertComponent.getBoundingClientRect().top + window.scrollY + -80
+        : 0;
+
+      window.scrollTo({ top: y, behavior: 'smooth' });
     }
   }, [formAlert]);
 
