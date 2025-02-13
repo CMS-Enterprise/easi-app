@@ -185,7 +185,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                 <div className="margin-bottom-2">
                   <UswdsReactLink
                     className="link-header"
-                    to={`/systems/${system.id}/system-data#data-categories`}
+                    to={`/systems/${system.id}/system-data`}
                   >
                     {t('singleSystem.systemData.viewAPIInfo')}
                     <span aria-hidden>&nbsp;</span>
