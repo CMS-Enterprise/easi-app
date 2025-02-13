@@ -22,6 +22,7 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
+import formatDollars from 'utils/formatDollars';
 import showVal from 'utils/showVal';
 import { showAtoExpirationDate } from 'views/SystemProfile/helpers';
 
@@ -52,6 +53,8 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
       moreUrls
     };
   }, [locations, productionLocation, t]);
+
+  console.log(system);
 
   return (
     <SectionWrapper borderBottom={isMobile}>
@@ -231,13 +234,22 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
               <Grid desktop={{ col: 12 }} className="padding-0">
                 <dt>{t('singleSystem.fundingAndBudget.systemFiscalYear')}</dt>
                 <h3 className="link-header margin-top-0 margin-bottom-2">
-                  $4,500,000 {/* TODO: Get from CEDAR */}
+                  {system.budgetSystemCosts?.budgetActualCost[0]
+                    .actualSystemCost
+                    ? formatDollars(
+                        Math.trunc(
+                          Number(
+                            system.budgetSystemCosts?.budgetActualCost[0]
+                              .actualSystemCost
+                          )
+                        )
+                      )
+                    : t('singleSystem.noDataAvailable')}
                 </h3>
                 <UswdsReactLink
                   className="link-header"
                   to={`/systems/${system.id}/funding-and-budget`}
                 >
-                  {/* TODO: Get from CEDAR */}
                   {t('singleSystem.fundingAndBudget.viewMoreFunding')}
                   <span aria-hidden>&nbsp;</span>
                   <span aria-hidden>&rarr; </span>
