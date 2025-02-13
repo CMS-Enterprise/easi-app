@@ -14,7 +14,8 @@ import ITGovAdminContext from '../ITGovAdminContext';
 import PresentationLinksCard from './PresentationLinksCard';
 
 describe('Async Presentation Links Card', () => {
-  const grbPresentationLinksMock = systemIntake.grbPresentationLinks;
+  const grbPresentationLinksMock = systemIntake.grbPresentationLinks!;
+  const formattedRecordingPasscode = `(Passcode: ${grbPresentationLinksMock?.recordingPasscode})`;
 
   function renderCard(
     grbPresentationLinks: SystemIntakeGRBPresentationLinks | null,
@@ -38,22 +39,7 @@ describe('Async Presentation Links Card', () => {
     );
   }
 
-  it('Admin empty state', () => {
-    renderCard({
-      ...grbPresentationLinksMock!,
-      recordingLink: null,
-      transcriptFileStatus: SystemIntakeDocumentStatus.UNAVAILABLE,
-      presentationDeckFileStatus: SystemIntakeDocumentStatus.UNAVAILABLE
-    });
-
-    expect(getExpectedAlertType('info')).toHaveTextContent(
-      'If this GRB review has an asynchronous presentation and recording, you may add that content to EASi to provide additional information for GRB reviews.'
-    );
-
-    screen.getByRole('link', { name: 'Add asynchronous presentation links' });
-  });
-
-  it('With all transcript link', () => {
+  it('renders the presentation links with transcript file', () => {
     renderCard(grbPresentationLinksMock);
 
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
@@ -66,17 +52,38 @@ describe('Async Presentation Links Card', () => {
 
     screen.getByRole('link', { name: 'Edit presentation links' });
     screen.getByRole('button', { name: 'Remove all presentation links' });
-    screen.getByRole('link', { name: 'View recording' });
-    screen.getByText('(Passcode: 123456)');
+
+    screen.getByRole('button', { name: 'View recording' });
+    screen.getByText(formattedRecordingPasscode);
     screen.getByRole('link', { name: 'View transcript' });
     screen.getByRole('link', { name: 'View slide deck' });
   });
 
-  it('No passcode', () => {
+  it('renders the transcript link', () => {
     renderCard({
-      ...grbPresentationLinksMock!,
-      transcriptFileStatus: SystemIntakeDocumentStatus.UNAVAILABLE,
-      presentationDeckFileStatus: SystemIntakeDocumentStatus.UNAVAILABLE
+      ...grbPresentationLinksMock,
+      transcriptLink: 'http://transcriptlink.com'
+    });
+
+    screen.getByRole('button', { name: 'View transcript' });
+  });
+
+  it('renders virus scanning text', () => {
+    renderCard({
+      ...grbPresentationLinksMock,
+      presentationDeckFileStatus: SystemIntakeDocumentStatus.PENDING
+    });
+
+    screen.queryByText('Virus scanning in progress...');
+  });
+
+  it('hides empty fields', () => {
+    renderCard({
+      ...grbPresentationLinksMock,
+      recordingPasscode: '',
+      transcriptLink: '',
+      transcriptFileStatus: null,
+      presentationDeckFileStatus: null
     });
 
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
@@ -87,39 +94,46 @@ describe('Async Presentation Links Card', () => {
       })
     ).not.toBeInTheDocument();
 
-    screen.getByRole('link', { name: 'View recording' });
+    screen.getByRole('button', { name: 'View recording' });
 
-    expect(screen.queryByText('Passcode')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(formattedRecordingPasscode)
+    ).not.toBeInTheDocument();
+
     expect(
       screen.queryByRole('link', { name: 'View transcript' })
     ).not.toBeInTheDocument();
+
     expect(
       screen.queryByRole('link', { name: 'View slide deck' })
     ).not.toBeInTheDocument();
   });
 
-  it('wont render if empty links and not admin', () => {
-    renderCard(
-      {
-        ...grbPresentationLinksMock!,
-        recordingLink: null,
-        transcriptFileStatus: SystemIntakeDocumentStatus.UNAVAILABLE,
-        presentationDeckFileStatus: SystemIntakeDocumentStatus.UNAVAILABLE
-      },
-      false
-    );
+  it('hides empty card for GRB reviewers', () => {
+    renderCard(null, false);
 
     expect(
       screen.queryByRole('header', { name: 'Asynchronous presentation' })
     ).not.toBeInTheDocument();
   });
 
-  it('wont show link buttons if not admin', () => {
+  it('renders admin empty state', () => {
+    renderCard(null);
+
+    expect(getExpectedAlertType('info')).toHaveTextContent(
+      'If this GRB review has an asynchronous presentation and recording, you may add that content to EASi to provide additional information for GRB reviews.'
+    );
+
+    screen.getByRole('link', { name: 'Add asynchronous presentation links' });
+  });
+
+  it('hides action links for GRB reviewers', () => {
     renderCard(grbPresentationLinksMock, false);
 
     expect(
       screen.queryByRole('link', { name: 'Edit presentation links' })
     ).not.toBeInTheDocument();
+
     expect(
       screen.queryByRole('button', { name: 'Remove all presentation links' })
     ).not.toBeInTheDocument();
