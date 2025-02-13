@@ -4,9 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
+import { SystemIntakeGRBReviewType } from 'gql/gen/graphql';
 
 import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
+import CheckboxField from 'components/shared/CheckboxField';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
@@ -31,10 +33,12 @@ import { EditsRequestedContext } from '.';
 /** Meeting date sub-field for the GRT and GRB meeting radio fields */
 const MeetingDateField = ({
   control,
-  type
+  type,
+  disabled
 }: {
   control: Control<ProgressToNewStepFields>;
   type: 'GRT' | 'GRB';
+  disabled?: boolean;
 }) => {
   const { t } = useTranslation('action');
   return (
@@ -42,6 +46,7 @@ const MeetingDateField = ({
       control={control}
       name="meetingDate"
       shouldUnregister
+      disabled={disabled}
       render={({ field: { ref, ...field }, fieldState: { error } }) => (
         <FormGroup error={!!error} className="margin-left-4 margin-top-1">
           <Label htmlFor={field.name}>
@@ -171,8 +176,8 @@ const ProgressToNewStep = ({
               description: t('progressToNewStep.finalBusinessCaseDescription')
             },
             {
-              title: t('progressToNewStep.GRB_MEETING'),
-              description: t('progressToNewStep.grbMeetingDescription')
+              title: t('progressToNewStep.GRB_REVIEW'),
+              description: t('progressToNewStep.grbReviewDescription')
             }
           ]
         }}
@@ -236,7 +241,54 @@ const ProgressToNewStep = ({
                 label={t('progressToNewStep.GRB_MEETING')}
               />
               {field.value === SystemIntakeStepToProgressTo.GRB_MEETING && (
-                <MeetingDateField control={control} type="GRB" />
+                <MeetingDateField
+                  control={control}
+                  type="GRB"
+                  disabled={
+                    watch('grbReviewType') === SystemIntakeGRBReviewType.ASYNC
+                  }
+                />
+              )}
+
+              {field.value === SystemIntakeStepToProgressTo.GRB_MEETING && (
+                <Controller
+                  control={control}
+                  name="grbReviewType"
+                  render={({ field: { ...checkboxField } }) => {
+                    const { ref: ref2, ...checkboxFieldWithoutRef } =
+                      checkboxField;
+
+                    return (
+                      <FormGroup className="margin-left-4">
+                        <CheckboxField
+                          {...checkboxFieldWithoutRef}
+                          id={checkboxField.name}
+                          value={
+                            checkboxField.value ||
+                            SystemIntakeGRBReviewType.STANDARD
+                          }
+                          checked={
+                            checkboxField.value ===
+                            SystemIntakeGRBReviewType.ASYNC
+                          }
+                          onChange={e => {
+                            const isChecked = e.target.checked;
+                            if (isChecked) {
+                              setValue('meetingDate', undefined);
+                            }
+
+                            checkboxField.onChange(
+                              isChecked
+                                ? SystemIntakeGRBReviewType.ASYNC
+                                : SystemIntakeGRBReviewType.STANDARD
+                            );
+                          }}
+                          label={t('progressToNewStep.asyncGRB')}
+                        />
+                      </FormGroup>
+                    );
+                  }}
+                />
               )}
             </FormGroup>
           )}
