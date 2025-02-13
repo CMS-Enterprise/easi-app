@@ -16,7 +16,7 @@ const action = {
       description:
         'Select which steps are required for this request, and move the request to another step in the Governance process.',
       accordion:
-        'Choose this action when this request is ready for a draft Business Case, GRT meeting, final Business Case, or GRB meeting. You will be able to select the step to move the request to. '
+        'Choose this action when this request is ready for a draft Business Case, GRT meeting, final Business Case, or GRB review. You will be able to select the step to move the request to. '
     },
     decisionOPEN: {
       title_NO_DECISION: 'Issue a decision or close this request',
@@ -398,7 +398,7 @@ const action = {
       'Adding a date here will replace any {{type}} date already entered.',
     FINAL_BUSINESS_CASE: 'Final Business Case',
     finalBusinessCaseDescription:
-      'Choose this step if this request is ready for a final Business Case and subsequent GRB meeting, either because the draft Business Case is complete, or because this request is skipping the GRT.',
+      'Choose this step if this request is ready for a final Business Case and subsequent GRB review, either because the draft Business Case is complete, or because this request is skipping the GRT.',
     GRB_MEETING: 'GRB review',
     grbMeetingDescription:
       'Choose this step if the final Business case is complete and this team is ready to review their project with the GRB. The GRB review may happen asynchronously or in a meeting format.',

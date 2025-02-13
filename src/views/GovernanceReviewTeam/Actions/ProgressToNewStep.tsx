@@ -30,7 +30,7 @@ import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
 import { actionDateInPast } from './ManageLcid/RetireLcid';
 import { EditsRequestedContext } from '.';
 
-/** Meeting date sub-field for the GRT and GRB meeting radio fields */
+/** Meeting date sub-field for the GRT and GRB review radio fields */
 const MeetingDateField = ({
   control,
   type,
