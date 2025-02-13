@@ -176,8 +176,8 @@ const ProgressToNewStep = ({
               description: t('progressToNewStep.finalBusinessCaseDescription')
             },
             {
-              title: t('progressToNewStep.GRB_REVIEW'),
-              description: t('progressToNewStep.grbReviewDescription')
+              title: t('progressToNewStep.GRB_MEETING'),
+              description: t('progressToNewStep.grbMeetingDescription')
             }
           ]
         }}
@@ -190,6 +190,7 @@ const ProgressToNewStep = ({
               <Label htmlFor={field.name} className="text-normal" required>
                 {t('progressToNewStep.newStep')}
               </Label>
+
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
@@ -259,7 +260,7 @@ const ProgressToNewStep = ({
                       checkboxField;
 
                     return (
-                      <FormGroup className="margin-left-4">
+                      <FormGroup className="margin-left-4 margin-top-1">
                         <CheckboxField
                           {...checkboxFieldWithoutRef}
                           id={checkboxField.name}
@@ -301,7 +302,7 @@ const ProgressToNewStep = ({
               <Label
                 id={`${field.name}-label`}
                 htmlFor={field.name}
-                className="text-normal"
+                className="text-normal margin-top-4"
               >
                 {t('progressToNewStep.feedback')}
               </Label>

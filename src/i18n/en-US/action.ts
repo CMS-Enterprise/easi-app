@@ -399,8 +399,8 @@ const action = {
     FINAL_BUSINESS_CASE: 'Final Business Case',
     finalBusinessCaseDescription:
       'Choose this step if this request is ready for a final Business Case and subsequent GRB meeting, either because the draft Business Case is complete, or because this request is skipping the GRT.',
-    GRB_REVIEW: 'GRB review',
-    grbReviewDescription:
+    GRB_MEETING: 'GRB review',
+    grbMeetingDescription:
       'Choose this step if the final Business case is complete and this team is ready to review their project with the GRB. The GRB review may happen asynchronously or in a meeting format.',
     feedback: 'Feedback for the requester (optional)',
     feedbackHelpText:
