@@ -73,7 +73,7 @@ function useSystemIntakeContacts(
       requester: {
         ...initialContactsObject.requester,
         euaUserId: systemIntake.euaUserId,
-        commonName: systemIntake.requester.name,
+        commonName: systemIntake.requester?.name,
         component: systemIntake.requester?.component || '',
         email: systemIntake.requester?.email || '',
         systemIntakeId

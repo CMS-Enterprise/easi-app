@@ -209,8 +209,14 @@ const Table = ({
               return a.original.lcid > b.original.lcid ? 1 : -1;
             }
 
-            const ai = SystemIntakeStatusRequesterIndex()[astatus];
-            const bi = SystemIntakeStatusRequesterIndex()[bstatus];
+            const ai =
+              SystemIntakeStatusRequesterIndex[
+                astatus as SystemIntakeStatusRequester
+              ];
+            const bi =
+              SystemIntakeStatusRequesterIndex[
+                bstatus as SystemIntakeStatusRequester
+              ];
             return ai > bi ? 1 : -1;
           }
 
@@ -270,7 +276,9 @@ const Table = ({
                 : systemIntake.statusRequester,
             submissionDate: systemIntake.submittedAt,
             systems: systemIntake.systems.map(system => system.name),
-            lcid: systemIntake.lcid
+            lcid: systemIntake.lcid,
+            type: 'IT Governance',
+            statusRequester: systemIntake.statusRequester
           });
         }
       );
@@ -286,7 +294,8 @@ const Table = ({
           status: trbRequest.status,
           submissionDate: trbRequest.submittedAt,
           systems: trbRequest.systems.map(system => system.name),
-          lcid: null
+          lcid: null,
+          type: 'TRB'
         });
       });
     }

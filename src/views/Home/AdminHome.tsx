@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dropdown, FormGroup, GridContainer } from '@trussworks/react-uswds';
+import { FormGroup, GridContainer, Select } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import RequestRepository from 'components/RequestRepository';
@@ -62,7 +62,7 @@ const AdminHome = ({ isTrbAdmin, isITGovAdmin }: AdminHomeProps) => {
               <Label htmlFor="select-admin-view" className="margin-right-2">
                 {t('adminHome.selectLabel')}
               </Label>
-              <Dropdown
+              <Select
                 id="select-admin-view-field"
                 name="select-admin-view"
                 data-testid="select-admin-view"
@@ -72,7 +72,7 @@ const AdminHome = ({ isTrbAdmin, isITGovAdmin }: AdminHomeProps) => {
               >
                 <option value="TRB">{t('adminHome.TRB.label')}</option>
                 <option value="GRT">{t('adminHome.GRT.label')}</option>
-              </Dropdown>
+              </Select>
             </FormGroup>
           )
         }

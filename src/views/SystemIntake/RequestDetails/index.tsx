@@ -7,12 +7,12 @@ import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Checkbox,
-  Dropdown,
   Fieldset,
   Form,
   FormGroup,
   Link as UswdsLink,
   Radio,
+  Select,
   Textarea,
   TextInput
 } from '@trussworks/react-uswds';
@@ -309,7 +309,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             name="currentStage"
             as={FieldErrorMsg}
           />
-          <Dropdown
+          <Select
             {...register('currentStage')}
             ref={null}
             id="currentStage"
@@ -323,7 +323,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 {name}
               </option>
             ))}
-          </Dropdown>
+          </Select>
         </FieldGroup>
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />

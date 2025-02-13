@@ -127,19 +127,26 @@ describe('Related Requests table', () => {
                 {
                   id: '1',
                   requestName: 'related intake 1',
-                  contractNumbers: ['1', '2'],
+                  contractNumbers: [
+                    { contractNumber: '1' },
+                    { contractNumber: '2' }
+                  ],
                   statusAdmin:
                     SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
                   statusRequester:
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
-                  submittedAt: new Date()
+                  submittedAt: new Date(),
+                  lcid: '123'
                 }
               ],
               relatedTRBRequests: [
                 {
                   id: '2',
                   name: 'related trb 1',
-                  contractNumbers: ['3', '4'],
+                  contractNumbers: [
+                    { contractNumber: '3' },
+                    { contractNumber: '4' }
+                  ],
                   status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
                   createdAt: new Date()
                 }
@@ -192,19 +199,26 @@ describe('Related Requests table', () => {
                 {
                   id: '1',
                   requestName: 'related intake 1',
-                  contractNumbers: ['1', '2'],
+                  contractNumbers: [
+                    { contractNumber: '1' },
+                    { contractNumber: '2' }
+                  ],
                   statusAdmin:
                     SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
                   statusRequester:
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
-                  submittedAt: new Date()
+                  submittedAt: new Date(),
+                  lcid: '123'
                 }
               ],
               relatedTRBRequests: [
                 {
                   id: '2',
                   name: 'related trb 1',
-                  contractNumbers: ['3', '4'],
+                  contractNumbers: [
+                    { contractNumber: '3' },
+                    { contractNumber: '4' }
+                  ],
                   status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
                   createdAt: new Date()
                 }
@@ -265,19 +279,26 @@ describe('Related Requests table', () => {
                 {
                   id: '1',
                   requestName: 'related intake 1',
-                  contractNumbers: ['1', '2'],
+                  contractNumbers: [
+                    { contractNumber: '1' },
+                    { contractNumber: '2' }
+                  ],
                   statusAdmin:
                     SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
                   statusRequester:
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
-                  submittedAt: new Date()
+                  submittedAt: new Date(),
+                  lcid: '123'
                 }
               ],
               relatedTRBRequests: [
                 {
                   id: '2',
                   name: 'related trb 1',
-                  contractNumbers: ['3', '4'],
+                  contractNumbers: [
+                    { contractNumber: '3' },
+                    { contractNumber: '4' }
+                  ],
                   status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
                   createdAt: new Date()
                 }
@@ -332,19 +353,26 @@ describe('Related Requests table', () => {
                 {
                   id: '1',
                   requestName: 'related intake 1',
-                  contractNumbers: ['1', '2'],
+                  contractNumbers: [
+                    { contractNumber: '1' },
+                    { contractNumber: '2' }
+                  ],
                   statusAdmin:
                     SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
                   statusRequester:
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
-                  submittedAt: new Date()
+                  submittedAt: new Date(),
+                  lcid: '123'
                 }
               ],
               relatedTRBRequests: [
                 {
                   id: '2',
                   name: 'related trb 1',
-                  contractNumbers: ['3', '4'],
+                  contractNumbers: [
+                    { contractNumber: '3' },
+                    { contractNumber: '4' }
+                  ],
                   status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
                   createdAt: new Date()
                 }
@@ -394,19 +422,26 @@ describe('Related Requests table', () => {
                 {
                   id: '1',
                   requestName: 'related intake 1',
-                  contractNumbers: ['1', '2'],
+                  contractNumbers: [
+                    { contractNumber: '1' },
+                    { contractNumber: '2' }
+                  ],
                   statusAdmin:
                     SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
                   statusRequester:
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
-                  submittedAt: new Date()
+                  submittedAt: new Date(),
+                  lcid: '123'
                 }
               ],
               relatedTRBRequests: [
                 {
                   id: '2',
                   name: 'related trb 1',
-                  contractNumbers: ['3', '4'],
+                  contractNumbers: [
+                    { contractNumber: '3' },
+                    { contractNumber: '4' }
+                  ],
                   status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
                   createdAt: new Date()
                 }
@@ -460,19 +495,26 @@ describe('Related Requests table', () => {
                 {
                   id: '1',
                   requestName: 'related intake 1',
-                  contractNumbers: ['1', '2'],
+                  contractNumbers: [
+                    { contractNumber: '1' },
+                    { contractNumber: '2' }
+                  ],
                   statusAdmin:
                     SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
                   statusRequester:
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
-                  submittedAt: new Date()
+                  submittedAt: new Date(),
+                  lcid: '123'
                 }
               ],
               relatedTRBRequests: [
                 {
                   id: '2',
                   name: 'related trb 1',
-                  contractNumbers: ['3', '4'],
+                  contractNumbers: [
+                    { contractNumber: '3' },
+                    { contractNumber: '4' }
+                  ],
                   status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
                   createdAt: new Date()
                 }
@@ -526,19 +568,26 @@ describe('Related Requests table', () => {
                 {
                   id: '1',
                   requestName: 'related intake 1',
-                  contractNumbers: ['1', '2'],
+                  contractNumbers: [
+                    { contractNumber: '1' },
+                    { contractNumber: '2' }
+                  ],
                   statusAdmin:
                     SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
                   statusRequester:
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
-                  submittedAt: new Date()
+                  submittedAt: new Date(),
+                  lcid: '123'
                 }
               ],
               relatedTRBRequests: [
                 {
                   id: '2',
                   name: 'related trb 1',
-                  contractNumbers: ['3', '4'],
+                  contractNumbers: [
+                    { contractNumber: '3' },
+                    { contractNumber: '4' }
+                  ],
                   status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
                   createdAt: new Date()
                 }
@@ -585,6 +634,7 @@ describe('Related Requests table', () => {
         },
         result: {
           data: {
+            __typename: 'Query',
             trbRequest: {
               __typename: 'TRBRequest',
               id: trbRequest.id,
@@ -592,19 +642,26 @@ describe('Related Requests table', () => {
                 {
                   id: '1',
                   requestName: 'related intake 1',
-                  contractNumbers: ['1', '2'],
+                  contractNumbers: [
+                    { contractNumber: '1' },
+                    { contractNumber: '2' }
+                  ],
                   statusAdmin:
                     SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
                   statusRequester:
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
-                  submittedAt: new Date()
+                  submittedAt: new Date(),
+                  lcid: '123'
                 }
               ],
               relatedTRBRequests: [
                 {
                   id: '2',
                   name: 'related trb 1',
-                  contractNumbers: ['3', '4'],
+                  contractNumbers: [
+                    { contractNumber: '3' },
+                    { contractNumber: '4' }
+                  ],
                   status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
                   createdAt: new Date()
                 }
@@ -657,19 +714,26 @@ describe('Related Requests table', () => {
                 {
                   id: '1',
                   requestName: 'related intake 1',
-                  contractNumbers: ['1', '2'],
+                  contractNumbers: [
+                    { contractNumber: '1' },
+                    { contractNumber: '2' }
+                  ],
                   statusAdmin:
                     SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
                   statusRequester:
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
-                  submittedAt: new Date()
+                  submittedAt: new Date(),
+                  lcid: '123'
                 }
               ],
               relatedTRBRequests: [
                 {
                   id: '2',
                   name: 'related trb 1',
-                  contractNumbers: ['3', '4'],
+                  contractNumbers: [
+                    { contractNumber: '3' },
+                    { contractNumber: '4' }
+                  ],
                   status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
                   createdAt: new Date()
                 }
@@ -710,7 +774,7 @@ describe('Related Requests table', () => {
         request: {
           query: GetTRBRequestRelatedRequests,
           variables: {
-            systemIntakeID: trbRequest.id
+            trbRequestID: trbRequest.id
           }
         },
         result: {
@@ -722,19 +786,26 @@ describe('Related Requests table', () => {
                 {
                   id: '1',
                   requestName: 'related intake 1',
-                  contractNumbers: ['1', '2'],
+                  contractNumbers: [
+                    { contractNumber: '1' },
+                    { contractNumber: '2' }
+                  ],
                   statusAdmin:
                     SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
                   statusRequester:
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
-                  submittedAt: new Date()
+                  submittedAt: new Date(),
+                  lcid: '123'
                 }
               ],
               relatedTRBRequests: [
                 {
                   id: '2',
                   name: 'related trb 1',
-                  contractNumbers: ['3', '4'],
+                  contractNumbers: [
+                    { contractNumber: '3' },
+                    { contractNumber: '4' }
+                  ],
                   status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
                   createdAt: new Date()
                 }

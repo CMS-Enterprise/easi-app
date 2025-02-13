@@ -6,7 +6,6 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Checkbox,
-  Dropdown,
   ErrorMessage,
   Fieldset,
   Form,
@@ -14,6 +13,7 @@ import {
   Grid,
   Label,
   Radio,
+  Select,
   TextInput
 } from '@trussworks/react-uswds';
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
@@ -420,7 +420,7 @@ function Basic({
                 {error && (
                   <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                 )}
-                <Dropdown
+                <Select
                   id="component"
                   data-testid="component"
                   {...field}
@@ -428,7 +428,7 @@ function Basic({
                 >
                   <option>- {t('basic.options.select')} -</option>
                   {cmsDivisionsAndOfficesOptions('component')}
-                </Dropdown>
+                </Select>
               </FormGroup>
             )}
           />
@@ -553,7 +553,7 @@ function Basic({
                 {error && (
                   <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                 )}
-                <Dropdown
+                <Select
                   id="whereInProcess"
                   data-testid="whereInProcess"
                   {...field}
@@ -574,7 +574,7 @@ function Basic({
                       </option>
                     );
                   })}
-                </Dropdown>
+                </Select>
                 {field.value === 'OTHER' && (
                   <Controller
                     name="whereInProcessOther"

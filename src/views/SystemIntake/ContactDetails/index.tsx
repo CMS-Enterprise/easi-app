@@ -7,11 +7,11 @@ import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Checkbox,
-  Dropdown,
   Fieldset,
   Form,
   FormGroup,
   Radio,
+  Select,
   TextInput
 } from '@trussworks/react-uswds';
 
@@ -404,7 +404,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             name="requester.component"
             as={FieldErrorMsg}
           />
-          <Dropdown
+          <Select
             {...register('requester.component')}
             ref={null}
             id="requesterComponent"
@@ -413,7 +413,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               {t('Select an option')}
             </option>
             {cmsDivisionsAndOfficesOptions('requester.component')}
-          </Dropdown>
+          </Select>
         </FormGroup>
 
         {/* Business Owner */}
@@ -490,7 +490,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               name="businessOwner.component"
               as={FieldErrorMsg}
             />
-            <Dropdown
+            <Select
               {...register('businessOwner.component')}
               ref={null}
               id="businessOwnerComponent"
@@ -500,7 +500,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 {t('Select an option')}
               </option>
               {cmsDivisionsAndOfficesOptions('businessOwner.component')}
-            </Dropdown>
+            </Select>
           </FormGroup>
 
           <FormGroup>
@@ -590,7 +590,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               name="productManager.component"
               as={FieldErrorMsg}
             />
-            <Dropdown
+            <Select
               {...register('productManager.component')}
               ref={null}
               id="productManagerComponent"
@@ -600,7 +600,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 {t('Select an option')}
               </option>
               {cmsDivisionsAndOfficesOptions('productManager.component')}
-            </Dropdown>
+            </Select>
           </FormGroup>
 
           <FormGroup>
@@ -697,7 +697,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   name="isso.component"
                   as={FieldErrorMsg}
                 />
-                <Dropdown
+                <Select
                   {...register('isso.component')}
                   ref={null}
                   id="issoComponent"
@@ -706,7 +706,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {t('Select an option')}
                   </option>
                   {cmsDivisionsAndOfficesOptions('isso.component')}
-                </Dropdown>
+                </Select>
               </FormGroup>
 
               <FormGroup>

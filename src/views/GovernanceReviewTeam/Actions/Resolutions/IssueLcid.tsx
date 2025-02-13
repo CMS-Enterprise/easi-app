@@ -3,7 +3,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Dropdown, FormGroup, Radio } from '@trussworks/react-uswds';
+import { FormGroup, Radio, Select } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
 import RichTextEditor from 'components/RichTextEditor';
@@ -330,18 +330,14 @@ const IssueLcid = ({
                                   {t(errors.lcid?.message)}
                                 </FieldErrorMsg>
                               )}
-                              <Dropdown
-                                {...lcidField}
-                                ref={null}
-                                id={field.name}
-                              >
+                              <Select {...lcidField} ref={null} id={field.name}>
                                 <option>-{t('Select')}-</option>
                                 {Object.keys(systemIntakesWithLcids || {}).map(
                                   key => (
                                     <option key={key}>{key}</option>
                                   )
                                 )}
-                              </Dropdown>
+                              </Select>
                             </FormGroup>
                           );
                         }}

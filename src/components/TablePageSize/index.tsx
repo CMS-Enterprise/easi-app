@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dropdown } from '@trussworks/react-uswds';
+import { Select } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 type TablePageSizeProps = {
@@ -26,7 +26,7 @@ const TablePageSize = ({
   const classNames = classnames('desktop:margin-top-2', className);
   return (
     <div className={classNames}>
-      <Dropdown
+      <Select
         className="margin-top-0 width-auto"
         id="table-page-size"
         data-testid="table-page-size"
@@ -39,7 +39,7 @@ const TablePageSize = ({
         <Option value={25} />
         <Option value={50} />
         <Option value={100} />
-      </Dropdown>
+      </Select>
     </div>
   );
 };

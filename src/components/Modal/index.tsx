@@ -16,6 +16,7 @@ export type ModalProps = {
   openModal?: () => void;
   closeModal: () => void;
   shouldCloseOnOverlayClick?: boolean;
+  noScrollOnClose?: boolean;
 };
 
 const Modal = ({
@@ -27,10 +28,12 @@ const Modal = ({
   isOpen,
   openModal,
   closeModal,
-  shouldCloseOnOverlayClick = false
+  shouldCloseOnOverlayClick = false,
+  noScrollOnClose
 }: ModalProps) => {
   const handleOpenModal = () => {
-    noScroll.on();
+    if (!noScrollOnClose) noScroll.on();
+
     if (openModal) {
       openModal();
     }

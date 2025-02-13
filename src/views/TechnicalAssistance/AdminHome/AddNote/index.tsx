@@ -3,11 +3,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import {
-  Dropdown,
   ErrorMessage,
   Form,
   FormGroup,
-  Grid
+  Grid,
+  Select
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
@@ -240,7 +240,7 @@ const AddNote = ({
                     <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
                   )}
 
-                  <Dropdown
+                  <Select
                     id="category"
                     data-testid="note-category"
                     {...field}
@@ -261,7 +261,7 @@ const AddNote = ({
                         {t(`notes.categories.${key}`)}
                       </option>
                     ))}
-                  </Dropdown>
+                  </Select>
                 </FormGroup>
               )}
             />

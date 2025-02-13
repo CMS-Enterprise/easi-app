@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Dropdown, Form, FormGroup } from '@trussworks/react-uswds';
+import { Button, Form, FormGroup, Select } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewersDocument,
   SystemIntakeGRBReviewerFragment,
@@ -182,14 +182,14 @@ const AddReviewerFromEua = ({
           name="votingRole"
           as={<FieldErrorMsg />}
         />
-        <Dropdown {...register('votingRole')} ref={null} id="votingRole">
+        <Select {...register('votingRole')} ref={null} id="votingRole">
           <option value="">{t('form:dropdownInitialSelect')}</option>
           {grbReviewerVotingRoles.map(key => (
             <option value={key} key={key}>
               {t(`votingRoles.${key}`)}
             </option>
           ))}
-        </Dropdown>
+        </Select>
       </FormGroup>
 
       <CollapsableLink
@@ -222,7 +222,7 @@ const AddReviewerFromEua = ({
           {t('form.grbRoleHelpText')}
         </HelpText>
         <ErrorMessage errors={errors} name="grbRole" as={<FieldErrorMsg />} />
-        <Dropdown
+        <Select
           {...register('grbRole')}
           ref={null}
           id="grbRole"
@@ -234,7 +234,7 @@ const AddReviewerFromEua = ({
               {t(`reviewerRoles.${key}`)}
             </option>
           ))}
-        </Dropdown>
+        </Select>
       </FormGroup>
 
       {activeReviewer && (
