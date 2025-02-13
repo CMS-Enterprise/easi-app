@@ -326,7 +326,9 @@
   display: inline-flex;
 }
 
-.grid-container {
+.grid-container,
+.usa-footer__primary-container,
+.usa-footer__secondary-section > .grid-container {
   max-width: 75rem;
 }
 
