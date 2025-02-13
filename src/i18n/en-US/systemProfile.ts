@@ -388,7 +388,11 @@ const systemProfile = {
       viewGateway: 'View gateway information',
       viewAPIInfo: 'View API information',
       viewDataExchange: 'View data exchange details',
-      more: 'more'
+      more: 'more',
+      apiStatusValues: {
+        apiDeveloped: 'API developed',
+        noApiDeveloped: 'No API developed'
+      }
     },
     systemDetails: {
       header: 'Basic details',

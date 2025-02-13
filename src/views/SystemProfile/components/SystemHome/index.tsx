@@ -23,17 +23,16 @@ import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import formatDollars from 'utils/formatDollars';
-import showVal from 'utils/showVal';
+import showVal, { showSystemVal } from 'utils/showVal';
 import { showAtoExpirationDate } from 'views/SystemProfile/helpers';
 
 const SystemHome = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
-  const [toggleTags, setToggleTags] = useState(false);
   const [toggleSystemData, setToggleSystemData] = useState(false);
   const [toggleSubSystems, setToggleSubSystems] = useState(false);
 
-  const { ato, locations, developmentTags, productionLocation } = system;
+  const { ato, locations, productionLocation } = system;
 
   const urlLocationCard = useMemo(() => {
     if (!productionLocation) return undefined;
@@ -53,8 +52,6 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
       moreUrls
     };
   }, [locations, productionLocation, t]);
-
-  console.log(system);
 
   return (
     <SectionWrapper borderBottom={isMobile}>
@@ -179,14 +176,17 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
             <Grid row>
               <Grid desktop={{ col: 12 }} className="padding-0">
                 <h3 className="link-header margin-top-0 margin-bottom-2">
-                  API developed and launched {/* TODO: Get from CEDAR */}
+                  {system.cedarSoftwareProducts?.apisDeveloped === 'Yes'
+                    ? t('singleSystem.systemData.apiStatusValues.apiDeveloped')
+                    : t(
+                        'singleSystem.systemData.apiStatusValues.noApiDeveloped'
+                      )}
                 </h3>
                 <div className="margin-bottom-2">
                   <UswdsReactLink
                     className="link-header"
-                    to={`/systems/${system.id}/system-data`}
+                    to={`/systems/${system.id}/system-data#data-categories`}
                   >
-                    {/* TODO: Get from CEDAR */}
                     {t('singleSystem.systemData.viewAPIInfo')}
                     <span aria-hidden>&nbsp;</span>
                     <span aria-hidden>&rarr; </span>
@@ -202,26 +202,41 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                 <DescriptionTerm
                   term={t('singleSystem.systemData.dataCategories')}
                 />
-                {developmentTags?.map(
-                  (tag: string, index: number) =>
-                    (index < 2 || toggleTags) && (
-                      <Tag
-                        key={tag}
-                        className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-                      >
-                        {tag}{' '}
-                      </Tag>
-                    )
-                )}
-                {developmentTags && developmentTags.length > 2 && (
-                  <Tag
-                    key="expand-tags"
-                    className="system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
-                    onClick={() => setToggleTags(!toggleTags)}
-                  >
-                    {toggleTags ? '-' : '+'}
-                    {developmentTags.length - 2}
-                  </Tag>
+                {system.cedarSoftwareProducts?.apiDataArea?.length ? (
+                  <>
+                    {system.cedarSoftwareProducts.apiDataArea.length > 2 ? (
+                      <>
+                        {system.cedarSoftwareProducts.apiDataArea.map(
+                          (tag, index) =>
+                            index < 2 && (
+                              <Tag
+                                key={tag}
+                                className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+                              >
+                                {tag}
+                              </Tag>
+                            )
+                        )}
+                        <Tag
+                          key="expand-tags"
+                          className="system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
+                        >
+                          +{system.cedarSoftwareProducts.apiDataArea.length - 2}
+                        </Tag>
+                      </>
+                    ) : (
+                      system.cedarSoftwareProducts.apiDataArea.map(tag => (
+                        <Tag
+                          key={tag}
+                          className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+                        >
+                          {tag}
+                        </Tag>
+                      ))
+                    )}
+                  </>
+                ) : (
+                  showSystemVal(null)
                 )}
               </Grid>
             </Grid>
