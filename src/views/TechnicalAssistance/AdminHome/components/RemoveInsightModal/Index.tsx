@@ -24,7 +24,7 @@ const RemoveInsightModal = ({
   const { closeModal } = modalProps;
 
   return (
-    <Modal {...modalProps}>
+    <Modal {...modalProps} noScrollOnClose>
       <h3 className="margin-y-0 line-height-heading-2">
         {t('guidanceLetterForm.modal.title')}
       </h3>
