@@ -10,6 +10,7 @@ import {
   Link,
   ModalHeading
 } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 import { useDeleteSystemIntakeGRBPresentationLinksMutation } from 'gql/gen/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -94,33 +95,33 @@ function PresentationLinksCard({
     <>
       {/* Asynchronous presentation links card */}
       <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
-        <CardHeader className="padding-bottom-0">
-          <h3 className="display-inline-block margin-right-2 margin-bottom-0">
-            {t('asyncPresentation.title')}
-          </h3>
+        <CardHeader>
+          <h3>{t('asyncPresentation.title')}</h3>
         </CardHeader>
         {
           // Hide action buttons for GRB reviewers
           isITGovAdmin && (
-            <CardBody>
+            <CardBody
+              className={classNames('padding-top-0', {
+                'display-flex flex-gap-105 padding-bottom-105 margin-top-neg-1':
+                  grbPresentationLinks
+              })}
+            >
               {!grbPresentationLinks ? (
                 <>
-                  <Alert type="info" slim className="margin-bottom-1">
+                  <Alert type="info" slim className="margin-bottom-2">
                     {t('asyncPresentation.adminEmptyAlert')}
                   </Alert>
-                  <div className="margin-top-2 margin-bottom-neg-2">
-                    <IconLink
-                      icon={<Icon.Add className="margin-right-1" />}
-                      to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
-                    >
-                      {t('asyncPresentation.addAsynchronousPresentationLinks')}
-                    </IconLink>
-                  </div>
+                  <IconLink
+                    icon={<Icon.Add />}
+                    to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
+                  >
+                    {t('asyncPresentation.addAsynchronousPresentationLinks')}
+                  </IconLink>
                 </>
               ) : (
-                <div className="margin-top-neg-1">
+                <>
                   <UswdsReactLink
-                    className="margin-right-2"
                     to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
                   >
                     {t('asyncPresentation.editPresentationLinks')}
@@ -133,67 +134,64 @@ function PresentationLinksCard({
                   >
                     {t('asyncPresentation.removeAllPresentationLinks')}
                   </Button>
-                </div>
+                </>
               )}
             </CardBody>
           )
         }
-        <CardFooter>
-          {grbPresentationLinks && (
-            <div className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 border-top-1px border-gray-10 padding-top-2">
-              {isVirusScanning ? (
-                <em>{t('asyncPresentation.virusScanning')}</em>
-              ) : (
-                <>
-                  <div className="display-flex flex-wrap flex-gap-1">
-                    {recordingLink && (
-                      <ExternalLinkAndModal href={recordingLink}>
-                        {t('asyncPresentation.viewRecording')}
-                      </ExternalLinkAndModal>
-                    )}
-
-                    {!recordingLink &&
-                      (recordingPasscode || transcriptLink) && (
-                        <span>
-                          {t('asyncPresentation.noRecordingLinkAvailable')}
-                        </span>
-                      )}
-
-                    {recordingPasscode && (
-                      <span className="text-base">
-                        {t('asyncPresentation.passcode', {
-                          passcode: recordingPasscode
-                        })}
-                      </span>
-                    )}
-                  </div>
-
-                  {transcriptLink && (
-                    <ExternalLinkAndModal href={transcriptLink}>
-                      {t('asyncPresentation.viewTranscript')}
+        {grbPresentationLinks && (
+          <CardFooter className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 padding-x-0 padding-bottom-205 padding-top-2 margin-x-3 border-top-1px border-gray-10">
+            {isVirusScanning ? (
+              <em>{t('asyncPresentation.virusScanning')}</em>
+            ) : (
+              <>
+                <div className="display-flex flex-wrap flex-gap-1">
+                  {recordingLink && (
+                    <ExternalLinkAndModal href={recordingLink}>
+                      {t('asyncPresentation.viewRecording')}
                     </ExternalLinkAndModal>
                   )}
 
-                  {transcriptFileStatus ===
-                    SystemIntakeDocumentStatus.AVAILABLE &&
-                    transcriptFileURL && (
-                      <Link href={transcriptFileURL} target="_blank">
-                        {t('asyncPresentation.viewTranscript')}
-                      </Link>
-                    )}
+                  {!recordingLink && (recordingPasscode || transcriptLink) && (
+                    <span>
+                      {t('asyncPresentation.noRecordingLinkAvailable')}
+                    </span>
+                  )}
 
-                  {presentationDeckFileStatus ===
-                    SystemIntakeDocumentStatus.AVAILABLE &&
-                    presentationDeckFileURL && (
-                      <Link href={presentationDeckFileURL} target="_blank">
-                        {t('asyncPresentation.viewSlideDeck')}
-                      </Link>
-                    )}
-                </>
-              )}
-            </div>
-          )}
-        </CardFooter>
+                  {recordingPasscode && (
+                    <span className="text-base">
+                      {t('asyncPresentation.passcode', {
+                        passcode: recordingPasscode
+                      })}
+                    </span>
+                  )}
+                </div>
+
+                {transcriptLink && (
+                  <ExternalLinkAndModal href={transcriptLink}>
+                    {t('asyncPresentation.viewTranscript')}
+                  </ExternalLinkAndModal>
+                )}
+
+                {transcriptFileStatus ===
+                  SystemIntakeDocumentStatus.AVAILABLE &&
+                  transcriptFileURL && (
+                    <Link href={transcriptFileURL} target="_blank">
+                      {t('asyncPresentation.viewTranscript')}
+                    </Link>
+                  )}
+
+                {presentationDeckFileStatus ===
+                  SystemIntakeDocumentStatus.AVAILABLE &&
+                  presentationDeckFileURL && (
+                    <Link href={presentationDeckFileURL} target="_blank">
+                      {t('asyncPresentation.viewSlideDeck')}
+                    </Link>
+                  )}
+              </>
+            )}
+          </CardFooter>
+        )}
       </div>
 
       {/* Modal to remove presentation links */}
