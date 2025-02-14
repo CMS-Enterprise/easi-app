@@ -315,6 +315,9 @@
   display: flex;
 }
 
+// Bug fixes for @trussworks/react-uswds overriding uswds styles
+// See Slack thread for issue: https://cmsgov.slack.com/archives/CNU2B59UH/p1739483727864639
+
 .inline-flex {
   display: inline-flex !important;
 }
@@ -323,12 +326,14 @@
   display: inline-flex;
 }
 
-.grid-container {
+.grid-container,
+.usa-footer__primary-container,
+.usa-footer__secondary-section > .grid-container {
   max-width: 75rem;
 }
 
-.usa-modal__heading {
-  font-family: inherit;
+body * {
+  font-family: inherit !important;
 }
 
 .width-fit-content {
