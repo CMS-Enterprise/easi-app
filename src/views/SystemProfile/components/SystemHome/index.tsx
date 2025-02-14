@@ -29,7 +29,6 @@ import { showAtoExpirationDate } from 'views/SystemProfile/helpers';
 const SystemHome = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
-  const [toggleSystemData, setToggleSystemData] = useState(false);
 
   const { ato, locations, productionLocation } = system;
 
@@ -291,31 +290,36 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
           <CardBody className="padding-x-2 padding-y-0">
             <Grid row>
               <Grid desktop={{ col: 12 }} className="padding-0">
-                {system?.systemData?.map(
-                  (data, index) =>
-                    (index < 2 || toggleSystemData) && (
-                      <div className="margin-bottom-1 text-bold" key={data.id}>
-                        <Icon.CheckCircleOutline className="text-success" />{' '}
-                        <span className="text-tbottom line-height-body-3">
-                          {data.title}{' '}
-                        </span>
-                        <Icon.FileDownload className="text-base" />
-                      </div>
-                    )
+                {system.exchanges.length && (
+                  <>
+                    {system.exchanges.map(
+                      (exchange, index) =>
+                        index < 2 && (
+                          <p key={exchange.exchangeId} className="margin-y-0">
+                            <span className="text-bold">
+                              {exchange.exchangeName}
+                            </span>
+                          </p>
+                        )
+                    )}
+                    {system.exchanges.length > 2 && (
+                      <UswdsReactLink
+                        className="link-header"
+                        to={`/systems/${system.id}/system-data#exchanges`}
+                      >
+                        {t('singleSystem.systemData.viewMoreExchanges', {
+                          count: system.exchanges.length - 2
+                        })}
+                        <span aria-hidden>&nbsp;</span>
+                        <span aria-hidden>&rarr; </span>
+                      </UswdsReactLink>
+                    )}
+                  </>
                 )}
-
-                {system?.systemData && system.systemData.length > 2 && (
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    className="text-underline link-header text-primary pointer"
-                    onClick={() => setToggleSystemData(!toggleSystemData)}
-                    onKeyDown={() => setToggleSystemData(!toggleSystemData)}
-                  >
-                    {toggleSystemData ? '- ' : '+ '}
-                    {system.systemData.length - 2}{' '}
-                    {t('singleSystem.systemData.more')}
-                  </div>
+                {!system.exchanges.length && (
+                  <span className="text-italic">
+                    {t('singleSystem.systemData.noExchangesAlert')}
+                  </span>
                 )}
               </Grid>
             </Grid>
@@ -372,7 +376,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                   to={`/systems/${system.id}/sub-systems`}
                 >
                   {system.cedarSubSystems.length > 2
-                    ? t('singleSystem.subSystems.viewInfo', {
+                    ? t('singleSystem.subSystems.viewMore', {
                         count: system.cedarSubSystems.length - 2
                       })
                     : t('singleSystem.subSystems.viewInfo')}
