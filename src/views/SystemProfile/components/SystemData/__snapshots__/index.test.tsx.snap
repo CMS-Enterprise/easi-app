@@ -231,6 +231,7 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
     </div>
     <h3
       class="margin-top-0 margin-bottom-1"
+      id="data-categories"
     >
       Data content categories
     </h3>

@@ -694,7 +694,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     <h3
                                       class="link-header margin-top-0 margin-bottom-2"
                                     >
-                                      API developed and launched 
+                                      No API developed
                                     </h3>
                                     <div
                                       class="margin-bottom-2"
@@ -743,8 +743,25 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                       class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
                                       data-testid="tag"
                                     >
-                                      Agile Methodology 
+                                      Beneficiary and Consumer
                                     </span>
+                                    <span
+                                      class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+                                      data-testid="tag"
+                                    >
+                                      Healthcare Payment
+                                    </span>
+                                    <a
+                                      class="usa-link link-header"
+                                      href="/systems/000-100-0/system-data#data-categories"
+                                    >
+                                      <span
+                                        class="easi-tag system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
+                                        data-testid="tag"
+                                      >
+                                        +2
+                                      </span>
+                                    </a>
                                   </div>
                                 </div>
                               </div>
@@ -775,11 +792,11 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     <h3
                                       class="link-header margin-top-0 margin-bottom-2"
                                     >
-                                      $4,500,000 
+                                      $3
                                     </h3>
                                     <a
                                       class="usa-link link-header"
-                                      href="/systems/000-100-0/funding-and-budget"
+                                      href="/systems/000-100-0/funding-and-budget#funding-and-budget"
                                     >
                                       Show more budget projects
                                       <span
@@ -990,67 +1007,26 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     class="desktop:grid-col-12 padding-0"
                                     data-testid="grid"
                                   >
-                                    <div
-                                      class="margin-bottom-1"
+                                    <p
+                                      class="margin-y-0"
                                     >
-                                      <svg
-                                        class="usa-icon text-base-lighter margin-right-1"
-                                        focusable="false"
-                                        height="1em"
-                                        role="img"
-                                        viewBox="0 0 24 24"
-                                        width="1em"
-                                        xmlns="http://www.w3.org/2000/svg"
+                                      <span
+                                        class="text-bold"
                                       >
-                                        <path
-                                          d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
-                                        />
-                                      </svg>
-                                      <a
-                                        class="usa-link link-header margin-bottom-1 text-bold"
-                                        href="/systems/000-100-0/sub-systems"
-                                      >
-                                        <span
-                                          class="text-tbottom line-height-body-3"
-                                        >
-                                          Test Ocular Fiction Utensil 
-                                        </span>
-                                      </a>
-                                    </div>
-                                    <div
-                                      class="margin-bottom-1"
+                                        Centers for Management Services
+                                      </span>
+                                       (CMS)
+                                    </p>
+                                    <p
+                                      class="margin-y-0"
                                     >
-                                      <svg
-                                        class="usa-icon text-base-lighter margin-right-1"
-                                        focusable="false"
-                                        height="1em"
-                                        role="img"
-                                        viewBox="0 0 24 24"
-                                        width="1em"
-                                        xmlns="http://www.w3.org/2000/svg"
+                                      <span
+                                        class="text-bold"
                                       >
-                                        <path
-                                          d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
-                                        />
-                                      </svg>
-                                      <a
-                                        class="usa-link link-header margin-bottom-1 text-bold"
-                                        href="/systems/000-100-0/sub-systems"
-                                      >
-                                        <span
-                                          class="text-tbottom line-height-body-3"
-                                        >
-                                          Bio-Energy Engagement File 
-                                        </span>
-                                      </a>
-                                    </div>
-                                    <div
-                                      class="text-underline link-header text-primary pointer margin-top-2"
-                                      role="button"
-                                      tabindex="0"
-                                    >
-                                      + 1 more
-                                    </div>
+                                        Office of Funny Walks
+                                      </span>
+                                       (OFW)
+                                    </p>
                                   </div>
                                 </div>
                                 <div
@@ -1136,7 +1112,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                       class="usa-link link-header"
                                       href="/systems/000-100-0/team"
                                     >
-                                      View more Team and Contract information
+                                      View more team information
                                       <span
                                         aria-hidden="true"
                                       >
