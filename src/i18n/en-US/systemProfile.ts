@@ -446,6 +446,7 @@ const systemProfile = {
       header: 'Sub-systems',
       retirementDate: 'Retirement date',
       viewInfo: 'View sub-system information',
+      viewMore: 'View {{count}} more sub-systems',
       noSystemDescription: 'No system description available',
       showSystems: {
         more: 'Show more sub-systems',

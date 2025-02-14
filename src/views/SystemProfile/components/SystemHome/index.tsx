@@ -30,7 +30,6 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const [toggleSystemData, setToggleSystemData] = useState(false);
-  const [toggleSubSystems, setToggleSubSystems] = useState(false);
 
   const { ato, locations, productionLocation } = system;
 
@@ -270,7 +269,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                 </h3>
                 <UswdsReactLink
                   className="link-header"
-                  to={`/systems/${system.id}/funding-and-budget`}
+                  to={`/systems/${system.id}/funding-and-budget#funding-and-budget`}
                 >
                   {t('singleSystem.fundingAndBudget.viewMoreFunding')}
                   <span aria-hidden>&nbsp;</span>
@@ -350,37 +349,17 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
           <CardBody className="padding-x-2 padding-y-0">
             <Grid row>
               <Grid desktop={{ col: 12 }} className="padding-0">
-                {system?.subSystems?.map(
-                  (subSystem, index) =>
-                    (index < 2 || toggleSubSystems) && (
-                      <div className="margin-bottom-1" key={subSystem.id}>
-                        <Icon.Bookmark className="text-base-lighter margin-right-1" />
-                        <UswdsReactLink
-                          className="link-header margin-bottom-1 text-bold"
-                          to={`/systems/${system.id}/sub-systems`}
-                          key={subSystem.id}
-                        >
-                          <span className="text-tbottom line-height-body-3">
-                            {subSystem.name}{' '}
-                          </span>
-                        </UswdsReactLink>
-                      </div>
+                {system.cedarSubSystems.length
+                  ? system.cedarSubSystems.map(
+                      (subsystem, index) =>
+                        index < 2 && (
+                          <p key={subsystem.id} className="margin-y-0">
+                            <span className="text-bold">{subsystem.name}</span>{' '}
+                            ({subsystem.acronym})
+                          </p>
+                        )
                     )
-                )}
-
-                {system?.subSystems && system.subSystems.length > 2 && (
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    className="text-underline link-header text-primary pointer margin-top-2"
-                    onClick={() => setToggleSubSystems(!toggleSubSystems)}
-                    onKeyDown={() => setToggleSubSystems(!toggleSubSystems)}
-                  >
-                    {toggleSubSystems ? '- ' : '+ '}
-                    {system.subSystems.length - 2}{' '}
-                    {t('singleSystem.systemData.more')}
-                  </div>
-                )}
+                  : showSystemVal(null)}
               </Grid>
             </Grid>
             <Divider className="margin-top-2" />
@@ -392,8 +371,11 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                   className="link-header"
                   to={`/systems/${system.id}/sub-systems`}
                 >
-                  {/* TODO: Get from CEDAR */}
-                  {t('singleSystem.subSystems.viewInfo')}
+                  {system.cedarSubSystems.length > 2
+                    ? t('singleSystem.subSystems.viewInfo', {
+                        count: system.cedarSubSystems.length - 2
+                      })
+                    : t('singleSystem.subSystems.viewInfo')}
                   <span aria-hidden>&nbsp;</span>
                   <span aria-hidden>&rarr; </span>
                 </UswdsReactLink>
