@@ -994,6 +994,16 @@ type CreateSystemIntakeGRBDiscussionReplyInput struct {
 	Content       TaggedHTML `json:"content"`
 }
 
+// Input data used to set or update a System Intake's GRB Review form data
+type UpdateSystemIntakeGRBReviewFormInput struct {
+	SystemIntakeID                  uuid.UUID                  `json:"systemIntakeID"`
+	GrbReviewType                   *SystemIntakeGRBReviewType `json:"grbReviewType,omitempty"`
+	GrbReviewAsyncRecordingTime     *time.Time                 `json:"grbReviewAsyncRecordingTime,omitempty"`
+	GrbReviewAsyncEndDate           *time.Time                 `json:"grbReviewAsyncEndDate,omitempty"`
+	GrbReviewStandardGRBMeetingTime *time.Time                 `json:"grbReviewStandardGRBMeetingTime,omitempty"`
+	GrbReviewAsyncGRBMeetingTime    *time.Time                 `json:"grbReviewAsyncGRBMeetingTime,omitempty"`
+}
+
 // Input data used to set or update a System Intake's GRB Review Type
 type UpdateSystemIntakeGRBReviewTypeInput struct {
 	SystemIntakeID uuid.UUID                 `json:"systemIntakeID"`

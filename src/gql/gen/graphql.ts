@@ -1020,6 +1020,7 @@ export type Mutation = {
   updateSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   updateSystemIntakeContactDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeContractDetails?: Maybe<UpdateSystemIntakePayload>;
+  updateSystemIntakeGRBReviewForm?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeGRBReviewType?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeGRBReviewer: SystemIntakeGRBReviewer;
   updateSystemIntakeLinkedCedarSystem?: Maybe<UpdateSystemIntakePayload>;
@@ -1445,6 +1446,12 @@ export type MutationUpdateSystemIntakeContactDetailsArgs = {
 /** Defines the mutations for the schema */
 export type MutationUpdateSystemIntakeContractDetailsArgs = {
   input: UpdateSystemIntakeContractDetailsInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationUpdateSystemIntakeGRBReviewFormArgs = {
+  input: UpdateSystemIntakeGRBReviewFormInput;
 };
 
 
@@ -1891,8 +1898,12 @@ export type SystemIntake = {
   grbMeetingState: SystemIntakeMeetingState;
   /** GRB Presentation Link Data */
   grbPresentationLinks?: Maybe<SystemIntakeGRBPresentationLinks>;
+  grbReviewAsyncEndDate?: Maybe<Scalars['Time']['output']>;
+  grbReviewAsyncGRBMeetingTime?: Maybe<Scalars['Time']['output']>;
+  grbReviewAsyncRecordingTime?: Maybe<Scalars['Time']['output']>;
+  grbReviewStandardGRBMeetingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
-  /** GRB Review Type */
+  /** GRB Review Form */
   grbReviewType: SystemIntakeGRBReviewType;
   grbReviewers: Array<SystemIntakeGRBReviewer>;
   grtDate?: Maybe<Scalars['Time']['output']>;
@@ -3304,6 +3315,16 @@ export type CreateSystemIntakeGRBDiscussionPostInput = {
 export type CreateSystemIntakeGRBDiscussionReplyInput = {
   content: Scalars['TaggedHTML']['input'];
   initialPostID: Scalars['UUID']['input'];
+};
+
+/** Input data used to set or update a System Intake's GRB Review form data */
+export type UpdateSystemIntakeGRBReviewFormInput = {
+  grbReviewAsyncEndDate?: InputMaybe<Scalars['Time']['input']>;
+  grbReviewAsyncGRBMeetingTime?: InputMaybe<Scalars['Time']['input']>;
+  grbReviewAsyncRecordingTime?: InputMaybe<Scalars['Time']['input']>;
+  grbReviewStandardGRBMeetingTime?: InputMaybe<Scalars['Time']['input']>;
+  grbReviewType?: InputMaybe<SystemIntakeGRBReviewType>;
+  systemIntakeID: Scalars['UUID']['input'];
 };
 
 /** Input data used to set or update a System Intake's GRB Review Type */
