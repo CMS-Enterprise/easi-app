@@ -26,6 +26,8 @@ import formatDollars from 'utils/formatDollars';
 import showVal, { showSystemVal } from 'utils/showVal';
 import { showAtoExpirationDate } from 'views/SystemProfile/helpers';
 
+import { ExchangeDirectionTag } from '../SystemData';
+
 const SystemHome = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
@@ -295,11 +297,16 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                     {system.exchanges.map(
                       (exchange, index) =>
                         index < 2 && (
-                          <p key={exchange.exchangeId} className="margin-y-0">
-                            <span className="text-bold">
-                              {exchange.exchangeName}
-                            </span>
-                          </p>
+                          <div className="display-flex margin-bottom-05">
+                            <ExchangeDirectionTag
+                              data={exchange.exchangeDirection}
+                            />
+                            <p key={exchange.exchangeId} className="margin-y-0">
+                              <span className="text-bold">
+                                {exchange.exchangeName}
+                              </span>
+                            </p>
+                          </div>
                         )
                     )}
                     {system.exchanges.length > 2 && (
