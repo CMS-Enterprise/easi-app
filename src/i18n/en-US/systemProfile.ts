@@ -389,6 +389,8 @@ const systemProfile = {
       viewAPIInfo: 'View API information',
       viewDataExchange: 'View data exchange details',
       viewMoreExchanges: 'View {{count}} more data exchanges',
+      numberOfSystemDependencies: 'Number of system dependencies',
+      numberOfDependentSystems: 'Number of dependent systems',
       more: 'more',
       apiStatusValues: {
         apiDeveloped: 'API developed',

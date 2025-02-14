@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Card,
@@ -7,7 +7,6 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  Icon,
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -309,7 +308,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                           </div>
                         )
                     )}
-                    {system.exchanges.length > 2 && (
+                    {system.exchanges.length > 2 ? (
                       <UswdsReactLink
                         className="link-header"
                         to={`/systems/${system.id}/system-data#exchanges`}
@@ -317,6 +316,15 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                         {t('singleSystem.systemData.viewMoreExchanges', {
                           count: system.exchanges.length - 2
                         })}
+                        <span aria-hidden>&nbsp;</span>
+                        <span aria-hidden>&rarr; </span>
+                      </UswdsReactLink>
+                    ) : (
+                      <UswdsReactLink
+                        className="link-header"
+                        to={`/systems/${system.id}/system-data`}
+                      >
+                        {t('singleSystem.systemData.viewDataExchange')}
                         <span aria-hidden>&nbsp;</span>
                         <span aria-hidden>&rarr; </span>
                       </UswdsReactLink>
@@ -332,18 +340,35 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
             </Grid>
             <Divider className="margin-top-2" />
           </CardBody>
-          <CardFooter className="padding-0">
+          <CardFooter className="padding-2">
             <Grid row>
-              <Grid desktop={{ col: 12 }} className="padding-2">
-                <UswdsReactLink
-                  className="link-header"
-                  to={`/systems/${system.id}/system-data`}
-                >
-                  {/* TODO: Get from CEDAR */}
-                  {t('singleSystem.systemData.viewDataExchange')}
-                  <span aria-hidden>&nbsp;</span>
-                  <span aria-hidden>&rarr; </span>
-                </UswdsReactLink>
+              <Grid tablet={{ col: 6 }}>
+                <DescriptionTerm
+                  className="display-inline-flex margin-right-1"
+                  term={t('singleSystem.systemData.numberOfSystemDependencies')}
+                />
+                <DescriptionDefinition
+                  className="font-body-md line-height-body-3"
+                  definition={
+                    system.exchanges.filter(
+                      e => e.exchangeDirection === 'SENDER'
+                    ).length
+                  }
+                />
+              </Grid>
+              <Grid tablet={{ col: 6 }}>
+                <DescriptionTerm
+                  className="display-inline-flex margin-right-1"
+                  term={t('singleSystem.systemData.numberOfDependentSystems')}
+                />
+                <DescriptionDefinition
+                  className="line-height-body-3 font-body-md"
+                  definition={
+                    system.exchanges.filter(
+                      e => e.exchangeDirection === 'RECEIVER'
+                    ).length
+                  }
+                />
               </Grid>
             </Grid>
           </CardFooter>
