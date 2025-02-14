@@ -199,7 +199,7 @@ const systemProfile = {
       assetsOrServices: 'Assets or services',
       sendAnEmail: 'Send an email',
       totalEmployees: 'Total Full Time Employees (FTE)',
-      viewMoreInfo: 'View more Team and Contract information',
+      viewMoreInfo: 'View more team information',
       federalFTE: 'Federal FTE',
       contractorFTE: 'Contractor FTE'
     },
