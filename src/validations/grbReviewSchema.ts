@@ -57,7 +57,7 @@ export const SetGRBPresentationLinksSchema = Yup.object().shape(
     recordingLink: Yup.string().when('presentationDeckFileData', {
       is: (value?: MixedSchema) => !value,
       then: Yup.string().required('This is a required field.'),
-      otherwise: Yup.string()
+      otherwise: Yup.string().nullable()
     }),
     presentationDeckFileData: Yup.mixed().when('recordingLink', {
       is: (value?: string) => !value,
@@ -66,9 +66,9 @@ export const SetGRBPresentationLinksSchema = Yup.object().shape(
     }),
 
     // Optional fields
-    recordingPasscode: Yup.string(),
+    recordingPasscode: Yup.string().nullable(),
     transcriptFileData: Yup.mixed(),
-    transcriptLink: Yup.string()
+    transcriptLink: Yup.string().nullable()
   },
   // Prevents cyclic dependency error
   [['recordingLink', 'presentationDeckFileData']]

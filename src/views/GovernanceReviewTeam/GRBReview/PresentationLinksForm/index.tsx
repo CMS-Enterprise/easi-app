@@ -13,6 +13,7 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import {
+  InputMaybe,
   SystemIntakeGRBPresentationLinksInput,
   useSetSystemIntakeGRBPresentationLinksMutation
 } from 'gql/gen/graphql';
@@ -67,18 +68,11 @@ const PresentationLinksForm = ({
     defaultValues: {
       recordingLink: grbPresentationLinks?.recordingLink,
       recordingPasscode: grbPresentationLinks?.recordingPasscode,
-      transcriptLink: grbPresentationLinks?.transcriptLink,
-      // Only include file name in default values
-      transcriptFileData: {
-        name: grbPresentationLinks?.transcriptFileName || ''
-      } as File,
-      presentationDeckFileData: {
-        name: grbPresentationLinks?.presentationDeckFileName || ''
-      } as File
+      transcriptLink: grbPresentationLinks?.transcriptLink
     }
   });
 
-  const formType: 'add' | 'edit' = grbPresentationLinks ? 'edit' : 'add';
+  const formType = grbPresentationLinks ? 'edit' : 'add';
 
   const grbReviewPath = `/it-governance/${id}/grb-review`;
 
@@ -90,27 +84,34 @@ const PresentationLinksForm = ({
     (!!errors?.presentationDeckFileData ||
       !defaultValues?.presentationDeckFileData?.name);
 
+  /**
+   * Formats file data only if file is not explicitly set to null or undefined
+   *
+   * Returns `null` to clear file data or `undefined` to retain existing data
+   * */
+  const formatFileData = async (file: InputMaybe<File> | undefined) => {
+    // If file data exists, return formatted version
+    if (file) return fileToBase64File(file);
+
+    // Return null or undefined file value
+    return file;
+  };
+
   /** Submit form to set GRB review presentation links */
   const submit = handleSubmit(async values => {
-    // Only include newly updated file data, not default values
-    // File data from default values does not have `size` field
-    const transcriptFileData = values.transcriptFileData?.size
-      ? await fileToBase64File(values.transcriptFileData)
-      : undefined;
+    const transcriptFileData = await formatFileData(values?.transcriptFileData);
 
-    const presentationDeckFileData = values.presentationDeckFileData?.size
-      ? await fileToBase64File(values.presentationDeckFileData)
-      : undefined;
+    const presentationDeckFileData = await formatFileData(
+      values?.presentationDeckFileData
+    );
 
     setPresentationLinks({
       variables: {
         input: {
           systemIntakeID: id,
           ...values,
-
-          presentationDeckFileData,
-          // If transcript link exists, clear transcript file
-          transcriptFileData: values?.transcriptLink ? null : transcriptFileData
+          transcriptFileData,
+          presentationDeckFileData
         }
       }
     })
@@ -205,7 +206,7 @@ const PresentationLinksForm = ({
                 className="margin-top-105"
                 // Default to upload document tab when document has been uploaded
                 defaultActiveTab={
-                  defaultValues?.transcriptFileData?.name
+                  grbPresentationLinks?.transcriptFileName
                     ? t('presentationLinks.uploadDocument')
                     : t('presentationLinks.addLink')
                 }
@@ -243,16 +244,14 @@ const PresentationLinksForm = ({
                     render={({ field: { ref, ...field } }) => (
                       <FileInput
                         defaultFileName={
-                          defaultValues?.transcriptFileData?.name
+                          grbPresentationLinks?.transcriptFileName
                         }
                         name={field.name}
                         id={field.name}
                         accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
                         aria-describedby="transcriptHelpText transcriptFileDataHelpText"
                         className="maxw-none"
-                        onChange={e =>
-                          field.onChange(e.currentTarget?.files?.[0])
-                        }
+                        onChange={field.onChange}
                       />
                     )}
                   />
@@ -276,14 +275,14 @@ const PresentationLinksForm = ({
                 return (
                   <FileInput
                     defaultFileName={
-                      defaultValues?.presentationDeckFileData?.name
+                      grbPresentationLinks?.presentationDeckFileName
                     }
                     name={field.name}
                     id={field.name}
                     accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
                     aria-describedby="presentationDeckHelpText"
                     className="maxw-none"
-                    onChange={e => field.onChange(e.currentTarget?.files?.[0])}
+                    onChange={field.onChange}
                   />
                 );
               }}
