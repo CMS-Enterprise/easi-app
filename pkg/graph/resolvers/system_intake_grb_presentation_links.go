@@ -130,7 +130,7 @@ func SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx context.Context, l
 
 	fileStatus, err := GetStatusForSystemIntakeDocument(s3Client, *links.TranscriptS3Key)
 	if err != nil {
-		logger.Warn("failed to get status for GRBPresentationLinksTranscriptFileStatus", zap.Error(err), zap.Any("s3Key", *links.TranscriptS3Key), zap.Any("systemIntakeID", systemIntakeID))
+		logger.Warn("failed to get status for GRBPresentationLinksTranscriptFileStatus", zap.Error(err), zap.Any("s3Key", links.TranscriptS3Key), zap.Any("systemIntakeID", systemIntakeID))
 		return nil, nil
 	}
 
@@ -175,7 +175,7 @@ func SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx context.Cont
 
 	fileStatus, err := GetStatusForSystemIntakeDocument(s3Client, *links.PresentationDeckS3Key)
 	if err != nil {
-		logger.Warn("failed to get status for GRBPresentationDeckFileStatus", zap.Error(err), zap.Any("s3Key", *links.TranscriptS3Key), zap.Any("systemIntakeID", systemIntakeID))
+		logger.Warn("failed to get status for GRBPresentationDeckFileStatus", zap.Error(err), zap.Any("s3Key", links.TranscriptS3Key), zap.Any("systemIntakeID", systemIntakeID))
 		return nil, nil
 	}
 
