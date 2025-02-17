@@ -228,7 +228,7 @@ describe('IT Gov Actions', () => {
         name: 'Action: progress to a new step'
       });
 
-      userEvent.click(screen.getByRole('radio', { name: 'GRB meeting' }));
+      userEvent.click(screen.getByRole('radio', { name: 'GRB review' }));
 
       const meetingDateField = screen.getByRole('textbox', {
         name: 'Meeting date'
@@ -254,12 +254,12 @@ describe('IT Gov Actions', () => {
         name: 'Action: progress to a new step'
       });
 
-      userEvent.click(screen.getByRole('radio', { name: 'GRB meeting' }));
+      userEvent.click(screen.getByRole('radio', { name: 'GRB review' }));
       userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
 
       // Error for selecting current step
       await screen.findByText(
-        'This request is already at the GRB meeting step. Please select a different step.'
+        'This request is already at the GRB review step. Please select a different step.'
       );
     });
   });

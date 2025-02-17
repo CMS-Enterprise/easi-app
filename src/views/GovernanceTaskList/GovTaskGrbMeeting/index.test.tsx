@@ -13,7 +13,7 @@ import {
 
 import GovTaskGrbMeeting from '.';
 
-describe('Gov Task: Attend the GRB meeting statuses', () => {
+describe('Gov Task: Attend the GRB review statuses', () => {
   function renderGovTaskGrbMeeting(mockdata: ItGovTaskSystemIntake) {
     return render(
       <MemoryRouter>
