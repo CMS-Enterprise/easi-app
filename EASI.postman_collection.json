@@ -1889,6 +1889,39 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Update System Intake GRB Review Form",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation UpdateSystemIntakeGRBReviewForm($input: updateSystemIntakeGRBReviewFormInput!) {\n  updateSystemIntakeGRBReviewForm(input: $input) {\n    systemIntake {\n      id\n      grbReviewType\n      grbReviewAsyncRecordingTime\n      grbReviewAsyncEndDate\n      grbReviewStandardGRBMeetingTime\n      grbReviewAsyncGRBMeetingTime\n    }\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\n    \"grbReviewType\": \"ASYNC\",\n    \"grbReviewAsyncRecordingTime\": \"2025-03-10T14:00:00Z\",\n    \"grbReviewAsyncEndDate\": \"2025-03-12T23:59:59Z\",\n    \"grbReviewStandardGRBMeetingTime\": \"2025-03-18T09:30:00Z\",\n    \"grbReviewAsyncGRBMeetingTime\": \"2025-03-20T15:45:00Z\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

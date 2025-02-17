@@ -111,6 +111,11 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			trb_follow_up_recommendation,
 			contract_name,
 			grb_review_type,
+			grb_review_async_reporting_date,
+			grb_review_async_recording_time,
+			grb_review_async_end_date,
+			grb_review_standard_grb_meeting_time,
+			grb_review_async_grb_meeting_time,
 			created_at,
 			updated_at
 		)
@@ -171,6 +176,11 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:trb_follow_up_recommendation,
 			:contract_name,
 			:grb_review_type,
+			:grb_review_async_reporting_date,
+			:grb_review_async_recording_time,
+			:grb_review_async_end_date,
+			:grb_review_standard_grb_meeting_time,
+			:grb_review_async_grb_meeting_time,
 			:created_at,
 			:updated_at
 		)`
@@ -279,7 +289,12 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			trb_follow_up_recommendation = :trb_follow_up_recommendation,
 			contract_name = :contract_name,
 			system_relation_type = :system_relation_type,
-			grb_review_type = :grb_review_type
+			grb_review_type = :grb_review_type,
+			grb_review_async_reporting_date = :grb_review_async_reporting_date,
+			grb_review_async_recording_time = :grb_review_async_recording_time,
+			grb_review_async_end_date = :grb_review_async_end_date,
+			grb_review_standard_grb_meeting_time = :grb_review_standard_grb_meeting_time,
+			grb_review_async_grb_meeting_time = :grb_review_async_grb_meeting_time
 		WHERE system_intakes.id = :id
 	`
 	updateStmt, err := np.PrepareNamed(updateSystemIntakeSQL)

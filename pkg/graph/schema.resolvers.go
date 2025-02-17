@@ -683,6 +683,11 @@ func (r *mutationResolver) UpdateSystemIntakeGRBReviewType(ctx context.Context, 
 	return resolvers.UpdateSystemIntakeGRBReviewType(ctx, r.store, input)
 }
 
+// UpdateSystemIntakeGRBReviewForm is the resolver for the updateSystemIntakeGRBReviewForm field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewForm(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInput) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.UpdateSystemIntakeGRBReviewForm(ctx, r.store, input)
+}
+
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
 func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error) {
 	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error
