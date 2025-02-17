@@ -166,8 +166,8 @@ const systemProfile = {
       fundingSource: 'Funding Source',
       budgetID: 'Budget ID: ',
       noBudgetTitle: 'No budget title listed',
-      systemFiscalYear: 'System fiscal year (FY) cost',
-      viewMoreFunding: 'Show more budget projects',
+      systemFiscalYear: 'System fiscal year cost',
+      viewMoreFunding: 'View more budget and funding information',
       viewLessFunding: 'Show fewer budget projects'
     },
     team: {

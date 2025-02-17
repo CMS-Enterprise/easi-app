@@ -250,10 +250,18 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
         </Card>
 
         <Card className="grid-col-12">
-          <CardBody className="padding-2">
+          <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
+            <p className="margin-y-0">
+              {t('singleSystem.fundingAndBudget.systemFiscalYear')}
+            </p>
+            <p className="margin-y-0 text-base">
+              {t('singleSystem.fundingAndBudget.fiscalYear')}:{' '}
+              {system.budgetSystemCosts?.budgetActualCost[0].fiscalYear}
+            </p>
+          </CardHeader>
+          <CardBody className="padding-2 padding-top-0">
             <Grid row>
               <Grid desktop={{ col: 12 }} className="padding-0">
-                <dt>{t('singleSystem.fundingAndBudget.systemFiscalYear')}</dt>
                 <h3 className="link-header margin-top-0 margin-bottom-2">
                   {system.budgetSystemCosts?.budgetActualCost[0]
                     .actualSystemCost
@@ -296,7 +304,9 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                     {system.exchanges.map(
                       (exchange, index) =>
                         index < 2 && (
-                          <div className="display-flex margin-bottom-05">
+                          <div
+                            className={`display-flex ${index === 0 ? 'margin-bottom-05' : 'margin-bottom-2'}`}
+                          >
                             <ExchangeDirectionTag
                               data={exchange.exchangeDirection}
                             />
@@ -310,7 +320,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                     )}
                     {system.exchanges.length > 2 ? (
                       <UswdsReactLink
-                        className="link-header"
+                        className="link-header margin-top-2"
                         to={`/systems/${system.id}/system-data#exchanges`}
                       >
                         {t('singleSystem.systemData.viewMoreExchanges', {
@@ -321,7 +331,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                       </UswdsReactLink>
                     ) : (
                       <UswdsReactLink
-                        className="link-header"
+                        className="link-header margin-top-2"
                         to={`/systems/${system.id}/system-data`}
                       >
                         {t('singleSystem.systemData.viewDataExchange')}
@@ -398,7 +408,6 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                   : showSystemVal(null)}
               </Grid>
             </Grid>
-            <Divider className="margin-top-2" />
           </CardBody>
           <CardFooter className="padding-0">
             <Grid row>
