@@ -606,7 +606,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     >
                                       <a
                                         class="usa-link link-header"
-                                        href="/systems/000-100-0/ato-and-security"
+                                        href="/systems/000-100-0/ato-and-security/top"
                                       >
                                         View more ATO information
                                         <span
@@ -701,7 +701,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     >
                                       <a
                                         class="usa-link link-header"
-                                        href="/systems/000-100-0/system-data"
+                                        href="/systems/000-100-0/system-data/top"
                                       >
                                         View more API information
                                         <span
@@ -753,7 +753,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     </span>
                                     <a
                                       class="usa-link link-header"
-                                      href="/systems/000-100-0/system-data#data-categories"
+                                      href="/systems/000-100-0/system-data#data-categories/top"
                                     >
                                       <span
                                         class="easi-tag system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
@@ -808,7 +808,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     </h3>
                                     <a
                                       class="usa-link link-header"
-                                      href="/systems/000-100-0/funding-and-budget#funding-and-budget"
+                                      href="/systems/000-100-0/funding-and-budget/top#funding-and-budget"
                                     >
                                       View more budget and funding information
                                       <span
@@ -865,7 +865,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     data-testid="grid"
                                   >
                                     <div
-                                      class="display-flex margin-bottom-05"
+                                      class="display-flex flex-wrap flex-align-center margin-bottom-05"
                                     >
                                       <span
                                         class="easi-tag text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content"
@@ -897,7 +897,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                       </p>
                                     </div>
                                     <div
-                                      class="display-flex margin-bottom-2"
+                                      class="display-flex flex-wrap flex-align-center margin-bottom-2"
                                     >
                                       <span
                                         class="easi-tag text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content"
@@ -930,7 +930,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     </div>
                                     <a
                                       class="usa-link link-header margin-top-2"
-                                      href="/systems/000-100-0/system-data"
+                                      href="/systems/000-100-0/system-data/top#exchanges"
                                     >
                                       View data exchange details
                                       <span
@@ -1066,7 +1066,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                   >
                                     <a
                                       class="usa-link link-header"
-                                      href="/systems/000-100-0/sub-systems"
+                                      href="/systems/000-100-0/sub-systems/top"
                                     >
                                       View sub-system information
                                       <span
@@ -1129,7 +1129,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     </h3>
                                     <a
                                       class="usa-link link-header"
-                                      href="/systems/000-100-0/team"
+                                      href="/systems/000-100-0/team/top"
                                     >
                                       View more team information
                                       <span
