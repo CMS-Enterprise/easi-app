@@ -27,6 +27,7 @@ import {
 import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeContact } from 'queries/types/SystemIntakeContact';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
+import { SystemIntakeGRBPresentationLinks } from 'queries/types/SystemIntakeGRBPresentationLinks';
 import {
   GovernanceRequestFeedbackTargetForm,
   GovernanceRequestFeedbackType,
@@ -162,6 +163,19 @@ export const documents: SystemIntakeDocument[] = [
     __typename: 'SystemIntakeDocument'
   }
 ];
+
+export const grbPresentationLinks: SystemIntakeGRBPresentationLinks = {
+  __typename: 'SystemIntakeGRBPresentationLinks',
+  recordingLink: 'https://google.com',
+  recordingPasscode: '123456',
+  transcriptFileName: 'transcript.doc',
+  transcriptFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
+  transcriptFileURL: 'https://google.com',
+  transcriptLink: null,
+  presentationDeckFileName: 'presentationDeck.pptx',
+  presentationDeckFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
+  presentationDeckFileURL: 'https://google.com'
+};
 
 export const governanceRequestFeedbacks: SystemIntake['governanceRequestFeedbacks'] =
   [
@@ -345,7 +359,8 @@ export const emptySystemIntake: SystemIntake = {
     }
   ],
   relatedIntakes: [],
-  relatedTRBRequests: []
+  relatedTRBRequests: [],
+  grbPresentationLinks
 };
 
 export const systemIntake: SystemIntake = {
@@ -505,7 +520,8 @@ export const systemIntake: SystemIntake = {
       status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
       createdAt: new Date().toString()
     }
-  ]
+  ],
+  grbPresentationLinks
 };
 
 export const systemIntakeForTable: TableSystemIntake = {
