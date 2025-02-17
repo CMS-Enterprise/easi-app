@@ -139,7 +139,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                 <div className="margin-bottom-2">
                   <UswdsReactLink
                     className="link-header"
-                    to={`/systems/${system.id}/ato-and-security`}
+                    to={`/systems/${system.id}/ato-and-security/top`}
                   >
                     {t('singleSystem.ato.viewATOInfo')}
                     <span aria-hidden>&nbsp;</span>
@@ -184,7 +184,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                 <div className="margin-bottom-2">
                   <UswdsReactLink
                     className="link-header"
-                    to={`/systems/${system.id}/system-data`}
+                    to={`/systems/${system.id}/system-data/top`}
                   >
                     {t('singleSystem.systemData.viewAPIInfo')}
                     <span aria-hidden>&nbsp;</span>
@@ -218,7 +218,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                         )}
                         <UswdsReactLink
                           className="link-header"
-                          to={`/systems/${system.id}/system-data#data-categories`}
+                          to={`/systems/${system.id}/system-data#data-categories/top`}
                         >
                           <Tag
                             key="expand-tags"
@@ -277,7 +277,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                 </h3>
                 <UswdsReactLink
                   className="link-header"
-                  to={`/systems/${system.id}/funding-and-budget#funding-and-budget`}
+                  to={`/systems/${system.id}/funding-and-budget#funding-and-budget/top`}
                 >
                   {t('singleSystem.fundingAndBudget.viewMoreBudgetAndFunding')}
                   <span aria-hidden>&nbsp;</span>
@@ -321,7 +321,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                     {system.exchanges.length > 2 ? (
                       <UswdsReactLink
                         className="link-header margin-top-2"
-                        to={`/systems/${system.id}/system-data#exchanges`}
+                        to={`/systems/${system.id}/system-data/top#exchanges`}
                       >
                         {t('singleSystem.systemData.viewMoreExchanges', {
                           count: system.exchanges.length - 2
@@ -332,7 +332,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                     ) : (
                       <UswdsReactLink
                         className="link-header margin-top-2"
-                        to={`/systems/${system.id}/system-data`}
+                        to={`/systems/${system.id}/system-data/top#exchanges`}
                       >
                         {t('singleSystem.systemData.viewDataExchange')}
                         <span aria-hidden>&nbsp;</span>
@@ -414,7 +414,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
               <Grid desktop={{ col: 12 }} className="padding-2">
                 <UswdsReactLink
                   className="link-header"
-                  to={`/systems/${system.id}/sub-systems`}
+                  to={`/systems/${system.id}/sub-systems/top`}
                 >
                   {system.cedarSubSystems.length > 2
                     ? t('singleSystem.subSystems.viewMore', {
@@ -445,7 +445,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                 </h3>
                 <UswdsReactLink
                   className="link-header"
-                  to={`/systems/${system.id}/team`}
+                  to={`/systems/${system.id}/team/top`}
                 >
                   {t('singleSystem.team.viewMoreInfo')}
                   <span aria-hidden>&nbsp;</span>
