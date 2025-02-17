@@ -13,37 +13,37 @@ CREATE TABLE IF NOT EXISTS system_intake_grb_presentation_links (
     presentation_deck_s3_key TEXT,
     presentation_deck_file_name TEXT,
     CONSTRAINT transcript_link_or_doc_null_check CHECK (
-      (
-        transcript_link IS NULL AND
-        transcript_s3_key IS NULL AND
-        transcript_file_name IS NULL
-      ) OR
-      (
-        transcript_link IS NOT NULL AND
-        transcript_s3_key IS NULL AND
-        transcript_file_name IS NULL
-      ) OR
-      (
-        transcript_link IS NULL AND
-        transcript_s3_key IS NOT NULL AND
-        transcript_file_name IS NOT NULL
-      )
+        (
+            transcript_link IS NULL AND
+            transcript_s3_key IS NULL AND
+            transcript_file_name IS NULL
+        ) OR
+        (
+            transcript_link IS NOT NULL AND
+            transcript_s3_key IS NULL AND
+            transcript_file_name IS NULL
+        ) OR
+        (
+            transcript_link IS NULL AND
+            transcript_s3_key IS NOT NULL AND
+            transcript_file_name IS NOT NULL
+        )
     ),
     CONSTRAINT presentation_deck_null_check CHECK (
-      (
-        presentation_deck_s3_key IS NULL AND
-        presentation_deck_file_name IS NULL
-      ) OR
-      (
-        presentation_deck_s3_key IS NOT NULL AND
-        presentation_deck_file_name IS NOT NULL
-      )
+        (
+            presentation_deck_s3_key IS NULL AND
+            presentation_deck_file_name IS NULL
+        ) OR
+        (
+            presentation_deck_s3_key IS NOT NULL AND
+            presentation_deck_file_name IS NOT NULL
+        )
     ),
     CONSTRAINT one_value_present_null_check CHECK (
-      recording_link IS NOT NULL OR
-      transcript_link IS NOT NULL OR
-      transcript_s3_key IS NOT NULL OR
-      presentation_deck_s3_key IS NOT NULL
+        recording_link IS NOT NULL OR
+        transcript_link IS NOT NULL OR
+        transcript_s3_key IS NOT NULL OR
+        presentation_deck_s3_key IS NOT NULL
     )
 );
 
