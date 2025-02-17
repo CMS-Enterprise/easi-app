@@ -107,8 +107,10 @@ const PresentationLinksForm = ({
         input: {
           systemIntakeID: id,
           ...values,
-          transcriptFileData,
-          presentationDeckFileData
+
+          presentationDeckFileData,
+          // If transcript link exists, clear transcript file
+          transcriptFileData: values?.transcriptLink ? null : transcriptFileData
         }
       }
     })
