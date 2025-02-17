@@ -608,7 +608,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                         class="usa-link link-header"
                                         href="/systems/000-100-0/ato-and-security"
                                       >
-                                        View ATO information
+                                        View more ATO information
                                         <span
                                           aria-hidden="true"
                                         >
@@ -703,7 +703,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                         class="usa-link link-header"
                                         href="/systems/000-100-0/system-data"
                                       >
-                                        View API information
+                                        View more API information
                                         <span
                                           aria-hidden="true"
                                         >
@@ -774,8 +774,23 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                             <div
                               class="usa-card__container"
                             >
+                              <header
+                                class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
+                                data-testid="CardHeader"
+                              >
+                                <p
+                                  class="margin-y-0"
+                                >
+                                  System fiscal year cost
+                                </p>
+                                <p
+                                  class="margin-y-0 text-base"
+                                >
+                                  Fiscal Year: 2021
+                                </p>
+                              </header>
                               <div
-                                class="usa-card__body padding-2"
+                                class="usa-card__body padding-2 padding-top-0"
                                 data-testid="CardBody"
                               >
                                 <div
@@ -786,9 +801,6 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     class="desktop:grid-col-12 padding-0"
                                     data-testid="grid"
                                   >
-                                    <dt>
-                                      System fiscal year (FY) cost
-                                    </dt>
                                     <h3
                                       class="link-header margin-top-0 margin-bottom-2"
                                     >
@@ -798,7 +810,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                       class="usa-link link-header"
                                       href="/systems/000-100-0/funding-and-budget#funding-and-budget"
                                     >
-                                      Show more budget projects
+                                      View more budget and funding information
                                       <span
                                         aria-hidden="true"
                                       >
@@ -853,104 +865,71 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     data-testid="grid"
                                   >
                                     <div
-                                      class="margin-bottom-1 text-bold"
+                                      class="display-flex margin-bottom-05"
                                     >
-                                      <svg
-                                        class="usa-icon text-success"
-                                        focusable="false"
-                                        height="1em"
-                                        role="img"
-                                        viewBox="0 0 24 24"
-                                        width="1em"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                                        />
-                                      </svg>
-                                       
                                       <span
-                                        class="text-tbottom line-height-body-3"
+                                        class="easi-tag text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content"
+                                        data-testid="tag"
                                       >
-                                        Beneficiary Information in the Cloud 
+                                        <svg
+                                          class="usa-icon margin-right-1"
+                                          focusable="false"
+                                          height="1em"
+                                          role="img"
+                                          viewBox="0 0 24 24"
+                                          width="1em"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"
+                                          />
+                                        </svg>
+                                        Sends data
                                       </span>
-                                      <svg
-                                        class="usa-icon text-base"
-                                        focusable="false"
-                                        height="1em"
-                                        role="img"
-                                        viewBox="0 0 24 24"
-                                        width="1em"
-                                        xmlns="http://www.w3.org/2000/svg"
+                                      <p
+                                        class="margin-y-0"
                                       >
-                                        <path
-                                          d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
-                                        />
-                                      </svg>
+                                        <span
+                                          class="text-bold"
+                                        >
+                                          CMS Exchange
+                                        </span>
+                                      </p>
                                     </div>
                                     <div
-                                      class="margin-bottom-1 text-bold"
+                                      class="display-flex margin-bottom-2"
                                     >
-                                      <svg
-                                        class="usa-icon text-success"
-                                        focusable="false"
-                                        height="1em"
-                                        role="img"
-                                        viewBox="0 0 24 24"
-                                        width="1em"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                                        />
-                                      </svg>
-                                       
                                       <span
-                                        class="text-tbottom line-height-body-3"
+                                        class="easi-tag text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content"
+                                        data-testid="tag"
                                       >
-                                        Happiness Quality Information 
+                                        <svg
+                                          class="usa-icon margin-right-1"
+                                          focusable="false"
+                                          height="1em"
+                                          role="img"
+                                          viewBox="0 0 24 24"
+                                          width="1em"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+                                          />
+                                        </svg>
+                                        Receives data
                                       </span>
-                                      <svg
-                                        class="usa-icon text-base"
-                                        focusable="false"
-                                        height="1em"
-                                        role="img"
-                                        viewBox="0 0 24 24"
-                                        width="1em"
-                                        xmlns="http://www.w3.org/2000/svg"
+                                      <p
+                                        class="margin-y-0"
                                       >
-                                        <path
-                                          d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
-                                        />
-                                      </svg>
+                                        <span
+                                          class="text-bold"
+                                        >
+                                          EASI Exchange
+                                        </span>
+                                      </p>
                                     </div>
-                                    <div
-                                      class="text-underline link-header text-primary pointer"
-                                      role="button"
-                                      tabindex="0"
-                                    >
-                                      + 1 more
-                                    </div>
-                                  </div>
-                                </div>
-                                <div
-                                  class="easi-divider margin-top-2"
-                                />
-                              </div>
-                              <div
-                                class="usa-card__footer padding-0"
-                                data-testid="CardFooter"
-                              >
-                                <div
-                                  class="grid-row"
-                                  data-testid="grid"
-                                >
-                                  <div
-                                    class="desktop:grid-col-12 padding-2"
-                                    data-testid="grid"
-                                  >
                                     <a
-                                      class="usa-link link-header"
+                                      class="usa-link link-header margin-top-2"
                                       href="/systems/000-100-0/system-data"
                                     >
                                       View data exchange details
@@ -965,6 +944,49 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                         → 
                                       </span>
                                     </a>
+                                  </div>
+                                </div>
+                                <div
+                                  class="easi-divider margin-top-2"
+                                />
+                              </div>
+                              <div
+                                class="usa-card__footer padding-2"
+                                data-testid="CardFooter"
+                              >
+                                <div
+                                  class="grid-row"
+                                  data-testid="grid"
+                                >
+                                  <div
+                                    class="tablet:grid-col-6"
+                                    data-testid="grid"
+                                  >
+                                    <dt
+                                      class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                                    >
+                                      Number of system dependencies
+                                    </dt>
+                                    <dd
+                                      class="description-definition margin-0 font-body-md line-height-body-3"
+                                    >
+                                      1
+                                    </dd>
+                                  </div>
+                                  <div
+                                    class="tablet:grid-col-6"
+                                    data-testid="grid"
+                                  >
+                                    <dt
+                                      class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                                    >
+                                      Number of dependent systems
+                                    </dt>
+                                    <dd
+                                      class="description-definition margin-0 line-height-body-3 font-body-md"
+                                    >
+                                      1
+                                    </dd>
                                   </div>
                                 </div>
                               </div>
@@ -1029,9 +1051,6 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     </p>
                                   </div>
                                 </div>
-                                <div
-                                  class="easi-divider margin-top-2"
-                                />
                               </div>
                               <div
                                 class="usa-card__footer padding-0"

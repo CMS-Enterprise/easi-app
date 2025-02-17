@@ -160,7 +160,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                     class="usa-link link-header"
                     href="/systems/000-100-0/ato-and-security"
                   >
-                    View ATO information
+                    View more ATO information
                     <span
                       aria-hidden="true"
                     >
@@ -255,7 +255,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                     class="usa-link link-header"
                     href="/systems/000-100-0/system-data"
                   >
-                    View API information
+                    View more API information
                     <span
                       aria-hidden="true"
                     >
@@ -326,8 +326,23 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
         <div
           class="usa-card__container"
         >
+          <header
+            class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
+            data-testid="CardHeader"
+          >
+            <p
+              class="margin-y-0"
+            >
+              System fiscal year cost
+            </p>
+            <p
+              class="margin-y-0 text-base"
+            >
+              Fiscal Year: 2021
+            </p>
+          </header>
           <div
-            class="usa-card__body padding-2"
+            class="usa-card__body padding-2 padding-top-0"
             data-testid="CardBody"
           >
             <div
@@ -338,9 +353,6 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 class="desktop:grid-col-12 padding-0"
                 data-testid="grid"
               >
-                <dt>
-                  System fiscal year (FY) cost
-                </dt>
                 <h3
                   class="link-header margin-top-0 margin-bottom-2"
                 >
@@ -350,7 +362,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                   class="usa-link link-header"
                   href="/systems/000-100-0/funding-and-budget#funding-and-budget"
                 >
-                  Show more budget projects
+                  View more budget and funding information
                   <span
                     aria-hidden="true"
                   >
@@ -437,7 +449,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                   </p>
                 </div>
                 <div
-                  class="display-flex margin-bottom-05"
+                  class="display-flex margin-bottom-2"
                 >
                   <span
                     class="easi-tag text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content"
@@ -469,7 +481,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                   </p>
                 </div>
                 <a
-                  class="usa-link link-header"
+                  class="usa-link link-header margin-top-2"
                   href="/systems/000-100-0/system-data"
                 >
                   View data exchange details
@@ -591,9 +603,6 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 </p>
               </div>
             </div>
-            <div
-              class="easi-divider margin-top-2"
-            />
           </div>
           <div
             class="usa-card__footer padding-0"

@@ -131,7 +131,7 @@ const systemProfile = {
         'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact',
       noATODates:
         'There is no information about previous tests or assessments available for this system',
-      viewATOInfo: 'View ATO information'
+      viewATOInfo: 'View more ATO information'
     },
     contracts: {
       header: 'Contracts',
@@ -386,7 +386,7 @@ const systemProfile = {
       dataCategories: 'Data content categories',
       qualityAssurance: 'Quality Assurance',
       viewGateway: 'View gateway information',
-      viewAPIInfo: 'View API information',
+      viewAPIInfo: 'View more API information',
       viewDataExchange: 'View data exchange details',
       viewMoreExchanges: 'View {{count}} more data exchanges',
       numberOfSystemDependencies: 'Number of system dependencies',
