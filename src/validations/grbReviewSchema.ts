@@ -1,7 +1,6 @@
 import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
 import i18next from 'i18next';
 import * as Yup from 'yup';
-import { MixedSchema } from 'yup/lib/mixed';
 
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 
@@ -54,16 +53,36 @@ export const CreateGRBReviewersSchema = Yup.object({
 export const SetGRBPresentationLinksSchema = Yup.object().shape(
   {
     // Form requires either recordingLink or presentationDeckFileData fields
-    recordingLink: Yup.string().when('presentationDeckFileData', {
-      is: (value?: MixedSchema) => !value,
-      then: Yup.string().required('This is a required field.'),
-      otherwise: Yup.string().nullable()
-    }),
-    presentationDeckFileData: Yup.mixed().when('recordingLink', {
-      is: (value?: string) => !value,
-      then: Yup.mixed().required('This is a required field.'),
-      otherwise: Yup.mixed()
-    }),
+    recordingLink: Yup.string().when(
+      ['$formType', 'presentationDeckFileData'],
+      {
+        is: (formType: 'add' | 'edit', value?: File | null) => {
+          if (formType === 'add' && !value) return true;
+
+          // Return error if editing and value is cleared
+          if (formType === 'edit' && value === null) return true;
+
+          return false;
+        },
+        then: Yup.string().required('This is a required field.'),
+        otherwise: Yup.string().nullable()
+      }
+    ),
+    presentationDeckFileData: Yup.mixed().test(
+      'required',
+      'This is a required field.',
+      (value, context) => {
+        const { recordingLink } = context.parent;
+
+        // If `recordingLink` is empty, `presentationDeckFileData` cannot be null
+        // undefined passes because it means there is an existing file
+        if (!recordingLink) {
+          return value !== null;
+        }
+
+        return true;
+      }
+    ),
 
     // Optional fields
     recordingPasscode: Yup.string().nullable(),

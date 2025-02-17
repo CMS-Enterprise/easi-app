@@ -58,31 +58,33 @@ const PresentationLinksForm = ({
     { refetchQueries: ['GetSystemIntake'] }
   );
 
+  const formType = grbPresentationLinks ? 'edit' : 'add';
+
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid, isDirty, defaultValues }
+    formState: { errors, isValid, isDirty }
   } = useEasiForm<PresentationLinkFields>({
     resolver: yupResolver(SetGRBPresentationLinksSchema),
+    context: { formType },
     defaultValues: {
       recordingLink: grbPresentationLinks?.recordingLink,
       recordingPasscode: grbPresentationLinks?.recordingPasscode,
-      transcriptLink: grbPresentationLinks?.transcriptLink
+      transcriptLink: grbPresentationLinks?.transcriptLink,
+
+      // Set file data to `undefined` if file name exists
+      // Used by form to determine when existing data should be cleared vs retained
+      transcriptFileData: grbPresentationLinks?.transcriptFileName
+        ? undefined
+        : null,
+      presentationDeckFileData: grbPresentationLinks?.presentationDeckFileName
+        ? undefined
+        : null
     }
   });
 
-  const formType = grbPresentationLinks ? 'edit' : 'add';
-
   const grbReviewPath = `/it-governance/${id}/grb-review`;
-
-  /**
-   * Returns true if both recordingLink and presentationDeckFileData fields have errors
-   */
-  const hasRequiredFieldErrors =
-    !!errors?.recordingLink &&
-    (!!errors?.presentationDeckFileData ||
-      !defaultValues?.presentationDeckFileData?.name);
 
   /**
    * Formats file data only if file is not explicitly set to null or undefined
@@ -133,11 +135,14 @@ const PresentationLinksForm = ({
 
   return (
     <>
-      {hasRequiredFieldErrors && (
-        <Alert type="error" slim className="margin-top-2">
-          {t('presentationLinks.emptyFormError')}
-        </Alert>
-      )}
+      {
+        // Error alert if both `recordingLink` and `presentationDeckFileData` fields are blank
+        !!errors?.recordingLink && !!errors?.presentationDeckFileData && (
+          <Alert type="error" slim className="margin-top-2">
+            {t('presentationLinks.emptyFormError')}
+          </Alert>
+        )
+      }
 
       <Grid
         tablet={{ col: 6 }}
@@ -159,7 +164,7 @@ const PresentationLinksForm = ({
         </IconLink>
 
         <Form onSubmit={submit} className="maxw-none">
-          <FormGroup error={hasRequiredFieldErrors}>
+          <FormGroup error={!!errors?.recordingLink}>
             <Label htmlFor="recordingLink">
               {t('presentationLinks.recordingLinkLabel')}
             </Label>
@@ -260,7 +265,7 @@ const PresentationLinksForm = ({
             </Fieldset>
           </FormGroup>
 
-          <FormGroup error={hasRequiredFieldErrors}>
+          <FormGroup error={!!errors?.presentationDeckFileData}>
             <Label htmlFor="presentationDeckFileData">
               {t('presentationLinks.presentationDeckLabel')}
             </Label>
