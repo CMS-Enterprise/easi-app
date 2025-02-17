@@ -2001,7 +2001,7 @@ func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileURL(ctx c
 
 // PresentationDeckFileStatus is the resolver for the presentationDeckFileStatus field.
 func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error) {
-	return resolvers.SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx, r.s3Client, obj.SystemIntakeID)
+	return resolvers.SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx, r.s3Client, obj.SystemIntakeID)
 }
 
 // VotingRole is the resolver for the votingRole field.
