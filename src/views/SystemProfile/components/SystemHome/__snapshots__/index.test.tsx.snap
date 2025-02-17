@@ -417,7 +417,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 data-testid="grid"
               >
                 <div
-                  class="display-flex margin-bottom-05"
+                  class="display-flex flex-wrap flex-align-center margin-bottom-05"
                 >
                   <span
                     class="easi-tag text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content"
@@ -449,7 +449,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                   </p>
                 </div>
                 <div
-                  class="display-flex margin-bottom-2"
+                  class="display-flex flex-wrap flex-align-center margin-bottom-2"
                 >
                   <span
                     class="easi-tag text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content"
