@@ -46,10 +46,12 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	if value, ok := input.TranscriptLink.ValueOK(); ok {
 		links.TranscriptLink = value
 
-		// setting a transcript link means we need to also un-set all the other transcript-related fields
+		// if setting a transcript link, we need to also un-set all the other transcript-related fields
 		// for the transcript_link_or_doc_null_check SQL check
-		links.TranscriptFileName = nil
-		links.TranscriptS3Key = nil
+		if value != nil {
+			links.TranscriptFileName = nil
+			links.TranscriptS3Key = nil
+		}
 	}
 
 	links.ModifiedBy = &userID
