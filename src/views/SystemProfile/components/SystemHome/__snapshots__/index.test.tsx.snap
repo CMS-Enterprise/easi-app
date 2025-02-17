@@ -360,7 +360,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 </h3>
                 <a
                   class="usa-link link-header"
-                  href="/systems/000-100-0/funding-and-budget#funding-and-budget/top"
+                  href="/systems/000-100-0/funding-and-budget/top#funding-and-budget"
                 >
                   View more budget and funding information
                   <span
