@@ -9495,11 +9495,11 @@ Input data used to set or update a System Intake's GRB Review form data
 """
 input updateSystemIntakeGRBReviewFormInput {
   systemIntakeID: UUID!
-  grbReviewType: SystemIntakeGRBReviewType
-  grbReviewAsyncRecordingTime: Time
-  grbReviewAsyncEndDate: Time
-  grbReviewStandardGRBMeetingTime: Time
-  grbReviewAsyncGRBMeetingTime: Time
+  grbReviewType: SystemIntakeGRBReviewType @goField(omittable: true)
+  grbReviewAsyncRecordingTime: Time @goField(omittable: true)
+  grbReviewAsyncEndDate: Time @goField(omittable: true)
+  grbReviewStandardGRBMeetingTime: Time @goField(omittable: true)
+  grbReviewAsyncGRBMeetingTime: Time @goField(omittable: true)
 }
 
 """
@@ -65544,35 +65544,35 @@ func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewFormInput(c
 			if err != nil {
 				return it, err
 			}
-			it.GrbReviewType = data
+			it.GrbReviewType = graphql.OmittableOf(data)
 		case "grbReviewAsyncRecordingTime":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbReviewAsyncRecordingTime"))
 			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.GrbReviewAsyncRecordingTime = data
+			it.GrbReviewAsyncRecordingTime = graphql.OmittableOf(data)
 		case "grbReviewAsyncEndDate":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbReviewAsyncEndDate"))
 			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.GrbReviewAsyncEndDate = data
+			it.GrbReviewAsyncEndDate = graphql.OmittableOf(data)
 		case "grbReviewStandardGRBMeetingTime":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbReviewStandardGRBMeetingTime"))
 			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.GrbReviewStandardGRBMeetingTime = data
+			it.GrbReviewStandardGRBMeetingTime = graphql.OmittableOf(data)
 		case "grbReviewAsyncGRBMeetingTime":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbReviewAsyncGRBMeetingTime"))
 			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.GrbReviewAsyncGRBMeetingTime = data
+			it.GrbReviewAsyncGRBMeetingTime = graphql.OmittableOf(data)
 		}
 	}
 

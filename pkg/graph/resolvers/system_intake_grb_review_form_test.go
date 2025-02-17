@@ -3,6 +3,8 @@ package resolvers
 import (
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
+
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -49,11 +51,11 @@ func (s *ResolverSuite) TestSystemIntakeUpdateGrbReviewForm() {
 		s.testConfigs.Store,
 		models.UpdateSystemIntakeGRBReviewFormInput{
 			SystemIntakeID:                  systemIntake.ID,
-			GrbReviewType:                   &grbReviewType,
-			GrbReviewAsyncRecordingTime:     &timeNow,
-			GrbReviewAsyncEndDate:           &timeNow,
-			GrbReviewStandardGRBMeetingTime: &timeNow,
-			GrbReviewAsyncGRBMeetingTime:    &timeNow,
+			GrbReviewType:                   graphql.OmittableOf(&grbReviewType),
+			GrbReviewAsyncRecordingTime:     graphql.OmittableOf(&timeNow),
+			GrbReviewAsyncEndDate:           graphql.OmittableOf(&timeNow),
+			GrbReviewStandardGRBMeetingTime: graphql.OmittableOf(&timeNow),
+			GrbReviewAsyncGRBMeetingTime:    graphql.OmittableOf(&timeNow),
 		},
 	)
 

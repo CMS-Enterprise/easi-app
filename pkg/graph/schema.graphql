@@ -1326,11 +1326,11 @@ Input data used to set or update a System Intake's GRB Review form data
 """
 input updateSystemIntakeGRBReviewFormInput {
   systemIntakeID: UUID!
-  grbReviewType: SystemIntakeGRBReviewType
-  grbReviewAsyncRecordingTime: Time
-  grbReviewAsyncEndDate: Time
-  grbReviewStandardGRBMeetingTime: Time
-  grbReviewAsyncGRBMeetingTime: Time
+  grbReviewType: SystemIntakeGRBReviewType @goField(omittable: true)
+  grbReviewAsyncRecordingTime: Time @goField(omittable: true)
+  grbReviewAsyncEndDate: Time @goField(omittable: true)
+  grbReviewStandardGRBMeetingTime: Time @goField(omittable: true)
+  grbReviewAsyncGRBMeetingTime: Time @goField(omittable: true)
 }
 
 """

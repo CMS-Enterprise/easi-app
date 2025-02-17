@@ -996,12 +996,12 @@ type CreateSystemIntakeGRBDiscussionReplyInput struct {
 
 // Input data used to set or update a System Intake's GRB Review form data
 type UpdateSystemIntakeGRBReviewFormInput struct {
-	SystemIntakeID                  uuid.UUID                  `json:"systemIntakeID"`
-	GrbReviewType                   *SystemIntakeGRBReviewType `json:"grbReviewType,omitempty"`
-	GrbReviewAsyncRecordingTime     *time.Time                 `json:"grbReviewAsyncRecordingTime,omitempty"`
-	GrbReviewAsyncEndDate           *time.Time                 `json:"grbReviewAsyncEndDate,omitempty"`
-	GrbReviewStandardGRBMeetingTime *time.Time                 `json:"grbReviewStandardGRBMeetingTime,omitempty"`
-	GrbReviewAsyncGRBMeetingTime    *time.Time                 `json:"grbReviewAsyncGRBMeetingTime,omitempty"`
+	SystemIntakeID                  uuid.UUID                                     `json:"systemIntakeID"`
+	GrbReviewType                   graphql.Omittable[*SystemIntakeGRBReviewType] `json:"grbReviewType,omitempty"`
+	GrbReviewAsyncRecordingTime     graphql.Omittable[*time.Time]                 `json:"grbReviewAsyncRecordingTime,omitempty"`
+	GrbReviewAsyncEndDate           graphql.Omittable[*time.Time]                 `json:"grbReviewAsyncEndDate,omitempty"`
+	GrbReviewStandardGRBMeetingTime graphql.Omittable[*time.Time]                 `json:"grbReviewStandardGRBMeetingTime,omitempty"`
+	GrbReviewAsyncGRBMeetingTime    graphql.Omittable[*time.Time]                 `json:"grbReviewAsyncGRBMeetingTime,omitempty"`
 }
 
 // Input data used to set or update a System Intake's GRB Review Type
