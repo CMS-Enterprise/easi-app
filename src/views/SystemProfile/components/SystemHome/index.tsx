@@ -305,7 +305,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                       (exchange, index) =>
                         index < 2 && (
                           <div
-                            className={`display-flex ${index === 0 ? 'margin-bottom-05' : 'margin-bottom-2'}`}
+                            className={`display-flex flex-wrap flex-align-center ${index === 0 ? 'margin-bottom-05' : 'margin-bottom-2'}`}
                           >
                             <ExchangeDirectionTag
                               data={exchange.exchangeDirection}
