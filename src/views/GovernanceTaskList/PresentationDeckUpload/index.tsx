@@ -142,7 +142,7 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
                   onChange={e => {
                     field.onChange(e.currentTarget?.files?.[0]);
                   }}
-                  accept=".pdf,.ppt,.pptx"
+                  accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
                 />
               )}
             />

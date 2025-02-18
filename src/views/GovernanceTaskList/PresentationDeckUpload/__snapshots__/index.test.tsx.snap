@@ -51,7 +51,7 @@ exports[`UploadForm page > renders correct navigation text if requester and take
         <p
           class="usa-hint margin-bottom-0 margin-top-05"
         >
-          Recommended file types: PPTX or PDF
+          Select a PDF, PPT, PPTX, DOC, DOCX, XLS, or XLSX
         </p>
         <div
           class="usa-file-input"
@@ -82,7 +82,7 @@ exports[`UploadForm page > renders correct navigation text if requester and take
               data-testid="file-input-box"
             />
             <input
-              accept=".pdf,.ppt,.pptx"
+              accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
               class="usa-file-input__input"
               data-testid="file-input-input"
               id="presentationDeckFileData"

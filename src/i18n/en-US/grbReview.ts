@@ -233,7 +233,7 @@ export default {
       dontUploadRequester:
         'Don’t upload and return to the governance task list',
       selectFile: 'Select your file',
-      recommendedFileTypes: 'Recommended file types: PPTX or PDF',
+      recommendedFileTypes: 'Select a PDF, PPT, PPTX, DOC, DOCX, XLS, or XLSX',
       upload: 'Upload presentation',
       success: 'You have successfully uploaded your GRB presentation.',
       error:
