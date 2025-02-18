@@ -177,7 +177,7 @@ const PresentationLinksForm = ({
               ref={null}
               id="recordingLink"
               aria-describedby="recordingLinkHelpText"
-              type="text"
+              type="url"
             />
           </FormGroup>
 
