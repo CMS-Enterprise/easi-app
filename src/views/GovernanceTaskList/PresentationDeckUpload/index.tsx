@@ -2,27 +2,28 @@ import React from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { FileInput, Form, FormGroup, Icon } from '@trussworks/react-uswds';
+import {
+  SystemIntakeGRBPresentationLinksInput,
+  useSetSystemIntakeGRBPresentationLinksMutation
+} from 'gql/gen/graphql';
 
 import { useEasiForm } from 'components/EasiForm';
 import { Alert } from 'components/shared/Alert';
 import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import useMessage from 'hooks/useMessage';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
-import { CreateSystemIntakeDocumentQuery } from 'queries/SystemIntakeDocumentQueries';
-import {
-  CreateSystemIntakeDocument,
-  CreateSystemIntakeDocumentVariables
-} from 'queries/types/CreateSystemIntakeDocument';
-import { CreateSystemIntakeDocumentInput } from 'types/graphql-global-types';
 import { fileToBase64File } from 'utils/downloadFile';
-import { documentSchema } from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
-type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
+type PresentationLinkFields = Omit<
+  SystemIntakeGRBPresentationLinksInput,
+  | 'systemIntakeID'
+  | 'recordingLink'
+  | 'recordingPasscode'
+  | 'transcriptLink'
+  | 'transcriptFileName'
+>;
 
 type UploadFormProps = {
   type: 'admin' | 'requester';
@@ -40,29 +41,23 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
     systemId: string;
   }>();
 
-  const { Message, showMessageOnNextPage, showMessage } = useMessage();
+  const { showMessageOnNextPage, showMessage } = useMessage();
 
-  const [createDocument] = useMutation<
-    CreateSystemIntakeDocument,
-    CreateSystemIntakeDocumentVariables
-  >(CreateSystemIntakeDocumentQuery, {
-    refetchQueries: [
-      {
-        query: GetSystemIntakeQuery,
-        variables: {
-          id: systemId
-        }
-      }
-    ]
-  });
+  const [setPresentationLinks] = useSetSystemIntakeGRBPresentationLinksMutation(
+    { refetchQueries: ['GetSystemIntake'] }
+  );
 
   const {
-    control,
     handleSubmit,
-    formState: { isSubmitting, errors, isValid }
-  } = useEasiForm<DocumentUploadFields>({
-    resolver: yupResolver(documentSchema),
-    context: { type }
+    control,
+    watch,
+    formState: { errors, isSubmitting }
+  } = useEasiForm<PresentationLinkFields>({
+    defaultValues: {
+      presentationDeckFileData: {
+        name: ''
+      } as File
+    }
   });
 
   const requestDetailsLink =
@@ -70,20 +65,16 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
       ? `/governance-task-list/${systemId}`
       : `/it-governance/${systemId}/grb-review`;
 
-  const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
-    const newFile = await fileToBase64File(formData.fileData);
-    createDocument({
+  const submit = handleSubmit(async values => {
+    const presentationDeckFileData = values.presentationDeckFileData?.size
+      ? await fileToBase64File(values.presentationDeckFileData)
+      : undefined;
+
+    setPresentationLinks({
       variables: {
         input: {
-          fileData: newFile,
-          version: formData.version,
-          documentType: formData.documentType,
-          // If type is set to 'Other', include description field
-          ...(formData.documentType === 'OTHER'
-            ? { otherTypeDescription }
-            : {}),
-          requestID: systemId,
-          sendNotification: formData.sendNotification
+          systemIntakeID: systemId,
+          presentationDeckFileData
         }
       }
     })
@@ -106,8 +97,6 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
 
   return (
     <>
-      <Message />
-
       <div className="tablet:grid-col-12 desktop:grid-col-8 margin-top-6 margin-bottom-8 padding-bottom-4">
         <h1 className="margin-bottom-1">
           {t('presentationLinks.presentationUpload.header')}
@@ -125,7 +114,10 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
 
         <Form className="maxw-full" onSubmit={submit}>
           {/* Upload field */}
-          <FormGroup error={!!errors.fileData} className="margin-top-5">
+          <FormGroup
+            error={!!errors.presentationDeckFileData}
+            className="margin-top-5"
+          >
             <Label htmlFor="fileData">
               {t('presentationLinks.presentationUpload.selectFile')}
             </Label>
@@ -136,7 +128,10 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
 
             <Controller
               control={control}
-              name="fileData"
+              name="presentationDeckFileData"
+              rules={{
+                required: true
+              }}
               render={({ field: { value, ...field } }) => (
                 <FileInput
                   {...field}
@@ -158,7 +153,7 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
           <Pager
             next={{
               text: t('presentationLinks.presentationUpload.upload'),
-              disabled: !isValid || isSubmitting
+              disabled: !watch('presentationDeckFileData')?.name || isSubmitting
             }}
             taskListUrl={requestDetailsLink}
             saveExitText={
@@ -166,6 +161,7 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
                 ? t('presentationLinks.presentationUpload.dontUploadRequester')
                 : t('presentationLinks.presentationUpload.dontUploadAdmin')
             }
+            submitDisabled
             border={false}
             className="margin-top-4"
           />
