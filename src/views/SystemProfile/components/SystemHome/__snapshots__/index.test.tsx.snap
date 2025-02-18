@@ -63,7 +63,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 >
                   <a
                     class="usa-link link-header"
-                    href="/systems/000-100-0/details"
+                    href="/systems/000-100-0/details#system-detail"
                   >
                     View URLs
                     <span
@@ -158,7 +158,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 >
                   <a
                     class="usa-link link-header"
-                    href="/systems/000-100-0/ato-and-security/top"
+                    href="/systems/000-100-0/ato-and-security#ato-and-security"
                   >
                     View more ATO information
                     <span
@@ -253,7 +253,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 >
                   <a
                     class="usa-link link-header"
-                    href="/systems/000-100-0/system-data/top"
+                    href="/systems/000-100-0/system-data#system-data"
                   >
                     View more API information
                     <span
@@ -305,7 +305,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 </span>
                 <a
                   class="usa-link link-header"
-                  href="/systems/000-100-0/system-data#data-categories/top"
+                  href="/systems/000-100-0/system-data#data-categories"
                 >
                   <span
                     class="easi-tag system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
@@ -360,7 +360,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 </h3>
                 <a
                   class="usa-link link-header"
-                  href="/systems/000-100-0/funding-and-budget/top#funding-and-budget"
+                  href="/systems/000-100-0/funding-and-budget#funding-and-budget"
                 >
                   View more budget and funding information
                   <span
@@ -482,7 +482,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 </div>
                 <a
                   class="usa-link link-header margin-top-2"
-                  href="/systems/000-100-0/system-data/top#exchanges"
+                  href="/systems/000-100-0/system-data#exchanges"
                 >
                   View data exchange details
                   <span
@@ -618,7 +618,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
               >
                 <a
                   class="usa-link link-header"
-                  href="/systems/000-100-0/sub-systems/top"
+                  href="/systems/000-100-0/sub-systems#system-sub-systems"
                 >
                   View sub-system information
                   <span
@@ -681,7 +681,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 </h3>
                 <a
                   class="usa-link link-header"
-                  href="/systems/000-100-0/team/top"
+                  href="/systems/000-100-0/team#system-team"
                 >
                   View more team information
                   <span
