@@ -361,7 +361,10 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         </Grid>
 
-        <h3 className="margin-top-0 margin-bottom-1" id="data-categories">
+        <h3
+          className="margin-top-0 margin-bottom-1 scroll-margin-top-6"
+          id="data-categories"
+        >
           {t('singleSystem.systemData.dataCategories')}
         </h3>
         {system.cedarSoftwareProducts?.apiDataArea
