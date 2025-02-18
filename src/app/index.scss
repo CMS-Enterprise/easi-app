@@ -1,7 +1,7 @@
 // .scss settings
 
 // USWDS theme overrides
-@forward './stylesheets/_settings.scss';
+@forward '../stylesheets/_settings.scss';
 
 // USWDS typography/color theme used below
 @use 'uswds-core' as *;
@@ -11,15 +11,15 @@
 @forward 'uswds';
 
 // Vendor Styles
-@forward '../node_modules/font-awesome/css/font-awesome.min.css';
+@forward '../../node_modules/font-awesome/css/font-awesome.min.css';
 @forward '@okta/okta-signin-widget/css/okta-sign-in.min.css'; // use path /css instead of /dist/css because that's what the package exports (even though it doesn't match the filesystem)
 @forward '@trussworks/react-uswds/lib/index.css';
 
 // Custom USWDS
-@forward './stylesheets/custom.scss';
+@forward '../stylesheets/custom.scss';
 
 // Print styles (used for PDF generation)
-@forward './stylesheets/print.scss';
+@forward '../stylesheets/print.scss';
 
 html,
 body,
