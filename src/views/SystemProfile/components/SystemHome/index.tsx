@@ -318,27 +318,18 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                           </div>
                         )
                     )}
-                    {system.exchanges.length > 2 ? (
-                      <UswdsReactLink
-                        className="link-header margin-top-2"
-                        to={`/systems/${system.id}/system-data#exchanges`}
-                      >
-                        {t('singleSystem.systemData.viewMoreExchanges', {
-                          count: system.exchanges.length - 2
-                        })}
-                        <span aria-hidden>&nbsp;</span>
-                        <span aria-hidden>&rarr; </span>
-                      </UswdsReactLink>
-                    ) : (
-                      <UswdsReactLink
-                        className="link-header margin-top-2"
-                        to={`/systems/${system.id}/system-data#exchanges`}
-                      >
-                        {t('singleSystem.systemData.viewDataExchange')}
-                        <span aria-hidden>&nbsp;</span>
-                        <span aria-hidden>&rarr; </span>
-                      </UswdsReactLink>
-                    )}
+                    <UswdsReactLink
+                      className="link-header margin-top-2"
+                      to={`/systems/${system.id}/system-data#exchanges`}
+                    >
+                      {system.exchanges.length > 2
+                        ? t('singleSystem.systemData.viewMoreExchanges', {
+                            count: system.exchanges.length - 2
+                          })
+                        : t('singleSystem.systemData.viewDataExchange')}
+                      <span aria-hidden>&nbsp;</span>
+                      <span aria-hidden>&rarr; </span>
+                    </UswdsReactLink>
                   </>
                 )}
                 {!system.exchanges.length && (
