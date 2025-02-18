@@ -56,21 +56,30 @@ export const SetGRBPresentationLinksSchema = Yup.object().shape(
     recordingLink: Yup.string().when(
       ['$formType', 'presentationDeckFileData'],
       {
-        is: (formType: 'add' | 'edit', value?: File | null) => {
-          if (formType === 'add' && !value) return true;
+        is: (
+          formType: 'add' | 'edit',
+          presentationDeckFileData?: File | null
+        ) => {
+          if (formType === 'add' && !presentationDeckFileData) {
+            return true;
+          }
 
-          // Return error if editing and value is cleared
-          if (formType === 'edit' && value === null) return true;
+          // Field is required if editing and presentation deck is cleared
+          if (formType === 'edit' && presentationDeckFileData === null) {
+            return true;
+          }
 
           return false;
         },
-        then: Yup.string().required('This is a required field.'),
+        then: Yup.string().required(
+          i18next.t('grbReview:presentationLinks.emptyFormError')
+        ),
         otherwise: Yup.string().nullable()
       }
     ),
     presentationDeckFileData: Yup.mixed().test(
       'required',
-      'This is a required field.',
+      i18next.t('grbReview:presentationLinks.emptyFormError'),
       (value, context) => {
         const { recordingLink } = context.parent;
 
