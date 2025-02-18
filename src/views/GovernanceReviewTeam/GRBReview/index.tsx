@@ -174,18 +174,6 @@ const GRBReview = ({
         )
       }
 
-      <Button
-        type="button"
-        onClick={() =>
-          history.push(
-            `/it-governance/${id}/grb-review/presentation-deck-upload`
-          )
-        }
-        unstyled
-      >
-        UPLOAD DECK
-      </Button>
-
       {isForm ? (
         <GRBReviewerForm
           setReviewerToRemove={setReviewerToRemove}
