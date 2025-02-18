@@ -1,11 +1,11 @@
 import React from 'react';
 
-import ReviewRow from 'components/ReviewRow';
 import {
   DescriptionDefinition,
   DescriptionList,
   DescriptionTerm
-} from 'components/shared/DescriptionGroup';
+} from 'components/DescriptionGroup';
+import ReviewRow from 'components/ReviewRow';
 import { GeneralRequestInfoForm } from 'types/businessCase';
 
 type GeneralRequestInfoReviewProps = {

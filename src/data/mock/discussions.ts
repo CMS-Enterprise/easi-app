@@ -2,7 +2,7 @@ import {
   SystemIntakeGRBReviewDiscussionFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
-} from 'gql/gen/graphql';
+} from 'gql/generated/graphql';
 
 import { systemIntake } from './systemIntake';
 import users from './users';

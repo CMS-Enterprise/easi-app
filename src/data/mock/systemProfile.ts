@@ -1,13 +1,14 @@
-import { cloneDeep } from 'lodash';
-
-import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
-import { CedarRole } from 'queries/types/CedarRole';
+import { getSystemProfileData } from 'features/Systems/SystemProfile';
+import GetSystemProfileQuery from 'gql/legacyGQL/GetSystemProfileQuery';
+import { CedarRole } from 'gql/legacyGQL/types/CedarRole';
 import {
   GetSystemProfile,
   // eslint-disable-next-line camelcase
   GetSystemProfile_cedarSystemDetails_roles,
   GetSystemProfileVariables
-} from 'queries/types/GetSystemProfile';
+} from 'gql/legacyGQL/types/GetSystemProfile';
+import { cloneDeep } from 'lodash';
+
 import {
   CedarAssigneeType,
   ExchangeDirection
@@ -20,7 +21,6 @@ import {
 import { MockedQuery } from 'types/util';
 import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 import MockUsers from 'utils/testing/MockUsers';
-import { getSystemProfileData } from 'views/SystemProfile';
 
 const emptyRoles: CedarRole[] = [
   {

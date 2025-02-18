@@ -14,42 +14,42 @@ import {
   TRBAdminNoteFragment,
   TRBGuidanceLetterFragment,
   TRBGuidanceLetterInsightCategory
-} from 'gql/gen/graphql';
-
-import GetRequestsQuery from 'queries/GetRequestsQuery';
-import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
-import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
-import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
-import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
+} from 'gql/generated/graphql';
+import GetRequestsQuery from 'gql/legacyGQL/GetRequestsQuery';
+import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
+import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
+import GetTrbRequestQuery from 'gql/legacyGQL/GetTrbRequestQuery';
+import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
+import { GetTRBRequestAttendeesQuery } from 'gql/legacyGQL/TrbAttendeeQueries';
 import {
   GetRequests,
   GetRequests_myTrbRequests as MyTrbRequests
-} from 'queries/types/GetRequests';
-import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
+} from 'gql/legacyGQL/types/GetRequests';
+import { GetTrbAdminTeamHome } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
 import {
   GetTrbRequest,
   GetTrbRequestVariables
-} from 'queries/types/GetTrbRequest';
+} from 'gql/legacyGQL/types/GetTrbRequest';
 import {
   GetTRBRequestAttendees,
   GetTRBRequestAttendeesVariables
-} from 'queries/types/GetTRBRequestAttendees';
+} from 'gql/legacyGQL/types/GetTRBRequestAttendees';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
-} from 'queries/types/GetTrbRequestDocuments';
+} from 'gql/legacyGQL/types/GetTrbRequestDocuments';
 import {
   GetTrbRequestSummary,
   GetTrbRequestSummary_trbRequest as Summary,
   GetTrbRequestSummaryVariables
-} from 'queries/types/GetTrbRequestSummary';
-import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'queries/types/TrbRequestFormFields';
+} from 'gql/legacyGQL/types/GetTrbRequestSummary';
+import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'gql/legacyGQL/types/TrbRequestFormFields';
 import {
   UpdateTrbRequestConsultMeeting,
   UpdateTrbRequestConsultMeetingVariables
-} from 'queries/types/UpdateTrbRequestConsultMeeting';
-import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
+} from 'gql/legacyGQL/types/UpdateTrbRequestConsultMeeting';
+import UpdateTrbRequestConsultMeetingQuery from 'gql/legacyGQL/UpdateTrbRequestConsultMeetingQuery';
+
 import {
   PersonRole,
   TRBAttendConsultStatus,

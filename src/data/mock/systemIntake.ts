@@ -1,32 +1,32 @@
-import { SystemIntakeWithReviewRequestedFragment } from 'gql/gen/graphql';
-import { DateTime } from 'luxon';
-
-import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
-import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
-import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
-import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
+import { SystemIntakeWithReviewRequestedFragment } from 'gql/generated/graphql';
+import GetGovernanceTaskListQuery from 'gql/legacyGQL/GetGovernanceTaskListQuery';
+import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
+import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
+import { GetSystemIntakeContactsQuery } from 'gql/legacyGQL/SystemIntakeContactsQueries';
 import {
   GetGovernanceTaskList,
   GetGovernanceTaskList_systemIntake as TaskListSystemIntake,
   GetGovernanceTaskListVariables
-} from 'queries/types/GetGovernanceTaskList';
+} from 'gql/legacyGQL/types/GetGovernanceTaskList';
 import {
   GetSystemIntake,
   GetSystemIntakeVariables
-} from 'queries/types/GetSystemIntake';
+} from 'gql/legacyGQL/types/GetSystemIntake';
 import {
   GetSystemIntakeContactsQuery as GetSystemIntakeContactsType,
   GetSystemIntakeContactsQueryVariables
-} from 'queries/types/GetSystemIntakeContactsQuery';
-import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'queries/types/GetSystemIntakesTable';
+} from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
+import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'gql/legacyGQL/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
   GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
-} from 'queries/types/GetSystemIntakesWithLCIDS';
-import { SystemIntake } from 'queries/types/SystemIntake';
-import { SystemIntakeContact } from 'queries/types/SystemIntakeContact';
-import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
+} from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
+import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import { SystemIntakeContact } from 'gql/legacyGQL/types/SystemIntakeContact';
+import { SystemIntakeDocument } from 'gql/legacyGQL/types/SystemIntakeDocument';
+import { DateTime } from 'luxon';
+
+import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import {
   GovernanceRequestFeedbackTargetForm,
   GovernanceRequestFeedbackType,

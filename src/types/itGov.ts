@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
-import { GetGovernanceTaskList_systemIntake } from 'queries/types/GetGovernanceTaskList';
+import { GetGovernanceTaskList_systemIntake } from 'gql/legacyGQL/types/GetGovernanceTaskList';
 
-export type { GetGovernanceTaskList_systemIntake_itGovTaskStatuses as ItGovTaskStatuses } from 'queries/types/GetGovernanceTaskList';
-export type { GetGovernanceTaskList_systemIntake as ItGovTaskSystemIntake } from 'queries/types/GetGovernanceTaskList';
+export type { GetGovernanceTaskList_systemIntake_itGovTaskStatuses as ItGovTaskStatuses } from 'gql/legacyGQL/types/GetGovernanceTaskList';
+export type { GetGovernanceTaskList_systemIntake as ItGovTaskSystemIntake } from 'gql/legacyGQL/types/GetGovernanceTaskList';
 /* eslint-enable camelcase */
 
 // Mock properties for frontend previews

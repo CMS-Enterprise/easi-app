@@ -2,8 +2,8 @@ import React from 'react';
 import { ComponentMeta } from '@storybook/react';
 import { Grid, GridContainer, Link } from '@trussworks/react-uswds';
 
-import Alert from 'components/shared/Alert';
-import { TaskStatus } from 'components/shared/TaskStatusTag';
+import Alert from 'components/Alert';
+import { TaskStatus } from 'components/TaskStatusTag';
 
 import TaskListItem, { TaskListContainer, TaskListDescription } from '.';
 

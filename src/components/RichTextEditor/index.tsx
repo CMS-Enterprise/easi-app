@@ -19,7 +19,7 @@ import classNames from 'classnames';
 import DOMPurify from 'dompurify';
 import { FieldHookConfig, useField } from 'formik';
 
-import ExternalDocumentLinkModal from 'components/shared/ExternalDocumentLinkModal';
+import ExternalDocumentLinkModal from 'components/ExternalDocumentLinkModal';
 import extractTextContent from 'utils/extractTextContent';
 
 // eslint-disable-next-line import/no-extraneous-dependencies

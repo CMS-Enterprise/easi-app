@@ -2,8 +2,7 @@ import React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
-import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
+import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
 
 import CedarContactSelect from './index';
 

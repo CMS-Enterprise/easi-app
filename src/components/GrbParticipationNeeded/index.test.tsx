@@ -6,7 +6,7 @@ import {
   GetSystemIntakesWithReviewRequestedDocument,
   GetSystemIntakesWithReviewRequestedQuery,
   SystemIntakeWithReviewRequestedFragment
-} from 'gql/gen/graphql';
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
 import { systemIntakesWithReviewRequested } from 'data/mock/systemIntake';

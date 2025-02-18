@@ -1,14 +1,14 @@
 import React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
-
-import { getSystemIntakeQuery, systemIntake } from 'data/mock/systemIntake';
-import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
-import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
+import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
+import { GetSystemIntakeContactsQuery } from 'gql/legacyGQL/SystemIntakeContactsQueries';
 import {
   GetCedarContacts,
   GetCedarContactsVariables
-} from 'queries/types/GetCedarContacts';
+} from 'gql/legacyGQL/types/GetCedarContacts';
+
+import { getSystemIntakeQuery, systemIntake } from 'data/mock/systemIntake';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 import { MockedQuery } from 'types/util';
 

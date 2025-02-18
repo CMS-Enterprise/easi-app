@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Label, Select } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { ExternalRecipientAlert } from 'features/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
+import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
 
+import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
-import Alert from 'components/shared/Alert';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import FieldGroup from 'components/shared/FieldGroup';
-import HelpText from 'components/shared/HelpText';
+import FieldErrorMsg from 'components/FieldErrorMsg';
+import FieldGroup from 'components/FieldGroup';
+import HelpText from 'components/HelpText';
 import Spinner from 'components/Spinner';
 import contactRoles from 'constants/enums/contactRoles';
 import { initialContactDetails } from 'constants/systemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 import {
   DeleteContactType,
   SystemIntakeContactProps
 } from 'types/systemIntake';
-import { ExternalRecipientAlert } from 'views/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
 
 import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
 
