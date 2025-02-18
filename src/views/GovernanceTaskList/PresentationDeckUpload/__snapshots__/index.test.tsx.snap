@@ -85,8 +85,8 @@ exports[`UploadForm page > renders correct navigation text if requester and take
               accept=".pdf,.ppt,.pptx"
               class="usa-file-input__input"
               data-testid="file-input-input"
-              id="fileData"
-              name="fileData"
+              id="presentationDeckFileData"
+              name="presentationDeckFileData"
               type="file"
             />
           </div>
