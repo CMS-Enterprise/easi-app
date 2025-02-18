@@ -11,8 +11,8 @@ import {
   UpdateTrbRequestLeadMutationVariables
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
+import { getTrbLeadOptionsQuery, trbLeadOptions } from 'tests/mock/trbRequest';
 
-import { getTrbLeadOptionsQuery, trbLeadOptions } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';

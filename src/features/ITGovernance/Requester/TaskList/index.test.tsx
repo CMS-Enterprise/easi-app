@@ -8,12 +8,12 @@ import {
   within
 } from '@testing-library/react';
 import i18next from 'i18next';
-
-import { taskListState } from 'data/mock/govTaskList';
+import { taskListState } from 'tests/mock/govTaskList';
 import {
   getGovernanceTaskListQuery,
   systemIntake
-} from 'data/mock/systemIntake';
+} from 'tests/mock/systemIntake';
+
 import { MessageProvider } from 'hooks/useMessage';
 import { SystemIntakeState } from 'types/graphql-global-types';
 import easiMockStore from 'utils/testing/easiMockStore';

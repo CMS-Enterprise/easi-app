@@ -3,11 +3,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
-
 import {
   mockDiscussions,
   mockDiscussionsWithoutReplies
-} from 'data/mock/discussions';
+} from 'tests/mock/discussions';
 
 import ViewDiscussions from './ViewDiscussions';
 

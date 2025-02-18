@@ -11,8 +11,8 @@ import GetTrbRequestHomeQuery from 'gql/legacyGQL/GetTrbRequestHomeQuery';
 import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendeesQuery } from 'gql/legacyGQL/TrbAttendeeQueries';
 import configureMockStore from 'redux-mock-store';
+import { attendees, requester, trbRequestSummary } from 'tests/mock/trbRequest';
 
-import { attendees, requester, trbRequestSummary } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

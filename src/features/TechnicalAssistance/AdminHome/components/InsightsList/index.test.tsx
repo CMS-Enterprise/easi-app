@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import i18next from 'i18next';
-
 import {
   getTRBGuidanceLetterInsightsQuery,
   guidanceLetter,
   trbRequest
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import InsightsList from '.';

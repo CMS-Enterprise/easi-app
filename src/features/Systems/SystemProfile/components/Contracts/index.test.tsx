@@ -1,8 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
-
-import { getMockSystemProfileData } from 'data/mock/systemProfile';
+import { getMockSystemProfileData } from 'tests/mock/systemProfile';
 
 import Contracts from '.';
 

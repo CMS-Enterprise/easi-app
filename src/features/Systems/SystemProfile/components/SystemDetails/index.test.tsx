@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-
-import { getMockSystemProfileData } from 'data/mock/systemProfile';
+import { getMockSystemProfileData } from 'tests/mock/systemProfile';
 
 import SystemDetails from './index';
 

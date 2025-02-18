@@ -2,8 +2,8 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import i18next from 'i18next';
+import { taskListState } from 'tests/mock/govTaskList';
 
-import { taskListState } from 'data/mock/govTaskList';
 import { ItGovTaskSystemIntake } from 'types/itGov';
 import {
   expectTaskStatusTagToHaveTextKey,

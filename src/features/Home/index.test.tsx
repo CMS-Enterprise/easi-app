@@ -11,12 +11,12 @@ import {
   GetSystemIntakesTable_systemIntakes as SystemIntake,
   GetSystemIntakesTableVariables
 } from 'gql/legacyGQL/types/GetSystemIntakesTable';
-
-import { systemIntakeForTable } from 'data/mock/systemIntake';
+import { systemIntakeForTable } from 'tests/mock/systemIntake';
 import {
   getRequestsQuery,
   getTrbAdminTeamHomeQuery
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import { MessageProvider } from 'hooks/useMessage';
 import { SystemIntakeState } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';

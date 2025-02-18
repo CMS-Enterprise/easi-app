@@ -3,12 +3,12 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
-
 import {
   getTrbGuidanceLetterQuery,
   taskStatuses,
   trbRequestSummary
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import {
   TRBFeedbackStatus,
   TRBFormStatus,

@@ -101,7 +101,7 @@ repos:
         name: Run GraphQL code generation
         entry: "scripts/dev gql"
         language: script
-        files: "pkg/graph/schema\\.graphql|pkg/graph/schema\\.resolvers\\.go|src/queries/.*\\.ts|src/gql/operations/.*\\.ts"
+        files: "pkg/graph/schema\\.graphql|pkg/graph/schema\\.resolvers\\.go|src/legacyGQL/queries/.*\\.ts|src/gql/operations/.*\\.ts"
         pass_filenames: false
 
   # for some reason, trying to call "go run cmd/intake_schema_gen/main.go" directly from this config doesn't work;

@@ -26,9 +26,9 @@ import {
   GetCedarContactsVariables
 } from 'gql/legacyGQL/types/GetCedarContacts';
 import i18next from 'i18next';
+import { businessCase } from 'tests/mock/businessCase';
+import { systemIntake } from 'tests/mock/systemIntake';
 
-import { businessCase } from 'data/mock/businessCase';
-import { systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
 import MockUsers from 'utils/testing/MockUsers';

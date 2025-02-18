@@ -8,8 +8,8 @@ import {
 } from 'gql/legacyGQL/types/GetGovernanceRequestFeedback';
 import { GovernanceRequestFeedback } from 'gql/legacyGQL/types/GovernanceRequestFeedback';
 import i18next from 'i18next';
+import { systemIntake } from 'tests/mock/systemIntake';
 
-import { systemIntake } from 'data/mock/systemIntake';
 import {
   GovernanceRequestFeedbackTargetForm,
   GovernanceRequestFeedbackType

@@ -7,10 +7,10 @@ import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
+import { businessCase } from 'tests/mock/businessCase';
+import { systemIntake } from 'tests/mock/systemIntake';
+import users from 'tests/mock/users';
 
-import { businessCase } from 'data/mock/businessCase';
-import { systemIntake } from 'data/mock/systemIntake';
-import users from 'data/mock/users';
 import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

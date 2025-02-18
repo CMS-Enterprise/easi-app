@@ -14,7 +14,6 @@ import {
   GetTrbRequestSummaryVariables
 } from 'gql/legacyGQL/types/GetTrbRequestSummary';
 import i18next from 'i18next';
-
 import {
   getTrbAdminNotesQuery,
   getTRBRequestAttendeesQuery,
@@ -24,7 +23,8 @@ import {
   getTrbRequestSummaryQuery,
   trbRequestSummary,
   updateTrbRequestConsultMeetingQuery
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import { MessageProvider } from 'hooks/useMessage';
 import { TRBFeedbackStatus } from 'types/graphql-global-types';
 import { TrbRequestIdRef } from 'types/technicalAssistance';

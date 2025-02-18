@@ -9,13 +9,13 @@ import {
   TRBRequestType
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
-
 import {
   getTRBGuidanceLetterInsightsQuery,
   guidanceLetter,
   requester,
   trbRequest as mockTrbRequest
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 

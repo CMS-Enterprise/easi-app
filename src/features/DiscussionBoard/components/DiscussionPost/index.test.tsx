@@ -3,8 +3,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/generated/graphql';
 import i18next from 'i18next';
+import { mockDiscussions } from 'tests/mock/discussions';
 
-import { mockDiscussions } from 'data/mock/discussions';
 import { getRelativeDate } from 'utils/date';
 
 import DiscussionPost from '.';

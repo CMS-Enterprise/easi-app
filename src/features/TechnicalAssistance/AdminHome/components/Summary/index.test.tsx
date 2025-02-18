@@ -4,13 +4,13 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, within } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
-
 import {
   getTRBRequestAttendeesQuery,
   getTrbRequestQuery,
   requester,
   trbRequestSummary
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';

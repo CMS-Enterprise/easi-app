@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { emptySystemIntake } from 'tests/mock/systemIntake';
 
-import { emptySystemIntake } from 'data/mock/systemIntake';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ContractDetails from '.';

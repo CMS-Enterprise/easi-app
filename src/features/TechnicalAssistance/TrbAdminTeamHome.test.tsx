@@ -6,12 +6,12 @@ import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
 import i18next from 'i18next';
-
 import {
   getTrbAdminTeamHomeQuery,
   getTrbLeadOptionsQuery,
   trbAdminTeamHomeRequests
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import { MessageProvider } from 'hooks/useMessage';
 import easiMockStore from 'utils/testing/easiMockStore';
 

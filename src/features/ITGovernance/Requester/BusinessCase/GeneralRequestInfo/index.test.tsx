@@ -10,12 +10,12 @@ import {
 import userEvent from '@testing-library/user-event';
 import BusinessCase from 'features/ITGovernance/Requester/BusinessCase';
 import configureMockStore from 'redux-mock-store';
-
-import { businessCaseInitialData } from 'data/businessCase';
 import {
   getGovernanceTaskListQuery,
   systemIntake
-} from 'data/mock/systemIntake';
+} from 'tests/mock/systemIntake';
+
+import { businessCaseInitialData } from 'data/businessCase';
 import { SystemIntakeStep } from 'types/graphql-global-types';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

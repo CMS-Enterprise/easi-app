@@ -8,9 +8,9 @@ import {
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
+import { mockDiscussions } from 'tests/mock/discussions';
+import users from 'tests/mock/users';
 
-import { mockDiscussions } from 'data/mock/discussions';
-import users from 'data/mock/users';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Discussion from './Discussion';

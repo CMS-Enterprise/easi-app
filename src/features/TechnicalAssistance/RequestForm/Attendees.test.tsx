@@ -9,8 +9,7 @@ import GetTrbRequestQuery from 'gql/legacyGQL/GetTrbRequestQuery';
 import { GetTRBRequestAttendeesQuery } from 'gql/legacyGQL/TrbAttendeeQueries';
 import { GetTrbRequest } from 'gql/legacyGQL/types/GetTrbRequest';
 import { TRBAttendee } from 'gql/legacyGQL/types/TRBAttendee';
-
-import { attendees, requester, trbRequest } from 'data/mock/trbRequest';
+import { attendees, requester, trbRequest } from 'tests/mock/trbRequest';
 
 import Attendees from './Attendees';
 

@@ -10,12 +10,12 @@ import {
 import userEvent from '@testing-library/user-event';
 import BusinessCase from 'features/ITGovernance/Requester/BusinessCase';
 import configureMockStore from 'redux-mock-store';
+import { getGovernanceTaskListQuery } from 'tests/mock/systemIntake';
 
 import {
   businessCaseInitialData,
   defaultProposedSolution
 } from 'data/businessCase';
-import { getGovernanceTaskListQuery } from 'data/mock/systemIntake';
 import { SystemIntakeStep } from 'types/graphql-global-types';
 
 window.matchMedia = (): any => ({

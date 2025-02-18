@@ -11,11 +11,11 @@ import {
   GetSystemIntakeContactsQuery as GetSystemIntakeContactsQueryType,
   GetSystemIntakeContactsQueryVariables
 } from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
-
 import {
   emptySystemIntake,
   getSystemIntakeQuery
-} from 'data/mock/systemIntake';
+} from 'tests/mock/systemIntake';
+
 import { MockedQuery } from 'types/util';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

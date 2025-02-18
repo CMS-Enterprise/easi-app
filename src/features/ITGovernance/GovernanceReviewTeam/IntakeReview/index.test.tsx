@@ -3,13 +3,13 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
-
 import {
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
   requester,
   systemIntake
-} from 'data/mock/systemIntake';
+} from 'tests/mock/systemIntake';
+
 import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

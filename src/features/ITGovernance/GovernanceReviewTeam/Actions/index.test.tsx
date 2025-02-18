@@ -8,14 +8,14 @@ import {
   CreateSystemIntakeActionRequestEditsVariables
 } from 'gql/legacyGQL/types/CreateSystemIntakeActionRequestEdits';
 import i18next from 'i18next';
-
 import {
   getGovernanceTaskListQuery,
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
   requester,
   systemIntake
-} from 'data/mock/systemIntake';
+} from 'tests/mock/systemIntake';
+
 import { MessageProvider } from 'hooks/useMessage';
 import {
   SystemIntakeFormStep,

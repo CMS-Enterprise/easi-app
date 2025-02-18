@@ -4,7 +4,6 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
-
 import {
   getTrbAdminNotesQuery,
   getTRBRequestAttendeesQuery,
@@ -12,7 +11,8 @@ import {
   getTrbRequestQuery,
   getTrbRequestSummaryQuery,
   trbRequestSummary
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import { MessageProvider } from 'hooks/useMessage';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import easiMockStore from 'utils/testing/easiMockStore';

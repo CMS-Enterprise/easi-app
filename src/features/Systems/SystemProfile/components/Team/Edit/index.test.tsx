@@ -4,9 +4,9 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
+import { usernamesWithRoles } from 'tests/mock/systemProfile';
+import teamRoles, { teamRequisiteRoles } from 'tests/mock/workspaceTeamRoles';
 
-import { usernamesWithRoles } from 'data/mock/systemProfile';
-import teamRoles, { teamRequisiteRoles } from 'data/mock/workspaceTeamRoles';
 import { MessageProvider } from 'hooks/useMessage';
 import { UsernameWithRoles } from 'types/systemProfile';
 import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';

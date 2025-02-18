@@ -1,13 +1,13 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { cloneDeep, uniqueId } from 'lodash';
-
-import { TEAM_SECTION_MEMBER_COUNT_CAP } from 'constants/systemProfile';
 import {
   getMockPersonRole,
   getMockSystemProfileData,
   result
-} from 'data/mock/systemProfile';
+} from 'tests/mock/systemProfile';
+
+import { TEAM_SECTION_MEMBER_COUNT_CAP } from 'constants/systemProfile';
 import { RoleTypeName } from 'types/systemProfile';
 
 import Team, { getTeam, TeamSection } from '.';

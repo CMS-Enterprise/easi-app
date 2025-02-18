@@ -5,9 +5,9 @@ import { renderToStringWithData } from '@apollo/client/react/ssr';
 import { render, screen, within } from '@testing-library/react';
 import { Link } from '@trussworks/react-uswds';
 import i18next from 'i18next';
+import { taskListState } from 'tests/mock/govTaskList';
 
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
-import { taskListState } from 'data/mock/govTaskList';
 import { ItGovTaskSystemIntake } from 'types/itGov';
 import {
   expectTaskStatusTagToHaveTextKey,

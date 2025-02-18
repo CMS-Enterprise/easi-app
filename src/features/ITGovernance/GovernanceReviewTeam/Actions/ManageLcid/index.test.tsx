@@ -2,8 +2,8 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import { DateTime } from 'luxon';
+import { systemIntake as mockSystemIntake } from 'tests/mock/systemIntake';
 
-import { systemIntake as mockSystemIntake } from 'data/mock/systemIntake';
 import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 
 import LcidTitleBox from './LcidTitleBox';

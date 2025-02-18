@@ -2,8 +2,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import GetGovernanceRequestFeedbackQuery from 'gql/legacyGQL/GetGovernanceRequestFeedbackQuery';
+import { governanceRequestFeedbacks as governanceRequestFeedbacksMock } from 'tests/mock/systemIntake';
 
-import { governanceRequestFeedbacks as governanceRequestFeedbacksMock } from 'data/mock/systemIntake';
 import { getExpectedAlertType } from 'utils/testing/helpers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

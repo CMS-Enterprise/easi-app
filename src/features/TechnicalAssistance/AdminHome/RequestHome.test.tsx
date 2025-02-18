@@ -4,8 +4,8 @@ import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
 import GetTrbRequestHomeQuery from 'gql/legacyGQL/GetTrbRequestHomeQuery';
 import i18next from 'i18next';
+import { trbRequestSummary } from 'tests/mock/trbRequest';
 
-import { trbRequestSummary } from 'data/mock/trbRequest';
 import {
   TRBFormStatus,
   TRBGuidanceLetterStatus,

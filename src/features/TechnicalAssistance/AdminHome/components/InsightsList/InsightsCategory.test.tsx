@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import { TRBGuidanceLetterInsightCategory } from 'gql/generated/graphql';
+import { guidanceLetter, trbRequest } from 'tests/mock/trbRequest';
 
-import { guidanceLetter, trbRequest } from 'data/mock/trbRequest';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import InsightsCategory from './InsightsCategory';

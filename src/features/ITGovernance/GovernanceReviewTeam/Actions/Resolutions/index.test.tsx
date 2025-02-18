@@ -2,8 +2,8 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { systemIntake } from 'tests/mock/systemIntake';
 
-import { systemIntake } from 'data/mock/systemIntake';
 import {
   SystemIntakeDecisionState,
   SystemIntakeState

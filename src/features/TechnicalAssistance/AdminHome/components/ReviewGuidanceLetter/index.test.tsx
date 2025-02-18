@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-
 import {
   getTRBGuidanceLetterInsightsQuery,
   guidanceLetter,
   trbRequest
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ReviewGuidanceLetter from '.';

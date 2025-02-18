@@ -8,11 +8,11 @@ import {
   GetLinkedRequests,
   GetLinkedRequestsVariables
 } from 'gql/legacyGQL/types/GetLinkedRequests';
-
 import {
   linkedSystemIntakes,
   linkedTrbRequests
-} from 'data/mock/systemLinkedRequest';
+} from 'tests/mock/systemLinkedRequest';
+
 import { SystemIntakeState, TRBRequestState } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 

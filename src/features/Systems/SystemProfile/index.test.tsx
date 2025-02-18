@@ -11,15 +11,15 @@ import {
 import { GetSystemProfile_cedarSystemDetails_roles } from 'gql/legacyGQL/types/GetSystemProfile';
 import { cloneDeep } from 'lodash';
 import { DateTime } from 'luxon';
-
-import { getAtoStatus } from 'components/AtoStatus';
-import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import {
   getMockPersonRole,
   getMockSystemProfileData,
   query,
   result
-} from 'data/mock/systemProfile';
+} from 'tests/mock/systemProfile';
+
+import { getAtoStatus } from 'components/AtoStatus';
+import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import { RoleTypeName, SubpageKey } from 'types/systemProfile';
 
 import SystemProfile from './index';

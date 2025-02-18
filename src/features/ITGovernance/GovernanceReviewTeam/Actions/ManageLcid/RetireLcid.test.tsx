@@ -5,12 +5,12 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 import { DateTime } from 'luxon';
-
 import {
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
   systemIntake
-} from 'data/mock/systemIntake';
+} from 'tests/mock/systemIntake';
+
 import { MessageProvider } from 'hooks/useMessage';
 import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';

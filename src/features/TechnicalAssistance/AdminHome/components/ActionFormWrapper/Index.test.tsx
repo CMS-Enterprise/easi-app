@@ -8,14 +8,14 @@ import {
   GetCedarContacts,
   GetCedarContactsVariables
 } from 'gql/legacyGQL/types/GetCedarContacts';
-
-import { CMS_TRB_EMAIL } from 'constants/externalUrls';
 import {
   attendees,
   getTRBRequestAttendeesQuery,
   newAttendee,
   requester
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
+import { CMS_TRB_EMAIL } from 'constants/externalUrls';
 import { MessageProvider } from 'hooks/useMessage';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';

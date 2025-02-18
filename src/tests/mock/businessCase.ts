@@ -1,7 +1,7 @@
 import { BusinessCaseModel } from 'types/businessCase';
 import { ApiLifecycleCostLine } from 'types/estimatedLifecycle';
 
-import { businessCaseInitialData } from '../businessCase';
+import { businessCaseInitialData } from '../../data/businessCase';
 
 export const prefferedCostLines: ApiLifecycleCostLine[] = [
   {

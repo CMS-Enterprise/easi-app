@@ -9,9 +9,9 @@ import {
 } from 'gql/generated/graphql';
 import GetSystemIntakeRelatedRequests from 'gql/operations/systemIntake/GetSystemIntakeRelatedRequests';
 import GetTRBRequestRelatedRequests from 'gql/operations/trb/GetTRBRequestRelatedRequests';
+import { systemIntake } from 'tests/mock/systemIntake';
+import { trbRequest } from 'tests/mock/trbRequest';
 
-import { systemIntake } from 'data/mock/systemIntake';
-import { trbRequest } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import { TRBRequestStatus } from 'types/graphql-global-types';
 import easiMockStore from 'utils/testing/easiMockStore';

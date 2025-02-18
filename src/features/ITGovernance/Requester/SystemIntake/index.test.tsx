@@ -11,12 +11,12 @@ import userEvent from '@testing-library/user-event';
 import GetSytemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
 import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
-
 import {
   documents,
   getSystemIntakeQuery,
   systemIntake
-} from 'data/mock/systemIntake';
+} from 'tests/mock/systemIntake';
+
 import { MessageProvider } from 'hooks/useMessage';
 import { SystemIntakeFormState } from 'types/graphql-global-types';
 

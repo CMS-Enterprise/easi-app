@@ -7,9 +7,9 @@ import {
   GetSystemIntakeGRBDiscussionsQueryVariables,
   SystemIntakeGRBReviewDiscussionFragment
 } from 'gql/generated/graphql';
+import { mockDiscussions } from 'tests/mock/discussions';
+import { systemIntake } from 'tests/mock/systemIntake';
 
-import { mockDiscussions } from 'data/mock/discussions';
-import { systemIntake } from 'data/mock/systemIntake';
 import { MockedQuery } from 'types/util';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

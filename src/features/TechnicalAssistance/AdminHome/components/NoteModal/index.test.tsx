@@ -11,8 +11,8 @@ import {
   TRBAdminNoteFragment
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
+import { getTrbAdminNotesQuery } from 'tests/mock/trbRequest';
 
-import { getTrbAdminNotesQuery } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';

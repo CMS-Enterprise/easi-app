@@ -7,14 +7,14 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
 import {
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
   getSystemIntakesWithLcidsQuery,
   systemIntake,
   systemIntakeWithLcid
-} from 'data/mock/systemIntake';
+} from 'tests/mock/systemIntake';
+
 import { MessageProvider } from 'hooks/useMessage';
 import { SystemIntakeDecisionState } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';

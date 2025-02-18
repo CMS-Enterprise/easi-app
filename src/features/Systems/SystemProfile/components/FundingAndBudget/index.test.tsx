@@ -4,9 +4,9 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 // eslint-disable-next-line camelcase
 import { GetSystemProfile_cedarBudget } from 'gql/legacyGQL/types/GetSystemProfile';
 import { cloneDeep, toString } from 'lodash';
+import { getMockSystemProfileData, result } from 'tests/mock/systemProfile';
 
 import { BUDGET_ITEMS_COUNT_CAP } from 'constants/systemProfile';
-import { getMockSystemProfileData, result } from 'data/mock/systemProfile';
 
 import FundingAndBudget from './index';
 

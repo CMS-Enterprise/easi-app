@@ -7,8 +7,8 @@ import {
   GetCedarContacts,
   GetCedarContactsVariables
 } from 'gql/legacyGQL/types/GetCedarContacts';
+import { getSystemIntakeQuery, systemIntake } from 'tests/mock/systemIntake';
 
-import { getSystemIntakeQuery, systemIntake } from 'data/mock/systemIntake';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 import { MockedQuery } from 'types/util';
 

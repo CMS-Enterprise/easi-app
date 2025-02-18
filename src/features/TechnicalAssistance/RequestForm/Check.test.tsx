@@ -10,8 +10,8 @@ import {
   GetTrbRequestVariables
 } from 'gql/legacyGQL/types/GetTrbRequest';
 import configureMockStore from 'redux-mock-store';
+import { requester } from 'tests/mock/trbRequest';
 
-import { requester } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import {
   TRBAttendConsultStatus,

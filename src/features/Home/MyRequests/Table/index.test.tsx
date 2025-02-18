@@ -4,8 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
-
-import { getRequestsQuery } from 'data/mock/trbRequest';
+import { getRequestsQuery } from 'tests/mock/trbRequest';
 
 import Table from '.';
 

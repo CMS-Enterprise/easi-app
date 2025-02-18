@@ -18,12 +18,12 @@ import {
   TRBGuidanceLetterInsightCategory
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
-
 import {
   getTrbGuidanceLetterQuery,
   guidanceLetter,
   taskStatuses
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import { MessageProvider } from 'hooks/useMessage';
 import { GuidanceFormStepKey } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';

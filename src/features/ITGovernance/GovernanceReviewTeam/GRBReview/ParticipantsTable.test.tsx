@@ -6,9 +6,9 @@ import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
+import { systemIntake } from 'tests/mock/systemIntake';
+import users from 'tests/mock/users';
 
-import { systemIntake } from 'data/mock/systemIntake';
-import users from 'data/mock/users';
 import { SystemIntakeState } from 'types/graphql-global-types';
 
 import ITGovAdminContext from '../ITGovAdminContext';

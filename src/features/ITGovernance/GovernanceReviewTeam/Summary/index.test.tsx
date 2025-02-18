@@ -4,8 +4,8 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, within } from '@testing-library/react';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'gql/legacyGQL/types/GetSystemIntake';
 import { DateTime } from 'luxon';
+import users from 'tests/mock/users';
 
-import users from 'data/mock/users';
 import {
   RequestRelationType,
   SystemIntakeRequestType,

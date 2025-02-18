@@ -25,13 +25,13 @@ import {
   GetTrbRequestDocumentsVariables
 } from 'gql/legacyGQL/types/GetTrbRequestDocuments';
 import i18next from 'i18next';
-
 import {
   getTRBRequestAttendeesQuery,
   getTrbRequestSummaryQuery,
   guidanceLetter,
   requester
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import { MessageProvider } from 'hooks/useMessage';
 import {
   TRBDocumentCommonType,

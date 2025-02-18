@@ -7,14 +7,14 @@ import { SystemIntakeActionType } from 'gql/generated/graphql';
 import GetAdminNotesAndActionsQuery from 'gql/legacyGQL/GetAdminNotesAndActionsQuery';
 import { GetAdminNotesAndActions } from 'gql/legacyGQL/types/GetAdminNotesAndActions';
 import configureMockStore from 'redux-mock-store';
-
-import { businessCaseInitialData } from 'data/businessCase';
 import {
   getGovernanceTaskListQuery,
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
   systemIntake
-} from 'data/mock/systemIntake';
+} from 'tests/mock/systemIntake';
+
+import { businessCaseInitialData } from 'data/businessCase';
 import { MessageProvider } from 'hooks/useMessage';
 
 import Actions from './Actions';

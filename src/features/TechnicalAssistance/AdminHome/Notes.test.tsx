@@ -9,12 +9,12 @@ import {
   TRBGuidanceLetterInsightCategory
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
-
 import {
   getTrbAdminNotesQuery,
   getTRBRequestAttendeesQuery,
   getTrbRequestSummaryQuery
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import { MessageProvider } from 'hooks/useMessage';
 import { formatDateLocal } from 'utils/date';
 import easiMockStore from 'utils/testing/easiMockStore';

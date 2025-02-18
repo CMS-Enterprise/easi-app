@@ -9,12 +9,12 @@ import {
   GetTrbRequestVariables
 } from 'gql/legacyGQL/types/GetTrbRequest';
 import i18next from 'i18next';
-
 import {
   attendees,
   getTrbRequestQuery,
   trbRequest
-} from 'data/mock/trbRequest';
+} from 'tests/mock/trbRequest';
+
 import {
   TRBFeedbackAction,
   TRBFeedbackStatus
