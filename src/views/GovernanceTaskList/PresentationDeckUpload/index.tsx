@@ -1,6 +1,6 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -58,8 +58,6 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
 
   const {
     control,
-    register,
-    watch,
     handleSubmit,
     formState: { isSubmitting, errors, isValid }
   } = useEasiForm<DocumentUploadFields>({
