@@ -1,6 +1,11 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link as RouterLink, NavLink, useParams } from 'react-router-dom';
+import {
+  Link as RouterLink,
+  NavLink,
+  useLocation,
+  useParams
+} from 'react-router-dom';
 import { NavHashLink } from 'react-router-hash-link';
 import { useQuery } from '@apollo/client';
 import {
@@ -244,6 +249,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
 
+  const location = useLocation();
   const params = useParams<{
     subinfo: SubpageKey;
     systemId: string;
@@ -253,6 +259,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
 
   const { subinfo, top, edit } = params;
   const systemId = id || params.systemId;
+  const { hash } = location;
 
   const [modalSubpage, setModalSubpage] = useState<SubpageKey>('home');
 
@@ -261,7 +268,13 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     if (top) {
       window.scrollTo(0, 0);
     }
-  }, [top]);
+    if (hash) {
+      const targetElement = document.querySelector(hash);
+      if (targetElement) {
+        targetElement.scrollIntoView();
+      }
+    }
+  }, [top, hash]);
 
   const { loading, error, data } = useQuery<
     GetSystemProfile,
@@ -280,14 +293,13 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     useState<boolean>(false);
 
   // Enable the description toggle if it overflows
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const { current: el } = descriptionRef;
     if (!el) return;
     if (el.scrollHeight > el.offsetHeight) {
       setIsDescriptionExpandable(true);
     }
-  });
+  }, [descriptionRef]);
 
   const systemProfileData: SystemProfileData | undefined = useMemo(
     () => getSystemProfileData(data),

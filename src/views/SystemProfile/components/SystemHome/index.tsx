@@ -277,7 +277,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                 </h3>
                 <UswdsReactLink
                   className="link-header"
-                  to={`/systems/${system.id}/funding-and-budget/top#funding-and-budget`}
+                  to={`/systems/${system.id}/funding-and-budget#funding-and-budget`}
                 >
                   {t('singleSystem.fundingAndBudget.viewMoreBudgetAndFunding')}
                   <span aria-hidden>&nbsp;</span>
