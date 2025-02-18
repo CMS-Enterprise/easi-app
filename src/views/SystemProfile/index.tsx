@@ -666,7 +666,10 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
 
               <Grid desktop={{ col: 9 }}>
                 {subComponent ? (
-                  <div id={subComponent.componentId ?? ''}>
+                  <div
+                    id={subComponent.componentId ?? ''}
+                    className="scroll-margin-top-5"
+                  >
                     <GridContainer className="padding-left-0 padding-right-0">
                       <Grid row gap>
                         {/* Central component */}
