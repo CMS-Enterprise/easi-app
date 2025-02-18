@@ -208,6 +208,7 @@
   &.usa-alert .usa-alert__body {
     max-width: none;
     display: inline-block;
+    width: 100%;
   }
 }
 
@@ -226,13 +227,21 @@
   top: 4rem !important;
 }
 
-.usa-button-group {
-  align-items: center;
-}
-
 // Fixes button icon margin with updated USWDS
 .usa-button .usa-icon {
   margin-right: 0rem !important;
+}
+.usa-table thead th[aria-sort] {
+  background-color: transparent;
+}
+.usa-alert .usa-alert__heading {
+  margin-left: 0;
+}
+.usa-alert .usa-alert__text {
+  margin-left: 0;
+}
+.usa-site-alert--info .usa-alert .usa-alert__body > * {
+  margin-left: 0;
 }
 
 // Fixes button group item margins when nested inside .usa-list
@@ -304,4 +313,25 @@
 
 .usa-site-alert .usa-alert .usa-alert__body {
   display: flex;
+}
+
+// Bug fixes for @trussworks/react-uswds overriding uswds styles
+// See Slack thread for issue: https://cmsgov.slack.com/archives/CNU2B59UH/p1739483727864639
+
+.inline-flex {
+  display: inline-flex !important;
+}
+
+.usa-button {
+  display: inline-flex;
+}
+
+.grid-container,
+.usa-footer__primary-container,
+.usa-footer__secondary-section > .grid-container {
+  max-width: 75rem;
+}
+
+body * {
+  font-family: inherit !important;
 }

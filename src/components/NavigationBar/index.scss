@@ -105,7 +105,11 @@
 }
 
 .system-dropdown {
-    padding: .85rem !important;
+    padding: .92rem !important;
+
+    &::after {
+        bottom: -1.1px !important;
+    }
 }
 
 .system-dropdown:hover {

@@ -3,10 +3,10 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import {
-  Dropdown,
   ErrorMessage,
   FormGroup,
-  Label
+  Label,
+  Select
 } from '@trussworks/react-uswds';
 
 import RichTextEditor from 'components/RichTextEditor';
@@ -116,7 +116,7 @@ const RequestEdits = ({
                     {t('form:inputError.makeSelection')}
                   </ErrorMessage>
                 )}
-                <Dropdown
+                <Select
                   id="intakeFormStep"
                   data-testid="intakeFormStep"
                   {...field}
@@ -132,7 +132,7 @@ const RequestEdits = ({
                       {t(`requestEdits.option.intakeFormStep.${val}`)}
                     </option>
                   ))}
-                </Dropdown>
+                </Select>
               </FormGroup>
             )}
           />

@@ -2,13 +2,13 @@ import React, { createContext, useMemo } from 'react';
 import { Controller, ControllerRenderProps, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import { Button, Radio } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioGroup } from 'components/shared/RadioField';
-import useCacheQuery from 'hooks/useCacheQuery';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import {
   GetGovernanceTaskList,
@@ -99,7 +99,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
 
   const { state, decisionState, lcidStatus } = systemIntake;
 
-  const { data, loading } = useCacheQuery<
+  const { data, loading } = useQuery<
     GetGovernanceTaskList,
     GetGovernanceTaskListVariables
   >(GetGovernanceTaskListQuery, {
@@ -107,6 +107,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
       id: systemIntake.id
     }
   });
+
   const taskStatuses = data?.systemIntake?.itGovTaskStatuses;
   const { step } = data?.systemIntake || {};
 
@@ -137,7 +138,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
   const { control, watch, handleSubmit } = useForm<{ actionRoute: string }>();
   const actionRoute = watch('actionRoute');
 
-  if (loading) return <PageLoading />;
+  if (loading && !data) return <PageLoading />;
 
   return (
     <EditsRequestedContext.Provider value={editsRequestedKey}>

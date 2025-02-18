@@ -28,9 +28,11 @@ jobs:
     needs: [Build_Application_Images,Build_Test_Frontend_Assets]
     secrets: inherit
 
-  Deploy_to_EKS:
-    uses: ./.github/workflows/deploy_to_eks.yml
-    needs: [Build_Application_Images,Build_easi-frontend_image]
-    secrets: inherit
-    with:
-      namespace: easi-${{ github.event.number }}
+  # Commented out while we figure out some issues with teardown / cost.
+  #
+  # Deploy_to_EKS:
+  #   uses: ./.github/workflows/deploy_to_eks.yml
+  #   needs: [Build_Application_Images,Build_easi-frontend_image]
+  #   secrets: inherit
+  #   with:
+  #     namespace: easi-${{ github.event.number }}
