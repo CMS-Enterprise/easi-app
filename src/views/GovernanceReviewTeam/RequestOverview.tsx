@@ -21,6 +21,7 @@ import {
 import { AppState } from 'reducers/rootReducer';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 import AdditionalInformation from 'views/AdditionalInformation';
+import PresentationDeckUpload from 'views/GovernanceTaskList/PresentationDeckUpload';
 import NotFound from 'views/NotFound';
 import UploadForm from 'views/SystemIntake/Documents/UploadForm';
 
@@ -222,6 +223,13 @@ const RequestOverview = ({
                         grbReviewStartedAt={grbReviewStartedAt}
                       />
                     )}
+                  />
+                )}
+
+                {flags?.grbReviewTab && (
+                  <Route
+                    path="/it-governance/:systemId/grb-review/presentation-deck-upload"
+                    render={() => <PresentationDeckUpload type="admin" />}
                   />
                 )}
 
