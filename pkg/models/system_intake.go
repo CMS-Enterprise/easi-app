@@ -285,16 +285,3 @@ func (s SystemIntakesByCedarSystemIDsResponse) GetMappingKey() string {
 func (s SystemIntakesByCedarSystemIDsResponse) GetMappingVal() *SystemIntake {
 	return &s.SystemIntake
 }
-
-type SystemIntakeGRBReviewState string
-
-const (
-	SystemIntakeGRBReviewStateCannotStartYet    SystemIntakeGRBReviewState = "CANNOT_START_YET"
-	SystemIntakeGRBReviewStateNotNeeded         SystemIntakeGRBReviewState = "NOT_NEEDED"
-	SystemIntakeGRBReviewStateReadyToSchedule   SystemIntakeGRBReviewState = "READY_TO_SCHEDULE"
-	SystemIntakeGRBReviewStateScheduled         SystemIntakeGRBReviewState = "SCHEDULED"
-	SystemIntakeGRBReviewStateAwaitingGrbReview SystemIntakeGRBReviewState = "AWAITING_GRB_REVIEW"
-	SystemIntakeGRBReviewStateReviewInProgress  SystemIntakeGRBReviewState = "REVIEW_IN_PROGRESS"
-	SystemIntakeGRBReviewStateAwaitingDecision  SystemIntakeGRBReviewState = "AWAITING_DECISION"
-	SystemIntakeGRBReviewStateCompleted         SystemIntakeGRBReviewState = "COMPLETED"
-)
