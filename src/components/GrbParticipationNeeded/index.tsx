@@ -5,11 +5,11 @@ import { Button, Icon, Table } from '@trussworks/react-uswds';
 import {
   SystemIntakeWithReviewRequestedFragment,
   useGetSystemIntakesWithReviewRequestedQuery
-} from 'gql/gen/graphql';
+} from 'gql/generated/graphql';
 
+import Divider from 'components/Divider';
+import IconButton from 'components/IconButton';
 import UswdsReactLink from 'components/LinkWrapper';
-import Divider from 'components/shared/Divider';
-import IconButton from 'components/shared/IconButton';
 import TablePagination from 'components/TablePagination';
 import { formatDateLocal, isDateInPast } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';

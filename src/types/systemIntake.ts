@@ -1,7 +1,8 @@
+import { FundingSource as FundingSourceType } from 'gql/legacyGQL/types/FundingSource';
+import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
+
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
-import { FundingSource as FundingSourceType } from 'queries/types/FundingSource';
-import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 
 import {
   SystemIntakeCollaboratorInput,

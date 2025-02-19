@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
+import users, { MockEuaUserId } from 'tests/mock/users';
 
 import { JobCode } from 'constants/jobCodes';
-import users, { MockEuaUserId } from 'data/mock/users';
 
 type EasiMockStoreProps =
   | {

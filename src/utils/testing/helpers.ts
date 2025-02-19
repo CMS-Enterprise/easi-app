@@ -1,8 +1,8 @@
 import { ByRoleMatcher, screen } from '@testing-library/react';
 import i18next from 'i18next';
 
-import { AlertProps } from 'components/shared/Alert';
-import { TaskStatus } from 'components/shared/TaskStatusTag';
+import { AlertProps } from 'components/Alert';
+import { TaskStatus } from 'components/TaskStatusTag';
 import fnErrorCapture from 'utils/fnErrorCapture';
 
 export const expectTaskStatusTagToHaveTextKey = fnErrorCapture(

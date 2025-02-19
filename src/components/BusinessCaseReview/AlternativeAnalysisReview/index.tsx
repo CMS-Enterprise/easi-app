@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import ProposedBusinessCaseSolutionReview from 'features/ITGovernance/Requester/BusinessCase/Review/ProposedBusinessCaseSolutionReview';
 
 import PrintableTabContent from 'components/PrintableTabContent';
-import ResponsiveTabs from 'components/shared/ResponsiveTabs';
+import ResponsiveTabs from 'components/ResponsiveTabs';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { ProposedBusinessCaseSolution } from 'types/businessCase';
-import ProposedBusinessCaseSolutionReview from 'views/BusinessCase/Review/ProposedBusinessCaseSolutionReview';
 
 type AlternativeAnalysisReviewProps = {
   fiscalYear: number;

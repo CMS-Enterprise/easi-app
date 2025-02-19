@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
-import Tag from 'components/shared/Tag';
+import Tag from 'components/Tag';
 
 type TLCPhase = string | null | undefined;
 

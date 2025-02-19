@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@apollo/client';
+import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
+import { GetCedarContacts } from 'gql/legacyGQL/types/GetCedarContacts';
 
-import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
-import { GetCedarContacts } from 'queries/types/GetCedarContacts';
 import { CedarContactProps } from 'types/systemIntake';
 
 function useCedarContactLookup(query?: string | null): {

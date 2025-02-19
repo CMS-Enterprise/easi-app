@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import Alert, { AlertProps } from 'components/shared/Alert';
+import Alert, { AlertProps } from 'components/Alert';
 
 type MessageProps = {
   message?: string | React.ReactElement;
