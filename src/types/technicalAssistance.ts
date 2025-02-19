@@ -1,18 +1,17 @@
 import React from 'react';
 import { ModalRef } from '@trussworks/react-uswds';
+import { StepSubmit } from 'features/TechnicalAssistance/RequestForm';
 import {
   TRBGuidanceLetterFragment,
   TRBGuidanceLetterInsightCategory
-} from 'gql/gen/graphql';
-
-import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'queries/types/GetTrbRequestSummary';
-import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
+} from 'gql/generated/graphql';
+import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'gql/legacyGQL/types/GetTrbRequestSummary';
 
 import { PersonRole, TRBGuidanceLetterStatus } from './graphql-global-types';
 
 /* eslint-disable camelcase */
-export type { GetTrbAdminTeamHome_trbRequests as TrbAdminTeamHomeRequest } from 'queries/types/GetTrbAdminTeamHome';
-export type { GetTrbRequestFeedback_trbRequest_feedback as TrbRequestFeedback } from 'queries/types/GetTrbRequestFeedback';
+export type { GetTrbAdminTeamHome_trbRequests as TrbAdminTeamHomeRequest } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
+export type { GetTrbRequestFeedback_trbRequest_feedback as TrbRequestFeedback } from 'gql/legacyGQL/types/GetTrbRequestFeedback';
 /* eslint-enable camelcase */
 
 /** TRB attendee fields allows null role in form */

@@ -8,7 +8,7 @@ import React, {
   useState
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TagType } from 'gql/gen/graphql';
+import { TagType } from 'gql/generated/graphql';
 
 import Spinner from 'components/Spinner';
 import {

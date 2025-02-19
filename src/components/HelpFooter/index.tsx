@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { GridContainer, Icon, Link } from '@trussworks/react-uswds';
 
-import IconLink from 'components/shared/IconLink';
+import IconLink from 'components/IconLink';
 import { SLACK_OIT_DEV_FEEDBACK } from 'constants/externalUrls';
 
 export default () => {

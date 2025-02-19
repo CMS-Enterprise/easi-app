@@ -3,8 +3,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { Icon } from '@trussworks/react-uswds';
 
+import Breadcrumbs from 'components/Breadcrumbs';
 import UswdsReactLink from 'components/LinkWrapper';
-import Breadcrumbs from 'components/shared/Breadcrumbs';
 
 import StepHeader from '.';
 

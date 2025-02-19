@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Alert from 'components/shared/Alert';
+import Alert from 'components/Alert';
 
 import './index.scss';
 

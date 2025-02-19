@@ -6,10 +6,10 @@ import {
   GetSystemIntakesWithReviewRequestedDocument,
   GetSystemIntakesWithReviewRequestedQuery,
   SystemIntakeWithReviewRequestedFragment
-} from 'gql/gen/graphql';
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
+import { systemIntakesWithReviewRequested } from 'tests/mock/systemIntake';
 
-import { systemIntakesWithReviewRequested } from 'data/mock/systemIntake';
 import { MockedQuery } from 'types/util';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
