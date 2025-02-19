@@ -3,18 +3,18 @@ import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { FileInput, Form, FormGroup, Icon } from '@trussworks/react-uswds';
+import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
 import {
   SystemIntakeGRBPresentationLinksInput,
   useSetSystemIntakeGRBPresentationLinksMutation
-} from 'gql/gen/graphql';
+} from 'gql/generated/graphql';
 
+import { Alert } from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
-import { Alert } from 'components/shared/Alert';
-import IconLink from 'components/shared/IconLink';
-import Label from 'components/shared/Label';
+import IconLink from 'components/IconLink';
+import Label from 'components/Label';
 import useMessage from 'hooks/useMessage';
 import { fileToBase64File } from 'utils/downloadFile';
-import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 type PresentationLinkFields = Omit<
   SystemIntakeGRBPresentationLinksInput,

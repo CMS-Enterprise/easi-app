@@ -1,7 +1,7 @@
 import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
-} from 'gql/gen/graphql';
+} from 'gql/generated/graphql';
 
 import { GRBReviewFormAction } from 'types/grbReview';
 import { Translation } from 'types/util';

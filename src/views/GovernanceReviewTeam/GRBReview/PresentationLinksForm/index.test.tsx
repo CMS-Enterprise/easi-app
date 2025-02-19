@@ -1,9 +1,9 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
-import { SystemIntakeGRBPresentationLinks } from 'gql/gen/graphql';
+import { SystemIntakeGRBPresentationLinks } from 'gql/generated/graphql';
+import { systemIntake } from 'tests/mock/systemIntake';
 
-import { systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

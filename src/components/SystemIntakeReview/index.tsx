@@ -1,20 +1,20 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
+import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
 import i18next from 'i18next';
 
-import ReviewRow from 'components/ReviewRow';
 import {
   DescriptionDefinition,
   DescriptionList,
   DescriptionTerm
-} from 'components/shared/DescriptionGroup';
+} from 'components/DescriptionGroup';
+import ReviewRow from 'components/ReviewRow';
 import { yesNoMap } from 'data/common';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { SystemIntake } from 'queries/types/SystemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
-import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
 import './index.scss';
 

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import Tag from 'components/shared/Tag';
+import Tag from 'components/Tag';
 import { ArticleRouteProps, ArticleTypeProps } from 'types/articles';
 
 const articleTypes: ArticleRouteProps[] = [

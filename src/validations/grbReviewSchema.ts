@@ -1,4 +1,4 @@
-import { SystemIntakeGRBReviewerFragment } from 'gql/gen/graphql';
+import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import * as Yup from 'yup';
 import { MixedSchema } from 'yup/lib/mixed';

@@ -13,11 +13,11 @@ import {
   DescriptionDefinition,
   DescriptionList,
   DescriptionTerm
-} from 'components/shared/DescriptionGroup';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import FieldGroup from 'components/shared/FieldGroup';
-import HelpText from 'components/shared/HelpText';
-import IconButton from 'components/shared/IconButton';
+} from 'components/DescriptionGroup';
+import FieldErrorMsg from 'components/FieldErrorMsg';
+import FieldGroup from 'components/FieldGroup';
+import HelpText from 'components/HelpText';
+import IconButton from 'components/IconButton';
 import {
   LifecycleCosts,
   LifecyclePhaseKey,

@@ -2,9 +2,9 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
+import { mockSystemInfo } from 'features/Systems/SystemProfile/mockSystemData';
 
 import { mapCedarStatusToIcon } from 'types/iconStatus';
-import { mockSystemInfo } from 'views/SystemProfile/mockSystemData';
 
 import BookmarkCard from './index';
 

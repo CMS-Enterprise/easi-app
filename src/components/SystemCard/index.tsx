@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Card, Grid, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import {
   DescriptionDefinition,
   DescriptionTerm
-} from 'components/shared/DescriptionGroup';
-import Divider from 'components/shared/Divider';
+} from 'components/DescriptionGroup';
+import Divider from 'components/Divider';
+import UswdsReactLink from 'components/LinkWrapper';
 
 import './index.scss';
 
