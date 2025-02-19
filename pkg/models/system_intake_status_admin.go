@@ -13,6 +13,7 @@ const (
 	SISAGrtMeetingComplete           SystemIntakeStatusAdmin = "GRT_MEETING_COMPLETE"
 	SISAGrbMeetingReady              SystemIntakeStatusAdmin = "GRB_MEETING_READY"
 	SISAGrbMeetingComplete           SystemIntakeStatusAdmin = "GRB_MEETING_COMPLETE"
+	SISAGrbReviewInProgress          SystemIntakeStatusAdmin = "GRB_REVIEW_IN_PROGRESS"
 	SISAFinalBusinessCaseInProgress  SystemIntakeStatusAdmin = "FINAL_BUSINESS_CASE_IN_PROGRESS"
 	SISAFinalBusinessCaseSubmitted   SystemIntakeStatusAdmin = "FINAL_BUSINESS_CASE_SUBMITTED"
 	SISALcidIssued                   SystemIntakeStatusAdmin = "LCID_ISSUED"

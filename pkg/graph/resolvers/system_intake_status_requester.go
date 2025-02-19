@@ -40,7 +40,7 @@ func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTi
 		return calcSystemIntakeFinalBusinessCaseStatusRequester(intake.FinalBusinessCaseState)
 	case models.SystemIntakeStepGRBMEETING:
 		// this calc function doesn't use a switch statement and can't possibly return an error
-		return calcSystemIntakeGRBMeetingStatusRequester(intake.GRBDate, currentTime), nil
+		return calcSystemIntakeGRBMeetingStatusRequester(intake, currentTime), nil
 	case models.SystemIntakeStepDECISION:
 		return calcSystemIntakeDecisionStatusRequester(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
@@ -97,8 +97,8 @@ func calcSystemIntakeFinalBusinessCaseStatusRequester(finalBusinessCaseState mod
 	}
 }
 
-func calcSystemIntakeGRBMeetingStatusRequester(grbDate *time.Time, currentTime time.Time) models.SystemIntakeStatusRequester {
-	if grbDate == nil || grbDate.After(currentTime) {
+func calcSystemIntakeGRBMeetingStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
+	if intake.GRBDate == nil || intake.GRBDate.After(currentTime) {
 		return models.SISRGrbMeetingReady
 	}
 
