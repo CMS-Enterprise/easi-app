@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { FetchResult, useMutation, useQuery } from '@apollo/client';
-import { initialAttendee } from 'features/TechnicalReviewBoard/RequestForm/Attendees';
+import { initialAttendee } from 'features/TechnicalAssistance/RequestForm/Attendees';
 import {
   CreateTRBRequestAttendeeQuery,
   DeleteTRBRequestAttendeeQuery,

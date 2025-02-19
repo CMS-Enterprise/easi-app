@@ -4,7 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import { Form, Grid } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import Pager from 'features/TechnicalReviewBoard/RequestForm/Pager';
+import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
 import { camelCase } from 'lodash';
 
 import Breadcrumbs from 'components/Breadcrumbs';

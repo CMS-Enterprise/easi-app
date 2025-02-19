@@ -10,7 +10,7 @@ import {
   Select
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import Pager from 'features/TechnicalReviewBoard/RequestForm/Pager';
+import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
 import {
   TRBAdminNoteCategory,
   useGetTRBGuidanceLetterInsightsQuery

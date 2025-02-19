@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormGroup, GridContainer, Select } from '@trussworks/react-uswds';
-import TrbAdminTeamHome from 'features/TechnicalReviewBoard/TrbAdminTeamHome';
+import TrbAdminTeamHome from 'features/TechnicalAssistance/TrbAdminTeamHome';
 
 import Label from 'components/Label';
 import PageHeading from 'components/PageHeading';

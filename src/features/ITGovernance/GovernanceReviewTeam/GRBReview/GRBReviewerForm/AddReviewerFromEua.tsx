@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Form, FormGroup, Select } from '@trussworks/react-uswds';
-import Pager from 'features/TechnicalReviewBoard/RequestForm/Pager';
+import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
 import {
   GetSystemIntakeGRBReviewersDocument,
   SystemIntakeGRBReviewerFragment,
