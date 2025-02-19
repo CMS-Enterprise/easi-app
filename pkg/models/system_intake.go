@@ -49,6 +49,8 @@ const (
 	SystemIntakeStepGRBMEETING SystemIntakeStep = "GRB_MEETING"
 	// SystemIntakeStepDECISION captures enum value "DECISION_AND_NEXT_STEPS"
 	SystemIntakeStepDECISION SystemIntakeStep = "DECISION_AND_NEXT_STEPS"
+	// SystemIntakeStepGRBREVIEW captures enum value "GRB_REVIEW"
+	SystemIntakeStepGRBREVIEW SystemIntakeStep = "GRB_REVIEW"
 )
 
 // SystemIntakeLCIDStatus represents the possible statuses that an issued LCID can be in
@@ -69,6 +71,13 @@ const (
 	SystemIntakeSoftwareAcquisitionELAOrInternal       SystemIntakeSoftwareAcquisitionMethod = "ELA_OR_INTERNAL"
 	SystemIntakeSoftwareAcquisitionNotYetDetermined    SystemIntakeSoftwareAcquisitionMethod = "NOT_YET_DETERMINED"
 	SystemIntakeSoftwareAcquisitionOther               SystemIntakeSoftwareAcquisitionMethod = "OTHER"
+)
+
+type SystemIntakeGRBReviewType string
+
+const (
+	SystemIntakeGRBReviewTypeStandard SystemIntakeGRBReviewType = "STANDARD"
+	SystemIntakeGRBReviewTypeAsync    SystemIntakeGRBReviewType = "ASYNC"
 )
 
 // SystemIntake is the model for the system intake form
@@ -151,6 +160,12 @@ type SystemIntake struct {
 	TRBFollowUpRecommendation       *SystemIntakeTRBFollowUp     `json:"trbFollowUpRecommendation" db:"trb_follow_up_recommendation"`
 	ContractName                    zero.String                  `json:"contractName" db:"contract_name"`
 	SystemRelationType              *RequestRelationType         `json:"relationType" db:"system_relation_type"`
+	GrbReviewType                   SystemIntakeGRBReviewType    `json:"grbReviewType" db:"grb_review_type"`
+	GrbReviewAsyncReportingDate     *time.Time                   `json:"grbReviewAsyncReportingDate" db:"grb_review_async_reporting_date"`
+	GrbReviewAsyncRecordingTime     *time.Time                   `json:"grbReviewAsyncRecordingTime" db:"grb_review_async_recording_time"`
+	GrbReviewAsyncEndDate           *time.Time                   `json:"grbReviewAsyncEndDate" db:"grb_review_async_end_date"`
+	GrbReviewStandardGRBMeetingTime *time.Time                   `json:"grbReviewStandardGRBMeetingTime" db:"grb_review_standard_grb_meeting_time"`
+	GrbReviewAsyncGRBMeetingTime    *time.Time                   `json:"grbReviewAsyncGRBMeetingTime" db:"grb_review_async_grb_meeting_time"`
 }
 
 // SystemIntakes is a list of System Intakes

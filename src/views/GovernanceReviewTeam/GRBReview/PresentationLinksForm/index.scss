@@ -1,0 +1,5 @@
+@use 'uswds-core' as *;
+
+fieldset#transcriptFields .easi-tabs__tab-btn {
+  font-size: size('body', 2);
+}

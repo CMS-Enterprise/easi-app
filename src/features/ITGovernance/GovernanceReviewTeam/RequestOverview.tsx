@@ -23,6 +23,8 @@ import PageLoading from 'components/PageLoading';
 import SideNavigation from 'components/SideNavigation';
 import useMessage from 'hooks/useMessage';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
+import PresentationLinksForm from 'views/GovernanceReviewTeam/GRBReview/PresentationLinksForm';
+import PresentationDeckUpload from 'views/GovernanceTaskList/PresentationDeckUpload';
 
 import AccordionNavigation from '../../../components/AccordionNavigation';
 
@@ -204,7 +206,15 @@ const RequestOverview = ({
 
                 {flags?.grbReviewTab && (
                   <Route
+                    path="/it-governance/:systemId/grb-review/presentation-links"
+                    render={() => <PresentationLinksForm {...systemIntake} />}
+                  />
+                )}
+
+                {flags?.grbReviewTab && (
+                  <Route
                     path="/it-governance/:systemId/grb-review/:action(add|edit)?"
+                    exact
                     render={() => (
                       <GRBReview
                         {...systemIntake}
@@ -213,6 +223,13 @@ const RequestOverview = ({
                         grbReviewStartedAt={grbReviewStartedAt}
                       />
                     )}
+                  />
+                )}
+
+                {flags?.grbReviewTab && (
+                  <Route
+                    path="/it-governance/:systemId/grb-review/presentation-deck-upload"
+                    render={() => <PresentationDeckUpload type="admin" />}
                   />
                 )}
 

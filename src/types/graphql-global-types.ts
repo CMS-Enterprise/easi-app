@@ -87,10 +87,12 @@ export enum ITGovFinalBusinessCaseStatus {
  */
 export enum ITGovGRBStatus {
   AWAITING_DECISION = "AWAITING_DECISION",
+  AWAITING_GRB_REVIEW = "AWAITING_GRB_REVIEW",
   CANT_START = "CANT_START",
   COMPLETED = "COMPLETED",
   NOT_NEEDED = "NOT_NEEDED",
   READY_TO_SCHEDULE = "READY_TO_SCHEDULE",
+  REVIEW_IN_PROGRESS = "REVIEW_IN_PROGRESS",
   SCHEDULED = "SCHEDULED",
 }
 
@@ -233,6 +235,11 @@ export enum SystemIntakeFormStep {
   DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
   FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
   INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
+}
+
+export enum SystemIntakeGRBReviewType {
+  ASYNC = "ASYNC",
+  STANDARD = "STANDARD",
 }
 
 /**
@@ -876,6 +883,7 @@ export interface SystemIntakeProgressToNewStepsInput {
   grbRecommendations?: HTML | null;
   additionalInfo?: HTML | null;
   adminNote?: HTML | null;
+  grbReviewType?: SystemIntakeGRBReviewType | null;
 }
 
 /**

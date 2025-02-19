@@ -153,7 +153,9 @@ const Tabs = ({ defaultActiveTab, children, className }: TabsProps) => {
             isActive: true
           });
         }
-        return child;
+
+        // Only show tab content when active
+        return null;
       })}
     </div>
   );

@@ -79,6 +79,7 @@ type Dataloaders struct {
 	SystemIntakeGovReqFeedback       *dataloadgen.Loader[uuid.UUID, []*models.GovernanceRequestFeedback]
 	SystemIntakeGRBReviewers         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewer]
 	SystemIntakeGRBDiscussionPosts   *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewDiscussionPost]
+	SystemIntakeGRBPresentationLinks *dataloadgen.Loader[uuid.UUID, *models.SystemIntakeGRBPresentationLinks]
 	SystemIntakeNotes                *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeNote]
 	SystemIntakeRelatedSystemIntakes *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
 	SystemIntakeRelatedTRBRequests   *dataloadgen.Loader[uuid.UUID, []*models.TRBRequest]
@@ -122,6 +123,7 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		SystemIntakeGovReqFeedback:       dataloadgen.NewLoader(dr.batchSystemIntakeGovReqFeedbackByIntakeIDs),
 		SystemIntakeGRBReviewers:         dataloadgen.NewLoader(dr.batchSystemIntakeGRBReviewersBySystemIntakeIDs),
 		SystemIntakeGRBDiscussionPosts:   dataloadgen.NewLoader(dr.batchSystemIntakeGRBDiscussionPostsBySystemIntakeIDs),
+		SystemIntakeGRBPresentationLinks: dataloadgen.NewLoader(dr.batchSystemIntakeGRBPresentationLinksByIntakeIDs),
 		SystemIntakeNotes:                dataloadgen.NewLoader(dr.batchSystemIntakeNotesBySystemIntakeIDs),
 		SystemIntakeRelatedSystemIntakes: dataloadgen.NewLoader(dr.batchRelatedSystemIntakesBySystemIntakeIDs),
 		SystemIntakeRelatedTRBRequests:   dataloadgen.NewLoader(dr.batchRelatedTRBRequestsBySystemIntakeIDs),

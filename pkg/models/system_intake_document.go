@@ -55,8 +55,8 @@ type SystemIntakeDocument struct {
 	Version            SystemIntakeDocumentVersion    `db:"document_version" json:"version"`
 	OtherType          string                         `db:"other_type"`
 	FileName           string                         `json:"fileName" db:"file_name"`
-	Bucket             string                         `json:"bucket" db:"bucket"`
-	S3Key              string                         `json:"s3Key" db:"s3_key"` // The document's key inside an S3 bucket; does *not* include the bucket name.
+	Bucket             string                         `json:"bucket" db:"bucket"` // TODO: Bucket name should be removed as it is never referenced
+	S3Key              string                         `json:"s3Key" db:"s3_key"`  // The document's key inside an S3 bucket; does *not* include the bucket name.
 	UploaderRole       DocumentUploaderRole           `json:"uploaderRole" db:"uploader_role"`
 }
 

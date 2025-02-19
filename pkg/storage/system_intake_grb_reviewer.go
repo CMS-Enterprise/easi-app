@@ -89,3 +89,30 @@ func (s *Store) CompareSystemIntakeGRBReviewers(ctx context.Context, systemIntak
 		"system_intake_id": systemIntakeID,
 	})
 }
+
+func UpdateSystemIntakeGRBReviewType(
+	ctx context.Context,
+	np sqlutils.NamedPreparer,
+	systemIntakeID uuid.UUID,
+	reviewType models.SystemIntakeGRBReviewType,
+) (*models.UpdateSystemIntakePayload, error) {
+	updatedIntake := &models.SystemIntake{}
+
+	if err := namedGet(ctx, np, updatedIntake, sqlqueries.SystemIntakeGRBReviewType.Update, args{
+		"system_intake_id": systemIntakeID,
+		"grb_review_type":  reviewType,
+		"eua_user_id":      appcontext.Principal(ctx).ID(),
+	}); err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"error updating system intake GRB reviewer",
+			zap.String("system_intake_id", systemIntakeID.String()),
+			zap.String("grb_review_type", string(reviewType)),
+		)
+
+		return nil, err
+	}
+
+	return &models.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
+	}, nil
+}

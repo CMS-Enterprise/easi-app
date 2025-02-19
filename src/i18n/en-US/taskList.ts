@@ -114,7 +114,7 @@ const taskList = {
     link: 'Review and Submit'
   },
   attendGRB: {
-    heading: 'Attend the GRB meeting',
+    heading: 'Attend the GRB review',
     description:
       'The Governance Review Board will discuss and make decisions based on the Business Case and recommendations from the Review Team.'
   },
@@ -130,7 +130,7 @@ const taskList = {
     viewSubmittedBusinessCase: 'View submitted request form',
     updateDraftBusinessCase: 'Update draft Business Case',
     updateSubmittedBusinessCase: 'Update submitted draft Business Case',
-    prepareGRB: 'Prepare for the GRB meeting (opens in new tab)',
+    prepareGRB: 'Prepare for the GRB review (opens in new tab)',
     prepareGRT: 'Prepare for the GRT meeting (opens in new tab)',
     readDecision: 'Read decision from board'
   },

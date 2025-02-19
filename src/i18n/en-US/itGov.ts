@@ -49,7 +49,7 @@ export default {
       bizCaseDraft: {
         title: 'Prepare a draft Business Case',
         description:
-          'Draft a Business Case to communicate your business need, possible solutions and their associated costs. The Governance Team will review it with you and determine whether you are ready for a GRT or GRB meeting.',
+          'Draft a Business Case to communicate your business need, possible solutions and their associated costs. The Governance Team will review it with you and determine whether you are ready for a GRT meeting or GRB review.',
         viewSubmittedDraftBusinessCase: 'View submitted draft Business Case',
         submittedInfo: 'Draft Business Case submitted. Waiting for feedback.',
         editsRequestedWarning:
@@ -78,13 +78,13 @@ export default {
           'The Governance Team has not requested edits to your final Business Case. If you have any questions, you may contact them at <a>{{email}}</a>.'
       },
       grbMeeting: {
-        title: 'Attend the GRB meeting',
+        title: 'Attend the GRB review',
         description:
           'The Governance Review Board will discuss and make decisions based on your Business Case and recommendations from the Governance Review Team.',
-        link: 'Prepare for the GRB meeting (opens in a new tab)',
-        button: 'Prepare for the GRB meeting',
-        scheduledInfo: 'GRB meeting scheduled for {{date}}.',
-        attendedInfo: 'You attended the GRB meeting on {{date}}.'
+        link: 'Prepare for the GRB review (opens in a new tab)',
+        button: 'Prepare for the GRB review',
+        scheduledInfo: 'GRB review scheduled for {{date}}.',
+        attendedInfo: 'You attended the GRB review on {{date}}.'
       },
       decisionAndNextSteps: {
         title: 'Decision and next steps',
