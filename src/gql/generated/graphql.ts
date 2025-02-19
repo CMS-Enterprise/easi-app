@@ -867,6 +867,8 @@ export enum ITGovFinalBusinessCaseStatus {
 export enum ITGovGRBStatus {
   /** The GRT meeting has already happened, and an outcome hasn't been noted yet */
   AWAITING_DECISION = 'AWAITING_DECISION',
+  /** The GRB meeting is waiting for review */
+  AWAITING_GRB_REVIEW = 'AWAITING_GRB_REVIEW',
   /** This step can't be started yet */
   CANT_START = 'CANT_START',
   /** The step is completed */
@@ -875,6 +877,8 @@ export enum ITGovGRBStatus {
   NOT_NEEDED = 'NOT_NEEDED',
   /** The GRB meeting is waiting to be scheduled */
   READY_TO_SCHEDULE = 'READY_TO_SCHEDULE',
+  /** The GRB review is currently in progress */
+  REVIEW_IN_PROGRESS = 'REVIEW_IN_PROGRESS',
   /** The GRB meeting has been scheduled */
   SCHEDULED = 'SCHEDULED'
 }

@@ -49,6 +49,8 @@ const (
 	SystemIntakeStepGRBMEETING SystemIntakeStep = "GRB_MEETING"
 	// SystemIntakeStepDECISION captures enum value "DECISION_AND_NEXT_STEPS"
 	SystemIntakeStepDECISION SystemIntakeStep = "DECISION_AND_NEXT_STEPS"
+	// SystemIntakeStepGRBREVIEW captures enum value "GRB_REVIEW"
+	SystemIntakeStepGRBREVIEW SystemIntakeStep = "GRB_REVIEW"
 )
 
 // SystemIntakeLCIDStatus represents the possible statuses that an issued LCID can be in
