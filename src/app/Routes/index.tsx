@@ -37,7 +37,7 @@ import SystemList from 'features/Systems';
 import SystemProfile from 'features/Systems/SystemProfile';
 import SystemWorkspace from 'features/Systems/SystemWorkspace';
 import SystemWorkspaceRequests from 'features/Systems/SystemWorkspace/SystemWorkspaceRequests';
-import TechnicalAssistance from 'features/TechnicalAssistance';
+import TechnicalAssistance from 'features/TechnicalReviewBoard';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import AuthenticationWrapper from 'wrappers/AuthenticationWrapper';
 import FlagsWrapper from 'wrappers/FlagsWrapper';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Grid } from '@trussworks/react-uswds';
-import { formatFundingSourcesForRender } from 'features/TechnicalAssistance/RequestForm/FundingSources/useTrbFundingSources';
+import { formatFundingSourcesForRender } from 'features/TechnicalReviewBoard/RequestForm/FundingSources/useTrbFundingSources';
 import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequest_trbRequest_form as TrbRequestForm

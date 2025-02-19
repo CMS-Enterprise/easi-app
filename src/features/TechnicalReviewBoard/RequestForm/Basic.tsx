@@ -16,7 +16,7 @@ import {
   Select,
   TextInput
 } from '@trussworks/react-uswds';
-import FundingSources from 'features/TechnicalAssistance/RequestForm/FundingSources/FundingSources';
+import FundingSources from 'features/TechnicalReviewBoard/RequestForm/FundingSources/FundingSources';
 import DeleteTRBRequestFundingSource from 'gql/legacyGQL/DeleteTRBRequestFundingSource';
 import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
 import {

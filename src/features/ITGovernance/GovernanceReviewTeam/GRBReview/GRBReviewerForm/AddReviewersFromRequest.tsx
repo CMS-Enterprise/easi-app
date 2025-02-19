@@ -17,7 +17,7 @@ import {
   FormGroup,
   Table
 } from '@trussworks/react-uswds';
-import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
+import Pager from 'features/TechnicalReviewBoard/RequestForm/Pager';
 import { useGetGRBReviewersComparisonsQuery } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';

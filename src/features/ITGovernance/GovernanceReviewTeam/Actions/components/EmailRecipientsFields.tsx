@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import {
   ExternalRecipientAlert,
   RecipientLabel
-} from 'features/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
+} from 'features/TechnicalReviewBoard/AdminHome/components/ActionFormWrapper/Recipients';
 import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
 
 import AdditionalContacts from 'components/AdditionalContacts';

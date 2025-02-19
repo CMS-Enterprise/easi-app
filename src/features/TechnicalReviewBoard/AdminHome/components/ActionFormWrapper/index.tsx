@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import Pager, {
   PageButtonProps,
   PagerProps
-} from 'features/TechnicalAssistance/RequestForm/Pager';
+} from 'features/TechnicalReviewBoard/RequestForm/Pager';
 
 import Alert from 'components/Alert';
 import Breadcrumbs, { BreadcrumbsProps } from 'components/Breadcrumbs'; // BreadcrumbsProps

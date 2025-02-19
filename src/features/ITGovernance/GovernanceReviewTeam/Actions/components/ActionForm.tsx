@@ -13,7 +13,7 @@ import {
   ModalHeading
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
+import Pager from 'features/TechnicalReviewBoard/RequestForm/Pager';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
