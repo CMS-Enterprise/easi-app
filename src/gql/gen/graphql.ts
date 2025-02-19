@@ -867,6 +867,8 @@ export enum ITGovFinalBusinessCaseStatus {
 export enum ITGovGRBStatus {
   /** The GRT meeting has already happened, and an outcome hasn't been noted yet */
   AWAITING_DECISION = 'AWAITING_DECISION',
+  /** The GRB meeting is waiting for review */
+  AWAITING_GRB_REVIEW = 'AWAITING_GRB_REVIEW',
   /** This step can't be started yet */
   CANT_START = 'CANT_START',
   /** The step is completed */
@@ -875,6 +877,8 @@ export enum ITGovGRBStatus {
   NOT_NEEDED = 'NOT_NEEDED',
   /** The GRB meeting is waiting to be scheduled */
   READY_TO_SCHEDULE = 'READY_TO_SCHEDULE',
+  /** The GRB review is currently in progress */
+  REVIEW_IN_PROGRESS = 'REVIEW_IN_PROGRESS',
   /** The GRB meeting has been scheduled */
   SCHEDULED = 'SCHEDULED'
 }
@@ -1903,11 +1907,6 @@ export type SystemIntake = {
   grbReviewAsyncRecordingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewStandardGRBMeetingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
-  /**
-   * GRB Review State
-   * This is a calculated state based on the GRB Review Form
-   */
-  grbReviewState: SystemIntakeGRBReviewState;
   /** GRB Review Form */
   grbReviewType: SystemIntakeGRBReviewType;
   grbReviewers: Array<SystemIntakeGRBReviewer>;
@@ -2324,17 +2323,6 @@ export type SystemIntakeGRBReviewDiscussionPost = {
   systemIntakeID: Scalars['UUID']['output'];
   votingRole?: Maybe<SystemIntakeGRBReviewerVotingRole>;
 };
-
-export enum SystemIntakeGRBReviewState {
-  AWAITING_DECISION = 'AWAITING_DECISION',
-  AWAITING_GRB_REVIEW = 'AWAITING_GRB_REVIEW',
-  CANNOT_START_YET = 'CANNOT_START_YET',
-  COMPLETED = 'COMPLETED',
-  NOT_NEEDED = 'NOT_NEEDED',
-  READY_TO_SCHEDULE = 'READY_TO_SCHEDULE',
-  REVIEW_IN_PROGRESS = 'REVIEW_IN_PROGRESS',
-  SCHEDULED = 'SCHEDULED'
-}
 
 export enum SystemIntakeGRBReviewType {
   ASYNC = 'ASYNC',

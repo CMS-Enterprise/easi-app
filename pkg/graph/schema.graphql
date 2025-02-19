@@ -845,11 +845,6 @@ type SystemIntake {
   grbReviewAsyncEndDate: Time
   grbReviewStandardGRBMeetingTime: Time
   grbReviewAsyncGRBMeetingTime: Time
-  """
-  GRB Review State
-  This is a calculated state based on the GRB Review Form
-  """
-  grbReviewState: SystemIntakeGRBReviewState!
 }
 
 type SystemIntakeContractNumber {
@@ -3046,6 +3041,14 @@ enum ITGovGRBStatus {
   """
   SCHEDULED
   """
+  The GRB meeting is waiting for review
+  """
+  AWAITING_GRB_REVIEW,
+  """
+  The GRB review is currently in progress
+  """
+  REVIEW_IN_PROGRESS,
+  """
   The GRT meeting has already happened, and an outcome hasn't been noted yet
   """
   AWAITING_DECISION
@@ -3138,17 +3141,6 @@ enum SystemIntakeLCIDStatus {
   ISSUED
   EXPIRED
   RETIRED
-}
-
-enum SystemIntakeGRBReviewState {
-  CANNOT_START_YET,
-  NOT_NEEDED,
-  READY_TO_SCHEDULE,
-  SCHEDULED,
-  AWAITING_GRB_REVIEW,
-  REVIEW_IN_PROGRESS,
-  AWAITING_DECISION,
-  COMPLETED
 }
 
 """
