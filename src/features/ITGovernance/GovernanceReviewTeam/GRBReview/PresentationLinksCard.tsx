@@ -142,7 +142,11 @@ function PresentationLinksCard({
         {grbPresentationLinks && (
           <CardFooter className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 padding-x-0 padding-bottom-205 padding-top-2 margin-x-3 border-top-1px border-gray-10">
             {isVirusScanning ? (
-              <em>{t('asyncPresentation.virusScanning')}</em>
+              <em
+                data-testdeckurl={presentationDeckFileURL || transcriptFileURL}
+              >
+                {t('asyncPresentation.virusScanning')}
+              </em>
             ) : (
               <>
                 <div className="display-flex flex-wrap flex-gap-1">
@@ -176,7 +180,11 @@ function PresentationLinksCard({
                 {transcriptFileStatus ===
                   SystemIntakeDocumentStatus.AVAILABLE &&
                   transcriptFileURL && (
-                    <Link href={transcriptFileURL} target="_blank">
+                    <Link
+                      href={transcriptFileURL}
+                      target="_blank"
+                      data-testid="transcript-url"
+                    >
                       {t('asyncPresentation.viewTranscript')}
                     </Link>
                   )}
@@ -184,7 +192,11 @@ function PresentationLinksCard({
                 {presentationDeckFileStatus ===
                   SystemIntakeDocumentStatus.AVAILABLE &&
                   presentationDeckFileURL && (
-                    <Link href={presentationDeckFileURL} target="_blank">
+                    <Link
+                      href={presentationDeckFileURL}
+                      target="_blank"
+                      data-testid="presentation-url"
+                    >
                       {t('asyncPresentation.viewSlideDeck')}
                     </Link>
                   )}
