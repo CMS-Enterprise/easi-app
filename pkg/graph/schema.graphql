@@ -845,6 +845,11 @@ type SystemIntake {
   grbReviewAsyncEndDate: Time
   grbReviewStandardGRBMeetingTime: Time
   grbReviewAsyncGRBMeetingTime: Time
+  """
+  GRB Review State
+  This is a calculated state based on the GRB Review Form
+  """
+  grbReviewState: SystemIntakeGRBReviewState!
 }
 
 type SystemIntakeContractNumber {
@@ -3133,6 +3138,17 @@ enum SystemIntakeLCIDStatus {
   ISSUED
   EXPIRED
   RETIRED
+}
+
+enum SystemIntakeGRBReviewState {
+  CANNOT_START_YET,
+  NOT_NEEDED,
+  READY_TO_SCHEDULE,
+  SCHEDULED,
+  AWAITING_GRB_REVIEW,
+  REVIEW_IN_PROGRESS,
+  AWAITING_DECISION,
+  COMPLETED
 }
 
 """

@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1950,6 +1951,11 @@ func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.S
 // GrbPresentationLinks is the resolver for the grbPresentationLinks field.
 func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error) {
 	return dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.ID)
+}
+
+// GrbReviewState is the resolver for the grbReviewState field.
+func (r *systemIntakeResolver) GrbReviewState(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeGRBReviewState, error) {
+	panic(fmt.Errorf("not implemented: GrbReviewState - grbReviewState"))
 }
 
 // DocumentType is the resolver for the documentType field.
