@@ -2,17 +2,17 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
 
+import ReportAProblem from './Feedback/ReportAProblem/ReportAProblem';
+import SendFeedback from './Feedback/SendFeedback';
 import NewSystem from './ITGovernance/NewSystem';
 import PrepareForGRB from './ITGovernance/PrepareForGRB';
 import PrepareForGRT from './ITGovernance/PrepareForGRT';
 import SampleBusinessCase from './ITGovernance/SampleBusinessCase';
-import ReportAProblem from './SendFeedback/ReportAProblem';
 import PrepareTrbConsultMeeting from './TechnicalReviewBoard/PrepareTrbConsultMeeting';
 import StepsInProcess from './TechnicalReviewBoard/StepsInProcess';
 import AllHelp from './All';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
-import SendFeedback from './SendFeedback';
 import TechnicalReviewBoard from './TechnicalReviewBoard';
 
 const Help = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { ActionText } from 'features/TechnicalAssistance/AdminHome/components/TrbAdminWrapper';
+import { ActionText } from 'features/TechnicalAssistance/Admin/_components/TrbAdminWrapper';
 import i18next from 'i18next';
 
 import AdminAction from '.';

@@ -13,8 +13,8 @@ import {
   Icon,
   Link
 } from '@trussworks/react-uswds';
-import { getPersonFullName } from 'features/Systems/SystemProfile/helpers';
-import { mockVendors } from 'features/Systems/SystemProfile/mockSystemData';
+import { mockVendors } from 'features/Systems/SystemProfile/data/mockSystemData';
+import { getPersonFullName } from 'features/Systems/SystemProfile/util';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Alert from 'components/Alert';

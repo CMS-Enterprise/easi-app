@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Label, Select } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { ExternalRecipientAlert } from 'features/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
+import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
 import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
 
 import Alert from 'components/Alert';

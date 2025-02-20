@@ -22,11 +22,11 @@ import { getAtoStatus } from 'components/AtoStatus';
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import { RoleTypeName, SubpageKey } from 'types/systemProfile';
 
-import SystemProfile from './index';
-import pointsOfContactIds from './pointsOfContactIds';
 import PointsOfContactSidebar, {
   getPointsOfContact
-} from './PointsOfContactSidebar';
+} from './components/PointsOfContactSidebar/PointsOfContactSidebar';
+import pointsOfContactIds from './data/pointsOfContactIds';
+import SystemProfile from './index';
 
 describe('System Profile parent request', () => {
   it('matches snapshot', async () => {
