@@ -29,7 +29,7 @@ import { showSystemVal } from 'utils/showVal';
 // The majority of values rendered the components here are one-offs
 // sometimes due to changing source data
 
-function ExchangeDirectionTag({
+export function ExchangeDirectionTag({
   data
 }: {
   data: Exchange['exchangeDirection'];
@@ -37,7 +37,7 @@ function ExchangeDirectionTag({
   const { t } = useTranslation('systemProfile');
 
   return (
-    <Tag className="text-base-darker bg-base-lighter  display-flex flex-align-center">
+    <Tag className="text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content">
       {data === ExchangeDirection.RECEIVER && (
         <>
           <Icon.FileDownload className="margin-right-1" />
@@ -361,7 +361,10 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         </Grid>
 
-        <h3 className="margin-top-0 margin-bottom-1">
+        <h3
+          className="margin-top-0 margin-bottom-1 scroll-margin-top-6"
+          id="data-categories"
+        >
           {t('singleSystem.systemData.dataCategories')}
         </h3>
         {system.cedarSoftwareProducts?.apiDataArea

@@ -230,7 +230,8 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
       </div>
     </div>
     <h3
-      class="margin-top-0 margin-bottom-1"
+      class="margin-top-0 margin-bottom-1 scroll-margin-top-6"
+      id="data-categories"
     >
       Data content categories
     </h3>
@@ -330,7 +331,7 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
               class="display-flex margin-bottom-3"
             >
               <span
-                class="easi-tag text-base-darker bg-base-lighter  display-flex flex-align-center"
+                class="easi-tag text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content"
                 data-testid="tag"
               >
                 <svg
@@ -477,7 +478,7 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
               class="display-flex margin-bottom-3"
             >
               <span
-                class="easi-tag text-base-darker bg-base-lighter  display-flex flex-align-center"
+                class="easi-tag text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content"
                 data-testid="tag"
               >
                 <svg
