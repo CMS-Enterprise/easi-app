@@ -115,6 +115,7 @@ func calcSystemIntakeStandardGRBReviewStatusRequester(intake *models.SystemIntak
 
 	return models.SISRGrbMeetingAwaitingDecision
 }
+
 func calcSystemIntakeAsyncGRBReviewStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
 	if intake.GrbReviewAsyncGRBMeetingTime == nil || intake.GrbReviewAsyncEndDate == nil {
 		return models.SISRGrbMeetingAwaitingDecision
