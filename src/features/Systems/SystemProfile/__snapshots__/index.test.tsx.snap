@@ -290,35 +290,6 @@ exports[`System Profile parent request > matches snapshot 1`] = `
         </div>
       </div>
       <div
-        class="system-detail__subNav-accordion"
-      >
-        <button
-          aria-controls="system-detail__subNav"
-          aria-expanded="false"
-          class="usa-menu-btn easi-header__basic width-full"
-          type="button"
-        >
-          <h3
-            class="padding-left-1"
-          >
-            System home
-          </h3>
-          <svg
-            class="usa-icon usa-icon--size-3"
-            focusable="false"
-            height="1em"
-            role="img"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
-            />
-          </svg>
-        </button>
-      </div>
-      <div
         class="easi-section margin-bottom-5"
         data-testid="section-wrapper"
       >
@@ -427,6 +398,26 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                     href="/systems/000-100-0/ato-and-security"
                   >
                     ATO and Security
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/systems/000-100-0/lifecycle-id"
+                  >
+                    Lifecyle ID
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/systems/000-100-0/documents"
+                  >
+                    Documents
                   </a>
                 </li>
               </ul>
