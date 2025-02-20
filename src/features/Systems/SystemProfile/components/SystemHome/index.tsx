@@ -10,6 +10,7 @@ import {
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { showAtoExpirationDate } from 'features/Systems/SystemProfile/helpers';
 
 import {
   DescriptionDefinition,
@@ -23,7 +24,6 @@ import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import formatDollars from 'utils/formatDollars';
 import showVal, { showSystemVal } from 'utils/showVal';
-import { showAtoExpirationDate } from 'views/SystemProfile/helpers';
 
 import { ExchangeDirectionTag } from '../SystemData';
 
