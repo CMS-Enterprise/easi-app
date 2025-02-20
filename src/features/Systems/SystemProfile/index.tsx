@@ -605,6 +605,16 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
           </SummaryBoxContent>
         </SummaryBox>
 
+        {isMobile && (
+          <SystemSubNav
+            subinfo={subpageKey}
+            system={systemProfileData}
+            systemProfileHiddenFields={flags.systemProfileHiddenFields}
+            modal={modal}
+            setModalSubpage={setModalSubpage}
+          />
+        )}
+
         {subinfo !== 'team' && (
           <GridContainer className="margin-bottom-3 margin-top-2">
             <Alert
@@ -621,16 +631,6 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
               </Trans>
             </Alert>
           </GridContainer>
-        )}
-
-        {isMobile && (
-          <SystemSubNav
-            subinfo={subpageKey}
-            system={systemProfileData}
-            systemProfileHiddenFields={flags.systemProfileHiddenFields}
-            modal={modal}
-            setModalSubpage={setModalSubpage}
-          />
         )}
 
         <SectionWrapper className="margin-bottom-5">
