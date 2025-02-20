@@ -623,13 +623,15 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
           </GridContainer>
         )}
 
-        <SystemSubNav
-          subinfo={subpageKey}
-          system={systemProfileData}
-          systemProfileHiddenFields={flags.systemProfileHiddenFields}
-          modal={modal}
-          setModalSubpage={setModalSubpage}
-        />
+        {isMobile && (
+          <SystemSubNav
+            subinfo={subpageKey}
+            system={systemProfileData}
+            systemProfileHiddenFields={flags.systemProfileHiddenFields}
+            modal={modal}
+            setModalSubpage={setModalSubpage}
+          />
+        )}
 
         <SectionWrapper className="margin-bottom-5">
           <GridContainer className={classnames({ 'maxw-none': modal })}>
