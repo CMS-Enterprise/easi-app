@@ -400,26 +400,6 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                     ATO and Security
                   </a>
                 </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/systems/000-100-0/lifecycle-id"
-                  >
-                    Lifecyle ID
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/systems/000-100-0/documents"
-                  >
-                    Documents
-                  </a>
-                </li>
               </ul>
             </div>
             <div

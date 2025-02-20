@@ -161,7 +161,7 @@ const sideNavItems = (
         }
       ]
     },
-    ...(!systemProfileHiddenFields && {
+    ...(systemProfileHiddenFields && {
       'lifecycle-id': {
         component: <SystemHome system={system} />,
         route: `/systems/${system.id}/lifecycle-id`
