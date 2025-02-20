@@ -5,7 +5,7 @@ import { CellProps, Column, Row } from 'react-table';
 import { Icon } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import TruncatedText from 'components/shared/TruncatedText';
+import TruncatedText from 'components/TruncatedText';
 import { SystemIntakeStatusAdmin } from 'types/graphql-global-types';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
 import { SystemIntakeStatusAdminIndex } from 'utils/tableRequestStatusIndex';

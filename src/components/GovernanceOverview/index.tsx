@@ -7,9 +7,9 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import CollapsableLink from 'components/CollapsableLink';
+import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
-import CollapsableLink from 'components/shared/CollapsableLink';
-import Divider from 'components/shared/Divider';
 import { ArticleComponentProps } from 'types/articles';
 
 type processStepProps = {

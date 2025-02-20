@@ -1,8 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
-
-import itGovernanceArticles from 'views/Help/ITGovernance/articles';
+import itGovernanceArticles from 'features/Help/ITGovernance/articles';
 
 import ArticleCard from './index';
 

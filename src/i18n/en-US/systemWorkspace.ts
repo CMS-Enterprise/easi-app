@@ -1,4 +1,4 @@
-import { ExternalModalType } from 'components/shared/ExternalLinkAndModal';
+import { ExternalModalType } from 'components/ExternalLinkAndModal';
 
 export type HelpLinkType = {
   header: string;

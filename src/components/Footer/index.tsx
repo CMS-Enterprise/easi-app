@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useOktaAuth } from '@okta/okta-react';
 import { Footer as UswdsFooter, FooterNav } from '@trussworks/react-uswds';
 
+import cmsGovLogo from 'assets/images/cmsGovLogo.png';
+import hhsLogo from 'assets/images/hhsLogo.png';
 import HelpFooter from 'components/HelpFooter';
 import UswdsReactLink from 'components/LinkWrapper';
-import cmsGovLogo from 'images/cmsGovLogo.png';
-import hhsLogo from 'images/hhsLogo.png';
 
 import './index.scss';
 

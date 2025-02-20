@@ -2,7 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 import { kebabCase } from 'lodash';
 
-import CollapsableLink from 'components/shared/CollapsableLink';
+import CollapsableLink from 'components/CollapsableLink';
 
 type CollapsableListListProps = {
   items: string[];

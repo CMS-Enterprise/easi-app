@@ -16,8 +16,8 @@ import {
 import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
-import Alert from 'components/shared/Alert';
-import IconButton from 'components/shared/IconButton';
+import Alert from 'components/Alert';
+import IconButton from 'components/IconButton';
 import { MentionAttributes, MentionSuggestion } from 'types/discussions';
 
 import suggestion from './suggestion';

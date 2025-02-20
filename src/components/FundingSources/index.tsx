@@ -12,11 +12,11 @@ import {
 } from '@trussworks/react-uswds';
 
 import { useEasiForm, useEasiFormContext } from 'components/EasiForm';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import FieldGroup from 'components/shared/FieldGroup';
-import HelpText from 'components/shared/HelpText';
-import Label from 'components/shared/Label';
-import MultiSelect from 'components/shared/MultiSelect';
+import FieldErrorMsg from 'components/FieldErrorMsg';
+import FieldGroup from 'components/FieldGroup';
+import HelpText from 'components/HelpText';
+import Label from 'components/Label';
+import MultiSelect from 'components/MultiSelect';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import { FundingSource } from 'types/systemIntake';
 import { FundingSourcesValidationSchema } from 'validations/systemIntakeSchema';

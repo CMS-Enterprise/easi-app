@@ -6,7 +6,7 @@ import {
   DescriptionDefinition,
   DescriptionList,
   DescriptionTerm
-} from 'components/shared/DescriptionGroup';
+} from 'components/DescriptionGroup';
 import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
 import formatDollars from 'utils/formatDollars';
 

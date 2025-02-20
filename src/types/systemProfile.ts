@@ -1,9 +1,9 @@
 import {
-  securityFindingKeys,
-  teamSectionKeys,
-  threatLevelGrades
-} from 'constants/systemProfile';
-import { CedarRole } from 'queries/types/CedarRole';
+  tempATOProp,
+  tempSubSystemProp,
+  tempSystemDataProp
+} from 'features/Systems/SystemProfile/mockSystemData';
+import { CedarRole } from 'gql/legacyGQL/types/CedarRole';
 import {
   GetSystemProfile,
   /* eslint-disable camelcase */
@@ -16,12 +16,13 @@ import {
   GetSystemProfile_cedarSystemDetails_roles,
   GetSystemProfile_cedarSystemDetails_urls
   /* eslint-enable camelcase */
-} from 'queries/types/GetSystemProfile';
+} from 'gql/legacyGQL/types/GetSystemProfile';
+
 import {
-  tempATOProp,
-  tempSubSystemProp,
-  tempSystemDataProp
-} from 'views/SystemProfile/mockSystemData';
+  securityFindingKeys,
+  teamSectionKeys,
+  threatLevelGrades
+} from 'constants/systemProfile';
 
 import { CedarAssigneeType } from './graphql-global-types';
 

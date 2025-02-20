@@ -2,7 +2,7 @@ import {
   GetGRBReviewersComparisonsQuery,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
-} from 'gql/gen/graphql';
+} from 'gql/generated/graphql';
 
 export type GRBReviewFormAction = 'add' | 'edit' | 'remove';
 

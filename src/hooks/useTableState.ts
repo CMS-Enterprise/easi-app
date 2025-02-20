@@ -8,13 +8,12 @@ Table setters are dependent on react-table exposed methods
 import { useContext, useEffect } from 'react';
 import { FilterValue, SortingRule } from 'react-table';
 import { assign } from 'lodash';
-
 import {
   ActiveStateType,
   ReactTableStateType,
   TableStateContext,
   TableStates
-} from 'views/TableStateWrapper';
+} from 'wrappers/TableStateWrapper';
 
 const useTableState = (
   tableName: string,

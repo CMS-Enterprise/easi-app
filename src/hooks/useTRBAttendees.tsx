@@ -1,34 +1,34 @@
 import { useCallback, useMemo } from 'react';
 import { FetchResult, useMutation, useQuery } from '@apollo/client';
-
+import { initialAttendee } from 'features/TechnicalAssistance/RequestForm/Attendees';
 import {
   CreateTRBRequestAttendeeQuery,
   DeleteTRBRequestAttendeeQuery,
   GetTRBRequestAttendeesQuery,
   UpdateTRBRequestAttendeeQuery
-} from 'queries/TrbAttendeeQueries';
+} from 'gql/legacyGQL/TrbAttendeeQueries';
 import {
   CreateTRBRequestAttendee,
   CreateTRBRequestAttendeeVariables
-} from 'queries/types/CreateTRBRequestAttendee';
+} from 'gql/legacyGQL/types/CreateTRBRequestAttendee';
 import {
   DeleteTRBRequestAttendee,
   DeleteTRBRequestAttendeeVariables
-} from 'queries/types/DeleteTRBRequestAttendee';
+} from 'gql/legacyGQL/types/DeleteTRBRequestAttendee';
 import {
   GetTRBRequestAttendees,
   GetTRBRequestAttendeesVariables
-} from 'queries/types/GetTRBRequestAttendees';
-import { TRBAttendee } from 'queries/types/TRBAttendee';
+} from 'gql/legacyGQL/types/GetTRBRequestAttendees';
+import { TRBAttendee } from 'gql/legacyGQL/types/TRBAttendee';
 import {
   UpdateTRBRequestAttendee,
   UpdateTRBRequestAttendeeVariables
-} from 'queries/types/UpdateTRBRequestAttendee';
+} from 'gql/legacyGQL/types/UpdateTRBRequestAttendee';
+
 import {
   CreateTRBRequestAttendeeInput,
   UpdateTRBRequestAttendeeInput
 } from 'types/graphql-global-types';
-import { initialAttendee } from 'views/TechnicalAssistance/RequestForm/Attendees';
 
 /** useTRBAttendees hook return type */
 type UseTRBAttendees = {
