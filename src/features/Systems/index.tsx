@@ -28,7 +28,7 @@ import PageLoading from 'components/PageLoading';
 import SectionWrapper from 'components/SectionWrapper';
 import { mapCedarStatusToIcon } from 'types/iconStatus';
 
-import Table from './Table';
+import Table from './SystemsTable';
 
 import './index.scss';
 

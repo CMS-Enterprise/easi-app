@@ -23,7 +23,7 @@ import {
   activities as mockActivies,
   subSystems as mockSubSystems,
   systemData as mockSystemData
-} from 'features/Systems/SystemProfile/mockSystemData';
+} from 'features/Systems/SystemProfile/data/mockSystemData';
 import GetSystemProfileQuery from 'gql/legacyGQL/GetSystemProfileQuery';
 import {
   GetSystemProfile,
@@ -67,10 +67,10 @@ import EditPageCallout from './components/EditPageCallout';
 // components/index contains all the sideNavItems components, routes, labels and translations
 // The sideNavItems object keys are mapped to the url param - 'subinfo'
 import sideNavItems from './components/index';
+import PointsOfContactSidebar from './components/PointsOfContactSidebar/PointsOfContactSidebar';
 import SystemSubNav from './components/SystemSubNav/index';
 import EditTeam from './components/Team/Edit';
-import { getPersonFullName } from './helpers';
-import PointsOfContactSidebar from './PointsOfContactSidebar';
+import { getPersonFullName } from './util';
 
 import './index.scss';
 

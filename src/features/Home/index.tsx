@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Grid } from '@trussworks/react-uswds';
 import Table from 'features/Home/MyRequests/Table';
-import SystemsListTable from 'features/Systems/Table';
+import SystemsListTable from 'features/Systems/SystemsTable';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -17,9 +17,9 @@ import { RequestType } from 'types/requestType';
 import user from 'utils/user';
 
 import AdminHome from './AdminHome';
-import WelcomePage from './WelcomePage';
+import WelcomePage from './Welcome';
 
-import './welcome.scss';
+import './Welcome/index.scss';
 
 const Home = () => {
   const { t } = useTranslation();

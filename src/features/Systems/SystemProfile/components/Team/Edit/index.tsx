@@ -13,7 +13,7 @@ import {
   Grid,
   Icon
 } from '@trussworks/react-uswds';
-import TeamTable from 'features/Systems/SystemWorkspace/TeamTable';
+import TeamTable from 'features/Systems/SystemWorkspace/components/TeamTable';
 import { SetRolesForUserOnSystemQuery } from 'gql/legacyGQL/CedarRoleQueries';
 import { CedarRole } from 'gql/legacyGQL/types/CedarRole';
 import {

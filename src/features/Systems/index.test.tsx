@@ -3,11 +3,11 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { mockSystemInfo } from 'features/Systems/SystemProfile/mockSystemData';
+import { mockSystemInfo } from 'features/Systems/SystemProfile/data/mockSystemData';
 import GetCedarSystemsQuery from 'gql/legacyGQL/GetCedarSystemsQuery';
 
 import SystemList from './index';
-import Table from './Table';
+import Table from './SystemsTable';
 
 // TODO:  Mock Bookmark GQL query once connected to BE
 // Currently component is baked with mocked data from file

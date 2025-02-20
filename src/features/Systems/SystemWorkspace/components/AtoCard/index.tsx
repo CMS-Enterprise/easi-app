@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { getPersonFullName } from 'features/Systems/SystemProfile/helpers';
+import { getPersonFullName } from 'features/Systems/SystemProfile/util';
 import { GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate } from 'gql/legacyGQL/types/GetSystemProfile';
 import { GetSystemWorkspace_cedarSystemDetails_roles as CedarRole } from 'gql/legacyGQL/types/GetSystemWorkspace';
 

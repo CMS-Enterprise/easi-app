@@ -1,5 +1,5 @@
-import { parseFeedbackForm } from 'features/Help/SendFeedback';
-import { parseReportForm } from 'features/Help/SendFeedback/ReportAProblem';
+import { parseReportForm } from 'features/Help/Feedback/ReportAProblem/ReportAProblem';
+import { parseFeedbackForm } from 'features/Help/Feedback/SendFeedback';
 import { cloneDeep } from 'lodash';
 
 import {
