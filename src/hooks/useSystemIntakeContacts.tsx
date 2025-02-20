@@ -1,26 +1,26 @@
 import { useCallback, useMemo } from 'react';
 import { FetchResult, useMutation, useQuery } from '@apollo/client';
-
-import { initialContactsObject } from 'constants/systemIntake';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
 import {
   CreateSystemIntakeContact,
   DeleteSystemIntakeContact,
   GetSystemIntakeContactsQuery,
   UpdateSystemIntakeContact
-} from 'queries/SystemIntakeContactsQueries';
-import { CreateSystemIntakeContact as CreateSystemIntakeContactPayload } from 'queries/types/CreateSystemIntakeContact';
-import { DeleteSystemIntakeContact as DeleteSystemIntakeContactPayload } from 'queries/types/DeleteSystemIntakeContact';
+} from 'gql/legacyGQL/SystemIntakeContactsQueries';
+import { CreateSystemIntakeContact as CreateSystemIntakeContactPayload } from 'gql/legacyGQL/types/CreateSystemIntakeContact';
+import { DeleteSystemIntakeContact as DeleteSystemIntakeContactPayload } from 'gql/legacyGQL/types/DeleteSystemIntakeContact';
 import {
   GetSystemIntake,
   GetSystemIntakeVariables
-} from 'queries/types/GetSystemIntake';
+} from 'gql/legacyGQL/types/GetSystemIntake';
 import {
   GetSystemIntakeContactsQuery as GetSystemIntakeContactsQueryType,
   GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact,
   GetSystemIntakeContactsQueryVariables
-} from 'queries/types/GetSystemIntakeContactsQuery';
-import { UpdateSystemIntakeContact as UpdateSystemIntakeContactPayload } from 'queries/types/UpdateSystemIntakeContact';
+} from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
+import { UpdateSystemIntakeContact as UpdateSystemIntakeContactPayload } from 'gql/legacyGQL/types/UpdateSystemIntakeContact';
+
+import { initialContactsObject } from 'constants/systemIntake';
 import {
   FormattedContacts,
   SystemIntakeContactProps,

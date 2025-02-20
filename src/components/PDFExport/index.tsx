@@ -3,7 +3,7 @@ import { useReactToPrint } from 'react-to-print';
 import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
-import IconButton from 'components/shared/IconButton';
+import IconButton from 'components/IconButton';
 
 type PDFExportButtonProps = {
   children: React.ReactNode;

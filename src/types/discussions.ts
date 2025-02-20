@@ -1,7 +1,7 @@
 import { SuggestionProps } from '@tiptap/suggestion';
-import { TagType } from 'gql/gen/graphql';
+import { TagType } from 'gql/generated/graphql';
 
-import { AlertProps } from 'components/shared/Alert';
+import { AlertProps } from 'components/Alert';
 
 /** Error and success alerts for the discussion form */
 export type DiscussionAlert =

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import SystemProfile from 'features/Systems/SystemProfile';
 
 import Modal from 'components/Modal';
-import SystemProfile from 'views/SystemProfile';
 
 import './index.scss';
 

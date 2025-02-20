@@ -4,7 +4,7 @@ import users, {
   MockEuaUserId,
   MockUserInfo,
   MockUserName
-} from 'data/mock/users';
+} from 'tests/mock/users';
 
 export interface MockUser {
   userInfo: MockUserInfo;

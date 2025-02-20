@@ -1,10 +1,10 @@
-import i18next, { TFunction } from 'i18next';
-import { sortBy } from 'lodash';
-
 import {
   GetSystemIntakesTable_systemIntakes as SystemIntake,
   GetSystemIntakesTable_systemIntakes_notes as AdminNote
-} from 'queries/types/GetSystemIntakesTable';
+} from 'gql/legacyGQL/types/GetSystemIntakesTable';
+import i18next, { TFunction } from 'i18next';
+import { sortBy } from 'lodash';
+
 import { formatContractDate } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 
