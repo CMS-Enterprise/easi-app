@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
-import NeedHelpBox from 'features/Help/InfoBox/NeedHelpBox';
+import NeedHelpBox from 'features/Help/NeedHelpBox';
 
 import Alert from 'components/Alert';
 import HelpPageIntro from 'components/HelpPageIntro';

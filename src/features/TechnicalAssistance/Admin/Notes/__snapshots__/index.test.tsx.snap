@@ -1,0 +1,474 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
+<DocumentFragment>
+  <div
+    class="trbAdmin__notes"
+    data-testid="trb-admin-home__notes"
+    id="trbAdmin__notes"
+  >
+    <div
+      class="grid-row grid-gap-lg"
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col-8"
+        data-testid="grid"
+      >
+        <h1
+          class="margin-top-0 margin-bottom-1"
+        >
+          Notes
+        </h1>
+        <p
+          class="line-height-body-4 text-light font-body-md margin-top-0"
+        >
+          Admin notes are internal TRB notes to communicate with other TRB members about this request. They will not be visible to the requester.
+        </p>
+      </div>
+    </div>
+    <a
+      class="usa-button margin-bottom-4"
+      href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/notes/add-note"
+    >
+      Add a note
+    </a>
+    <div
+      class="margin-top-1"
+    >
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+        data-testid="trb-note"
+      >
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            March 28, 2024
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Jerry Seinfeld
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Initial request form: Basic request details, Subject areas
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="1"
+                  >
+                    Initial Request Form Note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
+          </dd>
+        </div>
+      </dl>
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+        data-testid="trb-note"
+      >
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            March 27, 2024
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Jerry Seinfeld
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Supporting documents: documentOne.pdf, documentTwo.pdf
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="3"
+                  >
+                    Supporting Documents Note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
+          </dd>
+        </div>
+      </dl>
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+        data-testid="trb-note"
+      >
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            March 26, 2024
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Jerry Seinfeld
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Guidance letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="5"
+                  >
+                    Guidance Letter Note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
+          </dd>
+        </div>
+      </dl>
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+        data-testid="trb-note"
+      >
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            March 25, 2024
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Jerry Seinfeld
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            General note about this request
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="7"
+                  >
+                    General Request Note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
+          </dd>
+        </div>
+      </dl>
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+        data-testid="trb-note"
+      >
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            March 24, 2024
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Jerry Seinfeld
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            General note about this request
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="9"
+                  >
+                    General Request Note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
+          </dd>
+        </div>
+      </dl>
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 margin-bottom-0"
+        data-testid="trb-note"
+      >
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            March 23, 2024
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6 margin-bottom-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Jerry Seinfeld
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            General note about this request
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="11"
+                  >
+                    Hidden note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</DocumentFragment>
+`;

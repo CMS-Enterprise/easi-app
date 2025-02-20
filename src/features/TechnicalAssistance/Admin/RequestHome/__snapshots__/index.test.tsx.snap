@@ -1,0 +1,287 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
+<DocumentFragment>
+  <div
+    class="trbAdmin__request margin-bottom-2"
+    data-testid="trb-admin-home__request"
+    id="trbAdmin__request"
+  >
+    <div
+      class="grid-row grid-gap-lg"
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col-8"
+        data-testid="grid"
+      >
+        <h1
+          class="margin-top-0 margin-bottom-1"
+        >
+          Request home
+        </h1>
+      </div>
+      <div
+        class="tablet:grid-col-4"
+        data-testid="grid"
+      >
+        <div
+          class="trb-admin-home__request-notes bg-base-lightest padding-x-2 padding-y-1 margin-bottom-3"
+          data-testid="trb-admin-home__request-notes"
+        >
+          <p
+            class="margin-y-0 line-height-body-5"
+            data-testid="note-box-count"
+          >
+            <span
+              class="text-bold"
+            >
+              1
+            </span>
+             note about this request
+          </p>
+          <div
+            class="margin-top-05 display-flex"
+          >
+            <div
+              class="desktop:grid-col-6"
+              data-testid="grid"
+            >
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="note-modal-button"
+                type="button"
+              >
+                View notes
+              </button>
+            </div>
+            <div
+              class="desktop:grid-col-6"
+              data-testid="grid"
+            >
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="note-modal-button"
+                type="button"
+              >
+                Add a note
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h2
+      class="margin-top-4 margin-bottom-3"
+    >
+      Consult meeting details
+    </h2>
+    <p
+      class="text-bold margin-bottom-1"
+    >
+      Date and time
+    </p>
+    <div
+      class="usa-alert usa-alert--info usa-alert--slim margin-y-1 margin-top-2"
+      data-testid="alert"
+    >
+      <div
+        class="usa-alert__body"
+      >
+        <p
+          class="usa-alert__text"
+        >
+          Please wait until the initial request form is submitted, then review the form before setting a date and time in EASi.
+        </p>
+      </div>
+    </div>
+    <h3
+      class="margin-top-4 margin-bottom-3"
+    >
+      TRB representatives
+    </h3>
+    <p
+      class="text-bold"
+    >
+      TRB Lead
+    </p>
+    <button
+      class="usa-button usa-button--outline"
+      type="button"
+    >
+      Assign a TRB Lead
+    </button>
+    <div
+      class="easi-divider margin-top-6 margin-bottom-5"
+    />
+    <h2
+      class="margin-y-3"
+    >
+      Forms and documents
+    </h2>
+    <ul
+      class="usa-card-group tablet:grid-col-10"
+      data-testid="CardGroup"
+    >
+      <li
+        class="usa-card flex-1 information-card margin-bottom-2"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <header
+            class="usa-card__header"
+            data-testid="CardHeader"
+          >
+            <h3
+              class="margin-0"
+            >
+              Initial request form
+            </h3>
+            <p
+              class="text-base margin-0"
+            >
+              Completed by requester
+            </p>
+          </header>
+          <div
+            class="usa-card__body"
+            data-testid="CardBody"
+          >
+            <div
+              class="display-flex flex-align-center line-height-body-5 margin-bottom-2"
+            >
+              <span
+                class="easi-tag easi-task-status-tag bg-info-light"
+                data-testid="task-list-task-tag"
+              >
+                Ready to start
+              </span>
+            </div>
+            <dt
+              class="text-bold"
+            >
+              Last updated
+            </dt>
+            <dd
+              class="margin-left-0 margin-bottom-1"
+            >
+              Not started
+            </dd>
+          </div>
+          <div
+            class="usa-card__footer"
+            data-testid="CardFooter"
+          >
+            <button
+              class="usa-button usa-button--outline"
+              data-testid="button"
+              type="button"
+            >
+              View
+            </button>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-card flex-1 information-card margin-bottom-2"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <header
+            class="usa-card__header"
+            data-testid="CardHeader"
+          >
+            <h3
+              class="margin-0"
+            >
+              Guidance letter
+            </h3>
+            <p
+              class="text-base margin-0"
+            >
+              To be completed by TRB
+            </p>
+          </header>
+          <div
+            class="usa-card__body"
+            data-testid="CardBody"
+          >
+            <div
+              class="display-flex flex-align-center line-height-body-5 margin-bottom-2"
+            >
+              <span
+                class="easi-tag easi-task-status-tag border-2px text-base"
+                data-testid="task-list-task-tag"
+              >
+                Cannot start yet
+              </span>
+            </div>
+            <dt
+              class="text-bold"
+            >
+              Last updated
+            </dt>
+            <dd
+              class="margin-left-0 margin-bottom-1"
+            >
+              Not started
+            </dd>
+          </div>
+          <div
+            class="usa-card__footer"
+            data-testid="CardFooter"
+          >
+            <button
+              class="usa-button"
+              data-testid="button"
+              disabled=""
+              type="button"
+            >
+              Start guidance letter
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <p
+      class="text-bold margin-bottom-105"
+    >
+      Supporting documents
+    </p>
+    <div
+      data-testid="document-count"
+    >
+      There are 
+      <span
+        class="text-bold"
+      >
+        0
+      </span>
+       additional documents uploaded as a part of this request.
+    </div>
+    <a
+      class="usa-link display-flex flex-align-center margin-top-2"
+      href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/documents"
+    >
+      View documents
+      <svg
+        class="usa-icon margin-left-1"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+        />
+      </svg>
+    </a>
+  </div>
+</DocumentFragment>
+`;

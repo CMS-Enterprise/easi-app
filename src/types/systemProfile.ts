@@ -2,7 +2,7 @@ import {
   tempATOProp,
   tempSubSystemProp,
   tempSystemDataProp
-} from 'features/Systems/SystemProfile/mockSystemData';
+} from 'features/Systems/SystemProfile/data/mockSystemData';
 import { CedarRole } from 'gql/legacyGQL/types/CedarRole';
 import {
   GetSystemProfile,

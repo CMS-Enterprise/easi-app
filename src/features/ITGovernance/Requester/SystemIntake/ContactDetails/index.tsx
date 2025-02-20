@@ -14,7 +14,7 @@ import {
   Select,
   TextInput
 } from '@trussworks/react-uswds';
-import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
+import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'gql/legacyGQL/SystemIntakeQueries';
 import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';

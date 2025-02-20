@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Row, useFlexLayout, usePagination, useTable } from 'react-table';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
-import { getPersonFullName } from 'features/Systems/SystemProfile/helpers';
+import { getPersonFullName } from 'features/Systems/SystemProfile/util';
 import { SystemIntake_systems as SystemsType } from 'gql/legacyGQL/types/SystemIntake';
 
 import TablePagination from 'components/TablePagination';

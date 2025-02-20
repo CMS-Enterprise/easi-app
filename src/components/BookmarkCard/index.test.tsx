@@ -2,7 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
-import { mockSystemInfo } from 'features/Systems/SystemProfile/mockSystemData';
+import { mockSystemInfo } from 'features/Systems/SystemProfile/data/mockSystemData';
 
 import { mapCedarStatusToIcon } from 'types/iconStatus';
 
