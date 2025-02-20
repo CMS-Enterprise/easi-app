@@ -314,7 +314,7 @@ const TeamMemberForm = ({
           id="availableRoles"
           label={t('singleSystem.editTeam.form.availableRoles.link')}
         >
-          <ul className="easi-list padding-left-2">
+          <ul className="easi-list padding-left-3">
             <span className="text-base-dark">
               {t('singleSystem.editTeam.form.availableRoles.pocText')}
             </span>
