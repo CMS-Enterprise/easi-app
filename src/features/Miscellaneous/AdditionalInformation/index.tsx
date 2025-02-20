@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import ITGovAdminContext from 'features/ITGovernance/GovernanceReviewTeam/ITGovAdminContext';
+import ITGovAdminContext from 'features/ITGovernance/Admin/ITGovAdminContext';
 import { GetTrbRequestSummary_trbRequest as TrbRequest } from 'gql/legacyGQL/types/GetTrbRequestSummary';
 import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
 
