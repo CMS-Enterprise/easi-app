@@ -98,8 +98,30 @@ func calcSystemIntakeFinalBusinessCaseStatusRequester(finalBusinessCaseState mod
 }
 
 func calcSystemIntakeGRBMeetingStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
+	switch intake.GrbReviewType {
+	case models.SystemIntakeGRBReviewTypeStandard:
+		return calcSystemIntakeStandardGRBReviewStatusRequester(intake, currentTime)
+	case models.SystemIntakeGRBReviewTypeAsync:
+		return calcSystemIntakeAsyncGRBReviewStatusRequester(intake, currentTime)
+	}
+
+	return models.SISRGrbMeetingAwaitingDecision
+}
+
+func calcSystemIntakeStandardGRBReviewStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
 	if intake.GRBDate == nil || intake.GRBDate.After(currentTime) {
 		return models.SISRGrbMeetingReady
+	}
+
+	return models.SISRGrbMeetingAwaitingDecision
+}
+func calcSystemIntakeAsyncGRBReviewStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
+	if intake.GrbReviewAsyncGRBMeetingTime == nil || intake.GrbReviewAsyncEndDate == nil {
+		return models.SISRGrbMeetingAwaitingDecision
+	}
+
+	if intake.GrbReviewAsyncGRBMeetingTime.Before(currentTime) && intake.GrbReviewAsyncEndDate.After(currentTime) {
+		return models.SISRGrbReviewInProgress
 	}
 
 	return models.SISRGrbMeetingAwaitingDecision

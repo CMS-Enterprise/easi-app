@@ -15,7 +15,7 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 
 	if intake.State == models.SystemIntakeStateClosed && intake.DecisionState == models.SIDSNoDecision {
 		// If the decision is closed and a decision wasn't issued, show closed
-		// An intake that is closed without a decision doesn't progress to the SystemIntakeStepDECISION step, but remains on it's current step. This allows it to stay on that step if re-opened.
+		// An intake that is closed without a decision doesn't progress to the SystemIntakeStepDECISION step, but remains on its current step. This allows it to stay on that step if re-opened.
 		return models.SISAClosed, nil
 	}
 
@@ -39,7 +39,7 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 	case models.SystemIntakeStepFINALBIZCASE:
 		retStatus = calcSystemIntakeFinalBusinessCaseStatusAdmin(intake.FinalBusinessCaseState)
 	case models.SystemIntakeStepGRBMEETING:
-		retStatus = calcSystemIntakeGRBMeetingStatusAdmin(intake.GRBDate)
+		retStatus = calcSystemIntakeGRBMeetingStatusAdmin(intake)
 	case models.SystemIntakeStepDECISION:
 		retStatus, err = calcSystemIntakeDecisionStatusAdmin(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
@@ -82,15 +82,38 @@ func calcSystemIntakeFinalBusinessCaseStatusAdmin(finalBusinessCaseState models.
 	return models.SISAFinalBusinessCaseInProgress
 }
 
-func calcSystemIntakeGRBMeetingStatusAdmin(grbDate *time.Time) models.SystemIntakeStatusAdmin {
-
-	if grbDate == nil {
+func calcSystemIntakeGRBMeetingStatusAdmin(intake *models.SystemIntake) models.SystemIntakeStatusAdmin {
+	switch intake.GrbReviewType {
+	case models.SystemIntakeGRBReviewTypeStandard:
+		return calcSystemIntakeStandardGRBReviewStatusAdmin(intake)
+	case models.SystemIntakeGRBReviewTypeAsync:
+		return calcSystemIntakeAsyncGRBReviewStatusAdmin(intake)
+	}
+	if intake.GRBDate == nil || intake.GRBDate.After(time.Now()) {
 		return models.SISAGrbMeetingReady
 	}
 
-	if grbDate.After(time.Now()) {
+	return models.SISAGrbMeetingComplete
+}
+
+func calcSystemIntakeStandardGRBReviewStatusAdmin(intake *models.SystemIntake) models.SystemIntakeStatusAdmin {
+	if intake.GRBDate == nil || intake.GRBDate.After(time.Now()) {
 		return models.SISAGrbMeetingReady
 	}
+
+	return models.SISAGrbMeetingComplete
+}
+
+func calcSystemIntakeAsyncGRBReviewStatusAdmin(intake *models.SystemIntake) models.SystemIntakeStatusAdmin {
+	if intake.GrbReviewAsyncGRBMeetingTime == nil || intake.GrbReviewAsyncEndDate == nil {
+		return models.SISAGrbMeetingComplete
+	}
+
+	now := time.Now()
+	if intake.GrbReviewAsyncGRBMeetingTime.Before(now) && intake.GrbReviewAsyncEndDate.After(now) {
+		return models.SISAGrbReviewInProgress
+	}
+
 	return models.SISAGrbMeetingComplete
 }
 
