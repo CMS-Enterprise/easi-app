@@ -206,7 +206,7 @@ const RequestOverview = ({
                 {flags?.grbReviewTab && (
                   <Route
                     path="/it-governance/:systemId/grb-review/set-up"
-                    render={() => <GRBReviewForm />}
+                    render={() => <GRBReviewForm {...systemIntake} />}
                   />
                 )}
 
