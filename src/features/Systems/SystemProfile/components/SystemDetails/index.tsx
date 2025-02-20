@@ -98,27 +98,31 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
           )}
         </Grid>
 
-        <h3 className="margin-top-0 margin-bottom-1">
-          {t('singleSystem.systemDetails.tagHeader1')}
-        </h3>
-        <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
-          Fee for Service (FFS)
-        </Tag>
-        <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
-          Million Hearts
-        </Tag>
-        <h3 className="margin-top-3 margin-bottom-1">
-          {t('singleSystem.systemDetails.tagHeader2')}
-        </h3>
-        <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
-          Next Generation ACO Model
-        </Tag>
-        <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
-          Comprehensive Primary Care Plus
-        </Tag>
-        <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
-          Independence at Home Demonstration
-        </Tag>
+        {flags.systemProfileHiddenFields && (
+          <>
+            <h3 className="margin-top-0 margin-bottom-1">
+              {t('singleSystem.systemDetails.tagHeader1')}
+            </h3>
+            <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
+              Fee for Service (FFS)
+            </Tag>
+            <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
+              Million Hearts
+            </Tag>
+            <h3 className="margin-top-3 margin-bottom-1">
+              {t('singleSystem.systemDetails.tagHeader2')}
+            </h3>
+            <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
+              Next Generation ACO Model
+            </Tag>
+            <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
+              Comprehensive Primary Care Plus
+            </Tag>
+            <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
+              Independence at Home Demonstration
+            </Tag>
+          </>
+        )}
       </SectionWrapper>
 
       <SectionWrapper borderBottom className="padding-bottom-3 margin-bottom-3">
