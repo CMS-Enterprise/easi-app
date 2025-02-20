@@ -25,7 +25,6 @@ import UploadForm from 'views/SystemIntake/Documents/UploadForm';
 
 import AccordionNavigation from '../../components/shared/AccordionNavigation';
 
-import GRBReviewForm from './GRBReview/GRBReviewForm';
 import Actions from './Actions';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
@@ -113,10 +112,7 @@ const RequestOverview = ({
 
       {!fullPageLayout && <AccordionNavigation items={navItems} />}
 
-      <div
-        // Do not use `grid-container` class for "Set up GRB review" form
-        className={classnames({ 'grid-container': subPage !== 'set-up' })}
-      >
+      <div className="grid-container">
         <Message className="margin-top-2" />
 
         <div
@@ -202,13 +198,6 @@ const RequestOverview = ({
                   path="/it-governance/:systemId/lcid"
                   render={() => <LifecycleID systemIntake={systemIntake} />}
                 />
-
-                {flags?.grbReviewTab && (
-                  <Route
-                    path="/it-governance/:systemId/grb-review/set-up"
-                    render={() => <GRBReviewForm {...systemIntake} />}
-                  />
-                )}
 
                 <Route
                   path="/it-governance/:systemId/grb-review/:action(add|edit)?"

@@ -11,6 +11,7 @@ import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
 import NotFound from 'views/NotFound';
 import RequestLinkForm from 'views/RequestLinkForm';
 
+import GRBReviewForm from './GRBReview/GRBReviewForm';
 import ITGovAdminContext from './ITGovAdminContext';
 
 const GovernanceReviewTeam = () => {
@@ -51,6 +52,15 @@ const GovernanceReviewTeam = () => {
               /* Defining outside parent route to trigger parent rerender/refetch after mutation */
               <Route path="/it-governance/:id/additional-information/link">
                 <RequestLinkForm requestType="itgov" fromAdmin />
+              </Route>
+            )}
+
+            {flags?.grbReviewTab && (
+              <Route
+                path="/it-governance/:systemId/grb-review/:step(review-type|presentation|documents|participants)"
+                exact
+              >
+                <GRBReviewForm id={id} />
               </Route>
             )}
 
