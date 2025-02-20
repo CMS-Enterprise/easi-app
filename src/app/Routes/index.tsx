@@ -33,7 +33,7 @@ import TermsAndConditions from 'features/Miscellaneous/TermsAndConditions';
 import UserInfo from 'features/Miscellaneous/User';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
 import RequestTypeForm from 'features/RequestLinking/RequestTypeForm';
-import SystemList from 'features/Systems';
+import SystemList from 'features/Systems/Home';
 import SystemProfile from 'features/Systems/SystemProfile';
 import SystemWorkspace from 'features/Systems/SystemWorkspace';
 import SystemWorkspaceRequests from 'features/Systems/SystemWorkspace/SystemWorkspaceRequests';

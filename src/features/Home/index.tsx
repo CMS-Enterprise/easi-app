@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Grid } from '@trussworks/react-uswds';
 import Table from 'features/Home/MyRequests/Table';
-import SystemsListTable from 'features/Systems/SystemsTable';
+import SystemsListTable from 'features/Systems/Home/SystemsTable';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 
