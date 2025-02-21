@@ -968,15 +968,6 @@ export interface SystemIntakeUpdateLCIDInput {
 }
 
 /**
- * Input data used to update the admin lead assigned to a system IT governance
- * request
- */
-export interface UpdateSystemIntakeAdminLeadInput {
-  adminLead: string;
-  id: UUID;
-}
-
-/**
  * The input data used to update the contact details of the people associated with
  * a system request
  */
