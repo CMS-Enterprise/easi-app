@@ -40,6 +40,7 @@ export type TaskStatus =
 /** Statuses that reflect a step is in progress */
 const activeStatuses = {
   AWAITING_DECISION: 'bg-info-light',
+  AWAITING_GRB_REVIEW: 'bg-info-light',
   EDITS_REQUESTED: 'bg-warning',
   IN_PROGRESS: 'bg-warning',
   IN_REVIEW: 'bg-info-light',
@@ -47,6 +48,7 @@ const activeStatuses = {
   READY_FOR_REVIEW: 'bg-info-light',
   READY_TO_SCHEDULE: 'bg-info-light',
   READY_TO_START: 'bg-info-light',
+  REVIEW_IN_PROGRESS: 'bg-info-light',
   SCHEDULED: 'bg-info-light',
   SUBMITTED: 'bg-info-light'
 };

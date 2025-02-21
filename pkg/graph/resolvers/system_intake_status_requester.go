@@ -40,7 +40,7 @@ func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTi
 		return calcSystemIntakeFinalBusinessCaseStatusRequester(intake.FinalBusinessCaseState)
 	case models.SystemIntakeStepGRBMEETING:
 		// this calc function doesn't use a switch statement and can't possibly return an error
-		return calcSystemIntakeGRBMeetingStatusRequester(intake.GRBDate, currentTime), nil
+		return calcSystemIntakeGRBMeetingStatusRequester(intake, currentTime), nil
 	case models.SystemIntakeStepDECISION:
 		return calcSystemIntakeDecisionStatusRequester(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
@@ -97,9 +97,32 @@ func calcSystemIntakeFinalBusinessCaseStatusRequester(finalBusinessCaseState mod
 	}
 }
 
-func calcSystemIntakeGRBMeetingStatusRequester(grbDate *time.Time, currentTime time.Time) models.SystemIntakeStatusRequester {
-	if grbDate == nil || grbDate.After(currentTime) {
+func calcSystemIntakeGRBMeetingStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
+	switch intake.GrbReviewType {
+	case models.SystemIntakeGRBReviewTypeStandard:
+		return calcSystemIntakeStandardGRBReviewStatusRequester(intake, currentTime)
+	case models.SystemIntakeGRBReviewTypeAsync:
+		return calcSystemIntakeAsyncGRBReviewStatusRequester(intake, currentTime)
+	}
+
+	return models.SISRGrbMeetingAwaitingDecision
+}
+
+func calcSystemIntakeStandardGRBReviewStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
+	if intake.GRBDate == nil || intake.GRBDate.After(currentTime) {
 		return models.SISRGrbMeetingReady
+	}
+
+	return models.SISRGrbMeetingAwaitingDecision
+}
+
+func calcSystemIntakeAsyncGRBReviewStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
+	if intake.GrbReviewAsyncGRBMeetingTime == nil || intake.GrbReviewAsyncEndDate == nil {
+		return models.SISRGrbMeetingAwaitingDecision
+	}
+
+	if intake.GrbReviewAsyncGRBMeetingTime.Before(currentTime) && intake.GrbReviewAsyncEndDate.After(currentTime) {
+		return models.SISRGrbReviewInProgress
 	}
 
 	return models.SISRGrbMeetingAwaitingDecision
