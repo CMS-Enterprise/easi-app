@@ -11,7 +11,6 @@ import {
   ModalRef
 } from '@trussworks/react-uswds';
 import { SystemIntake_systems as System } from 'gql/legacyGQL/types/SystemIntake';
-import { TRBAttendee } from 'gql/legacyGQL/types/TRBAttendee';
 
 import AdminRequestHeaderSummary from 'components/AdminRequestHeaderSummary';
 import StateTag from 'components/StateTag';
@@ -21,7 +20,7 @@ import {
   TRBRequestStatus,
   TRBRequestType
 } from 'types/graphql-global-types';
-import { TrbRequestIdRef } from 'types/technicalAssistance';
+import { TRBAttendee, TrbRequestIdRef } from 'types/technicalAssistance';
 
 import { TrbAssignLeadModalOpener } from '../TrbAssignLeadModal';
 

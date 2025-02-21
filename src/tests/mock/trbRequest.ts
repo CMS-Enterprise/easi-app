@@ -12,6 +12,9 @@ import {
   GetTRBGuidanceLetterQueryVariables,
   GetTRBLeadOptionsDocument,
   GetTRBLeadOptionsQuery,
+  GetTRBRequestAttendeesDocument,
+  GetTRBRequestAttendeesQuery,
+  PersonRole,
   TRBAdminNoteCategory,
   TRBAdminNoteFragment,
   TRBGuidanceLetterFragment,
@@ -24,16 +27,11 @@ import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
 import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'gql/legacyGQL/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendeesQuery } from 'gql/legacyGQL/TrbAttendeeQueries';
 import { GetTrbAdminTeamHome } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
 import {
   GetTrbRequest,
   GetTrbRequestVariables
 } from 'gql/legacyGQL/types/GetTrbRequest';
-import {
-  GetTRBRequestAttendees,
-  GetTRBRequestAttendeesVariables
-} from 'gql/legacyGQL/types/GetTRBRequestAttendees';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
@@ -46,7 +44,6 @@ import {
 import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'gql/legacyGQL/types/TrbRequestFormFields';
 
 import {
-  PersonRole,
   TRBAttendConsultStatus,
   TRBCollabGroupOption,
   TRBConsultPrepStatus,
@@ -285,11 +282,10 @@ export const getRequestsQuery = (
 });
 
 export const getTRBRequestAttendeesQuery: MockedQuery<
-  GetTRBRequestAttendees,
-  GetTRBRequestAttendeesVariables
+  Omit<GetTRBRequestAttendeesQuery, '__typename'>
 > = {
   request: {
-    query: GetTRBRequestAttendeesQuery,
+    query: GetTRBRequestAttendeesDocument,
     variables: {
       id: trbRequestId
     }

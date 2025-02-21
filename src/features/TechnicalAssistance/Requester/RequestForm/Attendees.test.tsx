@@ -4,21 +4,24 @@ import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {
+  GetTRBRequestAttendeesDocument,
+  GetTRBRequestAttendeesQuery
+} from 'gql/generated/graphql';
 import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
 import GetTrbRequestQuery from 'gql/legacyGQL/GetTrbRequestQuery';
-import { GetTRBRequestAttendeesQuery } from 'gql/legacyGQL/TrbAttendeeQueries';
 import { GetTrbRequest } from 'gql/legacyGQL/types/GetTrbRequest';
-import { TRBAttendee } from 'gql/legacyGQL/types/TRBAttendee';
 import { attendees, requester, trbRequest } from 'tests/mock/trbRequest';
 
 import Attendees from './Attendees';
 
 /** Requester object with initial null values for component and role */
-const initialRequester: TRBAttendee = {
-  ...requester,
-  component: null,
-  role: null
-};
+const initialRequester: GetTRBRequestAttendeesQuery['trbRequest']['attendees'][0] =
+  {
+    ...requester,
+    component: null,
+    role: null
+  };
 
 describe('Trb Request form: Attendees', () => {
   const mockRefetch = async (): Promise<ApolloQueryResult<GetTrbRequest>> => {
@@ -33,7 +36,7 @@ describe('Trb Request form: Attendees', () => {
 
   const getAttendeesQuery = {
     request: {
-      query: GetTRBRequestAttendeesQuery,
+      query: GetTRBRequestAttendeesDocument,
       variables: {
         id: trbRequest.id
       }

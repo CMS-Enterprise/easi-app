@@ -116,22 +116,6 @@ export enum ITGovIntakeFormStatus {
   READY = "READY",
 }
 
-/**
- * PersonRole is an enumeration of values for a person's role
- */
-export enum PersonRole {
-  BUSINESS_OWNER = "BUSINESS_OWNER",
-  CLOUD_NAVIGATOR = "CLOUD_NAVIGATOR",
-  CONTRACT_OFFICE_RSREPRESENTATIVE = "CONTRACT_OFFICE_RSREPRESENTATIVE",
-  CRA = "CRA",
-  INFORMATION_SYSTEM_SECURITY_ADVISOR = "INFORMATION_SYSTEM_SECURITY_ADVISOR",
-  OTHER = "OTHER",
-  PRIVACY_ADVISOR = "PRIVACY_ADVISOR",
-  PRODUCT_OWNER = "PRODUCT_OWNER",
-  SYSTEM_MAINTAINER = "SYSTEM_MAINTAINER",
-  SYSTEM_OWNER = "SYSTEM_OWNER",
-}
-
 export enum RequestRelationType {
   EXISTING_SERVICE = "EXISTING_SERVICE",
   EXISTING_SYSTEM = "EXISTING_SYSTEM",
@@ -567,16 +551,6 @@ export interface CreateSystemIntakeNoteInput {
   content: HTML;
   authorName: string;
   intakeId: UUID;
-}
-
-/**
- * The data needed add a TRB request attendee to a TRB request
- */
-export interface CreateTRBRequestAttendeeInput {
-  euaUserId: string;
-  trbRequestId: UUID;
-  component: string;
-  role: PersonRole;
 }
 
 /**
@@ -1017,15 +991,6 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   usingSoftware?: string | null;
   acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
   cedarSystemId?: string | null;
-}
-
-/**
- * Represents an EUA user who is included as an attendee for a TRB request
- */
-export interface UpdateTRBRequestAttendeeInput {
-  id: UUID;
-  component: string;
-  role: PersonRole;
 }
 
 //==============================================================

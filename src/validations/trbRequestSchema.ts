@@ -1,4 +1,5 @@
 import {
+  PersonRole,
   TRBGuidanceLetterInsightCategory,
   UpdateTRBRequestFormInput
 } from 'gql/generated/graphql';
@@ -6,7 +7,6 @@ import * as yup from 'yup';
 
 import {
   CreateTRBRequestDocumentInput,
-  PersonRole,
   TRBCollabGroupOption,
   TRBDocumentCommonType,
   TRBWhereInProcessOption
