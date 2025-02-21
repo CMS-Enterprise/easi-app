@@ -1067,17 +1067,6 @@ export interface UpdateTRBRequestAttendeeInput {
 }
 
 /**
- * The data needed schedule a TRB consult meeting time
- */
-export interface UpdateTRBRequestConsultMeetingTimeInput {
-  trbRequestId: UUID;
-  consultMeetingTime: Time;
-  copyTrbMailbox: boolean;
-  notifyEuaIds: string[];
-  notes: string;
-}
-
-/**
  * Represents an EUA user who is included as an form for a TRB request
  */
 export interface UpdateTRBRequestFormInput {
@@ -1104,12 +1093,6 @@ export interface UpdateTRBRequestFormInput {
   systemIntakes?: UUID[] | null;
   subjectAreaOptions?: TRBSubjectAreaOption[] | null;
   subjectAreaOptionOther?: string | null;
-}
-
-export interface UpdateTRBRequestFundingSourcesInput {
-  trbRequestId: UUID;
-  fundingNumber: string;
-  sources: string[];
 }
 
 //==============================================================

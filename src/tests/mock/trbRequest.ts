@@ -15,7 +15,10 @@ import {
   TRBAdminNoteCategory,
   TRBAdminNoteFragment,
   TRBGuidanceLetterFragment,
-  TRBGuidanceLetterInsightCategory
+  TRBGuidanceLetterInsightCategory,
+  UpdateTrbRequestConsultMeetingDocument,
+  UpdateTrbRequestConsultMeetingMutation,
+  UpdateTrbRequestConsultMeetingMutationVariables
 } from 'gql/generated/graphql';
 import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
 import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
@@ -41,11 +44,6 @@ import {
   GetTrbRequestSummaryVariables
 } from 'gql/legacyGQL/types/GetTrbRequestSummary';
 import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'gql/legacyGQL/types/TrbRequestFormFields';
-import {
-  UpdateTrbRequestConsultMeeting,
-  UpdateTrbRequestConsultMeetingVariables
-} from 'gql/legacyGQL/types/UpdateTrbRequestConsultMeeting';
-import UpdateTrbRequestConsultMeetingQuery from 'gql/legacyGQL/UpdateTrbRequestConsultMeetingQuery';
 
 import {
   PersonRole,
@@ -308,11 +306,11 @@ export const getTRBRequestAttendeesQuery: MockedQuery<
 };
 
 export const updateTrbRequestConsultMeetingQuery: MockedQuery<
-  UpdateTrbRequestConsultMeeting,
-  UpdateTrbRequestConsultMeetingVariables
+  Omit<UpdateTrbRequestConsultMeetingMutation, '__typename'>,
+  UpdateTrbRequestConsultMeetingMutationVariables
 > = {
   request: {
-    query: UpdateTrbRequestConsultMeetingQuery,
+    query: UpdateTrbRequestConsultMeetingDocument,
     variables: {
       input: {
         trbRequestId,

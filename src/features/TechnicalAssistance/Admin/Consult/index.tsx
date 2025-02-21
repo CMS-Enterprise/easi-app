@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   DatePicker,
@@ -12,16 +12,12 @@ import {
   TimePicker
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
+import { useUpdateTrbRequestConsultMeetingMutation } from 'gql/generated/graphql';
 import GetTrbRequestConsultMeetingQuery from 'gql/legacyGQL/GetTrbRequestConsultMeetingQuery';
 import {
   GetTrbRequestConsultMeeting,
   GetTrbRequestConsultMeetingVariables
 } from 'gql/legacyGQL/types/GetTrbRequestConsultMeeting';
-import {
-  UpdateTrbRequestConsultMeeting,
-  UpdateTrbRequestConsultMeetingVariables
-} from 'gql/legacyGQL/types/UpdateTrbRequestConsultMeeting';
-import UpdateTrbRequestConsultMeetingQuery from 'gql/legacyGQL/UpdateTrbRequestConsultMeetingQuery';
 import { DateTime } from 'luxon';
 
 import PageLoading from 'components/PageLoading';
@@ -82,10 +78,7 @@ function Consult() {
     ? DateTime.fromISO(data.trbRequest.consultMeetingTime).toFormat('HH:mm')
     : '';
 
-  const [mutate, mutationResult] = useMutation<
-    UpdateTrbRequestConsultMeeting,
-    UpdateTrbRequestConsultMeetingVariables
-  >(UpdateTrbRequestConsultMeetingQuery);
+  const [mutate, mutationResult] = useUpdateTrbRequestConsultMeetingMutation();
 
   const {
     ActionForm,
