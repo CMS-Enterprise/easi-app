@@ -95,8 +95,8 @@
     "build": "vite build",
     "build:ts": "tsc",
     "serve": "vite preview",
-    "test": "vitest --run",
-    "test:watch": "vitest",
+    "test": "vitest",
+    "test:run": "vitest --run",
     "test:coverage": "vitest --coverage --run",
     "test:ci": "vitest --coverage --run --reporter=default --reporter=github-actions",
     "lint": "eslint '**/*.{ts,tsx}'",
@@ -212,5 +212,6 @@
       }
     },
     "globalSetup": "<rootDir>/jest-global-setup.js"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

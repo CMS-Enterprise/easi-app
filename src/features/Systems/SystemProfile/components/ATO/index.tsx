@@ -20,7 +20,7 @@ import classnames from 'classnames';
 import {
   showAtoEffectiveDate,
   showAtoExpirationDate
-} from 'features/Systems/SystemProfile/helpers';
+} from 'features/Systems/SystemProfile/util';
 // eslint-disable-next-line camelcase
 import { GetSystemProfile_cedarThreat } from 'gql/legacyGQL/types/GetSystemProfile';
 import { useFlags } from 'launchdarkly-react-client-sdk';

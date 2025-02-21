@@ -6,7 +6,7 @@ const systemProfile = {
     button: 'Start an Intake Request'
   },
   navigation: {
-    home: 'System Home',
+    home: 'System home',
     details: 'Implementation details',
     detailsBasic: 'Basic details',
     detailsUrls: 'URLs and locations',
@@ -39,6 +39,7 @@ const systemProfile = {
     pointsOfContact_plural: 'Points of contact',
     noPointsOfContact:
       'This system does not have any points of contact identified.',
+    cmsId: 'CMS UUID ',
     noDataAvailable: 'No data available',
     sendEmail: 'Send an email',
     moreContact: 'More points of contact',
@@ -48,7 +49,7 @@ const systemProfile = {
     },
     noDescription: 'No system description available',
     summary: {
-      back: 'Back to All systems',
+      back: 'Back to all systems',
       expand: 'Show system summary',
       hide: 'Hide system summary',
       label: 'Open system external link',
@@ -130,7 +131,7 @@ const systemProfile = {
         'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact',
       noATODates:
         'There is no information about previous tests or assessments available for this system',
-      viewATOInfo: 'View ATO information'
+      viewATOInfo: 'View more ATO information'
     },
     contracts: {
       header: 'Contracts',
@@ -165,7 +166,8 @@ const systemProfile = {
       fundingSource: 'Funding Source',
       budgetID: 'Budget ID: ',
       noBudgetTitle: 'No budget title listed',
-      systemFiscalYear: 'System fiscal year (FY) cost',
+      systemFiscalYear: 'System fiscal year cost',
+      viewMoreBudgetAndFunding: 'View more budget and funding information',
       viewMoreFunding: 'Show more budget projects',
       viewLessFunding: 'Show fewer budget projects'
     },
@@ -198,7 +200,7 @@ const systemProfile = {
       assetsOrServices: 'Assets or services',
       sendAnEmail: 'Send an email',
       totalEmployees: 'Total Full Time Employees (FTE)',
-      viewMoreInfo: 'View more Team and Contract information',
+      viewMoreInfo: 'View more team information',
       federalFTE: 'Federal FTE',
       contractorFTE: 'Contractor FTE'
     },
@@ -320,7 +322,7 @@ const systemProfile = {
       tempEditBanner: {
         heading: 'See something incorrect on this page?',
         content:
-          'To request edits to the information on this page, please email <1>EnterpriseArchitecture@cms.hhs.gov</1>'
+          'To request edits to the information on this page, please email <1>EnterpriseArchitecture@cms.hhs.gov</1>.'
       }
     },
     toolsAndSoftware: {
@@ -385,9 +387,16 @@ const systemProfile = {
       dataCategories: 'Data content categories',
       qualityAssurance: 'Quality Assurance',
       viewGateway: 'View gateway information',
-      viewAPIInfo: 'View API information',
+      viewAPIInfo: 'View more API information',
       viewDataExchange: 'View data exchange details',
-      more: 'more'
+      viewMoreExchanges: 'View {{count}} more data exchanges',
+      numberOfSystemDependencies: 'Number of system dependencies',
+      numberOfDependentSystems: 'Number of dependent systems',
+      more: 'more',
+      apiStatusValues: {
+        apiDeveloped: 'API developed',
+        noApiDeveloped: 'No API developed'
+      }
     },
     systemDetails: {
       header: 'Basic details',
@@ -441,6 +450,7 @@ const systemProfile = {
       header: 'Sub-systems',
       retirementDate: 'Retirement date',
       viewInfo: 'View sub-system information',
+      viewMore: 'View {{count}} more sub-systems',
       noSystemDescription: 'No system description available',
       showSystems: {
         more: 'Show more sub-systems',

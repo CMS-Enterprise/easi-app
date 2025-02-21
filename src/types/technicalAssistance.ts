@@ -1,6 +1,6 @@
 import React from 'react';
 import { ModalRef } from '@trussworks/react-uswds';
-import { StepSubmit } from 'features/TechnicalAssistance/RequestForm';
+import { StepSubmit } from 'features/TechnicalAssistance/Requester/RequestForm';
 import {
   TRBGuidanceLetterFragment,
   TRBGuidanceLetterInsightCategory
