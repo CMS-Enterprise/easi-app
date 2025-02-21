@@ -306,6 +306,8 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                         index < 2 && (
                           <div
                             className={`display-flex flex-wrap flex-align-center ${index === 0 ? 'margin-bottom-05' : 'margin-bottom-2'}`}
+                            // eslint-disable-next-line react/no-array-index-key
+                            key={index}
                           >
                             <ExchangeDirectionTag
                               data={exchange.exchangeDirection}
@@ -392,7 +394,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                         index < 2 && (
                           <p key={subsystem.id} className="margin-y-0">
                             <span className="text-bold">{subsystem.name}</span>{' '}
-                            ({subsystem.acronym})
+                            {subsystem.acronym && `(${subsystem.acronym})`}
                           </p>
                         )
                     )
