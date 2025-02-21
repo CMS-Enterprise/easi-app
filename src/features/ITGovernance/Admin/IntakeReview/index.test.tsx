@@ -61,7 +61,7 @@ describe('The GRT intake review view', () => {
     );
 
     expect(
-      await screen.findByTestId(`contact-requester-${requester.id}`)
+      await screen.findByTestId(`contact-requester-${requester.euaUserId}`)
     ).toBeInTheDocument();
 
     expect(asFragment()).toMatchSnapshot();
@@ -150,7 +150,7 @@ describe('The GRT intake review view', () => {
     );
 
     expect(
-      await screen.findByTestId(`contact-requester-${requester.id}`)
+      await screen.findByTestId(`contact-requester-${requester.euaUserId}`)
     ).toBeInTheDocument();
 
     expect(

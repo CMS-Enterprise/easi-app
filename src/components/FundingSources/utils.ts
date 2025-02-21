@@ -9,12 +9,13 @@ export const formatFundingSourcesForApi = (
   return fundingSources
     .map(({ id, fundingNumber, sources }) => {
       return sources.map(source => ({
+        __typename: 'SystemIntakeFundingSource' as const,
         id,
         fundingNumber,
         source
       }));
     })
-    .flat() as FundingSource[];
+    .flat();
 };
 
 /** Formats funding sources for app by grouping objects by funding number */

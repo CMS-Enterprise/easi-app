@@ -62,12 +62,12 @@ const Recipient = ({
   return (
     <div
       className="recipient-container"
-      data-testid={`recipient-${role.replaceAll(' ', '')}-${euaUserId}`}
+      data-testid={`recipient-${role?.replaceAll(' ', '')}-${euaUserId}`}
     >
       {/* Checkbox with label */}
       <CheckboxField
-        id={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
-        name={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
+        id={`${euaUserId || 'contact'}-${role?.replaceAll(' ', '')}`}
+        name={`${euaUserId || 'contact'}-${role?.replaceAll(' ', '')}`}
         label={
           <RecipientLabel
             name={`${getPersonNameAndComponentAcronym(
