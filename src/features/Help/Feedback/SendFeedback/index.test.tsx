@@ -3,8 +3,10 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SendFeedbackEmailQuery from 'gql/legacyGQL/SendFeedbackEmailQuery';
-import SendReportAProblemEmailQuery from 'gql/legacyGQL/SendReportAProblemEmailQuery';
+import {
+  SendFeedbackEmailDocument,
+  SendReportAProblemEmailDocument
+} from 'gql/generated/graphql';
 
 import ReportAProblem from '../ReportAProblem/ReportAProblem';
 
@@ -20,7 +22,7 @@ describe('Help forms', () => {
               mocks={[
                 {
                   request: {
-                    query: SendFeedbackEmailQuery,
+                    query: SendFeedbackEmailDocument,
                     variables: {
                       input: {
                         howCanWeImprove: 'improve',
@@ -95,7 +97,7 @@ describe('Help forms', () => {
               mocks={[
                 {
                   request: {
-                    query: SendReportAProblemEmailQuery,
+                    query: SendReportAProblemEmailDocument,
                     variables: {
                       input: {
                         isAnonymous: true,

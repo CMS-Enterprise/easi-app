@@ -28,6 +28,7 @@ import {
 
 /** Funding source formatted for app */
 export type FormattedFundingSource = {
+  __typename: 'SystemIntakeFundingSource';
   id: string;
   fundingNumber: string | null;
   sources: string[];
@@ -297,7 +298,8 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
             data-testid="fundingSourcesAction-add"
             type="button"
             onClick={() => {
-              const newSource = {
+              const newSource: Omit<FormattedFundingSource, 'id'> = {
+                __typename: 'SystemIntakeFundingSource',
                 fundingNumber: '',
                 sources: []
               };

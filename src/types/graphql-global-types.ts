@@ -116,22 +116,6 @@ export enum ITGovIntakeFormStatus {
   READY = "READY",
 }
 
-/**
- * PersonRole is an enumeration of values for a person's role
- */
-export enum PersonRole {
-  BUSINESS_OWNER = "BUSINESS_OWNER",
-  CLOUD_NAVIGATOR = "CLOUD_NAVIGATOR",
-  CONTRACT_OFFICE_RSREPRESENTATIVE = "CONTRACT_OFFICE_RSREPRESENTATIVE",
-  CRA = "CRA",
-  INFORMATION_SYSTEM_SECURITY_ADVISOR = "INFORMATION_SYSTEM_SECURITY_ADVISOR",
-  OTHER = "OTHER",
-  PRIVACY_ADVISOR = "PRIVACY_ADVISOR",
-  PRODUCT_OWNER = "PRODUCT_OWNER",
-  SYSTEM_MAINTAINER = "SYSTEM_MAINTAINER",
-  SYSTEM_OWNER = "SYSTEM_OWNER",
-}
-
 export enum RequestRelationType {
   EXISTING_SERVICE = "EXISTING_SERVICE",
   EXISTING_SYSTEM = "EXISTING_SYSTEM",
@@ -434,15 +418,6 @@ export enum TRBGuidanceLetterStatus {
 }
 
 /**
- * Represents the status of the TRB guidance letter step
- */
-export enum TRBGuidanceLetterStatusTaskList {
-  CANNOT_START_YET = "CANNOT_START_YET",
-  COMPLETED = "COMPLETED",
-  IN_REVIEW = "IN_REVIEW",
-}
-
-/**
  * Enumeration of the possible statuses of documents uploaded in the TRB workflow
  */
 export enum TRBRequestDocumentStatus {
@@ -531,52 +506,12 @@ export interface CreateCedarSystemBookmarkInput {
 }
 
 /**
- * The data needed to associate a contact with a system intake
- */
-export interface CreateSystemIntakeContactInput {
-  euaUserId: string;
-  systemIntakeId: UUID;
-  component: string;
-  role: string;
-}
-
-/**
- * The data needed to upload a System Intake document and attach it to a request with metadata
- */
-export interface CreateSystemIntakeDocumentInput {
-  requestID: UUID;
-  fileData: Upload;
-  documentType: SystemIntakeDocumentCommonType;
-  version: SystemIntakeDocumentVersion;
-  otherTypeDescription?: string | null;
-  sendNotification?: boolean | null;
-}
-
-/**
- * The input data used to initialize an IT governance request for a system
- */
-export interface CreateSystemIntakeInput {
-  requestType: SystemIntakeRequestType;
-  requester: SystemIntakeRequesterInput;
-}
-
-/**
  * Input data for adding a note to a system request
  */
 export interface CreateSystemIntakeNoteInput {
   content: HTML;
   authorName: string;
   intakeId: UUID;
-}
-
-/**
- * The data needed add a TRB request attendee to a TRB request
- */
-export interface CreateTRBRequestAttendeeInput {
-  euaUserId: string;
-  trbRequestId: UUID;
-  component: string;
-  role: PersonRole;
 }
 
 /**
@@ -600,13 +535,6 @@ export interface CreateTRBRequestFeedbackInput {
   action: TRBFeedbackAction;
 }
 
-/**
- * The data needed to delete a system intake contact
- */
-export interface DeleteSystemIntakeContactInput {
-  id: UUID;
-}
-
 export interface DeleteTRBRequestFundingSourcesInput {
   trbRequestId: UUID;
   fundingNumber: string;
@@ -618,104 +546,10 @@ export interface EmailNotificationRecipients {
   shouldNotifyITInvestment: boolean;
 }
 
-/**
- * The data needed to reopen a TRB request
- */
-export interface ReopenTRBRequestInput {
-  trbRequestId: UUID;
-  reasonReopened: HTML;
-  copyTrbMailbox: boolean;
-  notifyEuaIds: string[];
-}
-
-/**
- * The inputs to the user feedback form
- */
-export interface SendFeedbackEmailInput {
-  isAnonymous: boolean;
-  canBeContacted: boolean;
-  easiServicesUsed: string[];
-  cmsRole: string;
-  systemEasyToUse: string;
-  didntNeedHelpAnswering: string;
-  questionsWereRelevant: string;
-  hadAccessToInformation: string;
-  howSatisfied: string;
-  howCanWeImprove: string;
-}
-
-export interface SendReportAProblemEmailInput {
-  isAnonymous: boolean;
-  canBeContacted: boolean;
-  easiService: string;
-  whatWereYouDoing: string;
-  whatWentWrong: string;
-  howSevereWasTheProblem: string;
-}
-
 export interface SetRolesForUserOnSystemInput {
   cedarSystemID: string;
   euaUserId: string;
   desiredRoleTypeIDs: string[];
-}
-
-export interface SetSystemIntakeRelationExistingServiceInput {
-  systemIntakeID: UUID;
-  contractName: string;
-  contractNumbers: string[];
-}
-
-export interface SetSystemIntakeRelationExistingSystemInput {
-  systemIntakeID: UUID;
-  cedarSystemIDs: string[];
-  contractNumbers: string[];
-}
-
-export interface SetSystemIntakeRelationNewSystemInput {
-  systemIntakeID: UUID;
-  contractNumbers: string[];
-}
-
-export interface SetTRBRequestRelationExistingServiceInput {
-  trbRequestID: UUID;
-  contractName: string;
-  contractNumbers: string[];
-}
-
-export interface SetTRBRequestRelationExistingSystemInput {
-  trbRequestID: UUID;
-  cedarSystemIDs: string[];
-  contractNumbers: string[];
-}
-
-export interface SetTRBRequestRelationNewSystemInput {
-  trbRequestID: UUID;
-  contractNumbers: string[];
-}
-
-/**
- * Input to submit an intake for review
- */
-export interface SubmitIntakeInput {
-  id: UUID;
-}
-
-/**
- * Input data for current and planned year one annual costs associated with a system request
- */
-export interface SystemIntakeAnnualSpendingInput {
-  currentAnnualSpending?: string | null;
-  currentAnnualSpendingITPortion?: string | null;
-  plannedYearOneSpending?: string | null;
-  plannedYearOneSpendingITPortion?: string | null;
-}
-
-/**
- * The input data used to set the CMS Business Owner of a system
- */
-export interface SystemIntakeBusinessOwnerInput {
-  name: string;
-  component: string;
 }
 
 /**
@@ -741,15 +575,6 @@ export interface SystemIntakeCloseRequestInput {
 }
 
 /**
- * The input data used to add an OIT collaborator for a system request
- */
-export interface SystemIntakeCollaboratorInput {
-  collaborator: string;
-  name: string;
-  key: string;
-}
-
-/**
  * Input for confirming an intake's decision to issue an LCID in IT Gov v2
  */
 export interface SystemIntakeConfirmLCIDInput {
@@ -765,27 +590,6 @@ export interface SystemIntakeConfirmLCIDInput {
 }
 
 /**
- * Input data containing information about a contract related to a system request
- */
-export interface SystemIntakeContractInput {
-  contractor?: string | null;
-  endDate?: Time | null;
-  hasContract?: string | null;
-  startDate?: Time | null;
-  numbers: string[];
-}
-
-/**
- * Input data for estimated system cost increases associated with a system request
- * 
- * NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076)
- */
-export interface SystemIntakeCostsInput {
-  expectedIncreaseAmount?: string | null;
-  isExpectingIncrease?: string | null;
-}
-
-/**
  * Input for expiring an intake's LCID in IT Gov v2
  */
 export interface SystemIntakeExpireLCIDInput {
@@ -795,38 +599,6 @@ export interface SystemIntakeExpireLCIDInput {
   notificationRecipients?: EmailNotificationRecipients | null;
   additionalInfo?: HTML | null;
   adminNote?: HTML | null;
-}
-
-/**
- * Represents the source of funding for a system
- */
-export interface SystemIntakeFundingSourceInput {
-  fundingNumber?: string | null;
-  source?: string | null;
-}
-
-/**
- * The input required to specify the funding source(s) for a system intake
- */
-export interface SystemIntakeFundingSourcesInput {
-  existingFunding?: boolean | null;
-  fundingSources: SystemIntakeFundingSourceInput[];
-}
-
-/**
- * The input data used to set the list of OIT collaborators for a system request
- */
-export interface SystemIntakeGovernanceTeamInput {
-  isPresent?: boolean | null;
-  teams?: (SystemIntakeCollaboratorInput | null)[] | null;
-}
-
-/**
- * The input data used to set the ISSO associated with a system request, if any
- */
-export interface SystemIntakeISSOInput {
-  isPresent?: boolean | null;
-  name?: string | null;
 }
 
 /**
@@ -854,14 +626,6 @@ export interface SystemIntakeNotITGovReqInput {
   reason?: HTML | null;
   additionalInfo?: HTML | null;
   adminNote?: HTML | null;
-}
-
-/**
- * The input data used to set the CMS product manager/lead of a system
- */
-export interface SystemIntakeProductManagerInput {
-  name: string;
-  component: string;
 }
 
 /**
@@ -915,22 +679,6 @@ export interface SystemIntakeRequestEditsInput {
 }
 
 /**
- * The input data used to set the requester of a system request
- */
-export interface SystemIntakeRequesterInput {
-  name: string;
-}
-
-/**
- * The input data used to set the requester for a system request along with the
- * requester's business component
- */
-export interface SystemIntakeRequesterWithComponentInput {
-  name: string;
-  component: string;
-}
-
-/**
  * Input for retiring an intake's LCID in IT Gov v2
  */
 export interface SystemIntakeRetireLCIDInput {
@@ -965,151 +713,6 @@ export interface SystemIntakeUpdateLCIDInput {
   additionalInfo?: HTML | null;
   notificationRecipients?: EmailNotificationRecipients | null;
   adminNote?: HTML | null;
-}
-
-/**
- * TRBRequestChanges represents the possible changes you can make to a TRB request when updating it.
- * Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
- * https: // gqlgen.com/reference/changesets/
- */
-export interface TRBRequestChanges {
-  name?: string | null;
-  archived?: boolean | null;
-  type?: TRBRequestType | null;
-}
-
-/**
- * Input data used to update the admin lead assigned to a system IT governance
- * request
- */
-export interface UpdateSystemIntakeAdminLeadInput {
-  adminLead: string;
-  id: UUID;
-}
-
-/**
- * The input data used to update the contact details of the people associated with
- * a system request
- */
-export interface UpdateSystemIntakeContactDetailsInput {
-  id: UUID;
-  requester: SystemIntakeRequesterWithComponentInput;
-  businessOwner: SystemIntakeBusinessOwnerInput;
-  productManager: SystemIntakeProductManagerInput;
-  isso: SystemIntakeISSOInput;
-  governanceTeams: SystemIntakeGovernanceTeamInput;
-}
-
-/**
- * The data needed to update a contact associated with a system intake
- */
-export interface UpdateSystemIntakeContactInput {
-  id: UUID;
-  euaUserId: string;
-  systemIntakeId: UUID;
-  component: string;
-  role: string;
-}
-
-/**
- * Input data for updating contract details related to a system request
- */
-export interface UpdateSystemIntakeContractDetailsInput {
-  id: UUID;
-  fundingSources?: SystemIntakeFundingSourcesInput | null;
-  costs?: SystemIntakeCostsInput | null;
-  annualSpending?: SystemIntakeAnnualSpendingInput | null;
-  contract?: SystemIntakeContractInput | null;
-}
-
-/**
- * Input data for updating an IT governance admin note
- */
-export interface UpdateSystemIntakeNoteInput {
-  content: HTML;
-  isArchived: boolean;
-  id: UUID;
-}
-
-/**
- * Input to update some fields on a system request
- */
-export interface UpdateSystemIntakeRequestDetailsInput {
-  id: UUID;
-  requestName?: string | null;
-  businessNeed?: string | null;
-  businessSolution?: string | null;
-  currentStage?: string | null;
-  needsEaSupport?: boolean | null;
-  hasUiChanges?: boolean | null;
-  usesAiTech?: boolean | null;
-  usingSoftware?: string | null;
-  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
-  cedarSystemId?: string | null;
-}
-
-/**
- * Input data used to update GRT and GRB dates for a system request
- */
-export interface UpdateSystemIntakeReviewDatesInput {
-  grbDate?: Time | null;
-  grtDate?: Time | null;
-  id: UUID;
-}
-
-/**
- * Represents an EUA user who is included as an attendee for a TRB request
- */
-export interface UpdateTRBRequestAttendeeInput {
-  id: UUID;
-  component: string;
-  role: PersonRole;
-}
-
-/**
- * The data needed schedule a TRB consult meeting time
- */
-export interface UpdateTRBRequestConsultMeetingTimeInput {
-  trbRequestId: UUID;
-  consultMeetingTime: Time;
-  copyTrbMailbox: boolean;
-  notifyEuaIds: string[];
-  notes: string;
-}
-
-/**
- * Represents an EUA user who is included as an form for a TRB request
- */
-export interface UpdateTRBRequestFormInput {
-  trbRequestId: UUID;
-  isSubmitted?: boolean | null;
-  component?: string | null;
-  needsAssistanceWith?: string | null;
-  hasSolutionInMind?: boolean | null;
-  proposedSolution?: string | null;
-  whereInProcess?: TRBWhereInProcessOption | null;
-  whereInProcessOther?: string | null;
-  hasExpectedStartEndDates?: boolean | null;
-  expectedStartDate?: Time | null;
-  expectedEndDate?: Time | null;
-  collabGroups?: TRBCollabGroupOption[] | null;
-  collabDateSecurity?: string | null;
-  collabDateEnterpriseArchitecture?: string | null;
-  collabDateCloud?: string | null;
-  collabDatePrivacyAdvisor?: string | null;
-  collabDateGovernanceReviewBoard?: string | null;
-  collabDateOther?: string | null;
-  collabGroupOther?: string | null;
-  collabGRBConsultRequested?: boolean | null;
-  systemIntakes?: UUID[] | null;
-  subjectAreaOptions?: TRBSubjectAreaOption[] | null;
-  subjectAreaOptionOther?: string | null;
-}
-
-export interface UpdateTRBRequestFundingSourcesInput {
-  trbRequestId: UUID;
-  fundingNumber: string;
-  sources: string[];
 }
 
 //==============================================================

@@ -7,20 +7,17 @@ Updates on route change, as these values need to be reflected by current changes
 import React, { createContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { QueryResult } from '@apollo/client';
-import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
 import {
-  GetTrbRequestSummary,
-  GetTrbRequestSummaryVariables
-} from 'gql/legacyGQL/types/GetTrbRequestSummary';
-
-import useCacheQuery from 'hooks/useCacheQuery';
+  GetTRBRequestSummaryQuery,
+  useGetTRBRequestSummaryQuery
+} from 'gql/generated/graphql';
 
 type TRBRequestInfoWrapperProps = {
   children: React.ReactNode;
 };
 
 type TRBRequestContextType = Pick<
-  QueryResult<GetTrbRequestSummary, GetTrbRequestSummaryVariables>,
+  QueryResult<GetTRBRequestSummaryQuery>,
   'data' | 'loading' | 'error' | 'refetch'
 >;
 
@@ -43,10 +40,7 @@ const TRBRequestInfoWrapper = ({ children }: TRBRequestInfoWrapperProps) => {
   const requestID: string | undefined = pathname.split('/')[2];
 
   // TRB request query
-  const { data, loading, error, refetch } = useCacheQuery<
-    GetTrbRequestSummary,
-    GetTrbRequestSummaryVariables
-  >(GetTrbRequestSummaryQuery, {
+  const { data, loading, error, refetch } = useGetTRBRequestSummaryQuery({
     variables: { id: requestID },
     skip: !requestID
   });

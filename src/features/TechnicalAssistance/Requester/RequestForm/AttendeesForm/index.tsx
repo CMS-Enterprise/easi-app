@@ -5,15 +5,15 @@ import { useHistory } from 'react-router-dom';
 import { ApolloError, FetchResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, Icon } from '@trussworks/react-uswds';
-import { TRBAttendee } from 'gql/legacyGQL/types/TRBAttendee';
+import { PersonRole } from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import Spinner from 'components/Spinner';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
+  TRBAttendee,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';

@@ -2,7 +2,7 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import { SystemIntake as SystemIntakeOld } from 'gql/legacyGQL/types/SystemIntake';
 import {
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
@@ -61,14 +61,14 @@ describe('The GRT intake review view', () => {
     );
 
     expect(
-      await screen.findByTestId(`contact-requester-${requester.id}`)
+      await screen.findByTestId(`contact-requester-${requester.euaUserId}`)
     ).toBeInTheDocument();
 
     expect(asFragment()).toMatchSnapshot();
   });
 
   it('renders increased costs data', () => {
-    const costs: SystemIntake['costs'] = {
+    const costs: SystemIntakeOld['costs'] = {
       __typename: 'SystemIntakeCosts',
       isExpectingIncrease: 'YES',
       expectedIncreaseAmount: 'less than $1 million'
@@ -98,7 +98,7 @@ describe('The GRT intake review view', () => {
   });
 
   it('renders annual spending data', () => {
-    const annualSpending: SystemIntake['annualSpending'] = {
+    const annualSpending: SystemIntakeOld['annualSpending'] = {
       __typename: 'SystemIntakeAnnualSpending',
       currentAnnualSpending: 'about $3.50',
       currentAnnualSpendingITPortion: '35%',
@@ -150,7 +150,7 @@ describe('The GRT intake review view', () => {
     );
 
     expect(
-      await screen.findByTestId(`contact-requester-${requester.id}`)
+      await screen.findByTestId(`contact-requester-${requester.euaUserId}`)
     ).toBeInTheDocument();
 
     expect(

@@ -11,12 +11,12 @@ import { ApolloError, ApolloQueryResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { PersonRole } from 'gql/generated/graphql';
 import {
   GetTrbRequest,
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'gql/legacyGQL/types/GetTrbRequest';
-import { TRBAttendee } from 'gql/legacyGQL/types/TRBAttendee';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
@@ -24,9 +24,9 @@ import useEasiForm from 'components/EasiForm/useEasiForm';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
+  TRBAttendee,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
 import { trbRequesterSchema } from 'validations/trbRequestSchema';

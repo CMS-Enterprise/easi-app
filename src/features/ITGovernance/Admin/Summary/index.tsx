@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -14,10 +13,9 @@ import {
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
+import { useUpdateSystemIntakeAdminLeadMutation } from 'gql/generated/graphql';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'gql/legacyGQL/types/GetSystemIntake';
 import { SystemIntake_systems as System } from 'gql/legacyGQL/types/SystemIntake';
-import { UpdateSystemIntakeAdminLead } from 'gql/legacyGQL/types/UpdateSystemIntakeAdminLead';
-import UpdateSystemIntakeAdminLeadQuery from 'gql/legacyGQL/UpdateSystemIntakeAdminLeadQuery';
 
 import AdminRequestHeaderSummary from 'components/AdminRequestHeaderSummary';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
@@ -71,12 +69,9 @@ const RequestSummary = ({
   const { t } = useTranslation('governanceReviewTeam');
   const [isModalOpen, setModalOpen] = useState(false);
   const [newAdminLead, setAdminLead] = useState('');
-  const [mutate, mutationResult] = useMutation<UpdateSystemIntakeAdminLead>(
-    UpdateSystemIntakeAdminLeadQuery,
-    {
-      errorPolicy: 'all'
-    }
-  );
+  const [mutate, mutationResult] = useUpdateSystemIntakeAdminLeadMutation({
+    errorPolicy: 'all'
+  });
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 

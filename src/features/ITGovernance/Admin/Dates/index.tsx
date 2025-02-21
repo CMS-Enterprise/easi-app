@@ -1,15 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { useUpdateSystemIntakeReviewDatesMutation } from 'gql/generated/graphql';
 import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
-import {
-  UpdateSystemIntakeReviewDates,
-  UpdateSystemIntakeReviewDatesVariables
-} from 'gql/legacyGQL/types/UpdateSystemIntakeReviewDates';
-import UpdateSystemIntakeReviewDatesQuery from 'gql/legacyGQL/UpdateSystemIntakeReviewDatesQuery';
 import { DateTime } from 'luxon';
 
 import {
@@ -34,10 +29,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation();
-  const [mutate, mutationResult] = useMutation<
-    UpdateSystemIntakeReviewDates,
-    UpdateSystemIntakeReviewDatesVariables
-  >(UpdateSystemIntakeReviewDatesQuery, {
+  const [mutate, mutationResult] = useUpdateSystemIntakeReviewDatesMutation({
     errorPolicy: 'all'
   });
 

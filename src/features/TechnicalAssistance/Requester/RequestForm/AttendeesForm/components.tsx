@@ -21,8 +21,10 @@ import {
   Select,
   Table
 } from '@trussworks/react-uswds';
-import { DeleteTRBRequestAttendee } from 'gql/legacyGQL/types/DeleteTRBRequestAttendee';
-import { TRBAttendee } from 'gql/legacyGQL/types/TRBAttendee';
+import {
+  DeleteTRBRequestAttendeeMutation,
+  PersonRole
+} from 'gql/generated/graphql';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import Alert from 'components/Alert';
@@ -37,9 +39,9 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 import TablePagination from 'components/TablePagination';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import contactRoles from 'constants/enums/contactRoles';
-import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
+  TRBAttendee,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
 
@@ -343,7 +345,7 @@ type AttendeesTableProps = {
   /** Delete attendee */
   deleteAttendee?: (
     id: string
-  ) => Promise<FetchResult<DeleteTRBRequestAttendee>>;
+  ) => Promise<FetchResult<DeleteTRBRequestAttendeeMutation>>;
 };
 
 const AttendeesTable = ({

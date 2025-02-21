@@ -11,7 +11,7 @@ import formatContractNumbers from 'utils/formatContractNumbers';
 type SystemCardItemProps = {
   id: string;
   name: string;
-  acronym: string | null;
+  acronym?: string | null;
 };
 
 function SystemCardItem({ item }: { item: SystemCardItemProps }) {
@@ -81,8 +81,8 @@ function AdditionalRequestInfo({
 }: {
   id: string;
   systems: SystemCardItemProps[];
-  relationType: string | null;
-  contractName: string | null;
+  relationType?: string | null;
+  contractName?: string | null;
   contractNumbers: { contractNumber: string }[];
   requestType: RequestType;
 }) {

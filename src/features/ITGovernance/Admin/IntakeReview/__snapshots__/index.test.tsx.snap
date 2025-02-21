@@ -56,7 +56,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
             class="easi-review-row"
           >
             <div
-              data-testid="contact-requester-systemIntakeContact-A11Y"
+              data-testid="contact-requester-A11Y"
             >
               <dt
                 class="text-bold margin-bottom-05"

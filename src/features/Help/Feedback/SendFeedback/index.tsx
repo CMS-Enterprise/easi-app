@@ -7,7 +7,6 @@
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import {
   Button,
   Checkbox,
@@ -28,11 +27,10 @@ import {
   Formik,
   useFormikContext
 } from 'formik';
-import SendFeedbackEmailQuery from 'gql/legacyGQL/SendFeedbackEmailQuery';
 import {
-  SendFeedbackEmail,
-  SendFeedbackEmailVariables
-} from 'gql/legacyGQL/types/SendFeedbackEmail';
+  SendFeedbackEmailInput,
+  useSendFeedbackEmailMutation
+} from 'gql/generated/graphql';
 
 import HelpBreadcrumb from 'components/HelpBreadcrumb';
 import MainContent from 'components/MainContent';
@@ -46,7 +44,6 @@ import {
   SendFeedbackOptionKey,
   sendFeedbackOptions
 } from 'constants/helpFeedback';
-import { SendFeedbackEmailInput } from 'types/graphql-global-types';
 import {
   sendFeedbackEmailFormSchema,
   sendFeedbackEmailInputSchema
@@ -443,9 +440,7 @@ const SendFeedback = () => {
   const { t } = useTranslation('help');
   const [isDone, setIsDone] = useState<boolean>(false);
 
-  const [send] = useMutation<SendFeedbackEmail, SendFeedbackEmailVariables>(
-    SendFeedbackEmailQuery
-  );
+  const [send] = useSendFeedbackEmailMutation();
 
   const onSubmit = async (values: SendFeedbackEmailForm) => {
     const input = await parseFeedbackForm(values);

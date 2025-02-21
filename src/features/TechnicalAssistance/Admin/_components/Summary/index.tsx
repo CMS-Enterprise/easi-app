@@ -10,8 +10,7 @@ import {
   Icon,
   ModalRef
 } from '@trussworks/react-uswds';
-import { SystemIntake_systems as System } from 'gql/legacyGQL/types/SystemIntake';
-import { TRBAttendee } from 'gql/legacyGQL/types/TRBAttendee';
+import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
 
 import AdminRequestHeaderSummary from 'components/AdminRequestHeaderSummary';
 import StateTag from 'components/StateTag';
@@ -21,7 +20,7 @@ import {
   TRBRequestStatus,
   TRBRequestType
 } from 'types/graphql-global-types';
-import { TrbRequestIdRef } from 'types/technicalAssistance';
+import { TRBAttendee, TrbRequestIdRef } from 'types/technicalAssistance';
 
 import { TrbAssignLeadModalOpener } from '../TrbAssignLeadModal';
 
@@ -38,9 +37,9 @@ type SummaryProps = {
   assignLeadModalRef: React.RefObject<ModalRef>;
   assignLeadModalTrbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
   contractNumbers: string[];
-  contractName: string | null;
-  relationType: RequestRelationType | null;
-  systems: System[];
+  contractName?: string | null;
+  relationType?: RequestRelationType | null;
+  systems: GetTRBRequestSummaryQuery['trbRequest']['systems'];
 };
 
 export default function Summary({

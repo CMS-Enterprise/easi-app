@@ -18,39 +18,4 @@ export const SystemIntakeDocument = gql`
   }
 `;
 
-export const CreateSystemIntakeDocumentQuery = gql`
-  ${SystemIntakeDocument}
-  mutation CreateSystemIntakeDocument(
-    $input: CreateSystemIntakeDocumentInput!
-  ) {
-    createSystemIntakeDocument(input: $input) {
-      document {
-        ...SystemIntakeDocument
-      }
-    }
-  }
-`;
-
-export const DeleteSystemIntakeDocumentQuery = gql`
-  ${SystemIntakeDocument}
-  mutation DeleteSystemIntakeDocument($id: UUID!) {
-    deleteSystemIntakeDocument(id: $id) {
-      document {
-        ...SystemIntakeDocument
-      }
-    }
-  }
-`;
-
-export const GetSystemIntakeDocumentUrlsQuery = gql`
-  query GetSystemIntakeDocumentUrls($id: UUID!) {
-    systemIntake(id: $id) {
-      id
-      documents {
-        id
-        url
-        fileName
-      }
-    }
-  }
-`;
+export default SystemIntakeDocument;

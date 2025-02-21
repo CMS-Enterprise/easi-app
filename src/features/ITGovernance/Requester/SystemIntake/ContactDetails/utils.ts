@@ -1,7 +1,7 @@
+import { SystemIntakeCollaboratorInput } from 'gql/generated/graphql';
 import { GetSystemIntake_systemIntake_governanceTeams_teams as SystemIntakeCollaborator } from 'gql/legacyGQL/types/GetSystemIntake';
 
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-import { SystemIntakeCollaboratorInput } from 'types/graphql-global-types';
 import {
   CollaboratorFields,
   ContactFields,

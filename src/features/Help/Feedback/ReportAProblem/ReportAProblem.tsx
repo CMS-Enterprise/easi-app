@@ -5,7 +5,6 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import {
   Fieldset,
   FormGroup,
@@ -15,11 +14,10 @@ import {
   Textarea
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik } from 'formik';
-import SendReportAProblemEmailQuery from 'gql/legacyGQL/SendReportAProblemEmailQuery';
 import {
-  SendReportAProblemEmail,
-  SendReportAProblemEmailVariables
-} from 'gql/legacyGQL/types/SendReportAProblemEmail';
+  SendReportAProblemEmailInput,
+  useSendReportAProblemEmailMutation
+} from 'gql/generated/graphql';
 
 import MainContent from 'components/MainContent';
 import {
@@ -31,7 +29,6 @@ import {
   sendFeedbackOptions,
   SendReportAProblemEmailForm
 } from 'constants/helpFeedback';
-import { SendReportAProblemEmailInput } from 'types/graphql-global-types';
 import {
   sendReportAProblemEmailFormSchema,
   sendReportAProblemEmailInputSchema
@@ -110,10 +107,7 @@ const ReportAProblem = () => {
   const { t } = useTranslation('help');
   const [isDone, setIsDone] = useState<boolean>(false);
 
-  const [send] = useMutation<
-    SendReportAProblemEmail,
-    SendReportAProblemEmailVariables
-  >(SendReportAProblemEmailQuery);
+  const [send] = useSendReportAProblemEmailMutation();
 
   const onSubmit = async (values: SendReportAProblemEmailForm) => {
     const input = await parseReportForm(values);

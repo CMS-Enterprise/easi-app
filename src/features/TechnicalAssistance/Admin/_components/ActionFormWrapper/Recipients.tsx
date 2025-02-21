@@ -9,7 +9,7 @@ import {
   FormGroup,
   Select
 } from '@trussworks/react-uswds';
-import { TRBAttendee_userInfo as UserInfo } from 'gql/legacyGQL/types/TRBAttendee';
+import { PersonRole } from 'gql/generated/graphql';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import Alert from 'components/Alert';
@@ -21,7 +21,7 @@ import Label from 'components/Label';
 import Spinner from 'components/Spinner';
 import TruncatedContent from 'components/TruncatedContent';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
-import { PersonRole } from 'types/graphql-global-types';
+import { TRBAttendee } from 'types/technicalAssistance';
 import isExternalEmail from 'utils/externalEmail';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import toggleArrayValue from 'utils/toggleArrayValue';
@@ -30,11 +30,13 @@ type RecipientsProps = {
   setRecipientFormOpen?: (value: boolean) => void;
 };
 
+export type TRBRecipient = TRBAttendee['userInfo'];
+
 type TrbRecipient = {
   id?: string;
-  userInfo: UserInfo | null;
-  component: string | null;
-  role: PersonRole | null;
+  userInfo: TRBRecipient | null;
+  component: string | null | undefined;
+  role: PersonRole | null | undefined;
 };
 
 type RecipientFields = {

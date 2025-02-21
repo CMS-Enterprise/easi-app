@@ -4,7 +4,7 @@ import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import GovernanceOverview from 'features/ITGovernance/Requester/GovernanceOverview';
-import { CreateSystemIntake } from 'gql/legacyGQL/SystemIntakeQueries';
+import { CreateSystemIntakeDocument } from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
@@ -73,7 +73,7 @@ describe('The request type form page', () => {
   it('creates a new intake', async () => {
     const intakeMutation = {
       request: {
-        query: CreateSystemIntake,
+        query: CreateSystemIntakeDocument,
         variables: {
           input: {
             requestType: 'NEW',
@@ -110,7 +110,7 @@ describe('The request type form page', () => {
   it('creates a major changes intake', async () => {
     const intakeMutation = {
       request: {
-        query: CreateSystemIntake,
+        query: CreateSystemIntakeDocument,
         variables: {
           input: {
             requestType: 'MAJOR_CHANGES',
@@ -145,7 +145,7 @@ describe('The request type form page', () => {
   it('creates a recompete intake', async () => {
     const intakeMutation = {
       request: {
-        query: CreateSystemIntake,
+        query: CreateSystemIntakeDocument,
         variables: {
           input: {
             requestType: 'RECOMPETE',

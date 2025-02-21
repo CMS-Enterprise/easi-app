@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, ButtonGroup, ModalFooter } from '@trussworks/react-uswds';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { useUpdateSystemIntakeNoteMutation } from 'gql/generated/graphql';
 import CreateSystemIntakeNoteQuery from 'gql/legacyGQL/CreateSystemIntakeNoteQuery';
 import GetAdminNotesAndActionsQuery from 'gql/legacyGQL/GetAdminNotesAndActionsQuery';
 import {
@@ -15,8 +16,6 @@ import {
   GetAdminNotesAndActions,
   GetAdminNotesAndActionsVariables
 } from 'gql/legacyGQL/types/GetAdminNotesAndActions';
-import { UpdateSystemIntakeNote } from 'gql/legacyGQL/types/UpdateSystemIntakeNote';
-import UpdateSystemIntakeNoteQuery from 'gql/legacyGQL/UpdateSystemIntakeNoteQuery';
 import { DateTime } from 'luxon';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -78,7 +77,7 @@ const Notes = () => {
   );
 
   const [archiveNoteMutate, archiveMutationResult] =
-    useMutation<UpdateSystemIntakeNote>(UpdateSystemIntakeNoteQuery, {
+    useUpdateSystemIntakeNoteMutation({
       errorPolicy: 'all'
     });
 
@@ -98,7 +97,7 @@ const Notes = () => {
   };
 
   const [updateNoteMutate, updateMutationResult] =
-    useMutation<UpdateSystemIntakeNote>(UpdateSystemIntakeNoteQuery, {
+    useUpdateSystemIntakeNoteMutation({
       errorPolicy: 'all'
     });
 
