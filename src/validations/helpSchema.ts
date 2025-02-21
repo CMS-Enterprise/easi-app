@@ -1,4 +1,7 @@
-import { SendReportAProblemEmailInput } from 'gql/generated/graphql';
+import {
+  SendFeedbackEmailInput,
+  SendReportAProblemEmailInput
+} from 'gql/generated/graphql';
 import * as Yup from 'yup';
 
 import {
@@ -11,7 +14,6 @@ import {
   SendReportAProblemEmailForm
 } from 'constants/helpFeedback';
 import helpText from 'i18n/en-US/help';
-import { SendFeedbackEmailInput } from 'types/graphql-global-types';
 
 const msgSelect = helpText.sendFeedback.errorMessage.select;
 const msgExplain = helpText.sendFeedback.errorMessage.explain;

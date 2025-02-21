@@ -565,22 +565,6 @@ export interface ReopenTRBRequestInput {
   notifyEuaIds: string[];
 }
 
-/**
- * The inputs to the user feedback form
- */
-export interface SendFeedbackEmailInput {
-  isAnonymous: boolean;
-  canBeContacted: boolean;
-  easiServicesUsed: string[];
-  cmsRole: string;
-  systemEasyToUse: string;
-  didntNeedHelpAnswering: string;
-  questionsWereRelevant: string;
-  hadAccessToInformation: string;
-  howSatisfied: string;
-  howCanWeImprove: string;
-}
-
 export interface SetRolesForUserOnSystemInput {
   cedarSystemID: string;
   euaUserId: string;
