@@ -8,15 +8,12 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
 import CreateTrbRequestFeedbackQuery from 'gql/legacyGQL/CreateTrbRequestFeedbackQuery';
 import {
   CreateTrbRequestFeedback,
   CreateTrbRequestFeedbackVariables
 } from 'gql/legacyGQL/types/CreateTrbRequestFeedback';
-import {
-  GetTrbRequestSummary,
-  GetTrbRequestSummaryVariables
-} from 'gql/legacyGQL/types/GetTrbRequestSummary';
 import i18next from 'i18next';
 import {
   getTrbLeadOptionsQuery,
@@ -40,13 +37,11 @@ import AdminHome from '..';
 
 import RequestEdits from '.';
 
-const summaryQuery: MockedQuery<
-  GetTrbRequestSummary,
-  GetTrbRequestSummaryVariables
-> = {
+const summaryQuery: MockedQuery<GetTRBRequestSummaryQuery> = {
   ...getTrbRequestSummaryQuery,
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: getTrbRequestSummary({
         taskStatuses: {
           formStatus: TRBFormStatus.COMPLETED

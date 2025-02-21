@@ -8,11 +8,8 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ModalRef } from '@trussworks/react-uswds';
+import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
 import GetTrbRequestConsultMeetingQuery from 'gql/legacyGQL/GetTrbRequestConsultMeetingQuery';
-import {
-  GetTrbRequestSummary,
-  GetTrbRequestSummaryVariables
-} from 'gql/legacyGQL/types/GetTrbRequestSummary';
 import i18next from 'i18next';
 import {
   getTrbAdminNotesQuery,
@@ -38,13 +35,11 @@ import InitialRequestForm from '../InitialRequestForm';
 
 import Consult from '.';
 
-const summaryQuery: MockedQuery<
-  GetTrbRequestSummary,
-  GetTrbRequestSummaryVariables
-> = {
+const summaryQuery: MockedQuery<GetTRBRequestSummaryQuery> = {
   ...getTrbRequestSummaryQuery,
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: getTrbRequestSummary({
         taskStatuses: {
           feedbackStatus: TRBFeedbackStatus.COMPLETED

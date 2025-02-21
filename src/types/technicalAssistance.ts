@@ -3,11 +3,11 @@ import { ModalRef } from '@trussworks/react-uswds';
 import { StepSubmit } from 'features/TechnicalAssistance/Requester/RequestForm';
 import {
   GetTRBRequestAttendeesQuery,
+  GetTRBRequestSummaryQuery,
   PersonRole,
   TRBGuidanceLetterFragment,
   TRBGuidanceLetterInsightCategory
 } from 'gql/generated/graphql';
-import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'gql/legacyGQL/types/GetTrbRequestSummary';
 
 import { TRBGuidanceLetterStatus } from './graphql-global-types';
 
@@ -61,7 +61,7 @@ export type TrbRequestIdRef = string | null;
 
 interface TrbAdminDefaultProps {
   trbRequestId: string;
-  trbRequest: TrbRequestSummary;
+  trbRequest: GetTRBRequestSummaryQuery['trbRequest'];
   assignLeadModalRef: React.RefObject<ModalRef>;
   assignLeadModalTrbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
   requesterString?: string | null;

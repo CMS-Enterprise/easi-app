@@ -8,10 +8,10 @@ import {
 } from '@testing-library/react';
 import {
   GetTRBLeadOptionsDocument,
-  GetTRBRequestAttendeesDocument
+  GetTRBRequestAttendeesDocument,
+  GetTRBRequestSummaryDocument
 } from 'gql/generated/graphql';
 import GetTrbRequestHomeQuery from 'gql/legacyGQL/GetTrbRequestHomeQuery';
-import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
 import configureMockStore from 'redux-mock-store';
 import { attendees, requester, trbRequestSummary } from 'tests/mock/trbRequest';
 
@@ -107,7 +107,7 @@ const getTrbLeadOptionsQuery = {
 
 const getTrbRequestSummaryQuery = {
   request: {
-    query: GetTrbRequestSummaryQuery,
+    query: GetTRBRequestSummaryDocument,
     variables: {
       id: trbRequestId
     }

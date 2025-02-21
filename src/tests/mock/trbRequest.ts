@@ -14,6 +14,8 @@ import {
   GetTRBLeadOptionsQuery,
   GetTRBRequestAttendeesDocument,
   GetTRBRequestAttendeesQuery,
+  GetTRBRequestSummaryDocument,
+  GetTRBRequestSummaryQuery,
   PersonRole,
   TRBAdminNoteCategory,
   TRBAdminNoteFragment,
@@ -26,7 +28,6 @@ import {
 import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
 import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'gql/legacyGQL/GetTrbRequestQuery';
-import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
 import { GetTrbAdminTeamHome } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
 import {
   GetTrbRequest,
@@ -36,11 +37,6 @@ import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
 } from 'gql/legacyGQL/types/GetTrbRequestDocuments';
-import {
-  GetTrbRequestSummary,
-  GetTrbRequestSummary_trbRequest as Summary,
-  GetTrbRequestSummaryVariables
-} from 'gql/legacyGQL/types/GetTrbRequestSummary';
 import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'gql/legacyGQL/types/TrbRequestFormFields';
 
 import {
@@ -171,7 +167,7 @@ export const getTrbRequestQuery: MockedQuery<
   }
 };
 
-export const trbRequestSummary: Summary = {
+export const trbRequestSummary: GetTRBRequestSummaryQuery['trbRequest'] = {
   __typename: 'TRBRequest',
   id: trbRequestId,
   name: 'Mock TRB Request',
@@ -221,7 +217,7 @@ export const getTrbRequestSummary = (
         status?: TRBRequestStatus;
       }
     | undefined
-): Summary => ({
+): GetTRBRequestSummaryQuery['trbRequest'] => ({
   ...trbRequestSummary,
   status: fields?.status || TRBRequestStatus.DRAFT_REQUEST_FORM,
   taskStatuses: {
@@ -230,22 +226,21 @@ export const getTrbRequestSummary = (
   }
 });
 
-export const getTrbRequestSummaryQuery: MockedQuery<
-  GetTrbRequestSummary,
-  GetTrbRequestSummaryVariables
-> = {
-  request: {
-    query: GetTrbRequestSummaryQuery,
-    variables: {
-      id: trbRequestId
+export const getTrbRequestSummaryQuery: MockedQuery<GetTRBRequestSummaryQuery> =
+  {
+    request: {
+      query: GetTRBRequestSummaryDocument,
+      variables: {
+        id: trbRequestId
+      }
+    },
+    result: {
+      data: {
+        __typename: 'Query',
+        trbRequest: trbRequestSummary
+      }
     }
-  },
-  result: {
-    data: {
-      trbRequest: trbRequestSummary
-    }
-  }
-};
+  };
 
 const getRequestsData: {
   myTrbRequests: MyTrbRequests[];
