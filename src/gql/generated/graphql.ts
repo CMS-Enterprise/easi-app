@@ -3236,6 +3236,8 @@ export type CreateSystemIntakeGRBDiscussionReplyInput = {
   initialPostID: Scalars['UUID']['input'];
 };
 
+export type FundingSourceFragmentFragment = { __typename: 'SystemIntakeFundingSource', id: UUID, fundingNumber?: string | null, source?: string | null };
+
 export type TRBAttendeeFragmentFragment = { __typename: 'TRBRequestAttendee', id: UUID, trbRequestId: UUID, component?: string | null, role?: PersonRole | null, createdAt: Time, userInfo?: { __typename: 'UserInfo', commonName: string, email: EmailAddress, euaUserId: string } | null };
 
 export type TrbRequestFormFieldsFragmentFragment = { __typename: 'TRBRequest', id: UUID, name?: string | null, type: TRBRequestType, state: TRBRequestState, taskStatuses: { __typename: 'TRBTaskStatuses', formStatus: TRBFormStatus, feedbackStatus: TRBFeedbackStatus, consultPrepStatus: TRBConsultPrepStatus, attendConsultStatus: TRBAttendConsultStatus, guidanceLetterStatus: TRBGuidanceLetterStatus }, form: { __typename: 'TRBRequestForm', id: UUID, component?: string | null, needsAssistanceWith?: string | null, hasSolutionInMind?: boolean | null, proposedSolution?: string | null, whereInProcess?: TRBWhereInProcessOption | null, whereInProcessOther?: string | null, hasExpectedStartEndDates?: boolean | null, expectedStartDate?: Time | null, expectedEndDate?: Time | null, collabGroups: Array<TRBCollabGroupOption>, collabDateSecurity?: string | null, collabDateEnterpriseArchitecture?: string | null, collabDateCloud?: string | null, collabDatePrivacyAdvisor?: string | null, collabDateGovernanceReviewBoard?: string | null, collabDateOther?: string | null, collabGroupOther?: string | null, collabGRBConsultRequested?: boolean | null, subjectAreaOptions?: Array<TRBSubjectAreaOption> | null, subjectAreaOptionOther?: string | null, submittedAt?: Time | null, fundingSources?: Array<{ __typename: 'TRBFundingSource', id: UUID, fundingNumber: string, source: string }> | null, systemIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, lcid?: string | null }> }, feedback: Array<{ __typename: 'TRBRequestFeedback', id: UUID, action: TRBFeedbackAction, feedbackMessage: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string } }>, relatedTRBRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, createdAt: Time, contractNumbers: Array<{ __typename: 'TRBRequestContractNumber', contractNumber: string }> }>, relatedIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, decisionState: SystemIntakeDecisionState, submittedAt?: Time | null, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', contractNumber: string }> }> };
@@ -3392,6 +3394,49 @@ export type UnlinkTrbRequestRelationMutationVariables = Exact<{
 
 
 export type UnlinkTrbRequestRelationMutation = { __typename: 'Mutation', unlinkTRBRequestRelation?: { __typename: 'TRBRequest', id: UUID } | null };
+
+export type CreateSystemIntakeMutationVariables = Exact<{
+  input: CreateSystemIntakeInput;
+}>;
+
+
+export type CreateSystemIntakeMutation = { __typename: 'Mutation', createSystemIntake?: { __typename: 'SystemIntake', id: UUID, requestType: SystemIntakeRequestType, requester: { __typename: 'SystemIntakeRequester', name: string } } | null };
+
+export type UpdateSystemIntakeContractDetailsMutationVariables = Exact<{
+  input: UpdateSystemIntakeContractDetailsInput;
+}>;
+
+
+export type UpdateSystemIntakeContractDetailsMutation = { __typename: 'Mutation', updateSystemIntakeContractDetails?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID, currentStage?: string | null, fundingSources: Array<{ __typename: 'SystemIntakeFundingSource', id: UUID, fundingNumber?: string | null, source?: string | null }>, costs?: { __typename: 'SystemIntakeCosts', expectedIncreaseAmount?: string | null } | null, annualSpending?: { __typename: 'SystemIntakeAnnualSpending', currentAnnualSpending?: string | null, currentAnnualSpendingITPortion?: string | null, plannedYearOneSpending?: string | null, plannedYearOneSpendingITPortion?: string | null } | null, contract: { __typename: 'SystemIntakeContract', contractor?: string | null, hasContract?: string | null, endDate: { __typename: 'ContractDate', day?: string | null, month?: string | null, year?: string | null }, startDate: { __typename: 'ContractDate', day?: string | null, month?: string | null, year?: string | null } }, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', id: UUID, systemIntakeID: UUID, contractNumber: string }> } | null } | null };
+
+export type UpdateSystemIntakeRequestDetailsMutationVariables = Exact<{
+  input: UpdateSystemIntakeRequestDetailsInput;
+}>;
+
+
+export type UpdateSystemIntakeRequestDetailsMutation = { __typename: 'Mutation', updateSystemIntakeRequestDetails?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID, requestName?: string | null, businessNeed?: string | null, businessSolution?: string | null, needsEaSupport?: boolean | null, hasUiChanges?: boolean | null, usesAiTech?: boolean | null, usingSoftware?: string | null, acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods> } | null } | null };
+
+export type UpdateSystemIntakeContactDetailsMutationVariables = Exact<{
+  input: UpdateSystemIntakeContactDetailsInput;
+}>;
+
+
+export type UpdateSystemIntakeContactDetailsMutation = { __typename: 'Mutation', updateSystemIntakeContactDetails?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID, businessOwner: { __typename: 'SystemIntakeBusinessOwner', component?: string | null, name?: string | null }, governanceTeams: { __typename: 'SystemIntakeGovernanceTeam', isPresent?: boolean | null, teams?: Array<{ __typename: 'SystemIntakeCollaborator', acronym: string, collaborator: string, key: string, label: string, name: string }> | null }, isso: { __typename: 'SystemIntakeISSO', isPresent?: boolean | null, name?: string | null }, productManager: { __typename: 'SystemIntakeProductManager', component?: string | null, name?: string | null }, requester: { __typename: 'SystemIntakeRequester', component?: string | null, name: string } } | null } | null };
+
+export type UpdateSystemIntakeRequestTypeMutationVariables = Exact<{
+  id: Scalars['UUID']['input'];
+  requestType: SystemIntakeRequestType;
+}>;
+
+
+export type UpdateSystemIntakeRequestTypeMutation = { __typename: 'Mutation', updateSystemIntakeRequestType: { __typename: 'SystemIntake', id: UUID } };
+
+export type SubmitIntakeMutationVariables = Exact<{
+  input: SubmitIntakeInput;
+}>;
+
+
+export type SubmitIntakeMutation = { __typename: 'Mutation', submitIntake?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID } | null } | null };
 
 export type UpdateSystemIntakeAdminLeadMutationVariables = Exact<{
   input: UpdateSystemIntakeAdminLeadInput;
@@ -3658,6 +3703,13 @@ export type UpdateTRBRequestTypeMutationVariables = Exact<{
 
 export type UpdateTRBRequestTypeMutation = { __typename: 'Mutation', updateTRBRequest: { __typename: 'TRBRequest', id: UUID, type: TRBRequestType } };
 
+export const FundingSourceFragmentFragmentDoc = gql`
+    fragment FundingSourceFragment on SystemIntakeFundingSource {
+  id
+  fundingNumber
+  source
+}
+    `;
 export const TRBAttendeeFragmentFragmentDoc = gql`
     fragment TRBAttendeeFragment on TRBRequestAttendee {
   id
@@ -4671,6 +4723,283 @@ export function useUnlinkTrbRequestRelationMutation(baseOptions?: Apollo.Mutatio
 export type UnlinkTrbRequestRelationMutationHookResult = ReturnType<typeof useUnlinkTrbRequestRelationMutation>;
 export type UnlinkTrbRequestRelationMutationResult = Apollo.MutationResult<UnlinkTrbRequestRelationMutation>;
 export type UnlinkTrbRequestRelationMutationOptions = Apollo.BaseMutationOptions<UnlinkTrbRequestRelationMutation, UnlinkTrbRequestRelationMutationVariables>;
+export const CreateSystemIntakeDocument = gql`
+    mutation CreateSystemIntake($input: CreateSystemIntakeInput!) {
+  createSystemIntake(input: $input) {
+    id
+    requestType
+    requester {
+      name
+    }
+  }
+}
+    `;
+export type CreateSystemIntakeMutationFn = Apollo.MutationFunction<CreateSystemIntakeMutation, CreateSystemIntakeMutationVariables>;
+
+/**
+ * __useCreateSystemIntakeMutation__
+ *
+ * To run a mutation, you first call `useCreateSystemIntakeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSystemIntakeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSystemIntakeMutation, { data, loading, error }] = useCreateSystemIntakeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateSystemIntakeMutation(baseOptions?: Apollo.MutationHookOptions<CreateSystemIntakeMutation, CreateSystemIntakeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSystemIntakeMutation, CreateSystemIntakeMutationVariables>(CreateSystemIntakeDocument, options);
+      }
+export type CreateSystemIntakeMutationHookResult = ReturnType<typeof useCreateSystemIntakeMutation>;
+export type CreateSystemIntakeMutationResult = Apollo.MutationResult<CreateSystemIntakeMutation>;
+export type CreateSystemIntakeMutationOptions = Apollo.BaseMutationOptions<CreateSystemIntakeMutation, CreateSystemIntakeMutationVariables>;
+export const UpdateSystemIntakeContractDetailsDocument = gql`
+    mutation UpdateSystemIntakeContractDetails($input: UpdateSystemIntakeContractDetailsInput!) {
+  updateSystemIntakeContractDetails(input: $input) {
+    systemIntake {
+      id
+      currentStage
+      fundingSources {
+        ...FundingSourceFragment
+      }
+      costs {
+        expectedIncreaseAmount
+      }
+      annualSpending {
+        currentAnnualSpending
+        currentAnnualSpendingITPortion
+        plannedYearOneSpending
+        plannedYearOneSpendingITPortion
+      }
+      contract {
+        contractor
+        endDate {
+          day
+          month
+          year
+        }
+        hasContract
+        startDate {
+          day
+          month
+          year
+        }
+      }
+      contractNumbers {
+        id
+        systemIntakeID
+        contractNumber
+      }
+    }
+  }
+}
+    ${FundingSourceFragmentFragmentDoc}`;
+export type UpdateSystemIntakeContractDetailsMutationFn = Apollo.MutationFunction<UpdateSystemIntakeContractDetailsMutation, UpdateSystemIntakeContractDetailsMutationVariables>;
+
+/**
+ * __useUpdateSystemIntakeContractDetailsMutation__
+ *
+ * To run a mutation, you first call `useUpdateSystemIntakeContractDetailsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSystemIntakeContractDetailsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSystemIntakeContractDetailsMutation, { data, loading, error }] = useUpdateSystemIntakeContractDetailsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSystemIntakeContractDetailsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSystemIntakeContractDetailsMutation, UpdateSystemIntakeContractDetailsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSystemIntakeContractDetailsMutation, UpdateSystemIntakeContractDetailsMutationVariables>(UpdateSystemIntakeContractDetailsDocument, options);
+      }
+export type UpdateSystemIntakeContractDetailsMutationHookResult = ReturnType<typeof useUpdateSystemIntakeContractDetailsMutation>;
+export type UpdateSystemIntakeContractDetailsMutationResult = Apollo.MutationResult<UpdateSystemIntakeContractDetailsMutation>;
+export type UpdateSystemIntakeContractDetailsMutationOptions = Apollo.BaseMutationOptions<UpdateSystemIntakeContractDetailsMutation, UpdateSystemIntakeContractDetailsMutationVariables>;
+export const UpdateSystemIntakeRequestDetailsDocument = gql`
+    mutation UpdateSystemIntakeRequestDetails($input: UpdateSystemIntakeRequestDetailsInput!) {
+  updateSystemIntakeRequestDetails(input: $input) {
+    systemIntake {
+      id
+      requestName
+      businessNeed
+      businessSolution
+      needsEaSupport
+      hasUiChanges
+      usesAiTech
+      usingSoftware
+      acquisitionMethods
+    }
+  }
+}
+    `;
+export type UpdateSystemIntakeRequestDetailsMutationFn = Apollo.MutationFunction<UpdateSystemIntakeRequestDetailsMutation, UpdateSystemIntakeRequestDetailsMutationVariables>;
+
+/**
+ * __useUpdateSystemIntakeRequestDetailsMutation__
+ *
+ * To run a mutation, you first call `useUpdateSystemIntakeRequestDetailsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSystemIntakeRequestDetailsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSystemIntakeRequestDetailsMutation, { data, loading, error }] = useUpdateSystemIntakeRequestDetailsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSystemIntakeRequestDetailsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSystemIntakeRequestDetailsMutation, UpdateSystemIntakeRequestDetailsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSystemIntakeRequestDetailsMutation, UpdateSystemIntakeRequestDetailsMutationVariables>(UpdateSystemIntakeRequestDetailsDocument, options);
+      }
+export type UpdateSystemIntakeRequestDetailsMutationHookResult = ReturnType<typeof useUpdateSystemIntakeRequestDetailsMutation>;
+export type UpdateSystemIntakeRequestDetailsMutationResult = Apollo.MutationResult<UpdateSystemIntakeRequestDetailsMutation>;
+export type UpdateSystemIntakeRequestDetailsMutationOptions = Apollo.BaseMutationOptions<UpdateSystemIntakeRequestDetailsMutation, UpdateSystemIntakeRequestDetailsMutationVariables>;
+export const UpdateSystemIntakeContactDetailsDocument = gql`
+    mutation UpdateSystemIntakeContactDetails($input: UpdateSystemIntakeContactDetailsInput!) {
+  updateSystemIntakeContactDetails(input: $input) {
+    systemIntake {
+      id
+      businessOwner {
+        component
+        name
+      }
+      governanceTeams {
+        isPresent
+        teams {
+          acronym
+          collaborator
+          key
+          label
+          name
+        }
+      }
+      isso {
+        isPresent
+        name
+      }
+      productManager {
+        component
+        name
+      }
+      requester {
+        component
+        name
+      }
+    }
+  }
+}
+    `;
+export type UpdateSystemIntakeContactDetailsMutationFn = Apollo.MutationFunction<UpdateSystemIntakeContactDetailsMutation, UpdateSystemIntakeContactDetailsMutationVariables>;
+
+/**
+ * __useUpdateSystemIntakeContactDetailsMutation__
+ *
+ * To run a mutation, you first call `useUpdateSystemIntakeContactDetailsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSystemIntakeContactDetailsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSystemIntakeContactDetailsMutation, { data, loading, error }] = useUpdateSystemIntakeContactDetailsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSystemIntakeContactDetailsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSystemIntakeContactDetailsMutation, UpdateSystemIntakeContactDetailsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSystemIntakeContactDetailsMutation, UpdateSystemIntakeContactDetailsMutationVariables>(UpdateSystemIntakeContactDetailsDocument, options);
+      }
+export type UpdateSystemIntakeContactDetailsMutationHookResult = ReturnType<typeof useUpdateSystemIntakeContactDetailsMutation>;
+export type UpdateSystemIntakeContactDetailsMutationResult = Apollo.MutationResult<UpdateSystemIntakeContactDetailsMutation>;
+export type UpdateSystemIntakeContactDetailsMutationOptions = Apollo.BaseMutationOptions<UpdateSystemIntakeContactDetailsMutation, UpdateSystemIntakeContactDetailsMutationVariables>;
+export const UpdateSystemIntakeRequestTypeDocument = gql`
+    mutation UpdateSystemIntakeRequestType($id: UUID!, $requestType: SystemIntakeRequestType!) {
+  updateSystemIntakeRequestType(id: $id, newType: $requestType) {
+    id
+  }
+}
+    `;
+export type UpdateSystemIntakeRequestTypeMutationFn = Apollo.MutationFunction<UpdateSystemIntakeRequestTypeMutation, UpdateSystemIntakeRequestTypeMutationVariables>;
+
+/**
+ * __useUpdateSystemIntakeRequestTypeMutation__
+ *
+ * To run a mutation, you first call `useUpdateSystemIntakeRequestTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSystemIntakeRequestTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSystemIntakeRequestTypeMutation, { data, loading, error }] = useUpdateSystemIntakeRequestTypeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      requestType: // value for 'requestType'
+ *   },
+ * });
+ */
+export function useUpdateSystemIntakeRequestTypeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSystemIntakeRequestTypeMutation, UpdateSystemIntakeRequestTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSystemIntakeRequestTypeMutation, UpdateSystemIntakeRequestTypeMutationVariables>(UpdateSystemIntakeRequestTypeDocument, options);
+      }
+export type UpdateSystemIntakeRequestTypeMutationHookResult = ReturnType<typeof useUpdateSystemIntakeRequestTypeMutation>;
+export type UpdateSystemIntakeRequestTypeMutationResult = Apollo.MutationResult<UpdateSystemIntakeRequestTypeMutation>;
+export type UpdateSystemIntakeRequestTypeMutationOptions = Apollo.BaseMutationOptions<UpdateSystemIntakeRequestTypeMutation, UpdateSystemIntakeRequestTypeMutationVariables>;
+export const SubmitIntakeDocument = gql`
+    mutation SubmitIntake($input: SubmitIntakeInput!) {
+  submitIntake(input: $input) {
+    systemIntake {
+      id
+    }
+  }
+}
+    `;
+export type SubmitIntakeMutationFn = Apollo.MutationFunction<SubmitIntakeMutation, SubmitIntakeMutationVariables>;
+
+/**
+ * __useSubmitIntakeMutation__
+ *
+ * To run a mutation, you first call `useSubmitIntakeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubmitIntakeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitIntakeMutation, { data, loading, error }] = useSubmitIntakeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSubmitIntakeMutation(baseOptions?: Apollo.MutationHookOptions<SubmitIntakeMutation, SubmitIntakeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SubmitIntakeMutation, SubmitIntakeMutationVariables>(SubmitIntakeDocument, options);
+      }
+export type SubmitIntakeMutationHookResult = ReturnType<typeof useSubmitIntakeMutation>;
+export type SubmitIntakeMutationResult = Apollo.MutationResult<SubmitIntakeMutation>;
+export type SubmitIntakeMutationOptions = Apollo.BaseMutationOptions<SubmitIntakeMutation, SubmitIntakeMutationVariables>;
 export const UpdateSystemIntakeAdminLeadDocument = gql`
     mutation UpdateSystemIntakeAdminLead($input: UpdateSystemIntakeAdminLeadInput!) {
   updateSystemIntakeAdminLead(input: $input) {
@@ -6064,6 +6393,7 @@ export function useUpdateTRBRequestTypeMutation(baseOptions?: Apollo.MutationHoo
 export type UpdateTRBRequestTypeMutationHookResult = ReturnType<typeof useUpdateTRBRequestTypeMutation>;
 export type UpdateTRBRequestTypeMutationResult = Apollo.MutationResult<UpdateTRBRequestTypeMutation>;
 export type UpdateTRBRequestTypeMutationOptions = Apollo.BaseMutationOptions<UpdateTRBRequestTypeMutation, UpdateTRBRequestTypeMutationVariables>;
+export const TypedFundingSourceFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FundingSourceFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeFundingSource"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}}]} as unknown as DocumentNode<FundingSourceFragmentFragment, unknown>;
 export const TypedTRBAttendeeFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBAttendeeFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBRequestAttendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"trbRequestId"}},{"kind":"Field","name":{"kind":"Name","value":"userInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<TRBAttendeeFragmentFragment, unknown>;
 export const TypedTrbRequestFormFieldsFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TrbRequestFormFieldsFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBRequest"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"taskStatuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formStatus"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackStatus"}},{"kind":"Field","name":{"kind":"Name","value":"consultPrepStatus"}},{"kind":"Field","name":{"kind":"Name","value":"attendConsultStatus"}},{"kind":"Field","name":{"kind":"Name","value":"guidanceLetterStatus"}}]}},{"kind":"Field","name":{"kind":"Name","value":"form"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"needsAssistanceWith"}},{"kind":"Field","name":{"kind":"Name","value":"hasSolutionInMind"}},{"kind":"Field","name":{"kind":"Name","value":"proposedSolution"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcess"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcessOther"}},{"kind":"Field","name":{"kind":"Name","value":"hasExpectedStartEndDates"}},{"kind":"Field","name":{"kind":"Name","value":"expectedStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"expectedEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroups"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateSecurity"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateEnterpriseArchitecture"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateCloud"}},{"kind":"Field","name":{"kind":"Name","value":"collabDatePrivacyAdvisor"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateGovernanceReviewBoard"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroupOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGRBConsultRequested"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptions"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptionOther"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSources"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"feedback"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackMessage"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}}]}}]} as unknown as DocumentNode<TrbRequestFormFieldsFragmentFragment, unknown>;
 export const TypedSystemIntakeWithReviewRequestedFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeWithReviewRequested"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntake"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}}]}}]} as unknown as DocumentNode<SystemIntakeWithReviewRequestedFragment, unknown>;
@@ -6097,6 +6427,12 @@ export const TypedSetTrbRequestRelationNewSystemDocument = {"kind":"Document","d
 export const TypedSetTrbRequestRelationExistingSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetTrbRequestRelationExistingSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetTRBRequestRelationExistingSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setTRBRequestRelationExistingSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetTrbRequestRelationExistingSystemMutation, SetTrbRequestRelationExistingSystemMutationVariables>;
 export const TypedSetTrbRequestRelationExistingServiceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetTrbRequestRelationExistingService"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetTRBRequestRelationExistingServiceInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setTRBRequestRelationExistingService"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetTrbRequestRelationExistingServiceMutation, SetTrbRequestRelationExistingServiceMutationVariables>;
 export const TypedUnlinkTrbRequestRelationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UnlinkTrbRequestRelation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unlinkTRBRequestRelation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"trbRequestID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UnlinkTrbRequestRelationMutation, UnlinkTrbRequestRelationMutationVariables>;
+export const TypedCreateSystemIntakeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntake"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestType"}},{"kind":"Field","name":{"kind":"Name","value":"requester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeMutation, CreateSystemIntakeMutationVariables>;
+export const TypedUpdateSystemIntakeContractDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeContractDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeContractDetailsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeContractDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"currentStage"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSources"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FundingSourceFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"costs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"expectedIncreaseAmount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"annualSpending"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAnnualSpending"}},{"kind":"Field","name":{"kind":"Name","value":"currentAnnualSpendingITPortion"}},{"kind":"Field","name":{"kind":"Name","value":"plannedYearOneSpending"}},{"kind":"Field","name":{"kind":"Name","value":"plannedYearOneSpendingITPortion"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contract"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hasContract"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeID"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FundingSourceFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeFundingSource"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeContractDetailsMutation, UpdateSystemIntakeContractDetailsMutationVariables>;
+export const TypedUpdateSystemIntakeRequestDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeRequestDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeRequestDetailsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeRequestDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"businessNeed"}},{"kind":"Field","name":{"kind":"Name","value":"businessSolution"}},{"kind":"Field","name":{"kind":"Name","value":"needsEaSupport"}},{"kind":"Field","name":{"kind":"Name","value":"hasUiChanges"}},{"kind":"Field","name":{"kind":"Name","value":"usesAiTech"}},{"kind":"Field","name":{"kind":"Name","value":"usingSoftware"}},{"kind":"Field","name":{"kind":"Name","value":"acquisitionMethods"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeRequestDetailsMutation, UpdateSystemIntakeRequestDetailsMutationVariables>;
+export const TypedUpdateSystemIntakeContactDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeContactDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeContactDetailsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeContactDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"governanceTeams"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isPresent"}},{"kind":"Field","name":{"kind":"Name","value":"teams"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"collaborator"}},{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"isso"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isPresent"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"productManager"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeContactDetailsMutation, UpdateSystemIntakeContactDetailsMutationVariables>;
+export const TypedUpdateSystemIntakeRequestTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeRequestType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"requestType"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeRequestType"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeRequestType"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"newType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"requestType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeRequestTypeMutation, UpdateSystemIntakeRequestTypeMutationVariables>;
+export const TypedSubmitIntakeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SubmitIntake"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SubmitIntakeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SubmitIntakeMutation, SubmitIntakeMutationVariables>;
 export const TypedUpdateSystemIntakeAdminLeadDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeAdminLead"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeAdminLeadInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeAdminLead"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminLead"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeAdminLeadMutation, UpdateSystemIntakeAdminLeadMutationVariables>;
 export const TypedUpdateSystemIntakeNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeNoteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeNoteMutation, UpdateSystemIntakeNoteMutationVariables>;
 export const TypedUpdateSystemIntakeReviewDatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeReviewDates"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeReviewDatesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeReviewDates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeReviewDatesMutation, UpdateSystemIntakeReviewDatesMutationVariables>;

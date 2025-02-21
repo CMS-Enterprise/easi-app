@@ -537,14 +537,6 @@ export interface CreateSystemIntakeDocumentInput {
 }
 
 /**
- * The input data used to initialize an IT governance request for a system
- */
-export interface CreateSystemIntakeInput {
-  requestType: SystemIntakeRequestType;
-  requester: SystemIntakeRequesterInput;
-}
-
-/**
  * Input data for adding a note to a system request
  */
 export interface CreateSystemIntakeNoteInput {
@@ -634,31 +626,6 @@ export interface SetRolesForUserOnSystemInput {
 }
 
 /**
- * Input to submit an intake for review
- */
-export interface SubmitIntakeInput {
-  id: UUID;
-}
-
-/**
- * Input data for current and planned year one annual costs associated with a system request
- */
-export interface SystemIntakeAnnualSpendingInput {
-  currentAnnualSpending?: string | null;
-  currentAnnualSpendingITPortion?: string | null;
-  plannedYearOneSpending?: string | null;
-  plannedYearOneSpendingITPortion?: string | null;
-}
-
-/**
- * The input data used to set the CMS Business Owner of a system
- */
-export interface SystemIntakeBusinessOwnerInput {
-  name: string;
-  component: string;
-}
-
-/**
  * Input for changing an intake's LCID retirement date in IT Gov v2
  */
 export interface SystemIntakeChangeLCIDRetirementDateInput {
@@ -681,15 +648,6 @@ export interface SystemIntakeCloseRequestInput {
 }
 
 /**
- * The input data used to add an OIT collaborator for a system request
- */
-export interface SystemIntakeCollaboratorInput {
-  collaborator: string;
-  name: string;
-  key: string;
-}
-
-/**
  * Input for confirming an intake's decision to issue an LCID in IT Gov v2
  */
 export interface SystemIntakeConfirmLCIDInput {
@@ -705,27 +663,6 @@ export interface SystemIntakeConfirmLCIDInput {
 }
 
 /**
- * Input data containing information about a contract related to a system request
- */
-export interface SystemIntakeContractInput {
-  contractor?: string | null;
-  endDate?: Time | null;
-  hasContract?: string | null;
-  startDate?: Time | null;
-  numbers: string[];
-}
-
-/**
- * Input data for estimated system cost increases associated with a system request
- * 
- * NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076)
- */
-export interface SystemIntakeCostsInput {
-  expectedIncreaseAmount?: string | null;
-  isExpectingIncrease?: string | null;
-}
-
-/**
  * Input for expiring an intake's LCID in IT Gov v2
  */
 export interface SystemIntakeExpireLCIDInput {
@@ -735,38 +672,6 @@ export interface SystemIntakeExpireLCIDInput {
   notificationRecipients?: EmailNotificationRecipients | null;
   additionalInfo?: HTML | null;
   adminNote?: HTML | null;
-}
-
-/**
- * Represents the source of funding for a system
- */
-export interface SystemIntakeFundingSourceInput {
-  fundingNumber?: string | null;
-  source?: string | null;
-}
-
-/**
- * The input required to specify the funding source(s) for a system intake
- */
-export interface SystemIntakeFundingSourcesInput {
-  existingFunding?: boolean | null;
-  fundingSources: SystemIntakeFundingSourceInput[];
-}
-
-/**
- * The input data used to set the list of OIT collaborators for a system request
- */
-export interface SystemIntakeGovernanceTeamInput {
-  isPresent?: boolean | null;
-  teams?: (SystemIntakeCollaboratorInput | null)[] | null;
-}
-
-/**
- * The input data used to set the ISSO associated with a system request, if any
- */
-export interface SystemIntakeISSOInput {
-  isPresent?: boolean | null;
-  name?: string | null;
 }
 
 /**
@@ -794,14 +699,6 @@ export interface SystemIntakeNotITGovReqInput {
   reason?: HTML | null;
   additionalInfo?: HTML | null;
   adminNote?: HTML | null;
-}
-
-/**
- * The input data used to set the CMS product manager/lead of a system
- */
-export interface SystemIntakeProductManagerInput {
-  name: string;
-  component: string;
 }
 
 /**
@@ -855,22 +752,6 @@ export interface SystemIntakeRequestEditsInput {
 }
 
 /**
- * The input data used to set the requester of a system request
- */
-export interface SystemIntakeRequesterInput {
-  name: string;
-}
-
-/**
- * The input data used to set the requester for a system request along with the
- * requester's business component
- */
-export interface SystemIntakeRequesterWithComponentInput {
-  name: string;
-  component: string;
-}
-
-/**
  * Input for retiring an intake's LCID in IT Gov v2
  */
 export interface SystemIntakeRetireLCIDInput {
@@ -908,19 +789,6 @@ export interface SystemIntakeUpdateLCIDInput {
 }
 
 /**
- * The input data used to update the contact details of the people associated with
- * a system request
- */
-export interface UpdateSystemIntakeContactDetailsInput {
-  id: UUID;
-  requester: SystemIntakeRequesterWithComponentInput;
-  businessOwner: SystemIntakeBusinessOwnerInput;
-  productManager: SystemIntakeProductManagerInput;
-  isso: SystemIntakeISSOInput;
-  governanceTeams: SystemIntakeGovernanceTeamInput;
-}
-
-/**
  * The data needed to update a contact associated with a system intake
  */
 export interface UpdateSystemIntakeContactInput {
@@ -929,34 +797,6 @@ export interface UpdateSystemIntakeContactInput {
   systemIntakeId: UUID;
   component: string;
   role: string;
-}
-
-/**
- * Input data for updating contract details related to a system request
- */
-export interface UpdateSystemIntakeContractDetailsInput {
-  id: UUID;
-  fundingSources?: SystemIntakeFundingSourcesInput | null;
-  costs?: SystemIntakeCostsInput | null;
-  annualSpending?: SystemIntakeAnnualSpendingInput | null;
-  contract?: SystemIntakeContractInput | null;
-}
-
-/**
- * Input to update some fields on a system request
- */
-export interface UpdateSystemIntakeRequestDetailsInput {
-  id: UUID;
-  requestName?: string | null;
-  businessNeed?: string | null;
-  businessSolution?: string | null;
-  currentStage?: string | null;
-  needsEaSupport?: boolean | null;
-  hasUiChanges?: boolean | null;
-  usesAiTech?: boolean | null;
-  usingSoftware?: string | null;
-  acquisitionMethods: SystemIntakeSoftwareAcquisitionMethods[];
-  cedarSystemId?: string | null;
 }
 
 //==============================================================

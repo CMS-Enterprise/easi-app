@@ -1,9 +1,6 @@
 import { gql } from '@apollo/client';
 
-import { FundingSource } from './GetSystemIntakeQuery';
-
-// eslint-disable-next-line import/prefer-default-export
-export const CreateSystemIntake = gql`
+export const CreateSystemIntake = gql(/* GraphQL */ `
   mutation CreateSystemIntake($input: CreateSystemIntakeInput!) {
     createSystemIntake(input: $input) {
       id
@@ -13,10 +10,9 @@ export const CreateSystemIntake = gql`
       }
     }
   }
-`;
+`);
 
-export const UpdateSystemIntakeContractDetails = gql`
-  ${FundingSource}
+export const UpdateSystemIntakeContractDetails = gql(/* GraphQL */ `
   mutation UpdateSystemIntakeContractDetails(
     $input: UpdateSystemIntakeContractDetailsInput!
   ) {
@@ -25,7 +21,7 @@ export const UpdateSystemIntakeContractDetails = gql`
         id
         currentStage
         fundingSources {
-          ...FundingSource
+          ...FundingSourceFragment
         }
         costs {
           expectedIncreaseAmount
@@ -58,8 +54,8 @@ export const UpdateSystemIntakeContractDetails = gql`
       }
     }
   }
-`;
-export const UpdateSystemIntakeRequestDetails = gql`
+`);
+export const UpdateSystemIntakeRequestDetails = gql(/* GraphQL */ `
   mutation UpdateSystemIntakeRequestDetails(
     $input: UpdateSystemIntakeRequestDetailsInput!
   ) {
@@ -77,9 +73,9 @@ export const UpdateSystemIntakeRequestDetails = gql`
       }
     }
   }
-`;
+`);
 
-export const UpdateSystemIntakeContactDetails = gql`
+export const UpdateSystemIntakeContactDetails = gql(/* GraphQL */ `
   mutation UpdateSystemIntakeContactDetails(
     $input: UpdateSystemIntakeContactDetailsInput!
   ) {
@@ -115,9 +111,9 @@ export const UpdateSystemIntakeContactDetails = gql`
       }
     }
   }
-`;
+`);
 
-export const UpdateSystemIntakeRequestType = gql`
+export const UpdateSystemIntakeRequestType = gql(/* GraphQL */ `
   mutation UpdateSystemIntakeRequestType(
     $id: UUID!
     $requestType: SystemIntakeRequestType!
@@ -126,9 +122,9 @@ export const UpdateSystemIntakeRequestType = gql`
       id
     }
   }
-`;
+`);
 
-export const SubmitIntake = gql`
+export const SubmitIntake = gql(/* GraphQL */ `
   mutation SubmitIntake($input: SubmitIntakeInput!) {
     submitIntake(input: $input) {
       systemIntake {
@@ -136,4 +132,4 @@ export const SubmitIntake = gql`
       }
     }
   }
-`;
+`);
