@@ -17,6 +17,7 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import FundingSources from 'features/TechnicalAssistance/Requester/RequestForm/FundingSources/FundingSources';
+import { useUpdateTRBRequestFundingSourcesMutation } from 'gql/generated/graphql';
 import DeleteTRBRequestFundingSource from 'gql/legacyGQL/DeleteTRBRequestFundingSource';
 import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
 import {
@@ -30,12 +31,7 @@ import {
   UpdateTrbRequestAndForm,
   UpdateTrbRequestAndFormVariables
 } from 'gql/legacyGQL/types/UpdateTrbRequestAndForm';
-import {
-  UpdateTRBRequestFundingSources as UpdateTRBRequestFundingSourcesType,
-  UpdateTRBRequestFundingSourcesVariables
-} from 'gql/legacyGQL/types/UpdateTRBRequestFundingSources';
 import UpdateTrbRequestAndFormQuery from 'gql/legacyGQL/UpdateTrbRequestAndFormQuery';
-import UpdateTRBRequestFundingSources from 'gql/legacyGQL/UpdateTRBRequestFundingSources';
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -124,10 +120,7 @@ function Basic({
     UpdateTrbRequestAndFormVariables
   >(UpdateTrbRequestAndFormQuery);
 
-  const [updatefundingSource] = useMutation<
-    UpdateTRBRequestFundingSourcesType,
-    UpdateTRBRequestFundingSourcesVariables
-  >(UpdateTRBRequestFundingSources);
+  const [updatefundingSource] = useUpdateTRBRequestFundingSourcesMutation();
 
   const [deletefundingSource] = useMutation<
     DeleteTRBRequestFundingSourceType,

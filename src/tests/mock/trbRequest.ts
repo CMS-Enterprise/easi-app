@@ -1,4 +1,6 @@
 import {
+  GetRequestsDocument,
+  GetRequestsQuery,
   GetTRBAdminNotesDocument,
   GetTRBAdminNotesQuery,
   GetTRBAdminNotesQueryVariables,
@@ -15,16 +17,11 @@ import {
   TRBGuidanceLetterFragment,
   TRBGuidanceLetterInsightCategory
 } from 'gql/generated/graphql';
-import GetRequestsQuery from 'gql/legacyGQL/GetRequestsQuery';
 import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
 import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'gql/legacyGQL/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendeesQuery } from 'gql/legacyGQL/TrbAttendeeQueries';
-import {
-  GetRequests,
-  GetRequests_myTrbRequests as MyTrbRequests
-} from 'gql/legacyGQL/types/GetRequests';
 import { GetTrbAdminTeamHome } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
 import {
   GetTrbRequest,
@@ -272,11 +269,13 @@ const getRequestsData: {
   ]
 };
 
+type MyTrbRequests = GetRequestsQuery['myTrbRequests'][number];
+
 export const getRequestsQuery = (
   myTrbRequests: MyTrbRequests[] = getRequestsData.myTrbRequests
-): MockedQuery<GetRequests> => ({
+): MockedQuery<Omit<GetRequestsQuery, '__typename'>> => ({
   request: {
-    query: GetRequestsQuery,
+    query: GetRequestsDocument,
     variables: {}
   },
   result: {
