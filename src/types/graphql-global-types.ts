@@ -555,16 +555,6 @@ export interface EmailNotificationRecipients {
   shouldNotifyITInvestment: boolean;
 }
 
-/**
- * The data needed to reopen a TRB request
- */
-export interface ReopenTRBRequestInput {
-  trbRequestId: UUID;
-  reasonReopened: HTML;
-  copyTrbMailbox: boolean;
-  notifyEuaIds: string[];
-}
-
 export interface SetRolesForUserOnSystemInput {
   cedarSystemID: string;
   euaUserId: string;

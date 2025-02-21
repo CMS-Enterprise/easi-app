@@ -6,11 +6,11 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GetTRBRequestAttendeesDocument,
-  PersonRole
+  PersonRole,
+  ReopenTRBRequestDocument
 } from 'gql/generated/graphql';
 import CloseTrbRequestQuery from 'gql/legacyGQL/CloseTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
-import ReopenTrbRequestQuery from 'gql/legacyGQL/ReopenTrbRequestQuery';
 import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -280,7 +280,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
           mocks={[
             {
               request: {
-                query: ReopenTrbRequestQuery,
+                query: ReopenTRBRequestDocument,
                 variables: {
                   input: {
                     trbRequestId: id,
@@ -407,7 +407,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
           getAttendeesQuery,
           {
             request: {
-              query: ReopenTrbRequestQuery,
+              query: ReopenTRBRequestDocument,
               variables: {
                 input: {
                   trbRequestId: id,

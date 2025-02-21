@@ -15,16 +15,12 @@ import {
   ModalRef,
   ModalToggleButton
 } from '@trussworks/react-uswds';
+import { useReopenTRBRequestMutation } from 'gql/generated/graphql';
 import CloseTrbRequestQuery from 'gql/legacyGQL/CloseTrbRequestQuery';
-import ReopenTrbRequestQuery from 'gql/legacyGQL/ReopenTrbRequestQuery';
 import {
   CloseTrbRequest,
   CloseTrbRequestVariables
 } from 'gql/legacyGQL/types/CloseTrbRequest';
-import {
-  ReopenTrbRequest,
-  ReopenTrbRequestVariables
-} from 'gql/legacyGQL/types/ReopenTrbRequest';
 
 import Spinner from 'components/Spinner';
 import TextAreaField from 'components/TextAreaField';
@@ -83,10 +79,7 @@ function CloseRequest() {
     CloseTrbRequestVariables
   >(CloseTrbRequestQuery);
 
-  const [mutateReopen, mutateReopenResult] = useMutation<
-    ReopenTrbRequest,
-    ReopenTrbRequestVariables
-  >(ReopenTrbRequestQuery);
+  const [mutateReopen, mutateReopenResult] = useReopenTRBRequestMutation();
 
   const formSubmitting: boolean =
     isSubmitting || mutateCloseResult.loading || mutateReopenResult.loading;
