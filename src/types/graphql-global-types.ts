@@ -1012,15 +1012,6 @@ export interface UpdateSystemIntakeContractDetailsInput {
 }
 
 /**
- * Input data for updating an IT governance admin note
- */
-export interface UpdateSystemIntakeNoteInput {
-  content: HTML;
-  isArchived: boolean;
-  id: UUID;
-}
-
-/**
  * Input to update some fields on a system request
  */
 export interface UpdateSystemIntakeRequestDetailsInput {
