@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
-  mutation UpdateTrbRequestConsultMeeting(
+  mutation UpdateTRBRequestConsultMeeting(
     $input: UpdateTRBRequestConsultMeetingTimeInput!
   ) {
     updateTRBRequestConsultMeetingTime(input: $input) {

@@ -10,7 +10,7 @@ import {
   Grid,
   Label
 } from '@trussworks/react-uswds';
-import { useUpdateTrbFormMutation } from 'gql/generated/graphql';
+import { useUpdateTRBFormMutation } from 'gql/generated/graphql';
 import { isEqual, pick } from 'lodash';
 
 import Alert from 'components/Alert';
@@ -43,7 +43,7 @@ function SubjectAreas({
 
   const { t } = useTranslation('technicalAssistance');
 
-  const [updateForm] = useUpdateTrbFormMutation();
+  const [updateForm] = useUpdateTRBFormMutation();
 
   const initialValues = nullFillObject(request.form, subjectAreasBlankValues);
 

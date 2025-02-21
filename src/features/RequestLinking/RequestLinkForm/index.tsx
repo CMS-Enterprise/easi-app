@@ -21,7 +21,7 @@ import {
 import classNames from 'classnames';
 import {
   useGetSystemIntakeRelationQuery,
-  useGetTrbRequestRelationQuery
+  useGetTRBRequestRelationQuery
 } from 'gql/generated/graphql';
 import {
   SetSystemIntakeRelationExistingServiceQuery,
@@ -151,7 +151,7 @@ const RequestLinkForm = ({
 
   const query =
     requestType === 'trb'
-      ? useGetTrbRequestRelationQuery
+      ? useGetTRBRequestRelationQuery
       : useGetSystemIntakeRelationQuery;
 
   const {

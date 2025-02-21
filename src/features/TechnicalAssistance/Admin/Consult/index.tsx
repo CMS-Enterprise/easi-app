@@ -12,7 +12,7 @@ import {
   TimePicker
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { useUpdateTrbRequestConsultMeetingMutation } from 'gql/generated/graphql';
+import { useUpdateTRBRequestConsultMeetingMutation } from 'gql/generated/graphql';
 import GetTrbRequestConsultMeetingQuery from 'gql/legacyGQL/GetTrbRequestConsultMeetingQuery';
 import {
   GetTrbRequestConsultMeeting,
@@ -78,7 +78,7 @@ function Consult() {
     ? DateTime.fromISO(data.trbRequest.consultMeetingTime).toFormat('HH:mm')
     : '';
 
-  const [mutate, mutationResult] = useUpdateTrbRequestConsultMeetingMutation();
+  const [mutate, mutationResult] = useUpdateTRBRequestConsultMeetingMutation();
 
   const {
     ActionForm,

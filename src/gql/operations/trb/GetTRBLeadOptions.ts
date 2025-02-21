@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
-  query GetTrbLeadOptions {
+  query GetTRBLeadOptions {
     trbLeadOptions {
       euaUserId
       commonName

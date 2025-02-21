@@ -18,7 +18,7 @@ import {
 } from '@trussworks/react-uswds';
 import FundingSources from 'features/TechnicalAssistance/Requester/RequestForm/FundingSources/FundingSources';
 import {
-  useUpdateTrbRequestAndFormMutation,
+  useUpdateTRBRequestAndFormMutation,
   useUpdateTRBRequestFundingSourcesMutation
 } from 'gql/generated/graphql';
 import DeleteTRBRequestFundingSource from 'gql/legacyGQL/DeleteTRBRequestFundingSource';
@@ -109,7 +109,7 @@ function Basic({
       }));
   }, [data?.systemIntakesWithLcids]);
 
-  const [updateForm] = useUpdateTrbRequestAndFormMutation();
+  const [updateForm] = useUpdateTRBRequestAndFormMutation();
 
   const [updatefundingSource] = useUpdateTRBRequestFundingSourcesMutation();
 

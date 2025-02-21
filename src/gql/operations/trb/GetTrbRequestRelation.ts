@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-const GetTrbRequestRelationQuery = gql(/* GraphQL */ `
-  query GetTrbRequestRelation($id: UUID!) {
+export default gql(/* GraphQL */ `
+  query GetTRBRequestRelation($id: UUID!) {
     trbRequest(id: $id) {
       id
       relationType
@@ -22,5 +22,3 @@ const GetTrbRequestRelationQuery = gql(/* GraphQL */ `
     }
   }
 `);
-
-export default GetTrbRequestRelationQuery;

@@ -7,9 +7,9 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
-  TypedUpdateTrbRequestArchivedDocument,
-  UpdateTrbRequestArchivedMutation,
-  UpdateTrbRequestArchivedMutationVariables
+  TypedUpdateTRBRequestArchivedDocument,
+  UpdateTRBRequestArchivedMutation,
+  UpdateTRBRequestArchivedMutationVariables
 } from 'gql/generated/graphql';
 import GetTrbTasklistQuery from 'gql/legacyGQL/GetTrbTasklistQuery';
 import {
@@ -77,11 +77,11 @@ const getTrbTasklistQuery: MockedQuery<
 };
 
 const updateTrbRequestArchived: MockedQuery<
-  Omit<UpdateTrbRequestArchivedMutation, '__typename'>,
-  UpdateTrbRequestArchivedMutationVariables
+  Omit<UpdateTRBRequestArchivedMutation, '__typename'>,
+  UpdateTRBRequestArchivedMutationVariables
 > = {
   request: {
-    query: TypedUpdateTrbRequestArchivedDocument,
+    query: TypedUpdateTRBRequestArchivedDocument,
     variables: {
       id: trbRequestId,
       archived: true

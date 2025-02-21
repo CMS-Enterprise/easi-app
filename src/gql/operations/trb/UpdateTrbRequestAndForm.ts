@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
-  mutation UpdateTrbRequestAndForm(
+  mutation UpdateTRBRequestAndForm(
     $input: UpdateTRBRequestFormInput!
     $id: UUID!
     $changes: TRBRequestChanges

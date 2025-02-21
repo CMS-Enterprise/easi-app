@@ -12,7 +12,7 @@ import {
 } from '@trussworks/react-uswds';
 import AdditionalRequestInfo from 'features/ITGovernance/Requester/TaskList/AdditionalRequestInfo';
 import NotFoundPartial from 'features/Miscellaneous/NotFound/NotFoundPartial';
-import { useUpdateTrbRequestArchivedMutation } from 'gql/generated/graphql';
+import { useUpdateTRBRequestArchivedMutation } from 'gql/generated/graphql';
 import GetTrbTasklistQuery from 'gql/legacyGQL/GetTrbTasklistQuery';
 import {
   GetTrbTasklist,
@@ -75,7 +75,7 @@ function TaskList() {
 
   const requestName = data?.trbRequest.name;
 
-  const [archive] = useUpdateTrbRequestArchivedMutation();
+  const [archive] = useUpdateTRBRequestArchivedMutation();
 
   const [isRemoveRequestModalOpen, setRemoveRequestModalOpen] =
     useState<boolean>(false);

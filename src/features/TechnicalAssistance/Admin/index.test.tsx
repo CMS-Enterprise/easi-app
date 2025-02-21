@@ -6,7 +6,7 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import { GetTrbLeadOptionsDocument } from 'gql/generated/graphql';
+import { GetTRBLeadOptionsDocument } from 'gql/generated/graphql';
 import GetTrbRequestHomeQuery from 'gql/legacyGQL/GetTrbRequestHomeQuery';
 import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendeesQuery } from 'gql/legacyGQL/TrbAttendeeQueries';
@@ -73,7 +73,7 @@ const getTrbRequestHomeQuery = {
 
 const getTrbLeadOptionsQuery = {
   request: {
-    query: GetTrbLeadOptionsDocument
+    query: GetTRBLeadOptionsDocument
   },
   result: {
     data: {

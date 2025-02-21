@@ -11,7 +11,7 @@ import {
   GridContainer,
   Icon
 } from '@trussworks/react-uswds';
-import { useUpdateTrbRequestTypeMutation } from 'gql/generated/graphql';
+import { useUpdateTRBRequestTypeMutation } from 'gql/generated/graphql';
 
 import CollapsableLink from 'components/CollapsableLink';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -43,7 +43,7 @@ function RequestType() {
   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
   const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
 
-  const [mutate, { data, error, loading }] = useUpdateTrbRequestTypeMutation();
+  const [mutate, { data, error, loading }] = useUpdateTRBRequestTypeMutation();
 
   // Return to the task list after updating the type
   useEffect(() => {

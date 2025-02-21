@@ -10,15 +10,15 @@ import {
   GetTRBGuidanceLetterInsightsQueryVariables,
   GetTRBGuidanceLetterQuery,
   GetTRBGuidanceLetterQueryVariables,
-  GetTrbLeadOptionsDocument,
-  GetTrbLeadOptionsQuery,
+  GetTRBLeadOptionsDocument,
+  GetTRBLeadOptionsQuery,
   TRBAdminNoteCategory,
   TRBAdminNoteFragment,
   TRBGuidanceLetterFragment,
   TRBGuidanceLetterInsightCategory,
-  UpdateTrbRequestConsultMeetingDocument,
-  UpdateTrbRequestConsultMeetingMutation,
-  UpdateTrbRequestConsultMeetingMutationVariables
+  UpdateTRBRequestConsultMeetingDocument,
+  UpdateTRBRequestConsultMeetingMutation,
+  UpdateTRBRequestConsultMeetingMutationVariables
 } from 'gql/generated/graphql';
 import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
 import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
@@ -306,11 +306,11 @@ export const getTRBRequestAttendeesQuery: MockedQuery<
 };
 
 export const updateTrbRequestConsultMeetingQuery: MockedQuery<
-  Omit<UpdateTrbRequestConsultMeetingMutation, '__typename'>,
-  UpdateTrbRequestConsultMeetingMutationVariables
+  Omit<UpdateTRBRequestConsultMeetingMutation, '__typename'>,
+  UpdateTRBRequestConsultMeetingMutationVariables
 > = {
   request: {
-    query: UpdateTrbRequestConsultMeetingDocument,
+    query: UpdateTRBRequestConsultMeetingDocument,
     variables: {
       input: {
         trbRequestId,
@@ -642,9 +642,9 @@ export const trbLeadOptions: MockUserInfo[] = [
   users.next()?.userInfo!
 ];
 
-export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptionsQuery> = {
+export const getTrbLeadOptionsQuery: MockedQuery<GetTRBLeadOptionsQuery> = {
   request: {
-    query: GetTrbLeadOptionsDocument,
+    query: GetTRBLeadOptionsDocument,
     variables: {}
   },
   result: {
