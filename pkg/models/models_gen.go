@@ -306,6 +306,10 @@ type DeleteSystemIntakeDocumentPayload struct {
 	Document *SystemIntakeDocument `json:"document,omitempty"`
 }
 
+type DeleteSystemIntakeGRBPresentationLinksInput struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
+}
+
 type DeleteSystemIntakeGRBReviewerInput struct {
 	ReviewerID uuid.UUID `json:"reviewerID"`
 }
@@ -614,6 +618,17 @@ type SystemIntakeFundingSourceInput struct {
 type SystemIntakeFundingSourcesInput struct {
 	ExistingFunding *bool                             `json:"existingFunding,omitempty"`
 	FundingSources  []*SystemIntakeFundingSourceInput `json:"fundingSources"`
+}
+
+// Data needed to add system intake presentation link data
+// One of the optional link/files values is required to pass the database constraint
+type SystemIntakeGRBPresentationLinksInput struct {
+	SystemIntakeID           uuid.UUID                          `json:"systemIntakeID"`
+	RecordingLink            graphql.Omittable[*string]         `json:"recordingLink,omitempty"`
+	RecordingPasscode        graphql.Omittable[*string]         `json:"recordingPasscode,omitempty"`
+	TranscriptLink           graphql.Omittable[*string]         `json:"transcriptLink,omitempty"`
+	TranscriptFileData       graphql.Omittable[*graphql.Upload] `json:"transcriptFileData,omitempty"`
+	PresentationDeckFileData graphql.Omittable[*graphql.Upload] `json:"presentationDeckFileData,omitempty"`
 }
 
 type SystemIntakeGRBReviewDiscussion struct {

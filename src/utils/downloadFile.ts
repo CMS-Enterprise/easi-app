@@ -49,7 +49,7 @@ export function fileBlobToBase64(file: File): Promise<string> {
   });
 }
 
-// We are sending files encoded in base 64 to avoid false positive alerts from the WAF (see EASI-3075)
+/** We are sending files encoded in base 64 to avoid false positive alerts from the WAF (see EASI-3075) */
 export async function fileToBase64File(file: File): Promise<File> {
   const b64String = await fileBlobToBase64(file);
   return new Promise((resolve, _) => {

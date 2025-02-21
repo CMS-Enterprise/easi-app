@@ -45,7 +45,7 @@ type GRBReviewDiscussionGroupTaggedBody struct {
 
 func (sie systemIntakeEmails) grbReviewDiscussionGroupTaggedBody(input SendGRBReviewDiscussionGroupTaggedEmailInput) (string, error) {
 	if sie.client.templates.grbReviewDiscussionGroupTagged == nil {
-		return "", errors.New("grb review discussion reply template is nil")
+		return "", errors.New("grb review discussion group tagged template is nil")
 	}
 
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")

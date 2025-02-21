@@ -89,6 +89,29 @@ export default {
   supportingDocuments: 'Supporting documents',
   supportingDocumentsText:
     'The documents below will help the GRB review this IT Governance request, and were completed during the course of this IT Governance request or were added by the requester and/or the Governance Admin Team. You may add additional documents and may remove any that have been added by Governance Admin Team members.',
+  asyncPresentation: {
+    title: 'Asynchronous presentation',
+    editPresentationLinks: 'Edit presentation links',
+    removeAllPresentationLinks: 'Remove all presentation links',
+    viewRecording: 'View recording',
+    noRecordingLinkAvailable: 'No recording link available',
+    passcode: '(Passcode: {{passcode}})',
+    viewTranscript: 'View transcript',
+    viewSlideDeck: 'View slide deck',
+    addAsynchronousPresentationLinks: 'Add asynchronous presentation links',
+    virusScanning: 'Virus scanning in progress...',
+    adminEmptyAlert:
+      'If this GRB review has an asynchronous presentation and recording, you may add that content to EASi to provide additional information for GRB reviews.',
+    modalRemoveLinks: {
+      title: 'Remove presentation links?',
+      text: 'This action will remove any links and files previously added about this asynchronous presesntation and cannot be undone. Are you sure you want to continue?',
+      confirm: 'Remove presentation links',
+      cancel: "Don't remove",
+      success: 'Presentation links have been removed.',
+      error:
+        'There was an issue deleting the presentation details. Please try again, and if the problem persists, try again later.'
+    }
+  },
   businessCaseOverview: {
     title: 'Business Case overview',
     submitted: 'Last Updated',
@@ -173,5 +196,35 @@ export default {
     hideGrbReviews: 'Hide GRB reviews',
     grbDate: 'GRB date',
     noDateSet: 'No date set'
+  },
+  presentationLinks: {
+    heading_add: 'Add presentation links',
+    heading_edit: 'Edit presentation link',
+    description_add:
+      'If this GRB review has an asynchronous presentation and recording, add that content in the fields below to provide additional information for GRB reviews.',
+    description_edit:
+      'Update the content for this GRB review’s asynchronous presentation and recording.',
+    returnLink: "Don't {{formType}} and return to request details",
+    recordingLinkLabel: 'Recording link',
+    recordingLinkHelpText:
+      'Include a link to the cloud recording or recording storage location. Ensure that permissions allow view access for those who have the link.',
+    recordingPasscodeLabel: 'Recording passcode',
+    recordingPasscodeHelpText:
+      'Include a passcode if one is required to view the recording.',
+    transcript: 'Transcript',
+    transcriptHelpText:
+      'If the transcript of the above recording is located elsewhere, include that link or upload that document below. You cannot include both a link and a document.',
+    addLink: 'Add link',
+    uploadDocument: 'Upload document',
+    presentationDeckLabel: 'Upload a presentation deck',
+    documentUploadHelpText: 'Select a PDF, PPT, PPTX, DOC, DOCX, XLS, or XLSX',
+    uploadAlert:
+      "To keep CMS safe, documents are scanned for viruses after uploading. If something goes wrong, we'll let you know.",
+    savePresentationDetails: 'Save presentation details',
+    success: 'Your presentation details have been added.',
+    error:
+      'There was an issue saving your presentation details. Please try again, and if the problem persists, try again later.',
+    emptyFormError:
+      'Please complete either the recording link or presentation deck field before submitting.'
   }
 };

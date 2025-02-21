@@ -164,11 +164,4 @@ func namedExec(ctx context.Context, np sqlutils.NamedPreparer, sqlStatement stri
 	}
 
 	return np.NamedExecContext(ctx, sqlStatement, arguments)
-	// stmt, err := np.PrepareNamed(sqlStatement)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// defer stmt.Close()
-	//
-	// return stmt.ExecContext(ctx, arguments)
 }

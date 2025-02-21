@@ -1,0 +1,19 @@
+{{template "easi_header.gohtml"}}
+
+<p>The Governance Admin Team has updated the presentation recording links on the GRB review for {{.ProjectName}}. You
+  may view the recording and/or slide deck using the link below.</p>
+
+<p><strong><a href="{{.SystemIntakeLink}}">View this request in EASi</a></strong></p>
+
+<br>
+<div class="no-margin">
+  <p><strong>Request summary:</strong></p>
+  <p>Project title: {{.ProjectName}}</p>
+  <p>Requester: {{.RequesterName}}, {{.RequesterComponent}}</p>
+</div>
+
+<br>
+<p>If you have questions, please contact the Governance Team at <a
+    href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
+<hr>
+<p>You will continue to receive email notifications about this request until it is closed.</p>

@@ -11,10 +11,25 @@ export const FundingSource = gql`
   }
 `;
 
+export const SystemIntakeGRBPresentationLinks = gql`
+  fragment SystemIntakeGRBPresentationLinks on SystemIntakeGRBPresentationLinks {
+    recordingLink
+    recordingPasscode
+    transcriptFileName
+    transcriptFileStatus
+    transcriptFileURL
+    transcriptLink
+    presentationDeckFileName
+    presentationDeckFileStatus
+    presentationDeckFileURL
+  }
+`;
+
 export const SystemIntake = gql`
   ${SystemIntakeDocument}
   ${GovernanceRequestFeedback}
   ${FundingSource}
+  ${SystemIntakeGRBPresentationLinks}
   fragment SystemIntake on SystemIntake {
     id
     adminLead
@@ -154,6 +169,9 @@ export const SystemIntake = gql`
       }
       decisionState
       submittedAt
+    }
+    grbPresentationLinks {
+      ...SystemIntakeGRBPresentationLinks
     }
   }
 `;
