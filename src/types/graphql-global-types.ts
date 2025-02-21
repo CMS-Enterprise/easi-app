@@ -418,15 +418,6 @@ export enum TRBGuidanceLetterStatus {
 }
 
 /**
- * Represents the status of the TRB guidance letter step
- */
-export enum TRBGuidanceLetterStatusTaskList {
-  CANNOT_START_YET = "CANNOT_START_YET",
-  COMPLETED = "COMPLETED",
-  IN_REVIEW = "IN_REVIEW",
-}
-
-/**
  * Enumeration of the possible statuses of documents uploaded in the TRB workflow
  */
 export enum TRBRequestDocumentStatus {

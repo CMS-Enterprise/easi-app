@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -12,12 +11,11 @@ import {
 } from '@trussworks/react-uswds';
 import AdditionalRequestInfo from 'features/ITGovernance/Requester/TaskList/AdditionalRequestInfo';
 import NotFoundPartial from 'features/Miscellaneous/NotFound/NotFoundPartial';
-import { useUpdateTRBRequestArchivedMutation } from 'gql/generated/graphql';
-import GetTrbTasklistQuery from 'gql/legacyGQL/GetTrbTasklistQuery';
 import {
-  GetTrbTasklist,
-  GetTrbTasklistVariables
-} from 'gql/legacyGQL/types/GetTrbTasklist';
+  TRBGuidanceLetterStatusTaskList,
+  useGetTRBTasklistQuery,
+  useUpdateTRBRequestArchivedMutation
+} from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 import { DateTime } from 'luxon';
 
@@ -35,8 +33,7 @@ import {
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
-  TRBFormStatus,
-  TRBGuidanceLetterStatusTaskList
+  TRBFormStatus
 } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
@@ -64,10 +61,7 @@ function TaskList() {
 
   const { showMessageOnNextPage } = useMessage();
 
-  const { data, error, loading } = useQuery<
-    GetTrbTasklist,
-    GetTrbTasklistVariables
-  >(GetTrbTasklistQuery, {
+  const { data, error, loading } = useGetTRBTasklistQuery({
     variables: {
       id
     }

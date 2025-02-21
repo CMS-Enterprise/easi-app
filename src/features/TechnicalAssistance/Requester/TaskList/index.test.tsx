@@ -7,15 +7,13 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  GetTRBTasklistDocument,
+  GetTRBTasklistQuery,
+  TRBGuidanceLetterStatusTaskList,
   TypedUpdateTRBRequestArchivedDocument,
   UpdateTRBRequestArchivedMutation,
   UpdateTRBRequestArchivedMutationVariables
 } from 'gql/generated/graphql';
-import GetTrbTasklistQuery from 'gql/legacyGQL/GetTrbTasklistQuery';
-import {
-  GetTrbTasklist,
-  GetTrbTasklistVariables
-} from 'gql/legacyGQL/types/GetTrbTasklist';
 import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -24,7 +22,6 @@ import {
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
-  TRBGuidanceLetterStatusTaskList,
   TRBRequestType
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
@@ -36,18 +33,16 @@ import TaskList from '.';
 
 const trbRequestId = 'a5fdb150-e1e5-41c1-93a4-bc5165aae66c';
 
-const getTrbTasklistQuery: MockedQuery<
-  GetTrbTasklist,
-  GetTrbTasklistVariables
-> = {
+const getTrbTasklistQuery: MockedQuery<GetTRBTasklistQuery> = {
   request: {
-    query: GetTrbTasklistQuery,
+    query: GetTRBTasklistDocument,
     variables: {
       id: trbRequestId
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         name: 'Case 1 - Draft request form',
         type: TRBRequestType.NEED_HELP,
@@ -177,7 +172,7 @@ describe('Trb Task List', () => {
       i18next.t<string>('taskList:withdraw_modal:confirmationText', {
         context: 'name',
         requestName:
-          (getTrbTasklistQuery.result as { data: GetTrbTasklist }).data
+          (getTrbTasklistQuery.result as { data: GetTRBTasklistQuery }).data
             .trbRequest.name ?? ''
       })
     );

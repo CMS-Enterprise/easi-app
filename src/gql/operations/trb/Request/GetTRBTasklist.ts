@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export default gql`
-  query GetTrbTasklist($id: UUID!) {
+export default gql(/* GraphQL */ `
+  query GetTRBTasklist($id: UUID!) {
     trbRequest(id: $id) {
       name
       type
@@ -32,4 +32,4 @@ export default gql`
       }
     }
   }
-`;
+`);
