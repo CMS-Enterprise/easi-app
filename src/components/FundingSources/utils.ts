@@ -14,7 +14,7 @@ export const formatFundingSourcesForApi = (
         source
       }));
     })
-    .flat();
+    .flat() as FundingSource[];
 };
 
 /** Formats funding sources for app by grouping objects by funding number */

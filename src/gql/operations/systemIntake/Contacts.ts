@@ -1,29 +1,16 @@
 import { gql } from '@apollo/client';
 
-export const SystemIntakeContact = gql`
-  fragment SystemIntakeContact on AugmentedSystemIntakeContact {
-    systemIntakeId
-    id
-    euaUserId
-    component
-    role
-    commonName
-    email
-  }
-`;
-
-export const GetSystemIntakeContactsQuery = gql`
-  ${SystemIntakeContact}
-  query GetSystemIntakeContactsQuery($id: UUID!) {
+export const GetSystemIntakeContacts = gql(/* GraphQL */ `
+  query GetSystemIntakeContacts($id: UUID!) {
     systemIntakeContacts(id: $id) {
       systemIntakeContacts {
-        ...SystemIntakeContact
+        ...SystemIntakeContactFragment
       }
     }
   }
-`;
+`);
 
-export const CreateSystemIntakeContact = gql`
+export const CreateSystemIntakeContact = gql(/* GraphQL */ `
   mutation CreateSystemIntakeContact($input: CreateSystemIntakeContactInput!) {
     createSystemIntakeContact(input: $input) {
       systemIntakeContact {
@@ -35,9 +22,9 @@ export const CreateSystemIntakeContact = gql`
       }
     }
   }
-`;
+`);
 
-export const UpdateSystemIntakeContact = gql`
+export const UpdateSystemIntakeContact = gql(/* GraphQL */ `
   mutation UpdateSystemIntakeContact($input: UpdateSystemIntakeContactInput!) {
     updateSystemIntakeContact(input: $input) {
       systemIntakeContact {
@@ -49,9 +36,9 @@ export const UpdateSystemIntakeContact = gql`
       }
     }
   }
-`;
+`);
 
-export const DeleteSystemIntakeContact = gql`
+export const DeleteSystemIntakeContact = gql(/* GraphQL */ `
   mutation DeleteSystemIntakeContact($input: DeleteSystemIntakeContactInput!) {
     deleteSystemIntakeContact(input: $input) {
       systemIntakeContact {
@@ -63,4 +50,4 @@ export const DeleteSystemIntakeContact = gql`
       }
     }
   }
-`;
+`);

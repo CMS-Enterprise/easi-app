@@ -515,16 +515,6 @@ export interface CreateCedarSystemBookmarkInput {
 }
 
 /**
- * The data needed to associate a contact with a system intake
- */
-export interface CreateSystemIntakeContactInput {
-  euaUserId: string;
-  systemIntakeId: UUID;
-  component: string;
-  role: string;
-}
-
-/**
  * Input data for adding a note to a system request
  */
 export interface CreateSystemIntakeNoteInput {
@@ -552,13 +542,6 @@ export interface CreateTRBRequestFeedbackInput {
   copyTrbMailbox: boolean;
   notifyEuaIds: string[];
   action: TRBFeedbackAction;
-}
-
-/**
- * The data needed to delete a system intake contact
- */
-export interface DeleteSystemIntakeContactInput {
-  id: UUID;
 }
 
 export interface DeleteTRBRequestFundingSourcesInput {
@@ -774,17 +757,6 @@ export interface SystemIntakeUpdateLCIDInput {
   additionalInfo?: HTML | null;
   notificationRecipients?: EmailNotificationRecipients | null;
   adminNote?: HTML | null;
-}
-
-/**
- * The data needed to update a contact associated with a system intake
- */
-export interface UpdateSystemIntakeContactInput {
-  id: UUID;
-  euaUserId: string;
-  systemIntakeId: UUID;
-  component: string;
-  role: string;
 }
 
 //==============================================================

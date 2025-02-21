@@ -268,41 +268,42 @@ type MyTrbRequests = GetRequestsQuery['myTrbRequests'][number];
 
 export const getRequestsQuery = (
   myTrbRequests: MyTrbRequests[] = getRequestsData.myTrbRequests
-): MockedQuery<Omit<GetRequestsQuery, '__typename'>> => ({
+): MockedQuery<GetRequestsQuery> => ({
   request: {
     query: GetRequestsDocument,
     variables: {}
   },
   result: {
     data: {
+      __typename: 'Query',
       myTrbRequests,
       mySystemIntakes: []
     }
   }
 });
 
-export const getTRBRequestAttendeesQuery: MockedQuery<
-  Omit<GetTRBRequestAttendeesQuery, '__typename'>
-> = {
-  request: {
-    query: GetTRBRequestAttendeesDocument,
-    variables: {
-      id: trbRequestId
-    }
-  },
-  result: {
-    data: {
-      trbRequest: {
-        __typename: 'TRBRequest',
-        id: trbRequestId,
-        attendees: [requester, ...attendees]
+export const getTRBRequestAttendeesQuery: MockedQuery<GetTRBRequestAttendeesQuery> =
+  {
+    request: {
+      query: GetTRBRequestAttendeesDocument,
+      variables: {
+        id: trbRequestId
+      }
+    },
+    result: {
+      data: {
+        __typename: 'Query',
+        trbRequest: {
+          __typename: 'TRBRequest',
+          id: trbRequestId,
+          attendees: [requester, ...attendees]
+        }
       }
     }
-  }
-};
+  };
 
 export const updateTrbRequestConsultMeetingQuery: MockedQuery<
-  Omit<UpdateTRBRequestConsultMeetingMutation, '__typename'>,
+  UpdateTRBRequestConsultMeetingMutation,
   UpdateTRBRequestConsultMeetingMutationVariables
 > = {
   request: {
@@ -319,6 +320,7 @@ export const updateTrbRequestConsultMeetingQuery: MockedQuery<
   },
   result: {
     data: {
+      __typename: 'Mutation',
       updateTRBRequestConsultMeetingTime: {
         __typename: 'TRBRequest',
         id: trbRequestId,

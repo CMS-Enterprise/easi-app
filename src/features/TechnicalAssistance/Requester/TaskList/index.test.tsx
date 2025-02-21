@@ -77,7 +77,7 @@ const getTrbTasklistQuery: MockedQuery<
 };
 
 const updateTrbRequestArchived: MockedQuery<
-  Omit<UpdateTRBRequestArchivedMutation, '__typename'>,
+  UpdateTRBRequestArchivedMutation,
   UpdateTRBRequestArchivedMutationVariables
 > = {
   request: {
@@ -89,6 +89,7 @@ const updateTrbRequestArchived: MockedQuery<
   },
   result: {
     data: {
+      __typename: 'Mutation',
       updateTRBRequest: {
         id: trbRequestId,
         archived: true,

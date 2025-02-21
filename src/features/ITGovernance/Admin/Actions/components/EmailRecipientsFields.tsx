@@ -6,7 +6,7 @@ import {
   ExternalRecipientAlert,
   RecipientLabel
 } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
-import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
+import { AugmentedSystemIntakeContact } from 'gql/generated/graphql';
 
 import AdditionalContacts from 'components/AdditionalContacts';
 import Alert from 'components/Alert';

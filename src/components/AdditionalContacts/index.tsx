@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Label, Select } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
-import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
+import { AugmentedSystemIntakeContact } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
