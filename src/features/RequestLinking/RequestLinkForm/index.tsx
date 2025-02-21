@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -21,50 +20,16 @@ import {
 import classNames from 'classnames';
 import {
   useGetSystemIntakeRelationQuery,
-  useGetTRBRequestRelationQuery
+  useGetTRBRequestRelationQuery,
+  useSetSystemIntakeRelationExistingServiceMutation,
+  useSetSystemIntakeRelationExistingSystemMutation,
+  useSetSystemIntakeRelationNewSystemMutation,
+  useSetTrbRequestRelationExistingServiceMutation,
+  useSetTrbRequestRelationExistingSystemMutation,
+  useSetTrbRequestRelationNewSystemMutation,
+  useUnlinkSystemIntakeRelationMutation,
+  useUnlinkTrbRequestRelationMutation
 } from 'gql/generated/graphql';
-import {
-  SetSystemIntakeRelationExistingServiceQuery,
-  SetSystemIntakeRelationExistingSystemQuery,
-  SetSystemIntakeRelationNewSystemQuery,
-  SetTrbRequestRelationExistingServiceQuery,
-  SetTrbRequestRelationExistingSystemQuery,
-  SetTrbRequestRelationNewSystemQuery,
-  UnlinkSystemIntakeRelationQuery,
-  UnlinkTrbRequestRelationQuery
-} from 'gql/legacyGQL/SystemIntakeRelationQueries';
-import {
-  SetSystemIntakeRelationExistingService,
-  SetSystemIntakeRelationExistingServiceVariables
-} from 'gql/legacyGQL/types/SetSystemIntakeRelationExistingService';
-import {
-  SetSystemIntakeRelationExistingSystem,
-  SetSystemIntakeRelationExistingSystemVariables
-} from 'gql/legacyGQL/types/SetSystemIntakeRelationExistingSystem';
-import {
-  SetSystemIntakeRelationNewSystem,
-  SetSystemIntakeRelationNewSystemVariables
-} from 'gql/legacyGQL/types/SetSystemIntakeRelationNewSystem';
-import {
-  SetTrbRequestRelationExistingService,
-  SetTrbRequestRelationExistingServiceVariables
-} from 'gql/legacyGQL/types/SetTrbRequestRelationExistingService';
-import {
-  SetTrbRequestRelationExistingSystem,
-  SetTrbRequestRelationExistingSystemVariables
-} from 'gql/legacyGQL/types/SetTrbRequestRelationExistingSystem';
-import {
-  SetTrbRequestRelationNewSystem,
-  SetTrbRequestRelationNewSystemVariables
-} from 'gql/legacyGQL/types/SetTrbRequestRelationNewSystem';
-import {
-  UnlinkSystemIntakeRelation,
-  UnlinkSystemIntakeRelationVariables
-} from 'gql/legacyGQL/types/UnlinkSystemIntakeRelation';
-import {
-  UnlinkTrbRequestRelation,
-  UnlinkTrbRequestRelationVariables
-} from 'gql/legacyGQL/types/UnlinkTrbRequestRelation';
 
 import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
@@ -172,45 +137,29 @@ const RequestLinkForm = ({
         }));
   }, [data?.cedarSystems]);
 
-  const [setNewSystem, { error: newSystemError }] = useMutation<
-    SetSystemIntakeRelationNewSystem | SetTrbRequestRelationNewSystem,
-    | SetSystemIntakeRelationNewSystemVariables
-    | SetTrbRequestRelationNewSystemVariables
-  >(
-    requestType === 'trb'
-      ? SetTrbRequestRelationNewSystemQuery
-      : SetSystemIntakeRelationNewSystemQuery
-  );
+  const [setNewTRBSystem, { error: newTRBSystemError }] =
+    useSetTrbRequestRelationNewSystemMutation();
 
-  const [setExistingSystem, { error: existingSystemError }] = useMutation<
-    SetSystemIntakeRelationExistingSystem | SetTrbRequestRelationExistingSystem,
-    | SetSystemIntakeRelationExistingSystemVariables
-    | SetTrbRequestRelationExistingSystemVariables
-  >(
-    requestType === 'trb'
-      ? SetTrbRequestRelationExistingSystemQuery
-      : SetSystemIntakeRelationExistingSystemQuery
-  );
+  const [setNewIntakeSystem, { error: newIntakeSystemError }] =
+    useSetSystemIntakeRelationNewSystemMutation();
 
-  const [setExistingService, { error: existingServiceError }] = useMutation<
-    | SetSystemIntakeRelationExistingService
-    | SetTrbRequestRelationExistingService,
-    | SetSystemIntakeRelationExistingServiceVariables
-    | SetTrbRequestRelationExistingServiceVariables
-  >(
-    requestType === 'trb'
-      ? SetTrbRequestRelationExistingServiceQuery
-      : SetSystemIntakeRelationExistingServiceQuery
-  );
+  const [setExistingTRBSystem, { error: existingTRBSystemError }] =
+    useSetTrbRequestRelationExistingSystemMutation();
 
-  const [unlinkRelation, { error: unlinkRelationError }] = useMutation<
-    UnlinkSystemIntakeRelation | UnlinkTrbRequestRelation,
-    UnlinkSystemIntakeRelationVariables | UnlinkTrbRequestRelationVariables
-  >(
-    requestType === 'trb'
-      ? UnlinkTrbRequestRelationQuery
-      : UnlinkSystemIntakeRelationQuery
-  );
+  const [setExistingIntakeSystem, { error: existingIntakeSystemError }] =
+    useSetSystemIntakeRelationExistingSystemMutation();
+
+  const [setExistingTRBService, { error: existingTRBServiceError }] =
+    useSetTrbRequestRelationExistingServiceMutation();
+
+  const [setExistingIntakeService, { error: existingIntakeServiceError }] =
+    useSetSystemIntakeRelationExistingServiceMutation();
+
+  const [unlinkTRBRelation, { error: unlinkTRBRelationError }] =
+    useUnlinkTrbRequestRelationMutation();
+
+  const [unlinkIntakeRelation, { error: unlinkIntakeRelationError }] =
+    useUnlinkSystemIntakeRelationMutation();
 
   const { control, watch, setValue, handleSubmit } =
     useForm<RequestLinkFormFields>({
@@ -286,29 +235,28 @@ const RequestLinkForm = ({
     let p;
 
     if (relation === RequestRelationType.NEW_SYSTEM) {
-      p = setNewSystem(
+      p =
         requestType === 'trb'
-          ? {
+          ? setNewTRBSystem({
               variables: {
                 input: {
                   trbRequestID: id,
                   contractNumbers
                 }
               }
-            }
-          : {
+            })
+          : setNewIntakeSystem({
               variables: {
                 input: {
                   systemIntakeID: id,
                   contractNumbers
                 }
               }
-            }
-      );
+            });
     } else if (relation === RequestRelationType.EXISTING_SYSTEM) {
-      p = setExistingSystem(
+      p =
         requestType === 'trb'
-          ? {
+          ? setExistingTRBSystem({
               variables: {
                 input: {
                   trbRequestID: id,
@@ -316,8 +264,8 @@ const RequestLinkForm = ({
                   contractNumbers
                 }
               }
-            }
-          : {
+            })
+          : setExistingIntakeSystem({
               variables: {
                 input: {
                   systemIntakeID: id,
@@ -325,12 +273,11 @@ const RequestLinkForm = ({
                   contractNumbers
                 }
               }
-            }
-      );
+            });
     } else if (relation === RequestRelationType.EXISTING_SERVICE) {
-      p = setExistingService(
+      p =
         requestType === 'trb'
-          ? {
+          ? setExistingTRBService({
               variables: {
                 input: {
                   trbRequestID: id,
@@ -338,8 +285,8 @@ const RequestLinkForm = ({
                   contractNumbers
                 }
               }
-            }
-          : {
+            })
+          : setExistingIntakeService({
               variables: {
                 input: {
                   systemIntakeID: id,
@@ -347,8 +294,7 @@ const RequestLinkForm = ({
                   contractNumbers
                 }
               }
-            }
-      );
+            });
     }
 
     p
@@ -364,29 +310,42 @@ const RequestLinkForm = ({
   });
 
   const unlink = () => {
-    unlinkRelation(
-      requestType === 'trb'
-        ? { variables: { trbRequestID: id } }
-        : { variables: { intakeID: id } }
-    )
-      .then(
-        res => {
-          if (res?.data) history.push(redirectUrl);
-        },
-        () => {}
-      )
-      .catch(() => {
-        setUserError(true);
-      });
+    if (requestType === 'trb') {
+      unlinkTRBRelation({ variables: { trbRequestID: id } })
+        .then(
+          res => {
+            if (res?.data) history.push(redirectUrl);
+          },
+          () => {}
+        )
+        .catch(() => {
+          setUserError(true);
+        });
+    } else {
+      unlinkIntakeRelation({ variables: { intakeID: id } })
+        .then(
+          res => {
+            if (res?.data) history.push(redirectUrl);
+          },
+          () => {}
+        )
+        .catch(() => {
+          setUserError(true);
+        });
+    }
   };
 
   // Error feedback
   const hasErrors =
     relationError ||
-    newSystemError ||
-    existingSystemError ||
-    existingServiceError ||
-    unlinkRelationError ||
+    newIntakeSystemError ||
+    newTRBSystemError ||
+    existingTRBServiceError ||
+    existingIntakeServiceError ||
+    unlinkTRBRelationError ||
+    unlinkIntakeRelationError ||
+    existingTRBSystemError ||
+    existingIntakeSystemError ||
     hasUserError;
 
   useEffect(() => {

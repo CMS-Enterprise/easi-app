@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const SetSystemIntakeRelationNewSystemQuery = gql`
+export const SetSystemIntakeRelationNewSystem = gql(/* GraphQL */ `
   mutation SetSystemIntakeRelationNewSystem(
     $input: SetSystemIntakeRelationNewSystemInput!
   ) {
@@ -10,9 +10,9 @@ export const SetSystemIntakeRelationNewSystemQuery = gql`
       }
     }
   }
-`;
+`);
 
-export const SetSystemIntakeRelationExistingSystemQuery = gql`
+export const SetSystemIntakeRelationExistingSystem = gql(/* GraphQL */ `
   mutation SetSystemIntakeRelationExistingSystem(
     $input: SetSystemIntakeRelationExistingSystemInput!
   ) {
@@ -22,9 +22,9 @@ export const SetSystemIntakeRelationExistingSystemQuery = gql`
       }
     }
   }
-`;
+`);
 
-export const SetSystemIntakeRelationExistingServiceQuery = gql`
+export const SetSystemIntakeRelationExistingService = gql(/* GraphQL */ `
   mutation SetSystemIntakeRelationExistingService(
     $input: SetSystemIntakeRelationExistingServiceInput!
   ) {
@@ -34,9 +34,9 @@ export const SetSystemIntakeRelationExistingServiceQuery = gql`
       }
     }
   }
-`;
+`);
 
-export const UnlinkSystemIntakeRelationQuery = gql`
+export const UnlinkSystemIntakeRelation = gql(/* GraphQL */ `
   mutation UnlinkSystemIntakeRelation($intakeID: UUID!) {
     unlinkSystemIntakeRelation(intakeID: $intakeID) {
       systemIntake {
@@ -44,9 +44,9 @@ export const UnlinkSystemIntakeRelationQuery = gql`
       }
     }
   }
-`;
+`);
 
-export const SetTrbRequestRelationNewSystemQuery = gql`
+export const SetTrbRequestRelationNewSystem = gql(/* GraphQL */ `
   mutation SetTrbRequestRelationNewSystem(
     $input: SetTRBRequestRelationNewSystemInput!
   ) {
@@ -54,9 +54,9 @@ export const SetTrbRequestRelationNewSystemQuery = gql`
       id
     }
   }
-`;
+`);
 
-export const SetTrbRequestRelationExistingSystemQuery = gql`
+export const SetTrbRequestRelationExistingSystem = gql(/* GraphQL */ `
   mutation SetTrbRequestRelationExistingSystem(
     $input: SetTRBRequestRelationExistingSystemInput!
   ) {
@@ -64,9 +64,9 @@ export const SetTrbRequestRelationExistingSystemQuery = gql`
       id
     }
   }
-`;
+`);
 
-export const SetTrbRequestRelationExistingServiceQuery = gql`
+export const SetTrbRequestRelationExistingService = gql(/* GraphQL */ `
   mutation SetTrbRequestRelationExistingService(
     $input: SetTRBRequestRelationExistingServiceInput!
   ) {
@@ -74,12 +74,12 @@ export const SetTrbRequestRelationExistingServiceQuery = gql`
       id
     }
   }
-`;
+`);
 
-export const UnlinkTrbRequestRelationQuery = gql`
+export const UnlinkTrbRequestRelation = gql(/* GraphQL */ `
   mutation UnlinkTrbRequestRelation($trbRequestID: UUID!) {
     unlinkTRBRequestRelation(trbRequestID: $trbRequestID) {
       id
     }
   }
-`;
+`);

@@ -3337,6 +3337,62 @@ export type GetSystemIntakeRelationQueryVariables = Exact<{
 
 export type GetSystemIntakeRelationQuery = { __typename: 'Query', systemIntake?: { __typename: 'SystemIntake', id: UUID, relationType?: RequestRelationType | null, contractName?: string | null, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', contractNumber: string }>, systems: Array<{ __typename: 'CedarSystem', id: string, name: string, acronym?: string | null }> } | null, cedarSystems: Array<{ __typename: 'CedarSystem', id: string, name: string, acronym?: string | null }> };
 
+export type SetSystemIntakeRelationNewSystemMutationVariables = Exact<{
+  input: SetSystemIntakeRelationNewSystemInput;
+}>;
+
+
+export type SetSystemIntakeRelationNewSystemMutation = { __typename: 'Mutation', setSystemIntakeRelationNewSystem?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID } | null } | null };
+
+export type SetSystemIntakeRelationExistingSystemMutationVariables = Exact<{
+  input: SetSystemIntakeRelationExistingSystemInput;
+}>;
+
+
+export type SetSystemIntakeRelationExistingSystemMutation = { __typename: 'Mutation', setSystemIntakeRelationExistingSystem?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID } | null } | null };
+
+export type SetSystemIntakeRelationExistingServiceMutationVariables = Exact<{
+  input: SetSystemIntakeRelationExistingServiceInput;
+}>;
+
+
+export type SetSystemIntakeRelationExistingServiceMutation = { __typename: 'Mutation', setSystemIntakeRelationExistingService?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID } | null } | null };
+
+export type UnlinkSystemIntakeRelationMutationVariables = Exact<{
+  intakeID: Scalars['UUID']['input'];
+}>;
+
+
+export type UnlinkSystemIntakeRelationMutation = { __typename: 'Mutation', unlinkSystemIntakeRelation?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID } | null } | null };
+
+export type SetTrbRequestRelationNewSystemMutationVariables = Exact<{
+  input: SetTRBRequestRelationNewSystemInput;
+}>;
+
+
+export type SetTrbRequestRelationNewSystemMutation = { __typename: 'Mutation', setTRBRequestRelationNewSystem?: { __typename: 'TRBRequest', id: UUID } | null };
+
+export type SetTrbRequestRelationExistingSystemMutationVariables = Exact<{
+  input: SetTRBRequestRelationExistingSystemInput;
+}>;
+
+
+export type SetTrbRequestRelationExistingSystemMutation = { __typename: 'Mutation', setTRBRequestRelationExistingSystem?: { __typename: 'TRBRequest', id: UUID } | null };
+
+export type SetTrbRequestRelationExistingServiceMutationVariables = Exact<{
+  input: SetTRBRequestRelationExistingServiceInput;
+}>;
+
+
+export type SetTrbRequestRelationExistingServiceMutation = { __typename: 'Mutation', setTRBRequestRelationExistingService?: { __typename: 'TRBRequest', id: UUID } | null };
+
+export type UnlinkTrbRequestRelationMutationVariables = Exact<{
+  trbRequestID: Scalars['UUID']['input'];
+}>;
+
+
+export type UnlinkTrbRequestRelationMutation = { __typename: 'Mutation', unlinkTRBRequestRelation?: { __typename: 'TRBRequest', id: UUID } | null };
+
 export type UpdateSystemIntakeAdminLeadMutationVariables = Exact<{
   input: UpdateSystemIntakeAdminLeadInput;
 }>;
@@ -4343,6 +4399,278 @@ export type GetSystemIntakeRelationQueryHookResult = ReturnType<typeof useGetSys
 export type GetSystemIntakeRelationLazyQueryHookResult = ReturnType<typeof useGetSystemIntakeRelationLazyQuery>;
 export type GetSystemIntakeRelationSuspenseQueryHookResult = ReturnType<typeof useGetSystemIntakeRelationSuspenseQuery>;
 export type GetSystemIntakeRelationQueryResult = Apollo.QueryResult<GetSystemIntakeRelationQuery, GetSystemIntakeRelationQueryVariables>;
+export const SetSystemIntakeRelationNewSystemDocument = gql`
+    mutation SetSystemIntakeRelationNewSystem($input: SetSystemIntakeRelationNewSystemInput!) {
+  setSystemIntakeRelationNewSystem(input: $input) {
+    systemIntake {
+      id
+    }
+  }
+}
+    `;
+export type SetSystemIntakeRelationNewSystemMutationFn = Apollo.MutationFunction<SetSystemIntakeRelationNewSystemMutation, SetSystemIntakeRelationNewSystemMutationVariables>;
+
+/**
+ * __useSetSystemIntakeRelationNewSystemMutation__
+ *
+ * To run a mutation, you first call `useSetSystemIntakeRelationNewSystemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetSystemIntakeRelationNewSystemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setSystemIntakeRelationNewSystemMutation, { data, loading, error }] = useSetSystemIntakeRelationNewSystemMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSetSystemIntakeRelationNewSystemMutation(baseOptions?: Apollo.MutationHookOptions<SetSystemIntakeRelationNewSystemMutation, SetSystemIntakeRelationNewSystemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetSystemIntakeRelationNewSystemMutation, SetSystemIntakeRelationNewSystemMutationVariables>(SetSystemIntakeRelationNewSystemDocument, options);
+      }
+export type SetSystemIntakeRelationNewSystemMutationHookResult = ReturnType<typeof useSetSystemIntakeRelationNewSystemMutation>;
+export type SetSystemIntakeRelationNewSystemMutationResult = Apollo.MutationResult<SetSystemIntakeRelationNewSystemMutation>;
+export type SetSystemIntakeRelationNewSystemMutationOptions = Apollo.BaseMutationOptions<SetSystemIntakeRelationNewSystemMutation, SetSystemIntakeRelationNewSystemMutationVariables>;
+export const SetSystemIntakeRelationExistingSystemDocument = gql`
+    mutation SetSystemIntakeRelationExistingSystem($input: SetSystemIntakeRelationExistingSystemInput!) {
+  setSystemIntakeRelationExistingSystem(input: $input) {
+    systemIntake {
+      id
+    }
+  }
+}
+    `;
+export type SetSystemIntakeRelationExistingSystemMutationFn = Apollo.MutationFunction<SetSystemIntakeRelationExistingSystemMutation, SetSystemIntakeRelationExistingSystemMutationVariables>;
+
+/**
+ * __useSetSystemIntakeRelationExistingSystemMutation__
+ *
+ * To run a mutation, you first call `useSetSystemIntakeRelationExistingSystemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetSystemIntakeRelationExistingSystemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setSystemIntakeRelationExistingSystemMutation, { data, loading, error }] = useSetSystemIntakeRelationExistingSystemMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSetSystemIntakeRelationExistingSystemMutation(baseOptions?: Apollo.MutationHookOptions<SetSystemIntakeRelationExistingSystemMutation, SetSystemIntakeRelationExistingSystemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetSystemIntakeRelationExistingSystemMutation, SetSystemIntakeRelationExistingSystemMutationVariables>(SetSystemIntakeRelationExistingSystemDocument, options);
+      }
+export type SetSystemIntakeRelationExistingSystemMutationHookResult = ReturnType<typeof useSetSystemIntakeRelationExistingSystemMutation>;
+export type SetSystemIntakeRelationExistingSystemMutationResult = Apollo.MutationResult<SetSystemIntakeRelationExistingSystemMutation>;
+export type SetSystemIntakeRelationExistingSystemMutationOptions = Apollo.BaseMutationOptions<SetSystemIntakeRelationExistingSystemMutation, SetSystemIntakeRelationExistingSystemMutationVariables>;
+export const SetSystemIntakeRelationExistingServiceDocument = gql`
+    mutation SetSystemIntakeRelationExistingService($input: SetSystemIntakeRelationExistingServiceInput!) {
+  setSystemIntakeRelationExistingService(input: $input) {
+    systemIntake {
+      id
+    }
+  }
+}
+    `;
+export type SetSystemIntakeRelationExistingServiceMutationFn = Apollo.MutationFunction<SetSystemIntakeRelationExistingServiceMutation, SetSystemIntakeRelationExistingServiceMutationVariables>;
+
+/**
+ * __useSetSystemIntakeRelationExistingServiceMutation__
+ *
+ * To run a mutation, you first call `useSetSystemIntakeRelationExistingServiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetSystemIntakeRelationExistingServiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setSystemIntakeRelationExistingServiceMutation, { data, loading, error }] = useSetSystemIntakeRelationExistingServiceMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSetSystemIntakeRelationExistingServiceMutation(baseOptions?: Apollo.MutationHookOptions<SetSystemIntakeRelationExistingServiceMutation, SetSystemIntakeRelationExistingServiceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetSystemIntakeRelationExistingServiceMutation, SetSystemIntakeRelationExistingServiceMutationVariables>(SetSystemIntakeRelationExistingServiceDocument, options);
+      }
+export type SetSystemIntakeRelationExistingServiceMutationHookResult = ReturnType<typeof useSetSystemIntakeRelationExistingServiceMutation>;
+export type SetSystemIntakeRelationExistingServiceMutationResult = Apollo.MutationResult<SetSystemIntakeRelationExistingServiceMutation>;
+export type SetSystemIntakeRelationExistingServiceMutationOptions = Apollo.BaseMutationOptions<SetSystemIntakeRelationExistingServiceMutation, SetSystemIntakeRelationExistingServiceMutationVariables>;
+export const UnlinkSystemIntakeRelationDocument = gql`
+    mutation UnlinkSystemIntakeRelation($intakeID: UUID!) {
+  unlinkSystemIntakeRelation(intakeID: $intakeID) {
+    systemIntake {
+      id
+    }
+  }
+}
+    `;
+export type UnlinkSystemIntakeRelationMutationFn = Apollo.MutationFunction<UnlinkSystemIntakeRelationMutation, UnlinkSystemIntakeRelationMutationVariables>;
+
+/**
+ * __useUnlinkSystemIntakeRelationMutation__
+ *
+ * To run a mutation, you first call `useUnlinkSystemIntakeRelationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnlinkSystemIntakeRelationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unlinkSystemIntakeRelationMutation, { data, loading, error }] = useUnlinkSystemIntakeRelationMutation({
+ *   variables: {
+ *      intakeID: // value for 'intakeID'
+ *   },
+ * });
+ */
+export function useUnlinkSystemIntakeRelationMutation(baseOptions?: Apollo.MutationHookOptions<UnlinkSystemIntakeRelationMutation, UnlinkSystemIntakeRelationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnlinkSystemIntakeRelationMutation, UnlinkSystemIntakeRelationMutationVariables>(UnlinkSystemIntakeRelationDocument, options);
+      }
+export type UnlinkSystemIntakeRelationMutationHookResult = ReturnType<typeof useUnlinkSystemIntakeRelationMutation>;
+export type UnlinkSystemIntakeRelationMutationResult = Apollo.MutationResult<UnlinkSystemIntakeRelationMutation>;
+export type UnlinkSystemIntakeRelationMutationOptions = Apollo.BaseMutationOptions<UnlinkSystemIntakeRelationMutation, UnlinkSystemIntakeRelationMutationVariables>;
+export const SetTrbRequestRelationNewSystemDocument = gql`
+    mutation SetTrbRequestRelationNewSystem($input: SetTRBRequestRelationNewSystemInput!) {
+  setTRBRequestRelationNewSystem(input: $input) {
+    id
+  }
+}
+    `;
+export type SetTrbRequestRelationNewSystemMutationFn = Apollo.MutationFunction<SetTrbRequestRelationNewSystemMutation, SetTrbRequestRelationNewSystemMutationVariables>;
+
+/**
+ * __useSetTrbRequestRelationNewSystemMutation__
+ *
+ * To run a mutation, you first call `useSetTrbRequestRelationNewSystemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetTrbRequestRelationNewSystemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setTrbRequestRelationNewSystemMutation, { data, loading, error }] = useSetTrbRequestRelationNewSystemMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSetTrbRequestRelationNewSystemMutation(baseOptions?: Apollo.MutationHookOptions<SetTrbRequestRelationNewSystemMutation, SetTrbRequestRelationNewSystemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetTrbRequestRelationNewSystemMutation, SetTrbRequestRelationNewSystemMutationVariables>(SetTrbRequestRelationNewSystemDocument, options);
+      }
+export type SetTrbRequestRelationNewSystemMutationHookResult = ReturnType<typeof useSetTrbRequestRelationNewSystemMutation>;
+export type SetTrbRequestRelationNewSystemMutationResult = Apollo.MutationResult<SetTrbRequestRelationNewSystemMutation>;
+export type SetTrbRequestRelationNewSystemMutationOptions = Apollo.BaseMutationOptions<SetTrbRequestRelationNewSystemMutation, SetTrbRequestRelationNewSystemMutationVariables>;
+export const SetTrbRequestRelationExistingSystemDocument = gql`
+    mutation SetTrbRequestRelationExistingSystem($input: SetTRBRequestRelationExistingSystemInput!) {
+  setTRBRequestRelationExistingSystem(input: $input) {
+    id
+  }
+}
+    `;
+export type SetTrbRequestRelationExistingSystemMutationFn = Apollo.MutationFunction<SetTrbRequestRelationExistingSystemMutation, SetTrbRequestRelationExistingSystemMutationVariables>;
+
+/**
+ * __useSetTrbRequestRelationExistingSystemMutation__
+ *
+ * To run a mutation, you first call `useSetTrbRequestRelationExistingSystemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetTrbRequestRelationExistingSystemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setTrbRequestRelationExistingSystemMutation, { data, loading, error }] = useSetTrbRequestRelationExistingSystemMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSetTrbRequestRelationExistingSystemMutation(baseOptions?: Apollo.MutationHookOptions<SetTrbRequestRelationExistingSystemMutation, SetTrbRequestRelationExistingSystemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetTrbRequestRelationExistingSystemMutation, SetTrbRequestRelationExistingSystemMutationVariables>(SetTrbRequestRelationExistingSystemDocument, options);
+      }
+export type SetTrbRequestRelationExistingSystemMutationHookResult = ReturnType<typeof useSetTrbRequestRelationExistingSystemMutation>;
+export type SetTrbRequestRelationExistingSystemMutationResult = Apollo.MutationResult<SetTrbRequestRelationExistingSystemMutation>;
+export type SetTrbRequestRelationExistingSystemMutationOptions = Apollo.BaseMutationOptions<SetTrbRequestRelationExistingSystemMutation, SetTrbRequestRelationExistingSystemMutationVariables>;
+export const SetTrbRequestRelationExistingServiceDocument = gql`
+    mutation SetTrbRequestRelationExistingService($input: SetTRBRequestRelationExistingServiceInput!) {
+  setTRBRequestRelationExistingService(input: $input) {
+    id
+  }
+}
+    `;
+export type SetTrbRequestRelationExistingServiceMutationFn = Apollo.MutationFunction<SetTrbRequestRelationExistingServiceMutation, SetTrbRequestRelationExistingServiceMutationVariables>;
+
+/**
+ * __useSetTrbRequestRelationExistingServiceMutation__
+ *
+ * To run a mutation, you first call `useSetTrbRequestRelationExistingServiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetTrbRequestRelationExistingServiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setTrbRequestRelationExistingServiceMutation, { data, loading, error }] = useSetTrbRequestRelationExistingServiceMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSetTrbRequestRelationExistingServiceMutation(baseOptions?: Apollo.MutationHookOptions<SetTrbRequestRelationExistingServiceMutation, SetTrbRequestRelationExistingServiceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetTrbRequestRelationExistingServiceMutation, SetTrbRequestRelationExistingServiceMutationVariables>(SetTrbRequestRelationExistingServiceDocument, options);
+      }
+export type SetTrbRequestRelationExistingServiceMutationHookResult = ReturnType<typeof useSetTrbRequestRelationExistingServiceMutation>;
+export type SetTrbRequestRelationExistingServiceMutationResult = Apollo.MutationResult<SetTrbRequestRelationExistingServiceMutation>;
+export type SetTrbRequestRelationExistingServiceMutationOptions = Apollo.BaseMutationOptions<SetTrbRequestRelationExistingServiceMutation, SetTrbRequestRelationExistingServiceMutationVariables>;
+export const UnlinkTrbRequestRelationDocument = gql`
+    mutation UnlinkTrbRequestRelation($trbRequestID: UUID!) {
+  unlinkTRBRequestRelation(trbRequestID: $trbRequestID) {
+    id
+  }
+}
+    `;
+export type UnlinkTrbRequestRelationMutationFn = Apollo.MutationFunction<UnlinkTrbRequestRelationMutation, UnlinkTrbRequestRelationMutationVariables>;
+
+/**
+ * __useUnlinkTrbRequestRelationMutation__
+ *
+ * To run a mutation, you first call `useUnlinkTrbRequestRelationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnlinkTrbRequestRelationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unlinkTrbRequestRelationMutation, { data, loading, error }] = useUnlinkTrbRequestRelationMutation({
+ *   variables: {
+ *      trbRequestID: // value for 'trbRequestID'
+ *   },
+ * });
+ */
+export function useUnlinkTrbRequestRelationMutation(baseOptions?: Apollo.MutationHookOptions<UnlinkTrbRequestRelationMutation, UnlinkTrbRequestRelationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnlinkTrbRequestRelationMutation, UnlinkTrbRequestRelationMutationVariables>(UnlinkTrbRequestRelationDocument, options);
+      }
+export type UnlinkTrbRequestRelationMutationHookResult = ReturnType<typeof useUnlinkTrbRequestRelationMutation>;
+export type UnlinkTrbRequestRelationMutationResult = Apollo.MutationResult<UnlinkTrbRequestRelationMutation>;
+export type UnlinkTrbRequestRelationMutationOptions = Apollo.BaseMutationOptions<UnlinkTrbRequestRelationMutation, UnlinkTrbRequestRelationMutationVariables>;
 export const UpdateSystemIntakeAdminLeadDocument = gql`
     mutation UpdateSystemIntakeAdminLead($input: UpdateSystemIntakeAdminLeadInput!) {
   updateSystemIntakeAdminLead(input: $input) {
@@ -5761,6 +6089,14 @@ export const TypedUpdateSystemIntakeGRBReviewerDocument = {"kind":"Document","de
 export const TypedArchiveSystemIntakeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ArchiveSystemIntake"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"archiveSystemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}}]}}]} as unknown as DocumentNode<ArchiveSystemIntakeMutation, ArchiveSystemIntakeMutationVariables>;
 export const TypedGetSystemIntakeRelatedRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeRelatedRequests"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"systemIntakeID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"systemIntakeID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"statusAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"statusRequester"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>;
 export const TypedGetSystemIntakeRelationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeRelation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"relationType"}},{"kind":"Field","name":{"kind":"Name","value":"contractName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}}]}}]}}]} as unknown as DocumentNode<GetSystemIntakeRelationQuery, GetSystemIntakeRelationQueryVariables>;
+export const TypedSetSystemIntakeRelationNewSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationNewSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationNewSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationNewSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationNewSystemMutation, SetSystemIntakeRelationNewSystemMutationVariables>;
+export const TypedSetSystemIntakeRelationExistingSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationExistingSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationExistingSystemMutation, SetSystemIntakeRelationExistingSystemMutationVariables>;
+export const TypedSetSystemIntakeRelationExistingServiceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingService"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingServiceInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationExistingService"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationExistingServiceMutation, SetSystemIntakeRelationExistingServiceMutationVariables>;
+export const TypedUnlinkSystemIntakeRelationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UnlinkSystemIntakeRelation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"intakeID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unlinkSystemIntakeRelation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"intakeID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"intakeID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UnlinkSystemIntakeRelationMutation, UnlinkSystemIntakeRelationMutationVariables>;
+export const TypedSetTrbRequestRelationNewSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetTrbRequestRelationNewSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetTRBRequestRelationNewSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setTRBRequestRelationNewSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetTrbRequestRelationNewSystemMutation, SetTrbRequestRelationNewSystemMutationVariables>;
+export const TypedSetTrbRequestRelationExistingSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetTrbRequestRelationExistingSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetTRBRequestRelationExistingSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setTRBRequestRelationExistingSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetTrbRequestRelationExistingSystemMutation, SetTrbRequestRelationExistingSystemMutationVariables>;
+export const TypedSetTrbRequestRelationExistingServiceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetTrbRequestRelationExistingService"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetTRBRequestRelationExistingServiceInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setTRBRequestRelationExistingService"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetTrbRequestRelationExistingServiceMutation, SetTrbRequestRelationExistingServiceMutationVariables>;
+export const TypedUnlinkTrbRequestRelationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UnlinkTrbRequestRelation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unlinkTRBRequestRelation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"trbRequestID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UnlinkTrbRequestRelationMutation, UnlinkTrbRequestRelationMutationVariables>;
 export const TypedUpdateSystemIntakeAdminLeadDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeAdminLead"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeAdminLeadInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeAdminLead"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminLead"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeAdminLeadMutation, UpdateSystemIntakeAdminLeadMutationVariables>;
 export const TypedUpdateSystemIntakeNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeNoteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeNoteMutation, UpdateSystemIntakeNoteMutationVariables>;
 export const TypedUpdateSystemIntakeReviewDatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeReviewDates"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeReviewDatesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeReviewDates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeReviewDatesMutation, UpdateSystemIntakeReviewDatesMutationVariables>;
