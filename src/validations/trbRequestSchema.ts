@@ -1,4 +1,7 @@
-import { TRBGuidanceLetterInsightCategory } from 'gql/generated/graphql';
+import {
+  TRBGuidanceLetterInsightCategory,
+  UpdateTRBRequestFormInput
+} from 'gql/generated/graphql';
 import * as yup from 'yup';
 
 import {
@@ -6,10 +9,8 @@ import {
   PersonRole,
   TRBCollabGroupOption,
   TRBDocumentCommonType,
-  TRBWhereInProcessOption,
-  UpdateTRBRequestFormInput
+  TRBWhereInProcessOption
 } from 'types/graphql-global-types';
-// import { fileObjectSchema } from './fileSchema';
 
 type TrbFormInputBasic = Pick<
   UpdateTRBRequestFormInput,

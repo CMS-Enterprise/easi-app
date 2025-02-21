@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ApolloError, useMutation } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 import {
   ErrorMessage,
   Form,
@@ -10,11 +10,7 @@ import {
   Grid,
   Label
 } from '@trussworks/react-uswds';
-import {
-  UpdateTrbForm,
-  UpdateTrbFormVariables
-} from 'gql/legacyGQL/types/UpdateTrbForm';
-import UpdateTrbFormQuery from 'gql/legacyGQL/UpdateTrbFormQuery';
+import { useUpdateTrbFormMutation } from 'gql/generated/graphql';
 import { isEqual, pick } from 'lodash';
 
 import Alert from 'components/Alert';
@@ -47,9 +43,7 @@ function SubjectAreas({
 
   const { t } = useTranslation('technicalAssistance');
 
-  const [updateForm] = useMutation<UpdateTrbForm, UpdateTrbFormVariables>(
-    UpdateTrbFormQuery
-  );
+  const [updateForm] = useUpdateTrbFormMutation();
 
   const initialValues = nullFillObject(request.form, subjectAreasBlankValues);
 

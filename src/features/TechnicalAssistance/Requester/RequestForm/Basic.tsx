@@ -338,9 +338,9 @@ function Basic({
             }
 
             if (errors[fieldName as keyof typeof errors]?.message) {
-              msg += `: ${errors[
-                fieldName as keyof typeof errors
-              ]?.message?.replace(fieldName, ' This')}`;
+              msg += `: ${errors[fieldName as keyof typeof errors]?.message}`;
+
+              msg += msg?.replace(fieldName, ' This');
             }
 
             return (
@@ -828,7 +828,7 @@ function Basic({
                                 e.target.checked
                                   ? [...field.value, e.target.value]
                                   : field.value.filter(
-                                      value => value !== e.target.value
+                                      (value: any) => value !== e.target.value
                                     )
                               );
                             }}

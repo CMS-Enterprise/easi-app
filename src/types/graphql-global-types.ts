@@ -1055,35 +1055,6 @@ export interface UpdateTRBRequestAttendeeInput {
   role: PersonRole;
 }
 
-/**
- * Represents an EUA user who is included as an form for a TRB request
- */
-export interface UpdateTRBRequestFormInput {
-  trbRequestId: UUID;
-  isSubmitted?: boolean | null;
-  component?: string | null;
-  needsAssistanceWith?: string | null;
-  hasSolutionInMind?: boolean | null;
-  proposedSolution?: string | null;
-  whereInProcess?: TRBWhereInProcessOption | null;
-  whereInProcessOther?: string | null;
-  hasExpectedStartEndDates?: boolean | null;
-  expectedStartDate?: Time | null;
-  expectedEndDate?: Time | null;
-  collabGroups?: TRBCollabGroupOption[] | null;
-  collabDateSecurity?: string | null;
-  collabDateEnterpriseArchitecture?: string | null;
-  collabDateCloud?: string | null;
-  collabDatePrivacyAdvisor?: string | null;
-  collabDateGovernanceReviewBoard?: string | null;
-  collabDateOther?: string | null;
-  collabGroupOther?: string | null;
-  collabGRBConsultRequested?: boolean | null;
-  systemIntakes?: UUID[] | null;
-  subjectAreaOptions?: TRBSubjectAreaOption[] | null;
-  subjectAreaOptionOther?: string | null;
-}
-
 //==============================================================
 // END Enums and Input Objects
 //==============================================================
