@@ -89,9 +89,6 @@ func calcSystemIntakeGRBMeetingStatusAdmin(intake *models.SystemIntake) models.S
 	case models.SystemIntakeGRBReviewTypeAsync:
 		return calcSystemIntakeAsyncGRBReviewStatusAdmin(intake)
 	}
-	if intake.GRBDate == nil || intake.GRBDate.After(time.Now()) {
-		return models.SISAGrbMeetingReady
-	}
 
 	return models.SISAGrbMeetingComplete
 }
