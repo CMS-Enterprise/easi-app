@@ -3236,6 +3236,8 @@ export type CreateSystemIntakeGRBDiscussionReplyInput = {
   initialPostID: Scalars['UUID']['input'];
 };
 
+export type TrbRequestFormFieldsFragmentFragment = { __typename: 'TRBRequest', id: UUID, name?: string | null, type: TRBRequestType, state: TRBRequestState, taskStatuses: { __typename: 'TRBTaskStatuses', formStatus: TRBFormStatus, feedbackStatus: TRBFeedbackStatus, consultPrepStatus: TRBConsultPrepStatus, attendConsultStatus: TRBAttendConsultStatus, guidanceLetterStatus: TRBGuidanceLetterStatus }, form: { __typename: 'TRBRequestForm', id: UUID, component?: string | null, needsAssistanceWith?: string | null, hasSolutionInMind?: boolean | null, proposedSolution?: string | null, whereInProcess?: TRBWhereInProcessOption | null, whereInProcessOther?: string | null, hasExpectedStartEndDates?: boolean | null, expectedStartDate?: Time | null, expectedEndDate?: Time | null, collabGroups: Array<TRBCollabGroupOption>, collabDateSecurity?: string | null, collabDateEnterpriseArchitecture?: string | null, collabDateCloud?: string | null, collabDatePrivacyAdvisor?: string | null, collabDateGovernanceReviewBoard?: string | null, collabDateOther?: string | null, collabGroupOther?: string | null, collabGRBConsultRequested?: boolean | null, subjectAreaOptions?: Array<TRBSubjectAreaOption> | null, subjectAreaOptionOther?: string | null, submittedAt?: Time | null, fundingSources?: Array<{ __typename: 'TRBFundingSource', id: UUID, fundingNumber: string, source: string }> | null, systemIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, lcid?: string | null }> }, feedback: Array<{ __typename: 'TRBRequestFeedback', id: UUID, action: TRBFeedbackAction, feedbackMessage: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string } }>, relatedTRBRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, createdAt: Time, contractNumbers: Array<{ __typename: 'TRBRequestContractNumber', contractNumber: string }> }>, relatedIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, decisionState: SystemIntakeDecisionState, submittedAt?: Time | null, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', contractNumber: string }> }> };
+
 export type CreateSystemIntakeGRBDiscussionPostMutationVariables = Exact<{
   input: CreateSystemIntakeGRBDiscussionPostInput;
 }>;
@@ -3496,6 +3498,23 @@ export type UpdateTrbRequestFormStatusMutationVariables = Exact<{
 
 export type UpdateTrbRequestFormStatusMutation = { __typename: 'Mutation', updateTRBRequestForm: { __typename: 'TRBRequestForm', status: TRBFormStatus } };
 
+export type UpdateTrbRequestAndFormMutationVariables = Exact<{
+  input: UpdateTRBRequestFormInput;
+  id: Scalars['UUID']['input'];
+  changes?: InputMaybe<TRBRequestChanges>;
+}>;
+
+
+export type UpdateTrbRequestAndFormMutation = { __typename: 'Mutation', updateTRBRequestForm: { __typename: 'TRBRequestForm', id: UUID }, updateTRBRequest: { __typename: 'TRBRequest', id: UUID, name?: string | null, type: TRBRequestType, state: TRBRequestState, taskStatuses: { __typename: 'TRBTaskStatuses', formStatus: TRBFormStatus, feedbackStatus: TRBFeedbackStatus, consultPrepStatus: TRBConsultPrepStatus, attendConsultStatus: TRBAttendConsultStatus, guidanceLetterStatus: TRBGuidanceLetterStatus }, form: { __typename: 'TRBRequestForm', id: UUID, component?: string | null, needsAssistanceWith?: string | null, hasSolutionInMind?: boolean | null, proposedSolution?: string | null, whereInProcess?: TRBWhereInProcessOption | null, whereInProcessOther?: string | null, hasExpectedStartEndDates?: boolean | null, expectedStartDate?: Time | null, expectedEndDate?: Time | null, collabGroups: Array<TRBCollabGroupOption>, collabDateSecurity?: string | null, collabDateEnterpriseArchitecture?: string | null, collabDateCloud?: string | null, collabDatePrivacyAdvisor?: string | null, collabDateGovernanceReviewBoard?: string | null, collabDateOther?: string | null, collabGroupOther?: string | null, collabGRBConsultRequested?: boolean | null, subjectAreaOptions?: Array<TRBSubjectAreaOption> | null, subjectAreaOptionOther?: string | null, submittedAt?: Time | null, fundingSources?: Array<{ __typename: 'TRBFundingSource', id: UUID, fundingNumber: string, source: string }> | null, systemIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, lcid?: string | null }> }, feedback: Array<{ __typename: 'TRBRequestFeedback', id: UUID, action: TRBFeedbackAction, feedbackMessage: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string } }>, relatedTRBRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, createdAt: Time, contractNumbers: Array<{ __typename: 'TRBRequestContractNumber', contractNumber: string }> }>, relatedIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, decisionState: SystemIntakeDecisionState, submittedAt?: Time | null, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', contractNumber: string }> }> } };
+
+export type UpdateTrbRequestArchivedMutationVariables = Exact<{
+  id: Scalars['UUID']['input'];
+  archived: Scalars['Boolean']['input'];
+}>;
+
+
+export type UpdateTrbRequestArchivedMutation = { __typename: 'Mutation', updateTRBRequest: { __typename: 'TRBRequest', id: UUID, archived: boolean } };
+
 export type UpdateTrbRequestConsultMeetingMutationVariables = Exact<{
   input: UpdateTRBRequestConsultMeetingTimeInput;
 }>;
@@ -3525,6 +3544,82 @@ export type UpdateTrbRequestTypeMutationVariables = Exact<{
 
 export type UpdateTrbRequestTypeMutation = { __typename: 'Mutation', updateTRBRequest: { __typename: 'TRBRequest', id: UUID, type: TRBRequestType } };
 
+export const TrbRequestFormFieldsFragmentFragmentDoc = gql`
+    fragment TrbRequestFormFieldsFragment on TRBRequest {
+  id
+  name
+  type
+  state
+  taskStatuses {
+    formStatus
+    feedbackStatus
+    consultPrepStatus
+    attendConsultStatus
+    guidanceLetterStatus
+  }
+  form {
+    id
+    component
+    needsAssistanceWith
+    hasSolutionInMind
+    proposedSolution
+    whereInProcess
+    whereInProcessOther
+    hasExpectedStartEndDates
+    expectedStartDate
+    expectedEndDate
+    collabGroups
+    collabDateSecurity
+    collabDateEnterpriseArchitecture
+    collabDateCloud
+    collabDatePrivacyAdvisor
+    collabDateGovernanceReviewBoard
+    collabDateOther
+    collabGroupOther
+    collabGRBConsultRequested
+    subjectAreaOptions
+    subjectAreaOptionOther
+    fundingSources {
+      id
+      fundingNumber
+      source
+    }
+    systemIntakes {
+      id
+      requestName
+      lcid
+    }
+    submittedAt
+  }
+  feedback {
+    id
+    action
+    feedbackMessage
+    author {
+      commonName
+    }
+    createdAt
+  }
+  relatedTRBRequests {
+    id
+    name
+    contractNumbers {
+      contractNumber
+    }
+    status
+    createdAt
+  }
+  relatedIntakes {
+    id
+    requestName
+    contractNumbers {
+      contractNumber
+    }
+    decisionState
+    submittedAt
+  }
+}
+    `;
 export const SystemIntakeWithReviewRequestedFragmentDoc = gql`
     fragment SystemIntakeWithReviewRequested on SystemIntake {
   id
@@ -5070,6 +5165,79 @@ export function useUpdateTrbRequestFormStatusMutation(baseOptions?: Apollo.Mutat
 export type UpdateTrbRequestFormStatusMutationHookResult = ReturnType<typeof useUpdateTrbRequestFormStatusMutation>;
 export type UpdateTrbRequestFormStatusMutationResult = Apollo.MutationResult<UpdateTrbRequestFormStatusMutation>;
 export type UpdateTrbRequestFormStatusMutationOptions = Apollo.BaseMutationOptions<UpdateTrbRequestFormStatusMutation, UpdateTrbRequestFormStatusMutationVariables>;
+export const UpdateTrbRequestAndFormDocument = gql`
+    mutation UpdateTrbRequestAndForm($input: UpdateTRBRequestFormInput!, $id: UUID!, $changes: TRBRequestChanges) {
+  updateTRBRequestForm(input: $input) {
+    id
+  }
+  updateTRBRequest(id: $id, changes: $changes) {
+    ...TrbRequestFormFieldsFragment
+  }
+}
+    ${TrbRequestFormFieldsFragmentFragmentDoc}`;
+export type UpdateTrbRequestAndFormMutationFn = Apollo.MutationFunction<UpdateTrbRequestAndFormMutation, UpdateTrbRequestAndFormMutationVariables>;
+
+/**
+ * __useUpdateTrbRequestAndFormMutation__
+ *
+ * To run a mutation, you first call `useUpdateTrbRequestAndFormMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTrbRequestAndFormMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTrbRequestAndFormMutation, { data, loading, error }] = useUpdateTrbRequestAndFormMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *      id: // value for 'id'
+ *      changes: // value for 'changes'
+ *   },
+ * });
+ */
+export function useUpdateTrbRequestAndFormMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTrbRequestAndFormMutation, UpdateTrbRequestAndFormMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTrbRequestAndFormMutation, UpdateTrbRequestAndFormMutationVariables>(UpdateTrbRequestAndFormDocument, options);
+      }
+export type UpdateTrbRequestAndFormMutationHookResult = ReturnType<typeof useUpdateTrbRequestAndFormMutation>;
+export type UpdateTrbRequestAndFormMutationResult = Apollo.MutationResult<UpdateTrbRequestAndFormMutation>;
+export type UpdateTrbRequestAndFormMutationOptions = Apollo.BaseMutationOptions<UpdateTrbRequestAndFormMutation, UpdateTrbRequestAndFormMutationVariables>;
+export const UpdateTrbRequestArchivedDocument = gql`
+    mutation UpdateTrbRequestArchived($id: UUID!, $archived: Boolean!) {
+  updateTRBRequest(id: $id, changes: {archived: $archived}) {
+    id
+    archived
+  }
+}
+    `;
+export type UpdateTrbRequestArchivedMutationFn = Apollo.MutationFunction<UpdateTrbRequestArchivedMutation, UpdateTrbRequestArchivedMutationVariables>;
+
+/**
+ * __useUpdateTrbRequestArchivedMutation__
+ *
+ * To run a mutation, you first call `useUpdateTrbRequestArchivedMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTrbRequestArchivedMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTrbRequestArchivedMutation, { data, loading, error }] = useUpdateTrbRequestArchivedMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      archived: // value for 'archived'
+ *   },
+ * });
+ */
+export function useUpdateTrbRequestArchivedMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTrbRequestArchivedMutation, UpdateTrbRequestArchivedMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTrbRequestArchivedMutation, UpdateTrbRequestArchivedMutationVariables>(UpdateTrbRequestArchivedDocument, options);
+      }
+export type UpdateTrbRequestArchivedMutationHookResult = ReturnType<typeof useUpdateTrbRequestArchivedMutation>;
+export type UpdateTrbRequestArchivedMutationResult = Apollo.MutationResult<UpdateTrbRequestArchivedMutation>;
+export type UpdateTrbRequestArchivedMutationOptions = Apollo.BaseMutationOptions<UpdateTrbRequestArchivedMutation, UpdateTrbRequestArchivedMutationVariables>;
 export const UpdateTrbRequestConsultMeetingDocument = gql`
     mutation UpdateTrbRequestConsultMeeting($input: UpdateTRBRequestConsultMeetingTimeInput!) {
   updateTRBRequestConsultMeetingTime(input: $input) {
@@ -5214,6 +5382,7 @@ export function useUpdateTrbRequestTypeMutation(baseOptions?: Apollo.MutationHoo
 export type UpdateTrbRequestTypeMutationHookResult = ReturnType<typeof useUpdateTrbRequestTypeMutation>;
 export type UpdateTrbRequestTypeMutationResult = Apollo.MutationResult<UpdateTrbRequestTypeMutation>;
 export type UpdateTrbRequestTypeMutationOptions = Apollo.BaseMutationOptions<UpdateTrbRequestTypeMutation, UpdateTrbRequestTypeMutationVariables>;
+export const TypedTrbRequestFormFieldsFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TrbRequestFormFieldsFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBRequest"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"taskStatuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formStatus"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackStatus"}},{"kind":"Field","name":{"kind":"Name","value":"consultPrepStatus"}},{"kind":"Field","name":{"kind":"Name","value":"attendConsultStatus"}},{"kind":"Field","name":{"kind":"Name","value":"guidanceLetterStatus"}}]}},{"kind":"Field","name":{"kind":"Name","value":"form"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"needsAssistanceWith"}},{"kind":"Field","name":{"kind":"Name","value":"hasSolutionInMind"}},{"kind":"Field","name":{"kind":"Name","value":"proposedSolution"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcess"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcessOther"}},{"kind":"Field","name":{"kind":"Name","value":"hasExpectedStartEndDates"}},{"kind":"Field","name":{"kind":"Name","value":"expectedStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"expectedEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroups"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateSecurity"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateEnterpriseArchitecture"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateCloud"}},{"kind":"Field","name":{"kind":"Name","value":"collabDatePrivacyAdvisor"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateGovernanceReviewBoard"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroupOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGRBConsultRequested"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptions"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptionOther"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSources"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"feedback"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackMessage"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}}]}}]} as unknown as DocumentNode<TrbRequestFormFieldsFragmentFragment, unknown>;
 export const TypedSystemIntakeWithReviewRequestedFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeWithReviewRequested"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntake"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}}]}}]} as unknown as DocumentNode<SystemIntakeWithReviewRequestedFragment, unknown>;
 export const TypedSystemIntakeGRBReviewDiscussionPostFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewDiscussionPost"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewDiscussionPost"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"createdByUserAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeID"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<SystemIntakeGRBReviewDiscussionPostFragment, unknown>;
 export const TypedSystemIntakeGRBReviewDiscussionFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewDiscussion"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewDiscussion"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"initialPost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewDiscussionPost"}}]}},{"kind":"Field","name":{"kind":"Name","value":"replies"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewDiscussionPost"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewDiscussionPost"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewDiscussionPost"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"createdByUserAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeID"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<SystemIntakeGRBReviewDiscussionFragment, unknown>;
@@ -5259,6 +5428,8 @@ export const TypedUpdateTRBGuidanceLetterDocument = {"kind":"Document","definiti
 export const TypedUpdateTRBGuidanceLetterInsightDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterInsight"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterInsightInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBGuidanceLetterInsight"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"insight"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<UpdateTRBGuidanceLetterInsightMutation, UpdateTRBGuidanceLetterInsightMutationVariables>;
 export const TypedUpdateTRBGuidanceLetterInsightOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterInsightOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterInsightOrderInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBGuidanceLetterInsightOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"insight"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<UpdateTRBGuidanceLetterInsightOrderMutation, UpdateTRBGuidanceLetterInsightOrderMutationVariables>;
 export const TypedUpdateTrbRequestFormStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTrbRequestFormStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"isSubmitted"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBRequestForm"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"isSubmitted"},"value":{"kind":"Variable","name":{"kind":"Name","value":"isSubmitted"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"trbRequestId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<UpdateTrbRequestFormStatusMutation, UpdateTrbRequestFormStatusMutationVariables>;
+export const TypedUpdateTrbRequestAndFormDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTrbRequestAndForm"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBRequestFormInput"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"changes"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"TRBRequestChanges"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBRequestForm"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"updateTRBRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"changes"},"value":{"kind":"Variable","name":{"kind":"Name","value":"changes"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TrbRequestFormFieldsFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TrbRequestFormFieldsFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBRequest"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"taskStatuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formStatus"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackStatus"}},{"kind":"Field","name":{"kind":"Name","value":"consultPrepStatus"}},{"kind":"Field","name":{"kind":"Name","value":"attendConsultStatus"}},{"kind":"Field","name":{"kind":"Name","value":"guidanceLetterStatus"}}]}},{"kind":"Field","name":{"kind":"Name","value":"form"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"needsAssistanceWith"}},{"kind":"Field","name":{"kind":"Name","value":"hasSolutionInMind"}},{"kind":"Field","name":{"kind":"Name","value":"proposedSolution"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcess"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcessOther"}},{"kind":"Field","name":{"kind":"Name","value":"hasExpectedStartEndDates"}},{"kind":"Field","name":{"kind":"Name","value":"expectedStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"expectedEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroups"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateSecurity"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateEnterpriseArchitecture"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateCloud"}},{"kind":"Field","name":{"kind":"Name","value":"collabDatePrivacyAdvisor"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateGovernanceReviewBoard"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroupOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGRBConsultRequested"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptions"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptionOther"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSources"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"feedback"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackMessage"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}}]}}]} as unknown as DocumentNode<UpdateTrbRequestAndFormMutation, UpdateTrbRequestAndFormMutationVariables>;
+export const TypedUpdateTrbRequestArchivedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTrbRequestArchived"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"archived"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"changes"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"Variable","name":{"kind":"Name","value":"archived"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}}]}}]} as unknown as DocumentNode<UpdateTrbRequestArchivedMutation, UpdateTrbRequestArchivedMutationVariables>;
 export const TypedUpdateTrbRequestConsultMeetingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTrbRequestConsultMeeting"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBRequestConsultMeetingTimeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBRequestConsultMeetingTime"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"consultMeetingTime"}}]}}]}}]} as unknown as DocumentNode<UpdateTrbRequestConsultMeetingMutation, UpdateTrbRequestConsultMeetingMutationVariables>;
 export const TypedUpdateTRBRequestFundingSourcesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTRBRequestFundingSources"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBRequestFundingSourcesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBRequestFundingSources"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"source"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<UpdateTRBRequestFundingSourcesMutation, UpdateTRBRequestFundingSourcesMutationVariables>;
 export const TypedUpdateTrbRequestLeadDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTrbRequestLead"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBRequestTRBLeadInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBRequestTRBLead"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"trbLead"}},{"kind":"Field","name":{"kind":"Name","value":"trbLeadInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateTrbRequestLeadMutation, UpdateTrbRequestLeadMutationVariables>;

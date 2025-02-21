@@ -17,7 +17,10 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import FundingSources from 'features/TechnicalAssistance/Requester/RequestForm/FundingSources/FundingSources';
-import { useUpdateTRBRequestFundingSourcesMutation } from 'gql/generated/graphql';
+import {
+  useUpdateTrbRequestAndFormMutation,
+  useUpdateTRBRequestFundingSourcesMutation
+} from 'gql/generated/graphql';
 import DeleteTRBRequestFundingSource from 'gql/legacyGQL/DeleteTRBRequestFundingSource';
 import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
 import {
@@ -27,11 +30,6 @@ import {
 import { GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType } from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
 import { GetTrbRequest_trbRequest_form_fundingSources as GetTrbRequestFundingSourcesType } from 'gql/legacyGQL/types/GetTrbRequest';
 import { TrbRequestFormFields_form_systemIntakes as TrbRequestFormFieldsSystemIntakeType } from 'gql/legacyGQL/types/TrbRequestFormFields';
-import {
-  UpdateTrbRequestAndForm,
-  UpdateTrbRequestAndFormVariables
-} from 'gql/legacyGQL/types/UpdateTrbRequestAndForm';
-import UpdateTrbRequestAndFormQuery from 'gql/legacyGQL/UpdateTrbRequestAndFormQuery';
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -50,11 +48,7 @@ import useCacheQuery from 'hooks/useCacheQuery';
 import { TRBCollabGroupOption } from 'types/graphql-global-types';
 import { FormFieldProps } from 'types/util';
 import nullFillObject from 'utils/nullFillObject';
-import {
-  basicSchema,
-  // fundingSourcesBasicSchema,
-  TrbRequestFormBasic
-} from 'validations/trbRequestSchema';
+import { basicSchema, TrbRequestFormBasic } from 'validations/trbRequestSchema';
 
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
@@ -115,10 +109,7 @@ function Basic({
       }));
   }, [data?.systemIntakesWithLcids]);
 
-  const [updateForm] = useMutation<
-    UpdateTrbRequestAndForm,
-    UpdateTrbRequestAndFormVariables
-  >(UpdateTrbRequestAndFormQuery);
+  const [updateForm] = useUpdateTrbRequestAndFormMutation();
 
   const [updatefundingSource] = useUpdateTRBRequestFundingSourcesMutation();
 
@@ -140,7 +131,7 @@ function Basic({
       name: request.name || '',
       ...initialValues,
       // Mapping over intakes as mutation input only takes UUID
-      systemIntakes: request.form.systemIntakes.map(intake => intake.id)
+      systemIntakes: request.form.systemIntakes.map((intake: any) => intake.id)
     }
   });
 

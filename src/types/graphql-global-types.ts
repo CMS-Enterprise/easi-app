@@ -968,17 +968,6 @@ export interface SystemIntakeUpdateLCIDInput {
 }
 
 /**
- * TRBRequestChanges represents the possible changes you can make to a TRB request when updating it.
- * Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
- * https: // gqlgen.com/reference/changesets/
- */
-export interface TRBRequestChanges {
-  name?: string | null;
-  archived?: boolean | null;
-  type?: TRBRequestType | null;
-}
-
-/**
  * Input data used to update the admin lead assigned to a system IT governance
  * request
  */

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -12,16 +12,12 @@ import {
 } from '@trussworks/react-uswds';
 import AdditionalRequestInfo from 'features/ITGovernance/Requester/TaskList/AdditionalRequestInfo';
 import NotFoundPartial from 'features/Miscellaneous/NotFound/NotFoundPartial';
+import { useUpdateTrbRequestArchivedMutation } from 'gql/generated/graphql';
 import GetTrbTasklistQuery from 'gql/legacyGQL/GetTrbTasklistQuery';
 import {
   GetTrbTasklist,
   GetTrbTasklistVariables
 } from 'gql/legacyGQL/types/GetTrbTasklist';
-import {
-  UpdateTrbRequestArchived,
-  UpdateTrbRequestArchivedVariables
-} from 'gql/legacyGQL/types/UpdateTrbRequestArchived';
-import UpdateTrbRequestArchivedQuery from 'gql/legacyGQL/UpdateTrbRequestArchivedQuery';
 import { kebabCase } from 'lodash';
 import { DateTime } from 'luxon';
 
@@ -79,10 +75,7 @@ function TaskList() {
 
   const requestName = data?.trbRequest.name;
 
-  const [archive] = useMutation<
-    UpdateTrbRequestArchived,
-    UpdateTrbRequestArchivedVariables
-  >(UpdateTrbRequestArchivedQuery);
+  const [archive] = useUpdateTrbRequestArchivedMutation();
 
   const [isRemoveRequestModalOpen, setRemoveRequestModalOpen] =
     useState<boolean>(false);

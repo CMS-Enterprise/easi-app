@@ -6,16 +6,16 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {
+  TypedUpdateTrbRequestArchivedDocument,
+  UpdateTrbRequestArchivedMutation,
+  UpdateTrbRequestArchivedMutationVariables
+} from 'gql/generated/graphql';
 import GetTrbTasklistQuery from 'gql/legacyGQL/GetTrbTasklistQuery';
 import {
   GetTrbTasklist,
   GetTrbTasklistVariables
 } from 'gql/legacyGQL/types/GetTrbTasklist';
-import {
-  UpdateTrbRequestArchived,
-  UpdateTrbRequestArchivedVariables
-} from 'gql/legacyGQL/types/UpdateTrbRequestArchived';
-import UpdateTrbRequestArchivedQuery from 'gql/legacyGQL/UpdateTrbRequestArchivedQuery';
 import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -77,11 +77,11 @@ const getTrbTasklistQuery: MockedQuery<
 };
 
 const updateTrbRequestArchived: MockedQuery<
-  UpdateTrbRequestArchived,
-  UpdateTrbRequestArchivedVariables
+  Omit<UpdateTrbRequestArchivedMutation, '__typename'>,
+  UpdateTrbRequestArchivedMutationVariables
 > = {
   request: {
-    query: UpdateTrbRequestArchivedQuery,
+    query: TypedUpdateTrbRequestArchivedDocument,
     variables: {
       id: trbRequestId,
       archived: true

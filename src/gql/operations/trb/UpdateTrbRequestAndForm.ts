@@ -1,9 +1,6 @@
 import { gql } from '@apollo/client';
 
-import TrbRequestFormFieldsFragment from './TrbRequestFormFieldsFragment';
-
-export default gql`
-  ${TrbRequestFormFieldsFragment}
+export default gql(/* GraphQL */ `
   mutation UpdateTrbRequestAndForm(
     $input: UpdateTRBRequestFormInput!
     $id: UUID!
@@ -13,7 +10,7 @@ export default gql`
       id
     }
     updateTRBRequest(id: $id, changes: $changes) {
-      ...TrbRequestFormFields
+      ...TrbRequestFormFieldsFragment
     }
   }
-`;
+`);
