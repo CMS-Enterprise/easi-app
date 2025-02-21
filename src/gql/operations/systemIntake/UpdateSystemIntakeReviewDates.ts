@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export default gql`
+export default gql(/* GraphQL */ `
   mutation UpdateSystemIntakeReviewDates(
     $input: UpdateSystemIntakeReviewDatesInput!
   ) {
@@ -12,4 +12,4 @@ export default gql`
       }
     }
   }
-`;
+`);

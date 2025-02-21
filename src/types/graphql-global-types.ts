@@ -1038,15 +1038,6 @@ export interface UpdateSystemIntakeRequestDetailsInput {
 }
 
 /**
- * Input data used to update GRT and GRB dates for a system request
- */
-export interface UpdateSystemIntakeReviewDatesInput {
-  grbDate?: Time | null;
-  grtDate?: Time | null;
-  id: UUID;
-}
-
-/**
  * Represents an EUA user who is included as an attendee for a TRB request
  */
 export interface UpdateTRBRequestAttendeeInput {
