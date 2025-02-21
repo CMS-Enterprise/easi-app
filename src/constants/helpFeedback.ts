@@ -1,7 +1,6 @@
-import {
-  SendFeedbackEmailInput,
-  SendReportAProblemEmailInput
-} from 'types/graphql-global-types';
+import { SendReportAProblemEmailInput } from 'gql/generated/graphql';
+
+import { SendFeedbackEmailInput } from 'types/graphql-global-types';
 
 /** Field names with this suffix are not part of the backend form input data. */
 export const ADDITIONAL_TEXT_INPUT_SUFFIX = 'AdditionalText';
