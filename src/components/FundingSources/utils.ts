@@ -33,6 +33,7 @@ export const formatFundingSourcesForApp = (
       return [
         ...acc,
         {
+          __typename: 'SystemIntakeFundingSource',
           id,
           fundingNumber,
           sources: source ? [source] : []

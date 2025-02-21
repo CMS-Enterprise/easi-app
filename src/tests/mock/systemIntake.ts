@@ -628,7 +628,6 @@ export const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQu
       }
     },
     result: {
-      // Not sure why ts is throwing an error here
       // @ts-ignore
       data: {
         __typename: 'Query',
