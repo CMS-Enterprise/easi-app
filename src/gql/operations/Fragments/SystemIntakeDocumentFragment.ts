@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export const SystemIntakeDocument = gql`
-  fragment SystemIntakeDocument on SystemIntakeDocument {
+export default gql(/* GraphQL */ `
+  fragment SystemIntakeDocumentFragment on SystemIntakeDocument {
     documentType {
       commonType
       otherTypeDescription
@@ -16,6 +16,4 @@ export const SystemIntakeDocument = gql`
     canDelete
     systemIntakeId
   }
-`;
-
-export default SystemIntakeDocument;
+`);

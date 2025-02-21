@@ -525,18 +525,6 @@ export interface CreateSystemIntakeContactInput {
 }
 
 /**
- * The data needed to upload a System Intake document and attach it to a request with metadata
- */
-export interface CreateSystemIntakeDocumentInput {
-  requestID: UUID;
-  fileData: Upload;
-  documentType: SystemIntakeDocumentCommonType;
-  version: SystemIntakeDocumentVersion;
-  otherTypeDescription?: string | null;
-  sendNotification?: boolean | null;
-}
-
-/**
  * Input data for adding a note to a system request
  */
 export interface CreateSystemIntakeNoteInput {
