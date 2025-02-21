@@ -161,6 +161,21 @@ func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error
 		if intake.Step == models.SystemIntakeStepGRBMEETING { //if the step is GRB meeting, status is awaiting decision
 			return models.ITGGRBSAwaitingDecision, nil
 		}
+
+		if intake.GrbReviewType == models.SystemIntakeGRBReviewTypeAsync {
+			if intake.GRBReviewStartedAt != nil &&
+				intake.GrbReviewAsyncEndDate != nil &&
+				time.Now().After(*intake.GRBReviewStartedAt) &&
+				time.Now().Before(*intake.GrbReviewAsyncEndDate) {
+				return models.ITGRRBSReviewInProgress, nil
+			}
+
+			if intake.GrbReviewAsyncRecordingTime != nil &&
+				time.Now().After(*intake.GrbReviewAsyncRecordingTime) {
+				return models.ITGRRBSAwaitingGRBReview, nil
+			}
+		}
+
 		return models.ITGGRBSCompleted, nil // if the step is not GRB meeting, the status is completed
 	}
 	// the grb date is nil.
