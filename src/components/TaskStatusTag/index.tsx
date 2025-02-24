@@ -48,7 +48,7 @@ const activeStatuses = {
   READY_FOR_REVIEW: 'bg-info-light',
   READY_TO_SCHEDULE: 'bg-info-light',
   READY_TO_START: 'bg-info-light',
-  REVIEW_IN_PROGRESS: 'bg-info-light',
+  REVIEW_IN_PROGRESS: 'bg-warning',
   SCHEDULED: 'bg-info-light',
   SUBMITTED: 'bg-info-light'
 };

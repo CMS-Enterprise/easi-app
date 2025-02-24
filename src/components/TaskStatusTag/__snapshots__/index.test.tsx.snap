@@ -154,10 +154,10 @@ exports[`TaskStatusTag > renders task status tag {"status":"READY_TO_START","cla
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag > renders task status tag {"status":"REVIEW_IN_PROGRESS","className":"bg-info-light"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"REVIEW_IN_PROGRESS","className":"bg-warning"} 1`] = `
 <DocumentFragment>
   <span
-    class="easi-tag easi-task-status-tag bg-info-light"
+    class="easi-tag easi-task-status-tag bg-warning"
     data-testid="task-list-task-tag"
   >
     taskStatus.REVIEW_IN_PROGRESS
