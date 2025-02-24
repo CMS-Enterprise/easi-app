@@ -134,17 +134,17 @@ function useSystemIntakeContacts(
   );
 
   const [createSystemIntakeContact] = useCreateSystemIntakeContactMutation({
-    refetchQueries: ['GetSystemIntakeContactsQuery'],
+    refetchQueries: ['GetSystemIntakeContacts'],
     awaitRefetchQueries: true
   });
 
   const [updateSystemIntakeContact] = useUpdateSystemIntakeContactMutation({
-    refetchQueries: ['GetSystemIntakeContactsQuery'],
+    refetchQueries: ['GetSystemIntakeContacts'],
     awaitRefetchQueries: true
   });
 
   const [deleteSystemIntakeContact] = useDeleteSystemIntakeContactMutation({
-    refetchQueries: ['GetSystemIntakeContactsQuery'],
+    refetchQueries: ['GetSystemIntakeContacts'],
     awaitRefetchQueries: true
   });
 

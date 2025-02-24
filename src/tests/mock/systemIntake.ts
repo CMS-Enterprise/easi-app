@@ -23,6 +23,7 @@ import {
 } from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
 import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
 import { SystemIntakeDocument } from 'gql/legacyGQL/types/SystemIntakeDocument';
+import { SystemIntakeGRBPresentationLinks } from 'gql/legacyGQL/types/SystemIntakeGRBPresentationLinks';
 import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
@@ -163,6 +164,19 @@ export const documents: SystemIntakeDocument[] = [
     __typename: 'SystemIntakeDocument'
   }
 ];
+
+export const grbPresentationLinks: SystemIntakeGRBPresentationLinks = {
+  __typename: 'SystemIntakeGRBPresentationLinks',
+  recordingLink: 'https://google.com',
+  recordingPasscode: '123456',
+  transcriptFileName: 'transcript.doc',
+  transcriptFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
+  transcriptFileURL: 'https://google.com',
+  transcriptLink: null,
+  presentationDeckFileName: 'presentationDeck.pptx',
+  presentationDeckFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
+  presentationDeckFileURL: 'https://google.com'
+};
 
 export const governanceRequestFeedbacks: SystemIntake['governanceRequestFeedbacks'] =
   [
@@ -346,7 +360,8 @@ export const emptySystemIntake: SystemIntake = {
     }
   ],
   relatedIntakes: [],
-  relatedTRBRequests: []
+  relatedTRBRequests: [],
+  grbPresentationLinks
 };
 
 export const systemIntake: SystemIntake = {
@@ -506,7 +521,8 @@ export const systemIntake: SystemIntake = {
       status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
       createdAt: new Date().toString()
     }
-  ]
+  ],
+  grbPresentationLinks
 };
 
 export const systemIntakeForTable: TableSystemIntake = {
