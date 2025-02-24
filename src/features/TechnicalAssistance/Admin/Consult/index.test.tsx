@@ -8,8 +8,10 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ModalRef } from '@trussworks/react-uswds';
-import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
-import GetTrbRequestConsultMeetingQuery from 'gql/legacyGQL/GetTrbRequestConsultMeetingQuery';
+import {
+  GetTRBRequestConsultMeetingDocument,
+  GetTRBRequestSummaryQuery
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import {
   getTrbAdminNotesQuery,
@@ -59,7 +61,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
 
   const emptyConsultMeetingTime = {
     request: {
-      query: GetTrbRequestConsultMeetingQuery,
+      query: GetTRBRequestConsultMeetingDocument,
       variables: {
         id: mockTrbRequestId
       }

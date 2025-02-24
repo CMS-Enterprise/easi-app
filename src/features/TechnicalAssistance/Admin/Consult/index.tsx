@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   DatePicker,
@@ -12,12 +11,10 @@ import {
   TimePicker
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { useUpdateTRBRequestConsultMeetingMutation } from 'gql/generated/graphql';
-import GetTrbRequestConsultMeetingQuery from 'gql/legacyGQL/GetTrbRequestConsultMeetingQuery';
 import {
-  GetTrbRequestConsultMeeting,
-  GetTrbRequestConsultMeetingVariables
-} from 'gql/legacyGQL/types/GetTrbRequestConsultMeeting';
+  useGetTRBRequestConsultMeetingQuery,
+  useUpdateTRBRequestConsultMeetingMutation
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
 import PageLoading from 'components/PageLoading';
@@ -59,10 +56,7 @@ function Consult() {
     loading,
     data,
     error: pageError
-  } = useQuery<
-    GetTrbRequestConsultMeeting,
-    GetTrbRequestConsultMeetingVariables
-  >(GetTrbRequestConsultMeetingQuery, {
+  } = useGetTRBRequestConsultMeetingQuery({
     variables: {
       id
     }
