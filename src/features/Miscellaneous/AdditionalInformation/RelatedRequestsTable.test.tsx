@@ -8,7 +8,7 @@ import {
   SystemIntakeStatusRequester
 } from 'gql/generated/graphql';
 import GetSystemIntakeRelatedRequests from 'gql/operations/systemIntake/GetSystemIntakeRelatedRequests';
-import GetTRBRequestRelatedRequests from 'gql/operations/trb/GetTRBRequestRelatedRequests';
+import GetTRBRequestRelatedRequests from 'gql/operations/TRB/GetTRBRequestRelatedRequests';
 import { systemIntake } from 'tests/mock/systemIntake';
 import { trbRequest } from 'tests/mock/trbRequest';
 
