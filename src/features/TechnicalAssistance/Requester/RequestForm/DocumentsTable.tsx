@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Alert, Button, Table } from '@trussworks/react-uswds';
+import { useGetTRBRequestDocumentUrlsLazyQuery } from 'gql/generated/graphql';
 import DeleteTrbRequestDocumentQuery from 'gql/legacyGQL/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
-import GetTrbRequestDocumentUrlsQuery from 'gql/legacyGQL/GetTrbRequestDocumentUrlsQuery';
 import {
   DeleteTrbRequestDocument,
   DeleteTrbRequestDocumentVariables
@@ -15,7 +15,6 @@ import {
   GetTrbRequestDocuments_trbRequest_documents as TrbRequestDocuments,
   GetTrbRequestDocumentsVariables
 } from 'gql/legacyGQL/types/GetTrbRequestDocuments';
-import { GetTrbRequestDocumentUrls } from 'gql/legacyGQL/types/GetTrbRequestDocumentUrls';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -69,14 +68,12 @@ function DocumentsTable({
     variables: { id: trbRequestId }
   });
 
-  const [getDocumentUrls, { loading: documentUrlsLoading }] = useLazyQuery<
-    GetTrbRequestDocumentUrls,
-    GetTrbRequestDocumentsVariables
-  >(GetTrbRequestDocumentUrlsQuery, {
-    variables: {
-      id: trbRequestId
-    }
-  });
+  const [getDocumentUrls, { loading: documentUrlsLoading }] =
+    useGetTRBRequestDocumentUrlsLazyQuery({
+      variables: {
+        id: trbRequestId
+      }
+    });
 
   const documents = data?.trbRequest.documents || [];
 
