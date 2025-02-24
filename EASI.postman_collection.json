@@ -1289,6 +1289,72 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get GRB Presentation Links",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbPresentationLinks {\n        systemIntakeID\n        createdAt\n        createdBy\n        modifiedAt\n        modifiedBy\n        recordingLink\n        recordingPasscode\n        transcriptFileName\n        transcriptFileStatus\n        transcriptFileURL\n        presentationDeckFileName\n        presentationDeckFileStatus\n        presentationDeckFileURL\n    }\n  }\n}",
+										"variables": "{\r\n    \"systemIntakeID\": \"5af245bc-fc54-4677-bab1-1b3e798bb43c\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set GRB Presentation Links",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation setSystemIntakeGRBPresentationLinks(\n    $input: SystemIntakeGRBPresentationLinksInput!\n) {\n  setSystemIntakeGRBPresentationLinks(input: $input) {\n    systemIntakeID\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n    recordingLink\n    recordingPasscode\n    transcriptFileName\n    transcriptFileStatus\n    transcriptFileURL\n    presentationDeckFileName\n    presentationDeckFileStatus\n    presentationDeckFileURL\n  }\n}",
+										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"recordingLink\": \"https://google.com\",\r\n    \"recordingPasscode\": \"123456\"\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},

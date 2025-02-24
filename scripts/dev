@@ -359,6 +359,7 @@ namespace :db do
       estimated_lifecycle_costs
       business_cases
       governance_request_feedback
+      system_intake_grb_presentation_links
       system_intake_grb_reviewers
       system_intake_internal_grb_review_discussion_posts
       system_intake_contacts
