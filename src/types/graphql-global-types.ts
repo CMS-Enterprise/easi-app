@@ -417,15 +417,6 @@ export enum TRBGuidanceLetterStatus {
   READY_TO_START = "READY_TO_START",
 }
 
-/**
- * Enumeration of the possible statuses of documents uploaded in the TRB workflow
- */
-export enum TRBRequestDocumentStatus {
-  AVAILABLE = "AVAILABLE",
-  PENDING = "PENDING",
-  UNAVAILABLE = "UNAVAILABLE",
-}
-
 export enum TRBRequestState {
   CLOSED = "CLOSED",
   OPEN = "OPEN",

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export default gql`
-  query GetTrbRequestDocuments($id: UUID!) {
+export default gql(/* GraphQL */ `
+  query GetTRBRequestDocuments($id: UUID!) {
     trbRequest(id: $id) {
       id
       documents {
@@ -16,4 +16,4 @@ export default gql`
       }
     }
   }
-`;
+`);

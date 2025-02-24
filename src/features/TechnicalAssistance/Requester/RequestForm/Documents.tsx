@@ -9,9 +9,9 @@ import {
 } from 'react-router-dom';
 import { ApolloQueryResult } from '@apollo/client';
 import {
-  GetTrbRequestDocuments,
-  GetTrbRequestDocumentsVariables
-} from 'gql/legacyGQL/types/GetTrbRequestDocuments';
+  GetTRBRequestDocumentsQuery,
+  GetTRBRequestDocumentUrlsQueryVariables
+} from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
@@ -22,8 +22,8 @@ import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
 
 export type RefetchDocuments = (
-  variables?: Partial<GetTrbRequestDocumentsVariables> | undefined
-) => Promise<ApolloQueryResult<GetTrbRequestDocuments>> | (() => void);
+  variables?: Partial<GetTRBRequestDocumentUrlsQueryVariables> | undefined
+) => Promise<ApolloQueryResult<GetTRBRequestDocumentsQuery>> | (() => void);
 
 /**
  * Documents is a component of both the table list of uploaded documents

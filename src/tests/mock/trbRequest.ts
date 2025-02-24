@@ -15,6 +15,9 @@ import {
   GetTRBRequestAttendeesDocument,
   GetTRBRequestAttendeesQuery,
   GetTRBRequestDocument,
+  GetTRBRequestDocumentsDocument,
+  GetTRBRequestDocumentsQuery,
+  GetTRBRequestDocumentsQueryVariables,
   GetTRBRequestQuery,
   GetTRBRequestQueryVariables,
   GetTRBRequestSummaryDocument,
@@ -29,12 +32,7 @@ import {
   UpdateTRBRequestConsultMeetingMutationVariables
 } from 'gql/generated/graphql';
 import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
-import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
 import { GetTrbAdminTeamHome } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
-import {
-  GetTrbRequestDocuments,
-  GetTrbRequestDocumentsVariables
-} from 'gql/legacyGQL/types/GetTrbRequestDocuments';
 import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'gql/legacyGQL/types/TrbRequestFormFields';
 
 import {
@@ -648,15 +646,16 @@ export const getTrbLeadOptionsQuery: MockedQuery<GetTRBLeadOptionsQuery> = {
 };
 
 export const getTrbRequestDocumentsQuery: MockedQuery<
-  GetTrbRequestDocuments,
-  GetTrbRequestDocumentsVariables
+  GetTRBRequestDocumentsQuery,
+  GetTRBRequestDocumentsQueryVariables
 > = {
   request: {
-    query: GetTrbRequestDocumentsQuery,
+    query: GetTRBRequestDocumentsDocument,
     variables: { id: trbRequestId }
   },
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         __typename: 'TRBRequest',
         id: trbRequestId,
