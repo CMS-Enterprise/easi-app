@@ -1,14 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
+import { GetTRBRequestFeedbackQuery } from 'gql/generated/graphql';
 
 import Divider from 'components/Divider';
 import { RichTextViewer } from 'components/RichTextEditor';
-import { TrbRequestFeedback } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 
 type TrbRequestFeedbackListProps = {
-  feedback: TrbRequestFeedback[];
+  feedback: GetTRBRequestFeedbackQuery['trbRequest']['feedback'];
 };
 
 function TrbRequestFeedbackList({ feedback }: TrbRequestFeedbackListProps) {

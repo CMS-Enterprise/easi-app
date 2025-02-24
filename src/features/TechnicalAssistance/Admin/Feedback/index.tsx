@@ -1,16 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
-import GetTrbRequestFeedbackQuery from 'gql/legacyGQL/GetTrbRequestFeedbackQuery';
-import {
-  GetTrbRequestFeedback,
-  GetTrbRequestFeedbackVariables
-} from 'gql/legacyGQL/types/GetTrbRequestFeedback';
+import { useGetTRBRequestFeedbackQuery } from 'gql/generated/graphql';
 import { sortBy } from 'lodash';
 
 import Alert from 'components/Alert';
 import PageLoading from 'components/PageLoading';
-import useCacheQuery from 'hooks/useCacheQuery';
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
@@ -24,10 +19,7 @@ const Feedback = ({
 }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { data, loading, error } = useCacheQuery<
-    GetTrbRequestFeedback,
-    GetTrbRequestFeedbackVariables
-  >(GetTrbRequestFeedbackQuery, {
+  const { data, loading, error } = useGetTRBRequestFeedbackQuery({
     variables: {
       id: trbRequest.id
     }

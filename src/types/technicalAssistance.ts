@@ -13,7 +13,6 @@ import { TRBGuidanceLetterStatus } from './graphql-global-types';
 
 /* eslint-disable camelcase */
 export type { GetTrbAdminTeamHome_trbRequests as TrbAdminTeamHomeRequest } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
-export type { GetTrbRequestFeedback_trbRequest_feedback as TrbRequestFeedback } from 'gql/legacyGQL/types/GetTrbRequestFeedback';
 /* eslint-enable camelcase */
 
 /** TRB attendee  */
