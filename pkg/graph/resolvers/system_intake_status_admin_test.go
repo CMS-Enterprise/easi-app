@@ -277,7 +277,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				State:         models.SystemIntakeStateOpen,
 				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
-			expectedStatus: models.SISAGrbMeetingComplete,
+			expectedStatus: models.SISAGrbReviewComplete,
 			expectError:    false,
 		},
 		{

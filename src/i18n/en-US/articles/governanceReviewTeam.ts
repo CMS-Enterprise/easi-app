@@ -50,7 +50,6 @@ const systemIntakeStatusAdmin: Record<SystemIntakeStatusAdmin, string> = {
   GRB_MEETING_COMPLETE: 'GRB review complete',
   GRB_MEETING_READY: 'Ready for GRB review',
   GRB_REVIEW_IN_PROGRESS: 'GRB review in progress',
-  GRB_REVIEW_COMPLETE: 'GRB review complete',
   GRT_MEETING_COMPLETE: 'GRT meeting complete',
   GRT_MEETING_READY: 'Ready for GRT meeting',
   INITIAL_REQUEST_FORM_IN_PROGRESS: 'Intake Request in progress',

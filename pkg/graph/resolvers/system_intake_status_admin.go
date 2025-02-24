@@ -90,7 +90,7 @@ func calcSystemIntakeGRBMeetingStatusAdmin(intake *models.SystemIntake) models.S
 		return calcSystemIntakeAsyncGRBReviewStatusAdmin(intake)
 	}
 
-	return models.SISAGrbMeetingComplete
+	return models.SISAGrbReviewComplete
 }
 
 func calcSystemIntakeStandardGRBReviewStatusAdmin(intake *models.SystemIntake) models.SystemIntakeStatusAdmin {
@@ -98,12 +98,12 @@ func calcSystemIntakeStandardGRBReviewStatusAdmin(intake *models.SystemIntake) m
 		return models.SISAGrbMeetingReady
 	}
 
-	return models.SISAGrbMeetingComplete
+	return models.SISAGrbReviewComplete
 }
 
 func calcSystemIntakeAsyncGRBReviewStatusAdmin(intake *models.SystemIntake) models.SystemIntakeStatusAdmin {
 	if intake.GrbReviewAsyncGRBMeetingTime == nil || intake.GrbReviewAsyncEndDate == nil {
-		return models.SISAGrbMeetingComplete
+		return models.SISAGrbReviewComplete
 	}
 
 	now := time.Now()
@@ -111,7 +111,7 @@ func calcSystemIntakeAsyncGRBReviewStatusAdmin(intake *models.SystemIntake) mode
 		return models.SISAGrbReviewInProgress
 	}
 
-	return models.SISAGrbMeetingComplete
+	return models.SISAGrbReviewComplete
 }
 
 func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisionState, lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusAdmin, error) {
