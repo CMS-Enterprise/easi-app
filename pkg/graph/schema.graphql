@@ -838,6 +838,10 @@ type SystemIntake {
   """
   grbPresentationLinks: SystemIntakeGRBPresentationLinks
   """
+  GRB Presentation Deck Metadata
+  """
+  grbPresentationDeckRequesterReminderEmailSentTime: Time
+  """
   GRB Review Form
   """
   grbReviewType: SystemIntakeGRBReviewType!
@@ -2718,6 +2722,8 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
+  sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): String
+  @hasRole(role: EASI_GOVTEAM)
 }
 
 """
