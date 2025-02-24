@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { Button, Icon } from '@trussworks/react-uswds';
-import { CedarRole } from 'gql/legacyGQL/types/CedarRole';
+import { CedarRole } from 'gql/generated/graphql';
 
 import { AvatarCircle } from 'components/Avatar/Avatar';
 import UswdsReactLink from 'components/LinkWrapper';

@@ -1,9 +1,6 @@
 import { gql } from '@apollo/client';
 
-import { CedarRole } from './GetSystemProfileQuery';
-
-export default gql`
-  ${CedarRole}
+export default gql(/* GraphQL */ `
   query GetSystemWorkspace($cedarSystemId: String!) {
     cedarAuthorityToOperate(cedarSystemID: $cedarSystemId) {
       uuid
@@ -26,8 +23,8 @@ export default gql`
         }
       }
       roles {
-        ...CedarRole
+        ...CedarRoleFragment
       }
     }
   }
-`;
+`);

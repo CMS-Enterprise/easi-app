@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Icon, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { getPersonFullName } from 'features/Systems/SystemProfile/util';
+import { CedarRole } from 'gql/generated/graphql';
 import { GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate } from 'gql/legacyGQL/types/GetSystemProfile';
-import { GetSystemWorkspace_cedarSystemDetails_roles as CedarRole } from 'gql/legacyGQL/types/GetSystemWorkspace';
 
 import { AtoStatusTag } from 'components/AtoStatus';
 import ExternalLinkAndModal from 'components/ExternalLinkAndModal';
