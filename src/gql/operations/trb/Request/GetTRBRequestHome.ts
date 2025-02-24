@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export default gql`
-  query GetTrbRequestHome($id: UUID!) {
+export default gql(/* GraphQL */ `
+  query GetTRBRequestHome($id: UUID!) {
     trbRequest(id: $id) {
       id
       consultMeetingTime
@@ -35,4 +35,4 @@ export default gql`
       }
     }
   }
-`;
+`);
