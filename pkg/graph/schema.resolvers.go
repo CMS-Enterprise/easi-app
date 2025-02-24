@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1178,6 +1179,11 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 	return resolvers.DeleteTRBLeadOption(ctx, r.store, eua)
 }
 
+// SendGRBReviewPresentationDeckReminderEmail is the resolver for the sendGRBReviewPresentationDeckReminderEmail field.
+func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (*string, error) {
+	panic(fmt.Errorf("not implemented: SendGRBReviewPresentationDeckReminderEmail - sendGRBReviewPresentationDeckReminderEmail"))
+}
+
 // SystemIntake is the resolver for the systemIntake field.
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
@@ -1950,6 +1956,11 @@ func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.S
 // GrbPresentationLinks is the resolver for the grbPresentationLinks field.
 func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error) {
 	return dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.ID)
+}
+
+// GrbPresentationDeckRequesterReminderEmailSentTime is the resolver for the grbPresentationDeckRequesterReminderEmailSentTime field.
+func (r *systemIntakeResolver) GrbPresentationDeckRequesterReminderEmailSentTime(ctx context.Context, obj *models.SystemIntake) (*time.Time, error) {
+	panic(fmt.Errorf("not implemented: GrbPresentationDeckRequesterReminderEmailSentTime - grbPresentationDeckRequesterReminderEmailSentTime"))
 }
 
 // DocumentType is the resolver for the documentType field.

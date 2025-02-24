@@ -594,6 +594,7 @@ type ComplexityRoot struct {
 		RequestReviewForTRBGuidanceLetter                func(childComplexity int, id uuid.UUID) int
 		SendCantFindSomethingEmail                       func(childComplexity int, input models.SendCantFindSomethingEmailInput) int
 		SendFeedbackEmail                                func(childComplexity int, input models.SendFeedbackEmailInput) int
+		SendGRBReviewPresentationDeckReminderEmail       func(childComplexity int, systemIntakeID uuid.UUID) int
 		SendReportAProblemEmail                          func(childComplexity int, input models.SendReportAProblemEmailInput) int
 		SendTRBGuidanceLetter                            func(childComplexity int, input models.SendTRBGuidanceLetterInput) int
 		SetRolesForUserOnSystem                          func(childComplexity int, input models.SetRolesForUserOnSystemInput) int
@@ -668,91 +669,92 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntake struct {
-		AcquisitionMethods              func(childComplexity int) int
-		Actions                         func(childComplexity int) int
-		AdminLead                       func(childComplexity int) int
-		AnnualSpending                  func(childComplexity int) int
-		ArchivedAt                      func(childComplexity int) int
-		BusinessCase                    func(childComplexity int) int
-		BusinessCaseID                  func(childComplexity int) int
-		BusinessNeed                    func(childComplexity int) int
-		BusinessOwner                   func(childComplexity int) int
-		BusinessSolution                func(childComplexity int) int
-		CedarSystemID                   func(childComplexity int) int
-		Contract                        func(childComplexity int) int
-		ContractName                    func(childComplexity int) int
-		ContractNumbers                 func(childComplexity int) int
-		Costs                           func(childComplexity int) int
-		CreatedAt                       func(childComplexity int) int
-		CurrentStage                    func(childComplexity int) int
-		DecidedAt                       func(childComplexity int) int
-		DecisionNextSteps               func(childComplexity int) int
-		DecisionState                   func(childComplexity int) int
-		Documents                       func(childComplexity int) int
-		DraftBusinessCaseState          func(childComplexity int) int
-		EACollaborator                  func(childComplexity int) int
-		EACollaboratorName              func(childComplexity int) int
-		EUAUserID                       func(childComplexity int) int
-		ExistingFunding                 func(childComplexity int) int
-		FinalBusinessCaseState          func(childComplexity int) int
-		FundingSources                  func(childComplexity int) int
-		GRBDate                         func(childComplexity int) int
-		GRBMeetingState                 func(childComplexity int) int
-		GRBReviewStartedAt              func(childComplexity int) int
-		GRTDate                         func(childComplexity int) int
-		GRTMeetingState                 func(childComplexity int) int
-		GovernanceRequestFeedbacks      func(childComplexity int) int
-		GovernanceTeams                 func(childComplexity int) int
-		GrbDiscussions                  func(childComplexity int) int
-		GrbPresentationLinks            func(childComplexity int) int
-		GrbReviewAsyncEndDate           func(childComplexity int) int
-		GrbReviewAsyncGRBMeetingTime    func(childComplexity int) int
-		GrbReviewAsyncRecordingTime     func(childComplexity int) int
-		GrbReviewStandardGRBMeetingTime func(childComplexity int) int
-		GrbReviewType                   func(childComplexity int) int
-		GrbReviewers                    func(childComplexity int) int
-		GrtReviewEmailBody              func(childComplexity int) int
-		HasUIChanges                    func(childComplexity int) int
-		ID                              func(childComplexity int) int
-		Isso                            func(childComplexity int) int
-		ItGovTaskStatuses               func(childComplexity int) int
-		LastMeetingDate                 func(childComplexity int) int
-		Lcid                            func(childComplexity int) int
-		LcidCostBaseline                func(childComplexity int) int
-		LcidScope                       func(childComplexity int) int
-		LcidStatus                      func(childComplexity int) int
-		LifecycleExpiresAt              func(childComplexity int) int
-		LifecycleIssuedAt               func(childComplexity int) int
-		LifecycleRetiresAt              func(childComplexity int) int
-		NeedsEaSupport                  func(childComplexity int) int
-		NextMeetingDate                 func(childComplexity int) int
-		Notes                           func(childComplexity int) int
-		OITSecurityCollaborator         func(childComplexity int) int
-		OITSecurityCollaboratorName     func(childComplexity int) int
-		ProductManager                  func(childComplexity int) int
-		ProjectAcronym                  func(childComplexity int) int
-		RejectionReason                 func(childComplexity int) int
-		RelatedIntakes                  func(childComplexity int) int
-		RelatedTRBRequests              func(childComplexity int) int
-		RelationType                    func(childComplexity int) int
-		RequestFormState                func(childComplexity int) int
-		RequestName                     func(childComplexity int) int
-		RequestType                     func(childComplexity int) int
-		Requester                       func(childComplexity int) int
-		RequesterComponent              func(childComplexity int) int
-		RequesterName                   func(childComplexity int) int
-		State                           func(childComplexity int) int
-		StatusAdmin                     func(childComplexity int) int
-		StatusRequester                 func(childComplexity int) int
-		Step                            func(childComplexity int) int
-		SubmittedAt                     func(childComplexity int) int
-		Systems                         func(childComplexity int) int
-		TRBCollaborator                 func(childComplexity int) int
-		TRBCollaboratorName             func(childComplexity int) int
-		TRBFollowUpRecommendation       func(childComplexity int) int
-		UpdatedAt                       func(childComplexity int) int
-		UsesAITech                      func(childComplexity int) int
-		UsingSoftware                   func(childComplexity int) int
+		AcquisitionMethods                                func(childComplexity int) int
+		Actions                                           func(childComplexity int) int
+		AdminLead                                         func(childComplexity int) int
+		AnnualSpending                                    func(childComplexity int) int
+		ArchivedAt                                        func(childComplexity int) int
+		BusinessCase                                      func(childComplexity int) int
+		BusinessCaseID                                    func(childComplexity int) int
+		BusinessNeed                                      func(childComplexity int) int
+		BusinessOwner                                     func(childComplexity int) int
+		BusinessSolution                                  func(childComplexity int) int
+		CedarSystemID                                     func(childComplexity int) int
+		Contract                                          func(childComplexity int) int
+		ContractName                                      func(childComplexity int) int
+		ContractNumbers                                   func(childComplexity int) int
+		Costs                                             func(childComplexity int) int
+		CreatedAt                                         func(childComplexity int) int
+		CurrentStage                                      func(childComplexity int) int
+		DecidedAt                                         func(childComplexity int) int
+		DecisionNextSteps                                 func(childComplexity int) int
+		DecisionState                                     func(childComplexity int) int
+		Documents                                         func(childComplexity int) int
+		DraftBusinessCaseState                            func(childComplexity int) int
+		EACollaborator                                    func(childComplexity int) int
+		EACollaboratorName                                func(childComplexity int) int
+		EUAUserID                                         func(childComplexity int) int
+		ExistingFunding                                   func(childComplexity int) int
+		FinalBusinessCaseState                            func(childComplexity int) int
+		FundingSources                                    func(childComplexity int) int
+		GRBDate                                           func(childComplexity int) int
+		GRBMeetingState                                   func(childComplexity int) int
+		GRBReviewStartedAt                                func(childComplexity int) int
+		GRTDate                                           func(childComplexity int) int
+		GRTMeetingState                                   func(childComplexity int) int
+		GovernanceRequestFeedbacks                        func(childComplexity int) int
+		GovernanceTeams                                   func(childComplexity int) int
+		GrbDiscussions                                    func(childComplexity int) int
+		GrbPresentationDeckRequesterReminderEmailSentTime func(childComplexity int) int
+		GrbPresentationLinks                              func(childComplexity int) int
+		GrbReviewAsyncEndDate                             func(childComplexity int) int
+		GrbReviewAsyncGRBMeetingTime                      func(childComplexity int) int
+		GrbReviewAsyncRecordingTime                       func(childComplexity int) int
+		GrbReviewStandardGRBMeetingTime                   func(childComplexity int) int
+		GrbReviewType                                     func(childComplexity int) int
+		GrbReviewers                                      func(childComplexity int) int
+		GrtReviewEmailBody                                func(childComplexity int) int
+		HasUIChanges                                      func(childComplexity int) int
+		ID                                                func(childComplexity int) int
+		Isso                                              func(childComplexity int) int
+		ItGovTaskStatuses                                 func(childComplexity int) int
+		LastMeetingDate                                   func(childComplexity int) int
+		Lcid                                              func(childComplexity int) int
+		LcidCostBaseline                                  func(childComplexity int) int
+		LcidScope                                         func(childComplexity int) int
+		LcidStatus                                        func(childComplexity int) int
+		LifecycleExpiresAt                                func(childComplexity int) int
+		LifecycleIssuedAt                                 func(childComplexity int) int
+		LifecycleRetiresAt                                func(childComplexity int) int
+		NeedsEaSupport                                    func(childComplexity int) int
+		NextMeetingDate                                   func(childComplexity int) int
+		Notes                                             func(childComplexity int) int
+		OITSecurityCollaborator                           func(childComplexity int) int
+		OITSecurityCollaboratorName                       func(childComplexity int) int
+		ProductManager                                    func(childComplexity int) int
+		ProjectAcronym                                    func(childComplexity int) int
+		RejectionReason                                   func(childComplexity int) int
+		RelatedIntakes                                    func(childComplexity int) int
+		RelatedTRBRequests                                func(childComplexity int) int
+		RelationType                                      func(childComplexity int) int
+		RequestFormState                                  func(childComplexity int) int
+		RequestName                                       func(childComplexity int) int
+		RequestType                                       func(childComplexity int) int
+		Requester                                         func(childComplexity int) int
+		RequesterComponent                                func(childComplexity int) int
+		RequesterName                                     func(childComplexity int) int
+		State                                             func(childComplexity int) int
+		StatusAdmin                                       func(childComplexity int) int
+		StatusRequester                                   func(childComplexity int) int
+		Step                                              func(childComplexity int) int
+		SubmittedAt                                       func(childComplexity int) int
+		Systems                                           func(childComplexity int) int
+		TRBCollaborator                                   func(childComplexity int) int
+		TRBCollaboratorName                               func(childComplexity int) int
+		TRBFollowUpRecommendation                         func(childComplexity int) int
+		UpdatedAt                                         func(childComplexity int) int
+		UsesAITech                                        func(childComplexity int) int
+		UsingSoftware                                     func(childComplexity int) int
 	}
 
 	SystemIntakeAction struct {
@@ -1310,6 +1312,7 @@ type MutationResolver interface {
 	ReopenTrbRequest(ctx context.Context, input models.ReopenTRBRequestInput) (*models.TRBRequest, error)
 	CreateTrbLeadOption(ctx context.Context, eua string) (*models.UserInfo, error)
 	DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error)
+	SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (*string, error)
 }
 type QueryResolver interface {
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
@@ -1401,6 +1404,7 @@ type SystemIntakeResolver interface {
 	RelatedTRBRequests(ctx context.Context, obj *models.SystemIntake) ([]*models.TRBRequest, error)
 	GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error)
 	GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error)
+	GrbPresentationDeckRequesterReminderEmailSentTime(ctx context.Context, obj *models.SystemIntake) (*time.Time, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -4547,6 +4551,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.SendFeedbackEmail(childComplexity, args["input"].(models.SendFeedbackEmailInput)), true
 
+	case "Mutation.sendGRBReviewPresentationDeckReminderEmail":
+		if e.complexity.Mutation.SendGRBReviewPresentationDeckReminderEmail == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_sendGRBReviewPresentationDeckReminderEmail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SendGRBReviewPresentationDeckReminderEmail(childComplexity, args["systemIntakeID"].(uuid.UUID)), true
+
 	case "Mutation.sendReportAProblemEmail":
 		if e.complexity.Mutation.SendReportAProblemEmail == nil {
 			break
@@ -5569,6 +5585,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.GrbDiscussions(childComplexity), true
+
+	case "SystemIntake.grbPresentationDeckRequesterReminderEmailSentTime":
+		if e.complexity.SystemIntake.GrbPresentationDeckRequesterReminderEmailSentTime == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbPresentationDeckRequesterReminderEmailSentTime(childComplexity), true
 
 	case "SystemIntake.grbPresentationLinks":
 		if e.complexity.SystemIntake.GrbPresentationLinks == nil {
@@ -9007,6 +9030,10 @@ type SystemIntake {
   """
   grbPresentationLinks: SystemIntakeGRBPresentationLinks
   """
+  GRB Presentation Deck Metadata
+  """
+  grbPresentationDeckRequesterReminderEmailSentTime: Time
+  """
   GRB Review Form
   """
   grbReviewType: SystemIntakeGRBReviewType!
@@ -10887,6 +10914,8 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
+  sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): String
+  @hasRole(role: EASI_GOVTEAM)
 }
 
 """
@@ -12813,6 +12842,34 @@ func (ec *executionContext) field_Mutation_sendFeedbackEmail_argsInput(
 	}
 
 	var zeroVal models.SendFeedbackEmailInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_sendGRBReviewPresentationDeckReminderEmail_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_sendGRBReviewPresentationDeckReminderEmail_argsSystemIntakeID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["systemIntakeID"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_sendGRBReviewPresentationDeckReminderEmail_argsSystemIntakeID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (uuid.UUID, error) {
+	if _, ok := rawArgs["systemIntakeID"]; !ok {
+		var zeroVal uuid.UUID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+	if tmp, ok := rawArgs["systemIntakeID"]; ok {
+		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+	}
+
+	var zeroVal uuid.UUID
 	return zeroVal, nil
 }
 
@@ -16079,6 +16136,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -24983,6 +25042,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -31897,6 +31958,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -32151,6 +32214,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -34039,6 +34104,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -38069,6 +38136,85 @@ func (ec *executionContext) fieldContext_Mutation_deleteTrbLeadOption(ctx contex
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_sendGRBReviewPresentationDeckReminderEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_sendGRBReviewPresentationDeckReminderEmail(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().SendGRBReviewPresentationDeckReminderEmail(rctx, fc.Args["systemIntakeID"].(uuid.UUID))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *string
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *string
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*string); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *string`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_sendGRBReviewPresentationDeckReminderEmail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_sendGRBReviewPresentationDeckReminderEmail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_systemIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_systemIntake(ctx, field)
 	if err != nil {
@@ -38265,6 +38411,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -38492,6 +38640,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -38719,6 +38869,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -38935,6 +39087,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -39151,6 +39305,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -45160,6 +45316,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -45401,6 +45559,47 @@ func (ec *executionContext) fieldContext_SystemIntake_grbPresentationLinks(_ con
 				return ec.fieldContext_SystemIntakeGRBPresentationLinks_presentationDeckFileStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBPresentationLinks", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().GrbPresentationDeckRequesterReminderEmailSentTime(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -45857,6 +46056,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -55210,6 +55411,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -58091,6 +58294,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -58861,6 +59066,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
 			case "grbReviewType":
 				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
 			case "grbReviewAsyncRecordingTime":
@@ -69147,6 +69354,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "sendGRBReviewPresentationDeckReminderEmail":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_sendGRBReviewPresentationDeckReminderEmail(ctx, field)
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -71319,6 +71530,39 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_grbPresentationLinks(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "grbPresentationDeckRequesterReminderEmailSentTime":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field, obj)
 				return res
 			}
 

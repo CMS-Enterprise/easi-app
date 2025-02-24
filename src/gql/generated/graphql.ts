@@ -1005,6 +1005,7 @@ export type Mutation = {
   requestReviewForTRBGuidanceLetter: TRBGuidanceLetter;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
+  sendGRBReviewPresentationDeckReminderEmail?: Maybe<Scalars['String']['output']>;
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
   sendTRBGuidanceLetter: TRBGuidanceLetter;
   setRolesForUserOnSystem?: Maybe<Scalars['String']['output']>;
@@ -1335,6 +1336,12 @@ export type MutationSendCantFindSomethingEmailArgs = {
 /** Defines the mutations for the schema */
 export type MutationSendFeedbackEmailArgs = {
   input: SendFeedbackEmailInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationSendGRBReviewPresentationDeckReminderEmailArgs = {
+  systemIntakeID: Scalars['UUID']['input'];
 };
 
 
@@ -1900,6 +1907,8 @@ export type SystemIntake = {
   grbDiscussions: Array<SystemIntakeGRBReviewDiscussion>;
   /** This is a calculated state based on if a date exists for the GRB Meeting date */
   grbMeetingState: SystemIntakeMeetingState;
+  /** GRB Presentation Deck Metadata */
+  grbPresentationDeckRequesterReminderEmailSentTime?: Maybe<Scalars['Time']['output']>;
   /** GRB Presentation Link Data */
   grbPresentationLinks?: Maybe<SystemIntakeGRBPresentationLinks>;
   grbReviewAsyncEndDate?: Maybe<Scalars['Time']['output']>;
