@@ -4,12 +4,11 @@ import { Icon, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { getPersonFullName } from 'features/Systems/SystemProfile/util';
 import { CedarRole } from 'gql/generated/graphql';
-import { GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate } from 'gql/legacyGQL/types/GetSystemProfile';
 
 import { AtoStatusTag } from 'components/AtoStatus';
 import ExternalLinkAndModal from 'components/ExternalLinkAndModal';
 import { ATO_LEARN_MORE, CFACTS } from 'constants/externalUrls';
-import { AtoStatus } from 'types/systemProfile';
+import { AtoStatus, GetSystemProfileATO } from 'types/systemProfile';
 import { formatDateUtc } from 'utils/date';
 import showVal from 'utils/showVal';
 
@@ -17,7 +16,7 @@ import SpacesCard from '../SpacesCard';
 
 type Props = {
   status: AtoStatus;
-  dateAuthorizationMemoExpires?: CedarAuthorityToOperate['dateAuthorizationMemoExpires'];
+  dateAuthorizationMemoExpires?: GetSystemProfileATO['dateAuthorizationMemoExpires'];
   isso?: CedarRole;
   className?: string;
 };

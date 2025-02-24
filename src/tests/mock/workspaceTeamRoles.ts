@@ -1,4 +1,5 @@
-import { CedarAssigneeType } from 'types/graphql-global-types';
+import { CedarAssigneeType } from 'gql/generated/graphql';
+
 import { CedarRoleAssigneePerson } from 'types/systemProfile';
 
 const teamRoles: CedarRoleAssigneePerson[] = [

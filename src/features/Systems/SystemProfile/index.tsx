@@ -7,7 +7,6 @@ import {
   useParams
 } from 'react-router-dom';
 import { NavHashLink } from 'react-router-hash-link';
-import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -28,14 +27,11 @@ import {
   subSystems as mockSubSystems,
   systemData as mockSystemData
 } from 'features/Systems/SystemProfile/data/mockSystemData';
-import GetSystemProfileQuery from 'gql/legacyGQL/GetSystemProfileQuery';
 import {
-  GetSystemProfile,
-  /* eslint-disable camelcase */
-  GetSystemProfile_cedarSystemDetails,
-  /* eslint-enable camelcase */
-  GetSystemProfileVariables
-} from 'gql/legacyGQL/types/GetSystemProfile';
+  CedarAssigneeType,
+  GetSystemProfileQuery,
+  useGetSystemProfileQuery
+} from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Alert from 'components/Alert';
@@ -52,7 +48,6 @@ import PageLoading from 'components/PageLoading';
 import SectionWrapper from 'components/SectionWrapper';
 import TLCTag from 'components/TLCTag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import { CedarAssigneeType } from 'types/graphql-global-types';
 import {
   CedarRoleAssigneePerson,
   DevelopmentTag,
@@ -84,10 +79,10 @@ import './index.scss';
  */
 function getDevelopmentTags(
   // eslint-disable-next-line camelcase
-  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+  cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
 ): DevelopmentTag[] {
   const tags: DevelopmentTag[] = [];
-  if (cedarSystemDetails.systemMaintainerInformation.agileUsed === true) {
+  if (cedarSystemDetails?.systemMaintainerInformation.agileUsed === true) {
     tags.push('Agile Methodology');
   }
   return tags;
@@ -100,12 +95,12 @@ function getDevelopmentTags(
  */
 function getLocations(
   // eslint-disable-next-line camelcase
-  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+  cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
 ): UrlLocation[] {
-  return cedarSystemDetails.urls.map(url => {
+  return (cedarSystemDetails?.urls ?? []).map(url => {
     // Find a deployment from matching its type with the url host env
     const { urlHostingEnv } = url;
-    const deployment = cedarSystemDetails.deployments.find(
+    const deployment = cedarSystemDetails?.deployments.find(
       dpl => urlHostingEnv && dpl.deploymentType === urlHostingEnv
     );
 
@@ -129,10 +124,10 @@ function getLocations(
 
 function getPlannedRetirement(
   // eslint-disable-next-line camelcase
-  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+  cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
 ): string | null {
   const { plansToRetireReplace, quarterToRetireReplace, yearToRetireReplace } =
-    cedarSystemDetails.systemMaintainerInformation;
+    cedarSystemDetails?.systemMaintainerInformation || {};
 
   // Return null if none of the original properties are truthy
   if (
@@ -157,7 +152,7 @@ function getPlannedRetirement(
  * It is passed to all SystemProfile subpage components.
  */
 export function getSystemProfileData(
-  data?: GetSystemProfile
+  data?: GetSystemProfileQuery
 ): SystemProfileData | undefined {
   // System profile data is generally unavailable if `data.cedarSystemDetails` is empty
   if (!data) return undefined;
@@ -228,7 +223,7 @@ export function getSystemProfileData(
     personRoles,
     plannedRetirement: getPlannedRetirement(cedarSystemDetails),
     productionLocation,
-    status: cedarSystem.status,
+    status: cedarSystem.status!,
     toolsAndSoftware: cedarSoftwareProducts || undefined,
     usernamesWithRoles,
 
@@ -276,10 +271,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     }
   }, [top, hash]);
 
-  const { loading, error, data } = useQuery<
-    GetSystemProfile,
-    GetSystemProfileVariables
-  >(GetSystemProfileQuery, {
+  const { loading, error, data } = useGetSystemProfileQuery({
     variables: {
       cedarSystemId: systemId
     }

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
-import { FetchResult, MutationFunctionOptions, useQuery } from '@apollo/client';
+import { FetchResult, MutationFunctionOptions } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
@@ -14,15 +14,12 @@ import {
   Icon,
   Label
 } from '@trussworks/react-uswds';
-import { GetCedarRoleTypesQuery } from 'gql/legacyGQL/CedarRoleQueries';
 import {
-  GetCedarRoleTypes,
-  GetCedarRoleTypes_roleTypes as CedarRoleTypes
-} from 'gql/legacyGQL/types/GetCedarRoleTypes';
-import {
-  SetRolesForUserOnSystem,
-  SetRolesForUserOnSystemVariables
-} from 'gql/legacyGQL/types/SetRolesForUserOnSystem';
+  GetCedarRoleTypesQuery,
+  SetRolesForUserOnSystemMutation,
+  SetRolesForUserOnSystemMutationVariables,
+  useGetCedarRoleTypesQuery
+} from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import * as yup from 'yup';
 
@@ -53,10 +50,10 @@ type TeamMemberFormProps = {
   cedarSystemId: string;
   updateRoles: (
     options?: MutationFunctionOptions<
-      SetRolesForUserOnSystem,
-      SetRolesForUserOnSystemVariables
+      SetRolesForUserOnSystemMutation,
+      SetRolesForUserOnSystemMutationVariables
     >
-  ) => Promise<FetchResult<SetRolesForUserOnSystem>>;
+  ) => Promise<FetchResult<SetRolesForUserOnSystemMutation>>;
   loading: boolean;
   team: UsernameWithRoles[];
 };
@@ -93,11 +90,9 @@ const TeamMemberForm = ({
 
   const keyPrefix = `singleSystem.editTeam.form.${isEdit ? 'edit' : 'add'}`;
 
-  const { data, loading: roleTypesLoading } = useQuery<GetCedarRoleTypes>(
-    GetCedarRoleTypesQuery
-  );
+  const { data, loading: roleTypesLoading } = useGetCedarRoleTypesQuery();
 
-  const rolesOrdered: CedarRoleTypes[] = useMemo(() => {
+  const rolesOrdered: GetCedarRoleTypesQuery['roleTypes'] = useMemo(() => {
     const roles = data?.roleTypes;
 
     if (roles === undefined) return [];

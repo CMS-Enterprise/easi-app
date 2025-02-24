@@ -3293,6 +3293,8 @@ export type CreateSystemIntakeGRBDiscussionReplyInput = {
 
 export type CedarRoleFragmentFragment = { __typename: 'CedarRole', application: string, objectID: string, roleTypeID: string, assigneeType?: CedarAssigneeType | null, assigneeUsername?: string | null, assigneeEmail?: string | null, assigneeOrgID?: string | null, assigneeOrgName?: string | null, assigneeFirstName?: string | null, assigneeLastName?: string | null, roleTypeName?: string | null, roleID?: string | null };
 
+export type CedarRoleTypeFragmentFragment = { __typename: 'CedarRoleType', id: string, name: string, description?: string | null };
+
 export type FundingSourceFragmentFragment = { __typename: 'SystemIntakeFundingSource', id: UUID, fundingNumber?: string | null, source?: string | null };
 
 export type SystemIntakeContactFragmentFragment = { __typename: 'AugmentedSystemIntakeContact', systemIntakeId: UUID, id: UUID, euaUserId: string, component: string, role: string, commonName?: string | null, email?: EmailAddress | null };
@@ -3597,10 +3599,29 @@ export type UpdateSystemIntakeReviewDatesMutationVariables = Exact<{
 
 export type UpdateSystemIntakeReviewDatesMutation = { __typename: 'Mutation', updateSystemIntakeReviewDates?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID, grbDate?: Time | null, grtDate?: Time | null } | null } | null };
 
+export type GetCedarRoleTypesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCedarRoleTypesQuery = { __typename: 'Query', roleTypes: Array<{ __typename: 'CedarRoleType', id: string, name: string, description?: string | null }> };
+
+export type SetRolesForUserOnSystemMutationVariables = Exact<{
+  input: SetRolesForUserOnSystemInput;
+}>;
+
+
+export type SetRolesForUserOnSystemMutation = { __typename: 'Mutation', setRolesForUserOnSystem?: string | null };
+
 export type GetRequestsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetRequestsQuery = { __typename: 'Query', mySystemIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, submittedAt?: Time | null, statusRequester: SystemIntakeStatusRequester, statusAdmin: SystemIntakeStatusAdmin, grbDate?: Time | null, grtDate?: Time | null, lcid?: string | null, nextMeetingDate?: Time | null, lastMeetingDate?: Time | null, systems: Array<{ __typename: 'CedarSystem', id: string, name: string }> }>, myTrbRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, lastMeetingDate?: Time | null, submittedAt: Time, nextMeetingDate?: Time | null, systems: Array<{ __typename: 'CedarSystem', id: string, name: string }> }> };
+
+export type GetSystemProfileQueryVariables = Exact<{
+  cedarSystemId: Scalars['String']['input'];
+}>;
+
+
+export type GetSystemProfileQuery = { __typename: 'Query', cedarAuthorityToOperate: Array<{ __typename: 'CedarAuthorityToOperate', uuid: string, actualDispositionDate?: Time | null, containsPersonallyIdentifiableInformation?: boolean | null, countOfTotalNonPrivilegedUserPopulation: number, countOfOpenPoams: number, countOfTotalPrivilegedUserPopulation: number, dateAuthorizationMemoExpires?: Time | null, dateAuthorizationMemoSigned?: Time | null, eAuthenticationLevel?: string | null, fips199OverallImpactRating?: number | null, fismaSystemAcronym?: string | null, fismaSystemName?: string | null, isAccessedByNonOrganizationalUsers?: boolean | null, isPiiLimitedToUserNameAndPass?: boolean | null, isProtectedHealthInformation?: boolean | null, lastActScaDate?: Time | null, lastAssessmentDate?: Time | null, lastContingencyPlanCompletionDate?: Time | null, lastPenTestDate?: Time | null, piaCompletionDate?: Time | null, primaryCyberRiskAdvisor?: string | null, privacySubjectMatterExpert?: string | null, recoveryPointObjective?: number | null, recoveryTimeObjective?: number | null, systemOfRecordsNotice: Array<string>, tlcPhase?: string | null }>, exchanges: Array<{ __typename: 'CedarExchange', connectionFrequency: Array<string>, containsHealthDisparityData?: boolean | null, containsPhi?: boolean | null, dataExchangeAgreement?: string | null, exchangeDescription?: string | null, exchangeDirection?: ExchangeDirection | null, exchangeId?: string | null, exchangeName?: string | null, numOfRecords?: string | null, sharedViaApi?: boolean | null }>, cedarBudget?: Array<{ __typename: 'CedarBudget', fiscalYear?: string | null, funding?: string | null, fundingId?: string | null, fundingSource?: string | null, id?: string | null, name?: string | null, projectId: string, projectTitle?: string | null, systemId?: string | null }> | null, cedarBudgetSystemCost?: { __typename: 'CedarBudgetSystemCost', budgetActualCost: Array<{ __typename: 'CedarBudgetActualCost', actualSystemCost?: string | null, fiscalYear?: string | null, systemId?: string | null }> } | null, cedarThreat: Array<{ __typename: 'CedarThreat', daysOpen?: number | null, weaknessRiskLevel?: string | null }>, cedarSoftwareProducts?: { __typename: 'CedarSoftwareProducts', aiSolnCatg: Array<string | null>, aiSolnCatgOther?: string | null, apiDataArea: Array<string | null>, apiDescPubLocation?: string | null, apiDescPublished?: string | null, apiFHIRUse?: string | null, apiFHIRUseOther?: string | null, apiHasPortal?: boolean | null, apisAccessibility?: string | null, apisDeveloped?: string | null, developmentStage?: string | null, systemHasAPIGateway?: boolean | null, usesAiTech?: string | null, softwareProducts: Array<{ __typename: 'CedarSoftwareProductItem', apiGatewayUse?: boolean | null, elaPurchase?: string | null, elaVendorId?: string | null, providesAiCapability?: boolean | null, refstr?: string | null, softwareCatagoryConnectionGuid?: string | null, softwareVendorConnectionGuid?: string | null, softwareCost?: string | null, softwareElaOrganization?: string | null, softwareName?: string | null, systemSoftwareConnectionGuid?: string | null, technopediaCategory?: string | null, technopediaID?: string | null, vendorName?: string | null }> } | null, cedarContractsBySystem: Array<{ __typename: 'CedarContract', systemID?: string | null, startDate?: Time | null, endDate?: Time | null, contractNumber?: string | null, contractName?: string | null, description?: string | null, orderNumber?: string | null, serviceProvided?: string | null, isDeliveryOrg?: boolean | null }>, cedarSystemDetails?: { __typename: 'CedarSystemDetails', isMySystem?: boolean | null, businessOwnerInformation: { __typename: 'CedarBusinessOwnerInformation', isCmsOwned?: boolean | null, numberOfContractorFte?: string | null, numberOfFederalFte?: string | null, numberOfSupportedUsersPerMonth?: string | null, storesBeneficiaryAddress?: boolean | null, storesBankingData?: boolean | null }, cedarSystem: { __typename: 'CedarSystem', id: string, isBookmarked: boolean, name: string, description?: string | null, acronym?: string | null, status?: string | null, businessOwnerOrg?: string | null, businessOwnerOrgComp?: string | null, systemMaintainerOrg?: string | null, systemMaintainerOrgComp?: string | null, uuid?: string | null }, deployments: Array<{ __typename: 'CedarDeployment', id: string, startDate?: Time | null, deploymentType?: string | null, name: string, dataCenter?: { __typename: 'CedarDataCenter', name?: string | null } | null }>, roles: Array<{ __typename: 'CedarRole', application: string, objectID: string, roleTypeID: string, assigneeType?: CedarAssigneeType | null, assigneeUsername?: string | null, assigneeEmail?: string | null, assigneeOrgID?: string | null, assigneeOrgName?: string | null, assigneeFirstName?: string | null, assigneeLastName?: string | null, roleTypeName?: string | null, roleID?: string | null }>, urls: Array<{ __typename: 'CedarURL', id: string, address?: string | null, isAPIEndpoint?: boolean | null, isBehindWebApplicationFirewall?: boolean | null, isVersionCodeRepository?: boolean | null, urlHostingEnv?: string | null }>, systemMaintainerInformation: { __typename: 'CedarSystemMaintainerInformation', agileUsed?: boolean | null, deploymentFrequency?: string | null, devCompletionPercent?: string | null, devWorkDescription?: string | null, ecapParticipation?: boolean | null, frontendAccessType?: string | null, hardCodedIPAddress?: boolean | null, ip6EnabledAssetPercent?: string | null, ip6TransitionPlan?: string | null, ipEnabledAssetCount?: number | null, netAccessibility?: string | null, plansToRetireReplace?: string | null, quarterToRetireReplace?: string | null, systemCustomization?: string | null, yearToRetireReplace?: string | null } } | null, cedarSubSystems: Array<{ __typename: 'CedarSubSystem', id: string, name: string, acronym?: string | null, description?: string | null }> };
 
 export type GetSystemWorkspaceQueryVariables = Exact<{
   cedarSystemId: Scalars['String']['input'];
@@ -3935,6 +3956,13 @@ export const CedarRoleFragmentFragmentDoc = gql`
   assigneeLastName
   roleTypeName
   roleID
+}
+    `;
+export const CedarRoleTypeFragmentFragmentDoc = gql`
+    fragment CedarRoleTypeFragment on CedarRoleType {
+  id
+  name
+  description
 }
     `;
 export const FundingSourceFragmentFragmentDoc = gql`
@@ -5769,6 +5797,76 @@ export function useUpdateSystemIntakeReviewDatesMutation(baseOptions?: Apollo.Mu
 export type UpdateSystemIntakeReviewDatesMutationHookResult = ReturnType<typeof useUpdateSystemIntakeReviewDatesMutation>;
 export type UpdateSystemIntakeReviewDatesMutationResult = Apollo.MutationResult<UpdateSystemIntakeReviewDatesMutation>;
 export type UpdateSystemIntakeReviewDatesMutationOptions = Apollo.BaseMutationOptions<UpdateSystemIntakeReviewDatesMutation, UpdateSystemIntakeReviewDatesMutationVariables>;
+export const GetCedarRoleTypesDocument = gql`
+    query GetCedarRoleTypes {
+  roleTypes {
+    ...CedarRoleTypeFragment
+  }
+}
+    ${CedarRoleTypeFragmentFragmentDoc}`;
+
+/**
+ * __useGetCedarRoleTypesQuery__
+ *
+ * To run a query within a React component, call `useGetCedarRoleTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCedarRoleTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCedarRoleTypesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCedarRoleTypesQuery(baseOptions?: Apollo.QueryHookOptions<GetCedarRoleTypesQuery, GetCedarRoleTypesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCedarRoleTypesQuery, GetCedarRoleTypesQueryVariables>(GetCedarRoleTypesDocument, options);
+      }
+export function useGetCedarRoleTypesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCedarRoleTypesQuery, GetCedarRoleTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCedarRoleTypesQuery, GetCedarRoleTypesQueryVariables>(GetCedarRoleTypesDocument, options);
+        }
+export function useGetCedarRoleTypesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCedarRoleTypesQuery, GetCedarRoleTypesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCedarRoleTypesQuery, GetCedarRoleTypesQueryVariables>(GetCedarRoleTypesDocument, options);
+        }
+export type GetCedarRoleTypesQueryHookResult = ReturnType<typeof useGetCedarRoleTypesQuery>;
+export type GetCedarRoleTypesLazyQueryHookResult = ReturnType<typeof useGetCedarRoleTypesLazyQuery>;
+export type GetCedarRoleTypesSuspenseQueryHookResult = ReturnType<typeof useGetCedarRoleTypesSuspenseQuery>;
+export type GetCedarRoleTypesQueryResult = Apollo.QueryResult<GetCedarRoleTypesQuery, GetCedarRoleTypesQueryVariables>;
+export const SetRolesForUserOnSystemDocument = gql`
+    mutation SetRolesForUserOnSystem($input: SetRolesForUserOnSystemInput!) {
+  setRolesForUserOnSystem(input: $input)
+}
+    `;
+export type SetRolesForUserOnSystemMutationFn = Apollo.MutationFunction<SetRolesForUserOnSystemMutation, SetRolesForUserOnSystemMutationVariables>;
+
+/**
+ * __useSetRolesForUserOnSystemMutation__
+ *
+ * To run a mutation, you first call `useSetRolesForUserOnSystemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetRolesForUserOnSystemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setRolesForUserOnSystemMutation, { data, loading, error }] = useSetRolesForUserOnSystemMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSetRolesForUserOnSystemMutation(baseOptions?: Apollo.MutationHookOptions<SetRolesForUserOnSystemMutation, SetRolesForUserOnSystemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetRolesForUserOnSystemMutation, SetRolesForUserOnSystemMutationVariables>(SetRolesForUserOnSystemDocument, options);
+      }
+export type SetRolesForUserOnSystemMutationHookResult = ReturnType<typeof useSetRolesForUserOnSystemMutation>;
+export type SetRolesForUserOnSystemMutationResult = Apollo.MutationResult<SetRolesForUserOnSystemMutation>;
+export type SetRolesForUserOnSystemMutationOptions = Apollo.BaseMutationOptions<SetRolesForUserOnSystemMutation, SetRolesForUserOnSystemMutationVariables>;
 export const GetRequestsDocument = gql`
     query GetRequests {
   mySystemIntakes {
@@ -5833,6 +5931,214 @@ export type GetRequestsQueryHookResult = ReturnType<typeof useGetRequestsQuery>;
 export type GetRequestsLazyQueryHookResult = ReturnType<typeof useGetRequestsLazyQuery>;
 export type GetRequestsSuspenseQueryHookResult = ReturnType<typeof useGetRequestsSuspenseQuery>;
 export type GetRequestsQueryResult = Apollo.QueryResult<GetRequestsQuery, GetRequestsQueryVariables>;
+export const GetSystemProfileDocument = gql`
+    query GetSystemProfile($cedarSystemId: String!) {
+  cedarAuthorityToOperate(cedarSystemID: $cedarSystemId) {
+    uuid
+    actualDispositionDate
+    containsPersonallyIdentifiableInformation
+    countOfTotalNonPrivilegedUserPopulation
+    countOfOpenPoams
+    countOfTotalPrivilegedUserPopulation
+    dateAuthorizationMemoExpires
+    dateAuthorizationMemoSigned
+    eAuthenticationLevel
+    fips199OverallImpactRating
+    fismaSystemAcronym
+    fismaSystemName
+    isAccessedByNonOrganizationalUsers
+    isPiiLimitedToUserNameAndPass
+    isProtectedHealthInformation
+    lastActScaDate
+    lastAssessmentDate
+    lastContingencyPlanCompletionDate
+    lastPenTestDate
+    piaCompletionDate
+    primaryCyberRiskAdvisor
+    privacySubjectMatterExpert
+    recoveryPointObjective
+    recoveryTimeObjective
+    systemOfRecordsNotice
+    tlcPhase
+  }
+  exchanges(cedarSystemId: $cedarSystemId) {
+    connectionFrequency
+    containsHealthDisparityData
+    containsPhi
+    dataExchangeAgreement
+    exchangeDescription
+    exchangeDirection
+    exchangeId
+    exchangeName
+    numOfRecords
+    sharedViaApi
+  }
+  cedarBudget(cedarSystemID: $cedarSystemId) {
+    fiscalYear
+    funding
+    fundingId
+    fundingSource
+    id
+    name
+    projectId
+    projectTitle
+    systemId
+  }
+  cedarBudgetSystemCost(cedarSystemID: $cedarSystemId) {
+    budgetActualCost {
+      actualSystemCost
+      fiscalYear
+      systemId
+    }
+  }
+  cedarThreat(cedarSystemId: $cedarSystemId) {
+    daysOpen
+    weaknessRiskLevel
+  }
+  cedarSoftwareProducts(cedarSystemId: $cedarSystemId) {
+    aiSolnCatg
+    aiSolnCatgOther
+    apiDataArea
+    apiDescPubLocation
+    apiDescPublished
+    apiFHIRUse
+    apiFHIRUseOther
+    apiHasPortal
+    apisAccessibility
+    apisDeveloped
+    developmentStage
+    softwareProducts {
+      apiGatewayUse
+      elaPurchase
+      elaVendorId
+      providesAiCapability
+      refstr
+      softwareCatagoryConnectionGuid
+      softwareVendorConnectionGuid
+      softwareCost
+      softwareElaOrganization
+      softwareName
+      systemSoftwareConnectionGuid
+      technopediaCategory
+      technopediaID
+      vendorName
+    }
+    systemHasAPIGateway
+    usesAiTech
+  }
+  cedarContractsBySystem(cedarSystemId: $cedarSystemId) {
+    systemID
+    startDate
+    endDate
+    contractNumber
+    contractName
+    description
+    orderNumber
+    serviceProvided
+    isDeliveryOrg
+  }
+  cedarSystemDetails(cedarSystemId: $cedarSystemId) {
+    isMySystem
+    businessOwnerInformation {
+      isCmsOwned
+      numberOfContractorFte
+      numberOfFederalFte
+      numberOfSupportedUsersPerMonth
+      storesBeneficiaryAddress
+      storesBankingData
+    }
+    cedarSystem {
+      id
+      isBookmarked
+      name
+      description
+      acronym
+      status
+      businessOwnerOrg
+      businessOwnerOrgComp
+      systemMaintainerOrg
+      systemMaintainerOrgComp
+      uuid
+    }
+    deployments {
+      id
+      startDate
+      dataCenter {
+        name
+      }
+      deploymentType
+      name
+    }
+    roles {
+      ...CedarRoleFragment
+    }
+    urls {
+      id
+      address
+      isAPIEndpoint
+      isBehindWebApplicationFirewall
+      isVersionCodeRepository
+      urlHostingEnv
+    }
+    systemMaintainerInformation {
+      agileUsed
+      deploymentFrequency
+      devCompletionPercent
+      devWorkDescription
+      ecapParticipation
+      frontendAccessType
+      hardCodedIPAddress
+      ip6EnabledAssetPercent
+      ip6TransitionPlan
+      ipEnabledAssetCount
+      netAccessibility
+      plansToRetireReplace
+      quarterToRetireReplace
+      systemCustomization
+      yearToRetireReplace
+    }
+  }
+  cedarSubSystems(cedarSystemId: $cedarSystemId) {
+    id
+    name
+    acronym
+    description
+  }
+}
+    ${CedarRoleFragmentFragmentDoc}`;
+
+/**
+ * __useGetSystemProfileQuery__
+ *
+ * To run a query within a React component, call `useGetSystemProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSystemProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSystemProfileQuery({
+ *   variables: {
+ *      cedarSystemId: // value for 'cedarSystemId'
+ *   },
+ * });
+ */
+export function useGetSystemProfileQuery(baseOptions: Apollo.QueryHookOptions<GetSystemProfileQuery, GetSystemProfileQueryVariables> & ({ variables: GetSystemProfileQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSystemProfileQuery, GetSystemProfileQueryVariables>(GetSystemProfileDocument, options);
+      }
+export function useGetSystemProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSystemProfileQuery, GetSystemProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSystemProfileQuery, GetSystemProfileQueryVariables>(GetSystemProfileDocument, options);
+        }
+export function useGetSystemProfileSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSystemProfileQuery, GetSystemProfileQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSystemProfileQuery, GetSystemProfileQueryVariables>(GetSystemProfileDocument, options);
+        }
+export type GetSystemProfileQueryHookResult = ReturnType<typeof useGetSystemProfileQuery>;
+export type GetSystemProfileLazyQueryHookResult = ReturnType<typeof useGetSystemProfileLazyQuery>;
+export type GetSystemProfileSuspenseQueryHookResult = ReturnType<typeof useGetSystemProfileSuspenseQuery>;
+export type GetSystemProfileQueryResult = Apollo.QueryResult<GetSystemProfileQuery, GetSystemProfileQueryVariables>;
 export const GetSystemWorkspaceDocument = gql`
     query GetSystemWorkspace($cedarSystemId: String!) {
   cedarAuthorityToOperate(cedarSystemID: $cedarSystemId) {
@@ -7695,6 +8001,7 @@ export type UpdateTRBRequestTypeMutationHookResult = ReturnType<typeof useUpdate
 export type UpdateTRBRequestTypeMutationResult = Apollo.MutationResult<UpdateTRBRequestTypeMutation>;
 export type UpdateTRBRequestTypeMutationOptions = Apollo.BaseMutationOptions<UpdateTRBRequestTypeMutation, UpdateTRBRequestTypeMutationVariables>;
 export const TypedCedarRoleFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRole"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"application"}},{"kind":"Field","name":{"kind":"Name","value":"objectID"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeType"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeUsername"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeEmail"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeFirstName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeLastName"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeName"}},{"kind":"Field","name":{"kind":"Name","value":"roleID"}}]}}]} as unknown as DocumentNode<CedarRoleFragmentFragment, unknown>;
+export const TypedCedarRoleTypeFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleTypeFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRoleType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]} as unknown as DocumentNode<CedarRoleTypeFragmentFragment, unknown>;
 export const TypedFundingSourceFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FundingSourceFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeFundingSource"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}}]} as unknown as DocumentNode<FundingSourceFragmentFragment, unknown>;
 export const TypedSystemIntakeContactFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeContactFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AugmentedSystemIntakeContact"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]} as unknown as DocumentNode<SystemIntakeContactFragmentFragment, unknown>;
 export const TypedSystemIntakeDocumentFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeDocumentFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeDocument"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonType"}},{"kind":"Field","name":{"kind":"Name","value":"otherTypeDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"uploadedAt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"canView"}},{"kind":"Field","name":{"kind":"Name","value":"canDelete"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}}]}}]} as unknown as DocumentNode<SystemIntakeDocumentFragmentFragment, unknown>;
@@ -7751,7 +8058,10 @@ export const TypedSubmitIntakeDocument = {"kind":"Document","definitions":[{"kin
 export const TypedUpdateSystemIntakeAdminLeadDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeAdminLead"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeAdminLeadInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeAdminLead"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminLead"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeAdminLeadMutation, UpdateSystemIntakeAdminLeadMutationVariables>;
 export const TypedUpdateSystemIntakeNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeNoteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeNoteMutation, UpdateSystemIntakeNoteMutationVariables>;
 export const TypedUpdateSystemIntakeReviewDatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeReviewDates"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeReviewDatesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeReviewDates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeReviewDatesMutation, UpdateSystemIntakeReviewDatesMutationVariables>;
+export const TypedGetCedarRoleTypesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCedarRoleTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"roleTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CedarRoleTypeFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleTypeFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRoleType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]} as unknown as DocumentNode<GetCedarRoleTypesQuery, GetCedarRoleTypesQueryVariables>;
+export const TypedSetRolesForUserOnSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetRolesForUserOnSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetRolesForUserOnSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setRolesForUserOnSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<SetRolesForUserOnSystemMutation, SetRolesForUserOnSystemMutationVariables>;
 export const TypedGetRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mySystemIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"statusRequester"}},{"kind":"Field","name":{"kind":"Name","value":"statusAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"nextMeetingDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastMeetingDate"}}]}},{"kind":"Field","name":{"kind":"Name","value":"myTrbRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"archived"},"value":{"kind":"BooleanValue","value":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","alias":{"kind":"Name","value":"submittedAt"},"name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","alias":{"kind":"Name","value":"nextMeetingDate"},"name":{"kind":"Name","value":"consultMeetingTime"}},{"kind":"Field","name":{"kind":"Name","value":"lastMeetingDate"}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetRequestsQuery, GetRequestsQueryVariables>;
+export const TypedGetSystemProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarAuthorityToOperate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"actualDispositionDate"}},{"kind":"Field","name":{"kind":"Name","value":"containsPersonallyIdentifiableInformation"}},{"kind":"Field","name":{"kind":"Name","value":"countOfTotalNonPrivilegedUserPopulation"}},{"kind":"Field","name":{"kind":"Name","value":"countOfOpenPoams"}},{"kind":"Field","name":{"kind":"Name","value":"countOfTotalPrivilegedUserPopulation"}},{"kind":"Field","name":{"kind":"Name","value":"dateAuthorizationMemoExpires"}},{"kind":"Field","name":{"kind":"Name","value":"dateAuthorizationMemoSigned"}},{"kind":"Field","name":{"kind":"Name","value":"eAuthenticationLevel"}},{"kind":"Field","name":{"kind":"Name","value":"fips199OverallImpactRating"}},{"kind":"Field","name":{"kind":"Name","value":"fismaSystemAcronym"}},{"kind":"Field","name":{"kind":"Name","value":"fismaSystemName"}},{"kind":"Field","name":{"kind":"Name","value":"isAccessedByNonOrganizationalUsers"}},{"kind":"Field","name":{"kind":"Name","value":"isPiiLimitedToUserNameAndPass"}},{"kind":"Field","name":{"kind":"Name","value":"isProtectedHealthInformation"}},{"kind":"Field","name":{"kind":"Name","value":"lastActScaDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastAssessmentDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastContingencyPlanCompletionDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastPenTestDate"}},{"kind":"Field","name":{"kind":"Name","value":"piaCompletionDate"}},{"kind":"Field","name":{"kind":"Name","value":"primaryCyberRiskAdvisor"}},{"kind":"Field","name":{"kind":"Name","value":"privacySubjectMatterExpert"}},{"kind":"Field","name":{"kind":"Name","value":"recoveryPointObjective"}},{"kind":"Field","name":{"kind":"Name","value":"recoveryTimeObjective"}},{"kind":"Field","name":{"kind":"Name","value":"systemOfRecordsNotice"}},{"kind":"Field","name":{"kind":"Name","value":"tlcPhase"}}]}},{"kind":"Field","name":{"kind":"Name","value":"exchanges"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"connectionFrequency"}},{"kind":"Field","name":{"kind":"Name","value":"containsHealthDisparityData"}},{"kind":"Field","name":{"kind":"Name","value":"containsPhi"}},{"kind":"Field","name":{"kind":"Name","value":"dataExchangeAgreement"}},{"kind":"Field","name":{"kind":"Name","value":"exchangeDescription"}},{"kind":"Field","name":{"kind":"Name","value":"exchangeDirection"}},{"kind":"Field","name":{"kind":"Name","value":"exchangeId"}},{"kind":"Field","name":{"kind":"Name","value":"exchangeName"}},{"kind":"Field","name":{"kind":"Name","value":"numOfRecords"}},{"kind":"Field","name":{"kind":"Name","value":"sharedViaApi"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarBudget"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fiscalYear"}},{"kind":"Field","name":{"kind":"Name","value":"funding"}},{"kind":"Field","name":{"kind":"Name","value":"fundingId"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSource"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"projectTitle"}},{"kind":"Field","name":{"kind":"Name","value":"systemId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarBudgetSystemCost"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"budgetActualCost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actualSystemCost"}},{"kind":"Field","name":{"kind":"Name","value":"fiscalYear"}},{"kind":"Field","name":{"kind":"Name","value":"systemId"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarThreat"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"daysOpen"}},{"kind":"Field","name":{"kind":"Name","value":"weaknessRiskLevel"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSoftwareProducts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aiSolnCatg"}},{"kind":"Field","name":{"kind":"Name","value":"aiSolnCatgOther"}},{"kind":"Field","name":{"kind":"Name","value":"apiDataArea"}},{"kind":"Field","name":{"kind":"Name","value":"apiDescPubLocation"}},{"kind":"Field","name":{"kind":"Name","value":"apiDescPublished"}},{"kind":"Field","name":{"kind":"Name","value":"apiFHIRUse"}},{"kind":"Field","name":{"kind":"Name","value":"apiFHIRUseOther"}},{"kind":"Field","name":{"kind":"Name","value":"apiHasPortal"}},{"kind":"Field","name":{"kind":"Name","value":"apisAccessibility"}},{"kind":"Field","name":{"kind":"Name","value":"apisDeveloped"}},{"kind":"Field","name":{"kind":"Name","value":"developmentStage"}},{"kind":"Field","name":{"kind":"Name","value":"softwareProducts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apiGatewayUse"}},{"kind":"Field","name":{"kind":"Name","value":"elaPurchase"}},{"kind":"Field","name":{"kind":"Name","value":"elaVendorId"}},{"kind":"Field","name":{"kind":"Name","value":"providesAiCapability"}},{"kind":"Field","name":{"kind":"Name","value":"refstr"}},{"kind":"Field","name":{"kind":"Name","value":"softwareCatagoryConnectionGuid"}},{"kind":"Field","name":{"kind":"Name","value":"softwareVendorConnectionGuid"}},{"kind":"Field","name":{"kind":"Name","value":"softwareCost"}},{"kind":"Field","name":{"kind":"Name","value":"softwareElaOrganization"}},{"kind":"Field","name":{"kind":"Name","value":"softwareName"}},{"kind":"Field","name":{"kind":"Name","value":"systemSoftwareConnectionGuid"}},{"kind":"Field","name":{"kind":"Name","value":"technopediaCategory"}},{"kind":"Field","name":{"kind":"Name","value":"technopediaID"}},{"kind":"Field","name":{"kind":"Name","value":"vendorName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemHasAPIGateway"}},{"kind":"Field","name":{"kind":"Name","value":"usesAiTech"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarContractsBySystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemID"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}},{"kind":"Field","name":{"kind":"Name","value":"contractName"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"orderNumber"}},{"kind":"Field","name":{"kind":"Name","value":"serviceProvided"}},{"kind":"Field","name":{"kind":"Name","value":"isDeliveryOrg"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystemDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isMySystem"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isCmsOwned"}},{"kind":"Field","name":{"kind":"Name","value":"numberOfContractorFte"}},{"kind":"Field","name":{"kind":"Name","value":"numberOfFederalFte"}},{"kind":"Field","name":{"kind":"Name","value":"numberOfSupportedUsersPerMonth"}},{"kind":"Field","name":{"kind":"Name","value":"storesBeneficiaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"storesBankingData"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isBookmarked"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerOrg"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerOrgComp"}},{"kind":"Field","name":{"kind":"Name","value":"systemMaintainerOrg"}},{"kind":"Field","name":{"kind":"Name","value":"systemMaintainerOrgComp"}},{"kind":"Field","name":{"kind":"Name","value":"uuid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deployments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"dataCenter"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deploymentType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"roles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CedarRoleFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"urls"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"isAPIEndpoint"}},{"kind":"Field","name":{"kind":"Name","value":"isBehindWebApplicationFirewall"}},{"kind":"Field","name":{"kind":"Name","value":"isVersionCodeRepository"}},{"kind":"Field","name":{"kind":"Name","value":"urlHostingEnv"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemMaintainerInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"agileUsed"}},{"kind":"Field","name":{"kind":"Name","value":"deploymentFrequency"}},{"kind":"Field","name":{"kind":"Name","value":"devCompletionPercent"}},{"kind":"Field","name":{"kind":"Name","value":"devWorkDescription"}},{"kind":"Field","name":{"kind":"Name","value":"ecapParticipation"}},{"kind":"Field","name":{"kind":"Name","value":"frontendAccessType"}},{"kind":"Field","name":{"kind":"Name","value":"hardCodedIPAddress"}},{"kind":"Field","name":{"kind":"Name","value":"ip6EnabledAssetPercent"}},{"kind":"Field","name":{"kind":"Name","value":"ip6TransitionPlan"}},{"kind":"Field","name":{"kind":"Name","value":"ipEnabledAssetCount"}},{"kind":"Field","name":{"kind":"Name","value":"netAccessibility"}},{"kind":"Field","name":{"kind":"Name","value":"plansToRetireReplace"}},{"kind":"Field","name":{"kind":"Name","value":"quarterToRetireReplace"}},{"kind":"Field","name":{"kind":"Name","value":"systemCustomization"}},{"kind":"Field","name":{"kind":"Name","value":"yearToRetireReplace"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSubSystems"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRole"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"application"}},{"kind":"Field","name":{"kind":"Name","value":"objectID"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeType"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeUsername"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeEmail"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeFirstName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeLastName"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeName"}},{"kind":"Field","name":{"kind":"Name","value":"roleID"}}]}}]} as unknown as DocumentNode<GetSystemProfileQuery, GetSystemProfileQueryVariables>;
 export const TypedGetSystemWorkspaceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemWorkspace"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarAuthorityToOperate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"tlcPhase"}},{"kind":"Field","name":{"kind":"Name","value":"dateAuthorizationMemoExpires"}},{"kind":"Field","name":{"kind":"Name","value":"countOfOpenPoams"}},{"kind":"Field","name":{"kind":"Name","value":"lastAssessmentDate"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystemDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isMySystem"}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isBookmarked"}},{"kind":"Field","name":{"kind":"Name","value":"linkedTrbRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"state"},"value":{"kind":"EnumValue","value":"OPEN"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"linkedSystemIntakes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"state"},"value":{"kind":"EnumValue","value":"OPEN"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"roles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CedarRoleFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRole"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"application"}},{"kind":"Field","name":{"kind":"Name","value":"objectID"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeType"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeUsername"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeEmail"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeFirstName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeLastName"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeName"}},{"kind":"Field","name":{"kind":"Name","value":"roleID"}}]}}]} as unknown as DocumentNode<GetSystemWorkspaceQuery, GetSystemWorkspaceQueryVariables>;
 export const TypedGetTRBAdminHomeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBAdminHome"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"archived"},"value":{"kind":"BooleanValue","value":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"isRecent"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"consultMeetingTime"}},{"kind":"Field","name":{"kind":"Name","value":"trbLeadInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"requesterInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"taskStatuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formStatus"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackStatus"}},{"kind":"Field","name":{"kind":"Name","value":"consultPrepStatus"}},{"kind":"Field","name":{"kind":"Name","value":"attendConsultStatus"}},{"kind":"Field","name":{"kind":"Name","value":"guidanceLetterStatus"}}]}},{"kind":"Field","name":{"kind":"Name","value":"form"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contractName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetTRBAdminHomeQuery, GetTRBAdminHomeQueryVariables>;
 export const TypedCreateTRBAdminNoteConsultSessionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTRBAdminNoteConsultSession"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateTRBAdminNoteConsultSessionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTRBAdminNoteConsultSession"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBAdminNote"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBAdminNoteInitialRequestFormCategoryData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteInitialRequestFormCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"appliesToBasicRequestDetails"}},{"kind":"Field","name":{"kind":"Name","value":"appliesToSubjectAreas"}},{"kind":"Field","name":{"kind":"Name","value":"appliesToAttendees"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBAdminNoteSupportingDocumentsCategoryData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteSupportingDocumentsCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBAdminNoteGuidanceLetterCategoryData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteGuidanceLetterCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"appliesToMeetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"appliesToNextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"insights"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBAdminNote"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNote"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isArchived"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"noteText"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"categorySpecificData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteInitialRequestFormCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBAdminNoteInitialRequestFormCategoryData"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteSupportingDocumentsCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBAdminNoteSupportingDocumentsCategoryData"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBAdminNoteGuidanceLetterCategoryData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBAdminNoteGuidanceLetterCategoryData"}}]}}]}}]}}]} as unknown as DocumentNode<CreateTRBAdminNoteConsultSessionMutation, CreateTRBAdminNoteConsultSessionMutationVariables>;

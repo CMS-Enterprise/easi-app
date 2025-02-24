@@ -27,7 +27,7 @@ export const formatDateLocal = (
  * explicitly in order to match timezoneless dates within a iso string correctly.
  */
 export const formatDateUtc = (
-  date: string | null,
+  date: string | null | undefined,
   format: DateFormat
 ): string => {
   if (date) {

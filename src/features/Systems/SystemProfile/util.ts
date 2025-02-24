@@ -1,14 +1,12 @@
 import React from 'react';
 // eslint-disable-next-line camelcase
 import { GetSystemIntake_systemIntake_systems_businessOwnerRoles } from 'gql/legacyGQL/types/GetSystemIntake';
-import {
-  GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate,
-  /* eslint-disable camelcase */
-  GetSystemProfile_cedarSystemDetails_roles
-  /* eslint-enable camelcase */
-} from 'gql/legacyGQL/types/GetSystemProfile';
 import { startCase } from 'lodash';
 
+import {
+  GetSystemProfileATO,
+  GetSystemProfileRoles
+} from 'types/systemProfile';
 import { formatDateUtc } from 'utils/date';
 import showVal from 'utils/showVal';
 
@@ -18,7 +16,7 @@ import showVal from 'utils/showVal';
  */
 export function getPersonFullName(
   role: // eslint-disable-next-line camelcase
-  | GetSystemProfile_cedarSystemDetails_roles
+  | GetSystemProfileRoles
     // eslint-disable-next-line camelcase
     | GetSystemIntake_systemIntake_systems_businessOwnerRoles
 ): string {
@@ -29,7 +27,7 @@ export function getPersonFullName(
 }
 
 export function showAtoExpirationDate(
-  dateAuthorizationMemoExpires?: CedarAuthorityToOperate['dateAuthorizationMemoExpires']
+  dateAuthorizationMemoExpires?: GetSystemProfileATO['dateAuthorizationMemoExpires']
 ): React.ReactNode {
   return showVal(
     dateAuthorizationMemoExpires &&
@@ -40,7 +38,7 @@ export function showAtoExpirationDate(
 // TODO: combine this and above into one? showAtoDate? showDate?
 export function showAtoEffectiveDate(
   // eslint-disable-next-line camelcase
-  systemProfileAto?: CedarAuthorityToOperate
+  systemProfileAto?: GetSystemProfileATO
 ): React.ReactNode {
   return showVal(
     systemProfileAto?.dateAuthorizationMemoSigned &&

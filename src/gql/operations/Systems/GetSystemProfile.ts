@@ -1,24 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const CedarRole = gql`
-  fragment CedarRole on CedarRole {
-    application
-    objectID
-    roleTypeID
-    assigneeType
-    assigneeUsername
-    assigneeEmail
-    assigneeOrgID
-    assigneeOrgName
-    assigneeFirstName
-    assigneeLastName
-    roleTypeName
-    roleID
-  }
-`;
-
-export default gql`
-  ${CedarRole}
+export default gql(/* GraphQL */ `
   query GetSystemProfile($cedarSystemId: String!) {
     cedarAuthorityToOperate(cedarSystemID: $cedarSystemId) {
       uuid
@@ -157,7 +139,7 @@ export default gql`
         name
       }
       roles {
-        ...CedarRole
+        ...CedarRoleFragment
       }
       urls {
         id
@@ -192,4 +174,4 @@ export default gql`
       description
     }
   }
-`;
+`);

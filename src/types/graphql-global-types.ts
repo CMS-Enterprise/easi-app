@@ -8,19 +8,6 @@
 //==============================================================
 
 /**
- * The possible types of assignees for CedarRoles
- */
-export enum CedarAssigneeType {
-  ORGANIZATION = "ORGANIZATION",
-  PERSON = "PERSON",
-}
-
-export enum ExchangeDirection {
-  RECEIVER = "RECEIVER",
-  SENDER = "SENDER",
-}
-
-/**
  * Represents the possible forms on a governance request that can receive feedback
  */
 export enum GovernanceRequestFeedbackTargetForm {
@@ -535,12 +522,6 @@ export interface EmailNotificationRecipients {
   regularRecipientEmails: EmailAddress[];
   shouldNotifyITGovernance: boolean;
   shouldNotifyITInvestment: boolean;
-}
-
-export interface SetRolesForUserOnSystemInput {
-  cedarSystemID: string;
-  euaUserId: string;
-  desiredRoleTypeIDs: string[];
 }
 
 /**

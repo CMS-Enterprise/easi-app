@@ -12,7 +12,7 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { GetSystemProfile_exchanges as Exchange } from 'gql/legacyGQL/types/GetSystemProfile';
+import { ExchangeDirection } from 'gql/generated/graphql';
 
 import {
   DescriptionDefinition,
@@ -22,8 +22,10 @@ import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
 import SectionWrapper from 'components/SectionWrapper';
 import Tag from 'components/Tag';
-import { ExchangeDirection } from 'types/graphql-global-types';
-import { SystemProfileSubviewProps } from 'types/systemProfile';
+import {
+  GetSystemProfileExchanges,
+  SystemProfileSubviewProps
+} from 'types/systemProfile';
 import { showSystemVal } from 'utils/showVal';
 
 // The majority of values rendered the components here are one-offs
@@ -32,7 +34,7 @@ import { showSystemVal } from 'utils/showVal';
 export function ExchangeDirectionTag({
   data
 }: {
-  data: Exchange['exchangeDirection'];
+  data: GetSystemProfileExchanges['exchangeDirection'];
 }) {
   const { t } = useTranslation('systemProfile');
 
@@ -62,7 +64,7 @@ export function ExchangeDirectionTag({
   );
 }
 
-function ExchangeCard({ data }: { data: Exchange }) {
+function ExchangeCard({ data }: { data: GetSystemProfileExchanges }) {
   const { t } = useTranslation('systemProfile');
 
   // Header description expand toggle
