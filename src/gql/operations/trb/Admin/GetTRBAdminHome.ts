@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export default gql`
-  query GetTrbAdminTeamHome {
+export default gql(/* GraphQL */ `
+  query GetTRBAdminHome {
     trbRequests(archived: false) {
       id
       name
@@ -42,4 +42,4 @@ export default gql`
       }
     }
   }
-`;
+`);

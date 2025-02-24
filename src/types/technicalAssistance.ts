@@ -11,10 +11,6 @@ import {
 
 import { TRBGuidanceLetterStatus } from './graphql-global-types';
 
-/* eslint-disable camelcase */
-export type { GetTrbAdminTeamHome_trbRequests as TrbAdminTeamHomeRequest } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
-/* eslint-enable camelcase */
-
 /** TRB attendee  */
 export type TRBAttendee =
   GetTRBRequestAttendeesQuery['trbRequest']['attendees'][number];

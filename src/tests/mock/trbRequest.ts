@@ -1,6 +1,8 @@
 import {
   GetRequestsDocument,
   GetRequestsQuery,
+  GetTRBAdminHomeDocument,
+  GetTRBAdminHomeQuery,
   GetTRBAdminNotesDocument,
   GetTRBAdminNotesQuery,
   GetTRBAdminNotesQueryVariables,
@@ -31,8 +33,6 @@ import {
   UpdateTRBRequestConsultMeetingMutation,
   UpdateTRBRequestConsultMeetingMutationVariables
 } from 'gql/generated/graphql';
-import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
-import { GetTrbAdminTeamHome } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
 import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'gql/legacyGQL/types/TrbRequestFormFields';
 
 import {
@@ -440,7 +440,7 @@ export const getTrbAdminNotesQuery = (
   }
 });
 
-export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
+export const trbAdminTeamHomeRequests: GetTRBAdminHomeQuery['trbRequests'] = [
   {
     id: '0ba435ac-50ee-44d1-94cc-4dd480b70a75',
     name: 'First help',
@@ -617,10 +617,11 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
   }
 ];
 
-export const getTrbAdminTeamHomeQuery: MockedQuery<GetTrbAdminTeamHome> = {
-  request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
+export const getTrbAdminTeamHomeQuery: MockedQuery<GetTRBAdminHomeQuery> = {
+  request: { query: GetTRBAdminHomeDocument, variables: {} },
   result: {
     data: {
+      __typename: 'Query',
       trbRequests: [...trbAdminTeamHomeRequests]
     }
   }
