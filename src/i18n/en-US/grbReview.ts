@@ -1,7 +1,7 @@
 import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
-} from 'gql/gen/graphql';
+} from 'gql/generated/graphql';
 
 import { GRBReviewFormAction } from 'types/grbReview';
 import { Translation } from 'types/util';
@@ -224,6 +224,20 @@ export default {
     error:
       'There was an issue saving your presentation details. Please try again, and if the problem persists, try again later.',
     emptyFormError:
-      'Please complete either the recording link or presentation deck field before submitting.'
+      'Please complete either the recording link or presentation deck field before submitting.',
+    presentationUpload: {
+      header: 'Upload GRB presentation',
+      description:
+        'Upload the presentation deck that this project will share with the Governance Review Board (GRB). You may change the uploaded file at any time before the GRB review period starts. ',
+      dontUploadAdmin: 'Don’t upload and return to GRB setup',
+      dontUploadRequester:
+        'Don’t upload and return to the governance task list',
+      selectFile: 'Select your file',
+      recommendedFileTypes: 'Select a PDF, PPT, PPTX, DOC, DOCX, XLS, or XLSX',
+      upload: 'Upload presentation',
+      success: 'You have successfully uploaded your GRB presentation.',
+      error:
+        'There was an issue uploading your presentation. Please try again, and if the issue persists please try again later.'
+    }
   }
 };

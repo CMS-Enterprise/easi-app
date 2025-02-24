@@ -2,11 +2,11 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CardGroup } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import itGovernanceArticles from 'features/Help/ITGovernance/articles';
+import trbArticles from 'features/Help/TechnicalReviewBoard/articles';
 
 import ArticleCard from 'components/ArticleCard';
 import MainContent from 'components/MainContent';
-import itGovernanceArticles from 'views/Help/ITGovernance/articles';
-import trbArticles from 'views/Help/TechnicalReviewBoard/articles';
 
 const helpArticles = [...itGovernanceArticles, ...trbArticles];
 

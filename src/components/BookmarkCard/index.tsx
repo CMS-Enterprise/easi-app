@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { Button, Card, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import DeleteCedarSystemBookmarkQuery from 'gql/legacyGQL/DeleteCedarSystemBookmarkQuery';
+import GetCedarSystemIsBookmarkedQuery from 'gql/legacyGQL/GetCedarSystemIsBookmarkedQuery';
+import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'gql/legacyGQL/types/GetCedarSystems';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
-import GetCedarSystemIsBookmarkedQuery from 'queries/GetCedarSystemIsBookmarkedQuery';
-import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import { IconStatus } from 'types/iconStatus';
 
 import './index.scss';

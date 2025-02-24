@@ -1,0 +1,156 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`UploadForm page > renders correct navigation text if requester and takes a snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="tablet:grid-col-12 desktop:grid-col-8 margin-top-6 margin-bottom-8 padding-bottom-4"
+  >
+    <h1
+      class="margin-bottom-1"
+    >
+      Upload GRB presentation
+    </h1>
+    <p
+      class="margin-top-1 margin-bottom-2 font-body-md line-height-body-5 text-light"
+    >
+      Upload the presentation deck that this project will share with the Governance Review Board (GRB). You may change the uploaded file at any time before the GRB review period starts. 
+    </p>
+    <a
+      class="usa-link display-flex flex-align-center"
+      href="/governance-task-list/undefined"
+    >
+      <svg
+        class="usa-icon margin-right-1"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+        />
+      </svg>
+      Don’t upload and return to the governance task list
+    </a>
+    <form
+      class="usa-form maxw-full"
+      data-testid="form"
+    >
+      <div
+        class="usa-form-group margin-top-5"
+        data-testid="formGroup"
+      >
+        <label
+          class="usa-label"
+          for="fileData"
+        >
+          Select your file
+        </label>
+        <p
+          class="usa-hint margin-bottom-0 margin-top-05"
+        >
+          Select a PDF, PPT, PPTX, DOC, DOCX, XLS, or XLSX
+        </p>
+        <div
+          class="usa-file-input"
+          data-testid="file-input"
+        >
+          <div
+            class="usa-file-input__target"
+            data-testid="file-input-droptarget"
+          >
+            <div
+              aria-hidden="true"
+              class="usa-file-input__instructions"
+              data-testid="file-input-instructions"
+            >
+              <span
+                class="usa-file-input__drag-text"
+              >
+                Drag file here or 
+              </span>
+              <span
+                class="usa-file-input__choose"
+              >
+                choose from folder
+              </span>
+            </div>
+            <div
+              class="usa-file-input__box"
+              data-testid="file-input-box"
+            />
+            <input
+              accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+              class="usa-file-input__input"
+              data-testid="file-input-input"
+              id="presentationDeckFileData"
+              name="presentationDeckFileData"
+              type="file"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="usa-alert usa-alert--info usa-alert--slim margin-top-5"
+        data-testid="alert"
+      >
+        <div
+          class="usa-alert__body"
+        >
+          <p
+            class="usa-alert__text"
+          >
+            To keep CMS safe, documents are scanned for viruses after uploading. If something goes wrong, we'll let you know.
+          </p>
+        </div>
+      </div>
+      <div
+        class="margin-top-4"
+      >
+        <ul
+          class="usa-button-group"
+        >
+          <li
+            class="usa-button-group__item"
+          >
+            <div
+              class="display-flex flex-align-center"
+            >
+              <button
+                class="usa-button margin-top-0"
+                data-testid="button"
+                disabled=""
+                type="submit"
+              >
+                Upload presentation
+              </button>
+            </div>
+          </li>
+        </ul>
+        <button
+          class="usa-button usa-button--unstyled margin-top-2 display-flex flex-align-center"
+          data-testid="button"
+          type="button"
+        >
+          <svg
+            class="usa-icon margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+            />
+          </svg>
+          Don’t upload and return to the governance task list
+        </button>
+      </div>
+    </form>
+  </div>
+</DocumentFragment>
+`;

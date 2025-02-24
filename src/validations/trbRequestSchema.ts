@@ -1,4 +1,4 @@
-import { TRBGuidanceLetterInsightCategory } from 'gql/gen/graphql';
+import { TRBGuidanceLetterInsightCategory } from 'gql/generated/graphql';
 import * as yup from 'yup';
 
 import {

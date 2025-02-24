@@ -16,14 +16,14 @@ import {
   SystemIntakeGRBPresentationLinks,
   SystemIntakeGRBPresentationLinksInput,
   useSetSystemIntakeGRBPresentationLinksMutation
-} from 'gql/gen/graphql';
+} from 'gql/generated/graphql';
 
+import Alert from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
 import FileInput from 'components/FileInput';
-import Alert from 'components/shared/Alert';
-import HelpText from 'components/shared/HelpText';
-import IconLink from 'components/shared/IconLink';
-import Label from 'components/shared/Label';
+import HelpText from 'components/HelpText';
+import IconLink from 'components/IconLink';
+import Label from 'components/Label';
 import { TabPanel, Tabs } from 'components/Tabs';
 import useMessage from 'hooks/useMessage';
 import { fileToBase64File } from 'utils/downloadFile';

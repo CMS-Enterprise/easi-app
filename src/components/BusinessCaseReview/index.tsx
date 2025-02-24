@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PDFExport from 'components/PDFExport';
-import SectionWrapper from 'components/shared/SectionWrapper';
+import SectionWrapper from 'components/SectionWrapper';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear, parseAsUTC } from 'utils/date';
 

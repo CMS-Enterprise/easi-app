@@ -1,3 +1,5 @@
+import { parseFeedbackForm } from 'features/Help/SendFeedback';
+import { parseReportForm } from 'features/Help/SendFeedback/ReportAProblem';
 import { cloneDeep } from 'lodash';
 
 import {
@@ -12,8 +14,6 @@ import {
   SendReportAProblemEmailForm
 } from 'constants/helpFeedback';
 import helpText from 'i18n/en-US/help';
-import { parseFeedbackForm } from 'views/Help/SendFeedback';
-import { parseReportForm } from 'views/Help/SendFeedback/ReportAProblem';
 
 import {
   sendFeedbackEmailFormSchema,

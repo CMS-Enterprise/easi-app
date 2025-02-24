@@ -13,11 +13,11 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
+import { AppState } from 'stores/reducers/rootReducer';
 
 import MainContent from 'components/MainContent';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import useOutsideClick from 'hooks/useOutsideClick';
-import { AppState } from 'reducers/rootReducer';
 import { Flags } from 'types/flags';
 import user from 'utils/user';
 
