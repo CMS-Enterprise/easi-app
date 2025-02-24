@@ -6,11 +6,11 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GetTRBRequestAttendeesDocument,
-  GetTRBRequestAttendeesQuery
+  GetTRBRequestAttendeesQuery,
+  GetTRBRequestDocument,
+  GetTRBRequestQuery
 } from 'gql/generated/graphql';
 import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
-import GetTrbRequestQuery from 'gql/legacyGQL/GetTrbRequestQuery';
-import { GetTrbRequest } from 'gql/legacyGQL/types/GetTrbRequest';
 import { attendees, requester, trbRequest } from 'tests/mock/trbRequest';
 
 import Attendees from './Attendees';
@@ -24,11 +24,14 @@ const initialRequester: GetTRBRequestAttendeesQuery['trbRequest']['attendees'][0
   };
 
 describe('Trb Request form: Attendees', () => {
-  const mockRefetch = async (): Promise<ApolloQueryResult<GetTrbRequest>> => {
+  const mockRefetch = async (): Promise<
+    ApolloQueryResult<GetTRBRequestQuery>
+  > => {
     return {
       loading: false,
       networkStatus: NetworkStatus.ready,
       data: {
+        __typename: 'Query',
         trbRequest
       }
     };
@@ -53,7 +56,7 @@ describe('Trb Request form: Attendees', () => {
 
   const getTrbRequestQuery = {
     request: {
-      query: GetTrbRequestQuery,
+      query: GetTRBRequestDocument,
       variables: {
         id: trbRequest.id
       }

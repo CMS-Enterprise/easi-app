@@ -11,12 +11,11 @@ import { ApolloError, ApolloQueryResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { PersonRole } from 'gql/generated/graphql';
 import {
-  GetTrbRequest,
-  GetTrbRequest_trbRequest as TrbRequest,
-  GetTrbRequestVariables
-} from 'gql/legacyGQL/types/GetTrbRequest';
+  GetTRBRequestQuery,
+  GetTRBRequestQueryVariables,
+  PersonRole
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
@@ -41,11 +40,11 @@ import { FormStepComponentProps, StepSubmit, TrbFormAlert } from '.';
 type AttendeesProps =
   | {
       fromTaskList: true;
-      request?: TrbRequest;
+      request?: GetTRBRequestQuery['trbRequest'];
       /** Refetch the trb request from the form wrapper */
       refetchRequest?: (
-        variables?: Partial<GetTrbRequestVariables> | undefined
-      ) => Promise<ApolloQueryResult<GetTrbRequest>>;
+        variables?: Partial<GetTRBRequestQueryVariables> | undefined
+      ) => Promise<ApolloQueryResult<GetTRBRequestQuery>>;
       /**
        * Set the current form step component submit handler
        * so that in can be used in other places like the header.

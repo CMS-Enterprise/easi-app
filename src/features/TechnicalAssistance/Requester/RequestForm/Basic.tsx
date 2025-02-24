@@ -18,6 +18,7 @@ import {
 } from '@trussworks/react-uswds';
 import FundingSources from 'features/TechnicalAssistance/Requester/RequestForm/FundingSources/FundingSources';
 import {
+  GetTRBRequestQuery,
   useUpdateTRBRequestAndFormMutation,
   useUpdateTRBRequestFundingSourcesMutation
 } from 'gql/generated/graphql';
@@ -28,7 +29,6 @@ import {
   DeleteTRBRequestFundingSourceVariables
 } from 'gql/legacyGQL/types/DeleteTRBRequestFundingSource';
 import { GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType } from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
-import { GetTrbRequest_trbRequest_form_fundingSources as GetTrbRequestFundingSourcesType } from 'gql/legacyGQL/types/GetTrbRequest';
 import { TrbRequestFormFields_form_systemIntakes as TrbRequestFormFieldsSystemIntakeType } from 'gql/legacyGQL/types/TrbRequestFormFields';
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
@@ -54,7 +54,7 @@ import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
 
 type FundingSourcesFormType = {
-  fundingSources: GetTrbRequestFundingSourcesType[];
+  fundingSources: GetTRBRequestQuery['trbRequest']['form']['fundingSources'];
 };
 
 export const basicBlankValues = {

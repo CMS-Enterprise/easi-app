@@ -14,6 +14,9 @@ import {
   GetTRBLeadOptionsQuery,
   GetTRBRequestAttendeesDocument,
   GetTRBRequestAttendeesQuery,
+  GetTRBRequestDocument,
+  GetTRBRequestQuery,
+  GetTRBRequestQueryVariables,
   GetTRBRequestSummaryDocument,
   GetTRBRequestSummaryQuery,
   PersonRole,
@@ -27,12 +30,7 @@ import {
 } from 'gql/generated/graphql';
 import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
 import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
-import GetTrbRequestQuery from 'gql/legacyGQL/GetTrbRequestQuery';
 import { GetTrbAdminTeamHome } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
-import {
-  GetTrbRequest,
-  GetTrbRequestVariables
-} from 'gql/legacyGQL/types/GetTrbRequest';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
@@ -110,7 +108,7 @@ const adminNotes: TRBAdminNoteFragment[] = [
   }
 ];
 
-export const trbRequest: GetTrbRequest['trbRequest'] = {
+export const trbRequest: GetTRBRequestQuery['trbRequest'] = {
   __typename: 'TRBRequest',
   id: trbRequestId,
   name: 'Mock TRB Request',
@@ -151,17 +149,18 @@ export const trbRequest: GetTrbRequest['trbRequest'] = {
 };
 
 export const getTrbRequestQuery: MockedQuery<
-  GetTrbRequest,
-  GetTrbRequestVariables
+  GetTRBRequestQuery,
+  GetTRBRequestQueryVariables
 > = {
   request: {
-    query: GetTrbRequestQuery,
+    query: GetTRBRequestDocument,
     variables: {
       id: trbRequestId
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       trbRequest
     }
   }

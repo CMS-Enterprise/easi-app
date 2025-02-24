@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { GridContainer, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { GetTrbRequest_trbRequest as TrbRequest } from 'gql/legacyGQL/types/GetTrbRequest';
+import { GetTRBRequestQuery } from 'gql/generated/graphql';
 
 import IconButton from 'components/IconButton';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -16,7 +16,7 @@ function ViewSubmittedRequest({
   breadcrumbBar,
   taskListUrl
 }: {
-  request: TrbRequest;
+  request: GetTRBRequestQuery['trbRequest'];
   breadcrumbBar: React.ReactNode;
   taskListUrl: string;
 }) {

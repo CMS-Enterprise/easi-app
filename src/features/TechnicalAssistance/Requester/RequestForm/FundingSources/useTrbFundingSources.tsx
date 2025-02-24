@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { GetTrbRequest_trbRequest_form_fundingSources as FundingSource } from 'gql/legacyGQL/types/GetTrbRequest';
+import { GetTRBRequestQuery } from 'gql/generated/graphql';
 
 import {
   ExistingFundingSource,
@@ -13,6 +13,8 @@ import {
   UpdateActiveFundingSource,
   UpdateFundingSources
 } from 'types/technicalAssistance';
+
+type FundingSource = GetTRBRequestQuery['trbRequest']['form']['fundingSources'];
 
 /** useIntakeFundingSources hook return type */
 export type UseTrbFundingSources = {
