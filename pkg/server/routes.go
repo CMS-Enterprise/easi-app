@@ -46,6 +46,9 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
+// publishTimeUTC is the time of day (in UTC) when the system intakes are published to CEDAR
+const publishTimeUTC = 7 // 7 UTC is 2am ESTc
+
 func (s *Server) routes() {
 
 	oktaConfig := s.NewOktaClientConfig()
@@ -351,7 +354,7 @@ func (s *Server) routes() {
 		appcontext.WithLogger(context.Background(), s.logger),
 		store,
 		time.Friday,
-		17, // noon in UTC (containers run in UTC)
+		publishTimeUTC,
 	)
 
 	// This is a temporary solution for EASI-2597 until a more robust event scheduling solution is implemented
