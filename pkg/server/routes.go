@@ -355,6 +355,7 @@ func (s *Server) routes() {
 		store,
 		time.Friday,
 		publishTimeUTC,
+		buildDataloaders,
 	)
 
 	// This is a temporary solution for EASI-2597 until a more robust event scheduling solution is implemented

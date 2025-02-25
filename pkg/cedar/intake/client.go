@@ -24,6 +24,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/client/intake"
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/translation"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/logfields"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -169,7 +170,7 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 	return nil
 }
 
-func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, dayOfWeek time.Weekday, hourInUTC int) {
+func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, dayOfWeek time.Weekday, hourInUTC int, buildDataLoaders dataloaders.BuildDataloaders) {
 	logger := appcontext.ZLogger(ctx)
 	if hourInUTC > 24 || hourInUTC < 0 {
 		logger.Error("incorrect hour given for publish schedule, use int between 0 and 24")
@@ -188,18 +189,10 @@ func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, da
 			nextPublish,
 			time.Now().UTC().Add(nextPublish).Format(time.RFC3339),
 		))
-		decoratedLogger := logger.With(zap.Any("cedarPublisherTraceID", uuid.New()))
+		decoratedLogger := logger.With(logfields.TraceField(uuid.New().String()), logfields.CedarPublisherAppSection)
 		time.Sleep(nextPublish)
-		// We need to build the data loaders each time that we publish the de
-		//TODO (cedar) implement the loader
-		buildDataloaders := func() *dataloaders.Dataloaders {
-			return dataloaders.NewDataloaders(
-				store,
-				func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-				func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
-			)
-		}
-		contextWithLoader := dataloaders.CTXWithLoaders(ctx, buildDataloaders)
+		// We need to build the data loaders each time that we publish the details to CEDAR
+		contextWithLoader := dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
 
 		logger.Info("running scheduled intake publish to CEDAR")
 		c.publishIntakeAndBusinessCase(contextWithLoader, decoratedLogger, store)
