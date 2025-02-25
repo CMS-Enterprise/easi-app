@@ -27,7 +27,7 @@ describe('Gov Task: Attend the GRB review statuses', () => {
     // Cannot start yet
     expectTaskStatusTagToHaveTextKey('CANT_START');
     // Link to prep grb meeting
-    getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.link');
+    getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
   });
 
   it('Skipped', () => {
@@ -35,7 +35,7 @@ describe('Gov Task: Attend the GRB review statuses', () => {
     // Not needed
     expectTaskStatusTagToHaveTextKey('NOT_NEEDED');
     // Link to prep grb meeting
-    getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.link');
+    getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
   });
 
   it('In progress - not scheduled', () => {
@@ -56,9 +56,12 @@ describe('Gov Task: Attend the GRB review statuses', () => {
     expectTaskStatusTagToHaveTextKey('SCHEDULED');
     // Meeting scheduled info
     expect(getExpectedAlertType('info')).toHaveTextContent(
-      i18next.t<string>('itGov:taskList.step.grbMeeting.scheduledInfo', {
-        date: 'July 20, 2023'
-      })
+      i18next.t<string>(
+        'itGov:taskList.step.grbMeeting.alertType.STANDARD.SCHEDULED',
+        {
+          date: '07/20/2023'
+        }
+      )
     );
     // Button to prep grb meeting
     getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
@@ -70,11 +73,14 @@ describe('Gov Task: Attend the GRB review statuses', () => {
     expectTaskStatusTagToHaveTextKey('COMPLETED');
     // Meeting attended info
     expect(getExpectedAlertType('info')).toHaveTextContent(
-      i18next.t<string>('itGov:taskList.step.grbMeeting.attendedInfo', {
-        date: 'July 20, 2023'
-      })
+      i18next.t<string>(
+        'itGov:taskList.step.grbMeeting.alertType.STANDARD.COMPLETED',
+        {
+          date: '07/20/2023'
+        }
+      )
     );
     // Link to prep grb meeting
-    getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.link');
+    getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
   });
 });
