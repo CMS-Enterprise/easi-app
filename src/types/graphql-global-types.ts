@@ -515,17 +515,6 @@ export interface EmailNotificationRecipients {
 }
 
 /**
- * Input for changing an intake's LCID retirement date in IT Gov v2
- */
-export interface SystemIntakeChangeLCIDRetirementDateInput {
-  systemIntakeID: UUID;
-  retiresAt: Time;
-  additionalInfo?: HTML | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
-  adminNote?: HTML | null;
-}
-
-/**
  * Input for creating a Close Request Action in Admin Actions v2
  */
 export interface SystemIntakeCloseRequestInput {

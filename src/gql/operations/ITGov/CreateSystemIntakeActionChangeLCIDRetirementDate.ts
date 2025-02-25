@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export default gql`
-  mutation CreateSystemIntakeActionChangeLcidRetirementDate(
+export default gql(/* GraphQL */ `
+  mutation CreateSystemIntakeActionChangeLCIDRetirementDate(
     $input: SystemIntakeChangeLCIDRetirementDateInput!
   ) {
     createSystemIntakeActionChangeLCIDRetirementDate(input: $input) {
@@ -11,4 +11,4 @@ export default gql`
       }
     }
   }
-`;
+`);

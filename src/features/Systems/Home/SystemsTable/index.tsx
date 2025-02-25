@@ -26,7 +26,7 @@ import {
   Table as UswdsTable
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import CreateCedarSystemBookmarkQuery from 'gql/legacyGQL/CreateCedarSystemBookmarkQuery';
+import { useCreateCedarSystemBookmarkMutation } from 'gql/generated/graphql';
 import DeleteCedarSystemBookmarkQuery from 'gql/legacyGQL/DeleteCedarSystemBookmarkQuery';
 import GetCedarSystemIsBookmarkedQuery from 'gql/legacyGQL/GetCedarSystemIsBookmarkedQuery';
 import GetMyCedarSystemsQuery from 'gql/legacyGQL/GetMyCedarSystemsQuery';
@@ -87,7 +87,7 @@ export const Table = ({
     GetMyCedarSystemsQuery
   );
 
-  const [createMutate] = useMutation(CreateCedarSystemBookmarkQuery);
+  const [createMutate] = useCreateCedarSystemBookmarkMutation();
   const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
 
   // Sets the systemTableType state to the query param, defaults to all-systems if no param present
