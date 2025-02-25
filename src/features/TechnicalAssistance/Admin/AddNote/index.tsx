@@ -13,13 +13,9 @@ import classNames from 'classnames';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
   TRBAdminNoteCategory,
-  useGetTRBGuidanceLetterInsightsQuery
+  useGetTRBGuidanceLetterInsightsQuery,
+  useGetTRBRequestDocumentsQuery
 } from 'gql/generated/graphql';
-import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
-import {
-  GetTrbRequestDocuments,
-  GetTrbRequestDocumentsVariables
-} from 'gql/legacyGQL/types/GetTrbRequestDocuments';
 import { toLower } from 'lodash';
 
 import Alert from 'components/Alert';
@@ -34,7 +30,6 @@ import PageHeading from 'components/PageHeading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RichTextEditor from 'components/RichTextEditor';
 import Spinner from 'components/Spinner';
-import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 
 import { ModalViewType } from '../_components/NoteModal';
@@ -62,10 +57,7 @@ const AddNote = ({
     id: string;
   }>();
 
-  const documentsQuery = useCacheQuery<
-    GetTrbRequestDocuments,
-    GetTrbRequestDocumentsVariables
-  >(GetTrbRequestDocumentsQuery, {
+  const documentsQuery = useGetTRBRequestDocumentsQuery({
     variables: { id: trbRequestId || id }
   });
 

@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Fieldset, Label, Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { GetTrbRequest_trbRequest_form_fundingSources as FundingSource } from 'gql/legacyGQL/types/GetTrbRequest';
+import { GetTRBRequestQuery } from 'gql/generated/graphql';
 
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
@@ -274,7 +274,7 @@ const FundingSourceForm = ({
 
 type FundingSourcesProps = {
   id?: string;
-  initialValues: FundingSource[];
+  initialValues: GetTRBRequestQuery['trbRequest']['form']['fundingSources'];
   fundingSourceOptions: string[];
   setFieldValue: (value: any) => void;
   setFieldActive?: (active: boolean) => void;
@@ -292,7 +292,7 @@ const FundingSources = ({
 }: FundingSourcesProps) => {
   // Get funding sources actions from useIntakeFundingSources custom hook
   const fundingSourcesData = useIntakeFundingSources(
-    initialValues,
+    initialValues || [],
     setFieldValue,
     combinedFields
   );

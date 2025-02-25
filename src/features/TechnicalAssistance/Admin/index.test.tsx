@@ -6,10 +6,12 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import { GetTrbLeadOptionsDocument } from 'gql/generated/graphql';
-import GetTrbRequestHomeQuery from 'gql/legacyGQL/GetTrbRequestHomeQuery';
-import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendeesQuery } from 'gql/legacyGQL/TrbAttendeeQueries';
+import {
+  GetTRBLeadOptionsDocument,
+  GetTRBRequestAttendeesDocument,
+  GetTRBRequestHomeDocument,
+  GetTRBRequestSummaryDocument
+} from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
 import { attendees, requester, trbRequestSummary } from 'tests/mock/trbRequest';
 
@@ -23,7 +25,7 @@ const trbRequestId = trbRequestSummary.id;
 
 const getTrbRequestAttendeesQuery = {
   request: {
-    query: GetTRBRequestAttendeesQuery,
+    query: GetTRBRequestAttendeesDocument,
     variables: {
       id: trbRequestId
     }
@@ -41,7 +43,7 @@ const getTrbRequestAttendeesQuery = {
 
 const getTrbRequestHomeQuery = {
   request: {
-    query: GetTrbRequestHomeQuery,
+    query: GetTRBRequestHomeDocument,
     variables: {
       id: trbRequestId
     }
@@ -73,7 +75,7 @@ const getTrbRequestHomeQuery = {
 
 const getTrbLeadOptionsQuery = {
   request: {
-    query: GetTrbLeadOptionsDocument
+    query: GetTRBLeadOptionsDocument
   },
   result: {
     data: {
@@ -105,7 +107,7 @@ const getTrbLeadOptionsQuery = {
 
 const getTrbRequestSummaryQuery = {
   request: {
-    query: GetTrbRequestSummaryQuery,
+    query: GetTRBRequestSummaryDocument,
     variables: {
       id: trbRequestId
     }

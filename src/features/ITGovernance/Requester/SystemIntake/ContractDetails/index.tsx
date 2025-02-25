@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FieldErrors, FieldPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -13,13 +12,9 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
+import { useUpdateSystemIntakeContractDetailsMutation } from 'gql/generated/graphql';
 import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'gql/legacyGQL/SystemIntakeQueries';
 import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
-import {
-  UpdateSystemIntakeContractDetails,
-  UpdateSystemIntakeContractDetailsVariables
-} from 'gql/legacyGQL/types/UpdateSystemIntakeContractDetails';
 import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
@@ -79,10 +74,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     contractNumbers
   } = systemIntake;
 
-  const [mutate] = useMutation<
-    UpdateSystemIntakeContractDetails,
-    UpdateSystemIntakeContractDetailsVariables
-  >(UpdateSystemIntakeContractDetailsQuery, {
+  const [mutate] = useUpdateSystemIntakeContractDetailsMutation({
     refetchQueries: [
       {
         query: GetSystemIntakeQuery,

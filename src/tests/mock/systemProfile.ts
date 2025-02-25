@@ -1,20 +1,17 @@
 import { getSystemProfileData } from 'features/Systems/SystemProfile';
-import GetSystemProfileQuery from 'gql/legacyGQL/GetSystemProfileQuery';
-import { CedarRole } from 'gql/legacyGQL/types/CedarRole';
 import {
-  GetSystemProfile,
-  // eslint-disable-next-line camelcase
-  GetSystemProfile_cedarSystemDetails_roles,
-  GetSystemProfileVariables
-} from 'gql/legacyGQL/types/GetSystemProfile';
+  CedarAssigneeType,
+  CedarRole,
+  ExchangeDirection,
+  GetSystemProfileDocument,
+  GetSystemProfileQuery,
+  GetSystemProfileQueryVariables
+} from 'gql/generated/graphql';
 import { cloneDeep } from 'lodash';
 
 import {
-  CedarAssigneeType,
-  ExchangeDirection
-} from 'types/graphql-global-types';
-import {
   CedarRoleAssigneePerson,
+  GetSystemProfileRoles,
   SystemProfileData,
   UsernameWithRoles
 } from 'types/systemProfile';
@@ -259,8 +256,9 @@ export const usernamesWithRoles: UsernameWithRoles[] = getUsernamesWithRoles(
   ) as CedarRoleAssigneePerson[]
 );
 
-export const result: { data: GetSystemProfile } = {
+export const result: { data: GetSystemProfileQuery } = {
   data: {
+    __typename: 'Query',
     cedarAuthorityToOperate: [
       {
         uuid: '00000000-0000-0000-0000-000000000000',
@@ -940,9 +938,12 @@ export const result: { data: GetSystemProfile } = {
   }
 };
 
-export const query: MockedQuery<GetSystemProfile, GetSystemProfileVariables> = {
+export const query: MockedQuery<
+  GetSystemProfileQuery,
+  GetSystemProfileQueryVariables
+> = {
   request: {
-    query: GetSystemProfileQuery,
+    query: GetSystemProfileDocument,
     variables: {
       cedarSystemId: '000-100-0'
     }
@@ -951,16 +952,14 @@ export const query: MockedQuery<GetSystemProfile, GetSystemProfileVariables> = {
 };
 
 export function getMockSystemProfileData(
-  data?: GetSystemProfile
+  data?: GetSystemProfileQuery
 ): SystemProfileData {
   return getSystemProfileData(data ?? cloneDeep(result.data))!;
 }
 
 export function getMockPersonRole(
-  // eslint-disable-next-line camelcase
-  data?: Partial<GetSystemProfile_cedarSystemDetails_roles>
-  // eslint-disable-next-line camelcase
-): GetSystemProfile_cedarSystemDetails_roles {
+  data?: Partial<GetSystemProfileRoles>
+): GetSystemProfileRoles {
   return {
     application: 'alfabet',
     objectID: '',

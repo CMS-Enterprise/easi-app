@@ -39,6 +39,7 @@ export const SystemIntakeReview = ({
       data: { requester, businessOwner, productManager, isso }
     }
   } = useSystemIntakeContacts(systemIntake.id);
+
   const { t } = useTranslation('intake');
 
   const fundingDefinition = () => {
@@ -268,7 +269,9 @@ export const SystemIntakeReview = ({
 
       <DescriptionList title={t('review.contactDetails')}>
         <ReviewRow>
-          <div data-testid={`contact-requester-${requester.id}`}>
+          <div
+            data-testid={`contact-requester-${requester.id || requester.euaUserId}`}
+          >
             <DescriptionTerm term={t('fields.requester')} />
             <DescriptionDefinition definition={requester.commonName} />
           </div>

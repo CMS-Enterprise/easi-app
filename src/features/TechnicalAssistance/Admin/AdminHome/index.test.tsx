@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
+import { GetTRBAdminHomeDocument } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import {
   getTrbAdminTeamHomeQuery,
@@ -120,7 +120,7 @@ describe('Trb Admin Team Home', () => {
           <MockedProvider
             mocks={[
               {
-                request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
+                request: { query: GetTRBAdminHomeDocument, variables: {} },
                 result: { data: { trbRequests: [] } }
               },
               getTrbLeadOptionsQuery

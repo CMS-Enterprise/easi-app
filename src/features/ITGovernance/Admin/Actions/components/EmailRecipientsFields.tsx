@@ -6,7 +6,7 @@ import {
   ExternalRecipientAlert,
   RecipientLabel
 } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
-import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
+import { AugmentedSystemIntakeContact } from 'gql/generated/graphql';
 
 import AdditionalContacts from 'components/AdditionalContacts';
 import Alert from 'components/Alert';
@@ -62,12 +62,12 @@ const Recipient = ({
   return (
     <div
       className="recipient-container"
-      data-testid={`recipient-${role.replaceAll(' ', '')}-${euaUserId}`}
+      data-testid={`recipient-${role?.replaceAll(' ', '')}-${euaUserId}`}
     >
       {/* Checkbox with label */}
       <CheckboxField
-        id={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
-        name={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
+        id={`${euaUserId || 'contact'}-${role?.replaceAll(' ', '')}`}
+        name={`${euaUserId || 'contact'}-${role?.replaceAll(' ', '')}`}
         label={
           <RecipientLabel
             name={`${getPersonNameAndComponentAcronym(

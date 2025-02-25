@@ -4,14 +4,13 @@ import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {
+  GetTRBRequestDocumentsDocument,
+  GetTRBRequestQuery,
+  GetTRBRequestQueryVariables
+} from 'gql/generated/graphql';
 import CreateTrbRequestDocumentQuery from 'gql/legacyGQL/CreateTrbRequestDocumentQuery';
 import DeleteTrbRequestDocumentQuery from 'gql/legacyGQL/DeleteTrbRequestDocumentQuery';
-import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
-import {
-  GetTrbRequest,
-  GetTrbRequest_trbRequest as TrbRequest,
-  GetTrbRequestVariables
-} from 'gql/legacyGQL/types/GetTrbRequest';
 import i18next from 'i18next';
 import { MATCH_ANY_PARAMETERS, WildcardMockLink } from 'wildcard-mock-link';
 
@@ -46,7 +45,7 @@ const mockEmptyFormFields = {
   submittedAt: '2023-01-31T16:23:06.111436Z'
 };
 
-const mockTrbRequestData: TrbRequest = {
+const mockTrbRequestData: GetTRBRequestQuery['trbRequest'] = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Draft',
   form: {
@@ -64,12 +63,13 @@ const mockTrbRequestData: TrbRequest = {
 };
 
 const mockRefetch = async (
-  variables?: Partial<GetTrbRequestVariables> | undefined
-): Promise<ApolloQueryResult<GetTrbRequest>> => {
+  variables?: Partial<GetTRBRequestQueryVariables> | undefined
+): Promise<ApolloQueryResult<GetTRBRequestQuery>> => {
   return {
     loading: false,
     networkStatus: NetworkStatus.ready,
     data: {
+      __typename: 'Query',
       trbRequest: mockTrbRequestData
     }
   };
@@ -77,7 +77,7 @@ const mockRefetch = async (
 
 const mockGetTrbRequestDocumentsQueryNoDocuments = {
   request: {
-    query: GetTrbRequestDocumentsQuery,
+    query: GetTRBRequestDocumentsDocument,
     variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
   },
   result: {
@@ -132,7 +132,7 @@ describe('Trb Request form: Supporting documents', () => {
             mocks={[
               {
                 request: {
-                  query: GetTrbRequestDocumentsQuery,
+                  query: GetTRBRequestDocumentsDocument,
                   variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
                 },
                 result: {
@@ -177,7 +177,7 @@ describe('Trb Request form: Supporting documents', () => {
               mocks={[
                 {
                   request: {
-                    query: GetTrbRequestDocumentsQuery,
+                    query: GetTRBRequestDocumentsDocument,
                     variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
                   },
                   result: {
@@ -295,7 +295,7 @@ describe('Trb Request form: Supporting documents', () => {
               new WildcardMockLink([
                 {
                   request: {
-                    query: GetTrbRequestDocumentsQuery,
+                    query: GetTRBRequestDocumentsDocument,
                     variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
                   },
                   result: {
@@ -331,7 +331,7 @@ describe('Trb Request form: Supporting documents', () => {
                 // Documents list with uploaded file
                 {
                   request: {
-                    query: GetTrbRequestDocumentsQuery,
+                    query: GetTRBRequestDocumentsDocument,
                     variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
                   },
                   result: {
@@ -454,7 +454,7 @@ describe('Trb Request form: Supporting documents', () => {
               // Table with available file to delete
               {
                 request: {
-                  query: GetTrbRequestDocumentsQuery,
+                  query: GetTRBRequestDocumentsDocument,
                   variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
                 },
                 result: {
@@ -497,7 +497,7 @@ describe('Trb Request form: Supporting documents', () => {
               // Refreshed empty doc list
               {
                 request: {
-                  query: GetTrbRequestDocumentsQuery,
+                  query: GetTRBRequestDocumentsDocument,
                   variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
                 },
                 result: {

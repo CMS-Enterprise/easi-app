@@ -3,7 +3,6 @@ import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -16,12 +15,11 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import { CreateSystemIntakeDocumentQuery } from 'gql/legacyGQL/SystemIntakeDocumentQueries';
 import {
-  CreateSystemIntakeDocument,
-  CreateSystemIntakeDocumentVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeDocument';
+  CreateSystemIntakeDocumentInput,
+  useCreateSystemIntakeDocumentMutation
+} from 'gql/generated/graphql';
+import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -31,7 +29,6 @@ import HelpText from 'components/HelpText';
 import IconLink from 'components/IconLink';
 import Label from 'components/Label';
 import useMessage from 'hooks/useMessage';
-import { CreateSystemIntakeDocumentInput } from 'types/graphql-global-types';
 import { fileToBase64File } from 'utils/downloadFile';
 import user from 'utils/user';
 import { documentSchema } from 'validations/systemIntakeSchema';
@@ -63,10 +60,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
 
   const { Message, showMessageOnNextPage, showMessage } = useMessage();
 
-  const [createDocument] = useMutation<
-    CreateSystemIntakeDocument,
-    CreateSystemIntakeDocumentVariables
-  >(CreateSystemIntakeDocumentQuery, {
+  const [createDocument] = useCreateSystemIntakeDocumentMutation({
     refetchQueries: [
       {
         query: GetSystemIntakeQuery,

@@ -3,11 +3,10 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
-import GetTrbRequestsQuery from 'gql/legacyGQL/GetTrbRequestsQuery';
 import {
-  // eslint-disable-next-line camelcase
-  GetTrbRequests_myTrbRequests
-} from 'gql/legacyGQL/types/GetTrbRequests';
+  GetTRBRequestsDocument,
+  GetTRBRequestsQuery
+} from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
 
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
@@ -21,7 +20,7 @@ const mockStore = configureMockStore();
 
 describe('Technical Assistance (TRB) homepage', () => {
   // eslint-disable-next-line camelcase
-  const myTrbRequests: GetTrbRequests_myTrbRequests[] = [
+  const myTrbRequests: GetTRBRequestsQuery['myTrbRequests'] = [
     {
       id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
       name: 'My excellent question',
@@ -67,7 +66,7 @@ describe('Technical Assistance (TRB) homepage', () => {
               mocks={[
                 {
                   request: {
-                    query: GetTrbRequestsQuery
+                    query: GetTRBRequestsDocument
                   },
                   result: {
                     data: {

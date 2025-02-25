@@ -5,9 +5,9 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
-  GetTrbRequest,
-  GetTrbRequestVariables
-} from 'gql/legacyGQL/types/GetTrbRequest';
+  GetTRBRequestQuery,
+  GetTRBRequestQueryVariables
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import {
   attendees,
@@ -26,12 +26,13 @@ import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import RequestForm from '.';
 
 const getTrbRequestQueryWithFeedback: MockedQuery<
-  GetTrbRequest,
-  GetTrbRequestVariables
+  GetTRBRequestQuery,
+  GetTRBRequestQueryVariables
 > = {
   ...getTrbRequestQuery,
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         ...trbRequest,
         taskStatuses: {

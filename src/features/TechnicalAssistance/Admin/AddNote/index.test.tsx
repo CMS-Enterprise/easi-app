@@ -17,13 +17,12 @@ import {
   GetTRBGuidanceLetterInsightsDocument,
   GetTRBGuidanceLetterInsightsQuery,
   GetTRBGuidanceLetterInsightsQueryVariables,
-  TRBAdminNoteCategory
+  GetTRBRequestDocumentsDocument,
+  GetTRBRequestDocumentsQuery,
+  GetTRBRequestDocumentsQueryVariables,
+  TRBAdminNoteCategory,
+  TRBRequestDocumentStatus
 } from 'gql/generated/graphql';
-import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
-import {
-  GetTrbRequestDocuments,
-  GetTrbRequestDocumentsVariables
-} from 'gql/legacyGQL/types/GetTrbRequestDocuments';
 import i18next from 'i18next';
 import {
   getTRBRequestAttendeesQuery,
@@ -33,10 +32,7 @@ import {
 } from 'tests/mock/trbRequest';
 
 import { MessageProvider } from 'hooks/useMessage';
-import {
-  TRBDocumentCommonType,
-  TRBRequestDocumentStatus
-} from 'types/graphql-global-types';
+import { TRBDocumentCommonType } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
@@ -108,7 +104,7 @@ const createTrbAdminNoteQuery: MockedQuery<
   }
 };
 
-const documents: GetTrbRequestDocuments['trbRequest']['documents'] = [
+const documents: GetTRBRequestDocumentsQuery['trbRequest']['documents'] = [
   {
     __typename: 'TRBRequestDocument',
     fileName: 'documentOne.pdf',
@@ -136,15 +132,16 @@ const documents: GetTrbRequestDocuments['trbRequest']['documents'] = [
 ];
 
 const getTrbRequestDocumentsQuery: MockedQuery<
-  GetTrbRequestDocuments,
-  GetTrbRequestDocumentsVariables
+  GetTRBRequestDocumentsQuery,
+  GetTRBRequestDocumentsQueryVariables
 > = {
   request: {
-    query: GetTrbRequestDocumentsQuery,
+    query: GetTRBRequestDocumentsDocument,
     variables: { id: mockTrbRequestId }
   },
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         __typename: 'TRBRequest',
         id: mockTrbRequestId,

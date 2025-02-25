@@ -1,16 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
-import GetTrbRequestQuery from 'gql/legacyGQL/GetTrbRequestQuery';
 import {
-  GetTrbRequest,
-  GetTrbRequest_trbRequest as TrbRequest,
-  GetTrbRequestVariables
-} from 'gql/legacyGQL/types/GetTrbRequest';
+  GetTRBRequestQuery,
+  useGetTRBRequestQuery
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import PageLoading from 'components/PageLoading';
-import useCacheQuery from 'hooks/useCacheQuery';
 import { TRBFormStatus, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
@@ -27,14 +24,12 @@ const InitialRequestForm = ({
 
   const { id } = trbRequest;
 
-  const { data, error, loading } = useCacheQuery<
-    GetTrbRequest,
-    GetTrbRequestVariables
-  >(GetTrbRequestQuery, {
+  const { data, error, loading } = useGetTRBRequestQuery({
     variables: { id }
   });
 
-  const request: TrbRequest | undefined = data?.trbRequest;
+  const request: GetTRBRequestQuery['trbRequest'] | undefined =
+    data?.trbRequest;
 
   return (
     <TrbAdminWrapper

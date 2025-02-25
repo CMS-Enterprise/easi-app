@@ -8,7 +8,6 @@ import {
   Grid,
   Icon
 } from '@trussworks/react-uswds';
-import { GetSystemProfile_cedarContractsBySystem as ContractType } from 'gql/legacyGQL/types/GetSystemProfile';
 
 import Alert from 'components/Alert';
 import {
@@ -16,11 +15,18 @@ import {
   DescriptionTerm
 } from 'components/DescriptionGroup';
 import Divider from 'components/Divider';
-import { SystemProfileSubviewProps } from 'types/systemProfile';
+import {
+  GetSystemProfileContractBySystem,
+  SystemProfileSubviewProps
+} from 'types/systemProfile';
 import { formatDateUtc } from 'utils/date';
 import showVal from 'utils/showVal';
 
-const ContractCard = ({ contract }: { contract: ContractType }) => {
+const ContractCard = ({
+  contract
+}: {
+  contract: GetSystemProfileContractBySystem;
+}) => {
   const { t } = useTranslation('systemProfile');
 
   return (

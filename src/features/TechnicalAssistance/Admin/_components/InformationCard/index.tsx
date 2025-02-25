@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader
 } from '@trussworks/react-uswds';
-import { GetTrbRequestHome_trbRequest as GetTrbRequestHomeType } from 'gql/legacyGQL/types/GetTrbRequestHome';
+import { GetTRBRequestHomeQuery } from 'gql/generated/graphql';
 
 import TaskStatusTag from 'components/TaskStatusTag';
 import {
@@ -20,7 +20,7 @@ import { formatDateLocal } from 'utils/date';
 import './index.scss';
 
 type InformationCardProps = {
-  trbRequest: GetTrbRequestHomeType;
+  trbRequest: GetTRBRequestHomeQuery['trbRequest'];
   type: 'initialRequestForm' | 'guidanceLetter';
 };
 

@@ -16,7 +16,6 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useQuery } from '@apollo/client';
 import {
   Button,
   GridContainer,
@@ -25,12 +24,10 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import GetTrbRequestsQuery from 'gql/legacyGQL/GetTrbRequestsQuery';
 import {
-  GetTrbRequests,
-  // eslint-disable-next-line camelcase
-  GetTrbRequests_myTrbRequests
-} from 'gql/legacyGQL/types/GetTrbRequests';
+  GetTRBRequestsQuery,
+  useGetTRBRequestsQuery
+} from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -52,6 +49,8 @@ import {
 } from 'utils/tableSort';
 import user from 'utils/user';
 
+type TRBRequestType = GetTRBRequestsQuery['myTrbRequests'][number];
+
 function Homepage() {
   const { t } = useTranslation('technicalAssistance');
   const { url } = useRouteMatch();
@@ -61,8 +60,7 @@ function Homepage() {
   // Current user info from redux
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
-  const { loading, error, data } =
-    useQuery<GetTrbRequests>(GetTrbRequestsQuery);
+  const { loading, error, data } = useGetTRBRequestsQuery();
 
   const infoBoxText = t<Record<string, string[]>>('infoBox', {
     returnObjects: true
@@ -71,7 +69,7 @@ function Homepage() {
   // @ts-ignore
   // Ignoring due to accessor props with dot property string values which break react-table typescripting
   // eslint-disable-next-line camelcase
-  const columns = useMemo<Column<GetTrbRequests_myTrbRequests>[]>(() => {
+  const columns = useMemo<Column<TRBRequestType>[]>(() => {
     return [
       {
         Header: t<string>('table.header.requestName'),
@@ -80,7 +78,7 @@ function Homepage() {
           value,
           row
         }: // eslint-disable-next-line camelcase
-        CellProps<GetTrbRequests_myTrbRequests, string>) => {
+        CellProps<TRBRequestType, string>) => {
           return (
             <UswdsReactLink
               to={`/trb/task-list/${row.original.id}`}

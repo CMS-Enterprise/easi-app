@@ -2,23 +2,24 @@ import React from 'react';
 import { ModalRef } from '@trussworks/react-uswds';
 import { StepSubmit } from 'features/TechnicalAssistance/Requester/RequestForm';
 import {
+  GetTRBRequestAttendeesQuery,
+  GetTRBRequestSummaryQuery,
+  PersonRole,
   TRBGuidanceLetterFragment,
   TRBGuidanceLetterInsightCategory
 } from 'gql/generated/graphql';
-import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'gql/legacyGQL/types/GetTrbRequestSummary';
 
-import { PersonRole, TRBGuidanceLetterStatus } from './graphql-global-types';
+import { TRBGuidanceLetterStatus } from './graphql-global-types';
 
-/* eslint-disable camelcase */
-export type { GetTrbAdminTeamHome_trbRequests as TrbAdminTeamHomeRequest } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
-export type { GetTrbRequestFeedback_trbRequest_feedback as TrbRequestFeedback } from 'gql/legacyGQL/types/GetTrbRequestFeedback';
-/* eslint-enable camelcase */
+/** TRB attendee  */
+export type TRBAttendee =
+  GetTRBRequestAttendeesQuery['trbRequest']['attendees'][number];
 
 /** TRB attendee fields allows null role in form */
 export type TRBAttendeeFields = {
-  euaUserId: string | null;
-  component: string | null;
-  role: PersonRole | null;
+  euaUserId: string | null | undefined;
+  component: string | null | undefined;
+  role: PersonRole | null | undefined;
 };
 
 /** Field labels */
@@ -55,7 +56,7 @@ export type TrbRequestIdRef = string | null;
 
 interface TrbAdminDefaultProps {
   trbRequestId: string;
-  trbRequest: TrbRequestSummary;
+  trbRequest: GetTRBRequestSummaryQuery['trbRequest'];
   assignLeadModalRef: React.RefObject<ModalRef>;
   assignLeadModalTrbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
   requesterString?: string | null;

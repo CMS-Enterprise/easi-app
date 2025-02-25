@@ -17,8 +17,8 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import {
-  useGetTrbLeadOptionsQuery,
-  useUpdateTrbRequestLeadMutation
+  useGetTRBLeadOptionsQuery,
+  useUpdateTRBRequestLeadMutation
 } from 'gql/generated/graphql';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -33,7 +33,7 @@ type TrbAssignLeadModalOpenerProps = {
 
 /**
  * Button to open `<TrbAssignLeadModal>`.
- * Uses `trbRequestId` for `UpdateTrbRequestLeadQuery`.
+ * Uses `trbRequestId` for `UpdateTRBRequestLeadQuery`.
  * This will set the request id and open the modal to assign a lead to that request.
  * The original ModalToggleButton onClick handler did not work as expected.
  */
@@ -97,9 +97,9 @@ function TrbAssignLeadModal({
 
   const { showMessage } = useMessage();
 
-  const { data } = useGetTrbLeadOptionsQuery();
+  const { data } = useGetTRBLeadOptionsQuery();
 
-  const [mutate] = useUpdateTrbRequestLeadMutation();
+  const [mutate] = useUpdateTRBRequestLeadMutation();
 
   const submit = handleSubmit(formData => {
     if (!trbRequestIdRef.current) return;

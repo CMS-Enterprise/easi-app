@@ -1,21 +1,16 @@
 import React, { useContext, useMemo } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import { FormGroup } from '@trussworks/react-uswds';
-import CreateSystemIntakeActionCloseRequestQuery from 'gql/legacyGQL/CreateSystemIntakeActionCloseRequestQuery';
 import {
-  CreateSystemIntakeActionCloseRequest,
-  CreateSystemIntakeActionCloseRequestVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionCloseRequest';
+  SystemIntakeCloseRequestInput,
+  useCreateSystemIntakeActionCloseRequestMutation
+} from 'gql/generated/graphql';
 
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import RichTextEditor from 'components/RichTextEditor';
-import {
-  SystemIntakeCloseRequestInput,
-  SystemIntakeLCIDStatus
-} from 'types/graphql-global-types';
+import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
@@ -47,10 +42,7 @@ const CloseRequest = ({
   /** Edits requested form key for confirmation modal */
   const editsRequestedKey = useContext(EditsRequestedContext);
 
-  const [closeRequest] = useMutation<
-    CreateSystemIntakeActionCloseRequest,
-    CreateSystemIntakeActionCloseRequestVariables
-  >(CreateSystemIntakeActionCloseRequestQuery, {
+  const [closeRequest] = useCreateSystemIntakeActionCloseRequestMutation({
     refetchQueries
   });
 

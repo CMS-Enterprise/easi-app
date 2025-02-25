@@ -1,31 +1,25 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Alert, Button, Table } from '@trussworks/react-uswds';
+import {
+  GetTRBRequestDocumentsQuery,
+  TRBRequestDocumentStatus,
+  useGetTRBRequestDocumentsQuery,
+  useGetTRBRequestDocumentUrlsLazyQuery
+} from 'gql/generated/graphql';
 import DeleteTrbRequestDocumentQuery from 'gql/legacyGQL/DeleteTrbRequestDocumentQuery';
-import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
-import GetTrbRequestDocumentUrlsQuery from 'gql/legacyGQL/GetTrbRequestDocumentUrlsQuery';
 import {
   DeleteTrbRequestDocument,
   DeleteTrbRequestDocumentVariables
 } from 'gql/legacyGQL/types/DeleteTrbRequestDocument';
-import {
-  GetTrbRequestDocuments,
-  GetTrbRequestDocuments_trbRequest_documents as TrbRequestDocuments,
-  GetTrbRequestDocumentsVariables
-} from 'gql/legacyGQL/types/GetTrbRequestDocuments';
-import { GetTrbRequestDocumentUrls } from 'gql/legacyGQL/types/GetTrbRequestDocumentUrls';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Spinner from 'components/Spinner';
-import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
-import {
-  TRBDocumentCommonType,
-  TRBRequestDocumentStatus
-} from 'types/graphql-global-types';
+import { TRBDocumentCommonType } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
@@ -33,6 +27,9 @@ import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import { DocumentStatusType } from '../Documents';
 
 import { RefetchDocuments } from './Documents';
+
+type TrbRequestDocuments =
+  GetTRBRequestDocumentsQuery['trbRequest']['documents'][number];
 
 type Props = {
   trbRequestId: string;
@@ -62,21 +59,16 @@ function DocumentsTable({
     {} as TrbRequestDocuments
   );
 
-  const { data, refetch, loading } = useCacheQuery<
-    GetTrbRequestDocuments,
-    GetTrbRequestDocumentsVariables
-  >(GetTrbRequestDocumentsQuery, {
+  const { data, refetch, loading } = useGetTRBRequestDocumentsQuery({
     variables: { id: trbRequestId }
   });
 
-  const [getDocumentUrls, { loading: documentUrlsLoading }] = useLazyQuery<
-    GetTrbRequestDocumentUrls,
-    GetTrbRequestDocumentsVariables
-  >(GetTrbRequestDocumentUrlsQuery, {
-    variables: {
-      id: trbRequestId
-    }
-  });
+  const [getDocumentUrls, { loading: documentUrlsLoading }] =
+    useGetTRBRequestDocumentUrlsLazyQuery({
+      variables: {
+        id: trbRequestId
+      }
+    });
 
   const documents = data?.trbRequest.documents || [];
 

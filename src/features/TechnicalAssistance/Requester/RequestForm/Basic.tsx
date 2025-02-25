@@ -17,6 +17,11 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import FundingSources from 'features/TechnicalAssistance/Requester/RequestForm/FundingSources/FundingSources';
+import {
+  GetTRBRequestQuery,
+  useUpdateTRBRequestAndFormMutation,
+  useUpdateTRBRequestFundingSourcesMutation
+} from 'gql/generated/graphql';
 import DeleteTRBRequestFundingSource from 'gql/legacyGQL/DeleteTRBRequestFundingSource';
 import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
 import {
@@ -24,18 +29,7 @@ import {
   DeleteTRBRequestFundingSourceVariables
 } from 'gql/legacyGQL/types/DeleteTRBRequestFundingSource';
 import { GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType } from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
-import { GetTrbRequest_trbRequest_form_fundingSources as GetTrbRequestFundingSourcesType } from 'gql/legacyGQL/types/GetTrbRequest';
 import { TrbRequestFormFields_form_systemIntakes as TrbRequestFormFieldsSystemIntakeType } from 'gql/legacyGQL/types/TrbRequestFormFields';
-import {
-  UpdateTrbRequestAndForm,
-  UpdateTrbRequestAndFormVariables
-} from 'gql/legacyGQL/types/UpdateTrbRequestAndForm';
-import {
-  UpdateTRBRequestFundingSources as UpdateTRBRequestFundingSourcesType,
-  UpdateTRBRequestFundingSourcesVariables
-} from 'gql/legacyGQL/types/UpdateTRBRequestFundingSources';
-import UpdateTrbRequestAndFormQuery from 'gql/legacyGQL/UpdateTrbRequestAndFormQuery';
-import UpdateTRBRequestFundingSources from 'gql/legacyGQL/UpdateTRBRequestFundingSources';
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -54,17 +48,13 @@ import useCacheQuery from 'hooks/useCacheQuery';
 import { TRBCollabGroupOption } from 'types/graphql-global-types';
 import { FormFieldProps } from 'types/util';
 import nullFillObject from 'utils/nullFillObject';
-import {
-  basicSchema,
-  // fundingSourcesBasicSchema,
-  TrbRequestFormBasic
-} from 'validations/trbRequestSchema';
+import { basicSchema, TrbRequestFormBasic } from 'validations/trbRequestSchema';
 
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
 
 type FundingSourcesFormType = {
-  fundingSources: GetTrbRequestFundingSourcesType[];
+  fundingSources: GetTRBRequestQuery['trbRequest']['form']['fundingSources'];
 };
 
 export const basicBlankValues = {
@@ -119,15 +109,9 @@ function Basic({
       }));
   }, [data?.systemIntakesWithLcids]);
 
-  const [updateForm] = useMutation<
-    UpdateTrbRequestAndForm,
-    UpdateTrbRequestAndFormVariables
-  >(UpdateTrbRequestAndFormQuery);
+  const [updateForm] = useUpdateTRBRequestAndFormMutation();
 
-  const [updatefundingSource] = useMutation<
-    UpdateTRBRequestFundingSourcesType,
-    UpdateTRBRequestFundingSourcesVariables
-  >(UpdateTRBRequestFundingSources);
+  const [updatefundingSource] = useUpdateTRBRequestFundingSourcesMutation();
 
   const [deletefundingSource] = useMutation<
     DeleteTRBRequestFundingSourceType,
@@ -147,7 +131,7 @@ function Basic({
       name: request.name || '',
       ...initialValues,
       // Mapping over intakes as mutation input only takes UUID
-      systemIntakes: request.form.systemIntakes.map(intake => intake.id)
+      systemIntakes: request.form.systemIntakes.map((intake: any) => intake.id)
     }
   });
 
@@ -354,9 +338,9 @@ function Basic({
             }
 
             if (errors[fieldName as keyof typeof errors]?.message) {
-              msg += `: ${errors[
-                fieldName as keyof typeof errors
-              ]?.message?.replace(fieldName, ' This')}`;
+              msg += `: ${errors[fieldName as keyof typeof errors]?.message}`;
+
+              msg += msg?.replace(fieldName, ' This');
             }
 
             return (
@@ -844,7 +828,7 @@ function Basic({
                                 e.target.checked
                                   ? [...field.value, e.target.value]
                                   : field.value.filter(
-                                      value => value !== e.target.value
+                                      (value: any) => value !== e.target.value
                                     )
                               );
                             }}

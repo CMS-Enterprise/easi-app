@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
-import GetTrbRequestFeedbackQuery from 'gql/legacyGQL/GetTrbRequestFeedbackQuery';
+import { GetTRBRequestFeedbackDocument } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { trbRequestSummary } from 'tests/mock/trbRequest';
 
@@ -27,7 +27,7 @@ describe('Trb Admin: Feedback', () => {
         mocks={[
           {
             request: {
-              query: GetTrbRequestFeedbackQuery,
+              query: GetTRBRequestFeedbackDocument,
               variables: {
                 id
               }
@@ -80,7 +80,7 @@ describe('Trb Admin: Feedback', () => {
         mocks={[
           {
             request: {
-              query: GetTrbRequestFeedbackQuery,
+              query: GetTRBRequestFeedbackDocument,
               variables: {
                 id
               }

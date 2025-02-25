@@ -9,7 +9,6 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useQuery } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -19,8 +18,10 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import NotFound from 'features/Miscellaneous/NotFound';
-import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
-import { GetTrbAdminTeamHome } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
+import {
+  GetTRBAdminHomeQuery,
+  useGetTRBAdminHomeQuery
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { ActiveStateType, TableStateContext } from 'wrappers/TableStateWrapper';
 
@@ -32,10 +33,7 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import useTableState from 'hooks/useTableState';
 import { TRBRequestState } from 'types/graphql-global-types';
-import {
-  TrbAdminTeamHomeRequest,
-  TrbRequestIdRef
-} from 'types/technicalAssistance';
+import { TrbRequestIdRef } from 'types/technicalAssistance';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
@@ -51,6 +49,8 @@ import {
 import TrbAssignLeadModal, {
   TrbAssignLeadModalOpener
 } from '../_components/TrbAssignLeadModal';
+
+type TrbAdminTeamHomeRequest = GetTRBAdminHomeQuery['trbRequests'][number];
 
 export const trbRequestsCsvHeader = [
   i18next.t<string>('technicalAssistance:table.header.submissionDate'),
@@ -641,9 +641,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
 function TrbAdminTeamHome() {
   const { t } = useTranslation('technicalAssistance');
 
-  const { loading, error, data } = useQuery<GetTrbAdminTeamHome>(
-    GetTrbAdminTeamHomeQuery
-  );
+  const { loading, error, data } = useGetTRBAdminHomeQuery();
 
   if (error) {
     return <NotFound />;

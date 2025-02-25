@@ -5,17 +5,14 @@ import {
   UseFormProps,
   UseFormReturn
 } from 'react-hook-form';
-import { useLazyQuery } from '@apollo/client';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { GetTRBRequestAttendeesQuery } from 'gql/legacyGQL/TrbAttendeeQueries';
 import {
-  GetTRBRequestAttendees,
-  GetTRBRequestAttendeesVariables
-} from 'gql/legacyGQL/types/GetTRBRequestAttendees';
-import { TRBAttendee_userInfo as UserInfo } from 'gql/legacyGQL/types/TRBAttendee';
+  GetTRBRequestAttendeesQuery,
+  PersonRole,
+  useGetTRBRequestAttendeesLazyQuery
+} from 'gql/generated/graphql';
 
 import PageLoading from 'components/PageLoading';
-import { PersonRole } from 'types/graphql-global-types';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 
 import ActionForm, { ActionFormProps } from '.';
@@ -39,9 +36,11 @@ type UseActionFormReturn<
 
 type TrbRecipient = {
   id?: string;
-  userInfo: UserInfo | null;
-  component: string | null;
-  role: PersonRole | null;
+  userInfo:
+    | GetTRBRequestAttendeesQuery['trbRequest']['attendees'][0]['userInfo']
+    | null;
+  component: string | null | undefined;
+  role: PersonRole | null | undefined;
 };
 
 /**
@@ -57,10 +56,7 @@ function useActionForm<
   TFieldValues,
   TContext
 > {
-  const [getAttendees, { data }] = useLazyQuery<
-    GetTRBRequestAttendees,
-    GetTRBRequestAttendeesVariables
-  >(GetTRBRequestAttendeesQuery, {
+  const [getAttendees, { data }] = useGetTRBRequestAttendeesLazyQuery({
     variables: { id: trbRequestId }
   });
 
