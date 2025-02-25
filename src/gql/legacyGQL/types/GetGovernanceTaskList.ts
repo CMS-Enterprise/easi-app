@@ -57,8 +57,10 @@ export interface GetGovernanceTaskList_systemIntake {
    * GRB Review Form
    */
   grbReviewType: SystemIntakeGRBReviewType;
-  grbReviewStartedAt: Time | null;
+  grbReviewAsyncRecordingTime: Time | null;
   grbReviewAsyncEndDate: Time | null;
+  grbReviewStandardGRBMeetingTime: Time | null;
+  grbReviewAsyncGRBMeetingTime: Time | null;
   step: SystemIntakeStep;
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;
