@@ -78,7 +78,9 @@ const GovTaskGrbMeeting = ({
                   {
                     date: dateValue
                       ? formatDateUtc(dateValue, 'MM/dd/yyyy')
-                      : null
+                      : null,
+                    dateStart: formatDateUtc(grbReviewStartedAt, 'MM/dd/yyyy'),
+                    dateEnd: formatDateUtc(grbReviewAsyncEndDate, 'MM/dd/yyyy')
                   }
                 )}
               </Alert>
