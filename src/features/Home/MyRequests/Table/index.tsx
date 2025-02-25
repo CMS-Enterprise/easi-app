@@ -10,14 +10,8 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
-import GetRequestsQuery from 'gql/legacyGQL/GetRequestsQuery';
-import {
-  GetRequests,
-  GetRequests_mySystemIntakes as GetSystemIntakesType,
-  GetRequests_myTrbRequests as GetTRBRequestsType
-} from 'gql/legacyGQL/types/GetRequests';
+import { GetRequestsQuery, useGetRequestsQuery } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -48,6 +42,9 @@ import { MergedRequestsForTable } from './mergedRequestForTable';
 
 import '../index.scss';
 
+type GetSystemIntakesType = GetRequestsQuery['mySystemIntakes'][0];
+type GetTRBRequestsType = GetRequestsQuery['myTrbRequests'][0];
+
 type myRequestsTableProps = {
   type?: RequestType;
   hiddenColumns?: string[];
@@ -70,13 +67,7 @@ const Table = ({
 
   const flags = useFlags();
 
-  const {
-    loading,
-    error,
-    data: tableData
-  } = useQuery<GetRequests>(GetRequestsQuery, {
-    fetchPolicy: 'cache-and-network'
-  });
+  const { loading, error, data: tableData } = useGetRequestsQuery();
 
   const isITGovAdmin: boolean = useMemo(
     () => user.isITGovAdmin(groups, flags),
@@ -232,7 +223,7 @@ const Table = ({
       {
         Header: t<string>('requestsTable.headers.nextMeetingDate'),
         accessor: 'nextMeetingDate',
-        Cell: ({ value }: { value: string | null }) => {
+        Cell: ({ value }: { value: string | null | undefined }) => {
           if (value) {
             return <>{formatDateUtc(value, 'MM/dd/yyyy')}</>;
           }

@@ -7,8 +7,6 @@ import {
   waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-// eslint-disable-next-line camelcase
-import { GetSystemProfile_cedarSystemDetails_roles } from 'gql/legacyGQL/types/GetSystemProfile';
 import { cloneDeep } from 'lodash';
 import { DateTime } from 'luxon';
 import {
@@ -20,13 +18,17 @@ import {
 
 import { getAtoStatus } from 'components/AtoStatus';
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
-import { RoleTypeName, SubpageKey } from 'types/systemProfile';
+import {
+  GetSystemProfileRoles,
+  RoleTypeName,
+  SubpageKey
+} from 'types/systemProfile';
 
-import SystemProfile from './index';
-import pointsOfContactIds from './pointsOfContactIds';
 import PointsOfContactSidebar, {
   getPointsOfContact
-} from './PointsOfContactSidebar';
+} from './components/PointsOfContactSidebar/PointsOfContactSidebar';
+import pointsOfContactIds from './data/pointsOfContactIds';
+import SystemProfile from './index';
 
 describe('System Profile parent request', () => {
   it('matches snapshot', async () => {
@@ -121,12 +123,12 @@ describe('System Profile Points of Contact by subpage', () => {
   resultdata.cedarSystemDetails!.roles = Object.values(
     RoleTypeName
     // eslint-disable-next-line camelcase
-  ).map<GetSystemProfile_cedarSystemDetails_roles>((roleTypeName, idx) =>
+  ).map(roleTypeName =>
     getMockPersonRole({
-      assigneeUsername: `ABC${idx}`,
+      assigneeUsername: `ABC${roleTypeName}`,
       roleTypeName
     })
-  );
+  ) as GetSystemProfileRoles[];
 
   const data = getMockSystemProfileData(resultdata);
 

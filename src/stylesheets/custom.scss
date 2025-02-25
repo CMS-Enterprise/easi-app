@@ -335,3 +335,19 @@
 body * {
   font-family: inherit !important;
 }
+
+.width-fit-content {
+  width: fit-content;
+}
+
+.scroll-margin-top-5 {
+  scroll-margin-top: 2.5rem;
+}
+
+.scroll-margin-top-6 {
+  scroll-margin-top: 3rem;
+}
+
+.usa-banner__inner, .usa-banner__content {
+  max-width: 75rem;
+}

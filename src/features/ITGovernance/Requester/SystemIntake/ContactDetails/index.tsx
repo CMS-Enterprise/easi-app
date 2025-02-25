@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, FieldPath, UseFormSetValue } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -14,14 +13,13 @@ import {
   Select,
   TextInput
 } from '@trussworks/react-uswds';
-import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'gql/legacyGQL/SystemIntakeQueries';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
-  UpdateSystemIntakeContactDetails,
-  UpdateSystemIntakeContactDetailsVariables
-} from 'gql/legacyGQL/types/UpdateSystemIntakeContactDetails';
+  SystemIntakeGovernanceTeamInput,
+  useUpdateSystemIntakeContactDetailsMutation
+} from 'gql/generated/graphql';
+import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
+import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
 
 import AdditionalContacts from 'components/AdditionalContacts';
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -41,7 +39,6 @@ import PageNumber from 'components/PageNumber';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import {
   SystemIntakeFormState,
-  SystemIntakeGovernanceTeamInput,
   SystemIntakeRequestType
 } from 'types/graphql-global-types';
 import {
@@ -89,10 +86,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { contacts, createContact, updateContact, deleteContact } =
     useSystemIntakeContacts(systemIntake.id);
 
-  const [mutate] = useMutation<
-    UpdateSystemIntakeContactDetails,
-    UpdateSystemIntakeContactDetailsVariables
-  >(UpdateSystemIntakeContactDetailsQuery, {
+  const [mutate] = useUpdateSystemIntakeContactDetailsMutation({
     refetchQueries: [
       {
         query: GetSystemIntakeQuery,

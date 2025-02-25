@@ -1,10 +1,13 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link as RouterLink, NavLink, useParams } from 'react-router-dom';
-import { NavHashLink } from 'react-router-hash-link';
-import { useQuery } from '@apollo/client';
 import {
-  Alert,
+  Link as RouterLink,
+  NavLink,
+  useLocation,
+  useParams
+} from 'react-router-dom';
+import { NavHashLink } from 'react-router-hash-link';
+import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
@@ -23,17 +26,15 @@ import {
   activities as mockActivies,
   subSystems as mockSubSystems,
   systemData as mockSystemData
-} from 'features/Systems/SystemProfile/mockSystemData';
-import GetSystemProfileQuery from 'gql/legacyGQL/GetSystemProfileQuery';
+} from 'features/Systems/SystemProfile/data/mockSystemData';
 import {
-  GetSystemProfile,
-  /* eslint-disable camelcase */
-  GetSystemProfile_cedarSystemDetails,
-  /* eslint-enable camelcase */
-  GetSystemProfileVariables
-} from 'gql/legacyGQL/types/GetSystemProfile';
+  CedarAssigneeType,
+  GetSystemProfileQuery,
+  useGetSystemProfileQuery
+} from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import Alert from 'components/Alert';
 import { getAtoStatus } from 'components/AtoStatus';
 import CollapsableLink from 'components/CollapsableLink';
 import {
@@ -47,7 +48,6 @@ import PageLoading from 'components/PageLoading';
 import SectionWrapper from 'components/SectionWrapper';
 import TLCTag from 'components/TLCTag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import { CedarAssigneeType } from 'types/graphql-global-types';
 import {
   CedarRoleAssigneePerson,
   DevelopmentTag,
@@ -67,10 +67,10 @@ import EditPageCallout from './components/EditPageCallout';
 // components/index contains all the sideNavItems components, routes, labels and translations
 // The sideNavItems object keys are mapped to the url param - 'subinfo'
 import sideNavItems from './components/index';
+import PointsOfContactSidebar from './components/PointsOfContactSidebar/PointsOfContactSidebar';
 import SystemSubNav from './components/SystemSubNav/index';
 import EditTeam from './components/Team/Edit';
-import { getPersonFullName } from './helpers';
-import PointsOfContactSidebar from './PointsOfContactSidebar';
+import { getPersonFullName } from './util';
 
 import './index.scss';
 
@@ -79,10 +79,10 @@ import './index.scss';
  */
 function getDevelopmentTags(
   // eslint-disable-next-line camelcase
-  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+  cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
 ): DevelopmentTag[] {
   const tags: DevelopmentTag[] = [];
-  if (cedarSystemDetails.systemMaintainerInformation.agileUsed === true) {
+  if (cedarSystemDetails?.systemMaintainerInformation.agileUsed === true) {
     tags.push('Agile Methodology');
   }
   return tags;
@@ -95,12 +95,12 @@ function getDevelopmentTags(
  */
 function getLocations(
   // eslint-disable-next-line camelcase
-  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+  cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
 ): UrlLocation[] {
-  return cedarSystemDetails.urls.map(url => {
+  return (cedarSystemDetails?.urls ?? []).map(url => {
     // Find a deployment from matching its type with the url host env
     const { urlHostingEnv } = url;
-    const deployment = cedarSystemDetails.deployments.find(
+    const deployment = cedarSystemDetails?.deployments.find(
       dpl => urlHostingEnv && dpl.deploymentType === urlHostingEnv
     );
 
@@ -124,10 +124,10 @@ function getLocations(
 
 function getPlannedRetirement(
   // eslint-disable-next-line camelcase
-  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+  cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
 ): string | null {
   const { plansToRetireReplace, quarterToRetireReplace, yearToRetireReplace } =
-    cedarSystemDetails.systemMaintainerInformation;
+    cedarSystemDetails?.systemMaintainerInformation || {};
 
   // Return null if none of the original properties are truthy
   if (
@@ -152,7 +152,7 @@ function getPlannedRetirement(
  * It is passed to all SystemProfile subpage components.
  */
 export function getSystemProfileData(
-  data?: GetSystemProfile
+  data?: GetSystemProfileQuery
 ): SystemProfileData | undefined {
   // System profile data is generally unavailable if `data.cedarSystemDetails` is empty
   if (!data) return undefined;
@@ -223,7 +223,7 @@ export function getSystemProfileData(
     personRoles,
     plannedRetirement: getPlannedRetirement(cedarSystemDetails),
     productionLocation,
-    status: cedarSystem.status,
+    status: cedarSystem.status!,
     toolsAndSoftware: cedarSoftwareProducts || undefined,
     usernamesWithRoles,
 
@@ -232,19 +232,6 @@ export function getSystemProfileData(
     subSystems: mockSubSystems,
     systemData: mockSystemData
   };
-}
-
-/**
- * Determine whether a particular sub page is editable based on sub page key.
- */
-export function subPageIsEditable(componentID: SubpageKey): boolean {
-  // TODO: Add sub pages as they become editable (this will remove the temporary edit system profile banner from that sub page)
-  const editableComponentIDs: SubpageKey[] = ['home', 'team'];
-
-  if (!editableComponentIDs.includes(componentID)) {
-    return true;
-  }
-  return false;
 }
 
 type SystemProfileProps = {
@@ -257,6 +244,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
 
+  const location = useLocation();
   const params = useParams<{
     subinfo: SubpageKey;
     systemId: string;
@@ -266,6 +254,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
 
   const { subinfo, top, edit } = params;
   const systemId = id || params.systemId;
+  const { hash } = location;
 
   const [modalSubpage, setModalSubpage] = useState<SubpageKey>('home');
 
@@ -274,12 +263,15 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     if (top) {
       window.scrollTo(0, 0);
     }
-  }, [top]);
+    if (hash) {
+      const targetElement = document.querySelector(hash);
+      if (targetElement) {
+        targetElement.scrollIntoView();
+      }
+    }
+  }, [top, hash]);
 
-  const { loading, error, data } = useQuery<
-    GetSystemProfile,
-    GetSystemProfileVariables
-  >(GetSystemProfileQuery, {
+  const { loading, error, data } = useGetSystemProfileQuery({
     variables: {
       cedarSystemId: systemId
     }
@@ -293,14 +285,13 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     useState<boolean>(false);
 
   // Enable the description toggle if it overflows
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const { current: el } = descriptionRef;
     if (!el) return;
     if (el.scrollHeight > el.offsetHeight) {
       setIsDescriptionExpandable(true);
     }
-  });
+  }, [descriptionRef]);
 
   const systemProfileData: SystemProfileData | undefined = useMemo(
     () => getSystemProfileData(data),
@@ -606,12 +597,21 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
           </SummaryBoxContent>
         </SummaryBox>
 
-        {/* Only display temporary edit system profile banner if sub page does not have full edit functionality */}
-        {subPageIsEditable(subpageKey) && (
-          <GridContainer className="margin-bottom-3 margin-top-2 desktop:margin-bottom-3">
+        {isMobile && (
+          <SystemSubNav
+            subinfo={subpageKey}
+            system={systemProfileData}
+            systemProfileHiddenFields={flags.systemProfileHiddenFields}
+            modal={modal}
+            setModalSubpage={setModalSubpage}
+          />
+        )}
+
+        {subinfo !== 'team' && (
+          <GridContainer className="margin-bottom-3 margin-top-2">
             <Alert
               type="info"
-              headingLevel="h4"
+              isClosable
               heading={t('singleSystem.editPage.tempEditBanner.heading')}
             >
               <Trans i18nKey="systemProfile:singleSystem.editPage.tempEditBanner.content">
@@ -624,14 +624,6 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
             </Alert>
           </GridContainer>
         )}
-
-        <SystemSubNav
-          subinfo={subpageKey}
-          system={systemProfileData}
-          systemProfileHiddenFields={flags.systemProfileHiddenFields}
-          modal={modal}
-          setModalSubpage={setModalSubpage}
-        />
 
         <SectionWrapper className="margin-bottom-5">
           <GridContainer className={classnames({ 'maxw-none': modal })}>
@@ -668,7 +660,10 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
 
               <Grid desktop={{ col: 9 }}>
                 {subComponent ? (
-                  <div id={subComponent.componentId ?? ''}>
+                  <div
+                    id={subComponent.componentId ?? ''}
+                    className="scroll-margin-top-5"
+                  >
                     <GridContainer className="padding-left-0 padding-right-0">
                       <Grid row gap>
                         {/* Central component */}
@@ -677,6 +672,18 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                           className="padding-top-3"
                         >
                           {subComponent.component}
+                          <div className="margin-top-6 padding-1 bg-base-lightest">
+                            <p className="margin-0">
+                              <strong>{t('singleSystem.cmsId')}</strong>
+                              {/* Cedar System ID returns UUID with curly braces around it */}
+                              {/* the following will remove the curly braces, if not null */}
+                              {cedarSystem.id.replace(/[{}]/g, '') ?? (
+                                <span className="text-italic text-bold">
+                                  {t('singleSystem.noDataAvailable')}
+                                </span>
+                              )}
+                            </p>
+                          </div>
                         </Grid>
 
                         {/* Contact info sidebar */}

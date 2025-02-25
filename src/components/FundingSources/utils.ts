@@ -9,6 +9,7 @@ export const formatFundingSourcesForApi = (
   return fundingSources
     .map(({ id, fundingNumber, sources }) => {
       return sources.map(source => ({
+        __typename: 'SystemIntakeFundingSource' as const,
         id,
         fundingNumber,
         source
@@ -33,6 +34,7 @@ export const formatFundingSourcesForApp = (
       return [
         ...acc,
         {
+          __typename: 'SystemIntakeFundingSource',
           id,
           fundingNumber,
           sources: source ? [source] : []

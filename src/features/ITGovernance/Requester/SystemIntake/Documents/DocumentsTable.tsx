@@ -7,14 +7,9 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useMutation } from '@apollo/client';
 import { Button, Table } from '@trussworks/react-uswds';
+import { useDeleteSystemIntakeDocumentMutation } from 'gql/generated/graphql';
 import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import { DeleteSystemIntakeDocumentQuery } from 'gql/legacyGQL/SystemIntakeDocumentQueries';
-import {
-  DeleteSystemIntakeDocument,
-  DeleteSystemIntakeDocumentVariables
-} from 'gql/legacyGQL/types/DeleteSystemIntakeDocument';
 import { SystemIntakeDocument } from 'gql/legacyGQL/types/SystemIntakeDocument';
 
 import Modal from 'components/Modal';
@@ -46,10 +41,7 @@ const DocumentsTable = ({ systemIntakeId, documents }: DocumentsTableProps) => {
     null
   );
 
-  const [deleteDocument] = useMutation<
-    DeleteSystemIntakeDocument,
-    DeleteSystemIntakeDocumentVariables
-  >(DeleteSystemIntakeDocumentQuery, {
+  const [deleteDocument] = useDeleteSystemIntakeDocumentMutation({
     refetchQueries: [
       {
         query: GetSystemIntakeQuery,

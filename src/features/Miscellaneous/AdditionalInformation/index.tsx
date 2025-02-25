@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import ITGovAdminContext from 'features/ITGovernance/GovernanceReviewTeam/ITGovAdminContext';
-import { GetTrbRequestSummary_trbRequest as TrbRequest } from 'gql/legacyGQL/types/GetTrbRequestSummary';
+import ITGovAdminContext from 'features/ITGovernance/Admin/ITGovAdminContext';
+import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
 import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -19,7 +19,7 @@ const AdditionalInformation = ({
   request,
   type
 }: {
-  request: TrbRequest | SystemIntake;
+  request: GetTRBRequestSummaryQuery['trbRequest'] | SystemIntake;
   type: RequestType;
 }) => {
   const { t } = useTranslation('admin');

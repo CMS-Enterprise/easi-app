@@ -6,11 +6,10 @@ import {
   within
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { GetSystemIntakeContactsQuery } from 'gql/legacyGQL/SystemIntakeContactsQueries';
 import {
-  GetSystemIntakeContactsQuery as GetSystemIntakeContactsQueryType,
-  GetSystemIntakeContactsQueryVariables
-} from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
+  GetSystemIntakeContactsDocument,
+  GetSystemIntakeContactsQuery
+} from 'gql/generated/graphql';
 import {
   emptySystemIntake,
   getSystemIntakeQuery
@@ -21,25 +20,24 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ContactDetails from '.';
 
-const getSystemIntakeContactsQuery: MockedQuery<
-  GetSystemIntakeContactsQueryType,
-  GetSystemIntakeContactsQueryVariables
-> = {
-  request: {
-    query: GetSystemIntakeContactsQuery,
-    variables: {
-      id: emptySystemIntake.id
-    }
-  },
-  result: {
-    data: {
-      systemIntakeContacts: {
-        __typename: 'SystemIntakeContactsPayload',
-        systemIntakeContacts: []
+const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> =
+  {
+    request: {
+      query: GetSystemIntakeContactsDocument,
+      variables: {
+        id: emptySystemIntake.id
+      }
+    },
+    result: {
+      data: {
+        __typename: 'Query',
+        systemIntakeContacts: {
+          __typename: 'SystemIntakeContactsPayload',
+          systemIntakeContacts: []
+        }
       }
     }
-  }
-};
+  };
 
 describe('System intake form - Contact details', () => {
   it('renders fields for new request', async () => {

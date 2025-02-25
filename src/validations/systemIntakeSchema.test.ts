@@ -59,11 +59,13 @@ describe('System intake validation', () => {
 describe('Funding sources form validation', () => {
   const fundingSources: FormattedFundingSource[] = [
     {
+      __typename: 'SystemIntakeFundingSource',
       id: '414c80dc-8f8a-4bed-9aa0-29342d860190',
       fundingNumber: '111111',
       sources: ['Fed Admin', 'ACA 3021']
     },
     {
+      __typename: 'SystemIntakeFundingSource',
       id: '00a5db89-d05b-49e1-b6ac-f6f21c5d0992',
       fundingNumber: '222222',
       sources: ['HITECH Medicaid']
@@ -71,6 +73,7 @@ describe('Funding sources form validation', () => {
   ];
 
   const newFundingSource: FormattedFundingSource = {
+    __typename: 'SystemIntakeFundingSource',
     id: '75e52b6f-f120-48b2-b87d-137cfc0388b9',
     fundingNumber: '333333',
     sources: ['HITECH Medicare', 'Fed Admin', 'ACA 3021']

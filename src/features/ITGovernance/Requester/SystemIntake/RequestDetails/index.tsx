@@ -2,7 +2,6 @@ import React, { useEffect, useMemo } from 'react';
 import { Controller, FieldPath } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -16,14 +15,10 @@ import {
   Textarea,
   TextInput
 } from '@trussworks/react-uswds';
-import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
+import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
+import { useUpdateSystemIntakeRequestDetailsMutation } from 'gql/generated/graphql';
 import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'gql/legacyGQL/SystemIntakeQueries';
 import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
-import {
-  UpdateSystemIntakeRequestDetails,
-  UpdateSystemIntakeRequestDetailsVariables
-} from 'gql/legacyGQL/types/UpdateSystemIntakeRequestDetails';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
@@ -109,10 +104,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     }
   });
 
-  const [mutate] = useMutation<
-    UpdateSystemIntakeRequestDetails,
-    UpdateSystemIntakeRequestDetailsVariables
-  >(UpdateSystemIntakeRequestDetailsQuery, {
+  const [mutate] = useUpdateSystemIntakeRequestDetailsMutation({
     refetchQueries: [
       {
         query: GetSystemIntakeQuery,
