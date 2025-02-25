@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export default gql`
-  mutation CreateSystemIntakeActionConfirmLcid(
+export default gql(/* GraphQL */ `
+  mutation CreateSystemIntakeActionConfirmLCID(
     $input: SystemIntakeConfirmLCIDInput!
   ) {
     createSystemIntakeActionConfirmLCID(input: $input) {
@@ -11,4 +11,4 @@ export default gql`
       }
     }
   }
-`;
+`);

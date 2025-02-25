@@ -4,13 +4,12 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup, Radio, Select } from '@trussworks/react-uswds';
-import CreateSystemIntakeActionConfirmLcidQuery from 'gql/legacyGQL/CreateSystemIntakeActionConfirmLcidQuery';
+import {
+  CreateSystemIntakeActionConfirmLCIDMutationVariables,
+  useCreateSystemIntakeActionConfirmLCIDMutation
+} from 'gql/generated/graphql';
 import CreateSystemIntakeActionIssueLcidQuery from 'gql/legacyGQL/CreateSystemIntakeActionIssueLcidQuery';
 import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
-import {
-  CreateSystemIntakeActionConfirmLcid,
-  CreateSystemIntakeActionConfirmLcidVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionConfirmLcid';
 import {
   CreateSystemIntakeActionIssueLcid,
   CreateSystemIntakeActionIssueLcidVariables
@@ -87,10 +86,7 @@ const IssueLcid = ({
     refetchQueries
   });
 
-  const [mutateConfirmLcid] = useMutation<
-    CreateSystemIntakeActionConfirmLcid,
-    CreateSystemIntakeActionConfirmLcidVariables
-  >(CreateSystemIntakeActionConfirmLcidQuery, {
+  const [mutateConfirmLcid] = useCreateSystemIntakeActionConfirmLCIDMutation({
     refetchQueries
   });
 
@@ -151,7 +147,7 @@ const IssueLcid = ({
 
   /** Confirm LCID mutation - returns LCID value */
   const confirmLcid = async (
-    input: CreateSystemIntakeActionConfirmLcidVariables['input']
+    input: CreateSystemIntakeActionConfirmLCIDMutationVariables['input']
   ) =>
     mutateConfirmLcid({
       variables: {

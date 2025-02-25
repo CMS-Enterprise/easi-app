@@ -515,21 +515,6 @@ export interface EmailNotificationRecipients {
 }
 
 /**
- * Input for confirming an intake's decision to issue an LCID in IT Gov v2
- */
-export interface SystemIntakeConfirmLCIDInput {
-  systemIntakeID: UUID;
-  expiresAt: Time;
-  scope: HTML;
-  nextSteps: HTML;
-  trbFollowUp: SystemIntakeTRBFollowUp;
-  costBaseline?: string | null;
-  additionalInfo?: HTML | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
-  adminNote?: HTML | null;
-}
-
-/**
  * Input for expiring an intake's LCID in IT Gov v2
  */
 export interface SystemIntakeExpireLCIDInput {
