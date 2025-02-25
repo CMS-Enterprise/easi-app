@@ -93,16 +93,25 @@ export default {
           ASYNC: 'Asynchronous'
         },
         alertType: {
-          READY_TO_SCHEDULE:
-            'The Governance Admin Team may schedule a time to asynchronously record your presentation.',
-          SCHEDULED:
-            'Your presentation recording session is scheduled for {{date}}.',
-          AWAITING_GRB_REVIEW:
-            'You attended the presentation recording session on {{date}}.',
-          REVIEW_IN_PROGRESS:
-            'This asynchronous review starts {{dateStart}} and ends {{dateEnd}}.',
-          AWAITING_DECISION: 'This GRB review ended on {{date}}.',
-          COMPLETED: 'This GRB review ended on {{date}}.'
+          STANDARD: {
+            READY_TO_SCHEDULE:
+              'The Governance Admin Team will schedule a GRB review.',
+            SCHEDULED: 'GRB meeting scheduled for {{date}}.',
+            AWAITING_DECISION: 'You attended the GRB meeting on {{date}}.',
+            COMPLETED: 'You attended the GRB meeting on {{date}}.'
+          },
+          ASYNC: {
+            READY_TO_SCHEDULE:
+              'The Governance Admin Team may schedule a time to asynchronously record your presentation.',
+            SCHEDULED:
+              'Your presentation recording session is scheduled for {{date}}.',
+            AWAITING_GRB_REVIEW:
+              'You attended the presentation recording session on {{date}}.',
+            REVIEW_IN_PROGRESS:
+              'This asynchronous review starts {{dateStart}} and ends {{dateEnd}}.',
+            AWAITING_DECISION: 'This GRB review ended on {{date}}.',
+            COMPLETED: 'This GRB review ended on {{date}}.'
+          }
         }
       },
       decisionAndNextSteps: {

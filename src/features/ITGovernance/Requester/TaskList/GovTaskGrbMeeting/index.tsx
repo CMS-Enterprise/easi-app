@@ -1,11 +1,15 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import classNames from 'classnames';
 import { kebabCase } from 'lodash';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-import { ITGovGRBStatus } from 'types/graphql-global-types';
+import {
+  ITGovGRBStatus,
+  SystemIntakeGRBReviewType
+} from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { formatDateUtc } from 'utils/date';
 
@@ -35,36 +39,53 @@ const GovTaskGrbMeeting = ({
             <>
               <p>
                 <Trans
-                  i18nKey={`itGov:taskList.step.${stepKey}.reviewType`}
+                  i18nKey={`itGov:taskList.step.${stepKey}.reviewType.copy`}
                   components={{
                     strong: <strong />
                   }}
-                  values={{ type: grbReviewType }}
+                  values={{
+                    type: t(
+                      `taskList.step.${stepKey}.reviewType.${grbReviewType}`
+                    )
+                  }}
                 />
               </p>
               <Alert slim type="info">
-                {t(`taskList.step.${stepKey}.alertType.${grbMeetingStatus}`, {
-                  date: formatDateUtc(grbDate, 'MMMM d, yyyy')
-                })}
+                {t(
+                  `taskList.step.${stepKey}.alertType.${grbReviewType}.${grbMeetingStatus}`,
+                  {
+                    date: formatDateUtc(grbDate, 'MMMM d, yyyy')
+                  }
+                )}
               </Alert>
-              <div className="margin-top-2">
-                <UswdsReactLink
-                  variant="unstyled"
-                  className="usa-button"
-                  to="/help/it-governance/prepare-for-grb"
-                  target="_blank"
-                >
-                  {t(`taskList.step.${stepKey}.presentationUploadButton`)}
-                </UswdsReactLink>
-              </div>
+              {grbReviewType === SystemIntakeGRBReviewType.ASYNC && (
+                <div className="margin-top-2">
+                  <UswdsReactLink
+                    variant="unstyled"
+                    className="usa-button"
+                    to="/help/it-governance/prepare-for-grb"
+                    target="_blank"
+                  >
+                    {t(`taskList.step.${stepKey}.presentationUploadButton`)}
+                  </UswdsReactLink>
+                </div>
+              )}
             </>
           )}
 
-        <div className="margin-top-2 display-flex">
+        <div className="margin-top-2 display-flex flex-align-center">
           <UswdsReactLink
             to="/help/it-governance/prepare-for-grb"
             target="_blank"
-            className="margin-right-2 padding-right-2 border-right-1px border-base-lighter"
+            className={classNames(
+              'margin-right-2 padding-right-2 border-right-1px border-base-lighter',
+              {
+                'usa-button  border-right-0':
+                  grbReviewType === SystemIntakeGRBReviewType.STANDARD &&
+                  (grbMeetingStatus === ITGovGRBStatus.READY_TO_SCHEDULE ||
+                    grbMeetingStatus === ITGovGRBStatus.SCHEDULED)
+              }
+            )}
           >
             {t(`taskList.step.${stepKey}.button`)}
           </UswdsReactLink>
