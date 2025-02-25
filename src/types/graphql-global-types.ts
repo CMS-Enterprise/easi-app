@@ -467,16 +467,6 @@ export enum TRBWhereInProcessOption {
 }
 
 /**
- * The input needed to close a TRB request
- */
-export interface CloseTRBRequestInput {
-  id: UUID;
-  reasonClosed: HTML;
-  copyTrbMailbox: boolean;
-  notifyEuaIds: string[];
-}
-
-/**
  * The data needed to bookmark a cedar system
  */
 export interface CreateCedarSystemBookmarkInput {

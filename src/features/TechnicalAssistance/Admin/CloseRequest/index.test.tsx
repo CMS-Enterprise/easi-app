@@ -5,12 +5,12 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  CloseTRBRequestDocument,
   GetTRBRequestAttendeesDocument,
   GetTRBRequestSummaryDocument,
   PersonRole,
   ReopenTRBRequestDocument
 } from 'gql/generated/graphql';
-import CloseTrbRequestQuery from 'gql/legacyGQL/CloseTrbRequestQuery';
 import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -77,7 +77,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
           mocks={[
             {
               request: {
-                query: CloseTrbRequestQuery,
+                query: CloseTRBRequestDocument,
                 variables: {
                   input: {
                     id,
@@ -211,7 +211,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
           getAttendeesQuery,
           {
             request: {
-              query: CloseTrbRequestQuery,
+              query: CloseTRBRequestDocument,
               variables: {
                 input: {
                   id,

@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -15,12 +14,10 @@ import {
   ModalRef,
   ModalToggleButton
 } from '@trussworks/react-uswds';
-import { useReopenTRBRequestMutation } from 'gql/generated/graphql';
-import CloseTrbRequestQuery from 'gql/legacyGQL/CloseTrbRequestQuery';
 import {
-  CloseTrbRequest,
-  CloseTrbRequestVariables
-} from 'gql/legacyGQL/types/CloseTrbRequest';
+  useCloseTRBRequestMutation,
+  useReopenTRBRequestMutation
+} from 'gql/generated/graphql';
 
 import Spinner from 'components/Spinner';
 import TextAreaField from 'components/TextAreaField';
@@ -74,10 +71,7 @@ function CloseRequest() {
     }
   });
 
-  const [mutateClose, mutateCloseResult] = useMutation<
-    CloseTrbRequest,
-    CloseTrbRequestVariables
-  >(CloseTrbRequestQuery);
+  const [mutateClose, mutateCloseResult] = useCloseTRBRequestMutation();
 
   const [mutateReopen, mutateReopenResult] = useReopenTRBRequestMutation();
 
