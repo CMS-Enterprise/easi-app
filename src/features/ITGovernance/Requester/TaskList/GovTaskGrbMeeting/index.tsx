@@ -40,21 +40,22 @@ const GovTaskGrbMeeting = ({
                 />
               </p>
               <Alert slim type="info">
-                {t(`taskList.step.${stepKey}.alertType.${grbMeetingStatus}`)}
+                {t(`taskList.step.${stepKey}.alertType.${grbMeetingStatus}`, {
+                  date: formatDateUtc(grbDate, 'MMMM d, yyyy')
+                })}
               </Alert>
+              <div className="margin-top-2">
+                <UswdsReactLink
+                  variant="unstyled"
+                  className="usa-button"
+                  to="/help/it-governance/prepare-for-grb"
+                  target="_blank"
+                >
+                  {t(`taskList.step.${stepKey}.presentationUploadButton`)}
+                </UswdsReactLink>
+              </div>
             </>
           )}
-
-        <div className="margin-top-2">
-          <UswdsReactLink
-            variant="unstyled"
-            className="usa-button"
-            to="/help/it-governance/prepare-for-grb"
-            target="_blank"
-          >
-            {t(`taskList.step.${stepKey}.presentationUploadButton`)}
-          </UswdsReactLink>
-        </div>
 
         <div className="margin-top-2 display-flex">
           <UswdsReactLink
