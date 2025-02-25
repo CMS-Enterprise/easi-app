@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { kebabCase } from 'lodash';
 
 import Alert from 'components/Alert';
@@ -26,6 +26,24 @@ const GovTaskGrbMeeting = ({
     >
       <TaskListDescription>
         <p>{t(`taskList.step.${stepKey}.description`)}</p>
+
+        {grbMeetingStatus !== ITGovGRBStatus.CANT_START &&
+          grbMeetingStatus !== ITGovGRBStatus.NOT_NEEDED && (
+            <>
+              <p>
+                <Trans
+                  i18nKey={`itGov:taskList.step.${stepKey}.reviewType`}
+                  components={{
+                    strong: <strong />
+                  }}
+                  values={{ type: 'TO_BE_CHANGED' }}
+                />
+              </p>
+              <Alert slim type="info">
+                {t(`taskList.step.${stepKey}.alertType.${grbMeetingStatus}`)}
+              </Alert>
+            </>
+          )}
 
         {/* Scheduled or attended meeting date info */}
         {(grbMeetingStatus === ITGovGRBStatus.SCHEDULED ||
