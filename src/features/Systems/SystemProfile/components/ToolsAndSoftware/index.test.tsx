@@ -2,11 +2,11 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 // eslint-disable-next-line camelcase
-import { GetSystemProfile_cedarSoftwareProducts_softwareProducts } from 'gql/legacyGQL/types/GetSystemProfile';
 import { cloneDeep } from 'lodash';
 import { getMockSystemProfileData, result } from 'tests/mock/systemProfile';
 
 import { TOOLS_AND_SOFTWARE_PRODUCT_COUNT_CAP } from 'constants/systemProfile';
+import { GetSystemProfileSoftwareProducts } from 'types/systemProfile';
 
 import ToolsAndSoftware from './index';
 
@@ -81,8 +81,7 @@ describe(`System Profile Tools and Software section collapse/expand toggle at ${
 
   function fillSoftwareProducts(
     count: number
-    // eslint-disable-next-line camelcase
-  ): GetSystemProfile_cedarSoftwareProducts_softwareProducts[] {
+  ): GetSystemProfileSoftwareProducts['softwareProducts'] {
     return Array(count)
       .fill(0)
       .map((_, index) => {

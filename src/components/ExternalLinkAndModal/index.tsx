@@ -98,6 +98,7 @@ const ExternalLinkAndModal = ({
           onClick={() => setIsModalOpen(true)}
           icon={<Icon.Launch className="margin-left-0" />}
           iconPosition="after"
+          className="flex-gap-05"
         >
           {children}
         </IconButton>

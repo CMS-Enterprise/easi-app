@@ -1,8 +1,12 @@
-import { SystemIntakeWithReviewRequestedFragment } from 'gql/generated/graphql';
+import {
+  GetSystemIntakeContactsDocument,
+  GetSystemIntakeContactsQuery,
+  SystemIntakeContact,
+  SystemIntakeWithReviewRequestedFragment
+} from 'gql/generated/graphql';
 import GetGovernanceTaskListQuery from 'gql/legacyGQL/GetGovernanceTaskListQuery';
 import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
 import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
-import { GetSystemIntakeContactsQuery } from 'gql/legacyGQL/SystemIntakeContactsQueries';
 import {
   GetGovernanceTaskList,
   GetGovernanceTaskList_systemIntake as TaskListSystemIntake,
@@ -12,18 +16,14 @@ import {
   GetSystemIntake,
   GetSystemIntakeVariables
 } from 'gql/legacyGQL/types/GetSystemIntake';
-import {
-  GetSystemIntakeContactsQuery as GetSystemIntakeContactsType,
-  GetSystemIntakeContactsQueryVariables
-} from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
 import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'gql/legacyGQL/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
   GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
 } from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
 import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
-import { SystemIntakeContact } from 'gql/legacyGQL/types/SystemIntakeContact';
 import { SystemIntakeDocument } from 'gql/legacyGQL/types/SystemIntakeDocument';
+import { SystemIntakeGRBPresentationLinks } from 'gql/legacyGQL/types/SystemIntakeGRBPresentationLinks';
 import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
@@ -71,12 +71,14 @@ type ContactRole =
 export interface MockSystemIntakeContact extends SystemIntakeContact {
   component: CMSOffice;
   role: ContactRole;
+  commonName: string;
+  email: string;
 }
 
 const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
 
 const contacts: MockSystemIntakeContact[] = users.slice(0, 4).map(userInfo => ({
-  __typename: 'AugmentedSystemIntakeContact',
+  __typename: 'SystemIntakeContact',
   systemIntakeId,
   id: `systemIntakeContact-${userInfo.euaUserId}`,
   euaUserId: userInfo.euaUserId,
@@ -162,6 +164,19 @@ export const documents: SystemIntakeDocument[] = [
     __typename: 'SystemIntakeDocument'
   }
 ];
+
+export const grbPresentationLinks: SystemIntakeGRBPresentationLinks = {
+  __typename: 'SystemIntakeGRBPresentationLinks',
+  recordingLink: 'https://google.com',
+  recordingPasscode: '123456',
+  transcriptFileName: 'transcript.doc',
+  transcriptFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
+  transcriptFileURL: 'https://google.com',
+  transcriptLink: null,
+  presentationDeckFileName: 'presentationDeck.pptx',
+  presentationDeckFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
+  presentationDeckFileURL: 'https://google.com'
+};
 
 export const governanceRequestFeedbacks: SystemIntake['governanceRequestFeedbacks'] =
   [
@@ -345,7 +360,8 @@ export const emptySystemIntake: SystemIntake = {
     }
   ],
   relatedIntakes: [],
-  relatedTRBRequests: []
+  relatedTRBRequests: [],
+  grbPresentationLinks
 };
 
 export const systemIntake: SystemIntake = {
@@ -505,7 +521,8 @@ export const systemIntake: SystemIntake = {
       status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
       createdAt: new Date().toString()
     }
-  ]
+  ],
+  grbPresentationLinks
 };
 
 export const systemIntakeForTable: TableSystemIntake = {
@@ -618,25 +635,25 @@ export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCI
     }
   };
 
-export const getSystemIntakeContactsQuery: MockedQuery<
-  GetSystemIntakeContactsType,
-  GetSystemIntakeContactsQueryVariables
-> = {
-  request: {
-    query: GetSystemIntakeContactsQuery,
-    variables: {
-      id: systemIntakeId
-    }
-  },
-  result: {
-    data: {
-      systemIntakeContacts: {
-        __typename: 'SystemIntakeContactsPayload',
-        systemIntakeContacts: [requester, businessOwner, isso]
+export const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> =
+  {
+    request: {
+      query: GetSystemIntakeContactsDocument,
+      variables: {
+        id: systemIntakeId
+      }
+    },
+    result: {
+      // @ts-ignore
+      data: {
+        __typename: 'Query',
+        systemIntakeContacts: {
+          __typename: 'SystemIntakeContactsPayload',
+          systemIntakeContacts: [requester, businessOwner, isso]
+        }
       }
     }
-  }
-};
+  };
 
 export const taskListSystemIntake: TaskListSystemIntake = {
   __typename: 'SystemIntake',

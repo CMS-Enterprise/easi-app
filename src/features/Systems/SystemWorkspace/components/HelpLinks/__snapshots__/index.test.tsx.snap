@@ -119,7 +119,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               data-testid="CardBody"
             >
               <button
-                class="usa-button usa-button--unstyled display-flex flex-align-center"
+                class="usa-button usa-button--unstyled display-flex flex-align-center flex-gap-05"
                 data-testid="button"
                 type="button"
               >
@@ -164,7 +164,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               data-testid="CardBody"
             >
               <button
-                class="usa-button usa-button--unstyled display-flex flex-align-center"
+                class="usa-button usa-button--unstyled display-flex flex-align-center flex-gap-05"
                 data-testid="button"
                 type="button"
               >
@@ -209,7 +209,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               data-testid="CardBody"
             >
               <button
-                class="usa-button usa-button--unstyled display-flex flex-align-center"
+                class="usa-button usa-button--unstyled display-flex flex-align-center flex-gap-05"
                 data-testid="button"
                 type="button"
               >
@@ -254,7 +254,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               data-testid="CardBody"
             >
               <button
-                class="usa-button usa-button--unstyled display-flex flex-align-center"
+                class="usa-button usa-button--unstyled display-flex flex-align-center flex-gap-05"
                 data-testid="button"
                 type="button"
               >

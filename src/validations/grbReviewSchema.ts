@@ -56,12 +56,16 @@ export const SetGRBPresentationLinksSchema = Yup.object().shape(
     // Form requires either recordingLink or presentationDeckFileData fields
     recordingLink: Yup.string().when('presentationDeckFileData', {
       is: (value?: MixedSchema) => !value,
-      then: Yup.string().required('This is a required field.'),
+      then: Yup.string().required(
+        i18next.t('grbReview:presentationLinks.requiredField')
+      ),
       otherwise: Yup.string()
     }),
     presentationDeckFileData: Yup.mixed().when('recordingLink', {
       is: (value?: string) => !value,
-      then: Yup.mixed().required('This is a required field.'),
+      then: Yup.mixed().required(
+        i18next.t('grbReview:presentationLinks.requiredField')
+      ),
       otherwise: Yup.mixed()
     }),
 

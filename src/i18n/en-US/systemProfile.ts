@@ -6,7 +6,7 @@ const systemProfile = {
     button: 'Start an Intake Request'
   },
   navigation: {
-    home: 'System Home',
+    home: 'System home',
     details: 'Implementation details',
     detailsBasic: 'Basic details',
     detailsUrls: 'URLs and locations',
@@ -39,6 +39,7 @@ const systemProfile = {
     pointsOfContact_plural: 'Points of contact',
     noPointsOfContact:
       'This system does not have any points of contact identified.',
+    cmsId: 'CMS UUID ',
     noDataAvailable: 'No data available',
     sendEmail: 'Send an email',
     moreContact: 'More points of contact',
@@ -48,7 +49,7 @@ const systemProfile = {
     },
     noDescription: 'No system description available',
     summary: {
-      back: 'Back to All systems',
+      back: 'Back to all systems',
       expand: 'Show system summary',
       hide: 'Hide system summary',
       label: 'Open system external link',
@@ -130,7 +131,7 @@ const systemProfile = {
         'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact',
       noATODates:
         'There is no information about previous tests or assessments available for this system',
-      viewATOInfo: 'View ATO information'
+      viewATOInfo: 'View more ATO information'
     },
     contracts: {
       header: 'Contracts',
@@ -165,7 +166,8 @@ const systemProfile = {
       fundingSource: 'Funding Source',
       budgetID: 'Budget ID: ',
       noBudgetTitle: 'No budget title listed',
-      systemFiscalYear: 'System fiscal year (FY) cost',
+      systemFiscalYear: 'System fiscal year cost',
+      viewMoreBudgetAndFunding: 'View more budget and funding information',
       viewMoreFunding: 'Show more budget projects',
       viewLessFunding: 'Show fewer budget projects'
     },
@@ -198,7 +200,7 @@ const systemProfile = {
       assetsOrServices: 'Assets or services',
       sendAnEmail: 'Send an email',
       totalEmployees: 'Total Full Time Employees (FTE)',
-      viewMoreInfo: 'View more Team and Contract information',
+      viewMoreInfo: 'View more team information',
       federalFTE: 'Federal FTE',
       contractorFTE: 'Contractor FTE'
     },
@@ -288,28 +290,9 @@ const systemProfile = {
           'There was a problem removing a team member. Please try again. If the error persists, please try again at a later date.',
         availableRoles: {
           link: 'What roles are available?',
-          primaryLabel: 'Primary roles',
-          pocLabel: 'Points of contact',
+          descriptionNull: 'Error fetching role description',
           pocText:
-            'These are additional roles to signify primary points of contact for specific topics as appropriate. They identify who is best to contact if someone has questions on those topics.',
-          primaryList: [
-            '<strong>Business Owner:</strong> A person on the Business Owner team for the system or the person officially responsible for the business decisions of the system and the budgeting for the system. Every system should have at least one Business Owner, and this role must be a federal employee.',
-            '<strong>System Maintainer:</strong> A lead of the system maintainer team for the system or the person responsible for overseeing the technical operations of the system. Every system should have at least one System Maintainer, and this role must be a federal employee.',
-            "<strong>Contracting Officer's Representative (COR):</strong> A person responsible for all contracting tasks and activities related to the one or more system contracts. Every system should have at least one of the following: COR, GTL, or Project Lead, and that role must be filled by a federal employee.",
-            '<strong>Government Task Lead (GTL):</strong> A person responsible for leading the work on one or more task orders on a contract for the system. Every system should have at least one of the following: COR, GTL, or Project Lead, and that role must be filled by a federal employee.',
-            '<strong>Project Lead:</strong> A Project Manager or person responsible for leading the day-to-day work on a project or multiple projects for the system. Every system should have at least one of the following: COR, GTL, or Project Lead, and that role must be filled by a federal employee.',
-            '<strong>Information System Security Officer (ISSO):</strong> A person who is the security specialist for the system. This person is responsible for leading any security compliance procedures required for the system. An ISSO may often be an OIT staff member and may work on multiple systems.',
-            '<strong>Subject Matter Expert (SME):</strong> Additional staff who provide policy, process, or business expertise to a system.',
-            '<strong>Budget Analyst:</strong> The person who prepares and submits the annual budget request for the system.',
-            '<strong>Support Staff:</strong> A person who supports this system as a team member or in another capacity. Select this option if none of the other role options are applicable.'
-          ],
-          pocList: [
-            '<strong>Business Question Contact:</strong> A contact who can answer business questions for the system. Every system should have a team member with this role.',
-            '<strong>Technical System Issues Contact:</strong> The person on the team to contact if technical issues are found with the system. Every system should have a team member with this role.',
-            '<strong>Data Center Contact:</strong> The person on the team to contact if there is a question regarding the system’s data center or hosting environment.',
-            '<strong>API Contact:</strong> A person knowledgeable about API related information for the system.',
-            '<strong>AI Contact:</strong> A person knowledgeable about Artificial Intelligence (AI) and/or Machine Learning (ML) related information for the system.'
-          ]
+            "Roles that end in 'Contact' are additional roles to signify points of contact for specific topics as appropriate. They identify who is best to contact if someone has questions on those topics."
         }
       }
     },
@@ -320,7 +303,7 @@ const systemProfile = {
       tempEditBanner: {
         heading: 'See something incorrect on this page?',
         content:
-          'To request edits to the information on this page, please email <1>EnterpriseArchitecture@cms.hhs.gov</1>'
+          'To request edits to the information on this page, please email <1>EnterpriseArchitecture@cms.hhs.gov</1>.'
       }
     },
     toolsAndSoftware: {
@@ -385,9 +368,16 @@ const systemProfile = {
       dataCategories: 'Data content categories',
       qualityAssurance: 'Quality Assurance',
       viewGateway: 'View gateway information',
-      viewAPIInfo: 'View API information',
+      viewAPIInfo: 'View more API information',
       viewDataExchange: 'View data exchange details',
-      more: 'more'
+      viewMoreExchanges: 'View {{count}} more data exchanges',
+      numberOfSystemDependencies: 'Number of system dependencies',
+      numberOfDependentSystems: 'Number of dependent systems',
+      more: 'more',
+      apiStatusValues: {
+        apiDeveloped: 'API developed',
+        noApiDeveloped: 'No API developed'
+      }
     },
     systemDetails: {
       header: 'Basic details',
@@ -441,6 +431,7 @@ const systemProfile = {
       header: 'Sub-systems',
       retirementDate: 'Retirement date',
       viewInfo: 'View sub-system information',
+      viewMore: 'View {{count}} more sub-systems',
       noSystemDescription: 'No system description available',
       showSystems: {
         more: 'Show more sub-systems',

@@ -1,5 +1,6 @@
+import { PersonRole } from 'gql/generated/graphql';
+
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
-import { PersonRole } from 'types/graphql-global-types';
 
 import MockUsers, { MockUser, MockUserOptions } from './MockUsers';
 

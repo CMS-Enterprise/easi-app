@@ -2,11 +2,11 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 // eslint-disable-next-line camelcase
-import { GetSystemProfile_cedarBudget } from 'gql/legacyGQL/types/GetSystemProfile';
 import { cloneDeep, toString } from 'lodash';
 import { getMockSystemProfileData, result } from 'tests/mock/systemProfile';
 
 import { BUDGET_ITEMS_COUNT_CAP } from 'constants/systemProfile';
+import { GetSystemProfileBudget } from 'types/systemProfile';
 
 import FundingAndBudget from './index';
 
@@ -20,7 +20,7 @@ describe(`System Profile Funding and Budget section collapse/expand toggle at ${
   function fillBudgetItems(
     count: number
     // eslint-disable-next-line camelcase
-  ): GetSystemProfile_cedarBudget[] {
+  ): GetSystemProfileBudget[] {
     return Array(count)
       .fill(0)
       .map((_, index) => {

@@ -2,13 +2,15 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
-import { GetCedarRoleTypesQuery } from 'gql/legacyGQL/CedarRoleQueries';
-import { GetCedarRoleTypes } from 'gql/legacyGQL/types/GetCedarRoleTypes';
-import { SetRolesForUserOnSystem } from 'gql/legacyGQL/types/SetRolesForUserOnSystem';
+import {
+  CedarAssigneeType,
+  GetCedarRoleTypesDocument,
+  GetCedarRoleTypesQuery,
+  SetRolesForUserOnSystemMutation
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { CedarAssigneeType } from 'types/graphql-global-types';
 import { UsernameWithRoles } from 'types/systemProfile';
 import { MockedQuery } from 'types/util';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -17,14 +19,14 @@ import TeamMemberForm from './TeamMemberForm';
 
 const cedarSystemId = '000-0000-1';
 
-const getCedarRoleTypesQuery: MockedQuery<GetCedarRoleTypes> = {
+const getCedarRoleTypesQuery: MockedQuery<GetCedarRoleTypesQuery> = {
   request: {
-    query: GetCedarRoleTypesQuery,
+    query: GetCedarRoleTypesDocument,
     variables: {}
   },
   result: {
     data: {
-      // TODO: Add role types
+      __typename: 'Query',
       roleTypes: []
     }
   }
@@ -67,10 +69,11 @@ const user: UsernameWithRoles = {
 };
 
 const mockUpdateRoles = async (): Promise<
-  FetchResult<SetRolesForUserOnSystem>
+  FetchResult<SetRolesForUserOnSystemMutation>
 > => {
   return {
     data: {
+      __typename: 'Mutation',
       setRolesForUserOnSystem: null
     }
   };

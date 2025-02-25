@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
-import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
+import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
 
 import FeedbackBanner from 'components/FeedbackBanner';

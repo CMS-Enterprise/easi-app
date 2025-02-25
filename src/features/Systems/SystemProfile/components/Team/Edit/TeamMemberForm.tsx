@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
-import { FetchResult, MutationFunctionOptions, useQuery } from '@apollo/client';
+import { FetchResult, MutationFunctionOptions } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
@@ -14,15 +14,12 @@ import {
   Icon,
   Label
 } from '@trussworks/react-uswds';
-import { GetCedarRoleTypesQuery } from 'gql/legacyGQL/CedarRoleQueries';
 import {
-  GetCedarRoleTypes,
-  GetCedarRoleTypes_roleTypes as CedarRoleTypes
-} from 'gql/legacyGQL/types/GetCedarRoleTypes';
-import {
-  SetRolesForUserOnSystem,
-  SetRolesForUserOnSystemVariables
-} from 'gql/legacyGQL/types/SetRolesForUserOnSystem';
+  GetCedarRoleTypesQuery,
+  SetRolesForUserOnSystemMutation,
+  SetRolesForUserOnSystemMutationVariables,
+  useGetCedarRoleTypesQuery
+} from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import * as yup from 'yup';
 
@@ -53,10 +50,10 @@ type TeamMemberFormProps = {
   cedarSystemId: string;
   updateRoles: (
     options?: MutationFunctionOptions<
-      SetRolesForUserOnSystem,
-      SetRolesForUserOnSystemVariables
+      SetRolesForUserOnSystemMutation,
+      SetRolesForUserOnSystemMutationVariables
     >
-  ) => Promise<FetchResult<SetRolesForUserOnSystem>>;
+  ) => Promise<FetchResult<SetRolesForUserOnSystemMutation>>;
   loading: boolean;
   team: UsernameWithRoles[];
 };
@@ -93,18 +90,9 @@ const TeamMemberForm = ({
 
   const keyPrefix = `singleSystem.editTeam.form.${isEdit ? 'edit' : 'add'}`;
 
-  const { data, loading: roleTypesLoading } = useQuery<GetCedarRoleTypes>(
-    GetCedarRoleTypesQuery
-  );
+  const { data, loading: roleTypesLoading } = useGetCedarRoleTypesQuery();
 
-  const availableRolesText = t<Record<string, string[]>>(
-    'singleSystem.editTeam.form.availableRoles',
-    {
-      returnObjects: true
-    }
-  );
-
-  const rolesOrdered: CedarRoleTypes[] = useMemo(() => {
+  const rolesOrdered: GetCedarRoleTypesQuery['roleTypes'] = useMemo(() => {
     const roles = data?.roleTypes;
 
     if (roles === undefined) return [];
@@ -316,35 +304,25 @@ const TeamMemberForm = ({
             </FormGroup>
           )}
         />
+
         <CollapsableLink
           id="availableRoles"
           label={t('singleSystem.editTeam.form.availableRoles.link')}
         >
-          <p className="margin-y-0 line-heigt-body-5">
-            <strong>
-              {t('singleSystem.editTeam.form.availableRoles.primaryLabel')}
-            </strong>
-          </p>
-          <ul className="easi-list padding-left-2">
-            {availableRolesText.primaryList.map(li => (
-              <li key={li} className="margin-top-1">
-                <Trans>{li}</Trans>
-              </li>
-            ))}
-          </ul>
-          <p className="margin-bottom-0 line-height-body-5">
-            <strong>
-              {t('singleSystem.editTeam.form.availableRoles.pocLabel')}
-            </strong>
-            <br />
+          <ul className="easi-list padding-left-3">
             <span className="text-base-dark">
               {t('singleSystem.editTeam.form.availableRoles.pocText')}
             </span>
-          </p>
-          <ul className="easi-list padding-left-2">
-            {availableRolesText.pocList.map(li => (
-              <li key={li} className="margin-top-1">
-                <Trans>{li}</Trans>
+
+            {/* Loop through all available CEDAR roles and print out their name and description (if available) */}
+            {rolesOrdered.map(currRole => (
+              <li key={currRole.id} className="margin-top-1">
+                <strong>{currRole.name}</strong>:{' '}
+                {currRole?.description
+                  ? currRole.description
+                  : t(
+                      'singleSystem.editTeam.form.availableRoles.descriptionNull'
+                    )}
               </li>
             ))}
           </ul>
