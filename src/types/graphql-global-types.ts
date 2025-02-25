@@ -515,18 +515,6 @@ export interface EmailNotificationRecipients {
 }
 
 /**
- * Input for expiring an intake's LCID in IT Gov v2
- */
-export interface SystemIntakeExpireLCIDInput {
-  systemIntakeID: UUID;
-  reason: HTML;
-  nextSteps?: HTML | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
-  additionalInfo?: HTML | null;
-  adminNote?: HTML | null;
-}
-
-/**
  * Input for setting an intake's decision to issuing an LCID in IT Gov v2
  */
 export interface SystemIntakeIssueLCIDInput {
