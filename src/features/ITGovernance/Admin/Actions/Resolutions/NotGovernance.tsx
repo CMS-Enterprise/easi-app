@@ -1,18 +1,15 @@
 import React, { useContext } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import { FormGroup } from '@trussworks/react-uswds';
-import CreateSystemIntakeActionNotITGovRequestQuery from 'gql/legacyGQL/CreateSystemIntakeActionNotITGovRequestQuery';
 import {
-  CreateSystemIntakeActionNotITGovRequest,
-  CreateSystemIntakeActionNotITGovRequestVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionNotITGovRequest';
+  SystemIntakeNotITGovReqInput,
+  useCreateSystemIntakeActionNotITGovRequestMutation
+} from 'gql/generated/graphql';
 
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import RichTextEditor from 'components/RichTextEditor';
-import { SystemIntakeNotITGovReqInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
@@ -37,10 +34,7 @@ const NotGovernance = ({
 
   const { control } = form;
 
-  const [mutate] = useMutation<
-    CreateSystemIntakeActionNotITGovRequest,
-    CreateSystemIntakeActionNotITGovRequestVariables
-  >(CreateSystemIntakeActionNotITGovRequestQuery, {
+  const [mutate] = useCreateSystemIntakeActionNotITGovRequestMutation({
     refetchQueries
   });
 

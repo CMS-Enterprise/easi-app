@@ -531,17 +531,6 @@ export interface SystemIntakeIssueLCIDInput {
 }
 
 /**
- * Input for creating a Not an IT Governance Request Action in Admin Actions v2
- */
-export interface SystemIntakeNotITGovReqInput {
-  systemIntakeID: UUID;
-  notificationRecipients?: EmailNotificationRecipients | null;
-  reason?: HTML | null;
-  additionalInfo?: HTML | null;
-  adminNote?: HTML | null;
-}
-
-/**
  * Input for submitting a Progress to New Step action in IT Gov v2
  */
 export interface SystemIntakeProgressToNewStepsInput {
