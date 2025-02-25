@@ -89,7 +89,8 @@ const GovTaskGrbMeeting = ({
                   <UswdsReactLink
                     variant="unstyled"
                     className="usa-button"
-                    to="/help/it-governance/prepare-for-grb"
+                    // TODO: Update link to actual async recording upload page
+                    to="#"
                     target="_blank"
                   >
                     {t(`taskList.step.${stepKey}.presentationUploadButton`)}
