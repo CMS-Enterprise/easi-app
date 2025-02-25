@@ -12,11 +12,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
-  GetTrbRequest,
-  GetTrbRequest_trbRequest as TrbRequest,
-  GetTrbRequestVariables
-} from 'gql/legacyGQL/types/GetTrbRequest';
-import { TRBAttendee } from 'gql/legacyGQL/types/TRBAttendee';
+  GetTRBRequestQuery,
+  GetTRBRequestQueryVariables,
+  PersonRole
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
@@ -24,9 +23,9 @@ import useEasiForm from 'components/EasiForm/useEasiForm';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
+  TRBAttendee,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
 import { trbRequesterSchema } from 'validations/trbRequestSchema';
@@ -41,11 +40,11 @@ import { FormStepComponentProps, StepSubmit, TrbFormAlert } from '.';
 type AttendeesProps =
   | {
       fromTaskList: true;
-      request?: TrbRequest;
+      request?: GetTRBRequestQuery['trbRequest'];
       /** Refetch the trb request from the form wrapper */
       refetchRequest?: (
-        variables?: Partial<GetTrbRequestVariables> | undefined
-      ) => Promise<ApolloQueryResult<GetTrbRequest>>;
+        variables?: Partial<GetTRBRequestQueryVariables> | undefined
+      ) => Promise<ApolloQueryResult<GetTRBRequestQuery>>;
       /**
        * Set the current form step component submit handler
        * so that in can be used in other places like the header.

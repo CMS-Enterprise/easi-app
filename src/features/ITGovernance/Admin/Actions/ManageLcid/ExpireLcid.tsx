@@ -1,20 +1,17 @@
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
-import CreateSystemIntakeActionExpireLcidQuery from 'gql/legacyGQL/CreateSystemIntakeActionExpireLcidQuery';
 import {
-  CreateSystemIntakeActionExpireLcid,
-  CreateSystemIntakeActionExpireLcidVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionExpireLcid';
+  SystemIntakeExpireLCIDInput,
+  useCreateSystemIntakeActionExpireLCIDMutation
+} from 'gql/generated/graphql';
 
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import RichTextEditor from 'components/RichTextEditor';
-import { SystemIntakeExpireLCIDInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 import { expireLcidSchema } from 'validations/actionSchema';
 
@@ -39,10 +36,7 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
 
   const { control } = form;
 
-  const [expireLcid] = useMutation<
-    CreateSystemIntakeActionExpireLcid,
-    CreateSystemIntakeActionExpireLcidVariables
-  >(CreateSystemIntakeActionExpireLcidQuery, {
+  const [expireLcid] = useCreateSystemIntakeActionExpireLCIDMutation({
     refetchQueries: ['GetSystemIntake']
   });
 

@@ -1,15 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { ApolloQueryResult, useQuery } from '@apollo/client';
+import { ApolloQueryResult } from '@apollo/client';
 import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
-import GetTrbRequestQuery from 'gql/legacyGQL/GetTrbRequestQuery';
 import {
-  GetTrbRequest,
-  GetTrbRequest_trbRequest as TrbRequest,
-  GetTrbRequestVariables
-} from 'gql/legacyGQL/types/GetTrbRequest';
+  GetTRBRequestQuery,
+  GetTRBRequestQueryVariables,
+  useGetTRBRequestQuery
+} from 'gql/generated/graphql';
 import { isEqual } from 'lodash';
 
 import Alert from 'components/Alert';
@@ -71,11 +70,11 @@ export type TrbFormAlert =
   | false;
 
 export interface FormStepComponentProps {
-  request: TrbRequest;
+  request: GetTRBRequestQuery['trbRequest'];
   /** Refetch the trb request from the form wrapper */
   refetchRequest: (
-    variables?: Partial<GetTrbRequestVariables> | undefined
-  ) => Promise<ApolloQueryResult<GetTrbRequest>>;
+    variables?: Partial<GetTRBRequestQueryVariables> | undefined
+  ) => Promise<ApolloQueryResult<GetTRBRequestQuery>>;
   /**
    * Set the current form step component submit handler
    * so that in can be used in other places like the header.
@@ -135,7 +134,7 @@ function Header({
 }: {
   step: number;
   /** Unassigned request is used as a loading state toggle. */
-  request?: TrbRequest;
+  request?: GetTRBRequestQuery['trbRequest'];
   breadcrumbBar: React.ReactNode;
   stepsCompleted?: string[];
   stepSubmit: StepSubmit | null;
@@ -283,14 +282,12 @@ function RequestForm() {
     view?: string;
   }>();
 
-  const { data, error, loading, refetch } = useQuery<
-    GetTrbRequest,
-    GetTrbRequestVariables
-  >(GetTrbRequestQuery, {
+  const { data, error, loading, refetch } = useGetTRBRequestQuery({
     variables: { id }
   });
 
-  const request: TrbRequest | undefined = data?.trbRequest;
+  const request: GetTRBRequestQuery['trbRequest'] | undefined =
+    data?.trbRequest;
 
   const {
     data: { requester }

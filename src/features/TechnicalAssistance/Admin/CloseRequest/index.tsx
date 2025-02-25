@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -15,16 +14,10 @@ import {
   ModalRef,
   ModalToggleButton
 } from '@trussworks/react-uswds';
-import CloseTrbRequestQuery from 'gql/legacyGQL/CloseTrbRequestQuery';
-import ReopenTrbRequestQuery from 'gql/legacyGQL/ReopenTrbRequestQuery';
 import {
-  CloseTrbRequest,
-  CloseTrbRequestVariables
-} from 'gql/legacyGQL/types/CloseTrbRequest';
-import {
-  ReopenTrbRequest,
-  ReopenTrbRequestVariables
-} from 'gql/legacyGQL/types/ReopenTrbRequest';
+  useCloseTRBRequestMutation,
+  useReopenTRBRequestMutation
+} from 'gql/generated/graphql';
 
 import Spinner from 'components/Spinner';
 import TextAreaField from 'components/TextAreaField';
@@ -78,15 +71,9 @@ function CloseRequest() {
     }
   });
 
-  const [mutateClose, mutateCloseResult] = useMutation<
-    CloseTrbRequest,
-    CloseTrbRequestVariables
-  >(CloseTrbRequestQuery);
+  const [mutateClose, mutateCloseResult] = useCloseTRBRequestMutation();
 
-  const [mutateReopen, mutateReopenResult] = useMutation<
-    ReopenTrbRequest,
-    ReopenTrbRequestVariables
-  >(ReopenTrbRequestQuery);
+  const [mutateReopen, mutateReopenResult] = useReopenTRBRequestMutation();
 
   const formSubmitting: boolean =
     isSubmitting || mutateCloseResult.loading || mutateReopenResult.loading;

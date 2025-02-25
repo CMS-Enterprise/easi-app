@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
-import { GetTrbRequestHome_trbRequest as GetTrbRequestHomeType } from 'gql/legacyGQL/types/GetTrbRequestHome';
+import { GetTRBRequestHomeQuery } from 'gql/generated/graphql';
 import i18next from 'i18next';
 
 import {
@@ -13,7 +13,7 @@ import InformationCard from '.';
 
 const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
 
-const trbRequest: GetTrbRequestHomeType = {
+const trbRequest: GetTRBRequestHomeQuery['trbRequest'] = {
   id: trbRequestId,
   consultMeetingTime: '2024-01-05T05:00:00Z',
   taskStatuses: {

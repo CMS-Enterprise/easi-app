@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { GridContainer, Icon } from '@trussworks/react-uswds';
-import { GetTrbRequest_trbRequest as TrbRequest } from 'gql/legacyGQL/types/GetTrbRequest';
+import { GetTRBRequestQuery } from 'gql/generated/graphql';
 import { sortBy } from 'lodash';
 
 import Alert from 'components/Alert';
@@ -15,7 +15,7 @@ import Breadcrumbs from '../../../../components/Breadcrumbs';
 import TrbRequestFeedbackList from '../Feedback';
 
 type FeedbackProps = {
-  request: TrbRequest;
+  request: GetTRBRequestQuery['trbRequest'];
   taskListUrl: string;
   prevStep?: string;
 };

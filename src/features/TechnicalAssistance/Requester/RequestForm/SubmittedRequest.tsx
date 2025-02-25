@@ -2,10 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Grid } from '@trussworks/react-uswds';
 import { formatFundingSourcesForRender } from 'features/TechnicalAssistance/Requester/RequestForm/FundingSources/useTrbFundingSources';
-import {
-  GetTrbRequest_trbRequest as TrbRequest,
-  GetTrbRequest_trbRequest_form as TrbRequestForm
-} from 'gql/legacyGQL/types/GetTrbRequest';
+import { GetTRBRequestQuery } from 'gql/generated/graphql';
 import { camelCase, upperFirst } from 'lodash';
 
 import Divider from 'components/Divider';
@@ -22,7 +19,7 @@ import { AttendeesTable } from './AttendeesForm/components';
 import DocumentsTable from './DocumentsTable';
 
 type SubmittedRequestProps = {
-  request: TrbRequest;
+  request: GetTRBRequestQuery['trbRequest'];
   showEditSectionLinks?: boolean;
   showSectionHeadingDescription?: boolean;
   showRequestHeaderInfo?: boolean;
@@ -47,7 +44,7 @@ function SubmittedRequest({
   } = useTRBAttendees(request.id);
 
   /** Wraps valid collabDate in parenthesis */
-  const collabDate = (date: string | null): string =>
+  const collabDate = (date: string | null | undefined): string =>
     date ? ` (${date})` : '';
 
   return (
@@ -217,7 +214,7 @@ function SubmittedRequest({
                         request.form[
                           `collabDate${upperFirst(
                             camelCase(v)
-                          )}` as keyof TrbRequestForm
+                          )}` as keyof GetTRBRequestQuery['trbRequest']['form']
                         ] as string | null
                       )}`;
                     })

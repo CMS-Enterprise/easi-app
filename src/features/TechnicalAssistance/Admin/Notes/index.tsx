@@ -4,10 +4,10 @@ import { Button } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import {
+  GetTRBRequestSummaryQuery,
   TRBAdminNoteFragment,
   useGetTRBAdminNotesQuery
 } from 'gql/generated/graphql';
-import { GetTrbRequestSummary_trbRequest as GetTrbRequestSummaryType } from 'gql/legacyGQL/types/GetTrbRequestSummary';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -20,7 +20,7 @@ import TrbAdminWrapper from '../_components/TrbAdminWrapper';
 
 interface NotesProps {
   trbRequestId: string;
-  trbRequest?: GetTrbRequestSummaryType;
+  trbRequest?: GetTRBRequestSummaryQuery['trbRequest'];
   setModalView?: React.Dispatch<React.SetStateAction<ModalViewType>>;
   modalMessage?: string;
 }

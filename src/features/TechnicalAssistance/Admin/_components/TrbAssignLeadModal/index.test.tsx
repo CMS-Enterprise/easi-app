@@ -6,9 +6,9 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ModalRef } from '@trussworks/react-uswds';
 import {
-  UpdateTrbRequestLeadDocument,
-  UpdateTrbRequestLeadMutation,
-  UpdateTrbRequestLeadMutationVariables
+  UpdateTRBRequestLeadDocument,
+  UpdateTRBRequestLeadMutation,
+  UpdateTRBRequestLeadMutationVariables
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { getTrbLeadOptionsQuery, trbLeadOptions } from 'tests/mock/trbRequest';
@@ -25,11 +25,11 @@ import TrbAssignLeadModal, { TrbAssignLeadModalOpener } from '.';
 const trbLeadInfo = trbLeadOptions[0];
 
 const updateTrbRequestLeadMutation: MockedQuery<
-  UpdateTrbRequestLeadMutation,
-  UpdateTrbRequestLeadMutationVariables
+  UpdateTRBRequestLeadMutation,
+  UpdateTRBRequestLeadMutationVariables
 > = {
   request: {
-    query: UpdateTrbRequestLeadDocument,
+    query: UpdateTRBRequestLeadDocument,
     variables: {
       input: {
         trbRequestId: mockTrbRequestId,

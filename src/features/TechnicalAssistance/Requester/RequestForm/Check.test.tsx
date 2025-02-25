@@ -5,10 +5,9 @@ import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import {
-  GetTrbRequest,
-  GetTrbRequest_trbRequest as TrbRequest,
-  GetTrbRequestVariables
-} from 'gql/legacyGQL/types/GetTrbRequest';
+  GetTRBRequestQuery,
+  GetTRBRequestQueryVariables
+} from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
 import { requester } from 'tests/mock/trbRequest';
 
@@ -28,7 +27,7 @@ import {
 
 import Check from './Check';
 
-const mockTrbRequestData: TrbRequest = {
+const mockTrbRequestData: GetTRBRequestQuery['trbRequest'] = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Lorem ipsum dolor sit amet, consectetur',
   state: TRBRequestState.OPEN,
@@ -81,12 +80,13 @@ const mockTrbRequestData: TrbRequest = {
 };
 
 const mockRefetch = async (
-  variables?: Partial<GetTrbRequestVariables> | undefined
-): Promise<ApolloQueryResult<GetTrbRequest>> => {
+  variables?: Partial<GetTRBRequestQueryVariables> | undefined
+): Promise<ApolloQueryResult<GetTRBRequestQuery>> => {
   return {
     loading: false,
     networkStatus: NetworkStatus.ready,
     data: {
+      __typename: 'Query',
       trbRequest: mockTrbRequestData
     }
   };

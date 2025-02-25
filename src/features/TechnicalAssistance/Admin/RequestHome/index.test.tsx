@@ -2,7 +2,7 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
-import GetTrbRequestHomeQuery from 'gql/legacyGQL/GetTrbRequestHomeQuery';
+import { GetTRBRequestHomeDocument } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { trbRequestSummary } from 'tests/mock/trbRequest';
 
@@ -33,7 +33,7 @@ describe('Trb Admin Request Home', () => {
         mocks={[
           {
             request: {
-              query: GetTrbRequestHomeQuery,
+              query: GetTRBRequestHomeDocument,
               variables: {
                 id: trbRequestId
               }
@@ -127,7 +127,7 @@ describe('Trb Admin Request Home', () => {
         mocks={[
           {
             request: {
-              query: GetTrbRequestHomeQuery,
+              query: GetTRBRequestHomeDocument,
               variables: {
                 id: trbRequestId
               }

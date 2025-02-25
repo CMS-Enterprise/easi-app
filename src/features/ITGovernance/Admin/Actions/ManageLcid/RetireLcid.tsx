@@ -4,12 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
-import CreateSystemIntakeActionChangeLcidRetirementDateQuery from 'gql/legacyGQL/CreateSystemIntakeActionChangeLcidRetirementDateQuery';
+import { useCreateSystemIntakeActionChangeLCIDRetirementDateMutation } from 'gql/generated/graphql';
 import CreateSystemIntakeActionRetireLcidQuery from 'gql/legacyGQL/CreateSystemIntakeActionRetireLcidQuery';
-import {
-  CreateSystemIntakeActionChangeLcidRetirementDate,
-  CreateSystemIntakeActionChangeLcidRetirementDateVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionChangeLcidRetirementDate';
 import {
   CreateSystemIntakeActionRetireLcid,
   CreateSystemIntakeActionRetireLcidVariables
@@ -69,12 +65,10 @@ const RetireLcid = ({
     refetchQueries: ['GetSystemIntake']
   });
 
-  const [updateRetireDate] = useMutation<
-    CreateSystemIntakeActionChangeLcidRetirementDate,
-    CreateSystemIntakeActionChangeLcidRetirementDateVariables
-  >(CreateSystemIntakeActionChangeLcidRetirementDateQuery, {
-    refetchQueries: ['GetSystemIntake']
-  });
+  const [updateRetireDate] =
+    useCreateSystemIntakeActionChangeLCIDRetirementDateMutation({
+      refetchQueries: ['GetSystemIntake']
+    });
 
   /**
    * Retire LCID on form submit

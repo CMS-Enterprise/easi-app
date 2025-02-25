@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import {
   Alert,
   Breadcrumb,
@@ -14,12 +13,10 @@ import {
   Icon
 } from '@trussworks/react-uswds';
 import TeamTable from 'features/Systems/SystemWorkspace/components/TeamTable';
-import { SetRolesForUserOnSystemQuery } from 'gql/legacyGQL/CedarRoleQueries';
-import { CedarRole } from 'gql/legacyGQL/types/CedarRole';
 import {
-  SetRolesForUserOnSystem,
-  SetRolesForUserOnSystemVariables
-} from 'gql/legacyGQL/types/SetRolesForUserOnSystem';
+  CedarRole,
+  useSetRolesForUserOnSystemMutation
+} from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -138,10 +135,7 @@ const EditTeam = ({
 
   const actionType = state?.user ? 'edit' : 'add';
 
-  const [updateRoles, { loading }] = useMutation<
-    SetRolesForUserOnSystem,
-    SetRolesForUserOnSystemVariables
-  >(SetRolesForUserOnSystemQuery, {
+  const [updateRoles, { loading }] = useSetRolesForUserOnSystemMutation({
     refetchQueries: ['GetSystemProfile']
   });
 

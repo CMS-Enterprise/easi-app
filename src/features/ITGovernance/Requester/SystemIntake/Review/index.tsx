@@ -1,14 +1,9 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { SubmitIntake as SubmitIntakeQuery } from 'gql/legacyGQL/SystemIntakeQueries';
-import {
-  SubmitIntake,
-  SubmitIntakeVariables
-} from 'gql/legacyGQL/types/SubmitIntake';
+import { useSubmitIntakeMutation } from 'gql/generated/graphql';
 import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
 
 import FeedbackBanner from 'components/FeedbackBanner';
@@ -25,10 +20,7 @@ const Review = ({ systemIntake }: ReviewProps) => {
   const history = useHistory();
   const { t } = useTranslation('intake');
 
-  const [mutate, mutationResult] = useMutation<
-    SubmitIntake,
-    SubmitIntakeVariables
-  >(SubmitIntakeQuery);
+  const [mutate, mutationResult] = useSubmitIntakeMutation();
 
   const hasEditsRequested =
     systemIntake.requestFormState === SystemIntakeFormState.EDITS_REQUESTED;

@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import {
   Button,
   CardGroup,
@@ -9,11 +8,7 @@ import {
   GridContainer
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import GetSystemWorkspaceQuery from 'gql/legacyGQL/GetSystemWorkspaceQuery';
-import {
-  GetSystemWorkspace,
-  GetSystemWorkspaceVariables
-} from 'gql/legacyGQL/types/GetSystemWorkspace';
+import { useGetSystemWorkspaceQuery } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { getAtoStatus } from 'components/AtoStatus';
@@ -43,10 +38,7 @@ export const SystemWorkspace = () => {
     systemId: string;
   }>();
 
-  const { loading, error, data } = useQuery<
-    GetSystemWorkspace,
-    GetSystemWorkspaceVariables
-  >(GetSystemWorkspaceQuery, {
+  const { loading, error, data } = useGetSystemWorkspaceQuery({
     variables: {
       cedarSystemId: systemId
     }

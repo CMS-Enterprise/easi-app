@@ -4,14 +4,16 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import CloseTrbRequestQuery from 'gql/legacyGQL/CloseTrbRequestQuery';
-import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
-import ReopenTrbRequestQuery from 'gql/legacyGQL/ReopenTrbRequestQuery';
-import { GetTRBRequestAttendeesQuery } from 'gql/legacyGQL/TrbAttendeeQueries';
+import {
+  CloseTRBRequestDocument,
+  GetTRBRequestAttendeesDocument,
+  GetTRBRequestSummaryDocument,
+  PersonRole,
+  ReopenTRBRequestDocument
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { PersonRole } from 'types/graphql-global-types';
 import easiMockStore from 'utils/testing/easiMockStore';
 
 import TRBRequestInfoWrapper from '../_components/RequestContext';
@@ -39,7 +41,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
 
   const getAttendeesQuery = {
     request: {
-      query: GetTRBRequestAttendeesQuery,
+      query: GetTRBRequestAttendeesDocument,
       variables: {
         id
       }
@@ -75,7 +77,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
           mocks={[
             {
               request: {
-                query: CloseTrbRequestQuery,
+                query: CloseTRBRequestDocument,
                 variables: {
                   input: {
                     id,
@@ -96,7 +98,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
             },
             {
               request: {
-                query: GetTrbRequestSummaryQuery,
+                query: GetTRBRequestSummaryDocument,
                 variables: {
                   id
                 }
@@ -209,7 +211,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
           getAttendeesQuery,
           {
             request: {
-              query: CloseTrbRequestQuery,
+              query: CloseTRBRequestDocument,
               variables: {
                 input: {
                   id,
@@ -278,7 +280,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
           mocks={[
             {
               request: {
-                query: ReopenTrbRequestQuery,
+                query: ReopenTRBRequestDocument,
                 variables: {
                   input: {
                     trbRequestId: id,
@@ -299,7 +301,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
             },
             {
               request: {
-                query: GetTrbRequestSummaryQuery,
+                query: GetTRBRequestSummaryDocument,
                 variables: {
                   id
                 }
@@ -405,7 +407,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
           getAttendeesQuery,
           {
             request: {
-              query: ReopenTrbRequestQuery,
+              query: ReopenTRBRequestDocument,
               variables: {
                 input: {
                   trbRequestId: id,
