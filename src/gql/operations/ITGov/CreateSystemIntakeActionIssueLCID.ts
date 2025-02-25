@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  mutation CreateSystemIntakeActionIssueLcid(
+  mutation CreateSystemIntakeActionIssueLCID(
     $input: SystemIntakeIssueLCIDInput!
   ) {
     createSystemIntakeActionIssueLCID(input: $input) {
