@@ -47,7 +47,7 @@ import (
 )
 
 // publishTimeUTC is the time of day (in UTC) when the system intakes are published to CEDAR
-const publishTimeUTC = 7 // 7 UTC is 2am ESTc
+const publishTimeUTC = 7 // 7 UTC is 2am EST
 
 func (s *Server) routes() {
 
@@ -351,7 +351,7 @@ func (s *Server) routes() {
 
 	// This code publishes all system intakes to CEDAR's intake API
 	go publisher.PublishOnSchedule(
-		appcontext.WithLogger(context.Background(), s.logger),
+		appcontext.WithLogger(context.Background(), s.logger), // this requires the context to have a data loader each time published. This is built later in the call stack
 		store,
 		time.Friday,
 		publishTimeUTC,

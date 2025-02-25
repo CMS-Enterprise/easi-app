@@ -15,6 +15,7 @@ import (
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -22,6 +23,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/client/health_check"
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/client/intake"
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/translation"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -130,7 +132,7 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 		return nil
 	}
 
-	input, err := model.CreateIntakeModel(ctx)
+	input, err := model.CreateIntakeModel(ctx) //note this requires a data loader on the context
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -186,23 +188,34 @@ func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, da
 			nextPublish,
 			time.Now().UTC().Add(nextPublish).Format(time.RFC3339),
 		))
+		decoratedLogger := logger.With(zap.Any("cedarPublisherTraceID", uuid.New()))
 		time.Sleep(nextPublish)
+		// We need to build the data loaders each time that we publish the de
+		//TODO (cedar) implement the loader
+		buildDataloaders := func() *dataloaders.Dataloaders {
+			return dataloaders.NewDataloaders(
+				store,
+				func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
+				func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
+			)
+		}
+		contextWithLoader := dataloaders.CTXWithLoaders(ctx, buildDataloaders)
 
 		logger.Info("running scheduled intake publish to CEDAR")
-		c.publishIntakeAndBusinessCase(ctx, store)
+		c.publishIntakeAndBusinessCase(contextWithLoader, decoratedLogger, store)
 	}
 }
 
-func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, store *storage.Store) {
+func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, logger *zap.Logger, store *storage.Store) {
 	allIntakes, err := store.FetchSystemIntakes(ctx)
 	if err != nil {
-		appcontext.ZLogger(ctx).Warn("failed to fetch intakes when publishing to CEDAR", zap.Error(err))
+		logger.Warn("failed to fetch intakes when publishing to CEDAR", zap.Error(err))
 		return
 	}
 	for _, intake := range allIntakes {
-		err = c.PublishSystemIntake(ctx, intake)
+		err = c.PublishSystemIntake(ctx, intake) // NOTE this needs a dataloader on the context
 		if err != nil {
-			appcontext.ZLogger(ctx).Warn(
+			logger.Warn(
 				"failed to publish intake when publishing to CEDAR",
 				zap.String("id", intake.ID.String()),
 				zap.Error(err),
@@ -211,8 +224,8 @@ func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, store *storag
 		if intake.BusinessCaseID == nil {
 			continue
 		}
-		businessCase, err := store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
-		appcontext.ZLogger(ctx).Warn(
+		businessCase, err := store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID) // NOTE this needs a dataloader on the context
+		logger.Warn(
 			"failed to fetch Business Case for intake when publishing to CEDAR",
 			zap.String("id", intake.ID.String()),
 			zap.Error(err),
@@ -222,7 +235,7 @@ func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, store *storag
 		}
 		err = c.PublishBusinessCase(ctx, *businessCase)
 		if err != nil {
-			appcontext.ZLogger(ctx).Warn(
+			logger.Warn(
 				"failed to publish Business Case to CEDAR",
 				zap.String("id", intake.ID.String()),
 				zap.Error(err),
