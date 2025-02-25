@@ -19,10 +19,32 @@ const GovTaskGrbMeeting = ({
   grbDate,
   grbReviewType,
   grbReviewStartedAt,
-  grbReviewAsyncEndDate
+  grbReviewAsyncRecordingTime,
+  grbReviewAsyncEndDate,
+  grbReviewStandardGRBMeetingTime,
+  grbReviewAsyncGRBMeetingTime
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'grbMeeting';
   const { t } = useTranslation('itGov');
+
+  const dateMapping: Record<
+    SystemIntakeGRBReviewType,
+    Partial<Record<ITGovGRBStatus, string | null>>
+  > = {
+    STANDARD: {
+      SCHEDULED: grbReviewStandardGRBMeetingTime,
+      AWAITING_DECISION: grbReviewStartedAt,
+      COMPLETED: grbReviewStartedAt
+    },
+    ASYNC: {
+      SCHEDULED: grbReviewAsyncRecordingTime,
+      AWAITING_GRB_REVIEW: grbReviewAsyncGRBMeetingTime,
+      AWAITING_DECISION: grbReviewAsyncEndDate,
+      COMPLETED: grbReviewAsyncEndDate
+    }
+  };
+
+  const dateValue = dateMapping[grbReviewType][grbMeetingStatus];
 
   return (
     <TaskListItem
@@ -54,7 +76,9 @@ const GovTaskGrbMeeting = ({
                 {t(
                   `taskList.step.${stepKey}.alertType.${grbReviewType}.${grbMeetingStatus}`,
                   {
-                    date: formatDateUtc(grbDate, 'MMMM d, yyyy')
+                    date: dateValue
+                      ? formatDateUtc(dateValue, 'MM/dd/yyyy')
+                      : null
                   }
                 )}
               </Alert>
