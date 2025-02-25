@@ -183,13 +183,13 @@ func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, da
 	}
 
 	for {
+		decoratedLogger := logger.With(logfields.TraceField(uuid.New().String()), logfields.CedarPublisherAppSection)
 		nextPublish := getDurationUntilNextDayAndTime(time.Now().UTC(), dayOfWeek, hourInUTC)
-		logger.Info(fmt.Sprintf(
+		decoratedLogger.Info(fmt.Sprintf(
 			"next intake publish to CEDAR in %s at %s",
 			nextPublish,
 			time.Now().UTC().Add(nextPublish).Format(time.RFC3339),
 		))
-		decoratedLogger := logger.With(logfields.TraceField(uuid.New().String()), logfields.CedarPublisherAppSection)
 		time.Sleep(nextPublish)
 		// We need to build the data loaders each time that we publish the details to CEDAR
 		contextWithLoader := dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
@@ -200,6 +200,7 @@ func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, da
 }
 
 func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, logger *zap.Logger, store *storage.Store) {
+	logger.Info("publishing intakes to CEDAR")
 	allIntakes, err := store.FetchSystemIntakes(ctx)
 	if err != nil {
 		logger.Warn("failed to fetch intakes when publishing to CEDAR", zap.Error(err))
