@@ -83,6 +83,8 @@ export default {
           'The Governance Admin Team will select whether this review will be completed in a synchronous (meeting) format or an asynchronous review format and will direct you to complete any additional necessary steps. During the review, the Governance Review Board (GRB) will discuss and make a decision based on your Business Case and any recommendations from the Governance Review Team (GRT). You may be asked to answer questions about your project.',
         link: 'Prepare for the GRB review (opens in a new tab)',
         button: 'Prepare for the GRB review',
+        learnMore: 'Learn more about the GRB review types',
+        presentationUploadButton: 'Upload presentation deck',
         scheduledInfo: 'GRB review scheduled for {{date}}.',
         attendedInfo: 'You attended the GRB review on {{date}}.',
         reviewType: '<strong>Review type:</strong> {{type}}',
