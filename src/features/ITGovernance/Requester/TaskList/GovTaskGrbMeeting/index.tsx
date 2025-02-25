@@ -12,7 +12,10 @@ import { formatDateUtc } from 'utils/date';
 const GovTaskGrbMeeting = ({
   itGovTaskStatuses: { grbMeetingStatus },
   state,
-  grbDate
+  grbDate,
+  grbReviewType,
+  grbReviewStartedAt,
+  grbReviewAsyncEndDate
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'grbMeeting';
   const { t } = useTranslation('itGov');
@@ -36,7 +39,7 @@ const GovTaskGrbMeeting = ({
                   components={{
                     strong: <strong />
                   }}
-                  values={{ type: 'TO_BE_CHANGED' }}
+                  values={{ type: grbReviewType }}
                 />
               </p>
               <Alert slim type="info">

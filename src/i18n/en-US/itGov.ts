@@ -87,7 +87,11 @@ export default {
         presentationUploadButton: 'Upload presentation deck',
         scheduledInfo: 'GRB review scheduled for {{date}}.',
         attendedInfo: 'You attended the GRB review on {{date}}.',
-        reviewType: '<strong>Review type:</strong> {{type}}',
+        reviewType: {
+          copy: '<strong>Review type:</strong> {{type}}',
+          STANDARD: 'Standard GRB meeting',
+          ASYNC: 'Asynchronous'
+        },
         alertType: {
           READY_TO_SCHEDULE:
             'The Governance Admin Team may schedule a time to asynchronously record your presentation.',
