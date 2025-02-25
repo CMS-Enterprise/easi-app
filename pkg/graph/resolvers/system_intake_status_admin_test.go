@@ -7,6 +7,7 @@ import (
 	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -77,6 +78,21 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAClosed,
+			expectError:    false,
+		},
+		{
+			testCase: "Async GRB - In Review",
+			intake: models.SystemIntake{
+				Step:             models.SystemIntakeStepGRBMEETING,
+				RequestFormState: models.SIRFSSubmitted,
+				DecisionState:    models.SIDSNoDecision,
+				State:            models.SystemIntakeStateOpen,
+				GrbReviewType:    models.SystemIntakeGRBReviewTypeAsync,
+
+				GrbReviewAsyncGRBMeetingTime: helpers.PointerTo(time.Now().Add(-1 * time.Hour)),
+				GrbReviewAsyncEndDate:        helpers.PointerTo(time.Now().Add(1 * time.Hour)),
+			},
+			expectedStatus: models.SISAGrbReviewInProgress,
 			expectError:    false,
 		},
 	}
