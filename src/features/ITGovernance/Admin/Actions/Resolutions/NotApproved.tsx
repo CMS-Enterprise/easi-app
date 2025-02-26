@@ -1,14 +1,12 @@
 import React, { useContext } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup, Radio } from '@trussworks/react-uswds';
-import CreateSystemIntakeActionRejectIntakeQuery from 'gql/legacyGQL/CreateSystemIntakeActionRejectIntakeQuery';
 import {
-  CreateSystemIntakeActionRejectIntake,
-  CreateSystemIntakeActionRejectIntakeVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionRejectIntake';
+  SystemIntakeRejectIntakeInput,
+  useCreateSystemIntakeActionRejectIntakeMutation
+} from 'gql/generated/graphql';
 
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
@@ -16,7 +14,6 @@ import Label from 'components/Label';
 import RichTextEditor from 'components/RichTextEditor';
 import {
   SystemIntakeDecisionState,
-  SystemIntakeRejectIntakeInput,
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
@@ -51,10 +48,7 @@ const NotApproved = ({
   /** Edits requested form key for confirmation modal */
   const editsRequestedKey = useContext(EditsRequestedContext);
 
-  const [rejectIntake] = useMutation<
-    CreateSystemIntakeActionRejectIntake,
-    CreateSystemIntakeActionRejectIntakeVariables
-  >(CreateSystemIntakeActionRejectIntakeQuery, {
+  const [rejectIntake] = useCreateSystemIntakeActionRejectIntakeMutation({
     refetchQueries
   });
 

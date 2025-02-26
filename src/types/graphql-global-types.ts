@@ -505,35 +505,6 @@ export interface EmailNotificationRecipients {
 }
 
 /**
- * Input for setting an intake's decision to issuing an LCID in IT Gov v2
- */
-export interface SystemIntakeIssueLCIDInput {
-  systemIntakeID: UUID;
-  lcid?: string | null;
-  expiresAt: Time;
-  scope: HTML;
-  nextSteps: HTML;
-  trbFollowUp: SystemIntakeTRBFollowUp;
-  costBaseline?: string | null;
-  additionalInfo?: HTML | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
-  adminNote?: HTML | null;
-}
-
-/**
- * Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
- */
-export interface SystemIntakeRejectIntakeInput {
-  systemIntakeID: UUID;
-  reason: HTML;
-  nextSteps: HTML;
-  trbFollowUp: SystemIntakeTRBFollowUp;
-  additionalInfo?: HTML | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
-  adminNote?: HTML | null;
-}
-
-/**
  * Input for creating a Reopen Request Action in Admin Actions v2
  */
 export interface SystemIntakeReopenRequestInput {

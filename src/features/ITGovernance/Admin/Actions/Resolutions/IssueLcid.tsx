@@ -6,6 +6,7 @@ import { FormGroup, Radio, Select } from '@trussworks/react-uswds';
 import {
   CreateSystemIntakeActionConfirmLCIDMutationVariables,
   CreateSystemIntakeActionIssueLCIDMutationVariables,
+  SystemIntakeIssueLCIDInput,
   useCreateSystemIntakeActionConfirmLCIDMutation,
   useCreateSystemIntakeActionIssueLCIDMutation
 } from 'gql/generated/graphql';
@@ -27,7 +28,6 @@ import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import {
   SystemIntakeDecisionState,
-  SystemIntakeIssueLCIDInput,
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
