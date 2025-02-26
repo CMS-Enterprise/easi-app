@@ -208,11 +208,6 @@ export enum SystemIntakeFormStep {
   INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
 }
 
-export enum SystemIntakeGRBReviewType {
-  ASYNC = "ASYNC",
-  STANDARD = "STANDARD",
-}
-
 /**
  * The possible statuses that an issued LCID can be in
  */
@@ -309,16 +304,6 @@ export enum SystemIntakeStep {
   GRB_MEETING = "GRB_MEETING",
   GRT_MEETING = "GRT_MEETING",
   INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
-}
-
-/**
- * Steps in the system intake process that a Progress to New Step action can progress to
- */
-export enum SystemIntakeStepToProgressTo {
-  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
-  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
-  GRB_MEETING = "GRB_MEETING",
-  GRT_MEETING = "GRT_MEETING",
 }
 
 /**
@@ -535,21 +520,6 @@ export interface SystemIntakeIssueLCIDInput {
   additionalInfo?: HTML | null;
   notificationRecipients?: EmailNotificationRecipients | null;
   adminNote?: HTML | null;
-}
-
-/**
- * Input for submitting a Progress to New Step action in IT Gov v2
- */
-export interface SystemIntakeProgressToNewStepsInput {
-  systemIntakeID: UUID;
-  newStep: SystemIntakeStepToProgressTo;
-  meetingDate?: Time | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
-  feedback?: HTML | null;
-  grbRecommendations?: HTML | null;
-  additionalInfo?: HTML | null;
-  adminNote?: HTML | null;
-  grbReviewType?: SystemIntakeGRBReviewType | null;
 }
 
 /**
