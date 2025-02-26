@@ -8,6 +8,7 @@ import (
 	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -106,6 +107,110 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRClosed,
+				errorExpected:  false,
+			},
+			{
+				testName: "Sync GRB  - Meeting Ready. Missing date",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepGRBMEETING,
+					RequestFormState: models.SIRFSInProgress,
+					State:            models.SystemIntakeStateOpen,
+					DecisionState:    models.SIDSNoDecision,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "Sync GRB  - Meeting Ready",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepGRBMEETING,
+					RequestFormState: models.SIRFSInProgress,
+					State:            models.SystemIntakeStateOpen,
+					DecisionState:    models.SIDSNoDecision,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
+					GRBDate:          &tomorrow,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "Sync GRB  - Awaiting Decision",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepGRBMEETING,
+					RequestFormState: models.SIRFSInProgress,
+					State:            models.SystemIntakeStateOpen,
+					DecisionState:    models.SIDSNoDecision,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
+					GRBDate:          &yesterday,
+				},
+				expectedStatus: models.SISRGrbMeetingAwaitingDecision,
+				errorExpected:  false,
+			},
+			{
+				testName: "Async GRB  - Ready for review. Missing dates",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepGRBMEETING,
+					RequestFormState: models.SIRFSInProgress,
+					State:            models.SystemIntakeStateOpen,
+					DecisionState:    models.SIDSNoDecision,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeAsync,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "Async GRB  - Ready for review. Start date missing",
+				intake: models.SystemIntake{
+					Step:                  models.SystemIntakeStepGRBMEETING,
+					RequestFormState:      models.SIRFSInProgress,
+					State:                 models.SystemIntakeStateOpen,
+					DecisionState:         models.SIDSNoDecision,
+					GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+					GrbReviewAsyncEndDate: &tomorrow,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "Async GRB  - Ready for review. End date missing",
+				intake: models.SystemIntake{
+					Step:               models.SystemIntakeStepGRBMEETING,
+					RequestFormState:   models.SIRFSInProgress,
+					State:              models.SystemIntakeStateOpen,
+					DecisionState:      models.SIDSNoDecision,
+					GrbReviewType:      models.SystemIntakeGRBReviewTypeAsync,
+					GRBReviewStartedAt: &yesterday,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "Async GRB  - Review in progress",
+				intake: models.SystemIntake{
+					Step:                  models.SystemIntakeStepGRBMEETING,
+					RequestFormState:      models.SIRFSInProgress,
+					State:                 models.SystemIntakeStateOpen,
+					DecisionState:         models.SIDSNoDecision,
+					GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+					GRBReviewStartedAt:    &yesterday,
+					GrbReviewAsyncEndDate: &tomorrow,
+				},
+				expectedStatus: models.SISRGrbReviewInProgress,
+				errorExpected:  false,
+			},
+			{
+				testName: "Async GRB  - Awaiting decision",
+				intake: models.SystemIntake{
+					Step:                  models.SystemIntakeStepGRBMEETING,
+					RequestFormState:      models.SIRFSInProgress,
+					State:                 models.SystemIntakeStateOpen,
+					DecisionState:         models.SIDSNoDecision,
+					GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+					GRBReviewStartedAt:    helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
+					GrbReviewAsyncEndDate: &yesterday,
+				},
+				expectedStatus: models.SISRGrbMeetingAwaitingDecision,
 				errorExpected:  false,
 			},
 		},
