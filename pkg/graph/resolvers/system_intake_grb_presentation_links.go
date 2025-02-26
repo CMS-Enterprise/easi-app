@@ -8,6 +8,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
@@ -44,6 +45,13 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 
 	if value, ok := input.TranscriptLink.ValueOK(); ok {
 		links.TranscriptLink = value
+
+		// if setting a transcript link, we need to also un-set all the other transcript-related fields
+		// for the transcript_link_or_doc_null_check SQL check
+		if value != nil {
+			links.TranscriptFileName = nil
+			links.TranscriptS3Key = nil
+		}
 	}
 
 	links.ModifiedBy = &userID
@@ -113,7 +121,7 @@ func SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx context.Context, s3Cl
 	return helpers.PointerTo(data.URL), nil
 }
 
-func SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx context.Context, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*models.SystemIntakeDocumentStatus, error) {
+func SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx context.Context, logger *zap.Logger, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*models.SystemIntakeDocumentStatus, error) {
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
@@ -129,7 +137,8 @@ func SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx context.Context, s
 
 	fileStatus, err := GetStatusForSystemIntakeDocument(s3Client, *links.TranscriptS3Key)
 	if err != nil {
-		return nil, err
+		logger.Warn("failed to get status for GRBPresentationLinksTranscriptFileStatus", zap.Error(err), zap.Any("s3Key", links.TranscriptS3Key), zap.Any("systemIntakeID", systemIntakeID))
+		return nil, nil
 	}
 
 	return helpers.PointerTo(fileStatus), nil
@@ -157,7 +166,7 @@ func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context
 	return helpers.PointerTo(data.URL), nil
 }
 
-func SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx context.Context, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*models.SystemIntakeDocumentStatus, error) {
+func SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx context.Context, logger *zap.Logger, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*models.SystemIntakeDocumentStatus, error) {
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
@@ -173,7 +182,8 @@ func SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx context.Cont
 
 	fileStatus, err := GetStatusForSystemIntakeDocument(s3Client, *links.PresentationDeckS3Key)
 	if err != nil {
-		return nil, err
+		logger.Warn("failed to get status for GRBPresentationDeckFileStatus", zap.Error(err), zap.Any("s3Key", links.TranscriptS3Key), zap.Any("systemIntakeID", systemIntakeID))
+		return nil, nil
 	}
 
 	return helpers.PointerTo(fileStatus), nil

@@ -2007,7 +2007,8 @@ func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileURL(ctx context
 
 // TranscriptFileStatus is the resolver for the transcriptFileStatus field.
 func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error) {
-	return resolvers.SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx, r.s3Client, obj.SystemIntakeID)
+	logger := appcontext.ZLogger(ctx)
+	return resolvers.SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx, logger, r.s3Client, obj.SystemIntakeID)
 }
 
 // PresentationDeckFileURL is the resolver for the presentationDeckFileURL field.
@@ -2017,7 +2018,8 @@ func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileURL(ctx c
 
 // PresentationDeckFileStatus is the resolver for the presentationDeckFileStatus field.
 func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error) {
-	return resolvers.SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx, r.s3Client, obj.SystemIntakeID)
+	logger := appcontext.ZLogger(ctx)
+	return resolvers.SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx, logger, r.s3Client, obj.SystemIntakeID)
 }
 
 // VotingRole is the resolver for the votingRole field.
