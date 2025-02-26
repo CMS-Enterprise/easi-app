@@ -27,12 +27,12 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
+  GetCedarSystemIsBookmarkedDocument,
+  GetCedarSystemsQuery,
   useCreateCedarSystemBookmarkMutation,
   useDeleteCedarSystemBookmarkMutation
 } from 'gql/generated/graphql';
-import GetCedarSystemIsBookmarkedQuery from 'gql/legacyGQL/GetCedarSystemIsBookmarkedQuery';
 import GetMyCedarSystemsQuery from 'gql/legacyGQL/GetMyCedarSystemsQuery';
-import { GetCedarSystems_cedarSystems as CedarSystem } from 'gql/legacyGQL/types/GetCedarSystems';
 import { GetMyCedarSystems as GetMyCedarSystemsType } from 'gql/legacyGQL/types/GetMyCedarSystems';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -53,6 +53,8 @@ import {
 } from 'utils/tableSort';
 
 import '../index.scss';
+
+type CedarSystem = GetCedarSystemsQuery['cedarSystems'][number];
 
 export type SystemTableType =
   | 'all-systems'
@@ -141,7 +143,7 @@ export const Table = ({
         },
         refetchQueries: [
           {
-            query: GetCedarSystemIsBookmarkedQuery,
+            query: GetCedarSystemIsBookmarkedDocument,
             variables: { id: cedarSystemId }
           }
         ]

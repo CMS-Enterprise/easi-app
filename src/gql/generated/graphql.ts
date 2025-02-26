@@ -3797,6 +3797,37 @@ export type GetCedarContactsQueryVariables = Exact<{
 
 export type GetCedarContactsQuery = { __typename: 'Query', cedarPersonsByCommonName: Array<{ __typename: 'UserInfo', commonName: string, email: EmailAddress, euaUserId: string }> };
 
+export type GetCedarSubSystemsQueryVariables = Exact<{
+  cedarSystemId: Scalars['String']['input'];
+}>;
+
+
+export type GetCedarSubSystemsQuery = { __typename: 'Query', cedarSubSystems: Array<{ __typename: 'CedarSubSystem', id: string, name: string, acronym?: string | null, description?: string | null }> };
+
+export type GetCedarSystemQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type GetCedarSystemQuery = { __typename: 'Query', cedarSystem?: { __typename: 'CedarSystem', id: string, name: string, description?: string | null, acronym?: string | null, status?: string | null, businessOwnerOrg?: string | null, businessOwnerOrgComp?: string | null, systemMaintainerOrg?: string | null, systemMaintainerOrgComp?: string | null, isBookmarked: boolean } | null };
+
+export type GetCedarSystemIDsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCedarSystemIDsQuery = { __typename: 'Query', cedarSystems: Array<{ __typename: 'CedarSystem', id: string, name: string }> };
+
+export type GetCedarSystemIsBookmarkedQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type GetCedarSystemIsBookmarkedQuery = { __typename: 'Query', cedarSystem?: { __typename: 'CedarSystem', id: string, isBookmarked: boolean } | null };
+
+export type GetCedarSystemsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCedarSystemsQuery = { __typename: 'Query', cedarSystems: Array<{ __typename: 'CedarSystem', id: string, name: string, description?: string | null, acronym?: string | null, status?: string | null, businessOwnerOrg?: string | null, businessOwnerOrgComp?: string | null, systemMaintainerOrg?: string | null, systemMaintainerOrgComp?: string | null, isBookmarked: boolean, atoExpirationDate?: Time | null, linkedTrbRequests: Array<{ __typename: 'TRBRequest', id: UUID }>, linkedSystemIntakes: Array<{ __typename: 'SystemIntake', id: UUID }> }> };
+
 export type GetSystemProfileQueryVariables = Exact<{
   cedarSystemId: Scalars['String']['input'];
 }>;
@@ -6841,6 +6872,234 @@ export type GetCedarContactsQueryHookResult = ReturnType<typeof useGetCedarConta
 export type GetCedarContactsLazyQueryHookResult = ReturnType<typeof useGetCedarContactsLazyQuery>;
 export type GetCedarContactsSuspenseQueryHookResult = ReturnType<typeof useGetCedarContactsSuspenseQuery>;
 export type GetCedarContactsQueryResult = Apollo.QueryResult<GetCedarContactsQuery, GetCedarContactsQueryVariables>;
+export const GetCedarSubSystemsDocument = gql`
+    query GetCedarSubSystems($cedarSystemId: String!) {
+  cedarSubSystems(cedarSystemId: $cedarSystemId) {
+    id
+    name
+    acronym
+    description
+  }
+}
+    `;
+
+/**
+ * __useGetCedarSubSystemsQuery__
+ *
+ * To run a query within a React component, call `useGetCedarSubSystemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCedarSubSystemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCedarSubSystemsQuery({
+ *   variables: {
+ *      cedarSystemId: // value for 'cedarSystemId'
+ *   },
+ * });
+ */
+export function useGetCedarSubSystemsQuery(baseOptions: Apollo.QueryHookOptions<GetCedarSubSystemsQuery, GetCedarSubSystemsQueryVariables> & ({ variables: GetCedarSubSystemsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCedarSubSystemsQuery, GetCedarSubSystemsQueryVariables>(GetCedarSubSystemsDocument, options);
+      }
+export function useGetCedarSubSystemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCedarSubSystemsQuery, GetCedarSubSystemsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCedarSubSystemsQuery, GetCedarSubSystemsQueryVariables>(GetCedarSubSystemsDocument, options);
+        }
+export function useGetCedarSubSystemsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCedarSubSystemsQuery, GetCedarSubSystemsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCedarSubSystemsQuery, GetCedarSubSystemsQueryVariables>(GetCedarSubSystemsDocument, options);
+        }
+export type GetCedarSubSystemsQueryHookResult = ReturnType<typeof useGetCedarSubSystemsQuery>;
+export type GetCedarSubSystemsLazyQueryHookResult = ReturnType<typeof useGetCedarSubSystemsLazyQuery>;
+export type GetCedarSubSystemsSuspenseQueryHookResult = ReturnType<typeof useGetCedarSubSystemsSuspenseQuery>;
+export type GetCedarSubSystemsQueryResult = Apollo.QueryResult<GetCedarSubSystemsQuery, GetCedarSubSystemsQueryVariables>;
+export const GetCedarSystemDocument = gql`
+    query GetCedarSystem($id: String!) {
+  cedarSystem(cedarSystemId: $id) {
+    id
+    name
+    description
+    acronym
+    status
+    businessOwnerOrg
+    businessOwnerOrgComp
+    systemMaintainerOrg
+    systemMaintainerOrgComp
+    isBookmarked
+  }
+}
+    `;
+
+/**
+ * __useGetCedarSystemQuery__
+ *
+ * To run a query within a React component, call `useGetCedarSystemQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCedarSystemQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCedarSystemQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCedarSystemQuery(baseOptions: Apollo.QueryHookOptions<GetCedarSystemQuery, GetCedarSystemQueryVariables> & ({ variables: GetCedarSystemQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCedarSystemQuery, GetCedarSystemQueryVariables>(GetCedarSystemDocument, options);
+      }
+export function useGetCedarSystemLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCedarSystemQuery, GetCedarSystemQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCedarSystemQuery, GetCedarSystemQueryVariables>(GetCedarSystemDocument, options);
+        }
+export function useGetCedarSystemSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCedarSystemQuery, GetCedarSystemQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCedarSystemQuery, GetCedarSystemQueryVariables>(GetCedarSystemDocument, options);
+        }
+export type GetCedarSystemQueryHookResult = ReturnType<typeof useGetCedarSystemQuery>;
+export type GetCedarSystemLazyQueryHookResult = ReturnType<typeof useGetCedarSystemLazyQuery>;
+export type GetCedarSystemSuspenseQueryHookResult = ReturnType<typeof useGetCedarSystemSuspenseQuery>;
+export type GetCedarSystemQueryResult = Apollo.QueryResult<GetCedarSystemQuery, GetCedarSystemQueryVariables>;
+export const GetCedarSystemIDsDocument = gql`
+    query GetCedarSystemIDs {
+  cedarSystems {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetCedarSystemIDsQuery__
+ *
+ * To run a query within a React component, call `useGetCedarSystemIDsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCedarSystemIDsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCedarSystemIDsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCedarSystemIDsQuery(baseOptions?: Apollo.QueryHookOptions<GetCedarSystemIDsQuery, GetCedarSystemIDsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCedarSystemIDsQuery, GetCedarSystemIDsQueryVariables>(GetCedarSystemIDsDocument, options);
+      }
+export function useGetCedarSystemIDsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCedarSystemIDsQuery, GetCedarSystemIDsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCedarSystemIDsQuery, GetCedarSystemIDsQueryVariables>(GetCedarSystemIDsDocument, options);
+        }
+export function useGetCedarSystemIDsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCedarSystemIDsQuery, GetCedarSystemIDsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCedarSystemIDsQuery, GetCedarSystemIDsQueryVariables>(GetCedarSystemIDsDocument, options);
+        }
+export type GetCedarSystemIDsQueryHookResult = ReturnType<typeof useGetCedarSystemIDsQuery>;
+export type GetCedarSystemIDsLazyQueryHookResult = ReturnType<typeof useGetCedarSystemIDsLazyQuery>;
+export type GetCedarSystemIDsSuspenseQueryHookResult = ReturnType<typeof useGetCedarSystemIDsSuspenseQuery>;
+export type GetCedarSystemIDsQueryResult = Apollo.QueryResult<GetCedarSystemIDsQuery, GetCedarSystemIDsQueryVariables>;
+export const GetCedarSystemIsBookmarkedDocument = gql`
+    query GetCedarSystemIsBookmarked($id: String!) {
+  cedarSystem(cedarSystemId: $id) {
+    id
+    isBookmarked
+  }
+}
+    `;
+
+/**
+ * __useGetCedarSystemIsBookmarkedQuery__
+ *
+ * To run a query within a React component, call `useGetCedarSystemIsBookmarkedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCedarSystemIsBookmarkedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCedarSystemIsBookmarkedQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCedarSystemIsBookmarkedQuery(baseOptions: Apollo.QueryHookOptions<GetCedarSystemIsBookmarkedQuery, GetCedarSystemIsBookmarkedQueryVariables> & ({ variables: GetCedarSystemIsBookmarkedQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCedarSystemIsBookmarkedQuery, GetCedarSystemIsBookmarkedQueryVariables>(GetCedarSystemIsBookmarkedDocument, options);
+      }
+export function useGetCedarSystemIsBookmarkedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCedarSystemIsBookmarkedQuery, GetCedarSystemIsBookmarkedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCedarSystemIsBookmarkedQuery, GetCedarSystemIsBookmarkedQueryVariables>(GetCedarSystemIsBookmarkedDocument, options);
+        }
+export function useGetCedarSystemIsBookmarkedSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCedarSystemIsBookmarkedQuery, GetCedarSystemIsBookmarkedQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCedarSystemIsBookmarkedQuery, GetCedarSystemIsBookmarkedQueryVariables>(GetCedarSystemIsBookmarkedDocument, options);
+        }
+export type GetCedarSystemIsBookmarkedQueryHookResult = ReturnType<typeof useGetCedarSystemIsBookmarkedQuery>;
+export type GetCedarSystemIsBookmarkedLazyQueryHookResult = ReturnType<typeof useGetCedarSystemIsBookmarkedLazyQuery>;
+export type GetCedarSystemIsBookmarkedSuspenseQueryHookResult = ReturnType<typeof useGetCedarSystemIsBookmarkedSuspenseQuery>;
+export type GetCedarSystemIsBookmarkedQueryResult = Apollo.QueryResult<GetCedarSystemIsBookmarkedQuery, GetCedarSystemIsBookmarkedQueryVariables>;
+export const GetCedarSystemsDocument = gql`
+    query GetCedarSystems {
+  cedarSystems {
+    id
+    name
+    description
+    acronym
+    status
+    businessOwnerOrg
+    businessOwnerOrgComp
+    systemMaintainerOrg
+    systemMaintainerOrgComp
+    isBookmarked
+    atoExpirationDate
+    linkedTrbRequests(state: OPEN) {
+      id
+    }
+    linkedSystemIntakes(state: OPEN) {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCedarSystemsQuery__
+ *
+ * To run a query within a React component, call `useGetCedarSystemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCedarSystemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCedarSystemsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCedarSystemsQuery(baseOptions?: Apollo.QueryHookOptions<GetCedarSystemsQuery, GetCedarSystemsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCedarSystemsQuery, GetCedarSystemsQueryVariables>(GetCedarSystemsDocument, options);
+      }
+export function useGetCedarSystemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCedarSystemsQuery, GetCedarSystemsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCedarSystemsQuery, GetCedarSystemsQueryVariables>(GetCedarSystemsDocument, options);
+        }
+export function useGetCedarSystemsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCedarSystemsQuery, GetCedarSystemsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCedarSystemsQuery, GetCedarSystemsQueryVariables>(GetCedarSystemsDocument, options);
+        }
+export type GetCedarSystemsQueryHookResult = ReturnType<typeof useGetCedarSystemsQuery>;
+export type GetCedarSystemsLazyQueryHookResult = ReturnType<typeof useGetCedarSystemsLazyQuery>;
+export type GetCedarSystemsSuspenseQueryHookResult = ReturnType<typeof useGetCedarSystemsSuspenseQuery>;
+export type GetCedarSystemsQueryResult = Apollo.QueryResult<GetCedarSystemsQuery, GetCedarSystemsQueryVariables>;
 export const GetSystemProfileDocument = gql`
     query GetSystemProfile($cedarSystemId: String!) {
   cedarAuthorityToOperate(cedarSystemID: $cedarSystemId) {
@@ -9196,6 +9455,11 @@ export const TypedGetRequestsDocument = {"kind":"Document","definitions":[{"kind
 export const TypedCreateCedarSystemBookmarkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateCedarSystemBookmark"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateCedarSystemBookmarkInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCedarSystemBookmark"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystemBookmark"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystemId"}}]}}]}}]}}]} as unknown as DocumentNode<CreateCedarSystemBookmarkMutation, CreateCedarSystemBookmarkMutationVariables>;
 export const TypedDeleteCedarSystemBookmarkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteCedarSystemBookmark"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateCedarSystemBookmarkInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteCedarSystemBookmark"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystemId"}}]}}]}}]} as unknown as DocumentNode<DeleteCedarSystemBookmarkMutation, DeleteCedarSystemBookmarkMutationVariables>;
 export const TypedGetCedarContactsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCedarContacts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"commonName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarPersonsByCommonName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"commonName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"commonName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}}]}}]}}]} as unknown as DocumentNode<GetCedarContactsQuery, GetCedarContactsQueryVariables>;
+export const TypedGetCedarSubSystemsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCedarSubSystems"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSubSystems"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]} as unknown as DocumentNode<GetCedarSubSystemsQuery, GetCedarSubSystemsQueryVariables>;
+export const TypedGetCedarSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCedarSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerOrg"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerOrgComp"}},{"kind":"Field","name":{"kind":"Name","value":"systemMaintainerOrg"}},{"kind":"Field","name":{"kind":"Name","value":"systemMaintainerOrgComp"}},{"kind":"Field","name":{"kind":"Name","value":"isBookmarked"}}]}}]}}]} as unknown as DocumentNode<GetCedarSystemQuery, GetCedarSystemQueryVariables>;
+export const TypedGetCedarSystemIDsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCedarSystemIDs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetCedarSystemIDsQuery, GetCedarSystemIDsQueryVariables>;
+export const TypedGetCedarSystemIsBookmarkedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCedarSystemIsBookmarked"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isBookmarked"}}]}}]}}]} as unknown as DocumentNode<GetCedarSystemIsBookmarkedQuery, GetCedarSystemIsBookmarkedQueryVariables>;
+export const TypedGetCedarSystemsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCedarSystems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerOrg"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerOrgComp"}},{"kind":"Field","name":{"kind":"Name","value":"systemMaintainerOrg"}},{"kind":"Field","name":{"kind":"Name","value":"systemMaintainerOrgComp"}},{"kind":"Field","name":{"kind":"Name","value":"isBookmarked"}},{"kind":"Field","name":{"kind":"Name","value":"atoExpirationDate"}},{"kind":"Field","name":{"kind":"Name","value":"linkedTrbRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"state"},"value":{"kind":"EnumValue","value":"OPEN"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"linkedSystemIntakes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"state"},"value":{"kind":"EnumValue","value":"OPEN"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<GetCedarSystemsQuery, GetCedarSystemsQueryVariables>;
 export const TypedGetSystemProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarAuthorityToOperate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"actualDispositionDate"}},{"kind":"Field","name":{"kind":"Name","value":"containsPersonallyIdentifiableInformation"}},{"kind":"Field","name":{"kind":"Name","value":"countOfTotalNonPrivilegedUserPopulation"}},{"kind":"Field","name":{"kind":"Name","value":"countOfOpenPoams"}},{"kind":"Field","name":{"kind":"Name","value":"countOfTotalPrivilegedUserPopulation"}},{"kind":"Field","name":{"kind":"Name","value":"dateAuthorizationMemoExpires"}},{"kind":"Field","name":{"kind":"Name","value":"dateAuthorizationMemoSigned"}},{"kind":"Field","name":{"kind":"Name","value":"eAuthenticationLevel"}},{"kind":"Field","name":{"kind":"Name","value":"fips199OverallImpactRating"}},{"kind":"Field","name":{"kind":"Name","value":"fismaSystemAcronym"}},{"kind":"Field","name":{"kind":"Name","value":"fismaSystemName"}},{"kind":"Field","name":{"kind":"Name","value":"isAccessedByNonOrganizationalUsers"}},{"kind":"Field","name":{"kind":"Name","value":"isPiiLimitedToUserNameAndPass"}},{"kind":"Field","name":{"kind":"Name","value":"isProtectedHealthInformation"}},{"kind":"Field","name":{"kind":"Name","value":"lastActScaDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastAssessmentDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastContingencyPlanCompletionDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastPenTestDate"}},{"kind":"Field","name":{"kind":"Name","value":"piaCompletionDate"}},{"kind":"Field","name":{"kind":"Name","value":"primaryCyberRiskAdvisor"}},{"kind":"Field","name":{"kind":"Name","value":"privacySubjectMatterExpert"}},{"kind":"Field","name":{"kind":"Name","value":"recoveryPointObjective"}},{"kind":"Field","name":{"kind":"Name","value":"recoveryTimeObjective"}},{"kind":"Field","name":{"kind":"Name","value":"systemOfRecordsNotice"}},{"kind":"Field","name":{"kind":"Name","value":"tlcPhase"}}]}},{"kind":"Field","name":{"kind":"Name","value":"exchanges"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"connectionFrequency"}},{"kind":"Field","name":{"kind":"Name","value":"containsHealthDisparityData"}},{"kind":"Field","name":{"kind":"Name","value":"containsPhi"}},{"kind":"Field","name":{"kind":"Name","value":"dataExchangeAgreement"}},{"kind":"Field","name":{"kind":"Name","value":"exchangeDescription"}},{"kind":"Field","name":{"kind":"Name","value":"exchangeDirection"}},{"kind":"Field","name":{"kind":"Name","value":"exchangeId"}},{"kind":"Field","name":{"kind":"Name","value":"exchangeName"}},{"kind":"Field","name":{"kind":"Name","value":"numOfRecords"}},{"kind":"Field","name":{"kind":"Name","value":"sharedViaApi"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarBudget"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fiscalYear"}},{"kind":"Field","name":{"kind":"Name","value":"funding"}},{"kind":"Field","name":{"kind":"Name","value":"fundingId"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSource"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"projectTitle"}},{"kind":"Field","name":{"kind":"Name","value":"systemId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarBudgetSystemCost"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"budgetActualCost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actualSystemCost"}},{"kind":"Field","name":{"kind":"Name","value":"fiscalYear"}},{"kind":"Field","name":{"kind":"Name","value":"systemId"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarThreat"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"daysOpen"}},{"kind":"Field","name":{"kind":"Name","value":"weaknessRiskLevel"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSoftwareProducts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aiSolnCatg"}},{"kind":"Field","name":{"kind":"Name","value":"aiSolnCatgOther"}},{"kind":"Field","name":{"kind":"Name","value":"apiDataArea"}},{"kind":"Field","name":{"kind":"Name","value":"apiDescPubLocation"}},{"kind":"Field","name":{"kind":"Name","value":"apiDescPublished"}},{"kind":"Field","name":{"kind":"Name","value":"apiFHIRUse"}},{"kind":"Field","name":{"kind":"Name","value":"apiFHIRUseOther"}},{"kind":"Field","name":{"kind":"Name","value":"apiHasPortal"}},{"kind":"Field","name":{"kind":"Name","value":"apisAccessibility"}},{"kind":"Field","name":{"kind":"Name","value":"apisDeveloped"}},{"kind":"Field","name":{"kind":"Name","value":"developmentStage"}},{"kind":"Field","name":{"kind":"Name","value":"softwareProducts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apiGatewayUse"}},{"kind":"Field","name":{"kind":"Name","value":"elaPurchase"}},{"kind":"Field","name":{"kind":"Name","value":"elaVendorId"}},{"kind":"Field","name":{"kind":"Name","value":"providesAiCapability"}},{"kind":"Field","name":{"kind":"Name","value":"refstr"}},{"kind":"Field","name":{"kind":"Name","value":"softwareCatagoryConnectionGuid"}},{"kind":"Field","name":{"kind":"Name","value":"softwareVendorConnectionGuid"}},{"kind":"Field","name":{"kind":"Name","value":"softwareCost"}},{"kind":"Field","name":{"kind":"Name","value":"softwareElaOrganization"}},{"kind":"Field","name":{"kind":"Name","value":"softwareName"}},{"kind":"Field","name":{"kind":"Name","value":"systemSoftwareConnectionGuid"}},{"kind":"Field","name":{"kind":"Name","value":"technopediaCategory"}},{"kind":"Field","name":{"kind":"Name","value":"technopediaID"}},{"kind":"Field","name":{"kind":"Name","value":"vendorName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemHasAPIGateway"}},{"kind":"Field","name":{"kind":"Name","value":"usesAiTech"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarContractsBySystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemID"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}},{"kind":"Field","name":{"kind":"Name","value":"contractName"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"orderNumber"}},{"kind":"Field","name":{"kind":"Name","value":"serviceProvided"}},{"kind":"Field","name":{"kind":"Name","value":"isDeliveryOrg"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystemDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isMySystem"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isCmsOwned"}},{"kind":"Field","name":{"kind":"Name","value":"numberOfContractorFte"}},{"kind":"Field","name":{"kind":"Name","value":"numberOfFederalFte"}},{"kind":"Field","name":{"kind":"Name","value":"numberOfSupportedUsersPerMonth"}},{"kind":"Field","name":{"kind":"Name","value":"storesBeneficiaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"storesBankingData"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isBookmarked"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerOrg"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerOrgComp"}},{"kind":"Field","name":{"kind":"Name","value":"systemMaintainerOrg"}},{"kind":"Field","name":{"kind":"Name","value":"systemMaintainerOrgComp"}},{"kind":"Field","name":{"kind":"Name","value":"uuid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deployments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"dataCenter"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deploymentType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"roles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CedarRoleFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"urls"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"isAPIEndpoint"}},{"kind":"Field","name":{"kind":"Name","value":"isBehindWebApplicationFirewall"}},{"kind":"Field","name":{"kind":"Name","value":"isVersionCodeRepository"}},{"kind":"Field","name":{"kind":"Name","value":"urlHostingEnv"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemMaintainerInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"agileUsed"}},{"kind":"Field","name":{"kind":"Name","value":"deploymentFrequency"}},{"kind":"Field","name":{"kind":"Name","value":"devCompletionPercent"}},{"kind":"Field","name":{"kind":"Name","value":"devWorkDescription"}},{"kind":"Field","name":{"kind":"Name","value":"ecapParticipation"}},{"kind":"Field","name":{"kind":"Name","value":"frontendAccessType"}},{"kind":"Field","name":{"kind":"Name","value":"hardCodedIPAddress"}},{"kind":"Field","name":{"kind":"Name","value":"ip6EnabledAssetPercent"}},{"kind":"Field","name":{"kind":"Name","value":"ip6TransitionPlan"}},{"kind":"Field","name":{"kind":"Name","value":"ipEnabledAssetCount"}},{"kind":"Field","name":{"kind":"Name","value":"netAccessibility"}},{"kind":"Field","name":{"kind":"Name","value":"plansToRetireReplace"}},{"kind":"Field","name":{"kind":"Name","value":"quarterToRetireReplace"}},{"kind":"Field","name":{"kind":"Name","value":"systemCustomization"}},{"kind":"Field","name":{"kind":"Name","value":"yearToRetireReplace"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSubSystems"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRole"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"application"}},{"kind":"Field","name":{"kind":"Name","value":"objectID"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeType"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeUsername"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeEmail"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeFirstName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeLastName"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeName"}},{"kind":"Field","name":{"kind":"Name","value":"roleID"}}]}}]} as unknown as DocumentNode<GetSystemProfileQuery, GetSystemProfileQueryVariables>;
 export const TypedGetSystemWorkspaceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemWorkspace"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarAuthorityToOperate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"tlcPhase"}},{"kind":"Field","name":{"kind":"Name","value":"dateAuthorizationMemoExpires"}},{"kind":"Field","name":{"kind":"Name","value":"countOfOpenPoams"}},{"kind":"Field","name":{"kind":"Name","value":"lastAssessmentDate"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystemDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isMySystem"}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isBookmarked"}},{"kind":"Field","name":{"kind":"Name","value":"linkedTrbRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"state"},"value":{"kind":"EnumValue","value":"OPEN"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"linkedSystemIntakes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"state"},"value":{"kind":"EnumValue","value":"OPEN"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"roles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CedarRoleFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRole"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"application"}},{"kind":"Field","name":{"kind":"Name","value":"objectID"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeType"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeUsername"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeEmail"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeFirstName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeLastName"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeName"}},{"kind":"Field","name":{"kind":"Name","value":"roleID"}}]}}]} as unknown as DocumentNode<GetSystemWorkspaceQuery, GetSystemWorkspaceQueryVariables>;
 export const TypedGetTRBAdminHomeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBAdminHome"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"archived"},"value":{"kind":"BooleanValue","value":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"isRecent"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"consultMeetingTime"}},{"kind":"Field","name":{"kind":"Name","value":"trbLeadInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"requesterInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"taskStatuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formStatus"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackStatus"}},{"kind":"Field","name":{"kind":"Name","value":"consultPrepStatus"}},{"kind":"Field","name":{"kind":"Name","value":"attendConsultStatus"}},{"kind":"Field","name":{"kind":"Name","value":"guidanceLetterStatus"}}]}},{"kind":"Field","name":{"kind":"Name","value":"form"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contractName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetTRBAdminHomeQuery, GetTRBAdminHomeQueryVariables>;

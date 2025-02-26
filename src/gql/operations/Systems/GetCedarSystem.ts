@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export default gql`
+export default gql(/* GraphQL */ `
   query GetCedarSystem($id: String!) {
     cedarSystem(cedarSystemId: $id) {
       id
@@ -15,4 +15,4 @@ export default gql`
       isBookmarked
     }
   }
-`;
+`);
