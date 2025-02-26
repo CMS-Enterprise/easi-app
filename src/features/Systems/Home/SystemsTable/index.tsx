@@ -17,7 +17,7 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -26,8 +26,10 @@ import {
   Table as UswdsTable
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { useCreateCedarSystemBookmarkMutation } from 'gql/generated/graphql';
-import DeleteCedarSystemBookmarkQuery from 'gql/legacyGQL/DeleteCedarSystemBookmarkQuery';
+import {
+  useCreateCedarSystemBookmarkMutation,
+  useDeleteCedarSystemBookmarkMutation
+} from 'gql/generated/graphql';
 import GetCedarSystemIsBookmarkedQuery from 'gql/legacyGQL/GetCedarSystemIsBookmarkedQuery';
 import GetMyCedarSystemsQuery from 'gql/legacyGQL/GetMyCedarSystemsQuery';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'gql/legacyGQL/types/GetCedarSystems';
@@ -88,7 +90,7 @@ export const Table = ({
   );
 
   const [createMutate] = useCreateCedarSystemBookmarkMutation();
-  const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
+  const [deleteMutate] = useDeleteCedarSystemBookmarkMutation();
 
   // Sets the systemTableType state to the query param, defaults to all-systems if no param present
   // If the query param changes, update the component state

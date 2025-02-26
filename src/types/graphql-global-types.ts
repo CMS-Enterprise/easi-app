@@ -436,13 +436,6 @@ export enum TRBWhereInProcessOption {
   THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE = "THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE",
 }
 
-/**
- * The data needed to bookmark a cedar system
- */
-export interface CreateCedarSystemBookmarkInput {
-  cedarSystemId: string;
-}
-
 export interface DeleteTRBRequestFundingSourcesInput {
   trbRequestId: UUID;
   fundingNumber: string;

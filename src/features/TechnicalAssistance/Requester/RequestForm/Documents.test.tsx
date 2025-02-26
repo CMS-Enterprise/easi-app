@@ -6,11 +6,11 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   CreateTRBRequestDocumentDocument,
+  DeleteTRBRequestDocumentDocument,
   GetTRBRequestDocumentsDocument,
   GetTRBRequestQuery,
   GetTRBRequestQueryVariables
 } from 'gql/generated/graphql';
-import DeleteTrbRequestDocumentQuery from 'gql/legacyGQL/DeleteTrbRequestDocumentQuery';
 import i18next from 'i18next';
 import { MATCH_ANY_PARAMETERS, WildcardMockLink } from 'wildcard-mock-link';
 
@@ -481,7 +481,7 @@ describe('Trb Request form: Supporting documents', () => {
               // Delete file
               {
                 request: {
-                  query: DeleteTrbRequestDocumentQuery,
+                  query: DeleteTRBRequestDocumentDocument,
                   variables: { id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e' }
                 },
                 result: {
