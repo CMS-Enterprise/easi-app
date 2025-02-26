@@ -338,17 +338,6 @@ export enum TRBConsultPrepStatus {
 }
 
 /**
- * Represents the common options for document type that is attached to a
- * TRB Request
- */
-export enum TRBDocumentCommonType {
-  ARCHITECTURE_DIAGRAM = "ARCHITECTURE_DIAGRAM",
-  BUSINESS_CASE = "BUSINESS_CASE",
-  OTHER = "OTHER",
-  PRESENTATION_SLIDE_DECK = "PRESENTATION_SLIDE_DECK",
-}
-
-/**
  * Represents the action an admin is taking on a TRB request when leaving feedback
  */
 export enum TRBFeedbackAction {
@@ -454,27 +443,6 @@ export enum TRBWhereInProcessOption {
  */
 export interface CreateCedarSystemBookmarkInput {
   cedarSystemId: string;
-}
-
-/**
- * The data needed to upload a TRB document and attach it to a request with metadata
- */
-export interface CreateTRBRequestDocumentInput {
-  requestID: UUID;
-  fileData: Upload;
-  documentType: TRBDocumentCommonType;
-  otherTypeDescription?: string | null;
-}
-
-/**
- * The data needed to add feedback to a TRB request
- */
-export interface CreateTRBRequestFeedbackInput {
-  trbRequestId: UUID;
-  feedbackMessage: HTML;
-  copyTrbMailbox: boolean;
-  notifyEuaIds: string[];
-  action: TRBFeedbackAction;
 }
 
 export interface DeleteTRBRequestFundingSourcesInput {
