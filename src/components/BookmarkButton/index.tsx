@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Button, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import {
+  GetCedarSystemIsBookmarkedDocument,
   useCreateCedarSystemBookmarkMutation,
   useDeleteCedarSystemBookmarkMutation
 } from 'gql/generated/graphql';
-import GetCedarSystemIsBookmarkedQuery from 'gql/legacyGQL/GetCedarSystemIsBookmarkedQuery';
 
 import './index.scss';
 
@@ -29,7 +29,7 @@ export default function BookmarkButton({
   }, [isBookmarked]);
 
   const refetchCedarSystemIsBookmarkedQuery = {
-    query: GetCedarSystemIsBookmarkedQuery,
+    query: GetCedarSystemIsBookmarkedDocument,
     variables: { id }
   };
 

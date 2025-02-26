@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import GetCedarSystemsQuery from 'gql/legacyGQL/GetCedarSystemsQuery';
+import { GetCedarSystemsDocument } from 'gql/generated/graphql';
 import GetSystemIntakesTableQuery from 'gql/legacyGQL/GetSystemIntakesTableQuery';
 import {
   GetSystemIntakesTable,
@@ -77,7 +77,7 @@ const mocks = [
   getClosedSystemIntakesTable,
   {
     request: {
-      query: GetCedarSystemsQuery
+      query: GetCedarSystemsDocument
     },
     result: {
       data: {
