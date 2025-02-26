@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ApolloError, useMutation } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Checkbox,
@@ -19,15 +19,11 @@ import {
 import FundingSources from 'features/TechnicalAssistance/Requester/RequestForm/FundingSources/FundingSources';
 import {
   GetTRBRequestQuery,
+  useDeleteTRBRequestFundingSourceMutation,
   useUpdateTRBRequestAndFormMutation,
   useUpdateTRBRequestFundingSourcesMutation
 } from 'gql/generated/graphql';
-import DeleteTRBRequestFundingSource from 'gql/legacyGQL/DeleteTRBRequestFundingSource';
 import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
-import {
-  DeleteTRBRequestFundingSource as DeleteTRBRequestFundingSourceType,
-  DeleteTRBRequestFundingSourceVariables
-} from 'gql/legacyGQL/types/DeleteTRBRequestFundingSource';
 import { GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType } from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
 import { TrbRequestFormFields_form_systemIntakes as TrbRequestFormFieldsSystemIntakeType } from 'gql/legacyGQL/types/TrbRequestFormFields';
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
@@ -113,10 +109,7 @@ function Basic({
 
   const [updatefundingSource] = useUpdateTRBRequestFundingSourcesMutation();
 
-  const [deletefundingSource] = useMutation<
-    DeleteTRBRequestFundingSourceType,
-    DeleteTRBRequestFundingSourceVariables
-  >(DeleteTRBRequestFundingSource);
+  const [deletefundingSource] = useDeleteTRBRequestFundingSourceMutation();
 
   const initialValues = nullFillObject(request.form, basicBlankValues);
 

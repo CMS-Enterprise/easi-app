@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 // TODO: look into adding id field into systemIntake return object - doing this causes some weird behavior with caching (and thus not refetching system intakes)
-export default gql`
+export default gql(/* GraphQL */ `
   query GetAdminNotesAndActions($id: UUID!) {
     systemIntake(id: $id) {
       id
@@ -43,4 +43,4 @@ export default gql`
       }
     }
   }
-`;
+`);

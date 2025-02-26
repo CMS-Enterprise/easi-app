@@ -2,18 +2,15 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import { Button, ButtonGroup, ModalFooter } from '@trussworks/react-uswds';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import {
+  GetAdminNotesAndActionsDocument,
+  SystemIntakeActionType,
   useCreateSystemIntakeNoteMutation,
+  useGetAdminNotesAndActionsQuery,
   useUpdateSystemIntakeNoteMutation
 } from 'gql/generated/graphql';
-import GetAdminNotesAndActionsQuery from 'gql/legacyGQL/GetAdminNotesAndActionsQuery';
-import {
-  GetAdminNotesAndActions,
-  GetAdminNotesAndActionsVariables
-} from 'gql/legacyGQL/types/GetAdminNotesAndActions';
 import { DateTime } from 'luxon';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -35,7 +32,6 @@ import {
   RichTextViewer
 } from 'components/RichTextEditor';
 import TruncatedText from 'components/TruncatedText';
-import { SystemIntakeActionType } from 'types/graphql-global-types';
 import { formatDateUtc } from 'utils/date';
 
 import './index.scss';
@@ -51,7 +47,7 @@ const Notes = () => {
     useCreateSystemIntakeNoteMutation({
       refetchQueries: [
         {
-          query: GetAdminNotesAndActionsQuery,
+          query: GetAdminNotesAndActionsDocument,
           variables: {
             id: systemId
           }
@@ -63,14 +59,11 @@ const Notes = () => {
     error,
     data,
     refetch: refetchAdminNotesAndActions
-  } = useQuery<GetAdminNotesAndActions, GetAdminNotesAndActionsVariables>(
-    GetAdminNotesAndActionsQuery,
-    {
-      variables: {
-        id: systemId
-      }
+  } = useGetAdminNotesAndActionsQuery({
+    variables: {
+      id: systemId
     }
-  );
+  });
 
   const [archiveNoteMutate, archiveMutationResult] =
     useUpdateSystemIntakeNoteMutation({
