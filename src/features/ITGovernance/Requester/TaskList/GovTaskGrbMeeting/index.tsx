@@ -19,9 +19,7 @@ const GovTaskGrbMeeting = ({
   grbDate,
   grbReviewType,
   grbReviewStartedAt,
-  grbReviewAsyncRecordingTime,
   grbReviewAsyncEndDate,
-  grbReviewStandardGRBMeetingTime,
   grbReviewAsyncGRBMeetingTime
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'grbMeeting';
@@ -32,12 +30,12 @@ const GovTaskGrbMeeting = ({
     Partial<Record<ITGovGRBStatus, string | null>>
   > = {
     STANDARD: {
-      SCHEDULED: grbReviewStandardGRBMeetingTime,
+      SCHEDULED: grbDate,
       AWAITING_DECISION: grbReviewStartedAt,
       COMPLETED: grbReviewStartedAt
     },
     ASYNC: {
-      SCHEDULED: grbReviewAsyncRecordingTime,
+      SCHEDULED: grbDate,
       AWAITING_GRB_REVIEW: grbReviewAsyncGRBMeetingTime,
       AWAITING_DECISION: grbReviewAsyncEndDate,
       COMPLETED: grbReviewAsyncEndDate
