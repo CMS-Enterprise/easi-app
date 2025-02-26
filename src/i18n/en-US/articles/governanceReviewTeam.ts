@@ -1,9 +1,9 @@
-import { SystemIntakeActionType } from 'gql/generated/graphql';
-
 import {
-  SystemIntakeStatusAdmin,
-  SystemIntakeStatusRequester
-} from 'types/graphql-global-types';
+  SystemIntakeActionType,
+  SystemIntakeStatusAdmin
+} from 'gql/generated/graphql';
+
+import { SystemIntakeStatusRequester } from 'types/graphql-global-types';
 
 /** System intake action type translations */
 const actionNameTranslations: Record<SystemIntakeActionType, string> = {

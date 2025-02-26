@@ -1,36 +1,7 @@
 import { gql } from '@apollo/client';
 
-import { GovernanceRequestFeedback } from './GetGovernanceRequestFeedbackQuery';
-import { SystemIntakeDocument } from './SystemIntakeDocumentQueries';
-
-export const FundingSource = gql`
-  fragment FundingSource on SystemIntakeFundingSource {
-    id
-    fundingNumber
-    source
-  }
-`;
-
-export const SystemIntakeGRBPresentationLinks = gql`
-  fragment SystemIntakeGRBPresentationLinks on SystemIntakeGRBPresentationLinks {
-    recordingLink
-    recordingPasscode
-    transcriptFileName
-    transcriptFileStatus
-    transcriptFileURL
-    transcriptLink
-    presentationDeckFileName
-    presentationDeckFileStatus
-    presentationDeckFileURL
-  }
-`;
-
-export const SystemIntake = gql`
-  ${SystemIntakeDocument}
-  ${GovernanceRequestFeedback}
-  ${FundingSource}
-  ${SystemIntakeGRBPresentationLinks}
-  fragment SystemIntake on SystemIntake {
+export default gql(/* GraphQL */ `
+  fragment SystemIntakeFragment on SystemIntake {
     id
     adminLead
     businessNeed
@@ -73,7 +44,7 @@ export const SystemIntake = gql`
     grbDate
     grtDate
     governanceRequestFeedbacks {
-      ...GovernanceRequestFeedback
+      ...GovernanceRequestFeedbackFragment
     }
     governanceTeams {
       isPresent
@@ -91,7 +62,7 @@ export const SystemIntake = gql`
     }
     existingFunding
     fundingSources {
-      ...FundingSource
+      ...FundingSourceFragment
     }
     lcid
     lcidIssuedAt
@@ -128,7 +99,7 @@ export const SystemIntake = gql`
     usingSoftware
     acquisitionMethods
     documents {
-      ...SystemIntakeDocument
+      ...SystemIntakeDocumentFragment
     }
     state
     decisionState
@@ -171,16 +142,7 @@ export const SystemIntake = gql`
       submittedAt
     }
     grbPresentationLinks {
-      ...SystemIntakeGRBPresentationLinks
+      ...SystemIntakeGRBPresentationLinksFragment
     }
   }
-`;
-
-export default gql`
-  ${SystemIntake}
-  query GetSystemIntake($id: UUID!) {
-    systemIntake(id: $id) {
-      ...SystemIntake
-    }
-  }
-`;
+`);

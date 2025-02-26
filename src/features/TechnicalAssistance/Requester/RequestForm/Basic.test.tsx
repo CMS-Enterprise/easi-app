@@ -6,10 +6,11 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GetTRBRequestQuery,
-  GetTRBRequestQueryVariables
+  GetTRBRequestQueryVariables,
+  TRBRequestType
 } from 'gql/generated/graphql';
 
-import { TRBRequestState, TRBRequestType } from 'types/graphql-global-types';
+import { TRBRequestState } from 'types/graphql-global-types';
 
 import Basic from './Basic';
 

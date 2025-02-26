@@ -11,7 +11,7 @@ type DateFormat = 'MM/dd/yyyy' | 'MMMM d, yyyy' | 'MM/yyyy';
  * Dates may differ depending on local time zone
  */
 export const formatDateLocal = (
-  date: string | null,
+  date: string | null | undefined,
   format: DateFormat
 ): string => {
   if (date) {
@@ -38,17 +38,19 @@ export const formatDateUtc = (
 };
 
 type ContractDate = {
-  day: string | null;
-  month: string | null;
-  year: string | null;
+  day?: string | null | undefined;
+  month?: string | null | undefined;
+  year?: string | null | undefined;
 };
 
-export const formatContractDate = (date: ContractDate): string => {
+export const formatContractDate = (date?: ContractDate): string => {
+  if (!date) return '';
+
   const { month, day, year } = date;
 
   const parts = [month, day, year];
   return parts
-    .filter((value: string | null) => value && value.length > 0)
+    .filter((value: string | null | undefined) => value && value.length > 0)
     .join('/');
 };
 

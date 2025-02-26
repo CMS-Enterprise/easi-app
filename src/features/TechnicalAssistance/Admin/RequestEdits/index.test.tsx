@@ -12,7 +12,9 @@ import {
   CreateTRBRequestFeedbackDocument,
   CreateTRBRequestFeedbackMutation,
   CreateTRBRequestFeedbackMutationVariables,
-  GetTRBRequestSummaryQuery
+  GetTRBRequestSummaryQuery,
+  TRBFeedbackAction,
+  TRBFormStatus
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import {
@@ -26,7 +28,6 @@ import {
 } from 'tests/mock/trbRequest';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { TRBFeedbackAction, TRBFormStatus } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import typeRichText from 'utils/testing/typeRichText';

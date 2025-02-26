@@ -2,15 +2,17 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CardBody, CardHeader } from '@trussworks/react-uswds';
 import FeedbackList from 'features/ITGovernance/Requester/TaskList/Feedback/FeedbackList';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import {
+  GovernanceRequestFeedbackFragmentFragment,
+  GovernanceRequestFeedbackType
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import CollapsableLink from 'components/CollapsableLink';
-import { GovernanceRequestFeedbackType } from 'types/graphql-global-types';
 
 export type GRBFeedbackCardProps = {
   systemIntakeID: string;
-  governanceRequestFeedbacks: SystemIntake['governanceRequestFeedbacks'];
+  governanceRequestFeedbacks: GovernanceRequestFeedbackFragmentFragment[];
 };
 
 function GRBFeedbackCard({

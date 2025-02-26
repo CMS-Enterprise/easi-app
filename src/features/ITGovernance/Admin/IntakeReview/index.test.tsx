@@ -2,7 +2,7 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
-import { SystemIntake as SystemIntakeOld } from 'gql/legacyGQL/types/SystemIntake';
+import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 import {
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
@@ -68,7 +68,7 @@ describe('The GRT intake review view', () => {
   });
 
   it('renders increased costs data', () => {
-    const costs: SystemIntakeOld['costs'] = {
+    const costs: SystemIntakeFragmentFragment['costs'] = {
       __typename: 'SystemIntakeCosts',
       isExpectingIncrease: 'YES',
       expectedIncreaseAmount: 'less than $1 million'
@@ -98,7 +98,7 @@ describe('The GRT intake review view', () => {
   });
 
   it('renders annual spending data', () => {
-    const annualSpending: SystemIntakeOld['annualSpending'] = {
+    const annualSpending: SystemIntakeFragmentFragment['annualSpending'] = {
       __typename: 'SystemIntakeAnnualSpending',
       currentAnnualSpending: 'about $3.50',
       currentAnnualSpendingITPortion: '35%',

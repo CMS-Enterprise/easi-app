@@ -1,4 +1,4 @@
-const convertBoolToYesNo = (bool: boolean | null) => {
+const convertBoolToYesNo = (bool: boolean | null | undefined) => {
   switch (bool) {
     case true:
       return 'Yes';

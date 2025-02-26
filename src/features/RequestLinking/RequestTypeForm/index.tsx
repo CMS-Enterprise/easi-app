@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
 import {
   Breadcrumb,
@@ -11,14 +10,11 @@ import {
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import {
+  SystemIntakeRequestType,
   useCreateSystemIntakeMutation,
+  useGetSystemIntakeQuery,
   useUpdateSystemIntakeRequestTypeMutation
 } from 'gql/generated/graphql';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import {
-  GetSystemIntake,
-  GetSystemIntakeVariables
-} from 'gql/legacyGQL/types/GetSystemIntake';
 
 import CollapsableLink from 'components/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
@@ -26,7 +22,6 @@ import FieldGroup from 'components/FieldGroup';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import { RadioField } from 'components/RadioField';
-import { SystemIntakeRequestType } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 import linkCedarSystemIdQueryString, {
   useLinkCedarSystemIdQueryParam
@@ -54,15 +49,12 @@ const RequestTypeForm = () => {
   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
 
   // Check for an existing intake to prefill the request type option
-  const intakeQuery = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
-    GetSystemIntakeQuery,
-    {
-      variables: {
-        id: systemId || ''
-      },
-      skip: !systemId
-    }
-  );
+  const intakeQuery = useGetSystemIntakeQuery({
+    variables: {
+      id: systemId || ''
+    },
+    skip: !systemId
+  });
   const lastRequestType = intakeQuery.data?.systemIntake?.requestType;
 
   const majorChangesExamples: string[] = t(

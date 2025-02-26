@@ -1,10 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetTRBGuidanceLetterQuery } from 'gql/generated/graphql';
+import {
+  TRBGuidanceLetterStatus,
+  useGetTRBGuidanceLetterQuery
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import PageLoading from 'components/PageLoading';
-import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
 import ReviewGuidanceLetter from '../_components/ReviewGuidanceLetter';

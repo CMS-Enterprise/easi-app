@@ -19,13 +19,14 @@ import {
 import FundingSources from 'features/TechnicalAssistance/Requester/RequestForm/FundingSources/FundingSources';
 import {
   GetTRBRequestQuery,
+  TRBCollabGroupOption,
+  TrbRequestFormFieldsFragmentFragment,
   useDeleteTRBRequestFundingSourceMutation,
   useUpdateTRBRequestAndFormMutation,
   useUpdateTRBRequestFundingSourcesMutation
 } from 'gql/generated/graphql';
 import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
 import { GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType } from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
-import { TrbRequestFormFields_form_systemIntakes as TrbRequestFormFieldsSystemIntakeType } from 'gql/legacyGQL/types/TrbRequestFormFields';
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -41,7 +42,6 @@ import Spinner from 'components/Spinner';
 import TextAreaField from 'components/TextAreaField';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import useCacheQuery from 'hooks/useCacheQuery';
-import { TRBCollabGroupOption } from 'types/graphql-global-types';
 import { FormFieldProps } from 'types/util';
 import nullFillObject from 'utils/nullFillObject';
 import { basicSchema, TrbRequestFormBasic } from 'validations/trbRequestSchema';
@@ -750,7 +750,7 @@ function Basic({
                       name="systemIntakes"
                       options={systemIntakesWithLCIDs}
                       initialValues={initialValues.systemIntakes.map(
-                        (intake: TrbRequestFormFieldsSystemIntakeType) =>
+                        (intake: TrbRequestFormFieldsFragmentFragment) =>
                           intake.id
                       )}
                       onChange={values => {

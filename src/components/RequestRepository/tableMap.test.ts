@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next';
-import {
-  GetSystemIntakesTable_systemIntakes as TableSystemIntake,
-  GetSystemIntakesTable_systemIntakes_notes as AdminNote
-} from 'gql/legacyGQL/types/GetSystemIntakesTable';
 import { systemIntakeForTable } from 'tests/mock/systemIntake';
 
 import { SystemIntakeState } from 'types/graphql-global-types';
 
-import tableMap from './tableMap';
+import tableMap, {
+  TableSystemIntake,
+  TableSystemIntakeFundingSources,
+  TableSystemIntakeNotes
+} from './tableMap';
 
 // Mock useTranslation
 vi.mock('react-i18next', () => ({
@@ -21,7 +21,7 @@ vi.mock('react-i18next', () => ({
   }
 }));
 
-const fundingSources: TableSystemIntake['fundingSources'] = [
+const fundingSources: TableSystemIntakeFundingSources[] = [
   {
     __typename: 'SystemIntakeFundingSource',
     id: '3ebf0743-b501-4c06-aa7e-b11510dfe99e',
@@ -54,7 +54,7 @@ const fundingSources: TableSystemIntake['fundingSources'] = [
   }
 ];
 
-const note = (count: number): AdminNote => {
+const note = (count: number): TableSystemIntakeNotes => {
   return {
     __typename: 'SystemIntakeNote',
     id: count.toString(),
@@ -63,7 +63,7 @@ const note = (count: number): AdminNote => {
   };
 };
 
-const intakes: Array<TableSystemIntake> = [
+const intakes: TableSystemIntake[] = [
   {
     ...systemIntakeForTable,
     state: SystemIntakeState.CLOSED,

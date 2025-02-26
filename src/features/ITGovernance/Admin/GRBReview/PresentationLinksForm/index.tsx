@@ -14,10 +14,10 @@ import {
 } from '@trussworks/react-uswds';
 import {
   InputMaybe,
+  SystemIntakeGRBPresentationLinks,
   SystemIntakeGRBPresentationLinksInput,
   useSetSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
-import { SystemIntakeGRBPresentationLinks } from 'gql/legacyGQL/types/SystemIntakeGRBPresentationLinks';
 
 import Alert from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';

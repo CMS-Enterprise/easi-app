@@ -3297,9 +3297,15 @@ export type CedarRoleTypeFragmentFragment = { __typename: 'CedarRoleType', id: s
 
 export type FundingSourceFragmentFragment = { __typename: 'SystemIntakeFundingSource', id: UUID, fundingNumber?: string | null, source?: string | null };
 
+export type GovernanceRequestFeedbackFragmentFragment = { __typename: 'GovernanceRequestFeedback', id: UUID, feedback: HTML, targetForm: GovernanceRequestFeedbackTargetForm, type: GovernanceRequestFeedbackType, createdAt: Time, author?: { __typename: 'UserInfo', commonName: string } | null };
+
 export type SystemIntakeContactFragmentFragment = { __typename: 'AugmentedSystemIntakeContact', systemIntakeId: UUID, id: UUID, euaUserId: string, component: string, role: string, commonName?: string | null, email?: EmailAddress | null };
 
 export type SystemIntakeDocumentFragmentFragment = { __typename: 'SystemIntakeDocument', id: UUID, fileName: string, version: SystemIntakeDocumentVersion, status: SystemIntakeDocumentStatus, uploadedAt: Time, url?: string | null, canView: boolean, canDelete: boolean, systemIntakeId: UUID, documentType: { __typename: 'SystemIntakeDocumentType', commonType: SystemIntakeDocumentCommonType, otherTypeDescription?: string | null } };
+
+export type SystemIntakeFragmentFragment = { __typename: 'SystemIntake', id: UUID, adminLead?: string | null, businessNeed?: string | null, businessSolution?: string | null, currentStage?: string | null, decisionNextSteps?: HTML | null, grbDate?: Time | null, grtDate?: Time | null, existingFunding?: boolean | null, lcid?: string | null, lcidIssuedAt?: Time | null, lcidExpiresAt?: Time | null, lcidRetiresAt?: Time | null, lcidScope?: HTML | null, lcidCostBaseline?: string | null, lcidStatus?: SystemIntakeLCIDStatus | null, needsEaSupport?: boolean | null, rejectionReason?: HTML | null, requestName?: string | null, requestType: SystemIntakeRequestType, statusAdmin: SystemIntakeStatusAdmin, statusRequester: SystemIntakeStatusRequester, grtReviewEmailBody?: string | null, decidedAt?: Time | null, businessCaseId?: UUID | null, submittedAt?: Time | null, updatedAt?: Time | null, createdAt?: Time | null, archivedAt?: Time | null, euaUserId?: string | null, hasUiChanges?: boolean | null, usesAiTech?: boolean | null, usingSoftware?: string | null, acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>, state: SystemIntakeState, decisionState: SystemIntakeDecisionState, trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null, requestFormState: SystemIntakeFormState, relationType?: RequestRelationType | null, contractName?: string | null, businessOwner: { __typename: 'SystemIntakeBusinessOwner', component?: string | null, name?: string | null }, contract: { __typename: 'SystemIntakeContract', contractor?: string | null, hasContract?: string | null, vehicle?: string | null, endDate: { __typename: 'ContractDate', day?: string | null, month?: string | null, year?: string | null }, startDate: { __typename: 'ContractDate', day?: string | null, month?: string | null, year?: string | null } }, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', id: UUID, contractNumber: string }>, costs?: { __typename: 'SystemIntakeCosts', isExpectingIncrease?: string | null, expectedIncreaseAmount?: string | null } | null, annualSpending?: { __typename: 'SystemIntakeAnnualSpending', currentAnnualSpending?: string | null, currentAnnualSpendingITPortion?: string | null, plannedYearOneSpending?: string | null, plannedYearOneSpendingITPortion?: string | null } | null, governanceRequestFeedbacks: Array<{ __typename: 'GovernanceRequestFeedback', id: UUID, feedback: HTML, targetForm: GovernanceRequestFeedbackTargetForm, type: GovernanceRequestFeedbackType, createdAt: Time, author?: { __typename: 'UserInfo', commonName: string } | null }>, governanceTeams: { __typename: 'SystemIntakeGovernanceTeam', isPresent?: boolean | null, teams?: Array<{ __typename: 'SystemIntakeCollaborator', acronym: string, collaborator: string, key: string, label: string, name: string }> | null }, isso: { __typename: 'SystemIntakeISSO', isPresent?: boolean | null, name?: string | null }, fundingSources: Array<{ __typename: 'SystemIntakeFundingSource', id: UUID, fundingNumber?: string | null, source?: string | null }>, productManager: { __typename: 'SystemIntakeProductManager', component?: string | null, name?: string | null }, requester: { __typename: 'SystemIntakeRequester', component?: string | null, email?: string | null, name: string }, documents: Array<{ __typename: 'SystemIntakeDocument', id: UUID, fileName: string, version: SystemIntakeDocumentVersion, status: SystemIntakeDocumentStatus, uploadedAt: Time, url?: string | null, canView: boolean, canDelete: boolean, systemIntakeId: UUID, documentType: { __typename: 'SystemIntakeDocumentType', commonType: SystemIntakeDocumentCommonType, otherTypeDescription?: string | null } }>, systems: Array<{ __typename: 'CedarSystem', id: string, name: string, description?: string | null, acronym?: string | null, businessOwnerOrg?: string | null, businessOwnerRoles: Array<{ __typename: 'CedarRole', objectID: string, assigneeFirstName?: string | null, assigneeLastName?: string | null }> }>, relatedTRBRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, createdAt: Time, contractNumbers: Array<{ __typename: 'TRBRequestContractNumber', contractNumber: string }> }>, relatedIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, decisionState: SystemIntakeDecisionState, submittedAt?: Time | null, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', contractNumber: string }> }>, grbPresentationLinks?: { __typename: 'SystemIntakeGRBPresentationLinks', recordingLink?: string | null, recordingPasscode?: string | null, transcriptFileName?: string | null, transcriptFileStatus?: SystemIntakeDocumentStatus | null, transcriptFileURL?: string | null, transcriptLink?: string | null, presentationDeckFileName?: string | null, presentationDeckFileStatus?: SystemIntakeDocumentStatus | null, presentationDeckFileURL?: string | null } | null };
+
+export type SystemIntakeGRBPresentationLinksFragmentFragment = { __typename: 'SystemIntakeGRBPresentationLinks', recordingLink?: string | null, recordingPasscode?: string | null, transcriptFileName?: string | null, transcriptFileStatus?: SystemIntakeDocumentStatus | null, transcriptFileURL?: string | null, transcriptLink?: string | null, presentationDeckFileName?: string | null, presentationDeckFileStatus?: SystemIntakeDocumentStatus | null, presentationDeckFileURL?: string | null };
 
 export type TRBAttendeeFragmentFragment = { __typename: 'TRBRequestAttendee', id: UUID, trbRequestId: UUID, component?: string | null, role?: PersonRole | null, createdAt: Time, userInfo?: { __typename: 'UserInfo', commonName: string, email: EmailAddress, euaUserId: string } | null };
 
@@ -3570,6 +3576,20 @@ export type CreateSystemIntakeNoteMutationVariables = Exact<{
 
 export type CreateSystemIntakeNoteMutation = { __typename: 'Mutation', createSystemIntakeNote?: { __typename: 'SystemIntakeNote', id: UUID, createdAt: Time, content: HTML, author: { __typename: 'SystemIntakeNoteAuthor', name: string, eua: string } } | null };
 
+export type GetGovernanceRequestFeedbackQueryVariables = Exact<{
+  intakeID: Scalars['UUID']['input'];
+}>;
+
+
+export type GetGovernanceRequestFeedbackQuery = { __typename: 'Query', systemIntake?: { __typename: 'SystemIntake', id: UUID, requestName?: string | null, governanceRequestFeedbacks: Array<{ __typename: 'GovernanceRequestFeedback', id: UUID, feedback: HTML, targetForm: GovernanceRequestFeedbackTargetForm, type: GovernanceRequestFeedbackType, createdAt: Time, author?: { __typename: 'UserInfo', commonName: string } | null }> } | null };
+
+export type GetSystemIntakeQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type GetSystemIntakeQuery = { __typename: 'Query', systemIntake?: { __typename: 'SystemIntake', id: UUID, adminLead?: string | null, businessNeed?: string | null, businessSolution?: string | null, currentStage?: string | null, decisionNextSteps?: HTML | null, grbDate?: Time | null, grtDate?: Time | null, existingFunding?: boolean | null, lcid?: string | null, lcidIssuedAt?: Time | null, lcidExpiresAt?: Time | null, lcidRetiresAt?: Time | null, lcidScope?: HTML | null, lcidCostBaseline?: string | null, lcidStatus?: SystemIntakeLCIDStatus | null, needsEaSupport?: boolean | null, rejectionReason?: HTML | null, requestName?: string | null, requestType: SystemIntakeRequestType, statusAdmin: SystemIntakeStatusAdmin, statusRequester: SystemIntakeStatusRequester, grtReviewEmailBody?: string | null, decidedAt?: Time | null, businessCaseId?: UUID | null, submittedAt?: Time | null, updatedAt?: Time | null, createdAt?: Time | null, archivedAt?: Time | null, euaUserId?: string | null, hasUiChanges?: boolean | null, usesAiTech?: boolean | null, usingSoftware?: string | null, acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>, state: SystemIntakeState, decisionState: SystemIntakeDecisionState, trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null, requestFormState: SystemIntakeFormState, relationType?: RequestRelationType | null, contractName?: string | null, businessOwner: { __typename: 'SystemIntakeBusinessOwner', component?: string | null, name?: string | null }, contract: { __typename: 'SystemIntakeContract', contractor?: string | null, hasContract?: string | null, vehicle?: string | null, endDate: { __typename: 'ContractDate', day?: string | null, month?: string | null, year?: string | null }, startDate: { __typename: 'ContractDate', day?: string | null, month?: string | null, year?: string | null } }, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', id: UUID, contractNumber: string }>, costs?: { __typename: 'SystemIntakeCosts', isExpectingIncrease?: string | null, expectedIncreaseAmount?: string | null } | null, annualSpending?: { __typename: 'SystemIntakeAnnualSpending', currentAnnualSpending?: string | null, currentAnnualSpendingITPortion?: string | null, plannedYearOneSpending?: string | null, plannedYearOneSpendingITPortion?: string | null } | null, governanceRequestFeedbacks: Array<{ __typename: 'GovernanceRequestFeedback', id: UUID, feedback: HTML, targetForm: GovernanceRequestFeedbackTargetForm, type: GovernanceRequestFeedbackType, createdAt: Time, author?: { __typename: 'UserInfo', commonName: string } | null }>, governanceTeams: { __typename: 'SystemIntakeGovernanceTeam', isPresent?: boolean | null, teams?: Array<{ __typename: 'SystemIntakeCollaborator', acronym: string, collaborator: string, key: string, label: string, name: string }> | null }, isso: { __typename: 'SystemIntakeISSO', isPresent?: boolean | null, name?: string | null }, fundingSources: Array<{ __typename: 'SystemIntakeFundingSource', id: UUID, fundingNumber?: string | null, source?: string | null }>, productManager: { __typename: 'SystemIntakeProductManager', component?: string | null, name?: string | null }, requester: { __typename: 'SystemIntakeRequester', component?: string | null, email?: string | null, name: string }, documents: Array<{ __typename: 'SystemIntakeDocument', id: UUID, fileName: string, version: SystemIntakeDocumentVersion, status: SystemIntakeDocumentStatus, uploadedAt: Time, url?: string | null, canView: boolean, canDelete: boolean, systemIntakeId: UUID, documentType: { __typename: 'SystemIntakeDocumentType', commonType: SystemIntakeDocumentCommonType, otherTypeDescription?: string | null } }>, systems: Array<{ __typename: 'CedarSystem', id: string, name: string, description?: string | null, acronym?: string | null, businessOwnerOrg?: string | null, businessOwnerRoles: Array<{ __typename: 'CedarRole', objectID: string, assigneeFirstName?: string | null, assigneeLastName?: string | null }> }>, relatedTRBRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, createdAt: Time, contractNumbers: Array<{ __typename: 'TRBRequestContractNumber', contractNumber: string }> }>, relatedIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, decisionState: SystemIntakeDecisionState, submittedAt?: Time | null, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', contractNumber: string }> }>, grbPresentationLinks?: { __typename: 'SystemIntakeGRBPresentationLinks', recordingLink?: string | null, recordingPasscode?: string | null, transcriptFileName?: string | null, transcriptFileStatus?: SystemIntakeDocumentStatus | null, transcriptFileURL?: string | null, transcriptLink?: string | null, presentationDeckFileName?: string | null, presentationDeckFileStatus?: SystemIntakeDocumentStatus | null, presentationDeckFileURL?: string | null } | null } | null };
+
 export type GetSystemIntakeRelatedRequestsQueryVariables = Exact<{
   systemIntakeID: Scalars['UUID']['input'];
 }>;
@@ -3583,6 +3603,13 @@ export type GetSystemIntakeRelationQueryVariables = Exact<{
 
 
 export type GetSystemIntakeRelationQuery = { __typename: 'Query', systemIntake?: { __typename: 'SystemIntake', id: UUID, relationType?: RequestRelationType | null, contractName?: string | null, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', contractNumber: string }>, systems: Array<{ __typename: 'CedarSystem', id: string, name: string, acronym?: string | null }> } | null, cedarSystems: Array<{ __typename: 'CedarSystem', id: string, name: string, acronym?: string | null }> };
+
+export type GetSystemIntakesTableQueryVariables = Exact<{
+  openRequests: Scalars['Boolean']['input'];
+}>;
+
+
+export type GetSystemIntakesTableQuery = { __typename: 'Query', systemIntakes: Array<{ __typename: 'SystemIntake', id: UUID, euaUserId?: string | null, requestName?: string | null, statusAdmin: SystemIntakeStatusAdmin, state: SystemIntakeState, requesterName?: string | null, requesterComponent?: string | null, trbCollaboratorName?: string | null, oitSecurityCollaboratorName?: string | null, eaCollaboratorName?: string | null, existingFunding?: boolean | null, contractName?: string | null, businessNeed?: string | null, businessSolution?: string | null, currentStage?: string | null, needsEaSupport?: boolean | null, grtDate?: Time | null, grbDate?: Time | null, lcid?: string | null, lcidScope?: HTML | null, lcidExpiresAt?: Time | null, adminLead?: string | null, hasUiChanges?: boolean | null, usesAiTech?: boolean | null, usingSoftware?: string | null, acquisitionMethods: Array<SystemIntakeSoftwareAcquisitionMethods>, decidedAt?: Time | null, submittedAt?: Time | null, updatedAt?: Time | null, createdAt?: Time | null, archivedAt?: Time | null, businessOwner: { __typename: 'SystemIntakeBusinessOwner', name?: string | null, component?: string | null }, productManager: { __typename: 'SystemIntakeProductManager', name?: string | null, component?: string | null }, isso: { __typename: 'SystemIntakeISSO', name?: string | null }, fundingSources: Array<{ __typename: 'SystemIntakeFundingSource', id: UUID, fundingNumber?: string | null, source?: string | null }>, annualSpending?: { __typename: 'SystemIntakeAnnualSpending', currentAnnualSpending?: string | null, currentAnnualSpendingITPortion?: string | null, plannedYearOneSpending?: string | null, plannedYearOneSpendingITPortion?: string | null } | null, contract: { __typename: 'SystemIntakeContract', hasContract?: string | null, contractor?: string | null, vehicle?: string | null, startDate: { __typename: 'ContractDate', day?: string | null, month?: string | null, year?: string | null }, endDate: { __typename: 'ContractDate', day?: string | null, month?: string | null, year?: string | null } }, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', contractNumber: string }>, systems: Array<{ __typename: 'CedarSystem', id: string, name: string }>, notes: Array<{ __typename: 'SystemIntakeNote', id: UUID, createdAt: Time, content: HTML }>, actions: Array<{ __typename: 'SystemIntakeAction', id: UUID, createdAt: Time }> }> };
 
 export type SetSystemIntakeRelationNewSystemMutationVariables = Exact<{
   input: SetSystemIntakeRelationNewSystemInput;
@@ -4169,13 +4196,6 @@ export const CedarRoleTypeFragmentFragmentDoc = gql`
   description
 }
     `;
-export const FundingSourceFragmentFragmentDoc = gql`
-    fragment FundingSourceFragment on SystemIntakeFundingSource {
-  id
-  fundingNumber
-  source
-}
-    `;
 export const SystemIntakeContactFragmentFragmentDoc = gql`
     fragment SystemIntakeContactFragment on AugmentedSystemIntakeContact {
   systemIntakeId
@@ -4185,6 +4205,25 @@ export const SystemIntakeContactFragmentFragmentDoc = gql`
   role
   commonName
   email
+}
+    `;
+export const GovernanceRequestFeedbackFragmentFragmentDoc = gql`
+    fragment GovernanceRequestFeedbackFragment on GovernanceRequestFeedback {
+  id
+  feedback
+  targetForm
+  type
+  author {
+    commonName
+  }
+  createdAt
+}
+    `;
+export const FundingSourceFragmentFragmentDoc = gql`
+    fragment FundingSourceFragment on SystemIntakeFundingSource {
+  id
+  fundingNumber
+  source
 }
     `;
 export const SystemIntakeDocumentFragmentFragmentDoc = gql`
@@ -4204,6 +4243,168 @@ export const SystemIntakeDocumentFragmentFragmentDoc = gql`
   systemIntakeId
 }
     `;
+export const SystemIntakeGRBPresentationLinksFragmentFragmentDoc = gql`
+    fragment SystemIntakeGRBPresentationLinksFragment on SystemIntakeGRBPresentationLinks {
+  recordingLink
+  recordingPasscode
+  transcriptFileName
+  transcriptFileStatus
+  transcriptFileURL
+  transcriptLink
+  presentationDeckFileName
+  presentationDeckFileStatus
+  presentationDeckFileURL
+}
+    `;
+export const SystemIntakeFragmentFragmentDoc = gql`
+    fragment SystemIntakeFragment on SystemIntake {
+  id
+  adminLead
+  businessNeed
+  businessSolution
+  businessOwner {
+    component
+    name
+  }
+  contract {
+    contractor
+    endDate {
+      day
+      month
+      year
+    }
+    hasContract
+    startDate {
+      day
+      month
+      year
+    }
+    vehicle
+  }
+  contractNumbers {
+    id
+    contractNumber
+  }
+  costs {
+    isExpectingIncrease
+    expectedIncreaseAmount
+  }
+  annualSpending {
+    currentAnnualSpending
+    currentAnnualSpendingITPortion
+    plannedYearOneSpending
+    plannedYearOneSpendingITPortion
+  }
+  currentStage
+  decisionNextSteps
+  grbDate
+  grtDate
+  governanceRequestFeedbacks {
+    ...GovernanceRequestFeedbackFragment
+  }
+  governanceTeams {
+    isPresent
+    teams {
+      acronym
+      collaborator
+      key
+      label
+      name
+    }
+  }
+  isso {
+    isPresent
+    name
+  }
+  existingFunding
+  fundingSources {
+    ...FundingSourceFragment
+  }
+  lcid
+  lcidIssuedAt
+  lcidExpiresAt
+  lcidRetiresAt
+  lcidScope
+  lcidCostBaseline
+  lcidStatus
+  needsEaSupport
+  productManager {
+    component
+    name
+  }
+  rejectionReason
+  requester {
+    component
+    email
+    name
+  }
+  requestName
+  requestType
+  statusAdmin
+  statusRequester
+  grtReviewEmailBody
+  decidedAt
+  businessCaseId
+  submittedAt
+  updatedAt
+  createdAt
+  archivedAt
+  euaUserId
+  hasUiChanges
+  usesAiTech
+  usingSoftware
+  acquisitionMethods
+  documents {
+    ...SystemIntakeDocumentFragment
+  }
+  state
+  decisionState
+  trbFollowUpRecommendation
+  requestFormState
+  relationType
+  contractName
+  contractNumbers {
+    id
+    contractNumber
+  }
+  systems {
+    id
+    name
+    description
+    acronym
+    businessOwnerOrg
+    businessOwnerRoles {
+      objectID
+      assigneeFirstName
+      assigneeLastName
+    }
+  }
+  relatedTRBRequests {
+    id
+    name
+    contractNumbers {
+      contractNumber
+    }
+    status
+    createdAt
+  }
+  relatedIntakes {
+    id
+    requestName
+    contractNumbers {
+      contractNumber
+    }
+    decisionState
+    submittedAt
+  }
+  grbPresentationLinks {
+    ...SystemIntakeGRBPresentationLinksFragment
+  }
+}
+    ${GovernanceRequestFeedbackFragmentFragmentDoc}
+${FundingSourceFragmentFragmentDoc}
+${SystemIntakeDocumentFragmentFragmentDoc}
+${SystemIntakeGRBPresentationLinksFragmentFragmentDoc}`;
 export const TRBAttendeeFragmentFragmentDoc = gql`
     fragment TRBAttendeeFragment on TRBRequestAttendee {
   id
@@ -5807,6 +6008,90 @@ export function useCreateSystemIntakeNoteMutation(baseOptions?: Apollo.MutationH
 export type CreateSystemIntakeNoteMutationHookResult = ReturnType<typeof useCreateSystemIntakeNoteMutation>;
 export type CreateSystemIntakeNoteMutationResult = Apollo.MutationResult<CreateSystemIntakeNoteMutation>;
 export type CreateSystemIntakeNoteMutationOptions = Apollo.BaseMutationOptions<CreateSystemIntakeNoteMutation, CreateSystemIntakeNoteMutationVariables>;
+export const GetGovernanceRequestFeedbackDocument = gql`
+    query GetGovernanceRequestFeedback($intakeID: UUID!) {
+  systemIntake(id: $intakeID) {
+    id
+    requestName
+    governanceRequestFeedbacks {
+      ...GovernanceRequestFeedbackFragment
+    }
+  }
+}
+    ${GovernanceRequestFeedbackFragmentFragmentDoc}`;
+
+/**
+ * __useGetGovernanceRequestFeedbackQuery__
+ *
+ * To run a query within a React component, call `useGetGovernanceRequestFeedbackQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGovernanceRequestFeedbackQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetGovernanceRequestFeedbackQuery({
+ *   variables: {
+ *      intakeID: // value for 'intakeID'
+ *   },
+ * });
+ */
+export function useGetGovernanceRequestFeedbackQuery(baseOptions: Apollo.QueryHookOptions<GetGovernanceRequestFeedbackQuery, GetGovernanceRequestFeedbackQueryVariables> & ({ variables: GetGovernanceRequestFeedbackQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetGovernanceRequestFeedbackQuery, GetGovernanceRequestFeedbackQueryVariables>(GetGovernanceRequestFeedbackDocument, options);
+      }
+export function useGetGovernanceRequestFeedbackLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGovernanceRequestFeedbackQuery, GetGovernanceRequestFeedbackQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetGovernanceRequestFeedbackQuery, GetGovernanceRequestFeedbackQueryVariables>(GetGovernanceRequestFeedbackDocument, options);
+        }
+export function useGetGovernanceRequestFeedbackSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetGovernanceRequestFeedbackQuery, GetGovernanceRequestFeedbackQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetGovernanceRequestFeedbackQuery, GetGovernanceRequestFeedbackQueryVariables>(GetGovernanceRequestFeedbackDocument, options);
+        }
+export type GetGovernanceRequestFeedbackQueryHookResult = ReturnType<typeof useGetGovernanceRequestFeedbackQuery>;
+export type GetGovernanceRequestFeedbackLazyQueryHookResult = ReturnType<typeof useGetGovernanceRequestFeedbackLazyQuery>;
+export type GetGovernanceRequestFeedbackSuspenseQueryHookResult = ReturnType<typeof useGetGovernanceRequestFeedbackSuspenseQuery>;
+export type GetGovernanceRequestFeedbackQueryResult = Apollo.QueryResult<GetGovernanceRequestFeedbackQuery, GetGovernanceRequestFeedbackQueryVariables>;
+export const GetSystemIntakeDocument = gql`
+    query GetSystemIntake($id: UUID!) {
+  systemIntake(id: $id) {
+    ...SystemIntakeFragment
+  }
+}
+    ${SystemIntakeFragmentFragmentDoc}`;
+
+/**
+ * __useGetSystemIntakeQuery__
+ *
+ * To run a query within a React component, call `useGetSystemIntakeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSystemIntakeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSystemIntakeQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetSystemIntakeQuery(baseOptions: Apollo.QueryHookOptions<GetSystemIntakeQuery, GetSystemIntakeQueryVariables> & ({ variables: GetSystemIntakeQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSystemIntakeQuery, GetSystemIntakeQueryVariables>(GetSystemIntakeDocument, options);
+      }
+export function useGetSystemIntakeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSystemIntakeQuery, GetSystemIntakeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSystemIntakeQuery, GetSystemIntakeQueryVariables>(GetSystemIntakeDocument, options);
+        }
+export function useGetSystemIntakeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSystemIntakeQuery, GetSystemIntakeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSystemIntakeQuery, GetSystemIntakeQueryVariables>(GetSystemIntakeDocument, options);
+        }
+export type GetSystemIntakeQueryHookResult = ReturnType<typeof useGetSystemIntakeQuery>;
+export type GetSystemIntakeLazyQueryHookResult = ReturnType<typeof useGetSystemIntakeLazyQuery>;
+export type GetSystemIntakeSuspenseQueryHookResult = ReturnType<typeof useGetSystemIntakeSuspenseQuery>;
+export type GetSystemIntakeQueryResult = Apollo.QueryResult<GetSystemIntakeQuery, GetSystemIntakeQueryVariables>;
 export const GetSystemIntakeRelatedRequestsDocument = gql`
     query GetSystemIntakeRelatedRequests($systemIntakeID: UUID!) {
   systemIntake(id: $systemIntakeID) {
@@ -5922,6 +6207,127 @@ export type GetSystemIntakeRelationQueryHookResult = ReturnType<typeof useGetSys
 export type GetSystemIntakeRelationLazyQueryHookResult = ReturnType<typeof useGetSystemIntakeRelationLazyQuery>;
 export type GetSystemIntakeRelationSuspenseQueryHookResult = ReturnType<typeof useGetSystemIntakeRelationSuspenseQuery>;
 export type GetSystemIntakeRelationQueryResult = Apollo.QueryResult<GetSystemIntakeRelationQuery, GetSystemIntakeRelationQueryVariables>;
+export const GetSystemIntakesTableDocument = gql`
+    query GetSystemIntakesTable($openRequests: Boolean!) {
+  systemIntakes(openRequests: $openRequests) {
+    id
+    euaUserId
+    requestName
+    statusAdmin
+    state
+    requesterName
+    requesterComponent
+    businessOwner {
+      name
+      component
+    }
+    productManager {
+      name
+      component
+    }
+    isso {
+      name
+    }
+    trbCollaboratorName
+    oitSecurityCollaboratorName
+    eaCollaboratorName
+    existingFunding
+    fundingSources {
+      ...FundingSourceFragment
+    }
+    annualSpending {
+      currentAnnualSpending
+      currentAnnualSpendingITPortion
+      plannedYearOneSpending
+      plannedYearOneSpendingITPortion
+    }
+    contract {
+      hasContract
+      contractor
+      vehicle
+      startDate {
+        day
+        month
+        year
+      }
+      endDate {
+        day
+        month
+        year
+      }
+    }
+    contractName
+    contractNumbers {
+      contractNumber
+    }
+    systems {
+      id
+      name
+    }
+    businessNeed
+    businessSolution
+    currentStage
+    needsEaSupport
+    grtDate
+    grbDate
+    lcid
+    lcidScope
+    lcidExpiresAt
+    adminLead
+    notes {
+      id
+      createdAt
+      content
+    }
+    actions {
+      id
+      createdAt
+    }
+    hasUiChanges
+    usesAiTech
+    usingSoftware
+    acquisitionMethods
+    decidedAt
+    submittedAt
+    updatedAt
+    createdAt
+    archivedAt
+  }
+}
+    ${FundingSourceFragmentFragmentDoc}`;
+
+/**
+ * __useGetSystemIntakesTableQuery__
+ *
+ * To run a query within a React component, call `useGetSystemIntakesTableQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSystemIntakesTableQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSystemIntakesTableQuery({
+ *   variables: {
+ *      openRequests: // value for 'openRequests'
+ *   },
+ * });
+ */
+export function useGetSystemIntakesTableQuery(baseOptions: Apollo.QueryHookOptions<GetSystemIntakesTableQuery, GetSystemIntakesTableQueryVariables> & ({ variables: GetSystemIntakesTableQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSystemIntakesTableQuery, GetSystemIntakesTableQueryVariables>(GetSystemIntakesTableDocument, options);
+      }
+export function useGetSystemIntakesTableLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSystemIntakesTableQuery, GetSystemIntakesTableQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSystemIntakesTableQuery, GetSystemIntakesTableQueryVariables>(GetSystemIntakesTableDocument, options);
+        }
+export function useGetSystemIntakesTableSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSystemIntakesTableQuery, GetSystemIntakesTableQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSystemIntakesTableQuery, GetSystemIntakesTableQueryVariables>(GetSystemIntakesTableDocument, options);
+        }
+export type GetSystemIntakesTableQueryHookResult = ReturnType<typeof useGetSystemIntakesTableQuery>;
+export type GetSystemIntakesTableLazyQueryHookResult = ReturnType<typeof useGetSystemIntakesTableLazyQuery>;
+export type GetSystemIntakesTableSuspenseQueryHookResult = ReturnType<typeof useGetSystemIntakesTableSuspenseQuery>;
+export type GetSystemIntakesTableQueryResult = Apollo.QueryResult<GetSystemIntakesTableQuery, GetSystemIntakesTableQueryVariables>;
 export const SetSystemIntakeRelationNewSystemDocument = gql`
     mutation SetSystemIntakeRelationNewSystem($input: SetSystemIntakeRelationNewSystemInput!) {
   setSystemIntakeRelationNewSystem(input: $input) {
@@ -9370,9 +9776,12 @@ export type UpdateTRBRequestTypeMutationResult = Apollo.MutationResult<UpdateTRB
 export type UpdateTRBRequestTypeMutationOptions = Apollo.BaseMutationOptions<UpdateTRBRequestTypeMutation, UpdateTRBRequestTypeMutationVariables>;
 export const TypedCedarRoleFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRole"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"application"}},{"kind":"Field","name":{"kind":"Name","value":"objectID"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeType"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeUsername"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeEmail"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeFirstName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeLastName"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeName"}},{"kind":"Field","name":{"kind":"Name","value":"roleID"}}]}}]} as unknown as DocumentNode<CedarRoleFragmentFragment, unknown>;
 export const TypedCedarRoleTypeFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleTypeFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRoleType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]} as unknown as DocumentNode<CedarRoleTypeFragmentFragment, unknown>;
-export const TypedFundingSourceFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FundingSourceFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeFundingSource"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}}]} as unknown as DocumentNode<FundingSourceFragmentFragment, unknown>;
 export const TypedSystemIntakeContactFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeContactFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AugmentedSystemIntakeContact"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]} as unknown as DocumentNode<SystemIntakeContactFragmentFragment, unknown>;
+export const TypedGovernanceRequestFeedbackFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"GovernanceRequestFeedbackFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"GovernanceRequestFeedback"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"feedback"}},{"kind":"Field","name":{"kind":"Name","value":"targetForm"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<GovernanceRequestFeedbackFragmentFragment, unknown>;
+export const TypedFundingSourceFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FundingSourceFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeFundingSource"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}}]} as unknown as DocumentNode<FundingSourceFragmentFragment, unknown>;
 export const TypedSystemIntakeDocumentFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeDocumentFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeDocument"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonType"}},{"kind":"Field","name":{"kind":"Name","value":"otherTypeDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"uploadedAt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"canView"}},{"kind":"Field","name":{"kind":"Name","value":"canDelete"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}}]}}]} as unknown as DocumentNode<SystemIntakeDocumentFragmentFragment, unknown>;
+export const TypedSystemIntakeGRBPresentationLinksFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBPresentationLinksFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBPresentationLinks"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recordingLink"}},{"kind":"Field","name":{"kind":"Name","value":"recordingPasscode"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptFileName"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptFileStatus"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptFileURL"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptLink"}},{"kind":"Field","name":{"kind":"Name","value":"presentationDeckFileName"}},{"kind":"Field","name":{"kind":"Name","value":"presentationDeckFileStatus"}},{"kind":"Field","name":{"kind":"Name","value":"presentationDeckFileURL"}}]}}]} as unknown as DocumentNode<SystemIntakeGRBPresentationLinksFragmentFragment, unknown>;
+export const TypedSystemIntakeFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntake"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"adminLead"}},{"kind":"Field","name":{"kind":"Name","value":"businessNeed"}},{"kind":"Field","name":{"kind":"Name","value":"businessSolution"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contract"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hasContract"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}}]}},{"kind":"Field","name":{"kind":"Name","value":"vehicle"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"costs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isExpectingIncrease"}},{"kind":"Field","name":{"kind":"Name","value":"expectedIncreaseAmount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"annualSpending"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAnnualSpending"}},{"kind":"Field","name":{"kind":"Name","value":"currentAnnualSpendingITPortion"}},{"kind":"Field","name":{"kind":"Name","value":"plannedYearOneSpending"}},{"kind":"Field","name":{"kind":"Name","value":"plannedYearOneSpendingITPortion"}}]}},{"kind":"Field","name":{"kind":"Name","value":"currentStage"}},{"kind":"Field","name":{"kind":"Name","value":"decisionNextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}},{"kind":"Field","name":{"kind":"Name","value":"governanceRequestFeedbacks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"GovernanceRequestFeedbackFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"governanceTeams"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isPresent"}},{"kind":"Field","name":{"kind":"Name","value":"teams"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"collaborator"}},{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"isso"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isPresent"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"existingFunding"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSources"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FundingSourceFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"lcidIssuedAt"}},{"kind":"Field","name":{"kind":"Name","value":"lcidExpiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"lcidRetiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"lcidScope"}},{"kind":"Field","name":{"kind":"Name","value":"lcidCostBaseline"}},{"kind":"Field","name":{"kind":"Name","value":"lcidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"needsEaSupport"}},{"kind":"Field","name":{"kind":"Name","value":"productManager"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rejectionReason"}},{"kind":"Field","name":{"kind":"Name","value":"requester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"requestType"}},{"kind":"Field","name":{"kind":"Name","value":"statusAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"statusRequester"}},{"kind":"Field","name":{"kind":"Name","value":"grtReviewEmailBody"}},{"kind":"Field","name":{"kind":"Name","value":"decidedAt"}},{"kind":"Field","name":{"kind":"Name","value":"businessCaseId"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"hasUiChanges"}},{"kind":"Field","name":{"kind":"Name","value":"usesAiTech"}},{"kind":"Field","name":{"kind":"Name","value":"usingSoftware"}},{"kind":"Field","name":{"kind":"Name","value":"acquisitionMethods"}},{"kind":"Field","name":{"kind":"Name","value":"documents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeDocumentFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"trbFollowUpRecommendation"}},{"kind":"Field","name":{"kind":"Name","value":"requestFormState"}},{"kind":"Field","name":{"kind":"Name","value":"relationType"}},{"kind":"Field","name":{"kind":"Name","value":"contractName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerOrg"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerRoles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"objectID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeFirstName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeLastName"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"grbPresentationLinks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBPresentationLinksFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"GovernanceRequestFeedbackFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"GovernanceRequestFeedback"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"feedback"}},{"kind":"Field","name":{"kind":"Name","value":"targetForm"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FundingSourceFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeFundingSource"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeDocumentFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeDocument"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonType"}},{"kind":"Field","name":{"kind":"Name","value":"otherTypeDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"uploadedAt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"canView"}},{"kind":"Field","name":{"kind":"Name","value":"canDelete"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBPresentationLinksFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBPresentationLinks"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recordingLink"}},{"kind":"Field","name":{"kind":"Name","value":"recordingPasscode"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptFileName"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptFileStatus"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptFileURL"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptLink"}},{"kind":"Field","name":{"kind":"Name","value":"presentationDeckFileName"}},{"kind":"Field","name":{"kind":"Name","value":"presentationDeckFileStatus"}},{"kind":"Field","name":{"kind":"Name","value":"presentationDeckFileURL"}}]}}]} as unknown as DocumentNode<SystemIntakeFragmentFragment, unknown>;
 export const TypedTRBAttendeeFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBAttendeeFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBRequestAttendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"trbRequestId"}},{"kind":"Field","name":{"kind":"Name","value":"userInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<TRBAttendeeFragmentFragment, unknown>;
 export const TypedTrbRequestFormFieldsFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TrbRequestFormFieldsFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBRequest"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"taskStatuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formStatus"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackStatus"}},{"kind":"Field","name":{"kind":"Name","value":"consultPrepStatus"}},{"kind":"Field","name":{"kind":"Name","value":"attendConsultStatus"}},{"kind":"Field","name":{"kind":"Name","value":"guidanceLetterStatus"}}]}},{"kind":"Field","name":{"kind":"Name","value":"form"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"needsAssistanceWith"}},{"kind":"Field","name":{"kind":"Name","value":"hasSolutionInMind"}},{"kind":"Field","name":{"kind":"Name","value":"proposedSolution"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcess"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcessOther"}},{"kind":"Field","name":{"kind":"Name","value":"hasExpectedStartEndDates"}},{"kind":"Field","name":{"kind":"Name","value":"expectedStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"expectedEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroups"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateSecurity"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateEnterpriseArchitecture"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateCloud"}},{"kind":"Field","name":{"kind":"Name","value":"collabDatePrivacyAdvisor"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateGovernanceReviewBoard"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroupOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGRBConsultRequested"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptions"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptionOther"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSources"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"feedback"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackMessage"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}}]}}]} as unknown as DocumentNode<TrbRequestFormFieldsFragmentFragment, unknown>;
 export const TypedSystemIntakeWithReviewRequestedFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeWithReviewRequested"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntake"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}}]}}]} as unknown as DocumentNode<SystemIntakeWithReviewRequestedFragment, unknown>;
@@ -9422,8 +9831,11 @@ export const TypedStartGRBReviewDocument = {"kind":"Document","definitions":[{"k
 export const TypedUpdateSystemIntakeGRBReviewerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeGRBReviewer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeGRBReviewerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeGRBReviewer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBReviewer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbRole"}},{"kind":"Field","name":{"kind":"Name","value":"votingRole"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeGRBReviewerMutation, UpdateSystemIntakeGRBReviewerMutationVariables>;
 export const TypedArchiveSystemIntakeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ArchiveSystemIntake"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"archiveSystemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}}]}}]} as unknown as DocumentNode<ArchiveSystemIntakeMutation, ArchiveSystemIntakeMutationVariables>;
 export const TypedCreateSystemIntakeNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeNoteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"eua"}}]}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeNoteMutation, CreateSystemIntakeNoteMutationVariables>;
+export const TypedGetGovernanceRequestFeedbackDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetGovernanceRequestFeedback"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"intakeID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"intakeID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"governanceRequestFeedbacks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"GovernanceRequestFeedbackFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"GovernanceRequestFeedbackFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"GovernanceRequestFeedback"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"feedback"}},{"kind":"Field","name":{"kind":"Name","value":"targetForm"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<GetGovernanceRequestFeedbackQuery, GetGovernanceRequestFeedbackQueryVariables>;
+export const TypedGetSystemIntakeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntake"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"GovernanceRequestFeedbackFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"GovernanceRequestFeedback"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"feedback"}},{"kind":"Field","name":{"kind":"Name","value":"targetForm"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FundingSourceFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeFundingSource"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeDocumentFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeDocument"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonType"}},{"kind":"Field","name":{"kind":"Name","value":"otherTypeDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"uploadedAt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"canView"}},{"kind":"Field","name":{"kind":"Name","value":"canDelete"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeGRBPresentationLinksFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeGRBPresentationLinks"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recordingLink"}},{"kind":"Field","name":{"kind":"Name","value":"recordingPasscode"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptFileName"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptFileStatus"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptFileURL"}},{"kind":"Field","name":{"kind":"Name","value":"transcriptLink"}},{"kind":"Field","name":{"kind":"Name","value":"presentationDeckFileName"}},{"kind":"Field","name":{"kind":"Name","value":"presentationDeckFileStatus"}},{"kind":"Field","name":{"kind":"Name","value":"presentationDeckFileURL"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntake"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"adminLead"}},{"kind":"Field","name":{"kind":"Name","value":"businessNeed"}},{"kind":"Field","name":{"kind":"Name","value":"businessSolution"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contract"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hasContract"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}}]}},{"kind":"Field","name":{"kind":"Name","value":"vehicle"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"costs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isExpectingIncrease"}},{"kind":"Field","name":{"kind":"Name","value":"expectedIncreaseAmount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"annualSpending"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAnnualSpending"}},{"kind":"Field","name":{"kind":"Name","value":"currentAnnualSpendingITPortion"}},{"kind":"Field","name":{"kind":"Name","value":"plannedYearOneSpending"}},{"kind":"Field","name":{"kind":"Name","value":"plannedYearOneSpendingITPortion"}}]}},{"kind":"Field","name":{"kind":"Name","value":"currentStage"}},{"kind":"Field","name":{"kind":"Name","value":"decisionNextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}},{"kind":"Field","name":{"kind":"Name","value":"governanceRequestFeedbacks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"GovernanceRequestFeedbackFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"governanceTeams"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isPresent"}},{"kind":"Field","name":{"kind":"Name","value":"teams"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"collaborator"}},{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"isso"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isPresent"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"existingFunding"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSources"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FundingSourceFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"lcidIssuedAt"}},{"kind":"Field","name":{"kind":"Name","value":"lcidExpiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"lcidRetiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"lcidScope"}},{"kind":"Field","name":{"kind":"Name","value":"lcidCostBaseline"}},{"kind":"Field","name":{"kind":"Name","value":"lcidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"needsEaSupport"}},{"kind":"Field","name":{"kind":"Name","value":"productManager"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rejectionReason"}},{"kind":"Field","name":{"kind":"Name","value":"requester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"requestType"}},{"kind":"Field","name":{"kind":"Name","value":"statusAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"statusRequester"}},{"kind":"Field","name":{"kind":"Name","value":"grtReviewEmailBody"}},{"kind":"Field","name":{"kind":"Name","value":"decidedAt"}},{"kind":"Field","name":{"kind":"Name","value":"businessCaseId"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"hasUiChanges"}},{"kind":"Field","name":{"kind":"Name","value":"usesAiTech"}},{"kind":"Field","name":{"kind":"Name","value":"usingSoftware"}},{"kind":"Field","name":{"kind":"Name","value":"acquisitionMethods"}},{"kind":"Field","name":{"kind":"Name","value":"documents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeDocumentFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"trbFollowUpRecommendation"}},{"kind":"Field","name":{"kind":"Name","value":"requestFormState"}},{"kind":"Field","name":{"kind":"Name","value":"relationType"}},{"kind":"Field","name":{"kind":"Name","value":"contractName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerOrg"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwnerRoles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"objectID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeFirstName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeLastName"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"grbPresentationLinks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeGRBPresentationLinksFragment"}}]}}]}}]} as unknown as DocumentNode<GetSystemIntakeQuery, GetSystemIntakeQueryVariables>;
 export const TypedGetSystemIntakeRelatedRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeRelatedRequests"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"systemIntakeID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"systemIntakeID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"statusAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"statusRequester"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<GetSystemIntakeRelatedRequestsQuery, GetSystemIntakeRelatedRequestsQueryVariables>;
 export const TypedGetSystemIntakeRelationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeRelation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"relationType"}},{"kind":"Field","name":{"kind":"Name","value":"contractName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"acronym"}}]}}]}}]} as unknown as DocumentNode<GetSystemIntakeRelationQuery, GetSystemIntakeRelationQueryVariables>;
+export const TypedGetSystemIntakesTableDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakesTable"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"openRequests"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"openRequests"},"value":{"kind":"Variable","name":{"kind":"Name","value":"openRequests"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"statusAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"component"}}]}},{"kind":"Field","name":{"kind":"Name","value":"productManager"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"component"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isso"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"trbCollaboratorName"}},{"kind":"Field","name":{"kind":"Name","value":"oitSecurityCollaboratorName"}},{"kind":"Field","name":{"kind":"Name","value":"eaCollaboratorName"}},{"kind":"Field","name":{"kind":"Name","value":"existingFunding"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSources"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FundingSourceFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"annualSpending"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAnnualSpending"}},{"kind":"Field","name":{"kind":"Name","value":"currentAnnualSpendingITPortion"}},{"kind":"Field","name":{"kind":"Name","value":"plannedYearOneSpending"}},{"kind":"Field","name":{"kind":"Name","value":"plannedYearOneSpendingITPortion"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contract"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasContract"}},{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"vehicle"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}}]}},{"kind":"Field","name":{"kind":"Name","value":"endDate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"contractName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"businessNeed"}},{"kind":"Field","name":{"kind":"Name","value":"businessSolution"}},{"kind":"Field","name":{"kind":"Name","value":"currentStage"}},{"kind":"Field","name":{"kind":"Name","value":"needsEaSupport"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"lcidScope"}},{"kind":"Field","name":{"kind":"Name","value":"lcidExpiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"adminLead"}},{"kind":"Field","name":{"kind":"Name","value":"notes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}},{"kind":"Field","name":{"kind":"Name","value":"actions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hasUiChanges"}},{"kind":"Field","name":{"kind":"Name","value":"usesAiTech"}},{"kind":"Field","name":{"kind":"Name","value":"usingSoftware"}},{"kind":"Field","name":{"kind":"Name","value":"acquisitionMethods"}},{"kind":"Field","name":{"kind":"Name","value":"decidedAt"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FundingSourceFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeFundingSource"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}}]} as unknown as DocumentNode<GetSystemIntakesTableQuery, GetSystemIntakesTableQueryVariables>;
 export const TypedSetSystemIntakeRelationNewSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationNewSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationNewSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationNewSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationNewSystemMutation, SetSystemIntakeRelationNewSystemMutationVariables>;
 export const TypedSetSystemIntakeRelationExistingSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationExistingSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationExistingSystemMutation, SetSystemIntakeRelationExistingSystemMutationVariables>;
 export const TypedSetSystemIntakeRelationExistingServiceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingService"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingServiceInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationExistingService"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationExistingServiceMutation, SetSystemIntakeRelationExistingServiceMutationVariables>;

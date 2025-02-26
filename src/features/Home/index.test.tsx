@@ -4,13 +4,12 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { GetCedarSystemsDocument } from 'gql/generated/graphql';
-import GetSystemIntakesTableQuery from 'gql/legacyGQL/GetSystemIntakesTableQuery';
 import {
-  GetSystemIntakesTable,
-  GetSystemIntakesTable_systemIntakes as SystemIntake,
-  GetSystemIntakesTableVariables
-} from 'gql/legacyGQL/types/GetSystemIntakesTable';
+  GetCedarSystemsDocument,
+  GetSystemIntakesTableDocument,
+  GetSystemIntakesTableQuery,
+  GetSystemIntakesTableQueryVariables
+} from 'gql/generated/graphql';
 import { systemIntakeForTable } from 'tests/mock/systemIntake';
 import {
   getRequestsQuery,
@@ -25,6 +24,8 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import AdminHome from './AdminHome';
 import Home from './index';
+
+type SystemIntake = GetSystemIntakesTableQuery['systemIntakes'][0];
 
 const adminStore = easiMockStore({
   groups: ['EASI_D_GOVTEAM']
@@ -43,29 +44,31 @@ const mockClosedIntakes: SystemIntake[] = [
 ];
 
 const getOpenSystemIntakesTable: MockedQuery<
-  GetSystemIntakesTable,
-  GetSystemIntakesTableVariables
+  GetSystemIntakesTableQuery,
+  GetSystemIntakesTableQueryVariables
 > = {
   request: {
-    query: GetSystemIntakesTableQuery,
+    query: GetSystemIntakesTableDocument,
     variables: { openRequests: true }
   },
   result: {
     data: {
+      __typename: 'Query',
       systemIntakes: mockOpenIntakes
     }
   }
 };
 const getClosedSystemIntakesTable: MockedQuery<
-  GetSystemIntakesTable,
-  GetSystemIntakesTableVariables
+  GetSystemIntakesTableQuery,
+  GetSystemIntakesTableQueryVariables
 > = {
   request: {
-    query: GetSystemIntakesTableQuery,
+    query: GetSystemIntakesTableDocument,
     variables: { openRequests: false }
   },
   result: {
     data: {
+      __typename: 'Query',
       systemIntakes: mockClosedIntakes
     }
   }

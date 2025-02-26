@@ -2,15 +2,15 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
-import { GetTRBRequestHomeDocument } from 'gql/generated/graphql';
+import {
+  GetTRBRequestHomeDocument,
+  TRBFormStatus,
+  TRBGuidanceLetterStatus
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { trbRequestSummary } from 'tests/mock/trbRequest';
 
-import {
-  TRBFormStatus,
-  TRBGuidanceLetterStatus,
-  TRBRequestStatus
-} from 'types/graphql-global-types';
+import { TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

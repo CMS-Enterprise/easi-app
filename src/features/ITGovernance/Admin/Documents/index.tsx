@@ -1,13 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import PageHeading from 'components/PageHeading';
 
 type DocumentsProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 /**

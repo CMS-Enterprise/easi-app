@@ -6,24 +6,22 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import {
   GetTRBRequestQuery,
-  GetTRBRequestQueryVariables
-} from 'gql/generated/graphql';
-import configureMockStore from 'redux-mock-store';
-import { requester } from 'tests/mock/trbRequest';
-
-import { MessageProvider } from 'hooks/useMessage';
-import {
+  GetTRBRequestQueryVariables,
   TRBAttendConsultStatus,
   TRBCollabGroupOption,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
   TRBGuidanceLetterStatus,
-  TRBRequestState,
   TRBRequestType,
   TRBSubjectAreaOption,
   TRBWhereInProcessOption
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
+import configureMockStore from 'redux-mock-store';
+import { requester } from 'tests/mock/trbRequest';
+
+import { MessageProvider } from 'hooks/useMessage';
+import { TRBRequestState } from 'types/graphql-global-types';
 
 import Check from './Check';
 

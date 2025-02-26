@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 import i18next from 'i18next';
 
 import {
@@ -19,7 +19,7 @@ import formatContractNumbers from 'utils/formatContractNumbers';
 import './index.scss';
 
 type SystemIntakeReviewProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 type FundingSourcesObject = {
@@ -48,13 +48,14 @@ export const SystemIntakeReview = ({
     // Format funding sources object
     const fundingSourcesObject = fundingSources.reduce<FundingSourcesObject>(
       (acc, { fundingNumber, source }) => {
-        const sourcesArray = acc[fundingNumber!]
-          ? [...acc[fundingNumber!].sources, source]
+        if (!fundingNumber || !source) return acc;
+        const sourcesArray = acc[fundingNumber]
+          ? [...acc[fundingNumber].sources, source]
           : [source];
         // Return formatted object of funding sources
         return {
           ...acc,
-          [fundingNumber!]: {
+          [fundingNumber]: {
             fundingNumber,
             sources: sourcesArray
           }
@@ -137,6 +138,7 @@ export const SystemIntakeReview = ({
             <DescriptionDefinition
               definition={
                 systemIntake.usingSoftware !== null &&
+                systemIntake.usingSoftware !== undefined &&
                 systemIntake.usingSoftware in yesNoMap
                   ? yesNoMap[systemIntake.usingSoftware]
                   : 'N/A'

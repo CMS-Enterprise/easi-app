@@ -3,11 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import { Button, GridContainer } from '@trussworks/react-uswds';
 import { StepsInProcessContent } from 'features/Help/TechnicalReviewBoard/StepsInProcess';
-import { useCreateTRBRequestMutation } from 'gql/generated/graphql';
+import {
+  TRBRequestType,
+  useCreateTRBRequestMutation
+} from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
-import { TRBRequestType } from 'types/graphql-global-types';
 import linkCedarSystemIdQueryString, {
   useLinkCedarSystemIdQueryParam
 } from 'utils/linkCedarSystemIdQueryString';
