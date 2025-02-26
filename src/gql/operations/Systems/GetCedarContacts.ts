@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export default gql`
+export default gql(/* GraphQL */ `
   query GetCedarContacts($commonName: String!) {
     cedarPersonsByCommonName(commonName: $commonName) {
       commonName
@@ -8,4 +8,4 @@ export default gql`
       euaUserId
     }
   }
-`;
+`);
