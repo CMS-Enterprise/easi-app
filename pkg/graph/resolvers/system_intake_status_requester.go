@@ -100,28 +100,28 @@ func calcSystemIntakeFinalBusinessCaseStatusRequester(finalBusinessCaseState mod
 func calcSystemIntakeGRBMeetingStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
 	switch intake.GrbReviewType {
 	case models.SystemIntakeGRBReviewTypeStandard:
-		return calcSystemIntakeStandardGRBReviewStatusRequester(intake, currentTime)
+		return calcSystemIntakeStandardGRBReviewStatusRequester(intake.GRBDate, currentTime)
 	case models.SystemIntakeGRBReviewTypeAsync:
-		return calcSystemIntakeAsyncGRBReviewStatusRequester(intake, currentTime)
+		return calcSystemIntakeAsyncGRBReviewStatusRequester(intake.GRBReviewStartedAt, intake.GrbReviewAsyncEndDate, currentTime)
 	}
 
 	return models.SISRGrbMeetingAwaitingDecision
 }
 
-func calcSystemIntakeStandardGRBReviewStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
-	if intake.GRBDate == nil || intake.GRBDate.After(currentTime) {
+func calcSystemIntakeStandardGRBReviewStatusRequester(grbDate *time.Time, currentTime time.Time) models.SystemIntakeStatusRequester {
+	if grbDate == nil || grbDate.After(currentTime) {
 		return models.SISRGrbMeetingReady
 	}
 
 	return models.SISRGrbMeetingAwaitingDecision
 }
 
-func calcSystemIntakeAsyncGRBReviewStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
-	if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
+func calcSystemIntakeAsyncGRBReviewStatusRequester(startDate *time.Time, endDate *time.Time, currentTime time.Time) models.SystemIntakeStatusRequester {
+	if startDate == nil || endDate == nil {
 		return models.SISRGrbMeetingReady
 	}
 
-	if intake.GRBReviewStartedAt.Before(currentTime) && intake.GrbReviewAsyncEndDate.After(currentTime) {
+	if startDate.Before(currentTime) && endDate.After(currentTime) {
 		return models.SISRGrbReviewInProgress
 	}
 
