@@ -507,17 +507,6 @@ export interface EmailNotificationRecipients {
 }
 
 /**
- * Input for creating a Reopen Request Action in Admin Actions v2
- */
-export interface SystemIntakeReopenRequestInput {
-  systemIntakeID: UUID;
-  notificationRecipients?: EmailNotificationRecipients | null;
-  reason?: HTML | null;
-  additionalInfo?: HTML | null;
-  adminNote?: HTML | null;
-}
-
-/**
  * Input for creating a Request Edits Action in Admin Actions v2
  */
 export interface SystemIntakeRequestEditsInput {
