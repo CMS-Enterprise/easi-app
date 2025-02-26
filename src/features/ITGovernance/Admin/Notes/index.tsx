@@ -2,16 +2,14 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Button, ButtonGroup, ModalFooter } from '@trussworks/react-uswds';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import { useUpdateSystemIntakeNoteMutation } from 'gql/generated/graphql';
-import CreateSystemIntakeNoteQuery from 'gql/legacyGQL/CreateSystemIntakeNoteQuery';
-import GetAdminNotesAndActionsQuery from 'gql/legacyGQL/GetAdminNotesAndActionsQuery';
 import {
-  CreateSystemIntakeNote,
-  CreateSystemIntakeNoteVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeNote';
+  useCreateSystemIntakeNoteMutation,
+  useUpdateSystemIntakeNoteMutation
+} from 'gql/generated/graphql';
+import GetAdminNotesAndActionsQuery from 'gql/legacyGQL/GetAdminNotesAndActionsQuery';
 import {
   GetAdminNotesAndActions,
   GetAdminNotesAndActionsVariables
@@ -49,19 +47,17 @@ type NoteForm = {
 const Notes = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const authState = useSelector((state: AppState) => state.auth);
-  const [createNoteMutation, createMutationResult] = useMutation<
-    CreateSystemIntakeNote,
-    CreateSystemIntakeNoteVariables
-  >(CreateSystemIntakeNoteQuery, {
-    refetchQueries: [
-      {
-        query: GetAdminNotesAndActionsQuery,
-        variables: {
-          id: systemId
+  const [createNoteMutation, createMutationResult] =
+    useCreateSystemIntakeNoteMutation({
+      refetchQueries: [
+        {
+          query: GetAdminNotesAndActionsQuery,
+          variables: {
+            id: systemId
+          }
         }
-      }
-    ]
-  });
+      ]
+    });
 
   const {
     error,

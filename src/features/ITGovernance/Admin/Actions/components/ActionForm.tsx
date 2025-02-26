@@ -14,6 +14,7 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
+import { EmailNotificationRecipients } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -27,7 +28,6 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 import RichTextEditor from 'components/RichTextEditor';
 import useMessage from 'hooks/useMessage';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 
 import ActionsSummary, { ActionsSummaryProps } from './ActionsSummary';
