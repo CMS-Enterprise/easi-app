@@ -1,5 +1,6 @@
+import { SystemIntakeActionType } from 'gql/generated/graphql';
+
 import {
-  SystemIntakeActionType,
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester
 } from 'types/graphql-global-types';

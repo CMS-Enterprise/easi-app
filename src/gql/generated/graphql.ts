@@ -3465,6 +3465,13 @@ export type CreateSystemIntakeActionUpdateLCIDMutationVariables = Exact<{
 
 export type CreateSystemIntakeActionUpdateLCIDMutation = { __typename: 'Mutation', createSystemIntakeActionUpdateLCID?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID, lcid?: string | null } | null } | null };
 
+export type GetAdminNotesAndActionsQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type GetAdminNotesAndActionsQuery = { __typename: 'Query', systemIntake?: { __typename: 'SystemIntake', id: UUID, lcid?: string | null, notes: Array<{ __typename: 'SystemIntakeNote', id: UUID, createdAt: Time, content: HTML, modifiedBy?: string | null, modifiedAt?: Time | null, isArchived: boolean, editor?: { __typename: 'UserInfo', commonName: string } | null, author: { __typename: 'SystemIntakeNoteAuthor', name: string, eua: string } }>, actions: Array<{ __typename: 'SystemIntakeAction', id: UUID, createdAt: Time, feedback?: HTML | null, type: SystemIntakeActionType, lcidExpirationChange?: { __typename: 'SystemIntakeLCIDExpirationChange', previousDate: Time, newDate: Time, previousScope?: HTML | null, newScope?: HTML | null, previousNextSteps?: HTML | null, newNextSteps?: HTML | null, previousCostBaseline?: string | null, newCostBaseline?: string | null } | null, actor: { __typename: 'SystemIntakeActionActor', name: string, email: string } }> } | null };
+
 export type GetSystemIntakeContactsQueryVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
@@ -3995,6 +4002,13 @@ export type DeleteTRBRequestDocumentMutationVariables = Exact<{
 
 
 export type DeleteTRBRequestDocumentMutation = { __typename: 'Mutation', deleteTRBRequestDocument?: { __typename: 'DeleteTRBRequestDocumentPayload', document?: { __typename: 'TRBRequestDocument', fileName: string } | null } | null };
+
+export type DeleteTRBRequestFundingSourceMutationVariables = Exact<{
+  input: DeleteTRBRequestFundingSourcesInput;
+}>;
+
+
+export type DeleteTRBRequestFundingSourceMutation = { __typename: 'Mutation', deleteTRBRequestFundingSources: Array<{ __typename: 'TRBFundingSource', id: UUID }> };
 
 export type GetTRBLeadOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4943,6 +4957,82 @@ export function useCreateSystemIntakeActionUpdateLCIDMutation(baseOptions?: Apol
 export type CreateSystemIntakeActionUpdateLCIDMutationHookResult = ReturnType<typeof useCreateSystemIntakeActionUpdateLCIDMutation>;
 export type CreateSystemIntakeActionUpdateLCIDMutationResult = Apollo.MutationResult<CreateSystemIntakeActionUpdateLCIDMutation>;
 export type CreateSystemIntakeActionUpdateLCIDMutationOptions = Apollo.BaseMutationOptions<CreateSystemIntakeActionUpdateLCIDMutation, CreateSystemIntakeActionUpdateLCIDMutationVariables>;
+export const GetAdminNotesAndActionsDocument = gql`
+    query GetAdminNotesAndActions($id: UUID!) {
+  systemIntake(id: $id) {
+    id
+    lcid
+    notes {
+      id
+      createdAt
+      content
+      editor {
+        commonName
+      }
+      modifiedBy
+      modifiedAt
+      isArchived
+      author {
+        name
+        eua
+      }
+    }
+    actions {
+      id
+      createdAt
+      feedback
+      type
+      lcidExpirationChange {
+        previousDate
+        newDate
+        previousScope
+        newScope
+        previousNextSteps
+        newNextSteps
+        previousCostBaseline
+        newCostBaseline
+      }
+      actor {
+        name
+        email
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAdminNotesAndActionsQuery__
+ *
+ * To run a query within a React component, call `useGetAdminNotesAndActionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdminNotesAndActionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdminNotesAndActionsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetAdminNotesAndActionsQuery(baseOptions: Apollo.QueryHookOptions<GetAdminNotesAndActionsQuery, GetAdminNotesAndActionsQueryVariables> & ({ variables: GetAdminNotesAndActionsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAdminNotesAndActionsQuery, GetAdminNotesAndActionsQueryVariables>(GetAdminNotesAndActionsDocument, options);
+      }
+export function useGetAdminNotesAndActionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAdminNotesAndActionsQuery, GetAdminNotesAndActionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAdminNotesAndActionsQuery, GetAdminNotesAndActionsQueryVariables>(GetAdminNotesAndActionsDocument, options);
+        }
+export function useGetAdminNotesAndActionsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAdminNotesAndActionsQuery, GetAdminNotesAndActionsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAdminNotesAndActionsQuery, GetAdminNotesAndActionsQueryVariables>(GetAdminNotesAndActionsDocument, options);
+        }
+export type GetAdminNotesAndActionsQueryHookResult = ReturnType<typeof useGetAdminNotesAndActionsQuery>;
+export type GetAdminNotesAndActionsLazyQueryHookResult = ReturnType<typeof useGetAdminNotesAndActionsLazyQuery>;
+export type GetAdminNotesAndActionsSuspenseQueryHookResult = ReturnType<typeof useGetAdminNotesAndActionsSuspenseQuery>;
+export type GetAdminNotesAndActionsQueryResult = Apollo.QueryResult<GetAdminNotesAndActionsQuery, GetAdminNotesAndActionsQueryVariables>;
 export const GetSystemIntakeContactsDocument = gql`
     query GetSystemIntakeContacts($id: UUID!) {
   systemIntakeContacts(id: $id) {
@@ -7996,6 +8086,39 @@ export function useDeleteTRBRequestDocumentMutation(baseOptions?: Apollo.Mutatio
 export type DeleteTRBRequestDocumentMutationHookResult = ReturnType<typeof useDeleteTRBRequestDocumentMutation>;
 export type DeleteTRBRequestDocumentMutationResult = Apollo.MutationResult<DeleteTRBRequestDocumentMutation>;
 export type DeleteTRBRequestDocumentMutationOptions = Apollo.BaseMutationOptions<DeleteTRBRequestDocumentMutation, DeleteTRBRequestDocumentMutationVariables>;
+export const DeleteTRBRequestFundingSourceDocument = gql`
+    mutation DeleteTRBRequestFundingSource($input: DeleteTRBRequestFundingSourcesInput!) {
+  deleteTRBRequestFundingSources(input: $input) {
+    id
+  }
+}
+    `;
+export type DeleteTRBRequestFundingSourceMutationFn = Apollo.MutationFunction<DeleteTRBRequestFundingSourceMutation, DeleteTRBRequestFundingSourceMutationVariables>;
+
+/**
+ * __useDeleteTRBRequestFundingSourceMutation__
+ *
+ * To run a mutation, you first call `useDeleteTRBRequestFundingSourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTRBRequestFundingSourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTrbRequestFundingSourceMutation, { data, loading, error }] = useDeleteTRBRequestFundingSourceMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteTRBRequestFundingSourceMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTRBRequestFundingSourceMutation, DeleteTRBRequestFundingSourceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTRBRequestFundingSourceMutation, DeleteTRBRequestFundingSourceMutationVariables>(DeleteTRBRequestFundingSourceDocument, options);
+      }
+export type DeleteTRBRequestFundingSourceMutationHookResult = ReturnType<typeof useDeleteTRBRequestFundingSourceMutation>;
+export type DeleteTRBRequestFundingSourceMutationResult = Apollo.MutationResult<DeleteTRBRequestFundingSourceMutation>;
+export type DeleteTRBRequestFundingSourceMutationOptions = Apollo.BaseMutationOptions<DeleteTRBRequestFundingSourceMutation, DeleteTRBRequestFundingSourceMutationVariables>;
 export const GetTRBLeadOptionsDocument = gql`
     query GetTRBLeadOptions {
   trbLeadOptions {
@@ -8977,6 +9100,7 @@ export const TypedCreateSystemIntakeActionRequestEditsDocument = {"kind":"Docume
 export const TypedCreateSystemIntakeActionRetireLcidDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeActionRetireLcid"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeRetireLCIDInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeActionRetireLCID"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeActionRetireLcidMutation, CreateSystemIntakeActionRetireLcidMutationVariables>;
 export const TypedCreateSystemIntakeActionUnretireLCIDDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeActionUnretireLCID"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeUnretireLCIDInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeActionUnretireLCID"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeActionUnretireLCIDMutation, CreateSystemIntakeActionUnretireLCIDMutationVariables>;
 export const TypedCreateSystemIntakeActionUpdateLCIDDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeActionUpdateLCID"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeUpdateLCIDInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeActionUpdateLCID"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeActionUpdateLCIDMutation, CreateSystemIntakeActionUpdateLCIDMutationVariables>;
+export const TypedGetAdminNotesAndActionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAdminNotesAndActions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"notes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"editor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"modifiedBy"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}},{"kind":"Field","name":{"kind":"Name","value":"isArchived"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"eua"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"actions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"feedback"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"lcidExpirationChange"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"previousDate"}},{"kind":"Field","name":{"kind":"Name","value":"newDate"}},{"kind":"Field","name":{"kind":"Name","value":"previousScope"}},{"kind":"Field","name":{"kind":"Name","value":"newScope"}},{"kind":"Field","name":{"kind":"Name","value":"previousNextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"newNextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"previousCostBaseline"}},{"kind":"Field","name":{"kind":"Name","value":"newCostBaseline"}}]}},{"kind":"Field","name":{"kind":"Name","value":"actor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetAdminNotesAndActionsQuery, GetAdminNotesAndActionsQueryVariables>;
 export const TypedGetSystemIntakeContactsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeContacts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContacts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContacts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeContactFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeContactFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AugmentedSystemIntakeContact"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]} as unknown as DocumentNode<GetSystemIntakeContactsQuery, GetSystemIntakeContactsQueryVariables>;
 export const TypedCreateSystemIntakeContactDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeContact"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeContactInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeContact"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContact"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeContactMutation, CreateSystemIntakeContactMutationVariables>;
 export const TypedUpdateSystemIntakeContactDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeContact"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeContactInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeContact"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContact"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeContactMutation, UpdateSystemIntakeContactMutationVariables>;
@@ -9051,6 +9175,7 @@ export const TypedCreateTRBRequestDocument = {"kind":"Document","definitions":[{
 export const TypedCreateTRBRequestDocumentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTRBRequestDocument"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateTRBRequestDocumentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTRBRequestDocument"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"document"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"documentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonType"}},{"kind":"Field","name":{"kind":"Name","value":"otherTypeDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}}]}}]}}]}}]} as unknown as DocumentNode<CreateTRBRequestDocumentMutation, CreateTRBRequestDocumentMutationVariables>;
 export const TypedCreateTRBRequestFeedbackDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTRBRequestFeedback"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateTRBRequestFeedbackInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTRBRequestFeedback"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateTRBRequestFeedbackMutation, CreateTRBRequestFeedbackMutationVariables>;
 export const TypedDeleteTRBRequestDocumentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteTRBRequestDocument"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteTRBRequestDocument"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"document"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fileName"}}]}}]}}]}}]} as unknown as DocumentNode<DeleteTRBRequestDocumentMutation, DeleteTRBRequestDocumentMutationVariables>;
+export const TypedDeleteTRBRequestFundingSourceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteTRBRequestFundingSource"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteTRBRequestFundingSourcesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteTRBRequestFundingSources"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<DeleteTRBRequestFundingSourceMutation, DeleteTRBRequestFundingSourceMutationVariables>;
 export const TypedGetTRBLeadOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}}]}}]} as unknown as DocumentNode<GetTRBLeadOptionsQuery, GetTRBLeadOptionsQueryVariables>;
 export const TypedGetTRBRequestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBRequest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TrbRequestFormFieldsFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TrbRequestFormFieldsFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBRequest"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"taskStatuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formStatus"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackStatus"}},{"kind":"Field","name":{"kind":"Name","value":"consultPrepStatus"}},{"kind":"Field","name":{"kind":"Name","value":"attendConsultStatus"}},{"kind":"Field","name":{"kind":"Name","value":"guidanceLetterStatus"}}]}},{"kind":"Field","name":{"kind":"Name","value":"form"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"needsAssistanceWith"}},{"kind":"Field","name":{"kind":"Name","value":"hasSolutionInMind"}},{"kind":"Field","name":{"kind":"Name","value":"proposedSolution"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcess"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcessOther"}},{"kind":"Field","name":{"kind":"Name","value":"hasExpectedStartEndDates"}},{"kind":"Field","name":{"kind":"Name","value":"expectedStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"expectedEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroups"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateSecurity"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateEnterpriseArchitecture"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateCloud"}},{"kind":"Field","name":{"kind":"Name","value":"collabDatePrivacyAdvisor"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateGovernanceReviewBoard"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroupOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGRBConsultRequested"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptions"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptionOther"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSources"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"feedback"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackMessage"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}}]}}]} as unknown as DocumentNode<GetTRBRequestQuery, GetTRBRequestQueryVariables>;
 export const TypedGetTRBRequestConsultMeetingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBRequestConsultMeeting"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"consultMeetingTime"}}]}}]}}]} as unknown as DocumentNode<GetTRBRequestConsultMeetingQuery, GetTRBRequestConsultMeetingQueryVariables>;
