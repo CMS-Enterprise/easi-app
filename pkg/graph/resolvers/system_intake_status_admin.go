@@ -102,12 +102,12 @@ func calcSystemIntakeStandardGRBReviewStatusAdmin(intake *models.SystemIntake) m
 }
 
 func calcSystemIntakeAsyncGRBReviewStatusAdmin(intake *models.SystemIntake) models.SystemIntakeStatusAdmin {
-	if intake.GrbReviewAsyncGRBMeetingTime == nil || intake.GrbReviewAsyncEndDate == nil {
+	if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
 		return models.SISAGrbMeetingReady
 	}
 
 	now := time.Now()
-	if intake.GrbReviewAsyncGRBMeetingTime.Before(now) && intake.GrbReviewAsyncEndDate.After(now) {
+	if intake.GRBReviewStartedAt.Before(now) && intake.GrbReviewAsyncEndDate.After(now) {
 		return models.SISAGrbReviewInProgress
 	}
 

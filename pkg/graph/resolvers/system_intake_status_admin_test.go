@@ -89,8 +89,8 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				State:            models.SystemIntakeStateOpen,
 				GrbReviewType:    models.SystemIntakeGRBReviewTypeAsync,
 
-				GrbReviewAsyncGRBMeetingTime: helpers.PointerTo(time.Now().Add(-1 * time.Hour)),
-				GrbReviewAsyncEndDate:        helpers.PointerTo(time.Now().Add(1 * time.Hour)),
+				GRBReviewStartedAt:    helpers.PointerTo(time.Now().Add(-1 * time.Hour)),
+				GrbReviewAsyncEndDate: helpers.PointerTo(time.Now().Add(1 * time.Hour)),
 			},
 			expectedStatus: models.SISAGrbReviewInProgress,
 			expectError:    false,

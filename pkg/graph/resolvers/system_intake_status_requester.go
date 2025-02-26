@@ -117,11 +117,11 @@ func calcSystemIntakeStandardGRBReviewStatusRequester(intake *models.SystemIntak
 }
 
 func calcSystemIntakeAsyncGRBReviewStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
-	if intake.GrbReviewAsyncGRBMeetingTime == nil || intake.GrbReviewAsyncEndDate == nil {
+	if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
 		return models.SISRGrbMeetingReady
 	}
 
-	if intake.GrbReviewAsyncGRBMeetingTime.Before(currentTime) && intake.GrbReviewAsyncEndDate.After(currentTime) {
+	if intake.GRBReviewStartedAt.Before(currentTime) && intake.GrbReviewAsyncEndDate.After(currentTime) {
 		return models.SISRGrbReviewInProgress
 	}
 
