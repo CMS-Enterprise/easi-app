@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import classNames from 'classnames';
+import { GetGovernanceTaskList_systemIntake as GetGovernanceTaskListTypes } from 'gql/legacyGQL/types/GetGovernanceTaskList';
 import { kebabCase } from 'lodash';
 
 import Alert from 'components/Alert';
@@ -10,7 +11,6 @@ import {
   ITGovGRBStatus,
   SystemIntakeGRBReviewType
 } from 'types/graphql-global-types';
-import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { formatDateUtc } from 'utils/date';
 
 const GovTaskGrbMeeting = ({
@@ -21,7 +21,7 @@ const GovTaskGrbMeeting = ({
   grbReviewStartedAt,
   grbReviewAsyncEndDate,
   grbReviewAsyncGRBMeetingTime
-}: ItGovTaskSystemIntakeWithMockData) => {
+}: GetGovernanceTaskListTypes) => {
   const stepKey = 'grbMeeting';
   const { t } = useTranslation('itGov');
 
@@ -31,11 +31,11 @@ const GovTaskGrbMeeting = ({
   > = {
     STANDARD: {
       SCHEDULED: grbDate,
-      AWAITING_DECISION: grbReviewStartedAt,
-      COMPLETED: grbReviewStartedAt
+      AWAITING_DECISION: grbDate,
+      COMPLETED: grbDate
     },
     ASYNC: {
-      SCHEDULED: grbDate,
+      SCHEDULED: grbReviewAsyncGRBMeetingTime,
       AWAITING_GRB_REVIEW: grbReviewAsyncGRBMeetingTime,
       AWAITING_DECISION: grbReviewAsyncEndDate,
       COMPLETED: grbReviewAsyncEndDate
