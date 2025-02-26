@@ -1,14 +1,9 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { Button, GridContainer } from '@trussworks/react-uswds';
 import { StepsInProcessContent } from 'features/Help/TechnicalReviewBoard/StepsInProcess';
-import CreateTrbRequestQuery from 'gql/legacyGQL/CreateTrbRequestQuery';
-import {
-  CreateTrbRequest,
-  CreateTrbRequestVariables
-} from 'gql/legacyGQL/types/CreateTrbRequest';
+import { useCreateTRBRequestMutation } from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -32,10 +27,7 @@ function ProcessFlow() {
   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
   const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
 
-  const [create, createResult] = useMutation<
-    CreateTrbRequest,
-    CreateTrbRequestVariables
-  >(CreateTrbRequestQuery);
+  const [create, createResult] = useCreateTRBRequestMutation();
 
   // Redirect to task list on sucessful trb request creation
   useEffect(() => {
