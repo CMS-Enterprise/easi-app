@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
 import { Control, Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
-import CreateSystemIntakeActionProgressToNewStepQuery from 'gql/legacyGQL/CreateSystemIntakeActionProgressToNewStepQuery';
 import {
-  CreateSystemIntakeActionProgressToNewStep,
-  CreateSystemIntakeActionProgressToNewStepVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionProgressToNewStep';
+  SystemIntakeProgressToNewStepsInput,
+  SystemIntakeStepToProgressTo,
+  useCreateSystemIntakeActionProgressToNewStepMutation
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
@@ -17,11 +16,7 @@ import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import { RadioField } from 'components/RadioField';
 import RichTextEditor from 'components/RichTextEditor';
-import {
-  SystemIntakeProgressToNewStepsInput,
-  SystemIntakeStep,
-  SystemIntakeStepToProgressTo
-} from 'types/graphql-global-types';
+import { SystemIntakeStep } from 'types/graphql-global-types';
 import { progressToNewStepSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
@@ -99,10 +94,7 @@ const ProgressToNewStep = ({
   /** Edits requested form key for confirmation modal */
   const editsRequestedKey = useContext(EditsRequestedContext);
 
-  const [mutate] = useMutation<
-    CreateSystemIntakeActionProgressToNewStep,
-    CreateSystemIntakeActionProgressToNewStepVariables
-  >(CreateSystemIntakeActionProgressToNewStepQuery, {
+  const [mutate] = useCreateSystemIntakeActionProgressToNewStepMutation({
     refetchQueries: ['GetSystemIntake']
   });
 
