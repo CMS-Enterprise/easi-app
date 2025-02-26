@@ -496,16 +496,6 @@ export interface EmailNotificationRecipients {
 }
 
 /**
- * Input for "unretiring" (i.e. removing retirement date) an LCID in IT Gov v2
- */
-export interface SystemIntakeUnretireLCIDInput {
-  systemIntakeID: UUID;
-  additionalInfo?: HTML | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
-  adminNote?: HTML | null;
-}
-
-/**
  * Input for updating an intake's LCID in IT Gov v2
  */
 export interface SystemIntakeUpdateLCIDInput {
