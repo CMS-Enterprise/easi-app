@@ -81,18 +81,43 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			expectError:    false,
 		},
 		{
-			testCase: "Async GRB - In Review",
+			testCase: "Async GRB - Ready for review",
 			intake: models.SystemIntake{
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: models.SIRFSSubmitted,
 				DecisionState:    models.SIDSNoDecision,
 				State:            models.SystemIntakeStateOpen,
 				GrbReviewType:    models.SystemIntakeGRBReviewTypeAsync,
-
-				GRBReviewStartedAt:    helpers.PointerTo(time.Now().Add(-1 * time.Hour)),
-				GrbReviewAsyncEndDate: helpers.PointerTo(time.Now().Add(1 * time.Hour)),
+			},
+			expectedStatus: models.SISAGrbMeetingReady,
+			expectError:    false,
+		},
+		{
+			testCase: "Async GRB - In Review",
+			intake: models.SystemIntake{
+				Step:                  models.SystemIntakeStepGRBMEETING,
+				RequestFormState:      models.SIRFSSubmitted,
+				DecisionState:         models.SIDSNoDecision,
+				State:                 models.SystemIntakeStateOpen,
+				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:    &yesterday,
+				GrbReviewAsyncEndDate: &tomorrow,
 			},
 			expectedStatus: models.SISAGrbReviewInProgress,
+			expectError:    false,
+		},
+		{
+			testCase: "Async GRB - Review Complete",
+			intake: models.SystemIntake{
+				Step:                  models.SystemIntakeStepGRBMEETING,
+				RequestFormState:      models.SIRFSSubmitted,
+				DecisionState:         models.SIDSNoDecision,
+				State:                 models.SystemIntakeStateOpen,
+				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:    helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
+				GrbReviewAsyncEndDate: &yesterday,
+			},
+			expectedStatus: models.SISAGrbReviewComplete,
 			expectError:    false,
 		},
 	}
