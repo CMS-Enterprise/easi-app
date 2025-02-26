@@ -455,15 +455,6 @@ export interface CreateCedarSystemBookmarkInput {
 }
 
 /**
- * Input data for adding a note to a system request
- */
-export interface CreateSystemIntakeNoteInput {
-  content: HTML;
-  authorName: string;
-  intakeId: UUID;
-}
-
-/**
  * The data needed to upload a TRB document and attach it to a request with metadata
  */
 export interface CreateTRBRequestDocumentInput {
@@ -487,27 +478,6 @@ export interface CreateTRBRequestFeedbackInput {
 export interface DeleteTRBRequestFundingSourcesInput {
   trbRequestId: UUID;
   fundingNumber: string;
-}
-
-export interface EmailNotificationRecipients {
-  regularRecipientEmails: EmailAddress[];
-  shouldNotifyITGovernance: boolean;
-  shouldNotifyITInvestment: boolean;
-}
-
-/**
- * Input for updating an intake's LCID in IT Gov v2
- */
-export interface SystemIntakeUpdateLCIDInput {
-  systemIntakeID: UUID;
-  expiresAt?: Time | null;
-  scope?: HTML | null;
-  nextSteps?: HTML | null;
-  costBaseline?: string | null;
-  reason?: HTML | null;
-  additionalInfo?: HTML | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
-  adminNote?: HTML | null;
 }
 
 //==============================================================
