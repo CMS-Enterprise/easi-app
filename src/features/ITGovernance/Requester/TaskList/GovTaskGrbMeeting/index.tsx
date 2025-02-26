@@ -44,7 +44,7 @@ const GovTaskGrbMeeting = ({
     }
   };
 
-  const dateValue = dateMapping[grbReviewType][grbMeetingStatus];
+  const dateValue = dateMapping[grbReviewType]?.[grbMeetingStatus] ?? null;
 
   return (
     <TaskListItem
