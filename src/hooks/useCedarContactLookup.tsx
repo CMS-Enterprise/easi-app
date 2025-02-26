@@ -1,7 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useQuery } from '@apollo/client';
-import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
-import { GetCedarContacts } from 'gql/legacyGQL/types/GetCedarContacts';
+import { useGetCedarContactsQuery } from 'gql/generated/graphql';
 
 import { CedarContactProps } from 'types/systemIntake';
 
@@ -34,13 +32,10 @@ function useCedarContactLookup(
     query
   );
 
-  const { data, previousData, loading } = useQuery<GetCedarContacts>(
-    GetCedarContactsQuery,
-    {
-      variables: { commonName: searchTerm },
-      skip: !query || query.length < 2
-    }
-  );
+  const { data, previousData, loading } = useGetCedarContactsQuery({
+    variables: { commonName: searchTerm || '' },
+    skip: !query || query.length < 2
+  });
 
   /**
    * Update search term if query is more than 2 characters long
