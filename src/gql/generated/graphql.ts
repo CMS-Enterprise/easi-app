@@ -3704,6 +3704,16 @@ export type UpdateSystemIntakeReviewDatesMutationVariables = Exact<{
 
 export type UpdateSystemIntakeReviewDatesMutation = { __typename: 'Mutation', updateSystemIntakeReviewDates?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID, grbDate?: Time | null, grtDate?: Time | null } | null } | null };
 
+export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCurrentUserQuery = { __typename: 'Query', currentUser?: { __typename: 'CurrentUser', launchDarkly: { __typename: 'LaunchDarklySettings', userKey: string, signedHash: string } } | null };
+
+export type GetRequestsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRequestsQuery = { __typename: 'Query', mySystemIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, submittedAt?: Time | null, statusRequester: SystemIntakeStatusRequester, statusAdmin: SystemIntakeStatusAdmin, grbDate?: Time | null, grtDate?: Time | null, lcid?: string | null, nextMeetingDate?: Time | null, lastMeetingDate?: Time | null, systems: Array<{ __typename: 'CedarSystem', id: string, name: string }> }>, myTrbRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, lastMeetingDate?: Time | null, submittedAt: Time, nextMeetingDate?: Time | null, systems: Array<{ __typename: 'CedarSystem', id: string, name: string }> }> };
+
 export type GetCedarRoleTypesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3715,11 +3725,6 @@ export type SetRolesForUserOnSystemMutationVariables = Exact<{
 
 
 export type SetRolesForUserOnSystemMutation = { __typename: 'Mutation', setRolesForUserOnSystem?: string | null };
-
-export type GetRequestsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetRequestsQuery = { __typename: 'Query', mySystemIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, submittedAt?: Time | null, statusRequester: SystemIntakeStatusRequester, statusAdmin: SystemIntakeStatusAdmin, grbDate?: Time | null, grtDate?: Time | null, lcid?: string | null, nextMeetingDate?: Time | null, lastMeetingDate?: Time | null, systems: Array<{ __typename: 'CedarSystem', id: string, name: string }> }>, myTrbRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, lastMeetingDate?: Time | null, submittedAt: Time, nextMeetingDate?: Time | null, systems: Array<{ __typename: 'CedarSystem', id: string, name: string }> }> };
 
 export type CreateCedarSystemBookmarkMutationVariables = Exact<{
   input: CreateCedarSystemBookmarkInput;
@@ -6573,6 +6578,112 @@ export function useUpdateSystemIntakeReviewDatesMutation(baseOptions?: Apollo.Mu
 export type UpdateSystemIntakeReviewDatesMutationHookResult = ReturnType<typeof useUpdateSystemIntakeReviewDatesMutation>;
 export type UpdateSystemIntakeReviewDatesMutationResult = Apollo.MutationResult<UpdateSystemIntakeReviewDatesMutation>;
 export type UpdateSystemIntakeReviewDatesMutationOptions = Apollo.BaseMutationOptions<UpdateSystemIntakeReviewDatesMutation, UpdateSystemIntakeReviewDatesMutationVariables>;
+export const GetCurrentUserDocument = gql`
+    query GetCurrentUser {
+  currentUser {
+    launchDarkly {
+      userKey
+      signedHash
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useGetCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrentUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCurrentUserQuery(baseOptions?: Apollo.QueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
+      }
+export function useGetCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
+        }
+export function useGetCurrentUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
+        }
+export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
+export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
+export type GetCurrentUserSuspenseQueryHookResult = ReturnType<typeof useGetCurrentUserSuspenseQuery>;
+export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const GetRequestsDocument = gql`
+    query GetRequests {
+  mySystemIntakes {
+    id
+    requestName
+    submittedAt
+    statusRequester
+    statusAdmin
+    grbDate
+    grtDate
+    systems {
+      id
+      name
+    }
+    lcid
+    nextMeetingDate
+    lastMeetingDate
+  }
+  myTrbRequests(archived: false) {
+    id
+    name
+    submittedAt: createdAt
+    status
+    nextMeetingDate: consultMeetingTime
+    lastMeetingDate
+    systems {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetRequestsQuery__
+ *
+ * To run a query within a React component, call `useGetRequestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRequestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRequestsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetRequestsQuery(baseOptions?: Apollo.QueryHookOptions<GetRequestsQuery, GetRequestsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRequestsQuery, GetRequestsQueryVariables>(GetRequestsDocument, options);
+      }
+export function useGetRequestsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRequestsQuery, GetRequestsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRequestsQuery, GetRequestsQueryVariables>(GetRequestsDocument, options);
+        }
+export function useGetRequestsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetRequestsQuery, GetRequestsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetRequestsQuery, GetRequestsQueryVariables>(GetRequestsDocument, options);
+        }
+export type GetRequestsQueryHookResult = ReturnType<typeof useGetRequestsQuery>;
+export type GetRequestsLazyQueryHookResult = ReturnType<typeof useGetRequestsLazyQuery>;
+export type GetRequestsSuspenseQueryHookResult = ReturnType<typeof useGetRequestsSuspenseQuery>;
+export type GetRequestsQueryResult = Apollo.QueryResult<GetRequestsQuery, GetRequestsQueryVariables>;
 export const GetCedarRoleTypesDocument = gql`
     query GetCedarRoleTypes {
   roleTypes {
@@ -6643,70 +6754,6 @@ export function useSetRolesForUserOnSystemMutation(baseOptions?: Apollo.Mutation
 export type SetRolesForUserOnSystemMutationHookResult = ReturnType<typeof useSetRolesForUserOnSystemMutation>;
 export type SetRolesForUserOnSystemMutationResult = Apollo.MutationResult<SetRolesForUserOnSystemMutation>;
 export type SetRolesForUserOnSystemMutationOptions = Apollo.BaseMutationOptions<SetRolesForUserOnSystemMutation, SetRolesForUserOnSystemMutationVariables>;
-export const GetRequestsDocument = gql`
-    query GetRequests {
-  mySystemIntakes {
-    id
-    requestName
-    submittedAt
-    statusRequester
-    statusAdmin
-    grbDate
-    grtDate
-    systems {
-      id
-      name
-    }
-    lcid
-    nextMeetingDate
-    lastMeetingDate
-  }
-  myTrbRequests(archived: false) {
-    id
-    name
-    submittedAt: createdAt
-    status
-    nextMeetingDate: consultMeetingTime
-    lastMeetingDate
-    systems {
-      id
-      name
-    }
-  }
-}
-    `;
-
-/**
- * __useGetRequestsQuery__
- *
- * To run a query within a React component, call `useGetRequestsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetRequestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetRequestsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetRequestsQuery(baseOptions?: Apollo.QueryHookOptions<GetRequestsQuery, GetRequestsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetRequestsQuery, GetRequestsQueryVariables>(GetRequestsDocument, options);
-      }
-export function useGetRequestsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRequestsQuery, GetRequestsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetRequestsQuery, GetRequestsQueryVariables>(GetRequestsDocument, options);
-        }
-export function useGetRequestsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetRequestsQuery, GetRequestsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetRequestsQuery, GetRequestsQueryVariables>(GetRequestsDocument, options);
-        }
-export type GetRequestsQueryHookResult = ReturnType<typeof useGetRequestsQuery>;
-export type GetRequestsLazyQueryHookResult = ReturnType<typeof useGetRequestsLazyQuery>;
-export type GetRequestsSuspenseQueryHookResult = ReturnType<typeof useGetRequestsSuspenseQuery>;
-export type GetRequestsQueryResult = Apollo.QueryResult<GetRequestsQuery, GetRequestsQueryVariables>;
 export const CreateCedarSystemBookmarkDocument = gql`
     mutation CreateCedarSystemBookmark($input: CreateCedarSystemBookmarkInput!) {
   createCedarSystemBookmark(input: $input) {
@@ -9394,9 +9441,10 @@ export const TypedSubmitIntakeDocument = {"kind":"Document","definitions":[{"kin
 export const TypedUpdateSystemIntakeAdminLeadDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeAdminLead"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeAdminLeadInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeAdminLead"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminLead"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeAdminLeadMutation, UpdateSystemIntakeAdminLeadMutationVariables>;
 export const TypedUpdateSystemIntakeNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeNoteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeNoteMutation, UpdateSystemIntakeNoteMutationVariables>;
 export const TypedUpdateSystemIntakeReviewDatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeReviewDates"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeReviewDatesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeReviewDates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeReviewDatesMutation, UpdateSystemIntakeReviewDatesMutationVariables>;
+export const TypedGetCurrentUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"launchDarkly"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userKey"}},{"kind":"Field","name":{"kind":"Name","value":"signedHash"}}]}}]}}]}}]} as unknown as DocumentNode<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const TypedGetRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mySystemIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"statusRequester"}},{"kind":"Field","name":{"kind":"Name","value":"statusAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"nextMeetingDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastMeetingDate"}}]}},{"kind":"Field","name":{"kind":"Name","value":"myTrbRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"archived"},"value":{"kind":"BooleanValue","value":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","alias":{"kind":"Name","value":"submittedAt"},"name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","alias":{"kind":"Name","value":"nextMeetingDate"},"name":{"kind":"Name","value":"consultMeetingTime"}},{"kind":"Field","name":{"kind":"Name","value":"lastMeetingDate"}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetRequestsQuery, GetRequestsQueryVariables>;
 export const TypedGetCedarRoleTypesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCedarRoleTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"roleTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CedarRoleTypeFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleTypeFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRoleType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]} as unknown as DocumentNode<GetCedarRoleTypesQuery, GetCedarRoleTypesQueryVariables>;
 export const TypedSetRolesForUserOnSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetRolesForUserOnSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetRolesForUserOnSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setRolesForUserOnSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<SetRolesForUserOnSystemMutation, SetRolesForUserOnSystemMutationVariables>;
-export const TypedGetRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mySystemIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"statusRequester"}},{"kind":"Field","name":{"kind":"Name","value":"statusAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"nextMeetingDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastMeetingDate"}}]}},{"kind":"Field","name":{"kind":"Name","value":"myTrbRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"archived"},"value":{"kind":"BooleanValue","value":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","alias":{"kind":"Name","value":"submittedAt"},"name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","alias":{"kind":"Name","value":"nextMeetingDate"},"name":{"kind":"Name","value":"consultMeetingTime"}},{"kind":"Field","name":{"kind":"Name","value":"lastMeetingDate"}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetRequestsQuery, GetRequestsQueryVariables>;
 export const TypedCreateCedarSystemBookmarkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateCedarSystemBookmark"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateCedarSystemBookmarkInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCedarSystemBookmark"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystemBookmark"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystemId"}}]}}]}}]}}]} as unknown as DocumentNode<CreateCedarSystemBookmarkMutation, CreateCedarSystemBookmarkMutationVariables>;
 export const TypedDeleteCedarSystemBookmarkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteCedarSystemBookmark"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateCedarSystemBookmarkInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteCedarSystemBookmark"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystemId"}}]}}]}}]} as unknown as DocumentNode<DeleteCedarSystemBookmarkMutation, DeleteCedarSystemBookmarkMutationVariables>;
 export const TypedGetCedarContactsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCedarContacts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"commonName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarPersonsByCommonName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"commonName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"commonName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}}]}}]}}]} as unknown as DocumentNode<GetCedarContactsQuery, GetCedarContactsQueryVariables>;
