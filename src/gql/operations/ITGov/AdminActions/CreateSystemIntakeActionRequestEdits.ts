@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export default gql`
+export default gql(/* GraphQL */ `
   mutation CreateSystemIntakeActionRequestEdits(
     $input: SystemIntakeRequestEditsInput!
   ) {
@@ -10,4 +10,4 @@ export default gql`
       }
     }
   }
-`;
+`);
