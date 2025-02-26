@@ -198,15 +198,6 @@ export enum SystemIntakeFormState {
 }
 
 /**
- * SystemIntakeRequestEditsOptions represents the current step in the intake process
- */
-export enum SystemIntakeFormStep {
-  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
-  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
-  INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
-}
-
-/**
  * The possible statuses that an issued LCID can be in
  */
 export enum SystemIntakeLCIDStatus {
@@ -502,18 +493,6 @@ export interface EmailNotificationRecipients {
   regularRecipientEmails: EmailAddress[];
   shouldNotifyITGovernance: boolean;
   shouldNotifyITInvestment: boolean;
-}
-
-/**
- * Input for creating a Request Edits Action in Admin Actions v2
- */
-export interface SystemIntakeRequestEditsInput {
-  systemIntakeID: UUID;
-  intakeFormStep: SystemIntakeFormStep;
-  notificationRecipients?: EmailNotificationRecipients | null;
-  emailFeedback: HTML;
-  additionalInfo?: HTML | null;
-  adminNote?: HTML | null;
 }
 
 /**

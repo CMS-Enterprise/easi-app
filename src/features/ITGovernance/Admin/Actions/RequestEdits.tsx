@@ -1,25 +1,20 @@
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import {
   ErrorMessage,
   FormGroup,
   Label,
   Select
 } from '@trussworks/react-uswds';
-import CreateSystemIntakeActionRequestEditsQuery from 'gql/legacyGQL/CreateSystemIntakeActionRequestEditsQuery';
 import {
-  CreateSystemIntakeActionRequestEdits,
-  CreateSystemIntakeActionRequestEditsVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionRequestEdits';
+  SystemIntakeFormStep,
+  useCreateSystemIntakeActionRequestEditsMutation
+} from 'gql/generated/graphql';
 
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RichTextEditor from 'components/RichTextEditor';
-import {
-  SystemIntakeFormStep,
-  SystemIntakeStep
-} from 'types/graphql-global-types';
+import { SystemIntakeStep } from 'types/graphql-global-types';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
 
@@ -37,10 +32,7 @@ const RequestEdits = ({
 }) => {
   const { t } = useTranslation(['action', 'form']);
 
-  const [mutate] = useMutation<
-    CreateSystemIntakeActionRequestEdits,
-    CreateSystemIntakeActionRequestEditsVariables
-  >(CreateSystemIntakeActionRequestEditsQuery, {
+  const [mutate] = useCreateSystemIntakeActionRequestEditsMutation({
     refetchQueries: ['GetGovernanceTaskList']
   });
 
