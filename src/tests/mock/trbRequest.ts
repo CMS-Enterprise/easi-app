@@ -27,26 +27,23 @@ import {
   PersonRole,
   TRBAdminNoteCategory,
   TRBAdminNoteFragment,
-  TRBGuidanceLetterFragment,
-  TRBGuidanceLetterInsightCategory,
-  UpdateTRBRequestConsultMeetingDocument,
-  UpdateTRBRequestConsultMeetingMutation,
-  UpdateTRBRequestConsultMeetingMutationVariables
-} from 'gql/generated/graphql';
-import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'gql/legacyGQL/types/TrbRequestFormFields';
-
-import {
   TRBAttendConsultStatus,
   TRBCollabGroupOption,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
+  TRBGuidanceLetterFragment,
+  TRBGuidanceLetterInsightCategory,
   TRBGuidanceLetterStatus,
-  TRBRequestState,
-  TRBRequestStatus,
+  TrbRequestFormFieldsFragmentFragment,
   TRBRequestType,
-  TRBWhereInProcessOption
-} from 'types/graphql-global-types';
+  TRBWhereInProcessOption,
+  UpdateTRBRequestConsultMeetingDocument,
+  UpdateTRBRequestConsultMeetingMutation,
+  UpdateTRBRequestConsultMeetingMutationVariables
+} from 'gql/generated/graphql';
+
+import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import MockTrbAttendees, {
   MockTrbAttendee,
@@ -79,14 +76,15 @@ export const newAttendee: MockTrbAttendee = users.next({
   component: 'Center for Clinical Standards and Quality'
 })!;
 
-export const taskStatuses: TaskStatuses = {
-  __typename: 'TRBTaskStatuses',
-  formStatus: TRBFormStatus.IN_PROGRESS,
-  feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-  consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-  attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-  guidanceLetterStatus: TRBGuidanceLetterStatus.CANNOT_START_YET
-};
+export const taskStatuses: TrbRequestFormFieldsFragmentFragment['taskStatuses'] =
+  {
+    __typename: 'TRBTaskStatuses',
+    formStatus: TRBFormStatus.IN_PROGRESS,
+    feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+    consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+    attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+    guidanceLetterStatus: TRBGuidanceLetterStatus.CANNOT_START_YET
+  };
 
 const adminNotes: TRBAdminNoteFragment[] = [
   {
@@ -210,7 +208,9 @@ export const trbRequestSummary: GetTRBRequestSummaryQuery['trbRequest'] = {
 export const getTrbRequestSummary = (
   fields:
     | {
-        taskStatuses?: Partial<TaskStatuses>;
+        taskStatuses?: Partial<
+          TrbRequestFormFieldsFragmentFragment['taskStatuses']
+        >;
         status?: TRBRequestStatus;
       }
     | undefined

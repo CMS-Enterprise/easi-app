@@ -18,14 +18,6 @@ export enum GovernanceRequestFeedbackTargetForm {
 }
 
 /**
- * Represents the possible types of feedback on governance requests, based on who it's directed to
- */
-export enum GovernanceRequestFeedbackType {
-  GRB = "GRB",
-  REQUESTER = "REQUESTER",
-}
-
-/**
  * The requester view of the IT gov Decision step status
  */
 export enum ITGovDecisionStatus {
@@ -122,105 +114,11 @@ export enum SystemIntakeDecisionState {
 }
 
 /**
- * Represents the common options for document type that is attached to a
- * System Intake document
- */
-export enum SystemIntakeDocumentCommonType {
-  ACQUISITION_PLAN_OR_STRATEGY = "ACQUISITION_PLAN_OR_STRATEGY",
-  DRAFT_IGCE = "DRAFT_IGCE",
-  MEETING_MINUTES = "MEETING_MINUTES",
-  OTHER = "OTHER",
-  REQUEST_FOR_ADDITIONAL_FUNDING = "REQUEST_FOR_ADDITIONAL_FUNDING",
-  SOFTWARE_BILL_OF_MATERIALS = "SOFTWARE_BILL_OF_MATERIALS",
-  SOO_SOW = "SOO_SOW",
-}
-
-/**
- * Enumeration of the possible statuses of documents uploaded in the System Intake
- */
-export enum SystemIntakeDocumentStatus {
-  AVAILABLE = "AVAILABLE",
-  PENDING = "PENDING",
-  UNAVAILABLE = "UNAVAILABLE",
-}
-
-/**
- * Represents the version options for a document that is attached to a
- * System Intake document
- */
-export enum SystemIntakeDocumentVersion {
-  CURRENT = "CURRENT",
-  HISTORICAL = "HISTORICAL",
-}
-
-/**
- * This represents the possible state any system intake form can take
- */
-export enum SystemIntakeFormState {
-  EDITS_REQUESTED = "EDITS_REQUESTED",
-  IN_PROGRESS = "IN_PROGRESS",
-  NOT_STARTED = "NOT_STARTED",
-  SUBMITTED = "SUBMITTED",
-}
-
-/**
- * The possible statuses that an issued LCID can be in
- */
-export enum SystemIntakeLCIDStatus {
-  EXPIRED = "EXPIRED",
-  ISSUED = "ISSUED",
-  RETIRED = "RETIRED",
-}
-
-/**
- * The type of an IT governance (system) request
- */
-export enum SystemIntakeRequestType {
-  MAJOR_CHANGES = "MAJOR_CHANGES",
-  NEW = "NEW",
-  RECOMPETE = "RECOMPETE",
-  SHUTDOWN = "SHUTDOWN",
-}
-
-/**
- * SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
- */
-export enum SystemIntakeSoftwareAcquisitionMethods {
-  CONTRACTOR_FURNISHED = "CONTRACTOR_FURNISHED",
-  ELA_OR_INTERNAL = "ELA_OR_INTERNAL",
-  FED_FURNISHED = "FED_FURNISHED",
-  NOT_YET_DETERMINED = "NOT_YET_DETERMINED",
-  OTHER = "OTHER",
-}
-
-/**
  * SystemIntakeState represents whether the intake is open or closed
  */
 export enum SystemIntakeState {
   CLOSED = "CLOSED",
   OPEN = "OPEN",
-}
-
-/**
- * This represents the statuses that an admin would see as a representation of a system intake. Note, there is no status for a brand new request, because an Admin doesn't see the request until it is in progress.
- */
-export enum SystemIntakeStatusAdmin {
-  CLOSED = "CLOSED",
-  DRAFT_BUSINESS_CASE_IN_PROGRESS = "DRAFT_BUSINESS_CASE_IN_PROGRESS",
-  DRAFT_BUSINESS_CASE_SUBMITTED = "DRAFT_BUSINESS_CASE_SUBMITTED",
-  FINAL_BUSINESS_CASE_IN_PROGRESS = "FINAL_BUSINESS_CASE_IN_PROGRESS",
-  FINAL_BUSINESS_CASE_SUBMITTED = "FINAL_BUSINESS_CASE_SUBMITTED",
-  GRB_MEETING_COMPLETE = "GRB_MEETING_COMPLETE",
-  GRB_MEETING_READY = "GRB_MEETING_READY",
-  GRT_MEETING_COMPLETE = "GRT_MEETING_COMPLETE",
-  GRT_MEETING_READY = "GRT_MEETING_READY",
-  INITIAL_REQUEST_FORM_IN_PROGRESS = "INITIAL_REQUEST_FORM_IN_PROGRESS",
-  INITIAL_REQUEST_FORM_SUBMITTED = "INITIAL_REQUEST_FORM_SUBMITTED",
-  LCID_EXPIRED = "LCID_EXPIRED",
-  LCID_ISSUED = "LCID_ISSUED",
-  LCID_RETIRED = "LCID_RETIRED",
-  NOT_APPROVED = "NOT_APPROVED",
-  NOT_GOVERNANCE = "NOT_GOVERNANCE",
 }
 
 /**
@@ -270,76 +168,6 @@ export enum SystemIntakeTRBFollowUp {
   STRONGLY_RECOMMENDED = "STRONGLY_RECOMMENDED",
 }
 
-/**
- * Represents the status of the TRB consult attendance step
- */
-export enum TRBAttendConsultStatus {
-  CANNOT_START_YET = "CANNOT_START_YET",
-  COMPLETED = "COMPLETED",
-  READY_TO_SCHEDULE = "READY_TO_SCHEDULE",
-  SCHEDULED = "SCHEDULED",
-}
-
-/**
- * Represents an option selected for collaboration groups in the TRB request form
- */
-export enum TRBCollabGroupOption {
-  CLOUD = "CLOUD",
-  ENTERPRISE_ARCHITECTURE = "ENTERPRISE_ARCHITECTURE",
-  GOVERNANCE_REVIEW_BOARD = "GOVERNANCE_REVIEW_BOARD",
-  OTHER = "OTHER",
-  PRIVACY_ADVISOR = "PRIVACY_ADVISOR",
-  SECURITY = "SECURITY",
-}
-
-/**
- * Represents the status of the TRB consult step
- */
-export enum TRBConsultPrepStatus {
-  CANNOT_START_YET = "CANNOT_START_YET",
-  COMPLETED = "COMPLETED",
-  READY_TO_START = "READY_TO_START",
-}
-
-/**
- * Represents the action an admin is taking on a TRB request when leaving feedback
- */
-export enum TRBFeedbackAction {
-  READY_FOR_CONSULT = "READY_FOR_CONSULT",
-  REQUEST_EDITS = "REQUEST_EDITS",
-}
-
-/**
- * Represents the status of the TRB feedback step
- */
-export enum TRBFeedbackStatus {
-  CANNOT_START_YET = "CANNOT_START_YET",
-  COMPLETED = "COMPLETED",
-  EDITS_REQUESTED = "EDITS_REQUESTED",
-  IN_REVIEW = "IN_REVIEW",
-  READY_TO_START = "READY_TO_START",
-}
-
-/**
- * Represents the status of a TRB request form
- */
-export enum TRBFormStatus {
-  COMPLETED = "COMPLETED",
-  IN_PROGRESS = "IN_PROGRESS",
-  READY_TO_START = "READY_TO_START",
-}
-
-/**
- * Represents the status of the TRB guidance letter step
- */
-export enum TRBGuidanceLetterStatus {
-  CANNOT_START_YET = "CANNOT_START_YET",
-  COMPLETED = "COMPLETED",
-  IN_PROGRESS = "IN_PROGRESS",
-  READY_FOR_REVIEW = "READY_FOR_REVIEW",
-  READY_TO_START = "READY_TO_START",
-}
-
 export enum TRBRequestState {
   CLOSED = "CLOSED",
   OPEN = "OPEN",
@@ -356,50 +184,6 @@ export enum TRBRequestStatus {
   NEW = "NEW",
   READY_FOR_CONSULT = "READY_FOR_CONSULT",
   REQUEST_FORM_COMPLETE = "REQUEST_FORM_COMPLETE",
-}
-
-export enum TRBRequestType {
-  BRAINSTORM = "BRAINSTORM",
-  FOLLOWUP = "FOLLOWUP",
-  FORMAL_REVIEW = "FORMAL_REVIEW",
-  NEED_HELP = "NEED_HELP",
-  OTHER = "OTHER",
-}
-
-/**
- * The possible options on the TRB "Subject Areas" page
- */
-export enum TRBSubjectAreaOption {
-  ACCESSIBILITY_COMPLIANCE = "ACCESSIBILITY_COMPLIANCE",
-  ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT = "ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT",
-  ARTIFICIAL_INTELLIGENCE = "ARTIFICIAL_INTELLIGENCE",
-  ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT",
-  BUSINESS_INTELLIGENCE = "BUSINESS_INTELLIGENCE",
-  CLOUD_MIGRATION = "CLOUD_MIGRATION",
-  CONTAINERS_AND_MICROSERVICES = "CONTAINERS_AND_MICROSERVICES",
-  DISASTER_RECOVERY = "DISASTER_RECOVERY",
-  EMAIL_INTEGRATION = "EMAIL_INTEGRATION",
-  ENTERPRISE_DATA_LAKE_INTEGRATION = "ENTERPRISE_DATA_LAKE_INTEGRATION",
-  FRAMEWORK_OR_TOOL_ALTERNATIVES = "FRAMEWORK_OR_TOOL_ALTERNATIVES",
-  OPEN_SOURCE_SOFTWARE = "OPEN_SOURCE_SOFTWARE",
-  PORTAL_INTEGRATION = "PORTAL_INTEGRATION",
-  SYSTEM_ARCHITECTURE_REVIEW = "SYSTEM_ARCHITECTURE_REVIEW",
-  SYSTEM_DISPOSITION_PLANNING = "SYSTEM_DISPOSITION_PLANNING",
-  TECHNICAL_REFERENCE_ARCHITECTURE = "TECHNICAL_REFERENCE_ARCHITECTURE",
-  WEB_BASED_UI_SERVICES = "WEB_BASED_UI_SERVICES",
-  WEB_SERVICES_AND_APIS = "WEB_SERVICES_AND_APIS",
-}
-
-/**
- * Represents an option selected to the "where are you in the process?" TRB request form
- */
-export enum TRBWhereInProcessOption {
-  CONTRACTING_WORK_HAS_STARTED = "CONTRACTING_WORK_HAS_STARTED",
-  DEVELOPMENT_HAS_RECENTLY_STARTED = "DEVELOPMENT_HAS_RECENTLY_STARTED",
-  DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY = "DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY",
-  I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM = "I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM",
-  OTHER = "OTHER",
-  THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE = "THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE",
 }
 
 //==============================================================

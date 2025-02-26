@@ -3,7 +3,6 @@ import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import { Grid } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import PresentationLinksForm from 'features/ITGovernance/Admin/GRBReview/PresentationLinksForm';
@@ -13,13 +12,9 @@ import AdditionalInformation from 'features/Miscellaneous/AdditionalInformation'
 import NotFound from 'features/Miscellaneous/NotFound';
 import {
   SystemIntakeGRBPresentationLinks,
-  SystemIntakeGRBReviewerFragment
+  SystemIntakeGRBReviewerFragment,
+  useGetSystemIntakeQuery
 } from 'gql/generated/graphql';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import {
-  GetSystemIntake,
-  GetSystemIntakeVariables
-} from 'gql/legacyGQL/types/GetSystemIntake';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -71,14 +66,11 @@ const RequestOverview = ({
     subPage?: string;
   }>();
 
-  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
-    GetSystemIntakeQuery,
-    {
-      variables: {
-        id: systemId
-      }
+  const { loading, data } = useGetSystemIntakeQuery({
+    variables: {
+      id: systemId
     }
-  );
+  });
 
   const systemIntake = data?.systemIntake;
 

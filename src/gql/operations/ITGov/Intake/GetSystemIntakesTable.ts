@@ -1,14 +1,11 @@
 import { gql } from '@apollo/client';
 
-import { FundingSource } from './GetSystemIntakeQuery';
-
 /**
  * For use on requests table
  *
  * Returns all system intakes that have a submitted Intake Request form
  */
-export default gql`
-  ${FundingSource}
+export default gql(/* GraphQL */ `
   query GetSystemIntakesTable($openRequests: Boolean!) {
     systemIntakes(openRequests: $openRequests) {
       id
@@ -40,7 +37,7 @@ export default gql`
 
       existingFunding
       fundingSources {
-        ...FundingSource
+        ...FundingSourceFragment
       }
 
       annualSpending {
@@ -111,4 +108,4 @@ export default gql`
       archivedAt
     }
   }
-`;
+`);

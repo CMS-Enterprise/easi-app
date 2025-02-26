@@ -20,8 +20,8 @@ type UnretireLcidFields = NonNullableProps<
 >;
 
 interface UnretireLcidProps extends ManageLcidProps {
-  lcid: string | null;
-  lcidRetiresAt: string | null;
+  lcid?: string | null | undefined;
+  lcidRetiresAt?: string | null | undefined;
 }
 
 const UnretireLcid = ({

@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Alert } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import ITGovAdminContext from 'features/ITGovernance/Admin/ITGovAdminContext';
-import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import {
+  GetTRBRequestSummaryQuery,
+  SystemIntakeFragmentFragment
+} from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -19,7 +21,9 @@ const AdditionalInformation = ({
   request,
   type
 }: {
-  request: GetTRBRequestSummaryQuery['trbRequest'] | SystemIntake;
+  request:
+    | GetTRBRequestSummaryQuery['trbRequest']
+    | SystemIntakeFragmentFragment;
   type: RequestType;
 }) => {
   const { t } = useTranslation('admin');

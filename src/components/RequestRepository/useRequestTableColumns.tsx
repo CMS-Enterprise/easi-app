@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { CellProps, Column, Row } from 'react-table';
 import { Icon } from '@trussworks/react-uswds';
+import { SystemIntakeStatusAdmin } from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import TruncatedText from 'components/TruncatedText';
-import { SystemIntakeStatusAdmin } from 'types/graphql-global-types';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
 import { SystemIntakeStatusAdminIndex } from 'utils/tableRequestStatusIndex';
 
@@ -70,7 +70,8 @@ const useRequestTableColumns = (
   const adminLeadColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.adminLead'),
     accessor: ({ adminLead }) =>
-      adminLead || t<string>('governanceReviewTeam:adminLeads.notAssigned'),
+      (adminLead as string) ||
+      (t<string>('governanceReviewTeam:adminLeads.notAssigned') as string),
     Cell: ({
       value: adminLead
     }: CellProps<SystemIntakeForTable, SystemIntakeForTable['adminLead']>) => {
@@ -139,11 +140,11 @@ const useRequestTableColumns = (
         {
           lcid: obj.lcid
         }
-      );
+      ) as string;
     },
     sortType: (a: Row<SystemIntakeForTable>, b: Row<SystemIntakeForTable>) => {
-      const astatus = a.original.statusAdmin;
-      const bstatus = b.original.statusAdmin;
+      const astatus = a.original.statusAdmin as SystemIntakeStatusAdmin;
+      const bstatus = b.original.statusAdmin as SystemIntakeStatusAdmin;
 
       if (
         (astatus === SystemIntakeStatusAdmin.LCID_ISSUED &&

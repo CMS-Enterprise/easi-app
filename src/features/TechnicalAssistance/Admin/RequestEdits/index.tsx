@@ -4,18 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
-import { useCreateTRBRequestFeedbackMutation } from 'gql/generated/graphql';
+import {
+  TRBFeedbackAction,
+  TRBFeedbackStatus,
+  TRBFormStatus,
+  useCreateTRBRequestFeedbackMutation
+} from 'gql/generated/graphql';
 
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import PageLoading from 'components/PageLoading';
 import RichTextEditor from 'components/RichTextEditor';
 import useMessage from 'hooks/useMessage';
-import {
-  TRBFeedbackAction,
-  TRBFeedbackStatus,
-  TRBFormStatus
-} from 'types/graphql-global-types';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { trbActionSchema } from 'validations/trbRequestSchema';
 

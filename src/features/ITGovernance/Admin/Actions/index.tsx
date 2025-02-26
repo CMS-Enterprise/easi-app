@@ -5,12 +5,12 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, Radio } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
+import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 import GetGovernanceTaskListQuery from 'gql/legacyGQL/GetGovernanceTaskListQuery';
 import {
   GetGovernanceTaskList,
   GetGovernanceTaskListVariables
 } from 'gql/legacyGQL/types/GetGovernanceTaskList';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
 
 import CollapsableLink from 'components/CollapsableLink';
 import PageHeading from 'components/PageHeading';
@@ -76,7 +76,7 @@ const ActionRadioOption = ({
 };
 
 export type ActionsProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 export type EditsRequestedKey =

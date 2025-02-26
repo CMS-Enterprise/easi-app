@@ -36,8 +36,8 @@ export const actionDateInPast = (date: string | null): boolean => {
 };
 
 interface RetireLcidProps extends ManageLcidProps {
-  lcid: string | null;
-  lcidRetiresAt: string | null;
+  lcid?: string | null | undefined;
+  lcidRetiresAt?: string | null | undefined;
 }
 
 const RetireLcid = ({

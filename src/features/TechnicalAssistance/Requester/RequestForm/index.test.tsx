@@ -6,7 +6,9 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GetTRBRequestQuery,
-  GetTRBRequestQueryVariables
+  GetTRBRequestQueryVariables,
+  TRBFeedbackAction,
+  TRBFeedbackStatus
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import {
@@ -15,10 +17,6 @@ import {
   trbRequest
 } from 'tests/mock/trbRequest';
 
-import {
-  TRBFeedbackAction,
-  TRBFeedbackStatus
-} from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';

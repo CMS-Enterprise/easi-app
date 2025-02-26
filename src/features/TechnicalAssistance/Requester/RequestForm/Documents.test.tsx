@@ -9,13 +9,14 @@ import {
   DeleteTRBRequestDocumentDocument,
   GetTRBRequestDocumentsDocument,
   GetTRBRequestQuery,
-  GetTRBRequestQueryVariables
+  GetTRBRequestQueryVariables,
+  TRBRequestType
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { MATCH_ANY_PARAMETERS, WildcardMockLink } from 'wildcard-mock-link';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { TRBRequestState, TRBRequestType } from 'types/graphql-global-types';
+import { TRBRequestState } from 'types/graphql-global-types';
 
 import Documents from './Documents';
 

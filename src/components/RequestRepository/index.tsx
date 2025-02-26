@@ -23,11 +23,7 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import GetSystemIntakesTableQuery from 'gql/legacyGQL/GetSystemIntakesTableQuery';
-import {
-  GetSystemIntakesTable,
-  GetSystemIntakesTableVariables
-} from 'gql/legacyGQL/types/GetSystemIntakesTable';
+import { useGetSystemIntakesTableQuery } from 'gql/generated/graphql';
 import { startCase } from 'lodash';
 import { ActiveStateType, TableStateContext } from 'wrappers/TableStateWrapper';
 
@@ -44,7 +40,6 @@ import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import useCacheQuery from 'hooks/useCacheQuery';
 import useTableState from 'hooks/useTableState';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -90,20 +85,16 @@ const RequestRepository = () => {
   const dateRangeEnd = watch('dateEnd');
 
   // GQL query to get all OPEN system intakes
-  const { data: openIntakes, loading: loadingOpen } = useCacheQuery<
-    GetSystemIntakesTable,
-    GetSystemIntakesTableVariables
-  >(GetSystemIntakesTableQuery, {
-    variables: { openRequests: true }
-  });
+  const { data: openIntakes, loading: loadingOpen } =
+    useGetSystemIntakesTableQuery({
+      variables: { openRequests: true }
+    });
 
   // GQL query to get all CLOSED system intakes
-  const { data: closedIntakes, loading: loadingClosed } = useCacheQuery<
-    GetSystemIntakesTable,
-    GetSystemIntakesTableVariables
-  >(GetSystemIntakesTableQuery, {
-    variables: { openRequests: false }
-  });
+  const { data: closedIntakes, loading: loadingClosed } =
+    useGetSystemIntakesTableQuery({
+      variables: { openRequests: false }
+    });
 
   /** Object containing formatted system intakes split by `open` and `closed` state */
   const systemIntakes: SystemIntakesData = useMemo(
@@ -189,6 +180,8 @@ const RequestRepository = () => {
     setSortBy
   } = useTable(
     {
+      // TODO: Fix type issue
+      // @ts-ignore
       columns: useRequestTableColumns(activeTable),
       sortTypes: {
         alphanumeric: (rowOne, rowTwo, columnName) => {

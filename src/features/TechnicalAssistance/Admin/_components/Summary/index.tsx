@@ -10,15 +10,17 @@ import {
   Icon,
   ModalRef
 } from '@trussworks/react-uswds';
-import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
+import {
+  GetTRBRequestSummaryQuery,
+  TRBRequestType
+} from 'gql/generated/graphql';
 
 import AdminRequestHeaderSummary from 'components/AdminRequestHeaderSummary';
 import StateTag from 'components/StateTag';
 import {
   RequestRelationType,
   TRBRequestState,
-  TRBRequestStatus,
-  TRBRequestType
+  TRBRequestStatus
 } from 'types/graphql-global-types';
 import { TRBAttendee, TrbRequestIdRef } from 'types/technicalAssistance';
 
