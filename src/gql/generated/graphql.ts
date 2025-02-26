@@ -3906,6 +3906,20 @@ export type CloseTRBRequestMutationVariables = Exact<{
 
 export type CloseTRBRequestMutation = { __typename: 'Mutation', closeTRBRequest: { __typename: 'TRBRequest', id: UUID } };
 
+export type CreateTRBRequestDocumentMutationVariables = Exact<{
+  input: CreateTRBRequestDocumentInput;
+}>;
+
+
+export type CreateTRBRequestDocumentMutation = { __typename: 'Mutation', createTRBRequestDocument?: { __typename: 'CreateTRBRequestDocumentPayload', document?: { __typename: 'TRBRequestDocument', id: UUID, fileName: string, documentType: { __typename: 'TRBRequestDocumentType', commonType: TRBDocumentCommonType, otherTypeDescription?: string | null } } | null } | null };
+
+export type CreateTRBRequestFeedbackMutationVariables = Exact<{
+  input: CreateTRBRequestFeedbackInput;
+}>;
+
+
+export type CreateTRBRequestFeedbackMutation = { __typename: 'Mutation', createTRBRequestFeedback: { __typename: 'TRBRequestFeedback', id: UUID } };
+
 export type GetTRBLeadOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -7732,6 +7746,79 @@ export function useCloseTRBRequestMutation(baseOptions?: Apollo.MutationHookOpti
 export type CloseTRBRequestMutationHookResult = ReturnType<typeof useCloseTRBRequestMutation>;
 export type CloseTRBRequestMutationResult = Apollo.MutationResult<CloseTRBRequestMutation>;
 export type CloseTRBRequestMutationOptions = Apollo.BaseMutationOptions<CloseTRBRequestMutation, CloseTRBRequestMutationVariables>;
+export const CreateTRBRequestDocumentDocument = gql`
+    mutation CreateTRBRequestDocument($input: CreateTRBRequestDocumentInput!) {
+  createTRBRequestDocument(input: $input) {
+    document {
+      id
+      documentType {
+        commonType
+        otherTypeDescription
+      }
+      fileName
+    }
+  }
+}
+    `;
+export type CreateTRBRequestDocumentMutationFn = Apollo.MutationFunction<CreateTRBRequestDocumentMutation, CreateTRBRequestDocumentMutationVariables>;
+
+/**
+ * __useCreateTRBRequestDocumentMutation__
+ *
+ * To run a mutation, you first call `useCreateTRBRequestDocumentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTRBRequestDocumentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTrbRequestDocumentMutation, { data, loading, error }] = useCreateTRBRequestDocumentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateTRBRequestDocumentMutation(baseOptions?: Apollo.MutationHookOptions<CreateTRBRequestDocumentMutation, CreateTRBRequestDocumentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTRBRequestDocumentMutation, CreateTRBRequestDocumentMutationVariables>(CreateTRBRequestDocumentDocument, options);
+      }
+export type CreateTRBRequestDocumentMutationHookResult = ReturnType<typeof useCreateTRBRequestDocumentMutation>;
+export type CreateTRBRequestDocumentMutationResult = Apollo.MutationResult<CreateTRBRequestDocumentMutation>;
+export type CreateTRBRequestDocumentMutationOptions = Apollo.BaseMutationOptions<CreateTRBRequestDocumentMutation, CreateTRBRequestDocumentMutationVariables>;
+export const CreateTRBRequestFeedbackDocument = gql`
+    mutation CreateTRBRequestFeedback($input: CreateTRBRequestFeedbackInput!) {
+  createTRBRequestFeedback(input: $input) {
+    id
+  }
+}
+    `;
+export type CreateTRBRequestFeedbackMutationFn = Apollo.MutationFunction<CreateTRBRequestFeedbackMutation, CreateTRBRequestFeedbackMutationVariables>;
+
+/**
+ * __useCreateTRBRequestFeedbackMutation__
+ *
+ * To run a mutation, you first call `useCreateTRBRequestFeedbackMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTRBRequestFeedbackMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTrbRequestFeedbackMutation, { data, loading, error }] = useCreateTRBRequestFeedbackMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateTRBRequestFeedbackMutation(baseOptions?: Apollo.MutationHookOptions<CreateTRBRequestFeedbackMutation, CreateTRBRequestFeedbackMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTRBRequestFeedbackMutation, CreateTRBRequestFeedbackMutationVariables>(CreateTRBRequestFeedbackDocument, options);
+      }
+export type CreateTRBRequestFeedbackMutationHookResult = ReturnType<typeof useCreateTRBRequestFeedbackMutation>;
+export type CreateTRBRequestFeedbackMutationResult = Apollo.MutationResult<CreateTRBRequestFeedbackMutation>;
+export type CreateTRBRequestFeedbackMutationOptions = Apollo.BaseMutationOptions<CreateTRBRequestFeedbackMutation, CreateTRBRequestFeedbackMutationVariables>;
 export const GetTRBLeadOptionsDocument = gql`
     query GetTRBLeadOptions {
   trbLeadOptions {
@@ -8782,6 +8869,8 @@ export const TypedUpdateTRBGuidanceLetterDocument = {"kind":"Document","definiti
 export const TypedUpdateTRBGuidanceLetterInsightDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterInsight"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterInsightInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBGuidanceLetterInsight"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"insight"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<UpdateTRBGuidanceLetterInsightMutation, UpdateTRBGuidanceLetterInsightMutationVariables>;
 export const TypedUpdateTRBGuidanceLetterInsightOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterInsightOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTRBGuidanceLetterInsightOrderInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTRBGuidanceLetterInsightOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBGuidanceLetterInsight"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"insight"}},{"kind":"Field","name":{"kind":"Name","value":"links"}}]}}]} as unknown as DocumentNode<UpdateTRBGuidanceLetterInsightOrderMutation, UpdateTRBGuidanceLetterInsightOrderMutationVariables>;
 export const TypedCloseTRBRequestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CloseTRBRequest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CloseTRBRequestInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"closeTRBRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CloseTRBRequestMutation, CloseTRBRequestMutationVariables>;
+export const TypedCreateTRBRequestDocumentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTRBRequestDocument"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateTRBRequestDocumentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTRBRequestDocument"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"document"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"documentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonType"}},{"kind":"Field","name":{"kind":"Name","value":"otherTypeDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}}]}}]}}]}}]} as unknown as DocumentNode<CreateTRBRequestDocumentMutation, CreateTRBRequestDocumentMutationVariables>;
+export const TypedCreateTRBRequestFeedbackDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTRBRequestFeedback"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateTRBRequestFeedbackInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTRBRequestFeedback"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateTRBRequestFeedbackMutation, CreateTRBRequestFeedbackMutationVariables>;
 export const TypedGetTRBLeadOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbLeadOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}}]}}]} as unknown as DocumentNode<GetTRBLeadOptionsQuery, GetTRBLeadOptionsQueryVariables>;
 export const TypedGetTRBRequestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBRequest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"TrbRequestFormFieldsFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TrbRequestFormFieldsFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TRBRequest"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"taskStatuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formStatus"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackStatus"}},{"kind":"Field","name":{"kind":"Name","value":"consultPrepStatus"}},{"kind":"Field","name":{"kind":"Name","value":"attendConsultStatus"}},{"kind":"Field","name":{"kind":"Name","value":"guidanceLetterStatus"}}]}},{"kind":"Field","name":{"kind":"Name","value":"form"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"needsAssistanceWith"}},{"kind":"Field","name":{"kind":"Name","value":"hasSolutionInMind"}},{"kind":"Field","name":{"kind":"Name","value":"proposedSolution"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcess"}},{"kind":"Field","name":{"kind":"Name","value":"whereInProcessOther"}},{"kind":"Field","name":{"kind":"Name","value":"hasExpectedStartEndDates"}},{"kind":"Field","name":{"kind":"Name","value":"expectedStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"expectedEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroups"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateSecurity"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateEnterpriseArchitecture"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateCloud"}},{"kind":"Field","name":{"kind":"Name","value":"collabDatePrivacyAdvisor"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateGovernanceReviewBoard"}},{"kind":"Field","name":{"kind":"Name","value":"collabDateOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGroupOther"}},{"kind":"Field","name":{"kind":"Name","value":"collabGRBConsultRequested"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptions"}},{"kind":"Field","name":{"kind":"Name","value":"subjectAreaOptionOther"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSources"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"feedback"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"feedbackMessage"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedTRBRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"relatedIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"decisionState"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}}]}}]} as unknown as DocumentNode<GetTRBRequestQuery, GetTRBRequestQueryVariables>;
 export const TypedGetTRBRequestConsultMeetingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTRBRequestConsultMeeting"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trbRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"consultMeetingTime"}}]}}]}}]} as unknown as DocumentNode<GetTRBRequestConsultMeetingQuery, GetTRBRequestConsultMeetingQueryVariables>;

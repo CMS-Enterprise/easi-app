@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export default gql`
-  mutation CreateTrbRequestDocument($input: CreateTRBRequestDocumentInput!) {
+export default gql(/* GraphQL */ `
+  mutation CreateTRBRequestDocument($input: CreateTRBRequestDocumentInput!) {
     createTRBRequestDocument(input: $input) {
       document {
         id
@@ -13,4 +13,4 @@ export default gql`
       }
     }
   }
-`;
+`);

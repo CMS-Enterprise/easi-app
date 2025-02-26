@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client';
 import { Alert, Button, Table } from '@trussworks/react-uswds';
 import {
   GetTRBRequestDocumentsQuery,
+  TRBDocumentCommonType,
   TRBRequestDocumentStatus,
   useGetTRBRequestDocumentsQuery,
   useGetTRBRequestDocumentUrlsLazyQuery
@@ -19,7 +20,6 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Spinner from 'components/Spinner';
 import useMessage from 'hooks/useMessage';
-import { TRBDocumentCommonType } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';

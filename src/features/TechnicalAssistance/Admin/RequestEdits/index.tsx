@@ -2,14 +2,9 @@ import React, { useContext, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
-import CreateTrbRequestFeedbackQuery from 'gql/legacyGQL/CreateTrbRequestFeedbackQuery';
-import {
-  CreateTrbRequestFeedback,
-  CreateTrbRequestFeedbackVariables
-} from 'gql/legacyGQL/types/CreateTrbRequestFeedback';
+import { useCreateTRBRequestFeedbackMutation } from 'gql/generated/graphql';
 
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
@@ -83,10 +78,7 @@ function RequestEdits() {
     }
   });
 
-  const [sendFeedback, feedbackResult] = useMutation<
-    CreateTrbRequestFeedback,
-    CreateTrbRequestFeedbackVariables
-  >(CreateTrbRequestFeedbackQuery);
+  const [sendFeedback, feedbackResult] = useCreateTRBRequestFeedbackMutation();
 
   const submitForm = (formData: RequestEditsFields) => {
     sendFeedback({

@@ -1,14 +1,14 @@
 import {
+  CreateTRBRequestDocumentInput,
   PersonRole,
+  TRBDocumentCommonType,
   TRBGuidanceLetterInsightCategory,
   UpdateTRBRequestFormInput
 } from 'gql/generated/graphql';
 import * as yup from 'yup';
 
 import {
-  CreateTRBRequestDocumentInput,
   TRBCollabGroupOption,
-  TRBDocumentCommonType,
   TRBWhereInProcessOption
 } from 'types/graphql-global-types';
 
