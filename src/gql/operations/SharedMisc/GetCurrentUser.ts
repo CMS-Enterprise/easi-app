@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export default gql`
+export default gql(/* GraphQL */ `
   query GetCurrentUser {
     currentUser {
       launchDarkly {
@@ -9,4 +9,4 @@ export default gql`
       }
     }
   }
-`;
+`);
