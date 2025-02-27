@@ -7,7 +7,10 @@ import {
   waitForElementToBeRemoved,
   within
 } from '@testing-library/react';
-import { SystemIntakeState } from 'gql/generated/graphql';
+import {
+  SystemIntakeDecisionState,
+  SystemIntakeState
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { taskListState } from 'tests/mock/govTaskList';
 import {
@@ -124,6 +127,8 @@ describe('Governance Task List', () => {
             mocks={[
               getGovernanceTaskListQuery({
                 ...taskListState.intakeFormNotStarted.systemIntake,
+                state: SystemIntakeState.CLOSED,
+                decisionState: SystemIntakeDecisionState.NOT_APPROVED,
                 __typename: 'SystemIntake'
               })
             ]}
@@ -185,7 +190,7 @@ describe('Governance Task List', () => {
           <VerboseMockedProvider
             mocks={[
               getGovernanceTaskListQuery({
-                ...taskListState.intakeFormNotStarted.systemIntake,
+                ...taskListState.intakeFormSubmitted.systemIntake,
                 __typename: 'SystemIntake'
               })
             ]}

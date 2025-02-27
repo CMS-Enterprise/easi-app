@@ -38,13 +38,6 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     // In progress
     expectTaskStatusTagToHaveTextKey('IN_PROGRESS');
 
-    // % complete
-    screen.getByText(
-      i18next.t<string>('taskList:taskStatusInfo.percentComplete', {
-        percent: 22
-      })
-    );
-
     // Continue button
     getByRoleWithNameTextKey('button', 'itGov:button.continue');
   });

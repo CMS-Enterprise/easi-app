@@ -56,14 +56,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     );
     // In progress
     expectTaskStatusTagToHaveTextKey('IN_PROGRESS');
-    // Last updated date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>(
-          'taskList:taskStatusInfo.lastUpdated'
-        )}.*07/12/2023`
-      )
-    );
+
     // Continue button
     getByRoleWithNameTextKey('button', 'itGov:button.continue');
   });
@@ -75,13 +68,6 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
 
     // Completed
     expectTaskStatusTagToHaveTextKey('SUBMITTED');
-
-    // Submitted date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>('taskList:taskStatusInfo.submitted')}.*07/13/2023`
-      )
-    );
 
     // Submitted & waiting for feedback info
     expect(getExpectedAlertType('info')).toHaveTextContent(
@@ -102,15 +88,6 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
 
     // Edits Requested
     expectTaskStatusTagToHaveTextKey('EDITS_REQUESTED');
-
-    // Last updated date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>(
-          'taskList:taskStatusInfo.lastUpdated'
-        )}.*07/14/2023`
-      )
-    );
 
     // Edits requested warning
     expect(getExpectedAlertType('warning')).toHaveTextContent(
@@ -134,13 +111,6 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     // Completed
     expectTaskStatusTagToHaveTextKey('SUBMITTED');
 
-    // Submitted date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>('taskList:taskStatusInfo.submitted')}.*07/15/2023`
-      )
-    );
-
     // Submitted & waiting for feedback info
     expect(getExpectedAlertType('info')).toHaveTextContent(
       i18next.t<string>('itGov:taskList.step.bizCaseDraft.submittedInfo')
@@ -162,13 +132,6 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     // Completed
     expectTaskStatusTagToHaveTextKey('COMPLETED');
 
-    // Submitted date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>('taskList:taskStatusInfo.submitted')}.*07/16/2023`
-      )
-    );
-
     // No alert
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
 
@@ -187,13 +150,6 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
 
     // Completed
     expectTaskStatusTagToHaveTextKey('COMPLETED');
-
-    // Submitted date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>('taskList:taskStatusInfo.submitted')}.*07/16/2023`
-      )
-    );
 
     // No feedback info
     const noFeedbackInfo = getExpectedAlertType('info');

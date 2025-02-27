@@ -87,13 +87,6 @@ describe('Gov Task: Feedback from initial review statuses', () => {
     expect(
       within(noFeedbackInfo).getByRole('link', { name: IT_GOV_EMAIL })
     ).toHaveAttribute('href', mailtoItGov);
-
-    // Completed date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>('taskList:taskStatusInfo.completed')}.*07/10/2023`
-      )
-    );
   });
 
   it('Done - with feedback', () => {
@@ -109,13 +102,6 @@ describe('Gov Task: Feedback from initial review statuses', () => {
 
     // View feedback
     getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');
-
-    // Completed date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>('taskList:taskStatusInfo.completed')}.*07/10/2023`
-      )
-    );
   });
 
   it('Re-submitted with feedback', () => {

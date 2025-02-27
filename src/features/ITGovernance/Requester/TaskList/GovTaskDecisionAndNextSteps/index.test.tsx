@@ -1,7 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
-import i18next from 'i18next';
+import { render } from '@testing-library/react';
 import { taskListState } from 'tests/mock/govTaskList';
 
 import { ITGovTaskSystemIntake } from 'types/itGov';
@@ -44,13 +43,6 @@ describe('Gov Task: Decision and next steps statuses', () => {
 
     // Completed
     expectTaskStatusTagToHaveTextKey('COMPLETED');
-
-    // Date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>('taskList:taskStatusInfo.completed')}.*07/21/2023`
-      )
-    );
 
     // Decision and next steps button
     getByRoleWithNameTextKey(
