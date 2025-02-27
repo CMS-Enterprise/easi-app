@@ -109,7 +109,7 @@ function StepHeader({
                   onClick={
                     stp.onClick && !stp.disabled ? stp.onClick : undefined
                   }
-                  className={classNames({
+                  className={classNames('maxw-none', {
                     'usa-step-indicator__segment--clickable':
                       !!stp.onClick && !stp.disabled,
                     'usa-step-indicator__segment--disabled': stp.disabled

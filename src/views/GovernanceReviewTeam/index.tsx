@@ -60,7 +60,7 @@ const GovernanceReviewTeam = () => {
                 path="/it-governance/:systemId/grb-review/:step(review-type|presentation|documents|participants)"
                 exact
               >
-                <GRBReviewForm id={id} />
+                <GRBReviewForm />
               </Route>
             )}
 
