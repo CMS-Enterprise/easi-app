@@ -113,9 +113,11 @@ export default {
             COMPLETED: 'This GRB review ended on {{date}}.'
           }
         },
-        uploadPresentation: 'Uploaded presentation deck: {{fileName}}',
+        uploadPresentation:
+          '<strong>Uploaded presentation deck:</strong> {{fileName}}',
         view: 'View',
-        remove: 'Remove'
+        remove: 'Remove',
+        scanning: 'Document uploaded, virus scanning in progress...'
       },
       decisionAndNextSteps: {
         title: 'Decision and next steps',

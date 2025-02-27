@@ -1,5 +1,6 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { Button } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   GetGovernanceTaskListQuery,
@@ -24,6 +25,9 @@ const GovTaskGrbMeeting = ({
 }: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
   const stepKey = 'grbMeeting';
   const { t } = useTranslation('itGov');
+
+  // TEMPORARY: Remove when scanning is implemented
+  const isScanning = false;
 
   const dateMapping: Record<
     SystemIntakeGRBReviewType,
@@ -93,6 +97,43 @@ const GovTaskGrbMeeting = ({
                   >
                     {t(`taskList.step.${stepKey}.presentationUploadButton`)}
                   </UswdsReactLink>
+                  <div>
+                    {isScanning ? (
+                      <span>
+                        <em>{t(`itGov:taskList.step.${stepKey}.scanning`)}</em>
+                      </span>
+                    ) : (
+                      <>
+                        <span className="margin-right-1">
+                          <Trans
+                            i18nKey={`itGov:taskList.step.${stepKey}.uploadPresentation`}
+                            components={{
+                              strong: <strong />
+                            }}
+                            values={{
+                              fileName: 'presentation.pdf'
+                            }}
+                          />
+                        </span>
+                        <Button
+                          className="margin-right-1"
+                          type="button"
+                          unstyled
+                          onClick={() => console.log('view')}
+                        >
+                          {t(`taskList.step.${stepKey}.view`)}
+                        </Button>
+                        <Button
+                          className="text-error"
+                          type="button"
+                          unstyled
+                          onClick={() => console.log('remove')}
+                        >
+                          {t(`taskList.step.${stepKey}.remove`)}
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </div>
               )}
             </>
