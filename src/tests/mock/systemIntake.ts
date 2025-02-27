@@ -685,9 +685,7 @@ export const taskListSystemIntake: TaskListSystemIntake = {
   systems: [],
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
   grbReviewStartedAt: null,
-  grbReviewAsyncRecordingTime: null,
   grbReviewAsyncEndDate: null,
-  grbReviewStandardGRBMeetingTime: null,
   grbReviewAsyncGRBMeetingTime: null
 };
 

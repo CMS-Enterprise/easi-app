@@ -953,9 +953,7 @@ export const taskListState: {
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
       },
       grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-      grbReviewStandardGRBMeetingTime: '2023-07-20T00:30:28Z',
       grbReviewStartedAt: '2023-07-20T00:30:28Z',
-      grbReviewAsyncRecordingTime: '2023-07-20T00:30:28Z',
       grbReviewAsyncGRBMeetingTime: '2023-07-20T00:30:28Z',
       grbReviewAsyncEndDate: '2023-07-20T00:30:28Z'
     }
@@ -985,9 +983,7 @@ export const taskListState: {
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
       },
       grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-      grbReviewStandardGRBMeetingTime: '2023-07-20T00:30:28Z',
       grbReviewStartedAt: '2023-07-20T00:30:28Z',
-      grbReviewAsyncRecordingTime: '2023-07-20T00:30:28Z',
       grbReviewAsyncGRBMeetingTime: '2023-07-20T00:30:28Z',
       grbReviewAsyncEndDate: '2023-07-20T00:30:28Z'
     }
