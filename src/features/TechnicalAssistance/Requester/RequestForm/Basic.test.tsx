@@ -7,10 +7,9 @@ import userEvent from '@testing-library/user-event';
 import {
   GetTRBRequestQuery,
   GetTRBRequestQueryVariables,
+  TRBRequestState,
   TRBRequestType
 } from 'gql/generated/graphql';
-
-import { TRBRequestState } from 'types/graphql-global-types';
 
 import Basic from './Basic';
 

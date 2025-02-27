@@ -10,13 +10,13 @@ import {
   GetTRBRequestDocumentsDocument,
   GetTRBRequestQuery,
   GetTRBRequestQueryVariables,
+  TRBRequestState,
   TRBRequestType
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { MATCH_ANY_PARAMETERS, WildcardMockLink } from 'wildcard-mock-link';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { TRBRequestState } from 'types/graphql-global-types';
 
 import Documents from './Documents';
 

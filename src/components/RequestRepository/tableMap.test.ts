@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
+import { SystemIntakeState } from 'gql/generated/graphql';
 import { systemIntakeForTable } from 'tests/mock/systemIntake';
-
-import { SystemIntakeState } from 'types/graphql-global-types';
 
 import tableMap, {
   TableSystemIntake,

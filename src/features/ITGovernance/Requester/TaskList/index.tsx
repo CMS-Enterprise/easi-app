@@ -10,6 +10,7 @@ import {
   ModalHeading
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
+import { SystemIntakeState } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -21,7 +22,6 @@ import PageLoading from 'components/PageLoading';
 import { TaskListContainer } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
-import { SystemIntakeState } from 'types/graphql-global-types';
 
 import {
   ITGovIntakeFormStatus,

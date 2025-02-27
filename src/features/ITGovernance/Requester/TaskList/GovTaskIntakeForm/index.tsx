@@ -5,14 +5,14 @@ import { Button } from '@trussworks/react-uswds';
 import {
   GetGovernanceTaskListQuery,
   GovernanceRequestFeedbackTargetForm,
-  ITGovIntakeFormStatus
+  ITGovIntakeFormStatus,
+  SystemIntakeState
 } from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-import { SystemIntakeState } from 'types/graphql-global-types';
 import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskIntakeForm = ({

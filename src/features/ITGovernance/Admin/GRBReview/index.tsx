@@ -17,6 +17,7 @@ import {
   SystemIntakeDocumentFragmentFragment,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
+  SystemIntakeState,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
 } from 'gql/generated/graphql';
@@ -32,7 +33,6 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
 import { BusinessCaseModel } from 'types/businessCase';
-import { SystemIntakeState } from 'types/graphql-global-types';
 import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
 

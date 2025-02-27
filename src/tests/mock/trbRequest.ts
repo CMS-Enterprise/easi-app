@@ -36,6 +36,8 @@ import {
   TRBGuidanceLetterInsightCategory,
   TRBGuidanceLetterStatus,
   TrbRequestFormFieldsFragmentFragment,
+  TRBRequestState,
+  TRBRequestStatus,
   TRBRequestType,
   TRBWhereInProcessOption,
   UpdateTRBRequestConsultMeetingDocument,
@@ -43,7 +45,6 @@ import {
   UpdateTRBRequestConsultMeetingMutationVariables
 } from 'gql/generated/graphql';
 
-import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import MockTrbAttendees, {
   MockTrbAttendee,

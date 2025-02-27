@@ -13,6 +13,7 @@ import {
   TRBFeedbackStatus,
   TRBFormStatus,
   TRBGuidanceLetterStatus,
+  TRBRequestState,
   TRBRequestType,
   TRBSubjectAreaOption,
   TRBWhereInProcessOption
@@ -21,7 +22,6 @@ import configureMockStore from 'redux-mock-store';
 import { requester } from 'tests/mock/trbRequest';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { TRBRequestState } from 'types/graphql-global-types';
 
 import Check from './Check';
 

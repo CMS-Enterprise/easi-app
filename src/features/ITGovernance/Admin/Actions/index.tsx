@@ -9,6 +9,7 @@ import {
   ITGovFinalBusinessCaseStatus,
   ITGovIntakeFormStatus,
   SystemIntakeFragmentFragment,
+  SystemIntakeState,
   useGetGovernanceTaskListQuery
 } from 'gql/generated/graphql';
 
@@ -16,7 +17,6 @@ import CollapsableLink from 'components/CollapsableLink';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import { RadioGroup } from 'components/RadioField';
-import { SystemIntakeState } from 'types/graphql-global-types';
 
 import ManageLcid from './ManageLcid';
 import ProgressToNewStep from './ProgressToNewStep';

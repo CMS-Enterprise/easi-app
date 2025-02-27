@@ -13,12 +13,13 @@ import {
 import {
   GetTRBRequestSummaryQuery,
   RequestRelationType,
+  TRBRequestState,
+  TRBRequestStatus,
   TRBRequestType
 } from 'gql/generated/graphql';
 
 import AdminRequestHeaderSummary from 'components/AdminRequestHeaderSummary';
 import StateTag from 'components/StateTag';
-import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TRBAttendee, TrbRequestIdRef } from 'types/technicalAssistance';
 
 import { TrbAssignLeadModalOpener } from '../TrbAssignLeadModal';

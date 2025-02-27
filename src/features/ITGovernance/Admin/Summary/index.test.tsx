@@ -6,12 +6,11 @@ import {
   RequestRelationType,
   SystemIntakeFragmentFragment,
   SystemIntakeRequestType,
+  SystemIntakeState,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 import users from 'tests/mock/users';
-
-import { SystemIntakeState } from 'types/graphql-global-types';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 

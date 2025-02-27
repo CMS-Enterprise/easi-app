@@ -5,7 +5,8 @@ import { Button, Link } from '@trussworks/react-uswds';
 import {
   GetGovernanceTaskListQuery,
   GovernanceRequestFeedbackTargetForm,
-  ITGovFinalBusinessCaseStatus
+  ITGovFinalBusinessCaseStatus,
+  SystemIntakeState
 } from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
@@ -13,7 +14,6 @@ import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
-import { SystemIntakeState } from 'types/graphql-global-types';
 
 const GovTaskBizCaseFinal = ({
   id,

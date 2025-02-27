@@ -5,12 +5,12 @@ import { ModalRef } from '@trussworks/react-uswds';
 import {
   GetTRBRequestHomeDocument,
   TRBFormStatus,
-  TRBGuidanceLetterStatus
+  TRBGuidanceLetterStatus,
+  TRBRequestStatus
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { trbRequestSummary } from 'tests/mock/trbRequest';
 
-import { TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

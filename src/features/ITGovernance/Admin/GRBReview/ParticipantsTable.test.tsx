@@ -4,12 +4,11 @@ import { render, screen } from '@testing-library/react';
 import {
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
-  SystemIntakeGRBReviewerVotingRole
+  SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeState
 } from 'gql/generated/graphql';
 import { systemIntake } from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
-
-import { SystemIntakeState } from 'types/graphql-global-types';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 

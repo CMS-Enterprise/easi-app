@@ -16,6 +16,7 @@ import {
 import {
   RequestRelationType,
   SystemIntakeFragmentFragment,
+  SystemIntakeState,
   SystemIntakeStatusAdmin,
   useUpdateSystemIntakeAdminLeadMutation
 } from 'gql/generated/graphql';
@@ -25,7 +26,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import Modal from 'components/Modal';
 import { RadioField, RadioGroup } from 'components/RadioField';
 import StateTag from 'components/StateTag';
-import { SystemIntakeState } from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { translateRequestType } from 'utils/systemIntake';

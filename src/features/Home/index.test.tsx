@@ -8,7 +8,8 @@ import {
   GetCedarSystemsDocument,
   GetSystemIntakesTableDocument,
   GetSystemIntakesTableQuery,
-  GetSystemIntakesTableQueryVariables
+  GetSystemIntakesTableQueryVariables,
+  SystemIntakeState
 } from 'gql/generated/graphql';
 import { systemIntakeForTable } from 'tests/mock/systemIntake';
 import {
@@ -17,7 +18,6 @@ import {
 } from 'tests/mock/trbRequest';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { SystemIntakeState } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';

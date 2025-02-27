@@ -7,6 +7,7 @@ import {
   waitForElementToBeRemoved,
   within
 } from '@testing-library/react';
+import { SystemIntakeState } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { taskListState } from 'tests/mock/govTaskList';
 import {
@@ -15,7 +16,6 @@ import {
 } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { SystemIntakeState } from 'types/graphql-global-types';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { getByRoleWithNameTextKey } from 'utils/testing/helpers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';

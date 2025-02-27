@@ -8,10 +8,10 @@ import {
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
+  SystemIntakeState,
   SystemIntakeStep
 } from 'gql/generated/graphql';
 
-import { SystemIntakeState } from 'types/graphql-global-types';
 import { GetGovernanceTaskListWithMockData } from 'types/itGov';
 
 import { taskListSystemIntake } from './systemIntake';

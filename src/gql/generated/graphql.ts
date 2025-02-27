@@ -3743,6 +3743,15 @@ export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetCurrentUserQuery = { __typename: 'Query', currentUser?: { __typename: 'CurrentUser', launchDarkly: { __typename: 'LaunchDarklySettings', userKey: string, signedHash: string } } | null };
 
+export type GetLinkedRequestsQueryVariables = Exact<{
+  cedarSystemId: Scalars['String']['input'];
+  systemIntakeState: SystemIntakeState;
+  trbRequestState: TRBRequestState;
+}>;
+
+
+export type GetLinkedRequestsQuery = { __typename: 'Query', cedarSystemDetails?: { __typename: 'CedarSystemDetails', cedarSystem: { __typename: 'CedarSystem', id: string, linkedSystemIntakes: Array<{ __typename: 'SystemIntake', id: UUID, submittedAt?: Time | null, lcid?: string | null, requesterName?: string | null, nextMeetingDate?: Time | null, lastMeetingDate?: Time | null, name?: string | null, status: SystemIntakeStatusRequester }>, linkedTrbRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, state: TRBRequestState, nextMeetingDate?: Time | null, lastMeetingDate?: Time | null, form: { __typename: 'TRBRequestForm', submittedAt?: Time | null }, requesterInfo: { __typename: 'UserInfo', commonName: string } }> } } | null };
+
 export type GetRequestsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -7107,6 +7116,74 @@ export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQ
 export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
 export type GetCurrentUserSuspenseQueryHookResult = ReturnType<typeof useGetCurrentUserSuspenseQuery>;
 export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const GetLinkedRequestsDocument = gql`
+    query GetLinkedRequests($cedarSystemId: String!, $systemIntakeState: SystemIntakeState!, $trbRequestState: TRBRequestState!) {
+  cedarSystemDetails(cedarSystemId: $cedarSystemId) {
+    cedarSystem {
+      id
+      linkedSystemIntakes: linkedSystemIntakes(state: $systemIntakeState) {
+        id
+        name: requestName
+        submittedAt
+        status: statusRequester
+        lcid
+        requesterName
+        nextMeetingDate
+        lastMeetingDate
+      }
+      linkedTrbRequests(state: $trbRequestState) {
+        id
+        name
+        form {
+          submittedAt
+        }
+        status
+        state
+        requesterInfo {
+          commonName
+        }
+        nextMeetingDate
+        lastMeetingDate
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetLinkedRequestsQuery__
+ *
+ * To run a query within a React component, call `useGetLinkedRequestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLinkedRequestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLinkedRequestsQuery({
+ *   variables: {
+ *      cedarSystemId: // value for 'cedarSystemId'
+ *      systemIntakeState: // value for 'systemIntakeState'
+ *      trbRequestState: // value for 'trbRequestState'
+ *   },
+ * });
+ */
+export function useGetLinkedRequestsQuery(baseOptions: Apollo.QueryHookOptions<GetLinkedRequestsQuery, GetLinkedRequestsQueryVariables> & ({ variables: GetLinkedRequestsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLinkedRequestsQuery, GetLinkedRequestsQueryVariables>(GetLinkedRequestsDocument, options);
+      }
+export function useGetLinkedRequestsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLinkedRequestsQuery, GetLinkedRequestsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLinkedRequestsQuery, GetLinkedRequestsQueryVariables>(GetLinkedRequestsDocument, options);
+        }
+export function useGetLinkedRequestsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetLinkedRequestsQuery, GetLinkedRequestsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetLinkedRequestsQuery, GetLinkedRequestsQueryVariables>(GetLinkedRequestsDocument, options);
+        }
+export type GetLinkedRequestsQueryHookResult = ReturnType<typeof useGetLinkedRequestsQuery>;
+export type GetLinkedRequestsLazyQueryHookResult = ReturnType<typeof useGetLinkedRequestsLazyQuery>;
+export type GetLinkedRequestsSuspenseQueryHookResult = ReturnType<typeof useGetLinkedRequestsSuspenseQuery>;
+export type GetLinkedRequestsQueryResult = Apollo.QueryResult<GetLinkedRequestsQuery, GetLinkedRequestsQueryVariables>;
 export const GetRequestsDocument = gql`
     query GetRequests {
   mySystemIntakes {
@@ -9936,6 +10013,7 @@ export const TypedUpdateSystemIntakeAdminLeadDocument = {"kind":"Document","defi
 export const TypedUpdateSystemIntakeNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeNoteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeNoteMutation, UpdateSystemIntakeNoteMutationVariables>;
 export const TypedUpdateSystemIntakeReviewDatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeReviewDates"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeReviewDatesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeReviewDates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeReviewDatesMutation, UpdateSystemIntakeReviewDatesMutationVariables>;
 export const TypedGetCurrentUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"launchDarkly"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userKey"}},{"kind":"Field","name":{"kind":"Name","value":"signedHash"}}]}}]}}]}}]} as unknown as DocumentNode<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const TypedGetLinkedRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetLinkedRequests"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"systemIntakeState"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeState"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestState"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TRBRequestState"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystemDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cedarSystemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cedarSystemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cedarSystem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","alias":{"kind":"Name","value":"linkedSystemIntakes"},"name":{"kind":"Name","value":"linkedSystemIntakes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"state"},"value":{"kind":"Variable","name":{"kind":"Name","value":"systemIntakeState"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","alias":{"kind":"Name","value":"name"},"name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","alias":{"kind":"Name","value":"status"},"name":{"kind":"Name","value":"statusRequester"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"nextMeetingDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastMeetingDate"}}]}},{"kind":"Field","name":{"kind":"Name","value":"linkedTrbRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"state"},"value":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestState"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"form"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"requesterInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nextMeetingDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastMeetingDate"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetLinkedRequestsQuery, GetLinkedRequestsQueryVariables>;
 export const TypedGetRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mySystemIntakes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"statusRequester"}},{"kind":"Field","name":{"kind":"Name","value":"statusAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"nextMeetingDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastMeetingDate"}}]}},{"kind":"Field","name":{"kind":"Name","value":"myTrbRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"archived"},"value":{"kind":"BooleanValue","value":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","alias":{"kind":"Name","value":"submittedAt"},"name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","alias":{"kind":"Name","value":"nextMeetingDate"},"name":{"kind":"Name","value":"consultMeetingTime"}},{"kind":"Field","name":{"kind":"Name","value":"lastMeetingDate"}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetRequestsQuery, GetRequestsQueryVariables>;
 export const TypedGetCedarRoleTypesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCedarRoleTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"roleTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CedarRoleTypeFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleTypeFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRoleType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]} as unknown as DocumentNode<GetCedarRoleTypesQuery, GetCedarRoleTypesQueryVariables>;
 export const TypedSetRolesForUserOnSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetRolesForUserOnSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetRolesForUserOnSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setRolesForUserOnSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<SetRolesForUserOnSystemMutation, SetRolesForUserOnSystemMutationVariables>;

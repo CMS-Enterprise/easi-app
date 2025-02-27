@@ -20,6 +20,7 @@ import classnames from 'classnames';
 import NotFound from 'features/Miscellaneous/NotFound';
 import {
   GetTRBAdminHomeQuery,
+  TRBRequestState,
   useGetTRBAdminHomeQuery
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
@@ -32,7 +33,6 @@ import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import useTableState from 'hooks/useTableState';
-import { TRBRequestState } from 'types/graphql-global-types';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';

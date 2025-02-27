@@ -27,9 +27,12 @@ import {
   SystemIntakeFragmentFragment,
   SystemIntakeGRBPresentationLinksFragmentFragment,
   SystemIntakeRequestType,
+  SystemIntakeState,
   SystemIntakeStatusAdmin,
+  SystemIntakeStatusRequester,
   SystemIntakeStep,
-  SystemIntakeWithReviewRequestedFragment
+  SystemIntakeWithReviewRequestedFragment,
+  TRBRequestStatus
 } from 'gql/generated/graphql';
 import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
 import {
@@ -39,12 +42,7 @@ import {
 import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
-import {
-  SystemIntakeState,
-  SystemIntakeStatusRequester,
-  SystemIntakeTRBFollowUp,
-  TRBRequestStatus
-} from 'types/graphql-global-types';
+import { SystemIntakeTRBFollowUp } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 
 import users from './users';

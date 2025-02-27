@@ -7,11 +7,10 @@ import userEvent from '@testing-library/user-event';
 import {
   GetTRBRequestQuery,
   GetTRBRequestQueryVariables,
+  TRBRequestState,
   TRBRequestType,
   TRBSubjectAreaOption
 } from 'gql/generated/graphql';
-
-import { TRBRequestState } from 'types/graphql-global-types';
 
 import SubjectAreas from './SubjectAreas';
 
