@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export default gql`
+export default gql(/* GraphQL */ `
   query GetMyCedarSystems {
     myCedarSystems {
       id
@@ -22,4 +22,4 @@ export default gql`
       }
     }
   }
-`;
+`);

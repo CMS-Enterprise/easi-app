@@ -17,7 +17,6 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useQuery } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -30,10 +29,9 @@ import {
   GetCedarSystemIsBookmarkedDocument,
   GetCedarSystemsQuery,
   useCreateCedarSystemBookmarkMutation,
-  useDeleteCedarSystemBookmarkMutation
+  useDeleteCedarSystemBookmarkMutation,
+  useGetMyCedarSystemsQuery
 } from 'gql/generated/graphql';
-import GetMyCedarSystemsQuery from 'gql/legacyGQL/GetMyCedarSystemsQuery';
-import { GetMyCedarSystems as GetMyCedarSystemsType } from 'gql/legacyGQL/types/GetMyCedarSystems';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Alert from 'components/Alert';
@@ -87,9 +85,7 @@ export const Table = ({
     tableType || 'all-systems'
   );
 
-  const { loading, data: mySystems } = useQuery<GetMyCedarSystemsType>(
-    GetMyCedarSystemsQuery
-  );
+  const { loading, data: mySystems } = useGetMyCedarSystemsQuery();
 
   const [createMutate] = useCreateCedarSystemBookmarkMutation();
   const [deleteMutate] = useDeleteCedarSystemBookmarkMutation();
