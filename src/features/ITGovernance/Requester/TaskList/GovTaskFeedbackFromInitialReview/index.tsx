@@ -1,39 +1,26 @@
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from '@trussworks/react-uswds';
+import {
+  GetGovernanceTaskListQuery,
+  GovernanceRequestFeedbackTargetForm,
+  ITGovFeedbackStatus
+} from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
-import {
-  GovernanceRequestFeedbackTargetForm,
-  ITGovFeedbackStatus
-} from 'types/graphql-global-types';
-import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
-import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskFeedbackFromInitialReview = ({
   id,
   itGovTaskStatuses: { feedbackFromInitialReviewStatus },
   state,
-  governanceRequestFeedbacks,
-  governanceRequestFeedbackCompletedAt
-}: ItGovTaskSystemIntakeWithMockData) => {
+  governanceRequestFeedbacks
+}: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
   const stepKey = 'feedbackFromInitialReview';
   const { t } = useTranslation('itGov');
-
-  // Completed date
-  let dateInfo: TaskListItemDateInfo;
-  if (
-    feedbackFromInitialReviewStatus === ITGovFeedbackStatus.COMPLETED &&
-    governanceRequestFeedbackCompletedAt
-  )
-    dateInfo = {
-      label: 'completed',
-      value: governanceRequestFeedbackCompletedAt
-    };
 
   const hasFeedback = useMemo(() => {
     // If initial feedback step has not been started, return false
@@ -60,7 +47,6 @@ const GovTaskFeedbackFromInitialReview = ({
       heading={t(`taskList.step.${stepKey}.title`)}
       status={feedbackFromInitialReviewStatus}
       state={state}
-      statusDateInfo={dateInfo}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
     >
       <TaskListDescription>

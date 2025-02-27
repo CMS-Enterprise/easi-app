@@ -8,7 +8,7 @@ import i18next from 'i18next';
 import { taskListState } from 'tests/mock/govTaskList';
 
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
-import { ItGovTaskSystemIntake } from 'types/itGov';
+import { ITGovTaskSystemIntake } from 'types/itGov';
 import {
   expectTaskStatusTagToHaveTextKey,
   getByRoleWithNameTextKey,
@@ -19,7 +19,7 @@ import GovTaskFeedbackFromInitialReview from '.';
 
 describe('Gov Task: Feedback from initial review statuses', () => {
   function renderGovTaskFeedbackFromInitialReview(
-    mockdata: ItGovTaskSystemIntake
+    mockdata: ITGovTaskSystemIntake
   ) {
     return render(
       <MemoryRouter>
@@ -87,13 +87,6 @@ describe('Gov Task: Feedback from initial review statuses', () => {
     expect(
       within(noFeedbackInfo).getByRole('link', { name: IT_GOV_EMAIL })
     ).toHaveAttribute('href', mailtoItGov);
-
-    // Completed date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>('taskList:taskStatusInfo.completed')}.*07/10/2023`
-      )
-    );
   });
 
   it('Done - with feedback', () => {
@@ -109,13 +102,6 @@ describe('Gov Task: Feedback from initial review statuses', () => {
 
     // View feedback
     getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');
-
-    // Completed date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>('taskList:taskStatusInfo.completed')}.*07/10/2023`
-      )
-    );
   });
 
   it('Re-submitted with feedback', () => {

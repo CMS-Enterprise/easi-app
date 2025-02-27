@@ -2,28 +2,27 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
+import {
+  GetGovernanceTaskListQuery,
+  GovernanceRequestFeedbackTargetForm,
+  ITGovIntakeFormStatus,
+  SystemIntakeState
+} from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-import {
-  GovernanceRequestFeedbackTargetForm,
-  ITGovIntakeFormStatus,
-  SystemIntakeState
-} from 'types/graphql-global-types';
-import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskIntakeForm = ({
   id,
   itGovTaskStatuses,
-  intakeFormPctComplete,
   governanceRequestFeedbacks,
   submittedAt,
   updatedAt,
   state
-}: ItGovTaskSystemIntakeWithMockData) => {
+}: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
   const stepKey = 'intakeForm';
   const { t } = useTranslation('itGov');
   const history = useHistory();
@@ -72,10 +71,6 @@ const GovTaskIntakeForm = ({
       heading={t(`taskList.step.${stepKey}.title`)}
       status={itGovTaskStatuses.intakeFormStatus}
       state={state}
-      statusPercentComplete={
-        itGovTaskStatuses.intakeFormStatus ===
-          ITGovIntakeFormStatus.IN_PROGRESS && intakeFormPctComplete
-      }
       statusDateInfo={dateInfo}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
     >

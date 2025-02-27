@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
+import { TRBRequestState, TRBRequestStatus } from 'gql/generated/graphql';
 
-import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
 import DocumentsTable from '../../Requester/RequestForm/DocumentsTable';

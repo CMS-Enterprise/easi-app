@@ -1,7 +1,8 @@
-import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
+import {
+  GetTRBRequestSummaryQuery,
+  RequestRelationType
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
-
-import { RequestRelationType } from 'types/graphql-global-types';
 
 /** Returns linked contract or system name for display */
 const getSystemOrContractName = (

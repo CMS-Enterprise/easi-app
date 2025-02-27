@@ -5,11 +5,12 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import {
   GetTRBRequestsDocument,
-  GetTRBRequestsQuery
+  GetTRBRequestsQuery,
+  TRBRequestState,
+  TRBRequestStatus
 } from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
 
-import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ProcessFlow from '../Requester/ProcessFlow';

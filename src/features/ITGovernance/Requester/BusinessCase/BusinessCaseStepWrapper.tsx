@@ -1,22 +1,17 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
-import GetGovernanceTaskListQuery from 'gql/legacyGQL/GetGovernanceTaskListQuery';
 import {
-  GetGovernanceTaskList,
-  GetGovernanceTaskListVariables
-} from 'gql/legacyGQL/types/GetGovernanceTaskList';
+  ITGovDraftBusinessCaseStatus,
+  ITGovFinalBusinessCaseStatus,
+  SystemIntakeStep,
+  useGetGovernanceTaskListQuery
+} from 'gql/generated/graphql';
 
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
-import useCacheQuery from 'hooks/useCacheQuery';
-import {
-  ITGovDraftBusinessCaseStatus,
-  ITGovFinalBusinessCaseStatus,
-  SystemIntakeStep
-} from 'types/graphql-global-types';
 
 type BusinessCaseStepWrapperProps = {
   /** Form page title */
@@ -50,10 +45,7 @@ const BusinessCaseStepWrapper = ({
 }: BusinessCaseStepWrapperProps) => {
   const { t } = useTranslation('form');
 
-  const { data } = useCacheQuery<
-    GetGovernanceTaskList,
-    GetGovernanceTaskListVariables
-  >(GetGovernanceTaskListQuery, {
+  const { data } = useGetGovernanceTaskListQuery({
     variables: {
       id: systemIntakeId
     }

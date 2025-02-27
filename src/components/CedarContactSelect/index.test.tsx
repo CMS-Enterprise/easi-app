@@ -2,7 +2,7 @@ import React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
+import { GetCedarContactsDocument } from 'gql/generated/graphql';
 
 import CedarContactSelect from './index';
 
@@ -18,7 +18,7 @@ describe('CedarContactSelect', () => {
   // Cedar contacts query mock
   const cedarContactsQuery = {
     request: {
-      query: GetCedarContactsQuery,
+      query: GetCedarContactsDocument,
       variables: {
         commonName: contact.commonName
       }

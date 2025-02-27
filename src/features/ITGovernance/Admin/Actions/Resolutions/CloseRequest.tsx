@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { FormGroup } from '@trussworks/react-uswds';
 import {
   SystemIntakeCloseRequestInput,
+  SystemIntakeLCIDStatus,
   useCreateSystemIntakeActionCloseRequestMutation
 } from 'gql/generated/graphql';
 
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import RichTextEditor from 'components/RichTextEditor';
-import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
@@ -26,8 +26,8 @@ type CloseRequestFields = NonNullableProps<
 >;
 
 interface CloseRequestProps extends ResolutionProps {
-  lcid: string | null;
-  lcidStatus: SystemIntakeLCIDStatus | null;
+  lcid: string | null | undefined;
+  lcidStatus: SystemIntakeLCIDStatus | null | undefined;
 }
 
 const CloseRequest = ({

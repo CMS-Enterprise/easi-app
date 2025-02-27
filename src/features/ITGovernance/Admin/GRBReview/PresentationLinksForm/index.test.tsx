@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
+import { SystemIntakeGRBPresentationLinks } from 'gql/generated/graphql';
 import { systemIntake } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -53,7 +54,12 @@ describe('GRB presentation links form', () => {
       <MemoryRouter>
         <VerboseMockedProvider>
           <MessageProvider>
-            <PresentationLinksForm {...systemIntake} />
+            <PresentationLinksForm
+              {...systemIntake}
+              grbPresentationLinks={
+                systemIntake.grbPresentationLinks as SystemIntakeGRBPresentationLinks
+              }
+            />
           </MessageProvider>
         </VerboseMockedProvider>
       </MemoryRouter>

@@ -8,7 +8,10 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import GetSytemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
+import {
+  GetSystemIntakeDocument,
+  SystemIntakeFormState
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 import {
@@ -18,7 +21,6 @@ import {
 } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { SystemIntakeFormState } from 'types/graphql-global-types';
 
 import { SystemIntake } from './index';
 
@@ -199,7 +201,7 @@ describe('The System Intake page', () => {
   it('renders not found page for invalid intake id', async () => {
     const invalidIntakeQuery = {
       request: {
-        query: GetSytemIntakeQuery,
+        query: GetSystemIntakeDocument,
         variables: {
           id: systemIntake.id
         }

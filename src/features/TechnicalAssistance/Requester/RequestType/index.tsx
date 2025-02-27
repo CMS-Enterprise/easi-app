@@ -11,12 +11,14 @@ import {
   GridContainer,
   Icon
 } from '@trussworks/react-uswds';
-import { useUpdateTRBRequestTypeMutation } from 'gql/generated/graphql';
+import {
+  TRBRequestType,
+  useUpdateTRBRequestTypeMutation
+} from 'gql/generated/graphql';
 
 import CollapsableLink from 'components/CollapsableLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
-import { TRBRequestType } from 'types/graphql-global-types';
 import linkCedarSystemIdQueryString, {
   useLinkCedarSystemIdQueryParam
 } from 'utils/linkCedarSystemIdQueryString';

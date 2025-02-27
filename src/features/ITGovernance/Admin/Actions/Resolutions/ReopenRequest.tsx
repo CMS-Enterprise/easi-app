@@ -1,18 +1,15 @@
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import { FormGroup } from '@trussworks/react-uswds';
-import CreateSystemIntakeActionReopenRequestQuery from 'gql/legacyGQL/CreateSystemIntakeActionReopenRequestQuery';
 import {
-  CreateSystemIntakeActionReopenRequest,
-  CreateSystemIntakeActionReopenRequestVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionReopenRequest';
+  SystemIntakeReopenRequestInput,
+  useCreateSystemIntakeActionReopenRequestMutation
+} from 'gql/generated/graphql';
 
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import RichTextEditor from 'components/RichTextEditor';
-import { SystemIntakeReopenRequestInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
@@ -33,10 +30,7 @@ const ReopenRequest = ({
 }: ResolutionProps) => {
   const { t } = useTranslation('action');
 
-  const [reopenRequest] = useMutation<
-    CreateSystemIntakeActionReopenRequest,
-    CreateSystemIntakeActionReopenRequestVariables
-  >(CreateSystemIntakeActionReopenRequestQuery, {
+  const [reopenRequest] = useCreateSystemIntakeActionReopenRequestMutation({
     refetchQueries
   });
 

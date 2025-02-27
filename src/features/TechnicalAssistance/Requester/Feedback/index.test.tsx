@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-
-import { TRBFeedbackAction } from 'types/graphql-global-types';
+import { TRBFeedbackAction } from 'gql/generated/graphql';
 
 import TrbRequestFeedbackList from '.';
 

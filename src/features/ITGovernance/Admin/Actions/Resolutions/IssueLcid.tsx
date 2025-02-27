@@ -6,14 +6,14 @@ import { FormGroup, Radio, Select } from '@trussworks/react-uswds';
 import {
   CreateSystemIntakeActionConfirmLCIDMutationVariables,
   CreateSystemIntakeActionIssueLCIDMutationVariables,
+  GetSystemIntakesWithLCIDSQuery,
+  SystemIntakeDecisionState,
+  SystemIntakeIssueLCIDInput,
+  SystemIntakeTRBFollowUp,
   useCreateSystemIntakeActionConfirmLCIDMutation,
-  useCreateSystemIntakeActionIssueLCIDMutation
+  useCreateSystemIntakeActionIssueLCIDMutation,
+  useGetSystemIntakesWithLCIDSQuery
 } from 'gql/generated/graphql';
-import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
-import {
-  GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
-  GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
-} from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
 
 import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
@@ -23,13 +23,7 @@ import Label from 'components/Label';
 import PageLoading from 'components/PageLoading';
 import RichTextEditor from 'components/RichTextEditor';
 import TextAreaField from 'components/TextAreaField';
-import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
-import {
-  SystemIntakeDecisionState,
-  SystemIntakeIssueLCIDInput,
-  SystemIntakeTRBFollowUp
-} from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 import { lcidActionSchema } from 'validations/actionSchema';
 
@@ -83,9 +77,7 @@ const IssueLcid = ({
     refetchQueries
   });
 
-  const { data, loading } = useCacheQuery<GetSystemIntakesWithLCIDSType>(
-    GetSystemIntakesWithLCIDS
-  );
+  const { data, loading } = useGetSystemIntakesWithLCIDSQuery();
 
   /** System intakes with LCIDs, formatted for Use Existing LCID dropdown */
   const systemIntakesWithLcids = useMemo(() => {
@@ -93,7 +85,10 @@ const IssueLcid = ({
 
     // Restructure intakes to {LCID: SystemIntake} object
     return data?.systemIntakesWithLcids.reduce<
-      Record<string, SystemIntakeWithLcid>
+      Record<
+        string,
+        GetSystemIntakesWithLCIDSQuery['systemIntakesWithLcids'][0]
+      >
     >((acc, intake) => {
       if (!intake?.lcid) return acc;
       return { ...acc, [intake.lcid]: intake };

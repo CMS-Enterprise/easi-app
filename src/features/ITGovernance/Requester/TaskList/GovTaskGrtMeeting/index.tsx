@@ -1,12 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  GetGovernanceTaskListQuery,
+  ITGovGRTStatus
+} from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-import { ITGovGRTStatus } from 'types/graphql-global-types';
-import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { formatDateUtc } from 'utils/date';
 
 const GovTaskGrtMeeting = ({
@@ -15,7 +17,7 @@ const GovTaskGrtMeeting = ({
   state,
   governanceRequestFeedbacks,
   grtDate
-}: ItGovTaskSystemIntakeWithMockData) => {
+}: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
   const stepKey = 'grtMeeting';
   const { t } = useTranslation('itGov');
 

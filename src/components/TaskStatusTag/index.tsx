@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-
 import {
   ITGovDecisionStatus,
   ITGovDraftBusinessCaseStatus,
@@ -14,7 +13,7 @@ import {
   TRBFeedbackStatus,
   TRBFormStatus,
   TRBGuidanceLetterStatus
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
 
 import Tag from '../Tag';
 

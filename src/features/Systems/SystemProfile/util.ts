@@ -1,6 +1,5 @@
 import React from 'react';
-// eslint-disable-next-line camelcase
-import { GetSystemIntake_systemIntake_systems_businessOwnerRoles } from 'gql/legacyGQL/types/GetSystemIntake';
+import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 import { startCase } from 'lodash';
 
 import {
@@ -18,7 +17,7 @@ export function getPersonFullName(
   role: // eslint-disable-next-line camelcase
   | GetSystemProfileRoles
     // eslint-disable-next-line camelcase
-    | GetSystemIntake_systemIntake_systems_businessOwnerRoles
+    | SystemIntakeFragmentFragment['systems'][number]['businessOwnerRoles'][number]
 ): string {
   const fullname = `${role.assigneeFirstName} ${role.assigneeLastName}`;
   return fullname === fullname.toUpperCase()

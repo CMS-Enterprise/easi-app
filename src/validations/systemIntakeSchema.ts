@@ -1,12 +1,12 @@
+import {
+  SystemIntakeDocumentCommonType,
+  SystemIntakeDocumentVersion
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 import { FormattedFundingSource } from 'components/FundingSources';
-import {
-  SystemIntakeDocumentCommonType,
-  SystemIntakeDocumentVersion
-} from 'types/graphql-global-types';
 
 const govTeam = (name: string) =>
   Yup.object().shape({

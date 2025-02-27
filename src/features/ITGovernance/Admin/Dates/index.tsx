@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useUpdateSystemIntakeReviewDatesMutation } from 'gql/generated/graphql';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import {
+  SystemIntakeFragmentFragment,
+  useUpdateSystemIntakeReviewDatesMutation
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
 import {
@@ -25,7 +27,11 @@ import { parseAsUTC } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import { DateValidationSchema } from 'validations/systemIntakeSchema';
 
-const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
+const Dates = ({
+  systemIntake
+}: {
+  systemIntake: SystemIntakeFragmentFragment;
+}) => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation();

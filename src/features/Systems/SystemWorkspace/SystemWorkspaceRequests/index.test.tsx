@@ -3,17 +3,18 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import GetLinkedRequestsQuery from 'gql/legacyGQL/GetLinkedRequestsQuery';
 import {
-  GetLinkedRequests,
-  GetLinkedRequestsVariables
-} from 'gql/legacyGQL/types/GetLinkedRequests';
+  GetLinkedRequestsDocument,
+  GetLinkedRequestsQuery,
+  GetLinkedRequestsQueryVariables,
+  SystemIntakeState,
+  TRBRequestState
+} from 'gql/generated/graphql';
 import {
   linkedSystemIntakes,
   linkedTrbRequests
 } from 'tests/mock/systemLinkedRequest';
 
-import { SystemIntakeState, TRBRequestState } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 
 import SystemWorkspaceRequests from '.';
@@ -24,6 +25,7 @@ describe('System Workspace Requests Table', () => {
 
     const result = {
       data: {
+        __typename: 'Query',
         cedarSystemDetails: {
           __typename: 'CedarSystemDetails',
           cedarSystem: {
@@ -37,11 +39,11 @@ describe('System Workspace Requests Table', () => {
     } as const;
 
     const getLinkedRequestsMockedQuery: MockedQuery<
-      GetLinkedRequests,
-      GetLinkedRequestsVariables
+      GetLinkedRequestsQuery,
+      GetLinkedRequestsQueryVariables
     > = {
       request: {
-        query: GetLinkedRequestsQuery,
+        query: GetLinkedRequestsDocument,
         variables: {
           cedarSystemId,
           systemIntakeState: SystemIntakeState.OPEN,
@@ -52,11 +54,11 @@ describe('System Workspace Requests Table', () => {
     };
 
     const getLinkedRequestsMockedQueryClosed: MockedQuery<
-      GetLinkedRequests,
-      GetLinkedRequestsVariables
+      GetLinkedRequestsQuery,
+      GetLinkedRequestsQueryVariables
     > = {
       request: {
-        query: GetLinkedRequestsQuery,
+        query: GetLinkedRequestsDocument,
         variables: {
           cedarSystemId,
           systemIntakeState: SystemIntakeState.CLOSED,

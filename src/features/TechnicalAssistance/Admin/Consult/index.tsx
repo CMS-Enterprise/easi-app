@@ -12,6 +12,7 @@ import {
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
 import {
+  TRBFeedbackStatus,
   useGetTRBRequestConsultMeetingQuery,
   useUpdateTRBRequestConsultMeetingMutation
 } from 'gql/generated/graphql';
@@ -20,7 +21,6 @@ import { DateTime } from 'luxon';
 import PageLoading from 'components/PageLoading';
 import TextAreaField from 'components/TextAreaField';
 import useMessage from 'hooks/useMessage';
-import { TRBFeedbackStatus } from 'types/graphql-global-types';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { consultSchema } from 'validations/trbRequestSchema';
 

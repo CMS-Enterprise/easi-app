@@ -2,10 +2,13 @@ import React, { Dispatch, SetStateAction, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ModalRef } from '@trussworks/react-uswds';
-import { useCreateTRBGuidanceLetterMutation } from 'gql/generated/graphql';
+import {
+  TRBRequestState,
+  TRBRequestStatus,
+  useCreateTRBGuidanceLetterMutation
+} from 'gql/generated/graphql';
 
 import { AdminActionButton } from 'components/AdminAction';
-import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 
 import { TRBRequestContext } from '../RequestContext';

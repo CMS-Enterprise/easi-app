@@ -8,13 +8,13 @@ import {
   CardFooter,
   CardHeader
 } from '@trussworks/react-uswds';
-import { GetTRBRequestHomeQuery } from 'gql/generated/graphql';
-
-import TaskStatusTag from 'components/TaskStatusTag';
 import {
+  GetTRBRequestHomeQuery,
   TRBFormStatus,
   TRBGuidanceLetterStatus
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
+
+import TaskStatusTag from 'components/TaskStatusTag';
 import { formatDateLocal } from 'utils/date';
 
 import './index.scss';

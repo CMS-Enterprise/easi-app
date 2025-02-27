@@ -12,6 +12,10 @@ import {
 import AdditionalRequestInfo from 'features/ITGovernance/Requester/TaskList/AdditionalRequestInfo';
 import NotFoundPartial from 'features/Miscellaneous/NotFound/NotFoundPartial';
 import {
+  TRBAttendConsultStatus,
+  TRBConsultPrepStatus,
+  TRBFeedbackStatus,
+  TRBFormStatus,
   TRBGuidanceLetterStatusTaskList,
   useGetTRBTasklistQuery,
   useUpdateTRBRequestArchivedMutation
@@ -29,12 +33,6 @@ import TaskListItem, {
   TaskListDescription
 } from 'components/TaskList';
 import useMessage from 'hooks/useMessage';
-import {
-  TRBAttendConsultStatus,
-  TRBConsultPrepStatus,
-  TRBFeedbackStatus,
-  TRBFormStatus
-} from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
 import Breadcrumbs from '../../../../components/Breadcrumbs';

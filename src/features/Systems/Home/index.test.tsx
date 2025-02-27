@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { mockSystemInfo } from 'features/Systems/SystemProfile/data/mockSystemData';
-import GetCedarSystemsQuery from 'gql/legacyGQL/GetCedarSystemsQuery';
+import { GetCedarSystemsDocument } from 'gql/generated/graphql';
 
 import SystemList from './index';
 import Table from './SystemsTable';
@@ -18,7 +18,7 @@ describe('System List View', () => {
       const mocks = [
         {
           request: {
-            query: GetCedarSystemsQuery
+            query: GetCedarSystemsDocument
           },
           result: {
             data: {
@@ -46,7 +46,7 @@ describe('System List View', () => {
     const mocks = [
       {
         request: {
-          query: GetCedarSystemsQuery
+          query: GetCedarSystemsDocument
         },
         result: {
           data: {

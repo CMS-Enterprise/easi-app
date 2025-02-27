@@ -1,15 +1,12 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
-import CreateSystemIntakeActionUnretireLcidQuery from 'gql/legacyGQL/CreateSystemIntakeActionUnretireLcidQuery';
 import {
-  CreateSystemIntakeActionUnretireLcid,
-  CreateSystemIntakeActionUnretireLcidVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionUnretireLcid';
+  SystemIntakeUnretireLCIDInput,
+  useCreateSystemIntakeActionUnretireLCIDMutation
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
-import { SystemIntakeUnretireLCIDInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
@@ -23,8 +20,8 @@ type UnretireLcidFields = NonNullableProps<
 >;
 
 interface UnretireLcidProps extends ManageLcidProps {
-  lcid: string | null;
-  lcidRetiresAt: string | null;
+  lcid?: string | null | undefined;
+  lcidRetiresAt?: string | null | undefined;
 }
 
 const UnretireLcid = ({
@@ -37,10 +34,7 @@ const UnretireLcid = ({
     defaultValues: {}
   });
 
-  const [unretireLcid] = useMutation<
-    CreateSystemIntakeActionUnretireLcid,
-    CreateSystemIntakeActionUnretireLcidVariables
-  >(CreateSystemIntakeActionUnretireLcidQuery, {
+  const [unretireLcid] = useCreateSystemIntakeActionUnretireLCIDMutation({
     refetchQueries: ['GetSystemIntake']
   });
 

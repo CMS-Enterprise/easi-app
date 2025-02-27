@@ -2,7 +2,8 @@ import {
   SystemIntakeStatusRequester,
   TRBRequestState,
   TRBRequestStatus
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
+
 import {
   LinkedSystemIntake,
   LinkedTrbRequest

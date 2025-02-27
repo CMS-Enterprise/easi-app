@@ -1,18 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Route, Switch, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink
 } from '@trussworks/react-uswds';
 import NotFound, { NotFoundPartial } from 'features/Miscellaneous/NotFound';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import {
-  GetSystemIntake,
-  GetSystemIntakeVariables
-} from 'gql/legacyGQL/types/GetSystemIntake';
+import { useGetSystemIntakeQuery } from 'gql/generated/graphql';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
@@ -36,15 +31,12 @@ export const SystemIntake = () => {
     subPage: string;
   }>();
 
-  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
-    GetSystemIntakeQuery,
-    {
-      nextFetchPolicy: 'cache-first',
-      variables: {
-        id: systemId
-      }
+  const { loading, data } = useGetSystemIntakeQuery({
+    nextFetchPolicy: 'cache-first',
+    variables: {
+      id: systemId
     }
-  );
+  });
 
   const systemIntake = data?.systemIntake;
 

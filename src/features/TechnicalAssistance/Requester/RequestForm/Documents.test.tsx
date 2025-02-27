@@ -5,17 +5,18 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  CreateTRBRequestDocumentDocument,
+  DeleteTRBRequestDocumentDocument,
   GetTRBRequestDocumentsDocument,
   GetTRBRequestQuery,
-  GetTRBRequestQueryVariables
+  GetTRBRequestQueryVariables,
+  TRBRequestState,
+  TRBRequestType
 } from 'gql/generated/graphql';
-import CreateTrbRequestDocumentQuery from 'gql/legacyGQL/CreateTrbRequestDocumentQuery';
-import DeleteTrbRequestDocumentQuery from 'gql/legacyGQL/DeleteTrbRequestDocumentQuery';
 import i18next from 'i18next';
 import { MATCH_ANY_PARAMETERS, WildcardMockLink } from 'wildcard-mock-link';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { TRBRequestState, TRBRequestType } from 'types/graphql-global-types';
 
 import Documents from './Documents';
 
@@ -310,7 +311,7 @@ describe('Trb Request form: Supporting documents', () => {
                 // Create document
                 {
                   request: {
-                    query: CreateTrbRequestDocumentQuery,
+                    query: CreateTRBRequestDocumentDocument,
                     variables: MATCH_ANY_PARAMETERS // File operations don't match traditional `mocks` in MockedProvider, so use this to always match the Create mutation
                   },
                   result: {
@@ -410,7 +411,7 @@ describe('Trb Request form: Supporting documents', () => {
               // Upload document file with forced network error
               {
                 request: {
-                  query: CreateTrbRequestDocumentQuery,
+                  query: CreateTRBRequestDocumentDocument,
                   variables: {
                     input: {
                       requestID: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
@@ -481,7 +482,7 @@ describe('Trb Request form: Supporting documents', () => {
               // Delete file
               {
                 request: {
-                  query: DeleteTrbRequestDocumentQuery,
+                  query: DeleteTRBRequestDocumentDocument,
                   variables: { id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e' }
                 },
                 result: {

@@ -21,6 +21,7 @@ import {
   GetTRBRequestDocumentsQuery,
   GetTRBRequestDocumentsQueryVariables,
   TRBAdminNoteCategory,
+  TRBDocumentCommonType,
   TRBRequestDocumentStatus
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
@@ -32,7 +33,6 @@ import {
 } from 'tests/mock/trbRequest';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { TRBDocumentCommonType } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';

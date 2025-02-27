@@ -4,11 +4,13 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import { Column, useSortBy, useTable } from 'react-table';
 import { Button, ButtonGroup, Table } from '@trussworks/react-uswds';
-import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBReviewerFragment,
+  SystemIntakeState
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
-import { SystemIntakeState } from 'types/graphql-global-types';
 import {
   currentTableSortDescription,
   getColumnSortStatus,

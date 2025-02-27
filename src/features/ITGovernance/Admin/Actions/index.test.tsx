@@ -2,11 +2,11 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import CreateSystemIntakeActionRequestEditsQuery from 'gql/legacyGQL/CreateSystemIntakeActionRequestEditsQuery';
 import {
-  CreateSystemIntakeActionRequestEdits,
-  CreateSystemIntakeActionRequestEditsVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionRequestEdits';
+  CreateSystemIntakeActionRequestEditsDocument,
+  SystemIntakeFormStep,
+  SystemIntakeStep
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import {
   getGovernanceTaskListQuery,
@@ -17,10 +17,6 @@ import {
 } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
-import {
-  SystemIntakeFormStep,
-  SystemIntakeStep
-} from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import MockMessage from 'utils/testing/MockMessage';
 import typeRichText from 'utils/testing/typeRichText';
@@ -89,12 +85,9 @@ describe('IT Gov Actions', () => {
   });
 
   describe('Request edits', () => {
-    const createSystemIntakeActionRequestEditsQuery: MockedQuery<
-      CreateSystemIntakeActionRequestEdits,
-      CreateSystemIntakeActionRequestEditsVariables
-    > = {
+    const createSystemIntakeActionRequestEditsQuery: MockedQuery = {
       request: {
-        query: CreateSystemIntakeActionRequestEditsQuery,
+        query: CreateSystemIntakeActionRequestEditsDocument,
         variables: {
           input: {
             systemIntakeID: systemIntake.id,
@@ -112,6 +105,7 @@ describe('IT Gov Actions', () => {
       },
       result: {
         data: {
+          ___typename: 'Mutation',
           createSystemIntakeActionRequestEdits: {
             systemIntake: {
               id: systemIntake.id,

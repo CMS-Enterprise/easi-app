@@ -2,29 +2,26 @@ import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Link } from '@trussworks/react-uswds';
+import {
+  GetGovernanceTaskListQuery,
+  GovernanceRequestFeedbackTargetForm,
+  ITGovDraftBusinessCaseStatus,
+  SystemIntakeState
+} from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
-import {
-  GovernanceRequestFeedbackTargetForm,
-  ITGovDraftBusinessCaseStatus,
-  SystemIntakeState
-} from 'types/graphql-global-types';
-import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
-import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskBizCaseDraft = ({
   id,
   itGovTaskStatuses: { bizCaseDraftStatus },
-  bizCaseDraftSubmittedAt,
-  bizCaseDraftUpdatedAt,
   governanceRequestFeedbacks,
   businessCase,
   state
-}: ItGovTaskSystemIntakeWithMockData) => {
+}: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
   const stepKey = 'bizCaseDraft';
   const { t } = useTranslation('itGov');
   const history = useHistory();
@@ -34,31 +31,6 @@ const GovTaskBizCaseDraft = ({
     [ITGovDraftBusinessCaseStatus.IN_PROGRESS, 'continue'],
     [ITGovDraftBusinessCaseStatus.EDITS_REQUESTED, 'editForm']
   ]);
-
-  let dateInfo: TaskListItemDateInfo;
-
-  // Updated date
-  if (
-    (bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.IN_PROGRESS ||
-      bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.EDITS_REQUESTED) &&
-    bizCaseDraftUpdatedAt
-  )
-    dateInfo = {
-      label: 'lastUpdated',
-      value: bizCaseDraftUpdatedAt
-    };
-
-  // Submitted date
-  if (
-    !dateInfo &&
-    (bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.SUBMITTED ||
-      bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.DONE) &&
-    bizCaseDraftSubmittedAt
-  )
-    dateInfo = {
-      label: 'submitted',
-      value: bizCaseDraftSubmittedAt
-    };
 
   const hasFeedback = useMemo(
     () =>
@@ -74,7 +46,6 @@ const GovTaskBizCaseDraft = ({
       heading={t(`taskList.step.${stepKey}.title`)}
       status={bizCaseDraftStatus}
       state={state}
-      statusDateInfo={dateInfo}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
     >
       <TaskListDescription>

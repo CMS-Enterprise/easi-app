@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import GetGovernanceRequestFeedbackQuery from 'gql/legacyGQL/GetGovernanceRequestFeedbackQuery';
+import { GetGovernanceRequestFeedbackDocument } from 'gql/generated/graphql';
 import { governanceRequestFeedbacks as governanceRequestFeedbacksMock } from 'tests/mock/systemIntake';
 
 import { getExpectedAlertType } from 'utils/testing/helpers';
@@ -21,7 +21,7 @@ describe('GRB Feedback Card', () => {
         mocks={[
           {
             request: {
-              query: GetGovernanceRequestFeedbackQuery,
+              query: GetGovernanceRequestFeedbackDocument,
               variables: {
                 intakeID: systemIntakeID
               }

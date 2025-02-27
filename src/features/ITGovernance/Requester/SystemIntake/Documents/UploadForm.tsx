@@ -17,9 +17,9 @@ import {
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
   CreateSystemIntakeDocumentInput,
+  GetSystemIntakeDocument,
   useCreateSystemIntakeDocumentMutation
 } from 'gql/generated/graphql';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -63,7 +63,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
   const [createDocument] = useCreateSystemIntakeDocumentMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeQuery,
+        query: GetSystemIntakeDocument,
         variables: {
           id: systemId
         }

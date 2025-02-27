@@ -5,12 +5,12 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  GetCedarContactsDocument,
   GetTRBRequestAttendeesDocument,
   GetTRBRequestAttendeesQuery,
   GetTRBRequestDocument,
   GetTRBRequestQuery
 } from 'gql/generated/graphql';
-import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
 import { attendees, requester, trbRequest } from 'tests/mock/trbRequest';
 
 import Attendees from './Attendees';
@@ -68,7 +68,7 @@ describe('Trb Request form: Attendees', () => {
 
   const getCedarContactsQuery = {
     request: {
-      query: GetCedarContactsQuery,
+      query: GetCedarContactsDocument,
       variables: {
         commonName: initialRequester.userInfo?.commonName
       }

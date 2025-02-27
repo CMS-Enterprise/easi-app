@@ -1,4 +1,4 @@
-import GetSystemIntakesTableQuery from 'gql/legacyGQL/GetSystemIntakesTableQuery';
+import { GetSystemIntakesTableDocument } from 'gql/generated/graphql';
 
 /**
  * Refetches `getSystemIntake` and `getSystemIntakesTable` queries after closing/reopening a request
@@ -6,13 +6,13 @@ import GetSystemIntakesTableQuery from 'gql/legacyGQL/GetSystemIntakesTableQuery
 const refetchQueries = () => [
   'GetSystemIntake',
   {
-    query: GetSystemIntakesTableQuery,
+    query: GetSystemIntakesTableDocument,
     variables: {
       openRequests: true
     }
   },
   {
-    query: GetSystemIntakesTableQuery,
+    query: GetSystemIntakesTableDocument,
     variables: {
       openRequests: false
     }

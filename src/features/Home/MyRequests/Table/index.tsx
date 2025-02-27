@@ -11,7 +11,11 @@ import {
   useTable
 } from 'react-table';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
-import { GetRequestsQuery, useGetRequestsQuery } from 'gql/generated/graphql';
+import {
+  GetRequestsQuery,
+  SystemIntakeStatusRequester,
+  useGetRequestsQuery
+} from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -22,7 +26,6 @@ import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
-import { SystemIntakeStatusRequester } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import { formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';

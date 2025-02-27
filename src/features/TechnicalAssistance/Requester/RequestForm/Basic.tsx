@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ApolloError, useMutation } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Checkbox,
@@ -19,17 +19,13 @@ import {
 import FundingSources from 'features/TechnicalAssistance/Requester/RequestForm/FundingSources/FundingSources';
 import {
   GetTRBRequestQuery,
+  TRBCollabGroupOption,
+  TrbRequestFormFieldsFragmentFragment,
+  useDeleteTRBRequestFundingSourceMutation,
+  useGetSystemIntakesWithLCIDSQuery,
   useUpdateTRBRequestAndFormMutation,
   useUpdateTRBRequestFundingSourcesMutation
 } from 'gql/generated/graphql';
-import DeleteTRBRequestFundingSource from 'gql/legacyGQL/DeleteTRBRequestFundingSource';
-import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
-import {
-  DeleteTRBRequestFundingSource as DeleteTRBRequestFundingSourceType,
-  DeleteTRBRequestFundingSourceVariables
-} from 'gql/legacyGQL/types/DeleteTRBRequestFundingSource';
-import { GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType } from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
-import { TrbRequestFormFields_form_systemIntakes as TrbRequestFormFieldsSystemIntakeType } from 'gql/legacyGQL/types/TrbRequestFormFields';
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -44,8 +40,6 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 import Spinner from 'components/Spinner';
 import TextAreaField from 'components/TextAreaField';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
-import useCacheQuery from 'hooks/useCacheQuery';
-import { TRBCollabGroupOption } from 'types/graphql-global-types';
 import { FormFieldProps } from 'types/util';
 import nullFillObject from 'utils/nullFillObject';
 import { basicSchema, TrbRequestFormBasic } from 'validations/trbRequestSchema';
@@ -94,8 +88,7 @@ function Basic({
   const [fundingSourcesFormActive, setFundingSourcesFormActive] =
     useState(false);
 
-  const { data, loading: intakesLoading } =
-    useCacheQuery<GetSystemIntakesWithLCIDSType>(GetSystemIntakesWithLCIDS);
+  const { data, loading: intakesLoading } = useGetSystemIntakesWithLCIDSQuery();
 
   const systemIntakesWithLCIDs = useMemo(() => {
     const systemIntakes = data?.systemIntakesWithLcids
@@ -113,10 +106,7 @@ function Basic({
 
   const [updatefundingSource] = useUpdateTRBRequestFundingSourcesMutation();
 
-  const [deletefundingSource] = useMutation<
-    DeleteTRBRequestFundingSourceType,
-    DeleteTRBRequestFundingSourceVariables
-  >(DeleteTRBRequestFundingSource);
+  const [deletefundingSource] = useDeleteTRBRequestFundingSourceMutation();
 
   const initialValues = nullFillObject(request.form, basicBlankValues);
 
@@ -757,7 +747,7 @@ function Basic({
                       name="systemIntakes"
                       options={systemIntakesWithLCIDs}
                       initialValues={initialValues.systemIntakes.map(
-                        (intake: TrbRequestFormFieldsSystemIntakeType) =>
+                        (intake: TrbRequestFormFieldsFragmentFragment) =>
                           intake.id
                       )}
                       onChange={values => {

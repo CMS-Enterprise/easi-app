@@ -5,13 +5,13 @@ import { ApolloError } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import {
   GetTRBGuidanceLetterDocument,
+  TRBGuidanceLetterStatus,
   useDeleteTRBGuidanceLetterInsightMutation,
   useRequestReviewForTRBGuidanceLetterMutation
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
-import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { StepComponentProps } from 'types/technicalAssistance';
 
 import Pager from '../../../Requester/RequestForm/Pager';

@@ -1,9 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
-import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
+import {
+  GetTRBRequestSummaryQuery,
+  RequestRelationType
+} from 'gql/generated/graphql';
 
-import { RequestRelationType } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import getSystemOrContractName from 'utils/getSystemOrContractName';
 

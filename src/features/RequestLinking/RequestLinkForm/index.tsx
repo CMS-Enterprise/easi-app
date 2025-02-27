@@ -19,6 +19,7 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
+  RequestRelationType,
   useGetSystemIntakeRelationQuery,
   useGetTRBRequestRelationQuery,
   useSetSystemIntakeRelationExistingServiceMutation,
@@ -39,7 +40,6 @@ import MultiSelect from 'components/MultiSelect';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
-import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
 import { useLinkCedarSystemIdQueryParam } from 'utils/linkCedarSystemIdQueryString';

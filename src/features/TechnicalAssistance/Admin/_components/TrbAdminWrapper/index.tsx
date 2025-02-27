@@ -3,13 +3,13 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useReactToPrint } from 'react-to-print';
 import { Grid, ModalRef } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { TRBRequestState, TRBRequestStatus } from 'gql/generated/graphql';
 import i18next from 'i18next';
 
 import AdminAction, { AdminActionButton } from 'components/AdminAction';
 import CollapsableLink from 'components/CollapsableLink';
 import { PDFExportButton } from 'components/PDFExport';
 import { TaskStatus } from 'components/TaskStatusTag';
-import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 
 import AdminTaskStatusTag from '../AdminTaskStatusTag';

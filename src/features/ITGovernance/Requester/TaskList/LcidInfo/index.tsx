@@ -1,18 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
   Link as UswdsLink
 } from '@trussworks/react-uswds';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import {
-  GetSystemIntake,
-  GetSystemIntakeVariables
-} from 'gql/legacyGQL/types/GetSystemIntake';
+import { useGetSystemIntakeQuery } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -27,14 +22,11 @@ const LcidInfo = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('taskList');
 
-  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
-    GetSystemIntakeQuery,
-    {
-      variables: {
-        id: systemId
-      }
+  const { loading, data } = useGetSystemIntakeQuery({
+    variables: {
+      id: systemId
     }
-  );
+  });
 
   const systemIntake = data?.systemIntake;
 

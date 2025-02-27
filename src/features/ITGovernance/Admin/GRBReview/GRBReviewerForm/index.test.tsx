@@ -7,6 +7,9 @@ import {
   CreateSystemIntakeGRBReviewersDocument,
   CreateSystemIntakeGRBReviewersMutation,
   CreateSystemIntakeGRBReviewersMutationVariables,
+  GetCedarContactsDocument,
+  GetCedarContactsQuery,
+  GetCedarContactsQueryVariables,
   GetGRBReviewersComparisonsDocument,
   GetGRBReviewersComparisonsQuery,
   GetGRBReviewersComparisonsQueryVariables,
@@ -20,11 +23,6 @@ import {
   UpdateSystemIntakeGRBReviewerMutation,
   UpdateSystemIntakeGRBReviewerMutationVariables
 } from 'gql/generated/graphql';
-import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
-import {
-  GetCedarContacts,
-  GetCedarContactsVariables
-} from 'gql/legacyGQL/types/GetCedarContacts';
 import i18next from 'i18next';
 import { businessCase } from 'tests/mock/businessCase';
 import { systemIntake } from 'tests/mock/systemIntake';
@@ -67,15 +65,16 @@ const updatedGRBReviewer: SystemIntakeGRBReviewerFragment = {
 // Cedar contacts query mock
 const cedarContactsQuery = (
   commonName: string
-): MockedQuery<GetCedarContacts, GetCedarContactsVariables> => ({
+): MockedQuery<GetCedarContactsQuery, GetCedarContactsQueryVariables> => ({
   request: {
-    query: GetCedarContactsQuery,
+    query: GetCedarContactsDocument,
     variables: {
       commonName
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       cedarPersonsByCommonName: [contact]
     }
   }

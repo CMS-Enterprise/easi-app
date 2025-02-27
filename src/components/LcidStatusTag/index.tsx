@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
-
-import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 
 import Tag from '../Tag';
 
@@ -18,8 +17,8 @@ export const lcidStatusClassName: Record<LcidTagStatus, string> = {
 
 type LcidStatusTagProps = {
   lcidStatus: SystemIntakeLCIDStatus;
-  lcidExpiresAt: string | null;
-  lcidRetiresAt: string | null;
+  lcidExpiresAt: string | null | undefined;
+  lcidRetiresAt: string | null | undefined;
 };
 
 const LcidStatusTag = ({

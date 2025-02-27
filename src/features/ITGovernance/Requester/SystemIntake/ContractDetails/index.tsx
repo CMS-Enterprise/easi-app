@@ -12,9 +12,12 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
-import { useUpdateSystemIntakeContractDetailsMutation } from 'gql/generated/graphql';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import {
+  GetSystemIntakeDocument,
+  SystemIntakeFormState,
+  SystemIntakeFragmentFragment,
+  useUpdateSystemIntakeContractDetailsMutation
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
@@ -30,7 +33,6 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
-import { SystemIntakeFormState } from 'types/graphql-global-types';
 import { ContractDetailsForm } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import formatContractNumbers from 'utils/formatContractNumbers';
@@ -56,7 +58,7 @@ const contractDateToISO = ({
   ).toISO();
 
 type ContractDetailsProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
@@ -77,7 +79,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const [mutate] = useUpdateSystemIntakeContractDetailsMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeQuery,
+        query: GetSystemIntakeDocument,
         variables: {
           id
         }

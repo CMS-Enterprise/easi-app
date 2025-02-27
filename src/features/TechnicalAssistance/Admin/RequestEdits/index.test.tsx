@@ -8,12 +8,14 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
-import CreateTrbRequestFeedbackQuery from 'gql/legacyGQL/CreateTrbRequestFeedbackQuery';
 import {
-  CreateTrbRequestFeedback,
-  CreateTrbRequestFeedbackVariables
-} from 'gql/legacyGQL/types/CreateTrbRequestFeedback';
+  CreateTRBRequestFeedbackDocument,
+  CreateTRBRequestFeedbackMutation,
+  CreateTRBRequestFeedbackMutationVariables,
+  GetTRBRequestSummaryQuery,
+  TRBFeedbackAction,
+  TRBFormStatus
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import {
   getTrbLeadOptionsQuery,
@@ -26,7 +28,6 @@ import {
 } from 'tests/mock/trbRequest';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { TRBFeedbackAction, TRBFormStatus } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import typeRichText from 'utils/testing/typeRichText';
@@ -58,11 +59,11 @@ describe('Trb Admin: Action: Request Edits', () => {
   const feedbackMessage = 'test message';
 
   const createTrbRequestFeedbackQuery: MockedQuery<
-    CreateTrbRequestFeedback,
-    CreateTrbRequestFeedbackVariables
+    CreateTRBRequestFeedbackMutation,
+    CreateTRBRequestFeedbackMutationVariables
   > = {
     request: {
-      query: CreateTrbRequestFeedbackQuery,
+      query: CreateTRBRequestFeedbackDocument,
       variables: {
         input: {
           trbRequestId,
@@ -75,6 +76,7 @@ describe('Trb Admin: Action: Request Edits', () => {
     },
     result: {
       data: {
+        __typename: 'Mutation',
         createTRBRequestFeedback: {
           id: '94ebed72-8c66-41fd-aaa6-085a715737c2',
           __typename: 'TRBRequestFeedback'

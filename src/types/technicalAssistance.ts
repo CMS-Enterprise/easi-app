@@ -6,10 +6,9 @@ import {
   GetTRBRequestSummaryQuery,
   PersonRole,
   TRBGuidanceLetterFragment,
-  TRBGuidanceLetterInsightCategory
+  TRBGuidanceLetterInsightCategory,
+  TRBGuidanceLetterStatus
 } from 'gql/generated/graphql';
-
-import { TRBGuidanceLetterStatus } from './graphql-global-types';
 
 /** TRB attendee  */
 export type TRBAttendee =

@@ -1,12 +1,12 @@
 import React from 'react';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import SystemIntakeReview from 'components/SystemIntakeReview';
 
 type SystemIntakeViewOnlyProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 const SystemIntakeView = ({ systemIntake }: SystemIntakeViewOnlyProps) => {

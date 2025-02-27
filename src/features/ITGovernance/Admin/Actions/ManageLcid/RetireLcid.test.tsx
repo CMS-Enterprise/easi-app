@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { DateTime } from 'luxon';
 import {
@@ -12,7 +13,6 @@ import {
 } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
 import RetireLcid from './RetireLcid';

@@ -6,6 +6,7 @@ import {
   GetTRBPublicGuidanceLetterDocument,
   GetTRBPublicGuidanceLetterQuery,
   GetTRBPublicGuidanceLetterQueryVariables,
+  TRBGuidanceLetterStatus,
   TRBRequestType
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
@@ -16,7 +17,6 @@ import {
   trbRequest as mockTrbRequest
 } from 'tests/mock/trbRequest';
 
-import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 
 import PublicGuidanceLetter from '.';

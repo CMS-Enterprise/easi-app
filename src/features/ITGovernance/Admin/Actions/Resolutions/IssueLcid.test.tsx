@@ -7,6 +7,7 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { SystemIntakeDecisionState } from 'gql/generated/graphql';
 import {
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
@@ -16,7 +17,6 @@ import {
 } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { SystemIntakeDecisionState } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';

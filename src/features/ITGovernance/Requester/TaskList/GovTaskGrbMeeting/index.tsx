@@ -1,19 +1,21 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  GetGovernanceTaskListQuery,
+  ITGovGRBStatus
+} from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-import { ITGovGRBStatus } from 'types/graphql-global-types';
-import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { formatDateUtc } from 'utils/date';
 
 const GovTaskGrbMeeting = ({
   itGovTaskStatuses: { grbMeetingStatus },
   state,
   grbDate
-}: ItGovTaskSystemIntakeWithMockData) => {
+}: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
   const stepKey = 'grbMeeting';
   const { t } = useTranslation('itGov');
 

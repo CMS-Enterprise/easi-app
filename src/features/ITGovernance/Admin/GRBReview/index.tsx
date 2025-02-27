@@ -14,12 +14,13 @@ import {
 import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
 import {
   GetSystemIntakeGRBReviewersDocument,
+  SystemIntakeDocumentFragmentFragment,
+  SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
+  SystemIntakeState,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
 } from 'gql/generated/graphql';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
-import { SystemIntakeDocument } from 'gql/legacyGQL/types/SystemIntakeDocument';
 
 import Alert from 'components/Alert';
 import {
@@ -32,7 +33,6 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
 import { BusinessCaseModel } from 'types/businessCase';
-import { SystemIntakeState } from 'types/graphql-global-types';
 import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
 
@@ -48,14 +48,14 @@ import './index.scss';
 
 type GRBReviewProps = {
   id: string;
-  submittedAt: string | null;
+  submittedAt?: string | null;
   state: SystemIntakeState;
   businessCase: BusinessCaseModel;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
-  documents: SystemIntakeDocument[];
+  documents: SystemIntakeDocumentFragmentFragment[];
   grbReviewStartedAt?: string | null;
-  grbPresentationLinks: SystemIntake['grbPresentationLinks'];
-  governanceRequestFeedbacks: SystemIntake['governanceRequestFeedbacks'];
+  grbPresentationLinks?: SystemIntakeFragmentFragment['grbPresentationLinks'];
+  governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'];
 };
 
 const GRBReview = ({

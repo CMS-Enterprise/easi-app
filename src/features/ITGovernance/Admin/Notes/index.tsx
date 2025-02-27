@@ -2,20 +2,15 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
 import { Button, ButtonGroup, ModalFooter } from '@trussworks/react-uswds';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import { useUpdateSystemIntakeNoteMutation } from 'gql/generated/graphql';
-import CreateSystemIntakeNoteQuery from 'gql/legacyGQL/CreateSystemIntakeNoteQuery';
-import GetAdminNotesAndActionsQuery from 'gql/legacyGQL/GetAdminNotesAndActionsQuery';
 import {
-  CreateSystemIntakeNote,
-  CreateSystemIntakeNoteVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeNote';
-import {
-  GetAdminNotesAndActions,
-  GetAdminNotesAndActionsVariables
-} from 'gql/legacyGQL/types/GetAdminNotesAndActions';
+  GetAdminNotesAndActionsDocument,
+  SystemIntakeActionType,
+  useCreateSystemIntakeNoteMutation,
+  useGetAdminNotesAndActionsQuery,
+  useUpdateSystemIntakeNoteMutation
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -37,7 +32,6 @@ import {
   RichTextViewer
 } from 'components/RichTextEditor';
 import TruncatedText from 'components/TruncatedText';
-import { SystemIntakeActionType } from 'types/graphql-global-types';
 import { formatDateUtc } from 'utils/date';
 
 import './index.scss';
@@ -49,32 +43,27 @@ type NoteForm = {
 const Notes = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const authState = useSelector((state: AppState) => state.auth);
-  const [createNoteMutation, createMutationResult] = useMutation<
-    CreateSystemIntakeNote,
-    CreateSystemIntakeNoteVariables
-  >(CreateSystemIntakeNoteQuery, {
-    refetchQueries: [
-      {
-        query: GetAdminNotesAndActionsQuery,
-        variables: {
-          id: systemId
+  const [createNoteMutation, createMutationResult] =
+    useCreateSystemIntakeNoteMutation({
+      refetchQueries: [
+        {
+          query: GetAdminNotesAndActionsDocument,
+          variables: {
+            id: systemId
+          }
         }
-      }
-    ]
-  });
+      ]
+    });
 
   const {
     error,
     data,
     refetch: refetchAdminNotesAndActions
-  } = useQuery<GetAdminNotesAndActions, GetAdminNotesAndActionsVariables>(
-    GetAdminNotesAndActionsQuery,
-    {
-      variables: {
-        id: systemId
-      }
+  } = useGetAdminNotesAndActionsQuery({
+    variables: {
+      id: systemId
     }
-  );
+  });
 
   const [archiveNoteMutate, archiveMutationResult] =
     useUpdateSystemIntakeNoteMutation({

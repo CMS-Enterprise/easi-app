@@ -1,9 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { DateTime } from 'luxon';
-
-import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 
 import LcidStatusTag from '.';
 

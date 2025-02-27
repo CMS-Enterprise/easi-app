@@ -1,15 +1,13 @@
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
-import { useCreateSystemIntakeActionChangeLCIDRetirementDateMutation } from 'gql/generated/graphql';
-import CreateSystemIntakeActionRetireLcidQuery from 'gql/legacyGQL/CreateSystemIntakeActionRetireLcidQuery';
 import {
-  CreateSystemIntakeActionRetireLcid,
-  CreateSystemIntakeActionRetireLcidVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionRetireLcid';
+  SystemIntakeRetireLCIDInput,
+  useCreateSystemIntakeActionChangeLCIDRetirementDateMutation,
+  useCreateSystemIntakeActionRetireLcidMutation
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
@@ -18,7 +16,6 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import RichTextEditor from 'components/RichTextEditor';
-import { SystemIntakeRetireLCIDInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 import { retireLcidSchema } from 'validations/actionSchema';
 
@@ -39,8 +36,8 @@ export const actionDateInPast = (date: string | null): boolean => {
 };
 
 interface RetireLcidProps extends ManageLcidProps {
-  lcid: string | null;
-  lcidRetiresAt: string | null;
+  lcid?: string | null | undefined;
+  lcidRetiresAt?: string | null | undefined;
 }
 
 const RetireLcid = ({
@@ -58,10 +55,7 @@ const RetireLcid = ({
 
   const { control } = form;
 
-  const [retireLcid] = useMutation<
-    CreateSystemIntakeActionRetireLcid,
-    CreateSystemIntakeActionRetireLcidVariables
-  >(CreateSystemIntakeActionRetireLcidQuery, {
+  const [retireLcid] = useCreateSystemIntakeActionRetireLcidMutation({
     refetchQueries: ['GetSystemIntake']
   });
 

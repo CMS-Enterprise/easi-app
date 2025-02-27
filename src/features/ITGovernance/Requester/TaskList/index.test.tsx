@@ -7,6 +7,10 @@ import {
   waitForElementToBeRemoved,
   within
 } from '@testing-library/react';
+import {
+  SystemIntakeDecisionState,
+  SystemIntakeState
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { taskListState } from 'tests/mock/govTaskList';
 import {
@@ -15,7 +19,6 @@ import {
 } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { SystemIntakeState } from 'types/graphql-global-types';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { getByRoleWithNameTextKey } from 'utils/testing/helpers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -33,9 +36,10 @@ describe('Governance Task List', () => {
         <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
           <VerboseMockedProvider
             mocks={[
-              getGovernanceTaskListQuery(
-                taskListState.intakeFormNotStarted.systemIntake
-              )
+              getGovernanceTaskListQuery({
+                ...taskListState.intakeFormNotStarted.systemIntake,
+                __typename: 'SystemIntake'
+              })
             ]}
           >
             <Provider store={store}>
@@ -121,9 +125,12 @@ describe('Governance Task List', () => {
         <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
           <VerboseMockedProvider
             mocks={[
-              getGovernanceTaskListQuery(
-                taskListState.decisionAndNextStepsDone.systemIntake
-              )
+              getGovernanceTaskListQuery({
+                ...taskListState.intakeFormNotStarted.systemIntake,
+                state: SystemIntakeState.CLOSED,
+                decisionState: SystemIntakeDecisionState.NOT_APPROVED,
+                __typename: 'SystemIntake'
+              })
             ]}
           >
             <Provider store={store}>
@@ -153,9 +160,10 @@ describe('Governance Task List', () => {
         <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
           <VerboseMockedProvider
             mocks={[
-              getGovernanceTaskListQuery(
-                taskListState.intakeFormNotStarted.systemIntake
-              )
+              getGovernanceTaskListQuery({
+                ...taskListState.intakeFormNotStarted.systemIntake,
+                __typename: 'SystemIntake'
+              })
             ]}
           >
             <Provider store={store}>
@@ -181,9 +189,10 @@ describe('Governance Task List', () => {
         <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
           <VerboseMockedProvider
             mocks={[
-              getGovernanceTaskListQuery(
-                taskListState.intakeFormSubmitted.systemIntake
-              )
+              getGovernanceTaskListQuery({
+                ...taskListState.intakeFormSubmitted.systemIntake,
+                __typename: 'SystemIntake'
+              })
             ]}
           >
             <Provider store={store}>

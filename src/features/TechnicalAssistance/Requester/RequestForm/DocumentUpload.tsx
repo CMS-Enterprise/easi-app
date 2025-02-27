@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -18,11 +17,7 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import CreateTrbRequestDocumentQuery from 'gql/legacyGQL/CreateTrbRequestDocumentQuery';
-import {
-  CreateTrbRequestDocument,
-  CreateTrbRequestDocumentVariables
-} from 'gql/legacyGQL/types/CreateTrbRequestDocument';
+import { useCreateTRBRequestDocumentMutation } from 'gql/generated/graphql';
 import { clone } from 'lodash';
 
 import Alert from 'components/Alert';
@@ -68,10 +63,7 @@ const DocumentUpload = ({
   const { showMessageOnNextPage } = useMessage();
 
   // Documents can be created from the upload form
-  const [createDocument] = useMutation<
-    CreateTrbRequestDocument,
-    CreateTrbRequestDocumentVariables
-  >(CreateTrbRequestDocumentQuery);
+  const [createDocument] = useCreateTRBRequestDocumentMutation();
 
   const {
     control,

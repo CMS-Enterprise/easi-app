@@ -1,14 +1,12 @@
 import React, { useMemo } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
-import CreateSystemIntakeActionUpdateLcidQuery from 'gql/legacyGQL/CreateSystemIntakeActionUpdateLcidQuery';
 import {
-  CreateSystemIntakeActionUpdateLcid,
-  CreateSystemIntakeActionUpdateLcidVariables
-} from 'gql/legacyGQL/types/CreateSystemIntakeActionUpdateLcid';
+  SystemIntakeUpdateLCIDInput,
+  useCreateSystemIntakeActionUpdateLCIDMutation
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
@@ -18,7 +16,6 @@ import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import RichTextEditor from 'components/RichTextEditor';
 import TextAreaField from 'components/TextAreaField';
-import { SystemIntakeUpdateLCIDInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 import { updateLcidSchema } from 'validations/actionSchema';
 
@@ -46,10 +43,7 @@ const UpdateLcid = ({
     resolver: yupResolver(updateLcidSchema)
   });
 
-  const [updateLcid] = useMutation<
-    CreateSystemIntakeActionUpdateLcid,
-    CreateSystemIntakeActionUpdateLcidVariables
-  >(CreateSystemIntakeActionUpdateLcidQuery, {
+  const [updateLcid] = useCreateSystemIntakeActionUpdateLCIDMutation({
     refetchQueries: ['GetSystemIntake']
   });
 

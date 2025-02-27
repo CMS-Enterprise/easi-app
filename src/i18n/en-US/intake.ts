@@ -1,9 +1,10 @@
-import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import {
   SystemIntakeDocumentCommonType,
-  SystemIntakeDocumentVersion,
-  SystemIntakeSoftwareAcquisitionMethods
-} from 'types/graphql-global-types';
+  SystemIntakeDocumentVersion
+} from 'gql/generated/graphql';
+
+import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
+import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
 
 const hasContractLabels: Record<
   `hasContract_${SystemIntakeContractStatus}`,

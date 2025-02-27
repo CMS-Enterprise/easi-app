@@ -11,8 +11,11 @@ import {
   ModalHeading
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { useDeleteSystemIntakeGRBPresentationLinksMutation } from 'gql/generated/graphql';
-import { SystemIntakeGRBPresentationLinks } from 'gql/legacyGQL/types/SystemIntakeGRBPresentationLinks';
+import {
+  SystemIntakeDocumentStatus,
+  SystemIntakeGRBPresentationLinksFragmentFragment,
+  useDeleteSystemIntakeGRBPresentationLinksMutation
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import ExternalLinkAndModal from 'components/ExternalLinkAndModal';
@@ -20,13 +23,12 @@ import IconLink from 'components/IconLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import useMessage from 'hooks/useMessage';
-import { SystemIntakeDocumentStatus } from 'types/graphql-global-types';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 
 export type PresentationLinksCardProps = {
   systemIntakeID: string;
-  grbPresentationLinks: SystemIntakeGRBPresentationLinks | null;
+  grbPresentationLinks?: SystemIntakeGRBPresentationLinksFragmentFragment | null;
 };
 
 function PresentationLinksCard({

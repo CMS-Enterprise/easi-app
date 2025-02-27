@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import i18next from 'i18next';
 import { taskListState } from 'tests/mock/govTaskList';
 
-import { ItGovTaskSystemIntake } from 'types/itGov';
+import { ITGovTaskSystemIntake } from 'types/itGov';
 import {
   expectTaskStatusTagToHaveTextKey,
   getByRoleWithNameTextKey,
@@ -14,7 +14,7 @@ import {
 import GovTaskGrbMeeting from '.';
 
 describe('Gov Task: Attend the GRB meeting statuses', () => {
-  function renderGovTaskGrbMeeting(mockdata: ItGovTaskSystemIntake) {
+  function renderGovTaskGrbMeeting(mockdata: ITGovTaskSystemIntake) {
     return render(
       <MemoryRouter>
         <GovTaskGrbMeeting {...mockdata} />

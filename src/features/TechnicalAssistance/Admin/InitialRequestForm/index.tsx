@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import {
   GetTRBRequestQuery,
+  TRBFormStatus,
+  TRBRequestStatus,
   useGetTRBRequestQuery
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import PageLoading from 'components/PageLoading';
-import { TRBFormStatus, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
 import SubmittedRequest from '../../Requester/RequestForm/SubmittedRequest';

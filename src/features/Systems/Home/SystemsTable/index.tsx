@@ -17,7 +17,6 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useMutation, useQuery } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -26,12 +25,13 @@ import {
   Table as UswdsTable
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { useCreateCedarSystemBookmarkMutation } from 'gql/generated/graphql';
-import DeleteCedarSystemBookmarkQuery from 'gql/legacyGQL/DeleteCedarSystemBookmarkQuery';
-import GetCedarSystemIsBookmarkedQuery from 'gql/legacyGQL/GetCedarSystemIsBookmarkedQuery';
-import GetMyCedarSystemsQuery from 'gql/legacyGQL/GetMyCedarSystemsQuery';
-import { GetCedarSystems_cedarSystems as CedarSystem } from 'gql/legacyGQL/types/GetCedarSystems';
-import { GetMyCedarSystems as GetMyCedarSystemsType } from 'gql/legacyGQL/types/GetMyCedarSystems';
+import {
+  GetCedarSystemIsBookmarkedDocument,
+  GetCedarSystemsQuery,
+  useCreateCedarSystemBookmarkMutation,
+  useDeleteCedarSystemBookmarkMutation,
+  useGetMyCedarSystemsQuery
+} from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Alert from 'components/Alert';
@@ -51,6 +51,8 @@ import {
 } from 'utils/tableSort';
 
 import '../index.scss';
+
+type CedarSystem = GetCedarSystemsQuery['cedarSystems'][number];
 
 export type SystemTableType =
   | 'all-systems'
@@ -83,12 +85,10 @@ export const Table = ({
     tableType || 'all-systems'
   );
 
-  const { loading, data: mySystems } = useQuery<GetMyCedarSystemsType>(
-    GetMyCedarSystemsQuery
-  );
+  const { loading, data: mySystems } = useGetMyCedarSystemsQuery();
 
   const [createMutate] = useCreateCedarSystemBookmarkMutation();
-  const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
+  const [deleteMutate] = useDeleteCedarSystemBookmarkMutation();
 
   // Sets the systemTableType state to the query param, defaults to all-systems if no param present
   // If the query param changes, update the component state
@@ -139,7 +139,7 @@ export const Table = ({
         },
         refetchQueries: [
           {
-            query: GetCedarSystemIsBookmarkedQuery,
+            query: GetCedarSystemIsBookmarkedDocument,
             variables: { id: cedarSystemId }
           }
         ]

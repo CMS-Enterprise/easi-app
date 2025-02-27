@@ -7,13 +7,13 @@ import {
   GetSystemIntakeRelatedRequestsDocument,
   GetTRBRequestRelatedRequestsDocument,
   SystemIntakeStatusAdmin,
-  SystemIntakeStatusRequester
+  SystemIntakeStatusRequester,
+  TRBRequestStatus
 } from 'gql/generated/graphql';
 import { systemIntake } from 'tests/mock/systemIntake';
 import { trbRequest } from 'tests/mock/trbRequest';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { TRBRequestStatus } from 'types/graphql-global-types';
 import easiMockStore from 'utils/testing/easiMockStore';
 
 import RelatedRequestsTable from './RelatedRequestsTable';

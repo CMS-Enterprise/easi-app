@@ -1,26 +1,23 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
   Link as UswdsLink
 } from '@trussworks/react-uswds';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
 import {
-  GetSystemIntake,
-  GetSystemIntakeVariables
-} from 'gql/legacyGQL/types/GetSystemIntake';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+  SystemIntakeDecisionState,
+  SystemIntakeFragmentFragment,
+  useGetSystemIntakeQuery
+} from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
-import { SystemIntakeDecisionState } from 'types/graphql-global-types';
 
 import Approved from './Approved';
 import NotGovernance from './NotGovernance';
@@ -29,7 +26,7 @@ import Rejected from './Rejected';
 import './index.scss';
 
 type DecisionComponentProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 /** Renders decision content based on `decisionState` field */
@@ -56,14 +53,11 @@ const RequestDecision = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('taskList');
 
-  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
-    GetSystemIntakeQuery,
-    {
-      variables: {
-        id: systemId
-      }
+  const { loading, data } = useGetSystemIntakeQuery({
+    variables: {
+      id: systemId
     }
-  );
+  });
 
   const systemIntake = data?.systemIntake;
 

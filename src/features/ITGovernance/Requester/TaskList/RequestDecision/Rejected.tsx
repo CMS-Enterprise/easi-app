@@ -1,11 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 
 import { RichTextViewer } from 'components/RichTextEditor';
 
 type RejectedProps = {
-  intake: SystemIntake;
+  intake: SystemIntakeFragmentFragment;
 };
 
 /**

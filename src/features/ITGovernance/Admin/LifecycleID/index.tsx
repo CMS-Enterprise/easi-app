@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 
 import {
   DescriptionDefinition,
@@ -13,7 +13,7 @@ import { RichTextViewer } from 'components/RichTextEditor';
 import { formatDateUtc } from 'utils/date';
 
 type LcidProps = {
-  systemIntake?: SystemIntake | null;
+  systemIntake?: SystemIntakeFragmentFragment | null;
 };
 
 const LifecycleID = ({ systemIntake }: LcidProps) => {

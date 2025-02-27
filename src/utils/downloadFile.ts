@@ -21,7 +21,7 @@ export function downloadBlob(filename: string, blob: Blob) {
 }
 
 export function downloadFileFromURL(
-  downloadURL: string | null,
+  downloadURL: string | null | undefined,
   fileName: string
 ) {
   if (!downloadURL) return;

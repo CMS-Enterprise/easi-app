@@ -1,11 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
 import { Button, Card, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import DeleteCedarSystemBookmarkQuery from 'gql/legacyGQL/DeleteCedarSystemBookmarkQuery';
-import GetCedarSystemIsBookmarkedQuery from 'gql/legacyGQL/GetCedarSystemIsBookmarkedQuery';
-import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'gql/legacyGQL/types/GetCedarSystems';
+import {
+  GetCedarSystemIsBookmarkedDocument,
+  GetCedarSystemsQuery,
+  useDeleteCedarSystemBookmarkMutation
+} from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { IconStatus } from 'types/iconStatus';
@@ -28,10 +29,10 @@ const BookmarkCard = ({
   status,
   statusIcon,
   businessOwnerOrg
-}: BookmarkCardProps & CedarSystemProps) => {
+}: BookmarkCardProps & GetCedarSystemsQuery['cedarSystems'][number]) => {
   const { t } = useTranslation();
 
-  const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
+  const [deleteMutate] = useDeleteCedarSystemBookmarkMutation();
 
   const handleDeleteBookmark = (cedarSystemId: string) => {
     deleteMutate({
@@ -42,7 +43,7 @@ const BookmarkCard = ({
       },
       refetchQueries: [
         {
-          query: GetCedarSystemIsBookmarkedQuery,
+          query: GetCedarSystemIsBookmarkedDocument,
           variables: { id: cedarSystemId }
         }
       ]

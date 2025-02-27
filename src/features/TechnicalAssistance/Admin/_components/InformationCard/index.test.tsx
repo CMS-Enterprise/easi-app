@@ -1,13 +1,12 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
-import { GetTRBRequestHomeQuery } from 'gql/generated/graphql';
-import i18next from 'i18next';
-
 import {
+  GetTRBRequestHomeQuery,
   TRBFormStatus,
   TRBGuidanceLetterStatus
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
+import i18next from 'i18next';
 
 import InformationCard from '.';
 

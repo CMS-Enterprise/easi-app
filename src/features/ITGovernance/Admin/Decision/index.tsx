@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { SystemIntakeDecisionState } from 'gql/generated/graphql';
 
 import {
   DescriptionDefinition,
@@ -8,7 +9,6 @@ import {
 } from 'components/DescriptionGroup';
 import PageHeading from 'components/PageHeading';
 import { RichTextViewer } from 'components/RichTextEditor';
-import { SystemIntakeDecisionState } from 'types/graphql-global-types';
 
 type RejectedProps = {
   rejectionReason?: string | null;

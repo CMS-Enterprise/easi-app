@@ -16,9 +16,13 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
-import { useUpdateSystemIntakeRequestDetailsMutation } from 'gql/generated/graphql';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import {
+  GetSystemIntakeDocument,
+  SystemIntakeFormState,
+  SystemIntakeFragmentFragment,
+  SystemIntakeSoftwareAcquisitionMethods,
+  useUpdateSystemIntakeRequestDetailsMutation
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
@@ -39,10 +43,6 @@ import {
   CMS_DVSM_EMAIL,
   CMS_TRB_EMAIL
 } from 'constants/externalUrls';
-import {
-  SystemIntakeFormState,
-  SystemIntakeSoftwareAcquisitionMethods
-} from 'types/graphql-global-types';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
@@ -59,7 +59,7 @@ type RequestDetailsForm = {
 };
 
 type RequestDetailsProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
@@ -107,7 +107,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
   const [mutate] = useUpdateSystemIntakeRequestDetailsMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeQuery,
+        query: GetSystemIntakeDocument,
         variables: {
           id
         }

@@ -25,7 +25,7 @@ type ExpireLcidFields = NonNullableProps<
 >;
 
 interface ExpireLcidProps extends ManageLcidProps {
-  lcid: string | null;
+  lcid?: string | null | undefined;
 }
 
 const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {

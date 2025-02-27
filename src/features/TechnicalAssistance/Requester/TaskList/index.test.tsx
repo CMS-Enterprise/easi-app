@@ -9,7 +9,12 @@ import userEvent from '@testing-library/user-event';
 import {
   GetTRBTasklistDocument,
   GetTRBTasklistQuery,
+  TRBAttendConsultStatus,
+  TRBConsultPrepStatus,
+  TRBFeedbackStatus,
+  TRBFormStatus,
   TRBGuidanceLetterStatusTaskList,
+  TRBRequestType,
   TypedUpdateTRBRequestArchivedDocument,
   UpdateTRBRequestArchivedMutation,
   UpdateTRBRequestArchivedMutationVariables
@@ -17,13 +22,6 @@ import {
 import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
-import {
-  TRBAttendConsultStatus,
-  TRBConsultPrepStatus,
-  TRBFeedbackStatus,
-  TRBFormStatus,
-  TRBRequestType
-} from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import { getByRoleWithNameTextKey } from 'utils/testing/helpers';
 import MockMessage from 'utils/testing/MockMessage';

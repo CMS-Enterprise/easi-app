@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
-import { SystemIntake_systems as SystemIntakeType } from 'gql/legacyGQL/types/SystemIntake';
+import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 
 import SystemCardTable from './table';
 import SystemCard, { SystemCardProps } from '.';
@@ -15,7 +15,7 @@ const system: SystemCardProps = {
   businessOwners: 'John Doe'
 };
 
-const systems: SystemIntakeType[] = [
+const systems: SystemIntakeFragmentFragment['systems'] = [
   {
     __typename: 'CedarSystem',
     id: '123',

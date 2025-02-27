@@ -1,12 +1,12 @@
 import React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
-import { GetSystemIntakeContactsDocument } from 'gql/generated/graphql';
-import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
 import {
-  GetCedarContacts,
-  GetCedarContactsVariables
-} from 'gql/legacyGQL/types/GetCedarContacts';
+  GetCedarContactsDocument,
+  GetCedarContactsQuery,
+  GetCedarContactsQueryVariables,
+  GetSystemIntakeContactsDocument
+} from 'gql/generated/graphql';
 import { getSystemIntakeQuery, systemIntake } from 'tests/mock/systemIntake';
 
 import { SystemIntakeContactProps } from 'types/systemIntake';
@@ -74,17 +74,18 @@ const systemIntakeContactsQuery = {
 
 // Cedar contacts query mock
 const cedarContactsQuery: MockedQuery<
-  GetCedarContacts,
-  GetCedarContactsVariables
+  GetCedarContactsQuery,
+  GetCedarContactsQueryVariables
 > = {
   request: {
-    query: GetCedarContactsQuery,
+    query: GetCedarContactsDocument,
     variables: {
       commonName: 'Jerry Seinfeld, SF13 (jerry.seinfeld@local.fake)'
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       cedarPersonsByCommonName: [
         {
           __typename: 'UserInfo',

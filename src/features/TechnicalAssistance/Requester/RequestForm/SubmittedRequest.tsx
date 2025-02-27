@@ -2,17 +2,17 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Grid } from '@trussworks/react-uswds';
 import { formatFundingSourcesForRender } from 'features/TechnicalAssistance/Requester/RequestForm/FundingSources/useTrbFundingSources';
-import { GetTRBRequestQuery } from 'gql/generated/graphql';
+import {
+  GetTRBRequestQuery,
+  TRBCollabGroupOption,
+  TRBWhereInProcessOption
+} from 'gql/generated/graphql';
 import { camelCase, upperFirst } from 'lodash';
 
 import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
 import Tag from 'components/Tag';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-import {
-  TRBCollabGroupOption,
-  TRBWhereInProcessOption
-} from 'types/graphql-global-types';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
 
 import { AttendeesTable } from './AttendeesForm/components';
