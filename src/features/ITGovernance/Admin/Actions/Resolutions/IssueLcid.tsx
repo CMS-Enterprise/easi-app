@@ -6,6 +6,7 @@ import { FormGroup, Radio, Select } from '@trussworks/react-uswds';
 import {
   CreateSystemIntakeActionConfirmLCIDMutationVariables,
   CreateSystemIntakeActionIssueLCIDMutationVariables,
+  SystemIntakeDecisionState,
   SystemIntakeIssueLCIDInput,
   useCreateSystemIntakeActionConfirmLCIDMutation,
   useCreateSystemIntakeActionIssueLCIDMutation
@@ -26,10 +27,7 @@ import RichTextEditor from 'components/RichTextEditor';
 import TextAreaField from 'components/TextAreaField';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
-import {
-  SystemIntakeDecisionState,
-  SystemIntakeTRBFollowUp
-} from 'types/graphql-global-types';
+import { SystemIntakeTRBFollowUp } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 import { lcidActionSchema } from 'validations/actionSchema';
 

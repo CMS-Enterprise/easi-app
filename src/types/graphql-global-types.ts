@@ -8,110 +8,6 @@
 //==============================================================
 
 /**
- * Represents the possible forms on a governance request that can receive feedback
- */
-export enum GovernanceRequestFeedbackTargetForm {
-  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
-  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
-  INTAKE_REQUEST = "INTAKE_REQUEST",
-  NO_TARGET_PROVIDED = "NO_TARGET_PROVIDED",
-}
-
-/**
- * The requester view of the IT gov Decision step status
- */
-export enum ITGovDecisionStatus {
-  CANT_START = "CANT_START",
-  COMPLETED = "COMPLETED",
-  IN_REVIEW = "IN_REVIEW",
-}
-
-/**
- * The requester view of the IT gov draft Business Case step status
- */
-export enum ITGovDraftBusinessCaseStatus {
-  CANT_START = "CANT_START",
-  DONE = "DONE",
-  EDITS_REQUESTED = "EDITS_REQUESTED",
-  IN_PROGRESS = "IN_PROGRESS",
-  NOT_NEEDED = "NOT_NEEDED",
-  READY = "READY",
-  SUBMITTED = "SUBMITTED",
-}
-
-/**
- * The requester view of the IT gov feedback step status
- */
-export enum ITGovFeedbackStatus {
-  CANT_START = "CANT_START",
-  COMPLETED = "COMPLETED",
-  IN_REVIEW = "IN_REVIEW",
-}
-
-/**
- * The requester view of the IT Gov Final Business Case step status
- */
-export enum ITGovFinalBusinessCaseStatus {
-  CANT_START = "CANT_START",
-  DONE = "DONE",
-  EDITS_REQUESTED = "EDITS_REQUESTED",
-  IN_PROGRESS = "IN_PROGRESS",
-  NOT_NEEDED = "NOT_NEEDED",
-  READY = "READY",
-  SUBMITTED = "SUBMITTED",
-}
-
-/**
- * The requester view of the IT Gov GRB step status
- */
-export enum ITGovGRBStatus {
-  AWAITING_DECISION = "AWAITING_DECISION",
-  CANT_START = "CANT_START",
-  COMPLETED = "COMPLETED",
-  NOT_NEEDED = "NOT_NEEDED",
-  READY_TO_SCHEDULE = "READY_TO_SCHEDULE",
-  SCHEDULED = "SCHEDULED",
-}
-
-/**
- * The requester view of the IT Gov GRT step status
- */
-export enum ITGovGRTStatus {
-  AWAITING_DECISION = "AWAITING_DECISION",
-  CANT_START = "CANT_START",
-  COMPLETED = "COMPLETED",
-  NOT_NEEDED = "NOT_NEEDED",
-  READY_TO_SCHEDULE = "READY_TO_SCHEDULE",
-  SCHEDULED = "SCHEDULED",
-}
-
-/**
- * The requester view of the IT gov intake step status
- */
-export enum ITGovIntakeFormStatus {
-  COMPLETED = "COMPLETED",
-  EDITS_REQUESTED = "EDITS_REQUESTED",
-  IN_PROGRESS = "IN_PROGRESS",
-  READY = "READY",
-}
-
-export enum RequestRelationType {
-  EXISTING_SERVICE = "EXISTING_SERVICE",
-  EXISTING_SYSTEM = "EXISTING_SYSTEM",
-  NEW_SYSTEM = "NEW_SYSTEM",
-}
-
-/**
- * This represents the possible System Intake Decision States
- */
-export enum SystemIntakeDecisionState {
-  LCID_ISSUED = "LCID_ISSUED",
-  NOT_APPROVED = "NOT_APPROVED",
-  NOT_GOVERNANCE = "NOT_GOVERNANCE",
-  NO_DECISION = "NO_DECISION",
-}
-
-/**
  * SystemIntakeState represents whether the intake is open or closed
  */
 export enum SystemIntakeState {
@@ -143,18 +39,6 @@ export enum SystemIntakeStatusRequester {
   LCID_RETIRED = "LCID_RETIRED",
   NOT_APPROVED = "NOT_APPROVED",
   NOT_GOVERNANCE = "NOT_GOVERNANCE",
-}
-
-/**
- * SystemIntakeStep represents the current step in the intake process
- */
-export enum SystemIntakeStep {
-  DECISION_AND_NEXT_STEPS = "DECISION_AND_NEXT_STEPS",
-  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
-  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
-  GRB_MEETING = "GRB_MEETING",
-  GRT_MEETING = "GRT_MEETING",
-  INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
 }
 
 /**

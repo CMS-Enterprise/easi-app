@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 import {
   SystemIntakeProgressToNewStepsInput,
+  SystemIntakeStep,
   SystemIntakeStepToProgressTo,
   useCreateSystemIntakeActionProgressToNewStepMutation
 } from 'gql/generated/graphql';
@@ -16,7 +17,6 @@ import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import { RadioField } from 'components/RadioField';
 import RichTextEditor from 'components/RichTextEditor';
-import { SystemIntakeStep } from 'types/graphql-global-types';
 import { progressToNewStepSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';

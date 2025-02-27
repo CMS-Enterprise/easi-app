@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, within } from '@testing-library/react';
 import {
+  RequestRelationType,
   SystemIntakeFragmentFragment,
   SystemIntakeRequestType,
   SystemIntakeStatusAdmin
@@ -10,10 +11,7 @@ import {
 import { DateTime } from 'luxon';
 import users from 'tests/mock/users';
 
-import {
-  RequestRelationType,
-  SystemIntakeState
-} from 'types/graphql-global-types';
+import { SystemIntakeState } from 'types/graphql-global-types';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 

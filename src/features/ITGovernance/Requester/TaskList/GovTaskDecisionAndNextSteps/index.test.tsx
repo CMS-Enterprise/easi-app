@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 import { taskListState } from 'tests/mock/govTaskList';
 
-import { ItGovTaskSystemIntake } from 'types/itGov';
+import { ITGovTaskSystemIntake } from 'types/itGov';
 import {
   expectTaskStatusTagToHaveTextKey,
   getByRoleWithNameTextKey
@@ -13,7 +13,7 @@ import {
 import GovTaskDecisionAndNextSteps from '.';
 
 describe('Gov Task: Decision and next steps statuses', () => {
-  function renderGovTaskDecisionAndNextSteps(mockdata: ItGovTaskSystemIntake) {
+  function renderGovTaskDecisionAndNextSteps(mockdata: ITGovTaskSystemIntake) {
     return render(
       <MemoryRouter>
         <GovTaskDecisionAndNextSteps {...mockdata} />

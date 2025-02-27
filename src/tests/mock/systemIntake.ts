@@ -1,12 +1,24 @@
 import {
+  GetGovernanceTaskListDocument,
+  GetGovernanceTaskListQuery,
+  GetGovernanceTaskListQueryVariables,
   GetSystemIntakeContactsDocument,
   GetSystemIntakeContactsQuery,
   GetSystemIntakeDocument,
   GetSystemIntakeQuery,
   GetSystemIntakeQueryVariables,
   GetSystemIntakesTableQuery,
+  GovernanceRequestFeedbackTargetForm,
   GovernanceRequestFeedbackType,
+  ITGovDecisionStatus,
+  ITGovDraftBusinessCaseStatus,
+  ITGovFeedbackStatus,
+  ITGovFinalBusinessCaseStatus,
+  ITGovGRBStatus,
+  ITGovGRTStatus,
+  ITGovIntakeFormStatus,
   SystemIntakeContact,
+  SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentFragmentFragment,
   SystemIntakeDocumentStatus,
@@ -16,15 +28,10 @@ import {
   SystemIntakeGRBPresentationLinksFragmentFragment,
   SystemIntakeRequestType,
   SystemIntakeStatusAdmin,
+  SystemIntakeStep,
   SystemIntakeWithReviewRequestedFragment
 } from 'gql/generated/graphql';
-import GetGovernanceTaskListQuery from 'gql/legacyGQL/GetGovernanceTaskListQuery';
 import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
-import {
-  GetGovernanceTaskList,
-  GetGovernanceTaskList_systemIntake as TaskListSystemIntake,
-  GetGovernanceTaskListVariables
-} from 'gql/legacyGQL/types/GetGovernanceTaskList';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
   GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
@@ -33,18 +40,8 @@ import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import {
-  GovernanceRequestFeedbackTargetForm,
-  ITGovDecisionStatus,
-  ITGovDraftBusinessCaseStatus,
-  ITGovFeedbackStatus,
-  ITGovFinalBusinessCaseStatus,
-  ITGovGRBStatus,
-  ITGovGRTStatus,
-  ITGovIntakeFormStatus,
-  SystemIntakeDecisionState,
   SystemIntakeState,
   SystemIntakeStatusRequester,
-  SystemIntakeStep,
   SystemIntakeTRBFollowUp,
   TRBRequestStatus
 } from 'types/graphql-global-types';
@@ -656,7 +653,9 @@ export const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQu
     }
   };
 
-export const taskListSystemIntake: TaskListSystemIntake = {
+export const taskListSystemIntake: NonNullable<
+  GetGovernanceTaskListQuery['systemIntake']
+> = {
   __typename: 'SystemIntake',
   id: systemIntakeId,
   requestName: 'Mock system intake',
@@ -686,16 +685,20 @@ export const taskListSystemIntake: TaskListSystemIntake = {
 };
 
 export const getGovernanceTaskListQuery = (
-  taskListData?: Partial<GetGovernanceTaskList['systemIntake']>
-): MockedQuery<GetGovernanceTaskList, GetGovernanceTaskListVariables> => ({
+  taskListData?: Partial<GetGovernanceTaskListQuery['systemIntake']>
+): MockedQuery<
+  GetGovernanceTaskListQuery,
+  GetGovernanceTaskListQueryVariables
+> => ({
   request: {
-    query: GetGovernanceTaskListQuery,
+    query: GetGovernanceTaskListDocument,
     variables: {
       id: systemIntakeId
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       systemIntake: {
         ...taskListSystemIntake,
         ...taskListData

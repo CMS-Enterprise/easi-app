@@ -5,6 +5,7 @@ import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import { Form, Grid } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
+import { SystemIntakeDecisionState } from 'gql/generated/graphql';
 import { camelCase } from 'lodash';
 
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -12,10 +13,7 @@ import Label from 'components/Label';
 import PageHeading from 'components/PageHeading';
 import { RadioField, RadioGroup } from 'components/RadioField';
 import RequiredAsterisk from 'components/RequiredAsterisk';
-import {
-  SystemIntakeDecisionState,
-  SystemIntakeState
-} from 'types/graphql-global-types';
+import { SystemIntakeState } from 'types/graphql-global-types';
 
 import ActionsSummary from '../components/ActionsSummary';
 import { ActionsProps } from '..';

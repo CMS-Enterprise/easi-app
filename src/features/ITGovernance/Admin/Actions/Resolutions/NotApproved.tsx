@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup, Radio } from '@trussworks/react-uswds';
 import {
+  SystemIntakeDecisionState,
   SystemIntakeRejectIntakeInput,
   useCreateSystemIntakeActionRejectIntakeMutation
 } from 'gql/generated/graphql';
@@ -12,10 +13,7 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import RichTextEditor from 'components/RichTextEditor';
-import {
-  SystemIntakeDecisionState,
-  SystemIntakeTRBFollowUp
-} from 'types/graphql-global-types';
+import { SystemIntakeTRBFollowUp } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 import { notApprovedSchema } from 'validations/actionSchema';
 

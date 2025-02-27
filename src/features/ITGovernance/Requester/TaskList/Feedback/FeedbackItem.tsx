@@ -1,10 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
-import { GovernanceRequestFeedbackFragmentFragment } from 'gql/generated/graphql';
+import {
+  GovernanceRequestFeedbackFragmentFragment,
+  GovernanceRequestFeedbackTargetForm
+} from 'gql/generated/graphql';
 
 import { RichTextViewer } from 'components/RichTextEditor';
-import { GovernanceRequestFeedbackTargetForm } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
 /**

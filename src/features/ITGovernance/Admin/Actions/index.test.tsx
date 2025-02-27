@@ -4,7 +4,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   CreateSystemIntakeActionRequestEditsDocument,
-  SystemIntakeFormStep
+  SystemIntakeFormStep,
+  SystemIntakeStep
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import {
@@ -16,7 +17,6 @@ import {
 } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { SystemIntakeStep } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import MockMessage from 'utils/testing/MockMessage';
 import typeRichText from 'utils/testing/typeRichText';

@@ -5,13 +5,13 @@ import classNames from 'classnames';
 import ITGovAdminContext from 'features/ITGovernance/Admin/ITGovAdminContext';
 import {
   GetTRBRequestSummaryQuery,
+  RequestRelationType,
   SystemIntakeFragmentFragment
 } from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import SystemCardTable from 'components/SystemCard/table';
-import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
 

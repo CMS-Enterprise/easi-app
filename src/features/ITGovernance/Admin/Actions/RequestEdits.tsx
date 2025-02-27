@@ -9,12 +9,12 @@ import {
 } from '@trussworks/react-uswds';
 import {
   SystemIntakeFormStep,
+  SystemIntakeStep,
   useCreateSystemIntakeActionRequestEditsMutation
 } from 'gql/generated/graphql';
 
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RichTextEditor from 'components/RichTextEditor';
-import { SystemIntakeStep } from 'types/graphql-global-types';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
 
@@ -33,7 +33,7 @@ const RequestEdits = ({
   const { t } = useTranslation(['action', 'form']);
 
   const [mutate] = useCreateSystemIntakeActionRequestEditsMutation({
-    refetchQueries: ['GetGovernanceTaskList']
+    refetchQueries: ['GetGovernanceTaskListQuery']
   });
 
   /** Default `intakeFormStep` value

@@ -6,12 +6,12 @@ import {
   GetGovernanceRequestFeedbackQuery,
   GetGovernanceRequestFeedbackQueryVariables,
   GovernanceRequestFeedbackFragmentFragment,
+  GovernanceRequestFeedbackTargetForm,
   GovernanceRequestFeedbackType
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { systemIntake } from 'tests/mock/systemIntake';
 
-import { GovernanceRequestFeedbackTargetForm } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import { formatDateLocal } from 'utils/date';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';

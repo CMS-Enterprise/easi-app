@@ -8,7 +8,7 @@ import i18next from 'i18next';
 import { taskListState } from 'tests/mock/govTaskList';
 
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
-import { ItGovTaskSystemIntake } from 'types/itGov';
+import { ITGovTaskSystemIntake } from 'types/itGov';
 import {
   expectTaskStatusTagToHaveTextKey,
   getByRoleWithNameTextKey,
@@ -18,7 +18,7 @@ import {
 import GovTaskBizCaseDraft from '.';
 
 describe('Gov Task: Prepare a draft Business Case statuses', () => {
-  function renderGovTaskBizCaseDraft(mockdata: ItGovTaskSystemIntake) {
+  function renderGovTaskBizCaseDraft(mockdata: ITGovTaskSystemIntake) {
     return render(
       <MemoryRouter>
         <GovTaskBizCaseDraft {...mockdata} />

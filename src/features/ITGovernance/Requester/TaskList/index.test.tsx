@@ -33,9 +33,10 @@ describe('Governance Task List', () => {
         <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
           <VerboseMockedProvider
             mocks={[
-              getGovernanceTaskListQuery(
-                taskListState.intakeFormNotStarted.systemIntake
-              )
+              getGovernanceTaskListQuery({
+                ...taskListState.intakeFormNotStarted.systemIntake,
+                __typename: 'SystemIntake'
+              })
             ]}
           >
             <Provider store={store}>
@@ -121,9 +122,10 @@ describe('Governance Task List', () => {
         <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
           <VerboseMockedProvider
             mocks={[
-              getGovernanceTaskListQuery(
-                taskListState.decisionAndNextStepsDone.systemIntake
-              )
+              getGovernanceTaskListQuery({
+                ...taskListState.intakeFormNotStarted.systemIntake,
+                __typename: 'SystemIntake'
+              })
             ]}
           >
             <Provider store={store}>
@@ -153,9 +155,10 @@ describe('Governance Task List', () => {
         <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
           <VerboseMockedProvider
             mocks={[
-              getGovernanceTaskListQuery(
-                taskListState.intakeFormNotStarted.systemIntake
-              )
+              getGovernanceTaskListQuery({
+                ...taskListState.intakeFormNotStarted.systemIntake,
+                __typename: 'SystemIntake'
+              })
             ]}
           >
             <Provider store={store}>
@@ -181,9 +184,10 @@ describe('Governance Task List', () => {
         <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
           <VerboseMockedProvider
             mocks={[
-              getGovernanceTaskListQuery(
-                taskListState.intakeFormSubmitted.systemIntake
-              )
+              getGovernanceTaskListQuery({
+                ...taskListState.intakeFormNotStarted.systemIntake,
+                __typename: 'SystemIntake'
+              })
             ]}
           >
             <Provider store={store}>

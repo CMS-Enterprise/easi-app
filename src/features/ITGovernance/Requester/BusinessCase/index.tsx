@@ -16,19 +16,16 @@ import {
 } from '@trussworks/react-uswds';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import { FormikProps } from 'formik';
-import GetGovernanceTaskListQuery from 'gql/legacyGQL/GetGovernanceTaskListQuery';
 import {
-  GetGovernanceTaskList,
-  GetGovernanceTaskListVariables
-} from 'gql/legacyGQL/types/GetGovernanceTaskList';
+  SystemIntakeStep,
+  useGetGovernanceTaskListQuery
+} from 'gql/generated/graphql';
 import { AppState } from 'stores/reducers/rootReducer';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
-import useCacheQuery from 'hooks/useCacheQuery';
 import usePrevious from 'hooks/usePrevious';
 import { BusinessCaseModel } from 'types/businessCase';
-import { SystemIntakeStep } from 'types/graphql-global-types';
 import {
   clearBusinessCase,
   fetchBusinessCase,
@@ -80,10 +77,7 @@ export const BusinessCase = () => {
     current.resetForm({ values: current.values, errors: current.errors });
   };
 
-  const { data, loading } = useCacheQuery<
-    GetGovernanceTaskList,
-    GetGovernanceTaskListVariables
-  >(GetGovernanceTaskListQuery, {
+  const { data, loading } = useGetGovernanceTaskListQuery({
     variables: {
       id: businessCase.systemIntakeId
     },

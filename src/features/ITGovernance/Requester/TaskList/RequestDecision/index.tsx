@@ -8,6 +8,7 @@ import {
   Link as UswdsLink
 } from '@trussworks/react-uswds';
 import {
+  SystemIntakeDecisionState,
   SystemIntakeFragmentFragment,
   useGetSystemIntakeQuery
 } from 'gql/generated/graphql';
@@ -17,7 +18,6 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
-import { SystemIntakeDecisionState } from 'types/graphql-global-types';
 
 import Approved from './Approved';
 import NotGovernance from './NotGovernance';

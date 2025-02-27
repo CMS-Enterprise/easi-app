@@ -12,16 +12,13 @@ import {
 } from '@trussworks/react-uswds';
 import {
   GetTRBRequestSummaryQuery,
+  RequestRelationType,
   TRBRequestType
 } from 'gql/generated/graphql';
 
 import AdminRequestHeaderSummary from 'components/AdminRequestHeaderSummary';
 import StateTag from 'components/StateTag';
-import {
-  RequestRelationType,
-  TRBRequestState,
-  TRBRequestStatus
-} from 'types/graphql-global-types';
+import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TRBAttendee, TrbRequestIdRef } from 'types/technicalAssistance';
 
 import { TrbAssignLeadModalOpener } from '../TrbAssignLeadModal';
