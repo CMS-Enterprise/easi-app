@@ -5,10 +5,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import classnames from 'classnames';
+import PresentationLinksForm from 'features/ITGovernance/Admin/GRBReview/PresentationLinksForm';
 import UploadForm from 'features/ITGovernance/Requester/SystemIntake/Documents/UploadForm';
+import PresentationDeckUpload from 'features/ITGovernance/Requester/TaskList/PresentationDeckUpload';
 import AdditionalInformation from 'features/Miscellaneous/AdditionalInformation';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBPresentationLinks,
+  SystemIntakeGRBReviewerFragment
+} from 'gql/generated/graphql';
 import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
 import {
   GetSystemIntake,
@@ -25,7 +30,6 @@ import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 
 import AccordionNavigation from '../../../components/AccordionNavigation';
 
-import PresentationLinksForm from './GRBReview/PresentationLinksForm';
 import Actions from './Actions';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
@@ -203,7 +207,14 @@ const RequestOverview = ({
                 {flags?.grbReviewTab && (
                   <Route
                     path="/it-governance/:systemId/grb-review/presentation-links"
-                    render={() => <PresentationLinksForm {...systemIntake} />}
+                    render={() => (
+                      <PresentationLinksForm
+                        {...systemIntake}
+                        grbPresentationLinks={
+                          systemIntake.grbPresentationLinks as SystemIntakeGRBPresentationLinks
+                        }
+                      />
+                    )}
                   />
                 )}
 
@@ -219,6 +230,13 @@ const RequestOverview = ({
                         grbReviewStartedAt={grbReviewStartedAt}
                       />
                     )}
+                  />
+                )}
+
+                {flags?.grbReviewTab && (
+                  <Route
+                    path="/it-governance/:systemId/grb-review/presentation-deck-upload"
+                    render={() => <PresentationDeckUpload type="admin" />}
                   />
                 )}
 

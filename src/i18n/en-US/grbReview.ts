@@ -51,7 +51,7 @@ const messages: {
 export default {
   title: 'GRB review',
   description:
-    'Many projects coming through the IT Governance process require review by the Governance Review Board (GRB). These reviews may happen at regularly scheduled GRB meetings or during an alternate asynchronous review process. GRB members will review project details, discuss any concerns, and vote on the merits of the project under consideration. ',
+    'Many projects coming through the IT Governance process require review by the Governance Review Board (GRB). These reviews may happen at regularly scheduled GRB reviews or during an alternate asynchronous review process. GRB members will review project details, discuss any concerns, and vote on the merits of the project under consideration. ',
   featureInProgress: 'Feature in progress',
   featureInProgressText:
     'The capabilities currently available allow Governance Admin Team members to invite GRB reviewers to access documentation related to requests. Future capabilities will include voting, discussions with project teams, timelines, and more. Currently, however, all communication with the project team must be completed via email or during meetings. If you have any questions, please complete the <a>feedback form</a> in the footer of this page.',
@@ -229,6 +229,28 @@ export default {
       }
     ]
   },
+  adminTask: {
+    title: 'Admin Task',
+    setUpGRBReview: {
+      title: 'Set up GRB review',
+      description:
+        'EASi will guide you through setting up a GRB review, including the decision between an asynchronous review in EASi and a standard review meeting.',
+      whatDoINeedLabel: 'What do I need in order to set up a GRB review?',
+      whatDoINeed: [
+        '<bold>Presentation recording and transcript</bold>: Organize a time to asynchronously record this project team’s presentation. You will need to add a link to the recording during the setup process.',
+        '<bold>Additional supporting documents</bold>: EASi will automatically add a reference to the Business Case, Intake Request form, and any supporting documents already uploaded by the requester. Please have on hand any additional documents for the GRB to consider as a part of this request.',
+        '<bold>GRB reviewers</bold>: EASi will guide you through the process of adding voting and non-voting GRB reviewers. Please have on hand the names, email addresses, or EUA IDs of these individuals.',
+        '<bold>Timeframe</bold>: Decide on the number of days allotted for this GRB review. You will be able to add more time during the review process if needed.'
+      ]
+    },
+    sendReviewReminder: {
+      title: 'Send review reminder',
+      description:
+        'GRB voting members will get an automatic reminder when there is one day left in the review process. You may use the button below to send an additional reminder at any time.',
+      sendReminder: 'Send reminder'
+    },
+    takeADifferentAction: 'or, take a different action'
+  },
   presentationLinks: {
     heading_add: 'Add presentation links',
     heading_edit: 'Edit presentation link',
@@ -257,6 +279,21 @@ export default {
     error:
       'There was an issue saving your presentation details. Please try again, and if the problem persists, try again later.',
     emptyFormError:
-      'Please complete either the recording link or presentation deck field before submitting.'
+      'Please complete either the recording link or presentation deck field before submitting.',
+    requiredField: 'This is a required field.',
+    presentationUpload: {
+      header: 'Upload GRB presentation',
+      description:
+        'Upload the presentation deck that this project will share with the Governance Review Board (GRB). You may change the uploaded file at any time before the GRB review period starts. ',
+      dontUploadAdmin: 'Don’t upload and return to GRB setup',
+      dontUploadRequester:
+        'Don’t upload and return to the governance task list',
+      selectFile: 'Select your file',
+      recommendedFileTypes: 'Select a PDF, PPT, PPTX, DOC, DOCX, XLS, or XLSX',
+      upload: 'Upload presentation',
+      success: 'You have successfully uploaded your GRB presentation.',
+      error:
+        'There was an issue uploading your presentation. Please try again, and if the issue persists please try again later.'
+    }
   }
 };

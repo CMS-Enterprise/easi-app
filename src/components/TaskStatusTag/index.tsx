@@ -48,7 +48,9 @@ const activeStatuses = {
   READY_TO_SCHEDULE: 'bg-info-light',
   READY_TO_START: 'bg-info-light',
   SCHEDULED: 'bg-info-light',
-  SUBMITTED: 'bg-info-light'
+  SUBMITTED: 'bg-info-light',
+  AWAITING_GRB_REVIEW: 'bg-info-light',
+  REVIEW_IN_PROGRESS: 'bg-warning'
 };
 
 /** Statuses that reflect that a step has no available actions */

@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
+import { SystemIntakeGRBPresentationLinks } from 'gql/generated/graphql';
 import { systemIntake } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -16,7 +17,9 @@ describe('GRB presentation links form', () => {
           <MessageProvider>
             <PresentationLinksForm
               {...systemIntake}
-              grbPresentationLinks={null}
+              grbPresentationLinks={
+                undefined as unknown as SystemIntakeGRBPresentationLinks
+              }
             />
           </MessageProvider>
         </VerboseMockedProvider>
@@ -46,14 +49,19 @@ describe('GRB presentation links form', () => {
   });
 
   it('renders the edit links form', () => {
-    const { recordingLink, transcriptFileName, presentationDeckFileName } =
-      systemIntake?.grbPresentationLinks!;
-
     render(
       <MemoryRouter>
         <VerboseMockedProvider>
           <MessageProvider>
-            <PresentationLinksForm {...systemIntake} />
+            <PresentationLinksForm
+              {...systemIntake}
+              grbPresentationLinks={
+                {
+                  recordingLink: 'http://google.com',
+                  presentationDeckFileName: 'test.pdf'
+                } as SystemIntakeGRBPresentationLinks
+              }
+            />
           </MessageProvider>
         </VerboseMockedProvider>
       </MemoryRouter>
@@ -76,12 +84,10 @@ describe('GRB presentation links form', () => {
     ).toHaveLength(2);
 
     expect(screen.getByRole('textbox', { name: 'Recording link' })).toHaveValue(
-      recordingLink
+      'http://google.com'
     );
 
-    expect(screen.getByText(presentationDeckFileName!)).toBeInTheDocument();
-
-    expect(screen.getByText(transcriptFileName!)).toBeInTheDocument();
+    expect(screen.getByText('test.pdf')).toBeInTheDocument();
 
     // Button should be disabled before any changes are made
     expect(

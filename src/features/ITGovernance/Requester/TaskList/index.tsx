@@ -11,6 +11,10 @@ import {
   ModalHeading
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
+import {
+  ITGovIntakeFormStatus,
+  useArchiveSystemIntakeMutation
+} from 'gql/generated/graphql';
 import GetGovernanceTaskListQuery from 'gql/legacyGQL/GetGovernanceTaskListQuery';
 import {
   GetGovernanceTaskList,
@@ -28,13 +32,10 @@ import { TaskListContainer } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
 import {
-  ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
   SystemIntakeState,
   SystemIntakeStep
 } from 'types/graphql-global-types';
-
-import { useArchiveSystemIntakeMutation } from '../../../../gql/generated/graphql';
 
 import AdditionalRequestInfo from './AdditionalRequestInfo';
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
@@ -215,7 +216,7 @@ function GovernanceTaskList() {
                   <GovTaskGrtMeeting {...systemIntake} />
                   {/* 5. Submit your Business Case for final approval */}
                   <GovTaskBizCaseFinal {...systemIntake} />
-                  {/* 6. Attend the GRB meeting */}
+                  {/* 6. Attend the GRB review */}
                   <GovTaskGrbMeeting {...systemIntake} />
                   {/* 7. Decision and next steps */}
                   <GovTaskDecisionAndNextSteps {...systemIntake} />

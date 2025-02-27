@@ -837,6 +837,18 @@ type SystemIntake {
   GRB Presentation Link Data
   """
   grbPresentationLinks: SystemIntakeGRBPresentationLinks
+  """
+  GRB Presentation Deck Metadata
+  """
+  grbPresentationDeckRequesterReminderEmailSentTime: Time
+  """
+  GRB Review Form
+  """
+  grbReviewType: SystemIntakeGRBReviewType!
+  grbReviewAsyncRecordingTime: Time
+  grbReviewAsyncEndDate: Time
+  grbReviewStandardGRBMeetingTime: Time
+  grbReviewAsyncGRBMeetingTime: Time
 }
 
 type SystemIntakeContractNumber {
@@ -1289,6 +1301,11 @@ type SystemIntakeGRBReviewDiscussion {
   replies: [SystemIntakeGRBReviewDiscussionPost!]!
 }
 
+enum SystemIntakeGRBReviewType {
+  STANDARD
+  ASYNC
+}
+
 
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!
@@ -1298,6 +1315,26 @@ input createSystemIntakeGRBDiscussionPostInput {
 input createSystemIntakeGRBDiscussionReplyInput {
   initialPostID: UUID!
   content: TaggedHTML!
+}
+
+"""
+Input data used to set or update a System Intake's GRB Review Type
+"""
+input updateSystemIntakeGRBReviewTypeInput {
+  systemIntakeID: UUID!
+  grbReviewType: SystemIntakeGRBReviewType!
+}
+
+"""
+Input data used to set or update a System Intake's GRB Review form data
+"""
+input updateSystemIntakeGRBReviewFormInput {
+  systemIntakeID: UUID!
+  grbReviewType: SystemIntakeGRBReviewType @goField(omittable: true)
+  grbReviewAsyncRecordingTime: Time @goField(omittable: true)
+  grbReviewAsyncEndDate: Time @goField(omittable: true)
+  grbReviewStandardGRBMeetingTime: Time @goField(omittable: true)
+  grbReviewAsyncGRBMeetingTime: Time @goField(omittable: true)
 }
 
 """
@@ -1366,7 +1403,9 @@ input SystemIntakeProgressToNewStepsInput {
   grbRecommendations: HTML
   additionalInfo: HTML
   adminNote: HTML
+  grbReviewType: SystemIntakeGRBReviewType
 }
+
 """
 Input for updating an intake's LCID in IT Gov v2
 """
@@ -2604,6 +2643,13 @@ type Mutation {
   createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
   createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
 
+
+  updateSystemIntakeGRBReviewType(input: updateSystemIntakeGRBReviewTypeInput!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+
+  updateSystemIntakeGRBReviewForm(input: updateSystemIntakeGRBReviewFormInput!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
   setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
@@ -2676,6 +2722,8 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
+  sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): String
+  @hasRole(role: EASI_GOVTEAM)
 }
 
 """
@@ -2998,6 +3046,14 @@ enum ITGovGRBStatus {
   The GRB meeting has been scheduled
   """
   SCHEDULED
+  """
+  The GRB meeting is waiting for review
+  """
+  AWAITING_GRB_REVIEW,
+  """
+  The GRB review is currently in progress
+  """
+  REVIEW_IN_PROGRESS,
   """
   The GRT meeting has already happened, and an outcome hasn't been noted yet
   """

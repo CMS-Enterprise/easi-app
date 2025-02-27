@@ -480,7 +480,20 @@ describe('Governance Review Team', () => {
 
     // Complete action form
 
-    cy.get('#GRT_MEETING').check({ force: true });
+    cy.get('#GRB_MEETING').check({ force: true });
+
+    cy.get('#meetingDate').should('not.be.disabled');
+
+    cy.get('#meetingDate').type('01/01/2024');
+
+    cy.get('#grbReviewType').check({ force: true });
+
+    cy.get('#meetingDate').should('have.value', '');
+
+    cy.get('#meetingDate').should('be.disabled');
+
+    // Uncheck async grb and reinput dates
+    cy.get('#grbReviewType').uncheck({ force: true });
 
     cy.get('#meetingDate').type('01/01/2024');
 
@@ -488,21 +501,21 @@ describe('Governance Review Team', () => {
 
     // Check form submit was successful
     cy.get('div[data-testid="alert"]').contains(
-      'Action complete. This request is now ready for a GRT meeting.'
+      'Action complete. This request is now ready for a GRB review.'
     );
 
     // Check for correct status
     cy.get('[data-testid="grt-current-status"]').contains(
-      'GRT meeting complete'
+      'GRB review complete'
     );
 
     // Check GRT meeting date was set
 
     cy.get('li.usa-sidenav__item a[href*="dates"]').click();
 
-    cy.get('#Dates-GrtDateMonth').should('have.value', '1');
-    cy.get('#Dates-GrtDateDay').should('have.value', '1');
-    cy.get('#Dates-GrtDateYear').should('have.value', '2024');
+    cy.get('#Dates-GrbDateMonth').should('have.value', '1');
+    cy.get('#Dates-GrbDateDay').should('have.value', '1');
+    cy.get('#Dates-GrbDateYear').should('have.value', '2024');
   });
 
   it('can upload a presentation deck', () => {
