@@ -8,6 +8,8 @@ import {
   GetSystemIntakeQuery,
   GetSystemIntakeQueryVariables,
   GetSystemIntakesTableQuery,
+  GetSystemIntakesWithLCIDSDocument,
+  GetSystemIntakesWithLCIDSQuery,
   GovernanceRequestFeedbackTargetForm,
   GovernanceRequestFeedbackType,
   ITGovDecisionStatus,
@@ -31,18 +33,13 @@ import {
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester,
   SystemIntakeStep,
+  SystemIntakeTRBFollowUp,
   SystemIntakeWithReviewRequestedFragment,
   TRBRequestStatus
 } from 'gql/generated/graphql';
-import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
-import {
-  GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
-  GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
-} from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
 import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
-import { SystemIntakeTRBFollowUp } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 
 import users from './users';
@@ -593,26 +590,28 @@ export const getSystemIntakeQuery = (
   };
 };
 
-export const systemIntakeWithLcid: SystemIntakeWithLcid = {
-  __typename: 'SystemIntake',
-  id: '8be3f86d-a4d6-446b-8a56-dc9da77ed326',
-  lcid: '123456',
-  requestName: 'Test request name',
-  lcidExpiresAt: DateTime.local().plus({ year: 1 }).toISO(),
-  lcidScope: 'Test scope',
-  decisionNextSteps: 'Test next steps',
-  trbFollowUpRecommendation: SystemIntakeTRBFollowUp.NOT_RECOMMENDED,
-  lcidCostBaseline: 'Text cost baseline'
-};
+export const systemIntakeWithLcid: GetSystemIntakesWithLCIDSQuery['systemIntakesWithLcids'][number] =
+  {
+    __typename: 'SystemIntake',
+    id: '8be3f86d-a4d6-446b-8a56-dc9da77ed326',
+    lcid: '123456',
+    requestName: 'Test request name',
+    lcidExpiresAt: DateTime.local().plus({ year: 1 }).toISO(),
+    lcidScope: 'Test scope',
+    decisionNextSteps: 'Test next steps',
+    trbFollowUpRecommendation: SystemIntakeTRBFollowUp.NOT_RECOMMENDED,
+    lcidCostBaseline: 'Text cost baseline'
+  };
 
-export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSType> =
+export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSQuery> =
   {
     request: {
-      query: GetSystemIntakesWithLCIDS,
+      query: GetSystemIntakesWithLCIDSDocument,
       variables: {}
     },
     result: {
       data: {
+        __typename: 'Query',
         systemIntakesWithLcids: [
           systemIntakeWithLcid,
           {

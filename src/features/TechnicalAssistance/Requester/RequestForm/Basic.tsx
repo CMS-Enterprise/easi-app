@@ -22,11 +22,10 @@ import {
   TRBCollabGroupOption,
   TrbRequestFormFieldsFragmentFragment,
   useDeleteTRBRequestFundingSourceMutation,
+  useGetSystemIntakesWithLCIDSQuery,
   useUpdateTRBRequestAndFormMutation,
   useUpdateTRBRequestFundingSourcesMutation
 } from 'gql/generated/graphql';
-import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
-import { GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType } from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -41,7 +40,6 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 import Spinner from 'components/Spinner';
 import TextAreaField from 'components/TextAreaField';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
-import useCacheQuery from 'hooks/useCacheQuery';
 import { FormFieldProps } from 'types/util';
 import nullFillObject from 'utils/nullFillObject';
 import { basicSchema, TrbRequestFormBasic } from 'validations/trbRequestSchema';
@@ -90,8 +88,7 @@ function Basic({
   const [fundingSourcesFormActive, setFundingSourcesFormActive] =
     useState(false);
 
-  const { data, loading: intakesLoading } =
-    useCacheQuery<GetSystemIntakesWithLCIDSType>(GetSystemIntakesWithLCIDS);
+  const { data, loading: intakesLoading } = useGetSystemIntakesWithLCIDSQuery();
 
   const systemIntakesWithLCIDs = useMemo(() => {
     const systemIntakes = data?.systemIntakesWithLcids
