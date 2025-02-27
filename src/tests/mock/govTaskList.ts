@@ -8,6 +8,7 @@ import {
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
+  SystemIntakeGRBReviewType,
   SystemIntakeState,
   SystemIntakeStep
 } from 'types/graphql-global-types';
@@ -871,7 +872,8 @@ export const taskListState: {
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD
     }
   },
   grbMeetingSkipped: {
@@ -896,7 +898,8 @@ export const taskListState: {
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD
     }
   },
   grbMeetingInProgressNotScheduled: {
@@ -921,7 +924,8 @@ export const taskListState: {
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD
     }
   },
   grbMeetingInProgressScheduled: {
@@ -947,7 +951,11 @@ export const taskListState: {
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStartedAt: '2023-07-20T00:30:28Z',
+      grbReviewAsyncGRBMeetingTime: '2023-07-20T00:30:28Z',
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z'
     }
   },
   grbMeetingDone: {
@@ -973,7 +981,11 @@ export const taskListState: {
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStartedAt: '2023-07-20T00:30:28Z',
+      grbReviewAsyncGRBMeetingTime: '2023-07-20T00:30:28Z',
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z'
     }
   },
 

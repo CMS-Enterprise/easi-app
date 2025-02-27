@@ -136,6 +136,7 @@ const taskList = {
   },
   taskStatus: {
     AWAITING_DECISION: 'Awaiting decision',
+    AWAITING_GRB_REVIEW: 'Awaiting GRB review',
     CANT_START: 'Cannot start yet',
     CANNOT_START_YET: 'Cannot start yet',
     COMPLETED: 'Completed',
@@ -149,6 +150,7 @@ const taskList = {
     READY_FOR_REVIEW: 'Ready for review',
     READY_TO_SCHEDULE: 'Ready to schedule',
     READY_TO_START: 'Ready to start',
+    REVIEW_IN_PROGRESS: 'Review in progress',
     SCHEDULED: 'Scheduled'
   },
   taskStatusInfo: {

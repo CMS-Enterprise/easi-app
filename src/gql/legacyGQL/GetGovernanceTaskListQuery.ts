@@ -25,6 +25,10 @@ export default gql`
       updatedAt
       grtDate
       grbDate
+      grbReviewType
+      grbReviewStartedAt
+      grbReviewAsyncEndDate
+      grbReviewAsyncGRBMeetingTime
 
       step
       state
