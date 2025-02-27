@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Dropdown, Label } from '@trussworks/react-uswds';
+import { Button, Label, Select } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
+import { AugmentedSystemIntakeContact } from 'gql/generated/graphql';
 
+import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
-import Alert from 'components/shared/Alert';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import FieldGroup from 'components/shared/FieldGroup';
-import HelpText from 'components/shared/HelpText';
+import FieldErrorMsg from 'components/FieldErrorMsg';
+import FieldGroup from 'components/FieldGroup';
+import HelpText from 'components/HelpText';
 import Spinner from 'components/Spinner';
 import contactRoles from 'constants/enums/contactRoles';
 import { initialContactDetails } from 'constants/systemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 import {
   DeleteContactType,
   SystemIntakeContactProps
 } from 'types/systemIntake';
-import { ExternalRecipientAlert } from 'views/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
 
 import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
 
@@ -186,7 +186,7 @@ const ContactForm = ({
           {t('contactDetails.additionalContacts.component', { type })}
         </Label>
         <FieldErrorMsg>{errors.component}</FieldErrorMsg>
-        <Dropdown
+        <Select
           id="IntakeForm-ContactComponent"
           name="systemIntakeContact.component"
           data-testid="IntakeForm-ContactComponent"
@@ -202,7 +202,7 @@ const ContactForm = ({
             {t('contactDetails.additionalContacts.select')}
           </option>
           {cmsDivisionsAndOfficesOptions('systemIntakeContact')}
-        </Dropdown>
+        </Select>
       </FieldGroup>
 
       {/* Contact Role */}
@@ -211,7 +211,7 @@ const ContactForm = ({
           {t('contactDetails.additionalContacts.role', { type })}
         </Label>
         <FieldErrorMsg>{errors.role}</FieldErrorMsg>
-        <Dropdown
+        <Select
           id="IntakeForm-ContactRole"
           name="systemIntakeContact.role"
           data-testid="IntakeForm-ContactRole"
@@ -228,7 +228,7 @@ const ContactForm = ({
               {role}
             </option>
           ))}
-        </Dropdown>
+        </Select>
       </FieldGroup>
 
       <ExternalRecipientAlert email={activeContact?.email} />

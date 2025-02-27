@@ -1,6 +1,7 @@
+import { PersonRole } from 'gql/generated/graphql';
+import users, { MockUserInfo } from 'tests/mock/users';
+
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
-import users, { MockUserInfo } from 'data/mock/users';
-import { PersonRole } from 'types/graphql-global-types';
 
 import MockTrbAttendees, {
   defaultMockAttendeeProps,

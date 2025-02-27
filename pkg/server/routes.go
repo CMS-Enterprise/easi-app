@@ -46,6 +46,9 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
+// publishTimeUTC is the time of day (in UTC) when the system intakes are published to CEDAR
+const publishTimeUTC = 7 // 7 UTC is 2am EST
+
 func (s *Server) routes() {
 
 	oktaConfig := s.NewOktaClientConfig()
@@ -95,6 +98,7 @@ func (s *Server) routes() {
 		s.Config.GetString(appconfig.CEDARAPIURL),
 		s.Config.GetString(appconfig.CEDARAPIKey),
 		s.Config.GetBool(appconfig.CEDARIntakeEnabled),
+		s.Config.GetBool(appconfig.CEDARIntakePublisherEnabled),
 	)
 	if s.environment.Deployed() {
 		s.NewCEDARClientCheck()
@@ -344,6 +348,15 @@ func (s *Server) routes() {
 			return nil
 		})
 	}
+
+	// This code publishes all system intakes to CEDAR's intake API
+	go publisher.PublishOnSchedule(
+		appcontext.WithLogger(context.Background(), s.logger), // this requires the context to have a data loader each time published. This is built later in the call stack
+		store,
+		time.Friday,
+		publishTimeUTC,
+		buildDataloaders,
+	)
 
 	// This is a temporary solution for EASI-2597 until a more robust event scheduling solution is implemented
 

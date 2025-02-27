@@ -1,29 +1,19 @@
 import {
+  tempATOProp,
+  tempSubSystemProp,
+  tempSystemDataProp
+} from 'features/Systems/SystemProfile/data/mockSystemData';
+import {
+  CedarAssigneeType,
+  CedarRole,
+  GetSystemProfileQuery
+} from 'gql/generated/graphql';
+
+import {
   securityFindingKeys,
   teamSectionKeys,
   threatLevelGrades
 } from 'constants/systemProfile';
-import { CedarRole } from 'queries/types/CedarRole';
-import {
-  GetSystemProfile,
-  /* eslint-disable camelcase */
-  GetSystemProfile_cedarAuthorityToOperate,
-  GetSystemProfile_cedarBudget,
-  GetSystemProfile_cedarBudgetSystemCost,
-  GetSystemProfile_cedarSoftwareProducts,
-  GetSystemProfile_cedarSystemDetails_cedarSystem,
-  GetSystemProfile_cedarSystemDetails_deployments_dataCenter,
-  GetSystemProfile_cedarSystemDetails_roles,
-  GetSystemProfile_cedarSystemDetails_urls
-  /* eslint-enable camelcase */
-} from 'queries/types/GetSystemProfile';
-import {
-  tempATOProp,
-  tempSubSystemProp,
-  tempSystemDataProp
-} from 'views/SystemProfile/mockSystemData';
-
-import { CedarAssigneeType } from './graphql-global-types';
 
 // Loosely grouped by System Subpages
 
@@ -131,22 +121,68 @@ export type DevelopmentTag = 'Agile Methodology';
 
 export type UrlLocationTag = 'API endpoint' | 'Versioned code respository';
 
-// eslint-disable-next-line camelcase
-export interface UrlLocation extends GetSystemProfile_cedarSystemDetails_urls {
-  // eslint-disable-next-line camelcase
-  deploymentDataCenterName?: GetSystemProfile_cedarSystemDetails_deployments_dataCenter['name'];
+type GetSystemProfileURLs = NonNullable<
+  NonNullable<GetSystemProfileQuery['cedarSystemDetails']>['urls']
+>[number];
+
+type GetSystemProfileDataCenter = NonNullable<
+  NonNullable<
+    NonNullable<GetSystemProfileQuery['cedarSystemDetails']>['deployments']
+  >[number]['dataCenter']
+>['name'];
+
+export interface UrlLocation extends GetSystemProfileURLs {
+  deploymentDataCenterName?: GetSystemProfileDataCenter;
   tags: UrlLocationTag[];
 }
 
-export interface SystemProfileData extends GetSystemProfile {
+export type GetSystemProfileATO = NonNullable<
+  NonNullable<GetSystemProfileQuery['cedarAuthorityToOperate']>
+>[number];
+
+export type GetSystemProfileBudget = NonNullable<
+  NonNullable<GetSystemProfileQuery['cedarBudget']>
+>[number];
+
+export type GetSystemProfileSystemCost = NonNullable<
+  NonNullable<GetSystemProfileQuery['cedarBudgetSystemCost']>
+>;
+
+export type GetSystemProfileRoles = NonNullable<
+  NonNullable<GetSystemProfileQuery['cedarSystemDetails']>['roles'][number]
+>;
+
+export type GetSystemProfileStatus = NonNullable<
+  NonNullable<
+    GetSystemProfileQuery['cedarSystemDetails']
+  >['cedarSystem']['status']
+>;
+
+export type GetSystemProfileSoftwareProducts = NonNullable<
+  NonNullable<GetSystemProfileQuery['cedarSoftwareProducts']>
+>;
+
+export type GetSystemProfileCedarThreat = NonNullable<
+  NonNullable<GetSystemProfileQuery['cedarThreat']>
+>[number];
+
+export type GetSystemProfileContractBySystem = NonNullable<
+  NonNullable<GetSystemProfileQuery['cedarContractsBySystem']>
+>[number];
+
+export type GetSystemProfileExchanges = NonNullable<
+  NonNullable<GetSystemProfileQuery['exchanges']>
+>[number];
+
+export interface SystemProfileData extends GetSystemProfileQuery {
   // The original id type can be null, in which case this object is not created
   id: string;
   /* eslint-disable camelcase */
-  ato?: GetSystemProfile_cedarAuthorityToOperate;
+  ato?: GetSystemProfileATO;
   atoStatus?: AtoStatus;
-  budgets?: GetSystemProfile_cedarBudget[];
-  budgetSystemCosts?: GetSystemProfile_cedarBudgetSystemCost;
-  businessOwners: GetSystemProfile_cedarSystemDetails_roles[];
+  budgets?: GetSystemProfileBudget[];
+  budgetSystemCosts?: GetSystemProfileSystemCost;
+  businessOwners: GetSystemProfileRoles[];
   developmentTags?: DevelopmentTag[];
   locations?: UrlLocation[];
   numberOfContractorFte?: number;
@@ -155,12 +191,12 @@ export interface SystemProfileData extends GetSystemProfile {
   personRoles: CedarRoleAssigneePerson[];
   plannedRetirement: string | null;
   productionLocation?: UrlLocation;
-  status: GetSystemProfile_cedarSystemDetails_cedarSystem['status'];
+  status: GetSystemProfileStatus;
   usernamesWithRoles: UsernameWithRoles[];
 
   // Remaining mock data stubs
   activities?: tempATOProp[];
-  toolsAndSoftware?: GetSystemProfile_cedarSoftwareProducts;
+  toolsAndSoftware?: GetSystemProfileSoftwareProducts;
   subSystems?: tempSubSystemProp[];
   systemData?: tempSystemDataProp[];
   /* eslint-enable camelcase */

@@ -17,6 +17,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -401,6 +402,20 @@ func main() {
 		Tags:       nil,
 	})
 
+	// add GRB links to intake
+	mockUser, err := store.UserAccountGetByUsername(ctx, store, mock.PrincipalUser)
+	must(nil, err)
+
+	// create one with recording link and presentation file
+	links := models.NewSystemIntakeGRBPresentationLinks(mockUser.ID)
+	links.SystemIntakeID = intakeID
+	links.RecordingLink = helpers.PointerTo("test recording link")
+	links.RecordingPasscode = helpers.PointerTo("secret password")
+	links.PresentationDeckS3Key = helpers.PointerTo("prez deck s3 key")
+	links.PresentationDeckFileName = helpers.PointerTo("prez file name")
+
+	makeSystemIntakeGRBPresentationLinks(ctx, store, links)
+
 	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
 	makeSystemIntakeAndProgressToStep(
 		ctx,
@@ -413,6 +428,16 @@ func main() {
 			meetingDate: &pastMeetingDate,
 		},
 	)
+
+	// create one with recording link and transcript link
+	links = models.NewSystemIntakeGRBPresentationLinks(mockUser.ID)
+	links.SystemIntakeID = intakeID
+	links.RecordingLink = helpers.PointerTo("test recording link")
+	links.RecordingPasscode = helpers.PointerTo("secret password")
+	links.TranscriptFileName = helpers.PointerTo("transcript file name")
+	links.TranscriptS3Key = helpers.PointerTo("transcript s3 key")
+
+	makeSystemIntakeGRBPresentationLinks(ctx, store, links)
 
 	intakeID = uuid.MustParse("5c82f10a-0413-4a43-9b0f-e9e5c4f2699f")
 	makeSystemIntakeAndProgressToStep(
@@ -564,9 +589,9 @@ func main() {
 		},
 	)
 
-	// getting to the final business case through the normal process means
-	// the business case was already filled as a draft, so there's no
-	// seed data needed for an unfilled Final business case
+	// getting to the final Business Case through the normal process means
+	// the Business Case was already filled as a draft, so there's no
+	// seed data needed for an unfilled Final Business Case
 
 	intakeID = uuid.MustParse("561a5cfc-83a6-4600-9531-3a465dddec19")
 	makeSystemIntakeAndProgressToStep(
@@ -851,7 +876,7 @@ func main() {
 	intakeID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
 	intake = makeSystemIntakeAndProgressToStep(
 		ctx,
-		"For business case Cypress test",
+		"For Business Case Cypress test",
 		&intakeID,
 		mock.EndToEndUserOne,
 		store,

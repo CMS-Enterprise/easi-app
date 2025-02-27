@@ -1,12 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
+import NeedHelpBox from 'features/Help/NeedHelpBox';
 
 import CollapsableList from 'components/CollapsableList';
 import HelpPageIntro from 'components/HelpPageIntro';
 import PageHeading from 'components/PageHeading';
 import { ArticleComponentProps } from 'types/articles';
-import NeedHelpBox from 'views/Help/InfoBox/NeedHelpBox';
 
 export default ({ helpArticle, className }: ArticleComponentProps) => {
   const { t } = useTranslation('governanceReviewTeam');

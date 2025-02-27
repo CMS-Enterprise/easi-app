@@ -1,10 +1,13 @@
+import {
+  AugmentedSystemIntakeContact,
+  SystemIntakeCollaboratorInput
+} from 'gql/generated/graphql';
+import { FundingSource as FundingSourceType } from 'gql/legacyGQL/types/FundingSource';
+
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
-import { FundingSource as FundingSourceType } from 'queries/types/FundingSource';
-import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 
 import {
-  SystemIntakeCollaboratorInput,
   SystemIntakeSoftwareAcquisitionMethods,
   SystemIntakeStatusAdmin
 } from './graphql-global-types';
@@ -86,7 +89,7 @@ export type ContactDetailsForm = {
 };
 
 /** Funding source formatted for API */
-export type FundingSource = Omit<FundingSourceType, '__typename'>;
+export type FundingSource = FundingSourceType;
 
 /** Contract details form */
 export type ContractDetailsForm = {

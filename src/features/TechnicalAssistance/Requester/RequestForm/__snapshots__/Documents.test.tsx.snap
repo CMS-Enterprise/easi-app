@@ -1,0 +1,409 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Trb Request form: Supporting documents > renders states with documents loaded 1`] = `
+<DocumentFragment>
+  <div
+    class="margin-top-5 margin-bottom-4"
+  >
+    <a
+      class="usa-button"
+      href="/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents/upload"
+    >
+      Add a document
+    </a>
+  </div>
+  <div
+    class="easi-table--bleed-x easi-table--bottomless"
+  >
+    <div
+      class="usa-table-container--scrollable"
+      data-testid="scrollable-table-container"
+      tabindex="0"
+    >
+      <table
+        class="usa-table usa-table--borderless width-full"
+        data-testid="table"
+      >
+        <thead>
+          <tr
+            role="row"
+          >
+            <th
+              aria-sort="none"
+              class="border-bottom-2px"
+              colspan="1"
+              role="columnheader"
+              scope="col"
+              style="cursor: pointer;"
+              title="Toggle SortBy"
+            >
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+                type="button"
+              >
+                File name
+                <svg
+                  class="usa-icon margin-left-05"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
+              </button>
+            </th>
+            <th
+              aria-sort="none"
+              class="border-bottom-2px"
+              colspan="1"
+              role="columnheader"
+              scope="col"
+              style="cursor: pointer;"
+              title="Toggle SortBy"
+            >
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+                type="button"
+              >
+                Document type
+                <svg
+                  class="usa-icon margin-left-05"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
+              </button>
+            </th>
+            <th
+              aria-sort="descending"
+              class="border-bottom-2px"
+              colspan="1"
+              role="columnheader"
+              scope="col"
+              style="cursor: pointer;"
+              title="Toggle SortBy"
+            >
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+                type="button"
+              >
+                Upload date
+                <svg
+                  class="usa-icon margin-left-05"
+                  data-testid="caret--down"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                  />
+                </svg>
+              </button>
+            </th>
+            <th
+              aria-sort="none"
+              class="border-bottom-2px"
+              colspan="1"
+              role="columnheader"
+              scope="col"
+              style="cursor: pointer;"
+              title="Toggle SortBy"
+            >
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+                type="button"
+              >
+                Actions
+                <svg
+                  class="usa-icon margin-left-05"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          role="rowgroup"
+        >
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
+            >
+              baz.pdf
+            </td>
+            <td
+              role="cell"
+            >
+              Presentation slide deck
+            </td>
+            <td
+              role="cell"
+            >
+              12/20/2022
+            </td>
+            <td
+              role="cell"
+            >
+              <em>
+                Virus scan in progress...
+              </em>
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
+            >
+              bar.pdf
+            </td>
+            <td
+              role="cell"
+            >
+              test other
+            </td>
+            <td
+              role="cell"
+            >
+              12/20/2022
+            </td>
+            <td
+              role="cell"
+            >
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                View
+              </button>
+              <button
+                class="usa-button usa-button--unstyled margin-left-2 text-error"
+                data-testid="button"
+                type="button"
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <td
+              role="cell"
+            >
+              foo.pdf
+            </td>
+            <td
+              role="cell"
+            >
+              Architecture diagram
+            </td>
+            <td
+              role="cell"
+            >
+              12/20/2022
+            </td>
+            <td
+              role="cell"
+            >
+              Unavailable
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+    class="margin-top-7 border-base-light border-top-1px"
+  >
+    <ul
+      class="usa-button-group margin-top-2"
+    >
+      <li
+        class="usa-button-group__item"
+      >
+        <div
+          class="display-flex flex-align-center"
+        >
+          <button
+            class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+            data-testid="button"
+            type="button"
+          >
+            Back
+          </button>
+        </div>
+      </li>
+      <li
+        class="usa-button-group__item"
+      >
+        <div
+          class="display-flex flex-align-center"
+        >
+          <button
+            class="usa-button margin-top-0"
+            data-testid="button"
+            type="submit"
+          >
+            Next
+          </button>
+        </div>
+      </li>
+    </ul>
+    <button
+      class="usa-button usa-button--unstyled margin-top-2 display-flex flex-align-center"
+      data-testid="button"
+      type="button"
+    >
+      <svg
+        class="usa-icon margin-right-05"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+        />
+      </svg>
+      Save and exit
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Trb Request form: Supporting documents > renders states without documents 1`] = `
+<DocumentFragment>
+  <div
+    class="margin-top-5 margin-bottom-4"
+  >
+    <a
+      class="usa-button"
+      href="/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents/upload"
+    >
+      Add a document
+    </a>
+  </div>
+  <div
+    class="easi-table--bleed-x easi-table--bottomless"
+  >
+    <div
+      class="usa-alert usa-alert--info usa-alert--slim"
+      data-testid="alert"
+    >
+      <div
+        class="usa-alert__body"
+      >
+        <p
+          class="usa-alert__text"
+        >
+          You have not uploaded any supporting documents for this request.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div
+    class="margin-top-7 border-base-light border-top-1px"
+  >
+    <ul
+      class="usa-button-group margin-top-2"
+    >
+      <li
+        class="usa-button-group__item"
+      >
+        <div
+          class="display-flex flex-align-center"
+        >
+          <button
+            class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+            data-testid="button"
+            type="button"
+          >
+            Back
+          </button>
+        </div>
+      </li>
+      <li
+        class="usa-button-group__item"
+      >
+        <div
+          class="display-flex flex-align-center"
+        >
+          <button
+            class="usa-button usa-button--outline margin-top-0"
+            data-testid="button"
+            type="submit"
+          >
+            Continue without adding documents
+          </button>
+        </div>
+      </li>
+    </ul>
+    <button
+      class="usa-button usa-button--unstyled margin-top-2 display-flex flex-align-center"
+      data-testid="button"
+      type="button"
+    >
+      <svg
+        class="usa-icon margin-right-05"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+        />
+      </svg>
+      Save and exit
+    </button>
+  </div>
+</DocumentFragment>
+`;

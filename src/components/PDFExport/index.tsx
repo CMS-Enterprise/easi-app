@@ -3,7 +3,7 @@ import { useReactToPrint } from 'react-to-print';
 import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
-import IconButton from 'components/shared/IconButton';
+import IconButton from 'components/IconButton';
 
 type PDFExportButtonProps = {
   children: React.ReactNode;
@@ -60,7 +60,7 @@ const PDFExport = ({
     // Set auto margins back to show everything the browser renders
     pageStyle: `
       @page {
-        margin: auto;
+        margin: 1in;
       }
     `
   });

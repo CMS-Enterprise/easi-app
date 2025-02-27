@@ -1,34 +1,21 @@
 import { useCallback, useMemo } from 'react';
-import { FetchResult, useMutation, useQuery } from '@apollo/client';
-
-import {
-  CreateTRBRequestAttendeeQuery,
-  DeleteTRBRequestAttendeeQuery,
-  GetTRBRequestAttendeesQuery,
-  UpdateTRBRequestAttendeeQuery
-} from 'queries/TrbAttendeeQueries';
-import {
-  CreateTRBRequestAttendee,
-  CreateTRBRequestAttendeeVariables
-} from 'queries/types/CreateTRBRequestAttendee';
-import {
-  DeleteTRBRequestAttendee,
-  DeleteTRBRequestAttendeeVariables
-} from 'queries/types/DeleteTRBRequestAttendee';
-import {
-  GetTRBRequestAttendees,
-  GetTRBRequestAttendeesVariables
-} from 'queries/types/GetTRBRequestAttendees';
-import { TRBAttendee } from 'queries/types/TRBAttendee';
-import {
-  UpdateTRBRequestAttendee,
-  UpdateTRBRequestAttendeeVariables
-} from 'queries/types/UpdateTRBRequestAttendee';
+import { FetchResult } from '@apollo/client';
+import { initialAttendee } from 'features/TechnicalAssistance/Requester/RequestForm/Attendees';
 import {
   CreateTRBRequestAttendeeInput,
-  UpdateTRBRequestAttendeeInput
-} from 'types/graphql-global-types';
-import { initialAttendee } from 'views/TechnicalAssistance/RequestForm/Attendees';
+  CreateTRBRequestAttendeeMutation,
+  DeleteTRBRequestAttendeeMutation,
+  GetTRBRequestAttendeesQuery,
+  UpdateTRBRequestAttendeeInput,
+  UpdateTRBRequestAttendeeMutation,
+  useCreateTRBRequestAttendeeMutation,
+  useDeleteTRBRequestAttendeeMutation,
+  useGetTRBRequestAttendeesQuery,
+  useUpdateTRBRequestAttendeeMutation
+} from 'gql/generated/graphql';
+
+type TRBAttendee =
+  GetTRBRequestAttendeesQuery['trbRequest']['attendees'][number];
 
 /** useTRBAttendees hook return type */
 type UseTRBAttendees = {
@@ -44,15 +31,15 @@ type UseTRBAttendees = {
   /** Creates new TRB attendee */
   createAttendee: (
     input: CreateTRBRequestAttendeeInput
-  ) => Promise<FetchResult<CreateTRBRequestAttendee>>;
+  ) => Promise<FetchResult<CreateTRBRequestAttendeeMutation>>;
   /** Updates TRB attendee */
   updateAttendee: (
     input: UpdateTRBRequestAttendeeInput
-  ) => Promise<FetchResult<UpdateTRBRequestAttendee>>;
+  ) => Promise<FetchResult<UpdateTRBRequestAttendeeMutation>>;
   /** Deletes TRB attendee */
   deleteAttendee: (
     id: string
-  ) => Promise<FetchResult<DeleteTRBRequestAttendee>>;
+  ) => Promise<FetchResult<DeleteTRBRequestAttendeeMutation>>;
 };
 
 /**
@@ -65,10 +52,7 @@ export default function useTRBAttendees(
   /**
    * Query to get attendees by TRB request ID
    */
-  const { data, loading } = useQuery<
-    GetTRBRequestAttendees,
-    GetTRBRequestAttendeesVariables
-  >(GetTRBRequestAttendeesQuery, {
+  const { data, loading } = useGetTRBRequestAttendeesQuery({
     variables: { id: trbRequestId }
   });
 
@@ -88,26 +72,17 @@ export default function useTRBAttendees(
   const requester: TRBAttendee | undefined = attendees[attendees.length - 1];
 
   /** Create attendee mutation */
-  const [createAttendee] = useMutation<
-    CreateTRBRequestAttendee,
-    CreateTRBRequestAttendeeVariables
-  >(CreateTRBRequestAttendeeQuery, {
+  const [createAttendee] = useCreateTRBRequestAttendeeMutation({
     refetchQueries: ['GetTRBRequestAttendees']
   });
 
   /** Update attendee mutation */
-  const [updateAttendee] = useMutation<
-    UpdateTRBRequestAttendee,
-    UpdateTRBRequestAttendeeVariables
-  >(UpdateTRBRequestAttendeeQuery, {
+  const [updateAttendee] = useUpdateTRBRequestAttendeeMutation({
     refetchQueries: ['GetTRBRequestAttendees']
   });
 
   /** Delete attendee mutation */
-  const [deleteAttendee] = useMutation<
-    DeleteTRBRequestAttendee,
-    DeleteTRBRequestAttendeeVariables
-  >(DeleteTRBRequestAttendeeQuery, {
+  const [deleteAttendee] = useDeleteTRBRequestAttendeeMutation({
     refetchQueries: ['GetTRBRequestAttendees']
   });
 

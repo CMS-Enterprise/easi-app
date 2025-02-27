@@ -2,7 +2,7 @@ import React from 'react';
 import { Trans } from 'react-i18next';
 import classNames from 'classnames';
 
-import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 
 const RequiredFieldsText = ({ className }: { className?: string }) => {
   return (

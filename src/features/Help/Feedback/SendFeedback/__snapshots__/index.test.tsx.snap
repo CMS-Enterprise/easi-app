@@ -1,0 +1,1262 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Help forms > submits the "Report A Problem" form successfully after a failed attempt 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container help-send-feedback"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <button
+      class="usa-button usa-button--unstyled margin-top-6"
+      data-testid="button"
+      type="button"
+    >
+      <svg
+        class="usa-icon margin-right-05 margin-top-3px text-tbottom"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+        />
+      </svg>
+      Close tab without sending feedback
+    </button>
+    <h1
+      class="margin-top-2 margin-bottom-1"
+    >
+      Report a problem
+    </h1>
+    <div
+      class="font-body-lg line-height-body-2 line-height-body-5 text-light"
+    >
+      Did you notice something wrong with EASi? Let us know using the form below.
+    </div>
+    <div
+      class="grid-row"
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col-12 desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <form
+          action="#"
+        >
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <fieldset
+              class="usa-fieldset"
+              data-testid="fieldset"
+            >
+              <legend
+                class="usa-legend"
+              >
+                <div>
+                  Would you like your feedback to remain anonymous?
+                </div>
+                <div
+                  class="line-height-body-5 text-base text-normal text-ls-neg-1"
+                >
+                  If you select yes, your name and email will not be recorded with your feedback.
+                </div>
+              </legend>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="isAnonymous-yes"
+                  id="isAnonymous-yes"
+                  name="isAnonymous"
+                  type="radio"
+                  value="true"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="isAnonymous-yes"
+                >
+                  Yes
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="isAnonymous-no"
+                  id="isAnonymous-no"
+                  name="isAnonymous"
+                  type="radio"
+                  value="false"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="isAnonymous-no"
+                >
+                  No
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <fieldset
+              class="usa-fieldset"
+              data-testid="fieldset"
+            >
+              <legend
+                class="usa-legend"
+              >
+                Which EASi service were you using?
+              </legend>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="easiService-itGovernance"
+                  id="easiService-itGovernance"
+                  name="easiService"
+                  type="radio"
+                  value="IT Governance"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="easiService-itGovernance"
+                >
+                  IT Governance
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="easiService-technicalAssistance"
+                  id="easiService-technicalAssistance"
+                  name="easiService"
+                  type="radio"
+                  value="Technical Assistance"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="easiService-technicalAssistance"
+                >
+                  Technical Assistance
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="easiService-systems"
+                  id="easiService-systems"
+                  name="easiService"
+                  type="radio"
+                  value="Systems"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="easiService-systems"
+                >
+                  Systems
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="easiService-help"
+                  id="easiService-help"
+                  name="easiService"
+                  type="radio"
+                  value="Help"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="easiService-help"
+                >
+                  Help
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="easiService-other"
+                  id="easiService-other"
+                  name="easiService"
+                  type="radio"
+                  value="Other"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="easiService-other"
+                >
+                  Other
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <label
+              class="usa-label"
+              data-testid="label"
+              for="whatWereYouDoing"
+            >
+              What were you doing?
+            </label>
+            <textarea
+              class="usa-textarea height-card"
+              data-testid="textarea"
+              id="whatWereYouDoing"
+              name="whatWereYouDoing"
+            />
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <label
+              class="usa-label"
+              data-testid="label"
+              for="whatWentWrong"
+            >
+              What went wrong?
+            </label>
+            <textarea
+              class="usa-textarea height-card"
+              data-testid="textarea"
+              id="whatWentWrong"
+              name="whatWentWrong"
+            />
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <fieldset
+              class="usa-fieldset"
+              data-testid="fieldset"
+            >
+              <legend
+                class="usa-legend"
+              >
+                How severe was this problem?
+              </legend>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="howSevereWasTheProblem-itPreventedMe"
+                  id="howSevereWasTheProblem-itPreventedMe"
+                  name="howSevereWasTheProblem"
+                  type="radio"
+                  value="It prevented me from completing my task"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="howSevereWasTheProblem-itPreventedMe"
+                >
+                  It prevented me from completing my task
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="howSevereWasTheProblem-itDelayedCompletion"
+                  id="howSevereWasTheProblem-itDelayedCompletion"
+                  name="howSevereWasTheProblem"
+                  type="radio"
+                  value="It delayed completion of my task"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="howSevereWasTheProblem-itDelayedCompletion"
+                >
+                  It delayed completion of my task
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="howSevereWasTheProblem-itWasMinor"
+                  id="howSevereWasTheProblem-itWasMinor"
+                  name="howSevereWasTheProblem"
+                  type="radio"
+                  value="It was a minor annoyance"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="howSevereWasTheProblem-itWasMinor"
+                >
+                  It was a minor annoyance
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="howSevereWasTheProblem-other"
+                  id="howSevereWasTheProblem-other"
+                  name="howSevereWasTheProblem"
+                  type="radio"
+                  value="Other"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="howSevereWasTheProblem-other"
+                >
+                  Other
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            class="margin-top-4 margin-bottom-9"
+          >
+            <button
+              class="usa-button usa-button--inverse margin-bottom-1 tablet:margin-bottom-0"
+              data-testid="button"
+              type="submit"
+            >
+              Send report
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</DocumentFragment>
+`;
+
+exports[`Help forms > submits the "Report A Problem" form successfully after a failed attempt 2`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container help-send-feedback"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <button
+      class="usa-button usa-button--unstyled margin-top-6"
+      data-testid="button"
+      type="button"
+    >
+      <svg
+        class="usa-icon margin-right-05 margin-top-3px text-tbottom"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+        />
+      </svg>
+      Close tab
+    </button>
+    <h1
+      class="margin-top-2 margin-bottom-1"
+    >
+      Thank you for your feedback
+    </h1>
+    <div
+      class="font-body-lg line-height-body-2 line-height-body-5 text-light"
+    >
+      The EASi team has received your report and will review it.
+    </div>
+    <div
+      class="margin-top-3 height-card-lg"
+    >
+      <button
+        class="usa-button"
+        data-testid="button"
+        type="button"
+      >
+        Close tab and return to EASi
+      </button>
+      <div
+        class="margin-top-5"
+      >
+        <div
+          class="text-bold"
+        >
+          Send another report
+        </div>
+        <div
+          class="margin-top-1"
+        >
+          <button
+            class="usa-button usa-button--unstyled"
+            data-testid="button"
+            type="button"
+          >
+            Report a problem with EASi
+          </button>
+        </div>
+        <div
+          class="margin-top-05"
+        >
+          <button
+            class="usa-button usa-button--unstyled"
+            data-testid="button"
+            type="button"
+          >
+            Send feedback for the EASi team
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</DocumentFragment>
+`;
+
+exports[`Help forms > submits the "Send Feedback" form successfully after a failed attempt 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container help-send-feedback"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <button
+      class="usa-button usa-button--unstyled margin-top-6"
+      data-testid="button"
+      type="button"
+    >
+      <svg
+        class="usa-icon margin-right-05 margin-top-3px text-tbottom"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+        />
+      </svg>
+      Close tab without sending feedback
+    </button>
+    <h1
+      class="margin-top-2 margin-bottom-1"
+    >
+      Send feedback
+    </h1>
+    <div
+      class="font-body-lg line-height-body-2 line-height-body-5 text-light"
+    >
+      Have a suggestion for how to improve EASi? Let us know using the form below.
+    </div>
+    <div
+      class="grid-row"
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col-12 desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <form
+          action="#"
+        >
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <fieldset
+              class="usa-fieldset"
+              data-testid="fieldset"
+            >
+              <legend
+                class="usa-legend"
+              >
+                <div>
+                  Would you like your feedback to remain anonymous?
+                </div>
+                <div
+                  class="line-height-body-5 text-base text-normal text-ls-neg-1"
+                >
+                  If you select yes, your name and email will not be recorded with your feedback.
+                </div>
+              </legend>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="isAnonymous-yes"
+                  id="isAnonymous-yes"
+                  name="isAnonymous"
+                  type="radio"
+                  value="true"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="isAnonymous-yes"
+                >
+                  Yes
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="isAnonymous-no"
+                  id="isAnonymous-no"
+                  name="isAnonymous"
+                  type="radio"
+                  value="false"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="isAnonymous-no"
+                >
+                  No
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <fieldset
+              class="usa-fieldset"
+              data-testid="fieldset"
+            >
+              <legend
+                class="usa-legend"
+              >
+                Which EASi service were you using?
+              </legend>
+              <div
+                class="usa-checkbox"
+                data-testid="checkbox"
+              >
+                <input
+                  class="usa-checkbox__input"
+                  data-testid="easiServicesUsed-itGovernance"
+                  id="easiServicesUsed-itGovernance"
+                  name="easiServicesUsed"
+                  type="checkbox"
+                  value="IT Governance"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="easiServicesUsed-itGovernance"
+                >
+                  IT Governance
+                </label>
+              </div>
+              <div
+                class="usa-checkbox"
+                data-testid="checkbox"
+              >
+                <input
+                  class="usa-checkbox__input"
+                  data-testid="easiServicesUsed-technicalAssistance"
+                  id="easiServicesUsed-technicalAssistance"
+                  name="easiServicesUsed"
+                  type="checkbox"
+                  value="Technical Assistance"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="easiServicesUsed-technicalAssistance"
+                >
+                  Technical Assistance
+                </label>
+              </div>
+              <div
+                class="usa-checkbox"
+                data-testid="checkbox"
+              >
+                <input
+                  class="usa-checkbox__input"
+                  data-testid="easiServicesUsed-systems"
+                  id="easiServicesUsed-systems"
+                  name="easiServicesUsed"
+                  type="checkbox"
+                  value="Systems"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="easiServicesUsed-systems"
+                >
+                  Systems
+                </label>
+              </div>
+              <div
+                class="usa-checkbox"
+                data-testid="checkbox"
+              >
+                <input
+                  class="usa-checkbox__input"
+                  data-testid="easiServicesUsed-help"
+                  id="easiServicesUsed-help"
+                  name="easiServicesUsed"
+                  type="checkbox"
+                  value="Help"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="easiServicesUsed-help"
+                >
+                  Help
+                </label>
+              </div>
+              <div
+                class="usa-checkbox"
+                data-testid="checkbox"
+              >
+                <input
+                  class="usa-checkbox__input"
+                  data-testid="easiServicesUsed-other"
+                  id="easiServicesUsed-other"
+                  name="easiServicesUsed"
+                  type="checkbox"
+                  value="Other"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="easiServicesUsed-other"
+                >
+                  Other
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <label
+              class="usa-label"
+              data-testid="label"
+              for="cmsRole"
+            >
+              What is your role at CMS?
+            </label>
+            <input
+              class="usa-input"
+              data-testid="textInput"
+              id="cmsRole"
+              name="cmsRole"
+              value=""
+            />
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <fieldset
+              class="usa-fieldset"
+              data-testid="fieldset"
+            >
+              <legend
+                class="usa-legend"
+              >
+                The system was easy to use.
+              </legend>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="systemEasyToUse-agree"
+                  id="systemEasyToUse-agree"
+                  name="systemEasyToUse"
+                  type="radio"
+                  value="Agree"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="systemEasyToUse-agree"
+                >
+                  Agree
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="systemEasyToUse-disagree"
+                  id="systemEasyToUse-disagree"
+                  name="systemEasyToUse"
+                  type="radio"
+                  value="Disagree"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="systemEasyToUse-disagree"
+                >
+                  Disagree
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="systemEasyToUse-imNotSure"
+                  id="systemEasyToUse-imNotSure"
+                  name="systemEasyToUse"
+                  type="radio"
+                  value="I’m not sure"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="systemEasyToUse-imNotSure"
+                >
+                  I’m not sure
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <fieldset
+              class="usa-fieldset"
+              data-testid="fieldset"
+            >
+              <legend
+                class="usa-legend"
+              >
+                I didn’t need help answering any questions.
+              </legend>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="didntNeedHelpAnswering-agree"
+                  id="didntNeedHelpAnswering-agree"
+                  name="didntNeedHelpAnswering"
+                  type="radio"
+                  value="Agree"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="didntNeedHelpAnswering-agree"
+                >
+                  Agree
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="didntNeedHelpAnswering-disagree"
+                  id="didntNeedHelpAnswering-disagree"
+                  name="didntNeedHelpAnswering"
+                  type="radio"
+                  value="Disagree"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="didntNeedHelpAnswering-disagree"
+                >
+                  Disagree
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="didntNeedHelpAnswering-didntFillForm"
+                  id="didntNeedHelpAnswering-didntFillForm"
+                  name="didntNeedHelpAnswering"
+                  type="radio"
+                  value="I didn’t fill out a form in EASi"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="didntNeedHelpAnswering-didntFillForm"
+                >
+                  I didn’t fill out a form in EASi
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="didntNeedHelpAnswering-imNotSure"
+                  id="didntNeedHelpAnswering-imNotSure"
+                  name="didntNeedHelpAnswering"
+                  type="radio"
+                  value="I’m not sure"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="didntNeedHelpAnswering-imNotSure"
+                >
+                  I’m not sure
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <fieldset
+              class="usa-fieldset"
+              data-testid="fieldset"
+            >
+              <legend
+                class="usa-legend"
+              >
+                All the questions on the form were relevant to my use case.
+              </legend>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="questionsWereRelevant-agree"
+                  id="questionsWereRelevant-agree"
+                  name="questionsWereRelevant"
+                  type="radio"
+                  value="Agree"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="questionsWereRelevant-agree"
+                >
+                  Agree
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="questionsWereRelevant-disagree"
+                  id="questionsWereRelevant-disagree"
+                  name="questionsWereRelevant"
+                  type="radio"
+                  value="Disagree"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="questionsWereRelevant-disagree"
+                >
+                  Disagree
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="questionsWereRelevant-didntFillForm"
+                  id="questionsWereRelevant-didntFillForm"
+                  name="questionsWereRelevant"
+                  type="radio"
+                  value="I didn’t fill out a form in EASi"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="questionsWereRelevant-didntFillForm"
+                >
+                  I didn’t fill out a form in EASi
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="questionsWereRelevant-imNotSure"
+                  id="questionsWereRelevant-imNotSure"
+                  name="questionsWereRelevant"
+                  type="radio"
+                  value="I’m not sure"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="questionsWereRelevant-imNotSure"
+                >
+                  I’m not sure
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <fieldset
+              class="usa-fieldset"
+              data-testid="fieldset"
+            >
+              <legend
+                class="usa-legend"
+              >
+                I had access to all the information the form asked for.
+              </legend>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="hadAccessToInformation-agree"
+                  id="hadAccessToInformation-agree"
+                  name="hadAccessToInformation"
+                  type="radio"
+                  value="Agree"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="hadAccessToInformation-agree"
+                >
+                  Agree
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="hadAccessToInformation-disagree"
+                  id="hadAccessToInformation-disagree"
+                  name="hadAccessToInformation"
+                  type="radio"
+                  value="Disagree"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="hadAccessToInformation-disagree"
+                >
+                  Disagree
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="hadAccessToInformation-didntFillForm"
+                  id="hadAccessToInformation-didntFillForm"
+                  name="hadAccessToInformation"
+                  type="radio"
+                  value="I didn’t fill out a form in EASi"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="hadAccessToInformation-didntFillForm"
+                >
+                  I didn’t fill out a form in EASi
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="hadAccessToInformation-imNotSure"
+                  id="hadAccessToInformation-imNotSure"
+                  name="hadAccessToInformation"
+                  type="radio"
+                  value="I’m not sure"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="hadAccessToInformation-imNotSure"
+                >
+                  I’m not sure
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <fieldset
+              class="usa-fieldset"
+              data-testid="fieldset"
+            >
+              <legend
+                class="usa-legend"
+              >
+                Overall, how satisfied were you with the service?
+              </legend>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="howSatisfied-verySatisfied"
+                  id="howSatisfied-verySatisfied"
+                  name="howSatisfied"
+                  type="radio"
+                  value="Very satisfied"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="howSatisfied-verySatisfied"
+                >
+                  Very satisfied
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="howSatisfied-satisfied"
+                  id="howSatisfied-satisfied"
+                  name="howSatisfied"
+                  type="radio"
+                  value="Satisfied"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="howSatisfied-satisfied"
+                >
+                  Satisfied
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="howSatisfied-neutral"
+                  id="howSatisfied-neutral"
+                  name="howSatisfied"
+                  type="radio"
+                  value="Neutral"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="howSatisfied-neutral"
+                >
+                  Neutral
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="howSatisfied-dissatisfied"
+                  id="howSatisfied-dissatisfied"
+                  name="howSatisfied"
+                  type="radio"
+                  value="Dissatisfied"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="howSatisfied-dissatisfied"
+                >
+                  Dissatisfied
+                </label>
+              </div>
+              <div
+                class="usa-radio"
+                data-testid="radio"
+              >
+                <input
+                  class="usa-radio__input"
+                  data-testid="howSatisfied-veryDissatisfied"
+                  id="howSatisfied-veryDissatisfied"
+                  name="howSatisfied"
+                  type="radio"
+                  value="Very dissatisfied"
+                />
+                <label
+                  class="usa-radio__label"
+                  for="howSatisfied-veryDissatisfied"
+                >
+                  Very dissatisfied
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <label
+              class="usa-label"
+              data-testid="label"
+              for="howCanWeImprove"
+            >
+              How can we improve EASi?
+            </label>
+            <textarea
+              class="usa-textarea height-card"
+              data-testid="textarea"
+              id="howCanWeImprove"
+              name="howCanWeImprove"
+            />
+          </div>
+          <div
+            class="margin-top-4 margin-bottom-9"
+          >
+            <button
+              class="usa-button usa-button--inverse margin-bottom-1 tablet:margin-bottom-0"
+              data-testid="button"
+              type="submit"
+            >
+              Send feedback
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</DocumentFragment>
+`;
+
+exports[`Help forms > submits the "Send Feedback" form successfully after a failed attempt 2`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container help-send-feedback"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <button
+      class="usa-button usa-button--unstyled margin-top-6"
+      data-testid="button"
+      type="button"
+    >
+      <svg
+        class="usa-icon margin-right-05 margin-top-3px text-tbottom"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+        />
+      </svg>
+      Close tab
+    </button>
+    <h1
+      class="margin-top-2 margin-bottom-1"
+    >
+      Thank you for your feedback
+    </h1>
+    <div
+      class="font-body-lg line-height-body-2 line-height-body-5 text-light"
+    >
+      The EASi team has received your report and will review it.
+    </div>
+    <div
+      class="margin-top-3 height-card-lg"
+    >
+      <button
+        class="usa-button"
+        data-testid="button"
+        type="button"
+      >
+        Close tab and return to EASi
+      </button>
+      <div
+        class="margin-top-5"
+      >
+        <div
+          class="text-bold"
+        >
+          Send another report
+        </div>
+        <div
+          class="margin-top-1"
+        >
+          <button
+            class="usa-button usa-button--unstyled"
+            data-testid="button"
+            type="button"
+          >
+            Report a problem with EASi
+          </button>
+        </div>
+        <div
+          class="margin-top-05"
+        >
+          <button
+            class="usa-button usa-button--unstyled"
+            data-testid="button"
+            type="button"
+          >
+            Send feedback for the EASi team
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</DocumentFragment>
+`;

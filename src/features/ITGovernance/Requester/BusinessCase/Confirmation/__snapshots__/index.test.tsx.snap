@@ -1,0 +1,46 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`The Business Case Confirmation page > matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="grid-container margin-bottom-7"
+  >
+    <div>
+      <h1
+        aria-live="polite"
+        class="easi-h1"
+        tabindex="-1"
+      >
+        Your Business Case has been submitted
+      </h1>
+      <h2
+        class="margin-bottom-8 text-normal"
+      >
+        Your reference ID is 
+      </h2>
+      <div>
+        <a
+          class="display-flex"
+          href="/governance-task-list/12345"
+        >
+          <svg
+            aria-hidden="true"
+            class="usa-icon margin-x-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+            />
+          </svg>
+          Go back to governance task list
+        </a>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

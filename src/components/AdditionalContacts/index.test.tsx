@@ -1,14 +1,14 @@
 import React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
-
-import { getSystemIntakeQuery, systemIntake } from 'data/mock/systemIntake';
-import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
-import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
+import { GetSystemIntakeContactsDocument } from 'gql/generated/graphql';
+import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
 import {
   GetCedarContacts,
   GetCedarContactsVariables
-} from 'queries/types/GetCedarContacts';
+} from 'gql/legacyGQL/types/GetCedarContacts';
+import { getSystemIntakeQuery, systemIntake } from 'tests/mock/systemIntake';
+
 import { SystemIntakeContactProps } from 'types/systemIntake';
 import { MockedQuery } from 'types/util';
 
@@ -58,7 +58,7 @@ const additionalContacts: SystemIntakeContactProps[] = [
 /** System intake contacts query mock */
 const systemIntakeContactsQuery = {
   request: {
-    query: GetSystemIntakeContactsQuery,
+    query: GetSystemIntakeContactsDocument,
     variables: {
       id: systemIntake.id
     }

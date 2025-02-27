@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import TaskStatusTag, {
   TaskStatus,
   taskStatusClassName
-} from 'components/shared/TaskStatusTag';
+} from 'components/TaskStatusTag';
 import { TaskListItemDateInfo } from 'types/taskList';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
 

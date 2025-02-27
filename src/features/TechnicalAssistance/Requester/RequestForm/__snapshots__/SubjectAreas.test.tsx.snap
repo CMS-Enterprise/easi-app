@@ -1,0 +1,510 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Trb Request form: Subject areas > checks subject area form elements 1`] = `
+<DocumentFragment>
+  <form
+    class="usa-form trb-form-subject maxw-full"
+    data-testid="form"
+  >
+    <div
+      class="usa-form-group"
+      data-testid="formGroup"
+    >
+      <div
+        class="grid-row grid-gap-2 desktop:grid-col-12 flex-column subject-container-height"
+        data-testid="grid"
+      >
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="ACCESSIBILITY_COMPLIANCE"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="ACCESSIBILITY_COMPLIANCE"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="ACCESSIBILITY_COMPLIANCE"
+            >
+              Access Control and Identity Management
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT"
+            >
+              Accessibility Compliance
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="ARTIFICIAL_INTELLIGENCE"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="ARTIFICIAL_INTELLIGENCE"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="ARTIFICIAL_INTELLIGENCE"
+            >
+              Artificial Intelligence
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
+            >
+              Assistance with System Concept Development
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="BUSINESS_INTELLIGENCE"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="BUSINESS_INTELLIGENCE"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="BUSINESS_INTELLIGENCE"
+            >
+              Business Intelligence
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              checked=""
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="CLOUD_MIGRATION"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="CLOUD_MIGRATION"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="CLOUD_MIGRATION"
+            >
+              Cloud Migration
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="CONTAINERS_AND_MICROSERVICES"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="CONTAINERS_AND_MICROSERVICES"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="CONTAINERS_AND_MICROSERVICES"
+            >
+              Containers and Microservices
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="DISASTER_RECOVERY"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="DISASTER_RECOVERY"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="DISASTER_RECOVERY"
+            >
+              Disaster Recovery
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="EMAIL_INTEGRATION"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="EMAIL_INTEGRATION"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="EMAIL_INTEGRATION"
+            >
+              Email Integration
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="ENTERPRISE_DATA_LAKE_INTEGRATION"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="ENTERPRISE_DATA_LAKE_INTEGRATION"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="ENTERPRISE_DATA_LAKE_INTEGRATION"
+            >
+              Enterprise Data Lake Integration
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="FRAMEWORK_OR_TOOL_ALTERNATIVES"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="FRAMEWORK_OR_TOOL_ALTERNATIVES"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="FRAMEWORK_OR_TOOL_ALTERNATIVES"
+            >
+              Framework or Tool Alternatives
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="OPEN_SOURCE_SOFTWARE"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="OPEN_SOURCE_SOFTWARE"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="OPEN_SOURCE_SOFTWARE"
+            >
+              Open Source Software
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="PORTAL_INTEGRATION"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="PORTAL_INTEGRATION"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="PORTAL_INTEGRATION"
+            >
+              Portal Integration
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="SYSTEM_ARCHITECTURE_REVIEW"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="SYSTEM_ARCHITECTURE_REVIEW"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="SYSTEM_ARCHITECTURE_REVIEW"
+            >
+              TRA Clarifications and/or Applicability
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="SYSTEM_DISPOSITION_PLANNING"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="SYSTEM_DISPOSITION_PLANNING"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="SYSTEM_DISPOSITION_PLANNING"
+            >
+              System Architecture Review
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="TECHNICAL_REFERENCE_ARCHITECTURE"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="TECHNICAL_REFERENCE_ARCHITECTURE"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="TECHNICAL_REFERENCE_ARCHITECTURE"
+            >
+              System Disposition Planning
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="WEB_BASED_UI_SERVICES"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="WEB_BASED_UI_SERVICES"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="WEB_BASED_UI_SERVICES"
+            >
+              Web Services and Web APIs
+            </label>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input usa-checkbox__input--tile"
+              id="WEB_SERVICES_AND_APIS"
+              name="subjectAreaOptions"
+              type="checkbox"
+              value="WEB_SERVICES_AND_APIS"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="WEB_SERVICES_AND_APIS"
+            >
+              Web-based UI Services
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="desktop:grid-col-12 padding-top-1"
+      data-testid="grid"
+    >
+      <div
+        class="usa-form-group margin-top-1"
+        data-testid="formGroup"
+      >
+        <label
+          class="usa-label text-normal"
+          data-testid="label"
+          for="subjectAreaOptionOther"
+        >
+          <div
+            class="text-bold"
+          >
+            Other
+          </div>
+          <span
+            class="usa-hint"
+          >
+            <div>
+              Add a list of additional topics you’d like to discuss with the TRB. Please comma-separate your list if you are including multiple.
+            </div>
+          </span>
+        </label>
+        <textarea
+          class="usa-textarea usa-textarea__size-md"
+          data-testid="subjectAreaOptionOther"
+          id="subjectAreaOptionOther"
+          name="subjectAreaOptionOther"
+        />
+      </div>
+    </div>
+    <div
+      class="margin-top-5 border-base-light border-top-1px"
+    >
+      <ul
+        class="usa-button-group margin-top-2"
+      >
+        <li
+          class="usa-button-group__item"
+        >
+          <div
+            class="display-flex flex-align-center"
+          >
+            <button
+              class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+              data-testid="button"
+              type="button"
+            >
+              Back
+            </button>
+          </div>
+        </li>
+        <li
+          class="usa-button-group__item"
+        >
+          <div
+            class="display-flex flex-align-center"
+          >
+            <button
+              class="usa-button margin-top-0"
+              data-testid="button"
+              type="submit"
+            >
+              Next
+            </button>
+          </div>
+        </li>
+      </ul>
+      <button
+        class="usa-button usa-button--unstyled margin-top-2 display-flex flex-align-center"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          class="usa-icon margin-right-05"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Save and exit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;

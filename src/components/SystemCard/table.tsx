@@ -1,15 +1,16 @@
 import React, { useMemo } from 'react';
 import { Row, useFlexLayout, usePagination, useTable } from 'react-table';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
+import { getPersonFullName } from 'features/Systems/SystemProfile/util';
+import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
+import { SystemIntake_systems as SystemsType } from 'gql/legacyGQL/types/SystemIntake';
 
 import TablePagination from 'components/TablePagination';
-import { SystemIntake_systems as SystemsType } from 'queries/types/SystemIntake';
-import { getPersonFullName } from 'views/SystemProfile/helpers';
 
 import SystemCard from '.';
 
 type SystemCardTableProps = {
-  systems: SystemsType[];
+  systems: GetTRBRequestSummaryQuery['trbRequest']['systems'];
 };
 
 /**

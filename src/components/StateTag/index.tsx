@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { lowerCase } from 'lodash';
 
-import Tag from 'components/shared/Tag';
+import Tag from 'components/Tag';
 import { SystemIntakeState } from 'types/graphql-global-types';
 
 import './index.scss';

@@ -1,20 +1,20 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
+import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
 import i18next from 'i18next';
 
-import ReviewRow from 'components/ReviewRow';
 import {
   DescriptionDefinition,
   DescriptionList,
   DescriptionTerm
-} from 'components/shared/DescriptionGroup';
+} from 'components/DescriptionGroup';
+import ReviewRow from 'components/ReviewRow';
 import { yesNoMap } from 'data/common';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { SystemIntake } from 'queries/types/SystemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
-import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
 import './index.scss';
 
@@ -39,6 +39,7 @@ export const SystemIntakeReview = ({
       data: { requester, businessOwner, productManager, isso }
     }
   } = useSystemIntakeContacts(systemIntake.id);
+
   const { t } = useTranslation('intake');
 
   const fundingDefinition = () => {
@@ -264,11 +265,13 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contact Details</h2>
+      <h2 className="font-heading-xl">Contact details</h2>
 
       <DescriptionList title={t('review.contactDetails')}>
         <ReviewRow>
-          <div data-testid={`contact-requester-${requester.id}`}>
+          <div
+            data-testid={`contact-requester-${requester.id || requester.euaUserId}`}
+          >
             <DescriptionTerm term={t('fields.requester')} />
             <DescriptionDefinition definition={requester.commonName} />
           </div>
@@ -381,7 +384,7 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contract Details</h2>
+      <h2 className="font-heading-xl">Contract details</h2>
 
       <DescriptionList title={t('review.contractDetails')}>
         <ReviewRow>

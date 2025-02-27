@@ -33,9 +33,9 @@ func checkSystemIntakeSubmitted(intake *models.SystemIntake) (string, string) {
 	return "SystemIntake", "must have already been submitted"
 }
 
-// BusinessCaseForCreation checks if it's a valid business case to create
+// BusinessCaseForCreation checks if it's a valid Business Case to create
 func BusinessCaseForCreation(businessCase *models.BusinessCaseWithCosts, intake *models.SystemIntake) error {
-	// We return an empty id in this error because the business case hasn't been created
+	// We return an empty id in this error because the Business Case hasn't been created
 	expectedErr := apperrors.ValidationError{
 		Err:         errors.New("business case failed validations"),
 		Model:       businessCase,
@@ -60,9 +60,9 @@ func BusinessCaseForCreation(businessCase *models.BusinessCaseWithCosts, intake 
 	return nil
 }
 
-// BusinessCaseForUpdate checks if it's a valid business case to update
+// BusinessCaseForUpdate checks if it's a valid Business Case to update
 func BusinessCaseForUpdate(businessCase *models.BusinessCaseWithCosts) error {
-	// We return an empty id in this error because the business case hasn't been created
+	// We return an empty id in this error because the Business Case hasn't been created
 	expectedErr := apperrors.NewValidationError(
 		errors.New("business case failed validations"),
 		businessCase,
@@ -186,9 +186,9 @@ func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCaseWithCost
 	return validations
 }
 
-// BusinessCaseForSubmit checks if it's a valid business case to update
+// BusinessCaseForSubmit checks if it's a valid Business Case to update
 func BusinessCaseForSubmit(businessCase *models.BusinessCaseWithCosts) error {
-	// We return an empty id in this error because the business case hasn't been created
+	// We return an empty id in this error because the Business Case hasn't been created
 	expectedErr := apperrors.NewValidationError(
 		errors.New("business case failed validations"),
 		businessCase,

@@ -700,6 +700,16 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 	}, nil
 }
 
+// SetSystemIntakeGRBPresentationLinks is the resolver for the setSystemIntakeGRBPresentationLinks field.
+func (r *mutationResolver) SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error) {
+	return resolvers.SetSystemIntakeGRBPresentationLinks(ctx, r.store, r.s3Client, input)
+}
+
+// DeleteSystemIntakeGRBPresentationLinks is the resolver for the deleteSystemIntakeGRBPresentationLinks field.
+func (r *mutationResolver) DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, input models.DeleteSystemIntakeGRBPresentationLinksInput) (uuid.UUID, error) {
+	return input.SystemIntakeID, r.store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
+}
+
 // ArchiveSystemIntake is the resolver for the archiveSystemIntake field.
 func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
@@ -713,15 +723,15 @@ func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID
 
 	now := helpers.PointerTo(time.Now())
 
-	// close out any associated business case
+	// close out any associated Business Case
 	if intake.BusinessCaseID != nil {
-		// get business case
+		// get Business Case
 		businessCase, err := r.store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
 		if err != nil {
 			return nil, err
 		}
 
-		// only attempt to close if business case is not yet closed
+		// only attempt to close if Business Case is not yet closed
 		if businessCase.Status != models.BusinessCaseStatusCLOSED {
 			businessCase.UpdatedAt = now
 			businessCase.Status = models.BusinessCaseStatusCLOSED
@@ -1927,6 +1937,11 @@ func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.S
 	return resolvers.SystemIntakeGRBDiscussions(ctx, r.store, obj.ID)
 }
 
+// GrbPresentationLinks is the resolver for the grbPresentationLinks field.
+func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error) {
+	return dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.ID)
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
@@ -1962,6 +1977,28 @@ func (r *systemIntakeDocumentResolver) CanView(ctx context.Context, obj *models.
 		return false, err
 	}
 	return resolvers.CanViewDocument(ctx, grbUsers, obj), nil
+}
+
+// TranscriptFileURL is the resolver for the transcriptFileURL field.
+func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error) {
+	return resolvers.SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx, r.s3Client, obj.SystemIntakeID)
+}
+
+// TranscriptFileStatus is the resolver for the transcriptFileStatus field.
+func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error) {
+	logger := appcontext.ZLogger(ctx)
+	return resolvers.SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx, logger, r.s3Client, obj.SystemIntakeID)
+}
+
+// PresentationDeckFileURL is the resolver for the presentationDeckFileURL field.
+func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error) {
+	return resolvers.SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx, r.s3Client, obj.SystemIntakeID)
+}
+
+// PresentationDeckFileStatus is the resolver for the presentationDeckFileStatus field.
+func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileStatus(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*models.SystemIntakeDocumentStatus, error) {
+	logger := appcontext.ZLogger(ctx)
+	return resolvers.SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx, logger, r.s3Client, obj.SystemIntakeID)
 }
 
 // VotingRole is the resolver for the votingRole field.
@@ -2252,6 +2289,11 @@ func (r *Resolver) SystemIntakeDocument() generated.SystemIntakeDocumentResolver
 	return &systemIntakeDocumentResolver{r}
 }
 
+// SystemIntakeGRBPresentationLinks returns generated.SystemIntakeGRBPresentationLinksResolver implementation.
+func (r *Resolver) SystemIntakeGRBPresentationLinks() generated.SystemIntakeGRBPresentationLinksResolver {
+	return &systemIntakeGRBPresentationLinksResolver{r}
+}
+
 // SystemIntakeGRBReviewer returns generated.SystemIntakeGRBReviewerResolver implementation.
 func (r *Resolver) SystemIntakeGRBReviewer() generated.SystemIntakeGRBReviewerResolver {
 	return &systemIntakeGRBReviewerResolver{r}
@@ -2312,6 +2354,7 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
+type systemIntakeGRBPresentationLinksResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }

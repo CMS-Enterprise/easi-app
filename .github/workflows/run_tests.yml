@@ -9,7 +9,7 @@ on:
         default: false
 
 env:
-  EASI_APP_NODE_VERSION: "18.20.4"
+  EASI_APP_NODE_VERSION: "20.12.2"
   GIT_HASH: ${{ github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   DOCKER_BUILDKIT: 1
@@ -56,6 +56,7 @@ jobs:
           AWS_S3_FILE_UPLOAD_BUCKET: easi-app-file-uploads
           CEDAR_CORE_MOCK: true # Don't want real calls to CEDAR in our CI env
           CEDAR_INTAKE_ENABLED: false # Don't want real calls to CEDAR in our CI env
+          CEDAR_INTAKE_PUBLISHER_ENABLED: false # Don't want real calls to CEDAR in our CI env
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
@@ -155,6 +156,7 @@ jobs:
           OKTA_TEST_USERNAME: ${{ secrets.OKTA_TEST_USERNAME }}
           CEDAR_CORE_MOCK: true # Don't want real calls to CEDAR in our CI env
           CEDAR_INTAKE_ENABLED: false # Don't want real calls to CEDAR in our CI env
+          CEDAR_INTAKE_PUBLISHER_ENABLED: false # Don't want real calls to CEDAR in our CI env
         run: |
           ./scripts/run-cypress-test-docker
       - name: Upload cypress videos

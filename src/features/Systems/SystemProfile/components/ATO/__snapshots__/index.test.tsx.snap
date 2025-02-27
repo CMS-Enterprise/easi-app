@@ -1,0 +1,638 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ATO subpage for System Profile > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="easi-section easi-section__border-bottom margin-bottom-4 padding-bottom-4"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-0 margin-bottom-4"
+      id="ato"
+    >
+      Authority to Operate (ATO)
+    </h2>
+    <ul
+      class="usa-card-group margin-0"
+      data-testid="CardGroup"
+    >
+      <li
+        class="usa-card grid-col-12 bg-error-dark"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <header
+            class="usa-card__header padding-2 padding-bottom-0 text-top text-white"
+            data-testid="CardHeader"
+          >
+            <dt
+              class="text-bold margin-bottom-05"
+            >
+              Status
+            </dt>
+            <dd
+              class="description-definition margin-0 line-height-body-3 font-body-lg text-bold margin-bottom-2"
+            >
+              Expired
+            </dd>
+            <div
+              class="easi-divider grid-col-12 border-error-darker"
+            />
+          </header>
+          <div
+            class="usa-card__footer padding-2 text-white"
+            data-testid="CardFooter"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-6"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Expiration Date
+                </dt>
+                <dd
+                  class="description-definition margin-0 line-height-body-3 font-body-md"
+                >
+                  July 30, 2022
+                </dd>
+              </div>
+              <div
+                class="desktop:grid-col-6"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Effective Date
+                </dt>
+                <dd
+                  class="description-definition margin-0 line-height-body-3 font-body-md"
+                >
+                  February 26, 2022
+                </dd>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <div
+        class="easi-help-text display-flex"
+        data-testid="atoExpirationLogicHelpText"
+      >
+        <svg
+          class="usa-icon margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+          />
+        </svg>
+        Active ATOs will become Due Soon when they are 90 days away from their expiration
+      </div>
+    </ul>
+    <div
+      class="easi-section margin-bottom-4 margin-top-4"
+      data-testid="section-wrapper"
+    >
+      <div
+        class="usa-summary-box"
+        data-testid="summary-box"
+      >
+        <div
+          class="usa-summary-box__body"
+        >
+          <h3
+            class="usa-summary-box__heading"
+          >
+            Security and privacy compliance at CMS
+          </h3>
+          <div
+            class="usa-summary-box__text"
+          >
+            <p>
+              Every information system operated by or on behalf of the U.S federal government is required to meet FISMA standards, which includes system authorization (ATO) signed by an Authoirizing Official (AO).
+            </p>
+            <div
+              class="margin-top-1"
+            >
+              <a
+                aria-label="Open 'Lean more about ATO' in a new tab"
+                class="usa-link usa-link--external line-height-body-5"
+                href="https://security.cms.gov/learn/authorization-operate-ato"
+                target="_blank"
+              >
+                Learn more about ATO
+                <span
+                  aria-hidden="true"
+                >
+                   
+                </span>
+              </a>
+            </div>
+            <p>
+              CMS FISMA Continuous Tracking System (CFACTS) is a CMS database that tracks application security deficiencies and POA&Ms, and supports the ATO process. IT is the CMS governance, risk, and compliance tool used as a repository to manage CMS' information systems security and privacy requirements.
+            </p>
+            <div
+              class="margin-top-1 margin-bottom-2"
+            >
+              <a
+                aria-label="Open 'CFACTS' in a new tab"
+                class="usa-link usa-link--external line-height-body-5"
+                href="https://cfacts.cms.gov"
+                target="_blank"
+              >
+                Go to CFACTS
+                <span
+                  aria-hidden="true"
+                >
+                   
+                </span>
+              </a>
+            </div>
+            <div
+              class="easi-divider"
+            />
+            <div
+              class="margin-top-2"
+            >
+              <a
+                aria-label="Open 'Cybergeek' in a new tab"
+                class="usa-link usa-link--external line-height-body-5"
+                href="https://security.cms.gov"
+                target="_blank"
+              >
+                Learn more about security and privacy at CMS
+                <span
+                  aria-hidden="true"
+                >
+                   
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="easi-section easi-section__border-bottom margin-bottom-4"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-0"
+      id="poamsAndFindings"
+    >
+      Plan of Action and Milestones (POA&Ms) and security findings
+    </h2>
+    <div>
+      <div
+        class="grid-row grid-gap margin-top-2"
+        data-testid="grid"
+      >
+        <div
+          class="tablet:grid-col-6 padding-right-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Total Open POA&Ms
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            7
+          </dd>
+        </div>
+        <div
+          class="tablet:grid-col-6 padding-right-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Longest open POA&M
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            255
+          </dd>
+        </div>
+      </div>
+    </div>
+    <div
+      class="grid-row grid-gap"
+      data-testid="grid"
+    >
+      <div
+        class="padding-right-2 grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Total findings
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          66
+        </dd>
+      </div>
+      <div
+        class="padding-right-2 grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          High findings
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          18
+        </dd>
+      </div>
+      <div
+        class="padding-right-2 grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Medium findings
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          27
+        </dd>
+      </div>
+      <div
+        class="padding-right-2 grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Low findings
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          21
+        </dd>
+      </div>
+    </div>
+    <div
+      class="grid-row grid-gap margin-top-2 margin-bottom-2"
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col-12"
+        data-testid="grid"
+      >
+        <div
+          class="usa-alert usa-alert--info"
+          data-testid="alert"
+        >
+          <div
+            class="usa-alert__body"
+          >
+            <p
+              class="usa-alert__text"
+            >
+              If you have access to CFACTS, you can go there to view additional information about your system's POA&Ms and security findings. If you do not have access, ask this system's ISSO for help accessing addtional information in CFACTS.
+            </p>
+            <div
+              class="margin-top-1"
+            >
+              <a
+                aria-label="Open 'CFACTS' in a new tab"
+                class="usa-link usa-link--external line-height-body-5"
+                href="https://cfacts.cms.gov"
+                target="_blank"
+              >
+                Go to CFACTS
+                <span
+                  aria-hidden="true"
+                >
+                   
+                </span>
+              </a>
+            </div>
+            <p />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="easi-section"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-0 margin-bottom-2"
+      id="datesFormsAndTesting"
+    >
+      Dates, forms, and testing
+    </h2>
+    <div>
+      <div
+        class="grid-row grid-gap"
+        data-testid="grid"
+      >
+        <div
+          class="tablet:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Last ACT* or SCA*
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            January 23, 2022
+          </dd>
+        </div>
+        <div
+          class="tablet:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Last penetration test
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            May 31, 2022
+          </dd>
+        </div>
+      </div>
+      <div
+        class="grid-row grid-gap"
+        data-testid="grid"
+      >
+        <div
+          class="tablet:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Last PIA*
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            December 28, 2022
+          </dd>
+        </div>
+        <div
+          class="tablet:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Last ATO assessment
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            November 15, 2021
+          </dd>
+        </div>
+      </div>
+      <div
+        class="grid-row grid-gap"
+        data-testid="grid"
+      >
+        <div
+          class="tablet:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Last SIA*
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            No data available
+          </dd>
+        </div>
+        <div
+          class="tablet:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Last Disaster Recovery exercise
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            No data available
+          </dd>
+        </div>
+      </div>
+      <div
+        class="grid-row grid-gap"
+        data-testid="grid"
+      >
+        <div
+          class="tablet:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Last Contengency Plan completion
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            June 11, 2022
+          </dd>
+        </div>
+        <div
+          class="tablet:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Last Disaster Recovery Plan update
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            No data available
+          </dd>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="easi-section"
+    data-testid="section-wrapper"
+  >
+    <div
+      class="usa-table-container--scrollable"
+      data-testid="scrollable-table-container"
+      tabindex="0"
+    >
+      <table
+        class="usa-table usa-table--borderless width-full"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="border-bottom-2px"
+              scope="col"
+            >
+              Document
+            </th>
+            <th
+              class="border-bottom-2px"
+              scope="col"
+            >
+              Does this sytem have one?
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Disaster Recovery Plan
+            </td>
+            <td>
+              No data available
+            </td>
+          </tr>
+          <tr>
+            <td>
+              SORN*
+            </td>
+            <td>
+              Yes
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Contingency Plan
+            </td>
+            <td>
+              Yes
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+    class="easi-section margin-bottom-4 margin-top-4"
+    data-testid="section-wrapper"
+  >
+    <div
+      class="margin-top-3 padding-2 bg-base-lightest"
+    >
+      <h4
+        class="margin-top-0"
+      >
+        *Acronyms defined
+      </h4>
+      <a
+        aria-label="Open 'Full list of security acronyms' in a new tab'"
+        class="usa-link usa-link--external line-height-body-5"
+        href="https://security.cms.gov/learn/acronyms"
+        target="_blank"
+      >
+        Full list of security related acronyms
+        <span
+          aria-hidden="true"
+        >
+           
+        </span>
+      </a>
+      <p>
+        ACT: Adaptive Capabilities Testing
+      </p>
+      <p>
+        SCA: Security Control Assessment
+      </p>
+      <p>
+        PIA: Privacy Impact Assessment
+      </p>
+      <a
+        aria-label="Open 'Lean more about PIA' in a new tab"
+        class="usa-link usa-link--external line-height-body-5"
+        href="https://security.cms.gov/learn/privacy-impact-assessment-pia"
+        target="_blank"
+      >
+        Learn more about PIA
+        <span
+          aria-hidden="true"
+        >
+           
+        </span>
+      </a>
+      <p>
+        SIA: Security Impact Analysis
+      </p>
+      <a
+        aria-label="Open 'Lean more about SIA' in a new tab"
+        class="usa-link usa-link--external line-height-body-5"
+        href="https://security.cms.gov/learn/security-impact-analysis-sia"
+        target="_blank"
+      >
+        Learn more about SIA
+        <span
+          aria-hidden="true"
+        >
+           
+        </span>
+      </a>
+      <p>
+        SORN: System of Records Notice
+      </p>
+      <a
+        aria-label="Open 'Lean more about SORN' in a new tab"
+        class="usa-link usa-link--external line-height-body-5"
+        href="https://security.cms.gov/learn/system-records-notice-sorn"
+        target="_blank"
+      >
+        Learn more about SORN
+        <span
+          aria-hidden="true"
+        >
+           
+        </span>
+      </a>
+    </div>
+  </div>
+</DocumentFragment>
+`;

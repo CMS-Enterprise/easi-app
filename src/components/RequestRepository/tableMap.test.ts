@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
-
-import { systemIntakeForTable } from 'data/mock/systemIntake';
 import {
   GetSystemIntakesTable_systemIntakes as TableSystemIntake,
   GetSystemIntakesTable_systemIntakes_notes as AdminNote
-} from 'queries/types/GetSystemIntakesTable';
+} from 'gql/legacyGQL/types/GetSystemIntakesTable';
+import { systemIntakeForTable } from 'tests/mock/systemIntake';
+
 import { SystemIntakeState } from 'types/graphql-global-types';
 
 import tableMap from './tableMap';
@@ -104,7 +104,7 @@ const intakes: Array<TableSystemIntake> = [
   }
 ];
 
-describe('System intake request table map', () => {
+describe('System Intake Request table map', () => {
   const { t } = useTranslation();
   it('references correct admin note or action for filter date', () => {
     const formattedIntakes = tableMap(intakes, t);

@@ -1,0 +1,202 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`IT Gov Request relation link form > renders 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container margin-bottom-15"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <nav
+      aria-label="Breadcrumbs"
+      class="usa-breadcrumb usa-breadcrumb--wrap"
+    >
+      <ol
+        class="usa-breadcrumb__list"
+      >
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="usa-breadcrumb__link"
+            href="/"
+          >
+            <span>
+              IT Governance
+            </span>
+          </a>
+        </li>
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="usa-breadcrumb__link"
+            href="/governance-task-list/fa93173c-2e8c-4371-b464-4b3dd649f940"
+          >
+            <span>
+              Task list
+            </span>
+          </a>
+        </li>
+        <li
+          aria-current="page"
+          class="usa-breadcrumb__list-item usa-current"
+        >
+          Edit linked system, service, or contract
+        </li>
+      </ol>
+    </nav>
+    <h1
+      aria-live="polite"
+      class="easi-h1 margin-top-4 margin-bottom-0"
+      tabindex="-1"
+    >
+      Is this request part of an existing system, service, or contract?
+    </h1>
+    <p
+      class="font-body-lg line-height-body-5 text-light margin-y-0"
+    >
+      If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, service, or contract (such as a major change based on a new business need or the creation of a new sub-system) please include additional details below.
+    </p>
+    <p
+      class="margin-top-2 margin-bottom-5 text-base"
+    >
+      Fields marked with an asterisk (
+      <span
+        class="text-red margin-x-05"
+      >
+        *
+      </span>
+      ) are required.
+    </p>
+    <form
+      class="usa-form easi-form maxw-full"
+      data-testid="form"
+    >
+      <div
+        class="grid-row"
+        data-testid="grid"
+      >
+        <div
+          class="tablet:grid-col-12 desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <fieldset
+            class="usa-fieldset"
+            data-testid="fieldset"
+          >
+            <legend
+              class="usa-legend"
+            >
+              <h4
+                class="margin-top-0 margin-bottom-1 line-height-heading-2"
+              >
+                Is this IT Governance request part of an existing system, service, or contract?
+              </h4>
+            </legend>
+            <p
+              class="text-base margin-top-1 margin-bottom-3"
+            >
+              With any of the selections below, you may add contract number(s) if there are any in place to support this effort.
+            </p>
+            <div
+              class="usa-radio"
+              data-testid="radio"
+            >
+              <input
+                class="usa-radio__input"
+                id="relationType-newSystem"
+                name="relationType"
+                type="radio"
+                value="NEW_SYSTEM"
+              />
+              <label
+                class="usa-radio__label"
+                for="relationType-newSystem"
+              >
+                No, this is a completely new system, service, or contract
+              </label>
+            </div>
+            <div
+              class="usa-radio"
+              data-testid="radio"
+            >
+              <input
+                class="usa-radio__input"
+                id="relationType-existingSystem"
+                name="relationType"
+                type="radio"
+                value="EXISTING_SYSTEM"
+              />
+              <label
+                class="usa-radio__label"
+                for="relationType-existingSystem"
+              >
+                Yes, an existing system
+              </label>
+            </div>
+            <div
+              class="usa-radio"
+              data-testid="radio"
+            >
+              <input
+                class="usa-radio__input"
+                id="relationType-existingService"
+                name="relationType"
+                type="radio"
+                value="EXISTING_SERVICE"
+              />
+              <label
+                class="usa-radio__label"
+                for="relationType-existingService"
+              >
+                Yes, an existing service or other contract
+              </label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <ul
+        class="usa-button-group"
+      >
+        <li
+          class="usa-button-group__item"
+        >
+          <button
+            class="usa-button"
+            data-testid="button"
+            disabled=""
+            type="submit"
+          >
+            Save changes
+          </button>
+        </li>
+        <li
+          class="usa-button-group__item"
+        />
+      </ul>
+      <button
+        class="usa-button usa-button--unstyled display-flex flex-align-center"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          class="usa-icon margin-right-05 margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Back
+      </button>
+    </form>
+  </main>
+</DocumentFragment>
+`;

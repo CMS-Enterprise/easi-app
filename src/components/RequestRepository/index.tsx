@@ -23,15 +23,21 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import GetSystemIntakesTableQuery from 'gql/legacyGQL/GetSystemIntakesTableQuery';
+import {
+  GetSystemIntakesTable,
+  GetSystemIntakesTableVariables
+} from 'gql/legacyGQL/types/GetSystemIntakesTable';
 import { startCase } from 'lodash';
+import { ActiveStateType, TableStateContext } from 'wrappers/TableStateWrapper';
 
+import CsvDownloadLink from 'components/CsvDownloadLink';
+import DatePickerFormatted from 'components/DatePickerFormatted';
+import FieldErrorMsg from 'components/FieldErrorMsg';
+import HelpText from 'components/HelpText';
+import Label from 'components/Label';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
-import CsvDownloadLink from 'components/shared/CsvDownloadLink';
-import DatePickerFormatted from 'components/shared/DatePickerFormatted';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import HelpText from 'components/shared/HelpText';
-import Label from 'components/shared/Label';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
@@ -40,11 +46,6 @@ import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useTableState from 'hooks/useTableState';
-import GetSystemIntakesTableQuery from 'queries/GetSystemIntakesTableQuery';
-import {
-  GetSystemIntakesTable,
-  GetSystemIntakesTableVariables
-} from 'queries/types/GetSystemIntakesTable';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -52,7 +53,6 @@ import {
   sortColumnValues
 } from 'utils/tableSort';
 import dateRangeSchema from 'validations/dateRangeSchema';
-import { ActiveStateType, TableStateContext } from 'views/TableStateWrapper';
 
 import csvHeaderMap from './csvHeaderMap';
 import csvPortfolioReportHeaderMap from './csvPortfolioReportHeaderMap';
@@ -204,6 +204,7 @@ const RequestRepository = () => {
       autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => lastSort[activeTable], [lastSort, activeTable]),
+        pageIndex: itGovAdmin.current.state.pageIndex,
         pageSize: defaultPageSize
       }
     },

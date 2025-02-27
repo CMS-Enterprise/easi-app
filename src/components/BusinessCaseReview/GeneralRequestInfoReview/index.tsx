@@ -1,11 +1,11 @@
 import React from 'react';
 
-import ReviewRow from 'components/ReviewRow';
 import {
   DescriptionDefinition,
   DescriptionList,
   DescriptionTerm
-} from 'components/shared/DescriptionGroup';
+} from 'components/DescriptionGroup';
+import ReviewRow from 'components/ReviewRow';
 import { GeneralRequestInfoForm } from 'types/businessCase';
 
 type GeneralRequestInfoReviewProps = {
@@ -19,7 +19,7 @@ const GeneralRequestInfoReview = ({
     <DescriptionList title="General request information">
       <ReviewRow>
         <div>
-          <DescriptionTerm term="Project Name" />
+          <DescriptionTerm term="Project name" />
           <DescriptionDefinition definition={values.requestName} />
         </div>
         <div>
@@ -33,7 +33,7 @@ const GeneralRequestInfoReview = ({
           <DescriptionDefinition definition={values.requester.name} />
         </div>
         <div>
-          <DescriptionTerm term="Requester Phone Number" />
+          <DescriptionTerm term="Requester phone number" />
           <DescriptionDefinition definition={values.requester.phoneNumber} />
         </div>
       </ReviewRow>

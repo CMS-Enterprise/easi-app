@@ -3,18 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { Button, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-
-import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQuery';
-import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
-import GetCedarSystemIsBookmarkedQuery from 'queries/GetCedarSystemIsBookmarkedQuery';
-import {
-  CreateCedarSystemBookmark,
-  CreateCedarSystemBookmarkVariables
-} from 'queries/types/CreateCedarSystemBookmark';
+import { useCreateCedarSystemBookmarkMutation } from 'gql/generated/graphql';
+import DeleteCedarSystemBookmarkQuery from 'gql/legacyGQL/DeleteCedarSystemBookmarkQuery';
+import GetCedarSystemIsBookmarkedQuery from 'gql/legacyGQL/GetCedarSystemIsBookmarkedQuery';
 import {
   DeleteCedarSystemBookmark,
   DeleteCedarSystemBookmarkVariables
-} from 'queries/types/DeleteCedarSystemBookmark';
+} from 'gql/legacyGQL/types/DeleteCedarSystemBookmark';
 
 import './index.scss';
 
@@ -41,12 +36,10 @@ export default function BookmarkButton({
     variables: { id }
   };
 
-  const [create, { loading: createLoading }] = useMutation<
-    CreateCedarSystemBookmark,
-    CreateCedarSystemBookmarkVariables
-  >(CreateCedarSystemBookmarkQuery, {
-    refetchQueries: [refetchCedarSystemIsBookmarkedQuery]
-  });
+  const [create, { loading: createLoading }] =
+    useCreateCedarSystemBookmarkMutation({
+      refetchQueries: [refetchCedarSystemIsBookmarkedQuery]
+    });
 
   const [del, { loading: delLoading }] = useMutation<
     DeleteCedarSystemBookmark,

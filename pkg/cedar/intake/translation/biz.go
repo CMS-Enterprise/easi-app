@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"strconv"
+	"time"
 
 	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
@@ -20,7 +21,7 @@ func (bc *TranslatableBusinessCase) ObjectID() string {
 
 // ObjectType is a human-readable identifier for the BusinessCase type, for use in logging
 func (bc *TranslatableBusinessCase) ObjectType() string {
-	return "business case"
+	return "Business Case"
 }
 
 // CreateIntakeModel translates a BusinessCase into an IntakeInput
@@ -29,10 +30,10 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		UserEUA:                bc.EUAUserID,
 		BusinessCaseID:         bc.ID.String(),
 		IntakeID:               pStr(bc.SystemIntakeID.String()),
-		ProjectName:            bc.ProjectName.ValueOrZero(), // will always have a value by the time a draft business case is submitted
-		Requester:              bc.Requester.ValueOrZero(),   // will always have a value by the time a draft business case is submitted
+		ProjectName:            bc.ProjectName.ValueOrZero(), // will always have a value by the time a draft Business Case is submitted
+		Requester:              bc.Requester.ValueOrZero(),   // will always have a value by the time a draft Business Case is submitted
 		RequesterPhoneNumber:   bc.RequesterPhoneNumber.Ptr(),
-		BusinessOwner:          bc.BusinessOwner.ValueOrZero(), // will always have a value by the time a draft business case is submitted
+		BusinessOwner:          bc.BusinessOwner.ValueOrZero(), // will always have a value by the time a draft Business Case is submitted
 		BusinessNeed:           bc.BusinessNeed.Ptr(),
 		CurrentSolutionSummary: bc.CurrentSolutionSummary.Ptr(),
 		CmsBenefit:             bc.CMSBenefit.Ptr(),
@@ -164,8 +165,18 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 	if bc.CreatedAt != nil {
 		result.ClientCreatedDate = pStrfmtDateTime(bc.CreatedAt)
 	}
+
+	// Optionally send the updated at date if it exists
+	// Otherwise, send the created at date, falling back to the current time
+	// This code exists because the `ClientLastUpdatedDate` field is required by the CEDAR API
+	// but it's possible that the biz case doesn't have it set (as we have it nullable)
 	if bc.UpdatedAt != nil {
 		result.ClientLastUpdatedDate = pStrfmtDateTime(bc.UpdatedAt)
+	} else if bc.CreatedAt != nil {
+		result.ClientLastUpdatedDate = pStrfmtDateTime(bc.CreatedAt)
+	} else {
+		now := time.Now()
+		result.ClientLastUpdatedDate = pStrfmtDateTime(&now)
 	}
 
 	return result, nil

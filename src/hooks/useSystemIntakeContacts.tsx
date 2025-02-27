@@ -1,26 +1,21 @@
 import { useCallback, useMemo } from 'react';
-import { FetchResult, useMutation, useQuery } from '@apollo/client';
-
-import { initialContactsObject } from 'constants/systemIntake';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import { FetchResult, useQuery } from '@apollo/client';
 import {
-  CreateSystemIntakeContact,
-  DeleteSystemIntakeContact,
-  GetSystemIntakeContactsQuery,
-  UpdateSystemIntakeContact
-} from 'queries/SystemIntakeContactsQueries';
-import { CreateSystemIntakeContact as CreateSystemIntakeContactPayload } from 'queries/types/CreateSystemIntakeContact';
-import { DeleteSystemIntakeContact as DeleteSystemIntakeContactPayload } from 'queries/types/DeleteSystemIntakeContact';
+  AugmentedSystemIntakeContact,
+  CreateSystemIntakeContactMutation,
+  UpdateSystemIntakeContactMutation,
+  useCreateSystemIntakeContactMutation,
+  useDeleteSystemIntakeContactMutation,
+  useGetSystemIntakeContactsQuery,
+  useUpdateSystemIntakeContactMutation
+} from 'gql/generated/graphql';
+import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
 import {
   GetSystemIntake,
   GetSystemIntakeVariables
-} from 'queries/types/GetSystemIntake';
-import {
-  GetSystemIntakeContactsQuery as GetSystemIntakeContactsQueryType,
-  GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact,
-  GetSystemIntakeContactsQueryVariables
-} from 'queries/types/GetSystemIntakeContactsQuery';
-import { UpdateSystemIntakeContact as UpdateSystemIntakeContactPayload } from 'queries/types/UpdateSystemIntakeContact';
+} from 'gql/legacyGQL/types/GetSystemIntake';
+
+import { initialContactsObject } from 'constants/systemIntake';
 import {
   FormattedContacts,
   SystemIntakeContactProps,
@@ -42,10 +37,7 @@ function useSystemIntakeContacts(
   systemIntakeId: string
 ): UseSystemIntakeContactsType {
   // GQL query to get intake contacts
-  const { data, loading: contactsLoading } = useQuery<
-    GetSystemIntakeContactsQueryType,
-    GetSystemIntakeContactsQueryVariables
-  >(GetSystemIntakeContactsQuery, {
+  const { data, loading: contactsLoading } = useGetSystemIntakeContactsQuery({
     variables: { id: systemIntakeId }
   });
 
@@ -73,7 +65,7 @@ function useSystemIntakeContacts(
       requester: {
         ...initialContactsObject.requester,
         euaUserId: systemIntake.euaUserId,
-        commonName: systemIntake.requester.name,
+        commonName: systemIntake.requester?.name,
         component: systemIntake.requester?.component || '',
         email: systemIntake.requester?.email || '',
         systemIntakeId
@@ -141,21 +133,20 @@ function useSystemIntakeContacts(
     [systemIntakeContacts, formatContacts]
   );
 
-  const [createSystemIntakeContact] =
-    useMutation<CreateSystemIntakeContactPayload>(CreateSystemIntakeContact, {
-      refetchQueries: ['GetSystemIntakeContactsQuery'],
-      awaitRefetchQueries: true
-    });
-  const [updateSystemIntakeContact] =
-    useMutation<UpdateSystemIntakeContactPayload>(UpdateSystemIntakeContact, {
-      refetchQueries: ['GetSystemIntakeContactsQuery'],
-      awaitRefetchQueries: true
-    });
-  const [deleteSystemIntakeContact] =
-    useMutation<DeleteSystemIntakeContactPayload>(DeleteSystemIntakeContact, {
-      refetchQueries: ['GetSystemIntakeContactsQuery'],
-      awaitRefetchQueries: true
-    });
+  const [createSystemIntakeContact] = useCreateSystemIntakeContactMutation({
+    refetchQueries: ['GetSystemIntakeContacts'],
+    awaitRefetchQueries: true
+  });
+
+  const [updateSystemIntakeContact] = useUpdateSystemIntakeContactMutation({
+    refetchQueries: ['GetSystemIntakeContacts'],
+    awaitRefetchQueries: true
+  });
+
+  const [deleteSystemIntakeContact] = useDeleteSystemIntakeContactMutation({
+    refetchQueries: ['GetSystemIntakeContacts'],
+    awaitRefetchQueries: true
+  });
 
   /**
    * Create system intake contact in database
@@ -177,7 +168,7 @@ function useSystemIntakeContacts(
           }
         }
       })
-        .then((response: FetchResult<CreateSystemIntakeContactPayload>) => {
+        .then((response: FetchResult<CreateSystemIntakeContactMutation>) => {
           const {
             /** Contact data returned from mutation */
             systemIntakeContact
@@ -216,7 +207,7 @@ function useSystemIntakeContacts(
       updateSystemIntakeContact({
         variables: {
           input: {
-            id,
+            id: id || '',
             euaUserId: euaUserId?.toUpperCase() || '',
             component,
             role,
@@ -224,7 +215,7 @@ function useSystemIntakeContacts(
           }
         }
       })
-        .then((response: FetchResult<UpdateSystemIntakeContactPayload>) => {
+        .then((response: FetchResult<UpdateSystemIntakeContactMutation>) => {
           const {
             /** Contact data returned from mutation */
             systemIntakeContact

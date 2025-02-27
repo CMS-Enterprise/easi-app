@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["**/*.d.ts", "serviceWorker.ts",".storybook/**/*","src/gql/gen/**/*"],
+  "ignorePatterns": ["**/*.d.ts", "serviceWorker.ts",".storybook/**/*","src/gql/generated/**/*"],
   "globals" : {
     "JSX" : "readonly",
     "vi": true
@@ -30,6 +30,11 @@
         }
       }
     ],
+
+    "import/no-unresolved": [
+      2, 
+      { "caseSensitive": false }
+   ],
 
     // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-use-before-define.md#how-to-use
     "no-use-before-define": "off",

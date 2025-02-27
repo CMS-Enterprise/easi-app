@@ -233,7 +233,7 @@ func CanDeleteDocument(ctx context.Context, document *models.SystemIntakeDocumen
 
 // allowDelete guards unauthorized deletions of system intake documents
 // an admin is allowed to delete admin-uploaded docs
-// the intake requester is allowed to delete requester-uploaded docs
+// the Intake Requester is allowed to delete requester-uploaded docs
 func allowDelete(ctx context.Context, store *storage.Store, id uuid.UUID) error {
 	document, err := store.GetSystemIntakeDocumentByID(ctx, id)
 	if err != nil {

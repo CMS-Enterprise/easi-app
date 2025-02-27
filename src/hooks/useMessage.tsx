@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import Alert, { AlertProps } from 'components/shared/Alert';
+import Alert, { AlertProps } from 'components/Alert';
 
 type MessageProps = {
   message?: string | React.ReactElement;
@@ -24,6 +24,9 @@ const MessageContext = createContext<
       Message: ({ className }: { className?: string }) => JSX.Element | null;
       showMessage: SetMessage;
       showMessageOnNextPage: SetMessage;
+      errorMessageInModal: string | React.ReactNode | undefined;
+      showErrorMessageInModal: (message: string | React.ReactNode) => void;
+      clearMessage: () => void;
     }
   | undefined
 >(undefined);
@@ -33,6 +36,14 @@ const MessageContext = createContext<
 const MessageProvider = ({ children }: { children: ReactNode }) => {
   const [queuedMessage, setQueuedMessage] = useState<MessageProps>({});
   const [message, setMessage] = useState<MessageProps>({});
+  const [errorMessageInModal, setErrorMessageInModal] = useState<
+    string | React.ReactNode
+  >();
+
+  const clearMessage = () => {
+    setMessage({ message: '', alertProps: undefined });
+    setErrorMessageInModal(undefined);
+  };
 
   const location = useLocation();
 
@@ -76,7 +87,10 @@ const MessageProvider = ({ children }: { children: ReactNode }) => {
           setQueuedMessage({
             message: value,
             alertProps
-          })
+          }),
+        errorMessageInModal,
+        showErrorMessageInModal: setErrorMessageInModal,
+        clearMessage
       }}
     >
       {children}

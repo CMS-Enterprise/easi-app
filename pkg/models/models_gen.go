@@ -17,7 +17,7 @@ type TRBAdminNoteCategorySpecificData interface {
 	IsTRBAdminNoteCategorySpecificData()
 }
 
-// A solution proposal within a business case
+// A solution proposal within a Business Case
 type BusinessCaseSolution struct {
 	AcquisitionApproach     *string `json:"acquisitionApproach,omitempty"`
 	Cons                    *string `json:"cons,omitempty"`
@@ -41,7 +41,7 @@ type CedarBudgetActualCost struct {
 	SystemID         *string `json:"systemId,omitempty"`
 }
 
-// BusinessOwnerInformation contains information about the business owner for a CEDAR system
+// BusinessOwnerInformation contains information about the Business Owner for a CEDAR system
 type CedarBusinessOwnerInformation struct {
 	BeneficiaryAddressPurpose      []string `json:"beneficiaryAddressPurpose"`
 	BeneficiaryAddressPurposeOther *string  `json:"beneficiaryAddressPurposeOther,omitempty"`
@@ -306,6 +306,10 @@ type DeleteSystemIntakeDocumentPayload struct {
 	Document *SystemIntakeDocument `json:"document,omitempty"`
 }
 
+type DeleteSystemIntakeGRBPresentationLinksInput struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
+}
+
 type DeleteSystemIntakeGRBReviewerInput struct {
 	ReviewerID uuid.UUID `json:"reviewerID"`
 }
@@ -489,13 +493,13 @@ type SystemIntakeAnnualSpendingInput struct {
 	PlannedYearOneSpendingITPortion *string `json:"plannedYearOneSpendingITPortion,omitempty"`
 }
 
-// Represents the OIT business owner of a system
+// Represents the OIT Business Owner of a system
 type SystemIntakeBusinessOwner struct {
 	Component *string `json:"component,omitempty"`
 	Name      *string `json:"name,omitempty"`
 }
 
-// The input data used to set the CMS business owner of a system
+// The input data used to set the CMS Business Owner of a system
 type SystemIntakeBusinessOwnerInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
@@ -614,6 +618,17 @@ type SystemIntakeFundingSourceInput struct {
 type SystemIntakeFundingSourcesInput struct {
 	ExistingFunding *bool                             `json:"existingFunding,omitempty"`
 	FundingSources  []*SystemIntakeFundingSourceInput `json:"fundingSources"`
+}
+
+// Data needed to add system intake presentation link data
+// One of the optional link/files values is required to pass the database constraint
+type SystemIntakeGRBPresentationLinksInput struct {
+	SystemIntakeID           uuid.UUID                          `json:"systemIntakeID"`
+	RecordingLink            graphql.Omittable[*string]         `json:"recordingLink,omitempty"`
+	RecordingPasscode        graphql.Omittable[*string]         `json:"recordingPasscode,omitempty"`
+	TranscriptLink           graphql.Omittable[*string]         `json:"transcriptLink,omitempty"`
+	TranscriptFileData       graphql.Omittable[*graphql.Upload] `json:"transcriptFileData,omitempty"`
+	PresentationDeckFileData graphql.Omittable[*graphql.Upload] `json:"presentationDeckFileData,omitempty"`
 }
 
 type SystemIntakeGRBReviewDiscussion struct {

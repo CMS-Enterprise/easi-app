@@ -13,11 +13,11 @@ import {
   DescriptionDefinition,
   DescriptionList,
   DescriptionTerm
-} from 'components/shared/DescriptionGroup';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import FieldGroup from 'components/shared/FieldGroup';
-import HelpText from 'components/shared/HelpText';
-import IconButton from 'components/shared/IconButton';
+} from 'components/DescriptionGroup';
+import FieldErrorMsg from 'components/FieldErrorMsg';
+import FieldGroup from 'components/FieldGroup';
+import HelpText from 'components/HelpText';
+import IconButton from 'components/IconButton';
 import {
   LifecycleCosts,
   LifecyclePhaseKey,
@@ -153,7 +153,7 @@ type AddRelatedCostFieldProps = {
   addRelatedCost: (category: LifecyclePhaseKey) => void;
 };
 
-/** Dropdown field to add related lifecycle cost to business case */
+/** Dropdown field to add related lifecycle cost to Business Case */
 const AddRelatedCostField = ({
   lifecycleCosts,
   relatedCosts,
@@ -243,7 +243,7 @@ type EstimatedLifecycleCostProps = {
   className?: string;
 };
 
-/** Table to enter lifecycle cost fields for business case */
+/** Table to enter lifecycle cost fields for Business Case */
 const EstimatedLifecycleCost = ({
   formikKey,
   lifecycleCosts,

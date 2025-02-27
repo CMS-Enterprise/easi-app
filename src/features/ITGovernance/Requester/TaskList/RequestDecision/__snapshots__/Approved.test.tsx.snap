@@ -1,0 +1,97 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Business Owner task list approved view > matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="easi-governance-decision__info padding-2"
+    data-testid="grt-approved"
+  >
+    <h2
+      class="margin-top-05 margin-bottom-1"
+    >
+      Your Business Case has been approved.
+    </h2>
+    <dl>
+      <dt>
+        Project Life Cycle ID
+      </dt>
+      <dd
+        class="margin-left-0 font-body-xl text-bold"
+      >
+        123456
+      </dd>
+      <dt>
+        <h3
+          class="margin-top-1 margin-bottom-05"
+        >
+          Life Cycle ID Scope
+        </h3>
+      </dt>
+      <dd
+        class="margin-left-0 color-white"
+      >
+        <div
+          class="easi-toast easi-toast-viewer"
+        >
+          <div>
+            <div
+              class="toastui-editor-contents"
+              style="overflow-wrap: break-word;"
+            >
+              <p
+                data-nodeid="5"
+              >
+                Test scope
+              </p>
+              
+
+            </div>
+          </div>
+        </div>
+      </dd>
+      <dd
+        class="margin-left-0 margin-y-2 text-bold"
+      >
+        This ID expires on July 19, 2021
+      </dd>
+    </dl>
+  </div>
+  <h3
+    class="margin-bottom-1"
+  >
+    Next steps
+  </h3>
+  <div
+    class="usa-alert usa-alert--info usa-alert--slim margin-y-2"
+    data-testid="alert"
+  >
+    <div
+      class="usa-alert__body"
+    >
+      <p
+        class="usa-alert__text"
+      >
+        Finish these next steps to complete the governance review process.
+      </p>
+    </div>
+  </div>
+  <div
+    class="easi-toast easi-toast-viewer"
+  >
+    <div>
+      <div
+        class="toastui-editor-contents"
+        style="overflow-wrap: break-word;"
+      >
+        <p
+          data-nodeid="7"
+        >
+          Test next steps
+        </p>
+        
+
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

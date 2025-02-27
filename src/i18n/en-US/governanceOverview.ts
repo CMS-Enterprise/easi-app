@@ -18,14 +18,14 @@ const governanceOverview = {
   stepsHeading: 'Steps in the governance process',
   steps: [
     {
-      heading: 'Fill the intake request form',
+      heading: 'Fill the Intake Request form',
       content:
         'Tell the Governance Admin Team about your project or idea and upload any existing documentation.'
     },
     {
       heading: 'Feedback from initial review',
       content:
-        "The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps."
+        "The Governance admin team will review your Intake Request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps."
     },
     {
       heading: 'Prepare your Business Case',

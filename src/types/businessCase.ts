@@ -79,7 +79,7 @@ export type BusinessCasesState = {
   error: string | null;
 };
 
-// Redux store type for business case
+// Redux store type for Business Case
 export type BusinessCaseState = {
   form: BusinessCaseModel;
   isLoading: boolean | null;

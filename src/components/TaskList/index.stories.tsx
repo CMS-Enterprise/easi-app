@@ -2,8 +2,8 @@ import React from 'react';
 import { ComponentMeta } from '@storybook/react';
 import { Grid, GridContainer, Link } from '@trussworks/react-uswds';
 
-import Alert from 'components/shared/Alert';
-import { TaskStatus } from 'components/shared/TaskStatusTag';
+import Alert from 'components/Alert';
+import { TaskStatus } from 'components/TaskStatusTag';
 
 import TaskListItem, { TaskListContainer, TaskListDescription } from '.';
 
@@ -29,7 +29,7 @@ export const Default = () => (
             </p>
             <p>
               This step can take some time due to scheduling and availability.
-              You may go through multiple rounds of editing your business case
+              You may go through multiple rounds of editing your Business Case
               and receiving feedback.
             </p>
             <Alert type="info">
@@ -61,7 +61,7 @@ export const Default = () => (
             </p>
             <p>
               This step can take some time due to scheduling and availability.
-              You may go through multiple rounds of editing your business case
+              You may go through multiple rounds of editing your Business Case
               and receiving feedback.
             </p>
           </TaskListDescription>

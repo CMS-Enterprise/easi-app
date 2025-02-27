@@ -174,7 +174,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {\r\n    createSystemIntakeActionProgressToNewStep(input: $input) {\r\n        systemIntake {\r\n            step\r\n            governanceRequestFeedbacks {\r\n                id\r\n                feedback\r\n                sourceAction\r\n                targetForm\r\n                type\r\n                author {\r\n                    euaUserId\r\n                    commonName\r\n                    email\r\n                }\r\n            }\r\n            actions {\r\n                feedback\r\n                type\r\n            }\r\n            notes {\r\n                content\r\n                author {\r\n                    eua\r\n                    name\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"FINAL_BUSINESS_CASE\",\r\n        \"feedback\": \"You're doing good!\",\r\n        \"additionalInfo\": \"This is a note in the email\",\r\n        \"adminNote\": \"Team - make sure this looks ready to go\",\r\n        \"grbRecommendations\": \"Make sure to ask the business owner how they plan to reverse the polarity of the neutron flow\"\r\n    }\r\n}"
+												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"FINAL_BUSINESS_CASE\",\r\n        \"feedback\": \"You're doing good!\",\r\n        \"additionalInfo\": \"This is a note in the email\",\r\n        \"adminNote\": \"Team - make sure this looks ready to go\",\r\n        \"grbRecommendations\": \"Make sure to ask the Business Owner how they plan to reverse the polarity of the neutron flow\"\r\n    }\r\n}"
 											}
 										},
 										"url": {
@@ -1279,6 +1279,72 @@
 									"graphql": {
 										"query": "mutation createSystemIntakeGRBDiscussionReply($input: createSystemIntakeGRBDiscussionReplyInput!) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n        id\n        username\n    }\n  }\n}",
 										"variables": "{\r\n  \"input\": {\r\n    \"initialPostID\": \"{{SystemIntakeGRBDiscussionID}}\",\r\n    \"content\": \"<p>Let me look into it, ok? <span data-type=\\\"mention\\\" tag-type=\\\"GROUP_IT_GOV\\\" class=\\\"mention\\\">@Group</span><span data-type=\\\"mention\\\" tag-type=\\\"GROUP_GRB_REVIEWERS\\\" class=\\\"mention\\\">@Group2</span>!</p>\"\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get GRB Presentation Links",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbPresentationLinks {\n        systemIntakeID\n        createdAt\n        createdBy\n        modifiedAt\n        modifiedBy\n        recordingLink\n        recordingPasscode\n        transcriptFileName\n        transcriptFileStatus\n        transcriptFileURL\n        presentationDeckFileName\n        presentationDeckFileStatus\n        presentationDeckFileURL\n    }\n  }\n}",
+										"variables": "{\r\n    \"systemIntakeID\": \"5af245bc-fc54-4677-bab1-1b3e798bb43c\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set GRB Presentation Links",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation setSystemIntakeGRBPresentationLinks(\n    $input: SystemIntakeGRBPresentationLinksInput!\n) {\n  setSystemIntakeGRBPresentationLinks(input: $input) {\n    systemIntakeID\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n    recordingLink\n    recordingPasscode\n    transcriptFileName\n    transcriptFileStatus\n    transcriptFileURL\n    presentationDeckFileName\n    presentationDeckFileStatus\n    presentationDeckFileURL\n  }\n}",
+										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"recordingLink\": \"https://google.com\",\r\n    \"recordingPasscode\": \"123456\"\r\n  }\r\n}"
 									}
 								},
 								"url": {

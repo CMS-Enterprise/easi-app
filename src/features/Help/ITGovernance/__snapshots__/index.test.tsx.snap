@@ -1,0 +1,277 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`IT Governance Help > matches the snapshot 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <button
+      class="usa-button usa-button--unstyled margin-top-6"
+      data-testid="button"
+      type="button"
+    >
+      <svg
+        class="usa-icon margin-right-05 margin-top-3px text-tbottom"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+        />
+      </svg>
+      Back to help center
+    </button>
+    <div
+      class="help-page-intro margin-bottom-4"
+    >
+      <h1
+        aria-live="polite"
+        class="easi-h1 margin-bottom-0 margin-top-3"
+        tabindex="-1"
+      >
+        IT Governance
+      </h1>
+      <div
+        class="font-body-lg margin-top-1 margin-bottom-0 line-height-body-5"
+      >
+        Get assistance with your governance processes and requests, such as adding a new system or service or completing a Business Case.
+      </div>
+    </div>
+    <ul
+      class="usa-card-group padding-top-1 padding-bottom-4"
+      data-testid="CardGroup"
+    >
+      <li
+        class="usa-card desktop:grid-col-4 article article-card--isLink"
+        data-testid="article-card"
+      >
+        <div
+          class="usa-card__container radius-md shadow-2 minh-mobile"
+        >
+          <header
+            class="usa-card__header padding-x-3 padding-top-3"
+            data-testid="CardHeader"
+          >
+            <h3
+              class="line-height-body-4 margin-bottom-1"
+            >
+              Prepare for the Governance Review Team meeting
+            </h3>
+          </header>
+          <div
+            class="usa-card__body padding-top-0 article__body"
+            data-testid="CardBody"
+          >
+            <p>
+              Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+            </p>
+          </div>
+          <div
+            class="usa-card__footer padding-top-2 article__footer"
+            data-testid="CardFooter"
+          >
+            <a
+              class="usa-link easi-request__button-link padding-x-2"
+              href="/help/it-governance"
+            >
+              Read
+            </a>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-card desktop:grid-col-4 article article-card--isLink"
+        data-testid="article-card"
+      >
+        <div
+          class="usa-card__container radius-md shadow-2 minh-mobile"
+        >
+          <header
+            class="usa-card__header padding-x-3 padding-top-3"
+            data-testid="CardHeader"
+          >
+            <h3
+              class="line-height-body-4 margin-bottom-1"
+            >
+              Prepare for the Governance Review Board meeting
+            </h3>
+          </header>
+          <div
+            class="usa-card__body padding-top-0 article__body"
+            data-testid="CardBody"
+          >
+            <p>
+              Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+            </p>
+          </div>
+          <div
+            class="usa-card__footer padding-top-2 article__footer"
+            data-testid="CardFooter"
+          >
+            <a
+              class="usa-link easi-request__button-link padding-x-2"
+              href="/help/it-governance"
+            >
+              Read
+            </a>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-card desktop:grid-col-4 article article-card--isLink"
+        data-testid="article-card"
+      >
+        <div
+          class="usa-card__container radius-md shadow-2 minh-mobile"
+        >
+          <header
+            class="usa-card__header padding-x-3 padding-top-3"
+            data-testid="CardHeader"
+          >
+            <h3
+              class="line-height-body-4 margin-bottom-1"
+            >
+              Sample Business Case
+            </h3>
+          </header>
+          <div
+            class="usa-card__body padding-top-0 article__body"
+            data-testid="CardBody"
+          >
+            <p>
+              This sample Business Case can help you as you fill out your own Business Case. The content here is an example of how complete and precise to be when completing your Business Case.
+            </p>
+          </div>
+          <div
+            class="usa-card__footer padding-top-2 article__footer"
+            data-testid="CardFooter"
+          >
+            <a
+              class="usa-link easi-request__button-link padding-x-2"
+              href="/help/it-governance"
+            >
+              Read
+            </a>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-card desktop:grid-col-4 article article-card--isLink"
+        data-testid="article-card"
+      >
+        <div
+          class="usa-card__container radius-md shadow-2 minh-mobile"
+        >
+          <header
+            class="usa-card__header padding-x-3 padding-top-3"
+            data-testid="CardHeader"
+          >
+            <h3
+              class="line-height-body-4 margin-bottom-1"
+            >
+              Steps involved in adding a new system or service
+            </h3>
+          </header>
+          <div
+            class="usa-card__body padding-top-0 article__body"
+            data-testid="CardBody"
+          >
+            <p>
+              To add a new system or service and receive a CMS Life Cycle ID, you need to go through a set of steps and get approved by the Governance Review Board (GRB). This article will provide an overview of the steps involved.
+            </p>
+          </div>
+          <div
+            class="usa-card__footer padding-top-2 article__footer"
+            data-testid="CardFooter"
+          >
+            <a
+              class="usa-link easi-request__button-link padding-x-2"
+              href="/help/it-governance"
+            >
+              Read
+            </a>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div
+      class="easi-divider"
+    />
+    <div
+      class="padding-bottom-5 padding-top-2"
+    >
+      <h2
+        class="margin-bottom-1"
+      >
+        Additional contacts
+      </h2>
+      <p
+        class="font-body-md"
+      >
+        Still need help? Use the contact information below to contact the group you need.
+      </p>
+      <div
+        class="grid-row grid-gap-lg"
+      >
+        <div
+          class="desktop:grid-col-4 margin-bottom-2"
+        >
+          <h3
+            class="margin-bottom-1 margin-top-2"
+          >
+            Governance Review Admin
+          </h3>
+          <p
+            class="margin-top-1 line-height-body-4"
+          >
+            The Governance Review Admin team can help with questions related to your IT Governance requests.
+          </p>
+          <h4
+            class="margin-y-1"
+          >
+            Email addresses
+          </h4>
+          <a
+            class="usa-link"
+            href="mailto:IT_Governance@cms.hhs.gov"
+          >
+            IT_Governance@cms.hhs.gov
+          </a>
+        </div>
+        <div
+          class="desktop:grid-col-4 margin-bottom-2"
+        >
+          <h3
+            class="margin-bottom-1 margin-top-2"
+          >
+            Enterprise Architecture
+          </h3>
+          <p
+            class="margin-top-1 line-height-body-4"
+          >
+            The Enterprise Architecture team can help with questions related to your Enterprise Architecture needs.
+          </p>
+          <h4
+            class="margin-y-1"
+          >
+            Email addresses
+          </h4>
+          <a
+            class="usa-link"
+            href="mailto:EnterpriseArchitecture@cms.hhs.gov"
+          >
+            EnterpriseArchitecture@cms.hhs.gov
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</DocumentFragment>
+`;

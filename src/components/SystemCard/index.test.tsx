@@ -1,8 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
-
-import { SystemIntake_systems as SystemIntakeType } from 'queries/types/SystemIntake';
+import { SystemIntake_systems as SystemIntakeType } from 'gql/legacyGQL/types/SystemIntake';
 
 import SystemCardTable from './table';
 import SystemCard, { SystemCardProps } from '.';
