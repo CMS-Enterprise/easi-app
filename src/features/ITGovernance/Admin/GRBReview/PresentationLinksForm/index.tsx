@@ -13,11 +13,10 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import {
-  InputMaybe,
+  SystemIntakeGRBPresentationLinks,
   SystemIntakeGRBPresentationLinksInput,
   useSetSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
-import { SystemIntakeGRBPresentationLinks } from 'gql/legacyGQL/types/SystemIntakeGRBPresentationLinks';
 
 import Alert from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
@@ -58,54 +57,50 @@ const PresentationLinksForm = ({
     { refetchQueries: ['GetSystemIntake'] }
   );
 
-  const formType = grbPresentationLinks ? 'edit' : 'add';
-
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid, isDirty }
+    formState: { errors, isValid, isDirty, defaultValues }
   } = useEasiForm<PresentationLinkFields>({
     resolver: yupResolver(SetGRBPresentationLinksSchema),
-    context: { formType },
     defaultValues: {
       recordingLink: grbPresentationLinks?.recordingLink,
       recordingPasscode: grbPresentationLinks?.recordingPasscode,
       transcriptLink: grbPresentationLinks?.transcriptLink,
-
-      // Set file data to `undefined` if file name exists
-      // Used by form to determine when existing data should be cleared vs retained
-      transcriptFileData: grbPresentationLinks?.transcriptFileName
-        ? undefined
-        : null,
-      presentationDeckFileData: grbPresentationLinks?.presentationDeckFileName
-        ? undefined
-        : null
+      // Only include file name in default values
+      transcriptFileData: {
+        name: grbPresentationLinks?.transcriptFileName || ''
+      } as File,
+      presentationDeckFileData: {
+        name: grbPresentationLinks?.presentationDeckFileName || ''
+      } as File
     }
   });
+
+  const formType: 'add' | 'edit' = grbPresentationLinks ? 'edit' : 'add';
 
   const grbReviewPath = `/it-governance/${id}/grb-review`;
 
   /**
-   * Formats file data only if file is not explicitly set to null or undefined
-   *
-   * Returns `null` to clear file data or `undefined` to retain existing data
-   * */
-  const formatFileData = async (file: InputMaybe<File> | undefined) => {
-    // If file data exists, return formatted version
-    if (file) return fileToBase64File(file);
-
-    // Return null or undefined file value
-    return file;
-  };
+   * Returns true if both recordingLink and presentationDeckFileData fields have errors
+   */
+  const hasRequiredFieldErrors =
+    !!errors?.recordingLink &&
+    (!!errors?.presentationDeckFileData ||
+      !defaultValues?.presentationDeckFileData?.name);
 
   /** Submit form to set GRB review presentation links */
   const submit = handleSubmit(async values => {
-    const transcriptFileData = await formatFileData(values?.transcriptFileData);
+    // Only include newly updated file data, not default values
+    // File data from default values does not have `size` field
+    const transcriptFileData = values.transcriptFileData?.size
+      ? await fileToBase64File(values.transcriptFileData)
+      : undefined;
 
-    const presentationDeckFileData = await formatFileData(
-      values?.presentationDeckFileData
-    );
+    const presentationDeckFileData = values.presentationDeckFileData?.size
+      ? await fileToBase64File(values.presentationDeckFileData)
+      : undefined;
 
     setPresentationLinks({
       variables: {
@@ -135,14 +130,11 @@ const PresentationLinksForm = ({
 
   return (
     <>
-      {
-        // Error alert if both `recordingLink` and `presentationDeckFileData` fields are blank
-        !!errors?.recordingLink && !!errors?.presentationDeckFileData && (
-          <Alert type="error" slim className="margin-top-2">
-            {t('presentationLinks.emptyFormError')}
-          </Alert>
-        )
-      }
+      {hasRequiredFieldErrors && (
+        <Alert type="error" slim className="margin-top-2">
+          {t('presentationLinks.emptyFormError')}
+        </Alert>
+      )}
 
       <Grid
         tablet={{ col: 6 }}
@@ -164,7 +156,7 @@ const PresentationLinksForm = ({
         </IconLink>
 
         <Form onSubmit={submit} className="maxw-none">
-          <FormGroup error={!!errors?.recordingLink}>
+          <FormGroup error={hasRequiredFieldErrors}>
             <Label htmlFor="recordingLink">
               {t('presentationLinks.recordingLinkLabel')}
             </Label>
@@ -177,7 +169,7 @@ const PresentationLinksForm = ({
               ref={null}
               id="recordingLink"
               aria-describedby="recordingLinkHelpText"
-              type="url"
+              type="text"
             />
           </FormGroup>
 
@@ -211,7 +203,7 @@ const PresentationLinksForm = ({
                 className="margin-top-105"
                 // Default to upload document tab when document has been uploaded
                 defaultActiveTab={
-                  grbPresentationLinks?.transcriptFileName
+                  defaultValues?.transcriptFileData?.name
                     ? t('presentationLinks.uploadDocument')
                     : t('presentationLinks.addLink')
                 }
@@ -249,14 +241,16 @@ const PresentationLinksForm = ({
                     render={({ field: { ref, ...field } }) => (
                       <FileInput
                         defaultFileName={
-                          grbPresentationLinks?.transcriptFileName
+                          defaultValues?.transcriptFileData?.name
                         }
                         name={field.name}
                         id={field.name}
                         accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
                         aria-describedby="transcriptHelpText transcriptFileDataHelpText"
                         className="maxw-none"
-                        onChange={field.onChange}
+                        onChange={e =>
+                          field.onChange(e.currentTarget?.files?.[0])
+                        }
                       />
                     )}
                   />
@@ -265,7 +259,7 @@ const PresentationLinksForm = ({
             </Fieldset>
           </FormGroup>
 
-          <FormGroup error={!!errors?.presentationDeckFileData}>
+          <FormGroup error={hasRequiredFieldErrors}>
             <Label htmlFor="presentationDeckFileData">
               {t('presentationLinks.presentationDeckLabel')}
             </Label>
@@ -280,14 +274,14 @@ const PresentationLinksForm = ({
                 return (
                   <FileInput
                     defaultFileName={
-                      grbPresentationLinks?.presentationDeckFileName
+                      defaultValues?.presentationDeckFileData?.name
                     }
                     name={field.name}
                     id={field.name}
                     accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
                     aria-describedby="presentationDeckHelpText"
                     className="maxw-none"
-                    onChange={field.onChange}
+                    onChange={e => field.onChange(e.currentTarget?.files?.[0])}
                   />
                 );
               }}

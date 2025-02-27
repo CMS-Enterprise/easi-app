@@ -1271,6 +1271,29 @@ func TestGrbMeetingStatus(t *testing.T) {
 			expectError:    false,
 		},
 		{
+			testCase: "GRB Step: Review in Progress",
+			intake: models.SystemIntake{
+				Step:                  models.SystemIntakeStepGRBREVIEW,
+				GRBDate:               &yesterday,
+				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:    &yesterday,
+				GrbReviewAsyncEndDate: &tomorrow,
+			},
+			expectedStatus: models.ITGRRBSReviewInProgress,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: Awaiting GRB Review",
+			intake: models.SystemIntake{
+				Step:                        models.SystemIntakeStepGRBREVIEW,
+				GRBDate:                     &yesterday,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GrbReviewAsyncRecordingTime: &yesterday,
+			},
+			expectedStatus: models.ITGRRBSAwaitingGRBReview,
+			expectError:    false,
+		},
+		{
 			testCase: "GRB Step: GRB Date Yesterday",
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepGRBMEETING,

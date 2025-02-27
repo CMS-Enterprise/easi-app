@@ -21,7 +21,7 @@ import Label from 'components/Label';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
 import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
-import { GRBReviewerSchema } from 'validations/grbReviewerSchema';
+import { GRBReviewerSchema } from 'validations/grbReviewSchema';
 
 type AddReviewerFromEuaProps = {
   systemId: string;

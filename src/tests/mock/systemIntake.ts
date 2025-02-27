@@ -42,6 +42,7 @@ import {
   SystemIntakeDocumentStatus,
   SystemIntakeDocumentVersion,
   SystemIntakeFormState,
+  SystemIntakeGRBReviewType,
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatusAdmin,
@@ -681,7 +682,11 @@ export const taskListSystemIntake: TaskListSystemIntake = {
   relationType: null,
   contractName: null,
   contractNumbers: [],
-  systems: []
+  systems: [],
+  grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+  grbReviewStartedAt: null,
+  grbReviewAsyncEndDate: null,
+  grbReviewAsyncGRBMeetingTime: null
 };
 
 export const getGovernanceTaskListQuery = (
