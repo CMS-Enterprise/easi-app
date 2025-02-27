@@ -112,7 +112,10 @@ export default {
             AWAITING_DECISION: 'This GRB review ended on {{date}}.',
             COMPLETED: 'This GRB review ended on {{date}}.'
           }
-        }
+        },
+        uploadPresentation: 'Uploaded presentation deck: {{fileName}}',
+        view: 'View',
+        remove: 'Remove'
       },
       decisionAndNextSteps: {
         title: 'Decision and next steps',
