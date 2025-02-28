@@ -10,13 +10,15 @@ import {
   Grid,
   Label
 } from '@trussworks/react-uswds';
-import { useUpdateTRBFormMutation } from 'gql/generated/graphql';
+import {
+  TRBSubjectAreaOption,
+  useUpdateTRBFormMutation
+} from 'gql/generated/graphql';
 import { isEqual, pick } from 'lodash';
 
 import Alert from 'components/Alert';
 import { ErrorAlertMessage } from 'components/ErrorAlert';
 import TextAreaField from 'components/TextAreaField';
-import { TRBSubjectAreaOption } from 'types/graphql-global-types';
 import nullFillObject from 'utils/nullFillObject';
 
 import Pager from './Pager';

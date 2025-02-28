@@ -36,7 +36,7 @@ export const formatFundingSourcesForApp = (
         {
           __typename: 'SystemIntakeFundingSource',
           id,
-          fundingNumber,
+          fundingNumber: fundingNumber ?? null,
           sources: source ? [source] : []
         }
       ];

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Button, Icon } from '@trussworks/react-uswds';
+import { RequestRelationType } from 'gql/generated/graphql';
 
 import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
-import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
 

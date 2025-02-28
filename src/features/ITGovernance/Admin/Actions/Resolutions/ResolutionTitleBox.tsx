@@ -1,12 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-
-import PageHeading from 'components/PageHeading';
 import {
   SystemIntakeDecisionState,
   SystemIntakeState
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
+
+import PageHeading from 'components/PageHeading';
 
 type ResolutionTitleBoxProps = {
   title: string;

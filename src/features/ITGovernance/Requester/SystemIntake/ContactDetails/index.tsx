@@ -15,11 +15,13 @@ import {
 } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
+  GetSystemIntakeDocument,
+  SystemIntakeFormState,
+  SystemIntakeFragmentFragment,
   SystemIntakeGovernanceTeamInput,
+  SystemIntakeRequestType,
   useUpdateSystemIntakeContactDetailsMutation
 } from 'gql/generated/graphql';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
 
 import AdditionalContacts from 'components/AdditionalContacts';
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -38,10 +40,6 @@ import PageLoading from 'components/PageLoading';
 import PageNumber from 'components/PageNumber';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import {
-  SystemIntakeFormState,
-  SystemIntakeRequestType
-} from 'types/graphql-global-types';
-import {
   ContactDetailsForm,
   ContactFields,
   SystemIntakeContactProps
@@ -59,7 +57,7 @@ import {
 import './index.scss';
 
 type ContactDetailsProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 type SystemIntakeRoleKeys = keyof Omit<ContactDetailsForm, 'governanceTeams'>;
@@ -89,7 +87,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const [mutate] = useUpdateSystemIntakeContactDetailsMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeQuery,
+        query: GetSystemIntakeDocument,
         variables: {
           id: systemIntake.id
         }

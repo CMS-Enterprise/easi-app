@@ -12,7 +12,10 @@ import {
   SummaryBoxHeading
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { useGetTRBPublicGuidanceLetterQuery } from 'gql/generated/graphql';
+import {
+  TRBGuidanceLetterStatus,
+  useGetTRBPublicGuidanceLetterQuery
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs, { BreadcrumbsProps } from 'components/Breadcrumbs';
@@ -22,7 +25,6 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import { PDFExportButton } from 'components/PDFExport';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
-import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 

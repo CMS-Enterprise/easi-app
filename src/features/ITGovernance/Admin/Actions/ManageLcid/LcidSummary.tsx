@@ -2,21 +2,21 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
 
 import LcidStatusTag from 'components/LcidStatusTag';
 import { RichTextViewer } from 'components/RichTextEditor';
-import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
 export type LcidSummaryProps = {
-  lcid: string | null;
-  lcidIssuedAt: string | null;
-  lcidExpiresAt: string | null;
-  lcidRetiresAt: string | null;
-  lcidScope: string | null;
-  decisionNextSteps: string | null;
-  lcidCostBaseline: string | null;
-  lcidStatus: SystemIntakeLCIDStatus | null;
+  lcid: string | null | undefined;
+  lcidIssuedAt?: string | null | undefined;
+  lcidExpiresAt?: string | null | undefined;
+  lcidRetiresAt?: string | null | undefined;
+  lcidScope?: string | null | undefined;
+  decisionNextSteps?: string | null | undefined;
+  lcidCostBaseline?: string | null | undefined;
+  lcidStatus?: SystemIntakeLCIDStatus | null | undefined;
 };
 
 const LcidSummary = ({

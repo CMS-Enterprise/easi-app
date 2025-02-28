@@ -2,26 +2,21 @@ import React, { createContext, useMemo } from 'react';
 import { Controller, ControllerRenderProps, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import { Button, Radio } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import GetGovernanceTaskListQuery from 'gql/legacyGQL/GetGovernanceTaskListQuery';
 import {
-  GetGovernanceTaskList,
-  GetGovernanceTaskListVariables
-} from 'gql/legacyGQL/types/GetGovernanceTaskList';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+  ITGovDraftBusinessCaseStatus,
+  ITGovFinalBusinessCaseStatus,
+  ITGovIntakeFormStatus,
+  SystemIntakeFragmentFragment,
+  SystemIntakeState,
+  useGetGovernanceTaskListQuery
+} from 'gql/generated/graphql';
 
 import CollapsableLink from 'components/CollapsableLink';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import { RadioGroup } from 'components/RadioField';
-import {
-  ITGovDraftBusinessCaseStatus,
-  ITGovFinalBusinessCaseStatus,
-  ITGovIntakeFormStatus,
-  SystemIntakeState
-} from 'types/graphql-global-types';
 
 import ManageLcid from './ManageLcid';
 import ProgressToNewStep from './ProgressToNewStep';
@@ -76,7 +71,7 @@ const ActionRadioOption = ({
 };
 
 export type ActionsProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 export type EditsRequestedKey =
@@ -99,10 +94,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
 
   const { state, decisionState, lcidStatus } = systemIntake;
 
-  const { data, loading } = useQuery<
-    GetGovernanceTaskList,
-    GetGovernanceTaskListVariables
-  >(GetGovernanceTaskListQuery, {
+  const { data, loading } = useGetGovernanceTaskListQuery({
     variables: {
       id: systemIntake.id
     }

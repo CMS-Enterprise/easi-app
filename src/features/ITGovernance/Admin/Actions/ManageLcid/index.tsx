@@ -5,6 +5,7 @@ import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import { Form, Grid } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
+import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -12,7 +13,6 @@ import Label from 'components/Label';
 import PageHeading from 'components/PageHeading';
 import { RadioField, RadioGroup } from 'components/RadioField';
 import RequiredAsterisk from 'components/RequiredAsterisk';
-import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
 import ActionsSummary from '../components/ActionsSummary';
@@ -25,7 +25,7 @@ import UpdateLcid from './UpdateLcid';
 
 export interface ManageLcidProps {
   systemIntakeId: string;
-  lcidStatus: SystemIntakeLCIDStatus | null;
+  lcidStatus?: SystemIntakeLCIDStatus | null | undefined;
 }
 
 type LcidAction = 'update' | 'retire' | 'expire';

@@ -2,30 +2,26 @@ import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Link } from '@trussworks/react-uswds';
+import {
+  GetGovernanceTaskListQuery,
+  GovernanceRequestFeedbackTargetForm,
+  ITGovFinalBusinessCaseStatus,
+  SystemIntakeState
+} from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
-import {
-  GovernanceRequestFeedbackTargetForm,
-  ITGovFinalBusinessCaseStatus,
-  SystemIntakeState
-} from 'types/graphql-global-types';
-import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
-import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskBizCaseFinal = ({
   id,
   itGovTaskStatuses: { bizCaseFinalStatus },
-  bizCaseFinalPctComplete,
-  bizCaseFinalSubmittedAt,
-  bizCaseFinalUpdatedAt,
   governanceRequestFeedbacks,
   businessCase,
   state
-}: ItGovTaskSystemIntakeWithMockData) => {
+}: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
   const stepKey = 'bizCaseFinal';
   const { t } = useTranslation('itGov');
 
@@ -36,31 +32,6 @@ const GovTaskBizCaseFinal = ({
     [ITGovFinalBusinessCaseStatus.IN_PROGRESS, 'continue'],
     [ITGovFinalBusinessCaseStatus.EDITS_REQUESTED, 'editForm']
   ]);
-
-  let dateInfo: TaskListItemDateInfo;
-
-  // Updated date
-  if (
-    (bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.IN_PROGRESS ||
-      bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.EDITS_REQUESTED) &&
-    bizCaseFinalUpdatedAt
-  )
-    dateInfo = {
-      label: 'lastUpdated',
-      value: bizCaseFinalUpdatedAt
-    };
-
-  // Submitted date
-  if (
-    !dateInfo &&
-    (bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.SUBMITTED ||
-      bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.DONE) &&
-    bizCaseFinalSubmittedAt
-  )
-    dateInfo = {
-      label: 'submitted',
-      value: bizCaseFinalSubmittedAt
-    };
 
   const hasFeedback = useMemo(
     () =>
@@ -76,11 +47,6 @@ const GovTaskBizCaseFinal = ({
       heading={t(`taskList.step.${stepKey}.title`)}
       status={bizCaseFinalStatus}
       state={state}
-      statusPercentComplete={
-        bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.IN_PROGRESS &&
-        bizCaseFinalPctComplete
-      }
-      statusDateInfo={dateInfo}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
     >
       <TaskListDescription>

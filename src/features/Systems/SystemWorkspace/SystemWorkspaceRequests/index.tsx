@@ -10,15 +10,14 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useQuery } from '@apollo/client';
 import { Button, Icon, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
-import GetLinkedRequestsQuery from 'gql/legacyGQL/GetLinkedRequestsQuery';
 import {
-  GetLinkedRequests,
-  GetLinkedRequestsVariables
-} from 'gql/legacyGQL/types/GetLinkedRequests';
+  SystemIntakeState,
+  TRBRequestState,
+  useGetLinkedRequestsQuery
+} from 'gql/generated/graphql';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import IconLink from 'components/IconLink';
@@ -29,7 +28,6 @@ import PageLoading from 'components/PageLoading';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
-import { SystemIntakeState, TRBRequestState } from 'types/graphql-global-types';
 import { SystemLinkedRequest } from 'types/systemLinkedRequest';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
@@ -50,10 +48,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
 
   const [activeTable, setActiveTable] = useState<'open' | 'closed'>('open');
 
-  const { loading, error, data } = useQuery<
-    GetLinkedRequests,
-    GetLinkedRequestsVariables
-  >(GetLinkedRequestsQuery, {
+  const { loading, error, data } = useGetLinkedRequestsQuery({
     variables: {
       cedarSystemId: systemId,
       systemIntakeState:
@@ -114,7 +109,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
           SystemLinkedRequest,
           SystemLinkedRequest['__typename']
         >) => {
-          return <>{processName[value]}</>;
+          return <>{processName[value as keyof typeof processName]}</>;
         }
       },
       {

@@ -3,11 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useReactToPrint } from 'react-to-print';
 import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import GetGovernanceRequestFeedbackQuery from 'gql/legacyGQL/GetGovernanceRequestFeedbackQuery';
 import {
-  GetGovernanceRequestFeedback,
-  GetGovernanceRequestFeedbackVariables
-} from 'gql/legacyGQL/types/GetGovernanceRequestFeedback';
+  GovernanceRequestFeedbackType,
+  useGetGovernanceRequestFeedbackQuery
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
@@ -15,8 +14,6 @@ import IconLink from 'components/IconLink';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import { PDFExportButton } from 'components/PDFExport';
-import useCacheQuery from 'hooks/useCacheQuery';
-import { GovernanceRequestFeedbackType } from 'types/graphql-global-types';
 
 import FeedbackItem from './FeedbackItem';
 
@@ -46,10 +43,7 @@ const FeedbackList = ({
 }: FeedbackListProps) => {
   const { t } = useTranslation('taskList');
 
-  const { data, loading } = useCacheQuery<
-    GetGovernanceRequestFeedback,
-    GetGovernanceRequestFeedbackVariables
-  >(GetGovernanceRequestFeedbackQuery, {
+  const { data, loading } = useGetGovernanceRequestFeedbackQuery({
     variables: {
       intakeID: systemIntakeId
     }
