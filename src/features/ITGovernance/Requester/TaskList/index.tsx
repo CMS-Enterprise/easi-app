@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -13,13 +12,8 @@ import {
 import NotFound from 'features/Miscellaneous/NotFound';
 import {
   ITGovIntakeFormStatus,
-  useArchiveSystemIntakeMutation
+  SystemIntakeState
 } from 'gql/generated/graphql';
-import GetGovernanceTaskListQuery from 'gql/legacyGQL/GetGovernanceTaskListQuery';
-import {
-  GetGovernanceTaskList,
-  GetGovernanceTaskListVariables
-} from 'gql/legacyGQL/types/GetGovernanceTaskList';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -31,11 +25,13 @@ import PageLoading from 'components/PageLoading';
 import { TaskListContainer } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
+
 import {
   SystemIntakeDecisionState,
-  SystemIntakeState,
-  SystemIntakeStep
-} from 'types/graphql-global-types';
+  SystemIntakeStep,
+  useArchiveSystemIntakeMutation,
+  useGetGovernanceTaskListQuery
+} from '../../../../gql/generated/graphql';
 
 import AdditionalRequestInfo from './AdditionalRequestInfo';
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
@@ -55,10 +51,7 @@ function GovernanceTaskList() {
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
-  const { data, loading, error } = useQuery<
-    GetGovernanceTaskList,
-    GetGovernanceTaskListVariables
-  >(GetGovernanceTaskListQuery, {
+  const { data, loading, error } = useGetGovernanceTaskListQuery({
     variables: {
       id: systemId
     }

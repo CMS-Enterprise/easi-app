@@ -1,16 +1,13 @@
 import {
   AugmentedSystemIntakeContact,
-  SystemIntakeCollaboratorInput
+  FundingSourceFragmentFragment,
+  SystemIntakeCollaboratorInput,
+  SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
-import { FundingSource as FundingSourceType } from 'gql/legacyGQL/types/FundingSource';
 
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
-
-import {
-  SystemIntakeSoftwareAcquisitionMethods,
-  SystemIntakeStatusAdmin
-} from './graphql-global-types';
+import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
 
 export type RequestType = 'NEW' | 'MAJOR_CHANGES' | 'RECOMPETE' | 'SHUTDOWN';
 
@@ -89,7 +86,7 @@ export type ContactDetailsForm = {
 };
 
 /** Funding source formatted for API */
-export type FundingSource = FundingSourceType;
+export type FundingSource = FundingSourceFragmentFragment;
 
 /** Contract details form */
 export type ContractDetailsForm = {

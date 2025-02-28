@@ -1,12 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
-import { useGetTRBRequestFeedbackQuery } from 'gql/generated/graphql';
+import {
+  TRBRequestState,
+  TRBRequestStatus,
+  useGetTRBRequestFeedbackQuery
+} from 'gql/generated/graphql';
 import { sortBy } from 'lodash';
 
 import Alert from 'components/Alert';
 import PageLoading from 'components/PageLoading';
-import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
 import TrbRequestFeedbackList from '../../Requester/Feedback';

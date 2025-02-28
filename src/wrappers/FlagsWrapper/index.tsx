@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
-import GetCurrentUserQuery from 'gql/legacyGQL/GetCurrentUserQuery';
-import { GetCurrentUser } from 'gql/legacyGQL/types/GetCurrentUser';
+import { useGetCurrentUserQuery } from 'gql/generated/graphql';
 import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
 
 type WrapperProps = {
@@ -16,7 +14,7 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
     () => () => <div />
   );
 
-  const { data } = useQuery<GetCurrentUser>(GetCurrentUserQuery);
+  const { data } = useGetCurrentUserQuery();
 
   useEffect(() => {
     if (data) {

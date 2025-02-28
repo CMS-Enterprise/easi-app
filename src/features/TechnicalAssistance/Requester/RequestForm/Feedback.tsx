@@ -2,14 +2,13 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { GridContainer, Icon } from '@trussworks/react-uswds';
-import { GetTRBRequestQuery } from 'gql/generated/graphql';
+import { GetTRBRequestQuery, TRBFeedbackAction } from 'gql/generated/graphql';
 import { sortBy } from 'lodash';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
-import { TRBFeedbackAction } from 'types/graphql-global-types';
 
 import Breadcrumbs from '../../../../components/Breadcrumbs';
 import TrbRequestFeedbackList from '../Feedback';

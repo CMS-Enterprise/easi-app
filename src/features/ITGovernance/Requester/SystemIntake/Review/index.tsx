@@ -3,17 +3,19 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { useSubmitIntakeMutation } from 'gql/generated/graphql';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import {
+  SystemIntakeFormState,
+  SystemIntakeFragmentFragment,
+  useSubmitIntakeMutation
+} from 'gql/generated/graphql';
 
 import FeedbackBanner from 'components/FeedbackBanner';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
-import { SystemIntakeFormState } from 'types/graphql-global-types';
 
 type ReviewProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 const Review = ({ systemIntake }: ReviewProps) => {

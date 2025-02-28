@@ -1,4 +1,4 @@
-import { TRBDocumentCommonType } from 'types/graphql-global-types';
+import { TRBDocumentCommonType } from 'gql/generated/graphql';
 
 import {
   basicSchema,

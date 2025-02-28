@@ -6,7 +6,10 @@ import {
   ExternalRecipientAlert,
   RecipientLabel
 } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
-import { AugmentedSystemIntakeContact } from 'gql/generated/graphql';
+import {
+  AugmentedSystemIntakeContact,
+  EmailNotificationRecipients
+} from 'gql/generated/graphql';
 
 import AdditionalContacts from 'components/AdditionalContacts';
 import Alert from 'components/Alert';
@@ -18,7 +21,6 @@ import HelpText from 'components/HelpText';
 import TruncatedContent from 'components/TruncatedContent';
 import { IT_GOV_EMAIL, IT_INVESTMENT_EMAIL } from 'constants/externalUrls';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import {
   FormattedContacts,
   SystemIntakeContactProps

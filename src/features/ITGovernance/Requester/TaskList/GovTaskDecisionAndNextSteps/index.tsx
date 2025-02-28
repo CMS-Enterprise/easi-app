@@ -1,22 +1,21 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  GetGovernanceTaskListQuery,
+  ITGovDecisionStatus,
+  SystemIntakeDecisionState
+} from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-import {
-  ITGovDecisionStatus,
-  SystemIntakeDecisionState
-} from 'types/graphql-global-types';
-import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 
 const GovTaskDecisionAndNextSteps = ({
   id,
   itGovTaskStatuses: { decisionAndNextStepsStatus },
   state,
-  decisionState,
-  decisionAndNextStepsSubmittedAt
-}: ItGovTaskSystemIntakeWithMockData) => {
+  decisionState
+}: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
   const stepKey = 'decisionAndNextSteps';
   const { t } = useTranslation('itGov');
 
@@ -35,15 +34,6 @@ const GovTaskDecisionAndNextSteps = ({
       heading={t(`taskList.step.${stepKey}.title`)}
       status={decisionAndNextStepsStatus}
       state={state}
-      statusDateInfo={
-        decisionAndNextStepsStatus === ITGovDecisionStatus.COMPLETED &&
-        decisionAndNextStepsSubmittedAt
-          ? {
-              label: 'completed',
-              value: decisionAndNextStepsSubmittedAt
-            }
-          : undefined
-      }
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
       id="decision"
     >

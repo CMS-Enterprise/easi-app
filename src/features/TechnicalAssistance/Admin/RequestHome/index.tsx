@@ -1,7 +1,10 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { CardGroup, Icon, Link } from '@trussworks/react-uswds';
-import { useGetTRBRequestHomeQuery } from 'gql/generated/graphql';
+import {
+  TRBRequestStatus,
+  useGetTRBRequestHomeQuery
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
@@ -9,7 +12,6 @@ import { AvatarCircle } from 'components/Avatar/Avatar';
 import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
-import { TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';

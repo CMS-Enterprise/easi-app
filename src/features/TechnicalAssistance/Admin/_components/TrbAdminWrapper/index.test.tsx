@@ -4,17 +4,17 @@ import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
 import {
+  TRBFeedbackStatus,
+  TRBFormStatus,
+  TRBRequestState,
+  TRBRequestStatus
+} from 'gql/generated/graphql';
+import {
   getTrbGuidanceLetterQuery,
   taskStatuses,
   trbRequestSummary
 } from 'tests/mock/trbRequest';
 
-import {
-  TRBFeedbackStatus,
-  TRBFormStatus,
-  TRBRequestState,
-  TRBRequestStatus
-} from 'types/graphql-global-types';
 import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 import easiMockStore from 'utils/testing/easiMockStore';
 import mockTranslation from 'utils/testing/mockTranslation';

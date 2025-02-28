@@ -6,7 +6,6 @@
 
 import React, { useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useQuery } from '@apollo/client';
 import {
   Button,
   CardGroup,
@@ -15,8 +14,7 @@ import {
   SummaryBox,
   SummaryBoxContent
 } from '@trussworks/react-uswds';
-import GetCedarSystemsQuery from 'gql/legacyGQL/GetCedarSystemsQuery';
-import { GetCedarSystems } from 'gql/legacyGQL/types/GetCedarSystems';
+import { useGetCedarSystemsQuery } from 'gql/generated/graphql';
 
 import Alert, { AlertText } from 'components/Alert';
 import BookmarkCard from 'components/BookmarkCard';
@@ -41,7 +39,7 @@ export const SystemList = () => {
     loading: loadingSystems,
     error: error1,
     data: data1
-  } = useQuery<GetCedarSystems>(GetCedarSystemsQuery);
+  } = useGetCedarSystemsQuery();
 
   const systemsTableData = data1?.cedarSystems ?? [];
 

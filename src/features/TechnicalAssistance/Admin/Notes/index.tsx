@@ -6,13 +6,14 @@ import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import {
   GetTRBRequestSummaryQuery,
   TRBAdminNoteFragment,
+  TRBRequestState,
+  TRBRequestStatus,
   useGetTRBAdminNotesQuery
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
-import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 
 import Note from '../_components/Note';
 import { ModalViewType } from '../_components/NoteModal';

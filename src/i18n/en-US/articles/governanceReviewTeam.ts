@@ -2,7 +2,7 @@ import {
   SystemIntakeActionType,
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
 
 /** System intake action type translations */
 const actionNameTranslations: Record<SystemIntakeActionType, string> = {
