@@ -15,7 +15,7 @@ import {
   getHeaderSortIcon
 } from 'utils/tableSort';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 type ParticipantsTableProps = {
   id: string;

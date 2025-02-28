@@ -11,7 +11,7 @@ import users from 'tests/mock/users';
 
 import { SystemIntakeState } from 'types/graphql-global-types';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import ParticipantsTable from './ParticipantsTable';
 

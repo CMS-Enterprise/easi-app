@@ -17,7 +17,8 @@ import {
 import { businessCaseInitialData } from 'data/businessCase';
 import { MessageProvider } from 'hooks/useMessage';
 
-import Actions from './Actions';
+import Actions from '../Actions';
+
 import RequestOverview from './RequestOverview';
 
 vi.mock('@okta/okta-react', () => ({

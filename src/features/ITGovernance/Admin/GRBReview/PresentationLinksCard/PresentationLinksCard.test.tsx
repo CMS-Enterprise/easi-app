@@ -9,7 +9,7 @@ import { MessageProvider } from 'hooks/useMessage';
 import { SystemIntakeDocumentStatus } from 'types/graphql-global-types';
 import { getExpectedAlertType } from 'utils/testing/helpers';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import PresentationLinksCard from './PresentationLinksCard';
 

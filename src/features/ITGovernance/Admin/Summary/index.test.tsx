@@ -13,7 +13,7 @@ import {
   SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import Summary, { RequestSummaryProps } from '.';
 

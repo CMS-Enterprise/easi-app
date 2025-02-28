@@ -38,13 +38,13 @@ import { SystemIntakeState } from 'types/graphql-global-types';
 import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
-import Discussions from './Discussions';
-import GRBFeedbackCard from './GRBFeedbackCard';
+import Discussions from './Discussions/Discussions';
+import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
+import ParticipantsTable from './ParticipantsTable/ParticipantsTable';
+import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
 import GRBReviewerForm from './GRBReviewerForm';
-import ParticipantsTable from './ParticipantsTable';
-import PresentationLinksCard from './PresentationLinksCard';
 
 import './index.scss';
 

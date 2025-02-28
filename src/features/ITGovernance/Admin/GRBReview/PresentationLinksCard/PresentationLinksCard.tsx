@@ -22,7 +22,7 @@ import Modal from 'components/Modal';
 import useMessage from 'hooks/useMessage';
 import { SystemIntakeDocumentStatus } from 'types/graphql-global-types';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 export type PresentationLinksCardProps = {
   systemIntakeID: string;

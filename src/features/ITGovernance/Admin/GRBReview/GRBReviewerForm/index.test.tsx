@@ -2,7 +2,6 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ITGovAdminContext from 'features/ITGovernance/Admin/ITGovAdminContext';
 import {
   CreateSystemIntakeGRBReviewersDocument,
   CreateSystemIntakeGRBReviewersMutation,
@@ -28,6 +27,7 @@ import {
 import i18next from 'i18next';
 import { businessCase } from 'tests/mock/businessCase';
 import { systemIntake } from 'tests/mock/systemIntake';
+import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';

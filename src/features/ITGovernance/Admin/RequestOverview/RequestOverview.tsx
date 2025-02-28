@@ -29,23 +29,22 @@ import SideNavigation from 'components/SideNavigation';
 import useMessage from 'hooks/useMessage';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 
-import AccordionNavigation from '../../../components/AccordionNavigation';
+import AccordionNavigation from '../../../../components/AccordionNavigation';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import Actions from '../Actions';
+import BusinessCaseReview from '../BusinessCaseReview';
+import Dates from '../Dates';
+import Decision from '../Decision';
+import Documents from '../Documents';
+import Feedback from '../Feedback';
+import GRBReview from '../GRBReview';
+import IntakeReview from '../IntakeReview';
+import LifecycleID from '../LifecycleID';
+import Notes from '../Notes';
+import subNavItems from '../subNavItems';
+import Summary from '../Summary';
 
-import Actions from './Actions';
-import BusinessCaseReview from './BusinessCaseReview';
-import Dates from './Dates';
-import Decision from './Decision';
-import Documents from './Documents';
-import Feedback from './Feedback';
-import GRBReview from './GRBReview';
-import IntakeReview from './IntakeReview';
-import ITGovAdminContext from './ITGovAdminContext';
-import LifecycleID from './LifecycleID';
-import Notes from './Notes';
-import subNavItems from './subNavItems';
-import Summary from './Summary';
-
-import './index.scss';
+import '../index.scss';
 
 type RequestOverviewProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];

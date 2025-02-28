@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
-import RequestOverview from 'features/ITGovernance/Admin/RequestOverview';
+import RequestOverview from 'features/ITGovernance/Admin/RequestOverview/RequestOverview';
 import NotFound from 'features/Miscellaneous/NotFound';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
 import { useGetSystemIntakeGRBReviewersQuery } from 'gql/generated/graphql';
@@ -11,7 +11,7 @@ import { AppState } from 'stores/reducers/rootReducer';
 import PageLoading from 'components/PageLoading';
 import user from 'utils/user';
 
-import ITGovAdminContext from './ITGovAdminContext';
+import ITGovAdminContext from '../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 const GovernanceReviewTeam = () => {
   const { groups, euaId, isUserSet } = useSelector(
