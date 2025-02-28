@@ -63,7 +63,6 @@ const PresentationLinksForm = ({
     register,
     handleSubmit,
     control,
-    watch,
     formState: { errors, isValid, isDirty, defaultValues }
   } = useEasiForm<PresentationLinkFields>({
     resolver: yupResolver(SetGRBPresentationLinksSchema),
@@ -263,19 +262,19 @@ const PresentationLinksForm = ({
           </FormGroup>
 
           <FormGroup error={hasRequiredFieldErrors} className="margin-top-6">
-            {/* <Label htmlFor="presentationDeckFileData">
-              {t('presentationLinks.presentationDeckLabel')}
-            </Label>
-            <HelpText id="presentationDeckHelpText" className="margin-top-05">
-              {t('presentationLinks.documentUploadHelpText')}
-            </HelpText> */}
-
             <Controller
               control={control}
               name="presentationDeckFileData"
               render={({ field: { ref, ...field } }) => {
                 return (
                   <SendPresentationReminder
+                    systemIntakeID={id}
+                    presentationDeckFileURL={
+                      grbPresentationLinks?.presentationDeckFileURL
+                    }
+                    presentationDeckFileName={
+                      grbPresentationLinks?.presentationDeckFileName
+                    }
                     name={field.name}
                     id={field.name}
                     accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"

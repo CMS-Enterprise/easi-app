@@ -8,18 +8,45 @@ import {
   CardHeader,
   FileInput as UswdsFileInput
 } from '@trussworks/react-uswds';
+import { useSendPresentationDeckReminderMutation } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
+import { downloadFileFromURL } from 'utils/downloadFile';
 
 function SendPresentationReminder({
+  systemIntakeID,
+  presentationDeckFileURL,
+  presentationDeckFileName,
   ...props
-}: ComponentProps<typeof UswdsFileInput>) {
+}: ComponentProps<typeof UswdsFileInput> & {
+  systemIntakeID: string;
+  presentationDeckFileURL: string | null | undefined;
+  presentationDeckFileName: string | null | undefined;
+}) {
   const { t } = useTranslation('grbReview');
 
   const { id, name, onChange } = props;
 
   const [file, setFile] = useState<File>();
   const [error, setError] = useState(false);
+
+  const [sendReminder] = useSendPresentationDeckReminderMutation({
+    variables: {
+      systemIntakeID
+    }
+  });
+
+  const sendReminderClick = () => {
+    sendReminder()
+      .then(res => {
+        console.log(res);
+        // do something
+        // maybe show a success message
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -73,10 +100,6 @@ function SendPresentationReminder({
       </CardHeader>
 
       <CardBody>
-        <Alert type="info" slim>
-          {t('presentationLinks.sendReminderCard.notUploadedInfo')}
-        </Alert>
-
         {error && (
           <div
             className="usa-file-input__accepted-files-message"
@@ -86,13 +109,45 @@ function SendPresentationReminder({
           </div>
         )}
 
-        <div id="FileUpload-Description" className="sr-only">
-          {file ? `File ${file.name} selected` : 'Select a file'}
-        </div>
+        {!file && !presentationDeckFileName ? (
+          <Alert type="info" slim>
+            {t('presentationLinks.sendReminderCard.notUploadedInfo')}
+          </Alert>
+        ) : (
+          <div>
+            <p className="margin-y-1">
+              {t('presentationLinks.sendReminderCard.uplodededFile')}
+            </p>
+
+            <span>
+              {file?.name || presentationDeckFileName}{' '}
+              {presentationDeckFileURL && presentationDeckFileName && (
+                <Button
+                  type="button"
+                  unstyled
+                  className="margin-left-1 margin-top-0"
+                  onClick={() =>
+                    downloadFileFromURL(
+                      presentationDeckFileURL,
+                      presentationDeckFileName
+                    )
+                  }
+                >
+                  {t('presentationLinks.sendReminderCard.view')}
+                </Button>
+              )}
+            </span>
+          </div>
+        )}
       </CardBody>
 
       <CardFooter>
-        <Button type="submit" disabled={!file} className="margin-top-0">
+        <Button
+          type="button"
+          onClick={sendReminderClick}
+          // disabled={!file}
+          className="margin-top-0"
+        >
           {t('presentationLinks.sendReminderCard.sendReminder')}
         </Button>
 
