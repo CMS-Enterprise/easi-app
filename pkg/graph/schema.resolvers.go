@@ -1207,7 +1207,12 @@ func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx contex
 		return false, err
 	}
 
-	// TODO: Update the time cache in db for the last reminder sent
+	curTime := time.Now()
+	intake.GrbPresentationDeckRequesterReminderEmailSentTime = &curTime
+	_, err = r.store.UpdateSystemIntakeNP(ctx, r.store, intake)
+	if err != nil {
+		return true, err // return true to indicate email was sent, but include the error as the cache was not updated
+	}
 
 	return true, nil
 }

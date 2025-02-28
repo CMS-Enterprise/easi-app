@@ -29,7 +29,7 @@ func (sie systemIntakeEmails) presentationDeckUploadReminderBody(
 		ProjectTitle:             projectTitle,
 		SystemIntakeRequestLink:  requesterURL,
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
-		GRBHelpLink:              sie.client.urlFromPath(path.Join("help", "grb", "prepare-presentation-deck")), // TODO: Get proper path
+		GRBHelpLink:              sie.client.urlFromPath(path.Join("help", "it-governance", "prepare-for-grb")),
 	}
 
 	var b bytes.Buffer
@@ -50,7 +50,7 @@ func (sie systemIntakeEmails) SendPresentationDeckUploadReminder(
 	systemIntakeID uuid.UUID,
 	projectTitle string,
 ) error {
-	subject := fmt.Sprintf("GRB review started for %s", projectTitle)
+	subject := fmt.Sprintf("GRB reminder: upload presentation for %s", projectTitle)
 	body, err := sie.presentationDeckUploadReminderBody(systemIntakeID, projectTitle)
 	if err != nil {
 		return err

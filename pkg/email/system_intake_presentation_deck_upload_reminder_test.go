@@ -88,7 +88,7 @@ func (s *EmailTestSuite) TestSendPresentationDeckUploadReminder() {
 	s.NoError(err)
 
 	s.Run("Subject is correct", func() {
-		expectedSubject := fmt.Sprintf("GRB review started for %s", projectTitle)
+		expectedSubject := fmt.Sprintf("GRB reminder: upload presentation for %s", projectTitle)
 		s.Equal(expectedSubject, sender.subject)
 	})
 
