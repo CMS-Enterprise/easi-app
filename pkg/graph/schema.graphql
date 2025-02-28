@@ -2722,7 +2722,7 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
-  sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): String
+  sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
   @hasRole(role: EASI_GOVTEAM)
 }
 

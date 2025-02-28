@@ -1005,7 +1005,7 @@ export type Mutation = {
   requestReviewForTRBGuidanceLetter: TRBGuidanceLetter;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
-  sendGRBReviewPresentationDeckReminderEmail?: Maybe<Scalars['String']['output']>;
+  sendGRBReviewPresentationDeckReminderEmail: Scalars['Boolean']['output'];
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
   sendTRBGuidanceLetter: TRBGuidanceLetter;
   setRolesForUserOnSystem?: Maybe<Scalars['String']['output']>;
