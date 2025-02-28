@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1180,8 +1179,37 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 }
 
 // SendGRBReviewPresentationDeckReminderEmail is the resolver for the sendGRBReviewPresentationDeckReminderEmail field.
-func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (*string, error) {
-	panic(fmt.Errorf("not implemented: SendGRBReviewPresentationDeckReminderEmail - sendGRBReviewPresentationDeckReminderEmail"))
+func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (bool, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return false, err
+	}
+
+	if intake.RequesterEmailAddress.Ptr() == nil {
+		return false, &apperrors.ResourceNotFoundError{Err: errors.New("no requester email address found")}
+	}
+
+	recipients := models.EmailNotificationRecipients{
+		RegularRecipientEmails: []models.EmailAddress{
+			models.NewEmailAddress(intake.RequesterEmailAddress.ValueOrZero()),
+		},
+		ShouldNotifyITGovernance: false,
+		ShouldNotifyITInvestment: false,
+	}
+
+	err = r.emailClient.SystemIntake.SendPresentationDeckUploadReminder(
+		ctx,
+		recipients,
+		intake.ID,
+		intake.ProjectName.ValueOrZero(),
+	)
+	if err != nil {
+		return false, err
+	}
+
+	// TODO: Update the time cache in db for the last reminder sent
+
+	return true, nil
 }
 
 // SystemIntake is the resolver for the systemIntake field.
@@ -1956,11 +1984,6 @@ func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.S
 // GrbPresentationLinks is the resolver for the grbPresentationLinks field.
 func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error) {
 	return dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.ID)
-}
-
-// GrbPresentationDeckRequesterReminderEmailSentTime is the resolver for the grbPresentationDeckRequesterReminderEmailSentTime field.
-func (r *systemIntakeResolver) GrbPresentationDeckRequesterReminderEmailSentTime(ctx context.Context, obj *models.SystemIntake) (*time.Time, error) {
-	panic(fmt.Errorf("not implemented: GrbPresentationDeckRequesterReminderEmailSentTime - grbPresentationDeckRequesterReminderEmailSentTime"))
 }
 
 // DocumentType is the resolver for the documentType field.
