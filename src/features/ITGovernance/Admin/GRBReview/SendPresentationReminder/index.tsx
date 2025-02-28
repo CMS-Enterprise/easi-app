@@ -1,8 +1,15 @@
-import React, { ComponentProps, useState } from 'react';
+import React, { ComponentProps, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FileInput as UswdsFileInput } from '@trussworks/react-uswds';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  FileInput as UswdsFileInput
+} from '@trussworks/react-uswds';
 
-import useMessage from 'hooks/useMessage';
+import Alert from 'components/Alert';
 
 function SendPresentationReminder({
   ...props
@@ -11,12 +18,16 @@ function SendPresentationReminder({
 
   const { id, name, onChange } = props;
 
-  const { showMessage } = useMessage();
-
   const [file, setFile] = useState<File>();
   const [error, setError] = useState(false);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const accept = '.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx';
+
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e?.target?.files && e.target.files.length > 0) {
@@ -46,30 +57,64 @@ function SendPresentationReminder({
   };
 
   return (
-    <>
-      {error && (
-        <div
-          className="usa-file-input__accepted-files-message"
-          data-testid="file-upload-input-error"
-        >
-          {t('notValid')}
+    <Card
+      containerProps={{
+        className: 'margin-0 shadow-2 radius-md'
+      }}
+    >
+      <CardHeader>
+        <h4 className="margin-bottom-1">
+          {t('presentationLinks.sendReminderCard.header')}
+        </h4>
+
+        <p className="margin-top-0 text-base">
+          {t('presentationLinks.sendReminderCard.description')}
+        </p>
+      </CardHeader>
+
+      <CardBody>
+        <Alert type="info" slim>
+          {t('presentationLinks.sendReminderCard.notUploadedInfo')}
+        </Alert>
+
+        {error && (
+          <div
+            className="usa-file-input__accepted-files-message"
+            data-testid="file-upload-input-error"
+          >
+            {t('notValid')}
+          </div>
+        )}
+
+        <div id="FileUpload-Description" className="sr-only">
+          {file ? `File ${file.name} selected` : 'Select a file'}
         </div>
-      )}
-      <input
-        id={id}
-        className="usa-file-input__input"
-        type="file"
-        name={name}
-        accept={accept}
-        å
-        aria-describedby={t('presentationLinks.presentationUpload.selectFile')}
-        onChange={handleChange}
-        data-testid="file-upload-input"
-      />
-      <div id="FileUpload-Description" className="sr-only">
-        {file ? `File ${file.name} selected` : 'Select a file'}
-      </div>
-    </>
+      </CardBody>
+
+      <CardFooter>
+        <Button type="submit" disabled={!file} className="margin-top-0">
+          {t('presentationLinks.sendReminderCard.sendReminder')}
+        </Button>
+
+        <Button type="button" onClick={handleButtonClick} unstyled>
+          {t('presentationLinks.sendReminderCard.uploadDeck')}
+        </Button>
+
+        <input
+          id={id}
+          style={{ display: 'none' }}
+          type="file"
+          name={name}
+          accept={accept}
+          ref={fileInputRef}
+          aria-describedby={t(
+            'presentationLinks.presentationUpload.selectFile'
+          )}
+          onChange={handleChange}
+          data-testid="file-upload-input"
+        />
+      </CardFooter>
+    </Card>
   );
 }
 

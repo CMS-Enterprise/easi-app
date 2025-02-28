@@ -262,13 +262,13 @@ const PresentationLinksForm = ({
             </Fieldset>
           </FormGroup>
 
-          <FormGroup error={hasRequiredFieldErrors}>
-            <Label htmlFor="presentationDeckFileData">
+          <FormGroup error={hasRequiredFieldErrors} className="margin-top-6">
+            {/* <Label htmlFor="presentationDeckFileData">
               {t('presentationLinks.presentationDeckLabel')}
             </Label>
             <HelpText id="presentationDeckHelpText" className="margin-top-05">
               {t('presentationLinks.documentUploadHelpText')}
-            </HelpText>
+            </HelpText> */}
 
             <Controller
               control={control}
