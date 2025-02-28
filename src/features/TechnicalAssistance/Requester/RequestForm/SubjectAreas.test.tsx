@@ -6,14 +6,11 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GetTRBRequestQuery,
-  GetTRBRequestQueryVariables
-} from 'gql/generated/graphql';
-
-import {
+  GetTRBRequestQueryVariables,
   TRBRequestState,
   TRBRequestType,
   TRBSubjectAreaOption
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
 
 import SubjectAreas from './SubjectAreas';
 

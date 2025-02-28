@@ -66,7 +66,7 @@ const TaskListItem = ({
         'NOT_NEEDED',
         'CANNOT_START_YET',
         'CANT_START'
-      ].includes(status || '')
+      ].includes((status as string) || '')
     }
   );
 

@@ -2,12 +2,11 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { systemIntake } from 'tests/mock/systemIntake';
-
 import {
   SystemIntakeDecisionState,
   SystemIntakeState
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
+import { systemIntake } from 'tests/mock/systemIntake';
 
 import ResolutionTitleBox from './ResolutionTitleBox';
 import Resolutions from '.';

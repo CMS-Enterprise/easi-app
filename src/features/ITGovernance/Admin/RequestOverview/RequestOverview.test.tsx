@@ -3,9 +3,11 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
-import { SystemIntakeActionType } from 'gql/generated/graphql';
-import GetAdminNotesAndActionsQuery from 'gql/legacyGQL/GetAdminNotesAndActionsQuery';
-import { GetAdminNotesAndActions } from 'gql/legacyGQL/types/GetAdminNotesAndActions';
+import {
+  GetAdminNotesAndActionsDocument,
+  GetAdminNotesAndActionsQuery,
+  SystemIntakeActionType
+} from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
 import {
   getGovernanceTaskListQuery,
@@ -70,7 +72,8 @@ const defaultStore = mockStore({
   }
 });
 
-const adminNotesAndActionsQueryData: GetAdminNotesAndActions = {
+const adminNotesAndActionsQueryData: GetAdminNotesAndActionsQuery = {
+  __typename: 'Query',
   systemIntake: {
     __typename: 'SystemIntake',
     id: systemIntake.id,
@@ -129,7 +132,7 @@ const adminNotesAndActionsQueryData: GetAdminNotesAndActions = {
 describe('Governance Review Team', () => {
   const adminNotesAndActionsQuery = {
     request: {
-      query: GetAdminNotesAndActionsQuery,
+      query: GetAdminNotesAndActionsDocument,
       variables: {
         id: systemIntake.id
       }

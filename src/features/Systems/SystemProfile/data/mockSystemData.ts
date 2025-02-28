@@ -1,6 +1,6 @@
-import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'gql/legacyGQL/types/GetCedarSystems';
-
 // Temporary extension of CEDAR types under BE integration complete
+
+import { GetCedarSystemsQuery } from 'gql/generated/graphql';
 
 export type tempProductsProp = {
   id: string;
@@ -114,7 +114,7 @@ export const activities: tempATOProp[] = [
   }
 ];
 
-export const mockSystemInfo: CedarSystemProps[] = [
+export const mockSystemInfo: GetCedarSystemsQuery['cedarSystems'] = [
   {
     __typename: 'CedarSystem',
     id: '1',

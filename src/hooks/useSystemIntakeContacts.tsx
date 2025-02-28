@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { FetchResult, useQuery } from '@apollo/client';
+import { FetchResult } from '@apollo/client';
 import {
   AugmentedSystemIntakeContact,
   CreateSystemIntakeContactMutation,
@@ -7,13 +7,9 @@ import {
   useCreateSystemIntakeContactMutation,
   useDeleteSystemIntakeContactMutation,
   useGetSystemIntakeContactsQuery,
+  useGetSystemIntakeQuery,
   useUpdateSystemIntakeContactMutation
 } from 'gql/generated/graphql';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import {
-  GetSystemIntake,
-  GetSystemIntakeVariables
-} from 'gql/legacyGQL/types/GetSystemIntake';
 
 import { initialContactsObject } from 'constants/systemIntake';
 import {
@@ -46,14 +42,11 @@ function useSystemIntakeContacts(
     data?.systemIntakeContacts?.systemIntakeContacts;
 
   /** System intake query results */
-  const intakeQuery = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
-    GetSystemIntakeQuery,
-    {
-      variables: {
-        id: systemIntakeId
-      }
+  const intakeQuery = useGetSystemIntakeQuery({
+    variables: {
+      id: systemIntakeId
     }
-  );
+  });
   const { systemIntake } = intakeQuery?.data || {};
 
   /** Initial contacts object merged with possible legacy data from system intake */
@@ -64,7 +57,7 @@ function useSystemIntakeContacts(
       ...initialContactsObject,
       requester: {
         ...initialContactsObject.requester,
-        euaUserId: systemIntake.euaUserId,
+        euaUserId: systemIntake.euaUserId ?? null,
         commonName: systemIntake.requester?.name,
         component: systemIntake.requester?.component || '',
         email: systemIntake.requester?.email || '',

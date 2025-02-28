@@ -1,11 +1,11 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
+import { SystemIntakeGRBReviewType } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { taskListState } from 'tests/mock/govTaskList';
 
-import { SystemIntakeGRBReviewType } from 'types/graphql-global-types';
-import { ItGovTaskSystemIntake } from 'types/itGov';
+import { ITGovTaskSystemIntake } from 'types/itGov';
 import {
   expectTaskStatusTagToHaveTextKey,
   getByRoleWithNameTextKey,
@@ -14,8 +14,8 @@ import {
 
 import GovTaskGrbMeeting from '.';
 
-describe('Gov Task: Attend the GRB review statuses', () => {
-  function renderGovTaskGrbMeeting(mockdata: ItGovTaskSystemIntake) {
+describe('Gov Task: Attend the GRB meeting statuses', () => {
+  function renderGovTaskGrbMeeting(mockdata: ITGovTaskSystemIntake) {
     return render(
       <MemoryRouter>
         <GovTaskGrbMeeting {...mockdata} />

@@ -2,11 +2,13 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
-import { SystemIntakeGRBPresentationLinks } from 'gql/legacyGQL/types/SystemIntakeGRBPresentationLinks';
+import {
+  SystemIntakeDocumentStatus,
+  SystemIntakeGRBPresentationLinksFragmentFragment
+} from 'gql/generated/graphql';
 import { systemIntake } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { SystemIntakeDocumentStatus } from 'types/graphql-global-types';
 import { getExpectedAlertType } from 'utils/testing/helpers';
 
 import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -18,7 +20,7 @@ describe('Async Presentation Links Card', () => {
   const formattedRecordingPasscode = `(Passcode: ${grbPresentationLinksMock?.recordingPasscode})`;
 
   function renderCard(
-    grbPresentationLinks: SystemIntakeGRBPresentationLinks | null,
+    grbPresentationLinks: SystemIntakeGRBPresentationLinksFragmentFragment | null,
     isAdmin: boolean = true
   ) {
     return render(

@@ -13,20 +13,19 @@ import {
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
-import { useUpdateSystemIntakeAdminLeadMutation } from 'gql/generated/graphql';
-import { GetSystemIntake_systemIntake_requester as Requester } from 'gql/legacyGQL/types/GetSystemIntake';
-import { SystemIntake_systems as System } from 'gql/legacyGQL/types/SystemIntake';
+import {
+  RequestRelationType,
+  SystemIntakeFragmentFragment,
+  SystemIntakeState,
+  SystemIntakeStatusAdmin,
+  useUpdateSystemIntakeAdminLeadMutation
+} from 'gql/generated/graphql';
 
 import AdminRequestHeaderSummary from 'components/AdminRequestHeaderSummary';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import Modal from 'components/Modal';
 import { RadioField, RadioGroup } from 'components/RadioField';
 import StateTag from 'components/StateTag';
-import {
-  RequestRelationType,
-  SystemIntakeState,
-  SystemIntakeStatusAdmin
-} from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { translateRequestType } from 'utils/systemIntake';
@@ -37,18 +36,18 @@ import './index.scss';
 
 export type RequestSummaryProps = {
   id: string;
-  requester: Requester;
+  requester: SystemIntakeFragmentFragment['requester'];
   requestName: string;
   requestType: RequestType;
   statusAdmin: SystemIntakeStatusAdmin;
-  adminLead: string | null;
-  submittedAt: string | null;
-  lcid: string | null;
+  adminLead?: string | null;
+  submittedAt?: string | null;
+  lcid?: string | null;
   contractNumbers: string[];
   state: SystemIntakeState;
-  contractName: string | null;
-  relationType: RequestRelationType | null;
-  systems: System[];
+  contractName?: string | null;
+  relationType?: RequestRelationType | null;
+  systems: SystemIntakeFragmentFragment['systems'];
 };
 
 const RequestSummary = ({

@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-
-import { TRBFormStatus } from 'types/graphql-global-types';
+import { TRBFormStatus } from 'gql/generated/graphql';
 
 import TaskListItem, { TaskListDescription } from '.';
 

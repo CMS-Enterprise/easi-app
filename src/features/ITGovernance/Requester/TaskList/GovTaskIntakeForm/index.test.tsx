@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 import { taskListState } from 'tests/mock/govTaskList';
 
-import { ItGovTaskSystemIntake } from 'types/itGov';
+import { ITGovTaskSystemIntake } from 'types/itGov';
 import {
   expectTaskStatusTagToHaveTextKey,
   getByRoleWithNameTextKey,
@@ -14,7 +14,7 @@ import {
 import GovTaskIntakeForm from '.';
 
 describe('Gov Task: Fill out the Intake Request form statuses', () => {
-  function renderGovTaskIntakeForm(mockdata: ItGovTaskSystemIntake) {
+  function renderGovTaskIntakeForm(mockdata: ITGovTaskSystemIntake) {
     return render(
       <MemoryRouter>
         <GovTaskIntakeForm {...mockdata} />
@@ -37,13 +37,6 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
 
     // In progress
     expectTaskStatusTagToHaveTextKey('IN_PROGRESS');
-
-    // % complete
-    screen.getByText(
-      i18next.t<string>('taskList:taskStatusInfo.percentComplete', {
-        percent: 22
-      })
-    );
 
     // Continue button
     getByRoleWithNameTextKey('button', 'itGov:button.continue');

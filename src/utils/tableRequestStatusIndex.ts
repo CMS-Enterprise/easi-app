@@ -1,10 +1,9 @@
 import {
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester,
+  TRBRequestState,
   TRBRequestStatus
 } from 'gql/generated/graphql';
-
-import { TRBRequestState } from 'types/graphql-global-types';
 
 /**
  * Hash tables of status enum strings and their status order.
