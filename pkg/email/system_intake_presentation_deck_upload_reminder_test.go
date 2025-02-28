@@ -23,7 +23,7 @@ func (s *EmailTestSuite) TestSendPresentationDeckUploadReminder() {
 	)
 
 	grbHelpLink := fmt.Sprintf(
-		"%s://%s/help/grb/prepare-presentation-deck",
+		"%s://%s/help/it-governance/prepare-for-grb",
 		s.config.URLScheme,
 		s.config.URLHost,
 	)
@@ -44,32 +44,18 @@ func (s *EmailTestSuite) TestSendPresentationDeckUploadReminder() {
 			<p class="header-subtitle">Easy Access to System Information</p>
 
 			<p>Reminder: Upload your GRB presentation deck for %s. The Governance Review Board (GRB) may reference your presentation deck as they review your project materials. Use the link below to go to EASi and upload your presentation.</p>
-
-			<br>
 			<p><a href="%s">View this request in EASi</a></p>
-
 			<div class="no-margin">
 			  <p>What to expect:</p>
 			  <ul>
 				<li>The GRB will review all materials related to your project, such as your presentation deck and Business Case.</li>
 				<li>GRB members and Governance Admin Team members may ask questions of you and your project team to better understand the nuances of your project.</li>
-				<li>After the review is complete, the Governance Review Board (GRB) and the Governance Admin Team will make a decision about your request and document it in EASi. You will receive a notification once the decision is entered in EASi.</li>
 			  </ul>
 			</div>
-
-			<br>
 			<p>If you need additional guidance about the GRB review process, please visit the help article in EASi using the link below.</p>
-
-			<br>
 			<p><a href="%s">Prepare for the GRB review</a></p>
-
-			<br>
 			<hr>
-			<br>
-
 			<p>If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
-			<br>
-
 			<p>You will continue to receive email notifications about this request until it is closed.</p>`,
 			projectTitle,
 			requestLink,
