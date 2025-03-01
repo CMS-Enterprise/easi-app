@@ -68,6 +68,20 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## File Structure
 
+The paradigm structure for all components should be as follows.
+
+```text
+├── MyTestComponent
+│   ├── _components                     # Child components that are specific to this component.  (They are not shared with other components outside of this tree)
+│   ├── _utils                          # util files (business logic, helpers)
+│   ├── _data                           # static data files for components.  Not mock data
+│   ├── _snapshots                      # Snapshot files for unit test
+│   ├── index.tsx                       # Main entry/index for component
+│   ├── index.test.tsx                  # Unit test file
+│   ├── index.scss                      # Style file
+│   └── index.stories.tsx               # Story file
+```
+
 All of the frontend React code lives in the `src` directory.
 
 ```text
@@ -82,7 +96,6 @@ All of the frontend React code lives in the `src` directory.
 │   └── features                  # Application features/pages
 │   ├── gql                       # Graphql queries/mutation/typeand generated types
 │   │   └── generated             # Generated type definitions
-│   │   └── legacyGQL             # Legacy gql operations and generated type (not using codegen)
 │   │   └── operations            # Defined queries, mutations, and fragments
 │   ├── hooks                     # Redux sagas and reducers
 │   ├── i18n                      # Translation files

@@ -17,7 +17,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"AWAITING_GRB_REVIEW"
     class="easi-tag easi-task-status-tag bg-info-light"
     data-testid="task-list-task-tag"
   >
-    taskStatus.AWAITING_GRB_REVIEW
+    Awaiting GRB review
   </span>
 </DocumentFragment>
 `;
@@ -160,7 +160,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"REVIEW_IN_PROGRESS",
     class="easi-tag easi-task-status-tag bg-warning"
     data-testid="task-list-task-tag"
   >
-    taskStatus.REVIEW_IN_PROGRESS
+    Review in progress
   </span>
 </DocumentFragment>
 `;

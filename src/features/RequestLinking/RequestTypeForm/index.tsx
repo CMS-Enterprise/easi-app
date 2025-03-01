@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
 import {
   Breadcrumb,
@@ -10,19 +9,12 @@ import {
   Button
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
 import {
-  CreateSystemIntake,
-  UpdateSystemIntakeRequestType as UpdateSystemIntakeRequestTypeQuery
-} from 'gql/legacyGQL/SystemIntakeQueries';
-import {
-  GetSystemIntake,
-  GetSystemIntakeVariables
-} from 'gql/legacyGQL/types/GetSystemIntake';
-import {
-  UpdateSystemIntakeRequestType,
-  UpdateSystemIntakeRequestTypeVariables
-} from 'gql/legacyGQL/types/UpdateSystemIntakeRequestType';
+  SystemIntakeRequestType,
+  useCreateSystemIntakeMutation,
+  useGetSystemIntakeQuery,
+  useUpdateSystemIntakeRequestTypeMutation
+} from 'gql/generated/graphql';
 
 import CollapsableLink from 'components/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
@@ -30,7 +22,6 @@ import FieldGroup from 'components/FieldGroup';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import { RadioField } from 'components/RadioField';
-import { SystemIntakeRequestType } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 import linkCedarSystemIdQueryString, {
   useLinkCedarSystemIdQueryParam
@@ -51,25 +42,19 @@ const RequestTypeForm = () => {
   const { t } = useTranslation('intake');
   const { oktaAuth } = useOktaAuth();
   const history = useHistory();
-  const [create] = useMutation(CreateSystemIntake);
+  const [create] = useCreateSystemIntakeMutation();
 
-  const [edit] = useMutation<
-    UpdateSystemIntakeRequestType,
-    UpdateSystemIntakeRequestTypeVariables
-  >(UpdateSystemIntakeRequestTypeQuery);
+  const [edit] = useUpdateSystemIntakeRequestTypeMutation();
 
   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
 
   // Check for an existing intake to prefill the request type option
-  const intakeQuery = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
-    GetSystemIntakeQuery,
-    {
-      variables: {
-        id: systemId || ''
-      },
-      skip: !systemId
-    }
-  );
+  const intakeQuery = useGetSystemIntakeQuery({
+    variables: {
+      id: systemId || ''
+    },
+    skip: !systemId
+  });
   const lastRequestType = intakeQuery.data?.systemIntake?.requestType;
 
   const majorChangesExamples: string[] = t(
@@ -79,7 +64,9 @@ const RequestTypeForm = () => {
     }
   );
 
-  const handleCreateIntake = (formikValues: { requestType: string }) => {
+  const handleCreateIntake = (formikValues: {
+    requestType: SystemIntakeRequestType;
+  }) => {
     oktaAuth.getUser().then((user: any) => {
       const { requestType } = formikValues;
       const input = {
@@ -111,8 +98,8 @@ const RequestTypeForm = () => {
 
       if (!systemId) {
         create({ variables: { input } }).then(response => {
-          if (!response.errors) {
-            const { id } = response.data.createSystemIntake;
+          if (!response.errors && response.data?.createSystemIntake) {
+            const { id } = response.data?.createSystemIntake;
             nextPage(id);
           }
         });
@@ -148,7 +135,9 @@ const RequestTypeForm = () => {
       </BreadcrumbBar>
       <PageHeading>{t('requestTypeForm.heading')}</PageHeading>
       <Formik
-        initialValues={{ requestType: lastRequestType || '' }}
+        initialValues={{
+          requestType: lastRequestType || ('' as SystemIntakeRequestType)
+        }}
         enableReinitialize
         onSubmit={handleCreateIntake}
         validationSchema={SystemIntakeValidationSchema.requestType}
@@ -156,7 +145,9 @@ const RequestTypeForm = () => {
         validateOnChange={false}
         validateOnMount={false}
       >
-        {(formikProps: FormikProps<{ requestType: string }>) => {
+        {(
+          formikProps: FormikProps<{ requestType: SystemIntakeRequestType }>
+        ) => {
           const { values, errors, setErrors, handleSubmit } = formikProps;
           const flatErrors = flattenErrors(errors);
           return (

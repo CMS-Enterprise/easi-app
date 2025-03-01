@@ -1,13 +1,14 @@
-import { SystemIntake_systems as System } from 'gql/legacyGQL/types/SystemIntake';
+import {
+  GetTRBRequestSummaryQuery,
+  RequestRelationType
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
-
-import { RequestRelationType } from 'types/graphql-global-types';
 
 /** Returns linked contract or system name for display */
 const getSystemOrContractName = (
-  relationType: RequestRelationType | null,
-  contractName: string | null,
-  systems: System[]
+  relationType: RequestRelationType | null | undefined,
+  contractName: string | null | undefined,
+  systems: GetTRBRequestSummaryQuery['trbRequest']['systems']
 ) => {
   if (relationType === RequestRelationType.EXISTING_SERVICE && contractName) {
     return contractName;

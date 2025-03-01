@@ -1,33 +1,15 @@
-import { SystemIntakeWithReviewRequestedFragment } from 'gql/generated/graphql';
-import GetGovernanceTaskListQuery from 'gql/legacyGQL/GetGovernanceTaskListQuery';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import GetSystemIntakesWithLCIDS from 'gql/legacyGQL/GetSystemIntakesWithLCIDS';
-import { GetSystemIntakeContactsQuery } from 'gql/legacyGQL/SystemIntakeContactsQueries';
 import {
-  GetGovernanceTaskList,
-  GetGovernanceTaskList_systemIntake as TaskListSystemIntake,
-  GetGovernanceTaskListVariables
-} from 'gql/legacyGQL/types/GetGovernanceTaskList';
-import {
-  GetSystemIntake,
-  GetSystemIntakeVariables
-} from 'gql/legacyGQL/types/GetSystemIntake';
-import {
-  GetSystemIntakeContactsQuery as GetSystemIntakeContactsType,
-  GetSystemIntakeContactsQueryVariables
-} from 'gql/legacyGQL/types/GetSystemIntakeContactsQuery';
-import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'gql/legacyGQL/types/GetSystemIntakesTable';
-import {
-  GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
-  GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
-} from 'gql/legacyGQL/types/GetSystemIntakesWithLCIDS';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
-import { SystemIntakeContact } from 'gql/legacyGQL/types/SystemIntakeContact';
-import { SystemIntakeDocument } from 'gql/legacyGQL/types/SystemIntakeDocument';
-import { DateTime } from 'luxon';
-
-import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
-import {
+  GetGovernanceTaskListDocument,
+  GetGovernanceTaskListQuery,
+  GetGovernanceTaskListQueryVariables,
+  GetSystemIntakeContactsDocument,
+  GetSystemIntakeContactsQuery,
+  GetSystemIntakeDocument,
+  GetSystemIntakeQuery,
+  GetSystemIntakeQueryVariables,
+  GetSystemIntakesTableQuery,
+  GetSystemIntakesWithLCIDSDocument,
+  GetSystemIntakesWithLCIDSQuery,
   GovernanceRequestFeedbackTargetForm,
   GovernanceRequestFeedbackType,
   ITGovDecisionStatus,
@@ -37,19 +19,28 @@ import {
   ITGovGRBStatus,
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
+  SystemIntakeContact,
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
+  SystemIntakeDocumentFragmentFragment,
   SystemIntakeDocumentStatus,
   SystemIntakeDocumentVersion,
   SystemIntakeFormState,
+  SystemIntakeFragmentFragment,
+  SystemIntakeGRBPresentationLinksFragmentFragment,
+  SystemIntakeGRBReviewType,
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester,
   SystemIntakeStep,
   SystemIntakeTRBFollowUp,
+  SystemIntakeWithReviewRequestedFragment,
   TRBRequestStatus
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
+import { DateTime } from 'luxon';
+
+import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import { MockedQuery } from 'types/util';
 
 import users from './users';
@@ -71,12 +62,14 @@ type ContactRole =
 export interface MockSystemIntakeContact extends SystemIntakeContact {
   component: CMSOffice;
   role: ContactRole;
+  commonName: string;
+  email: string;
 }
 
 const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
 
 const contacts: MockSystemIntakeContact[] = users.slice(0, 4).map(userInfo => ({
-  __typename: 'AugmentedSystemIntakeContact',
+  __typename: 'SystemIntakeContact',
   systemIntakeId,
   id: `systemIntakeContact-${userInfo.euaUserId}`,
   euaUserId: userInfo.euaUserId,
@@ -109,7 +102,7 @@ const isso: MockSystemIntakeContact = {
   component: 'Office of Communications'
 };
 
-export const documents: SystemIntakeDocument[] = [
+export const documents: SystemIntakeDocumentFragmentFragment[] = [
   {
     id: '3b23fcf9-85d3-4211-a7d8-d2d08148f196',
     fileName: 'sample1.pdf',
@@ -163,7 +156,21 @@ export const documents: SystemIntakeDocument[] = [
   }
 ];
 
-export const governanceRequestFeedbacks: SystemIntake['governanceRequestFeedbacks'] =
+export const grbPresentationLinks: SystemIntakeGRBPresentationLinksFragmentFragment =
+  {
+    __typename: 'SystemIntakeGRBPresentationLinks',
+    recordingLink: 'https://google.com',
+    recordingPasscode: '123456',
+    transcriptFileName: 'transcript.doc',
+    transcriptFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
+    transcriptFileURL: 'https://google.com',
+    transcriptLink: null,
+    presentationDeckFileName: 'presentationDeck.pptx',
+    presentationDeckFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
+    presentationDeckFileURL: 'https://google.com'
+  };
+
+export const governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'] =
   [
     {
       id: '401c5caa-2245-4078-aa8d-670e72d6020d',
@@ -218,7 +225,7 @@ export const governanceRequestFeedbacks: SystemIntake['governanceRequestFeedback
     }
   ];
 
-export const emptySystemIntake: SystemIntake = {
+export const emptySystemIntake: SystemIntakeFragmentFragment = {
   __typename: 'SystemIntake',
   requestName: null,
   id: systemIntakeId,
@@ -345,10 +352,11 @@ export const emptySystemIntake: SystemIntake = {
     }
   ],
   relatedIntakes: [],
-  relatedTRBRequests: []
+  relatedTRBRequests: [],
+  grbPresentationLinks
 };
 
-export const systemIntake: SystemIntake = {
+export const systemIntake: SystemIntakeFragmentFragment = {
   __typename: 'SystemIntake',
   requestName: 'Mock System Intake Request',
   id: systemIntakeId,
@@ -505,72 +513,75 @@ export const systemIntake: SystemIntake = {
       status: TRBRequestStatus.FOLLOW_UP_REQUESTED,
       createdAt: new Date().toString()
     }
-  ]
+  ],
+  grbPresentationLinks
 };
 
-export const systemIntakeForTable: TableSystemIntake = {
-  __typename: 'SystemIntake',
-  id: '1',
-  euaUserId: '',
-  requestName: '',
-  statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
-  state: SystemIntakeState.OPEN,
-  requesterName: systemIntake.requester.name,
-  requesterComponent: systemIntake.requester.component,
-  businessOwner: systemIntake.businessOwner,
-  productManager: systemIntake.productManager,
-  isso: systemIntake.isso,
-  trbCollaboratorName: '',
-  oitSecurityCollaboratorName: '',
-  eaCollaboratorName: '',
-  existingFunding: false,
-  fundingSources: [],
-  annualSpending: {
-    __typename: 'SystemIntakeAnnualSpending',
-    currentAnnualSpending: 'Current annual spending',
-    currentAnnualSpendingITPortion: 'Current annual spending IT portion',
-    plannedYearOneSpending: 'Planned year one spending',
-    plannedYearOneSpendingITPortion: 'Planned year one spending IT portion'
-  },
-  contract: systemIntake.contract,
-  contractName: '',
-  contractNumbers: [],
-  systems: [],
-  businessNeed: systemIntake.businessNeed,
-  businessSolution: systemIntake.businessSolution,
-  currentStage: systemIntake.currentStage,
-  needsEaSupport: systemIntake.needsEaSupport,
-  usesAiTech: systemIntake.usesAiTech,
-  usingSoftware: systemIntake.usingSoftware,
-  acquisitionMethods: systemIntake.acquisitionMethods,
-  grtDate: systemIntake.grtDate,
-  grbDate: systemIntake.grbDate,
-  lcid: null,
-  lcidScope: null,
-  lcidExpiresAt: null,
-  adminLead: null,
-  notes: [],
-  actions: [],
-  decidedAt: null,
-  submittedAt: null,
-  updatedAt: null,
-  createdAt: systemIntake.createdAt,
-  archivedAt: null,
-  hasUiChanges: null
-};
+export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =
+  {
+    __typename: 'SystemIntake',
+    id: '1',
+    euaUserId: '',
+    requestName: '',
+    statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
+    state: SystemIntakeState.OPEN,
+    requesterName: systemIntake.requester.name,
+    requesterComponent: systemIntake.requester.component,
+    businessOwner: systemIntake.businessOwner,
+    productManager: systemIntake.productManager,
+    isso: systemIntake.isso,
+    trbCollaboratorName: '',
+    oitSecurityCollaboratorName: '',
+    eaCollaboratorName: '',
+    existingFunding: false,
+    fundingSources: [],
+    annualSpending: {
+      __typename: 'SystemIntakeAnnualSpending',
+      currentAnnualSpending: 'Current annual spending',
+      currentAnnualSpendingITPortion: 'Current annual spending IT portion',
+      plannedYearOneSpending: 'Planned year one spending',
+      plannedYearOneSpendingITPortion: 'Planned year one spending IT portion'
+    },
+    contract: systemIntake.contract,
+    contractName: '',
+    contractNumbers: [],
+    systems: [],
+    businessNeed: systemIntake.businessNeed,
+    businessSolution: systemIntake.businessSolution,
+    currentStage: systemIntake.currentStage,
+    needsEaSupport: systemIntake.needsEaSupport,
+    usesAiTech: systemIntake.usesAiTech,
+    usingSoftware: systemIntake.usingSoftware,
+    acquisitionMethods: systemIntake.acquisitionMethods,
+    grtDate: systemIntake.grtDate,
+    grbDate: systemIntake.grbDate,
+    lcid: null,
+    lcidScope: null,
+    lcidExpiresAt: null,
+    adminLead: null,
+    notes: [],
+    actions: [],
+    decidedAt: null,
+    submittedAt: null,
+    updatedAt: null,
+    createdAt: systemIntake.createdAt,
+    archivedAt: null,
+    hasUiChanges: null
+  };
 
 export const getSystemIntakeQuery = (
-  intakeData?: Partial<SystemIntake>
-): MockedQuery<GetSystemIntake, GetSystemIntakeVariables> => {
+  intakeData?: Partial<SystemIntakeFragmentFragment>
+): MockedQuery<GetSystemIntakeQuery, GetSystemIntakeQueryVariables> => {
   return {
     request: {
-      query: GetSystemIntakeQuery,
+      query: GetSystemIntakeDocument,
       variables: {
         id: intakeData?.id || systemIntakeId
       }
     },
     result: {
       data: {
+        __typename: 'Query',
         systemIntake: {
           ...systemIntake,
           ...intakeData
@@ -580,26 +591,28 @@ export const getSystemIntakeQuery = (
   };
 };
 
-export const systemIntakeWithLcid: SystemIntakeWithLcid = {
-  __typename: 'SystemIntake',
-  id: '8be3f86d-a4d6-446b-8a56-dc9da77ed326',
-  lcid: '123456',
-  requestName: 'Test request name',
-  lcidExpiresAt: DateTime.local().plus({ year: 1 }).toISO(),
-  lcidScope: 'Test scope',
-  decisionNextSteps: 'Test next steps',
-  trbFollowUpRecommendation: SystemIntakeTRBFollowUp.NOT_RECOMMENDED,
-  lcidCostBaseline: 'Text cost baseline'
-};
+export const systemIntakeWithLcid: GetSystemIntakesWithLCIDSQuery['systemIntakesWithLcids'][number] =
+  {
+    __typename: 'SystemIntake',
+    id: '8be3f86d-a4d6-446b-8a56-dc9da77ed326',
+    lcid: '123456',
+    requestName: 'Test request name',
+    lcidExpiresAt: DateTime.local().plus({ year: 1 }).toISO(),
+    lcidScope: 'Test scope',
+    decisionNextSteps: 'Test next steps',
+    trbFollowUpRecommendation: SystemIntakeTRBFollowUp.NOT_RECOMMENDED,
+    lcidCostBaseline: 'Text cost baseline'
+  };
 
-export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSType> =
+export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSQuery> =
   {
     request: {
-      query: GetSystemIntakesWithLCIDS,
+      query: GetSystemIntakesWithLCIDSDocument,
       variables: {}
     },
     result: {
       data: {
+        __typename: 'Query',
         systemIntakesWithLcids: [
           systemIntakeWithLcid,
           {
@@ -618,27 +631,29 @@ export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCI
     }
   };
 
-export const getSystemIntakeContactsQuery: MockedQuery<
-  GetSystemIntakeContactsType,
-  GetSystemIntakeContactsQueryVariables
-> = {
-  request: {
-    query: GetSystemIntakeContactsQuery,
-    variables: {
-      id: systemIntakeId
-    }
-  },
-  result: {
-    data: {
-      systemIntakeContacts: {
-        __typename: 'SystemIntakeContactsPayload',
-        systemIntakeContacts: [requester, businessOwner, isso]
+export const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> =
+  {
+    request: {
+      query: GetSystemIntakeContactsDocument,
+      variables: {
+        id: systemIntakeId
+      }
+    },
+    result: {
+      // @ts-ignore
+      data: {
+        __typename: 'Query',
+        systemIntakeContacts: {
+          __typename: 'SystemIntakeContactsPayload',
+          systemIntakeContacts: [requester, businessOwner, isso]
+        }
       }
     }
-  }
-};
+  };
 
-export const taskListSystemIntake: TaskListSystemIntake = {
+export const taskListSystemIntake: NonNullable<
+  GetGovernanceTaskListQuery['systemIntake']
+> = {
   __typename: 'SystemIntake',
   id: systemIntakeId,
   requestName: 'Mock system intake',
@@ -664,20 +679,28 @@ export const taskListSystemIntake: TaskListSystemIntake = {
   relationType: null,
   contractName: null,
   contractNumbers: [],
-  systems: []
+  systems: [],
+  grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+  grbReviewStartedAt: null,
+  grbReviewAsyncEndDate: null,
+  grbReviewAsyncGRBMeetingTime: null
 };
 
 export const getGovernanceTaskListQuery = (
-  taskListData?: Partial<GetGovernanceTaskList['systemIntake']>
-): MockedQuery<GetGovernanceTaskList, GetGovernanceTaskListVariables> => ({
+  taskListData?: Partial<GetGovernanceTaskListQuery['systemIntake']>
+): MockedQuery<
+  GetGovernanceTaskListQuery,
+  GetGovernanceTaskListQueryVariables
+> => ({
   request: {
-    query: GetGovernanceTaskListQuery,
+    query: GetGovernanceTaskListDocument,
     variables: {
       id: systemIntakeId
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       systemIntake: {
         ...taskListSystemIntake,
         ...taskListData

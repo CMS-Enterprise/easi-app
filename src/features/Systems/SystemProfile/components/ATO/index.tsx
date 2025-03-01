@@ -20,9 +20,8 @@ import classnames from 'classnames';
 import {
   showAtoEffectiveDate,
   showAtoExpirationDate
-} from 'features/Systems/SystemProfile/helpers';
+} from 'features/Systems/SystemProfile/util';
 // eslint-disable-next-line camelcase
-import { GetSystemProfile_cedarThreat } from 'gql/legacyGQL/types/GetSystemProfile';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { camelCase } from 'lodash';
 
@@ -38,6 +37,7 @@ import Tag from 'components/Tag';
 import { securityFindingKeys } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import {
+  GetSystemProfileCedarThreat,
   SecurityFindings,
   SystemProfileSubviewProps,
   ThreatLevel
@@ -52,7 +52,7 @@ import './index.scss';
  */
 function getSecurityFindings(
   // eslint-disable-next-line camelcase
-  cedarThreat: GetSystemProfile_cedarThreat[]
+  cedarThreat: GetSystemProfileCedarThreat[]
 ): SecurityFindings {
   // Init finding props with 0 count
   const findings = Object.fromEntries(
@@ -72,13 +72,13 @@ function getSecurityFindings(
 
 function getLongestOpenFinding(
   // eslint-disable-next-line camelcase
-  cedarThreat: GetSystemProfile_cedarThreat[]
+  cedarThreat: GetSystemProfileCedarThreat[]
 ): number {
   let longestOpenFinding = 0;
   // eslint-disable-next-line no-restricted-syntax
   for (const threat of cedarThreat) {
     const { daysOpen } = threat;
-    if (daysOpen !== null && daysOpen > longestOpenFinding) {
+    if (daysOpen && daysOpen > longestOpenFinding) {
       longestOpenFinding = daysOpen;
     }
   }

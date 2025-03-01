@@ -518,6 +518,110 @@ describe('Governance Review Team', () => {
     cy.get('#Dates-GrbDateYear').should('have.value', '2024');
   });
 
+  it('can upload a presentation deck', () => {
+    cy.contains('a', 'Draft Business Case').should('be.visible').click();
+
+    cy.get('li.usa-sidenav__item a[href*="grb-review#details"]').click();
+
+    cy.contains('a', 'Add asynchronous presentation links').click();
+
+    // Complete upload form form
+
+    cy.contains('button', 'Save presentation details').should('be.disabled');
+
+    // Recording link
+    cy.get('#recordingLink')
+      .type('https://example.com/recording')
+      .should('have.value', 'https://example.com/recording');
+
+    cy.contains('button', 'Save presentation details').should(
+      'not.be.disabled'
+    );
+
+    // Recording passcode
+    cy.get('#recordingPasscode')
+      .type('3465376')
+      .should('have.value', '3465376');
+
+    // Transcript link
+    cy.get('#transcriptLink')
+      .type('https://example.com/transcript')
+      .should('have.value', 'https://example.com/transcript');
+
+    // Upload presentation deck
+    cy.get('input[name=presentationDeckFileData]').selectFile(
+      'cypress/fixtures/test.pdf'
+    );
+
+    // Submit form
+    cy.contains('button', 'Save presentation details').click();
+
+    cy.contains('.usa-card__footer', 'Virus scanning in progress...').should(
+      'be.visible'
+    );
+
+    // Mark file as passing virus scan
+    cy.get('[data-testdeckurl]').within(el => {
+      const url = el.attr('data-testdeckurl');
+      // console.log('url', url);
+      const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)[1];
+      cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+    });
+
+    cy.reload();
+
+    // Verify presentation deck is uploaded as well as other details
+    cy.contains('button', 'View recording').should('be.visible');
+
+    cy.contains('span', '(Passcode: 3465376)').should('be.visible');
+
+    cy.contains('button', 'View transcript').should('be.visible');
+
+    cy.contains('a', 'View slide deck').should('be.visible');
+
+    // Edit presentation links
+    cy.contains('a', 'Edit presentation links').click();
+
+    cy.contains('button', 'Save presentation details').should('be.disabled');
+
+    cy.contains('button', 'Upload document').click();
+
+    // Upload transcript file
+    cy.get('input[name=transcriptFileData]').selectFile(
+      'cypress/fixtures/test.pdf'
+    );
+
+    // Clear presentation deck file
+    cy.get('button').contains('Clear file').click();
+
+    // Submit form
+    cy.contains('button', 'Save presentation details').click();
+
+    // Mark file as passing virus scan
+    cy.get('[data-testdeckurl]').within(el => {
+      const url = el.attr('data-testdeckurl');
+      // console.log('url', url);
+      const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)[1];
+      cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+    });
+
+    cy.reload();
+
+    // Check that the presentation deck file was deleted
+    cy.get('[data-testid="presentation-url"]').should('not.exist');
+
+    // Remove all presentation links
+    cy.contains('button', 'Remove all presentation links').click();
+
+    // Modal remove button
+    cy.contains('button', 'Remove presentation links').click();
+
+    // Returns to empty state with no links
+    cy.contains('a', 'Add asynchronous presentation links').should(
+      'be.visible'
+    );
+  });
+
   it('can close a request', () => {
     cy.contains('a', 'grt meeting with date set in past')
       .should('be.visible')

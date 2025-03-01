@@ -7,31 +7,26 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useMutation } from '@apollo/client';
 import { Button, Table } from '@trussworks/react-uswds';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import { DeleteSystemIntakeDocumentQuery } from 'gql/legacyGQL/SystemIntakeDocumentQueries';
 import {
-  DeleteSystemIntakeDocument,
-  DeleteSystemIntakeDocumentVariables
-} from 'gql/legacyGQL/types/DeleteSystemIntakeDocument';
-import { SystemIntakeDocument } from 'gql/legacyGQL/types/SystemIntakeDocument';
+  GetSystemIntakeDocument,
+  SystemIntakeDocumentCommonType,
+  SystemIntakeDocumentFragmentFragment,
+  SystemIntakeDocumentStatus,
+  useDeleteSystemIntakeDocumentMutation
+} from 'gql/generated/graphql';
 
 import Modal from 'components/Modal';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import useMessage from 'hooks/useMessage';
-import {
-  SystemIntakeDocumentCommonType,
-  SystemIntakeDocumentStatus
-} from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 type DocumentsTableProps = {
   systemIntakeId: string;
-  documents: SystemIntakeDocument[];
+  documents: SystemIntakeDocumentFragmentFragment[];
 };
 
 /**
@@ -42,17 +37,13 @@ const DocumentsTable = ({ systemIntakeId, documents }: DocumentsTableProps) => {
 
   const { showMessage } = useMessage();
 
-  const [fileToDelete, setFileToDelete] = useState<SystemIntakeDocument | null>(
-    null
-  );
+  const [fileToDelete, setFileToDelete] =
+    useState<SystemIntakeDocumentFragmentFragment | null>(null);
 
-  const [deleteDocument] = useMutation<
-    DeleteSystemIntakeDocument,
-    DeleteSystemIntakeDocumentVariables
-  >(DeleteSystemIntakeDocumentQuery, {
+  const [deleteDocument] = useDeleteSystemIntakeDocumentMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeQuery,
+        query: GetSystemIntakeDocument,
         variables: {
           id: systemIntakeId
         }
@@ -60,7 +51,9 @@ const DocumentsTable = ({ systemIntakeId, documents }: DocumentsTableProps) => {
     ]
   });
 
-  const columns = useMemo<Column<SystemIntakeDocument>[]>(() => {
+  const columns = useMemo<
+    Column<SystemIntakeDocumentFragmentFragment>[]
+  >(() => {
     return [
       {
         Header: t<string>('intake:documents.table.fileName'),
@@ -74,7 +67,9 @@ const DocumentsTable = ({ systemIntakeId, documents }: DocumentsTableProps) => {
           }
           return t(`intake:documents.abbreviatedType.${commonType}`);
         },
-        Cell: ({ row }: CellProps<SystemIntakeDocument, string>) => {
+        Cell: ({
+          row
+        }: CellProps<SystemIntakeDocumentFragmentFragment, string>) => {
           const { version } = row.original;
           return (
             <>
@@ -103,7 +98,9 @@ const DocumentsTable = ({ systemIntakeId, documents }: DocumentsTableProps) => {
           if (status === SystemIntakeDocumentStatus.UNAVAILABLE) return 3;
           return 4;
         },
-        Cell: ({ row }: CellProps<SystemIntakeDocument, string>) => {
+        Cell: ({
+          row
+        }: CellProps<SystemIntakeDocumentFragmentFragment, string>) => {
           // Show the upload status
           // Virus scanning
           if (row.original.status === SystemIntakeDocumentStatus.PENDING) {

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Button, Icon } from '@trussworks/react-uswds';
+import { RequestRelationType } from 'gql/generated/graphql';
 
 import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
-import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
 
 type SystemCardItemProps = {
   id: string;
   name: string;
-  acronym: string | null;
+  acronym?: string | null;
 };
 
 function SystemCardItem({ item }: { item: SystemCardItemProps }) {
@@ -81,8 +81,8 @@ function AdditionalRequestInfo({
 }: {
   id: string;
   systems: SystemCardItemProps[];
-  relationType: string | null;
-  contractName: string | null;
+  relationType?: string | null;
+  contractName?: string | null;
   contractNumbers: { contractNumber: string }[];
   requestType: RequestType;
 }) {

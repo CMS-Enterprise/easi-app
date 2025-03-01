@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FieldErrors, FieldPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -12,14 +11,13 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
-import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'gql/legacyGQL/SystemIntakeQueries';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
-  UpdateSystemIntakeContractDetails,
-  UpdateSystemIntakeContractDetailsVariables
-} from 'gql/legacyGQL/types/UpdateSystemIntakeContractDetails';
+  GetSystemIntakeDocument,
+  SystemIntakeFormState,
+  SystemIntakeFragmentFragment,
+  useUpdateSystemIntakeContractDetailsMutation
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
@@ -35,7 +33,6 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
-import { SystemIntakeFormState } from 'types/graphql-global-types';
 import { ContractDetailsForm } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import formatContractNumbers from 'utils/formatContractNumbers';
@@ -61,7 +58,7 @@ const contractDateToISO = ({
   ).toISO();
 
 type ContractDetailsProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
@@ -79,13 +76,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     contractNumbers
   } = systemIntake;
 
-  const [mutate] = useMutation<
-    UpdateSystemIntakeContractDetails,
-    UpdateSystemIntakeContractDetailsVariables
-  >(UpdateSystemIntakeContractDetailsQuery, {
+  const [mutate] = useUpdateSystemIntakeContractDetailsMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeQuery,
+        query: GetSystemIntakeDocument,
         variables: {
           id
         }

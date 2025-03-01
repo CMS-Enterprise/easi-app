@@ -1,4 +1,8 @@
 import {
+  GetRequestsDocument,
+  GetRequestsQuery,
+  GetTRBAdminHomeDocument,
+  GetTRBAdminHomeQuery,
   GetTRBAdminNotesDocument,
   GetTRBAdminNotesQuery,
   GetTRBAdminNotesQueryVariables,
@@ -8,61 +12,39 @@ import {
   GetTRBGuidanceLetterInsightsQueryVariables,
   GetTRBGuidanceLetterQuery,
   GetTRBGuidanceLetterQueryVariables,
-  GetTrbLeadOptionsDocument,
-  GetTrbLeadOptionsQuery,
+  GetTRBLeadOptionsDocument,
+  GetTRBLeadOptionsQuery,
+  GetTRBRequestAttendeesDocument,
+  GetTRBRequestAttendeesQuery,
+  GetTRBRequestDocument,
+  GetTRBRequestDocumentsDocument,
+  GetTRBRequestDocumentsQuery,
+  GetTRBRequestDocumentsQueryVariables,
+  GetTRBRequestQuery,
+  GetTRBRequestQueryVariables,
+  GetTRBRequestSummaryDocument,
+  GetTRBRequestSummaryQuery,
+  PersonRole,
   TRBAdminNoteCategory,
   TRBAdminNoteFragment,
-  TRBGuidanceLetterFragment,
-  TRBGuidanceLetterInsightCategory
-} from 'gql/generated/graphql';
-import GetRequestsQuery from 'gql/legacyGQL/GetRequestsQuery';
-import GetTrbAdminTeamHomeQuery from 'gql/legacyGQL/GetTrbAdminTeamHomeQuery';
-import GetTrbRequestDocumentsQuery from 'gql/legacyGQL/GetTrbRequestDocumentsQuery';
-import GetTrbRequestQuery from 'gql/legacyGQL/GetTrbRequestQuery';
-import GetTrbRequestSummaryQuery from 'gql/legacyGQL/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendeesQuery } from 'gql/legacyGQL/TrbAttendeeQueries';
-import {
-  GetRequests,
-  GetRequests_myTrbRequests as MyTrbRequests
-} from 'gql/legacyGQL/types/GetRequests';
-import { GetTrbAdminTeamHome } from 'gql/legacyGQL/types/GetTrbAdminTeamHome';
-import {
-  GetTrbRequest,
-  GetTrbRequestVariables
-} from 'gql/legacyGQL/types/GetTrbRequest';
-import {
-  GetTRBRequestAttendees,
-  GetTRBRequestAttendeesVariables
-} from 'gql/legacyGQL/types/GetTRBRequestAttendees';
-import {
-  GetTrbRequestDocuments,
-  GetTrbRequestDocumentsVariables
-} from 'gql/legacyGQL/types/GetTrbRequestDocuments';
-import {
-  GetTrbRequestSummary,
-  GetTrbRequestSummary_trbRequest as Summary,
-  GetTrbRequestSummaryVariables
-} from 'gql/legacyGQL/types/GetTrbRequestSummary';
-import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'gql/legacyGQL/types/TrbRequestFormFields';
-import {
-  UpdateTrbRequestConsultMeeting,
-  UpdateTrbRequestConsultMeetingVariables
-} from 'gql/legacyGQL/types/UpdateTrbRequestConsultMeeting';
-import UpdateTrbRequestConsultMeetingQuery from 'gql/legacyGQL/UpdateTrbRequestConsultMeetingQuery';
-
-import {
-  PersonRole,
   TRBAttendConsultStatus,
   TRBCollabGroupOption,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
+  TRBGuidanceLetterFragment,
+  TRBGuidanceLetterInsightCategory,
   TRBGuidanceLetterStatus,
+  TrbRequestFormFieldsFragmentFragment,
   TRBRequestState,
   TRBRequestStatus,
   TRBRequestType,
-  TRBWhereInProcessOption
-} from 'types/graphql-global-types';
+  TRBWhereInProcessOption,
+  UpdateTRBRequestConsultMeetingDocument,
+  UpdateTRBRequestConsultMeetingMutation,
+  UpdateTRBRequestConsultMeetingMutationVariables
+} from 'gql/generated/graphql';
+
 import { MockedQuery } from 'types/util';
 import MockTrbAttendees, {
   MockTrbAttendee,
@@ -95,14 +77,15 @@ export const newAttendee: MockTrbAttendee = users.next({
   component: 'Center for Clinical Standards and Quality'
 })!;
 
-export const taskStatuses: TaskStatuses = {
-  __typename: 'TRBTaskStatuses',
-  formStatus: TRBFormStatus.IN_PROGRESS,
-  feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-  consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-  attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-  guidanceLetterStatus: TRBGuidanceLetterStatus.CANNOT_START_YET
-};
+export const taskStatuses: TrbRequestFormFieldsFragmentFragment['taskStatuses'] =
+  {
+    __typename: 'TRBTaskStatuses',
+    formStatus: TRBFormStatus.IN_PROGRESS,
+    feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+    consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+    attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+    guidanceLetterStatus: TRBGuidanceLetterStatus.CANNOT_START_YET
+  };
 
 const adminNotes: TRBAdminNoteFragment[] = [
   {
@@ -122,7 +105,7 @@ const adminNotes: TRBAdminNoteFragment[] = [
   }
 ];
 
-export const trbRequest: GetTrbRequest['trbRequest'] = {
+export const trbRequest: GetTRBRequestQuery['trbRequest'] = {
   __typename: 'TRBRequest',
   id: trbRequestId,
   name: 'Mock TRB Request',
@@ -163,23 +146,24 @@ export const trbRequest: GetTrbRequest['trbRequest'] = {
 };
 
 export const getTrbRequestQuery: MockedQuery<
-  GetTrbRequest,
-  GetTrbRequestVariables
+  GetTRBRequestQuery,
+  GetTRBRequestQueryVariables
 > = {
   request: {
-    query: GetTrbRequestQuery,
+    query: GetTRBRequestDocument,
     variables: {
       id: trbRequestId
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       trbRequest
     }
   }
 };
 
-export const trbRequestSummary: Summary = {
+export const trbRequestSummary: GetTRBRequestSummaryQuery['trbRequest'] = {
   __typename: 'TRBRequest',
   id: trbRequestId,
   name: 'Mock TRB Request',
@@ -225,11 +209,13 @@ export const trbRequestSummary: Summary = {
 export const getTrbRequestSummary = (
   fields:
     | {
-        taskStatuses?: Partial<TaskStatuses>;
+        taskStatuses?: Partial<
+          TrbRequestFormFieldsFragmentFragment['taskStatuses']
+        >;
         status?: TRBRequestStatus;
       }
     | undefined
-): Summary => ({
+): GetTRBRequestSummaryQuery['trbRequest'] => ({
   ...trbRequestSummary,
   status: fields?.status || TRBRequestStatus.DRAFT_REQUEST_FORM,
   taskStatuses: {
@@ -238,22 +224,21 @@ export const getTrbRequestSummary = (
   }
 });
 
-export const getTrbRequestSummaryQuery: MockedQuery<
-  GetTrbRequestSummary,
-  GetTrbRequestSummaryVariables
-> = {
-  request: {
-    query: GetTrbRequestSummaryQuery,
-    variables: {
-      id: trbRequestId
+export const getTrbRequestSummaryQuery: MockedQuery<GetTRBRequestSummaryQuery> =
+  {
+    request: {
+      query: GetTRBRequestSummaryDocument,
+      variables: {
+        id: trbRequestId
+      }
+    },
+    result: {
+      data: {
+        __typename: 'Query',
+        trbRequest: trbRequestSummary
+      }
     }
-  },
-  result: {
-    data: {
-      trbRequest: trbRequestSummary
-    }
-  }
-};
+  };
 
 const getRequestsData: {
   myTrbRequests: MyTrbRequests[];
@@ -272,48 +257,50 @@ const getRequestsData: {
   ]
 };
 
+type MyTrbRequests = GetRequestsQuery['myTrbRequests'][number];
+
 export const getRequestsQuery = (
   myTrbRequests: MyTrbRequests[] = getRequestsData.myTrbRequests
-): MockedQuery<GetRequests> => ({
+): MockedQuery<GetRequestsQuery> => ({
   request: {
-    query: GetRequestsQuery,
+    query: GetRequestsDocument,
     variables: {}
   },
   result: {
     data: {
+      __typename: 'Query',
       myTrbRequests,
       mySystemIntakes: []
     }
   }
 });
 
-export const getTRBRequestAttendeesQuery: MockedQuery<
-  GetTRBRequestAttendees,
-  GetTRBRequestAttendeesVariables
-> = {
-  request: {
-    query: GetTRBRequestAttendeesQuery,
-    variables: {
-      id: trbRequestId
-    }
-  },
-  result: {
-    data: {
-      trbRequest: {
-        __typename: 'TRBRequest',
-        id: trbRequestId,
-        attendees: [requester, ...attendees]
+export const getTRBRequestAttendeesQuery: MockedQuery<GetTRBRequestAttendeesQuery> =
+  {
+    request: {
+      query: GetTRBRequestAttendeesDocument,
+      variables: {
+        id: trbRequestId
+      }
+    },
+    result: {
+      data: {
+        __typename: 'Query',
+        trbRequest: {
+          __typename: 'TRBRequest',
+          id: trbRequestId,
+          attendees: [requester, ...attendees]
+        }
       }
     }
-  }
-};
+  };
 
 export const updateTrbRequestConsultMeetingQuery: MockedQuery<
-  UpdateTrbRequestConsultMeeting,
-  UpdateTrbRequestConsultMeetingVariables
+  UpdateTRBRequestConsultMeetingMutation,
+  UpdateTRBRequestConsultMeetingMutationVariables
 > = {
   request: {
-    query: UpdateTrbRequestConsultMeetingQuery,
+    query: UpdateTRBRequestConsultMeetingDocument,
     variables: {
       input: {
         trbRequestId,
@@ -326,6 +313,7 @@ export const updateTrbRequestConsultMeetingQuery: MockedQuery<
   },
   result: {
     data: {
+      __typename: 'Mutation',
       updateTRBRequestConsultMeetingTime: {
         __typename: 'TRBRequest',
         id: trbRequestId,
@@ -453,7 +441,7 @@ export const getTrbAdminNotesQuery = (
   }
 });
 
-export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
+export const trbAdminTeamHomeRequests: GetTRBAdminHomeQuery['trbRequests'] = [
   {
     id: '0ba435ac-50ee-44d1-94cc-4dd480b70a75',
     name: 'First help',
@@ -630,10 +618,11 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
   }
 ];
 
-export const getTrbAdminTeamHomeQuery: MockedQuery<GetTrbAdminTeamHome> = {
-  request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
+export const getTrbAdminTeamHomeQuery: MockedQuery<GetTRBAdminHomeQuery> = {
+  request: { query: GetTRBAdminHomeDocument, variables: {} },
   result: {
     data: {
+      __typename: 'Query',
       trbRequests: [...trbAdminTeamHomeRequests]
     }
   }
@@ -645,9 +634,9 @@ export const trbLeadOptions: MockUserInfo[] = [
   users.next()?.userInfo!
 ];
 
-export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptionsQuery> = {
+export const getTrbLeadOptionsQuery: MockedQuery<GetTRBLeadOptionsQuery> = {
   request: {
-    query: GetTrbLeadOptionsDocument,
+    query: GetTRBLeadOptionsDocument,
     variables: {}
   },
   result: {
@@ -659,15 +648,16 @@ export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptionsQuery> = {
 };
 
 export const getTrbRequestDocumentsQuery: MockedQuery<
-  GetTrbRequestDocuments,
-  GetTrbRequestDocumentsVariables
+  GetTRBRequestDocumentsQuery,
+  GetTRBRequestDocumentsQueryVariables
 > = {
   request: {
-    query: GetTrbRequestDocumentsQuery,
+    query: GetTRBRequestDocumentsDocument,
     variables: { id: trbRequestId }
   },
   result: {
     data: {
+      __typename: 'Query',
       trbRequest: {
         __typename: 'TRBRequest',
         id: trbRequestId,

@@ -2,7 +2,6 @@ import React, { useEffect, useMemo } from 'react';
 import { Controller, FieldPath } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -16,14 +15,14 @@ import {
   Textarea,
   TextInput
 } from '@trussworks/react-uswds';
-import Pager from 'features/TechnicalAssistance/RequestForm/Pager';
-import GetSystemIntakeQuery from 'gql/legacyGQL/GetSystemIntakeQuery';
-import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'gql/legacyGQL/SystemIntakeQueries';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
-  UpdateSystemIntakeRequestDetails,
-  UpdateSystemIntakeRequestDetailsVariables
-} from 'gql/legacyGQL/types/UpdateSystemIntakeRequestDetails';
+  GetSystemIntakeDocument,
+  SystemIntakeFormState,
+  SystemIntakeFragmentFragment,
+  SystemIntakeSoftwareAcquisitionMethods,
+  useUpdateSystemIntakeRequestDetailsMutation
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
@@ -44,10 +43,6 @@ import {
   CMS_DVSM_EMAIL,
   CMS_TRB_EMAIL
 } from 'constants/externalUrls';
-import {
-  SystemIntakeFormState,
-  SystemIntakeSoftwareAcquisitionMethods
-} from 'types/graphql-global-types';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
@@ -64,7 +59,7 @@ type RequestDetailsForm = {
 };
 
 type RequestDetailsProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
@@ -109,13 +104,10 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     }
   });
 
-  const [mutate] = useMutation<
-    UpdateSystemIntakeRequestDetails,
-    UpdateSystemIntakeRequestDetailsVariables
-  >(UpdateSystemIntakeRequestDetailsQuery, {
+  const [mutate] = useUpdateSystemIntakeRequestDetailsMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeQuery,
+        query: GetSystemIntakeDocument,
         variables: {
           id
         }

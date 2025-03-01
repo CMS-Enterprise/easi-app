@@ -12,7 +12,7 @@ describe('The System Intake Form', () => {
         req.alias = 'updateRequestDetails';
       }
 
-      if (req.body.operationName === 'GetSystemIntakeContactsQuery') {
+      if (req.body.operationName === 'GetSystemIntakeContacts') {
         req.alias = 'getSystemIntakeContacts';
       }
 

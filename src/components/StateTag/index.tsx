@@ -1,10 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
+import { SystemIntakeState } from 'gql/generated/graphql';
 import { lowerCase } from 'lodash';
 
 import Tag from 'components/Tag';
-import { SystemIntakeState } from 'types/graphql-global-types';
 
 import './index.scss';
 

@@ -16,10 +16,10 @@ export type SystemCardProps = {
   className?: string;
   id: string;
   name: string;
-  description: string | null;
-  acronym: string | null;
-  businessOwnerOrg: string | null;
-  businessOwners: string | null;
+  description: string | null | undefined;
+  acronym: string | null | undefined;
+  businessOwnerOrg: string | null | undefined;
+  businessOwners: string | null | undefined;
 };
 
 const SystemCard = ({

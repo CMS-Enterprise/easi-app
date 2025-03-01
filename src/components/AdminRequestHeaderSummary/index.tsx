@@ -1,9 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
-import { SystemIntake_systems as System } from 'gql/legacyGQL/types/SystemIntake';
+import {
+  GetTRBRequestSummaryQuery,
+  RequestRelationType
+} from 'gql/generated/graphql';
 
-import { RequestRelationType } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import getSystemOrContractName from 'utils/getSystemOrContractName';
 
@@ -13,9 +15,9 @@ type AdminRequestHeaderSummaryProps = {
   requestName: string;
   submittedAt: string;
   requestType: string;
-  relationType: RequestRelationType | null;
-  contractName: string | null;
-  systems: System[];
+  relationType?: RequestRelationType | null;
+  contractName?: string | null;
+  systems: GetTRBRequestSummaryQuery['trbRequest']['systems'];
   requester: string;
   trbRequesterTestId?: string;
   contractNumbers: string[];

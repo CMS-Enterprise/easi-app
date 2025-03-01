@@ -8,9 +8,11 @@ import {
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
+  SystemIntakeGRBReviewType,
   SystemIntakeState,
   SystemIntakeStep
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
+
 import { GetGovernanceTaskListWithMockData } from 'types/itGov';
 
 import { taskListSystemIntake } from './systemIntake';
@@ -37,8 +39,7 @@ export const taskListState: {
         grtMeetingStatus: ITGovGRTStatus.CANT_START,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
-      },
-      intakeFormPctComplete: 22
+      }
     }
   },
   intakeFormSubmitted: {
@@ -148,8 +149,7 @@ export const taskListState: {
         grtMeetingStatus: ITGovGRTStatus.CANT_START,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
-      },
-      governanceRequestFeedbackCompletedAt: '2023-07-10T00:30:28Z'
+      }
     }
   },
   feedbackFromInitialReviewDoneWithFeedback: {
@@ -171,8 +171,7 @@ export const taskListState: {
           targetForm: GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST,
           id
         }
-      ],
-      governanceRequestFeedbackCompletedAt: '2023-07-10T00:30:28Z'
+      ]
     }
   },
   feedbackFromInitialReviewResubmittedWithFeedback: {
@@ -267,7 +266,6 @@ export const taskListState: {
       step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-12T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -290,8 +288,6 @@ export const taskListState: {
       step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-13T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-13T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -321,8 +317,6 @@ export const taskListState: {
       ],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-14T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-13T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -352,8 +346,6 @@ export const taskListState: {
       ],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -383,8 +375,6 @@ export const taskListState: {
       ],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-16T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -407,8 +397,6 @@ export const taskListState: {
       step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-16T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -432,8 +420,6 @@ export const taskListState: {
       step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -456,8 +442,6 @@ export const taskListState: {
       step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -480,8 +464,6 @@ export const taskListState: {
       step: SystemIntakeStep.GRT_MEETING,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -504,8 +486,6 @@ export const taskListState: {
       step: SystemIntakeStep.GRT_MEETING,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
@@ -529,8 +509,6 @@ export const taskListState: {
       step: SystemIntakeStep.GRT_MEETING,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
@@ -561,8 +539,6 @@ export const taskListState: {
       ],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
@@ -586,8 +562,6 @@ export const taskListState: {
       step: SystemIntakeStep.GRT_MEETING,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
@@ -612,8 +586,6 @@ export const taskListState: {
       step: SystemIntakeStep.GRT_MEETING,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
@@ -637,7 +609,6 @@ export const taskListState: {
       step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      governanceRequestFeedbackCompletedAt: '2023-07-10T00:30:28Z',
       grtDate: null,
       businessCase: null
     }
@@ -658,8 +629,6 @@ export const taskListState: {
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
@@ -683,10 +652,7 @@ export const taskListState: {
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      bizCaseFinalPctComplete: 89,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -709,10 +675,7 @@ export const taskListState: {
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      bizCaseFinalSubmittedAt: '2023-07-18T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -742,11 +705,7 @@ export const taskListState: {
       ],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      bizCaseFinalUpdatedAt: '2023-07-19T00:30:28Z',
-      bizCaseFinalSubmittedAt: '2023-07-18T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -776,11 +735,7 @@ export const taskListState: {
       ],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      bizCaseFinalUpdatedAt: '2023-07-20T00:30:28Z',
-      bizCaseFinalSubmittedAt: '2023-07-20T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -810,11 +765,7 @@ export const taskListState: {
       ],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      bizCaseFinalUpdatedAt: '2023-07-2T00:30:28Z',
-      bizCaseFinalSubmittedAt: '2023-07-21T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -837,11 +788,7 @@ export const taskListState: {
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      bizCaseFinalUpdatedAt: '2023-07-20T00:30:28Z',
-      bizCaseFinalSubmittedAt: '2023-07-21T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -865,13 +812,12 @@ export const taskListState: {
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD
     }
   },
   grbMeetingSkipped: {
@@ -890,13 +836,12 @@ export const taskListState: {
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD
     }
   },
   grbMeetingInProgressNotScheduled: {
@@ -915,13 +860,12 @@ export const taskListState: {
       step: SystemIntakeStep.GRB_MEETING,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD
     }
   },
   grbMeetingInProgressScheduled: {
@@ -940,14 +884,16 @@ export const taskListState: {
       step: SystemIntakeStep.GRB_MEETING,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       grbDate: '2023-07-20T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStartedAt: '2023-07-20T00:30:28Z',
+      grbReviewAsyncGRBMeetingTime: '2023-07-20T00:30:28Z',
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z'
     }
   },
   grbMeetingDone: {
@@ -966,14 +912,16 @@ export const taskListState: {
       step: SystemIntakeStep.GRB_MEETING,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       grbDate: '2023-07-20T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStartedAt: '2023-07-20T00:30:28Z',
+      grbReviewAsyncGRBMeetingTime: '2023-07-20T00:30:28Z',
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z'
     }
   },
 
@@ -993,8 +941,6 @@ export const taskListState: {
       step: SystemIntakeStep.GRB_MEETING,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       grbDate: '2023-07-20T00:30:28Z',
       businessCase: {
@@ -1019,8 +965,6 @@ export const taskListState: {
       step: SystemIntakeStep.DECISION_AND_NEXT_STEPS,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       grbDate: '2023-07-20T00:30:28Z',
       businessCase: {
@@ -1047,11 +991,8 @@ export const taskListState: {
       step: SystemIntakeStep.GRB_MEETING,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       grbDate: '2023-07-20T00:30:28Z',
-      decisionAndNextStepsSubmittedAt: '2023-07-21T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'

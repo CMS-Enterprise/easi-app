@@ -1,5 +1,6 @@
+import { SystemIntakeStatusAdmin } from 'gql/generated/graphql';
+
 import { SystemIntakeForTable } from 'components/RequestRepository/tableMap';
-import { SystemIntakeStatusAdmin } from 'types/graphql-global-types';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { cleanCSVData } from 'utils/csv';

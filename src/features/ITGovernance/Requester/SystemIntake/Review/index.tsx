@@ -1,34 +1,28 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { SubmitIntake as SubmitIntakeQuery } from 'gql/legacyGQL/SystemIntakeQueries';
 import {
-  SubmitIntake,
-  SubmitIntakeVariables
-} from 'gql/legacyGQL/types/SubmitIntake';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+  SystemIntakeFormState,
+  SystemIntakeFragmentFragment,
+  useSubmitIntakeMutation
+} from 'gql/generated/graphql';
 
 import FeedbackBanner from 'components/FeedbackBanner';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
-import { SystemIntakeFormState } from 'types/graphql-global-types';
 
 type ReviewProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 const Review = ({ systemIntake }: ReviewProps) => {
   const history = useHistory();
   const { t } = useTranslation('intake');
 
-  const [mutate, mutationResult] = useMutation<
-    SubmitIntake,
-    SubmitIntakeVariables
-  >(SubmitIntakeQuery);
+  const [mutate, mutationResult] = useSubmitIntakeMutation();
 
   const hasEditsRequested =
     systemIntake.requestFormState === SystemIntakeFormState.EDITS_REQUESTED;

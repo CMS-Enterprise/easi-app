@@ -12,7 +12,7 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { GetSystemProfile_exchanges as Exchange } from 'gql/legacyGQL/types/GetSystemProfile';
+import { ExchangeDirection } from 'gql/generated/graphql';
 
 import {
   DescriptionDefinition,
@@ -22,22 +22,24 @@ import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
 import SectionWrapper from 'components/SectionWrapper';
 import Tag from 'components/Tag';
-import { ExchangeDirection } from 'types/graphql-global-types';
-import { SystemProfileSubviewProps } from 'types/systemProfile';
+import {
+  GetSystemProfileExchanges,
+  SystemProfileSubviewProps
+} from 'types/systemProfile';
 import { showSystemVal } from 'utils/showVal';
 
 // The majority of values rendered the components here are one-offs
 // sometimes due to changing source data
 
-function ExchangeDirectionTag({
+export function ExchangeDirectionTag({
   data
 }: {
-  data: Exchange['exchangeDirection'];
+  data: GetSystemProfileExchanges['exchangeDirection'];
 }) {
   const { t } = useTranslation('systemProfile');
 
   return (
-    <Tag className="text-base-darker bg-base-lighter  display-flex flex-align-center">
+    <Tag className="text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content">
       {data === ExchangeDirection.RECEIVER && (
         <>
           <Icon.FileDownload className="margin-right-1" />
@@ -62,7 +64,7 @@ function ExchangeDirectionTag({
   );
 }
 
-function ExchangeCard({ data }: { data: Exchange }) {
+function ExchangeCard({ data }: { data: GetSystemProfileExchanges }) {
   const { t } = useTranslation('systemProfile');
 
   // Header description expand toggle
@@ -361,7 +363,10 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         </Grid>
 
-        <h3 className="margin-top-0 margin-bottom-1">
+        <h3
+          className="margin-top-0 margin-bottom-1 scroll-margin-top-6"
+          id="data-categories"
+        >
           {t('singleSystem.systemData.dataCategories')}
         </h3>
         {system.cedarSoftwareProducts?.apiDataArea

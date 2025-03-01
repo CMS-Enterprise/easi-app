@@ -1,7 +1,9 @@
-import { GetSystemIntake_systemIntake_governanceTeams_teams as SystemIntakeCollaborator } from 'gql/legacyGQL/types/GetSystemIntake';
+import {
+  SystemIntakeCollaboratorInput,
+  SystemIntakeFragmentFragment
+} from 'gql/generated/graphql';
 
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-import { SystemIntakeCollaboratorInput } from 'types/graphql-global-types';
 import {
   CollaboratorFields,
   ContactFields,
@@ -37,7 +39,10 @@ export const formatGovernanceTeamsInput = (
 /** Format system intake governance team data for Contact details fields */
 export const formatGovTeamsField = (
   /** System intake `governanceTeams.teams` value */
-  teams: SystemIntakeCollaborator[] | null
+  teams:
+    | SystemIntakeFragmentFragment['governanceTeams']['teams']
+    | null
+    | undefined
 ): CollaboratorFields => {
   return cmsGovernanceTeams.reduce((acc, { key }) => {
     /** Value from system intake */

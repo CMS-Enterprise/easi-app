@@ -1,0 +1,609 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`The GRT intake review view > matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="intake-review"
+  >
+    <h1
+      aria-live="polite"
+      class="easi-h1 margin-top-0"
+      tabindex="-1"
+    >
+      Intake Request
+    </h1>
+    <div
+      class="easi-pdf-export"
+    >
+      <h1
+        class="easi-only-print"
+      >
+        System Intake
+      </h1>
+      <div>
+        <dl
+          title="System Request"
+        >
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Submission date
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                October 20, 2022
+              </dd>
+            </div>
+          </div>
+        </dl>
+        <hr
+          class="system-intake__hr"
+        />
+        <h2
+          class="font-heading-xl"
+        >
+          Contact details
+        </h2>
+        <dl
+          title="Contact details"
+        >
+          <div
+            class="easi-review-row"
+          >
+            <div
+              data-testid="contact-requester-A11Y"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Requester
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Ally Anderson
+              </dd>
+            </div>
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Requester component
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                CMS Wide
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                CMS Business Owner's name
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Adeline Aarons
+              </dd>
+            </div>
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                CMS Business Owner component
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Center for Medicare
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                CMS Project/Product Manager or Lead
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Audrey Abrams
+              </dd>
+            </div>
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                CMS Project/Product Manager or Lead component
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Office of Legislation
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Does your project have an Information System Security Officer (ISSO)?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Yes, Aaron Adams
+              </dd>
+            </div>
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                I have started collaborating with
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                N/A
+              </dd>
+            </div>
+          </div>
+        </dl>
+        <hr
+          class="system-intake__hr"
+        />
+        <h2
+          class="font-heading-xl"
+        >
+          Request details
+        </h2>
+        <dl
+          title="Request details"
+        >
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Project name
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Mock System Intake Request
+              </dd>
+            </div>
+          </div>
+          <div
+            class="margin-bottom-205 line-height-body-3"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                What is your business need?
+              </dt>
+              <dd
+                class="description-definition margin-0 text-pre-wrap"
+              >
+                The quick brown fox jumps over the lazy dog.
+              </dd>
+            </div>
+          </div>
+          <div
+            class="margin-bottom-205 line-height-body-3"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                How are you thinking of solving it?
+              </dt>
+              <dd
+                class="description-definition margin-0 text-pre-wrap"
+              >
+                The quick brown fox jumps over the lazy dog.
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Where are you in the process?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                The quick brown fox jumps over the lazy dog.
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Do you need Enterprise Architecture (EA) support?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                No
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Does your request involve AI technologies?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Yes
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Does your project involve any user interface component, or changes to an interface component?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                No
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Do you plan to use any software products to fulfill your business needs?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                No
+              </dd>
+            </div>
+          </div>
+        </dl>
+        <hr
+          class="system-intake__hr"
+        />
+        <h2
+          class="font-heading-xl"
+        >
+          Contract details
+        </h2>
+        <dl
+          title="Contract details"
+        >
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Which existing funding sources will fund this project?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                N/A
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Do the costs for this request exceed what you are currently spending to meet your business need?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                No
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Do you already have a contract in place to support this effort?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                I am currently working on my OAGM Acquisition Plan/IAA documents
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Contractors
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                TrussWorks, Inc.
+              </dd>
+            </div>
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Contract number
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                123456-7890
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Period of performance
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                1/2020 to 12/2020
+              </dd>
+            </div>
+          </div>
+        </dl>
+        <hr
+          class="system-intake__hr"
+        />
+        <h2
+          class="font-heading-xl"
+        >
+          Documents
+        </h2>
+        <div
+          id="systemIntakeDocuments"
+        >
+          <div
+            class="usa-table-container--scrollable"
+            data-testid="scrollable-table-container"
+            tabindex="0"
+          >
+            <table
+              class="usa-table usa-table--borderless width-full"
+              data-testid="table"
+            >
+              <thead>
+                <tr
+                  role="row"
+                >
+                  <th
+                    aria-sort="none"
+                    class="border-bottom-2px"
+                    colspan="1"
+                    role="columnheader"
+                    scope="col"
+                    style="cursor: pointer;"
+                    title="Toggle SortBy"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled"
+                      data-testid="button"
+                      style="cursor: pointer;"
+                      title="Toggle SortBy"
+                      type="button"
+                    >
+                      File name
+                      <svg
+                        class="usa-icon margin-left-05"
+                        data-testid="caret--sort"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                        />
+                      </svg>
+                    </button>
+                  </th>
+                  <th
+                    aria-sort="none"
+                    class="border-bottom-2px"
+                    colspan="1"
+                    role="columnheader"
+                    scope="col"
+                    style="cursor: pointer;"
+                    title="Toggle SortBy"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled"
+                      data-testid="button"
+                      style="cursor: pointer;"
+                      title="Toggle SortBy"
+                      type="button"
+                    >
+                      Document type
+                      <svg
+                        class="usa-icon margin-left-05"
+                        data-testid="caret--sort"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                        />
+                      </svg>
+                    </button>
+                  </th>
+                  <th
+                    aria-sort="descending"
+                    class="border-bottom-2px"
+                    colspan="1"
+                    role="columnheader"
+                    scope="col"
+                    style="cursor: pointer;"
+                    title="Toggle SortBy"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled"
+                      data-testid="button"
+                      style="cursor: pointer;"
+                      title="Toggle SortBy"
+                      type="button"
+                    >
+                      Date added
+                      <svg
+                        class="usa-icon margin-left-05"
+                        data-testid="caret--down"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                        />
+                      </svg>
+                    </button>
+                  </th>
+                  <th
+                    aria-sort="none"
+                    class="border-bottom-2px"
+                    colspan="1"
+                    role="columnheader"
+                    scope="col"
+                    style="cursor: pointer;"
+                    title="Toggle SortBy"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled"
+                      data-testid="button"
+                      style="cursor: pointer;"
+                      title="Toggle SortBy"
+                      type="button"
+                    >
+                      Actions
+                      <svg
+                        class="usa-icon margin-left-05"
+                        data-testid="caret--sort"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                        />
+                      </svg>
+                    </button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                role="rowgroup"
+              />
+            </table>
+          </div>
+          <p>
+            No documents uploaded
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="easi-pdf-export__controls margin-top-6"
+    >
+      <button
+        class="usa-button usa-button--unstyled display-flex flex-align-center easi-no-print"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          class="usa-icon margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+          />
+        </svg>
+        Download System Intake as PDF
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;

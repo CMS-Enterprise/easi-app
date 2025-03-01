@@ -1,15 +1,18 @@
 import React, { useMemo } from 'react';
 import { Row, useFlexLayout, usePagination, useTable } from 'react-table';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
-import { getPersonFullName } from 'features/Systems/SystemProfile/helpers';
-import { SystemIntake_systems as SystemsType } from 'gql/legacyGQL/types/SystemIntake';
+import { getPersonFullName } from 'features/Systems/SystemProfile/util';
+import {
+  GetTRBRequestSummaryQuery,
+  SystemIntakeFragmentFragment
+} from 'gql/generated/graphql';
 
 import TablePagination from 'components/TablePagination';
 
 import SystemCard from '.';
 
 type SystemCardTableProps = {
-  systems: SystemsType[];
+  systems: GetTRBRequestSummaryQuery['trbRequest']['systems'];
 };
 
 /**
@@ -23,7 +26,11 @@ const SystemCardTable = ({ systems }: SystemCardTableProps) => {
       {
         accessor: 'id',
         disableGlobalFilter: true,
-        Cell: ({ row }: { row: Row<SystemsType> }) => {
+        Cell: ({
+          row
+        }: {
+          row: Row<SystemIntakeFragmentFragment['systems'][number]>;
+        }) => {
           return (
             <SystemCard
               id={row.original.id}
