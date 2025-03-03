@@ -117,7 +117,13 @@ export default {
           '<strong>Uploaded presentation deck:</strong> {{fileName}}',
         view: 'View',
         remove: 'Remove',
-        scanning: 'Document uploaded, virus scanning in progress...'
+        scanning: 'Document uploaded, virus scanning in progress...',
+        removeModal: {
+          title: 'Are you sure you want to remove this GRB presentation?',
+          text: 'You cannot undo this action, but you may upload a different file after removing this one.',
+          confirm: 'Remove presentation',
+          goBack: 'Go back'
+        }
       },
       decisionAndNextSteps: {
         title: 'Decision and next steps',
