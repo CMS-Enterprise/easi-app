@@ -123,6 +123,24 @@ export default {
           text: 'You cannot undo this action, but you may upload a different file after removing this one.',
           confirm: 'Remove presentation',
           goBack: 'Go back'
+        },
+        reviewTypeModal: {
+          title: 'GRB review types',
+          goBack: 'Go back to task list',
+          ASYNC: {
+            heading: 'Asynchronous review',
+            description: [
+              'The Governance Admin Team chooses an asynchronous review process when the projects cannot fit into the standard schedule of meetings or have other requirements that make an asynchronous review preferable.',
+              'The Admin Team will work with the project team to record their presentation and will then upload the recording for asynchronous review by the Governance Review Board (GRB).',
+              'During the asynchronous review period, the GRB will evaluate all project documents including the Business Case, presentation recording, presentation slide deck, and any other supporting documents. They may use the discussion board to ask questions of the project team. During the review period they will make decisions about the project based on the Business Case and any previous recommendations from the Governance Review Team (GRT).'
+            ]
+          },
+          STANDARD: {
+            heading: 'Standard meeting',
+            description: [
+              'The Governance Admin Team chooses a standard meeting format when schedules allow for it. In this meeting, the GRB, Admin Team, and the project team all meet to discuss the project. Afterward, the GRB will make decisions about the project based on the Business Case and any previous recommendations from the Governance Review Team.'
+            ]
+          }
         }
       },
       decisionAndNextSteps: {

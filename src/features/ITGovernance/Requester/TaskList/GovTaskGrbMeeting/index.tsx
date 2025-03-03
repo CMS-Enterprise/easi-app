@@ -27,7 +27,8 @@ const GovTaskGrbMeeting = ({
 }: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
   const stepKey = 'grbMeeting';
   const { t } = useTranslation('itGov');
-  const [modalOpen, setModalOpen] = useState(false);
+  const [removalModalOpen, setRemovalModalOpen] = useState(false);
+  const [reviewTypesModalOpen, setReviewTypesModalOpen] = useState(false);
 
   // TEMPORARY: Remove when scanning is implemented
   const isScanning = false;
@@ -55,8 +56,8 @@ const GovTaskGrbMeeting = ({
     <>
       {/* Remove Presentation Modal */}
       <Modal
-        isOpen={modalOpen}
-        closeModal={() => setModalOpen(false)}
+        isOpen={removalModalOpen}
+        closeModal={() => setRemovalModalOpen(false)}
         shouldCloseOnOverlayClick
         className="maxw-mobile-lg height-auto"
       >
@@ -81,10 +82,58 @@ const GovTaskGrbMeeting = ({
           >
             {t(`taskList.step.${stepKey}.removeModal.confirm`)}
           </Button>
-          <Button type="button" unstyled onClick={() => setModalOpen(false)}>
+          <Button
+            type="button"
+            unstyled
+            onClick={() => setRemovalModalOpen(false)}
+          >
             {t(`taskList.step.${stepKey}.removeModal.goBack`)}
           </Button>
         </ButtonGroup>
+      </Modal>
+
+      {/* GRB Review Type Modal */}
+      <Modal
+        isOpen={reviewTypesModalOpen}
+        closeModal={() => setReviewTypesModalOpen(false)}
+        shouldCloseOnOverlayClick
+        className="height-auto"
+      >
+        <PageHeading headingLevel="h3" className="margin-top-0 margin-bottom-3">
+          {t(`taskList.step.${stepKey}.reviewTypeModal.title`)}
+        </PageHeading>
+
+        {Object.values(SystemIntakeGRBReviewType).map(type => (
+          <React.Fragment key={type}>
+            <p className="font-body-md line-height-sans-4 margin-top-0 margin-bottom-1 text-bold">
+              {t(`taskList.step.${stepKey}.reviewTypeModal.${type}.heading`)}
+            </p>
+            {(
+              t(
+                `taskList.step.${stepKey}.reviewTypeModal.${type}.description`,
+                {
+                  returnObjects: true
+                }
+              ) as string[]
+            ).map((description, index, arr) => (
+              <p
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                className={`margin-top-0 ${
+                  index === arr.length - 1
+                    ? 'margin-bottom-3'
+                    : 'margin-bottom-1'
+                }`}
+              >
+                {description}
+              </p>
+            ))}
+          </React.Fragment>
+        ))}
+
+        <Button type="button" onClick={() => setReviewTypesModalOpen(false)}>
+          {t(`taskList.step.${stepKey}.reviewTypeModal.goBack`)}
+        </Button>
       </Modal>
 
       <TaskListItem
@@ -173,7 +222,7 @@ const GovTaskGrbMeeting = ({
                             className="text-error"
                             type="button"
                             unstyled
-                            onClick={() => setModalOpen(true)}
+                            onClick={() => setRemovalModalOpen(true)}
                           >
                             {t(`taskList.step.${stepKey}.remove`)}
                           </Button>
@@ -201,12 +250,13 @@ const GovTaskGrbMeeting = ({
             >
               {t(`taskList.step.${stepKey}.button`)}
             </UswdsReactLink>
-            <UswdsReactLink
-              to="/help/it-governance/prepare-for-grb"
-              target="_blank"
+            <Button
+              type="button"
+              unstyled
+              onClick={() => setReviewTypesModalOpen(true)}
             >
               {t(`taskList.step.${stepKey}.learnMore`)}
-            </UswdsReactLink>
+            </Button>
           </div>
         </TaskListDescription>
       </TaskListItem>
