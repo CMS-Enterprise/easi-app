@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import { MixedSchema } from 'yup/lib/mixed';
 
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
+import { SystemIntakeGRBReviewType } from 'types/graphql-global-types';
+import extractObjectKeys from 'utils/extractObjectKeys';
 
 /** GRB Reviewer for IT Governance request */
 export const GRBReviewerSchema = Yup.object().shape({
@@ -77,3 +79,11 @@ export const SetGRBPresentationLinksSchema = Yup.object().shape(
   // Prevents cyclic dependency error
   [['recordingLink', 'presentationDeckFileData']]
 );
+
+export const GrbReviewFormSchema = {
+  grbReviewType: Yup.mixed()
+    .oneOf(extractObjectKeys(SystemIntakeGRBReviewType))
+    .required(),
+  presentation: SetGRBPresentationLinksSchema,
+  participants: CreateGRBReviewersSchema
+};

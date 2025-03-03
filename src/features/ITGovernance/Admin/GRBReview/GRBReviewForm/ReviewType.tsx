@@ -3,6 +3,7 @@ import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Fieldset, FormGroup } from '@trussworks/react-uswds';
 import {
+  SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType,
   useUpdateSystemIntakeGRBReviewTypeMutation
 } from 'gql/generated/graphql';
@@ -20,17 +21,17 @@ type ReviewTypeFields = {
 };
 
 type ReviewTypeProps = {
-  grbReviewType: SystemIntakeGRBReviewType;
+  grbReview: SystemIntakeGRBReviewFragment;
 };
 
-const ReviewType = ({ grbReviewType }: ReviewTypeProps) => {
+const ReviewType = ({ grbReview }: ReviewTypeProps) => {
   const { t } = useTranslation('grbReview');
 
   const [mutate] = useUpdateSystemIntakeGRBReviewTypeMutation();
 
   const form = useEasiForm<ReviewTypeFields>({
     defaultValues: {
-      grbReviewType
+      grbReviewType: grbReview.grbReviewType
     }
   });
 
@@ -44,7 +45,10 @@ const ReviewType = ({ grbReviewType }: ReviewTypeProps) => {
 
   return (
     <EasiFormProvider<ReviewTypeFields> {...form}>
-      <GRBReviewFormStepWrapper<ReviewTypeFields> onSubmit={onSubmit}>
+      <GRBReviewFormStepWrapper<ReviewTypeFields>
+        onSubmit={onSubmit}
+        grbReview={grbReview}
+      >
         <FormGroup error={!!errors.grbReviewType} className="margin-top-5">
           <Fieldset>
             <legend className="text-bold">
