@@ -30,7 +30,7 @@ function SendPresentationReminder({
   const [file, setFile] = useState<File>();
   const [error, setError] = useState(false);
 
-  const [sendReminder] = useSendPresentationDeckReminderMutation({
+  const [sendReminder, { loading }] = useSendPresentationDeckReminderMutation({
     variables: {
       systemIntakeID
     }
@@ -115,7 +115,7 @@ function SendPresentationReminder({
           </Alert>
         ) : (
           <div>
-            <p className="margin-y-1">
+            <p className="margin-top-1 margin-bottom-0">
               {t('presentationLinks.sendReminderCard.uplodededFile')}
             </p>
 
@@ -142,16 +142,23 @@ function SendPresentationReminder({
       </CardBody>
 
       <CardFooter>
+        {!presentationDeckFileName && (
+          <Button
+            type="button"
+            onClick={sendReminderClick}
+            disabled={!loading}
+            className="margin-top-0"
+          >
+            {t('presentationLinks.sendReminderCard.sendReminder')}
+          </Button>
+        )}
+
         <Button
           type="button"
-          onClick={sendReminderClick}
-          // disabled={!file}
-          className="margin-top-0"
+          onClick={handleButtonClick}
+          unstyled
+          className="margin-top-1"
         >
-          {t('presentationLinks.sendReminderCard.sendReminder')}
-        </Button>
-
-        <Button type="button" onClick={handleButtonClick} unstyled>
           {t('presentationLinks.sendReminderCard.uploadDeck')}
         </Button>
 
