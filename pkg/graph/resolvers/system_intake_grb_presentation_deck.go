@@ -2,10 +2,10 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/pkg/errors"
 
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/email"
@@ -18,19 +18,25 @@ func SendGRBReviewPresentationDeckReminderEmail(
 	systemIntakeID uuid.UUID,
 	emailClient *email.Client,
 	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 ) (bool, error) {
 	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return false, err
 	}
 
-	if intake.RequesterEmailAddress.Ptr() == nil {
+	usr, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
+	if err != nil {
+		return false, err
+	}
+
+	if usr.Email == "" {
 		return false, &apperrors.ResourceNotFoundError{Err: errors.New("no requester email address found")}
 	}
 
 	recipients := models.EmailNotificationRecipients{
 		RegularRecipientEmails: []models.EmailAddress{
-			models.NewEmailAddress(intake.RequesterEmailAddress.ValueOrZero()),
+			usr.Email,
 		},
 		ShouldNotifyITGovernance: false,
 		ShouldNotifyITInvestment: false,

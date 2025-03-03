@@ -1,19 +1,18 @@
 package resolvers
 
 import (
+	"context"
 	"time"
 
 	"github.com/guregu/null"
 
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *ResolverSuite) TestSendGRBReviewPresentationDeckReminderEmail() {
 	systemIntake := s.createNewIntake()
 	s.NotNil(systemIntake)
-
-	requesterEmail := "requester@example.com"
-	systemIntake.RequesterEmailAddress = null.StringFrom(requesterEmail)
 
 	systemIntake, err := s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, systemIntake)
 	s.NoError(err, "Failed to update system intake with requester email")
@@ -23,6 +22,7 @@ func (s *ResolverSuite) TestSendGRBReviewPresentationDeckReminderEmail() {
 		systemIntake.ID,
 		s.testConfigs.EmailClient,
 		s.testConfigs.Store,
+		s.fetchUserInfoStub,
 	)
 	s.NoError(err, "Failed to send email")
 
@@ -40,22 +40,26 @@ func (s *ResolverSuite) TestSendGRBReviewPresentationDeckReminderEmail() {
 
 // Test case: Missing Requester Email should return an error
 func (s *ResolverSuite) TestSendGRBReviewPresentationDeckReminderEmail_MissingEmail() {
-	// Step 1: Create a real system intake record **without a requester email**
 	systemIntake := s.createNewIntake()
 	s.NotNil(systemIntake)
 
-	// Step 2: Ensure requester email is empty
 	systemIntake.RequesterEmailAddress = null.NewString("", false)
 
 	systemIntake, err := s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, systemIntake)
 	s.NoError(err, "Failed to update system intake with missing requester email")
 
-	// Step 3: Call the function
 	emailSent, err := SendGRBReviewPresentationDeckReminderEmail(
 		s.testConfigs.Context,
 		systemIntake.ID,
 		s.testConfigs.EmailClient,
 		s.testConfigs.Store,
+		func(context.Context, string) (*models.UserInfo, error) {
+			return &models.UserInfo{
+				Username:    "ANON",
+				DisplayName: "Anonymous",
+				Email:       models.NewEmailAddress(""),
+			}, nil
+		},
 	)
 
 	// Step 4: Assertions

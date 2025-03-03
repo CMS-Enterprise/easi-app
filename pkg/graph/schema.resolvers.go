@@ -1180,7 +1180,7 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 
 // SendGRBReviewPresentationDeckReminderEmail is the resolver for the sendGRBReviewPresentationDeckReminderEmail field.
 func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (bool, error) {
-	return resolvers.SendGRBReviewPresentationDeckReminderEmail(ctx, systemIntakeID, r.emailClient, r.store)
+	return resolvers.SendGRBReviewPresentationDeckReminderEmail(ctx, systemIntakeID, r.emailClient, r.store, r.service.FetchUserInfo)
 }
 
 // SystemIntake is the resolver for the systemIntake field.
