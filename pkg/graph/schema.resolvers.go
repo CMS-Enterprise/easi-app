@@ -1180,41 +1180,7 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 
 // SendGRBReviewPresentationDeckReminderEmail is the resolver for the sendGRBReviewPresentationDeckReminderEmail field.
 func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (bool, error) {
-	intake, err := r.store.FetchSystemIntakeByID(ctx, systemIntakeID)
-	if err != nil {
-		return false, err
-	}
-
-	if intake.RequesterEmailAddress.Ptr() == nil {
-		return false, &apperrors.ResourceNotFoundError{Err: errors.New("no requester email address found")}
-	}
-
-	recipients := models.EmailNotificationRecipients{
-		RegularRecipientEmails: []models.EmailAddress{
-			models.NewEmailAddress(intake.RequesterEmailAddress.ValueOrZero()),
-		},
-		ShouldNotifyITGovernance: false,
-		ShouldNotifyITInvestment: false,
-	}
-
-	err = r.emailClient.SystemIntake.SendPresentationDeckUploadReminder(
-		ctx,
-		recipients,
-		intake.ID,
-		intake.ProjectName.ValueOrZero(),
-	)
-	if err != nil {
-		return false, err
-	}
-
-	curTime := time.Now()
-	intake.GrbPresentationDeckRequesterReminderEmailSentTime = &curTime
-	_, err = r.store.UpdateSystemIntakeNP(ctx, r.store, intake)
-	if err != nil {
-		return true, err // return true to indicate email was sent, but include the error as the cache was not updated
-	}
-
-	return true, nil
+	return resolvers.SendGRBReviewPresentationDeckReminderEmail(ctx, systemIntakeID, r.emailClient, r.store)
 }
 
 // SystemIntake is the resolver for the systemIntake field.
