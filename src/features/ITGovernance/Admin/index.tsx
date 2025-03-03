@@ -2,9 +2,9 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
 import RequestOverview from 'features/ITGovernance/Admin/RequestOverview';
-import NotFound from 'features/Miscellaneous/NotFound';
+import NotFound, { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
-import { useGetSystemIntakeGRBReviewersQuery } from 'gql/generated/graphql';
+import { useGetSystemIntakeGRBReviewQuery } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -25,13 +25,15 @@ const GovernanceReviewTeam = () => {
     id: string;
   }>();
 
-  const { data, loading } = useGetSystemIntakeGRBReviewersQuery({
+  const { data, loading } = useGetSystemIntakeGRBReviewQuery({
     variables: {
       id
     }
   });
 
-  const { grbReviewers, grbReviewStartedAt } = data?.systemIntake || {};
+  const grbReview = data?.systemIntake;
+
+  const { grbReviewers, grbReviewStartedAt } = grbReview || {};
 
   /** Check if current user is set as GRB reviewer */
   const isGrbReviewer: boolean = useMemo(() => {
@@ -43,6 +45,10 @@ const GovernanceReviewTeam = () => {
   const isITGovAdmin = user.isITGovAdmin(groups, flags);
 
   if (isUserSet && !loading) {
+    if (!grbReview) {
+      return <NotFoundPartial />;
+    }
+
     // Only show admin section if user is either IT Gov admin or GRB reviewer
     if (isITGovAdmin || isGrbReviewer) {
       return (
@@ -60,7 +66,7 @@ const GovernanceReviewTeam = () => {
                 path="/it-governance/:systemId/grb-review/:step(review-type|presentation|documents|participants)"
                 exact
               >
-                <GRBReviewForm />
+                <GRBReviewForm grbReview={grbReview} />
               </Route>
             )}
 

@@ -10,12 +10,13 @@ import {
   GetGRBReviewersComparisonsDocument,
   GetGRBReviewersComparisonsQuery,
   GetGRBReviewersComparisonsQueryVariables,
-  GetSystemIntakeGRBReviewersDocument,
-  GetSystemIntakeGRBReviewersQuery,
-  GetSystemIntakeGRBReviewersQueryVariables,
+  GetSystemIntakeGRBReviewDocument,
+  GetSystemIntakeGRBReviewQuery,
+  GetSystemIntakeGRBReviewQueryVariables,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeGRBReviewType,
   UpdateSystemIntakeGRBReviewerDocument,
   UpdateSystemIntakeGRBReviewerMutation,
   UpdateSystemIntakeGRBReviewerMutationVariables
@@ -133,14 +134,14 @@ const updateSystemIntakeGRBReviewerQuery: MockedQuery<
   }
 };
 
-const getSystemIntakeGRBReviewersQuery = (
+const getSystemIntakeGRBReviewQuery = (
   reviewer?: SystemIntakeGRBReviewerFragment
 ): MockedQuery<
-  GetSystemIntakeGRBReviewersQuery,
-  GetSystemIntakeGRBReviewersQueryVariables
+  GetSystemIntakeGRBReviewQuery,
+  GetSystemIntakeGRBReviewQueryVariables
 > => ({
   request: {
-    query: GetSystemIntakeGRBReviewersDocument,
+    query: GetSystemIntakeGRBReviewDocument,
     variables: {
       id: systemIntake.id
     }
@@ -152,7 +153,8 @@ const getSystemIntakeGRBReviewersQuery = (
         __typename: 'SystemIntake',
         id: systemIntake.id,
         grbReviewers: reviewer ? [reviewer] : [],
-        grbReviewStartedAt: null
+        grbReviewStartedAt: null,
+        grbReviewType: SystemIntakeGRBReviewType.STANDARD
       }
     }
   }
@@ -191,8 +193,8 @@ describe('GRB reviewer form', () => {
             cedarContactsQuery('Je'),
             cedarContactsQuery('Jerry Seinfeld'),
             createSystemIntakeGRBReviewersQuery,
-            getSystemIntakeGRBReviewersQuery(),
-            getSystemIntakeGRBReviewersQuery(grbReviewer)
+            getSystemIntakeGRBReviewQuery(),
+            getSystemIntakeGRBReviewQuery(grbReviewer)
           ]}
         >
           <MessageProvider>
@@ -279,8 +281,8 @@ describe('GRB reviewer form', () => {
             getGRBReviewersComparisonsQuery,
             cedarContactsQuery(contactLabel),
             updateSystemIntakeGRBReviewerQuery,
-            getSystemIntakeGRBReviewersQuery(grbReviewer),
-            getSystemIntakeGRBReviewersQuery(updatedGRBReviewer)
+            getSystemIntakeGRBReviewQuery(grbReviewer),
+            getSystemIntakeGRBReviewQuery(updatedGRBReviewer)
           ]}
         >
           <MessageProvider>

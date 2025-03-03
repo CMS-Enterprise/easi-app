@@ -227,7 +227,12 @@ export default {
         description:
           'Add the voting and non-voting GRB members who should participate in this review. For asynchronous reviews, add an end date for the review.'
       }
-    ]
+    ],
+    reviewType: {
+      label: 'Choose review type',
+      async: 'Asynchronous review',
+      standard: 'Standard review'
+    }
   },
   adminTask: {
     title: 'Admin Task',
