@@ -9,18 +9,15 @@ import (
 )
 
 func (s *ResolverSuite) TestSendGRBReviewPresentationDeckReminderEmail() {
-	// Step 1: Create a real system intake record in the database
 	systemIntake := s.createNewIntake()
 	s.NotNil(systemIntake)
 
-	// Step 2: Set the requester email and update the record in the DB
 	requesterEmail := "requester@example.com"
 	systemIntake.RequesterEmailAddress = null.StringFrom(requesterEmail)
 
 	systemIntake, err := s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, systemIntake)
 	s.NoError(err, "Failed to update system intake with requester email")
 
-	// Step 3: Call the function to send the email
 	emailSent, err := SendGRBReviewPresentationDeckReminderEmail(
 		s.testConfigs.Context,
 		systemIntake.ID,
@@ -29,15 +26,16 @@ func (s *ResolverSuite) TestSendGRBReviewPresentationDeckReminderEmail() {
 	)
 	s.NoError(err, "Failed to send email")
 
-	// Step 4: Fetch the updated record to verify timestamp update
 	updatedIntake, err := s.testConfigs.Store.FetchSystemIntakeByID(s.testConfigs.Context, systemIntake.ID)
 	s.NoError(err, "Failed to fetch updated system intake after email send")
 
-	// Step 5: Assertions
 	s.True(emailSent, "Email should be sent successfully")
 	s.NoError(err, "Function should not return an error")
 	s.NotNil(updatedIntake.GrbPresentationDeckRequesterReminderEmailSentTime, "Email sent timestamp should be updated")
-	s.WithinDuration(time.Now(), *updatedIntake.GrbPresentationDeckRequesterReminderEmailSentTime, time.Second)
+
+	// Compare timestamps correctly in UTC
+	timeNow := time.Now().UTC()
+	s.WithinDuration(timeNow, (*updatedIntake.GrbPresentationDeckRequesterReminderEmailSentTime).UTC(), time.Second, "Timestamps should match within 1 second")
 }
 
 // Test case: Missing Requester Email should return an error

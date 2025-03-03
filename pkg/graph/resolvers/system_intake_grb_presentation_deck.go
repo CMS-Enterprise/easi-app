@@ -46,7 +46,7 @@ func SendGRBReviewPresentationDeckReminderEmail(
 		return false, err
 	}
 
-	curTime := time.Now()
+	curTime := time.Now().UTC()
 	intake.GrbPresentationDeckRequesterReminderEmailSentTime = &curTime
 	_, err = store.UpdateSystemIntakeNP(ctx, store, intake)
 	if err != nil {
