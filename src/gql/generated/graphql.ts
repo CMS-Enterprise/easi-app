@@ -3597,7 +3597,7 @@ export type SendPresentationDeckReminderMutationVariables = Exact<{
 }>;
 
 
-export type SendPresentationDeckReminderMutation = { __typename: 'Mutation', sendGRBReviewPresentationDeckReminderEmail?: string | null };
+export type SendPresentationDeckReminderMutation = { __typename: 'Mutation', sendGRBReviewPresentationDeckReminderEmail: boolean };
 
 export type SetSystemIntakeGRBPresentationLinksMutationVariables = Exact<{
   input: SystemIntakeGRBPresentationLinksInput;

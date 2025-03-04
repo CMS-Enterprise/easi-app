@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
@@ -8,6 +9,7 @@ import {
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 
+import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
 
 import SendPresentationReminder from './index';
@@ -23,26 +25,28 @@ const sendReminderEmail: MockedQuery<
     }
   },
   result: {
-    data: {
-      __typename: 'Mutation'
-    }
+    data: undefined
   }
 };
 
 describe('SendPresentationReminder', () => {
   it('renders without crashing', () => {
     render(
-      <MockedProvider mocks={[sendReminderEmail]}>
-        <SendPresentationReminder
-          systemIntakeID="123"
-          presentationDeckFileURL={null}
-          presentationDeckFileName={null}
-          id="file-input"
-          name="file"
-          onChange={vi.fn()}
-          clearFile={vi.fn()}
-        />
-      </MockedProvider>
+      <MemoryRouter>
+        <MockedProvider mocks={[sendReminderEmail]}>
+          <MessageProvider>
+            <SendPresentationReminder
+              systemIntakeID="123"
+              presentationDeckFileURL={null}
+              presentationDeckFileName={null}
+              id="file-input"
+              name="file"
+              onChange={vi.fn()}
+              clearFile={vi.fn()}
+            />
+          </MessageProvider>
+        </MockedProvider>
+      </MemoryRouter>
     );
 
     expect(
@@ -54,17 +58,21 @@ describe('SendPresentationReminder', () => {
 
   it('handles file upload', () => {
     render(
-      <MockedProvider mocks={[sendReminderEmail]}>
-        <SendPresentationReminder
-          systemIntakeID="123"
-          presentationDeckFileURL={null}
-          presentationDeckFileName={null}
-          id="file-input"
-          name="file"
-          onChange={vi.fn()}
-          clearFile={vi.fn()}
-        />
-      </MockedProvider>
+      <MemoryRouter>
+        <MockedProvider mocks={[sendReminderEmail]}>
+          <MessageProvider>
+            <SendPresentationReminder
+              systemIntakeID="123"
+              presentationDeckFileURL={null}
+              presentationDeckFileName={null}
+              id="file-input"
+              name="file"
+              onChange={vi.fn()}
+              clearFile={vi.fn()}
+            />
+          </MessageProvider>
+        </MockedProvider>
+      </MemoryRouter>
     );
 
     const fileInput = screen.getByTestId('file-upload-input');
@@ -79,17 +87,21 @@ describe('SendPresentationReminder', () => {
 
   it('handles send reminder click', async () => {
     render(
-      <MockedProvider mocks={[sendReminderEmail]}>
-        <SendPresentationReminder
-          systemIntakeID="test-id"
-          presentationDeckFileURL={null}
-          presentationDeckFileName={null}
-          id="file-input"
-          name="file"
-          onChange={vi.fn()}
-          clearFile={vi.fn()}
-        />
-      </MockedProvider>
+      <MemoryRouter>
+        <MockedProvider mocks={[sendReminderEmail]}>
+          <MessageProvider>
+            <SendPresentationReminder
+              systemIntakeID="test-id"
+              presentationDeckFileURL={null}
+              presentationDeckFileName={null}
+              id="file-input"
+              name="file"
+              onChange={vi.fn()}
+              clearFile={vi.fn()}
+            />
+          </MessageProvider>
+        </MockedProvider>
+      </MemoryRouter>
     );
 
     const sendReminderButton = screen.getByText(
