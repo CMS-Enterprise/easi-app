@@ -6,6 +6,7 @@ import { grbReview } from 'tests/mock/grbReview';
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import { MessageProvider } from 'hooks/useMessage';
+import { GrbReviewFormStepKey } from 'types/grbReview';
 
 import GRBReviewFormStepWrapper from '.';
 
@@ -17,13 +18,16 @@ describe('GRB review form step wrapper', () => {
     return <EasiFormProvider {...form}>{children}</EasiFormProvider>;
   };
 
+  /** Renders empty GRB Review form wrapper */
   const renderComponent = (
-    props?: Partial<ComponentProps<typeof GRBReviewFormStepWrapper>>
-  ) =>
-    render(
+    props?: Partial<ComponentProps<typeof GRBReviewFormStepWrapper>> & {
+      step?: GrbReviewFormStepKey;
+    }
+  ) => {
+    return render(
       <MemoryRouter
         initialEntries={[
-          `/it-governance/${grbReview.id}/grb-review/review-type`
+          `/it-governance/${grbReview.id}/grb-review/${props?.step || 'review-type'}`
         ]}
       >
         <MessageProvider>
@@ -41,6 +45,7 @@ describe('GRB review form step wrapper', () => {
         </MessageProvider>
       </MemoryRouter>
     );
+  };
 
   it('disables steps for new form', async () => {
     renderComponent();
@@ -96,6 +101,17 @@ describe('GRB review form step wrapper', () => {
       'aria-disabled',
       'false'
     );
+  });
+
+  it('redirects user if step is disabled', async () => {
+    renderComponent({ step: 'participants' });
+
+    // Participants step is disabled, so redirects to Presentation step
+    expect(
+      await screen.findByRole('heading', {
+        name: 'Step 2 of 4 Presentation'
+      })
+    ).toBeInTheDocument();
   });
 
   it('hides required fields text', () => {
