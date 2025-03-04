@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Button, ButtonGroup } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   GetGovernanceTaskListQuery,
@@ -217,14 +217,16 @@ const GovTaskGrbMeeting = ({
                                 }}
                               />
                             </span>
-                            <Button
+
+                            <Link
+                              href={
+                                grbPresentationLinks?.presentationDeckFileURL!
+                              }
+                              target="_blank"
                               className="margin-right-1"
-                              type="button"
-                              unstyled
-                              onClick={() => console.log('view')}
                             >
                               {t(`taskList.step.${stepKey}.view`)}
-                            </Button>
+                            </Link>
                             <Button
                               className="text-error"
                               type="button"
