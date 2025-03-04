@@ -129,7 +129,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 		)
 	})
 
-	s.Run("CreateGRBDiscussionFromPosts should sort initial posts and replies", func() {
+	s.Run("createGRBDiscussionFromPosts should sort initial posts and replies", func() {
 		// randomized order to reflect the possibility of posts not coming sorted from db
 		posts := []*SystemIntakeGRBReviewDiscussionPost{
 			post1reply1,
@@ -137,7 +137,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 			post1reply2,
 		}
 
-		discussion, err := CreateGRBDiscussionFromPosts(posts)
+		discussion, err := createGRBDiscussionFromPosts(posts)
 		s.NoError(err)
 		s.NotNil(discussion)
 
@@ -173,7 +173,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 		)
 	})
 
-	s.Run("CreateGRBDiscussionFromPosts should error if two initial posts are found", func() {
+	s.Run("createGRBDiscussionFromPosts should error if two initial posts are found", func() {
 		// randomized order to reflect the possibility of posts not coming sorted from db
 		posts := []*SystemIntakeGRBReviewDiscussionPost{
 			post2,
@@ -184,12 +184,12 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 			post2reply1,
 		}
 
-		discussion, err := CreateGRBDiscussionFromPosts(posts)
+		discussion, err := createGRBDiscussionFromPosts(posts)
 		s.Error(err)
 		s.Nil(discussion)
 	})
 
-	s.Run("CreateGRBDiscussionFromPosts should error if no initial posts are found", func() {
+	s.Run("createGRBDiscussionFromPosts should error if no initial posts are found", func() {
 		// randomized order to reflect the possibility of posts not coming sorted from db
 		posts := []*SystemIntakeGRBReviewDiscussionPost{
 			post1reply1,
@@ -198,7 +198,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 			post2reply1,
 		}
 
-		discussion, err := CreateGRBDiscussionFromPosts(posts)
+		discussion, err := createGRBDiscussionFromPosts(posts)
 		s.Error(err)
 		s.Nil(discussion)
 	})
