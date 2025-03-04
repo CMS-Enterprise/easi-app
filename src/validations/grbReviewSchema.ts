@@ -1,9 +1,13 @@
-import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewType
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import * as Yup from 'yup';
 import { MixedSchema } from 'yup/lib/mixed';
 
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
+import extractObjectKeys from 'utils/extractObjectKeys';
 
 /** GRB Reviewer for IT Governance request */
 export const GRBReviewerSchema = Yup.object().shape({
@@ -77,3 +81,11 @@ export const SetGRBPresentationLinksSchema = Yup.object().shape(
   // Prevents cyclic dependency error
   [['recordingLink', 'presentationDeckFileData']]
 );
+
+export const GrbReviewFormSchema = {
+  grbReviewType: Yup.mixed()
+    .oneOf(extractObjectKeys(SystemIntakeGRBReviewType))
+    .required(),
+  presentation: SetGRBPresentationLinksSchema,
+  participants: CreateGRBReviewersSchema
+};

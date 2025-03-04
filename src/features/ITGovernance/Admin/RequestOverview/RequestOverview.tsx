@@ -3,7 +3,6 @@ import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
-import { Grid } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import PresentationLinksForm from 'features/ITGovernance/Admin/GRBReview/PresentationLinksForm';
 import UploadForm from 'features/ITGovernance/Requester/SystemIntake/Documents/UploadForm';
@@ -77,9 +76,9 @@ const RequestOverview = ({
     (state: AppState) => state.businessCase.form
   );
 
-  /** Hides summary and side navigation for all action subpages */
+  /** Full page layout hides summary and side navigation */
   const fullPageLayout: boolean =
-    activePage === 'resolutions' || activePage === 'manage-lcid' || !!subPage;
+    ['resolutions', 'manage-lcid'].includes(activePage) || !!subPage;
 
   const navItems = subNavItems(systemId, isITGovAdmin, flags);
 
@@ -102,21 +101,19 @@ const RequestOverview = ({
           {...systemIntake}
           requestName={systemIntake.requestName || ''}
           contractNumbers={
-            systemIntake?.contractNumbers?.map(c => c.contractNumber) || []
+            systemIntake.contractNumbers?.map(c => c.contractNumber) || []
           }
         />
       )}
 
       {!fullPageLayout && <AccordionNavigation items={navItems} />}
 
-      <section className="grid-container">
+      <div className="grid-container">
         <Message className="margin-top-2" />
 
-        <Grid
-          row
-          gap
+        <div
           className={classnames({
-            'margin-bottom-5 margin-top-7': !fullPageLayout
+            'grid-row grid-gap margin-bottom-5 margin-top-7': !fullPageLayout
           })}
         >
           {!fullPageLayout && (
@@ -250,8 +247,8 @@ const RequestOverview = ({
               </Switch>
             </section>
           )}
-        </Grid>
-      </section>
+        </div>
+      </div>
     </MainContent>
   );
 };
