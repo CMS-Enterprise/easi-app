@@ -29,6 +29,8 @@ import useMessage from 'hooks/useMessage';
 import { fileToBase64File } from 'utils/downloadFile';
 import { SetGRBPresentationLinksSchema } from 'validations/grbReviewSchema';
 
+import SendPresentationReminder from '../SendPresentationReminder';
+
 import './index.scss';
 
 type PresentationLinkFields = Omit<
@@ -61,6 +63,7 @@ const PresentationLinksForm = ({
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors, isValid, isDirty, defaultValues }
   } = useEasiForm<PresentationLinkFields>({
     resolver: yupResolver(SetGRBPresentationLinksSchema),
@@ -108,7 +111,10 @@ const PresentationLinksForm = ({
           systemIntakeID: id,
           ...values,
           transcriptFileData,
-          presentationDeckFileData
+          presentationDeckFileData:
+            values.presentationDeckFileData === null
+              ? null
+              : presentationDeckFileData
         }
       }
     })
@@ -259,29 +265,29 @@ const PresentationLinksForm = ({
             </Fieldset>
           </FormGroup>
 
-          <FormGroup error={hasRequiredFieldErrors}>
-            <Label htmlFor="presentationDeckFileData">
-              {t('presentationLinks.presentationDeckLabel')}
-            </Label>
-            <HelpText id="presentationDeckHelpText" className="margin-top-05">
-              {t('presentationLinks.documentUploadHelpText')}
-            </HelpText>
-
+          <FormGroup error={hasRequiredFieldErrors} className="margin-top-6">
             <Controller
               control={control}
               name="presentationDeckFileData"
               render={({ field: { ref, ...field } }) => {
                 return (
-                  <FileInput
-                    defaultFileName={
-                      defaultValues?.presentationDeckFileData?.name
+                  <SendPresentationReminder
+                    systemIntakeID={id}
+                    presentationDeckFileURL={
+                      grbPresentationLinks?.presentationDeckFileURL
+                    }
+                    presentationDeckFileName={
+                      watch('presentationDeckFileData')?.name
                     }
                     name={field.name}
                     id={field.name}
                     accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
                     aria-describedby="presentationDeckHelpText"
                     className="maxw-none"
-                    onChange={e => field.onChange(e.currentTarget?.files?.[0])}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      field.onChange(e.currentTarget?.files?.[0])
+                    }
+                    clearFile={() => field.onChange(null)}
                   />
                 );
               }}

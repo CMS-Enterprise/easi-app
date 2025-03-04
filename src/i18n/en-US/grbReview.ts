@@ -262,6 +262,22 @@ export default {
       success: 'You have successfully uploaded your GRB presentation.',
       error:
         'There was an issue uploading your presentation. Please try again, and if the issue persists please try again later.'
+    },
+    sendReminderCard: {
+      header: 'Presentation deck',
+      description:
+        'The requester and their project team are responsible for uploading their completed presentation deck to EASi, though admin team members may upload a deck for them.',
+      uplodededFile: 'Uploaded file',
+      notUploadedInfo:
+        'The requester has not yet uploaded their GRB presentation deck. Use the buttons below to send a reminder or upload the deck yourself.',
+      sendReminder: 'Send reminder',
+      reminderSent: 'Reminder sent',
+      reminderError:
+        'There was an issue sending the reminder. Please try again.',
+      uploadDeck: 'or, upload a deck for the project team',
+      clearFile: 'Clear file',
+      replacementDeck: 'or, upload a replacement presentation deck',
+      view: 'View'
     }
   }
 };
