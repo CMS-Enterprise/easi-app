@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ITGovIntakeFormStatus, ITGovFeedbackStatus, ITGovDraftBusinessCaseStatus, ITGovGRTStatus, ITGovFinalBusinessCaseStatus, ITGovGRBStatus, ITGovDecisionStatus, GovernanceRequestFeedbackTargetForm, SystemIntakeGRBReviewType, SystemIntakeStep, SystemIntakeState, SystemIntakeDecisionState, RequestRelationType } from "./../../../types/graphql-global-types";
+import { ITGovIntakeFormStatus, ITGovFeedbackStatus, ITGovDraftBusinessCaseStatus, ITGovGRTStatus, ITGovFinalBusinessCaseStatus, ITGovGRBStatus, ITGovDecisionStatus, GovernanceRequestFeedbackTargetForm, SystemIntakeGRBReviewType, SystemIntakeStep, SystemIntakeState, SystemIntakeDecisionState, RequestRelationType } from "gql/generated/graphql";
 
 // ====================================================
 // GraphQL query operation: GetGovernanceTaskList
