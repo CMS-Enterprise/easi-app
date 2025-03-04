@@ -230,6 +230,8 @@ export default {
       'You will be able to select the type of review, add recordings and documents, invite GRB members to review this project, and set a timeframe for an asynchronous review.',
     saveAndReturn: 'Save and return to request',
     steps: grbReviewFormSteps,
+    error:
+      'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
     reviewType: {
       label: 'Choose review type',
       async: 'Asynchronous review',

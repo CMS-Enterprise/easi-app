@@ -11,6 +11,7 @@ import { useEasiFormContext } from 'components/EasiForm';
 import IconButton from 'components/IconButton';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import StepHeader, { StepHeaderStepProps } from 'components/StepHeader';
+import useMessage from 'hooks/useMessage';
 import { grbReviewFormSteps } from 'i18n/en-US/grbReview';
 import { GrbReviewFormStepKey } from 'types/grbReview';
 import { GrbReviewFormSchema } from 'validations/grbReviewSchema';
@@ -38,6 +39,7 @@ function GRBReviewFormStepWrapper<
 }: GRBReviewFormStepWrapperProps<TFieldValues>) {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
+  const { Message, showMessage } = useMessage();
 
   /** Formatted steps for stepped form header */
   const [steps, setSteps] = useState<StepHeaderStepProps[]>([
@@ -156,6 +158,7 @@ function GRBReviewFormStepWrapper<
         subText={t('setUpGrbReviewForm.subText')}
         hideSteps={currentStepIndex < 0}
         steps={steps}
+        errorAlert={<Message className="margin-top-2" />}
         breadcrumbBar={
           <Breadcrumbs
             items={[
@@ -187,11 +190,15 @@ function GRBReviewFormStepWrapper<
 
           <Form
             onSubmit={handleSubmit(values =>
-              onSubmit?.({ systemIntakeID: systemId, ...values }).then(() =>
-                history.push(
-                  `${grbReviewPath}/${grbReviewFormSteps[currentStepIndex + 1].key}`
+              onSubmit?.({ systemIntakeID: systemId, ...values })
+                .then(() =>
+                  history.push(
+                    `${grbReviewPath}/${grbReviewFormSteps[currentStepIndex + 1].key}`
+                  )
                 )
-              )
+                .catch(() =>
+                  showMessage(t('setUpGrbReviewForm.error'), { type: 'error' })
+                )
             )}
           >
             {children}
