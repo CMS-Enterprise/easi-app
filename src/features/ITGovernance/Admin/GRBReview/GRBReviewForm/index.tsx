@@ -5,7 +5,7 @@ import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
 import AdditionalDocumentation from './AdditionalDocumentation';
-import ParticipantsAndTimeframe from './ParticipantsAndTimeframe';
+import Participants from './Participants';
 import Presentation from './Presentation';
 import ReviewType from './ReviewType';
 
@@ -25,7 +25,7 @@ const GRBReviewForm = ({ grbReview }: GRBReviewFormStepProps) => {
       </Route>
 
       <Route path="/it-governance/:systemId/grb-review/:step(participants)">
-        <ParticipantsAndTimeframe grbReview={grbReview} />
+        <Participants grbReview={grbReview} />
       </Route>
 
       <Route path="*">

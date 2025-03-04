@@ -14,7 +14,7 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 
 import GRBReviewFormStepWrapper, {
   GRBReviewFormStepSubmit
-} from './GRBReviewFormStepWrapper';
+} from '../GRBReviewFormStepWrapper';
 
 type ReviewTypeFields = {
   grbReviewType: SystemIntakeGRBReviewType;

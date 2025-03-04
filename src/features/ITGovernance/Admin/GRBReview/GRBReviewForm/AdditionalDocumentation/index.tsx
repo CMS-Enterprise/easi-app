@@ -3,7 +3,7 @@ import React from 'react';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
-import GRBReviewFormStepWrapper from './GRBReviewFormStepWrapper';
+import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
 
 // TODO: Update fields type
 type AdditionalDocumentationFields = {};
