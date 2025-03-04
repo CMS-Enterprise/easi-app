@@ -188,14 +188,16 @@ function SendPresentationReminder({
           </Button>
         )}
 
-        <Button
-          type="button"
-          onClick={handleButtonClick}
-          unstyled
-          className="margin-top-1"
-        >
-          {t('presentationLinks.sendReminderCard.uploadDeck')}
-        </Button>
+        <label htmlFor={id} className="margin-left-1">
+          <Button
+            type="button"
+            onClick={handleButtonClick}
+            unstyled
+            className="margin-top-1"
+          >
+            {t('presentationLinks.sendReminderCard.uploadDeck')}
+          </Button>
+        </label>
 
         <input
           id={id}
