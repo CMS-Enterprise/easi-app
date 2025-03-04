@@ -40,7 +40,9 @@ function GRBReviewFormStepWrapper<
   const history = useHistory();
 
   /** Formatted steps for stepped form header */
-  const [steps, setSteps] = useState<StepHeaderStepProps[] | null>(null);
+  const [steps, setSteps] = useState<StepHeaderStepProps[]>([
+    ...grbReviewFormSteps
+  ]);
 
   const { systemId, step } = useParams<{
     systemId: string;
@@ -56,6 +58,24 @@ function GRBReviewFormStepWrapper<
 
   const currentStepIndex: number = grbReviewFormSteps.findIndex(
     ({ key }) => key === step
+  );
+
+  /**
+   * Submits step if fields are valid
+   */
+  const submitStep = useCallback(
+    (path?: string) => {
+      if (!isValid || !isDirty) {
+        return history.push(`${grbReviewPath}/${path}`);
+      }
+
+      return handleSubmit(values =>
+        onSubmit?.({ systemIntakeID: systemId, ...values }).then(() =>
+          history.push(`${grbReviewPath}/${path}`)
+        )
+      )();
+    },
+    [grbReviewPath, isValid, isDirty, handleSubmit, onSubmit, history, systemId]
   );
 
   /**
@@ -84,7 +104,7 @@ function GRBReviewFormStepWrapper<
       (acc, value, index) => {
         let completed: boolean;
 
-        // Get validation for each step
+        // Set whether each step is completed
         switch (value.key) {
           case 'review-type':
             completed = reviewTypeIsValid;
@@ -111,33 +131,14 @@ function GRBReviewFormStepWrapper<
           ...acc[index],
           completed,
           disabled: index > 0 ? !acc[index - 1].completed : false,
-          onClick: () => {
-            if (isDirty && isValid) {
-              handleSubmit(values =>
-                onSubmit?.({ systemIntakeID: systemId, ...values }).then(() =>
-                  history.push(`${grbReviewPath}/${value.key}`)
-                )
-              )();
-            } else {
-              history.push(`${grbReviewPath}/${value.key}`);
-            }
-          }
+          onClick: () => submitStep(value.key)
         };
 
         return acc;
       },
       [...grbReviewFormSteps]
     );
-  }, [
-    grbReview,
-    grbReviewPath,
-    handleSubmit,
-    history,
-    isDirty,
-    isValid,
-    onSubmit,
-    systemId
-  ]);
+  }, [grbReview, submitStep]);
 
   // Set form steps
   useEffect(() => {
@@ -145,8 +146,6 @@ function GRBReviewFormStepWrapper<
       setSteps(values);
     });
   }, [grbReview, formatSteps]);
-
-  if (!steps) return null;
 
   return (
     <>
@@ -174,17 +173,7 @@ function GRBReviewFormStepWrapper<
           <IconButton
             icon={<Icon.ArrowBack />}
             type="button"
-            onClick={() => {
-              if (!isValid || !isDirty) {
-                return history.push(grbReviewPath);
-              }
-
-              return handleSubmit(values =>
-                onSubmit?.({ systemIntakeID: systemId, ...values }).then(() =>
-                  history.push(grbReviewPath)
-                )
-              )();
-            }}
+            onClick={() => submitStep()}
             unstyled
           >
             {t('setUpGrbReviewForm.saveAndReturn')}
