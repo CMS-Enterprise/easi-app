@@ -18,11 +18,13 @@ function SendPresentationReminder({
   systemIntakeID,
   presentationDeckFileURL,
   presentationDeckFileName,
+  clearFile,
   ...props
 }: ComponentProps<typeof UswdsFileInput> & {
   systemIntakeID: string;
   presentationDeckFileURL: string | null | undefined;
   presentationDeckFileName: string | null | undefined;
+  clearFile: () => void;
 }) {
   const { t } = useTranslation('grbReview');
 
@@ -43,7 +45,6 @@ function SendPresentationReminder({
   });
 
   const sendReminderClick = () => {
-    setReminderSend(true);
     sendReminder()
       .then(() => {
         // Set state to show reminder has been sent and disable Send Reminder button
@@ -137,19 +138,36 @@ function SendPresentationReminder({
             <span>
               {file?.name || presentationDeckFileName}{' '}
               {presentationDeckFileURL && presentationDeckFileName && (
-                <Button
-                  type="button"
-                  unstyled
-                  className="margin-left-1 margin-top-0"
-                  onClick={() =>
-                    downloadFileFromURL(
-                      presentationDeckFileURL,
-                      presentationDeckFileName
-                    )
-                  }
-                >
-                  {t('presentationLinks.sendReminderCard.view')}
-                </Button>
+                <span>
+                  {!file?.name && (
+                    <Button
+                      type="button"
+                      unstyled
+                      className="margin-left-1 margin-top-0"
+                      onClick={() =>
+                        downloadFileFromURL(
+                          presentationDeckFileURL,
+                          presentationDeckFileName
+                        )
+                      }
+                    >
+                      {t('presentationLinks.sendReminderCard.view')}
+                    </Button>
+                  )}
+
+                  <Button
+                    type="button"
+                    // Clear fileName to show file upload field
+                    onClick={() => {
+                      clearFile();
+                      setFile(undefined);
+                    }}
+                    unstyled
+                    className="margin-top-0 margin-left-1 text-red"
+                  >
+                    {t('presentationLinks.sendReminderCard.clearFile')}
+                  </Button>
+                </span>
               )}
             </span>
           </div>

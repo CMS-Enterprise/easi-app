@@ -63,6 +63,7 @@ const PresentationLinksForm = ({
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors, isValid, isDirty, defaultValues }
   } = useEasiForm<PresentationLinkFields>({
     resolver: yupResolver(SetGRBPresentationLinksSchema),
@@ -110,7 +111,10 @@ const PresentationLinksForm = ({
           systemIntakeID: id,
           ...values,
           transcriptFileData,
-          presentationDeckFileData
+          presentationDeckFileData:
+            values.presentationDeckFileData === null
+              ? null
+              : presentationDeckFileData
         }
       }
     })
@@ -273,7 +277,7 @@ const PresentationLinksForm = ({
                       grbPresentationLinks?.presentationDeckFileURL
                     }
                     presentationDeckFileName={
-                      grbPresentationLinks?.presentationDeckFileName
+                      watch('presentationDeckFileData')?.name
                     }
                     name={field.name}
                     id={field.name}
@@ -283,6 +287,7 @@ const PresentationLinksForm = ({
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       field.onChange(e.currentTarget?.files?.[0])
                     }
+                    clearFile={() => field.onChange(null)}
                   />
                 );
               }}

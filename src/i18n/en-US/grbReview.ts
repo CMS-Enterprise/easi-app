@@ -275,6 +275,7 @@ export default {
       reminderError:
         'There was an issue sending the reminder. Please try again.',
       uploadDeck: 'or, upload a deck for the project team',
+      clearFile: 'Clear file',
       replacementDeck: 'or, upload a replacement presentation deck',
       view: 'View'
     }

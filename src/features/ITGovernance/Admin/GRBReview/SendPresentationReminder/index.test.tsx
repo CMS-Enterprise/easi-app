@@ -40,6 +40,7 @@ describe('SendPresentationReminder', () => {
           id="file-input"
           name="file"
           onChange={vi.fn()}
+          clearFile={vi.fn()}
         />
       </MockedProvider>
     );
@@ -61,6 +62,7 @@ describe('SendPresentationReminder', () => {
           id="file-input"
           name="file"
           onChange={vi.fn()}
+          clearFile={vi.fn()}
         />
       </MockedProvider>
     );
@@ -85,6 +87,7 @@ describe('SendPresentationReminder', () => {
           id="file-input"
           name="file"
           onChange={vi.fn()}
+          clearFile={vi.fn()}
         />
       </MockedProvider>
     );
