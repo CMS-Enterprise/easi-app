@@ -11,6 +11,7 @@ import {
 import { useSendPresentationDeckReminderMutation } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
+import useMessage from 'hooks/useMessage';
 import { downloadFileFromURL } from 'utils/downloadFile';
 
 function SendPresentationReminder({
@@ -29,6 +30,9 @@ function SendPresentationReminder({
 
   const [file, setFile] = useState<File>();
   const [error, setError] = useState(false);
+  const [reminderSend, setReminderSend] = useState(false);
+
+  const { showMessage } = useMessage();
 
   const [sendReminder, { loading }] = useSendPresentationDeckReminderMutation({
     variables: {
@@ -37,14 +41,17 @@ function SendPresentationReminder({
   });
 
   const sendReminderClick = () => {
+    setReminderSend(true);
     sendReminder()
-      .then(res => {
-        console.log(res);
-        // do something
-        // maybe show a success message
+      .then(() => {
+        setReminderSend(true);
       })
-      .catch(err => {
-        console.log(err);
+      .catch(() => {
+        showMessage(t('presentationLinks.sendReminderCard.reminderError'), {
+          type: 'error',
+          className: 'margin-top-4'
+        });
+        document.querySelector('.usa-alert--error')?.scrollIntoView();
       });
   };
 
@@ -146,10 +153,12 @@ function SendPresentationReminder({
           <Button
             type="button"
             onClick={sendReminderClick}
-            disabled={!loading}
+            disabled={loading || reminderSend}
             className="margin-top-0"
           >
-            {t('presentationLinks.sendReminderCard.sendReminder')}
+            {reminderSend
+              ? t('presentationLinks.sendReminderCard.reminderSent')
+              : t('presentationLinks.sendReminderCard.sendReminder')}
           </Button>
         )}
 

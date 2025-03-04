@@ -271,6 +271,9 @@ export default {
       notUploadedInfo:
         'The requester has not yet uploaded their GRB presentation deck. Use the buttons below to send a reminder or upload the deck yourself.',
       sendReminder: 'Send reminder',
+      reminderSent: 'Reminder sent',
+      reminderError:
+        'There was an issue sending the reminder. Please try again.',
       uploadDeck: 'or, upload a deck for the project team',
       replacementDeck: 'or, upload a replacement presentation deck',
       view: 'View'
