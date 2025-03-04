@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
+import NotFound from 'features/Miscellaneous/NotFound';
 
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
@@ -29,7 +29,7 @@ const GRBReviewForm = ({ grbReview }: GRBReviewFormStepProps) => {
       </Route>
 
       <Route path="*">
-        <NotFoundPartial />
+        <NotFound />
       </Route>
     </Switch>
   );

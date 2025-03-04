@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
-import NotFound, { NotFoundPartial } from 'features/Miscellaneous/NotFound';
+import NotFound from 'features/Miscellaneous/NotFound';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
 import { useGetSystemIntakeGRBReviewQuery } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -46,7 +46,7 @@ const GovernanceReviewTeam = () => {
 
   if (isUserSet && !loading) {
     if (!grbReview) {
-      return <NotFoundPartial />;
+      return <NotFound />;
     }
 
     // Only show admin section if user is either IT Gov admin or GRB reviewer
