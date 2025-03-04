@@ -17,6 +17,7 @@ import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { formatDateUtc } from 'utils/date';
 
 const GovTaskGrbMeeting = ({
+  id,
   itGovTaskStatuses: { grbMeetingStatus },
   state,
   grbDate,
@@ -184,9 +185,7 @@ const GovTaskGrbMeeting = ({
                     <UswdsReactLink
                       variant="unstyled"
                       className="usa-button"
-                      // TODO: Update link to actual async recording upload page
-                      to="#"
-                      target="_blank"
+                      to={`/governance-task-list/${id}/presentation-deck-upload`}
                     >
                       {t(`taskList.step.${stepKey}.presentationUploadButton`)}
                     </UswdsReactLink>
