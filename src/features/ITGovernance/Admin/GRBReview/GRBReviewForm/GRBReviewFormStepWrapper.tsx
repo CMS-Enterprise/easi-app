@@ -6,6 +6,7 @@ import { Form, Grid, GridContainer, Icon } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
 
+import AutoSave from 'components/AutoSave';
 import Breadcrumbs from 'components/Breadcrumbs';
 import { useEasiFormContext } from 'components/EasiForm';
 import IconButton from 'components/IconButton';
@@ -23,7 +24,7 @@ export type GRBReviewFormStepSubmit<TFieldValues extends FieldValues> = (
 type GRBReviewFormStepWrapperProps<TFieldValues extends FieldValues> = {
   children: React.ReactNode;
   grbReview: SystemIntakeGRBReviewFragment;
-  onSubmit?: GRBReviewFormStepSubmit<TFieldValues>;
+  onSubmit: GRBReviewFormStepSubmit<TFieldValues>;
   /** Defaults to true - shows required fields text above `children` */
   requiredFields?: boolean;
 };
@@ -53,6 +54,7 @@ function GRBReviewFormStepWrapper<
 
   const {
     handleSubmit,
+    watch,
     formState: { isValid, isDirty }
   } = useEasiFormContext<TFieldValues>();
 
@@ -193,7 +195,7 @@ function GRBReviewFormStepWrapper<
 
           <Form
             onSubmit={handleSubmit(values =>
-              onSubmit?.({ systemIntakeID: systemId, ...values })
+              onSubmit({ systemIntakeID: systemId, ...values })
                 .then(() =>
                   history.push(
                     `${grbReviewPath}/${grbReviewFormSteps[currentStepIndex + 1].key}`
@@ -227,6 +229,16 @@ function GRBReviewFormStepWrapper<
               border={false}
               className="margin-top-8 margin-bottom-3"
             />
+
+            {isDirty && (
+              <AutoSave
+                values={watch()}
+                onSave={() =>
+                  onSubmit({ systemIntakeID: systemId, ...watch() })
+                }
+                debounceDelay={3000}
+              />
+            )}
           </Form>
         </Grid>
       </GridContainer>

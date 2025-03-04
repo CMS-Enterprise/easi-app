@@ -13,7 +13,10 @@ const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
 
   return (
     <EasiFormProvider<AdditionalDocumentationFields> {...form}>
-      <GRBReviewFormStepWrapper grbReview={grbReview}>
+      <GRBReviewFormStepWrapper
+        grbReview={grbReview}
+        onSubmit={async () => null}
+      >
         <p>Fields here</p>
       </GRBReviewFormStepWrapper>
     </EasiFormProvider>

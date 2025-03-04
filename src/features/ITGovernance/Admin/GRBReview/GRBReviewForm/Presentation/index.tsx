@@ -13,7 +13,10 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
 
   return (
     <EasiFormProvider<PresentationFields> {...form}>
-      <GRBReviewFormStepWrapper grbReview={grbReview}>
+      <GRBReviewFormStepWrapper
+        grbReview={grbReview}
+        onSubmit={async () => null}
+      >
         <p>Fields here</p>
       </GRBReviewFormStepWrapper>
     </EasiFormProvider>
