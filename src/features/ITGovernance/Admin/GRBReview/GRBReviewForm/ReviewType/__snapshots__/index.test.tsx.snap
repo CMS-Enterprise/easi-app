@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`GRB review form step wrapper > matches the snapshot 1`] = `
+exports[`GRB review form - review type > renders the step 1`] = `
 <DocumentFragment>
   <div
     class="trb-form-header"
@@ -125,8 +125,8 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
         >
           <li
             aria-current="true"
-            aria-disabled="false"
-            class="usa-step-indicator__segment usa-step-indicator__segment--current maxw-none usa-step-indicator__segment--clickable"
+            aria-disabled="true"
+            class="usa-step-indicator__segment usa-step-indicator__segment--current maxw-none usa-step-indicator__segment--disabled"
             data-testid="stepIndicator-0"
           >
             <span
@@ -136,8 +136,8 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
             </span>
           </li>
           <li
-            aria-disabled="false"
-            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--clickable"
+            aria-disabled="true"
+            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--disabled"
             data-testid="stepIndicator-1"
           >
             <span
@@ -249,7 +249,61 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
         class="usa-form"
         data-testid="form"
       >
-        <div />
+        <div
+          class="usa-form-group margin-top-5"
+          data-testid="formGroup"
+        >
+          <fieldset
+            class="usa-fieldset"
+            data-testid="fieldset"
+          >
+            <legend
+              class="text-bold"
+            >
+              Choose review type 
+              <span
+                class="text-red margin-x-05"
+              >
+                *
+              </span>
+            </legend>
+            <div
+              class="usa-radio"
+            >
+              <input
+                class="usa-radio__input"
+                id="grbReviewTypeAsync"
+                name="grbReviewType"
+                type="radio"
+                value="ASYNC"
+              />
+              <label
+                class="usa-radio__label"
+                for="grbReviewTypeAsync"
+              >
+                Asynchronous review
+              </label>
+            </div>
+            <div
+              class="usa-radio"
+            >
+              <input
+                checked=""
+                class="usa-radio__input"
+                id="grbReviewTypeStandard"
+                name="grbReviewType"
+                type="radio"
+                value="STANDARD"
+              />
+              <label
+                class="usa-radio__label"
+                for="grbReviewTypeStandard"
+              >
+                Standard review
+              </label>
+            </div>
+          </fieldset>
+        </div>
         <div
           class="margin-top-8 margin-bottom-3"
         >
@@ -265,6 +319,7 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
                 <button
                   class="usa-button margin-top-0"
                   data-testid="button"
+                  disabled=""
                   type="submit"
                 >
                   Next
