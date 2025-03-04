@@ -550,7 +550,8 @@ describe('Governance Review Team', () => {
 
     // Upload presentation deck
     cy.get('input[name=presentationDeckFileData]').selectFile(
-      'cypress/fixtures/test.pdf'
+      'cypress/fixtures/test.pdf',
+      { force: true }
     );
 
     // Submit form
