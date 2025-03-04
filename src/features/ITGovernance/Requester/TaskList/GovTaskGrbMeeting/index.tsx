@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import {
   GetGovernanceTaskListQuery,
   ITGovGRBStatus,
+  SystemIntakeDocumentStatus,
   SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
@@ -24,15 +25,18 @@ const GovTaskGrbMeeting = ({
   grbReviewType,
   grbReviewStartedAt,
   grbReviewAsyncEndDate,
-  grbReviewAsyncGRBMeetingTime
+  grbReviewAsyncGRBMeetingTime,
+  grbPresentationLinks
 }: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
   const stepKey = 'grbMeeting';
   const { t } = useTranslation('itGov');
   const [removalModalOpen, setRemovalModalOpen] = useState(false);
   const [reviewTypesModalOpen, setReviewTypesModalOpen] = useState(false);
 
-  // TEMPORARY: Remove when scanning is implemented
-  const isScanning = false;
+  const presentationDeckFileName =
+    grbPresentationLinks?.presentationDeckFileName;
+  const presentationDeckFileStatus =
+    grbPresentationLinks?.presentationDeckFileStatus;
 
   const dateMapping: Record<
     SystemIntakeGRBReviewType,
@@ -182,52 +186,57 @@ const GovTaskGrbMeeting = ({
                 </Alert>
                 {grbReviewType === SystemIntakeGRBReviewType.ASYNC && (
                   <div className="margin-top-2">
-                    <UswdsReactLink
-                      variant="unstyled"
-                      className="usa-button"
-                      to={`/governance-task-list/${id}/presentation-deck-upload`}
-                    >
-                      {t(`taskList.step.${stepKey}.presentationUploadButton`)}
-                    </UswdsReactLink>
-                    <div>
-                      {isScanning ? (
-                        <span>
-                          <em>
-                            {t(`itGov:taskList.step.${stepKey}.scanning`)}
-                          </em>
-                        </span>
-                      ) : (
-                        <>
-                          <span className="margin-right-1">
-                            <Trans
-                              i18nKey={`itGov:taskList.step.${stepKey}.uploadPresentation`}
-                              components={{
-                                strong: <strong />
-                              }}
-                              values={{
-                                fileName: 'presentation.pdf'
-                              }}
-                            />
+                    {!grbPresentationLinks && (
+                      <UswdsReactLink
+                        variant="unstyled"
+                        className="usa-button"
+                        to={`/governance-task-list/${id}/presentation-deck-upload`}
+                      >
+                        {t(`taskList.step.${stepKey}.presentationUploadButton`)}
+                      </UswdsReactLink>
+                    )}
+                    {grbPresentationLinks && (
+                      <div>
+                        {presentationDeckFileStatus ===
+                        SystemIntakeDocumentStatus.PENDING ? (
+                          <span>
+                            <em>
+                              {t(`itGov:taskList.step.${stepKey}.scanning`)}
+                            </em>
                           </span>
-                          <Button
-                            className="margin-right-1"
-                            type="button"
-                            unstyled
-                            onClick={() => console.log('view')}
-                          >
-                            {t(`taskList.step.${stepKey}.view`)}
-                          </Button>
-                          <Button
-                            className="text-error"
-                            type="button"
-                            unstyled
-                            onClick={() => setRemovalModalOpen(true)}
-                          >
-                            {t(`taskList.step.${stepKey}.remove`)}
-                          </Button>
-                        </>
-                      )}
-                    </div>
+                        ) : (
+                          <>
+                            <span className="margin-right-1">
+                              <Trans
+                                i18nKey={`itGov:taskList.step.${stepKey}.uploadPresentation`}
+                                components={{
+                                  strong: <strong />
+                                }}
+                                values={{
+                                  fileName: presentationDeckFileName
+                                }}
+                              />
+                            </span>
+                            <Button
+                              className="margin-right-1"
+                              type="button"
+                              unstyled
+                              onClick={() => console.log('view')}
+                            >
+                              {t(`taskList.step.${stepKey}.view`)}
+                            </Button>
+                            <Button
+                              className="text-error"
+                              type="button"
+                              unstyled
+                              onClick={() => setRemovalModalOpen(true)}
+                            >
+                              {t(`taskList.step.${stepKey}.remove`)}
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </>
