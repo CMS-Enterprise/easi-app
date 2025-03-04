@@ -64,16 +64,19 @@ function GRBReviewFormStepWrapper<
 
   /**
    * Submits step if fields are valid
+   *
+   * If invalid, redirects to GRB Review tab or `path` prop with no error messages
    */
   const submitStep = useCallback(
-    (path?: string) => {
+    async (path?: string) => {
+      // Don't submit if invalid or no changes
       if (!isValid || !isDirty) {
-        return history.push(`${grbReviewPath}/${path}`);
+        return history.push(`${grbReviewPath}/${path || ''}`);
       }
 
       return handleSubmit(values =>
         onSubmit?.({ systemIntakeID: systemId, ...values }).then(() =>
-          history.push(`${grbReviewPath}/${path}`)
+          history.push(`${grbReviewPath}/${path || ''}`)
         )
       )();
     },
@@ -220,13 +223,7 @@ function GRBReviewFormStepWrapper<
               saveExitText={t('setUpGrbReviewForm.saveAndReturn')}
               taskListUrl={grbReviewPath}
               submitDisabled={!isValid || !isDirty}
-              submit={() =>
-                handleSubmit(values =>
-                  onSubmit?.({ systemIntakeID: systemId, ...values }).then(() =>
-                    history.push(grbReviewPath)
-                  )
-                )()
-              }
+              submit={() => submitStep()}
               border={false}
               className="margin-top-8 margin-bottom-3"
             />
