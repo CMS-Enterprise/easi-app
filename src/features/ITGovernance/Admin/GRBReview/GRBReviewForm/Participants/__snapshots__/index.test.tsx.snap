@@ -282,7 +282,6 @@ exports[`GRB review form - participants and timeframe > renders the step 1`] = `
                 <button
                   class="usa-button margin-top-0"
                   data-testid="button"
-                  disabled=""
                   type="submit"
                 >
                   Next
