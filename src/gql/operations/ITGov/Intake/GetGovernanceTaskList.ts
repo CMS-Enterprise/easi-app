@@ -25,6 +25,10 @@ export default gql(/* GraphQL */ `
       updatedAt
       grtDate
       grbDate
+      grbReviewType
+      grbReviewStartedAt
+      grbReviewAsyncEndDate
+      grbReviewAsyncGRBMeetingTime
 
       step
       state
