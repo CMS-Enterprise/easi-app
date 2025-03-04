@@ -132,7 +132,7 @@ type SystemIntake struct {
 	GRBReviewStartedAt                                *time.Time                   `json:"grbReviewStartedAt" db:"grb_review_started_at"`
 	AlfabetID                                         null.String                  `json:"alfabetID" db:"alfabet_id"`
 	GrtReviewEmailBody                                null.String                  `json:"grtReviewEmailBody" db:"grt_review_email_body"`
-	RequesterEmailAddress                             null.String                  `json:"requesterEmailAddress" db:"requester_email_address"`
+	RequesterEmailAddress                             null.String                  `json:"requesterEmailAddress" db:"requester_email_address"` // Deprecated
 	BusinessCaseID                                    *uuid.UUID                   `json:"businessCase" db:"business_case_id"`
 	LifecycleID                                       null.String                  `json:"lcid" db:"lcid"`
 	LifecycleExpiresAt                                *time.Time                   `json:"lcidExpiresAt" db:"lcid_expires_at" gqlgen:"lcidExpiresAt"`
