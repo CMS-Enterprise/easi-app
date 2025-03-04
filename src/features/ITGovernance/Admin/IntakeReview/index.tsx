@@ -1,16 +1,16 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import SystemIntakeReview from 'components/SystemIntakeReview';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 type IntakeReviewProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {

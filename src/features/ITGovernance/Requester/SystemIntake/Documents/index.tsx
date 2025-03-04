@@ -3,20 +3,22 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import {
+  SystemIntakeFormState,
+  SystemIntakeFragmentFragment
+} from 'gql/generated/graphql';
 
 import FeedbackBanner from 'components/FeedbackBanner';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import useMessage from 'hooks/useMessage';
-import { SystemIntakeFormState } from 'types/graphql-global-types';
 
 import DocumentsTable from './DocumentsTable';
 
 import './index.scss';
 
 type DocumentsProps = {
-  systemIntake: SystemIntake;
+  systemIntake: SystemIntakeFragmentFragment;
 };
 
 /**

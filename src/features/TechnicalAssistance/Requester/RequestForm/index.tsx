@@ -7,6 +7,8 @@ import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import {
   GetTRBRequestQuery,
   GetTRBRequestQueryVariables,
+  TRBFeedbackStatus,
+  TRBFormStatus,
   useGetTRBRequestQuery
 } from 'gql/generated/graphql';
 import { isEqual } from 'lodash';
@@ -15,7 +17,6 @@ import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-import { TRBFeedbackStatus, TRBFormStatus } from 'types/graphql-global-types';
 import nullFillObject from 'utils/nullFillObject';
 import {
   inputBasicSchema,

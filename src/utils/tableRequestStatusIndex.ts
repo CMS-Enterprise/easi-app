@@ -1,10 +1,9 @@
 import {
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester,
+  TRBRequestState,
   TRBRequestStatus
 } from 'gql/generated/graphql';
-
-import { TRBRequestState } from 'types/graphql-global-types';
 
 /**
  * Hash tables of status enum strings and their status order.
@@ -54,12 +53,13 @@ export const SystemIntakeStatusRequesterIndex: Record<
   FINAL_BUSINESS_CASE_EDITS_REQUESTED: 11,
   GRB_MEETING_READY: 12,
   GRB_MEETING_AWAITING_DECISION: 13,
-  LCID_ISSUED: 14,
-  LCID_EXPIRED: 15,
-  LCID_RETIRED: 16,
-  NOT_GOVERNANCE: 17,
-  NOT_APPROVED: 18,
-  CLOSED: 19
+  GRB_REVIEW_IN_PROGRESS: 14,
+  LCID_ISSUED: 15,
+  LCID_EXPIRED: 16,
+  LCID_RETIRED: 17,
+  NOT_GOVERNANCE: 18,
+  NOT_APPROVED: 19,
+  CLOSED: 20
 } as const;
 
 export const SystemIntakeStatusAdminIndex: Record<
@@ -74,14 +74,15 @@ export const SystemIntakeStatusAdminIndex: Record<
   GRT_MEETING_COMPLETE: 5,
   GRB_MEETING_READY: 6,
   GRB_MEETING_COMPLETE: 7,
-  FINAL_BUSINESS_CASE_IN_PROGRESS: 8,
-  FINAL_BUSINESS_CASE_SUBMITTED: 9,
-  LCID_ISSUED: 10,
-  LCID_EXPIRED: 11,
-  LCID_RETIRED: 12,
-  NOT_GOVERNANCE: 13,
-  NOT_APPROVED: 14,
-  CLOSED: 15
+  GRB_REVIEW_IN_PROGRESS: 8,
+  FINAL_BUSINESS_CASE_IN_PROGRESS: 9,
+  FINAL_BUSINESS_CASE_SUBMITTED: 10,
+  LCID_ISSUED: 11,
+  LCID_EXPIRED: 12,
+  LCID_RETIRED: 13,
+  NOT_GOVERNANCE: 14,
+  NOT_APPROVED: 15,
+  CLOSED: 16
 } as const;
 
 // Adding 'OPEN' status for typescript, but will never be needed in trbRequestStatusSortType

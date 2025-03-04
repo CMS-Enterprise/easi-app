@@ -26,6 +26,7 @@ import {
 import NotFound from 'features/Miscellaneous/NotFound';
 import {
   GetTRBRequestsQuery,
+  TRBRequestState,
   useGetTRBRequestsQuery
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -38,7 +39,6 @@ import SectionWrapper from 'components/SectionWrapper';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
-import { TRBRequestState } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import { trbRequestStatusSortType } from 'utils/tableRequestStatusIndex';

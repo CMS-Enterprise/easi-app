@@ -1,10 +1,9 @@
-import i18next from 'i18next';
-import * as Yup from 'yup';
-
 import {
   SystemIntakeStepToProgressTo,
   SystemIntakeTRBFollowUp
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
+import i18next from 'i18next';
+import * as Yup from 'yup';
 
 export const confirmLcidSchema = Yup.object().shape({
   expiresAt: Yup.date()

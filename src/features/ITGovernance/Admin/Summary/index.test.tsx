@@ -2,18 +2,17 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, within } from '@testing-library/react';
-import { GetSystemIntake_systemIntake_requester as Requester } from 'gql/legacyGQL/types/GetSystemIntake';
-import { DateTime } from 'luxon';
-import users from 'tests/mock/users';
-
 import {
   RequestRelationType,
+  SystemIntakeFragmentFragment,
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatusAdmin
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
+import { DateTime } from 'luxon';
+import users from 'tests/mock/users';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import Summary, { RequestSummaryProps } from '.';
 
@@ -34,7 +33,7 @@ vi.mock('@okta/okta-react', () => ({
   }
 }));
 
-const requester: Requester = {
+const requester: SystemIntakeFragmentFragment['requester'] = {
   __typename: 'SystemIntakeRequester',
   name: users[0].commonName,
   email: users[0].email,

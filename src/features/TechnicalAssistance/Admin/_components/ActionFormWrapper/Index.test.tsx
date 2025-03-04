@@ -3,11 +3,11 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import GetCedarContactsQuery from 'gql/legacyGQL/GetCedarContactsQuery';
 import {
-  GetCedarContacts,
-  GetCedarContactsVariables
-} from 'gql/legacyGQL/types/GetCedarContacts';
+  GetCedarContactsDocument,
+  GetCedarContactsQuery,
+  GetCedarContactsQueryVariables
+} from 'gql/generated/graphql';
 import {
   attendees,
   getTRBRequestAttendeesQuery,
@@ -26,15 +26,16 @@ import useActionForm from './useActionForm';
 
 const cedarContactsMock = (
   query: string
-): MockedQuery<GetCedarContacts, GetCedarContactsVariables> => ({
+): MockedQuery<GetCedarContactsQuery, GetCedarContactsQueryVariables> => ({
   request: {
-    query: GetCedarContactsQuery,
+    query: GetCedarContactsDocument,
     variables: {
       commonName: query
     }
   },
   result: {
     data: {
+      __typename: 'Query',
       cedarPersonsByCommonName: [newAttendee.userInfo]
     }
   }

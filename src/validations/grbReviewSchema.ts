@@ -1,10 +1,12 @@
-import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewType
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import * as Yup from 'yup';
 import { MixedSchema } from 'yup/lib/mixed';
 
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
-import { SystemIntakeGRBReviewType } from 'types/graphql-global-types';
 import extractObjectKeys from 'utils/extractObjectKeys';
 
 /** GRB Reviewer for IT Governance request */

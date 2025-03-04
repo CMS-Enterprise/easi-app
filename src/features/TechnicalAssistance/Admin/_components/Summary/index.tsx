@@ -10,16 +10,16 @@ import {
   Icon,
   ModalRef
 } from '@trussworks/react-uswds';
-import { GetTRBRequestSummaryQuery } from 'gql/generated/graphql';
-
-import AdminRequestHeaderSummary from 'components/AdminRequestHeaderSummary';
-import StateTag from 'components/StateTag';
 import {
+  GetTRBRequestSummaryQuery,
   RequestRelationType,
   TRBRequestState,
   TRBRequestStatus,
   TRBRequestType
-} from 'types/graphql-global-types';
+} from 'gql/generated/graphql';
+
+import AdminRequestHeaderSummary from 'components/AdminRequestHeaderSummary';
+import StateTag from 'components/StateTag';
 import { TRBAttendee, TrbRequestIdRef } from 'types/technicalAssistance';
 
 import { TrbAssignLeadModalOpener } from '../TrbAssignLeadModal';

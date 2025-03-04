@@ -1,13 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
+import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import { RichTextViewer } from 'components/RichTextEditor';
 import { formatDateUtc } from 'utils/date';
 
 type ApprovedProps = {
-  intake: SystemIntake;
+  intake: SystemIntakeFragmentFragment;
 };
 
 /**

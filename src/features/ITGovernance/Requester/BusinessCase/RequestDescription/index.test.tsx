@@ -9,6 +9,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import BusinessCase from 'features/ITGovernance/Requester/BusinessCase';
+import { SystemIntakeStep } from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
 import {
   getGovernanceTaskListQuery,
@@ -16,7 +17,6 @@ import {
 } from 'tests/mock/systemIntake';
 
 import { businessCaseInitialData } from 'data/businessCase';
-import { SystemIntakeStep } from 'types/graphql-global-types';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 const renderPage = async (store: any, isFinal?: boolean) => {

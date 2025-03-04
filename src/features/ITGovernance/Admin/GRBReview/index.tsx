@@ -14,12 +14,13 @@ import {
 import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
 import {
   GetSystemIntakeGRBReviewDocument,
+  SystemIntakeDocumentFragmentFragment,
+  SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
+  SystemIntakeState,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
 } from 'gql/generated/graphql';
-import { SystemIntake } from 'gql/legacyGQL/types/SystemIntake';
-import { SystemIntakeDocument } from 'gql/legacyGQL/types/SystemIntakeDocument';
 
 import AdminAction from 'components/AdminAction';
 import Alert from 'components/Alert';
@@ -34,30 +35,29 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
 import { BusinessCaseModel } from 'types/businessCase';
-import { SystemIntakeState } from 'types/graphql-global-types';
 import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
-import Discussions from './Discussions';
-import GRBFeedbackCard from './GRBFeedbackCard';
+import Discussions from './Discussions/Discussions';
+import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
+import ParticipantsTable from './ParticipantsTable/ParticipantsTable';
+import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
 import GRBReviewerForm from './GRBReviewerForm';
-import ParticipantsTable from './ParticipantsTable';
-import PresentationLinksCard from './PresentationLinksCard';
 
 import './index.scss';
 
 type GRBReviewProps = {
   id: string;
-  submittedAt: string | null;
+  submittedAt?: string | null;
   state: SystemIntakeState;
   businessCase: BusinessCaseModel;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
-  documents: SystemIntakeDocument[];
+  documents: SystemIntakeDocumentFragmentFragment[];
   grbReviewStartedAt?: string | null;
-  grbPresentationLinks: SystemIntake['grbPresentationLinks'];
-  governanceRequestFeedbacks: SystemIntake['governanceRequestFeedbacks'];
+  grbPresentationLinks?: SystemIntakeFragmentFragment['grbPresentationLinks'];
+  governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'];
 };
 
 const GRBReview = ({

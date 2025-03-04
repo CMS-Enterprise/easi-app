@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GovernanceRequestFeedback } from 'gql/legacyGQL/types/GovernanceRequestFeedback';
+import { GovernanceRequestFeedbackFragmentFragment } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
@@ -13,11 +13,11 @@ import PDFExport from 'components/PDFExport';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 type BusinessCaseReviewProps = {
   businessCase: BusinessCaseModel;
-  grtFeedbacks?: GovernanceRequestFeedback[] | null;
+  grtFeedbacks?: GovernanceRequestFeedbackFragmentFragment[] | null;
 };
 
 const BusinessCaseReview = ({

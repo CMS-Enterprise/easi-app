@@ -10,7 +10,8 @@ import userEvent from '@testing-library/user-event';
 import { ModalRef } from '@trussworks/react-uswds';
 import {
   GetTRBRequestConsultMeetingDocument,
-  GetTRBRequestSummaryQuery
+  GetTRBRequestSummaryQuery,
+  TRBFeedbackStatus
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import {
@@ -25,7 +26,6 @@ import {
 } from 'tests/mock/trbRequest';
 
 import { MessageProvider } from 'hooks/useMessage';
-import { TRBFeedbackStatus } from 'types/graphql-global-types';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';

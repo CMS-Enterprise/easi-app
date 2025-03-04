@@ -3,13 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Button, Grid, GridContainer, Icon } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { useGetTRBGuidanceLetterQuery } from 'gql/generated/graphql';
+import {
+  TRBGuidanceLetterStatus,
+  useGetTRBGuidanceLetterQuery
+} from 'gql/generated/graphql';
 import { isEqual } from 'lodash';
 
 import { Alert } from 'components/Alert';
 import PageLoading from 'components/PageLoading';
 import StepHeader from 'components/StepHeader';
-import { TRBGuidanceLetterStatus } from 'types/graphql-global-types';
 import {
   FormAlertObject,
   GuidanceFormStepKey

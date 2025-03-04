@@ -1,25 +1,20 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
-import { useMutation } from '@apollo/client';
 import { Alert, Button, Table } from '@trussworks/react-uswds';
 import {
   GetTRBRequestDocumentsQuery,
+  TRBDocumentCommonType,
   TRBRequestDocumentStatus,
+  useDeleteTRBRequestDocumentMutation,
   useGetTRBRequestDocumentsQuery,
   useGetTRBRequestDocumentUrlsLazyQuery
 } from 'gql/generated/graphql';
-import DeleteTrbRequestDocumentQuery from 'gql/legacyGQL/DeleteTrbRequestDocumentQuery';
-import {
-  DeleteTrbRequestDocument,
-  DeleteTrbRequestDocumentVariables
-} from 'gql/legacyGQL/types/DeleteTrbRequestDocument';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Spinner from 'components/Spinner';
 import useMessage from 'hooks/useMessage';
-import { TRBDocumentCommonType } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
@@ -86,10 +81,7 @@ function DocumentsTable({
   ]);
 
   // Documents can be deleted from the table
-  const [deleteDocument] = useMutation<
-    DeleteTrbRequestDocument,
-    DeleteTrbRequestDocumentVariables
-  >(DeleteTrbRequestDocumentQuery);
+  const [deleteDocument] = useDeleteTRBRequestDocumentMutation();
 
   const setRemoveError = useMemo(() => {
     return () => {
