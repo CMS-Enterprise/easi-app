@@ -6,7 +6,8 @@ import {
   GetGovernanceTaskListQuery,
   ITGovGRBStatus,
   SystemIntakeDocumentStatus,
-  SystemIntakeGRBReviewType
+  SystemIntakeGRBReviewType,
+  useDeleteSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
@@ -15,6 +16,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
+import useMessage from 'hooks/useMessage';
 import { formatDateUtc } from 'utils/date';
 
 const GovTaskGrbMeeting = ({
@@ -32,6 +34,7 @@ const GovTaskGrbMeeting = ({
   const { t } = useTranslation('itGov');
   const [removalModalOpen, setRemovalModalOpen] = useState(false);
   const [reviewTypesModalOpen, setReviewTypesModalOpen] = useState(false);
+  const { showMessage } = useMessage();
 
   const presentationDeckFileName =
     grbPresentationLinks?.presentationDeckFileName;
@@ -56,6 +59,33 @@ const GovTaskGrbMeeting = ({
   };
 
   const dateValue = dateMapping[grbReviewType]?.[grbMeetingStatus] ?? null;
+
+  const [deleteSystemIntakeGRBPresentationLinks] =
+    useDeleteSystemIntakeGRBPresentationLinksMutation({
+      variables: {
+        input: {
+          systemIntakeID: id
+        }
+      },
+      refetchQueries: ['GetSystemIntake']
+    });
+
+  const removePresentationLinks = () => {
+    deleteSystemIntakeGRBPresentationLinks()
+      .then(() => {
+        showMessage(t('grbReview:asyncPresentation.modalRemoveLinks.success'), {
+          type: 'success'
+        });
+      })
+      .catch(() => {
+        showMessage(t('grbReview:asyncPresentation.modalRemoveLinks.error'), {
+          type: 'error'
+        });
+      })
+      .finally(() => {
+        setRemovalModalOpen(false);
+      });
+  };
 
   return (
     <>
@@ -82,8 +112,7 @@ const GovTaskGrbMeeting = ({
           <Button
             type="button"
             className="bg-error"
-            // TODO: Implement remove presentation functionality
-            onClick={() => console.log('Remove Presentation')}
+            onClick={() => removePresentationLinks()}
           >
             {t(`taskList.step.${stepKey}.removeModal.confirm`)}
           </Button>
@@ -186,6 +215,7 @@ const GovTaskGrbMeeting = ({
                 </Alert>
                 {grbReviewType === SystemIntakeGRBReviewType.ASYNC && (
                   <div className="margin-top-2">
+                    {/* If presentation deck is not uploaded, then show upload button */}
                     {!grbPresentationLinks && (
                       <UswdsReactLink
                         variant="unstyled"
@@ -195,6 +225,7 @@ const GovTaskGrbMeeting = ({
                         {t(`taskList.step.${stepKey}.presentationUploadButton`)}
                       </UswdsReactLink>
                     )}
+                    {/* Else, render file status as pending or the actual file name */}
                     {grbPresentationLinks && (
                       <div>
                         {presentationDeckFileStatus ===
@@ -250,12 +281,12 @@ const GovTaskGrbMeeting = ({
               target="_blank"
               className={classNames(
                 'margin-right-2 padding-right-2 border-right-1px border-base-lighter',
-                {
-                  'usa-button  border-right-0':
-                    grbReviewType === SystemIntakeGRBReviewType.STANDARD &&
-                    (grbMeetingStatus === ITGovGRBStatus.READY_TO_SCHEDULE ||
-                      grbMeetingStatus === ITGovGRBStatus.SCHEDULED)
-                }
+                (grbReviewType === SystemIntakeGRBReviewType.STANDARD &&
+                  (grbMeetingStatus === ITGovGRBStatus.READY_TO_SCHEDULE ||
+                    grbMeetingStatus === ITGovGRBStatus.SCHEDULED)) ||
+                  grbPresentationLinks
+                  ? 'usa-button border-right-0'
+                  : ''
               )}
             >
               {t(`taskList.step.${stepKey}.button`)}
