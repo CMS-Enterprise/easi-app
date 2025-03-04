@@ -64,6 +64,12 @@ function GRBReviewFormStepWrapper<
     ({ key }) => key === step
   );
 
+  const previousStep: StepHeaderStepProps | undefined =
+    currentStepIndex > -1 ? steps[currentStepIndex - 1] : undefined;
+
+  const nextStep: StepHeaderStepProps | undefined =
+    currentStepIndex > -1 ? steps[currentStepIndex + 1] : undefined;
+
   /**
    * Submits step if fields are valid
    *
@@ -197,9 +203,8 @@ function GRBReviewFormStepWrapper<
             onSubmit={handleSubmit(values =>
               onSubmit({ systemIntakeID: systemId, ...values })
                 .then(() =>
-                  history.push(
-                    `${grbReviewPath}/${grbReviewFormSteps[currentStepIndex + 1].key}`
-                  )
+                  // Go to next step, or back to review if end of form
+                  history.push(`${grbReviewPath}/${nextStep?.key || ''}`)
                 )
                 .catch(() =>
                   showMessage(t('setUpGrbReviewForm.error'), { type: 'error' })
@@ -212,15 +217,14 @@ function GRBReviewFormStepWrapper<
               next={{
                 type: 'submit',
                 // Disable `next` button if next step is disabled
-                disabled: steps[currentStepIndex + 1].disabled
+                disabled: !!nextStep?.disabled
               }}
               back={
-                currentStepIndex > 0 && {
+                // Only show `back` button if there is a previous step
+                previousStep && {
                   type: 'button',
                   onClick: () =>
-                    history.push(
-                      `${grbReviewPath}/${grbReviewFormSteps[currentStepIndex - 1].key}`
-                    )
+                    history.push(`${grbReviewPath}/${previousStep.key}`)
                 }
               }
               saveExitText={t('setUpGrbReviewForm.saveAndReturn')}
