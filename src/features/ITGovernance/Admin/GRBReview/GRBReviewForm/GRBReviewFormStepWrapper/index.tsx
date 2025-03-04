@@ -43,9 +43,9 @@ function GRBReviewFormStepWrapper<
   const { Message, showMessage } = useMessage();
 
   /** Formatted steps for stepped form header */
-  const [steps, setSteps] = useState<StepHeaderStepProps[]>([
-    ...grbReviewFormSteps
-  ]);
+  const [steps, setSteps] = useState<StepHeaderStepProps[]>(
+    [...grbReviewFormSteps].map(step => ({ ...step, disabled: true }))
+  );
 
   const { systemId, step } = useParams<{
     systemId: string;

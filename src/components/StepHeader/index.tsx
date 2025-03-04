@@ -106,6 +106,8 @@ function StepHeader({
                 <StepIndicatorStep
                   key={stp.key}
                   status={status}
+                  data-testid={`stepIndicator-${idx}`}
+                  aria-disabled={stp.disabled}
                   onClick={
                     stp.onClick && !stp.disabled ? stp.onClick : undefined
                   }
