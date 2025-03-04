@@ -134,7 +134,7 @@ jobs:
           name: test-frontend-assets
           path: build/
       - name: Buildx Bake testing images
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
           files: docker-compose.cypress_ci.yml
           load: true
