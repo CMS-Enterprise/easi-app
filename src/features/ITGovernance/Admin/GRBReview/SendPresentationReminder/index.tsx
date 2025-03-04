@@ -30,6 +30,8 @@ function SendPresentationReminder({
 
   const [file, setFile] = useState<File>();
   const [error, setError] = useState(false);
+
+  // State to track if reminder has been sent
   const [reminderSend, setReminderSend] = useState(false);
 
   const { showMessage } = useMessage();
@@ -44,8 +46,10 @@ function SendPresentationReminder({
     setReminderSend(true);
     sendReminder()
       .then(() => {
+        // Set state to show reminder has been sent and disable Send Reminder button
         setReminderSend(true);
       })
+      // Set error message if reminder fails to send
       .catch(() => {
         showMessage(t('presentationLinks.sendReminderCard.reminderError'), {
           type: 'error',
@@ -57,12 +61,15 @@ function SendPresentationReminder({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const accept = '.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx';
+  const accept: string = '.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx';
 
+  // Ref event to capture the the button click of the hidden file input
+  // The hidden file input is used to trigger the file upload dialog
   const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
 
+  // Function to handle the file upload.
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e?.target?.files && e.target.files.length > 0) {
       if (isFileTypeValid(e.target.files[0])) {
@@ -76,6 +83,7 @@ function SendPresentationReminder({
     }
   };
 
+  // Checks if the file type is valid
   const isFileTypeValid = (localFile: File) => {
     let isFileTypeAcceptable = false;
     const acceptedFileTypes = accept.split(',');
