@@ -36,11 +36,6 @@ const GovTaskGrbMeeting = ({
   const [reviewTypesModalOpen, setReviewTypesModalOpen] = useState(false);
   const { showMessage } = useMessage();
 
-  const presentationDeckFileName =
-    grbPresentationLinks?.presentationDeckFileName;
-  const presentationDeckFileStatus =
-    grbPresentationLinks?.presentationDeckFileStatus;
-
   const dateMapping: Record<
     SystemIntakeGRBReviewType,
     Partial<Record<ITGovGRBStatus, string | null>>
@@ -228,7 +223,7 @@ const GovTaskGrbMeeting = ({
                     {/* Else, render file status as pending or the actual file name */}
                     {grbPresentationLinks && (
                       <div>
-                        {presentationDeckFileStatus ===
+                        {grbPresentationLinks.presentationDeckFileStatus ===
                         SystemIntakeDocumentStatus.PENDING ? (
                           <span>
                             <em>
@@ -244,14 +239,15 @@ const GovTaskGrbMeeting = ({
                                   strong: <strong />
                                 }}
                                 values={{
-                                  fileName: presentationDeckFileName
+                                  fileName:
+                                    grbPresentationLinks.presentationDeckFileName
                                 }}
                               />
                             </span>
 
                             <Link
                               href={
-                                grbPresentationLinks?.presentationDeckFileURL!
+                                grbPresentationLinks.presentationDeckFileURL!
                               }
                               target="_blank"
                               className="margin-right-1"
