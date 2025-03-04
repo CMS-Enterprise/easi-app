@@ -67,7 +67,7 @@ const GovTaskGrbMeeting = ({
           systemIntakeID: id
         }
       },
-      refetchQueries: ['GetSystemIntake']
+      refetchQueries: ['GetGovernanceTaskList']
     });
 
   const removePresentationLinks = () => {
