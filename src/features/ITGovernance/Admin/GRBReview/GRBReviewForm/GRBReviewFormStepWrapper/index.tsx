@@ -211,7 +211,8 @@ function GRBReviewFormStepWrapper<
             <Pager
               next={{
                 type: 'submit',
-                disabled: !isValid
+                // Disable `next` button if next step is disabled
+                disabled: steps[currentStepIndex + 1].disabled
               }}
               back={
                 currentStepIndex > 0 && {
