@@ -210,16 +210,20 @@ function GRBReviewFormStepWrapper<
           {requiredFields && <RequiredFieldsText />}
 
           <Form
-            onSubmit={handleSubmit(values =>
-              onSubmit({ systemIntakeID: systemId, ...values })
+            onSubmit={handleSubmit(values => {
+              if (!isDirty) {
+                return history.push(`${grbReviewPath}/${nextStep?.key || ''}`);
+              }
+
+              return onSubmit({ systemIntakeID: systemId, ...values })
                 .then(() =>
                   // Go to next step, or back to review if end of form
                   history.push(`${grbReviewPath}/${nextStep?.key || ''}`)
                 )
                 .catch(() =>
                   showMessage(t('setUpGrbReviewForm.error'), { type: 'error' })
-                )
-            )}
+                );
+            })}
           >
             {children}
 
@@ -245,7 +249,7 @@ function GRBReviewFormStepWrapper<
               className="margin-top-8 margin-bottom-3"
             />
 
-            {isDirty && (
+            {isValid && isDirty && (
               <AutoSave
                 values={watch()}
                 onSave={() =>
