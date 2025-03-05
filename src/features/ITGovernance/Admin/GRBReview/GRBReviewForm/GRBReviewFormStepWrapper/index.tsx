@@ -275,7 +275,10 @@ function GRBReviewFormStepWrapper<
                   !onSubmit &&
                   history.push(`${grbReviewPath}/${nextStep?.key || ''}`),
                 // Disable `next` button if next step is disabled
-                disabled: !!nextStep?.disabled
+                disabled: !!nextStep?.disabled,
+                text: nextStep
+                  ? t('Next')
+                  : t('setUpGrbReviewForm.completeAndBeginReview')
               }}
               back={
                 // Only show `back` button if there is a previous step

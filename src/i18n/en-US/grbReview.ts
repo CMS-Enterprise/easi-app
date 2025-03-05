@@ -236,7 +236,8 @@ export default {
       label: 'Choose review type',
       async: 'Asynchronous review',
       standard: 'Standard review'
-    }
+    },
+    completeAndBeginReview: 'Complete and begin review'
   },
   adminTask: {
     title: 'Admin Task',
