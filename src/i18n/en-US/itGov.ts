@@ -49,7 +49,7 @@ export default {
       bizCaseDraft: {
         title: 'Prepare a draft Business Case',
         description:
-          'Draft a Business Case to communicate your business need, possible solutions and their associated costs. The Governance Team will review it with you and determine whether you are ready for a GRT or GRB meeting.',
+          'Draft a Business Case to communicate your business need, possible solutions and their associated costs. The Governance Team will review it with you and determine whether you are ready for a GRT meeting or GRB review.',
         viewSubmittedDraftBusinessCase: 'View submitted draft Business Case',
         submittedInfo: 'Draft Business Case submitted. Waiting for feedback.',
         editsRequestedWarning:
@@ -78,13 +78,41 @@ export default {
           'The Governance Team has not requested edits to your final Business Case. If you have any questions, you may contact them at <a>{{email}}</a>.'
       },
       grbMeeting: {
-        title: 'Attend the GRB meeting',
+        title: 'Participate in GRB review',
         description:
-          'The Governance Review Board will discuss and make decisions based on your Business Case and recommendations from the Governance Review Team.',
-        link: 'Prepare for the GRB meeting (opens in a new tab)',
-        button: 'Prepare for the GRB meeting',
-        scheduledInfo: 'GRB meeting scheduled for {{date}}.',
-        attendedInfo: 'You attended the GRB meeting on {{date}}.'
+          'The Governance Admin Team will select whether this review will be completed in a synchronous (meeting) format or an asynchronous review format and will direct you to complete any additional necessary steps. During the review, the Governance Review Board (GRB) will discuss and make a decision based on your Business Case and any recommendations from the Governance Review Team (GRT). You may be asked to answer questions about your project.',
+        link: 'Prepare for the GRB review (opens in a new tab)',
+        button: 'Prepare for the GRB review',
+        learnMore: 'Learn more about the GRB review types',
+        presentationUploadButton: 'Upload presentation deck',
+        scheduledInfo: 'GRB review scheduled for {{date}}.',
+        attendedInfo: 'You attended the GRB review on {{date}}.',
+        reviewType: {
+          copy: '<strong>Review type:</strong> {{type}}',
+          STANDARD: 'Standard GRB meeting',
+          ASYNC: 'Asynchronous'
+        },
+        alertType: {
+          STANDARD: {
+            READY_TO_SCHEDULE:
+              'The Governance Admin Team will schedule a GRB review.',
+            SCHEDULED: 'GRB meeting scheduled for {{date}}.',
+            AWAITING_DECISION: 'You attended the GRB meeting on {{date}}.',
+            COMPLETED: 'You attended the GRB meeting on {{date}}.'
+          },
+          ASYNC: {
+            READY_TO_SCHEDULE:
+              'The Governance Admin Team may schedule a time to asynchronously record your presentation.',
+            SCHEDULED:
+              'Your presentation recording session is scheduled for {{date}}.',
+            AWAITING_GRB_REVIEW:
+              'You attended the presentation recording session on {{date}}.',
+            REVIEW_IN_PROGRESS:
+              'This asynchronous review starts {{dateStart}} and ends {{dateEnd}}.',
+            AWAITING_DECISION: 'This GRB review ended on {{date}}.',
+            COMPLETED: 'This GRB review ended on {{date}}.'
+          }
+        }
       },
       decisionAndNextSteps: {
         title: 'Decision and next steps',
