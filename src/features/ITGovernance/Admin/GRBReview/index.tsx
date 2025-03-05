@@ -13,7 +13,7 @@ import {
 } from '@trussworks/react-uswds';
 import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
 import {
-  GetSystemIntakeGRBReviewersDocument,
+  GetSystemIntakeGRBReviewDocument,
   SystemIntakeDocumentFragmentFragment,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
@@ -94,7 +94,7 @@ const GRBReview = ({
   const { showMessage } = useMessage();
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
-    refetchQueries: [GetSystemIntakeGRBReviewersDocument]
+    refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
 
   const [startGRBReview] = useStartGRBReviewMutation({
@@ -105,7 +105,7 @@ const GRBReview = ({
     },
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewersDocument,
+        query: GetSystemIntakeGRBReviewDocument,
         variables: { id }
       }
     ]
@@ -280,8 +280,11 @@ const GRBReview = ({
                     buttons={[
                       {
                         label: t('adminTask.setUpGRBReview.title'),
-                        onClick: () => setStartReviewModalIsOpen(true)
-                        // history.push(`/it-governance/${id}/grb-review/form`)
+                        // onClick: () => setStartReviewModalIsOpen(true)
+                        onClick: () =>
+                          history.push(
+                            `/it-governance/${id}/grb-review/review-type`
+                          )
                       },
                       {
                         label: t('adminTask.takeADifferentAction'),
