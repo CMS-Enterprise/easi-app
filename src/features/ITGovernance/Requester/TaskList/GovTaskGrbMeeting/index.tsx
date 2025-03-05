@@ -34,7 +34,8 @@ const GovTaskGrbMeeting = ({
   const { t } = useTranslation('itGov');
   const [removalModalOpen, setRemovalModalOpen] = useState(false);
   const [reviewTypesModalOpen, setReviewTypesModalOpen] = useState(false);
-  const { showMessage } = useMessage();
+  const { showMessage, showErrorMessageInModal, errorMessageInModal } =
+    useMessage();
 
   const dateMapping: Record<
     SystemIntakeGRBReviewType,
@@ -73,9 +74,9 @@ const GovTaskGrbMeeting = ({
         });
       })
       .catch(() => {
-        showMessage(t('grbReview:asyncPresentation.modalRemoveLinks.error'), {
-          type: 'error'
-        });
+        showErrorMessageInModal(
+          t('grbReview:asyncPresentation.modalRemoveLinks.error')
+        );
       })
       .finally(() => {
         setRemovalModalOpen(false);
@@ -97,6 +98,11 @@ const GovTaskGrbMeeting = ({
         >
           {t(`taskList.step.${stepKey}.removeModal.title`)}
         </PageHeading>
+        {errorMessageInModal && (
+          <Alert type="error" className="margin-top-2">
+            {errorMessageInModal}
+          </Alert>
+        )}
         <p
           className="font-body-md line-height-sans-4 margin-top-0 margin-bottom-2"
           style={{ whiteSpace: 'break-spaces' }}
