@@ -38,7 +38,7 @@ describe('GRB review form step wrapper', () => {
                 grbReview={props?.grbReview || grbReview}
                 {...props}
               >
-                <div />
+                <h1>Test</h1>
               </GRBReviewFormStepWrapper>
             </Wrapper>
           </Route>
@@ -46,6 +46,19 @@ describe('GRB review form step wrapper', () => {
       </MemoryRouter>
     );
   };
+
+  it('matches the snapshot', async () => {
+    const { asFragment } = renderComponent();
+
+    // Wraps content in `form`
+    expect(
+      screen.getByTestId('grbReviewForm-stepContentWrapper')
+    ).toHaveAttribute('role', 'form');
+
+    expect(screen.getByRole('heading', { name: 'Test' }));
+
+    expect(asFragment()).toMatchSnapshot();
+  });
 
   it('disables steps for new form', async () => {
     renderComponent();
@@ -137,5 +150,36 @@ describe('GRB review form step wrapper', () => {
       'aria-current',
       'true'
     );
+  });
+
+  it('wraps content in `div` if `onSubmit` is undefined', async () => {
+    renderComponent({ onSubmit: undefined });
+
+    expect(
+      screen.getByTestId('grbReviewForm-stepContentWrapper')
+    ).not.toHaveAttribute('role', 'form');
+  });
+
+  it('renders without form context', async () => {
+    // Render without mocked `EasiFormContextProvider`
+    render(
+      <MemoryRouter
+        initialEntries={[
+          `/it-governance/${grbReview.id}/grb-review/review-type`
+        ]}
+      >
+        <MessageProvider>
+          <Route path="/it-governance/:systemId/grb-review/:step">
+            <GRBReviewFormStepWrapper onSubmit={vi.fn()} grbReview={grbReview}>
+              <div />
+            </GRBReviewFormStepWrapper>
+          </Route>
+        </MessageProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByTestId('grbReviewForm-stepContentWrapper')
+    ).not.toHaveAttribute('role', 'form');
   });
 });
