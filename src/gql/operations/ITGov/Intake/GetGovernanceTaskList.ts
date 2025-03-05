@@ -48,6 +48,11 @@ export default gql(/* GraphQL */ `
         name
         acronym
       }
+      grbPresentationLinks {
+        presentationDeckFileName
+        presentationDeckFileStatus
+        presentationDeckFileURL
+      }
     }
   }
 `);
