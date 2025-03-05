@@ -109,7 +109,7 @@ const GovTaskGrbMeeting = ({
         >
           {t(`taskList.step.${stepKey}.removeModal.text`)}
         </p>
-        <ButtonGroup style={{ gap: '1.5rem' }}>
+        <ButtonGroup style={{ gap: '0.5rem 1.5rem' }}>
           <Button
             type="button"
             className="bg-error"
