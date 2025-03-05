@@ -2555,6 +2555,23 @@ input ReopenTRBRequestInput {
 }
 
 """
+Data corresponding to an uploaded presentation deck
+"""
+type PresentationDeck {
+  id: UUID!
+  url: String!
+  uploadedAt: Time!
+}
+
+"""
+Input for creating a presentation deck
+"""
+input CreatePresentationDeckInput {
+  requestID: UUID!
+  fileData: Upload!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -2723,6 +2740,8 @@ type Mutation {
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
   sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
+  @hasRole(role: EASI_GOVTEAM)
+  createPresentationDeck(input: CreatePresentationDeckInput!): PresentationDeck!
   @hasRole(role: EASI_GOVTEAM)
 }
 

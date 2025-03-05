@@ -535,6 +535,12 @@ export type CreateGRBReviewerInput = {
   votingRole: SystemIntakeGRBReviewerVotingRole;
 };
 
+/** Input for creating a presentation deck */
+export type CreatePresentationDeckInput = {
+  fileData: Scalars['Upload']['input'];
+  requestID: Scalars['UUID']['input'];
+};
+
 /** The data needed to associate a contact with a system intake */
 export type CreateSystemIntakeContactInput = {
   component: Scalars['String']['input'];
@@ -959,6 +965,7 @@ export type Mutation = {
   archiveSystemIntake: SystemIntake;
   closeTRBRequest: TRBRequest;
   createCedarSystemBookmark?: Maybe<CreateCedarSystemBookmarkPayload>;
+  createPresentationDeck: PresentationDeck;
   createSystemIntake?: Maybe<SystemIntake>;
   createSystemIntakeActionChangeLCIDRetirementDate?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeActionCloseRequest?: Maybe<UpdateSystemIntakePayload>;
@@ -1060,6 +1067,12 @@ export type MutationCloseTRBRequestArgs = {
 /** Defines the mutations for the schema */
 export type MutationCreateCedarSystemBookmarkArgs = {
   input: CreateCedarSystemBookmarkInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationCreatePresentationDeckArgs = {
+  input: CreatePresentationDeckInput;
 };
 
 
@@ -1576,6 +1589,14 @@ export enum PersonRole {
   SYSTEM_MAINTAINER = 'SYSTEM_MAINTAINER',
   SYSTEM_OWNER = 'SYSTEM_OWNER'
 }
+
+/** Data corresponding to an uploaded presentation deck */
+export type PresentationDeck = {
+  __typename: 'PresentationDeck';
+  id: Scalars['UUID']['output'];
+  uploadedAt: Scalars['Time']['output'];
+  url: Scalars['String']['output'];
+};
 
 /** Query definition for the schema */
 export type Query = {

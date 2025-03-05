@@ -51,6 +51,7 @@ type ResolverRoot interface {
 	GovernanceRequestFeedback() GovernanceRequestFeedbackResolver
 	ITGovTaskStatuses() ITGovTaskStatusesResolver
 	Mutation() MutationResolver
+	PresentationDeck() PresentationDeckResolver
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
 	SystemIntakeDocument() SystemIntakeDocumentResolver
@@ -548,6 +549,7 @@ type ComplexityRoot struct {
 		ArchiveSystemIntake                              func(childComplexity int, id uuid.UUID) int
 		CloseTRBRequest                                  func(childComplexity int, input models.CloseTRBRequestInput) int
 		CreateCedarSystemBookmark                        func(childComplexity int, input models.CreateCedarSystemBookmarkInput) int
+		CreatePresentationDeck                           func(childComplexity int, input models.CreatePresentationDeckInput) int
 		CreateSystemIntake                               func(childComplexity int, input models.CreateSystemIntakeInput) int
 		CreateSystemIntakeActionChangeLCIDRetirementDate func(childComplexity int, input models.SystemIntakeChangeLCIDRetirementDateInput) int
 		CreateSystemIntakeActionCloseRequest             func(childComplexity int, input models.SystemIntakeCloseRequestInput) int
@@ -631,6 +633,12 @@ type ComplexityRoot struct {
 		UpdateTRBRequestForm                             func(childComplexity int, input map[string]interface{}) int
 		UpdateTRBRequestFundingSources                   func(childComplexity int, input models.UpdateTRBRequestFundingSourcesInput) int
 		UpdateTRBRequestTRBLead                          func(childComplexity int, input models.UpdateTRBRequestTRBLeadInput) int
+	}
+
+	PresentationDeck struct {
+		ID         func(childComplexity int) int
+		URL        func(childComplexity int) int
+		UploadedAt func(childComplexity int) int
 	}
 
 	Query struct {
@@ -1313,6 +1321,11 @@ type MutationResolver interface {
 	CreateTrbLeadOption(ctx context.Context, eua string) (*models.UserInfo, error)
 	DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error)
 	SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (bool, error)
+	CreatePresentationDeck(ctx context.Context, input models.CreatePresentationDeckInput) (*models.PresentationDeck, error)
+}
+type PresentationDeckResolver interface {
+	URL(ctx context.Context, obj *models.PresentationDeck) (string, error)
+	UploadedAt(ctx context.Context, obj *models.PresentationDeck) (*time.Time, error)
 }
 type QueryResolver interface {
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
@@ -3998,6 +4011,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateCedarSystemBookmark(childComplexity, args["input"].(models.CreateCedarSystemBookmarkInput)), true
 
+	case "Mutation.createPresentationDeck":
+		if e.complexity.Mutation.CreatePresentationDeck == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createPresentationDeck_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreatePresentationDeck(childComplexity, args["input"].(models.CreatePresentationDeckInput)), true
+
 	case "Mutation.createSystemIntake":
 		if e.complexity.Mutation.CreateSystemIntake == nil {
 			break
@@ -4993,6 +5018,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateTRBRequestTRBLead(childComplexity, args["input"].(models.UpdateTRBRequestTRBLeadInput)), true
+
+	case "PresentationDeck.id":
+		if e.complexity.PresentationDeck.ID == nil {
+			break
+		}
+
+		return e.complexity.PresentationDeck.ID(childComplexity), true
+
+	case "PresentationDeck.url":
+		if e.complexity.PresentationDeck.URL == nil {
+			break
+		}
+
+		return e.complexity.PresentationDeck.URL(childComplexity), true
+
+	case "PresentationDeck.uploadedAt":
+		if e.complexity.PresentationDeck.UploadedAt == nil {
+			break
+		}
+
+		return e.complexity.PresentationDeck.UploadedAt(childComplexity), true
 
 	case "Query.cedarAuthorityToOperate":
 		if e.complexity.Query.CedarAuthorityToOperate == nil {
@@ -8011,6 +8057,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCloseTRBRequestInput,
 		ec.unmarshalInputCreateCedarSystemBookmarkInput,
 		ec.unmarshalInputCreateGRBReviewerInput,
+		ec.unmarshalInputCreatePresentationDeckInput,
 		ec.unmarshalInputCreateSystemIntakeContactInput,
 		ec.unmarshalInputCreateSystemIntakeDocumentInput,
 		ec.unmarshalInputCreateSystemIntakeGRBReviewersInput,
@@ -10746,6 +10793,23 @@ input ReopenTRBRequestInput {
 }
 
 """
+Data corresponding to an uploaded presentation deck
+"""
+type PresentationDeck {
+  id: UUID!
+  url: String!
+  uploadedAt: Time!
+}
+
+"""
+Input for creating a presentation deck
+"""
+input CreatePresentationDeckInput {
+  requestID: UUID!
+  fileData: Upload!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -10914,6 +10978,8 @@ type Mutation {
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
   sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
+  @hasRole(role: EASI_GOVTEAM)
+  createPresentationDeck(input: CreatePresentationDeckInput!): PresentationDeck!
   @hasRole(role: EASI_GOVTEAM)
 }
 
@@ -11553,6 +11619,34 @@ func (ec *executionContext) field_Mutation_createCedarSystemBookmark_argsInput(
 	}
 
 	var zeroVal models.CreateCedarSystemBookmarkInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_createPresentationDeck_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_createPresentationDeck_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_createPresentationDeck_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.CreatePresentationDeckInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.CreatePresentationDeckInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCreatePresentationDeckInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreatePresentationDeckInput(ctx, tmp)
+	}
+
+	var zeroVal models.CreatePresentationDeckInput
 	return zeroVal, nil
 }
 
@@ -38217,6 +38311,228 @@ func (ec *executionContext) fieldContext_Mutation_sendGRBReviewPresentationDeckR
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_createPresentationDeck(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createPresentationDeck(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreatePresentationDeck(rctx, fc.Args["input"].(models.CreatePresentationDeckInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *models.PresentationDeck
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.PresentationDeck
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.PresentationDeck); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.PresentationDeck`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.PresentationDeck)
+	fc.Result = res
+	return ec.marshalNPresentationDeck2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐPresentationDeck(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createPresentationDeck(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_PresentationDeck_id(ctx, field)
+			case "url":
+				return ec.fieldContext_PresentationDeck_url(ctx, field)
+			case "uploadedAt":
+				return ec.fieldContext_PresentationDeck_uploadedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PresentationDeck", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createPresentationDeck_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PresentationDeck_id(ctx context.Context, field graphql.CollectedField, obj *models.PresentationDeck) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PresentationDeck_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PresentationDeck_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PresentationDeck",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PresentationDeck_url(ctx context.Context, field graphql.CollectedField, obj *models.PresentationDeck) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PresentationDeck_url(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.PresentationDeck().URL(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PresentationDeck_url(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PresentationDeck",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PresentationDeck_uploadedAt(ctx context.Context, field graphql.CollectedField, obj *models.PresentationDeck) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PresentationDeck_uploadedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.PresentationDeck().UploadedAt(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PresentationDeck_uploadedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PresentationDeck",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_systemIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_systemIntake(ctx, field)
 	if err != nil {
@@ -61902,6 +62218,40 @@ func (ec *executionContext) unmarshalInputCreateGRBReviewerInput(ctx context.Con
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreatePresentationDeckInput(ctx context.Context, obj any) (models.CreatePresentationDeckInput, error) {
+	var it models.CreatePresentationDeckInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"requestID", "fileData"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "requestID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RequestID = data
+		case "fileData":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fileData"))
+			data, err := ec.unmarshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.FileData = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateSystemIntakeContactInput(ctx context.Context, obj any) (models.CreateSystemIntakeContactInput, error) {
 	var it models.CreateSystemIntakeContactInput
 	asMap := map[string]any{}
@@ -69363,6 +69713,124 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "createPresentationDeck":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createPresentationDeck(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var presentationDeckImplementors = []string{"PresentationDeck"}
+
+func (ec *executionContext) _PresentationDeck(ctx context.Context, sel ast.SelectionSet, obj *models.PresentationDeck) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, presentationDeckImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PresentationDeck")
+		case "id":
+			out.Values[i] = ec._PresentationDeck_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "url":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._PresentationDeck_url(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "uploadedAt":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._PresentationDeck_uploadedAt(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -77199,6 +77667,11 @@ func (ec *executionContext) unmarshalNCreateGRBReviewerInput2ᚖgithubᚗcomᚋc
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreatePresentationDeckInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreatePresentationDeckInput(ctx context.Context, v any) (models.CreatePresentationDeckInput, error) {
+	res, err := ec.unmarshalInputCreatePresentationDeckInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateSystemIntakeContactInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeContactInput(ctx context.Context, v any) (models.CreateSystemIntakeContactInput, error) {
 	res, err := ec.unmarshalInputCreateSystemIntakeContactInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -77748,6 +78221,20 @@ func (ec *executionContext) marshalNPersonRole2githubᚗcomᚋcmsᚑenterprise�
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNPresentationDeck2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐPresentationDeck(ctx context.Context, sel ast.SelectionSet, v models.PresentationDeck) graphql.Marshaler {
+	return ec._PresentationDeck(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPresentationDeck2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐPresentationDeck(ctx context.Context, sel ast.SelectionSet, v *models.PresentationDeck) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._PresentationDeck(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNReopenTRBRequestInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐReopenTRBRequestInput(ctx context.Context, v any) (models.ReopenTRBRequestInput, error) {

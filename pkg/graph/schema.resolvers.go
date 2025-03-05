@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1183,6 +1184,21 @@ func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx contex
 	return resolvers.SendGRBReviewPresentationDeckReminderEmail(ctx, systemIntakeID, r.emailClient, r.store)
 }
 
+// CreatePresentationDeck is the resolver for the createPresentationDeck field.
+func (r *mutationResolver) CreatePresentationDeck(ctx context.Context, input models.CreatePresentationDeckInput) (*models.PresentationDeck, error) {
+	return resolvers.CreatePresentationDeck(ctx, r.store, r.s3Client, input)
+}
+
+// URL is the resolver for the url field.
+func (r *presentationDeckResolver) URL(ctx context.Context, obj *models.PresentationDeck) (string, error) {
+	panic(fmt.Errorf("not implemented: URL - url"))
+}
+
+// UploadedAt is the resolver for the uploadedAt field.
+func (r *presentationDeckResolver) UploadedAt(ctx context.Context, obj *models.PresentationDeck) (*time.Time, error) {
+	panic(fmt.Errorf("not implemented: UploadedAt - uploadedAt"))
+}
+
 // SystemIntake is the resolver for the systemIntake field.
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
@@ -2293,6 +2309,11 @@ func (r *Resolver) ITGovTaskStatuses() generated.ITGovTaskStatusesResolver {
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
+// PresentationDeck returns generated.PresentationDeckResolver implementation.
+func (r *Resolver) PresentationDeck() generated.PresentationDeckResolver {
+	return &presentationDeckResolver{r}
+}
+
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
@@ -2366,6 +2387,7 @@ type cedarSystemDetailsResolver struct{ *Resolver }
 type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
+type presentationDeckResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
