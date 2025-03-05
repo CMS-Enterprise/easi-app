@@ -24,7 +24,6 @@ import (
 
 func SystemIntakeGRBDiscussions(
 	ctx context.Context,
-	store *storage.Store,
 	intakeID uuid.UUID,
 ) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
 	posts, err := dataloaders.GetSystemIntakeGRBDiscussionPostsBySystemIntakeID(ctx, intakeID)
