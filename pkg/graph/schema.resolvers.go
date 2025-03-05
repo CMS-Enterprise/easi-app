@@ -1934,7 +1934,7 @@ func (r *systemIntakeResolver) RelatedTRBRequests(ctx context.Context, obj *mode
 
 // GrbDiscussions is the resolver for the grbDiscussions field.
 func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
-	return resolvers.SystemIntakeGRBDiscussions(ctx, r.store, obj.ID)
+	return resolvers.SystemIntakeGRBDiscussions(ctx, obj.ID)
 }
 
 // GrbPresentationLinks is the resolver for the grbPresentationLinks field.
