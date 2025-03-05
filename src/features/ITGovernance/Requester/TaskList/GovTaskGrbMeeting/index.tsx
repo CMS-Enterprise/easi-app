@@ -200,9 +200,7 @@ const GovTaskGrbMeeting = ({
                   {t(
                     `taskList.step.${stepKey}.alertType.${grbReviewType}.${grbMeetingStatus}`,
                     {
-                      date: dateValue
-                        ? formatDateUtc(dateValue, 'MM/dd/yyyy')
-                        : null,
+                      date: formatDateUtc(dateValue, 'MM/dd/yyyy'),
                       dateStart: formatDateUtc(
                         grbReviewStartedAt,
                         'MM/dd/yyyy'
