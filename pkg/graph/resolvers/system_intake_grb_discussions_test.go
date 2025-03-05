@@ -29,7 +29,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 		)
 
 		// test the resolver for retrieving discussions
-		discussions, err := SystemIntakeGRBDiscussions(ctx, store, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
 		s.NotNil(discussions)
 		s.NoError(err)
 		s.Len(discussions, 1)
@@ -181,7 +181,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		intake := s.createNewIntake()
 
 		ctx, princ := s.getTestContextWithPrincipal("USR1", true)
-		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a discussion</p>")
+		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a newerDiscussion</p>")
 
 		replyPost := s.createGRBDiscussionReply(
 			ctx,
@@ -190,21 +190,37 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 			"<p>banana</p>",
 		)
 
-		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, store, intake.ID)
+		replyPost2 := s.createGRBDiscussionReply(
+			ctx,
+			emailClient,
+			discussionPost,
+			"<p>apple</p>",
+		)
+
+		discussionPost2 := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a newer newerDiscussion</p>")
+
+		// fetch newerDiscussion using resolver
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
 		s.NoError(err)
 		s.NotNil(discussions)
-		s.Len(discussions, 1)
-		discussion := discussions[0]
-		s.Equal(discussion.InitialPost.ID, discussionPost.ID)
+		s.Len(discussions, 2)
+		newerDiscussion := discussions[0]
+		// confirm the newer newerDiscussion is first
+		s.Equal(newerDiscussion.InitialPost.ID, discussionPost2.ID)
 
-		// test discussion reply from resolver
-		s.Len(discussions[0].Replies, 1)
-		reply := discussions[0].Replies[0]
-		s.Equal(reply.ID, replyPost.ID)
+		olderDiscussion := discussions[1]
+
+		// test newerDiscussion reply from resolver
+		s.Len(newerDiscussion.Replies, 0) // the newest has no replies
+		s.Len(olderDiscussion.Replies, 2) // the first one has two replies
+		reply := olderDiscussion.Replies[0]
+		s.Equal(reply.ID, replyPost.ID) // confirm oldest reply is first
+		reply2 := olderDiscussion.Replies[1]
+		s.Equal(reply2.ID, replyPost2.ID) // confirm newest reply is second
 		s.Equal(princ.UserAccount.ID, reply.CreatedBy)
 		s.NotNil(reply.ReplyToID)
-		s.Equal(discussion.InitialPost.ID, *reply.ReplyToID)
+
+		s.Equal(olderDiscussion.InitialPost.ID, *reply.ReplyToID)
 		s.Equal(reply.Content, models.HTML("<p>banana</p>"))
 	})
 
@@ -225,7 +241,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, store, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -267,7 +283,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		s.Error(err)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, store, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -304,7 +320,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, store, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -361,33 +377,33 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussions using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, store, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 2)
-		discussion1 := discussions[0]
-		discussion2 := discussions[1]
-		s.Equal(discussion1.InitialPost.ID, discussion1Post.ID)
-		s.Equal(discussion2.InitialPost.ID, discussion2Post.ID)
-		s.Equal(discussion1.InitialPost.CreatedBy, disc1Author.UserAccount.ID)
-		s.Equal(discussion2.InitialPost.CreatedBy, disc2Author.UserAccount.ID)
+		newerDiscussion := discussions[0]
+		olderDiscussion := discussions[1]
+		s.Equal(olderDiscussion.InitialPost.ID, discussion1Post.ID)
+		s.Equal(newerDiscussion.InitialPost.ID, discussion2Post.ID)
+		s.Equal(olderDiscussion.InitialPost.CreatedBy, disc1Author.UserAccount.ID)
+		s.Equal(newerDiscussion.InitialPost.CreatedBy, disc2Author.UserAccount.ID)
 
 		// test each discussion's reply
-		s.Len(discussions[0].Replies, 1)
-		s.Len(discussions[1].Replies, 1)
+		s.Len(newerDiscussion.Replies, 1)
+		s.Len(olderDiscussion.Replies, 1)
 
-		reply1 := discussion1.Replies[0]
+		reply1 := olderDiscussion.Replies[0]
 		s.Equal(reply1.ID, reply1Post.ID)
 		s.Equal(reply1Author.UserAccount.ID, reply1.CreatedBy)
 		s.NotNil(reply1.ReplyToID)
-		s.Equal(discussion1.InitialPost.ID, *reply1.ReplyToID)
+		s.Equal(olderDiscussion.InitialPost.ID, *reply1.ReplyToID)
 		s.Equal(reply1.Content, models.HTML("<p>banana</p>"))
 
-		reply2 := discussion2.Replies[0]
+		reply2 := newerDiscussion.Replies[0]
 		s.Equal(reply2.ID, reply2Post.ID)
 		s.Equal(reply2Author.UserAccount.ID, reply2.CreatedBy)
 		s.NotNil(reply2.ReplyToID)
-		s.Equal(discussion2.InitialPost.ID, *reply2.ReplyToID)
+		s.Equal(newerDiscussion.InitialPost.ID, *reply2.ReplyToID)
 		s.Equal(reply2.Content, models.HTML("<p>tangerine</p>"))
 	})
 
