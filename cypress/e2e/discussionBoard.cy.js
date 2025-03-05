@@ -56,8 +56,8 @@ describe('Discussion Board', () => {
       'You have successfully added to the discussion board.'
     );
 
-    // New posts are at the end
-    cy.get('#grbDiscussionsNew li:last-child').within(() => {
+    // New posts are at the beginning
+    cy.get('#grbDiscussionsNew li:first-child').within(() => {
       // Check contents
       cy.contains('p', `${mentionName} ${discussionText}`);
 

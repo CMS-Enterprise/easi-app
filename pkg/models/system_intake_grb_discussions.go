@@ -26,7 +26,7 @@ func NewSystemIntakeGRBReviewDiscussionPost(createdBy uuid.UUID) *SystemIntakeGR
 func CreateGRBDiscussionsFromPosts(posts []*SystemIntakeGRBReviewDiscussionPost) ([]*SystemIntakeGRBReviewDiscussion, error) {
 	postMap := map[uuid.UUID][]*SystemIntakeGRBReviewDiscussionPost{}
 	for _, post := range posts {
-		// shouldn't happen but we deference below
+		// shouldn't happen but we dereference below
 		if post == nil {
 			return nil, errors.New("post is nil")
 		}
@@ -48,21 +48,21 @@ func CreateGRBDiscussionsFromPosts(posts []*SystemIntakeGRBReviewDiscussionPost)
 	// after grouping by initial post ID, loop through slice of slices and convert groups of posts into discussions
 	discussions := []*SystemIntakeGRBReviewDiscussion{}
 	for _, posts := range postMap {
-		groupedPosts, err := CreateGRBDiscussionFromPosts(posts)
+		groupedPosts, err := createGRBDiscussionFromPosts(posts)
 		if err != nil {
 			return nil, err
 		}
 		discussions = append(discussions, groupedPosts)
 	}
 	slices.SortFunc(discussions, func(a *SystemIntakeGRBReviewDiscussion, b *SystemIntakeGRBReviewDiscussion) int {
-		return a.InitialPost.CreatedAt.Compare(b.InitialPost.CreatedAt)
+		return b.InitialPost.CreatedAt.Compare(a.InitialPost.CreatedAt)
 	})
 	return discussions, nil
 }
 
-// CreateGRBDiscussionFromPosts organizes a post and its replies into a single discussion
+// createGRBDiscussionFromPosts organizes a post and its replies into a single discussion
 // (for slices with multiple initial posts/related replies use CreateGRBDiscussionsFromPosts)
-func CreateGRBDiscussionFromPosts(posts []*SystemIntakeGRBReviewDiscussionPost) (*SystemIntakeGRBReviewDiscussion, error) {
+func createGRBDiscussionFromPosts(posts []*SystemIntakeGRBReviewDiscussionPost) (*SystemIntakeGRBReviewDiscussion, error) {
 	var discussion SystemIntakeGRBReviewDiscussion
 	for _, post := range posts {
 		if post.ReplyToID == nil {

@@ -55,17 +55,17 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 		s.Len(discussions, 2)
 
 		// first discussion tests
-		firstDisc := discussions[0]
+		oldestDiscussion := discussions[1]
 		s.EqualValues(
-			firstDisc.InitialPost.ID,
+			oldestDiscussion.InitialPost.ID,
 			post1ID,
 			"first discussion should be sorted as first item in slice",
 		)
 
 		// replies to first discussion
-		s.Len(firstDisc.Replies, 2)
+		s.Len(oldestDiscussion.Replies, 2)
 
-		firstDiscFirstReply := firstDisc.Replies[0]
+		firstDiscFirstReply := oldestDiscussion.Replies[0]
 		s.EqualValues(
 			firstDiscFirstReply.ID,
 			post1reply1ID,
@@ -78,7 +78,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 			"first reply to first discussion should have replyToID of first discussion post",
 		)
 
-		firstDiscSecondReply := firstDisc.Replies[1]
+		firstDiscSecondReply := oldestDiscussion.Replies[1]
 		s.EqualValues(
 			firstDiscSecondReply.ID,
 			post1reply2ID,
@@ -92,17 +92,17 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 		)
 
 		// second discussion tests
-		secondDisc := discussions[1]
+		newestDiscussion := discussions[0]
 		s.EqualValues(
-			secondDisc.InitialPost.ID,
+			newestDiscussion.InitialPost.ID,
 			post2ID,
 			"second discussion should be sorted as second item in slice",
 		)
 
 		// replies to second discussion
-		s.Len(secondDisc.Replies, 2)
+		s.Len(newestDiscussion.Replies, 2)
 
-		secondDiscFirstReply := secondDisc.Replies[0]
+		secondDiscFirstReply := newestDiscussion.Replies[0]
 		s.EqualValues(
 			secondDiscFirstReply.ID,
 			post2reply1ID,
@@ -115,7 +115,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 			"first reply to second discussion should have replyToID of second discussion post",
 		)
 
-		secondDiscSecondReply := secondDisc.Replies[1]
+		secondDiscSecondReply := newestDiscussion.Replies[1]
 		s.EqualValues(
 			secondDiscSecondReply.ID,
 			post2reply2ID,
@@ -129,7 +129,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 		)
 	})
 
-	s.Run("CreateGRBDiscussionFromPosts should sort initial posts and replies", func() {
+	s.Run("createGRBDiscussionFromPosts should sort initial posts and replies", func() {
 		// randomized order to reflect the possibility of posts not coming sorted from db
 		posts := []*SystemIntakeGRBReviewDiscussionPost{
 			post1reply1,
@@ -137,7 +137,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 			post1reply2,
 		}
 
-		discussion, err := CreateGRBDiscussionFromPosts(posts)
+		discussion, err := createGRBDiscussionFromPosts(posts)
 		s.NoError(err)
 		s.NotNil(discussion)
 
@@ -173,7 +173,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 		)
 	})
 
-	s.Run("CreateGRBDiscussionFromPosts should error if two initial posts are found", func() {
+	s.Run("createGRBDiscussionFromPosts should error if two initial posts are found", func() {
 		// randomized order to reflect the possibility of posts not coming sorted from db
 		posts := []*SystemIntakeGRBReviewDiscussionPost{
 			post2,
@@ -184,12 +184,12 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 			post2reply1,
 		}
 
-		discussion, err := CreateGRBDiscussionFromPosts(posts)
+		discussion, err := createGRBDiscussionFromPosts(posts)
 		s.Error(err)
 		s.Nil(discussion)
 	})
 
-	s.Run("CreateGRBDiscussionFromPosts should error if no initial posts are found", func() {
+	s.Run("createGRBDiscussionFromPosts should error if no initial posts are found", func() {
 		// randomized order to reflect the possibility of posts not coming sorted from db
 		posts := []*SystemIntakeGRBReviewDiscussionPost{
 			post1reply1,
@@ -198,7 +198,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 			post2reply1,
 		}
 
-		discussion, err := CreateGRBDiscussionFromPosts(posts)
+		discussion, err := createGRBDiscussionFromPosts(posts)
 		s.Error(err)
 		s.Nil(discussion)
 	})
