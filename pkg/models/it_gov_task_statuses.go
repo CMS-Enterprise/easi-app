@@ -82,10 +82,12 @@ type ITGovGRBStatus string
 
 // These are the options for ITGovGRBStatus
 const (
-	ITGGRBSCantStart        ITGovGRBStatus = "CANT_START"
-	ITGGRBSNotNeeded        ITGovGRBStatus = "NOT_NEEDED"
-	ITGGRBSReadyToSchedule  ITGovGRBStatus = "READY_TO_SCHEDULE"
-	ITGGRBSScheduled        ITGovGRBStatus = "SCHEDULED"
-	ITGGRBSAwaitingDecision ITGovGRBStatus = "AWAITING_DECISION"
-	ITGGRBSCompleted        ITGovGRBStatus = "COMPLETED"
+	ITGGRBSCantStart         ITGovGRBStatus = "CANT_START"
+	ITGGRBSNotNeeded         ITGovGRBStatus = "NOT_NEEDED"
+	ITGGRBSReadyToSchedule   ITGovGRBStatus = "READY_TO_SCHEDULE"
+	ITGGRBSScheduled         ITGovGRBStatus = "SCHEDULED"
+	ITGRRBSAwaitingGRBReview ITGovGRBStatus = "AWAITING_GRB_REVIEW"
+	ITGRRBSReviewInProgress  ITGovGRBStatus = "REVIEW_IN_PROGRESS"
+	ITGGRBSAwaitingDecision  ITGovGRBStatus = "AWAITING_DECISION"
+	ITGGRBSCompleted         ITGovGRBStatus = "COMPLETED"
 )

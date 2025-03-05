@@ -5,7 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
 import { Grid } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import PresentationLinksForm from 'features/ITGovernance/Admin/GRBReview/PresentationLinksForm';
 import UploadForm from 'features/ITGovernance/Requester/SystemIntake/Documents/UploadForm';
+import PresentationDeckUpload from 'features/ITGovernance/Requester/TaskList/PresentationDeckUpload';
 import AdditionalInformation from 'features/Miscellaneous/AdditionalInformation';
 import NotFound from 'features/Miscellaneous/NotFound';
 import {
@@ -22,24 +24,22 @@ import SideNavigation from 'components/SideNavigation';
 import useMessage from 'hooks/useMessage';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 
-import AccordionNavigation from '../../../components/AccordionNavigation';
+import AccordionNavigation from '../../../../components/AccordionNavigation';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import Actions from '../Actions';
+import BusinessCaseReview from '../BusinessCaseReview';
+import Dates from '../Dates';
+import Decision from '../Decision';
+import Documents from '../Documents';
+import Feedback from '../Feedback';
+import GRBReview from '../GRBReview';
+import IntakeReview from '../IntakeReview';
+import LifecycleID from '../LifecycleID';
+import Notes from '../Notes';
+import subNavItems from '../subNavItems';
+import Summary from '../Summary';
 
-import PresentationLinksForm from './GRBReview/PresentationLinksForm';
-import Actions from './Actions';
-import BusinessCaseReview from './BusinessCaseReview';
-import Dates from './Dates';
-import Decision from './Decision';
-import Documents from './Documents';
-import Feedback from './Feedback';
-import GRBReview from './GRBReview';
-import IntakeReview from './IntakeReview';
-import ITGovAdminContext from './ITGovAdminContext';
-import LifecycleID from './LifecycleID';
-import Notes from './Notes';
-import subNavItems from './subNavItems';
-import Summary from './Summary';
-
-import './index.scss';
+import '../index.scss';
 
 type RequestOverviewProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
@@ -224,6 +224,13 @@ const RequestOverview = ({
                         grbReviewStartedAt={grbReviewStartedAt}
                       />
                     )}
+                  />
+                )}
+
+                {flags?.grbReviewTab && (
+                  <Route
+                    path="/it-governance/:systemId/grb-review/presentation-deck-upload"
+                    render={() => <PresentationDeckUpload type="admin" />}
                   />
                 )}
 

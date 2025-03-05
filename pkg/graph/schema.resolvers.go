@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -678,6 +679,16 @@ func (r *mutationResolver) CreateSystemIntakeGRBDiscussionReply(ctx context.Cont
 	return resolvers.CreateSystemIntakeGRBDiscussionReply(ctx, r.store, r.emailClient, input)
 }
 
+// UpdateSystemIntakeGRBReviewType is the resolver for the updateSystemIntakeGRBReviewType field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewType(ctx context.Context, input models.UpdateSystemIntakeGRBReviewTypeInput) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.UpdateSystemIntakeGRBReviewType(ctx, r.store, input)
+}
+
+// UpdateSystemIntakeGRBReviewForm is the resolver for the updateSystemIntakeGRBReviewForm field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewForm(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInput) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.UpdateSystemIntakeGRBReviewForm(ctx, r.store, input)
+}
+
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
 func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error) {
 	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error
@@ -1166,6 +1177,26 @@ func (r *mutationResolver) CreateTrbLeadOption(ctx context.Context, eua string) 
 // DeleteTrbLeadOption is the resolver for the deleteTrbLeadOption field.
 func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error) {
 	return resolvers.DeleteTRBLeadOption(ctx, r.store, eua)
+}
+
+// SendGRBReviewPresentationDeckReminderEmail is the resolver for the sendGRBReviewPresentationDeckReminderEmail field.
+func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (bool, error) {
+	return resolvers.SendGRBReviewPresentationDeckReminderEmail(ctx, systemIntakeID, r.emailClient, r.store)
+}
+
+// CreatePresentationDeck is the resolver for the createPresentationDeck field.
+func (r *mutationResolver) CreatePresentationDeck(ctx context.Context, input models.CreatePresentationDeckInput) (*models.PresentationDeck, error) {
+	return resolvers.CreatePresentationDeck(ctx, r.store, r.s3Client, input)
+}
+
+// URL is the resolver for the url field.
+func (r *presentationDeckResolver) URL(ctx context.Context, obj *models.PresentationDeck) (string, error) {
+	panic(fmt.Errorf("not implemented: URL - url"))
+}
+
+// UploadedAt is the resolver for the uploadedAt field.
+func (r *presentationDeckResolver) UploadedAt(ctx context.Context, obj *models.PresentationDeck) (*time.Time, error) {
+	panic(fmt.Errorf("not implemented: UploadedAt - uploadedAt"))
 }
 
 // SystemIntake is the resolver for the systemIntake field.
@@ -2278,6 +2309,11 @@ func (r *Resolver) ITGovTaskStatuses() generated.ITGovTaskStatusesResolver {
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
+// PresentationDeck returns generated.PresentationDeckResolver implementation.
+func (r *Resolver) PresentationDeck() generated.PresentationDeckResolver {
+	return &presentationDeckResolver{r}
+}
+
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
@@ -2351,6 +2387,7 @@ type cedarSystemDetailsResolver struct{ *Resolver }
 type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
+type presentationDeckResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
