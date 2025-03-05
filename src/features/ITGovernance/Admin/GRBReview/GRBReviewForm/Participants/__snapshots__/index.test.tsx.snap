@@ -246,8 +246,9 @@ exports[`GRB review form - participants and timeframe > renders the step 1`] = `
         ) are required.
       </p>
       <form
-        class="usa-form"
-        data-testid="form"
+        class="usa-form maxw-none"
+        data-testid="grbReviewForm-stepContentWrapper"
+        role="form"
       >
         <p>
           Fields here
@@ -284,7 +285,7 @@ exports[`GRB review form - participants and timeframe > renders the step 1`] = `
                   data-testid="button"
                   type="submit"
                 >
-                  Next
+                  Complete and begin review
                 </button>
               </div>
             </li>

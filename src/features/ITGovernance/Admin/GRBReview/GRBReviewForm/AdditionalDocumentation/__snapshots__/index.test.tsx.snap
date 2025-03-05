@@ -246,8 +246,9 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
         ) are required.
       </p>
       <form
-        class="usa-form"
-        data-testid="form"
+        class="usa-form maxw-none"
+        data-testid="grbReviewForm-stepContentWrapper"
+        role="form"
       >
         <p>
           Fields here
