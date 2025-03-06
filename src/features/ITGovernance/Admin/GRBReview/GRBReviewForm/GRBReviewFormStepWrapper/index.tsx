@@ -161,7 +161,7 @@ function GRBReviewFormStepWrapper<
         acc[index] = {
           ...acc[index],
           completed,
-          disabled: index > 0 ? !acc[index - 1].completed : false,
+          // disabled: index > 0 ? !acc[index - 1].completed : false,
           onClick: () => submitStep(value.key)
         };
 
