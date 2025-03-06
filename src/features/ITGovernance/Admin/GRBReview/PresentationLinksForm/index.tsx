@@ -279,6 +279,7 @@ const PresentationLinksForm = ({
                     presentationDeckFileName={
                       watch('presentationDeckFileData')?.name
                     }
+                    canDownload={!watch('presentationDeckFileData')?.size}
                     name={field.name}
                     id={field.name}
                     accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
