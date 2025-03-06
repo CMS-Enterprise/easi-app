@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
+import { SystemIntakeGRBReviewType } from 'gql/generated/graphql';
 
+import Alert from 'components/Alert';
 import CollapsableLink from 'components/CollapsableLink';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
@@ -34,6 +36,12 @@ const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
           ))}
         </ul>
       </CollapsableLink>
+
+      {grbReview.grbReviewType === SystemIntakeGRBReviewType.STANDARD && (
+        <Alert slim type="info" className="margin-top-3">
+          {t('setUpGrbReviewForm.documents.standardMeetingAlert')}
+        </Alert>
+      )}
 
       <h4 className="margin-top-6 margin-bottom-1">
         {t('setUpGrbReviewForm.documents.heading')}

@@ -240,6 +240,8 @@ export default {
     documents: {
       heading: 'Documents',
       addDocument: 'Add a document',
+      standardMeetingAlert:
+        'Because this review is a standard GRB meeting, GRB members may not review these documents unless they are presented during the meeting. However, adding additional documents here gives GRB members the option to access documentation within EASi prior to the meeting.',
       collapsableText: {
         label: 'What documents should I upload?',
         description:
