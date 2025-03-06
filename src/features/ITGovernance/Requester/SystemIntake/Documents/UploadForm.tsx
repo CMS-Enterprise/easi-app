@@ -85,6 +85,12 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
     context: { type }
   });
 
+  /** Used to show/hide send notification field */
+  const canSendNotification: boolean =
+    type === 'admin' &&
+    user.isITGovAdmin(groups, flags) &&
+    state.uploadSource !== 'grbReviewForm';
+
   const returnLink = useMemo(() => {
     if (state.uploadSource === 'grbReviewForm') {
       return `/it-governance/${systemId}/grb-review/documents`;
@@ -288,8 +294,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
             </Fieldset>
           </FormGroup>
 
-          {/* display for admins only when accessed from admin view */}
-          {type === 'admin' && user.isITGovAdmin(groups, flags) && (
+          {canSendNotification && (
             <Controller
               name="sendNotification"
               control={control}
