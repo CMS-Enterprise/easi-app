@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { Button, Grid, Icon } from '@trussworks/react-uswds';
+import { Grid, Icon } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
@@ -71,7 +71,11 @@ const GRBReviewerForm = ({
           { type: 'success' }
         );
 
-        history.push(grbReviewPath);
+        if (isFromGRBSetup) {
+          history.push(`${grbReviewPath}/participants`);
+        } else {
+          history.push(grbReviewPath);
+        }
       })
       .catch(() => {
         showMessage(t(`messages.error.add`), { type: 'error' });
