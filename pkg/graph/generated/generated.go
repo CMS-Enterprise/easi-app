@@ -10980,7 +10980,6 @@ type Mutation {
   sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
   @hasRole(role: EASI_GOVTEAM)
   createPresentationDeck(input: CreatePresentationDeckInput!): PresentationDeck!
-  @hasRole(role: EASI_GOVTEAM)
 }
 
 """
@@ -38324,35 +38323,8 @@ func (ec *executionContext) _Mutation_createPresentationDeck(ctx context.Context
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		directive0 := func(rctx context.Context) (any, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreatePresentationDeck(rctx, fc.Args["input"].(models.CreatePresentationDeckInput))
-		}
-
-		directive1 := func(ctx context.Context) (any, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
-			if err != nil {
-				var zeroVal *models.PresentationDeck
-				return zeroVal, err
-			}
-			if ec.directives.HasRole == nil {
-				var zeroVal *models.PresentationDeck
-				return zeroVal, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*models.PresentationDeck); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.PresentationDeck`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreatePresentationDeck(rctx, fc.Args["input"].(models.CreatePresentationDeckInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

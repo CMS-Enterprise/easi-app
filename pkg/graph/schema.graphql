@@ -2742,7 +2742,6 @@ type Mutation {
   sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
   @hasRole(role: EASI_GOVTEAM)
   createPresentationDeck(input: CreatePresentationDeckInput!): PresentationDeck!
-  @hasRole(role: EASI_GOVTEAM)
 }
 
 """
