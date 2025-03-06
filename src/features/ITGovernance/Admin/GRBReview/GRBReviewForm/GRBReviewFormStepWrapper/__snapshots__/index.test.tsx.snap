@@ -222,11 +222,11 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
     </div>
   </div>
   <div
-    class="grid-container grb-review-form padding-bottom-10"
+    class="grid-container grb-review-form-review-type padding-bottom-10"
     data-testid="gridContainer"
   >
     <form
-      class="usa-form grb-review-form__step-content-wrapper maxw-none"
+      class="usa-form step-content-wrapper maxw-none"
       data-testid="grbReviewForm-stepContentWrapper"
       role="form"
     >

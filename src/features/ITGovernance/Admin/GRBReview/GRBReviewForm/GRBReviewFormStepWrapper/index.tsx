@@ -184,14 +184,14 @@ function GRBReviewFormStepWrapper<
   }) => {
     if (!onSubmit || !handleSubmit)
       return (
-        <div className="grb-review-form__step-content-wrapper" {...props}>
+        <div className="step-content-wrapper" {...props}>
           {children}
         </div>
       );
 
     return (
       <Form
-        className="grb-review-form__step-content-wrapper maxw-none"
+        className="step-content-wrapper maxw-none"
         {...props}
         role="form"
         onSubmit={handleSubmit(values => {
@@ -267,7 +267,7 @@ function GRBReviewFormStepWrapper<
         )}
       </StepHeader>
 
-      <GridContainer className="grb-review-form padding-bottom-10">
+      <GridContainer className={`grb-review-form-${step} padding-bottom-10`}>
         <StepContentWrapper data-testid="grbReviewForm-stepContentWrapper">
           <p className="line-height-body-5 text-light font-body-sm margin-top-0 margin-bottom-1">
             {grbReviewFormSteps[currentStepIndex].description}

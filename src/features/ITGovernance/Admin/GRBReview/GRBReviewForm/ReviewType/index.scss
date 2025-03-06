@@ -1,6 +1,6 @@
 @use 'viewports' as *;
 
-.grb-review-form__step-content-wrapper {
+.grb-review-form-review-type .step-content-wrapper {
   display: grid;
   grid-column-gap: 2rem;
   grid-template-columns: 1fr 1fr;
