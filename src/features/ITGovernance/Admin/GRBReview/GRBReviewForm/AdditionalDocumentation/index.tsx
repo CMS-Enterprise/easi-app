@@ -1,25 +1,35 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
+import CollapsableLink from 'components/CollapsableLink';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
 import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
 
-// TODO: Update fields type
-type AdditionalDocumentationFields = {};
-
 const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
-  const form = useEasiForm<AdditionalDocumentationFields>();
-
+  const { t } = useTranslation('grbReview');
   return (
-    <EasiFormProvider<AdditionalDocumentationFields> {...form}>
-      <GRBReviewFormStepWrapper
-        grbReview={grbReview}
-        onSubmit={async () => null}
+    <GRBReviewFormStepWrapper grbReview={grbReview} requiredFields={false}>
+      <CollapsableLink
+        id="documentsList"
+        className="margin-top-3 padding-y-0"
+        label={t('setUpGrbReviewForm.documents.collapsableText.label')}
       >
-        <p>Fields here</p>
-      </GRBReviewFormStepWrapper>
-    </EasiFormProvider>
+        <p className="line-height-body-5 margin-y-0 tablet:grid-col-9">
+          {t('setUpGrbReviewForm.documents.collapsableText.description')}
+        </p>
+
+        <ul className="line-height-body-5 margin-y-0">
+          {t<string[]>('setUpGrbReviewForm.documents.collapsableText.list', {
+            returnObjects: true
+          }).map(item => (
+            <li key={item} className="margin-top-05">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </CollapsableLink>
+    </GRBReviewFormStepWrapper>
   );
 };
 

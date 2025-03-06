@@ -237,6 +237,18 @@ export default {
       async: 'Asynchronous review',
       standard: 'Standard review'
     },
+    documents: {
+      collapsableText: {
+        label: 'What documents should I upload?',
+        description:
+          'GRB reviewers value documents that give them additional context about the project, its budget and funding background, and/or feedback from previous reviewers such as the GRT or small group. These could include documents such as:',
+        list: [
+          'GRT meeting minutes',
+          'Request for Additional Funding (RAF)',
+          'Draft Independent Government Cost Estimate (IGCE)'
+        ]
+      }
+    },
     completeAndBeginReview: 'Complete and begin review'
   },
   adminTask: {
