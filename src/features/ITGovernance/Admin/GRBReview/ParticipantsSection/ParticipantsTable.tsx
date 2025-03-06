@@ -42,6 +42,7 @@ const ParticipantsTable = ({
             <Button
               type="button"
               onClick={() => history.push(`${pathname}/edit`, reviewer)}
+              className="margin-y-0"
               unstyled
             >
               {t('Edit')}
@@ -49,7 +50,7 @@ const ParticipantsTable = ({
             <Button
               type="button"
               onClick={() => setReviewerToRemove(reviewer)}
-              className="text-error"
+              className="text-error margin-y-0"
               unstyled
             >
               {t('Remove')}
