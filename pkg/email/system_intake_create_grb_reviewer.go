@@ -23,6 +23,10 @@ func (sie systemIntakeEmails) createGRBReviewerBody(
 	projectTitle string,
 	requesterName string,
 ) (string, error) {
+	if sie.client.templates.systemIntakeCreateGRBReviewer == nil {
+		return "", errors.New("create grb reviewer email template is nil")
+	}
+
 	adminPath := path.Join("it-governance", systemIntakeID.String(), "grb-review")
 
 	data := systemIntakeCreateGRBReviewerParameters{
@@ -33,13 +37,10 @@ func (sie systemIntakeEmails) createGRBReviewerBody(
 	}
 
 	var b bytes.Buffer
-	if sie.client.templates.systemIntakeCreateGRBReviewer == nil {
-		return "", errors.New("create grb reviewer email template is nil")
-	}
-	err := sie.client.templates.systemIntakeCreateGRBReviewer.Execute(&b, data)
-	if err != nil {
+	if err := sie.client.templates.systemIntakeCreateGRBReviewer.Execute(&b, data); err != nil {
 		return "", err
 	}
+
 	return b.String(), nil
 }
 
