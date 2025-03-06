@@ -46,7 +46,10 @@ const GRBReviewerForm = ({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
 
-  const grbReviewPath = `/it-governance/${systemId}/grb-review`;
+  const grbReviewPath = isFromGRBSetup
+    ? `/it-governance/${systemId}/grb-review/participants`
+    : `/it-governance/${systemId}/grb-review`;
+
   const createGRBReviewers = (reviewers: GRBReviewerFields[]) =>
     mutate({
       variables: {
@@ -68,11 +71,7 @@ const GRBReviewerForm = ({
           { type: 'success' }
         );
 
-        if (isFromGRBSetup) {
-          history.push(`${grbReviewPath}/participants`);
-        } else {
-          history.push(grbReviewPath);
-        }
+        history.push(grbReviewPath);
       })
       .catch(() => {
         showMessage(t(`messages.error.add`), { type: 'error' });
@@ -97,10 +96,6 @@ const GRBReviewerForm = ({
           />
         </p>
 
-        {/* //TODO: think about this one later */}
-        {/* <Button type="button" onClick={() => history.goBack()} outline>
-          {t('form.returnToRequest', { context: action })}
-        </Button> */}
         <IconLink
           icon={<Icon.ArrowBack />}
           to={grbReviewPath}
@@ -123,6 +118,7 @@ const GRBReviewerForm = ({
                 className="outline-0"
               >
                 <AddReviewerFromEua
+                  grbReviewPath={grbReviewPath}
                   systemId={systemId}
                   initialGRBReviewers={initialGRBReviewers}
                   createGRBReviewers={createGRBReviewers}
@@ -136,6 +132,7 @@ const GRBReviewerForm = ({
                 className="outline-0"
               >
                 <AddReviewersFromRequest
+                  grbReviewPath={grbReviewPath}
                   systemId={systemId}
                   createGRBReviewers={createGRBReviewers}
                 />
@@ -143,6 +140,7 @@ const GRBReviewerForm = ({
             </Tabs>
           ) : (
             <AddReviewerFromEua
+              grbReviewPath={grbReviewPath}
               systemId={systemId}
               initialGRBReviewers={initialGRBReviewers}
               createGRBReviewers={createGRBReviewers}
