@@ -4,6 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import {
   Fieldset,
   FormGroup,
+  Radio,
   SummaryBox,
   SummaryBoxContent,
   SummaryBoxHeading
@@ -15,7 +16,6 @@ import {
 } from 'gql/generated/graphql';
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
-import { RadioField } from 'components/RadioField';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 
 import GRBReviewFormStepWrapper, {
@@ -66,18 +66,20 @@ const ReviewType = ({ grbReview }: ReviewTypeProps) => {
             <Controller
               control={control}
               name="grbReviewType"
-              render={({ field: { ref, ...field }, fieldState: { error } }) => (
+              render={({ field: { ref, ...field } }) => (
                 <>
-                  <RadioField
+                  <Radio
                     {...field}
+                    inputRef={ref}
                     id="grbReviewTypeAsync"
                     value={SystemIntakeGRBReviewType.ASYNC}
                     label={t('setUpGrbReviewForm.reviewType.async')}
                     checked={field.value === SystemIntakeGRBReviewType.ASYNC}
                   />
 
-                  <RadioField
+                  <Radio
                     {...field}
+                    inputRef={ref}
                     id="grbReviewTypeStandard"
                     value={SystemIntakeGRBReviewType.STANDARD}
                     label={t('setUpGrbReviewForm.reviewType.standard')}

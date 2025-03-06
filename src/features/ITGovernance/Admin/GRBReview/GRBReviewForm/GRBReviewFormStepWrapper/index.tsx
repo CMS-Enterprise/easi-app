@@ -269,11 +269,13 @@ function GRBReviewFormStepWrapper<
 
       <GridContainer className="grb-review-form padding-bottom-10">
         <StepContentWrapper data-testid="grbReviewForm-stepContentWrapper">
-          <p className="line-height-body-5 text-light font-body-sm margin-top-0">
+          <p className="line-height-body-5 text-light font-body-sm margin-top-0 margin-bottom-1">
             {grbReviewFormSteps[currentStepIndex].description}
           </p>
 
-          {requiredFields && <RequiredFieldsText className="margin-top-0" />}
+          {requiredFields && (
+            <RequiredFieldsText className="margin-top-0 font-body-sm" />
+          )}
 
           {children}
 
