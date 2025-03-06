@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useCallback, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Button, Grid } from '@trussworks/react-uswds';
 import {
+  Button,
+  ButtonGroup,
+  Grid,
+  ModalFooter,
+  ModalHeading
+} from '@trussworks/react-uswds';
+import {
+  GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
-  useGetSystemIntakeQuery
+  useDeleteSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
+import Modal from 'components/Modal';
 import RequiredAsterisk from 'components/RequiredAsterisk';
+import useMessage from 'hooks/useMessage';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
 import ParticipantsTable from '../../ParticipantsSection/ParticipantsTable';
@@ -23,18 +32,41 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
   const history = useHistory();
   const { pathname } = useLocation();
-  const { data } = useGetSystemIntakeQuery({
-    variables: {
-      id: grbReview.id
-    }
-  });
+  const { showMessage } = useMessage();
 
   const [reviewerToRemove, setReviewerToRemove] =
     useState<SystemIntakeGRBReviewerFragment | null>(null);
 
-  if (!data) {
-    return null;
-  }
+  const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
+    refetchQueries: [GetSystemIntakeGRBReviewDocument]
+  });
+
+  const removeGRBReviewer = useCallback(
+    (reviewer: SystemIntakeGRBReviewerFragment) => {
+      mutate({ variables: { input: { reviewerID: reviewer.id } } })
+        .then(() =>
+          showMessage(
+            <Trans
+              i18nKey="grbReview:messages.success.remove"
+              values={{ commonName: reviewer.userAccount.commonName }}
+            />,
+            { type: 'success' }
+          )
+        )
+        .catch(() =>
+          showMessage(t('form.messages.error.remove'), { type: 'error' })
+        );
+
+      // Reset `reviewerToRemove` to close modal
+      setReviewerToRemove(null);
+
+      // // If removing reviewer from form, go to GRB Review page
+      // if (isForm) {
+      //   history.push(`/it-governance/${id}/grb-review`);
+      // }
+    },
+    [mutate, showMessage, t]
+  );
 
   return (
     <EasiFormProvider<ParticipantsFields> {...form}>
@@ -42,6 +74,41 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         grbReview={grbReview}
         onSubmit={async () => null}
       >
+        {
+          // Remove GRB reviewer modal
+          !!reviewerToRemove && (
+            <Modal
+              isOpen={!!reviewerToRemove}
+              closeModal={() => setReviewerToRemove(null)}
+            >
+              <ModalHeading>
+                {t('removeModal.title', {
+                  commonName: reviewerToRemove.userAccount.commonName
+                })}
+              </ModalHeading>
+              <p>{t('removeModal.text')}</p>
+              <ModalFooter>
+                <ButtonGroup>
+                  <Button
+                    type="button"
+                    onClick={() => removeGRBReviewer(reviewerToRemove)}
+                    className="bg-error margin-right-1"
+                  >
+                    {t('removeModal.remove')}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setReviewerToRemove(null)}
+                    unstyled
+                  >
+                    {t('Cancel')}
+                  </Button>
+                </ButtonGroup>
+              </ModalFooter>
+            </Modal>
+          )
+        }
+
         <Grid col={6}>
           <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
             <p className="text-bold margin-y-0">
