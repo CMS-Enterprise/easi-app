@@ -78,7 +78,6 @@ const GRBReview = ({
   });
 
   const history = useHistory();
-  console.log(history);
 
   const { action } = useParams<{
     action?: GRBReviewFormAction;
