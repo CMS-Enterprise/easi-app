@@ -13,7 +13,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 
 import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
-import ParticipantsTable from './ParticipantsTable';
+import ParticipantsTable from './_components/ParticipantsTable';
 
 type ParticipantsSectionProps = {
   id: string;
