@@ -1,9 +1,12 @@
 import React, { useCallback, useState } from 'react';
+import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
+  Fieldset,
+  FormGroup,
   Grid,
   ModalFooter,
   ModalHeading
@@ -11,9 +14,11 @@ import {
 import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewFragment,
   useDeleteSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
 
+import DatePickerFormatted from 'components/DatePickerFormatted';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import Modal from 'components/Modal';
 import RequiredAsterisk from 'components/RequiredAsterisk';
@@ -24,11 +29,22 @@ import ParticipantsTable from '../../ParticipantsSection/_components/Participant
 import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
 
 // TODO: Update fields type
-type ParticipantsFields = {};
+type ParticipantsFields = {
+  grbReviewAsyncEndDate: SystemIntakeGRBReviewFragment['grbReviewAsyncEndDate'];
+};
 
 const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
-  const form = useEasiForm<ParticipantsFields>();
   const { t } = useTranslation('grbReview');
+
+  const form = useEasiForm<ParticipantsFields>({
+    defaultValues: {
+      grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate
+    }
+  });
+  const {
+    control,
+    formState: { errors }
+  } = form;
 
   const history = useHistory();
   const { pathname } = useLocation();
@@ -145,13 +161,40 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             <p className="margin-top-0 margin-bottom-3 text-base-dark">
               {t('setUpGrbReviewForm.step4.timeframe.description')}
             </p>
-            <p className="margin-top-0 margin-bottom-1">
-              {t('setUpGrbReviewForm.step4.selectReviewEndDate.heading')}
-              <RequiredAsterisk />
-            </p>
-            <p className="margin-y-0 text-base-dark">
-              {t('setUpGrbReviewForm.step4.selectReviewEndDate.description')}
-            </p>
+            <FormGroup
+              error={!!errors.grbReviewAsyncEndDate}
+              className="margin-top-0"
+            >
+              <Fieldset>
+                <p className="margin-top-0 margin-bottom-1">
+                  {t('setUpGrbReviewForm.step4.selectReviewEndDate.heading')}
+                  <RequiredAsterisk />
+                </p>
+                <p className="margin-y-0 text-base-dark">
+                  {t(
+                    'setUpGrbReviewForm.step4.selectReviewEndDate.description'
+                  )}
+                </p>
+
+                <Controller
+                  control={control}
+                  name="grbReviewAsyncEndDate"
+                  render={({
+                    field: { ref, ...field },
+                    fieldState: { error }
+                  }) => (
+                    <>
+                      <DatePickerFormatted
+                        id="grbReviewAsyncEndDate"
+                        {...field}
+                        defaultValue={field.value}
+                        ref={null}
+                      />
+                    </>
+                  )}
+                />
+              </Fieldset>
+            </FormGroup>
           </div>
         </Grid>
       </GRBReviewFormStepWrapper>
