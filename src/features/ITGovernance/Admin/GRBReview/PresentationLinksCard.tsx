@@ -153,27 +153,30 @@ function PresentationLinksCard({
               </em>
             ) : (
               <>
-                <div className="display-flex flex-wrap flex-gap-1">
-                  {recordingLink && (
-                    <ExternalLinkAndModal href={recordingLink}>
-                      {t('asyncPresentation.viewRecording')}
-                    </ExternalLinkAndModal>
-                  )}
+                {(recordingLink || recordingPasscode || transcriptLink) && (
+                  <div className="display-flex flex-wrap flex-gap-1">
+                    {recordingLink && (
+                      <ExternalLinkAndModal href={recordingLink}>
+                        {t('asyncPresentation.viewRecording')}
+                      </ExternalLinkAndModal>
+                    )}
 
-                  {!recordingLink && (recordingPasscode || transcriptLink) && (
-                    <span>
-                      {t('asyncPresentation.noRecordingLinkAvailable')}
-                    </span>
-                  )}
+                    {!recordingLink &&
+                      (recordingPasscode || transcriptLink) && (
+                        <span>
+                          {t('asyncPresentation.noRecordingLinkAvailable')}
+                        </span>
+                      )}
 
-                  {recordingPasscode && (
-                    <span className="text-base">
-                      {t('asyncPresentation.passcode', {
-                        passcode: recordingPasscode
-                      })}
-                    </span>
-                  )}
-                </div>
+                    {recordingPasscode && (
+                      <span className="text-base">
+                        {t('asyncPresentation.passcode', {
+                          passcode: recordingPasscode
+                        })}
+                      </span>
+                    )}
+                  </div>
+                )}
 
                 {transcriptLink && (
                   <ExternalLinkAndModal href={transcriptLink}>
