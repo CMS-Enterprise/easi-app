@@ -20,7 +20,7 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 import useMessage from 'hooks/useMessage';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
-import ParticipantsTable from '../../ParticipantsSection/ParticipantsTable';
+import ParticipantsTable from '../../ParticipantsSection/_components/ParticipantsTable';
 import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
 
 // TODO: Update fields type
