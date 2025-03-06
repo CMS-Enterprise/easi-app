@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { Grid, Icon } from '@trussworks/react-uswds';
+import { Button, Grid, Icon } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
@@ -96,6 +96,10 @@ const GRBReviewerForm = ({
           />
         </p>
 
+        {/* //TODO: think about this one later */}
+        {/* <Button type="button" onClick={() => history.goBack()} outline>
+          {t('form.returnToRequest', { context: action })}
+        </Button> */}
         <IconLink
           icon={<Icon.ArrowBack />}
           to={grbReviewPath}
