@@ -1025,7 +1025,9 @@ export type Mutation = {
   updateSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
   updateSystemIntakeContactDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeContractDetails?: Maybe<UpdateSystemIntakePayload>;
-  updateSystemIntakeGRBReviewForm?: Maybe<UpdateSystemIntakePayload>;
+  updateSystemIntakeGRBReviewFormPresentationAsync?: Maybe<UpdateSystemIntakePayload>;
+  updateSystemIntakeGRBReviewFormPresentationStandard?: Maybe<UpdateSystemIntakePayload>;
+  updateSystemIntakeGRBReviewFormTimeframeAsync?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeGRBReviewType?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeGRBReviewer: SystemIntakeGRBReviewer;
   updateSystemIntakeLinkedCedarSystem?: Maybe<UpdateSystemIntakePayload>;
@@ -1461,8 +1463,20 @@ export type MutationUpdateSystemIntakeContractDetailsArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateSystemIntakeGRBReviewFormArgs = {
-  input: UpdateSystemIntakeGRBReviewFormInput;
+export type MutationUpdateSystemIntakeGRBReviewFormPresentationAsyncArgs = {
+  input: UpdateSystemIntakeGRBReviewFormInputPresentationAsync;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationUpdateSystemIntakeGRBReviewFormPresentationStandardArgs = {
+  input: UpdateSystemIntakeGRBReviewFormInputPresentationStandard;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationUpdateSystemIntakeGRBReviewFormTimeframeAsyncArgs = {
+  input: UpdateSystemIntakeGRBReviewFormInputTimeframeAsync;
 };
 
 
@@ -1914,7 +1928,6 @@ export type SystemIntake = {
   grbReviewAsyncEndDate?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncGRBMeetingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncRecordingTime?: Maybe<Scalars['Time']['output']>;
-  grbReviewStandardGRBMeetingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
   /** GRB Review Form */
   grbReviewType: SystemIntakeGRBReviewType;
@@ -3332,13 +3345,21 @@ export type CreateSystemIntakeGRBDiscussionReplyInput = {
   initialPostID: Scalars['UUID']['input'];
 };
 
-/** Input data used to set or update a System Intake's GRB Review form data */
-export type UpdateSystemIntakeGRBReviewFormInput = {
-  grbReviewAsyncEndDate?: InputMaybe<Scalars['Time']['input']>;
-  grbReviewAsyncGRBMeetingTime?: InputMaybe<Scalars['Time']['input']>;
+/** Input data used to set or update a System Intake's GRB Review Presentation (Async) data */
+export type UpdateSystemIntakeGRBReviewFormInputPresentationAsync = {
   grbReviewAsyncRecordingTime?: InputMaybe<Scalars['Time']['input']>;
-  grbReviewStandardGRBMeetingTime?: InputMaybe<Scalars['Time']['input']>;
-  grbReviewType?: InputMaybe<SystemIntakeGRBReviewType>;
+  systemIntakeID: Scalars['UUID']['input'];
+};
+
+/** Input data used to set or update a System Intake's GRB Review Presentation (Standard) data */
+export type UpdateSystemIntakeGRBReviewFormInputPresentationStandard = {
+  grbDate?: InputMaybe<Scalars['Time']['input']>;
+  systemIntakeID: Scalars['UUID']['input'];
+};
+
+/** Input data used to set or update a System Intake's GRB Review Timeframe (Async) data */
+export type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync = {
+  grbReviewAsyncEndDate?: InputMaybe<Scalars['Time']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
 };
 

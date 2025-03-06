@@ -21,39 +21,79 @@ func UpdateSystemIntakeGRBReviewType(
 	)
 }
 
-func UpdateSystemIntakeGRBReviewForm(
+// UpdateSystemIntakeGRBReviewFormInputPresentationStandard is the resolver for
+// updating the GRB Review Form Presentation Standard page.
+func UpdateSystemIntakeGRBReviewFormInputPresentationStandard(
 	ctx context.Context,
 	store *storage.Store,
-	input models.UpdateSystemIntakeGRBReviewFormInput,
+	input models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard,
 ) (*models.UpdateSystemIntakePayload, error) {
 	// Fetch intake by ID
-	intake, err := store.FetchSystemIntakeByIDNP(ctx, store, input.SystemIntakeID)
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
 
-	if input.GrbReviewType.IsSet() {
-		intake.GrbReviewType = *input.GrbReviewType.Value()
+	intake.GRBDate = input.GrbDate
+
+	// Update system intake
+	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
+	}, nil
+}
+
+// UpdateSystemIntakeGRBReviewFormInputPresentationAsync is the resolver for
+// updating the GRB Review Form Presentation Async page.
+func UpdateSystemIntakeGRBReviewFormInputPresentationAsync(
+	ctx context.Context,
+	store *storage.Store,
+	input models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync,
+) (*models.UpdateSystemIntakePayload, error) {
+	// Fetch intake by ID
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
 	}
 
 	if input.GrbReviewAsyncRecordingTime.IsSet() {
 		intake.GrbReviewAsyncRecordingTime = input.GrbReviewAsyncRecordingTime.Value()
 	}
 
+	// Update system intake
+	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
+	}, nil
+}
+
+// UpdateSystemIntakeGRBReviewFormInputTimeframeAsync is the resolver for
+// updating the GRB Review Form Timeframe Async page.
+func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
+	ctx context.Context,
+	store *storage.Store,
+	input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync,
+) (*models.UpdateSystemIntakePayload, error) {
+	// Fetch intake by ID
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
 	if input.GrbReviewAsyncEndDate.IsSet() {
 		intake.GrbReviewAsyncEndDate = input.GrbReviewAsyncEndDate.Value()
 	}
 
-	if input.GrbReviewStandardGRBMeetingTime.IsSet() {
-		intake.GrbReviewStandardGRBMeetingTime = input.GrbReviewStandardGRBMeetingTime.Value()
-	}
-
-	if input.GrbReviewAsyncGRBMeetingTime.IsSet() {
-		intake.GrbReviewAsyncGRBMeetingTime = input.GrbReviewAsyncGRBMeetingTime.Value()
-	}
-
 	// Update system intake
-	updatedIntake, err := store.UpdateSystemIntakeNP(ctx, store, intake)
+	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
 	}

@@ -39,23 +39,18 @@ func (s *ResolverSuite) TestSystemIntakeUpdateGrbReviewType() {
 	)
 }
 
-func (s *ResolverSuite) TestSystemIntakeUpdateGrbReviewForm() {
+func (s *ResolverSuite) TestSystemIntakeUpdateGrbReviewFormInputPresentationStandard() {
 	systemIntake := s.createNewIntake()
 	s.NotNil(systemIntake)
 
-	grbReviewType := models.SystemIntakeGRBReviewTypeAsync
-	timeNow := time.Now().UTC()
+	grbDate := time.Now().UTC()
 
-	updatedPayload, err := UpdateSystemIntakeGRBReviewForm(
+	updatedPayload, err := UpdateSystemIntakeGRBReviewFormInputPresentationStandard(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
-		models.UpdateSystemIntakeGRBReviewFormInput{
-			SystemIntakeID:                  systemIntake.ID,
-			GrbReviewType:                   graphql.OmittableOf(&grbReviewType),
-			GrbReviewAsyncRecordingTime:     graphql.OmittableOf(&timeNow),
-			GrbReviewAsyncEndDate:           graphql.OmittableOf(&timeNow),
-			GrbReviewStandardGRBMeetingTime: graphql.OmittableOf(&timeNow),
-			GrbReviewAsyncGRBMeetingTime:    graphql.OmittableOf(&timeNow),
+		models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard{
+			SystemIntakeID: systemIntake.ID,
+			GrbDate:        &grbDate,
 		},
 	)
 
@@ -64,13 +59,53 @@ func (s *ResolverSuite) TestSystemIntakeUpdateGrbReviewForm() {
 	s.NotNil(updatedPayload)
 	s.NotNil(updatedPayload.SystemIntake)
 
-	s.Equal(grbReviewType, updatedPayload.SystemIntake.GrbReviewType)
+	s.WithinDuration(grbDate, *updatedPayload.SystemIntake.GRBDate, time.Second)
+}
+
+func (s *ResolverSuite) TestSystemIntakeUpdateGrbReviewFormInputPresentationAsync() {
+	systemIntake := s.createNewIntake()
+	s.NotNil(systemIntake)
+
+	timeNow := time.Now().UTC()
+
+	updatedPayload, err := UpdateSystemIntakeGRBReviewFormInputPresentationAsync(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync{
+			SystemIntakeID:              systemIntake.ID,
+			GrbReviewAsyncRecordingTime: graphql.OmittableOf(&timeNow),
+		},
+	)
+
+	// Check for errors
+	s.NoError(err)
+	s.NotNil(updatedPayload)
+	s.NotNil(updatedPayload.SystemIntake)
+
 	s.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncRecordingTime)
-	s.WithinDuration(timeNow, *updatedPayload.SystemIntake.GrbReviewAsyncRecordingTime, time.Millisecond)
+	s.WithinDuration(timeNow, *updatedPayload.SystemIntake.GrbReviewAsyncRecordingTime, time.Second)
+}
+
+func (s *ResolverSuite) TestSystemIntakeUpdateSystemIntakeGRBReviewFormInputTimeframeAsync() {
+	systemIntake := s.createNewIntake()
+	s.NotNil(systemIntake)
+
+	timeNow := time.Now().UTC()
+
+	updatedPayload, err := UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync{
+			SystemIntakeID:        systemIntake.ID,
+			GrbReviewAsyncEndDate: graphql.OmittableOf(&timeNow),
+		},
+	)
+
+	// Check for errors
+	s.NoError(err)
+	s.NotNil(updatedPayload)
+	s.NotNil(updatedPayload.SystemIntake)
+
 	s.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncEndDate)
-	s.WithinDuration(timeNow, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Millisecond)
-	s.NotNil(updatedPayload.SystemIntake.GrbReviewStandardGRBMeetingTime)
-	s.WithinDuration(timeNow, *updatedPayload.SystemIntake.GrbReviewStandardGRBMeetingTime, time.Millisecond)
-	s.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncGRBMeetingTime)
-	s.WithinDuration(timeNow, *updatedPayload.SystemIntake.GrbReviewAsyncGRBMeetingTime, time.Millisecond)
+	s.WithinDuration(timeNow, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Second)
 }

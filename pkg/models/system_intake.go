@@ -165,7 +165,6 @@ type SystemIntake struct {
 	GrbReviewAsyncReportingDate                       *time.Time                   `json:"grbReviewAsyncReportingDate" db:"grb_review_async_reporting_date"`
 	GrbReviewAsyncRecordingTime                       *time.Time                   `json:"grbReviewAsyncRecordingTime" db:"grb_review_async_recording_time"`
 	GrbReviewAsyncEndDate                             *time.Time                   `json:"grbReviewAsyncEndDate" db:"grb_review_async_end_date"`
-	GrbReviewStandardGRBMeetingTime                   *time.Time                   `json:"grbReviewStandardGRBMeetingTime" db:"grb_review_standard_grb_meeting_time"`
 	GrbReviewAsyncGRBMeetingTime                      *time.Time                   `json:"grbReviewAsyncGRBMeetingTime" db:"grb_review_async_grb_meeting_time"`
 }
 

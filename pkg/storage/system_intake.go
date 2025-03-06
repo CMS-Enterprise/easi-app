@@ -114,7 +114,6 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			grb_review_async_reporting_date,
 			grb_review_async_recording_time,
 			grb_review_async_end_date,
-			grb_review_standard_grb_meeting_time,
 			grb_review_async_grb_meeting_time,
 			grb_presentation_deck_requester_reminder_email_sent_time,
 			created_at,
@@ -180,7 +179,6 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:grb_review_async_reporting_date,
 			:grb_review_async_recording_time,
 			:grb_review_async_end_date,
-			:grb_review_standard_grb_meeting_time,
 			:grb_review_async_grb_meeting_time,
 		    :grb_presentation_deck_requester_reminder_email_sent_time,
 			:created_at,
@@ -295,7 +293,6 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			grb_review_async_reporting_date = :grb_review_async_reporting_date,
 			grb_review_async_recording_time = :grb_review_async_recording_time,
 			grb_review_async_end_date = :grb_review_async_end_date,
-			grb_review_standard_grb_meeting_time = :grb_review_standard_grb_meeting_time,
 			grb_review_async_grb_meeting_time = :grb_review_async_grb_meeting_time,
 			grb_presentation_deck_requester_reminder_email_sent_time = :grb_presentation_deck_requester_reminder_email_sent_time
 		WHERE system_intakes.id = :id

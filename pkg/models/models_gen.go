@@ -994,14 +994,22 @@ type CreateSystemIntakeGRBDiscussionReplyInput struct {
 	Content       TaggedHTML `json:"content"`
 }
 
-// Input data used to set or update a System Intake's GRB Review form data
-type UpdateSystemIntakeGRBReviewFormInput struct {
-	SystemIntakeID                  uuid.UUID                                     `json:"systemIntakeID"`
-	GrbReviewType                   graphql.Omittable[*SystemIntakeGRBReviewType] `json:"grbReviewType,omitempty"`
-	GrbReviewAsyncRecordingTime     graphql.Omittable[*time.Time]                 `json:"grbReviewAsyncRecordingTime,omitempty"`
-	GrbReviewAsyncEndDate           graphql.Omittable[*time.Time]                 `json:"grbReviewAsyncEndDate,omitempty"`
-	GrbReviewStandardGRBMeetingTime graphql.Omittable[*time.Time]                 `json:"grbReviewStandardGRBMeetingTime,omitempty"`
-	GrbReviewAsyncGRBMeetingTime    graphql.Omittable[*time.Time]                 `json:"grbReviewAsyncGRBMeetingTime,omitempty"`
+// Input data used to set or update a System Intake's GRB Review Presentation (Async) data
+type UpdateSystemIntakeGRBReviewFormInputPresentationAsync struct {
+	SystemIntakeID              uuid.UUID                     `json:"systemIntakeID"`
+	GrbReviewAsyncRecordingTime graphql.Omittable[*time.Time] `json:"grbReviewAsyncRecordingTime,omitempty"`
+}
+
+// Input data used to set or update a System Intake's GRB Review Presentation (Standard) data
+type UpdateSystemIntakeGRBReviewFormInputPresentationStandard struct {
+	SystemIntakeID uuid.UUID  `json:"systemIntakeID"`
+	GrbDate        *time.Time `json:"grbDate,omitempty"`
+}
+
+// Input data used to set or update a System Intake's GRB Review Timeframe (Async) data
+type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync struct {
+	SystemIntakeID        uuid.UUID                     `json:"systemIntakeID"`
+	GrbReviewAsyncEndDate graphql.Omittable[*time.Time] `json:"grbReviewAsyncEndDate,omitempty"`
 }
 
 // Input data used to set or update a System Intake's GRB Review Type
