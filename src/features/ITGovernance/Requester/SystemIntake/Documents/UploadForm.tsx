@@ -363,6 +363,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
               disabled: !isValid || isSubmitting
             }}
             taskListUrl={returnLink}
+            submitDisabled
             saveExitText={t('intake:documents.dontUpload', {
               context:
                 state.uploadSource === 'grbReviewForm' ? 'grbReviewForm' : type
