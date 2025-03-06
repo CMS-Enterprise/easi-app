@@ -11,7 +11,7 @@ import { systemIntake } from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
-import ParticipantsTable from './ParticipantsTable';
+import ParticipantsSection from './ParticipantsSection';
 
 const user = users[0];
 
@@ -34,7 +34,7 @@ describe('GRB review participants table', () => {
     render(
       <MemoryRouter>
         <ITGovAdminContext.Provider value>
-          <ParticipantsTable
+          <ParticipantsSection
             id={systemIntake.id}
             state={SystemIntakeState.OPEN}
             grbReviewers={[grbReviewer]}
@@ -65,7 +65,7 @@ describe('GRB review participants table', () => {
     render(
       <MemoryRouter>
         <ITGovAdminContext.Provider value>
-          <ParticipantsTable
+          <ParticipantsSection
             id={systemIntake.id}
             state={SystemIntakeState.OPEN}
             grbReviewers={[grbReviewer]}
@@ -83,7 +83,7 @@ describe('GRB review participants table', () => {
     render(
       <MemoryRouter>
         <ITGovAdminContext.Provider value>
-          <ParticipantsTable
+          <ParticipantsSection
             id={systemIntake.id}
             state={SystemIntakeState.CLOSED}
             grbReviewers={[]}
@@ -107,7 +107,7 @@ describe('GRB review participants table', () => {
     render(
       <MemoryRouter>
         <ITGovAdminContext.Provider value={false}>
-          <ParticipantsTable
+          <ParticipantsSection
             id={systemIntake.id}
             state={SystemIntakeState.OPEN}
             grbReviewers={[grbReviewer]}

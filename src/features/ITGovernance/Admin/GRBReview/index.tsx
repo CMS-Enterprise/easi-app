@@ -42,7 +42,7 @@ import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdmin
 
 import Discussions from './Discussions/Discussions';
 import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
-import ParticipantsTable from './ParticipantsTable/ParticipantsTable';
+import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
 import GRBReviewerForm from './GRBReviewerForm';
 
@@ -444,7 +444,7 @@ const GRBReview = ({
               className="margin-top-4 margin-bottom-6"
             />
 
-            <ParticipantsTable
+            <ParticipantsSection
               id={id}
               state={state}
               grbReviewers={grbReviewers}
