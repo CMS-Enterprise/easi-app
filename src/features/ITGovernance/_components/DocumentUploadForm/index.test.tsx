@@ -7,9 +7,9 @@ import { render, screen } from '@testing-library/react';
 import { MessageProvider } from 'hooks/useMessage';
 import easiMockStore from 'utils/testing/easiMockStore';
 
-import UploadForm from './UploadForm';
+import DocumentUploadForm from '.';
 
-describe('UploadForm page', () => {
+describe('DocumentUploadForm page', () => {
   it('renders send notification check if viewing in admin context', async () => {
     const mockStore = easiMockStore({
       groups: [
@@ -25,7 +25,7 @@ describe('UploadForm page', () => {
         <MockedProvider>
           <Provider store={mockStore}>
             <MessageProvider>
-              <UploadForm type="admin" />
+              <DocumentUploadForm type="admin" />
             </MessageProvider>
           </Provider>
         </MockedProvider>
@@ -54,7 +54,7 @@ describe('UploadForm page', () => {
         <MockedProvider>
           <Provider store={mockStore}>
             <MessageProvider>
-              <UploadForm type="requester" />
+              <DocumentUploadForm type="requester" />
             </MessageProvider>
           </Provider>
         </MockedProvider>
@@ -78,7 +78,7 @@ describe('UploadForm page', () => {
         <MockedProvider>
           <Provider store={mockStore}>
             <MessageProvider>
-              <UploadForm type="requester" />
+              <DocumentUploadForm type="requester" />
             </MessageProvider>
           </Provider>
         </MockedProvider>
@@ -102,7 +102,7 @@ describe('UploadForm page', () => {
         <MockedProvider>
           <Provider store={mockStore}>
             <MessageProvider>
-              <UploadForm type="admin" />
+              <DocumentUploadForm type="admin" />
             </MessageProvider>
           </Provider>
         </MockedProvider>

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
-import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
+import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import { SystemIntakeGRBReviewType } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -60,7 +60,7 @@ const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
 
       <DocumentsTable
         systemIntakeId={grbReview.id}
-        documents={grbReview.documents}
+        documents={[grbReview.documents[0], grbReview.documents[1]]}
         className="margin-top-4"
       />
     </GRBReviewFormStepWrapper>

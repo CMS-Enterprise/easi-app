@@ -25,27 +25,28 @@ import { AppState } from 'stores/reducers/rootReducer';
 
 import { Alert } from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
+import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import IconLink from 'components/IconLink';
 import Label from 'components/Label';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import useMessage from 'hooks/useMessage';
 import { fileToBase64File } from 'utils/downloadFile';
 import user from 'utils/user';
 import { documentSchema } from 'validations/systemIntakeSchema';
 
-import FieldErrorMsg from '../../../../../components/FieldErrorMsg';
-import RequiredAsterisk from '../../../../../components/RequiredAsterisk';
-
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
 
-type UploadFormProps = {
+type DocumentUploadFormProps = {
   type: 'admin' | 'requester';
 };
 
 /**
  * System intake document upload form
  */
-const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
+const DocumentUploadForm = ({
+  type = 'requester'
+}: DocumentUploadFormProps) => {
   const { t } = useTranslation();
 
   const { groups } = useSelector((state: AppState) => state.auth);
@@ -377,4 +378,4 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
   );
 };
 
-export default UploadForm;
+export default DocumentUploadForm;
