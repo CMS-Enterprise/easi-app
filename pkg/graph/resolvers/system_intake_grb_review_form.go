@@ -34,7 +34,7 @@ func UpdateSystemIntakeGRBReviewFormInputPresentationStandard(
 		return nil, err
 	}
 
-	intake.GRBDate = input.GrbDate
+	intake.GRBDate = &input.GrbDate
 
 	// Update system intake
 	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
@@ -88,9 +88,7 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 		return nil, err
 	}
 
-	if input.GrbReviewAsyncEndDate.IsSet() {
-		intake.GrbReviewAsyncEndDate = input.GrbReviewAsyncEndDate.Value()
-	}
+	intake.GrbReviewAsyncEndDate = &input.GrbReviewAsyncEndDate
 
 	// Update system intake
 	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)

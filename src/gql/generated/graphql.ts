@@ -3353,13 +3353,13 @@ export type UpdateSystemIntakeGRBReviewFormInputPresentationAsync = {
 
 /** Input data used to set or update a System Intake's GRB Review Presentation (Standard) data */
 export type UpdateSystemIntakeGRBReviewFormInputPresentationStandard = {
-  grbDate?: InputMaybe<Scalars['Time']['input']>;
+  grbDate: Scalars['Time']['input'];
   systemIntakeID: Scalars['UUID']['input'];
 };
 
 /** Input data used to set or update a System Intake's GRB Review Timeframe (Async) data */
 export type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync = {
-  grbReviewAsyncEndDate?: InputMaybe<Scalars['Time']['input']>;
+  grbReviewAsyncEndDate: Scalars['Time']['input'];
   systemIntakeID: Scalars['UUID']['input'];
 };
 

@@ -50,7 +50,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateGrbReviewFormInputPresentationStan
 		s.testConfigs.Store,
 		models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard{
 			SystemIntakeID: systemIntake.ID,
-			GrbDate:        &grbDate,
+			GrbDate:        grbDate,
 		},
 	)
 
@@ -97,7 +97,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateSystemIntakeGRBReviewFormInputTime
 		s.testConfigs.Store,
 		models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync{
 			SystemIntakeID:        systemIntake.ID,
-			GrbReviewAsyncEndDate: graphql.OmittableOf(&timeNow),
+			GrbReviewAsyncEndDate: timeNow,
 		},
 	)
 

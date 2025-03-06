@@ -9542,7 +9542,7 @@ Input data used to set or update a System Intake's GRB Review Presentation (Stan
 """
 input updateSystemIntakeGRBReviewFormInputPresentationStandard {
   systemIntakeID: UUID!
-  grbDate: Time
+  grbDate: Time!
 }
 
 """
@@ -9558,7 +9558,7 @@ Input data used to set or update a System Intake's GRB Review Timeframe (Async) 
 """
 input updateSystemIntakeGRBReviewFormInputTimeframeAsync {
   systemIntakeID: UUID!
-  grbReviewAsyncEndDate: Time @goField(omittable: true)
+  grbReviewAsyncEndDate: Time!
 }
 
 """
@@ -65984,7 +65984,7 @@ func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewFormInputPr
 			it.SystemIntakeID = data
 		case "grbDate":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbDate"))
-			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -66018,11 +66018,11 @@ func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewFormInputTi
 			it.SystemIntakeID = data
 		case "grbReviewAsyncEndDate":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbReviewAsyncEndDate"))
-			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.GrbReviewAsyncEndDate = graphql.OmittableOf(data)
+			it.GrbReviewAsyncEndDate = data
 		}
 	}
 

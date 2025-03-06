@@ -1002,14 +1002,14 @@ type UpdateSystemIntakeGRBReviewFormInputPresentationAsync struct {
 
 // Input data used to set or update a System Intake's GRB Review Presentation (Standard) data
 type UpdateSystemIntakeGRBReviewFormInputPresentationStandard struct {
-	SystemIntakeID uuid.UUID  `json:"systemIntakeID"`
-	GrbDate        *time.Time `json:"grbDate,omitempty"`
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
+	GrbDate        time.Time `json:"grbDate"`
 }
 
 // Input data used to set or update a System Intake's GRB Review Timeframe (Async) data
 type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync struct {
-	SystemIntakeID        uuid.UUID                     `json:"systemIntakeID"`
-	GrbReviewAsyncEndDate graphql.Omittable[*time.Time] `json:"grbReviewAsyncEndDate,omitempty"`
+	SystemIntakeID        uuid.UUID `json:"systemIntakeID"`
+	GrbReviewAsyncEndDate time.Time `json:"grbReviewAsyncEndDate"`
 }
 
 // Input data used to set or update a System Intake's GRB Review Type

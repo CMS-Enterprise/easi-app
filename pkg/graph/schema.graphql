@@ -1329,7 +1329,7 @@ Input data used to set or update a System Intake's GRB Review Presentation (Stan
 """
 input updateSystemIntakeGRBReviewFormInputPresentationStandard {
   systemIntakeID: UUID!
-  grbDate: Time
+  grbDate: Time!
 }
 
 """
@@ -1345,7 +1345,7 @@ Input data used to set or update a System Intake's GRB Review Timeframe (Async) 
 """
 input updateSystemIntakeGRBReviewFormInputTimeframeAsync {
   systemIntakeID: UUID!
-  grbReviewAsyncEndDate: Time @goField(omittable: true)
+  grbReviewAsyncEndDate: Time!
 }
 
 """
