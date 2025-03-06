@@ -258,7 +258,24 @@ export default {
         ]
       }
     },
-    completeAndBeginReview: 'Complete and begin review'
+    completeAndBeginReview: 'Complete and begin review',
+    step4: {
+      grbReviewers: {
+        heading: 'GRB reviewers',
+        description:
+          'Add the GRB members who should review this IT Governance request and indicate their voting role. For asynchronous reviews, you must add at least 5 voting members.'
+      },
+      timeframe: {
+        heading: 'Timeframe',
+        description:
+          'Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.'
+      },
+      selectReviewEndDate: {
+        heading: 'Select review end date',
+        description:
+          'Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.'
+      }
+    }
   },
   adminTask: {
     title: 'Admin Task',
