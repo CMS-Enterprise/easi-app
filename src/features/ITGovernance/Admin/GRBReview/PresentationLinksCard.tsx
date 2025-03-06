@@ -7,7 +7,6 @@ import {
   CardFooter,
   CardHeader,
   Icon,
-  Link,
   ModalHeading
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -46,6 +45,7 @@ function PresentationLinksCard({
     recordingLink,
     recordingPasscode,
     transcriptLink,
+    transcriptFileName,
     transcriptFileStatus,
     transcriptFileURL,
     presentationDeckFileName,
@@ -186,14 +186,20 @@ function PresentationLinksCard({
 
                 {transcriptFileStatus ===
                   SystemIntakeDocumentStatus.AVAILABLE &&
-                  transcriptFileURL && (
-                    <Link
-                      href={transcriptFileURL}
-                      target="_blank"
-                      data-testid="transcript-url"
+                  transcriptFileURL &&
+                  transcriptFileName && (
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        downloadFileFromURL(
+                          transcriptFileURL,
+                          transcriptFileName
+                        )
+                      }
+                      unstyled
                     >
                       {t('asyncPresentation.viewTranscript')}
-                    </Link>
+                    </Button>
                   )}
 
                 {presentationDeckFileStatus ===
