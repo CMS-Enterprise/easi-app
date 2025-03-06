@@ -71,11 +71,7 @@ const GRBReviewerForm = ({
           { type: 'success' }
         );
 
-        if (isFromGRBSetup) {
-          history.push(`${grbReviewPath}/participants`);
-        } else {
-          history.push(grbReviewPath);
-        }
+        history.push(grbReviewPath);
       })
       .catch(() => {
         showMessage(t(`messages.error.add`), { type: 'error' });
@@ -100,10 +96,6 @@ const GRBReviewerForm = ({
           />
         </p>
 
-        {/* //TODO: think about this one later */}
-        {/* <Button type="button" onClick={() => history.goBack()} outline>
-          {t('form.returnToRequest', { context: action })}
-        </Button> */}
         <IconLink
           icon={<Icon.ArrowBack />}
           to={grbReviewPath}
