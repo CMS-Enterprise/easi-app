@@ -11,7 +11,7 @@ import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
-import ParticipantsTable from '../../ParticipantsTable/ParticipantsTable';
+import ParticipantsTable from '../../ParticipantsSection/ParticipantsSection';
 import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
 
 // TODO: Update fields type
