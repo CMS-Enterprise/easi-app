@@ -23,6 +23,7 @@ import IconLink from 'components/IconLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import useMessage from 'hooks/useMessage';
+import { downloadFileFromURL } from 'utils/downloadFile';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 
@@ -47,6 +48,7 @@ function PresentationLinksCard({
     transcriptLink,
     transcriptFileStatus,
     transcriptFileURL,
+    presentationDeckFileName,
     presentationDeckFileStatus,
     presentationDeckFileURL
   } = grbPresentationLinks || {};
@@ -193,14 +195,20 @@ function PresentationLinksCard({
 
                 {presentationDeckFileStatus ===
                   SystemIntakeDocumentStatus.AVAILABLE &&
-                  presentationDeckFileURL && (
-                    <Link
-                      href={presentationDeckFileURL}
-                      target="_blank"
-                      data-testid="presentation-url"
+                  presentationDeckFileURL &&
+                  presentationDeckFileName && (
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        downloadFileFromURL(
+                          presentationDeckFileURL,
+                          presentationDeckFileName
+                        )
+                      }
+                      unstyled
                     >
                       {t('asyncPresentation.viewSlideDeck')}
-                    </Link>
+                    </Button>
                   )}
               </>
             )}
