@@ -9,8 +9,7 @@ import {
 } from 'gql/generated/graphql';
 import { systemIntake } from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
-
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import ParticipantsTable from './ParticipantsTable';
 

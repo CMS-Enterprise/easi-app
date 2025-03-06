@@ -735,4 +735,12 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		},
 	)
 	noErr(err)
+
+	err = client.SystemIntake.SendPresentationDeckUploadReminder(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Project with Presentation",
+	)
+	noErr(err)
 }

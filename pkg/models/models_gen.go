@@ -724,6 +724,7 @@ type SystemIntakeProgressToNewStepsInput struct {
 	GrbRecommendations     *HTML                        `json:"grbRecommendations,omitempty"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
+	GrbReviewType          *SystemIntakeGRBReviewType   `json:"grbReviewType,omitempty"`
 }
 
 // Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
@@ -991,6 +992,30 @@ type CreateSystemIntakeGRBDiscussionPostInput struct {
 type CreateSystemIntakeGRBDiscussionReplyInput struct {
 	InitialPostID uuid.UUID  `json:"initialPostID"`
 	Content       TaggedHTML `json:"content"`
+}
+
+// Input data used to set or update a System Intake's GRB Review Presentation (Async) data
+type UpdateSystemIntakeGRBReviewFormInputPresentationAsync struct {
+	SystemIntakeID              uuid.UUID                     `json:"systemIntakeID"`
+	GrbReviewAsyncRecordingTime graphql.Omittable[*time.Time] `json:"grbReviewAsyncRecordingTime,omitempty"`
+}
+
+// Input data used to set or update a System Intake's GRB Review Presentation (Standard) data
+type UpdateSystemIntakeGRBReviewFormInputPresentationStandard struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
+	GrbDate        time.Time `json:"grbDate"`
+}
+
+// Input data used to set or update a System Intake's GRB Review Timeframe (Async) data
+type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync struct {
+	SystemIntakeID        uuid.UUID `json:"systemIntakeID"`
+	GrbReviewAsyncEndDate time.Time `json:"grbReviewAsyncEndDate"`
+}
+
+// Input data used to set or update a System Intake's GRB Review Type
+type UpdateSystemIntakeGRBReviewTypeInput struct {
+	SystemIntakeID uuid.UUID                 `json:"systemIntakeID"`
+	GrbReviewType  SystemIntakeGRBReviewType `json:"grbReviewType"`
 }
 
 // A user role associated with a job code

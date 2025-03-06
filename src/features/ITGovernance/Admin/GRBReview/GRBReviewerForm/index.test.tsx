@@ -2,7 +2,6 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ITGovAdminContext from 'features/ITGovernance/Admin/ITGovAdminContext';
 import {
   CreateSystemIntakeGRBReviewersDocument,
   CreateSystemIntakeGRBReviewersMutation,
@@ -13,12 +12,13 @@ import {
   GetGRBReviewersComparisonsDocument,
   GetGRBReviewersComparisonsQuery,
   GetGRBReviewersComparisonsQueryVariables,
-  GetSystemIntakeGRBReviewersDocument,
-  GetSystemIntakeGRBReviewersQuery,
-  GetSystemIntakeGRBReviewersQueryVariables,
+  GetSystemIntakeGRBReviewDocument,
+  GetSystemIntakeGRBReviewQuery,
+  GetSystemIntakeGRBReviewQueryVariables,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeGRBReviewType,
   UpdateSystemIntakeGRBReviewerDocument,
   UpdateSystemIntakeGRBReviewerMutation,
   UpdateSystemIntakeGRBReviewerMutationVariables
@@ -26,6 +26,7 @@ import {
 import i18next from 'i18next';
 import { businessCase } from 'tests/mock/businessCase';
 import { systemIntake } from 'tests/mock/systemIntake';
+import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
@@ -132,14 +133,14 @@ const updateSystemIntakeGRBReviewerQuery: MockedQuery<
   }
 };
 
-const getSystemIntakeGRBReviewersQuery = (
+const getSystemIntakeGRBReviewQuery = (
   reviewer?: SystemIntakeGRBReviewerFragment
 ): MockedQuery<
-  GetSystemIntakeGRBReviewersQuery,
-  GetSystemIntakeGRBReviewersQueryVariables
+  GetSystemIntakeGRBReviewQuery,
+  GetSystemIntakeGRBReviewQueryVariables
 > => ({
   request: {
-    query: GetSystemIntakeGRBReviewersDocument,
+    query: GetSystemIntakeGRBReviewDocument,
     variables: {
       id: systemIntake.id
     }
@@ -151,7 +152,8 @@ const getSystemIntakeGRBReviewersQuery = (
         __typename: 'SystemIntake',
         id: systemIntake.id,
         grbReviewers: reviewer ? [reviewer] : [],
-        grbReviewStartedAt: null
+        grbReviewStartedAt: null,
+        grbReviewType: SystemIntakeGRBReviewType.STANDARD
       }
     }
   }
@@ -190,8 +192,8 @@ describe('GRB reviewer form', () => {
             cedarContactsQuery('Je'),
             cedarContactsQuery('Jerry Seinfeld'),
             createSystemIntakeGRBReviewersQuery,
-            getSystemIntakeGRBReviewersQuery(),
-            getSystemIntakeGRBReviewersQuery(grbReviewer)
+            getSystemIntakeGRBReviewQuery(),
+            getSystemIntakeGRBReviewQuery(grbReviewer)
           ]}
         >
           <MessageProvider>
@@ -278,8 +280,8 @@ describe('GRB reviewer form', () => {
             getGRBReviewersComparisonsQuery,
             cedarContactsQuery(contactLabel),
             updateSystemIntakeGRBReviewerQuery,
-            getSystemIntakeGRBReviewersQuery(grbReviewer),
-            getSystemIntakeGRBReviewersQuery(updatedGRBReviewer)
+            getSystemIntakeGRBReviewQuery(grbReviewer),
+            getSystemIntakeGRBReviewQuery(updatedGRBReviewer)
           ]}
         >
           <MessageProvider>
