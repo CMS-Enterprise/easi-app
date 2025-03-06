@@ -219,23 +219,24 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
           </h4>
         </div>
       </div>
-      <div
-        class="line-height-body-5 text-light"
-      >
-        EASi will automatically link the Business Case (if applicable) and Intake Request form, but you may upload any additional documents necessary to provide GRB reviewers with project information or context. Documents already listed below were uploaded by the requester or project team as a part of their intake request. You may remove any documents uploaded by other Governance Admin Team members, but will not be able to remove documents uploaded by the requester or project team.
-      </div>
     </div>
   </div>
   <div
-    class="grid-container padding-bottom-10"
+    class="grid-container grb-review-form padding-bottom-10"
     data-testid="gridContainer"
   >
-    <div
-      class=""
-      data-testid="grid"
+    <form
+      class="usa-form grb-review-form__step-content-wrapper maxw-none"
+      data-testid="grbReviewForm-stepContentWrapper"
+      role="form"
     >
       <p
-        class="text-base"
+        class="line-height-body-5 text-light font-body-sm margin-top-0 margin-bottom-1"
+      >
+        EASi will automatically link the Business Case (if applicable) and Intake Request form, but you may upload any additional documents necessary to provide GRB reviewers with project information or context. Documents already listed below were uploaded by the requester or project team as a part of their intake request. You may remove any documents uploaded by other Governance Admin Team members, but will not be able to remove documents uploaded by the requester or project team.
+      </p>
+      <p
+        class="text-base margin-top-0 font-body-sm"
       >
         Fields marked with an asterisk (
         <span
@@ -245,75 +246,69 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
         </span>
         ) are required.
       </p>
-      <form
-        class="usa-form maxw-none"
-        data-testid="grbReviewForm-stepContentWrapper"
-        role="form"
+      <p>
+        Fields here
+      </p>
+      <div
+        class="margin-top-8 margin-bottom-3"
       >
-        <p>
-          Fields here
-        </p>
-        <div
-          class="margin-top-8 margin-bottom-3"
+        <ul
+          class="usa-button-group"
         >
-          <ul
-            class="usa-button-group"
+          <li
+            class="usa-button-group__item"
           >
-            <li
-              class="usa-button-group__item"
+            <div
+              class="display-flex flex-align-center"
             >
-              <div
-                class="display-flex flex-align-center"
+              <button
+                class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+                data-testid="button"
+                type="button"
               >
-                <button
-                  class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-                  data-testid="button"
-                  type="button"
-                >
-                  Back
-                </button>
-              </div>
-            </li>
-            <li
-              class="usa-button-group__item"
-            >
-              <div
-                class="display-flex flex-align-center"
-              >
-                <button
-                  class="usa-button margin-top-0"
-                  data-testid="button"
-                  disabled=""
-                  type="submit"
-                >
-                  Next
-                </button>
-              </div>
-            </li>
-          </ul>
-          <button
-            class="usa-button usa-button--unstyled margin-top-2 display-flex flex-align-center"
-            data-testid="button"
-            type="button"
+                Back
+              </button>
+            </div>
+          </li>
+          <li
+            class="usa-button-group__item"
           >
-            <svg
-              class="usa-icon margin-right-05"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
+            <div
+              class="display-flex flex-align-center"
             >
-              <path
-                d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
-              />
-            </svg>
-            Save and return to request
-          </button>
-        </div>
-      </form>
-    </div>
+              <button
+                class="usa-button margin-top-0"
+                data-testid="button"
+                disabled=""
+                type="submit"
+              >
+                Next
+              </button>
+            </div>
+          </li>
+        </ul>
+        <button
+          class="usa-button usa-button--unstyled margin-top-2 display-flex flex-align-center"
+          data-testid="button"
+          type="button"
+        >
+          <svg
+            class="usa-icon margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+            />
+          </svg>
+          Save and return to request
+        </button>
+      </div>
+    </form>
   </div>
 </DocumentFragment>
 `;
