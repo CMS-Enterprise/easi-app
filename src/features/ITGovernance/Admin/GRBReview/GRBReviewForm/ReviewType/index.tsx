@@ -1,7 +1,13 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { Fieldset, FormGroup } from '@trussworks/react-uswds';
+import { Trans, useTranslation } from 'react-i18next';
+import {
+  Fieldset,
+  FormGroup,
+  SummaryBox,
+  SummaryBoxContent,
+  SummaryBoxHeading
+} from '@trussworks/react-uswds';
 import {
   SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType,
@@ -15,6 +21,8 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 import GRBReviewFormStepWrapper, {
   GRBReviewFormStepSubmit
 } from '../GRBReviewFormStepWrapper';
+
+import './index.scss';
 
 type ReviewTypeFields = {
   grbReviewType: SystemIntakeGRBReviewType;
@@ -49,7 +57,7 @@ const ReviewType = ({ grbReview }: ReviewTypeProps) => {
         onSubmit={onSubmit}
         grbReview={grbReview}
       >
-        <FormGroup error={!!errors.grbReviewType} className="margin-top-5">
+        <FormGroup error={!!errors.grbReviewType}>
           <Fieldset>
             <legend className="text-bold">
               {t('setUpGrbReviewForm.reviewType.label')} <RequiredAsterisk />
@@ -80,6 +88,30 @@ const ReviewType = ({ grbReview }: ReviewTypeProps) => {
             />
           </Fieldset>
         </FormGroup>
+
+        <div className="review-type-sidebar">
+          <SummaryBox>
+            <SummaryBoxHeading headingLevel="h3">
+              {t('setUpGrbReviewForm.reviewType.summaryHeading')}
+            </SummaryBoxHeading>
+            <SummaryBoxContent>
+              <ul className="padding-left-3 margin-bottom-0 font-body-sm line-height-body-5">
+                <li>
+                  <Trans
+                    i18nKey="grbReview:setUpGrbReviewForm.reviewType.asyncSummary"
+                    components={{ span: <span className="text-bold" /> }}
+                  />
+                </li>
+                <li>
+                  <Trans
+                    i18nKey="grbReview:setUpGrbReviewForm.reviewType.standardSummary"
+                    components={{ span: <span className="text-bold" /> }}
+                  />
+                </li>
+              </ul>
+            </SummaryBoxContent>
+          </SummaryBox>
+        </div>
       </GRBReviewFormStepWrapper>
     </EasiFormProvider>
   );
